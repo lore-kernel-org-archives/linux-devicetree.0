@@ -1,47 +1,75 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] iio: adc: mt7622: Add compatible node for
- mt7622.
-Date: Sat, 1 Jul 2017 10:21:13 +0100
-Message-ID: <20170701102113.2f53742c@kernel.org>
-References: <1498457502-3669-1-git-send-email-zhiyong.tao@mediatek.com>
-        <1498457502-3669-4-git-send-email-zhiyong.tao@mediatek.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: dts: rockchip: enable saradc for rk3288-evb
+Date: Sat, 01 Jul 2017 13:06:12 +0200
+Message-ID: <10342435.5c883YxTZd@phil>
+References: <1498874567-11219-1-git-send-email-jacob-chen@iotwrt.com> <1498874567-11219-5-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498457502-3669-4-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1498874567-11219-5-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Jun 2017 14:11:42 +0800
-Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+Hi Jacob,
 
-> This commit adds mt7622 compatible node.
+Am Samstag, 1. Juli 2017, 10:02:46 CEST schrieb Jacob Chen:
+> saradc in rk3288-evb use 1.8v ref.
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Applied.
-
-Thanks,
-
-Jonathan
+> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/iio/adc/mt6577_auxadc.c |    1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm/boot/dts/rk3288-evb.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-> index c174b73..4224fc0 100644
-> --- a/drivers/iio/adc/mt6577_auxadc.c
-> +++ b/drivers/iio/adc/mt6577_auxadc.c
-> @@ -308,6 +308,7 @@ static SIMPLE_DEV_PM_OPS(mt6577_auxadc_pm_ops,
+> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+> index f226ca7..9cee856 100644
+> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+> @@ -129,6 +129,15 @@
+>  		};
+>  	};
 >  
->  static const struct of_device_id mt6577_auxadc_of_match[] = {
->  	{ .compatible = "mediatek,mt2701-auxadc", },
-> +	{ .compatible = "mediatek,mt7622-auxadc", },
->  	{ .compatible = "mediatek,mt8173-auxadc", },
->  	{ }
+> +	vccadc_ref: vccadc-ref {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc1v8_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +	};
+
+this looks wrong. Regulators should always be named with the name
+used in schematics and also, according to the rk3288-evb schematics
+I have here, the saradc uses vcc_18 directly which comes from either
+the rk808 or act8846 pmics (depending on the board version).
+
+> +
+>  	/* This turns on USB vbus for both host0 (ehci) and host1 (dwc2) */
+>  	vcc_host: vcc-host-regulator {
+>  		compatible = "regulator-fixed";
+> @@ -218,6 +227,11 @@
+>  	status = "okay";
 >  };
+>  
+> +&saradc {
+> +	vref-supply = <&vccadc_ref>;
+
+So taking the above into account
+	vref-supply = <&vcc_18>; ?
+
+
+Heiko
+
+> +	status = "okay";
+> +};
+> +
+>  &sdmmc {
+>  	bus-width = <4>;
+>  	cap-mmc-highspeed;
+> 
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
