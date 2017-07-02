@@ -1,297 +1,136 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v7 13/16] MIPS: lantiq: remove old GPHY loader code
-Date: Mon,  3 Jul 2017 00:40:48 +0200
-Message-ID: <20170702224051.15109-14-hauke@hauke-m.de>
-References: <20170702224051.15109-1-hauke@hauke-m.de>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170702224051.15109-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v11 0/3]add PCIe driver for Kirin PCIe
+Date: Sun, 2 Jul 2017 18:36:57 -0500
+Message-ID: <20170702233657.GA13507@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: guodong.xu@linaro.org, bhelgaas@google.com, robh+dt@kernel.org, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The GPHY loader was replaced by a new more flexible driver. Remove the
-old driver.
+[+cc Catalin, Will, linux-arm-kernel]
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
----
- arch/mips/lantiq/xway/Makefile        |   2 -
- arch/mips/lantiq/xway/reset.c         | 106 -------------------------------
- arch/mips/lantiq/xway/xrx200_phy_fw.c | 113 ----------------------------------
- 3 files changed, 221 deletions(-)
- delete mode 100644 arch/mips/lantiq/xway/xrx200_phy_fw.c
+Applied patches 2 & 3 to pci/host-kirin for v4.13.
 
-diff --git a/arch/mips/lantiq/xway/Makefile b/arch/mips/lantiq/xway/Makefile
-index a2edc538f477..6daf3149e7ca 100644
---- a/arch/mips/lantiq/xway/Makefile
-+++ b/arch/mips/lantiq/xway/Makefile
-@@ -1,5 +1,3 @@
- obj-y := prom.o sysctrl.o clk.o reset.o dma.o gptu.o dcdc.o
- 
- obj-y += vmmc.o
--
--obj-$(CONFIG_XRX200_PHY_FW) += xrx200_phy_fw.o
-diff --git a/arch/mips/lantiq/xway/reset.c b/arch/mips/lantiq/xway/reset.c
-index 5cb9309b0047..be5fd29de523 100644
---- a/arch/mips/lantiq/xway/reset.c
-+++ b/arch/mips/lantiq/xway/reset.c
-@@ -27,18 +27,6 @@
- #define RCU_RST_REQ		0x0010
- /* reset status register */
- #define RCU_RST_STAT		0x0014
--/* vr9 gphy registers */
--#define RCU_GFS_ADD0_XRX200	0x0020
--#define RCU_GFS_ADD1_XRX200	0x0068
--/* xRX300 gphy registers */
--#define RCU_GFS_ADD0_XRX300	0x0020
--#define RCU_GFS_ADD1_XRX300	0x0058
--#define RCU_GFS_ADD2_XRX300	0x00AC
--/* xRX330 gphy registers */
--#define RCU_GFS_ADD0_XRX330	0x0020
--#define RCU_GFS_ADD1_XRX330	0x0058
--#define RCU_GFS_ADD2_XRX330	0x00AC
--#define RCU_GFS_ADD3_XRX330	0x0264
- 
- /* xbar BE flag */
- #define RCU_AHB_ENDIAN          0x004C
-@@ -48,15 +36,6 @@
- #define RCU_RD_GPHY0_XRX200	BIT(31)
- #define RCU_RD_SRST		BIT(30)
- #define RCU_RD_GPHY1_XRX200	BIT(29)
--/* xRX300 bits */
--#define RCU_RD_GPHY0_XRX300	BIT(31)
--#define RCU_RD_GPHY1_XRX300	BIT(29)
--#define RCU_RD_GPHY2_XRX300	BIT(28)
--/* xRX330 bits */
--#define RCU_RD_GPHY0_XRX330	BIT(31)
--#define RCU_RD_GPHY1_XRX330	BIT(29)
--#define RCU_RD_GPHY2_XRX330	BIT(28)
--#define RCU_RD_GPHY3_XRX330	BIT(10)
- 
- /* reset cause */
- #define RCU_STAT_SHIFT		26
-@@ -98,7 +77,6 @@
- /* remapped base addr of the reset control unit */
- static void __iomem *ltq_rcu_membase;
- static struct device_node *ltq_rcu_np;
--static DEFINE_SPINLOCK(ltq_rcu_lock);
- 
- static void ltq_rcu_w32(uint32_t val, uint32_t reg_off)
- {
-@@ -110,90 +88,6 @@ static uint32_t ltq_rcu_r32(uint32_t reg_off)
- 	return ltq_r32(ltq_rcu_membase + reg_off);
- }
- 
--static void ltq_rcu_w32_mask(uint32_t clr, uint32_t set, uint32_t reg_off)
--{
--	unsigned long flags;
--
--	spin_lock_irqsave(&ltq_rcu_lock, flags);
--	ltq_rcu_w32((ltq_rcu_r32(reg_off) & ~(clr)) | (set), reg_off);
--	spin_unlock_irqrestore(&ltq_rcu_lock, flags);
--}
--
--struct ltq_gphy_reset {
--	u32 rd;
--	u32 addr;
--};
--
--/* reset / boot a gphy */
--static struct ltq_gphy_reset xrx200_gphy[] = {
--	{RCU_RD_GPHY0_XRX200, RCU_GFS_ADD0_XRX200},
--	{RCU_RD_GPHY1_XRX200, RCU_GFS_ADD1_XRX200},
--};
--
--/* reset / boot a gphy */
--static struct ltq_gphy_reset xrx300_gphy[] = {
--	{RCU_RD_GPHY0_XRX300, RCU_GFS_ADD0_XRX300},
--	{RCU_RD_GPHY1_XRX300, RCU_GFS_ADD1_XRX300},
--	{RCU_RD_GPHY2_XRX300, RCU_GFS_ADD2_XRX300},
--};
--
--/* reset / boot a gphy */
--static struct ltq_gphy_reset xrx330_gphy[] = {
--	{RCU_RD_GPHY0_XRX330, RCU_GFS_ADD0_XRX330},
--	{RCU_RD_GPHY1_XRX330, RCU_GFS_ADD1_XRX330},
--	{RCU_RD_GPHY2_XRX330, RCU_GFS_ADD2_XRX330},
--	{RCU_RD_GPHY3_XRX330, RCU_GFS_ADD3_XRX330},
--};
--
--static void xrx200_gphy_boot_addr(struct ltq_gphy_reset *phy_regs,
--				  dma_addr_t dev_addr)
--{
--	ltq_rcu_w32_mask(0, phy_regs->rd, RCU_RST_REQ);
--	ltq_rcu_w32(dev_addr, phy_regs->addr);
--	ltq_rcu_w32_mask(phy_regs->rd, 0,  RCU_RST_REQ);
--}
--
--/* reset and boot a gphy. these phys only exist on xrx200 SoC */
--int xrx200_gphy_boot(struct device *dev, unsigned int id, dma_addr_t dev_addr)
--{
--	struct clk *clk;
--
--	if (!of_device_is_compatible(ltq_rcu_np, "lantiq,rcu-xrx200")) {
--		dev_err(dev, "this SoC has no GPHY\n");
--		return -EINVAL;
--	}
--
--	if (of_machine_is_compatible("lantiq,vr9")) {
--		clk = clk_get_sys("1f203000.rcu", "gphy");
--		if (IS_ERR(clk))
--			return PTR_ERR(clk);
--		clk_enable(clk);
--	}
--
--	dev_info(dev, "booting GPHY%u firmware at %X\n", id, dev_addr);
--
--	if (of_machine_is_compatible("lantiq,vr9")) {
--		if (id >= ARRAY_SIZE(xrx200_gphy)) {
--			dev_err(dev, "%u is an invalid gphy id\n", id);
--			return -EINVAL;
--		}
--		xrx200_gphy_boot_addr(&xrx200_gphy[id], dev_addr);
--	} else if (of_machine_is_compatible("lantiq,ar10")) {
--		if (id >= ARRAY_SIZE(xrx300_gphy)) {
--			dev_err(dev, "%u is an invalid gphy id\n", id);
--			return -EINVAL;
--		}
--		xrx200_gphy_boot_addr(&xrx300_gphy[id], dev_addr);
--	} else if (of_machine_is_compatible("lantiq,grx390")) {
--		if (id >= ARRAY_SIZE(xrx330_gphy)) {
--			dev_err(dev, "%u is an invalid gphy id\n", id);
--			return -EINVAL;
--		}
--		xrx200_gphy_boot_addr(&xrx330_gphy[id], dev_addr);
--	}
--	return 0;
--}
--
- static void ltq_machine_restart(char *command)
- {
- 	u32 val = ltq_rcu_r32(RCU_RST_REQ);
-diff --git a/arch/mips/lantiq/xway/xrx200_phy_fw.c b/arch/mips/lantiq/xway/xrx200_phy_fw.c
-deleted file mode 100644
-index f0a0f2d431b2..000000000000
---- a/arch/mips/lantiq/xway/xrx200_phy_fw.c
-+++ /dev/null
-@@ -1,113 +0,0 @@
--/*
-- * Lantiq XRX200 PHY Firmware Loader
-- * Author: John Crispin
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under the terms of the GNU General Public License version 2 as published
-- *  by the Free Software Foundation.
-- *
-- *  Copyright (C) 2012 John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-- */
--
--#include <linux/delay.h>
--#include <linux/dma-mapping.h>
--#include <linux/firmware.h>
--#include <linux/of_platform.h>
--
--#include <lantiq_soc.h>
--
--#define XRX200_GPHY_FW_ALIGN	(16 * 1024)
--
--static dma_addr_t xway_gphy_load(struct platform_device *pdev)
--{
--	const struct firmware *fw;
--	dma_addr_t dev_addr = 0;
--	const char *fw_name;
--	void *fw_addr;
--	size_t size;
--
--	if (of_get_property(pdev->dev.of_node, "firmware1", NULL) ||
--		of_get_property(pdev->dev.of_node, "firmware2", NULL)) {
--		switch (ltq_soc_type()) {
--		case SOC_TYPE_VR9:
--			if (of_property_read_string(pdev->dev.of_node,
--						    "firmware1", &fw_name)) {
--				dev_err(&pdev->dev,
--					"failed to load firmware filename\n");
--				return 0;
--			}
--			break;
--		case SOC_TYPE_VR9_2:
--			if (of_property_read_string(pdev->dev.of_node,
--						    "firmware2", &fw_name)) {
--				dev_err(&pdev->dev,
--					"failed to load firmware filename\n");
--				return 0;
--			}
--			break;
--		}
--	} else if (of_property_read_string(pdev->dev.of_node,
--					 "firmware", &fw_name)) {
--		dev_err(&pdev->dev, "failed to load firmware filename\n");
--		return 0;
--	}
--
--	dev_info(&pdev->dev, "requesting %s\n", fw_name);
--	if (request_firmware(&fw, fw_name, &pdev->dev)) {
--		dev_err(&pdev->dev, "failed to load firmware: %s\n", fw_name);
--		return 0;
--	}
--
--	/*
--	 * GPHY cores need the firmware code in a persistent and contiguous
--	 * memory area with a 16 kB boundary aligned start address
--	 */
--	size = fw->size + XRX200_GPHY_FW_ALIGN;
--
--	fw_addr = dma_alloc_coherent(&pdev->dev, size, &dev_addr, GFP_KERNEL);
--	if (fw_addr) {
--		fw_addr = PTR_ALIGN(fw_addr, XRX200_GPHY_FW_ALIGN);
--		dev_addr = ALIGN(dev_addr, XRX200_GPHY_FW_ALIGN);
--		memcpy(fw_addr, fw->data, fw->size);
--	} else {
--		dev_err(&pdev->dev, "failed to alloc firmware memory\n");
--	}
--
--	release_firmware(fw);
--	return dev_addr;
--}
--
--static int xway_phy_fw_probe(struct platform_device *pdev)
--{
--	dma_addr_t fw_addr;
--	struct property *pp;
--	unsigned char *phyids;
--	int i, ret = 0;
--
--	fw_addr = xway_gphy_load(pdev);
--	if (!fw_addr)
--		return -EINVAL;
--	pp = of_find_property(pdev->dev.of_node, "phys", NULL);
--	if (!pp)
--		return -ENOENT;
--	phyids = pp->value;
--	for (i = 0; i < pp->length && !ret; i++)
--		ret = xrx200_gphy_boot(&pdev->dev, phyids[i], fw_addr);
--	if (!ret)
--		mdelay(100);
--	return ret;
--}
--
--static const struct of_device_id xway_phy_match[] = {
--	{ .compatible = "lantiq,phy-xrx200" },
--	{},
--};
--
--static struct platform_driver xway_phy_driver = {
--	.probe = xway_phy_fw_probe,
--	.driver = {
--		.name = "phy-xrx200",
--		.of_match_table = xway_phy_match,
--	},
--};
--builtin_platform_driver(xway_phy_driver);
--- 
-2.11.0
+I would like a MAINTAINERS update, too.  If you send me that, I'll
+squash it into the driver patch.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Catalin, Will, how do you want to handle the
+arch/arm64/configs/defconfig change (patch 3)?  It's currently on my
+branch, but I'm happy to drop it if another route is better.
+
+On Mon, Jun 19, 2017 at 06:23:46PM +0800, Xiaowei Song wrote:
+> Before Version Patches
+> ======================
+> patch v9
+> http://www.spinics.net/lists/linux-pci/msg61821.html
+> patch V8
+> http://www.spinics.net/lists/linux-pci/msg61715.html
+> patch V7
+> https://www.spinics.net/lists/linux-pci/msg61664.html
+> patch V6
+> https://www.spinics.net/lists/linux-pci/msg61610.html
+> 
+> patch V4
+> https://www.spinics.net/lists/linux-pci/msg61406.html
+> 
+> patch V3
+> https://www.spinics.net/lists/linux-pci/msg61399.html
+> 
+> Changes between V11 and V9
+> ========================
+> 1. Fix the indent issues according to the review comments from Bjorn:
+>    (1) The value of reg is right-aligned in both dtsi file and Documentation file.
+>    (2) Re-indent the space of macro defination pointed out by Bjorn.
+>    (3) Adjust the space in 'struct kirin_pcie' defination.
+>    (4) Use dev replace of pdev->dev in function  kirin_pcie_get_clk and kirin_pcie_get_resource.
+>    (5) Aligned params with '(' in function kirin_apb_ctrl_writel and several others.
+> 2. Fix the issues that compitable value in Documentation was different with .dtsi file.
+> 3. For dependance during compiling, the dtsi patch is deleted, and it was merged in patch[1].
+> 4. The indent style issues will be pull with MSI-patch in the next weeks;
+> 
+> patch[1]: https://www.spinics.net/lists/arm-kernel/msg588944.html
+> 
+> =========================
+> Changes between V8 and V7
+> =========================
+> 1. Fix the indent issues in Documentation, dtsi file and macro defination.
+> 2. Replace pdev->dev with dev in kirin_pcie_get_resource and 
+>    kirin_pcie_get_clk functions.
+> 3. Put variables "pci" and "kirin_pcie" to be initialized at first
+>    in kirin_pcie_wr_own_config, kirin_pcie_read_dbi and other functions.
+> 4. Add space before blankets in "Low power mode(L1 ".
+> 5. Short the Makefile sentence to lower than 80 characters
+>    and delete reduntant words.
+> 6. Use word 'located' instead of the wrong one 'lacated'.
+> 7. Fix the problem of return value type.
+> 
+> Changes between V8 and V7
+> =========================
+> 1. Replace 'reset-gpios' of 'reset-gpio' in Documentation.
+> 
+> Changes between V7 and V6
+> =========================
+> 1. add enumeration log Based on Hikey960 Board with these patches.
+> 2. fix issues as fellows:
+>    (1) delete reduntant blankets in macro defination,
+>    (2) add blank line in  kirin_pcie_clk_ctrl function.
+>    (3) Fix compitable property in DT with the SoC name,
+>        for example "hisilicon,kirin960-pcie".
+> 
+> Changes between V6 and V4
+> =========================
+> 1. seperate Document from .dtsi patch.
+> 2. fix issues according to review comments
+>    from Bjorn Helgaas and Rob Herring: annotation stype, DT node,
+>    patch post method and so on.
+> 
+> Enumeration log
+> ===============
+> These test logs come from patches running on Hikey960 Board
+> (1) Connect with Atheros Communications WIFI
+> 	OF: PCI: host bridge /soc/kirin_pcie_rc@f4000000 ranges:
+> 	OF: PCI:   MEM 0xf6000000..0xf7ffffff -> 0x00000000
+> 	kirin-pcie f4000000.kirin_pcie_rc: PCI host bridge to bus 0000:00
+> 	pci_bus 0000:00: root bus resource [bus 00-01]
+> 	pci_bus 0000:00: root bus resource [mem 0xf6000000-0xf7ffffff] (bus address [0x00000000-0x01ffffff])
+> 	pci 0000:00:00.0: [19e5:3660] type 01 class 0x060400
+> 	pci 0000:00:00.0: reg 0x10: [mem 0xf6000000-0xf6ffffff]
+> 	pci 0000:00:00.0: supports D1 D2
+> 	pci 0000:00:00.0: PME# supported from D0 D1 D2 D3hot
+> 	pci 0000:01:00.0: [168c:002a] type 00 class 0x028000
+> 	pci 0000:01:00.0: reg 0x10: [mem 0xf6000000-0xf600ffff 64bit]
+> 	pci 0000:01:00.0: supports D1
+> 	pci 0000:01:00.0: PME# supported from D0 D1 D3hot
+> 	pci 0000:01:00.0: disabling ASPM on pre-1.1 PCIe device.  You can enable it with 'pcie_aspm=force'
+> 	pci 0000:00:00.0: BAR 0: assigned [mem 0xf6000000-0xf6ffffff]
+> 	pci 0000:00:00.0: BAR 14: assigned [mem 0xf7000000-0xf70fffff]
+> 	pci 0000:01:00.0: BAR 0: assigned [mem 0xf7000000-0xf700ffff 64bit]
+> 	pci 0000:00:00.0: PCI bridge to [bus 01]
+> 	pci 0000:00:00.0:   bridge window [mem 0xf7000000-0xf70fffff]
+> 	pcieport 0000:00:00.0: Signaling PME with IRQ 276
+> 	pcieport 0000:00:00.0: AER enabled with IRQ 276	 
+> 
+> 
+> Xiaowei Song (3):
+>   PCI: hisi: Add DT binding for PCIe of Kirin SoC series
+>   PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
+>   ARM4: defconfig: Enable  Kirin PCIe
+> 
+>  .../devicetree/bindings/pci/kirin-pcie.txt         |  55 +++
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/pci/dwc/Kconfig                            |  10 +
+>  drivers/pci/dwc/Makefile                           |   1 +
+>  drivers/pci/dwc/pcie-kirin.c                       | 518 +++++++++++++++++++++
+>  5 files changed, 585 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+>  create mode 100644 drivers/pci/dwc/pcie-kirin.c
+> 
+> -- 
+> 2.11.GIT
+> 
