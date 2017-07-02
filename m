@@ -1,68 +1,117 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 6/6] net: stmmac: revert "support future
- possible different internal phy mode"
-Date: Sun,  2 Jul 2017 14:31:59 +0200
-Message-ID: <20170702123159.6939-7-clabbe.montjoie@gmail.com>
-References: <20170702123159.6939-1-clabbe.montjoie@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBRGQ4PFAKGQEG5AJN3Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170702123159.6939-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2.1 1/2] dt-bindings: display: rcar-du: Add a VSP channel index to the vsps DT property
+Date: Sun,  2 Jul 2017 16:40:01 +0300
+Message-ID: <20170702134001.4752-1-laurent.pinchart+renesas@ideasonboard.com>
+References: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Since internal phy-mode is reserved for non-xMII protocol we cannot use
-it with dwmac-sun8i
-This reverts commit 1c2fa5f84683 ("net: stmmac: support future possible different internal phy mode")
+On some R-Car SoCs a single VSP can serve multiple DU channels through
+multiple LIF instances in the VSP. The current DT bindings don't support
+specifying that kind of SoC integration scheme. Extend them with a VSP
+channel index.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Backward compatibility can be ensured in drivers by checking the length
+of the vsps property and setting the channel to 0 when the property
+doesn't contain channel indices.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/display/renesas,du.txt     | 51 +++++++++++++---------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-index 6c2d1da05588..fffd6d5fc907 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-@@ -638,7 +638,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- {
- 	struct sunxi_priv_data *gmac = priv->plat->bsp_priv;
- 	struct device_node *node = priv->device->of_node;
--	int ret, phy_interface;
-+	int ret;
- 	u32 reg, val;
+Changes since v2:
+
+- Used proper prefix for subject line
+- Fixed type in vsps property description
+- Increase visibility in the vsps example
+
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index c6cb96a4fa93..4bbd1e9bf3be 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -36,8 +36,10 @@ Required Properties:
+       When supplied they must be named "dclkin.x" with "x" being the input
+       clock numerical index.
  
- 	regmap_read(gmac->regmap, SYSCON_EMAC_REG, &val);
-@@ -718,11 +718,7 @@ static int sun8i_dwmac_set_syscon(struct stmmac_priv *priv)
- 	if (gmac->variant->support_rmii)
- 		reg &= ~SYSCON_RMII_EN;
+-  - vsps: A list of phandles to the VSP nodes that handle the memory
+-    interfaces for the DU channels.
++  - vsps: A list of phandle and channel index tuples to the VSPs that handle
++    the memory interfaces for the DU channels. The phandle identifies the VSP
++    instance that serves the DU channel, and the channel index identifies the
++    LIF instance in that VSP.
  
--	phy_interface = priv->plat->interface;
--	/* if PHY is internal, select the mode (xMII) used by the SoC */
--	if (gmac->use_internal_phy)
--		phy_interface = gmac->variant->internal_phy;
--	switch (phy_interface) {
-+	switch (priv->plat->interface) {
- 	case PHY_INTERFACE_MODE_MII:
- 		/* default */
- 		break;
-@@ -936,7 +932,7 @@ static int sun8i_dwmac_probe(struct platform_device *pdev)
- 	}
+ Required nodes:
  
- 	plat_dat->interface = of_get_phy_mode(dev->of_node);
--	if (plat_dat->interface == PHY_INTERFACE_MODE_INTERNAL) {
-+	if (plat_dat->interface == gmac->variant->internal_phy) {
- 		dev_info(&pdev->dev, "Will use internal PHY\n");
- 		gmac->use_internal_phy = true;
- 		gmac->ephy_clk = of_clk_get(plat_dat->phy_node, 0);
+@@ -59,24 +61,24 @@ corresponding to each DU output.
+  R8A7796 (M3-W)	DPAD		HDMI		LVDS		-
+ 
+ 
+-Example: R8A7790 (R-Car H2) DU
++Example: R8A7795 (R-Car H3) ES2.0 DU
+ 
+-	du: du@feb00000 {
+-		compatible = "renesas,du-r8a7790";
+-		reg = <0 0xfeb00000 0 0x70000>,
+-		      <0 0xfeb90000 0 0x1c>,
+-		      <0 0xfeb94000 0 0x1c>;
+-		reg-names = "du", "lvds.0", "lvds.1";
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 268 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 269 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp7_clks R8A7790_CLK_DU0>,
+-		         <&mstp7_clks R8A7790_CLK_DU1>,
+-		         <&mstp7_clks R8A7790_CLK_DU2>,
+-		         <&mstp7_clks R8A7790_CLK_LVDS0>,
+-		         <&mstp7_clks R8A7790_CLK_LVDS1>;
+-		clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
++	du: display@feb00000 {
++		compatible = "renesas,du-r8a7795";
++		reg = <0 0xfeb00000 0 0x80000>,
++		      <0 0xfeb90000 0 0x14>;
++		reg-names = "du", "lvds.0";
++		interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 724>,
++			 <&cpg CPG_MOD 723>,
++			 <&cpg CPG_MOD 722>,
++			 <&cpg CPG_MOD 721>,
++			 <&cpg CPG_MOD 727>;
++		clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
++		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -89,12 +91,19 @@ Example: R8A7790 (R-Car H2) DU
+ 			};
+ 			port@1 {
+ 				reg = <1>;
+-				du_out_lvds0: endpoint {
++				du_out_hdmi0: endpoint {
++					remote-endpoint = <&dw_hdmi0_in>;
+ 				};
+ 			};
+ 			port@2 {
+ 				reg = <2>;
+-				du_out_lvds1: endpoint {
++				du_out_hdmi1: endpoint {
++					remote-endpoint = <&dw_hdmi1_in>;
++				};
++			};
++			port@3 {
++				reg = <3>;
++				du_out_lvds0: endpoint {
+ 				};
+ 			};
+ 		};
 -- 
-2.13.0
+Regards,
+
+Laurent Pinchart
