@@ -1,269 +1,268 @@
-From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 1/8] mailbox: introduce ARM SMC based mailbox
-Date: Sun, 2 Jul 2017 11:25:50 +0530
-Message-ID: <CABb+yY18Aye3wr2A9-+jemqc=VSRyUA+xzKGo9s0G4KCt1ovyA@mail.gmail.com>
-References: <20170630095608.24943-1-andre.przywara@arm.com>
- <20170630095608.24943-2-andre.przywara@arm.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 05/21] net-next: stmmac: Add dwmac-sun8i
+Date: Sun, 2 Jul 2017 10:36:10 +0200
+Message-ID: <20170702083610.GA14450@Red>
+References: <530f7b3e-247d-2e4d-8174-ce6195bacf5b@arm.com>
+ <20170627094111.supxmzf2k3n3ewec@flea.lan>
+ <44afb371-44d4-dbb5-0aac-4bbc55269344@arm.com>
+ <700A8221-3CEC-4657-900D-183398D25AE7@aosc.io>
+ <858b5361-fde5-8ab4-b9ba-aeb7859b9a7d@arm.com>
+ <20170627123748.GA8403@Red>
+ <20170627172937.qrbcie347wlbo3z3@flea>
+ <42c51c03-2247-2d75-8534-51a96a92875c@gmail.com>
+ <20170701065358.GC23363@Red>
+ <e5d4eb94-65b7-5cf6-2e50-41a6b3323ae2@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170630095608.24943-2-andre.przywara@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Sudeep Holla <sudeep.holla@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBA7B4LFAKGQEMOXARIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <e5d4eb94-65b7-5cf6-2e50-41a6b3323ae2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 3:26 PM, Andre Przywara <andre.przywara@arm.com> wrote:
-> This mailbox driver implements a mailbox which signals transmitted data
-> via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> is implemented in firmware and can synchronously return data when it
-> returns execution to the non-secure world again.
-> An asynchronous receive path is not implemented.
-> This allows the usage of a mailbox to trigger firmware actions on SoCs
-> which either don't have a separate management processor or on which such
-> a core is not available. A user of this mailbox could be the SCP
-> interface.
->
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/mailbox/Kconfig           |   8 ++
->  drivers/mailbox/Makefile          |   2 +
->  drivers/mailbox/arm-smc-mailbox.c | 172 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 182 insertions(+)
->  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
->
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index c5731e5..5664b7f 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -170,4 +170,12 @@ config BCM_FLEXRM_MBOX
->           Mailbox implementation of the Broadcom FlexRM ring manager,
->           which provides access to various offload engines on Broadcom
->           SoCs. Say Y here if you want to use the Broadcom FlexRM.
-> +
-> +config ARM_SMC_MBOX
-> +       tristate "Generic ARM smc mailbox"
-> +       depends on OF && HAVE_ARM_SMCCC
-> +       help
-> +         Generic mailbox driver which uses ARM smc calls to call into
-> +         firmware for triggering mailboxes.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index d54e412..8ec6869 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -35,3 +35,5 @@ obj-$(CONFIG_BCM_FLEXRM_MBOX) += bcm-flexrm-mailbox.o
->  obj-$(CONFIG_QCOM_APCS_IPC)    += qcom-apcs-ipc-mailbox.o
->
->  obj-$(CONFIG_TEGRA_HSP_MBOX)   += tegra-hsp.o
-> +
-> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
-> diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-mailbox.c
-> new file mode 100644
-> index 0000000..578aed2
-> --- /dev/null
-> +++ b/drivers/mailbox/arm-smc-mailbox.c
-> @@ -0,0 +1,172 @@
-> +/*
-> + *  Copyright (C) 2016,2017 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This device provides a mechanism for emulating a mailbox by using
-> + * smc calls, allowing a "mailbox" consumer to sit in firmware running
-> + * on the same core.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/arm-smccc.h>
-> +
-Please have relook at what headers are really needed.
+On Sat, Jul 01, 2017 at 02:42:14PM -0700, Florian Fainelli wrote:
+> On 30/06/2017 23:53, Corentin Labbe wrote:
+> > On Tue, Jun 27, 2017 at 10:37:34AM -0700, Florian Fainelli wrote:
+> >> On 06/27/2017 10:29 AM, Maxime Ripard wrote:
+> >>> On Tue, Jun 27, 2017 at 02:37:48PM +0200, Corentin Labbe wrote:
+> >>>> On Tue, Jun 27, 2017 at 11:33:56AM +0100, Andre Przywara wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> On 27/06/17 11:23, Icenowy Zheng wrote:
+> >>>>>>
+> >>>>>>
+> >>>>>> =E4=BA=8E 2017=E5=B9=B46=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=
+=E5=8D=886:15:58, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=
+=B0:
+> >>>>>>> Hi,
+> >>>>>>>
+> >>>>>>> On 27/06/17 10:41, Maxime Ripard wrote:
+> >>>>>>>> On Tue, Jun 27, 2017 at 10:02:45AM +0100, Andre Przywara wrote:
+> >>>>>>>>> Hi,
+> >>>>>>>>>
+> >>>>>>>>> (CC:ing some people from that Rockchip dmwac series)
+> >>>>>>>>>
+> >>>>>>>>> On 27/06/17 09:21, Corentin Labbe wrote:
+> >>>>>>>>>> On Tue, Jun 27, 2017 at 04:11:21PM +0800, Chen-Yu Tsai wrote:
+> >>>>>>>>>>> On Tue, Jun 27, 2017 at 4:05 PM, Corentin Labbe
+> >>>>>>>>>>> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>>>>>>>>>>> On Mon, Jun 26, 2017 at 01:18:23AM +0100, Andr=C3=A9 Przywar=
+a wrote:
+> >>>>>>>>>>>>> On 31/05/17 08:18, Corentin Labbe wrote:
+> >>>>>>>>>>>>>> The dwmac-sun8i is a heavy hacked version of stmmac hardwa=
+re by
+> >>>>>>>>>>>>>> allwinner.
+> >>>>>>>>>>>>>> In fact the only common part is the descriptor management =
+and
+> >>>>>>> the first
+> >>>>>>>>>>>>>> register function.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Hi,
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> I know I am a bit late with this, but while adapting the U-=
+Boot
+> >>>>>>> driver
+> >>>>>>>>>>>>> to the new binding I was wondering about the internal PHY
+> >>>>>>> detection:
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> So here you seem to deduce the usage of the internal PHY by=
+ the
+> >>>>>>> PHY
+> >>>>>>>>>>>>> interface specified in the DT (MII =3D internal, RGMII =3D
+> >>>>>>> external).
+> >>>>>>>>>>>>> I think I raised this question before, but isn't it perfect=
+ly
+> >>>>>>> legal for
+> >>>>>>>>>>>>> a board to use MII with an external PHY even on those SoCs =
+that
+> >>>>>>> feature
+> >>>>>>>>>>>>> an internal PHY?
+> >>>>>>>>>>>>> On the first glance that does not make too much sense, but =
+apart
+> >>>>>>> from
+> >>>>>>>>>>>>> not being the correct binding to describe all of the SoCs
+> >>>>>>> features I see
+> >>>>>>>>>>>>> two scenarios:
+> >>>>>>>>>>>>> 1) A board vendor might choose to not use the internal PHY
+> >>>>>>> because it
+> >>>>>>>>>>>>> has bugs, lacks features (configurability) or has other iss=
+ues.
+> >>>>>>> For
+> >>>>>>>>>>>>> instance I have heard reports that the internal PHY makes t=
+he
+> >>>>>>> SoC go
+> >>>>>>>>>>>>> rather hot, possibly limiting the CPU frequency. By using a=
+n
+> >>>>>>> external
+> >>>>>>>>>>>>> MII PHY (which are still cheaper than RGMII PHYs) this can =
+be
+> >>>>>>> avoided.
+> >>>>>>>>>>>>> 2) A PHY does not necessarily need to be directly connected=
+ to
+> >>>>>>>>>>>>> magnetics. Indeed quite some boards use (RG)MII to connect =
+to a
+> >>>>>>> switch
+> >>>>>>>>>>>>> IC or some other network circuitry, for instance fibre
+> >>>>>>> connectors.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> So I was wondering if we would need an explicit:
+> >>>>>>>>>>>>>       allwinner,use-internal-phy;
+> >>>>>>>>>>>>> boolean DT property to signal the usage of the internal PHY=
+?
+> >>>>>>>>>>>>> Alternatively we could go with the negative version:
+> >>>>>>>>>>>>>       allwinner,disable-internal-phy;
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Or what about introducing a new "allwinner,internal-mii-phy=
+"
+> >>>>>>> compatible
+> >>>>>>>>>>>>> string for the *PHY* node and use that?
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> I just want to avoid that we introduce a binding that cause=
+s us
+> >>>>>>>>>>>>> headaches later. I think we can still fix this with a follo=
+wup
+> >>>>>>> patch
+> >>>>>>>>>>>>> before the driver and its binding hit a release kernel.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>> Cheers,
+> >>>>>>>>>>>>> Andre.
+> >>>>>>>>>>>>>
+> >>>>>>>>>>>>
+> >>>>>>>>>>>> I just see some patch, where "phy-mode =3D internal" is vali=
+d.
+> >>>>>>>>>>>> I will try to find a way to use it
+> >>>>>>>>>>>
+> >>>>>>>>>>> Can you provide a link?
+> >>>>>>>>>>
+> >>>>>>>>>> https://lkml.org/lkml/2017/6/23/479
+> >>>>>>>>>>
+> >>>>>>>>>>>
+> >>>>>>>>>>> I'm not a fan of using phy-mode for this. There's no guarante=
+e
+> >>>>>>> what
+> >>>>>>>>>>> mode the internal PHY uses. That's what phy-mode is for.
+> >>>>>>>>>
+> >>>>>>>>> I can understand Chen-Yu's concerns, but ...
+> >>>>>>>>>
+> >>>>>>>>>> For each soc the internal PHY mode is know and setted in
+> >>>>>>> emac_variant/internal_phy
+> >>>>>>>>>> So its not a problem.
+> >>>>>>>>>
+> >>>>>>>>> that is true as well, at least for now.
+> >>>>>>>>>
+> >>>>>>>>> So while I agree that having a separate property to indicate
+> >>>>>>>>> the usage of the internal PHY would be nice, I am bit tempted
+> >>>>>>>>> to use this easier approach and piggy back on the existing
+> >>>>>>>>> phy-mode property.
+> >>>>>>>>
+> >>>>>>>> We're trying to fix an issue that works for now too.
+> >>>>>>>>
+> >>>>>>>> If we want to consider future weird cases, then we must
+> >>>>>>>> consider all of them. And the phy mode changing is definitely
+> >>>>>>>> not really far fetched.
+> >>>>>>>>
+> >>>>>>>> I agree with Chen-Yu, and I really feel like the compatible
+> >>>>>>>> solution you suggested would cover both your concerns, and
+> >>>>>>>> ours.
+> >>>>>>>
+> >>>>>>> So something like this?
+> >>>>>>> 	emac: emac@1c30000 {
+> >>>>>>> 	    compatible =3D "allwinner,sun8i-h3-emac";
+> >>>>>>> 	    ...
+> >>>>>>> 	    phy-mode =3D "mii";
+> >>>>>>> 	    phy-handle =3D <&int_mii_phy>;
+> >>>>>>> 	    ...
+> >>>>>>>
+> >>>>>>> 	    mdio: mdio {
+> >>>>>>>                #address-cells =3D <1>;
+> >>>>>>>                #size-cells =3D <0>;
+> >>>>>>>                int_mii_phy: ethernet-phy@1 {
+> >>>>>>>                    compatible =3D "allwinner,sun8i-h3-ephy";
+> >>>>>>>                    syscon =3D <&syscon>;
+> >>>>>>
+> >>>>>> The MAC still needs to set some bits of syscon register.
+> >>>>>
+> >>>>> Yes, the syscon property needs also to be in the MAC node, that
+> >>>>> was meant to be somewhere in the second "..." ;-)
+> >>>>>
+> >>>>> But now since Chen-Yu mentioned that we need to set up the PHY *fir=
+st*
+> >>>>> to make it actually discoverable via MDIO, I wonder if we could cha=
+nge
+> >>>>> this to:
+> >>>>> 1) have the DT as described here
+> >>>>> 2) Let the dwmac-sun8i driver peek into the node referenced by
+> >>>>> phy-handle and check the compatible string there.
+> >>>>> 3) If that matches some allwinner internal PHY name, it sets up the=
+ PHY
+> >>>>> to make it respond when the MDIO driver queries its bus.
+> >>>>>
+> >>>>> Or can a PHY driver set itself up (since we have clocks and resets
+> >>>>> properties in there) *before* the MDIO bus gets scanned?
+> >>>>> Chen-Yu's comment in the other mail hints at that this is not easil=
+y
+> >>>>> possible.
+> >>>>
+> >>>> I think adding phy compatible just make things more complex.
+> >>>>
+> >>>> I think the patch series I sent early fix all problems without more
+> >>>> complexity since:
+> >>>>
+> >>>> - it does not add more DT stuff
+> >>>> - it use an already used in tree DT phy-mode "internal" (and so phy
+> >>>>   mode PHY_INTERFACE_MODE_INTERNAL)
+> >>>
+> >>>   - it doesn't cover all the concerns we ha>   - it uses an undocumen=
+ted value, with an unclear implication
+> >>
+> >> No it's no longer undocumented since [1]
+> >>
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/com=
+mit/?id=3D29b65f5f97632722bb80969377e5b0e2401fb392
+> >>
+> >> Due to the timezone difference, you guys have already managed to have
+> >> several exchanges, hopefully I will have a chance to review your
+> >> discussions a little later today.
+> >=20
+> > Hello
+> >=20
+> > I wait for your comment before sending my reverts patch for http://www.=
+mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1431579.html
+> > Could you confirm that internal is only meant for "non xMII internal pr=
+otocol"
+>=20
+> Yes that's what is it meant for. There are possibly two ways here:
+>=20
+> 1) assuming there is already a specific PHY driver for that internal
+> PHY, you should have this PHY driver set PHY_IS_INTERNAL (see bcm63xx.c
+> and bcm7xxx.c that do that) and so you would know that you did bind to
+> the correct internal PHY driver. Problem with that is if you need to
+> perform a particular action such that you will successfully bind to the
+> internal PHY (e.g: power on, reset, etc.)
+>=20
+> 2) We could create a new set of phy-mode values that are, e.g:
+>=20
+> 'internal-mii': internal MII connection to the PHY
+>=20
+> and so on in order to cover the internal variants of those modes. I am
+> not sure this is strictly needed here though.
 
-> +#define ARM_SMC_MBOX_SMC               (0 << 0)
-> +#define ARM_SMC_MBOX_HVC               (1 << 0)
-> +#define ARM_SMC_MBOX_METHOD_MASK       (1 << 0)
-> +
-Maybe have only
-   #define ARM_SMC_MBOX_HVC    BIT(0)
+Or perhaps a phy-location =3D "external|internal" ?
 
-> +struct arm_smc_chan_data {
-> +       u32 function_id;
-> +       u32 flags;
-> +};
-> +
-> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
-> +{
-> +       struct arm_smc_chan_data *chan_data = link->con_priv;
-> +       u32 function_id = chan_data->function_id;
-> +       struct arm_smccc_res res;
-> +       u32 msg = *(u32 *)data;
-> +
-> +       if ((chan_data->flags & ARM_SMC_MBOX_METHOD_MASK) == ARM_SMC_MBOX_SMC)
-> +               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-> +       else
-> +               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-> +
-       if (chan_data->flags & ARM_SMC_MBOX_HVC)
-               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-       else
-               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-
-is simpler.
-
-> +       mbox_chan_received_data(link, (void *)res.a0);
-> +
-Or you can update the 'data' with value from 'a0' ?
-
-> +       return 0;
-> +}
-> +
-> +static int arm_smc_startup(struct mbox_chan *link)
-> +{
-> +       return 0;
-> +}
-> +
-> +static void arm_smc_shutdown(struct mbox_chan *link)
-> +{
-> +}
-> +
-startup and shutdown can be omitted now.
-
-> +/* This mailbox is synchronous, so we are always done. */
-> +static bool arm_smc_last_tx_done(struct mbox_chan *link)
-> +{
-> +       return true;
-> +}
-> +
-> +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
-> +       .send_data      = arm_smc_send_data,
-> +       .startup        = arm_smc_startup,
-> +       .shutdown       = arm_smc_shutdown,
-> +       .last_tx_done   = arm_smc_last_tx_done
-> +};
-> +
-> +static int arm_smc_mbox_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct mbox_controller *mbox;
-> +       struct arm_smc_chan_data *chan_data;
-> +       const char *method;
-> +       bool use_hvc = false;
-> +       int ret = 0, i;
-> +
-No need to initialise 'ret'
-
-> +       ret = of_property_count_elems_of_size(dev->of_node, "arm,smc-func-ids",
-> +                                             sizeof(u32));
-> +       if (ret < 0)
-> +               return ret;
-> +
-> +       if (!of_property_read_string(dev->of_node, "method", &method)) {
-> +               if (!strcmp("hvc", method)) {
-> +                       use_hvc = true;
-> +               } else if (!strcmp("smc", method)) {
-> +                       use_hvc = false;
-> +               } else {
-> +                       dev_warn(dev, "invalid \"method\" property: %s\n",
-> +                                method);
-> +
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> +       if (!mbox)
-> +               return -ENOMEM;
-> +
-> +       mbox->num_chans = ret;
-> +       mbox->chans = devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
-> +                                  GFP_KERNEL);
-> +       if (!mbox->chans)
-> +               return -ENOMEM;
-> +
-> +       chan_data = devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
-> +                                GFP_KERNEL);
-> +       if (!chan_data)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < mbox->num_chans; i++) {
-> +               u32 function_id;
-> +
-> +               ret = of_property_read_u32_index(dev->of_node,
-> +                                                "arm,smc-func-ids", i,
-> +                                                &function_id);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               chan_data[i].function_id = function_id;
-> +               if (use_hvc)
-> +                       chan_data[i].flags |= ARM_SMC_MBOX_HVC;
-> +               mbox->chans[i].con_priv = &chan_data[i];
-> +       }
-> +
-> +       mbox->txdone_poll = true;
-> +       mbox->txdone_irq = false;
-> +       mbox->txpoll_period = 1;
-> +       mbox->ops = &arm_smc_mbox_chan_ops;
-> +       mbox->dev = dev;
-> +
-> +       ret = mbox_controller_register(mbox);
-> +       if (ret)
-> +               return ret;
-> +
-> +       platform_set_drvdata(pdev, mbox);
-> +       dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
-> +                mbox->num_chans, mbox->num_chans == 1 ? "" : "s");
-> +
-> +       return ret;
-> +}
-> +
-> +static int arm_smc_mbox_remove(struct platform_device *pdev)
-> +{
-> +       struct mbox_controller *mbox = platform_get_drvdata(pdev);
-> +
-> +       mbox_controller_unregister(mbox);
-> +       return 0;
-> +}
-> +
-> +static const struct of_device_id arm_smc_mbox_of_match[] = {
-> +       { .compatible = "arm,smc-mbox", },
-> +       {},
-> +};
-> +MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
-> +
-> +static struct platform_driver arm_smc_mbox_driver = {
-> +       .driver = {
-> +               .name = "arm-smc-mbox",
-> +               .of_match_table = arm_smc_mbox_of_match,
-> +       },
-> +       .probe          = arm_smc_mbox_probe,
-> +       .remove         = arm_smc_mbox_remove,
-> +};
-> +module_platform_driver(arm_smc_mbox_driver);
-> +
-> +MODULE_AUTHOR("Andre Przywara <andre.przywara@arm.com>");
-> +MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.9.0
->
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
