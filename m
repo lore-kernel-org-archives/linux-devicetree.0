@@ -1,70 +1,71 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 08/18] serial: 8250_ingenic: Add support for the JZ4770 SoC
-Date: Sun,  2 Jul 2017 18:30:06 +0200
-Message-ID: <20170702163016.6714-9-paul@crapouillou.net>
+Subject: [PATCH v3 11/18] MIPS: ingenic: Use common cmdline handling code
+Date: Sun,  2 Jul 2017 18:30:09 +0200
+Message-ID: <20170702163016.6714-12-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170702163016.6714-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170702163016.6714-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The JZ4770 SoC's UART is no different from the other JZ SoCs, so this
-commit simply adds the ingenic,jz4770-uart compatible string.
+From: Paul Burton <paul.burton@imgtec.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Rob Herring <robh@kernel.org>
+jz4740_init_cmdline appends all arguments from argv (in fw_arg1) to
+arcs_cmdline, up to argc (in fw_arg0). The common code in
+fw_init_cmdline will do the exact same thing when run on a system where
+fw_arg0 isn't a pointer to kseg0 (it'll also set _fw_envp but we don't
+use it). Remove the custom implementation & use the generic code.
+
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
- Documentation/devicetree/bindings/serial/ingenic,uart.txt | 8 ++++++--
- drivers/tty/serial/8250/8250_ingenic.c                    | 5 +++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ arch/mips/jz4740/prom.c | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
- v2: List one compatible entry per line
+ v2: No change
  v3: No change
 
-diff --git a/Documentation/devicetree/bindings/serial/ingenic,uart.txt b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-index 02cb7fe59cb7..c3c6406d5cfe 100644
---- a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-+++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
-@@ -1,8 +1,12 @@
- * Ingenic SoC UART
+diff --git a/arch/mips/jz4740/prom.c b/arch/mips/jz4740/prom.c
+index 47e857194ce6..a62dd8e6ecf9 100644
+--- a/arch/mips/jz4740/prom.c
++++ b/arch/mips/jz4740/prom.c
+@@ -20,33 +20,13 @@
+ #include <linux/serial_reg.h>
  
- Required properties:
--- compatible : "ingenic,jz4740-uart", "ingenic,jz4760-uart",
--	"ingenic,jz4775-uart" or "ingenic,jz4780-uart"
-+- compatible : One of:
-+  - "ingenic,jz4740-uart",
-+  - "ingenic,jz4760-uart",
-+  - "ingenic,jz4770-uart",
-+  - "ingenic,jz4775-uart",
-+  - "ingenic,jz4780-uart".
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
- - clocks : phandles to the module & baud clocks.
-diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index 4d9dc10e265c..b31b2ca552d1 100644
---- a/drivers/tty/serial/8250/8250_ingenic.c
-+++ b/drivers/tty/serial/8250/8250_ingenic.c
-@@ -133,6 +133,10 @@ EARLYCON_DECLARE(jz4740_uart, ingenic_early_console_setup);
- OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
- 		    ingenic_early_console_setup);
+ #include <asm/bootinfo.h>
++#include <asm/fw/fw.h>
+ #include <asm/mach-jz4740/base.h>
  
-+EARLYCON_DECLARE(jz4770_uart, ingenic_early_console_setup);
-+OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
-+		    ingenic_early_console_setup);
-+
- EARLYCON_DECLARE(jz4775_uart, ingenic_early_console_setup);
- OF_EARLYCON_DECLARE(jz4775_uart, "ingenic,jz4775-uart",
- 		    ingenic_early_console_setup);
-@@ -327,6 +331,7 @@ static const struct ingenic_uart_config jz4780_uart_config = {
- static const struct of_device_id of_match[] = {
- 	{ .compatible = "ingenic,jz4740-uart", .data = &jz4740_uart_config },
- 	{ .compatible = "ingenic,jz4760-uart", .data = &jz4760_uart_config },
-+	{ .compatible = "ingenic,jz4770-uart", .data = &jz4760_uart_config },
- 	{ .compatible = "ingenic,jz4775-uart", .data = &jz4760_uart_config },
- 	{ .compatible = "ingenic,jz4780-uart", .data = &jz4780_uart_config },
- 	{ /* sentinel */ }
+-static __init void jz4740_init_cmdline(int argc, char *argv[])
+-{
+-	unsigned int count = COMMAND_LINE_SIZE - 1;
+-	int i;
+-	char *dst = &(arcs_cmdline[0]);
+-	char *src;
+-
+-	for (i = 1; i < argc && count; ++i) {
+-		src = argv[i];
+-		while (*src && count) {
+-			*dst++ = *src++;
+-			--count;
+-		}
+-		*dst++ = ' ';
+-	}
+-	if (i > 1)
+-		--dst;
+-
+-	*dst = 0;
+-}
+-
+ void __init prom_init(void)
+ {
+-	jz4740_init_cmdline((int)fw_arg0, (char **)fw_arg1);
+ 	mips_machtype = MACH_INGENIC_JZ4740;
++	fw_init_cmdline();
+ }
+ 
+ void __init prom_free_prom_memory(void)
 -- 
 2.11.0
