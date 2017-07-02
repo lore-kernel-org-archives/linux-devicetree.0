@@ -1,57 +1,148 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 15/18] MIPS: JZ4770: Work around config2 misreporting associativity
-Date: Sun,  2 Jul 2017 18:30:13 +0200
-Message-ID: <20170702163016.6714-16-paul@crapouillou.net>
+Subject: [PATCH v3 13/18] MIPS: ingenic: Add machine info for supported boards
+Date: Sun,  2 Jul 2017 18:30:11 +0200
+Message-ID: <20170702163016.6714-14-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170702163016.6714-1-paul@crapouillou.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170702163016.6714-1-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+This makes sure that 'mips_machtype' will be initialized to the SoC
+version used on the board.
 
-According to config2, the associativity would be 5-ways, but the
-documentation states 4-ways, which also matches the documented
-L2 cache size of 256 kB.
-
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/mm/sc-mips.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/mips/Kconfig         |  1 +
+ arch/mips/jz4740/Makefile |  2 +-
+ arch/mips/jz4740/boards.c | 16 ++++++++++++++++
+ arch/mips/jz4740/setup.c  | 34 +++++++++++++++++++++++++++++-----
+ 4 files changed, 47 insertions(+), 6 deletions(-)
+ create mode 100644 arch/mips/jz4740/boards.c
 
  v2: No change
  v3: No change
 
-diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
-index c909c3342729..67a3b4d88580 100644
---- a/arch/mips/mm/sc-mips.c
-+++ b/arch/mips/mm/sc-mips.c
-@@ -15,6 +15,7 @@
- #include <asm/mmu_context.h>
- #include <asm/r4kcache.h>
- #include <asm/mips-cm.h>
-+#include <asm/bootinfo.h>
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 2828ecde133d..f36ffb93efd9 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -370,6 +370,7 @@ config MACH_INGENIC
+ 	select BUILTIN_DTB
+ 	select USE_OF
+ 	select LIBFDT
++	select MIPS_MACHINE
  
- /*
-  * MIPS32/MIPS64 L2 cache handling
-@@ -228,6 +229,14 @@ static inline int __init mips_sc_probe(void)
- 	else
- 		return 0;
+ config LANTIQ
+ 	bool "Lantiq based platforms"
+diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+index 39d70bde8cfe..87feb246fafe 100644
+--- a/arch/mips/jz4740/Makefile
++++ b/arch/mips/jz4740/Makefile
+@@ -5,7 +5,7 @@
+ # Object file lists.
  
-+	/*
-+	 * According to config2 it would be 5-ways, but that is contradicted
-+	 * by all documentation.
-+	 */
-+	if (current_cpu_type() == CPU_JZRISC &&
-+				mips_machtype == MACH_INGENIC_JZ4770)
-+		c->scache.ways = 4;
+ obj-y += prom.o time.o reset.o setup.o \
+-	platform.o timer.o
++	platform.o timer.o boards.o
+ 
+ obj-$(CONFIG_MACH_JZ4740) += gpio.o
+ 
+diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
+new file mode 100644
+index 000000000000..a3cf64cf004a
+--- /dev/null
++++ b/arch/mips/jz4740/boards.c
+@@ -0,0 +1,16 @@
++/*
++ * Ingenic boards support
++ *
++ * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 or later
++ * as published by the Free Software Foundation.
++ */
 +
- 	c->scache.waysize = c->scache.sets * c->scache.linesz;
- 	c->scache.waybit = __ffs(c->scache.waysize);
++#include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
++
++MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
++MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
++			"Imagination Technologies CI20", NULL);
+diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
+index 6d0152321819..afd84ee966e8 100644
+--- a/arch/mips/jz4740/setup.c
++++ b/arch/mips/jz4740/setup.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_fdt.h>
  
+ #include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
+ #include <asm/prom.h>
+ 
+ #include <asm/mach-jz4740/base.h>
+@@ -53,16 +54,34 @@ static void __init jz4740_detect_mem(void)
+ 	add_memory_region(0, size, BOOT_MEM_RAM);
+ }
+ 
++static unsigned long __init get_board_mach_type(const void *fdt)
++{
++	const struct mips_machine *mach;
++
++	for (mach = (struct mips_machine *)&__mips_machines_start;
++			mach < (struct mips_machine *)&__mips_machines_end;
++			mach++) {
++		if (!fdt_node_check_compatible(fdt, 0, mach->mach_id))
++			return mach->mach_type;
++	}
++
++	return MACH_INGENIC_JZ4740;
++}
++
+ void __init plat_mem_setup(void)
+ {
+ 	int offset;
+ 
++	if (!early_init_dt_scan(__dtb_start))
++		return;
++
+ 	jz4740_reset_init();
+-	__dt_setup_arch(__dtb_start);
+ 
+ 	offset = fdt_path_offset(__dtb_start, "/memory");
+ 	if (offset < 0)
+ 		jz4740_detect_mem();
++
++	mips_machtype = get_board_mach_type(__dtb_start);
+ }
+ 
+ void __init device_tree_init(void)
+@@ -75,13 +94,18 @@ void __init device_tree_init(void)
+ 
+ const char *get_system_type(void)
+ {
+-	if (IS_ENABLED(CONFIG_MACH_JZ4780))
+-		return "JZ4780";
+-
+-	return "JZ4740";
++	return mips_get_machine_name();
+ }
+ 
+ void __init arch_init_irq(void)
+ {
+ 	irqchip_init();
+ }
++
++static int __init jz4740_machine_setup(void)
++{
++	mips_machine_setup();
++
++	return 0;
++}
++arch_initcall(jz4740_machine_setup);
 -- 
 2.11.0
-
