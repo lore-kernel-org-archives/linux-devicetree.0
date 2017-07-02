@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 01/18] clk: ingenic: Use const pointer to clk_ops in struct
-Date: Sun,  2 Jul 2017 18:29:59 +0200
-Message-ID: <20170702163016.6714-2-paul@crapouillou.net>
+Subject: [PATCH v3 08/18] serial: 8250_ingenic: Add support for the JZ4770 SoC
+Date: Sun,  2 Jul 2017 18:30:06 +0200
+Message-ID: <20170702163016.6714-9-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170702163016.6714-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -11,43 +11,60 @@ To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.c
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-The CGU common code does not modify the pointed clk_ops structure, so it
-should be marked as const.
+The JZ4770 SoC's UART is no different from the other JZ SoCs, so this
+commit simply adds the ingenic,jz4770-uart compatible string.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/ingenic/cgu.h        | 2 +-
- drivers/clk/ingenic/jz4780-cgu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/serial/ingenic,uart.txt | 8 ++++++--
+ drivers/tty/serial/8250/8250_ingenic.c                    | 5 +++++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
- v2: New patch in this series
+ v2: List one compatible entry per line
  v3: No change
 
-diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-index 09700b2c555d..da448b0cac18 100644
---- a/drivers/clk/ingenic/cgu.h
-+++ b/drivers/clk/ingenic/cgu.h
-@@ -120,7 +120,7 @@ struct ingenic_cgu_gate_info {
-  * @clk_ops: custom clock operation callbacks
-  */
- struct ingenic_cgu_custom_info {
--	struct clk_ops *clk_ops;
-+	const struct clk_ops *clk_ops;
- };
+diff --git a/Documentation/devicetree/bindings/serial/ingenic,uart.txt b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+index 02cb7fe59cb7..c3c6406d5cfe 100644
+--- a/Documentation/devicetree/bindings/serial/ingenic,uart.txt
++++ b/Documentation/devicetree/bindings/serial/ingenic,uart.txt
+@@ -1,8 +1,12 @@
+ * Ingenic SoC UART
  
- /**
-diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index b35d6d9dd5aa..a21698fb202c 100644
---- a/drivers/clk/ingenic/jz4780-cgu.c
-+++ b/drivers/clk/ingenic/jz4780-cgu.c
-@@ -203,7 +203,7 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
- 	return 0;
- }
+ Required properties:
+-- compatible : "ingenic,jz4740-uart", "ingenic,jz4760-uart",
+-	"ingenic,jz4775-uart" or "ingenic,jz4780-uart"
++- compatible : One of:
++  - "ingenic,jz4740-uart",
++  - "ingenic,jz4760-uart",
++  - "ingenic,jz4770-uart",
++  - "ingenic,jz4775-uart",
++  - "ingenic,jz4780-uart".
+ - reg : offset and length of the register set for the device.
+ - interrupts : should contain uart interrupt.
+ - clocks : phandles to the module & baud clocks.
+diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
+index 4d9dc10e265c..b31b2ca552d1 100644
+--- a/drivers/tty/serial/8250/8250_ingenic.c
++++ b/drivers/tty/serial/8250/8250_ingenic.c
+@@ -133,6 +133,10 @@ EARLYCON_DECLARE(jz4740_uart, ingenic_early_console_setup);
+ OF_EARLYCON_DECLARE(jz4740_uart, "ingenic,jz4740-uart",
+ 		    ingenic_early_console_setup);
  
--static struct clk_ops jz4780_otg_phy_ops = {
-+static const struct clk_ops jz4780_otg_phy_ops = {
- 	.get_parent = jz4780_otg_phy_get_parent,
- 	.set_parent = jz4780_otg_phy_set_parent,
- 
++EARLYCON_DECLARE(jz4770_uart, ingenic_early_console_setup);
++OF_EARLYCON_DECLARE(jz4770_uart, "ingenic,jz4770-uart",
++		    ingenic_early_console_setup);
++
+ EARLYCON_DECLARE(jz4775_uart, ingenic_early_console_setup);
+ OF_EARLYCON_DECLARE(jz4775_uart, "ingenic,jz4775-uart",
+ 		    ingenic_early_console_setup);
+@@ -327,6 +331,7 @@ static const struct ingenic_uart_config jz4780_uart_config = {
+ static const struct of_device_id of_match[] = {
+ 	{ .compatible = "ingenic,jz4740-uart", .data = &jz4740_uart_config },
+ 	{ .compatible = "ingenic,jz4760-uart", .data = &jz4760_uart_config },
++	{ .compatible = "ingenic,jz4770-uart", .data = &jz4760_uart_config },
+ 	{ .compatible = "ingenic,jz4775-uart", .data = &jz4760_uart_config },
+ 	{ .compatible = "ingenic,jz4780-uart", .data = &jz4780_uart_config },
+ 	{ /* sentinel */ }
 -- 
 2.11.0
