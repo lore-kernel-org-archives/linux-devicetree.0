@@ -1,83 +1,88 @@
 From: Sean Young <sean@mess.org>
-Subject: [PATCH 3/4] [media] rc: gpio-ir-tx: add new driver
-Date: Sun,  2 Jul 2017 12:06:11 +0100
-Message-ID: <616e336df6badc96ced14d14956ed7c080b39781.1498992850.git.sean@mess.org>
+Subject: [PATCH 4/4] [media] rc: pwm-ir-tx: add new driver
+Date: Sun,  2 Jul 2017 12:06:13 +0100
+Message-ID: <88fa0219db3388fad7bcc7b20cf30dd41e763aee.1498992850.git.sean@mess.org>
 References: <cover.1498992850.git.sean@mess.org>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <cover.1498992850.git.sean@mess.org>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Timo Kokkonen <timo.t.kokkonen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-This is a simple bit-banging GPIO IR TX driver.
+This is new driver which uses pwm, so it is more power-efficient
+than the bit banging gpio-ir-tx driver.
 
 Signed-off-by: Sean Young <sean@mess.org>
 ---
- .../devicetree/bindings/leds/irled/gpio-ir-tx.txt  |  11 ++
- drivers/media/rc/Kconfig                           |  11 ++
+ .../devicetree/bindings/leds/irled/pwm-ir-tx.txt   |  13 ++
+ drivers/media/rc/Kconfig                           |  12 ++
  drivers/media/rc/Makefile                          |   1 +
- drivers/media/rc/gpio-ir-tx.c                      | 189 +++++++++++++++++++++
- 4 files changed, 212 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
- create mode 100644 drivers/media/rc/gpio-ir-tx.c
+ drivers/media/rc/pwm-ir-tx.c                       | 165 +++++++++++++++++++++
+ 4 files changed, 191 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt
+ create mode 100644 drivers/media/rc/pwm-ir-tx.c
 
-diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+diff --git a/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt
 new file mode 100644
-index 0000000..bf4d4fb
+index 0000000..6887a71
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-@@ -0,0 +1,11 @@
-+Device tree bindings for IR LED connected through gpio pin which is used as
++++ b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt
+@@ -0,0 +1,13 @@
++Device tree bindings for IR LED connected through pwm pin which is used as
 +IR transmitter.
 +
 +Required properties:
-+	- compatible: should be "gpio-ir-tx".
++- compatible: should be "pwm-ir-tx".
++- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
++  specify the period time to be used: <&phandle id period_ns>;
 +
 +Example:
-+	irled@0 {
-+		compatible = "gpio-ir-tx";
-+		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++	irled {
++		compatible = "pwm-ir-tx";
++		pwms = <&pwm0 0 10000000>;
 +	};
 diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
-index 5e83b76..ad54011 100644
+index ad54011..c5338e3 100644
 --- a/drivers/media/rc/Kconfig
 +++ b/drivers/media/rc/Kconfig
-@@ -388,6 +388,17 @@ config IR_GPIO_CIR
+@@ -399,6 +399,18 @@ config IR_GPIO_TX
  	   To compile this driver as a module, choose M here: the module will
- 	   be called gpio-ir-recv.
+ 	   be called gpio-ir-tx.
  
-+config IR_GPIO_TX
-+	tristate "GPIO IR bit banging transmitter"
++config IR_PWM_TX
++	tristate "PWM IR transmitter"
 +	depends on RC_CORE
 +	depends on LIRC
++	depends on PWM
 +	---help---
-+	   Say Y if you want to a GPIO based IR transmitter. This is a
-+	   bit banging driver.
++	   Say Y if you want to use a PWM based IR transmitter. This is
++	   more power efficient than the bit banging gpio driver.
 +
 +	   To compile this driver as a module, choose M here: the module will
-+	   be called gpio-ir-tx.
++	   be called pwm-ir-tx.
 +
  config RC_ST
  	tristate "ST remote control receiver"
  	depends on RC_CORE
 diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-index 245e2c2..3e64a4e 100644
+index 3e64a4e..466c402 100644
 --- a/drivers/media/rc/Makefile
 +++ b/drivers/media/rc/Makefile
-@@ -32,6 +32,7 @@ obj-$(CONFIG_IR_STREAMZAP) += streamzap.o
- obj-$(CONFIG_IR_WINBOND_CIR) += winbond-cir.o
+@@ -33,6 +33,7 @@ obj-$(CONFIG_IR_WINBOND_CIR) += winbond-cir.o
  obj-$(CONFIG_RC_LOOPBACK) += rc-loopback.o
  obj-$(CONFIG_IR_GPIO_CIR) += gpio-ir-recv.o
-+obj-$(CONFIG_IR_GPIO_TX) += gpio-ir-tx.o
+ obj-$(CONFIG_IR_GPIO_TX) += gpio-ir-tx.o
++obj-$(CONFIG_IR_PWM_TX) += pwm-ir-tx.o
  obj-$(CONFIG_IR_IGORPLUGUSB) += igorplugusb.o
  obj-$(CONFIG_IR_IGUANA) += iguanair.o
  obj-$(CONFIG_IR_TTUSBIR) += ttusbir.o
-diff --git a/drivers/media/rc/gpio-ir-tx.c b/drivers/media/rc/gpio-ir-tx.c
+diff --git a/drivers/media/rc/pwm-ir-tx.c b/drivers/media/rc/pwm-ir-tx.c
 new file mode 100644
-index 0000000..c2ea002
+index 0000000..1ab10b4
 --- /dev/null
-+++ b/drivers/media/rc/gpio-ir-tx.c
-@@ -0,0 +1,189 @@
++++ b/drivers/media/rc/pwm-ir-tx.c
+@@ -0,0 +1,165 @@
 +/*
 + * Copyright (C) 2017 Sean Young <sean@mess.org>
 + *
@@ -93,156 +98,117 @@ index 0000000..c2ea002
 +
 +#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/gpio.h>
++#include <linux/pwm.h>
 +#include <linux/delay.h>
 +#include <linux/slab.h>
 +#include <linux/of.h>
-+#include <linux/of_gpio.h>
 +#include <linux/platform_device.h>
 +#include <media/rc-core.h>
 +
-+#define DRIVER_NAME	"gpio-ir-tx"
-+#define DEVICE_NAME	"GPIO IR Bit Banging Transmitter"
++#define DRIVER_NAME	"pwm-ir-tx"
++#define DEVICE_NAME	"PWM IR Transmitter"
 +
-+struct gpio_rc_dev {
-+	int gpio_nr;
++struct pwm_ir {
++	struct pwm_device *pwm;
 +	unsigned int carrier;
 +	unsigned int duty_cycle;
-+	bool active_low;
-+	/* we need a spinlock to hold the cpu while transmitting */
-+	spinlock_t lock;
++	/* One transmission at a time */
++	struct mutex lock;
 +};
 +
-+static const struct of_device_id gpio_ir_tx_of_match[] = {
-+	{ .compatible = "gpio-ir-tx", },
++static const struct of_device_id pwm_ir_of_match[] = {
++	{ .compatible = "pwm-ir-tx", },
 +	{ },
 +};
-+MODULE_DEVICE_TABLE(of, gpio_ir_tx_of_match);
++MODULE_DEVICE_TABLE(of, pwm_ir_of_match);
 +
-+static int gpio_ir_tx_set_duty_cycle(struct rc_dev *dev, u32 duty_cycle)
++static int pwm_ir_set_duty_cycle(struct rc_dev *dev, u32 duty_cycle)
 +{
-+	struct gpio_rc_dev *gpio_dev = dev->priv;
++	struct pwm_ir *pwm_ir = dev->priv;
 +
-+	gpio_dev->duty_cycle = duty_cycle;
++	pwm_ir->duty_cycle = duty_cycle;
 +
 +	return 0;
 +}
 +
-+static int gpio_ir_tx_set_carrier(struct rc_dev *dev, u32 carrier)
++static int pwm_ir_set_carrier(struct rc_dev *dev, u32 carrier)
 +{
-+	struct gpio_rc_dev *gpio_dev = dev->priv;
++	struct pwm_ir *pwm_ir = dev->priv;
 +
 +	if (!carrier)
 +		return -EINVAL;
 +
-+	gpio_dev->carrier = carrier;
++	pwm_ir->carrier = carrier;
 +
 +	return 0;
 +}
 +
-+static int gpio_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
-+		      unsigned int count)
++static int pwm_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
++		     unsigned int count)
 +{
-+	struct gpio_rc_dev *gpio_dev = dev->priv;
-+	unsigned long flags;
++	struct pwm_ir *pwm_ir = dev->priv;
++	struct pwm_device *pwm = pwm_ir->pwm;
++	int i, duty, period;
 +	ktime_t edge;
 +	s64 delta;
-+	int i;
-+	unsigned int pulse, space;
 +
-+	/* Ensure the dividend fits into 32 bit */
-+	pulse = DIV_ROUND_CLOSEST(gpio_dev->duty_cycle * (NSEC_PER_SEC / 100),
-+				  gpio_dev->carrier);
-+	space = DIV_ROUND_CLOSEST((100l - gpio_dev->duty_cycle) *
-+				  (NSEC_PER_SEC / 100), gpio_dev->carrier);
++	if (mutex_lock_interruptible(&pwm_ir->lock))
++		return -ERESTARTSYS;
 +
-+	spin_lock_irqsave(&gpio_dev->lock, flags);
++	period = DIV_ROUND_CLOSEST(NSEC_PER_SEC, pwm_ir->carrier);
++	duty = DIV_ROUND_CLOSEST(pwm_ir->duty_cycle * period, 100);
++
++	pwm_config(pwm, duty, period);
 +
 +	edge = ktime_get();
 +
 +	for (i = 0; i < count; i++) {
-+		if (i % 2) {
-+			// space
-+			edge = ktime_add_us(edge, txbuf[i]);
-+			delta = ktime_us_delta(edge, ktime_get());
-+			if (delta > 10) {
-+				spin_unlock_irqrestore(&gpio_dev->lock, flags);
-+				usleep_range(delta - 10, delta + 10);
-+				spin_lock_irqsave(&gpio_dev->lock, flags);
-+			} else if (delta > 0) {
-+				udelay(delta);
-+			}
-+		} else {
-+			// pulse
-+			ktime_t last = ktime_add_us(edge, txbuf[i]);
++		if (i % 2) // space
++			pwm_disable(pwm);
++		else
++			pwm_enable(pwm);
 +
-+			while (ktime_get() < last) {
-+				gpio_set_value(gpio_dev->gpio_nr,
-+					       gpio_dev->active_low);
-+				edge += pulse;
-+				delta = ktime_sub(edge, ktime_get());
-+				if (delta > 0)
-+					ndelay(delta);
-+				gpio_set_value(gpio_dev->gpio_nr,
-+					       !gpio_dev->active_low);
-+				edge += space;
-+				delta = ktime_sub(edge, ktime_get());
-+				if (delta > 0)
-+					ndelay(delta);
-+			}
-+
-+			edge = last;
-+		}
++		edge = ktime_add_us(edge, txbuf[i]);
++		delta = ktime_us_delta(edge, ktime_get());
++		if (delta > 0)
++			usleep_range(delta, delta + 10);
 +	}
 +
-+	spin_unlock_irqrestore(&gpio_dev->lock, flags);
++	pwm_disable(pwm);
++
++	mutex_unlock(&pwm_ir->lock);
 +
 +	return count;
 +}
 +
-+static int gpio_ir_tx_probe(struct platform_device *pdev)
++static int pwm_ir_probe(struct platform_device *pdev)
 +{
-+	struct gpio_rc_dev *gpio_dev;
++	struct pwm_ir *pwm_ir;
 +	struct rc_dev *rcdev;
-+	enum of_gpio_flags flags;
-+	int rc, gpio;
++	int rc;
 +
-+	gpio = of_get_gpio_flags(pdev->dev.of_node, 0, &flags);
-+	if (gpio < 0) {
-+		if (gpio != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "Failed to get gpio flags (%d)\n",
-+				gpio);
-+		return -EINVAL;
-+	}
-+
-+	gpio_dev = devm_kzalloc(&pdev->dev, sizeof(*gpio_dev), GFP_KERNEL);
-+	if (!gpio_dev)
++	pwm_ir = devm_kzalloc(&pdev->dev, sizeof(*pwm_ir), GFP_KERNEL);
++	if (!pwm_ir)
 +		return -ENOMEM;
++
++	pwm_ir->pwm = devm_pwm_get(&pdev->dev, NULL);
++	if (IS_ERR(pwm_ir->pwm))
++		return PTR_ERR(pwm_ir->pwm);
++
++	pwm_ir->carrier = 38000;
++	pwm_ir->duty_cycle = 50;
++	mutex_init(&pwm_ir->lock);
 +
 +	rcdev = devm_rc_allocate_device(&pdev->dev, RC_DRIVER_IR_RAW_TX);
 +	if (!rcdev)
 +		return -ENOMEM;
 +
-+	rcdev->priv = gpio_dev;
++	rcdev->priv = pwm_ir;
 +	rcdev->driver_name = DRIVER_NAME;
 +	rcdev->device_name = DEVICE_NAME;
-+	rcdev->tx_ir = gpio_ir_tx;
-+	rcdev->s_tx_duty_cycle = gpio_ir_tx_set_duty_cycle;
-+	rcdev->s_tx_carrier = gpio_ir_tx_set_carrier;
-+
-+	gpio_dev->gpio_nr = gpio;
-+	gpio_dev->active_low = (flags & OF_GPIO_ACTIVE_LOW) != 0;
-+	spin_lock_init(&gpio_dev->lock);
-+	gpio_dev->carrier = 38000;
-+	gpio_dev->duty_cycle = 50;
-+
-+	rc = devm_gpio_request(&pdev->dev, gpio, "gpio-ir-tx");
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = gpio_direction_output(gpio, !gpio_dev->active_low);
-+	if (rc < 0)
-+		return rc;
++	rcdev->tx_ir = pwm_ir_tx;
++	rcdev->s_tx_duty_cycle = pwm_ir_set_duty_cycle;
++	rcdev->s_tx_carrier = pwm_ir_set_carrier;
 +
 +	rc = devm_rc_register_device(&pdev->dev, rcdev);
 +	if (rc < 0) {
@@ -250,21 +216,36 @@ index 0000000..c2ea002
 +		return rc;
 +	}
 +
-+	platform_set_drvdata(pdev, gpio_dev);
++	platform_set_drvdata(pdev, pwm_ir);
 +
 +	return 0;
 +}
 +
-+static struct platform_driver gpio_ir_tx_driver = {
-+	.probe	= gpio_ir_tx_probe,
++#ifdef CONFIG_PM
++static int pwm_ir_suspend(struct platform_device *dev, pm_message_t state)
++{
++	struct pwm_ir *pwm_ir = platform_get_drvdata(dev);
++
++	if (mutex_is_locked(&pwm_ir->lock))
++		return -EAGAIN;
++
++	return 0;
++}
++#else
++#define pwm_ir_suspend NULL
++#endif
++
++static struct platform_driver pwm_ir_driver = {
++	.probe = pwm_ir_probe,
++	.suspend = pwm_ir_suspend,
 +	.driver = {
 +		.name	= DRIVER_NAME,
-+		.of_match_table = of_match_ptr(gpio_ir_tx_of_match),
++		.of_match_table = of_match_ptr(pwm_ir_of_match),
 +	},
 +};
-+module_platform_driver(gpio_ir_tx_driver);
++module_platform_driver(pwm_ir_driver);
 +
-+MODULE_DESCRIPTION("GPIO IR Bit Banging Transmitter");
++MODULE_DESCRIPTION("PWM IR Transmitter");
 +MODULE_AUTHOR("Sean Young <sean@mess.org>");
 +MODULE_LICENSE("GPL");
 -- 
