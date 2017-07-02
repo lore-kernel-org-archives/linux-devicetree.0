@@ -1,94 +1,70 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 10/18] MIPS: Setup boot_command_line before plat_mem_setup
-Date: Sun,  2 Jul 2017 18:30:08 +0200
-Message-ID: <20170702163016.6714-11-paul@crapouillou.net>
+Subject: [PATCH v3 09/18] serial: 8250_ingenic: Parse earlycon options
+Date: Sun,  2 Jul 2017 18:30:07 +0200
+Message-ID: <20170702163016.6714-10-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170702163016.6714-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170702163016.6714-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+In the devicetree, it is possible to specify the baudrate, parity,
+bits, flow of the early console, by passing a configuration string like
+this:
 
-Platforms using DT will typically call __dt_setup_arch from
-plat_mem_setup. This in turn calls early_init_dt_scan. When
-CONFIG_CMDLINE is set, this leads to its value being copied into
-boot_command_line by early_init_dt_scan_chosen. If this happens before
-the code setting up boot_command_line in arch_mem_init runs, that code
-will go on to append CONFIG_CMDLINE (via builtin_cmdline) to
-boot_command_line again, duplicating it. For some command line
-parameters (eg. earlycon) this can be a problem. Set up
-boot_command_line before early_init_dt_scan_chosen gets called such that
-it will not write CONFIG_CMDLINE in this scenario & the arguments aren't
-duplicated.
+aliases {
+	serial0 = &uart0;
+};
 
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+chosen {
+	stdout-path = "serial0:57600n8";
+};
+
+This, for instance, will configure the early console for a baudrate of
+57600 bps, no parity, and 8 bits per baud.
+
+This patches implements parsing of this configuration string in the
+8250_ingenic driver, which previously just ignored it.
+
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/kernel/setup.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ drivers/tty/serial/8250/8250_ingenic.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
- v2: No change
+ v2: Don't create temp. buffer, now that uart_parse_options takes a const char*
  v3: No change
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 01d1dbde5fbf..89785600fde4 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -785,25 +785,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 	struct memblock_region *reg;
- 	extern void plat_mem_setup(void);
+diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
+index b31b2ca552d1..be4a07a24342 100644
+--- a/drivers/tty/serial/8250/8250_ingenic.c
++++ b/drivers/tty/serial/8250/8250_ingenic.c
+@@ -99,14 +99,22 @@ static int __init ingenic_early_console_setup(struct earlycon_device *dev,
+ 					      const char *opt)
+ {
+ 	struct uart_port *port = &dev->port;
+-	unsigned int baud, divisor;
++	unsigned int divisor;
++	int baud = 115200;
  
--	/* call board setup routine */
--	plat_mem_setup();
--
--	/*
--	 * Make sure all kernel memory is in the maps.  The "UP" and
--	 * "DOWN" are opposite for initdata since if it crosses over
--	 * into another memory section you don't want that to be
--	 * freed when the initdata is freed.
--	 */
--	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
--			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
--			 BOOT_MEM_RAM);
--	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
--			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
--			 BOOT_MEM_INIT_RAM);
--
--	pr_info("Determined physical RAM map:\n");
--	print_memory_map();
--
- #if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
- 	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
- #else
-@@ -831,6 +812,26 @@ static void __init arch_mem_init(char **cmdline_p)
- 	}
- #endif
- #endif
-+
-+	/* call board setup routine */
-+	plat_mem_setup();
-+
-+	/*
-+	 * Make sure all kernel memory is in the maps.  The "UP" and
-+	 * "DOWN" are opposite for initdata since if it crosses over
-+	 * into another memory section you don't want that to be
-+	 * freed when the initdata is freed.
-+	 */
-+	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
-+			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
-+			 BOOT_MEM_RAM);
-+	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
-+			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
-+			 BOOT_MEM_INIT_RAM);
-+
-+	pr_info("Determined physical RAM map:\n");
-+	print_memory_map();
-+
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+ 	if (!dev->port.membase)
+ 		return -ENODEV;
  
- 	*cmdline_p = command_line;
++	if (opt) {
++		unsigned int parity, bits, flow; /* unused for now */
++
++		uart_parse_options(opt, &baud, &parity, &bits, &flow);
++	}
++
+ 	ingenic_early_console_setup_clock(dev);
+ 
+-	baud = dev->baud ?: 115200;
++	if (dev->baud)
++		baud = dev->baud;
+ 	divisor = DIV_ROUND_CLOSEST(port->uartclk, 16 * baud);
+ 
+ 	early_out(port, UART_IER, 0);
 -- 
 2.11.0
