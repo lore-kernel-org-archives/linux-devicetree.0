@@ -1,75 +1,67 @@
 From: Tom Levens <tom.levens@cern.ch>
-Subject: [PATCH v3 1/3] hwmon: ltc2990: refactor value conversion
-Date: Mon, 3 Jul 2017 06:28:58 +0200
-Message-ID: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
+Subject: [PATCH v3 2/3] hwmon: ltc2990: add devicetree binding
+Date: Mon, 3 Jul 2017 06:28:59 +0200
+Message-ID: <1499056140-6064-2-git-send-email-tom.levens@cern.ch>
+References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
 Sender: linux-hwmon-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mike Looijmans <mike.looijmans@topic.nl>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Conversion from raw values to signed integers has been refactored using
-bitops.h. This also fixes a bug where negative temperatures were
-converted incorrectly.
+Add a devicetree binding for the ltc2990 hwmon driver.
 
 Signed-off-by: Tom Levens <tom.levens@cern.ch>
 ---
- drivers/hwmon/ltc2990.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/hwmon/ltc2990.txt          | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ltc2990.txt
 
-diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
-index 8f8fe05..e320d21 100644
---- a/drivers/hwmon/ltc2990.c
-+++ b/drivers/hwmon/ltc2990.c
-@@ -11,6 +11,7 @@
-  * the chip's internal temperature and Vcc power supply voltage.
-  */
- 
-+#include <linux/bitops.h>
- #include <linux/err.h>
- #include <linux/hwmon.h>
- #include <linux/hwmon-sysfs.h>
-@@ -34,15 +35,6 @@
- #define LTC2990_CONTROL_MODE_CURRENT	0x06
- #define LTC2990_CONTROL_MODE_VOLTAGE	0x07
- 
--/* convert raw register value to sign-extended integer in 16-bit range */
--static int ltc2990_voltage_to_int(int raw)
--{
--	if (raw & BIT(14))
--		return -(0x4000 - (raw & 0x3FFF)) << 2;
--	else
--		return (raw & 0x3FFF) << 2;
--}
--
- /* Return the converted value from the given register in uV or mC */
- static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
- {
-@@ -55,18 +47,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
- 	switch (reg) {
- 	case LTC2990_TINT_MSB:
- 		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
--		val = (val & 0x1FFF) << 3;
--		*result = (val * 1000) >> 7;
-+		*result = sign_extend32(val, 12) * 1000 / 16;
- 		break;
- 	case LTC2990_V1_MSB:
- 	case LTC2990_V3_MSB:
- 		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
--		*result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
-+		*result = sign_extend32(val, 14) * 1942 / 100;
- 		break;
- 	case LTC2990_VCC_MSB:
- 		/* Vcc, 305.18μV/LSB, 2.5V offset */
--		*result = (ltc2990_voltage_to_int(val) * 30518 /
--			   (4 * 100 * 1000)) + 2500;
-+		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
- 		break;
- 	default:
- 		return -EINVAL; /* won't happen, keep compiler happy */
+diff --git a/Documentation/devicetree/bindings/hwmon/ltc2990.txt b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+new file mode 100644
+index 0000000..f92f540
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ltc2990.txt
+@@ -0,0 +1,36 @@
++ltc2990: Linear Technology LTC2990 power monitor
++
++Required properties:
++- compatible: Must be "lltc,ltc2990"
++- reg: I2C slave address
++- lltc,meas-mode:
++	An array of two integers for configuring the chip measurement mode.
++
++	The first integer defines the bits 2..0 in the control register. In all
++	cases the internal temperature and supply voltage are measured. In
++	addition the following input measurements are enabled per mode:
++
++		0: V1, V2, TR2
++		1: V1-V2, TR2
++		2: V1-V2, V3, V4
++		3: TR1, V3, V4
++		4: TR1, V3-V4
++		5: TR1, TR2
++		6: V1-V2, V3-V4
++		7: V1, V2, V3, V4
++
++	The second integer defines the bits 4..3 in the control register. This
++	allows a subset of the measurements to be enabled:
++
++		0: Internal temperature and supply voltage only
++		1: TR1, V1 or V1-V2 only per mode
++		2: TR2, V3 or V3-V4 only per mode
++		3: All measurements per mode
++
++Example:
++
++ltc2990@4c {
++	compatible = "lltc,ltc2990";
++	reg = <0x4c>;
++	lltc,meas-mode = <7 3>;	/* V1, V2, V3, V4 */
++};
 -- 
 1.8.3.1
 
