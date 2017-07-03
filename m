@@ -1,79 +1,48 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v2 1/7] DT bindings: add bindings for ov965x camera module
-Date: Mon, 3 Jul 2017 11:16:02 +0200
-Message-ID: <1499073368-31905-2-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v2 2/7] [media] ov9650: switch i2c device id to lower case
+Date: Mon, 3 Jul 2017 11:16:03 +0200
+Message-ID: <1499073368-31905-3-git-send-email-hugues.fruchet@st.com>
 References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, " H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Switch i2c device id to lower case as it is
+done for other omnivision cameras.
 
-This adds documentation of device tree bindings
-for the OV965X family camera sensor module.
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- .../devicetree/bindings/media/i2c/ov965x.txt       | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
+ drivers/media/i2c/ov9650.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov965x.txt b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
-new file mode 100644
-index 0000000..4ceb727
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
-@@ -0,0 +1,45 @@
-+* Omnivision OV9650/9652/9655 CMOS sensor
-+
-+The Omnivision OV965x sensor support multiple resolutions output, such as
-+CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
-+output format.
-+
-+Required Properties:
-+- compatible: should be one of
-+	"ovti,ov9650"
-+	"ovti,ov9652"
-+	"ovti,ov9655"
-+- clocks: reference to the mclk input clock.
-+
-+Optional Properties:
-+- resetb-gpios: reference to the GPIO connected to the RESETB pin, if any,
-+		polarity is active low.
-+- pwdn-gpios: reference to the GPIO connected to the PWDN pin, if any,
-+		polarity is active high.
-+- avdd-supply: reference to the analog power supply regulator connected
-+		to the AVDD pin, if any.
-+- dvdd-supply: reference to the digital power supply regulator connected
-+		to the DVDD pin, if any.
-+- dovdd-supply: reference to the digital I/O power supply regulator
-+		connected to the DOVDD pin, if any.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+&i2c2 {
-+	ov9655: camera@30 {
-+		compatible = "ovti,ov9655";
-+		reg = <0x30>;
-+		pwdn-gpios = <&gpioh 13 GPIO_ACTIVE_HIGH>;
-+		clocks = <&clk_ext_camera>;
-+
-+		port {
-+			ov9655: endpoint {
-+				remote-endpoint = <&dcmi_0>;
-+			};
-+		};
-+	};
-+};
+diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+index 2de2fbb..1e4e99e 100644
+--- a/drivers/media/i2c/ov9650.c
++++ b/drivers/media/i2c/ov9650.c
+@@ -1545,8 +1545,8 @@ static int ov965x_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id ov965x_id[] = {
+-	{ "OV9650", 0 },
+-	{ "OV9652", 0 },
++	{ "ov9650", 0 },
++	{ "ov9652", 0 },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(i2c, ov965x_id);
 -- 
 1.9.1
