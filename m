@@ -1,347 +1,454 @@
-From: <vitaly_kuzmichev@mentor.com>
-Subject: [PATCH 2/2] drivers: dma-coherent: show per-device DMA region utilization via procfs
-Date: Mon, 3 Jul 2017 17:51:15 +0300
-Message-ID: <1499093475-29859-3-git-send-email-vitaly_kuzmichev@mentor.com>
-References: <1499093475-29859-1-git-send-email-vitaly_kuzmichev@mentor.com>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v7 08/10] power: Adds support for Smart Battery System
+ Manager
+Date: Mon, 3 Jul 2017 17:17:55 +0200
+Message-ID: <20170703151755.dbm5d3diwizm67ji@earth>
+References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
+ <1497535178-12001-9-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499093475-29859-1-git-send-email-vitaly_kuzmichev@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, george_davis@mentor.com, vitaly_kuzmichev@mentor.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="t46fldph7dcryiw3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1497535178-12001-9-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "George G. Davis" <george_davis@mentor.com>
 
-Add hooks to allow displaying per-device DMA region utilization via
-/proc/dmainfo similar to how free blocks are displayed in
-/proc/pagetypeinfo.
+--t46fldph7dcryiw3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This also adds /proc/dmainfo reporting for regions defined via
-dma_declare_coherent_memory().
+Hi,
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Mark Craske <Mark_Craske@mentor.com>
-Signed-off-by: Vitaly Kuzmichev <Vitaly_Kuzmichev@mentor.com>
----
- drivers/base/dma-coherent.c | 221 ++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 213 insertions(+), 8 deletions(-)
+On Thu, Jun 15, 2017 at 09:59:36PM +0800, Phil Reid wrote:
+> From: Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>
+>=20
+> This patch adds support for Smart Battery System Manager.
+> A SBSM is a device listening at I2C/SMBus address 0x0a and is capable of
+> communicating up to four I2C smart battery devices. All smart battery
+> devices are listening at address 0x0b, so the SBSM muliplexes between
+> them. The driver makes use of the I2C-Mux framework to allow smart
+> batteries to be bound via device tree, i.e. the sbs-battery driver.
+>=20
+> Via sysfs interface the online state and charge type are presented. If
+> the driver is bound as ltc1760 (an implementation of a Dual Smart Battery
+> System Manager) the charge type can also be changed from trickle to fast.
+>=20
+> Tested-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> Reviewed-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> Signed-off-by: Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>
+> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> ---
+>  drivers/power/supply/Kconfig       |  13 ++
+>  drivers/power/supply/Makefile      |   1 +
+>  drivers/power/supply/sbs-manager.c | 323 +++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 337 insertions(+)
+>  create mode 100644 drivers/power/supply/sbs-manager.c
 
-diff --git a/drivers/base/dma-coherent.c b/drivers/base/dma-coherent.c
-index a0b0f2b..5671422 100644
---- a/drivers/base/dma-coherent.c
-+++ b/drivers/base/dma-coherent.c
-@@ -8,6 +8,12 @@
- #include <linux/module.h>
- #include <linux/dma-mapping.h>
- 
-+#ifdef CONFIG_PROC_FS
-+#include <linux/fs.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
-+#endif
-+
- struct dma_coherent_mem {
- 	void		*virt_base;
- 	dma_addr_t	device_base;
-@@ -16,8 +22,57 @@ struct dma_coherent_mem {
- 	int		flags;
- 	unsigned long	*bitmap;
- 	spinlock_t	spinlock;
-+	int		used;
-+	int		highwatermark;
-+	int		errs;
- };
- 
-+#ifdef CONFIG_PROC_FS
-+struct dmacoherent_region {
-+	struct list_head list;
-+	struct device *dev;
-+};
-+
-+static LIST_HEAD(dmacoherent_region_list);
-+static DEFINE_MUTEX(dmacoherent_region_list_lock);
-+
-+static int dmacoherent_region_add(struct device *dev)
-+{
-+	struct dmacoherent_region *rp;
-+
-+	rp = kzalloc(sizeof(*rp), GFP_KERNEL);
-+	if (!rp)
-+		return -ENOMEM;
-+
-+	rp->dev = dev;
-+
-+	mutex_lock(&dmacoherent_region_list_lock);
-+	list_add(&rp->list, &dmacoherent_region_list);
-+	mutex_unlock(&dmacoherent_region_list_lock);
-+	dev_info(dev, "Registered DMA-coherent pool with /proc/dmainfo accounting\n");
-+
-+	return 0;
-+}
-+
-+static void dmacoherent_region_del(struct device *dev)
-+{
-+	struct dmacoherent_region *rp;
-+
-+	mutex_lock(&dmacoherent_region_list_lock);
-+	list_for_each_entry(rp, &dmacoherent_region_list, list) {
-+		if (rp->dev == dev) {
-+			list_del(&rp->list);
-+			kfree(rp);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&dmacoherent_region_list_lock);
-+}
-+#else
-+static int dmacoherent_region_add(struct device *dev) { return 0; }
-+static void dmacoherent_region_del(struct device *dev) { return; }
-+#endif
-+
- static struct dma_coherent_mem **dma_coherent_default_area;
- 
- static inline struct dma_coherent_mem *dev_get_dma_area(struct device *dev)
-@@ -109,14 +164,22 @@ int dma_declare_coherent_memory(struct device *dev, phys_addr_t phys_addr,
- 				dma_addr_t device_addr, size_t size, int flags)
- {
- 	struct dma_coherent_mem *mem;
-+	int ret;
- 
- 	if (!dma_init_coherent_memory(phys_addr, device_addr, size, flags,
- 				      &mem))
- 		return 0;
- 
--	if (dma_assign_coherent_memory(dev, mem) == 0)
--		return flags & DMA_MEMORY_MAP ? DMA_MEMORY_MAP : DMA_MEMORY_IO;
-+	if (dma_assign_coherent_memory(dev, mem) != 0)
-+		goto errout;
-+
-+	ret = (flags & DMA_MEMORY_MAP ? DMA_MEMORY_MAP : DMA_MEMORY_IO);
-+
-+	if (dmacoherent_region_add(dev) == 0)
-+		return ret;
- 
-+	dev->dma_mem = NULL;
-+errout:
- 	dma_release_coherent_memory(mem);
- 	return 0;
- }
-@@ -128,6 +191,8 @@ void dma_release_declared_memory(struct device *dev)
- 
- 	if (!mem)
- 		return;
-+
-+	dmacoherent_region_del(dev);
- 	dma_release_coherent_memory(mem);
- 	dev->dma_mem = NULL;
- }
-@@ -139,19 +204,25 @@ void *dma_mark_declared_memory_occupied(struct device *dev,
- 	struct dma_coherent_mem *mem = dev_get_dma_area(dev);
- 	unsigned long flags;
- 	int pos, err;
--
--	size += device_addr & ~PAGE_MASK;
-+	int order;
- 
- 	if (!mem)
- 		return ERR_PTR(-EINVAL);
- 
--	spin_lock_irqsave(&mem->spinlock, flags);
-+	size += device_addr & ~PAGE_MASK;
-+	order = get_order(size);
- 	pos = (device_addr - mem->device_base) >> PAGE_SHIFT;
--	err = bitmap_allocate_region(mem->bitmap, pos, get_order(size));
--	spin_unlock_irqrestore(&mem->spinlock, flags);
- 
--	if (err != 0)
-+	spin_lock_irqsave(&mem->spinlock, flags);
-+	err = bitmap_allocate_region(mem->bitmap, pos, order);
-+	if (err != 0) {
-+		spin_unlock_irqrestore(&mem->spinlock, flags);
- 		return ERR_PTR(err);
-+	}
-+	mem->used += 1 << order;
-+	if (mem->highwatermark < mem->used)
-+		mem->highwatermark = mem->used;
-+	spin_unlock_irqrestore(&mem->spinlock, flags);
- 	return mem->virt_base + (pos << PAGE_SHIFT);
- }
- EXPORT_SYMBOL(dma_mark_declared_memory_occupied);
-@@ -194,6 +265,10 @@ int dma_alloc_from_coherent(struct device *dev, ssize_t size,
- 	if (unlikely(pageno < 0))
- 		goto err;
- 
-+	mem->used += 1 << order;
-+	if (mem->highwatermark < mem->used)
-+		mem->highwatermark = mem->used;
-+
- 	/*
- 	 * Memory was found in the per-device area.
- 	 */
-@@ -209,6 +284,7 @@ int dma_alloc_from_coherent(struct device *dev, ssize_t size,
- 	return 1;
- 
- err:
-+	mem->errs++;
- 	spin_unlock_irqrestore(&mem->spinlock, flags);
- 	/*
- 	 * In the case where the allocation can not be satisfied from the
-@@ -243,6 +319,7 @@ int dma_release_from_coherent(struct device *dev, int order, void *vaddr)
- 
- 		spin_lock_irqsave(&mem->spinlock, flags);
- 		bitmap_release_region(mem->bitmap, page, order);
-+		mem->used -= 1 << order;
- 		spin_unlock_irqrestore(&mem->spinlock, flags);
- 		return 1;
- 	}
-@@ -311,6 +388,10 @@ static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
- 		return -ENODEV;
- 	}
- 	rmem->priv = mem;
-+
-+	if (dmacoherent_region_add(dev))
-+		return -ENOMEM;
-+
- 	dma_assign_coherent_memory(dev, mem);
- 	return 0;
- }
-@@ -318,6 +399,7 @@ static int rmem_dma_device_init(struct reserved_mem *rmem, struct device *dev)
- static void rmem_dma_device_release(struct reserved_mem *rmem,
- 				    struct device *dev)
- {
-+	dmacoherent_region_del(dev);
- 	dev->dma_mem = NULL;
- }
- 
-@@ -351,3 +433,126 @@ static int __init rmem_dma_setup(struct reserved_mem *rmem)
- }
- RESERVEDMEM_OF_DECLARE(dma, "shared-dma-pool", rmem_dma_setup);
- #endif
-+
-+#ifdef CONFIG_PROC_FS
-+
-+static int dmainfo_proc_show_dma_mem(struct seq_file *m, void *v,
-+				     struct device *dev)
-+{
-+	struct dma_coherent_mem *mem = dev_get_dma_area(dev);
-+	int offset;
-+	int start;
-+	int end;
-+	int pages;
-+	int order;
-+	int free = 0;
-+	int blocks[MAX_ORDER];
-+
-+	memset(blocks, 0, sizeof(blocks));
-+
-+	spin_lock(&mem->spinlock);
-+
-+	for (offset = 0; offset < mem->size; offset = end) {
-+		start = find_next_zero_bit(mem->bitmap, mem->size, offset);
-+		if (start >= mem->size)
-+			break;
-+		end = find_next_bit(mem->bitmap, mem->size, start + 1);
-+		pages = end - start;
-+
-+		/* Align start: */
-+		for (order = 0; order < MAX_ORDER; order += 1) {
-+			if (start >= end)
-+				break;
-+			if (pages < (1 << order))
-+				break;
-+			if (start & (1 << order)) {
-+				blocks[order] += 1;
-+				start += 1 << order;
-+				pages -= 1 << order;
-+				free += 1 << order;
-+			}
-+		}
-+
-+		if (start >= end)
-+			continue;
-+
-+		/* Align middle and end: */
-+		order = MAX_ORDER - 1;
-+		while (order >= 0) {
-+			if (start >= end)
-+				break;
-+			if (pages >= (1 << order)) {
-+				blocks[order] += 1;
-+				start += 1 << order;
-+				pages -= 1 << order;
-+				free += 1 << order;
-+			} else {
-+				order -= 1;
-+			}
-+		}
-+	}
-+
-+	seq_printf(m, "%-30s", dev_name(dev));
-+
-+	for (order = 0; order < MAX_ORDER; order += 1)
-+		seq_printf(m, " %6d", blocks[order]);
-+
-+	seq_printf(m, " %6d %6d %6d %6d %6d\n",
-+		   mem->size,
-+		   mem->used,
-+		   free,
-+		   mem->highwatermark,
-+		   mem->errs);
-+
-+	spin_unlock(&mem->spinlock);
-+
-+	return 0;
-+}
-+
-+static int dmainfo_proc_show(struct seq_file *m, void *v)
-+{
-+	struct dmacoherent_region *rp;
-+	int order;
-+
-+	seq_puts(m, "DMA-coherent region information:\n");
-+	seq_printf(m, "%-30s", "Free block count at order");
-+
-+	for (order = 0; order < MAX_ORDER; ++order)
-+		seq_printf(m, " %6d", order);
-+
-+	seq_printf(m, " %6s %6s %6s %6s %6s\n",
-+		   "Size",
-+		   "Used",
-+		   "Free",
-+		   "High",
-+		   "Errs");
-+
-+	mutex_lock(&dmacoherent_region_list_lock);
-+	list_for_each_entry(rp, &dmacoherent_region_list, list) {
-+		dmainfo_proc_show_dma_mem(m, v, rp->dev);
-+	}
-+	mutex_unlock(&dmacoherent_region_list_lock);
-+
-+	return 0;
-+}
-+
-+static int dmainfo_proc_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, dmainfo_proc_show, NULL);
-+}
-+
-+static const struct file_operations dmainfo_proc_fops = {
-+	.open		= dmainfo_proc_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= single_release,
-+};
-+
-+static int __init proc_dmainfo_init(void)
-+{
-+	proc_create("dmainfo", 0, NULL, &dmainfo_proc_fops);
-+	return 0;
-+}
-+module_init(proc_dmainfo_init);
-+
-+#endif
--- 
-1.9.1
+Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+
+-- Sebastian
+
+> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
+> index da54ac8..a435415 100644
+> --- a/drivers/power/supply/Kconfig
+> +++ b/drivers/power/supply/Kconfig
+> @@ -170,6 +170,19 @@ config CHARGER_SBS
+>          help
+>  	  Say Y to include support for SBS compilant battery chargers.
+> =20
+> +config MANAGER_SBS
+> +	tristate "Smart Battery System Manager"
+> +	depends on I2C && I2C_MUX
+> +	help
+> +	  Say Y here to include support for Smart Battery System Manager
+> +	  ICs. The driver reports online and charging status via sysfs.
+> +	  It presents itself also as I2C mux which allows to bind
+> +	  smart battery driver to its ports.
+> +	  Supported is for example LTC1760.
+> +
+> +	  This driver can also be built as a module. If so, the module will be
+> +	  called sbs-manager.
+> +
+>  config BATTERY_BQ27XXX
+>  	tristate "BQ27xxx battery driver"
+>  	help
+> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
+> index 3789a2c..350c0bb 100644
+> --- a/drivers/power/supply/Makefile
+> +++ b/drivers/power/supply/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_BATTERY_IPAQ_MICRO) +=3D ipaq_micro_batter=
+y.o
+>  obj-$(CONFIG_BATTERY_WM97XX)	+=3D wm97xx_battery.o
+>  obj-$(CONFIG_BATTERY_SBS)	+=3D sbs-battery.o
+>  obj-$(CONFIG_CHARGER_SBS)	+=3D sbs-charger.o
+> +obj-$(CONFIG_MANAGER_SBS)	+=3D sbs-manager.o
+>  obj-$(CONFIG_BATTERY_BQ27XXX)	+=3D bq27xxx_battery.o
+>  obj-$(CONFIG_BATTERY_BQ27XXX_I2C) +=3D bq27xxx_battery_i2c.o
+>  obj-$(CONFIG_BATTERY_DA9030)	+=3D da9030_battery.o
+> diff --git a/drivers/power/supply/sbs-manager.c b/drivers/power/supply/sb=
+s-manager.c
+> new file mode 100644
+> index 0000000..47c09a1
+> --- /dev/null
+> +++ b/drivers/power/supply/sbs-manager.c
+> @@ -0,0 +1,323 @@
+> +/*
+> + * Driver for SBS compliant Smart Battery System Managers
+> + *
+> + * The device communicates via i2c at address 0x0a and multiplexes acces=
+s to up
+> + * to four smart batteries at address 0x0b.
+> + *
+> + * Via sysfs interface the online state and charge type are presented.
+> + *
+> + * Datasheet SBSM:    http://sbs-forum.org/specs/sbsm100b.pdf
+> + * Datasheet LTC1760: http://cds.linear.com/docs/en/datasheet/1760fb.pdf
+> + *
+> + * Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/i2c.h>
+> +#include <linux/i2c-mux.h>
+> +#include <linux/power_supply.h>
+> +
+> +#define SBSM_MAX_BATS  4
+> +#define SBSM_RETRY_CNT 3
+> +
+> +/* registers addresses */
+> +#define SBSM_CMD_BATSYSSTATE     0x01
+> +#define SBSM_CMD_BATSYSSTATECONT 0x02
+> +#define SBSM_CMD_BATSYSINFO      0x04
+> +#define SBSM_CMD_LTC             0x3c
+> +
+> +#define SBSM_MASK_BAT_SUPPORTED  GENMASK(3, 0)
+> +#define SBSM_MASK_CHARGE_BAT     GENMASK(7, 4)
+> +#define SBSM_BIT_AC_PRESENT      BIT(0)
+> +#define SBSM_BIT_TURBO           BIT(7)
+> +
+> +#define SBSM_SMB_BAT_OFFSET      11
+> +struct sbsm_data {
+> +	struct i2c_client *client;
+> +	struct i2c_mux_core *muxc;
+> +
+> +	struct power_supply *psy;
+> +
+> +	u8 cur_chan;          /* currently selected channel */
+> +	bool is_ltc1760;      /* special capabilities */
+> +};
+> +
+> +static enum power_supply_property sbsm_props[] =3D {
+> +	POWER_SUPPLY_PROP_ONLINE,
+> +	POWER_SUPPLY_PROP_CHARGE_TYPE,
+> +};
+> +
+> +static int sbsm_read_word(struct i2c_client *client, u8 address)
+> +{
+> +	int reg, retries;
+> +
+> +	for (retries =3D SBSM_RETRY_CNT; retries > 0; retries--) {
+> +		reg =3D i2c_smbus_read_word_data(client, address);
+> +		if (reg >=3D 0)
+> +			break;
+> +	}
+> +
+> +	if (reg < 0) {
+> +		dev_err(&client->dev, "failed to read register 0x%02x\n",
+> +			address);
+> +	}
+> +
+> +	return reg;
+> +}
+> +
+> +static int sbsm_write_word(struct i2c_client *client, u8 address, u16 wo=
+rd)
+> +{
+> +	int ret, retries;
+> +
+> +	for (retries =3D SBSM_RETRY_CNT; retries > 0; retries--) {
+> +		ret =3D i2c_smbus_write_word_data(client, address, word);
+> +		if (ret >=3D 0)
+> +			break;
+> +	}
+> +	if (ret < 0)
+> +		dev_err(&client->dev, "failed to write to register 0x%02x\n",
+> +			address);
+> +
+> +	return ret;
+> +}
+> +
+> +static int sbsm_get_property(struct power_supply *psy,
+> +			     enum power_supply_property psp,
+> +			     union power_supply_propval *val)
+> +{
+> +	struct sbsm_data *data =3D power_supply_get_drvdata(psy);
+> +	int regval =3D 0;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_ONLINE:
+> +		regval =3D sbsm_read_word(data->client, SBSM_CMD_BATSYSSTATECONT);
+> +		if (regval < 0)
+> +			return regval;
+> +		val->intval =3D !!(regval & SBSM_BIT_AC_PRESENT);
+> +		break;
+> +
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+> +		regval =3D sbsm_read_word(data->client, SBSM_CMD_BATSYSSTATE);
+> +		if (regval < 0)
+> +			return regval;
+> +
+> +		if ((regval & SBSM_MASK_CHARGE_BAT) =3D=3D 0) {
+> +			val->intval =3D POWER_SUPPLY_CHARGE_TYPE_NONE;
+> +			return 0;
+> +		}
+> +		val->intval =3D POWER_SUPPLY_CHARGE_TYPE_TRICKLE;
+> +
+> +		if (data->is_ltc1760) {
+> +			/* charge mode fast if turbo is active */
+> +			regval =3D sbsm_read_word(data->client, SBSM_CMD_LTC);
+> +			if (regval < 0)
+> +				return regval;
+> +			else if (regval & SBSM_BIT_TURBO)
+> +				val->intval =3D POWER_SUPPLY_CHARGE_TYPE_FAST;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int sbsm_prop_is_writeable(struct power_supply *psy,
+> +				  enum power_supply_property psp)
+> +{
+> +	struct sbsm_data *data =3D power_supply_get_drvdata(psy);
+> +
+> +	return (psp =3D=3D POWER_SUPPLY_PROP_CHARGE_TYPE) && data->is_ltc1760;
+> +}
+> +
+> +static int sbsm_set_property(struct power_supply *psy,
+> +			     enum power_supply_property psp,
+> +			     const union power_supply_propval *val)
+> +{
+> +	struct sbsm_data *data =3D power_supply_get_drvdata(psy);
+> +	int ret =3D -EINVAL;
+> +	u16 regval;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CHARGE_TYPE:
+> +		/* write 1 to TURBO if type fast is given */
+> +		if (!data->is_ltc1760)
+> +			break;
+> +		regval =3D val->intval =3D=3D
+> +			 POWER_SUPPLY_CHARGE_TYPE_FAST ? SBSM_BIT_TURBO : 0;
+> +		ret =3D sbsm_write_word(data->client, SBSM_CMD_LTC, regval);
+> +		break;
+> +
+> +	default:
+> +		break;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Switch to battery
+> + * Parameter chan is directly the content of SMB_BAT* nibble
+> + */
+> +static int sbsm_select(struct i2c_mux_core *muxc, u32 chan)
+> +{
+> +	struct sbsm_data *data =3D i2c_mux_priv(muxc);
+> +	struct device *dev =3D &data->client->dev;
+> +	int ret =3D 0;
+> +	u16 reg;
+> +
+> +	if (data->cur_chan =3D=3D chan)
+> +		return ret;
+> +
+> +	/* chan goes from 1 ... 4 */
+> +	reg =3D 1 << BIT(SBSM_SMB_BAT_OFFSET + chan);
+> +	ret =3D sbsm_write_word(data->client, SBSM_CMD_BATSYSSTATE, reg);
+> +	if (ret)
+> +		dev_err(dev, "Failed to select channel %i\n", chan);
+> +	else
+> +		data->cur_chan =3D chan;
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct power_supply_desc sbsm_default_psy_desc =3D {
+> +	.type =3D POWER_SUPPLY_TYPE_MAINS,
+> +	.properties =3D sbsm_props,
+> +	.num_properties =3D ARRAY_SIZE(sbsm_props),
+> +	.get_property =3D &sbsm_get_property,
+> +	.set_property =3D &sbsm_set_property,
+> +	.property_is_writeable =3D &sbsm_prop_is_writeable,
+> +};
+> +
+> +static int sbsm_probe(struct i2c_client *client,
+> +		      const struct i2c_device_id *id)
+> +{
+> +	struct i2c_adapter *adapter =3D to_i2c_adapter(client->dev.parent);
+> +	struct sbsm_data *data;
+> +	struct device *dev =3D &client->dev;
+> +	struct power_supply_desc *psy_desc;
+> +	struct power_supply_config psy_cfg =3D {};
+> +	int ret =3D 0, i, supported_bats;
+> +
+> +	/* Device listens only at address 0x0a */
+> +	if (client->addr !=3D 0x0a)
+> +		return -EINVAL;
+> +
+> +	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
+> +		return -EPFNOSUPPORT;
+> +
+> +	data =3D devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	i2c_set_clientdata(client, data);
+> +
+> +	data->client =3D client;
+> +	data->is_ltc1760 =3D !!strstr(id->name, "ltc1760");
+> +
+> +	ret  =3D sbsm_read_word(client, SBSM_CMD_BATSYSINFO);
+> +	if (ret < 0)
+> +		return ret;
+> +	supported_bats =3D ret & SBSM_MASK_BAT_SUPPORTED;
+> +
+> +	data->muxc =3D i2c_mux_alloc(adapter, dev, SBSM_MAX_BATS, 0,
+> +				   I2C_MUX_LOCKED, &sbsm_select, NULL);
+> +	if (!data->muxc) {
+> +		dev_err(dev, "failed to alloc i2c mux\n");
+> +		ret =3D -ENOMEM;
+> +		goto err_mux_alloc;
+> +	}
+> +	data->muxc->priv =3D data;
+> +
+> +	/* register muxed i2c channels. One for each supported battery */
+> +	for (i =3D 0; i < SBSM_MAX_BATS; ++i) {
+> +		if (supported_bats & BIT(i)) {
+> +			ret =3D i2c_mux_add_adapter(data->muxc, 0, i + 1, 0);
+> +			if (ret)
+> +				break;
+> +		}
+> +	}
+> +	if (ret) {
+> +		dev_err(dev, "failed to register i2c mux channel %d\n", i + 1);
+> +		goto err_mux_register;
+> +	}
+> +
+> +	psy_desc =3D devm_kmemdup(dev, &sbsm_default_psy_desc,
+> +				sizeof(struct power_supply_desc),
+> +				GFP_KERNEL);
+> +	if (!psy_desc) {
+> +		ret =3D -ENOMEM;
+> +		goto err_psy;
+> +	}
+> +
+> +	psy_desc->name =3D devm_kasprintf(dev, GFP_KERNEL, "sbsm-%s",
+> +					dev_name(&client->dev));
+> +	if (!psy_desc->name) {
+> +		ret =3D -ENOMEM;
+> +		goto err_psy;
+> +	}
+> +
+> +	psy_cfg.drv_data =3D data;
+> +	psy_cfg.of_node =3D dev->of_node;
+> +	data->psy =3D devm_power_supply_register(dev, psy_desc, &psy_cfg);
+> +	if (IS_ERR(data->psy)) {
+> +		ret =3D PTR_ERR(data->psy);
+> +		dev_err(dev, "failed to register power supply %s\n",
+> +			psy_desc->name);
+> +		goto err_psy;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_psy:
+> +err_mux_register:
+> +	i2c_mux_del_adapters(data->muxc);
+> +
+> +err_mux_alloc:
+> +	return ret;
+> +}
+> +
+> +static int sbsm_remove(struct i2c_client *client)
+> +{
+> +	struct sbsm_data *data =3D i2c_get_clientdata(client);
+> +
+> +	i2c_mux_del_adapters(data->muxc);
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id sbsm_ids[] =3D {
+> +	{ "sbs-manager", 0 },
+> +	{ "ltc1760",     0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, sbsm_ids);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id sbsm_dt_ids[] =3D {
+> +	{ .compatible =3D "sbs,sbs-manager" },
+> +	{ .compatible =3D "lltc,ltc1760" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, sbsm_dt_ids);
+> +#endif
+> +
+> +static struct i2c_driver sbsm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "sbsm",
+> +		.of_match_table =3D of_match_ptr(sbsm_dt_ids),
+> +	},
+> +	.probe		=3D sbsm_probe,
+> +	.remove		=3D sbsm_remove,
+> +	.id_table	=3D sbsm_ids
+> +};
+> +module_i2c_driver(sbsm_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Karl-Heinz Schneider <karl-heinz-X5L7DgJ4l23oE99TX8zNy7NAH6kLmebB@public.gmane.org>");
+> +MODULE_DESCRIPTION("SBSM Smart Battery System Manager");
+> --=20
+> 1.8.3.1
+>=20
+
+--t46fldph7dcryiw3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllaYB8ACgkQ2O7X88g7
++prNdw//bnjBt0kRlk/I/XxG87GTjYynVJ1KLyl/t98DjEOQbAcM/8n3YtiW+EUy
+t/sfG1lu4DMBqHSCvFlrhhoAAofAv0uPgFdTaZ5DCqHf/m6BMP87pMF/pH8731T1
+WXTc1A0QhqnexxdjKewmuGYbRl7fGiWkuJdEPJe+DVBKX0Ew66N6b79VbVvivu6w
+aomkJ/ip2GAF4DHXNBiKb2KlhxJbH4488yOYRwehSVZSzWPE0AooMl6lrVLSXkh6
+JNVlWb/7K9mQljhpc6/k5lXNfQBaPtmpcJMl9Jx0UVHm3wEUlA3tOYLuODY29nVn
+ij4WZqMS42O5nbIk2rtweq/oPslKDgXbIfZci1wFsse3lBpJg1S+EFKVaAp9k925
+cpd67FXfft0TCDwes249CwL+QsPRCNLfhcfw4RsgEhU79+l8p2FMdV2mir+QQ/hN
+KYWny7JtXglR59ejZGe2wqOC/1eD2DKF2HWyM9HM/T8bXKhhjduyI/fMesIkit5G
+XodtPvTjZEakt/uI06FQDZQ4SyB0DYLY9405uAePT03GkZXxgOGuj3HOyKYp8yuW
+GCqtt59K+a61kqLjYSKmK4yTL0OElnyN16apEQ4qte2E52AmVqvGd+qNm95fZJny
+LCIpap6DE5GF77hlsMunI+ghNfIE4rr4c+q0tEGnSu1sDBUKNM8=
+=S78t
+-----END PGP SIGNATURE-----
+
+--t46fldph7dcryiw3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
