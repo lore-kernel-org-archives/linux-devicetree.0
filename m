@@ -1,111 +1,107 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v8 0/2] More fixes for twl4030 charger
-Date: Mon, 3 Jul 2017 19:18:35 +0200
-Message-ID: <20170703171835.gidyf3fmg32rfptq@earth>
-References: <cover.1499099830.git.hns@goldelico.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
+Date: Mon, 3 Jul 2017 20:17:38 +0200
+Message-ID: <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
+References: <20170628101514.22610-1-romain.perier@collabora.com>
+ <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ez2c5yvealysbg5s"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1499099830.git.hns@goldelico.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
+In-Reply-To: <20170629182618.jpahpmuq364ldcv2-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Greg,
 
---ez2c5yvealysbg5s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'm a bit disappointed that you didn't drop this patch. At the time I
+sent my review it was still in your tty-testing branch and now it's part
+of your pull request for 4.13-rc1 (as commit
+a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
 
-Hi,
+I'm still convinced that this patch is wrong in its current form.
 
-Thanks, queued. I will send these in 2nd pull-request end of next
-week, so that they get some time in linux-next.
+Best regards
+Uwe
 
--- Sebastian
+On Thu, Jun 29, 2017 at 08:26:18PM +0200, Uwe Kleine-König wrote:
+> Cc: += devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> On Wed, Jun 28, 2017 at 12:15:14PM +0200, Romain Perier wrote:
+> > From: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+> > 
+> > The size of the DMA buffer can affect the delta time between data being
+> > produced and data being consumed. Basically the DMA system will move
+> > data to tty buffer when a) DMA buffer is full b) serial line is idle.
+> > The situation is visible when producer generates data continuously and
+> > there is no possibility for idle line. At this point the DMA buffer is
+> > directly affecting the delta time.
+> 
+> This doesn't look like a hw property but a configuration item. Also I
+> don't understand the problematic case. The i.MX is sending continuously
+> and then doesn't receive bytes until the DMA buffer is full? What is the
+> DMA buffer? You don't mean the FIFO here, do you?
+> 
+> That doesn't sound like a good fix but more like a work around. Which
+> other options did you test to fix your problem?
+> 
+> > The patch will add the possibility to configure the DMA buffers in DT,
+> > which case by case can be configured separately for every driver
+> > instance. The DT configuration is optional and in case missing the
+> > driver will use the 4096 buffer with 4 periods (as before), therefore no
+> > clients are impacted by this change.
+> > 
+> > Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+> > Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/serial/fsl-imx-uart.txt    |  2 ++
+> >  drivers/tty/serial/imx.c                           | 25 +++++++++++++++-------
+> >  2 files changed, 19 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> > index 574c3a2..e6b5724 100644
+> > --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
+> > @@ -9,6 +9,7 @@ Optional properties:
+> >  - fsl,irda-mode : Indicate the uart supports irda mode
+> >  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
+> >                    in DCE mode by default.
+> > +- fsl,dma-size : Indicate the size of the DMA buffer and its periods
+> 
+> This is a sparse description, just from reading that I don't understand
+> what it does.
+>  
+> >  Please check Documentation/devicetree/bindings/serial/serial.txt
+> >  for the complete list of generic properties.
+> > @@ -28,4 +29,5 @@ uart1: serial@73fbc000 {
+> >  	interrupts = <31>;
+> >  	uart-has-rtscts;
+> >  	fsl,dte-mode;
+> > +	fsl,dma-size = <1024 4>;
+> >  };
+> > diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+> > index bbefddd..7327477 100644
+> > --- a/drivers/tty/serial/imx.c
+> > +++ b/drivers/tty/serial/imx.c
+> > @@ -186,6 +186,11 @@
+> >  
+> >  #define UART_NR 8
+> >  
+> > +/* RX DMA buffer periods */
+> > +#define RX_DMA_PERIODS 4
+> > +#define RX_BUF_SIZE	(PAGE_SIZE)
+> 
+> These names should include "DEFAULT" in their name now to fit their new
+> semantic.
 
-On Mon, Jul 03, 2017 at 06:37:09PM +0200, H. Nikolaus Schaller wrote:
-> Changes V78:
-> * further fix for wrong notifier initialization sequence (suggested by Se=
-bastian Reichel)
->=20
-> 2017-06-19 10:41:47: Changes V7:
-> * removed already merged patches from patch set
-> * further fix for potentially wrong irq and notifier initialization seque=
-nce (suggested by Sebastian Reichel)
-> * NULLify transceiver pointer in case of errors (suggested by Sebastian R=
-eichel)
->=20
-> 2017-06-14 11:25:59: Changes V6:
-> * split up -EPROBE_DEFER and irq allocation patch into small steps:
-> 	* convert iio to devm allocation (by Sebsatian Reichel)
-> 	* fix potentially wrong initialization sequence (by Grygorii Strashko)
-> 	* add -EPROBE_DEFER
->=20
-> 2017-05-21 12:38:24: Changes V5:
-> * reworked max_current removal patch (comments by Sebastian Reichel)
-> * resubmit missing madc connection for AC power detection
-> * resubmit patch for irq allocation and -EPROBE_DEFER
-> * rebased on 4.12-rc1
->=20
-> Changes V4:
-> * resent commit (original one did contain material not upstream)
->=20
-> 2017-04-14 21:29:39: 2017-04-14 20:26:00: Changes V3:
-> * worked in comments by Sebsatian Reichel
-> * clarifications of some commit messages
-> * rebased on v4.11rc-6
->=20
-> It took a while (18 months) until we propose an updated patch for upstrea=
-m...
->=20
-> 2015-11-02 12:27:39: Changes V2:
-> * worked in comments by Nishanth Menon <nm@ti.com>
-> * added another patch which solves a probing/boot stall problem (irq allo=
-cation vs. -EPROBE_DEFER)
->=20
-> V1:
-> 4.3-rc1 introduced a new charger driver for the twl4030. This patch set f=
-ixes some
-> issues.
->=20
-> While making twl4030 changes from 4.3 operable we have found some issues
-> during testing on GTA04 and OpenPandora.
->=20
-> H. Nikolaus Schaller (2):
->   power: supply: twl4030-charger: move irq allocation to just before
->     irqs are enabled
->   power: supply: twl4030-charger: add deferred probing for phy and iio
->=20
->  drivers/power/supply/twl4030_charger.c | 43 ++++++++++++++++++++++------=
-------
->  1 file changed, 28 insertions(+), 15 deletions(-)
->=20
-> --=20
-> 2.12.2
->=20
-
---ez2c5yvealysbg5s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllafGsACgkQ2O7X88g7
-+prppw//TqiCJO9wMGm9lRJhkudKhobWsuFs/N+d1wt1N/5niBm8WsxWowut9vly
-Aer4jSYKawTYXAu/O61Ev5lOT79caGu90b1otoPHyv1XBoqv4fUgHe++O+liR/Bd
-0TQ8REdwZZhwOaiRgkuUJFzJjM6Ix2o56jaIQtFmvoFEwLl9C1pE4uTSgiaq6UeB
-viTB2L1kEGl/0BcbmFMtkIE9tJaFh6ZFkDqaZx+vW6fM251bE1beCtQuBWdKoHz+
-TrJ8fPPkIPbOVwFUxeCcq7jK3h2yaD4PwMRb3vY+6IIY7GrJMyJwuBBslYR4/kNB
-rxgklmUwahetog0Wl5yAG8d2jfKbPj7zHPKPUo0k+cLB+PNVnhw4qautlG50l0eq
-SG2Btb+OIYb9s60nl14qCxxCadaxEMDr7LNWRL4kpVH0YHHIr8YUqaZIEsbgLxAj
-Ex9STaAIGHqTKbiVGcck72Hojka8yLYxOgwNXYzz4PRVjkfzuO2U5BjBPZebcHMN
-KLrjYqXJ2OScGABZfnvBhhuU8AepK+eT6C1SZqSFXJFz1B2IixngV3hlxLPHV3e+
-oL+OMZNAtZNWcu+BU5ijlZiRxJdwjC5EirJ0UmMG8EyoRHVxWmYySH0Nf0+Lg2OC
-vXO/zM5iouE6WXpLBq6Xqeot3wMG5hW1eL2P5AcZaLcqn09xQA0=
-=ic4V
------END PGP SIGNATURE-----
-
---ez2c5yvealysbg5s--
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
