@@ -1,61 +1,57 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 01/17] mfd: madera: Add register
- definitions for Cirrus Logic Madera codecs
-Date: Mon, 3 Jul 2017 12:21:16 +0100
-Message-ID: <20170703112116.zgatgnazk24qja4e@dell>
-References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1496415790-19164-2-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170703103330.uka6otpdes462eym@dell>
- <1499079166.9885.13.camel@perches.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] media: V3s: Add support for
+ Allwinner CSI.
+Date: Mon, 3 Jul 2017 13:25:21 +0200
+Message-ID: <20170703112521.ca253erguut5v7se@flea>
+References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
+ <1498561654-14658-2-git-send-email-yong.deng@magewell.com>
+ <667c858b-2655-88c5-6bbc-9d70d06c1ff1@xs4all.nl>
+ <20170703185952.18a97e9b7b05cbe321cb1268@magewell.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jeum2g7ncqcdbp47"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLGT5DFAKGQEZ63IODY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1499079166.9885.13.camel@perches.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Joe Perches <joe@perches.com>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, tglx@linutronix.de, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+In-Reply-To: <20170703185952.18a97e9b7b05cbe321cb1268-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAwMyBKdWwgMjAxNywgSm9lIFBlcmNoZXMgd3JvdGU6Cgo+IE9uIE1vbiwgMjAxNy0w
-Ny0wMyBhdCAxMTozMyArMDEwMCwgTGVlIEpvbmVzIHdyb3RlOgo+ID4gT24gRnJpLCAwMiBKdW4g
-MjAxNywgUmljaGFyZCBGaXR6Z2VyYWxkIHdyb3RlOgo+ID4gCj4gPiA+IFRoaXMgcGF0Y2ggYWRk
-cyBhIGhlYWRlciBmaWxlIG9mIHJlZ2lzdGVyIGRlZmluaXRpb25zIGZvciBDaXJydXMKPiA+ID4g
-TG9naWMgIk1hZGVyYSIgY2xhc3MgY29kZWNzLiBUaGVzZSBjb2RlY3MgYXJlIGFsbCBiYXNlZCBv
-ZmYgYSBjb21tb24KPiA+ID4gc2V0IG9mIGhhcmR3YXJlIElQIHNvIGhhdmUgYSBjb21tb24gcmVn
-aXN0ZXIgbWFwICh3aXRoIGEgZmV3IG1pbm9yCj4gPiA+IGRldmljZS10by1kZXZpY2UgdmFyaWF0
-aW9ucykuIFRoZXNlIGFyZSBjb21wbGV4IGRldmljZXMgd2l0aCBhIGxhcmdlCj4gPiA+IG51bWJl
-ciBvZiBmZWF0dXJlcyBhbmQgc28gaGF2ZSBhIGNvcnJlc3BvbmRpbmdseSBsYXJnZSByZWdpc3Rl
-ciBzZXQuCj4gPiA+IFRoZSByZWdpc3RlcnMuaCBmaWxlIGhhcyBiZWVuIGF1dG8tZ2VuZXJhdGVk
-IGZyb20gdGhlIGhhcmR3YXJlIHJlZ2lzdGVyCj4gPiA+IGRlZmluaXRpb25zLCBzdHJpcHBlZCBk
-b3duIHRvIG9ubHkgcmVnaXN0ZXJzIHdlIG5lZWQgdG8gYWNjZXNzIGZyb20KPiA+ID4gdGhlIGRy
-aXZlcgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogUmljaGFyZCBGaXR6Z2VyYWxkIDxyZkBv
-cGVuc291cmNlLndvbGZzb25taWNyby5jb20+Cj4gPiA+IC0tLQo+ID4gPiBDaGFuZ2VzIHNpbmNl
-IFYyOgo+ID4gPiAtIFVzZWQgbmV3IGZpZWxkIG5hbWVzIGZvciBJUlExX1NUQVRVU18zMyByZWdp
-c3Rlcgo+ID4gPiAKPiA+ID4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICB8
-ICAgMTAgKwo+ID4gPiAgaW5jbHVkZS9saW51eC9tZmQvbWFkZXJhL3JlZ2lzdGVycy5oIHwgODgz
-MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDg4NDIgaW5zZXJ0aW9ucygrKQo+ID4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUv
-bGludXgvbWZkL21hZGVyYS9yZWdpc3RlcnMuaAo+ID4gCj4gPiBBcHBsaWVkLCB0aGFua3MuCj4g
-Cj4gZm9sbG93ZWQgYnkgNDAwayBvZiB1c2VsZXNzIHF1b3RlZCByZXBseSEhIQo+IAo+IExlZS4g
-IFNlcmlvdXNseS4gIERvbid0IGJlIGltcG9saXRlIHRvIG90aGVycy4KPiBSZW1lbWJlciB0byB0
-cmltICB5b3VyIHJlcGxpZXMuCgoiQXBwbGllZCwgdGhhbmtzIiBpcyAqb2J2aW91c2x5KiB0aGUg
-bGFzdCBtZXNzYWdlIGluIG15IHJlcGx5LiAgRGlkCnlvdSB3YXN0ZSBhbnkgdGltZSByZWFkaW5n
-IHBhc3QgdGhhdCwgb3IgYXJlIHlvdSBqdXN0IGJlaW5nIHBlZGFudGljPwoKSWYgeW91IGFyZSB0
-cnVseSBjb25jZXJuZWQgb3ZlciA0MDBrIG9mIGJhbmR3aWR0aCB5b3UgbmVlZCB0byBzd2l0Y2gK
-dG8gYSBuZXcgaW50ZXJuZXQgcHJvdmlkZXIuCgpUaGlzIGlzbid0IHRoZSAxOTgwcy4KCi0tIApM
-ZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5h
-cm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFy
-bzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFs
-c2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2Fsc2EtZGV2ZWwK
+
+--jeum2g7ncqcdbp47
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+Hi,
+
+On Mon, Jul 03, 2017 at 06:59:52PM +0800, Yong wrote:
+> > > +	select VIDEOBUF2_DMA_CONTIG
+> > > +	select REGMAP_MMIO
+> > > +	---help---
+> > > +	   Support for the Allwinner Camera Sensor Interface Controller.
+> > 
+> > This controller is the same for all Allwinner SoC models?
+> 
+> No.
+> I will change the Kconfig and Makefile.
+
+This is basically a design that has been introduced in the A31 (sun6i
+family). I guess we should just call the driver and Kconfig symbols
+sun6i_csi (even though we don't support it yet). It also used on the
+A23, A33, A80, A83T, H3, and probably the H5 and A64.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--jeum2g7ncqcdbp47--
