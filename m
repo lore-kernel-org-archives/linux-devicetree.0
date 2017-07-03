@@ -1,46 +1,49 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v3 1/2] dts: ipq4019: Fix pinctrl node name
-Date: Mon,  3 Jul 2017 13:17:12 +0530
-Message-ID: <1499068033-24000-2-git-send-email-varada@codeaurora.org>
-References: <1499068033-24000-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499068033-24000-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 10/16] reset: Add a reset controller driver for the
+ Lantiq XWAY based SoCs
+Date: Mon, 3 Jul 2017 10:51:51 +0300
+Message-ID: <CAHp75VexwnVsb-ojXaZDN7QPVRKUeP-R=5C+j5ZSkE37Dtyp1Q@mail.gmail.com>
+References: <20170702224051.15109-1-hauke@hauke-m.de> <20170702224051.15109-11-hauke@hauke-m.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170702224051.15109-11-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 2 +-
- arch/arm/boot/dts/qcom-ipq4019.dtsi           | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Mon, Jul 3, 2017 at 1:40 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>
+> The reset controllers (on xRX200 and newer SoCs have two of them) are
+> provided by the RCU module. This was initially implemented as a simple
+> reset controller. However, the RCU module provides more functionality
+> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
+> The old reset controller driver implementation from
+> arch/mips/lantiq/xway/reset.c did not honor this fact.
+>
+> For some devices the request and the status bits are different.
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-index b9457dd..1ce253d 100644
---- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-@@ -40,7 +40,7 @@
- 			clock-frequency = <48000000>;
- 		};
- 
--		pinctrl@0x01000000 {
-+		pinctrl@1000000 {
- 			serial_pins: serial_pinmux {
- 				mux {
- 					pins = "gpio60", "gpio61";
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b7a24af..6defd0e 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -119,7 +119,7 @@
- 			reg = <0x1800000 0x60000>;
- 		};
- 
--		tlmm: pinctrl@0x01000000 {
-+		tlmm: pinctrl@1000000 {
- 			compatible = "qcom,ipq4019-pinctrl";
- 			reg = <0x01000000 0x300000>;
- 			gpio-controller;
+> +Required properties:
+> +- compatible           : Should be one of
+> +                               "lantiq,danube-reset"
+> +                               "lantiq,xrx200-reset"
+> +- offset-set           : Offset of the reset set register
+> +- offset-status                : Offset of the reset status register
+
+Just one side comment (I'm fine with either choice, just for your
+information). Recently I have reviewed at24 patch which adds a
+property for getting MAC offset and my reseach ends up with the naming
+pattern mac-offset (as many others are doing this way). So, perhaps in
+your case it might make sense to do that way? Anyway, it's a matter of
+a (bit of a) chaos in DT bindings, whatever you decide users will live
+with.
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
