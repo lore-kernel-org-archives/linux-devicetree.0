@@ -1,7 +1,7 @@
 From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 2/3 v7] ARC: Decouple linux kernel memory address and link address
-Date: Mon,  3 Jul 2017 19:51:08 +0300
-Message-ID: <20170703165109.31535-3-Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 1/3 v7] ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
+Date: Mon,  3 Jul 2017 19:51:07 +0300
+Message-ID: <20170703165109.31535-2-Eugeniy.Paltsev@synopsys.com>
 References: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
@@ -10,110 +10,73 @@ To: linux-snps-arc@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-We faced with problem when we tried to utilize 1G DRAM by linux on
-HSDK.
+Most of the time we indeed use the one and only LINUX_LINK_BASE
+set to 0x8000_0000. But there might be good reasons to move
+the kernel to another location like 0x9z etc.
 
-We can't use our usual kernel memory address (0x80000000) like on
-AXS103 because of DCCM memory bank located at exactly same
-address (0x80000000)
-But we can't simply move kernel memory address to another address (like
-0x90000000) because IOC base address must be aligned to the
-size of the aperture as specified in the IOC size register.
-
-So we had to use 1G aligned address for kernel memory.
-
-We can't use 0x00000000 or 0x40000000 addresses because addresses
-lover then 0x80000000 are MMU-translated.
-We can't use 0xB0000000 address because we can define a volatile
-uncached region only from AUX_NON_VOLATILE_LIMIT to the
-0xFFFFFFFF. (the end of region is hardcoded)
-
-So, the decision is to link kernel to 0x90000000, but use
-0x80000000-0xBFFFFFFF memory region and reallocate DCCM in our platform
-code.
-This patch only makes possible to set kernel memory address not equal to
-kernel link address.
+And we want IOC aperture to cover entire area used by the kernel,
+so let's make its base matching link base and add required asserts:
+checking IOC aperture base address and size to be supported by IOC.
 
 Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/arc/Kconfig            | 5 +++++
- arch/arc/include/asm/page.h | 2 +-
- arch/arc/mm/cache.c         | 2 +-
- arch/arc/mm/init.c          | 6 +++---
- 4 files changed, 10 insertions(+), 5 deletions(-)
+ arch/arc/mm/cache.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index a545969..75e5276 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -430,6 +430,11 @@ config LINUX_LINK_BASE
- 	  However some customers have peripherals mapped at this addr, so
- 	  Linux needs to be scooted a bit.
- 	  If you don't know what the above means, leave this setting alone.
-+
-+config KERNEL_RAM_BASE_ADDRESS
-+	hex "Linux ram base address"
-+	default LINUX_LINK_BASE
-+	help
- 	  This needs to match memory start address specified in Device Tree
- 
- config HIGHMEM
-diff --git a/arch/arc/include/asm/page.h b/arch/arc/include/asm/page.h
-index 296c342..777f676 100644
---- a/arch/arc/include/asm/page.h
-+++ b/arch/arc/include/asm/page.h
-@@ -85,7 +85,7 @@ typedef pte_t * pgtable_t;
-  */
- #define virt_to_pfn(kaddr)	(__pa(kaddr) >> PAGE_SHIFT)
- 
--#define ARCH_PFN_OFFSET		virt_to_pfn(CONFIG_LINUX_LINK_BASE)
-+#define ARCH_PFN_OFFSET		virt_to_pfn(CONFIG_KERNEL_RAM_BASE_ADDRESS)
- 
- #ifdef CONFIG_FLATMEM
- #define pfn_valid(pfn)		(((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
 diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
-index 383ff77..f303274 100644
+index a867575..383ff77 100644
 --- a/arch/arc/mm/cache.c
 +++ b/arch/arc/mm/cache.c
-@@ -1113,7 +1113,7 @@ noinline void __init arc_ioc_setup(void)
- 	 * For now we assume IOC aperture to cover all the memory used by the
- 	 * kernel.
+@@ -1083,7 +1083,8 @@ SYSCALL_DEFINE3(cacheflush, uint32_t, start, uint32_t, sz, uint32_t, flags)
+  */
+ noinline void __init arc_ioc_setup(void)
+ {
+-	unsigned int ap_sz;
++	unsigned int ap_base;
++	long ap_size;
+ 
+ 	/* Flush + invalidate + disable L1 dcache */
+ 	__dc_disable();
+@@ -1092,18 +1093,32 @@ noinline void __init arc_ioc_setup(void)
+ 	if (read_aux_reg(ARC_REG_SLC_BCR))
+ 		slc_entire_op(OP_FLUSH_N_INV);
+ 
+-	/* IOC Aperture start: TDB: handle non default CONFIG_LINUX_LINK_BASE */
+-	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, 0x80000);
+-
+ 	/*
+-	 * IOC Aperture size:
+-	 *   decoded as 2 ^ (SIZE + 2) KB: so setting 0x11 implies 512M
+-	 * TBD: fix for PGU + 1GB of low mem
++	 * IOC Aperture size is equal to memory size.
++	 * TBD: fix for PGU + 1GiB of low mem
+ 	 * TBD: fix for PAE
  	 */
--	ap_base = CONFIG_LINUX_LINK_BASE;
-+	ap_base = CONFIG_KERNEL_RAM_BASE_ADDRESS;
+-	ap_sz = order_base_2(arc_get_mem_sz()/1024) - 2;
+-	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, ap_sz);
++	ap_size = arc_get_mem_sz();
++
++	if (!is_power_of_2(ap_size) || ap_size < 4096)
++		panic("IOC Aperture size must be power of 2 larger than 4KiB");
++
++	/*
++	 * IOC Aperture size decoded as 2 ^ (SIZE + 2) KiB,
++	 * so setting 0x11 implies 512MiB, 0x12 implies 1G...
++	 */
++	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, order_base_2(ap_size / 1024) - 2);
++
++	/*
++	 * For now we assume IOC aperture to cover all the memory used by the
++	 * kernel.
++	 */
++	ap_base = CONFIG_LINUX_LINK_BASE;
++
++	if (ap_base % ap_size != 0)
++		panic("IOC Aperture start must be aligned to the size of the aperture");
  
- 	if (ap_base % ap_size != 0)
- 		panic("IOC Aperture start must be aligned to the size of the aperture");
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index 8c9415e..f84cba2 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -26,7 +26,7 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __aligned(PAGE_SIZE);
- char empty_zero_page[PAGE_SIZE] __aligned(PAGE_SIZE);
- EXPORT_SYMBOL(empty_zero_page);
++	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, ap_base >> 12);
+ 	write_aux_reg(ARC_REG_IO_COH_PARTIAL, 1);
+ 	write_aux_reg(ARC_REG_IO_COH_ENABLE, 1);
  
--static const unsigned long low_mem_start = CONFIG_LINUX_LINK_BASE;
-+static const unsigned long low_mem_start = CONFIG_KERNEL_RAM_BASE_ADDRESS;
- static unsigned long low_mem_sz;
- 
- #ifdef CONFIG_HIGHMEM
-@@ -63,7 +63,7 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 
- 	if (!low_mem_sz) {
- 		if (base != low_mem_start)
--			panic("CONFIG_LINUX_LINK_BASE != DT memory { }");
-+			panic("CONFIG_KERNEL_RAM_BASE_ADDRESS != DT memory { }");
- 
- 		low_mem_sz = size;
- 		in_use = 1;
-@@ -161,7 +161,7 @@ void __init setup_arch_memory(void)
- 	 * We can't use the helper free_area_init(zones[]) because it uses
- 	 * PAGE_OFFSET to compute the @min_low_pfn which would be wrong
- 	 * when our kernel doesn't start at PAGE_OFFSET, i.e.
--	 * PAGE_OFFSET != CONFIG_LINUX_LINK_BASE
-+	 * PAGE_OFFSET != CONFIG_KERNEL_RAM_BASE_ADDRESS
- 	 */
- 	free_area_init_node(0,			/* node-id */
- 			    zones_size,		/* num pages per zone */
 -- 
 2.9.3
