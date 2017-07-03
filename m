@@ -1,173 +1,422 @@
-From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V1 7/9] clk: sprd: add adjustable pll support
-Date: Mon, 3 Jul 2017 15:41:33 +0800
-Message-ID: <CAAfSe-sw669n2ZwpWpeCDw0S46Pg94xaWZFcSbEE6TYKg2JbLg@mail.gmail.com>
-References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170618015855.27738-8-chunyan.zhang@spreadtrum.com> <20170620013710.GJ4493@codeaurora.org>
- <CAAfSe-sMy3aM9=LwpVivvHKy4hVw3GEd3U-hZe17pXM5fJRxPg@mail.gmail.com>
- <20170630014452.GL22780@codeaurora.org> <CAAfSe-smKqgd42jDAGDA=NtYvRZExNanU7fHrRkT4W-WH-2=ug@mail.gmail.com>
- <20170630192228.GO22780@codeaurora.org>
+From: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] hwmon: ltc2990: support all measurement modes
+Date: Mon, 3 Jul 2017 08:29:56 +0200
+Message-ID: <341b5c67-c013-5a7c-54b5-e8c2a7c168e7@topic.nl>
+References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
+ <1499056140-6064-3-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170630192228.GO22780-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <1499056140-6064-3-git-send-email-tom.levens-vJEk5272eHo@public.gmane.org>
+Content-Language: nl
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaolong Zhang <xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Geng Ren <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Ben Li <ben.li-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+To: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 July 2017 at 03:22, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 06/30, Chunyan Zhang wrote:
->> Hi Stephen,
->>
->> On 30 June 2017 at 09:44, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> > On 06/22, Chunyan Zhang wrote:
->> >> On 20 June 2017 at 09:37, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> >> > On 06/18, Chunyan Zhang wrote:
->> >> >> +     pll->factors[member].width
->> >> >> +
->> >> >> +#define pmask(pll, member)                                   \
->> >> >> +     ((pwidth(pll, member)) ?                                \
->> >> >> +     GENMASK(pwidth(pll, member) + pshift(pll, member) - 1,  \
->> >> >> +     pshift(pll, member)) : 0)
->> >> >> +
->> >> >> +#define pinternal(pll, cfg, member)  \
->> >> >> +     (cfg[pindex(pll, member)] & pmask(pll, member))
->> >> >> +
->> >> >> +#define pinternal_val(pll, cfg, member)      \
->> >> >> +     (pinternal(pll, cfg, member) >> pshift(pll, member))
->> >> >> +
->> >> >> +static unsigned long pll_get_refin_rate(struct ccu_pll *pll)
->> >> >
->> >> > pll could be const?
->> >>
->> >> What this function returns is a factor used to calculate the pll rate
->> >> later, I will rename this function in the next iterator.
->> >>
->> >
->> > Rename is fine, but pll can still be marked const?
->>
->> Oh, sorry I misunderstood :)
->> You mean mark the input parameter "pll" const, right?
->
-> Yes.
->
->> >> >> +
->> >> >> +static int ccu_pll_helper_set_rate(struct ccu_pll *pll,
->> >> >> +                                unsigned long rate,
->> >> >> +                                unsigned long parent_rate)
->> >> >> +{
->> >> >> +     u32 mask, shift, width, ibias_val, index, kint, nint;
->> >> >> +     u32 reg_num = pll->regs[0], i = 0;
->> >> >> +     unsigned long refin, fvco = rate;
->> >> >> +     struct reg_cfg *cfg;
->> >> >> +
->> >> >> +     cfg = kcalloc(reg_num, sizeof(*cfg), GFP_KERNEL);
->> >> >> +     if (!cfg)
->> >> >> +             return -ENOMEM;
->> >> >> +
->> >> >> +     refin = pll_get_refin_rate(pll);
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_PREDIV);
->> >> >> +     index = pindex(pll, PLL_PREDIV);
->> >> >> +     width = pwidth(pll, PLL_PREDIV);
->> >> >> +     if (width && (ccu_pll_readl(pll, index) & mask))
->> >> >> +             refin = refin * 2;
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_POSTDIV);
->> >> >> +     index = pindex(pll, PLL_POSTDIV);
->> >> >> +     width = pwidth(pll, PLL_POSTDIV);
->> >> >> +     cfg[index].msk = mask;
->> >> >> +     if (width && ((pll->fflag == 1 && fvco <= pll->fvco) ||
->> >> >> +                   (pll->fflag == 0 && fvco > pll->fvco)))
->> >> >> +             cfg[index].val |= mask;
->> >> >> +
->> >> >> +     if (width && fvco <= pll->fvco)
->> >> >> +             fvco = fvco * 2;
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_DIV_S);
->> >> >> +     index = pindex(pll, PLL_DIV_S);
->> >> >> +     cfg[index].val |= mask;
->> >> >> +     cfg[index].msk |= mask;
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_SDM_EN);
->> >> >> +     index = pindex(pll, PLL_SDM_EN);
->> >> >> +     cfg[index].val |= mask;
->> >> >> +     cfg[index].msk |= mask;
->> >> >> +
->> >> >> +     nint  = fvco/(refin * CCU_PLL_1M);
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_NINT);
->> >> >> +     index = pindex(pll, PLL_NINT);
->> >> >> +     shift = pshift(pll, PLL_NINT);
->> >> >> +     cfg[index].val |= (nint << shift) & mask;
->> >> >> +     cfg[index].msk |= mask;
->> >> >> +
->> >> >> +     mask = pmask(pll, PLL_KINT);
->> >> >> +     index = pindex(pll, PLL_KINT);
->> >> >> +     width = pwidth(pll, PLL_KINT);
->> >> >> +     shift = pshift(pll, PLL_KINT);
->> >> >> +#ifndef CONFIG_64BIT
->> >> >> +     i = width < 21 ? 0 : i - 21;
->> >> >> +#endif
->> >> >
->> >> > What's this? Why do we depend on CONFIG_64BIT?
->> >>
->> >> On 32-bit SoCs, the largest width we can support is limited due to the
->> >> limitation of calculation precision.
->> >
->> > Does the hardware width change? Still not clear to me what's
->> > going on here.
->>
->> I heard from my colleague, that because the calculation precision on
->> Spreadtrum's 32-bit SoCs is different from on 64-bit SoCs,  when the
->> width of the value of PLL_KINT is larger than 21, the value is too
->> large to be multiplied on 32-bit Spreadtrum's SoCs.
->
-> It sounds like you're saying that the clk hardware is not
-> changing, but the sizeof(long) is different on 64-bit and 32-bit
-> CPUs so you've added this ifndef here for that.
->
+﻿Applied, and tested on my board, so you have my
 
-I finally figure out that this #ifndef is indeed not needed, thanks to
-your querying :)
+Tested-By: mike.looijmans-Oq418RWZeHk@public.gmane.org
 
-They told me that on Spreadtrum's 32-bit SoCs, only 20-bit of PLL_KINT
-is used and 3-bit is reserved in order to keep in line with the PLLs
-on 64-bit SoC.
-And we can get the same effect only if we define PLL with the specific
-'width' and 'shift' for PLL_KINT.
+Probably the maintainers will like to see a patch header mail with a "v3" 
+summary for what you've changed ("git send-email --cover-letter" or something 
+similar to that)
 
-I'll remove this statement and 'i' from here and
-sprd_pll_helper_recalc_rate() function.
+On 03-07-17 06:29, Tom Levens wrote:
+> Updated version of the ltc2990 driver which supports all measurement
+> modes (current, voltage, temperature) available in the chip.
+> 
+> If devicetree is used, the mode must be specified with the property
+> "lltc,meas-mode". The format and possible values of the property are
+> described in the binding.
+> 
+> If devicetree is not used, the mode of the chip will not be configured.
+> Unless the chip is configured by another source, only the internal
+> temperature and supply voltage will be measured.
+> 
+> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+> ---
+>   Documentation/hwmon/ltc2990 |  24 ++++--
+>   drivers/hwmon/Kconfig       |   7 +-
+>   drivers/hwmon/ltc2990.c     | 196 +++++++++++++++++++++++++++++++++++++-------
+>   3 files changed, 185 insertions(+), 42 deletions(-)
+> 
+> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
+> index c25211e..3ed68f6 100644
+> --- a/Documentation/hwmon/ltc2990
+> +++ b/Documentation/hwmon/ltc2990
+> @@ -8,6 +8,7 @@ Supported chips:
+>       Datasheet: http://www.linear.com/product/ltc2990
+>   
+>   Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+> +        Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>   
+>   
+>   Description
+> @@ -16,10 +17,8 @@ Description
+>   LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
+>   The chip's inputs can measure 4 voltages, or two inputs together (1+2 and 3+4)
+>   can be combined to measure a differential voltage, which is typically used to
+> -measure current through a series resistor, or a temperature.
+> -
+> -This driver currently uses the 2x differential mode only. In order to support
+> -other modes, the driver will need to be expanded.
+> +measure current through a series resistor, or a temperature with an external
+> +diode.
+>   
+>   
+>   Usage Notes
+> @@ -32,12 +31,19 @@ devices explicitly.
+>   Sysfs attributes
+>   ----------------
+>   
+> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+> +temp1_input   Internal chip temperature in millidegrees Celcius
+> +
+> +A subset of the following attributes are visible, depending on the measurement
+> +mode of the chip.
+> +
+> +in[1-4]_input Voltage at V[1-4] pin in millivolt
+> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
+> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
+> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
+> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
+> +
+>   The "curr*_input" measurements actually report the voltage drop across the
+>   input pins in microvolts. This is equivalent to the current through a 1mOhm
+>   sense resistor. Divide the reported value by the actual sense resistor value
+>   in mOhm to get the actual value.
+> -
+> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+> -temp1_input   Internal chip temperature in millidegrees Celcius
+> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense resistor.
+> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense resistor.
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 5ef2814..578e5a9 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -709,15 +709,12 @@ config SENSORS_LTC2945
+>   	  be called ltc2945.
+>   
+>   config SENSORS_LTC2990
+> -	tristate "Linear Technology LTC2990 (current monitoring mode only)"
+> +	tristate "Linear Technology LTC2990"
+>   	depends on I2C
+>   	help
+>   	  If you say yes here you get support for Linear Technology LTC2990
+>   	  I2C System Monitor. The LTC2990 supports a combination of voltage,
+> -	  current and temperature monitoring, but in addition to the Vcc supply
+> -	  voltage and chip temperature, this driver currently only supports
+> -	  reading two currents by measuring two differential voltages across
+> -	  series resistors.
+> +	  current and temperature monitoring.
+>   
+>   	  This driver can also be built as a module. If so, the module will
+>   	  be called ltc2990.
+> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+> index e320d21..32f3a8d 100644
+> --- a/drivers/hwmon/ltc2990.c
+> +++ b/drivers/hwmon/ltc2990.c
+> @@ -5,10 +5,6 @@
+>    * Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+>    *
+>    * License: GPLv2
+> - *
+> - * This driver assumes the chip is wired as a dual current monitor, and
+> - * reports the voltage drop across two series resistors. It also reports
+> - * the chip's internal temperature and Vcc power supply voltage.
+>    */
+>   
+>   #include <linux/bitops.h>
+> @@ -18,6 +14,7 @@
+>   #include <linux/i2c.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+> +#include <linux/of.h>
+>   
+>   #define LTC2990_STATUS	0x00
+>   #define LTC2990_CONTROL	0x01
+> @@ -29,35 +26,109 @@
+>   #define LTC2990_V4_MSB	0x0C
+>   #define LTC2990_VCC_MSB	0x0E
+>   
+> -#define LTC2990_CONTROL_KELVIN		BIT(7)
+> -#define LTC2990_CONTROL_SINGLE		BIT(6)
+> -#define LTC2990_CONTROL_MEASURE_ALL	(0x3 << 3)
+> -#define LTC2990_CONTROL_MODE_CURRENT	0x06
+> -#define LTC2990_CONTROL_MODE_VOLTAGE	0x07
+> +#define LTC2990_IN0	BIT(0)
+> +#define LTC2990_IN1	BIT(1)
+> +#define LTC2990_IN2	BIT(2)
+> +#define LTC2990_IN3	BIT(3)
+> +#define LTC2990_IN4	BIT(4)
+> +#define LTC2990_CURR1	BIT(5)
+> +#define LTC2990_CURR2	BIT(6)
+> +#define LTC2990_TEMP1	BIT(7)
+> +#define LTC2990_TEMP2	BIT(8)
+> +#define LTC2990_TEMP3	BIT(9)
+> +#define LTC2990_NONE	0
+> +#define LTC2990_ALL	GENMASK(9, 0)
+> +
+> +#define LTC2990_MODE0_SHIFT	0
+> +#define LTC2990_MODE0_MASK	GENMASK(2, 0)
+> +#define LTC2990_MODE1_SHIFT	3
+> +#define LTC2990_MODE1_MASK	GENMASK(1, 0)
+> +
+> +/* Enabled measurements for mode bits 2..0 */
+> +static const int ltc2990_attrs_ena_0[] = {
+> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
+> +	LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
+> +	LTC2990_TEMP2 | LTC2990_CURR2,
+> +	LTC2990_TEMP2 | LTC2990_TEMP3,
+> +	LTC2990_CURR1 | LTC2990_CURR2,
+> +	LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
+> +};
+> +
+> +/* Enabled measurements for mode bits 4..3 */
+> +static const int ltc2990_attrs_ena_1[] = {
+> +	LTC2990_NONE,
+> +	LTC2990_TEMP2 | LTC2990_IN1 | LTC2990_CURR1,
+> +	LTC2990_TEMP3 | LTC2990_IN3 | LTC2990_CURR2,
+> +	LTC2990_ALL
+> +};
+> +
+> +struct ltc2990_data {
+> +	struct i2c_client *i2c;
+> +	u32 mode[2];
+> +};
+>   
+>   /* Return the converted value from the given register in uV or mC */
+> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+> +static int ltc2990_get_value(struct i2c_client *i2c, int index, int *result)
+>   {
+>   	int val;
+> +	u8 reg;
+> +
+> +	switch (index) {
+> +	case LTC2990_IN0:
+> +		reg = LTC2990_VCC_MSB;
+> +		break;
+> +	case LTC2990_IN1:
+> +	case LTC2990_CURR1:
+> +	case LTC2990_TEMP2:
+> +		reg = LTC2990_V1_MSB;
+> +		break;
+> +	case LTC2990_IN2:
+> +		reg = LTC2990_V2_MSB;
+> +		break;
+> +	case LTC2990_IN3:
+> +	case LTC2990_CURR2:
+> +	case LTC2990_TEMP3:
+> +		reg = LTC2990_V3_MSB;
+> +		break;
+> +	case LTC2990_IN4:
+> +		reg = LTC2990_V4_MSB;
+> +		break;
+> +	case LTC2990_TEMP1:
+> +		reg = LTC2990_TINT_MSB;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+>   
+>   	val = i2c_smbus_read_word_swapped(i2c, reg);
+>   	if (unlikely(val < 0))
+>   		return val;
+>   
+> -	switch (reg) {
+> -	case LTC2990_TINT_MSB:
+> -		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
+> +	switch (index) {
+> +	case LTC2990_TEMP1:
+> +	case LTC2990_TEMP2:
+> +	case LTC2990_TEMP3:
+> +		/* temp, 0.0625 degrees/LSB */
+>   		*result = sign_extend32(val, 12) * 1000 / 16;
+>   		break;
+> -	case LTC2990_V1_MSB:
+> -	case LTC2990_V3_MSB:
+> -		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+> +	case LTC2990_CURR1:
+> +	case LTC2990_CURR2:
+> +		 /* Vx-Vy, 19.42uV/LSB */
+>   		*result = sign_extend32(val, 14) * 1942 / 100;
+>   		break;
+> -	case LTC2990_VCC_MSB:
+> -		/* Vcc, 305.18μV/LSB, 2.5V offset */
+> +	case LTC2990_IN0:
+> +		/* Vcc, 305.18uV/LSB, 2.5V offset */
+>   		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+>   		break;
+> +	case LTC2990_IN1:
+> +	case LTC2990_IN2:
+> +	case LTC2990_IN3:
+> +	case LTC2990_IN4:
+> +		/* Vx, 305.18uV/LSB */
+> +		*result = sign_extend32(val, 14) * 30518 / (100 * 1000);
+> +		break;
+>   	default:
+>   		return -EINVAL; /* won't happen, keep compiler happy */
+>   	}
+> @@ -69,48 +140,117 @@ static ssize_t ltc2990_show_value(struct device *dev,
+>   				  struct device_attribute *da, char *buf)
+>   {
+>   	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+> +	struct ltc2990_data *data = dev_get_drvdata(dev);
+>   	int value;
+>   	int ret;
+>   
+> -	ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
+> +	ret = ltc2990_get_value(data->i2c, attr->index, &value);
+>   	if (unlikely(ret < 0))
+>   		return ret;
+>   
+>   	return snprintf(buf, PAGE_SIZE, "%d\n", value);
+>   }
+>   
+> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
+> +				     struct attribute *a, int n)
+> +{
+> +	struct device *dev = container_of(kobj, struct device, kobj);
+> +	struct ltc2990_data *data = dev_get_drvdata(dev);
+> +	struct device_attribute *da =
+> +			container_of(a, struct device_attribute, attr);
+> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+> +
+> +	int attrs_mask = LTC2990_IN0 | LTC2990_TEMP1 |
+> +			 ltc2990_attrs_ena_0[data->mode[0]] &
+> +			 ltc2990_attrs_ena_1[data->mode[1]];
+> +
+> +	if (attr->index & attrs_mask)
+> +		return a->mode;
+> +
+> +	return 0;
+> +}
+> +
+>   static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_TINT_MSB);
+> +			  LTC2990_TEMP1);
+> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_TEMP2);
+> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_TEMP3);
+>   static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_V1_MSB);
+> +			  LTC2990_CURR1);
+>   static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_V3_MSB);
+> +			  LTC2990_CURR2);
+>   static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
+> -			  LTC2990_VCC_MSB);
+> +			  LTC2990_IN0);
+> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN1);
+> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN2);
+> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN3);
+> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
+> +			  LTC2990_IN4);
+>   
+>   static struct attribute *ltc2990_attrs[] = {
+>   	&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp2_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp3_input.dev_attr.attr,
+>   	&sensor_dev_attr_curr1_input.dev_attr.attr,
+>   	&sensor_dev_attr_curr2_input.dev_attr.attr,
+>   	&sensor_dev_attr_in0_input.dev_attr.attr,
+> +	&sensor_dev_attr_in1_input.dev_attr.attr,
+> +	&sensor_dev_attr_in2_input.dev_attr.attr,
+> +	&sensor_dev_attr_in3_input.dev_attr.attr,
+> +	&sensor_dev_attr_in4_input.dev_attr.attr,
+>   	NULL,
+>   };
+> -ATTRIBUTE_GROUPS(ltc2990);
+> +
+> +static const struct attribute_group ltc2990_group = {
+> +	.attrs = ltc2990_attrs,
+> +	.is_visible = ltc2990_attrs_visible,
+> +};
+> +__ATTRIBUTE_GROUPS(ltc2990);
+>   
+>   static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>   			     const struct i2c_device_id *id)
+>   {
+>   	int ret;
+>   	struct device *hwmon_dev;
+> +	struct ltc2990_data *data;
+> +	struct device_node *of_node = i2c->dev.of_node;
+>   
+>   	if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+>   				     I2C_FUNC_SMBUS_WORD_DATA))
+>   		return -ENODEV;
+>   
+> -	/* Setup continuous mode, current monitor */
+> +	data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data), GFP_KERNEL);
+> +	if (unlikely(!data))
+> +		return -ENOMEM;
+> +
+> +	data->i2c = i2c;
+> +
+> +	if (of_node) {
+> +		ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
+> +						 data->mode, 2);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (data->mode[0] & ~LTC2990_MODE0_MASK ||
+> +		    data->mode[1] & ~LTC2990_MODE1_MASK)
+> +			return -EINVAL;
+> +	} else {
+> +		ret = i2c_smbus_read_byte_data(i2c, LTC2990_CONTROL);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		data->mode[0] = ret >> LTC2990_MODE0_SHIFT & LTC2990_MODE0_MASK;
+> +		data->mode[1] = ret >> LTC2990_MODE1_SHIFT & LTC2990_MODE1_MASK;
+> +	}
+> +
+> +	/* Setup continuous mode */
+>   	ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
+> -					LTC2990_CONTROL_MEASURE_ALL |
+> -					LTC2990_CONTROL_MODE_CURRENT);
+> +					data->mode[0] << LTC2990_MODE0_SHIFT |
+> +					data->mode[1] << LTC2990_MODE1_SHIFT);
+>   	if (ret < 0) {
+>   		dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
+>   		return ret;
+> @@ -124,7 +264,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>   
+>   	hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
+>   							   i2c->name,
+> -							   i2c,
+> +							   data,
+>   							   ltc2990_groups);
+>   
+>   	return PTR_ERR_OR_ZERO(hwmon_dev);
+> 
 
->>
->> i = width < 21 ? 0 : i - 20;
->>
->> Here ' i ' is used to adjust 'shift' rather than 'width'  like below (
->> wrote the code back for convenience of understanding)
->>
->> +       kint = DIV_ROUND_CLOSEST(((fvco - refin * nint * CCU_PLL_1M)/10000) *
->> +       ((mask >> (shift + i)) + 1), refin * 100) << i;
->>
->
-> Having the types for all these variables would also be helpful.
->
->   u32 mask, shift, width, kint, nint;
->   unsigned long refin, fvco;
->
-> Why don't we do 64-bit math here instead of 32-bit math? And use
-> DIV_ROUND_CLOSEST_ULL?
 
-Agree, we should use 64-bit math, will address this.
 
-Thanks,
-Chunyan
+Kind regards,
 
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Mike Looijmans
+System Expert
+
+TOPIC Products
+Materiaalweg 4, NL-5681 RJ Best
+Postbus 440, NL-5680 AK Best
+Telefoon: +31 (0) 499 33 69 79
+E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
+Website: www.topicproducts.com
+
+Please consider the environment before printing this e-mail
+
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
