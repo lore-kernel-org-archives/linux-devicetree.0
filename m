@@ -1,67 +1,40 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v11 0/3]add PCIe driver for Kirin PCIe
-Date: Mon, 3 Jul 2017 14:32:24 +0100
-Message-ID: <595A4768.20404@hisilicon.com>
-References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
- <20170702233657.GA13507@bhelgaas-glaptop.roam.corp.google.com>
- <20170703104727.GB1573@arm.com>
- <CAFGCpxx+92PSs1VaryFOXau7CjBYEP4H6wT-o=bNMwkSznjQuw@mail.gmail.com>
+From: Ralf Baechle <ralf@linux-mips.org>
+Subject: Re: [PATCH v5 05/14] MIPS: ingenic: Enable pinctrl for all ingenic
+ SoCs
+Date: Mon, 3 Jul 2017 15:55:55 +0200
+Message-ID: <20170703135555.GA686@linux-mips.org>
+References: <20170402204244.14216-2-paul@crapouillou.net>
+ <20170428200824.10906-1-paul@crapouillou.net>
+ <20170428200824.10906-6-paul@crapouillou.net>
+ <CACRpkdauf5c2i4o5i8QY8YHPNjizkvTu6kAbnquWiP_=v2=KdQ@mail.gmail.com>
+ <1499013301.1477.0@smtp.crapouillou.net>
+ <CACRpkdb=Zti+C+2me_WP0=m6z12G5Kz+W_cPcZsw=CVzBO_wAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFGCpxx+92PSs1VaryFOXau7CjBYEP4H6wT-o=bNMwkSznjQuw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>, Xiaowei Song <songxiaowei@hisilicon.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mips-bounce@linux-mips.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdb=Zti+C+2me_WP0=m6z12G5Kz+W_cPcZsw=CVzBO_wAg@mail.gmail.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Paul Cercueil <paul@crapouillou.net>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+On Mon, Jul 03, 2017 at 11:07:09AM +0200, Linus Walleij wrote:
 
-On 2017/7/3 14:04, Guodong Xu wrote:
-> Hi, Xu Wei
-> 
-> 
-> 
-> On Mon, Jul 3, 2017 at 6:47 PM, Will Deacon <will.deacon@arm.com> wrote:
->> On Sun, Jul 02, 2017 at 06:36:57PM -0500, Bjorn Helgaas wrote:
->>> [+cc Catalin, Will, linux-arm-kernel]
->>>
->>> Applied patches 2 & 3 to pci/host-kirin for v4.13.
->>>
->>> I would like a MAINTAINERS update, too.  If you send me that, I'll
->>> squash it into the driver patch.
->>>
->>> Catalin, Will, how do you want to handle the
->>> arch/arm64/configs/defconfig change (patch 3)?  It's currently on my
->>> branch, but I'm happy to drop it if another route is better.
->>
->> defconfig updates usually go through arm-soc, via the relevant platform
->> maintainer, so it would be best to follow that route here too otherwise
->> you'll probably see conflicts in -next.
->>
-> 
-> Is it ok for you to pick up the arch/arm64/configs/defconfig change (patch 3)?
+> > There has been no word from Ralf, is this going into 4.13?
 
-Since it is already 4.12-rc7, I will pick up it and queue for the v4.14.
-Are you fine about that?
-Thanks!
+Acked-by: Ralf Baechle <ralf@linux-mips.org>
 
-Best Regards,
-Wei
+for the whole series.
 
-> 
-> -Guodong
-> 
->> Will
-> 
-> .
-> 
+Thanks,
+
+  Ralf
