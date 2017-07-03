@@ -1,37 +1,47 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v11 0/3]add PCIe driver for Kirin PCIe
-Date: Mon, 3 Jul 2017 11:47:27 +0100
-Message-ID: <20170703104727.GB1573@arm.com>
-References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
- <20170702233657.GA13507@bhelgaas-glaptop.roam.corp.google.com>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 01/17] mfd: madera: Add register definitions for
+ Cirrus Logic Madera codecs
+Date: Mon, 03 Jul 2017 03:52:46 -0700
+Message-ID: <1499079166.9885.13.camel@perches.com>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+         <1496415790-19164-2-git-send-email-rf@opensource.wolfsonmicro.com>
+         <20170703103330.uka6otpdes462eym@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170702233657.GA13507-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170703103330.uka6otpdes462eym@dell>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 02, 2017 at 06:36:57PM -0500, Bjorn Helgaas wrote:
-> [+cc Catalin, Will, linux-arm-kernel]
+On Mon, 2017-07-03 at 11:33 +0100, Lee Jones wrote:
+> On Fri, 02 Jun 2017, Richard Fitzgerald wrote:
 > 
-> Applied patches 2 & 3 to pci/host-kirin for v4.13.
+> > This patch adds a header file of register definitions for Cirrus
+> > Logic "Madera" class codecs. These codecs are all based off a common
+> > set of hardware IP so have a common register map (with a few minor
+> > device-to-device variations). These are complex devices with a large
+> > number of features and so have a correspondingly large register set.
+> > The registers.h file has been auto-generated from the hardware register
+> > definitions, stripped down to only registers we need to access from
+> > the driver
+> > 
+> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> > ---
+> > Changes since V2:
+> > - Used new field names for IRQ1_STATUS_33 register
+> > 
+> >  MAINTAINERS                          |   10 +
+> >  include/linux/mfd/madera/registers.h | 8832 ++++++++++++++++++++++++++++++++++
+> >  2 files changed, 8842 insertions(+)
+> >  create mode 100644 include/linux/mfd/madera/registers.h
 > 
-> I would like a MAINTAINERS update, too.  If you send me that, I'll
-> squash it into the driver patch.
-> 
-> Catalin, Will, how do you want to handle the
-> arch/arm64/configs/defconfig change (patch 3)?  It's currently on my
-> branch, but I'm happy to drop it if another route is better.
+> Applied, thanks.
 
-defconfig updates usually go through arm-soc, via the relevant platform
-maintainer, so it would be best to follow that route here too otherwise
-you'll probably see conflicts in -next.
+followed by 400k of useless quoted reply!!!
 
-Will
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lee.  Seriously.  Don't be impolite to others.
+Remember to trim  your replies.
+
