@@ -1,58 +1,45 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 03/14] qcom: mtd: nand: Fixed config error for BCH
-Date: Mon, 3 Jul 2017 11:55:49 +0530
-Message-ID: <497e44b6-0872-0de3-5ca8-2f10af13d254@codeaurora.org>
-References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-4-git-send-email-absahu@codeaurora.org>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Mon, 3 Jul 2017 14:22:44 +0800
+Message-ID: <20170703062244.GA24742@spreadtrum.com>
+References: <2083c9d6e96a72f9c1324c8a277acfd780a34094.1498472593.git.baolin.wang@spreadtrum.com>
+ <6941c6866078fac8fe81d108b573f7408245a0b9.1498472593.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498720566-20782-4-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <6941c6866078fac8fe81d108b573f7408245a0b9.1498472593.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Abhishek,
+Hi Andy and Wolfram,
 
-On 6/29/2017 12:45 PM, Abhishek Sahu wrote:
-> The configuration for BCH is not correct in the current
-> driver so this patch fixed the same.
+On 一,  6月 26, 2017 at 06:28:14下午 +0800, Baolin Wang wrote:
+> This patch adds the I2C controller driver for Spreadtrum SC9860 platform.
 > 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 > ---
->  drivers/mtd/nand/qcom_nandc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes since v2:
+>  - Remove some redundant comments and parens.
+>  - Define macros instead of magic number.
+>  - Add some comments to explain clock formula.
+>  - Change of_clk_get_by_name() to devm_clk_get().
+>  - Deal with other frequency.
+>  - Change register definiton to low case.
+>  - Change is_last_msg to boolean.
+>  - Other optimization.
 > 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 520add9..410ee53 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -1919,7 +1919,7 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
->  				| wide_bus << WIDE_FLASH
->  				| 1 << DEV0_CFG1_ECC_DISABLE;
->  
-> -	host->ecc_bch_cfg = host->bch_enabled << ECC_CFG_ECC_DISABLE
-> +	host->ecc_bch_cfg = !host->bch_enabled << ECC_CFG_ECC_DISABLE
->  				| 0 << ECC_SW_RESET
->  				| host->cw_data << ECC_NUM_DATA_BYTES
->  				| 1 << ECC_FORCE_CLK_OPEN
-> 
+> Changes sice v1:
+>  - Power on I2C device in probe().
+>  - Remove redundant macros and usb __maybe_unused.
+>  - Remove redundant 'of_match_ptr'.
+>  - Modify return values and check the return value for 'clk_prepare_enable'.
+> ---
 
- This could be patch #1, so basically all fixes first and then support
- for bam after that.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+Do you have any more comments about this patch? Thanks.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
