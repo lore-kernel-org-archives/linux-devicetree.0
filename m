@@ -1,38 +1,39 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 05/14] MIPS: ingenic: Enable pinctrl for all ingenic SoCs
-Date: Mon, 3 Jul 2017 11:07:09 +0200
-Message-ID: <CACRpkdb=Zti+C+2me_WP0=m6z12G5Kz+W_cPcZsw=CVzBO_wAg@mail.gmail.com>
-References: <20170402204244.14216-2-paul@crapouillou.net> <20170428200824.10906-1-paul@crapouillou.net>
- <20170428200824.10906-6-paul@crapouillou.net> <CACRpkdauf5c2i4o5i8QY8YHPNjizkvTu6kAbnquWiP_=v2=KdQ@mail.gmail.com>
- <1499013301.1477.0@smtp.crapouillou.net>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: r8a7795: Add DRIF support
+Date: Mon, 3 Jul 2017 11:03:23 +0200
+Message-ID: <20170703090323.GA15426@verge.net.au>
+References: <20170623091320.12664-1-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1499013301.1477.0@smtp.crapouillou.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>"linux-mtd@lists.infradead.org" <li>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170623091320.12664-1-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 2, 2017 at 6:35 PM, Paul Cercueil <paul@crapouillou.net> wrote:
-> Hi Linus,
->
->> I applied all the patches to a branch in pinctrl and merged into my
->> devel branch for testing:
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/
->> Branch: ingenic
->>
->> Ralf: are you OK with this? It would be nice to have your ACK on
->> all patches. If you want you can pull this branch into the MIPS
->> tree, or we can hope for it all to settle nicely because of low platform
->> activity in MIPS on this platform, so it only needs to come in
->> from my trees.
->
->
-> There has been no word from Ralf, is this going into 4.13?
+On Fri, Jun 23, 2017 at 10:13:20AM +0100, Ramesh Shanmugasundaram wrote:
+> Adds the DRIF controller nodes for r8a7795.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> ---
+> Hi Simon,
+> 
+>    This patch is based on renesas-devel-20170622-v4.12-rc6 tag.
+>    It is verified on both H3 ES1.1 and ES2.0 SoC revisions.
+> 
+>    The bindings[1] and the driver[2] were pushed into the media_tree.
+> 
+>    [1] https://git.linuxtv.org/media_tree.git/commit/?id=54a707ea011601f06cc5ef7fe6d0daac71ab0622
+>    [2] https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6c0006e2af471326f
+> 
+> Thanks,
+> Ramesh.
 
-Yes.
-
-Yours,
-Linus Walleij
+Thanks for the reminder and sorry for letting this slip through.
+I have queued this up for v4.14.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
