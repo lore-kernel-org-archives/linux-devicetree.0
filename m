@@ -1,57 +1,74 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] media: V3s: Add support for
- Allwinner CSI.
-Date: Mon, 3 Jul 2017 13:25:21 +0200
-Message-ID: <20170703112521.ca253erguut5v7se@flea>
-References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
- <1498561654-14658-2-git-send-email-yong.deng@magewell.com>
- <667c858b-2655-88c5-6bbc-9d70d06c1ff1@xs4all.nl>
- <20170703185952.18a97e9b7b05cbe321cb1268@magewell.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 01/17] mfd: madera: Add register definitions for
+ Cirrus Logic Madera codecs
+Date: Mon, 03 Jul 2017 04:26:54 -0700
+Message-ID: <1499081214.9885.15.camel@perches.com>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+         <1496415790-19164-2-git-send-email-rf@opensource.wolfsonmicro.com>
+         <20170703103330.uka6otpdes462eym@dell>
+         <1499079166.9885.13.camel@perches.com>
+         <20170703112116.zgatgnazk24qja4e@dell>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jeum2g7ncqcdbp47"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLGT5DFAKGQEZ63IODY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170703185952.18a97e9b7b05cbe321cb1268-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170703112116.zgatgnazk24qja4e@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---jeum2g7ncqcdbp47
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Mon, Jul 03, 2017 at 06:59:52PM +0800, Yong wrote:
-> > > +	select VIDEOBUF2_DMA_CONTIG
-> > > +	select REGMAP_MMIO
-> > > +	---help---
-> > > +	   Support for the Allwinner Camera Sensor Interface Controller.
-> > 
-> > This controller is the same for all Allwinner SoC models?
+On Mon, 2017-07-03 at 12:21 +0100, Lee Jones wrote:
+> On Mon, 03 Jul 2017, Joe Perches wrote:
 > 
-> No.
-> I will change the Kconfig and Makefile.
+> > On Mon, 2017-07-03 at 11:33 +0100, Lee Jones wrote:
+> > > On Fri, 02 Jun 2017, Richard Fitzgerald wrote:
+> > > 
+> > > > This patch adds a header file of register definitions for Cirrus
+> > > > Logic "Madera" class codecs. These codecs are all based off a common
+> > > > set of hardware IP so have a common register map (with a few minor
+> > > > device-to-device variations). These are complex devices with a large
+> > > > number of features and so have a correspondingly large register set.
+> > > > The registers.h file has been auto-generated from the hardware register
+> > > > definitions, stripped down to only registers we need to access from
+> > > > the driver
+> > > > 
+> > > > Signed-off-by: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> > > > ---
+> > > > Changes since V2:
+> > > > - Used new field names for IRQ1_STATUS_33 register
+> > > > 
+> > > >  MAINTAINERS                          |   10 +
+> > > >  include/linux/mfd/madera/registers.h | 8832 ++++++++++++++++++++++++++++++++++
+> > > >  2 files changed, 8842 insertions(+)
+> > > >  create mode 100644 include/linux/mfd/madera/registers.h
+> > > 
+> > > Applied, thanks.
+> > 
+> > followed by 400k of useless quoted reply!!!
+> > 
+> > Lee.  Seriously.  Don't be impolite to others.
+> > Remember to trim  your replies.
+> 
+> "Applied, thanks" is *obviously* the last message in my reply.  Did
+> you waste any time reading past that, or are you just being pedantic?
 
-This is basically a design that has been introduced in the A31 (sun6i
-family). I guess we should just call the driver and Kconfig symbols
-sun6i_csi (even though we don't support it yet). It also used on the
-A23, A33, A80, A83T, H3, and probably the H5 and A64.
+Nope, I just looked at the size and the delay
+in loading this message over my phone's hotspot.
 
-Maxime
+> If you are truly concerned over 400k of bandwidth you need to switch
+> to a new internet provider.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---jeum2g7ncqcdbp47--
+Not everyone uses continuously fast connections.
+
+> This isn't the 1980s.
+
+2017 last I checked.
+
+Being thoughtful to others is still something you
+seem content to overlook.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
