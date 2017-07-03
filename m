@@ -1,114 +1,119 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3 v7] hsdk: initial port for HSDK board
-Date: Mon,  3 Jul 2017 19:51:06 +0300
-Message-ID: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 2/3 v7] ARC: Decouple linux kernel memory address and link address
+Date: Mon,  3 Jul 2017 19:51:08 +0300
+Message-ID: <20170703165109.31535-3-Eugeniy.Paltsev@synopsys.com>
+References: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces some required preparations and initial
-port of ARC HS Development Kit board with some basic features such
-as serial port, USB, SD/MMC and Ethernet.
+We faced with problem when we tried to utilize 1G DRAM by linux on
+HSDK.
 
-Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
-heavily use IO Coherency for speeding-up DMA-aware peripherals.
+We can't use our usual kernel memory address (0x80000000) like on
+AXS103 because of DCCM memory bank located at exactly same
+address (0x80000000)
+But we can't simply move kernel memory address to another address (like
+0x90000000) because IOC base address must be aligned to the
+size of the aperture as specified in the IOC size register.
 
-Note as opposed to other ARC boards we link Linux kernel to
-0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
-situated at our more usual link base 0x8000_0000.
+So we had to use 1G aligned address for kernel memory.
 
-Note that two patches of this series ("ARC: Decouple linux kernel memory
-address and link address" and "ARC: Set IO-coherency aperture base to 
-LINUX_LINK_BASE") are prerequisites for HDSK support as its hardware
-configuration differs quite a bit from what we used to have on other
-ARC boards.
+We can't use 0x00000000 or 0x40000000 addresses because addresses
+lover then 0x80000000 are MMU-translated.
+We can't use 0xB0000000 address because we can define a volatile
+uncached region only from AUX_NON_VOLATILE_LIMIT to the
+0xFFFFFFFF. (the end of region is hardcoded)
 
-Alexey Brodkin (1):
-  ARC: hsdk: initial port for HSDK board
+So, the decision is to link kernel to 0x90000000, but use
+0x80000000-0xBFFFFFFF memory region and reallocate DCCM in our platform
+code.
+This patch only makes possible to set kernel memory address not equal to
+kernel link address.
 
-Eugeniy Paltsev (2):
-  ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
-  ARC: Decouple linux kernel memory address and link address
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/Kconfig            | 5 +++++
+ arch/arc/include/asm/page.h | 2 +-
+ arch/arc/mm/cache.c         | 2 +-
+ arch/arc/mm/init.c          | 6 +++---
+ 4 files changed, 10 insertions(+), 5 deletions(-)
 
-Changes v6 -> v7:
- * DTS: get rid of skeleton.dts, move cpus nodes to hsdk.dts
- * DTS: style fixes
- * Enable loadable modules, module unloading and NFS client as defaults
- * Get rid of ARC_PLAT_HSDK board config option
-
-Changes v5 -> v6:
- * Add support of USB-to-HDMI adapter
- * Revert removing of resetting CREG_PAE bits.
-   PAE remapping for DMA clients does not work due to an RTL bug, so
-   CREG_PAE register must be programmed to all zeroes, otherwise it
-   will cause problems with DMA to/from peripherals even if PAE40 is
-   not used.
-
-Changes v4 -> v5:
- * Move DCCM outside of 0x8000_0000 adress at kernel boot time.
- * Decouple linux kernel memory address and link address.
- * Remove hardcoding of IO-coherency aperture base.
- * Remove resetting CREG_PAE bits as default value is suitable for us.
-
-Changes v3 -> v4:
- * Removed senseless "ranges" property from "memory" node in .dts
- * Refined early-boot code:
-    - ICCM relocation should be done on each and every core that sports ICCM
-      so we leave it in init_per_cpu(). Even though init_per_cpu() gets called
-      on the master core pretty late still it is way much earlier than that
-      moment when it might affect us - as it only huts us when addresses in
-      0x7z-0x7fff_ffff range are used, i.e. virtual addresses that we don't
-      use during init. This also makes code much cleaner compared to
-      additional check in case of master etc.
-
-Changes v2 -> v3:
- * Added Rob to Cc-list for DT binding approval
- * Removed mention of prerequsite patch from commit message
- * Removed hsdk_early_init() as hsdk_init_per_cpu() is executed on
-   all cores anyways including master
- * Cleaned-up board's .dts a little bit
- * Removed CONFIG_DP83867_PHY from defconfig as it was only used on
-   FPGA prototype, on real board we use MICREL PHY which is still selected
-
-Changes v1 -> v2:
- * Update copyright year from 2016 to more up to date 2017
- * Merge early UART clock with AXS10x as in both cases that's 33.3 MHz
- * Bump memory to 1Gb, we don't use more for now because it requires
-   trickier IOC setup and usage
- * Update early platform init code:
-    - Added missing fixup_pae_regs() to per-cpu init
-    - Mark most of functions as "static __init"
-    - Use writel_relaxed() for setting CREG_PAE, CREG_PAE_UPDATE is still
-      written with stronger writel() since we don't want reordering to happen,
-      otherwise value written to CREG_PAE won't be applied
-
- Documentation/devicetree/bindings/arc/hsdk.txt |   7 ++
- arch/arc/Kconfig                               |   6 +
- arch/arc/Makefile                              |   1 +
- arch/arc/boot/dts/hsdk.dts                     | 150 +++++++++++++++++++++++++
- arch/arc/boot/dts/include/dt-bindings          |   1 +
- arch/arc/configs/hsdk_defconfig                |  72 ++++++++++++
- arch/arc/include/asm/page.h                    |   2 +-
- arch/arc/kernel/devtree.c                      |   5 +-
- arch/arc/mm/cache.c                            |  33 ++++--
- arch/arc/mm/init.c                             |   6 +-
- arch/arc/plat-hsdk/Kconfig                     |  12 ++
- arch/arc/plat-hsdk/Makefile                    |   9 ++
- arch/arc/plat-hsdk/platform.c                  |  77 +++++++++++++
- 13 files changed, 366 insertions(+), 15 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arc/hsdk.txt
- create mode 100644 arch/arc/boot/dts/hsdk.dts
- create mode 120000 arch/arc/boot/dts/include/dt-bindings
- create mode 100644 arch/arc/configs/hsdk_defconfig
- create mode 100644 arch/arc/plat-hsdk/Kconfig
- create mode 100644 arch/arc/plat-hsdk/Makefile
- create mode 100644 arch/arc/plat-hsdk/platform.c
-
+diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+index a545969..75e5276 100644
+--- a/arch/arc/Kconfig
++++ b/arch/arc/Kconfig
+@@ -430,6 +430,11 @@ config LINUX_LINK_BASE
+ 	  However some customers have peripherals mapped at this addr, so
+ 	  Linux needs to be scooted a bit.
+ 	  If you don't know what the above means, leave this setting alone.
++
++config KERNEL_RAM_BASE_ADDRESS
++	hex "Linux ram base address"
++	default LINUX_LINK_BASE
++	help
+ 	  This needs to match memory start address specified in Device Tree
+ 
+ config HIGHMEM
+diff --git a/arch/arc/include/asm/page.h b/arch/arc/include/asm/page.h
+index 296c342..777f676 100644
+--- a/arch/arc/include/asm/page.h
++++ b/arch/arc/include/asm/page.h
+@@ -85,7 +85,7 @@ typedef pte_t * pgtable_t;
+  */
+ #define virt_to_pfn(kaddr)	(__pa(kaddr) >> PAGE_SHIFT)
+ 
+-#define ARCH_PFN_OFFSET		virt_to_pfn(CONFIG_LINUX_LINK_BASE)
++#define ARCH_PFN_OFFSET		virt_to_pfn(CONFIG_KERNEL_RAM_BASE_ADDRESS)
+ 
+ #ifdef CONFIG_FLATMEM
+ #define pfn_valid(pfn)		(((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
+index 383ff77..f303274 100644
+--- a/arch/arc/mm/cache.c
++++ b/arch/arc/mm/cache.c
+@@ -1113,7 +1113,7 @@ noinline void __init arc_ioc_setup(void)
+ 	 * For now we assume IOC aperture to cover all the memory used by the
+ 	 * kernel.
+ 	 */
+-	ap_base = CONFIG_LINUX_LINK_BASE;
++	ap_base = CONFIG_KERNEL_RAM_BASE_ADDRESS;
+ 
+ 	if (ap_base % ap_size != 0)
+ 		panic("IOC Aperture start must be aligned to the size of the aperture");
+diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
+index 8c9415e..f84cba2 100644
+--- a/arch/arc/mm/init.c
++++ b/arch/arc/mm/init.c
+@@ -26,7 +26,7 @@ pgd_t swapper_pg_dir[PTRS_PER_PGD] __aligned(PAGE_SIZE);
+ char empty_zero_page[PAGE_SIZE] __aligned(PAGE_SIZE);
+ EXPORT_SYMBOL(empty_zero_page);
+ 
+-static const unsigned long low_mem_start = CONFIG_LINUX_LINK_BASE;
++static const unsigned long low_mem_start = CONFIG_KERNEL_RAM_BASE_ADDRESS;
+ static unsigned long low_mem_sz;
+ 
+ #ifdef CONFIG_HIGHMEM
+@@ -63,7 +63,7 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ 
+ 	if (!low_mem_sz) {
+ 		if (base != low_mem_start)
+-			panic("CONFIG_LINUX_LINK_BASE != DT memory { }");
++			panic("CONFIG_KERNEL_RAM_BASE_ADDRESS != DT memory { }");
+ 
+ 		low_mem_sz = size;
+ 		in_use = 1;
+@@ -161,7 +161,7 @@ void __init setup_arch_memory(void)
+ 	 * We can't use the helper free_area_init(zones[]) because it uses
+ 	 * PAGE_OFFSET to compute the @min_low_pfn which would be wrong
+ 	 * when our kernel doesn't start at PAGE_OFFSET, i.e.
+-	 * PAGE_OFFSET != CONFIG_LINUX_LINK_BASE
++	 * PAGE_OFFSET != CONFIG_KERNEL_RAM_BASE_ADDRESS
+ 	 */
+ 	free_area_init_node(0,			/* node-id */
+ 			    zones_size,		/* num pages per zone */
 -- 
 2.9.3
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
