@@ -1,136 +1,70 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 5/6] clk: at91: clk-generated: make gclk
- determine audio_pll rate
-Date: Mon, 3 Jul 2017 16:19:05 +0200
-Message-ID: <20170703161905.5f994151@bbrezillon>
-References: <20170623090059.8371-1-quentin.schulz@free-electrons.com>
- <20170623090059.8371-6-quentin.schulz@free-electrons.com>
+From: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v2 0/5] Add SoM1 support
+Date: Mon, 3 Jul 2017 15:56:07 +0300
+Message-ID: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170623090059.8371-6-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, thomas.petazzoni@free-electrons.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, nicolas.ferre@microchip.com, linux@armlinux.org.uk, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, broonie@kernel.org, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sza-4N5lU0Zj96A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Jun 2017 11:00:58 +0200
-Quentin Schulz <quentin.schulz@free-electrons.com> wrote:
+Hi all,
 
-> This allows gclk to determine audio_pll rate and set the parent rate
-> accordingly.
-> 
-> However, there are multiple children clocks that could technically
-> change the rate of audio_pll. Since the clock rate is usually critical
-> for IPs, it isn't a good idea to have multiple clocks changing audio_pll
-> clock rate. There isn't any rate locking system for the moment, thus
-> we enforce that classd_gclk be the only one allowed to change audio_pll
-> rate. To remain consistent, we deny other clocks to be children of
-> audio_pll so classd_gclk altering audio_pll rate does not impact any
-> other device.
-> 
-> This needs to be re-worked once we have a rate locking system so two
-> clocks could be children of the same clock and be sure the clock rate
-> isn't changed by one or the other.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  drivers/clk/at91/clk-generated.c | 41 ++++++++++++++++++++++++++++++++++------
->  1 file changed, 35 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-> index 6530a2e7e84d..e66ee735a569 100644
-> --- a/drivers/clk/at91/clk-generated.c
-> +++ b/drivers/clk/at91/clk-generated.c
-> @@ -26,6 +26,9 @@
->  #define GENERATED_SOURCE_MAX	6
->  #define GENERATED_MAX_DIV	255
->  
-> +#define GCK_ID_CLASSD		59
-> +#define GCK_INDEX_DT_AUDIO_PLL	5
-> +
->  struct clk_generated {
->  	struct clk_hw hw;
->  	struct regmap *regmap;
-> @@ -126,15 +129,14 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
->  {
->  	struct clk_generated *gck = to_clk_generated(hw);
->  	struct clk_hw *parent = NULL;
-> +	struct clk_rate_request req_parent = *req;
->  	long best_rate = -EINVAL;
-> -	unsigned long min_rate;
-> +	unsigned long min_rate, parent_rate;
->  	int best_diff = -1;
->  	int i;
-> +	u32 div;
->  
-> -	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-> -		u32 div;
-> -		unsigned long parent_rate;
-> -
-> +	for (i = 0; i < clk_hw_get_num_parents(hw) - 1; i++) {
->  		parent = clk_hw_get_parent_by_index(hw, i);
->  		if (!parent)
->  			continue;
-> @@ -150,11 +152,37 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
->  		clk_generated_best_diff(req, parent, parent_rate, div,
->  					&best_diff, &best_rate);
->  
-> +		if (!best_diff)
-> +			break;
-> +	}
-> +
-> +	/*
-> +	 * The audio_pll rate can be modified unlike the five others clocks that
-> +	 * should never be altered.
-> +	 * The audio_pll can technically be used by multiple consumers. However,
-> +	 * they all are likely to want to modify its rate while the rate is
-> +	 * critical for each one. Since we do not have a rate locking for the
-> +	 * moment, let classd_gclk be the only consumer of the audio_pll clock.
-> +	 */
-> +
-> +	if (gck->id != GCK_ID_CLASSD)
-> +		goto end;
+This series adds support for sama5d2 SoM1 devices.
 
-As discussed on IRC with Nicolas and Cyrille, it seems we have other
-potential users of the audio-pll: SSC and I2S. Can you extend the test
-to let these GCK clks take the audio-pll?
+The at91-sama5d27_som1.dtsi add specific bindings for SoM1 board.
+The at91-sama5d27_som1_ek.dts add specific bindings for SoM1 EK board.
 
-> +
-> +	parent = clk_hw_get_parent_by_index(hw, GCK_INDEX_DT_AUDIO_PLL);
-> +	if (!parent)
-> +		goto end;
-> +
-> +	for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
-> +		req_parent.rate = req->rate * div;
-> +		__clk_determine_rate(parent, &req_parent);
-> +		clk_generated_best_diff(req, parent, req_parent.rate, div,
-> +					&best_diff, &best_rate);
->  
->  		if (!best_diff)
->  			break;
->  	}
->  
-> +end:
->  	pr_debug("GCLK: %s, best_rate = %ld, parent clk: %s @ %ld\n",
->  		 __func__, best_rate,
->  		 __clk_get_name((req->best_parent_hw)->clk),
-> @@ -264,7 +292,8 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
->  	init.ops = &generated_ops;
->  	init.parent_names = parent_names;
->  	init.num_parents = num_parents;
-> -	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-> +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
-> +		CLK_SET_RATE_PARENT;
->  
->  	gck->id = id;
->  	gck->hw.init = &init;
+The sama5d27_som1_ek uses a EEPROM binding, "start-offset", which is
+introduced in patch series: "[RFC PATCH 0/3] Add at24 functionality to
+read form different EEPROM offsets".
+
+Thank you,
+Claudiu
+
+Changes in v2:
+o in at91-sama5d27_som1.dtsi:
+- increase bootloader and kernel size in flash map (with bootloader
+flash offset the dtb and kernel flash offsets were changed)
+- use right pin for ethernet-phy interrupt
+
+o in at91-sama5d27_som1_ek.dts:
+- removed memory tag and rely on bootloader to fill the right value
+- use pin macros (from arch/arm/boot/dts/sama5d2-pinfunc.h) wherever
+posible instead of pin numbers
+- remove pinctrl_sensor_power and pinctrl_sensor_reset pin muxing
+since they are not of intereset for this board
+- use "pb4" label for user button instead of "bp1"
+
+Claudiu Beznea (2):
+  ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support
+  ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK support
+
+Cristian Birsan (1):
+  drivers: soc: atmel: Add basic support for new sama5d2 SiPs
+
+Cyrille Pitchen (1):
+  ARM: dts: at91: sama5d2: add QSPI nodes
+
+Songjun Wu (1):
+  ARM: dts: at91: sama5d2: add isc node
+
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi   | 178 +++++++++
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 551 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi              |  38 ++
+ drivers/soc/atmel/soc.c                     |   8 +
+ drivers/soc/atmel/soc.h                     |   4 +
+ 6 files changed, 780 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
