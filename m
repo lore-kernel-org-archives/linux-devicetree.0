@@ -1,70 +1,81 @@
-From: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v2 0/5] Add SoM1 support
-Date: Mon, 3 Jul 2017 15:56:07 +0300
-Message-ID: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: [PATCH v2 3/5] drivers: soc: atmel: Add basic support for new sama5d2 SiPs
+Date: Mon, 3 Jul 2017 15:56:10 +0300
+Message-ID: <1499086572-6083-4-git-send-email-claudiu.beznea@microchip.com>
+References: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sza-4N5lU0Zj96A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cristian.birsan@microchip.com, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+From: Cristian Birsan <cristian.birsan@microchip.com>
 
-This series adds support for sama5d2 SoM1 devices.
+Add basic support for new sama5d2 System in a Package chips.
 
-The at91-sama5d27_som1.dtsi add specific bindings for SoM1 board.
-The at91-sama5d27_som1_ek.dts add specific bindings for SoM1 EK board.
+Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+[claudiu.beznea@microchip.com: use MiB instead of MB]
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+---
+ drivers/soc/atmel/soc.c | 8 ++++++++
+ drivers/soc/atmel/soc.h | 4 ++++
+ 2 files changed, 12 insertions(+)
 
-The sama5d27_som1_ek uses a EEPROM binding, "start-offset", which is
-introduced in patch series: "[RFC PATCH 0/3] Add at24 functionality to
-read form different EEPROM offsets".
-
-Thank you,
-Claudiu
-
-Changes in v2:
-o in at91-sama5d27_som1.dtsi:
-- increase bootloader and kernel size in flash map (with bootloader
-flash offset the dtb and kernel flash offsets were changed)
-- use right pin for ethernet-phy interrupt
-
-o in at91-sama5d27_som1_ek.dts:
-- removed memory tag and rely on bootloader to fill the right value
-- use pin macros (from arch/arm/boot/dts/sama5d2-pinfunc.h) wherever
-posible instead of pin numbers
-- remove pinctrl_sensor_power and pinctrl_sensor_reset pin muxing
-since they are not of intereset for this board
-- use "pb4" label for user button instead of "bp1"
-
-Claudiu Beznea (2):
-  ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support
-  ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK support
-
-Cristian Birsan (1):
-  drivers: soc: atmel: Add basic support for new sama5d2 SiPs
-
-Cyrille Pitchen (1):
-  ARM: dts: at91: sama5d2: add QSPI nodes
-
-Songjun Wu (1):
-  ARM: dts: at91: sama5d2: add isc node
-
- arch/arm/boot/dts/Makefile                  |   1 +
- arch/arm/boot/dts/at91-sama5d27_som1.dtsi   | 178 +++++++++
- arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 551 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/sama5d2.dtsi              |  38 ++
- drivers/soc/atmel/soc.c                     |   8 +
- drivers/soc/atmel/soc.h                     |   4 +
- 6 files changed, 780 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
- create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-
+diff --git a/drivers/soc/atmel/soc.c b/drivers/soc/atmel/soc.c
+index c1363c8..4dd03b0 100644
+--- a/drivers/soc/atmel/soc.c
++++ b/drivers/soc/atmel/soc.c
+@@ -72,6 +72,8 @@ static const struct at91_soc __initconst socs[] = {
+ 		 "sama5d21", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D22CU_EXID_MATCH,
+ 		 "sama5d22", "sama5d2"),
++	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D225C_D1M_EXID_MATCH,
++		 "sama5d225c 16MiB SiP", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D23CU_EXID_MATCH,
+ 		 "sama5d23", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D24CX_EXID_MATCH,
+@@ -84,10 +86,16 @@ static const struct at91_soc __initconst socs[] = {
+ 		 "sama5d27", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D27CN_EXID_MATCH,
+ 		 "sama5d27", "sama5d2"),
++	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D27C_D1G_EXID_MATCH,
++		 "sama5d27c 128MiB SiP", "sama5d2"),
++	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D27C_D5M_EXID_MATCH,
++		 "sama5d27c 64MiB SiP", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D28CU_EXID_MATCH,
+ 		 "sama5d28", "sama5d2"),
+ 	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D28CN_EXID_MATCH,
+ 		 "sama5d28", "sama5d2"),
++	AT91_SOC(SAMA5D2_CIDR_MATCH, SAMA5D28C_D1G_EXID_MATCH,
++		 "sama5d28c 128MiB SiP", "sama5d2"),
+ 	AT91_SOC(SAMA5D3_CIDR_MATCH, SAMA5D31_EXID_MATCH,
+ 		 "sama5d31", "sama5d3"),
+ 	AT91_SOC(SAMA5D3_CIDR_MATCH, SAMA5D33_EXID_MATCH,
+diff --git a/drivers/soc/atmel/soc.h b/drivers/soc/atmel/soc.h
+index a90bd5b..94cd5d1 100644
+--- a/drivers/soc/atmel/soc.h
++++ b/drivers/soc/atmel/soc.h
+@@ -64,14 +64,18 @@ at91_soc_init(const struct at91_soc *socs);
+ 
+ #define SAMA5D2_CIDR_MATCH		0x0a5c08c0
+ #define SAMA5D21CU_EXID_MATCH		0x0000005a
++#define SAMA5D225C_D1M_EXID_MATCH	0x00000053
+ #define SAMA5D22CU_EXID_MATCH		0x00000059
+ #define SAMA5D22CN_EXID_MATCH		0x00000069
+ #define SAMA5D23CU_EXID_MATCH		0x00000058
+ #define SAMA5D24CX_EXID_MATCH		0x00000004
+ #define SAMA5D24CU_EXID_MATCH		0x00000014
+ #define SAMA5D26CU_EXID_MATCH		0x00000012
++#define SAMA5D27C_D1G_EXID_MATCH	0x00000033
++#define SAMA5D27C_D5M_EXID_MATCH	0x00000032
+ #define SAMA5D27CU_EXID_MATCH		0x00000011
+ #define SAMA5D27CN_EXID_MATCH		0x00000021
++#define SAMA5D28C_D1G_EXID_MATCH	0x00000013
+ #define SAMA5D28CU_EXID_MATCH		0x00000010
+ #define SAMA5D28CN_EXID_MATCH		0x00000020
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
