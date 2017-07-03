@@ -1,86 +1,38 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv5 4/6] mfd: da9052: make touchscreen registration optional
-Date: Mon,  3 Jul 2017 10:40:01 +0200
-Message-ID: <20170703084003.31184-5-sebastian.reichel@collabora.co.uk>
-References: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
-Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] media: adv7180: add missing adv7180cp, adv7180st i2c device IDs
+Date: Mon,  3 Jul 2017 10:43:33 +0200
+Message-ID: <1499071413-609-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If the touchscreen pins are used as general purpose analogue
-input, the touchscreen driver should not be used. The pins
-will be handled by the existing hwmon driver instead.
+Fixes a crash on Renesas R8A7793 Gose board that uses these "compatible"
+entries.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- drivers/mfd/da9052-core.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
+ drivers/media/i2c/adv7180.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mfd/da9052-core.c b/drivers/mfd/da9052-core.c
-index 977418ca9117..a671c18381d7 100644
---- a/drivers/mfd/da9052-core.c
-+++ b/drivers/mfd/da9052-core.c
-@@ -18,6 +18,7 @@
- #include <linux/mfd/core.h>
- #include <linux/slab.h>
- #include <linux/module.h>
-+#include <linux/property.h>
+diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
+index 78de7dd..3df28f2 100644
+--- a/drivers/media/i2c/adv7180.c
++++ b/drivers/media/i2c/adv7180.c
+@@ -1402,6 +1402,8 @@ static int adv7180_remove(struct i2c_client *client)
  
- #include <linux/mfd/da9052/da9052.h>
- #include <linux/mfd/da9052/pdata.h>
-@@ -521,9 +522,6 @@ static const struct mfd_cell da9052_subdev_info[] = {
- 		.name = "da9052-wled3",
- 	},
- 	{
--		.name = "da9052-tsi",
--	},
--	{
- 		.name = "da9052-bat",
- 	},
- 	{
-@@ -531,6 +529,12 @@ static const struct mfd_cell da9052_subdev_info[] = {
- 	},
- };
- 
-+static const struct mfd_cell da9052_tsi_subdev_info[] = {
-+	{
-+		.name = "da9052-tsi",
-+	},
-+};
-+
- const struct regmap_config da9052_regmap_config = {
- 	.reg_bits = 8,
- 	.val_bits = 8,
-@@ -621,9 +625,27 @@ int da9052_device_init(struct da9052 *da9052, u8 chip_id)
- 		goto err;
- 	}
- 
-+	/*
-+	 * Check if touchscreen pins are used are analogue input instead
-+	 * of having a touchscreen connected to them. The analogue input
-+	 * functionality will be provided by hwmon driver (if enabled).
-+	 */
-+	if (!device_property_read_bool(da9052->dev, "dlg,tsi-as-adc")) {
-+		ret = mfd_add_devices(da9052->dev, PLATFORM_DEVID_AUTO,
-+				      da9052_tsi_subdev_info,
-+				      ARRAY_SIZE(da9052_tsi_subdev_info),
-+				      NULL, 0, NULL);
-+		if (ret) {
-+			dev_err(da9052->dev, "failed to add TSI subdev: %d\n",
-+				ret);
-+			goto err;
-+		}
-+	}
-+
- 	return 0;
- 
- err:
-+	mfd_remove_devices(da9052->dev);
- 	da9052_irq_exit(da9052);
- 
- 	return ret;
+ static const struct i2c_device_id adv7180_id[] = {
+ 	{ "adv7180", (kernel_ulong_t)&adv7180_info },
++	{ "adv7180cp", (kernel_ulong_t)&adv7180_info },
++	{ "adv7180st", (kernel_ulong_t)&adv7180_info },
+ 	{ "adv7182", (kernel_ulong_t)&adv7182_info },
+ 	{ "adv7280", (kernel_ulong_t)&adv7280_info },
+ 	{ "adv7280-m", (kernel_ulong_t)&adv7280_m_info },
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
