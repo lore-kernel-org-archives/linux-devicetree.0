@@ -1,70 +1,38 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Mon, 3 Jul 2017 19:06:48 +1000
-Message-ID: <20170703090648.GV13989@umbus.fritz.box>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v5 05/14] MIPS: ingenic: Enable pinctrl for all ingenic SoCs
+Date: Mon, 3 Jul 2017 11:07:09 +0200
+Message-ID: <CACRpkdb=Zti+C+2me_WP0=m6z12G5Kz+W_cPcZsw=CVzBO_wAg@mail.gmail.com>
+References: <20170402204244.14216-2-paul@crapouillou.net> <20170428200824.10906-1-paul@crapouillou.net>
+ <20170428200824.10906-6-paul@crapouillou.net> <CACRpkdauf5c2i4o5i8QY8YHPNjizkvTu6kAbnquWiP_=v2=KdQ@mail.gmail.com>
+ <1499013301.1477.0@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wfgmFf0LjPE7xkRl"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497451946-15443-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1499013301.1477.0@smtp.crapouillou.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, James Hogan <james.hogan@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>"linux-mtd@lists.infradead.org" <li>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Jul 2, 2017 at 6:35 PM, Paul Cercueil <paul@crapouillou.net> wrote:
+> Hi Linus,
+>
+>> I applied all the patches to a branch in pinctrl and merged into my
+>> devel branch for testing:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git/
+>> Branch: ingenic
+>>
+>> Ralf: are you OK with this? It would be nice to have your ACK on
+>> all patches. If you want you can pull this branch into the MIPS
+>> tree, or we can hope for it all to settle nicely because of low platform
+>> activity in MIPS on this platform, so it only needs to come in
+>> from my trees.
+>
+>
+> There has been no word from Ralf, is this going into 4.13?
 
---wfgmFf0LjPE7xkRl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes.
 
-On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
-> This patch enables an overlay to refer to a previous overlay's
-> labels by performing a merge of symbol information at application
-> time.
-
-This seems to be doing things the hard way.
-
-You're essentially extending the semantics of overlay application to
-add the symbol merging.  You've implemented these extended semantics
-in libfdt, which is all very well, but that's not the only overlay
-application implementation.
-
-
-It seems to me a better approach would be to change dtc's -@
-implementation, so that in /plugin/ mode instead of making a global
-__symbols__ node, it puts it into the individual fragments.  That way
-the existing overlay application semantics will update the __symbols__
-node.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---wfgmFf0LjPE7xkRl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJZWgklAAoJEGw4ysog2bOSoVkQALIXhdKuBWzar8T8lnWEePdE
-oqc6jBtKgcMaSatYa3m1hlkOUv5GL8TmC+XsGTw6VwHiiZvXv39M5ZbBmMlOBbF6
-BIY7RQ1bjcICF/2HNwojzhWqGk9nFdxbeo0ub7Dg1mXhbnkN7GOFBZVsE7P2EwfZ
-25qcbsQcqsg72LhQ7Ky88sG4h8J9YSAmbcKMcWIltcc0gdFHmkvKaZpnacl4IWOT
-0Cnk989+cOZ8J8tz/63CqSB8ZjADLg9koiwS9CH3tg8NY+rwU1+wqCgO9s/Qt9g7
-4QwWhjZ7EGeVJpnOlfXskKgxMJf3Vhk5WDCmL0dt8wnxGxTnpMhgsQ6CQNGmvIOg
-fFd/KWJiBJrcDCMOIvXKluIZrOCSXdocMra85mlG6MzxtPXijgqq+CRMSFWC7yhd
-U02QyF9nY39v5jeV17FwVqrUJhvpBXbu3wBDumUqpIVazRw6syVtpPK1vpucyBeY
-Y1T0Tmi6EfXlLZXX9xzd6/TUQOI2EsuaHKWQi0aam1UY3p1t0Z42+ovs2HVnI5Oy
-WJeW1ILoDkeZExyHC6yY57ho/CcJKWa2ahOJU76rANeQgvNjtXfynmz3BjR1KwHY
-r4dhnwoh3t8os0J6/ecIDERfbZA7OZNAYWlGPr+2+ufDuIN0UeYlFN4ED7hnyIn5
-lMuPLtK9z/3Hgk0v33kV
-=yz45
------END PGP SIGNATURE-----
-
---wfgmFf0LjPE7xkRl--
+Yours,
+Linus Walleij
