@@ -1,415 +1,111 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] hwmon: ltc2990: support all measurement modes
-Date: Mon, 3 Jul 2017 10:09:26 -0700
-Message-ID: <080a2b76-7c9d-d8f2-c8f2-be1a513e2daa@roeck-us.net>
-References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
- <1499056140-6064-3-git-send-email-tom.levens@cern.ch>
- <341b5c67-c013-5a7c-54b5-e8c2a7c168e7@topic.nl>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH v8 0/2] More fixes for twl4030 charger
+Date: Mon, 3 Jul 2017 19:18:35 +0200
+Message-ID: <20170703171835.gidyf3fmg32rfptq@earth>
+References: <cover.1499099830.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <341b5c67-c013-5a7c-54b5-e8c2a7c168e7-Oq418RWZeHk@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ez2c5yvealysbg5s"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1499099830.git.hns@goldelico.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2017 11:29 PM, Mike Looijmans wrote:
-> Applied, and tested on my board, so you have my
-> 
-> Tested-By: mike.looijmans-Oq418RWZeHk@public.gmane.org
-> 
-> Probably the maintainers will like to see a patch header mail with a "v3" summary for what you've changed ("git send-email --cover-letter" or something similar to that)
-> 
 
-... and without it, the patch series tends to end up at the end of my review
-list since I'll have to spend time tracking down the changes myself or, per
-my choice, start all over and hope I catch all the problems found earlier.
+--ez2c5yvealysbg5s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In other words, if people would like their patch series handled with
-priority, making life easy for maintainers is a good start.
+Hi,
 
-Guenter
+Thanks, queued. I will send these in 2nd pull-request end of next
+week, so that they get some time in linux-next.
 
-> On 03-07-17 06:29, Tom Levens wrote:
->> Updated version of the ltc2990 driver which supports all measurement
->> modes (current, voltage, temperature) available in the chip.
->>
->> If devicetree is used, the mode must be specified with the property
->> "lltc,meas-mode". The format and possible values of the property are
+-- Sebastian
 
-AFAIK, DT maintainers are not much into abbreviations.
+On Mon, Jul 03, 2017 at 06:37:09PM +0200, H. Nikolaus Schaller wrote:
+> Changes V78:
+> * further fix for wrong notifier initialization sequence (suggested by Se=
+bastian Reichel)
+>=20
+> 2017-06-19 10:41:47: Changes V7:
+> * removed already merged patches from patch set
+> * further fix for potentially wrong irq and notifier initialization seque=
+nce (suggested by Sebastian Reichel)
+> * NULLify transceiver pointer in case of errors (suggested by Sebastian R=
+eichel)
+>=20
+> 2017-06-14 11:25:59: Changes V6:
+> * split up -EPROBE_DEFER and irq allocation patch into small steps:
+> 	* convert iio to devm allocation (by Sebsatian Reichel)
+> 	* fix potentially wrong initialization sequence (by Grygorii Strashko)
+> 	* add -EPROBE_DEFER
+>=20
+> 2017-05-21 12:38:24: Changes V5:
+> * reworked max_current removal patch (comments by Sebastian Reichel)
+> * resubmit missing madc connection for AC power detection
+> * resubmit patch for irq allocation and -EPROBE_DEFER
+> * rebased on 4.12-rc1
+>=20
+> Changes V4:
+> * resent commit (original one did contain material not upstream)
+>=20
+> 2017-04-14 21:29:39: 2017-04-14 20:26:00: Changes V3:
+> * worked in comments by Sebsatian Reichel
+> * clarifications of some commit messages
+> * rebased on v4.11rc-6
+>=20
+> It took a while (18 months) until we propose an updated patch for upstrea=
+m...
+>=20
+> 2015-11-02 12:27:39: Changes V2:
+> * worked in comments by Nishanth Menon <nm@ti.com>
+> * added another patch which solves a probing/boot stall problem (irq allo=
+cation vs. -EPROBE_DEFER)
+>=20
+> V1:
+> 4.3-rc1 introduced a new charger driver for the twl4030. This patch set f=
+ixes some
+> issues.
+>=20
+> While making twl4030 changes from 4.3 operable we have found some issues
+> during testing on GTA04 and OpenPandora.
+>=20
+> H. Nikolaus Schaller (2):
+>   power: supply: twl4030-charger: move irq allocation to just before
+>     irqs are enabled
+>   power: supply: twl4030-charger: add deferred probing for phy and iio
+>=20
+>  drivers/power/supply/twl4030_charger.c | 43 ++++++++++++++++++++++------=
+------
+>  1 file changed, 28 insertions(+), 15 deletions(-)
+>=20
+> --=20
+> 2.12.2
+>=20
 
->> described in the binding.
->>
->> If devicetree is not used, the mode of the chip will not be configured.
->> Unless the chip is configured by another source, only the internal
->> temperature and supply voltage will be measured.
->>
->> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
->> ---
->>   Documentation/hwmon/ltc2990 |  24 ++++--
->>   drivers/hwmon/Kconfig       |   7 +-
->>   drivers/hwmon/ltc2990.c     | 196 +++++++++++++++++++++++++++++++++++++-------
->>   3 files changed, 185 insertions(+), 42 deletions(-)
->>
->> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
->> index c25211e..3ed68f6 100644
->> --- a/Documentation/hwmon/ltc2990
->> +++ b/Documentation/hwmon/ltc2990
->> @@ -8,6 +8,7 @@ Supported chips:
->>       Datasheet: http://www.linear.com/product/ltc2990
->>   Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
->> +        Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
->>   Description
->> @@ -16,10 +17,8 @@ Description
->>   LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
->>   The chip's inputs can measure 4 voltages, or two inputs together (1+2 and 3+4)
->>   can be combined to measure a differential voltage, which is typically used to
->> -measure current through a series resistor, or a temperature.
->> -
->> -This driver currently uses the 2x differential mode only. In order to support
->> -other modes, the driver will need to be expanded.
->> +measure current through a series resistor, or a temperature with an external
->> +diode.
->>   Usage Notes
->> @@ -32,12 +31,19 @@ devices explicitly.
->>   Sysfs attributes
->>   ----------------
->> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
->> +temp1_input   Internal chip temperature in millidegrees Celcius
->> +
->> +A subset of the following attributes are visible, depending on the measurement
->> +mode of the chip.
->> +
->> +in[1-4]_input Voltage at V[1-4] pin in millivolt
->> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
->> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
->> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
->> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
->> +
->>   The "curr*_input" measurements actually report the voltage drop across the
->>   input pins in microvolts. This is equivalent to the current through a 1mOhm
->>   sense resistor. Divide the reported value by the actual sense resistor value
->>   in mOhm to get the actual value.
->> -
->> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
->> -temp1_input   Internal chip temperature in millidegrees Celcius
->> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense resistor.
->> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense resistor.
->> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
->> index 5ef2814..578e5a9 100644
->> --- a/drivers/hwmon/Kconfig
->> +++ b/drivers/hwmon/Kconfig
->> @@ -709,15 +709,12 @@ config SENSORS_LTC2945
->>         be called ltc2945.
->>   config SENSORS_LTC2990
->> -    tristate "Linear Technology LTC2990 (current monitoring mode only)"
->> +    tristate "Linear Technology LTC2990"
->>       depends on I2C
->>       help
->>         If you say yes here you get support for Linear Technology LTC2990
->>         I2C System Monitor. The LTC2990 supports a combination of voltage,
->> -      current and temperature monitoring, but in addition to the Vcc supply
->> -      voltage and chip temperature, this driver currently only supports
->> -      reading two currents by measuring two differential voltages across
->> -      series resistors.
->> +      current and temperature monitoring.
->>         This driver can also be built as a module. If so, the module will
->>         be called ltc2990.
->> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
->> index e320d21..32f3a8d 100644
->> --- a/drivers/hwmon/ltc2990.c
->> +++ b/drivers/hwmon/ltc2990.c
->> @@ -5,10 +5,6 @@
->>    * Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
->>    *
->>    * License: GPLv2
->> - *
->> - * This driver assumes the chip is wired as a dual current monitor, and
->> - * reports the voltage drop across two series resistors. It also reports
->> - * the chip's internal temperature and Vcc power supply voltage.
->>    */
->>   #include <linux/bitops.h>
->> @@ -18,6 +14,7 @@
->>   #include <linux/i2c.h>
->>   #include <linux/kernel.h>
->>   #include <linux/module.h>
->> +#include <linux/of.h>
->>   #define LTC2990_STATUS    0x00
->>   #define LTC2990_CONTROL    0x01
->> @@ -29,35 +26,109 @@
->>   #define LTC2990_V4_MSB    0x0C
->>   #define LTC2990_VCC_MSB    0x0E
->> -#define LTC2990_CONTROL_KELVIN        BIT(7)
->> -#define LTC2990_CONTROL_SINGLE        BIT(6)
->> -#define LTC2990_CONTROL_MEASURE_ALL    (0x3 << 3)
->> -#define LTC2990_CONTROL_MODE_CURRENT    0x06
->> -#define LTC2990_CONTROL_MODE_VOLTAGE    0x07
->> +#define LTC2990_IN0    BIT(0)
->> +#define LTC2990_IN1    BIT(1)
->> +#define LTC2990_IN2    BIT(2)
->> +#define LTC2990_IN3    BIT(3)
->> +#define LTC2990_IN4    BIT(4)
->> +#define LTC2990_CURR1    BIT(5)
->> +#define LTC2990_CURR2    BIT(6)
->> +#define LTC2990_TEMP1    BIT(7)
->> +#define LTC2990_TEMP2    BIT(8)
->> +#define LTC2990_TEMP3    BIT(9)
->> +#define LTC2990_NONE    0
->> +#define LTC2990_ALL    GENMASK(9, 0)
->> +
->> +#define LTC2990_MODE0_SHIFT    0
->> +#define LTC2990_MODE0_MASK    GENMASK(2, 0)
->> +#define LTC2990_MODE1_SHIFT    3
->> +#define LTC2990_MODE1_MASK    GENMASK(1, 0)
->> +
->> +/* Enabled measurements for mode bits 2..0 */
->> +static const int ltc2990_attrs_ena_0[] = {
->> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
->> +    LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
->> +    LTC2990_TEMP2 | LTC2990_CURR2,
->> +    LTC2990_TEMP2 | LTC2990_TEMP3,
->> +    LTC2990_CURR1 | LTC2990_CURR2,
->> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
->> +};
->> +
->> +/* Enabled measurements for mode bits 4..3 */
->> +static const int ltc2990_attrs_ena_1[] = {
->> +    LTC2990_NONE,
->> +    LTC2990_TEMP2 | LTC2990_IN1 | LTC2990_CURR1,
->> +    LTC2990_TEMP3 | LTC2990_IN3 | LTC2990_CURR2,
->> +    LTC2990_ALL
->> +};
->> +
->> +struct ltc2990_data {
->> +    struct i2c_client *i2c;
->> +    u32 mode[2];
->> +};
->>   /* Return the converted value from the given register in uV or mC */
->> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
->> +static int ltc2990_get_value(struct i2c_client *i2c, int index, int *result)
->>   {
->>       int val;
->> +    u8 reg;
->> +
->> +    switch (index) {
->> +    case LTC2990_IN0:
->> +        reg = LTC2990_VCC_MSB;
->> +        break;
->> +    case LTC2990_IN1:
->> +    case LTC2990_CURR1:
->> +    case LTC2990_TEMP2:
->> +        reg = LTC2990_V1_MSB;
->> +        break;
->> +    case LTC2990_IN2:
->> +        reg = LTC2990_V2_MSB;
->> +        break;
->> +    case LTC2990_IN3:
->> +    case LTC2990_CURR2:
->> +    case LTC2990_TEMP3:
->> +        reg = LTC2990_V3_MSB;
->> +        break;
->> +    case LTC2990_IN4:
->> +        reg = LTC2990_V4_MSB;
->> +        break;
->> +    case LTC2990_TEMP1:
->> +        reg = LTC2990_TINT_MSB;
->> +        break;
->> +    default:
->> +        return -EINVAL;
->> +    }
->>       val = i2c_smbus_read_word_swapped(i2c, reg);
->>       if (unlikely(val < 0))
->>           return val;
->> -    switch (reg) {
->> -    case LTC2990_TINT_MSB:
->> -        /* internal temp, 0.0625 degrees/LSB, 13-bit  */
->> +    switch (index) {
->> +    case LTC2990_TEMP1:
->> +    case LTC2990_TEMP2:
->> +    case LTC2990_TEMP3:
->> +        /* temp, 0.0625 degrees/LSB */
->>           *result = sign_extend32(val, 12) * 1000 / 16;
->>           break;
->> -    case LTC2990_V1_MSB:
->> -    case LTC2990_V3_MSB:
->> -         /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
->> +    case LTC2990_CURR1:
->> +    case LTC2990_CURR2:
->> +         /* Vx-Vy, 19.42uV/LSB */
->>           *result = sign_extend32(val, 14) * 1942 / 100;
->>           break;
->> -    case LTC2990_VCC_MSB:
->> -        /* Vcc, 305.18μV/LSB, 2.5V offset */
->> +    case LTC2990_IN0:
->> +        /* Vcc, 305.18uV/LSB, 2.5V offset */
->>           *result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
->>           break;
->> +    case LTC2990_IN1:
->> +    case LTC2990_IN2:
->> +    case LTC2990_IN3:
->> +    case LTC2990_IN4:
->> +        /* Vx, 305.18uV/LSB */
->> +        *result = sign_extend32(val, 14) * 30518 / (100 * 1000);
->> +        break;
->>       default:
->>           return -EINVAL; /* won't happen, keep compiler happy */
->>       }
->> @@ -69,48 +140,117 @@ static ssize_t ltc2990_show_value(struct device *dev,
->>                     struct device_attribute *da, char *buf)
->>   {
->>       struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
->> +    struct ltc2990_data *data = dev_get_drvdata(dev);
->>       int value;
->>       int ret;
->> -    ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
->> +    ret = ltc2990_get_value(data->i2c, attr->index, &value);
->>       if (unlikely(ret < 0))
->>           return ret;
->>       return snprintf(buf, PAGE_SIZE, "%d\n", value);
->>   }
->> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
->> +                     struct attribute *a, int n)
->> +{
->> +    struct device *dev = container_of(kobj, struct device, kobj);
->> +    struct ltc2990_data *data = dev_get_drvdata(dev);
->> +    struct device_attribute *da =
->> +            container_of(a, struct device_attribute, attr);
->> +    struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
->> +
->> +    int attrs_mask = LTC2990_IN0 | LTC2990_TEMP1 |
->> +             ltc2990_attrs_ena_0[data->mode[0]] &
->> +             ltc2990_attrs_ena_1[data->mode[1]];
->> +
->> +    if (attr->index & attrs_mask)
->> +        return a->mode;
->> +
->> +    return 0;
->> +}
->> +
->>   static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value, NULL,
->> -              LTC2990_TINT_MSB);
->> +              LTC2990_TEMP1);
->> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_TEMP2);
->> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_TEMP3);
->>   static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value, NULL,
->> -              LTC2990_V1_MSB);
->> +              LTC2990_CURR1);
->>   static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value, NULL,
->> -              LTC2990_V3_MSB);
->> +              LTC2990_CURR2);
->>   static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
->> -              LTC2990_VCC_MSB);
->> +              LTC2990_IN0);
->> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN1);
->> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN2);
->> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN3);
->> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
->> +              LTC2990_IN4);
->>   static struct attribute *ltc2990_attrs[] = {
->>       &sensor_dev_attr_temp1_input.dev_attr.attr,
->> +    &sensor_dev_attr_temp2_input.dev_attr.attr,
->> +    &sensor_dev_attr_temp3_input.dev_attr.attr,
->>       &sensor_dev_attr_curr1_input.dev_attr.attr,
->>       &sensor_dev_attr_curr2_input.dev_attr.attr,
->>       &sensor_dev_attr_in0_input.dev_attr.attr,
->> +    &sensor_dev_attr_in1_input.dev_attr.attr,
->> +    &sensor_dev_attr_in2_input.dev_attr.attr,
->> +    &sensor_dev_attr_in3_input.dev_attr.attr,
->> +    &sensor_dev_attr_in4_input.dev_attr.attr,
->>       NULL,
->>   };
->> -ATTRIBUTE_GROUPS(ltc2990);
->> +
->> +static const struct attribute_group ltc2990_group = {
->> +    .attrs = ltc2990_attrs,
->> +    .is_visible = ltc2990_attrs_visible,
->> +};
->> +__ATTRIBUTE_GROUPS(ltc2990);
->>   static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>                    const struct i2c_device_id *id)
->>   {
->>       int ret;
->>       struct device *hwmon_dev;
->> +    struct ltc2990_data *data;
->> +    struct device_node *of_node = i2c->dev.of_node;
->>       if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
->>                        I2C_FUNC_SMBUS_WORD_DATA))
->>           return -ENODEV;
->> -    /* Setup continuous mode, current monitor */
->> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data), GFP_KERNEL);
->> +    if (unlikely(!data))
->> +        return -ENOMEM;
->> +
->> +    data->i2c = i2c;
->> +
->> +    if (of_node) {
->> +        ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
->> +                         data->mode, 2);
->> +        if (ret < 0)
->> +            return ret;
->> +
->> +        if (data->mode[0] & ~LTC2990_MODE0_MASK ||
->> +            data->mode[1] & ~LTC2990_MODE1_MASK)
->> +            return -EINVAL;
->> +    } else {
->> +        ret = i2c_smbus_read_byte_data(i2c, LTC2990_CONTROL);
->> +        if (ret < 0)
->> +            return ret;
->> +
->> +        data->mode[0] = ret >> LTC2990_MODE0_SHIFT & LTC2990_MODE0_MASK;
->> +        data->mode[1] = ret >> LTC2990_MODE1_SHIFT & LTC2990_MODE1_MASK;
->> +    }
->> +
->> +    /* Setup continuous mode */
->>       ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
->> -                    LTC2990_CONTROL_MEASURE_ALL |
->> -                    LTC2990_CONTROL_MODE_CURRENT);
->> +                    data->mode[0] << LTC2990_MODE0_SHIFT |
->> +                    data->mode[1] << LTC2990_MODE1_SHIFT);
->>       if (ret < 0) {
->>           dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
->>           return ret;
->> @@ -124,7 +264,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
->>       hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
->>                                  i2c->name,
->> -                               i2c,
->> +                               data,
->>                                  ltc2990_groups);
->>       return PTR_ERR_OR_ZERO(hwmon_dev);
->>
-> 
-> 
-> 
-> Kind regards,
-> 
-> Mike Looijmans
-> System Expert
-> 
-> TOPIC Products
-> Materiaalweg 4, NL-5681 RJ Best
-> Postbus 440, NL-5680 AK Best
-> Telefoon: +31 (0) 499 33 69 79
-> E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
-> Website: www.topicproducts.com
-> 
-> Please consider the environment before printing this e-mail
-> 
-> 
-> 
-> 
+--ez2c5yvealysbg5s
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllafGsACgkQ2O7X88g7
++prppw//TqiCJO9wMGm9lRJhkudKhobWsuFs/N+d1wt1N/5niBm8WsxWowut9vly
+Aer4jSYKawTYXAu/O61Ev5lOT79caGu90b1otoPHyv1XBoqv4fUgHe++O+liR/Bd
+0TQ8REdwZZhwOaiRgkuUJFzJjM6Ix2o56jaIQtFmvoFEwLl9C1pE4uTSgiaq6UeB
+viTB2L1kEGl/0BcbmFMtkIE9tJaFh6ZFkDqaZx+vW6fM251bE1beCtQuBWdKoHz+
+TrJ8fPPkIPbOVwFUxeCcq7jK3h2yaD4PwMRb3vY+6IIY7GrJMyJwuBBslYR4/kNB
+rxgklmUwahetog0Wl5yAG8d2jfKbPj7zHPKPUo0k+cLB+PNVnhw4qautlG50l0eq
+SG2Btb+OIYb9s60nl14qCxxCadaxEMDr7LNWRL4kpVH0YHHIr8YUqaZIEsbgLxAj
+Ex9STaAIGHqTKbiVGcck72Hojka8yLYxOgwNXYzz4PRVjkfzuO2U5BjBPZebcHMN
+KLrjYqXJ2OScGABZfnvBhhuU8AepK+eT6C1SZqSFXJFz1B2IixngV3hlxLPHV3e+
+oL+OMZNAtZNWcu+BU5ijlZiRxJdwjC5EirJ0UmMG8EyoRHVxWmYySH0Nf0+Lg2OC
+vXO/zM5iouE6WXpLBq6Xqeot3wMG5hW1eL2P5AcZaLcqn09xQA0=
+=ic4V
+-----END PGP SIGNATURE-----
+
+--ez2c5yvealysbg5s--
