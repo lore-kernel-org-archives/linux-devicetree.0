@@ -1,837 +1,457 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH RFC 1/2] media: V3s: Add support for Allwinner CSI.
-Date: Mon, 3 Jul 2017 18:59:52 +0800
-Message-ID: <20170703185952.18a97e9b7b05cbe321cb1268@magewell.com>
-References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
-        <1498561654-14658-2-git-send-email-yong.deng@magewell.com>
-        <667c858b-2655-88c5-6bbc-9d70d06c1ff1@xs4all.nl>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: Add driver for RAVE Supervisory Processor
+Date: Mon, 3 Jul 2017 12:11:00 +0100
+Message-ID: <20170703111100.ok3tm45j7oc77ak2@dell>
+References: <20170613012358.15084-1-andrew.smirnov@gmail.com>
+ <20170620081900.geyv7v564xmlk2am@dell>
+ <CAHQ1cqFUmFnzA76UgTsNN165LOifh4RBA4QEN3LewxTqywcAaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <667c858b-2655-88c5-6bbc-9d70d06c1ff1-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHQ1cqFUmFnzA76UgTsNN165LOifh4RBA4QEN3LewxTqywcAaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Fri, 23 Jun 2017, Andrey Smirnov wrote:
 
-Thanks for your review.
+> On Tue, Jun 20, 2017 at 1:19 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Mon, 12 Jun 2017, Andrey Smirnov wrote:
+> >
+> >> Add a driver for RAVE Supervisory Processor, an MCU implementing
+> >> varoius bits of housekeeping functionality (watchdoging, backlight
+> >> control, LED control, etc) on RAVE family of products by Zodiac
+> >> Inflight Innovations.
+> >>
+> >> This driver implementes core MFD/serdev device as well as
+> >> communication subroutines necessary for commanding the device.
+> >>
+> >> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> >> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> >> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> ---
+> >>
+> >> Changes since [v1]:
+> >>
+> >>  - Fix MODULE_LICENSE to specify "GPL v2"
+> >>
+> >>  - Fix a bug in rave_sp_get_status()
+> >>
+> >>  - Use %zu to fix warning repored by kbuild test robot
+> >>
+> >>  - Remove "status" properties from examples zii,rave-sp.txt as well as
+> >>    clarify the fact that device node is expected to be a child of a
+> >>    serial device node
+> >>
+> >> NOTE:
+> >>
+> >>  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+> >>    submitted it yet, becuase I wanted to make sure that API exposed by
+> >>    this MFD is acceptable and doesn't need drastic changes
+> >>
+> >>  * This driver is dependent on crc_ccitt_false() introduced in
+> >>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+> >>
+> >>
+> >> [v1] lkml.kernel.org/r/20170606180643.14258-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> >>
+> >>
+> >>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   36 +
+> >
+> > This should be a separate patch.
+> 
+> OK, will fix in v3.
+> 
+> >
+> >>  drivers/mfd/Kconfig                                |    9 +
+> >>  drivers/mfd/Makefile                               |    1 +
+> >>  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
+> >>  include/linux/rave-sp.h                            |   54 ++
+> >>  5 files changed, 1109 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> >>  create mode 100644 drivers/mfd/rave-sp.c
+> >>  create mode 100644 include/linux/rave-sp.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> >> new file mode 100644
+> >> index 0000000..903c889
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> >> @@ -0,0 +1,36 @@
+> >> +Zodiac Inflight Innovations RAVE Supervisory Processor
+> >> +
+> >> +RAVE Supervisory Processor communicates with SoC over UART and is
+> >> +presented to the kernel as a "serdev". Given that it is expected that
+> >
+> > Please revisit this sentence.
+> >
+> 
+> Just to make sure I understand you correctly we are talking about
+> "Given that it is expected that", correct?
 
-On Mon, 3 Jul 2017 12:18:55 +0200
-Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org> wrote:
+Right.
 
-> Hi Yong Deng,
+> >> +its device-tree node is specified as a child of a node corresponding
+> >> +to UART controller used for communication.
+> >
+> > This is unusual.  I believe we sometimes do this with I2C devices, but
+> > we don't normally have the supported comms medium as the parent.
+> >
 > 
-> Thanks for contributing this driver!
+> I don't think there's any other way to specify a "serdev" device. It
+> has to be a child of corresponding serial controller. In that aspect
+> it is no different from I2C device.
 > 
-> First a high-level comment: you need to rebase this to the latest media_tree
-> master branch (https://git.linuxtv.org/media_tree.git/) since v4l2-of.h has
-> been replaced by v4l2-fwnode.h. So this driver will not apply as-is.
->
- 
-OK.
+> >> +Required parent device properties:
+> >> +
+> >> + - compatible: Should be one of:
+> >> +     - "zii,rave-sp-niu"
+> >> +     - "zii,rave-sp-mezz"
+> >> +     - "zii,rave-sp-esb"
+> >> +     - "zii,rave-sp-rdu1"
+> >> +     - "zii,rave-sp-rdu2"
+> >> +
+> >> + - current-speed: Should be set to baud rate SP device is using
+> >> +
+> >> +RAVE SP consists of the following sub-devices:
+> >> +
+> >> +Device                                Description
+> >> +------                                -----------
+> >> +rave-sp-wdt                  : Watchdog
+> >
+> > What else does it contain.
+> >
+> > MFDs always have more than one device.
+> >
+> 
+> It also exposes EEPROM, sensor/hwmon device, backlight driver, LED
+> driver and an input device.
 
-> Also missing is a patch adding a new entry to the MAINTAINERS file.
-> 
-> I have some more comments below:
-> 
-> On 06/27/2017 01:07 PM, Yong Deng wrote:
-> > Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
-> > and CSI1 is used for parallel interface. This is not documented in
-> > datatsheet but by testing and guess.
-> 
-> datatsheet -> datasheet
+So why aren't they listed?
 
-OK.
+> >> +Example of usage:
+> >> +
+> >> +     rdu {
+> >
+> > What is an RDU?
+> >
+> 
+> RDU stands for "removable display unit".
 
-> 
-> > 
-> > This patch implement a v4l2 framework driver for it.
-> > 
-> > Currently, the driver only support the parallel interface. MIPI-CSI2,
-> > ISP's support are not included in this patch.
-> > 
-> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   drivers/media/platform/Kconfig                   |   1 +
-> >   drivers/media/platform/Makefile                  |   2 +
-> >   drivers/media/platform/sunxi-csi/Kconfig         |   8 +
-> >   drivers/media/platform/sunxi-csi/Makefile        |   3 +
-> >   drivers/media/platform/sunxi-csi/sunxi_csi.c     | 535 +++++++++++++++
-> >   drivers/media/platform/sunxi-csi/sunxi_csi.h     | 203 ++++++
-> >   drivers/media/platform/sunxi-csi/sunxi_csi_v3s.c | 827 +++++++++++++++++++++++
-> >   drivers/media/platform/sunxi-csi/sunxi_csi_v3s.h | 206 ++++++
-> >   drivers/media/platform/sunxi-csi/sunxi_video.c   | 667 ++++++++++++++++++
-> >   drivers/media/platform/sunxi-csi/sunxi_video.h   |  61 ++
-> >   10 files changed, 2513 insertions(+)
-> >   create mode 100644 drivers/media/platform/sunxi-csi/Kconfig
-> >   create mode 100644 drivers/media/platform/sunxi-csi/Makefile
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_csi.c
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_csi.h
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_csi_v3s.c
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_csi_v3s.h
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_video.c
-> >   create mode 100644 drivers/media/platform/sunxi-csi/sunxi_video.h
-> 
-> <snip>
-> 
-> > diff --git a/drivers/media/platform/sunxi-csi/Kconfig b/drivers/media/platform/sunxi-csi/Kconfig
-> > new file mode 100644
-> > index 0000000..f26592a
-> > --- /dev/null
-> > +++ b/drivers/media/platform/sunxi-csi/Kconfig
-> > @@ -0,0 +1,8 @@
-> > +config VIDEO_SUNXI_CSI
-> > +	tristate "Allwinner Camera Sensor Interface driver"
-> > +	depends on VIDEO_V4L2 && COMMON_CLK && VIDEO_V4L2_SUBDEV_API && HAS_DMA
-> > +	depends on ARCH_SUNXI
-> 
-> If possible change this to:
-> 
-> 	depends on ARCH_SUNXI || COMPILE_TEST
+And what is one of those?
 
-OK.
+> >> +             compatible = "zii,rave-sp-rdu2";
+> >> +             current-speed = <1000000>;
+> >> +
+> >> +             watchdog {
+> >> +                     compatible = "zii,rave-sp-watchdog";
+> >> +             };
+> >> +     };
+> >> +
+> >> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >> index 3eb5c93..6cab311 100644
+> >> --- a/drivers/mfd/Kconfig
+> >> +++ b/drivers/mfd/Kconfig
+> >> @@ -867,6 +867,15 @@ config MFD_SPMI_PMIC
+> >>         Say M here if you want to include support for the SPMI PMIC
+> >>         series as a module.  The module will be called "qcom-spmi-pmic".
+> >>
+> >> +config MFD_RAVE_SP
+> >> +     tristate "RAVE SP MCU core driver"
+> >> +     select MFD_CORE
+> >> +     select SERIAL_DEV_BUS
+> >> +     select CRC_CCITT
+> >> +     help
+> >> +       Select this to get support for the RAVE Supervisory
+> >> +       Processor driver
+> >
+> > Missing '.'.
+> 
+> OK, will fix in v3.
+> 
+> >
+> >>  config MFD_RDC321X
+> >>       tristate "RDC R-321x southbridge"
+> >>       select MFD_CORE
+> >> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> >> index c16bf1e..bc3df0a 100644
+> >> --- a/drivers/mfd/Makefile
+> >> +++ b/drivers/mfd/Makefile
+> >> @@ -221,3 +221,4 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)     += sun4i-gpadc.o
+> >>
+> >>  obj-$(CONFIG_MFD_STM32_TIMERS)       += stm32-timers.o
+> >>  obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
+> >> +obj-$(CONFIG_MFD_RAVE_SP)    += rave-sp.o
+> >> diff --git a/drivers/mfd/rave-sp.c b/drivers/mfd/rave-sp.c
+> >> new file mode 100644
+> >> index 0000000..41cdbd2
+> >> --- /dev/null
+> >> +++ b/drivers/mfd/rave-sp.c
+> >> @@ -0,0 +1,1009 @@
+> >> +/*
+> >> + * rave-sp.c - Multifunction core driver for Zodiac Inflight Innovations
+> >
+> > Drop the filename please, they have a habit of becoming incorrect
+> >
+> 
+> OK, will do in v3.
+> 
+> >> + * SP MCU that is connected via dedicated UART port
+> >> + *
+> >> + * Copyright (C) 2017 Zodiac Inflight Innovations
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or
+> >> + * modify it under the terms of the GNU General Public License as
+> >> + * published by the Free Software Foundation; either version 2 of
+> >> + * the License, or (at your option) any later version.
+> >> + *
+> >> + * This program is distributed in the hope that it will be useful,
+> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> >> + * GNU General Public License for more details.
+> >> + *
+> >> + * You should have received a copy of the GNU General Public License
+> >> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> >
+> > Are you able to use the short version?
+> >
+> 
+> I don't know what you mean by "short version". Is it short version of
+> GPL notice above?
 
-> 
-> to allow this driver to be compiled on e.g. Intel for compile testing.
-> 
-> > +	select VIDEOBUF2_DMA_CONTIG
-> > +	select REGMAP_MMIO
-> > +	---help---
-> > +	   Support for the Allwinner Camera Sensor Interface Controller.
-> 
-> This controller is the same for all Allwinner SoC models?
+Yes, it's a few lines and implies the same thing.
 
-No.
-I will change the Kconfig and Makefile.
+> >> + */
+> >> +
+> >> +/*
+> >> + * UART protocol using following entities:
+> >> + *  - message to MCU => ACK response
+> >> + *  - event from MCU => event ACK
+> >> + *
+> >> + * Frame structure:
+> >> + * <STX> <DATA> <CHECKSUM> <ETX>
+> >> + * Where:
+> >> + * - STX - is start of transmission character
+> >> + * - ETX - end of transmission
+> >> + * - DATA - payload
+> >> + * - CHECKSUM - checksum calculated on <DATA>
+> >> + *
+> >> + * If <DATA> or <CHECKSUM> contain one of control characters, then it is
+> >> + * escaped using <DLE> control code. Added <DLE> does not participate in
+> >> + * checksum calculation.
+> >> + */
+> >> +
+> >> +/* #define DEBUG */
+> >
+> > If you're going to do this, add a comment to the tune of:
+> >
+> > "Uncomment this to provide driver specific debugging."
+> >
+> 
+> That's a leftover I missed. Will remove in v3.
+> 
+> >> +#include <linux/atomic.h>
+> >> +#include <linux/crc-ccitt.h>
+> >> +#include <linux/delay.h>
+> >> +#include <linux/export.h>
+> >> +#include <linux/init.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_device.h>
+> >> +#include <linux/sched.h>
+> >> +#include <linux/serdev.h>
+> >> +#include <linux/rave-sp.h>
+> >> +
+> >> +enum {
+> >> +     STX = 0x02,
+> >> +     ETX = 0x03,
+> >> +     DLE = 0x10,
+> >> +};
+> >
+> > We usually prefix defines/enums.
+> >
+> 
+> OK, will do in v3.
+> 
+> > Also these are not very human readable.  Either improve the
+> > nomenclature or add a comment/header.
+> >
+> 
+> OK, will add comments in v3.
+> 
+> >> +enum {
+> >> +     RAVE_SP_BOOT_SOURCE_GET = 0,
+> >> +     RAVE_SP_BOOT_SOURCE_SET = 1,
+> >> +
+> >> +     RAVE_SP_MAX_DATA_SIZE   = 64,
+> >> +     RAVE_SP_CHECKSUM_SIZE   = 2, /* Worst case scenariou on RDU2 */
+> >> +     /*
+> >> +      * We don't store STX, ETX and unescaped bytes, so Rx is only
+> >> +      * DATA + CSUM
+> >> +      */
+> >> +     RAVE_SP_RX_BUFFER_SIZE  = RAVE_SP_MAX_DATA_SIZE +
+> >> +                               RAVE_SP_CHECKSUM_SIZE,
+> >> +     RAVE_SP_STX_ETX_SIZE    = 2,
+> >> +     /*
+> >> +      * For Tx we have to have space for everything, STX, EXT and
+> >> +      * potentially stuffed DATA + CSUM data + csum
+> >> +      */
+> >> +     RAVE_SP_TX_BUFFER_SIZE  = RAVE_SP_STX_ETX_SIZE +
+> >> +                               2 * RAVE_SP_RX_BUFFER_SIZE,
+> >> +};
+> >
+> > This format is unusual for an enum.
+> >
+> > These would better suit #includes I think.
+> >
+> 
+> Not sure what you mean here. You want me to move that enum into a header file?
 
-> 
-> <snip>
-> 
-> > diff --git a/drivers/media/platform/sunxi-csi/sunxi_video.c b/drivers/media/platform/sunxi-csi/sunxi_video.c
-> > new file mode 100644
-> > index 0000000..57d7563
-> > --- /dev/null
-> > +++ b/drivers/media/platform/sunxi-csi/sunxi_video.c
-> > @@ -0,0 +1,667 @@
-> > +/*
-> > + * Copyright (c) 2017 Magewell Electronics Co., Ltd. (Nanjing).
-> > + * All rights reserved.
-> > + * Author: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + *
-> > + * This program is distributed in the hope that it will be useful,
-> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> > + * GNU General Public License for more details.
-> > + */
-> > +
-> > +#include <linux/of.h>
-> > +
-> > +#include <media/v4l2-device.h>
-> > +#include <media/v4l2-ioctl.h>
-> > +#include <media/v4l2-mc.h>
-> > +#include <media/videobuf2-dma-contig.h>
-> > +#include <media/videobuf2-v4l2.h>
-> > +
-> > +#include "sunxi_csi.h"
-> > +#include "sunxi_video.h"
-> > +
-> > +struct sunxi_csi_buffer {
-> > +	struct vb2_v4l2_buffer		vb;
-> > +	struct list_head		list;
-> > +
-> > +	dma_addr_t			dma_addr;
-> > +};
-> > +
-> > +static struct sunxi_csi_format *
-> > +find_format_by_fourcc(struct sunxi_video *video, unsigned int fourcc)
-> > +{
-> > +	unsigned int num_formats = video->num_formats;
-> > +	struct sunxi_csi_format *fmt;
-> > +	unsigned int i;
-> > +
-> > +	for (i = 0; i < num_formats; i++) {
-> > +		fmt = &video->formats[i];
-> > +		if (fmt->fourcc == fourcc)
-> > +			return fmt;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > +
-> > +static struct v4l2_subdev *
-> > +sunxi_video_remote_subdev(struct sunxi_video *video, u32 *pad)
-> > +{
-> > +	struct media_pad *remote;
-> > +
-> > +	remote = media_entity_remote_pad(&video->pad);
-> > +
-> > +	if (!remote || !is_media_entity_v4l2_subdev(remote->entity))
-> > +		return NULL;
-> > +
-> > +	if (pad)
-> > +		*pad = remote->index;
-> > +
-> > +	return media_entity_to_v4l2_subdev(remote->entity);
-> > +}
-> > +
-> > +static int sunxi_video_queue_setup(struct vb2_queue *vq,
-> > +				 unsigned int *nbuffers, unsigned int *nplanes,
-> > +				 unsigned int sizes[],
-> > +				 struct device *alloc_devs[])
-> > +{
-> > +	struct sunxi_video *video = vb2_get_drv_priv(vq);
-> > +	unsigned int size = video->fmt.fmt.pix.sizeimage;
-> > +
-> > +	if (*nplanes)
-> > +		return sizes[0] < size ? -EINVAL : 0;
-> > +
-> > +	*nplanes = 1;
-> > +	sizes[0] = size;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_video_buffer_prepare(struct vb2_buffer *vb)
-> > +{
-> > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> > +	struct sunxi_csi_buffer *buf =
-> > +			container_of(vbuf, struct sunxi_csi_buffer, vb);
-> > +	struct sunxi_video *video = vb2_get_drv_priv(vb->vb2_queue);
-> > +	unsigned long size = video->fmt.fmt.pix.sizeimage;
-> > +
-> > +	if (vb2_plane_size(vb, 0) < size) {
-> > +		v4l2_err(video->vdev.v4l2_dev, "buffer too small (%lu < %lu)\n",
-> > +			 vb2_plane_size(vb, 0), size);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	vb2_set_plane_payload(vb, 0, size);
-> > +
-> > +	buf->dma_addr = vb2_dma_contig_plane_dma_addr(vb, 0);
-> > +
-> > +	vbuf->field = video->fmt.fmt.pix.field;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_pipeline_set_stream(struct sunxi_video *video, bool enable)
-> > +{
-> > +	struct media_entity *entity;
-> > +	struct media_pad *pad;
-> > +	struct v4l2_subdev *subdev;
-> > +	int ret;
-> > +
-> > +	entity = &video->vdev.entity;
-> > +	while (1) {
-> > +		pad = &entity->pads[0];
-> > +		if (!(pad->flags & MEDIA_PAD_FL_SINK))
-> > +			break;
-> > +
-> > +		pad = media_entity_remote_pad(pad);
-> > +		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
-> > +			break;
-> > +
-> > +		entity = pad->entity;
-> > +		subdev = media_entity_to_v4l2_subdev(entity);
-> > +
-> > +		ret = v4l2_subdev_call(subdev, video, s_stream, enable);
-> > +		if (enable && ret < 0 && ret != -ENOIOCTLCMD)
-> > +			return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_video_start_streaming(struct vb2_queue *vq, unsigned int count)
-> > +{
-> > +	struct sunxi_video *video = vb2_get_drv_priv(vq);
-> > +	struct sunxi_csi_buffer *buf;
-> > +	struct sunxi_csi_config config;
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	video->sequence = 0;
-> > +
-> > +	ret = media_pipeline_start(&video->vdev.entity, &video->vdev.pipe);
-> > +	if (ret < 0)
-> > +		goto err_start_pipeline;
-> > +
-> > +	ret = sunxi_pipeline_set_stream(video, true);
-> > +	if (ret < 0)
-> > +		goto err_start_stream;
-> > +
-> > +	config.pixelformat = video->fmt.fmt.pix.pixelformat;
-> > +	config.code = video->current_fmt->mbus_code;
-> > +	config.field = video->fmt.fmt.pix.field;
-> > +	config.width = video->fmt.fmt.pix.width;
-> > +	config.height = video->fmt.fmt.pix.height;
-> > +
-> > +	ret = sunxi_csi_update_config(video->csi, &config);
-> > +	if (ret < 0)
-> > +		goto err_update_config;
-> > +
-> > +	spin_lock_irqsave(&video->dma_queue_lock, flags);
-> > +	video->cur_frm = list_first_entry(&video->dma_queue,
-> > +					  struct sunxi_csi_buffer, list);
-> > +	list_del(&video->cur_frm->list);
-> > +	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-> > +
-> > +	ret = sunxi_csi_update_buf_addr(video->csi, video->cur_frm->dma_addr);
-> > +	if (ret < 0)
-> > +		goto err_update_addr;
-> > +
-> > +	ret = sunxi_csi_set_stream(video->csi, true);
-> > +	if (ret < 0)
-> > +		goto err_csi_stream;
-> > +
-> > +	return 0;
-> > +
-> > +err_csi_stream:
-> > +err_update_addr:
-> > +err_update_config:
-> > +	sunxi_pipeline_set_stream(video, false);
-> > +err_start_stream:
-> > +	media_pipeline_stop(&video->vdev.entity);
-> > +err_start_pipeline:
-> > +	spin_lock_irqsave(&video->dma_queue_lock, flags);
-> > +	list_for_each_entry(buf, &video->dma_queue, list)
-> > +		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_QUEUED);
-> > +	INIT_LIST_HEAD(&video->dma_queue);
-> > +	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-> > +
-> > +	return ret;
-> > +}
-> > +
-> > +static void sunxi_video_stop_streaming(struct vb2_queue *vq)
-> > +{
-> > +	struct sunxi_video *video = vb2_get_drv_priv(vq);
-> > +	unsigned long flags;
-> > +	struct sunxi_csi_buffer *buf;
-> > +
-> > +	sunxi_pipeline_set_stream(video, false);
-> > +
-> > +	sunxi_csi_set_stream(video->csi, false);
-> > +
-> > +	media_pipeline_stop(&video->vdev.entity);
-> > +
-> > +	/* Release all active buffers */
-> > +	spin_lock_irqsave(&video->dma_queue_lock, flags);
-> > +	if (unlikely(video->cur_frm)) {
-> > +		vb2_buffer_done(&video->cur_frm->vb.vb2_buf,
-> > +				VB2_BUF_STATE_ERROR);
-> > +		video->cur_frm = NULL;
-> > +	}
-> > +	list_for_each_entry(buf, &video->dma_queue, list)
-> > +		vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_ERROR);
-> > +	INIT_LIST_HEAD(&video->dma_queue);
-> > +	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-> > +}
-> > +
-> > +static void sunxi_video_buffer_queue(struct vb2_buffer *vb)
-> > +{
-> > +	struct vb2_v4l2_buffer *vbuf = to_vb2_v4l2_buffer(vb);
-> > +	struct sunxi_csi_buffer *buf =
-> > +			container_of(vbuf, struct sunxi_csi_buffer, vb);
-> > +	struct sunxi_video *video = vb2_get_drv_priv(vb->vb2_queue);
-> > +	unsigned long flags;
-> > +
-> > +	spin_lock_irqsave(&video->dma_queue_lock, flags);
-> > +	if (!video->cur_frm && list_empty(&video->dma_queue) &&
-> > +		vb2_is_streaming(vb->vb2_queue)) {
-> > +		video->cur_frm = buf;
-> > +		sunxi_csi_update_buf_addr(video->csi, video->cur_frm->dma_addr);
-> > +		sunxi_csi_set_stream(video->csi, 1);
-> > +	} else
-> > +		list_add_tail(&buf->list, &video->dma_queue);
-> > +	spin_unlock_irqrestore(&video->dma_queue_lock, flags);
-> > +}
-> > +
-> > +void sunxi_video_frame_done(struct sunxi_video *video)
-> > +{
-> > +	spin_lock(&video->dma_queue_lock);
-> > +
-> > +	if (video->cur_frm) {
-> > +		struct vb2_v4l2_buffer *vbuf = &video->cur_frm->vb;
-> > +		struct vb2_buffer *vb = &vbuf->vb2_buf;
-> > +
-> > +		vb->timestamp = ktime_get_ns();
-> > +		vbuf->sequence = video->sequence++;
-> > +		vb2_buffer_done(vb, VB2_BUF_STATE_DONE);
-> > +		video->cur_frm = NULL;
-> > +	}
-> > +
-> > +	if (!list_empty(&video->dma_queue)
-> > +	    && vb2_is_streaming(&video->vb2_vidq)) {
-> > +		video->cur_frm = list_first_entry(&video->dma_queue,
-> > +				struct sunxi_csi_buffer, list);
-> > +		list_del(&video->cur_frm->list);
-> > +		sunxi_csi_update_buf_addr(video->csi, video->cur_frm->dma_addr);
-> > +	} else
-> > +		sunxi_csi_set_stream(video->csi, 0);
-> > +
-> > +	spin_unlock(&video->dma_queue_lock);
-> > +}
-> > +
-> > +static struct vb2_ops sunxi_csi_vb2_ops = {
-> > +	.queue_setup		= sunxi_video_queue_setup,
-> > +	.wait_prepare		= vb2_ops_wait_prepare,
-> > +	.wait_finish		= vb2_ops_wait_finish,
-> > +	.buf_prepare		= sunxi_video_buffer_prepare,
-> > +	.start_streaming	= sunxi_video_start_streaming,
-> > +	.stop_streaming		= sunxi_video_stop_streaming,
-> > +	.buf_queue		= sunxi_video_buffer_queue,
-> > +};
-> > +
-> > +static int vidioc_querycap(struct file *file, void *priv,
-> > +				struct v4l2_capability *cap)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +
-> > +	strlcpy(cap->driver, "sunxi-video", sizeof(cap->driver));
-> > +	strlcpy(cap->card, video->vdev.name, sizeof(cap->card));
-> > +	snprintf(cap->bus_info, sizeof(cap->bus_info), "platform:%s",
-> > +		 video->csi->dev->of_node->name);
-> > +
-> > +	cap->device_caps = V4L2_CAP_VIDEO_CAPTURE | V4L2_CAP_STREAMING;
-> > +	cap->capabilities = cap->device_caps | V4L2_CAP_DEVICE_CAPS;
-> 
-> Drop these two lines. You already set device_caps in the video_device struct,
-> and the V4L2 core will fill in these two v4l2_capability fields based on that.
+No, but I do want you to convert them to #defines.
 
-OK.
+> >> +enum rave_sp_deframer_state {
+> >> +     RAVE_SP_EXPECT_SOF,
+> >> +     RAVE_SP_EXPECT_DATA,
+> >> +     RAVE_SP_EXPECT_ESCAPED_DATA,
+> >> +};
+> >
+> > It's normal to set the first attribute as 0.
+> >
+> > I can't remember what the C standard says about that.
+> >
+> 
+> It's initialized to 0 if no value is specified.
+> 
+> >> +struct rave_sp_deframer {
+> >> +     enum rave_sp_deframer_state state;
+> >> +     unsigned char data[RAVE_SP_RX_BUFFER_SIZE];
+> >> +     size_t length;
+> >> +};
+> >> +
+> >> +struct rave_sp_reply {
+> >> +     size_t length;
+> >> +     void  *data;
+> >> +     u8     code;
+> >> +     u8     ackid;
+> >> +     struct completion received;
+> >> +};
+> >> +
+> >> +struct rave_sp_checksum {
+> >> +     size_t length;
+> >> +     void (*subroutine)(const u8 *, size_t, u8 *);
+> >> +};
+> >> +
+> >> +enum rave_sp_boot_source {
+> >> +     RAVE_SP_BOOT_SOURCE_SD          = 0,
+> >> +     RAVE_SP_BOOT_SOURCE_EMMC        = 1,
+> >> +     RAVE_SP_BOOT_SOURCE_NOR         = 2,
+> >> +};
+> >
+> > Just set the first one.  The C standard will do the rest.
+> >
+> 
+> Those correspond to values specified in device's ICD, so I specified
+> all of the values explicitly to make it easier to compare against the
+> documentation. I'll change it if you insist, but my preference would
+> be to keep it as is.
 
-> 
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int vidioc_enum_fmt_vid_cap(struct file *file, void *priv,
-> > +				   struct v4l2_fmtdesc *f)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +	u32 index = f->index;
-> > +
-> > +	if (index >= video->num_formats)
-> > +		return -EINVAL;
-> > +
-> > +	f->pixelformat = video->formats[index].fourcc;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int vidioc_g_fmt_vid_cap(struct file *file, void *priv,
-> > +				struct v4l2_format *fmt)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +
-> > +	*fmt = video->fmt;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_video_try_fmt(struct sunxi_video *video, struct v4l2_format *f,
-> > +			       struct sunxi_csi_format **current_fmt)
-> > +{
-> > +	struct sunxi_csi_format *csi_fmt;
-> > +	struct v4l2_pix_format *pixfmt = &f->fmt.pix;
-> > +	struct v4l2_subdev_format format;
-> > +	struct v4l2_subdev *subdev;
-> > +	u32 pad;
-> > +	int ret;
-> > +
-> > +	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-> > +		return -EINVAL;
-> 
-> Drop this test. It's not needed.
+If you provide a comment to that effect you don't have to explicitly
+set the values.  It's common practice.
 
-OK.
+"These must not be reordered.", or similar.
 
+> >> +struct rave_sp_variant {
+> >> +     const struct rave_sp_checksum *checksum;
+> >> +
+> >> +     struct {
+> >> +             int (*translate)(enum rave_sp_command);
+> >> +             int (*get_boot_source)(struct rave_sp *);
+> >> +             int (*set_boot_source)(struct rave_sp *,
+> >> +                                    enum rave_sp_boot_source);
+> >> +     } cmd;
+> >
+> > Declare this struct separately, then reference it.
+> >
 > 
-> > +
-> > +	subdev = sunxi_video_remote_subdev(video, &pad);
-> > +	if (subdev == NULL)
-> > +		return -ENXIO;
-> > +
-> > +	csi_fmt = find_format_by_fourcc(video, pixfmt->pixelformat);
-> > +	if (csi_fmt == NULL)
-> > +		return -EINVAL;
-> > +
-> > +	format.pad = pad;
-> > +	format.which = V4L2_SUBDEV_FORMAT_TRY;
-> > +	v4l2_fill_mbus_format(&format.format, pixfmt, csi_fmt->mbus_code);
-> > +	ret = v4l2_subdev_call(subdev, pad, get_fmt, NULL, &format);
-> > +	if (ret)
-> > +		return ret == -ENOIOCTLCMD ? -ENOTTY : ret;
+> OK, will fix in v3.
 > 
-> Just do 'return ret'.
+> >> +     void (*init)(struct rave_sp *);
+> >> +
+> >> +     struct attribute_group group;
+> >> +};
+> >> +
+> >> +struct rave_sp {
+> >> +     struct serdev_device *serdev;
+> >> +
+> >> +     struct rave_sp_deframer deframer;
+> >> +     atomic_t ackid;
+> >> +
+> >> +     struct mutex bus_lock;
+> >> +     struct mutex reply_lock;
+> >> +     struct rave_sp_reply *reply;
+> >> +
+> >> +     const char *part_number_firmware;
+> >> +     const char *part_number_bootloader;
+> >> +
+> >> +     const char *reset_reason;
+> >> +     const char *copper_rev_rmb;
+> >> +     const char *copper_rev_deb;
+> >> +     const char *silicon_devid;
+> >> +     const char *silicon_devrev;
+> >> +
+> >> +     const char *copper_mod_rmb;
+> >> +     const char *copper_mod_deb;
+> >> +
+> >> +     const struct rave_sp_variant *variant;
+> >> +
+> >> +     struct blocking_notifier_head event_notifier_list;
+> >> +
+> >> +     struct attribute_group *group;
+> >> +};
+> >
+> > This is going to require a kerneldoc header.
+> >
+> 
+> OK. Will fix in v3.
+> 
+> > [...]
+> >
+> > I'm going to stop the review here.  Looking at the rest of the code,
+> > it looks like you're submitting to the wrong subsystem.
+> >
+> > Please consider submitting to drivers/platform instead.
+> >
+> 
+> Could you elaborate a bit more why you think this driver doesn't
+> belong in MFD subsystem? My reasoning for putting it there was that
+> it's a driver for a device that connects to SoC via a serial bus, it
+> implements multiple distinct functions that are exposed to MFD cell
+> drivers it creates via shared API. There seemed to be number of I2C
+> devices in MFD that seem to be exactly that. Did I miss some crucial
+> difference?
 
-OK.
+There is some overlap between the 2 subsystems.  Many of the drivers
+which we now describe as 'platform' used to be MFD drivers.  Once the
+aforementioned shared API reaches a level of complexity, it is no
+longer considered to be a fairly simple IC which provides >1 piece of
+functionality.  Instead it's considered more of a platform driver.
+Your driver surpasses that level of complexity and needs to be handled
+slightly differently.
 
-> 
-> > +
-> > +	v4l2_fill_pix_format(pixfmt, &format.format);
-> > +
-> > +	pixfmt->bytesperline = (pixfmt->width * csi_fmt->bpp) >> 3;
-> > +	pixfmt->sizeimage = (pixfmt->width * csi_fmt->bpp * pixfmt->height) / 8;
-> > +
-> > +	if (current_fmt)
-> > +		*current_fmt = csi_fmt;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_video_set_fmt(struct sunxi_video *video, struct v4l2_format *f)
-> > +{
-> > +	struct v4l2_subdev_format format;
-> > +	struct sunxi_csi_format *current_fmt;
-> > +	struct v4l2_subdev *subdev;
-> > +	u32 pad;
-> > +	int ret;
-> > +
-> > +	subdev = sunxi_video_remote_subdev(video, &pad);
-> > +	if (subdev == NULL)
-> > +		return -ENXIO;
-> > +
-> > +	ret = sunxi_video_try_fmt(video, f, &current_fmt);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	format.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> > +	v4l2_fill_mbus_format(&format.format, &f->fmt.pix,
-> > +			      current_fmt->mbus_code);
-> > +	ret = v4l2_subdev_call(subdev, pad, set_fmt, NULL, &format);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	video->fmt = *f;
-> > +	video->current_fmt = current_fmt;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int vidioc_s_fmt_vid_cap(struct file *file, void *priv,
-> > +				struct v4l2_format *f)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +
-> > +	if (vb2_is_streaming(&video->vb2_vidq))
-> > +		return -EBUSY;
-> > +
-> > +	return sunxi_video_set_fmt(video, f);
-> > +}
-> > +
-> > +static int vidioc_try_fmt_vid_cap(struct file *file, void *priv,
-> > +				  struct v4l2_format *f)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +
-> > +	return sunxi_video_try_fmt(video, f, NULL);
-> > +}
-> > +
-> > +static const struct v4l2_ioctl_ops sunxi_video_ioctl_ops = {
-> > +	.vidioc_querycap		= vidioc_querycap,
-> > +	.vidioc_enum_fmt_vid_cap	= vidioc_enum_fmt_vid_cap,
-> > +	.vidioc_g_fmt_vid_cap		= vidioc_g_fmt_vid_cap,
-> > +	.vidioc_s_fmt_vid_cap		= vidioc_s_fmt_vid_cap,
-> > +	.vidioc_try_fmt_vid_cap		= vidioc_try_fmt_vid_cap,
-> > +
-> > +	.vidioc_reqbufs			= vb2_ioctl_reqbufs,
-> > +	.vidioc_querybuf		= vb2_ioctl_querybuf,
-> > +	.vidioc_qbuf			= vb2_ioctl_qbuf,
-> > +	.vidioc_expbuf			= vb2_ioctl_expbuf,
-> > +	.vidioc_dqbuf			= vb2_ioctl_dqbuf,
-> > +	.vidioc_create_bufs		= vb2_ioctl_create_bufs,
-> > +	.vidioc_prepare_buf		= vb2_ioctl_prepare_buf,
-> > +	.vidioc_streamon		= vb2_ioctl_streamon,
-> > +	.vidioc_streamoff		= vb2_ioctl_streamoff,
-> > +};
-> > +
-> > +/* -----------------------------------------------------------------------------
-> > + * V4L2 file operations
-> > + */
-> > +static int sunxi_video_open(struct file *file)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +	struct v4l2_format format;
-> > +	int ret;
-> > +
-> > +	if (mutex_lock_interruptible(&video->lock))
-> > +		return -ERESTARTSYS;
-> > +
-> > +	ret = v4l2_fh_open(file);
-> > +	if (ret < 0)
-> > +		goto unlock;
-> > +
-> > +	ret = v4l2_pipeline_pm_use(&video->vdev.entity, 1);
-> > +	if (ret < 0)
-> > +		goto fh_release;
-> > +
-> > +	if (!v4l2_fh_is_singular_file(file))
-> > +		goto unlock;
-> > +
-> > +	ret = sunxi_csi_set_power(video->csi, true);
-> > +	if (ret < 0)
-> > +		goto fh_release;
-> > +
-> > +	/* setup default format */
-> > +	if (video->num_formats > 0) {
-> > +		format.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-> > +		format.fmt.pix.width = 1280;
-> > +		format.fmt.pix.height = 720;
-> > +		format.fmt.pix.pixelformat = video->formats[0].fourcc;
-> > +		sunxi_video_set_fmt(video, &format);
-> > +	}
-> > +
-> > +	mutex_unlock(&video->lock);
-> > +	return 0;
-> > +
-> > +fh_release:
-> > +	v4l2_fh_release(file);
-> > +unlock:
-> > +	mutex_unlock(&video->lock);
-> > +	return ret;
-> > +}
-> > +
-> > +static int sunxi_video_close(struct file *file)
-> > +{
-> > +	struct sunxi_video *video = video_drvdata(file);
-> > +
-> > +	mutex_lock(&video->lock);
-> > +
-> > +	_vb2_fop_release(file, NULL);
-> > +
-> > +	v4l2_pipeline_pm_use(&video->vdev.entity, 0);
-> > +
-> > +	if (v4l2_fh_is_singular_file(file))
-> 
-> This is the wrong order. You need to check this before _vb2_fop_release is called.
-> 
-> E.g.:
-> 
-> 	bool last_fh = v4l2_fh_is_singular_file(file);
-> 
-> 	_vb2_fop_release(file, NULL);
-> 	...
-> 	if (last_fh)
-> 		sunxi_csi_set_power(video->csi, false);
-
-OK.
-
-> 
-> > +		sunxi_csi_set_power(video->csi, false);
-> > +
-> > +	mutex_unlock(&video->lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct v4l2_file_operations sunxi_video_fops = {
-> > +	.owner		= THIS_MODULE,
-> > +	.open		= sunxi_video_open,
-> > +	.release	= sunxi_video_close,
-> > +	.unlocked_ioctl	= video_ioctl2,
-> > +	.read		= vb2_fop_read,
-> 
-> You haven't signalled read() support in the capabilities or in the vb2 io_modes, so
-> either drop this from the video_fops, or add it to the device_caps and io_modes fields.
-
-OK.
-
-> 
-> > +	.mmap		= vb2_fop_mmap,
-> > +	.poll		= vb2_fop_poll
-> > +};
-> > +
-> > +/* -----------------------------------------------------------------------------
-> > + * Media Operations
-> > + */
-> > +static int sunxi_video_formats_init(struct sunxi_video *video)
-> > +{
-> > +	struct v4l2_subdev_mbus_code_enum mbus_code = { 0 };
-> > +	struct sunxi_csi *csi = video->csi;
-> > +	struct v4l2_subdev *subdev;
-> > +	u32 pad;
-> > +	const u32 *pixformats;
-> > +	int pixformat_count = 0;
-> > +	u32 subdev_codes[32]; /* subdev format codes, 32 should be enough */
-> > +	int codes_count = 0;
-> > +	int num_fmts = 0;
-> > +	int i, j;
-> > +
-> > +	subdev = sunxi_video_remote_subdev(video, &pad);
-> > +	if (subdev == NULL)
-> > +		return -ENXIO;
-> > +
-> > +	/* Get supported pixformats of CSI */
-> > +	pixformat_count = sunxi_csi_get_supported_pixformats(csi, &pixformats);
-> > +	if (pixformat_count <= 0)
-> > +		return -ENXIO;
-> > +
-> > +	/* Get subdev formats codes */
-> > +	mbus_code.pad = pad;
-> > +	mbus_code.which = V4L2_SUBDEV_FORMAT_ACTIVE;
-> > +	while (!v4l2_subdev_call(subdev, pad, enum_mbus_code, NULL,
-> > +			&mbus_code)) {
-> > +		subdev_codes[codes_count] = mbus_code.code;
-> > +		codes_count++;
-> > +		mbus_code.index++;
-> > +	}
-> > +
-> > +	if (!codes_count)
-> > +		return -ENXIO;
-> > +
-> > +	/* Get supported formats count */
-> > +	for (i = 0; i < codes_count; i++) {
-> > +		for (j = 0; j < pixformat_count; j++) {
-> > +			if (!sunxi_csi_is_format_support(csi, pixformats[j],
-> > +					mbus_code.code)) {
-> > +				continue;
-> > +			}
-> > +			num_fmts++;
-> > +		}
-> > +	}
-> > +
-> > +	if (!num_fmts)
-> > +		return -ENXIO;
-> > +
-> > +	video->num_formats = num_fmts;
-> > +	video->formats = devm_kcalloc(video->csi->dev, num_fmts,
-> > +			sizeof(struct sunxi_csi_format), GFP_KERNEL);
-> > +	if (!video->formats) {
-> > +		dev_err(video->csi->dev, "could not allocate memory\n");
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	/* Get supported formats */
-> > +	num_fmts = 0;
-> > +	for (i = 0; i < codes_count; i++) {
-> > +		for (j = 0; j < pixformat_count; j++) {
-> > +			if (!sunxi_csi_is_format_support(csi, pixformats[j],
-> > +					mbus_code.code)) {
-> > +				continue;
-> > +			}
-> > +
-> > +			video->formats[num_fmts].fourcc = pixformats[j];
-> > +			video->formats[num_fmts].mbus_code =
-> > +					mbus_code.code;
-> > +			video->formats[num_fmts].bpp =
-> > +					v4l2_pixformat_get_bpp(pixformats[j]);
-> > +			num_fmts++;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int sunxi_video_link_setup(struct media_entity *entity,
-> > +				  const struct media_pad *local,
-> > +				  const struct media_pad *remote, u32 flags)
-> > +{
-> > +	struct video_device *vdev = media_entity_to_video_device(entity);
-> > +	struct sunxi_video *video = video_get_drvdata(vdev);
-> > +
-> > +	if (WARN_ON(video == NULL))
-> > +		return 0;
-> > +
-> > +	return sunxi_video_formats_init(video);
-> > +}
-> > +
-> > +static const struct media_entity_operations sunxi_video_media_ops = {
-> > +	.link_setup = sunxi_video_link_setup,
-> > +};
-> > +
-> > +int sunxi_video_init(struct sunxi_video *video, struct sunxi_csi *csi,
-> > +		     const char *name)
-> > +{
-> > +	struct video_device *vdev = &video->vdev;
-> > +	struct vb2_queue *vidq = &video->vb2_vidq;
-> > +	int ret;
-> > +
-> > +	video->csi = csi;
-> > +
-> > +	/* Initialize the media entity... */
-> > +	video->pad.flags = MEDIA_PAD_FL_SINK | MEDIA_PAD_FL_MUST_CONNECT;
-> > +	vdev->entity.ops = &sunxi_video_media_ops;
-> > +	ret = media_entity_pads_init(&vdev->entity, 1, &video->pad);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	mutex_init(&video->lock);
-> > +
-> > +	INIT_LIST_HEAD(&video->dma_queue);
-> > +	spin_lock_init(&video->dma_queue_lock);
-> > +
-> > +	video->cur_frm = NULL;
-> > +	video->sequence = 0;
-> > +	video->num_formats = 0;
-> > +
-> > +	/* Initialize videobuf2 queue */
-> > +	vidq->type			= V4L2_BUF_TYPE_VIDEO_CAPTURE;
-> > +	vidq->io_modes			= VB2_MMAP | VB2_DMABUF;
-> > +	vidq->drv_priv			= video;
-> > +	vidq->buf_struct_size		= sizeof(struct sunxi_csi_buffer);
-> > +	vidq->ops			= &sunxi_csi_vb2_ops;
-> > +	vidq->mem_ops			= &vb2_dma_contig_memops;
-> > +	vidq->timestamp_flags		= V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-> > +	vidq->lock			= &video->lock;
-> > +	vidq->min_buffers_needed	= 1;
-> > +	vidq->dev			= csi->dev;
-> > +
-> > +	ret = vb2_queue_init(vidq);
-> > +	if (ret) {
-> > +		v4l2_err(&csi->v4l2_dev, "vb2_queue_init failed: %d\n", ret);
-> > +		goto error;
-> > +	}
-> > +
-> > +	/* Register video device */
-> > +	strlcpy(vdev->name, name, sizeof(vdev->name));
-> > +	vdev->release		= video_device_release_empty;
-> > +	vdev->fops		= &sunxi_video_fops;
-> > +	vdev->ioctl_ops		= &sunxi_video_ioctl_ops;
-> > +	vdev->vfl_type		= VFL_TYPE_GRABBER;
-> > +	vdev->vfl_dir		= VFL_DIR_RX;
-> > +	vdev->v4l2_dev		= &csi->v4l2_dev;
-> > +	vdev->queue		= vidq;
-> > +	vdev->lock		= &video->lock;
-> > +	vdev->device_caps	= V4L2_CAP_STREAMING | V4L2_CAP_VIDEO_CAPTURE;
-> > +	video_set_drvdata(vdev, video);
-> > +
-> > +	ret = video_register_device(vdev, VFL_TYPE_GRABBER, -1);
-> > +	if (ret < 0) {
-> > +		v4l2_err(&csi->v4l2_dev,
-> > +			 "video_register_device failed: %d\n", ret);
-> > +		goto error;
-> > +	}
-> > +
-> > +	return 0;
-> > +
-> > +error:
-> > +	sunxi_video_cleanup(video);
-> > +	return ret;
-> > +}
-> > +
-> > +void sunxi_video_cleanup(struct sunxi_video *video)
-> > +{
-> > +	if (video_is_registered(&video->vdev))
-> > +		video_unregister_device(&video->vdev);
-> > +
-> > +	media_entity_cleanup(&video->vdev.entity);
-> > +}
-> 
-> <snip>
-> 
-> Regards,
-> 
-> 	Hans
-
-Yong
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
