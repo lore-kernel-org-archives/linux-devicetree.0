@@ -1,475 +1,415 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH 3/3 v7] ARC: hsdk: initial port for HSDK board
-Date: Mon,  3 Jul 2017 19:51:09 +0300
-Message-ID: <20170703165109.31535-4-Eugeniy.Paltsev@synopsys.com>
-References: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-snps-arc@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] hwmon: ltc2990: support all measurement modes
+Date: Mon, 3 Jul 2017 10:09:26 -0700
+Message-ID: <080a2b76-7c9d-d8f2-c8f2-be1a513e2daa@roeck-us.net>
+References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
+ <1499056140-6064-3-git-send-email-tom.levens@cern.ch>
+ <341b5c67-c013-5a7c-54b5-e8c2a7c168e7@topic.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <341b5c67-c013-5a7c-54b5-e8c2a7c168e7-Oq418RWZeHk@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexey Brodkin <abrodkin@synopsys.com>
+On 07/02/2017 11:29 PM, Mike Looijmans wrote:
+> Applied, and tested on my board, so you have my
+> 
+> Tested-By: mike.looijmans-Oq418RWZeHk@public.gmane.org
+> 
+> Probably the maintainers will like to see a patch header mail with a "v3" summary for what you've changed ("git send-email --cover-letter" or something similar to that)
+> 
 
-This initial port adds support of ARC HS Development Kit board with some
-basic features such serial port, USB, SD/MMC and Ethernet.
+... and without it, the patch series tends to end up at the end of my review
+list since I'll have to spend time tracking down the changes myself or, per
+my choice, start all over and hope I catch all the problems found earlier.
 
-Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
-heavily use IO Coherency for speeding-up DMA-aware peripherals.
+In other words, if people would like their patch series handled with
+priority, making life easy for maintainers is a good start.
 
-Note as opposed to other ARC boards we link Linux kernel to
-0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
-situated at our more usual link base 0x8000_0000. We still can use
-memory region starting at 0x8000_0000 as we reallocate DCCM in our
-platform code.
+Guenter
 
-Note that PAE remapping for DMA clients does not work due to an RTL bug,
-so CREG_PAE register must be programmed to all zeroes, otherwise it will
-cause problems with DMA to/from peripherals even if PAE40 is not used.
+> On 03-07-17 06:29, Tom Levens wrote:
+>> Updated version of the ltc2990 driver which supports all measurement
+>> modes (current, voltage, temperature) available in the chip.
+>>
+>> If devicetree is used, the mode must be specified with the property
+>> "lltc,meas-mode". The format and possible values of the property are
 
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v6 -> v7:
- * DTS: get rid of skeleton.dts, move cpus nodes to hsdk.dts
- * DTS: style fixes
- * Enable loadable modules, module unloading and NFS client as defaults
- * Get rid of ARC_PLAT_HSDK board config option
+AFAIK, DT maintainers are not much into abbreviations.
 
- Documentation/devicetree/bindings/arc/hsdk.txt |   7 +
- arch/arc/Makefile                              |   1 +
- arch/arc/boot/dts/hsdk.dts                     | 189 +++++++++++++++++++++++++
- arch/arc/configs/hsdk_defconfig                |  78 ++++++++++
- arch/arc/kernel/devtree.c                      |   5 +-
- arch/arc/plat-hsdk/Makefile                    |   9 ++
- arch/arc/plat-hsdk/platform.c                  |  79 +++++++++++
- 7 files changed, 366 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arc/hsdk.txt
- create mode 100644 arch/arc/boot/dts/hsdk.dts
- create mode 100644 arch/arc/configs/hsdk_defconfig
- create mode 100644 arch/arc/plat-hsdk/Makefile
- create mode 100644 arch/arc/plat-hsdk/platform.c
+>> described in the binding.
+>>
+>> If devicetree is not used, the mode of the chip will not be configured.
+>> Unless the chip is configured by another source, only the internal
+>> temperature and supply voltage will be measured.
+>>
+>> Signed-off-by: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>> ---
+>>   Documentation/hwmon/ltc2990 |  24 ++++--
+>>   drivers/hwmon/Kconfig       |   7 +-
+>>   drivers/hwmon/ltc2990.c     | 196 +++++++++++++++++++++++++++++++++++++-------
+>>   3 files changed, 185 insertions(+), 42 deletions(-)
+>>
+>> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990
+>> index c25211e..3ed68f6 100644
+>> --- a/Documentation/hwmon/ltc2990
+>> +++ b/Documentation/hwmon/ltc2990
+>> @@ -8,6 +8,7 @@ Supported chips:
+>>       Datasheet: http://www.linear.com/product/ltc2990
+>>   Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+>> +        Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+>>   Description
+>> @@ -16,10 +17,8 @@ Description
+>>   LTC2990 is a Quad I2C Voltage, Current and Temperature Monitor.
+>>   The chip's inputs can measure 4 voltages, or two inputs together (1+2 and 3+4)
+>>   can be combined to measure a differential voltage, which is typically used to
+>> -measure current through a series resistor, or a temperature.
+>> -
+>> -This driver currently uses the 2x differential mode only. In order to support
+>> -other modes, the driver will need to be expanded.
+>> +measure current through a series resistor, or a temperature with an external
+>> +diode.
+>>   Usage Notes
+>> @@ -32,12 +31,19 @@ devices explicitly.
+>>   Sysfs attributes
+>>   ----------------
+>> +in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+>> +temp1_input   Internal chip temperature in millidegrees Celcius
+>> +
+>> +A subset of the following attributes are visible, depending on the measurement
+>> +mode of the chip.
+>> +
+>> +in[1-4]_input Voltage at V[1-4] pin in millivolt
+>> +temp2_input   External temperature sensor TR1 in millidegrees Celcius
+>> +temp3_input   External temperature sensor TR2 in millidegrees Celcius
+>> +curr1_input   Current in mA across V1-V2 assuming a 1mOhm sense resistor
+>> +curr2_input   Current in mA across V3-V4 assuming a 1mOhm sense resistor
+>> +
+>>   The "curr*_input" measurements actually report the voltage drop across the
+>>   input pins in microvolts. This is equivalent to the current through a 1mOhm
+>>   sense resistor. Divide the reported value by the actual sense resistor value
+>>   in mOhm to get the actual value.
+>> -
+>> -in0_input     Voltage at Vcc pin in millivolt (range 2.5V to 5V)
+>> -temp1_input   Internal chip temperature in millidegrees Celcius
+>> -curr1_input   Current in mA across v1-v2 assuming a 1mOhm sense resistor.
+>> -curr2_input   Current in mA across v3-v4 assuming a 1mOhm sense resistor.
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index 5ef2814..578e5a9 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -709,15 +709,12 @@ config SENSORS_LTC2945
+>>         be called ltc2945.
+>>   config SENSORS_LTC2990
+>> -    tristate "Linear Technology LTC2990 (current monitoring mode only)"
+>> +    tristate "Linear Technology LTC2990"
+>>       depends on I2C
+>>       help
+>>         If you say yes here you get support for Linear Technology LTC2990
+>>         I2C System Monitor. The LTC2990 supports a combination of voltage,
+>> -      current and temperature monitoring, but in addition to the Vcc supply
+>> -      voltage and chip temperature, this driver currently only supports
+>> -      reading two currents by measuring two differential voltages across
+>> -      series resistors.
+>> +      current and temperature monitoring.
+>>         This driver can also be built as a module. If so, the module will
+>>         be called ltc2990.
+>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+>> index e320d21..32f3a8d 100644
+>> --- a/drivers/hwmon/ltc2990.c
+>> +++ b/drivers/hwmon/ltc2990.c
+>> @@ -5,10 +5,6 @@
+>>    * Author: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+>>    *
+>>    * License: GPLv2
+>> - *
+>> - * This driver assumes the chip is wired as a dual current monitor, and
+>> - * reports the voltage drop across two series resistors. It also reports
+>> - * the chip's internal temperature and Vcc power supply voltage.
+>>    */
+>>   #include <linux/bitops.h>
+>> @@ -18,6 +14,7 @@
+>>   #include <linux/i2c.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of.h>
+>>   #define LTC2990_STATUS    0x00
+>>   #define LTC2990_CONTROL    0x01
+>> @@ -29,35 +26,109 @@
+>>   #define LTC2990_V4_MSB    0x0C
+>>   #define LTC2990_VCC_MSB    0x0E
+>> -#define LTC2990_CONTROL_KELVIN        BIT(7)
+>> -#define LTC2990_CONTROL_SINGLE        BIT(6)
+>> -#define LTC2990_CONTROL_MEASURE_ALL    (0x3 << 3)
+>> -#define LTC2990_CONTROL_MODE_CURRENT    0x06
+>> -#define LTC2990_CONTROL_MODE_VOLTAGE    0x07
+>> +#define LTC2990_IN0    BIT(0)
+>> +#define LTC2990_IN1    BIT(1)
+>> +#define LTC2990_IN2    BIT(2)
+>> +#define LTC2990_IN3    BIT(3)
+>> +#define LTC2990_IN4    BIT(4)
+>> +#define LTC2990_CURR1    BIT(5)
+>> +#define LTC2990_CURR2    BIT(6)
+>> +#define LTC2990_TEMP1    BIT(7)
+>> +#define LTC2990_TEMP2    BIT(8)
+>> +#define LTC2990_TEMP3    BIT(9)
+>> +#define LTC2990_NONE    0
+>> +#define LTC2990_ALL    GENMASK(9, 0)
+>> +
+>> +#define LTC2990_MODE0_SHIFT    0
+>> +#define LTC2990_MODE0_MASK    GENMASK(2, 0)
+>> +#define LTC2990_MODE1_SHIFT    3
+>> +#define LTC2990_MODE1_MASK    GENMASK(1, 0)
+>> +
+>> +/* Enabled measurements for mode bits 2..0 */
+>> +static const int ltc2990_attrs_ena_0[] = {
+>> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_TEMP3,
+>> +    LTC2990_CURR1 | LTC2990_TEMP3,
+>> +    LTC2990_CURR1 | LTC2990_IN3 | LTC2990_IN4,
+>> +    LTC2990_TEMP2 | LTC2990_IN3 | LTC2990_IN4,
+>> +    LTC2990_TEMP2 | LTC2990_CURR2,
+>> +    LTC2990_TEMP2 | LTC2990_TEMP3,
+>> +    LTC2990_CURR1 | LTC2990_CURR2,
+>> +    LTC2990_IN1 | LTC2990_IN2 | LTC2990_IN3 | LTC2990_IN4
+>> +};
+>> +
+>> +/* Enabled measurements for mode bits 4..3 */
+>> +static const int ltc2990_attrs_ena_1[] = {
+>> +    LTC2990_NONE,
+>> +    LTC2990_TEMP2 | LTC2990_IN1 | LTC2990_CURR1,
+>> +    LTC2990_TEMP3 | LTC2990_IN3 | LTC2990_CURR2,
+>> +    LTC2990_ALL
+>> +};
+>> +
+>> +struct ltc2990_data {
+>> +    struct i2c_client *i2c;
+>> +    u32 mode[2];
+>> +};
+>>   /* Return the converted value from the given register in uV or mC */
+>> -static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>> +static int ltc2990_get_value(struct i2c_client *i2c, int index, int *result)
+>>   {
+>>       int val;
+>> +    u8 reg;
+>> +
+>> +    switch (index) {
+>> +    case LTC2990_IN0:
+>> +        reg = LTC2990_VCC_MSB;
+>> +        break;
+>> +    case LTC2990_IN1:
+>> +    case LTC2990_CURR1:
+>> +    case LTC2990_TEMP2:
+>> +        reg = LTC2990_V1_MSB;
+>> +        break;
+>> +    case LTC2990_IN2:
+>> +        reg = LTC2990_V2_MSB;
+>> +        break;
+>> +    case LTC2990_IN3:
+>> +    case LTC2990_CURR2:
+>> +    case LTC2990_TEMP3:
+>> +        reg = LTC2990_V3_MSB;
+>> +        break;
+>> +    case LTC2990_IN4:
+>> +        reg = LTC2990_V4_MSB;
+>> +        break;
+>> +    case LTC2990_TEMP1:
+>> +        reg = LTC2990_TINT_MSB;
+>> +        break;
+>> +    default:
+>> +        return -EINVAL;
+>> +    }
+>>       val = i2c_smbus_read_word_swapped(i2c, reg);
+>>       if (unlikely(val < 0))
+>>           return val;
+>> -    switch (reg) {
+>> -    case LTC2990_TINT_MSB:
+>> -        /* internal temp, 0.0625 degrees/LSB, 13-bit  */
+>> +    switch (index) {
+>> +    case LTC2990_TEMP1:
+>> +    case LTC2990_TEMP2:
+>> +    case LTC2990_TEMP3:
+>> +        /* temp, 0.0625 degrees/LSB */
+>>           *result = sign_extend32(val, 12) * 1000 / 16;
+>>           break;
+>> -    case LTC2990_V1_MSB:
+>> -    case LTC2990_V3_MSB:
+>> -         /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+>> +    case LTC2990_CURR1:
+>> +    case LTC2990_CURR2:
+>> +         /* Vx-Vy, 19.42uV/LSB */
+>>           *result = sign_extend32(val, 14) * 1942 / 100;
+>>           break;
+>> -    case LTC2990_VCC_MSB:
+>> -        /* Vcc, 305.18μV/LSB, 2.5V offset */
+>> +    case LTC2990_IN0:
+>> +        /* Vcc, 305.18uV/LSB, 2.5V offset */
+>>           *result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+>>           break;
+>> +    case LTC2990_IN1:
+>> +    case LTC2990_IN2:
+>> +    case LTC2990_IN3:
+>> +    case LTC2990_IN4:
+>> +        /* Vx, 305.18uV/LSB */
+>> +        *result = sign_extend32(val, 14) * 30518 / (100 * 1000);
+>> +        break;
+>>       default:
+>>           return -EINVAL; /* won't happen, keep compiler happy */
+>>       }
+>> @@ -69,48 +140,117 @@ static ssize_t ltc2990_show_value(struct device *dev,
+>>                     struct device_attribute *da, char *buf)
+>>   {
+>>       struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+>> +    struct ltc2990_data *data = dev_get_drvdata(dev);
+>>       int value;
+>>       int ret;
+>> -    ret = ltc2990_get_value(dev_get_drvdata(dev), attr->index, &value);
+>> +    ret = ltc2990_get_value(data->i2c, attr->index, &value);
+>>       if (unlikely(ret < 0))
+>>           return ret;
+>>       return snprintf(buf, PAGE_SIZE, "%d\n", value);
+>>   }
+>> +static umode_t ltc2990_attrs_visible(struct kobject *kobj,
+>> +                     struct attribute *a, int n)
+>> +{
+>> +    struct device *dev = container_of(kobj, struct device, kobj);
+>> +    struct ltc2990_data *data = dev_get_drvdata(dev);
+>> +    struct device_attribute *da =
+>> +            container_of(a, struct device_attribute, attr);
+>> +    struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
+>> +
+>> +    int attrs_mask = LTC2990_IN0 | LTC2990_TEMP1 |
+>> +             ltc2990_attrs_ena_0[data->mode[0]] &
+>> +             ltc2990_attrs_ena_1[data->mode[1]];
+>> +
+>> +    if (attr->index & attrs_mask)
+>> +        return a->mode;
+>> +
+>> +    return 0;
+>> +}
+>> +
+>>   static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, ltc2990_show_value, NULL,
+>> -              LTC2990_TINT_MSB);
+>> +              LTC2990_TEMP1);
+>> +static SENSOR_DEVICE_ATTR(temp2_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_TEMP2);
+>> +static SENSOR_DEVICE_ATTR(temp3_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_TEMP3);
+>>   static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ltc2990_show_value, NULL,
+>> -              LTC2990_V1_MSB);
+>> +              LTC2990_CURR1);
+>>   static SENSOR_DEVICE_ATTR(curr2_input, S_IRUGO, ltc2990_show_value, NULL,
+>> -              LTC2990_V3_MSB);
+>> +              LTC2990_CURR2);
+>>   static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ltc2990_show_value, NULL,
+>> -              LTC2990_VCC_MSB);
+>> +              LTC2990_IN0);
+>> +static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_IN1);
+>> +static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_IN2);
+>> +static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_IN3);
+>> +static SENSOR_DEVICE_ATTR(in4_input, S_IRUGO, ltc2990_show_value, NULL,
+>> +              LTC2990_IN4);
+>>   static struct attribute *ltc2990_attrs[] = {
+>>       &sensor_dev_attr_temp1_input.dev_attr.attr,
+>> +    &sensor_dev_attr_temp2_input.dev_attr.attr,
+>> +    &sensor_dev_attr_temp3_input.dev_attr.attr,
+>>       &sensor_dev_attr_curr1_input.dev_attr.attr,
+>>       &sensor_dev_attr_curr2_input.dev_attr.attr,
+>>       &sensor_dev_attr_in0_input.dev_attr.attr,
+>> +    &sensor_dev_attr_in1_input.dev_attr.attr,
+>> +    &sensor_dev_attr_in2_input.dev_attr.attr,
+>> +    &sensor_dev_attr_in3_input.dev_attr.attr,
+>> +    &sensor_dev_attr_in4_input.dev_attr.attr,
+>>       NULL,
+>>   };
+>> -ATTRIBUTE_GROUPS(ltc2990);
+>> +
+>> +static const struct attribute_group ltc2990_group = {
+>> +    .attrs = ltc2990_attrs,
+>> +    .is_visible = ltc2990_attrs_visible,
+>> +};
+>> +__ATTRIBUTE_GROUPS(ltc2990);
+>>   static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>>                    const struct i2c_device_id *id)
+>>   {
+>>       int ret;
+>>       struct device *hwmon_dev;
+>> +    struct ltc2990_data *data;
+>> +    struct device_node *of_node = i2c->dev.of_node;
+>>       if (!i2c_check_functionality(i2c->adapter, I2C_FUNC_SMBUS_BYTE_DATA |
+>>                        I2C_FUNC_SMBUS_WORD_DATA))
+>>           return -ENODEV;
+>> -    /* Setup continuous mode, current monitor */
+>> +    data = devm_kzalloc(&i2c->dev, sizeof(struct ltc2990_data), GFP_KERNEL);
+>> +    if (unlikely(!data))
+>> +        return -ENOMEM;
+>> +
+>> +    data->i2c = i2c;
+>> +
+>> +    if (of_node) {
+>> +        ret = of_property_read_u32_array(of_node, "lltc,meas-mode",
+>> +                         data->mode, 2);
+>> +        if (ret < 0)
+>> +            return ret;
+>> +
+>> +        if (data->mode[0] & ~LTC2990_MODE0_MASK ||
+>> +            data->mode[1] & ~LTC2990_MODE1_MASK)
+>> +            return -EINVAL;
+>> +    } else {
+>> +        ret = i2c_smbus_read_byte_data(i2c, LTC2990_CONTROL);
+>> +        if (ret < 0)
+>> +            return ret;
+>> +
+>> +        data->mode[0] = ret >> LTC2990_MODE0_SHIFT & LTC2990_MODE0_MASK;
+>> +        data->mode[1] = ret >> LTC2990_MODE1_SHIFT & LTC2990_MODE1_MASK;
+>> +    }
+>> +
+>> +    /* Setup continuous mode */
+>>       ret = i2c_smbus_write_byte_data(i2c, LTC2990_CONTROL,
+>> -                    LTC2990_CONTROL_MEASURE_ALL |
+>> -                    LTC2990_CONTROL_MODE_CURRENT);
+>> +                    data->mode[0] << LTC2990_MODE0_SHIFT |
+>> +                    data->mode[1] << LTC2990_MODE1_SHIFT);
+>>       if (ret < 0) {
+>>           dev_err(&i2c->dev, "Error: Failed to set control mode.\n");
+>>           return ret;
+>> @@ -124,7 +264,7 @@ static int ltc2990_i2c_probe(struct i2c_client *i2c,
+>>       hwmon_dev = devm_hwmon_device_register_with_groups(&i2c->dev,
+>>                                  i2c->name,
+>> -                               i2c,
+>> +                               data,
+>>                                  ltc2990_groups);
+>>       return PTR_ERR_OR_ZERO(hwmon_dev);
+>>
+> 
+> 
+> 
+> Kind regards,
+> 
+> Mike Looijmans
+> System Expert
+> 
+> TOPIC Products
+> Materiaalweg 4, NL-5681 RJ Best
+> Postbus 440, NL-5680 AK Best
+> Telefoon: +31 (0) 499 33 69 79
+> E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
+> Website: www.topicproducts.com
+> 
+> Please consider the environment before printing this e-mail
+> 
+> 
+> 
+> 
 
-diff --git a/Documentation/devicetree/bindings/arc/hsdk.txt b/Documentation/devicetree/bindings/arc/hsdk.txt
-new file mode 100644
-index 0000000..be50654
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arc/hsdk.txt
-@@ -0,0 +1,7 @@
-+Synopsys DesignWare ARC HS Development Kit Device Tree Bindings
-+---------------------------------------------------------------------------
-+
-+ARC HSDK Board with quad-core ARC HS38x4 in silicon.
-+
-+Required root node properties:
-+    - compatible = "snps,hsdk";
-diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-index 44ef35d..e67397e 100644
---- a/arch/arc/Makefile
-+++ b/arch/arc/Makefile
-@@ -111,6 +111,7 @@ core-$(CONFIG_ARC_PLAT_SIM)	+= arch/arc/plat-sim/
- core-$(CONFIG_ARC_PLAT_TB10X)	+= arch/arc/plat-tb10x/
- core-$(CONFIG_ARC_PLAT_AXS10X)	+= arch/arc/plat-axs10x/
- core-$(CONFIG_ARC_PLAT_EZNPS)	+= arch/arc/plat-eznps/
-+core-y				+= arch/arc/plat-hsdk/
- 
- ifdef CONFIG_ARC_PLAT_EZNPS
- KBUILD_CPPFLAGS += -I$(srctree)/arch/arc/plat-eznps/include
-diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
-new file mode 100644
-index 0000000..33872f1
---- /dev/null
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -0,0 +1,189 @@
-+/*
-+ * Copyright (C) 2017 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * Device Tree for ARC HS Development Kit
-+ */
-+/dts-v1/;
-+
-+#include <dt-bindings/net/ti-dp83867.h>
-+
-+/ {
-+	model = "snps,hsdk";
-+	compatible = "snps,hsdk";
-+
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	chosen {
-+		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <0>;
-+			clocks = <&core_clk>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <1>;
-+			clocks = <&core_clk>;
-+		};
-+
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <2>;
-+			clocks = <&core_clk>;
-+		};
-+
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "snps,archs38";
-+			reg = <3>;
-+			clocks = <&core_clk>;
-+		};
-+
-+		core_intc: archs-intc@cpu {
-+			compatible = "snps,archs-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		idu_intc: idu-interrupt-controller {
-+			compatible = "snps,archs-idu-intc";
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&core_intc>;
-+		};
-+
-+		arcpct0: pct {
-+			compatible = "snps,archs-pct";
-+		};
-+
-+		/* TIMER0 with interrupt for clockevent */
-+		timer0 {
-+			compatible = "snps,arc-timer";
-+			interrupts = <16>;
-+			interrupt-parent = <&core_intc>;
-+			clocks = <&core_clk>;
-+		};
-+
-+		/* 64-bit Global Free Running Counter */
-+		gfrc {
-+			compatible = "snps,archs-timer-gfrc";
-+			clocks = <&core_clk>;
-+		};
-+	};
-+
-+	core_clk: core-clk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <1000000000>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		interrupt-parent = <&idu_intc>;
-+
-+		ranges = <0x00000000 0xf0000000 0x10000000>;
-+
-+		serial: dw-apb-uart@5000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x5000 0x100>;
-+			clock-frequency = <33330000>;
-+			interrupts = <6>;
-+			baud = <115200>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+		};
-+
-+		gmacclk: gmacclk {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		mmcclk_ciu: mmcclk-ciu {
-+			compatible = "fixed-clock";
-+			clock-frequency = <100000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		mmcclk_biu: mmcclk-biu {
-+			compatible = "fixed-clock";
-+			clock-frequency = <400000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		ethernet@8000 {
-+			#interrupt-cells = <1>;
-+			compatible = "snps,dwmac";
-+			reg = <0x8000 0x2000>;
-+			interrupts = <10>;
-+			interrupt-names = "macirq";
-+			phy-mode = "rgmii";
-+			snps,pbl = <32>;
-+			clocks = <&gmacclk>;
-+			clock-names = "stmmaceth";
-+			phy-handle = <&phy0>;
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				compatible = "snps,dwmac-mdio";
-+				phy0: ethernet-phy@0 {
-+					reg = <0>;
-+					ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+					ti,tx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
-+					ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
-+				};
-+			};
-+		};
-+
-+		ohci@60000 {
-+			compatible = "generic-ohci";
-+			reg = <0x60000 0x100>;
-+			interrupts = <15>;
-+		};
-+
-+		ehci@40000 {
-+			compatible = "generic-ehci";
-+			reg = <0x40000 0x100>;
-+			interrupts = <15>;
-+		};
-+
-+		mmc@a000 {
-+			compatible = "altr,socfpga-dw-mshc";
-+			reg = <0xa000 0x400>;
-+			num-slots = <1>;
-+			fifo-depth = <16>;
-+			card-detect-delay = <200>;
-+			clocks = <&mmcclk_biu>, <&mmcclk_ciu>;
-+			clock-names = "biu", "ciu";
-+			interrupts = <12>;
-+			bus-width = <4>;
-+		};
-+	};
-+
-+	memory@80000000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		device_type = "memory";
-+		reg = <0x80000000 0x40000000>;  /* 1 GiB */
-+	};
-+};
-diff --git a/arch/arc/configs/hsdk_defconfig b/arch/arc/configs/hsdk_defconfig
-new file mode 100644
-index 0000000..f4190bc
---- /dev/null
-+++ b/arch/arc/configs/hsdk_defconfig
-@@ -0,0 +1,78 @@
-+CONFIG_DEFAULT_HOSTNAME="ARCLinux"
-+CONFIG_SYSVIPC=y
-+# CONFIG_CROSS_MEMORY_ATTACH is not set
-+CONFIG_NO_HZ_IDLE=y
-+CONFIG_HIGH_RES_TIMERS=y
-+CONFIG_IKCONFIG=y
-+CONFIG_IKCONFIG_PROC=y
-+CONFIG_NAMESPACES=y
-+# CONFIG_UTS_NS is not set
-+# CONFIG_PID_NS is not set
-+CONFIG_BLK_DEV_INITRD=y
-+CONFIG_INITRAMFS_SOURCE="../../arc_initramfs_hs/"
-+CONFIG_EMBEDDED=y
-+CONFIG_PERF_EVENTS=y
-+# CONFIG_VM_EVENT_COUNTERS is not set
-+# CONFIG_COMPAT_BRK is not set
-+CONFIG_SLAB=y
-+CONFIG_MODULES=y
-+CONFIG_MODULE_UNLOAD=y
-+CONFIG_ISA_ARCV2=y
-+CONFIG_SMP=y
-+CONFIG_LINUX_LINK_BASE=0x90000000
-+CONFIG_KERNEL_RAM_BASE_ADDRESS=0x80000000
-+CONFIG_ARC_BUILTIN_DTB_NAME="hsdk"
-+CONFIG_PREEMPT=y
-+# CONFIG_COMPACTION is not set
-+CONFIG_NET=y
-+CONFIG_PACKET=y
-+CONFIG_UNIX=y
-+CONFIG_INET=y
-+CONFIG_DEVTMPFS=y
-+# CONFIG_STANDALONE is not set
-+# CONFIG_PREVENT_FIRMWARE_BUILD is not set
-+# CONFIG_FIRMWARE_IN_KERNEL is not set
-+CONFIG_SCSI=y
-+CONFIG_BLK_DEV_SD=y
-+CONFIG_NETDEVICES=y
-+CONFIG_STMMAC_ETH=y
-+CONFIG_MICREL_PHY=y
-+# CONFIG_INPUT_KEYBOARD is not set
-+# CONFIG_INPUT_MOUSE is not set
-+# CONFIG_SERIO is not set
-+# CONFIG_LEGACY_PTYS is not set
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_8250_DW=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+# CONFIG_HW_RANDOM is not set
-+# CONFIG_HWMON is not set
-+CONFIG_FB=y
-+CONFIG_FB_UDL=y
-+CONFIG_FRAMEBUFFER_CONSOLE=y
-+CONFIG_USB=y
-+CONFIG_USB_EHCI_HCD=y
-+CONFIG_USB_EHCI_HCD_PLATFORM=y
-+CONFIG_USB_OHCI_HCD=y
-+CONFIG_USB_OHCI_HCD_PLATFORM=y
-+CONFIG_USB_STORAGE=y
-+CONFIG_MMC=y
-+CONFIG_MMC_SDHCI=y
-+CONFIG_MMC_SDHCI_PLTFM=y
-+CONFIG_MMC_DW=y
-+# CONFIG_IOMMU_SUPPORT is not set
-+CONFIG_EXT3_FS=y
-+CONFIG_VFAT_FS=y
-+CONFIG_TMPFS=y
-+CONFIG_NFS_FS=y
-+CONFIG_NLS_CODEPAGE_437=y
-+CONFIG_NLS_ISO8859_1=y
-+# CONFIG_ENABLE_WARN_DEPRECATED is not set
-+# CONFIG_ENABLE_MUST_CHECK is not set
-+CONFIG_STRIP_ASM_SYMS=y
-+CONFIG_LOCKUP_DETECTOR=y
-+CONFIG_DEFAULT_HUNG_TASK_TIMEOUT=10
-+# CONFIG_SCHED_DEBUG is not set
-+# CONFIG_DEBUG_PREEMPT is not set
-+# CONFIG_FTRACE is not set
-+CONFIG_CRYPTO_ECHAINIV=y
-diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
-index 3b67f53..521ef35 100644
---- a/arch/arc/kernel/devtree.c
-+++ b/arch/arc/kernel/devtree.c
-@@ -29,8 +29,9 @@ static void __init arc_set_early_base_baud(unsigned long dt_root)
- {
- 	if (of_flat_dt_is_compatible(dt_root, "abilis,arc-tb10x"))
- 		arc_base_baud = 166666666;	/* Fixed 166.6MHz clk (TB10x) */
--	else if (of_flat_dt_is_compatible(dt_root, "snps,arc-sdp"))
--		arc_base_baud = 33333333;	/* Fixed 33MHz clk (AXS10x) */
-+	else if (of_flat_dt_is_compatible(dt_root, "snps,arc-sdp") ||
-+		 of_flat_dt_is_compatible(dt_root, "snps,hsdk"))
-+		arc_base_baud = 33333333;	/* Fixed 33MHz clk (AXS10x & HSDK) */
- 	else if (of_flat_dt_is_compatible(dt_root, "ezchip,arc-nps"))
- 		arc_base_baud = 800000000;      /* Fixed 800MHz clk (NPS) */
- 	else
-diff --git a/arch/arc/plat-hsdk/Makefile b/arch/arc/plat-hsdk/Makefile
-new file mode 100644
-index 0000000..9a50c51
---- /dev/null
-+++ b/arch/arc/plat-hsdk/Makefile
-@@ -0,0 +1,9 @@
-+#
-+# Copyright (C) 2017 Synopsys, Inc. (www.synopsys.com)
-+#
-+# This program is free software; you can redistribute it and/or modify
-+# it under the terms of the GNU General Public License version 2 as
-+# published by the Free Software Foundation.
-+#
-+
-+obj-y := platform.o
-diff --git a/arch/arc/plat-hsdk/platform.c b/arch/arc/plat-hsdk/platform.c
-new file mode 100644
-index 0000000..5943d23
---- /dev/null
-+++ b/arch/arc/plat-hsdk/platform.c
-@@ -0,0 +1,79 @@
-+/*
-+ * ARC HSDK Platform support code
-+ *
-+ * Copyright (C) 2017 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/smp.h>
-+#include <asm/arcregs.h>
-+#include <asm/io.h>
-+#include <asm/mach_desc.h>
-+
-+#define ARC_CCM_UNUSED_ADDR	0x60000000
-+
-+/*
-+ * By default ICCM is mapped to 0x7z while this area is used for
-+ * Virtual kernel mappings, so move it to currently unused area.
-+ */
-+static void __init relocate_iccm(void)
-+{
-+	if (cpuinfo_arc700[smp_processor_id()].iccm.sz)
-+		write_aux_reg(ARC_REG_AUX_ICCM, ARC_CCM_UNUSED_ADDR);
-+}
-+
-+/*
-+ * By default DCCM is mapped to 0x8z while this area is used by kernel,
-+ * so move it to currently unused area.
-+ */
-+static void __init relocate_dccm(void)
-+{
-+	if (cpuinfo_arc700[smp_processor_id()].dccm.sz)
-+		write_aux_reg(ARC_REG_AUX_DCCM, ARC_CCM_UNUSED_ADDR);
-+}
-+
-+static void __init hsdk_init_per_cpu(unsigned int cpu)
-+{
-+	relocate_iccm();
-+	relocate_dccm();
-+}
-+
-+/*
-+ * PAE remapping for DMA clients does not work due to an RTL bug, so
-+ * CREG_PAE register must be programmed to all zeroes, otherwise it
-+ * will cause problems with DMA to/from peripherals even if PAE40 is
-+ * not used.
-+ */
-+static void __init fixup_pae_regs(void)
-+{
-+#define ARC_PERIPHERAL_BASE	0xf0000000
-+#define	CREG_BASE		(ARC_PERIPHERAL_BASE + 0x1000)
-+#define	CREG_PAE		(CREG_BASE + 0x180)
-+#define	CREG_PAE_UPDATE		(CREG_BASE + 0x194)
-+
-+	/* Default is 1, which means "PAE offset = 4GByte" */
-+	writel_relaxed(0, (void __iomem *) CREG_PAE);
-+
-+	/* Really apply settings made above */
-+	writel(1, (void __iomem *) CREG_PAE_UPDATE);
-+}
-+
-+static void __init hsdk_early_init(void)
-+{
-+	fixup_pae_regs();
-+}
-+
-+static const char *hsdk_compat[] __initconst = {
-+	"snps,hsdk",
-+	NULL,
-+};
-+
-+MACHINE_START(SIMULATION, "hsdk")
-+	.dt_compat	= hsdk_compat,
-+	.init_early     = hsdk_early_init,
-+	.init_per_cpu	= hsdk_init_per_cpu,
-+MACHINE_END
--- 
-2.9.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
