@@ -1,31 +1,35 @@
-From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
-Date: Mon, 03 Jul 2017 22:35:13 +1000
-Message-ID: <87o9t1bsvy.fsf@concordia.ellerman.id.au>
-References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com> <87r2yogpc6.fsf@concordia.ellerman.id.au> <CAK7LNAS0tkpCuCjjCe=P_Qc2Q12B-+7YgAipko5n+AoeASpQnQ@mail.gmail.com> <87y3sv2hky.fsf@concordia.ellerman.id.au> <CAK7LNAQ2Ek3VEou_adaH3g8efSnJ7JgvHynzqR9Br4M+q8Mccw@mail.gmail.com> <87bmphu0vq.fsf@concordia.ellerman.id.au> <CAK7LNAQBbZ7WcXN=3rxi0AQGJC8W_WKtGtmapEziLUre075J=g@mail.gmail.com> <CAK7LNASvupxqXnwm3hyEq7iGpHyActRbYjZ3v9xyd4qpxdVmLA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCHv2 0/2] Input: atmel_mxt_ts: Add reset support
+Date: Mon,  3 Jul 2017 14:38:41 +0200
+Message-ID: <20170703123843.19340-1-sebastian.reichel@collabora.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASvupxqXnwm3hyEq7iGpHyActRbYjZ3v9xyd4qpxdVmLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Henrik Rydberg <rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
+Hi,
 
-> Hi Michael,
->
-> Ping.  Please apply this patch.
->
-> I need this to clean up Makefiles in the next development cycle.
+This adds support for the reset pin of Atmel MXT.
 
-Sorry for some reason it didn't land in patchwork, so I keep forgetting
-about it.
+Changes since PATCHv1:
+ - Add new patch preparing for resource managed gpio
+ - Use resource managed gpio
+ - Wait for interrupt after reset
 
-Have merged it now for 4.13.
+-- Sebastian
 
-cheers
+Sebastian Reichel (2):
+  Input: atmel_mxt_ts: Use more managed resources
+  Input: atmel_mxt_ts: Add support for reset line
+
+ .../devicetree/bindings/input/atmel,maxtouch.txt   |  2 ++
+ drivers/input/touchscreen/atmel_mxt_ts.c           | 42 +++++++++++++++-------
+ 2 files changed, 31 insertions(+), 13 deletions(-)
+
+-- 
+2.13.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
