@@ -1,102 +1,46 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 RESEND 2/2] tpm: do not suspend/resume
- if power stays on
-Date: Mon, 3 Jul 2017 16:00:50 +0300
-Message-ID: <20170703130050.genolhp2eg4qpkfn@linux.intel.com>
-References: <20170627102724.23861-1-enric.balletbo@collabora.com>
-	<20170627102724.23861-2-enric.balletbo@collabora.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v11 0/3]add PCIe driver for Kirin PCIe
+Date: Mon, 3 Jul 2017 21:04:56 +0800
+Message-ID: <CAFGCpxx+92PSs1VaryFOXau7CjBYEP4H6wT-o=bNMwkSznjQuw@mail.gmail.com>
+References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+ <20170702233657.GA13507@bhelgaas-glaptop.roam.corp.google.com> <20170703104727.GB1573@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170627102724.23861-2-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/options/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
-List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
-	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170703104727.GB1573-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suzhuangluan <suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 12:27:24PM +0200, Enric Balletbo i Serra wrote:
-> The suspend/resume behavior of the TPM can be controlled by setting
-> "powered-while-suspended" in the DTS. This is useful for the cases
-> when hardware does not power-off the TPM.
-> 
-> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
-> Changes since v3.
->   - Rebased on top of linux-next
->  Rob Herring
->   - Split DT binding from code patch as is preferred.
-> Changes since v2:
->  Jarkko Sakkinen
->   - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
->   - Remove a trailing newline.
-> Changes since v1:
->  Jason Gunthorpe :
->   - Move the code to handle suspend/resume in the common chip code.
-> 
->  drivers/char/tpm/tpm-interface.c | 3 +++
->  drivers/char/tpm/tpm.h           | 1 +
->  drivers/char/tpm/tpm_of.c        | 3 +++
->  3 files changed, 7 insertions(+)
-> 
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index be54159..34ec7ce 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -1099,6 +1099,9 @@ int tpm_pm_suspend(struct device *dev)
->  	if (chip == NULL)
->  		return -ENODEV;
->  
-> +	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
-> +		return 0;
-> +
->  	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
->  		tpm2_shutdown(chip, TPM2_SU_STATE);
->  		return 0;
-> diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-> index af05c14..b44d39c 100644
-> --- a/drivers/char/tpm/tpm.h
-> +++ b/drivers/char/tpm/tpm.h
-> @@ -170,6 +170,7 @@ enum tpm_chip_flags {
->  	TPM_CHIP_FLAG_IRQ		= BIT(2),
->  	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
->  	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
-> +	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
->  };
->  
->  struct tpm_bios_log {
-> diff --git a/drivers/char/tpm/tpm_of.c b/drivers/char/tpm/tpm_of.c
-> index de57d4a..aadb7f4 100644
-> --- a/drivers/char/tpm/tpm_of.c
-> +++ b/drivers/char/tpm/tpm_of.c
-> @@ -36,6 +36,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
->  	else
->  		return -ENODEV;
->  
-> +	if (of_property_read_bool(np, "powered-while-suspended"))
-> +		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
-> +
->  	sizep = of_get_property(np, "linux,sml-size", NULL);
->  	basep = of_get_property(np, "linux,sml-base", NULL);
->  	if (sizep == NULL && basep == NULL)
-> -- 
-> 2.9.3
+Hi, Xu Wei
 
-Applied.
 
-/Jarkko
 
-------------------------------------------------------------------------------
-Check out the vibrant tech community on one of the world's most
-engaging tech sites, Slashdot.org! http://sdm.link/slashdot
+On Mon, Jul 3, 2017 at 6:47 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Sun, Jul 02, 2017 at 06:36:57PM -0500, Bjorn Helgaas wrote:
+>> [+cc Catalin, Will, linux-arm-kernel]
+>>
+>> Applied patches 2 & 3 to pci/host-kirin for v4.13.
+>>
+>> I would like a MAINTAINERS update, too.  If you send me that, I'll
+>> squash it into the driver patch.
+>>
+>> Catalin, Will, how do you want to handle the
+>> arch/arm64/configs/defconfig change (patch 3)?  It's currently on my
+>> branch, but I'm happy to drop it if another route is better.
+>
+> defconfig updates usually go through arm-soc, via the relevant platform
+> maintainer, so it would be best to follow that route here too otherwise
+> you'll probably see conflicts in -next.
+>
+
+Is it ok for you to pick up the arch/arm64/configs/defconfig change (patch 3)?
+
+-Guodong
+
+> Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
