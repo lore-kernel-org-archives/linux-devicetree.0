@@ -1,167 +1,75 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v2 4/7] [media] ov9650: use write_array() for resolution
- sequences
-Date: Mon, 3 Jul 2017 11:16:05 +0200
-Message-ID: <1499073368-31905-5-git-send-email-hugues.fruchet@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v3 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Mon, 3 Jul 2017 17:29:57 +0800
+Message-ID: <CAAfSe-uJZFMA4nr8Ah3OKz0Wx9bJOLHXcWK9Ujxx3kSi=PvaLw@mail.gmail.com>
+References: <2083c9d6e96a72f9c1324c8a277acfd780a34094.1498472593.git.baolin.wang@spreadtrum.com>
+ <6941c6866078fac8fe81d108b573f7408245a0b9.1498472593.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, " H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <6941c6866078fac8fe81d108b573f7408245a0b9.1498472593.git.baolin.wang@spreadtrum.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: wsa@the-dreams.de, Mark Rutland <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, baolin.wang@linaro.org, =?UTF-8?B?T3Jzb24gWmhhaSAo57+f5LqsKQ==?= <orson.zhai@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-Align resolution sequences on initialization sequence using
-i2c_rv structure NULL terminated .This add flexibility
-on resolution sequence size.
-Document resolution related registers by using corresponding
-define instead of hexa address/value.
+Hi Baolin,
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/i2c/ov9650.c | 88 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 59 insertions(+), 29 deletions(-)
+On 26 June 2017 at 18:28, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+> This patch adds the I2C controller driver for Spreadtrum SC9860 platform.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> ---
+> Changes since v2:
+>  - Remove some redundant comments and parens.
+>  - Define macros instead of magic number.
+>  - Add some comments to explain clock formula.
+>  - Change of_clk_get_by_name() to devm_clk_get().
+>  - Deal with other frequency.
+>  - Change register definiton to low case.
+>  - Change is_last_msg to boolean.
+>  - Other optimization.
+>
+> Changes sice v1:
+>  - Power on I2C device in probe().
+>  - Remove redundant macros and usb __maybe_unused.
+>  - Remove redundant 'of_match_ptr'.
+>  - Modify return values and check the return value for 'clk_prepare_enable'.
+> ---
+>  drivers/i2c/busses/Kconfig    |    7 +
+>  drivers/i2c/busses/Makefile   |    1 +
+>  drivers/i2c/busses/i2c-sprd.c |  683 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 691 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-sprd.c
+>
 
-diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-index 7e9a902..db96698 100644
---- a/drivers/media/i2c/ov9650.c
-+++ b/drivers/media/i2c/ov9650.c
-@@ -227,11 +227,16 @@ struct ov965x_ctrls {
- 	u8 update;
- };
- 
-+struct i2c_rv {
-+	u8 addr;
-+	u8 value;
-+};
-+
- struct ov965x_framesize {
- 	u16 width;
- 	u16 height;
- 	u16 max_exp_lines;
--	const u8 *regs;
-+	const struct i2c_rv *regs;
- };
- 
- struct ov965x_interval {
-@@ -280,11 +285,6 @@ struct ov965x {
- 	u8 apply_frame_fmt;
- };
- 
--struct i2c_rv {
--	u8 addr;
--	u8 value;
--};
--
- static const struct i2c_rv ov965x_init_regs[] = {
- 	{ REG_COM2, 0x10 },	/* Set soft sleep mode */
- 	{ REG_COM5, 0x00 },	/* System clock options */
-@@ -342,30 +342,59 @@ struct i2c_rv {
- 	{ REG_NULL, 0 }
- };
- 
--#define NUM_FMT_REGS 14
--/*
-- * COM7,  COM3,  COM4, HSTART, HSTOP, HREF, VSTART, VSTOP, VREF,
-- * EXHCH, EXHCL, ADC,  OCOM,   OFON
-- */
--static const u8 frame_size_reg_addr[NUM_FMT_REGS] = {
--	0x12, 0x0c, 0x0d, 0x17, 0x18, 0x32, 0x19, 0x1a, 0x03,
--	0x2a, 0x2b, 0x37, 0x38, 0x39,
--};
--
--static const u8 ov965x_sxga_regs[NUM_FMT_REGS] = {
--	0x00, 0x00, 0x00, 0x1e, 0xbe, 0xbf, 0x01, 0x81, 0x12,
--	0x10, 0x34, 0x81, 0x93, 0x51,
-+static const struct i2c_rv ov965x_sxga_regs[] = {
-+	{ REG_COM7, 0x00 },
-+	{ REG_COM3, 0x00 },
-+	{ REG_COM4, 0x00 },
-+	{ REG_HSTART, 0x1e },
-+	{ REG_HSTOP, 0xbe },
-+	{ 0x32, 0xbf },
-+	{ REG_VSTART, 0x01 },
-+	{ REG_VSTOP, 0x81 },
-+	{ REG_VREF, 0x12 },
-+	{ REG_EXHCH, 0x10 },
-+	{ REG_EXHCL, 0x34 },
-+	{ REG_ADC, 0x81 },
-+	{ REG_ACOM, 0x93 },
-+	{ REG_OFON, 0x51 },
-+	{ REG_NULL, 0 },
- };
- 
--static const u8 ov965x_vga_regs[NUM_FMT_REGS] = {
--	0x40, 0x04, 0x80, 0x26, 0xc6, 0xed, 0x01, 0x3d, 0x00,
--	0x10, 0x40, 0x91, 0x12, 0x43,
-+static const struct i2c_rv ov965x_vga_regs[] = {
-+	{ REG_COM7, 0x40 },
-+	{ REG_COM3, 0x04 },
-+	{ REG_COM4, 0x80 },
-+	{ REG_HSTART, 0x26 },
-+	{ REG_HSTOP, 0xc6 },
-+	{ 0x32, 0xed },
-+	{ REG_VSTART, 0x01 },
-+	{ REG_VSTOP, 0x3d },
-+	{ REG_VREF, 0x00 },
-+	{ REG_EXHCH, 0x10 },
-+	{ REG_EXHCL, 0x40 },
-+	{ REG_ADC, 0x91 },
-+	{ REG_ACOM, 0x12 },
-+	{ REG_OFON, 0x43 },
-+	{ REG_NULL, 0 },
- };
- 
- /* Determined empirically. */
--static const u8 ov965x_qvga_regs[NUM_FMT_REGS] = {
--	0x10, 0x04, 0x80, 0x25, 0xc5, 0xbf, 0x00, 0x80, 0x12,
--	0x10, 0x40, 0x91, 0x12, 0x43,
-+static const struct i2c_rv ov965x_qvga_regs[] = {
-+	{ REG_COM7, 0x10 },
-+	{ REG_COM3, 0x04 },
-+	{ REG_COM4, 0x80 },
-+	{ REG_HSTART, 0x25 },
-+	{ REG_HSTOP, 0xc5 },
-+	{ 0x32, 0xbf },
-+	{ REG_VSTART, 0x00 },
-+	{ REG_VSTOP, 0x80 },
-+	{ REG_VREF, 0x12 },
-+	{ REG_EXHCH, 0x10 },
-+	{ REG_EXHCL, 0x40 },
-+	{ REG_ADC, 0x91 },
-+	{ REG_ACOM, 0x12 },
-+	{ REG_OFON, 0x43 },
-+	{ REG_NULL, 0 },
- };
- 
- static const struct ov965x_framesize ov965x_framesizes[] = {
-@@ -1266,11 +1295,12 @@ static int ov965x_set_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config
- 
- static int ov965x_set_frame_size(struct ov965x *ov965x)
- {
--	int i, ret = 0;
-+	int ret = 0;
-+
-+	v4l2_dbg(1, debug, ov965x->client, "%s\n", __func__);
- 
--	for (i = 0; ret == 0 && i < NUM_FMT_REGS; i++)
--		ret = ov965x_write(ov965x->client, frame_size_reg_addr[i],
--				   ov965x->frame_size->regs[i]);
-+	ret = ov965x_write_array(ov965x->client,
-+				 ov965x->frame_size->regs);
- 	return ret;
- }
- 
--- 
-1.9.1
+[snip]
+
+> diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+> new file mode 100644
+> index 0000000..a070f61
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-sprd.c
+> @@ -0,0 +1,683 @@
+> +/*
+> + * Copyright (C) 2017 Spreadtrum Communications Inc.
+> + *
+> + * This software is licensed under the terms of the GNU General Public
+> + * License version 2, as published by the Free Software Foundation, and
+> + * may be copied, distributed, and modified under those terms.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+
+According to RobH's comments [1], we're switching to use
+SPDX-License-Identifier tag instead, like [2].
+
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1702.2/05122.html
+[2] http://elixir.free-electrons.com/linux/v4.12/source/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts#L6
+
+
+Thanks,
+Chunyan
