@@ -1,61 +1,142 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Mon, 03 Jul 2017 15:41:14 +0300
-Message-ID: <1499085674.4225.17.camel@hp800z>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
-         <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
-         <20170703090648.GV13989@umbus.fritz.box>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v6] media: platform: Renesas IMR driver
+Date: Mon, 3 Jul 2017 14:43:04 +0200
+Message-ID: <589c2ca4-d1e7-86c3-1ef5-8831a54856ed@xs4all.nl>
+References: <20170623203456.503714406@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170703090648.GV13989-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170623203456.503714406@cogentembedded.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On 06/23/2017 10:34 PM, Sergei Shtylyov wrote:
+> Index: media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+> ===================================================================
+> --- /dev/null
+> +++ media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+> @@ -0,0 +1,86 @@
+> +Renesas R-Car Image Rendeder (IMR) Driver
 
-On Mon, 2017-07-03 at 19:06 +1000, David Gibson wrote:
-> On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
-> > This patch enables an overlay to refer to a previous overlay's
-> > labels by performing a merge of symbol information at application
-> > time.
-> 
-> This seems to be doing things the hard way.
-> 
+Rendeder -> Renderer
 
-It is the minimal implementation to get things to work, with the current
-overlay implementation. I do have plans for a version 2 with fixes to
-a number of areas.
- 
-> You're essentially extending the semantics of overlay application to
-> add the symbol merging.  You've implemented these extended semantics
-> in libfdt, which is all very well, but that's not the only overlay
-> application implementation.
-> 
-> 
+> +=========================================
+> +
+> +This file documents some driver-specific aspects of the IMR driver, such as
+> +driver-specific ioctls.
+> +
+> +The ioctl reference
+> +~~~~~~~~~~~~~~~~~~~
+> +
+> +VIDIOC_IMR_MESH - Set mapping data
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +
+> +Argument: struct imr_map_desc
+> +
+> +**Description**:
+> +
+> +	This ioctl sets up the mesh using which the input frames will be
 
-This is a port of the same patch that's against the linux kernel.
-As far as I know there's no other implementations, or at least none
-that are open source.
+s/using/through/
 
-> It seems to me a better approach would be to change dtc's -@
-> implementation, so that in /plugin/ mode instead of making a global
-> __symbols__ node, it puts it into the individual fragments.  That way
-> the existing overlay application semantics will update the __symbols__
-> node.
-> 
+> +	transformed into the output frames. The mesh can be strictly rectangular
+> +	(when IMR_MAP_MESH bit is set in imr_map_desc::type) or arbitrary (when
+> +	that bit is not set).
+> +
+> +	A rectangular mesh consists of the imr_mesh structure followed by M*N
+> +	vertex objects (where M is imr_mesh::rows and N is imr_mesh::columns).
+> +	In case either IMR_MAP_AUTOSG or IMR_MAP_AUTODG bits were set in
+> +	imr_map_desc::type, imr_mesh::{x|y}0 specify the coordinates of the top
+> +	left corner of the auto-generated mesh and imr_mesh::d{x|y} specify the
+> +	mesh's X/Y steps.
 
-A lot of things can be made better, on the next version. These are
-minimally intrusive patches to address user requests for the current
-implementation.
+What if any of the other types are used like IMR_MAP_LUCE?
 
-Why don't we start by making a list, and work towards that goal?
+Is this documented in a Renesas datasheet? If so, add a reference to that in this
+documentation.
 
-Care to start about what you want addressed and how?
+> +
+> +	An arbitrary mesh consists of the imr_vbo structure followed by N
+> +	triangle objects (where N is imr_vbo::num), consisting of 3 vertex
+> +	objects each.
+> +
+> +	A vertex object has a complex structure:
+> +
+> +.. code-block:: none
+> +
+> +	__u16	v		vertical   \ source coordinates (only present
+> +	__u16	u		horizontal / if IMR_MAP_AUTOSG isn't set)
+> +	__u16	Y		vertical   \ destination coordinates (only here
+> +	__u16	X		horizontal / if IMR_MAP_AUTODG isn't set)
+> +	__s8	lofst		offset \  luminance correction parameters
+> +	__u8	lscal		scale   > (only present if IMR_MAP_LUCE
+> +	__u16	reserved	       /  is set)
+> +	__s8	vrofs		V value offset \  hue correction parameters
+> +	__u8	vrscl		V value scale   \ (only present if IMR_MAP_CLCE
+> +	__s8	ubofs		U value offset  / is set)
+> +	__u8	ubscl		U value scale  /
 
-Regards
+Is this the internal structure? Or something that userspace has to fill in?
+It's not clear at all.
 
--- Pantelis
+I recommend giving a few code examples of how this should be used.
+
+> +
+> +**Return value**:
+> +
+> +	On success 0 is returned. On error -1 is returned and errno is set
+> +	appropriately.
+> +
+> +**Data types**:
+> +
+> +.. code-block:: none
+> +
+> +	* struct imr_map_desc
+> +
+> +	__u32	type		mapping types
+
+This is a bitmask? If so, what combination of bits are allowed?
+
+> +	__u32	size		total size of the mesh structure
+> +	__u64	data		map-specific user-pointer
+> +
+> +	IMR_MAP_MESH		regular mesh specification
+> +	IMR_MAP_AUTOSG		auto-generated source coordinates
+> +	IMR_MAP_AUTODG		auto-generated destination coordinates
+> +	IMR_MAP_LUCE		luminance correction flag
+> +	IMR_MAP_CLCE		chromacity correction flag
+
+You probably mean 'chroma'. 'chromacity' isn't a word.
+
+> +	IMR_MAP_TCM		vertex clockwise-mode order
+> +	IMR_MAP_UVDPOR(n)	source coordinate decimal point position
+> +	IMR_MAP_DDP		destination coordinate sub-pixel mode
+> +	IMR_MAP_YLDPO(n)	luminance correction offset decimal point
+> +				position
+> +	IMR_MAP_UBDPO(n)	chromacity (U) correction offset decimal point
+> +				position
+> +	IMR_MAP_VRDPO(n)	chromacity (V) correction offset decimal point
+> +				position
+
+There is no documentation what how these types relate to IMR_MAP_MESH and
+IMR_MAP_AUTOS/DG.
+
+> +
+> +	* struct imr_mesh	regular mesh specification
+> +
+> +	__u16	rows, columns	rectangular mesh sizes
+> +	__u16	x0, y0, dx, dy	auto-generated mesh parameters
+> +
+> +	* struct imr_vbo	vertex-buffer-object (VBO) descriptor
+> +
+> +	__u16	num		number of triangles
+
+Sorry, this needs more work.
+
+Regards,
+
+	Hans
