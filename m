@@ -1,54 +1,57 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add bindings for basic reset controller
-Date: Mon, 3 Jul 2017 16:21:29 +0930
-Message-ID: <CACPK8Xd86gAtR5sLb1LAy49Rc-dw4mAnZtk9_vwYvBe+Qefa1Q@mail.gmail.com>
-References: <20170530060851.29923-1-joel@jms.id.au> <20170530060851.29923-2-joel@jms.id.au>
- <20170607204916.n3wh3fkwbfctdv6s@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170607204916.n3wh3fkwbfctdv6s@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v2 1/2] dts: ipq4019: Fix pinctrl node name
+Date: Mon,  3 Jul 2017 13:04:43 +0530
+Message-ID: <1499067284-21008-2-git-send-email-varada@codeaurora.org>
+References: <1499067284-21008-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1499067284-21008-1-git-send-email-varada@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 6:19 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 30, 2017 at 03:38:50PM +0930, Joel Stanley wrote:
->> This adds the bindings documentation for a basic single-register reset
->> controller.
->>
->> The bindings describe a single 32-bit register that contains up to 32
->> reset lines, each deasserted by clearing the appropriate bit in the
->> register. Optionally a property can be provided that changes this
->> behaviour to assert on clear.
->>
->
-> I think this is a good idea for kernel code, but not for bindings. We
-> don't really want per register bindings.
->
-> The problem with any generic/simple/basic binding is they always start
-> that way. Then we add one property at a time not in any well planned
-> way. I can easily come up with additions. For example, what about
-> self-clearing reset bits. Or 2 bits per reset. Or multiple resets that
-> have to be controlled together. 8 or 16-bit registers.
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 13 +------------
+ arch/arm/boot/dts/qcom-ipq4019.dtsi           |  2 +-
+ 2 files changed, 2 insertions(+), 13 deletions(-)
 
-Thanks for the explanation. I will send a v3 with aspeed specific bindings.
-
-How should I handle the driver? Were you suggesting I keep it generic,
-but with my aspeed compatible?
-
-Cheers,
-
-Joel
-
->
-> IRQs and GPIOs could also be described in some cases with just groups of
-> 32-bit registers for set,clear,status,mask,etc., but we don't do that in
-> bindings for the same reasons.
->
-> Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+index b9457dd..de83bc9 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
+@@ -29,18 +29,7 @@
+ 	};
+ 
+ 	soc {
+-
+-
+-		timer {
+-			compatible = "arm,armv7-timer";
+-			interrupts = <1 2 0xf08>,
+-				     <1 3 0xf08>,
+-				     <1 4 0xf08>,
+-				     <1 1 0xf08>;
+-			clock-frequency = <48000000>;
+-		};
+-
+-		pinctrl@0x01000000 {
++		pinctrl@1000000 {
+ 			serial_pins: serial_pinmux {
+ 				mux {
+ 					pins = "gpio60", "gpio61";
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index b7a24af..6defd0e 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -119,7 +119,7 @@
+ 			reg = <0x1800000 0x60000>;
+ 		};
+ 
+-		tlmm: pinctrl@0x01000000 {
++		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq4019-pinctrl";
+ 			reg = <0x01000000 0x300000>;
+ 			gpio-controller;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
