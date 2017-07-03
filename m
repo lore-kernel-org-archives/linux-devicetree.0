@@ -1,66 +1,108 @@
-From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Subject: Re: [PATCH v3 2/4] media: adv7180: add adv7180cp, adv7180st
- compatible strings
-Date: Mon, 3 Jul 2017 10:44:08 +0200
-Message-ID: <CAO3366zk4eULzWXFhFX39egJc3G7eWdDm5-4gjmW7jdomnVRMA@mail.gmail.com>
-References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <1495199224-16337-3-git-send-email-ulrich.hecht+renesas@gmail.com> <CAMuHMdU-LcB_Te_SeqkZbji81v82n-NP0VKAAdDQ=DhqE5wBwg@mail.gmail.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: [PATCH v5 0/7] STM32 DSI HOST
+Date: Mon, 3 Jul 2017 10:41:20 +0200
+Message-ID: <1499071287-10414-1-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU-LcB_Te_SeqkZbji81v82n-NP0VKAAdDQ=DhqE5wBwg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Archit Taneja <architt@codeaurora.org>, Eric Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, zourongrong@gmail.com, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puck.chen@hisilicon.com>, Mark Yao <mark.yao@rock-chips.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 11:19 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Ulrich,
->
-> On Fri, May 19, 2017 at 3:07 PM, Ulrich Hecht
-> <ulrich.hecht+renesas@gmail.com> wrote:
->> Used to differentiate between models with 3 and 6 inputs.
->>
->> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
->> ---
->>  drivers/media/i2c/adv7180.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/media/i2c/adv7180.c b/drivers/media/i2c/adv7180.c
->> index bdbbf8c..78de7dd 100644
->> --- a/drivers/media/i2c/adv7180.c
->> +++ b/drivers/media/i2c/adv7180.c
->> @@ -1452,6 +1452,8 @@ static SIMPLE_DEV_PM_OPS(adv7180_pm_ops, adv7180_suspend, adv7180_resume);
->>  #ifdef CONFIG_OF
->>  static const struct of_device_id adv7180_of_id[] = {
->>         { .compatible = "adi,adv7180", },
->> +       { .compatible = "adi,adv7180cp", },
->> +       { .compatible = "adi,adv7180st", },
->>         { .compatible = "adi,adv7182", },
->>         { .compatible = "adi,adv7280", },
->>         { .compatible = "adi,adv7280-m", },
->
-> Adding compatible entries here is not sufficient, and causes a crash on
-> r8a7793/gose with renesas-drivers-2017-06-27-v4.12-rc7:
->
->     adv7180 2-0020: chip found @ 0x20 (e6530000.i2c)
->     Unable to handle kernel NULL pointer dereference at virtual address 00000014
->     pgd = c0003000
->     [00000014] *pgd=80000040004003, *pmd=00000000
->     Internal error: Oops: 207 [#1] SMP ARM
->     Modules linked in:
->     CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.12.0-rc7-rcar2-initrd #37
->     Hardware name: Generic R-Car Gen2 (Flattened Device Tree)
->     task: df427040 task.stack: df436000
->     PC is at adv7180_probe+0x84/0x3cc
->
-> In the absence of an entry in adv7180_id[], the passed i2c_device_id
-> pointer is NULL, and thus dereferencing it crashes the system.
-
-Thank you for testing this. I have sent a fix (" media: adv7180: add
-missing adv7180cp, adv7180st i2c device IDs"), could you please check
-if it unbreaks things for you?
-
-CU
-Uli
+VmVyc2lvbiA1OgotIGJyaWRnZS9zeW5vcHNpcy9kdy1taXBpLWRzaS5jOiBJbXByb3ZlIHRoZSBk
+aXJlY3QgY2FsbCB0byBwYW5lbAogIGJyaWRnZSBwb3N0X2Rpc2FibGUoKSAmIHJlbGF0ZWQgY29t
+bWVudHMgKEFyY2hpdCBUYW5lamEpCi0gc3RtL2x0ZGMuYzogZml4IGxlYWsgb2YgcGl4ZWwgY2xv
+Y2sgZW5hYmxlIGluIHNvbWUgZXJyb3IKICBwYXRocyAoRXJpYyBBbmhvbHQpCi0gYmluZGluZ3Mv
+ZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0OiBhZGQgcGl4ZWwgY2xvY2sgJiByZW1vdmUK
+ICAiZHJpdmVyIiAoUm9iIEhlcnJpbmcsIEFyY2hpdCBUYW5lamEpCi0gYmluZGluZ3MvZGlzcGxh
+eS9zdCxzdG0zMi1sdGRjLnR4dDogcmVtb3ZlICJkcml2ZXIiIChSb2IgSGVycmluZywKICBBcmNo
+aXQgVGFuZWphKQoKVmVyc2lvbiA0OgotIGJyaWRnZS9zeW5vcHNpcy9kdy1taXBpLWRzaS5jOiBB
+ZGQgcGFuZWwtYnJpZGdlIHN1cHBvcnQgKC00NSBsaW5lcywKICBidXQgbm8gc28gZWFzeSB0byBk
+bykgYW5kIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBiZXR0ZXIgY2xlYW4gdXAsIGFkZAogIHN0bSBj
+b3B5cmlnaHQvcmVtb3ZlIGRwbXNfbW9kZS9yZW1vdmUgZHJtX29mLmgvaW1wcm92ZSBjbGsKICBt
+YW5hZ2VtZW50L2FkZCBtb2RlX3ZhbGlkICh0aGFua3MgdG8gY29tbWVudHMgb2YgQXJjaGl0IFRh
+bmVqYSksIHVzZQogICJEZXNpZ25XYXJlIiBpbnN0ZWFkIG9mICJEZXNpZ253YXJlICh0aGFua3Mg
+dG8gY29tbWVudHMgb2YgTmVpbAogIEFybXN0cm9uZykKLSBicmlkZ2Uvc3lub3BzaXMvS2NvbmZp
+ZzogUmVtb3ZlIGhlbHAgc2VjdGlvbiB0byBoaWRlIGl0IGluIG1lbnVjb25maWcKICAodGhhbmtz
+IHRvIGNvbW1lbnRzIG9mIEFyY2hpdCBUYW5lamEpCi0gaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21p
+cGlfZHNpLmg6IFJlbW92ZSBkcm1QLmggKHRoYW5rcyB0byBjb21tZW50cwogIG9mIEFyY2hpdCBU
+YW5lamEpCi0gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0OiBJbXByb3Zl
+IG9wdGlvbmFsIHByb3BlcnR5CiAgZXhwbGFuYXRpb25zICh0aGFua3MgdG8gY29tbWVudHMgb2Yg
+TmVpbCBBcm1zdHJvbmcpCi0gc3RtL2x0ZGMuYzogQWRkIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBi
+ZXR0ZXIgY2xlYW4gdXAvcmVtb3ZlCiAgZHJtX2VuY29kZXJfaGVscGVyX2FkZCgpICh0aGFua3Mg
+dG8gY29tbWVudHMgb2YgRXJpYyBBbmhvbHQpCi0gc3RtL2R3X21pcGlfZHNpLXN0bS5jOiByZW1v
+dmUgbWF0aDY0LmgvdXNlIERSTV9XQVJOL3JlbW92ZSB3YXJuaW5ncwogICh0aGFua3MgdG8gY29t
+bWVudHMgb2YgQXJjaGl0IFRhbmVqYSksIG1pbm9yIGFsaWdubWVudCBmaXggKHRoYW5rcyB0bwog
+IGNvbW1lbnRzIG9mIE5laWwgQXJtc3Ryb25nKQotIGJpbmRpbmdzL2Rpc3BsYXkvc3Qsc3RtMzIt
+bHRkYy50eHQ6IHVzZSBncmFwaCBiaW5kaW5nIGluIHRoZSAKICBleGFtcGxlL2ltcHJvdmUgcG9y
+dHMgdXNhZ2UgZG9jICh0aGFua3MgdG8gY29tbWVudHMgb2YgUm9iIEhlcnJpbmcpLAogIHVzZSAi
+RFNJIiBpbnN0ZWFkIG9mICJkc2kiIHdoZXJlIHJlbGV2YW50ICh0aGFua3MgdG8gY29tbWVudHMg
+b2YgTmVpbAogIEFybXN0cm9uZykKClZlcnNpb24gMzoKLSBzdG0vbHRkYzogVXNlIHBhbmVsLWJy
+aWRnZSAoLTE3MCBsaW5lcyksIHRoYW5rcyB0byBjb21tZW50cyBvZiBFcmljIEFuaG9sdCwKICBC
+b3JpcyBCcmV6aWxsb24sIEFyY2hpdCBUYW5lamEgJiBBbmRyemVqIEhhamRhLgotIFN5bm9wc3lz
+IGRzaTogQWRkIGR3X21pcGlfZHNpLmggKGZvcmdvdHRlbiBpbiB2MiksIHRoYW5rcyB0byBjb21t
+ZW50cyBvZgogIE5laWwgQXJtc3Ryb25nLgotIFN5bm9wc3lzIGRzaS9kdy1taXBpLWRzaS5jOiBh
+ZGQgZHdfbWlwaV9kc2lfZHBoeV9pbml0KCkgJgogIGR3X21pcGlfZHNpX2RwaHlfZW5hYmxlKCkg
+dG8gYmV0dGVyIG1hbmFnZSBEVyBwaHktZGVkaWNhdGVkIHJlZ3MsIHJlbW92ZQogIGR3X21pcGlf
+ZHNpX21vZGUgZW51bSwgcmVtb3ZlIHN0bTMyIHBhdGNoIGZvciBscG0sIHJlbW92ZSBwbGxyZWYg
+KG1hbmFnZSBpbgogIHRoZSB2ZW5kb3IgcGh5KSB0aGFua3MgdG8gY29tbWVudHMgb2YgQXJjaGl0
+IFRhbmVqYS4gQWRkIG1vZGVfZmxhZ3MgdG8gcGh5CiAgcGFyYW1ldGVycyB0byBiZXR0ZXIgYWRq
+dXN0IGxhbmUgbWJwcyBhY2NvcmRpbmcgdG8gZHNpIGJ1cnN0IGFuZCBub24gYnVyc3QKICBtb2Rl
+cyB0b2RvcyBpbiBjYXBzLgotIHN0bS9kd19taXBpX2RzaS1zdG0uYzogQWRkIHBsbHJlZiBtYW5h
+Z2VtZW50LgotIGR0LWJpbmRpbmdzL2Rpc3BsYXkvc3RtOiBTcGxpdCBkdC1iaW5kaW5ncyBwYXRj
+aCBpbiB0d28gKHBhcmVudCBub2RlCiAgcmVtb3ZhbC8gZHNpKSwgYWRkIHJlcXVpcmVkIG5vZGVz
+IChwb3J0ICYgcGFuZWwvYnJpZGdlKSwgdXBkYXRlcyB0aGFua3MgdG8KICBjb21tZW50cyBvZiBS
+b2IgSGVycmluZy4KLSBkdC1iaW5kaW5ncy9kaXNwbGF5L1N5bm9wc3lzIGRzaTogcmVtb3ZlIHBv
+cnQgYXMgcGFydCBvZiB0aGUgdmVuZG9yCiAgZG9jdW1lbnRhdGlvbiwgYWRkIHBhbmVsL2JyaWRn
+ZSBub2RlLCB1cGRhdGUgZHQtYmluZGluZ3MgdGhhbmtzIHRvIGNvbW1lbnRzCiAgb2YgUm9iIEhl
+cnJpbmcuCi0gQWRkIG1vcmUgcGVvcGxlIGZyb20gSGlzaWxpY29uICYgUm9ja2NoaXAuCgpWZXJz
+aW9uIDI6Ci0gQWRkIGEgZ2VuZXJpYyBTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGJyaWRn
+ZSBkcml2ZXIgZm9sbG93aW5nCiAgY29tbWVudHMgZnJvbSBOZWlsIEFybXN0cm9uZyAmIEFyY2hp
+dCBUYW5lamEuCi0gVXNlIGRybV9vZl9maW5kX3BhbmVsX29yX2JyaWRnZSgpIHRoYW5rcyB0byBF
+cmljIEFuaG9sdCBjb21tZW50cwotIFVwZGF0ZSBkdC1iaW5kaW5ncyB0aGFua3MgdG8gUm9iIEhl
+cnJpbmcgY29tbWVudHMKClZlcnNpb24gMToKLSBJbml0aWFsIGNvbW1pdAoKVGhlIHB1cnBvc2Ug
+b2YgdGhpcyBzZXQgb2YgcGF0Y2hlcyBpcyB0byBhZGQgdGhlIG1pcGkgZHNpIGhvc3QgZHJpdmVy
+CnRvIHRoZSBzdG0zMiBmYW1pbHkuCgpUaGlzIG1pcGkgZHNpIGhvc3QgZHJpdmVyIGlzIGJhc2Vk
+IG9uIHRoZSBSb2NrY2hpcCB2ZXJzaW9uIG9mIHRoZQpTeW5vcHN5cyBEZXNpZ253YXJlIG1pcGkg
+ZHNpIGRyaXZlciAocm9ja2NoaXAvZHctbWlwaS1kc2kuYykKbW9kaWZpZWQgZm9yIHRoZSBzdG0z
+MiBmYW1pbHk6CiAgICAtIHJlcGxhY2UgUm9ja2NoaXAgZGlnaXRhbCAmIHBoeSBzcGVjaWZpYyBl
+eHRlbnNpb25zIHdpdGggc3RtMzIncyBvbmVzLgogICAgLSBhZGQgYSBicmlkZ2UKClBoaWxpcHBl
+IENPUk5VICg3KToKICBkcm0vc3RtOiBsdGRjOiBGaXggbGVhayBvZiBweCBjbGsgZW5hYmxlIGlu
+IHNvbWUgZXJyb3IgcGF0aHMKICBkcm0vc3RtOiBsdGRjOiBBZGQgcGFuZWwtYnJpZGdlIHN1cHBv
+cnQKICBkdC1iaW5kaW5nczogZGlzcGxheTogQWRkIFN5bm9wc3lzIERXIE1JUEkgRFNJIGhvc3Qg
+Y29udHJvbGxlcgogIGRybS9icmlkZ2Uvc3lub3BzeXM6IEFkZCBNSVBJIERTSSBob3N0IGNvbnRy
+b2xsZXIgYnJpZGdlCiAgZHQtYmluZGluZ3M6IGRpc3BsYXk6IHN0bTMyOiByZW1vdmUgc3QtZGlz
+cGxheS1zdWJzeXN0ZW0gcGFyZW50IG5vZGUKICAgIHJlcXVpcmVtZW50CiAgZHQtYmluZGluZ3M6
+IGRpc3BsYXk6IHN0bTMyOiBBZGQgRFNJIGNvbnRyb2xsZXIKICBkcm0vc3RtOiBBZGQgU1RNMzIg
+RFNJIGNvbnRyb2xsZXIgZHJpdmVyCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R3X21p
+cGlfZHNpLnR4dCAgICAgICAgfCAgMzIgKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9zdCxzdG0zMi1sdGRjLnR4dCAgfCAxMDUgKystCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5
+bm9wc3lzL0tjb25maWcgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L3N5bm9wc3lzL01ha2VmaWxlICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMgICAgICB8IDk3OSArKysrKysrKysrKysrKysrKysr
+KysKIGRyaXZlcnMvZ3B1L2RybS9zdG0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwg
+ICA5ICstCiBkcml2ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vc3RtL2R3X21pcGlfZHNpLXN0bS5jICAgICAgICAg
+ICAgICB8IDM1MiArKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAyMjAgKy0tLS0KIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5oICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstCiBpbmNsdWRlL2RybS9icmlkZ2UvZHdfbWlw
+aV9kc2kuaCAgICAgICAgICAgICAgICAgICB8ICAzOSArCiAxMSBmaWxlcyBjaGFuZ2VkLCAxNTY2
+IGluc2VydGlvbnMoKyksIDE4MyBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2ku
+dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9k
+dy1taXBpLWRzaS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19t
+aXBpX2RzaS1zdG0uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHJtL2JyaWRnZS9kd19t
+aXBpX2RzaS5oCgotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
