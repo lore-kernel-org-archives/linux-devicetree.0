@@ -1,55 +1,63 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: r8a7794: Add SMP support
-Date: Tue,  4 Jul 2017 19:02:13 +0200
-Message-ID: <1499187733-1430-3-git-send-email-geert+renesas@glider.be>
-References: <1499187733-1430-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/2] ARM: renesas: Enable SMP on R-Car E2
+Date: Tue,  4 Jul 2017 19:02:11 +0200
+Message-ID: <1499187733-1430-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499187733-1430-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+	Hi Magnus, Mar[ck], Sergei, Simon,
 
-Add the device tree node for the Advanced Power Management Unit (APMU).
-Use the "enable-method" prop to  point out that the APMU should be used
-for the SMP support.
+This patch series enables SMP on R-Car E2 (r8a7794).
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/r8a7794.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+  - The first patch initializes CNTVOFF for secondary CPU cores, like is
+    already done for the boot CPU core.  Without this, the ARM arch
+    timer doesn't work on secondary CPU cores.
+  - The second patch adds the required infrastructure (APMU device node
+    and corresponding enable-method) to DT.
+    This must not be applied on a branch that doesn't have the first
+    patch!
 
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index f32b458e93285adc..8afd04339c84c65e 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -37,6 +37,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		enable-method = "renesas,apmu";
- 
- 		cpu0: cpu@0 {
- 			device_type = "cpu";
-@@ -65,6 +66,12 @@
- 		};
- 	};
- 
-+	apmu@e6151000 {
-+		compatible = "renesas,r8a7794-apmu", "renesas,apmu";
-+		reg = <0 0xe6151000 0 0x188>;
-+		cpus = <&cpu0 &cpu1>;
-+	};
-+
- 	gic: interrupt-controller@f1001000 {
- 		compatible = "arm,gic-400";
- 		#interrupt-cells = <3>;
+According to the original comments, the CNTVOFF initialization is needed
+on Cortex-A7 only, hence affects R-Car E2, which has a dual Cortex-A7
+cluster.
+Apparently it's not needed on other R-Car Gen2 members that have (only)
+Cortex-A15 clusters.
+Perhaps it's also needed on R-Car H2, which has a big.LITTLE
+quad Cortex-A15 + quad Cortex-A7 configuration, when running Linux on
+the Cortex-A7 cores?  How can I test that?
+
+Thanks for your comments!
+
+Geert Uytterhoeven (1):
+  ARM: shmobile: Add CA7 arch_timer initialization for secondary CPUs
+
+Sergei Shtylyov (1):
+  ARM: dts: r8a7794: Add SMP support
+
+ arch/arm/boot/dts/r8a7794.dtsi        |  7 +++++++
+ arch/arm/mach-shmobile/Makefile       |  1 +
+ arch/arm/mach-shmobile/common.h       |  1 +
+ arch/arm/mach-shmobile/headsmp-apmu.S | 38 +++++++++++++++++++++++++++++++++++
+ arch/arm/mach-shmobile/platsmp-apmu.c |  2 +-
+ 5 files changed, 48 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/mach-shmobile/headsmp-apmu.S
+
 -- 
 2.7.4
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
