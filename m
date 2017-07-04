@@ -1,42 +1,40 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 7/7] ARM: dts: r8a7794: Add Inter Connect RAM
-Date: Tue,  4 Jul 2017 17:23:18 +0200
-Message-ID: <1499181798-28859-8-git-send-email-geert+renesas@glider.be>
-References: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 9/9] ARM: dts: r8a7794: Reserve SRAM for the SMP jump stub
+Date: Tue,  4 Jul 2017 17:41:43 +0200
+Message-ID: <1499182903-31339-10-git-send-email-geert+renesas@glider.be>
+References: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+To: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>
 Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-R-Car E2 has 2 regions of Inter Connect RAM (72 + 4 KiB).
+Reserve SRAM for the jump stub for CPU core bringup.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm/boot/dts/r8a7794.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/r8a7794.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index 7d9a81d970d87c6b..78973cee7185ffe6 100644
+index 78973cee7185ffe6..f32b458e93285adc 100644
 --- a/arch/arm/boot/dts/r8a7794.dtsi
 +++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -588,6 +588,16 @@
- 		status = "disabled";
+@@ -596,6 +596,14 @@
+ 	icram1:	sram@e63c0000 {
+ 		compatible = "mmio-sram";
+ 		reg = <0 0xe63c0000 0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0 0xe63c0000 0x1000>;
++
++		smp-sram@0 {
++			compatible = "renesas,smp-sram";
++			reg = <0 0x10>;
++		};
  	};
  
-+	icram0:	sram@e63a0000 {
-+		compatible = "mmio-sram";
-+		reg = <0 0xe63a0000 0 0x12000>;
-+	};
-+
-+	icram1:	sram@e63c0000 {
-+		compatible = "mmio-sram";
-+		reg = <0 0xe63c0000 0 0x1000>;
-+	};
-+
  	ether: ethernet@ee700000 {
- 		compatible = "renesas,ether-r8a7794";
- 		reg = <0 0xee700000 0 0x400>;
 -- 
 2.7.4
