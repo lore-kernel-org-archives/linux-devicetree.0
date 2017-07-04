@@ -1,112 +1,53 @@
-From: Marcin Niestroj <m.niestroj@grinn-global.com>
-Subject: [RESEND PATCH] ARM: dts: imx: update snvs-poweroff mask
-Date: Tue,  4 Jul 2017 18:19:12 +0200
-Message-ID: <20170704161912.29618-1-m.niestroj@grinn-global.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] MAINTAINERS:add maintainer for kirin pcie
+Date: Tue, 4 Jul 2017 11:25:38 -0500
+Message-ID: <20170704162538.GJ13824@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170704021516.96575-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guy Shapiro <guy.shapiro@mobi-wize.com>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170704021516.96575-1-songxiaowei@hisilicon.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: guodong.xu@linaro.org, bhelgaas@google.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Guy Shapiro <guy.shapiro@mobi-wize.com>
+On Tue, Jul 04, 2017 at 10:15:16AM +0800, Xiaowei Song wrote:
+> Kirin PCIe Driver does not have a maintainer at present,
+> 
+> Add maintainers for kirin pcie driver and Doc, the two fellowing files.
+> Documentation/devicetree/bindings/pci/pcie-kirin.txt
+> drivers/pci/dwc/pcie-kirin.c
+> 
+> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
+> Cc: Guodong Xu <guodong.xu@linaro.org>
 
-Make the syscon-poweroff driver change only the shutdown bits on the
-SNVS_LP control register.
+Applied to pci/host-kirin for v4.13, thanks!
 
-This change fixes an issue with the RTC wakeup alarm, that was
-previously disabled during power off.
-
-Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
-Reviewed-by: Marcin Niestroj <m.niestroj@grinn-global.com>
----
-Hi,
-
-This is a resend of second patch from patch series [1]. First patch is already
-in v4.12, but this one was not applied.
-
-Tested on imx6ul board. Without that patch RTC time is "frozen" during
-power-down state. With that patch RTC shows proper time after exiting
-from power-down.
-
-[1] https://www.spinics.net/lists/arm-kernel/msg561152.html
-
- arch/arm/boot/dts/imx6qdl.dtsi | 1 +
- arch/arm/boot/dts/imx6sl.dtsi  | 1 +
- arch/arm/boot/dts/imx6sx.dtsi  | 1 +
- arch/arm/boot/dts/imx6ul.dtsi  | 1 +
- arch/arm/boot/dts/imx7s.dtsi   | 1 +
- 5 files changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e426faa9c243..f81f38700c88 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -766,6 +766,7 @@
- 					compatible = "syscon-poweroff";
- 					regmap = <&snvs>;
- 					offset = <0x38>;
-+					value = <0x60>;
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index cc9572ea2860..2c2a90f2c8fc 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -652,6 +652,7 @@
- 					compatible = "syscon-poweroff";
- 					regmap = <&snvs>;
- 					offset = <0x38>;
-+					value = <0x60>;
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 3f1416be4c36..a7c6ca1638c6 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -707,6 +707,7 @@
- 					compatible = "syscon-poweroff";
- 					regmap = <&snvs>;
- 					offset = <0x38>;
-+					value = <0x60>;
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index b9d7d2d09402..d3431a796716 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -613,6 +613,7 @@
- 					compatible = "syscon-poweroff";
- 					regmap = <&snvs>;
- 					offset = <0x38>;
-+					value = <0x60>;
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index c4f12fd2e044..216fbcb13bf5 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -535,6 +535,7 @@
- 					compatible = "syscon-poweroff";
- 					regmap = <&snvs>;
- 					offset = <0x38>;
-+					value = <0x60>;
- 					mask = <0x60>;
- 				};
- 
--- 
-2.13.2
+> ---
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 5ee3125f8341..c64ff79587c8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9851,6 +9851,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+>  F:	drivers/pci/dwc/pcie-hisi.c
+>  
+> +PCIE DRIVER FOR Kirin
+> +M:	Xiaowei Song <songxiaowei@hisilicon.com>
+> +M:	Binghui Wang <wangbinghui@hisilicon.com>
+> +L:	linux-pci@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/pci/pcie-kirin.txt
+> +F:	drivers/pci/dwc/pcie-kirin.c
+> +
+>  PCIE DRIVER FOR ROCKCHIP
+>  M:	Shawn Lin <shawn.lin@rock-chips.com>
+>  M:	Wenrui Li <wenrui.li@rock-chips.com>
+> -- 
+> 2.11.GIT
+> 
