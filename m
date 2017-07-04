@@ -1,122 +1,56 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: shmobile: Add CA7 arch_timer initialization for secondary CPUs
-Date: Tue,  4 Jul 2017 19:02:12 +0200
-Message-ID: <1499187733-1430-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: r8a7794: Add SMP support
+Date: Tue,  4 Jul 2017 19:02:13 +0200
+Message-ID: <1499187733-1430-3-git-send-email-geert+renesas@glider.be>
 References: <1499187733-1430-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499187733-1430-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499187733-1430-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Cortex-A7, the arch timer CNTVOFF register is uninitialized.
-Hence when enabling SMP on r8a7794, the kernel log is spammed with:
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-    WARNING: Underflow in clocksource 'arch_sys_counter' observed, time update ignored.
-	     Please report this, consider using a different clocksource, if possible.
-	     Your kernel is probably still fine.
+Add the device tree node for the Advanced Power Management Unit (APMU).
+Use the "enable-method" prop to  point out that the APMU should be used
+for the SMP support.
 
-To fix this, wrap the standard secondary_startup routine inside a
-routine which initializes CNTVOFF when running on a Cortex-A7.
-As the only possibilities are Cortex-A7 or Cortex-A15, checking the low
-nibble of the Primary Part Number is sufficient.
-
-The initialization is identical to what is already done for the boot CPU
-since commit 9ce3fa6816c2fb59 ("ARM: shmobile: rcar-gen2: Add CA7
-arch_timer initialization for r8a7794").
-
-Based on patches by Hisashi Nakamura in the BSP.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/mach-shmobile/Makefile       |  1 +
- arch/arm/mach-shmobile/common.h       |  1 +
- arch/arm/mach-shmobile/headsmp-apmu.S | 38 +++++++++++++++++++++++++++++++++++
- arch/arm/mach-shmobile/platsmp-apmu.c |  2 +-
- 4 files changed, 41 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-shmobile/headsmp-apmu.S
+ arch/arm/boot/dts/r8a7794.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/mach-shmobile/Makefile b/arch/arm/mach-shmobile/Makefile
-index 64611a1b4276517b..de735444e9f715fd 100644
---- a/arch/arm/mach-shmobile/Makefile
-+++ b/arch/arm/mach-shmobile/Makefile
-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARCH_R8A7793)	+= regulator-quirk-rcar-gen2.o
+diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
+index f32b458e93285adc..8afd04339c84c65e 100644
+--- a/arch/arm/boot/dts/r8a7794.dtsi
++++ b/arch/arm/boot/dts/r8a7794.dtsi
+@@ -37,6 +37,7 @@
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		enable-method = "renesas,apmu";
  
- # SMP objects
- smp-y				:= $(cpu-y)
-+smp-$(CONFIG_ARCH_RCAR_GEN2)	+= headsmp-apmu.o
- smp-$(CONFIG_ARCH_SH73A0)	+= smp-sh73a0.o headsmp-scu.o platsmp-scu.o
- smp-$(CONFIG_ARCH_R8A7779)	+= smp-r8a7779.o headsmp-scu.o platsmp-scu.o
- smp-$(CONFIG_ARCH_R8A7790)	+= smp-r8a7790.o
-diff --git a/arch/arm/mach-shmobile/common.h b/arch/arm/mach-shmobile/common.h
-index 1a8f7b3ab449db56..6792a07bce761aab 100644
---- a/arch/arm/mach-shmobile/common.h
-+++ b/arch/arm/mach-shmobile/common.h
-@@ -11,6 +11,7 @@ extern void shmobile_smp_hook(unsigned int cpu, unsigned long fn,
- 			      unsigned long arg);
- extern bool shmobile_smp_cpu_can_disable(unsigned int cpu);
- extern bool shmobile_smp_init_fallback_ops(void);
-+extern void shmobile_boot_apmu(void);
- extern void shmobile_boot_scu(void);
- extern void shmobile_smp_scu_prepare_cpus(phys_addr_t scu_base_phys,
- 					  unsigned int max_cpus);
-diff --git a/arch/arm/mach-shmobile/headsmp-apmu.S b/arch/arm/mach-shmobile/headsmp-apmu.S
-new file mode 100644
-index 0000000000000000..52516d81ce98384c
---- /dev/null
-+++ b/arch/arm/mach-shmobile/headsmp-apmu.S
-@@ -0,0 +1,38 @@
-+/*
-+ * SMP support for APMU based systems
-+ *
-+ * Copyright (C) 2014  Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/linkage.h>
-+
-+ENTRY(shmobile_boot_apmu)
-+	mrc	p15, 0, r0, c0, c0, 0		/* Get Main ID */
-+	ubfx	r1, r0, #4, #4			/* r1=Lo 4bit of Primary Part */
-+	cmp	r1, #0x7			/* 0x7 = CA7, 0xf = CA15 */
-+	bne	1f
-+	/*
-+	 * CA7 setup
-+	 * CNTVOFF has to be initialized either from non-secure Hypervisor
-+	 * mode or secure Monitor mode with SCR.NS==1. If TrustZone is enabled
-+	 * then it should be handled by the secure code
-+	 */
-+	cps	0x16
-+	mrc	p15, 0, r1, c1, c1, 0		/* get Secure Config */
-+	orr	r0, r1, #1
-+	mcr	p15, 0, r0, c1, c1, 0		/* Set Non Secure bit */
-+	isb
-+	mov	r0, #0
-+	mcrr	p15, 4, r0, r0, c14		/* CNTVOFF = 0 */
-+	isb
-+	mcr	p15, 0, r1, c1, c1, 0		/* Set Secure bit */
-+	isb
-+	cps	0x13
-+1:
-+
-+	b	secondary_startup
-+ENDPROC(shmobile_boot_apmu)
-diff --git a/arch/arm/mach-shmobile/platsmp-apmu.c b/arch/arm/mach-shmobile/platsmp-apmu.c
-index 3ca2c13346f0cbc3..4422b615a6ee6045 100644
---- a/arch/arm/mach-shmobile/platsmp-apmu.c
-+++ b/arch/arm/mach-shmobile/platsmp-apmu.c
-@@ -204,7 +204,7 @@ void __init shmobile_smp_apmu_prepare_cpus(unsigned int max_cpus,
- int shmobile_smp_apmu_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
- 	/* For this particular CPU register boot vector */
--	shmobile_smp_hook(cpu, __pa_symbol(secondary_startup), 0);
-+	shmobile_smp_hook(cpu, __pa_symbol(shmobile_boot_apmu), 0);
+ 		cpu0: cpu@0 {
+ 			device_type = "cpu";
+@@ -65,6 +66,12 @@
+ 		};
+ 	};
  
- 	return apmu_wrap(cpu, apmu_power_on);
- }
++	apmu@e6151000 {
++		compatible = "renesas,r8a7794-apmu", "renesas,apmu";
++		reg = <0 0xe6151000 0 0x188>;
++		cpus = <&cpu0 &cpu1>;
++	};
++
+ 	gic: interrupt-controller@f1001000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
