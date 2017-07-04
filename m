@@ -1,40 +1,112 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 6/9] ARM: dts: r8a7791: Reserve SRAM for the SMP jump stub
-Date: Tue,  4 Jul 2017 17:41:40 +0200
-Message-ID: <1499182903-31339-7-git-send-email-geert+renesas@glider.be>
-References: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: [RESEND PATCH] ARM: dts: imx: update snvs-poweroff mask
+Date: Tue,  4 Jul 2017 18:19:12 +0200
+Message-ID: <20170704161912.29618-1-m.niestroj@grinn-global.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guy Shapiro <guy.shapiro@mobi-wize.com>, Marcin Niestroj <m.niestroj@grinn-global.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reserve SRAM for the jump stub for CPU core bringup.
+From: Guy Shapiro <guy.shapiro@mobi-wize.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Make the syscon-poweroff driver change only the shutdown bits on the
+SNVS_LP control register.
+
+This change fixes an issue with the RTC wakeup alarm, that was
+previously disabled during power off.
+
+Signed-off-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
+Reviewed-by: Marcin Niestroj <m.niestroj@grinn-global.com>
 ---
- arch/arm/boot/dts/r8a7791.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index f4748a9cb0375e4d..e135da440eed7b94 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -898,6 +898,14 @@
- 	icram1:	sram@e63c0000 {
- 		compatible = "mmio-sram";
- 		reg = <0 0xe63c0000 0 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0xe63c0000 0x1000>;
-+
-+		smp-sram@0 {
-+			compatible = "renesas,smp-sram";
-+			reg = <0 0x10>;
-+		};
- 	};
+This is a resend of second patch from patch series [1]. First patch is already
+in v4.12, but this one was not applied.
+
+Tested on imx6ul board. Without that patch RTC time is "frozen" during
+power-down state. With that patch RTC shows proper time after exiting
+from power-down.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg561152.html
+
+ arch/arm/boot/dts/imx6qdl.dtsi | 1 +
+ arch/arm/boot/dts/imx6sl.dtsi  | 1 +
+ arch/arm/boot/dts/imx6sx.dtsi  | 1 +
+ arch/arm/boot/dts/imx6ul.dtsi  | 1 +
+ arch/arm/boot/dts/imx7s.dtsi   | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e426faa9c243..f81f38700c88 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -766,6 +766,7 @@
+ 					compatible = "syscon-poweroff";
+ 					regmap = <&snvs>;
+ 					offset = <0x38>;
++					value = <0x60>;
+ 					mask = <0x60>;
+ 					status = "disabled";
+ 				};
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index cc9572ea2860..2c2a90f2c8fc 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -652,6 +652,7 @@
+ 					compatible = "syscon-poweroff";
+ 					regmap = <&snvs>;
+ 					offset = <0x38>;
++					value = <0x60>;
+ 					mask = <0x60>;
+ 					status = "disabled";
+ 				};
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 3f1416be4c36..a7c6ca1638c6 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -707,6 +707,7 @@
+ 					compatible = "syscon-poweroff";
+ 					regmap = <&snvs>;
+ 					offset = <0x38>;
++					value = <0x60>;
+ 					mask = <0x60>;
+ 					status = "disabled";
+ 				};
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index b9d7d2d09402..d3431a796716 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -613,6 +613,7 @@
+ 					compatible = "syscon-poweroff";
+ 					regmap = <&snvs>;
+ 					offset = <0x38>;
++					value = <0x60>;
+ 					mask = <0x60>;
+ 					status = "disabled";
+ 				};
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index c4f12fd2e044..216fbcb13bf5 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -535,6 +535,7 @@
+ 					compatible = "syscon-poweroff";
+ 					regmap = <&snvs>;
+ 					offset = <0x38>;
++					value = <0x60>;
+ 					mask = <0x60>;
+ 				};
  
- 	ether: ethernet@ee700000 {
 -- 
-2.7.4
+2.13.2
