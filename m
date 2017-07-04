@@ -1,12 +1,12 @@
 From: Xiaowei Song <songxiaowei@hisilicon.com>
 Subject: [PATCH] MAINTAINERS:add maintainer for kirin pcie
-Date: Tue, 4 Jul 2017 10:08:29 +0800
-Message-ID: <20170704020829.94912-1-songxiaowei@hisilicon.com>
+Date: Tue, 4 Jul 2017 10:15:16 +0800
+Message-ID: <20170704021516.96575-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: guodong.xu@linaro.org, bhelgaas@kernel.org, robh+dt@kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: guodong.xu@linaro.org, bhelgaas@google.com
 Cc: songxiaowei@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
