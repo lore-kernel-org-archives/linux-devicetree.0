@@ -1,121 +1,344 @@
-From: Michal Suchanek <hramrach@gmail.com>
-Subject: Re: [PATCH 2/3] mtd: spi-nor: core code for the Altera Quadspi Flash
- Controller v2
-Date: Tue, 4 Jul 2017 12:38:39 +0200
-Message-ID: <CAOMqctTBK35P2mbRnp=CKWhDFniKdeHK_VVu9is1zU3gdoNMZQ@mail.gmail.com>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1498493619-4633-3-git-send-email-matthew.gerlach@linux.intel.com> <54a6cd9d-8d4a-8d22-26e7-b5e0f8df0f5b@wedev4u.fr>
+From: Oleksij Rempel <ore@pengutronix.de>
+Subject: Re: [RFC PATCH 2/3] remoteproc: imx_rproc: add a NXP/Freescale imx
+ rproc driver
+Date: Tue, 4 Jul 2017 12:48:56 +0200
+Message-ID: <e5f08858-bc6f-c755-4b2f-68e345f47a0f@pengutronix.de>
+References: <20170614204855.18347-1-o.rempel@pengutronix.de>
+ <20170614204855.18347-3-o.rempel@pengutronix.de>
+ <20170625204101.GB26155@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54a6cd9d-8d4a-8d22-26e7-b5e0f8df0f5b@wedev4u.fr>
+In-Reply-To: <20170625204101.GB26155@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Cc: matthew.gerlach@linux.intel.com, vndao@altera.com, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, MTD Maling List <linux-mtd@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, David Miller <davem@davemloft.net>, mchehab@kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
-On 4 July 2017 at 02:00, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr> wrote=
-:
-> Hi Matthew,
->
->
-> Le 26/06/2017 =C3=A0 18:13, matthew.gerlach@linux.intel.com a =C3=A9crit =
-:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Hi Bjorn,
 
->> +static int altera_quadspi_setup_banks(struct device *dev,
->> +                                   u32 bank, struct device_node *np)
+thank you for review,
+
+On 25.06.2017 22:41, Bjorn Andersson wrote:
+> On Wed 14 Jun 13:48 PDT 2017, Oleksij Rempel wrote:
+>
+>> From: Oleksij Rempel <linux@rempel-privat.de>
+>>
+>> this driver was tested on NXP imx7d but should work on
+>> imx6sx as well.
+>> It will upload firmware to OCRAM, which shared memory between
+>> Cortex A7 and Cortex M4, then turn M4 on.
+>>
+>
+> This looks very generic, are there any IMX specific parts or is this the
+> "default" way of integrating a M4? Could we perhaps come up with a
+> common M4-rproc driver?
+
+It is kind of generic. The differences are:
+- platform specific clocks/reset/mbox configuration. So, maybe generic 
+driver just should provide pre and post start/stop bindings?
+- arrays for address translations. Naming seems not to be not really 
+important. In my case:
+  1) M4 own RAM for best performance. This can be requested immediately 
+by rptoc driver.
+  2) SRAM. Can be used by other parts of the system. Probably 
+application specific, not good for mainline.
+  3) limited range of DDR RAM. This should be dynamically allocated on 
+request.
+
+For (1) most drivers seem to have nearly identical code which IMO can be 
+shared.
+
+> Even though it will be rather short, you need a DT binding document
+> defining the compatible and the few properties that you use.
+>
+>> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+>> ---
+>>  drivers/remoteproc/Kconfig     |   8 ++
+>>  drivers/remoteproc/Makefile    |   1 +
+>>  drivers/remoteproc/imx_rproc.c | 264 +++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 273 insertions(+)
+>>  create mode 100644 drivers/remoteproc/imx_rproc.c
+>>
+>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>> index faad69a1a597..8d33bff4f530 100644
+>> --- a/drivers/remoteproc/Kconfig
+>> +++ b/drivers/remoteproc/Kconfig
+>> @@ -130,6 +130,14 @@ config ST_SLIM_REMOTEPROC
+>>  	tristate
+>>  	depends on REMOTEPROC
+>>
+>> +config IMX_REMOTEPROC
+>
+> Please make an attempt to keep entries in the Kconfig and Makefile
+> alphabetically sorted.
+>
+>> +	tristate "IMX6/7 remoteproc support"
+>> +	depends on SOC_IMX6SX || SOC_IMX7D
+>> +	depends on REMOTEPROC
+>> +	help
+>> +	  TODO, write some thing here
+>> +	  This can be either built-in or a loadable module.
+>> +
+>>  endif # REMOTEPROC
+>>
+>>  endmenu
+>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>> index ffc5e430df27..d351c25cdb4e 100644
+>> --- a/drivers/remoteproc/Makefile
+>> +++ b/drivers/remoteproc/Makefile
+>> @@ -19,3 +19,4 @@ qcom_wcnss_pil-y			+= qcom_wcnss.o
+>>  qcom_wcnss_pil-y			+= qcom_wcnss_iris.o
+>>  obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+>>  obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
+>> +obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>> diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+>> new file mode 100644
+>> index 000000000000..6bef85237a27
+>> --- /dev/null
+>> +++ b/drivers/remoteproc/imx_rproc.c
+>> @@ -0,0 +1,264 @@
+>> +/*
+>> + * Oleksij Rempel <o.rempel@pengutronix.de>
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/err.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/remoteproc.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +
+>> +#define IMX7D_ENABLE_M4			BIT(3)
+>> +#define IMX7D_SW_M4P_RST		BIT(2)
+>> +#define IMX7D_SW_M4C_RST		BIT(1)
+>> +#define IMX7D_SW_M4C_NON_SCLR_RST	BIT(0)
+>> +
+>> +#define IMX7D_M4_RST_MASK		0xf
+>> +
+>> +
+>> +#define IMX7D_RPROC_MEM_MAX		2
+>> +enum {
+>> +	IMX7D_RPROC_IMEM,
+>> +	IMX7D_RPROC_DMEM,
+>> +};
+>> +
+>> +static const char *mem_names[IMX7D_RPROC_MEM_MAX] = {
+>> +	[IMX7D_RPROC_IMEM]	= "imem",
+>> +	[IMX7D_RPROC_DMEM]	= "dmem",
+>> +};
+>> +
+>> +/**
+>> + * struct imx_rproc_mem - slim internal memory structure
+>> + * @cpu_addr: MPU virtual address of the memory region
+>> + * @bus_addr: Bus address used to access the memory region
+>> + * @size: Size of the memory region
+>> + */
+>> +struct imx_rproc_mem {
+>> +	void __iomem *cpu_addr;
+>> +	phys_addr_t bus_addr;
+>> +	size_t size;
+>> +};
+>> +
+>> +struct imx_rproc_dcfg {
+>> +	int offset;
+>> +};
+>
+> Unless you foresee this being expanded in the very near future I would
+> prefer that you just inline the offset in imx_rproc and put (void*)0xc
+> as .data in your of_match (typecast the of_device_get_match_data result
+> to unsigned long).
+>
+>> +
+>> +struct imx_rproc {
+>> +	struct device			*dev;
+>> +	struct regmap			*regmap;
+>> +	struct rproc			*rproc;
+>> +	const struct imx_rproc_dcfg	*dcfg;
+>> +	struct imx_rproc_mem mem[IMX7D_RPROC_MEM_MAX];
+>> +	struct clk		*clk;
+>> +};
+>> +
+>> +static const struct imx_rproc_dcfg imx_rproc_cfg_imx7d = {
+>> +	.offset = 0xc,
+>> +};
+>> +
+>> +static int imx_rproc_start(struct rproc *rproc)
 >> +{
->> +     struct altera_quadspi *q =3D dev_get_drvdata(dev);
->> +     struct altera_quadspi_flash *flash;
->> +     struct spi_nor *nor;
->> +     int ret =3D 0;
->> +     char modalias[40] =3D {0};
->> +     struct spi_nor_hwcaps hwcaps =3D {
->> +             .mask =3D SNOR_HWCAPS_READ |
->> +                     SNOR_HWCAPS_READ_FAST |
->> +                     SNOR_HWCAPS_READ_1_1_2 |
->> +                     SNOR_HWCAPS_READ_1_1_4 |
->> +                     SNOR_HWCAPS_PP,
->> +     };
+>> +	struct imx_rproc *priv = rproc->priv;
+>> +	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+>> +	struct device *dev = priv->dev;
+>> +	int ret;
+>> +
+>> +	ret = clk_enable(priv->clk);
+>> +	if (ret) {
+>> +		dev_err(&rproc->dev, "Failed to enable clock\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = regmap_update_bits(priv->regmap, dcfg->offset,
+>> +				 IMX7D_M4_RST_MASK,
+>> +				 IMX7D_SW_M4C_RST | IMX7D_SW_M4P_RST | IMX7D_ENABLE_M4);
+>> +	if (ret) {
+>> +		dev_err(dev, "Filed to enable M4!\n");
+>> +		clk_disable(priv->clk);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int imx_rproc_stop(struct rproc *rproc)
+>> +{
+>> +	struct imx_rproc *priv = rproc->priv;
+>> +	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
+>> +	struct device *dev = priv->dev;
+>> +	int ret;
+>> +
+>> +	ret = regmap_update_bits(priv->regmap, dcfg->offset,
+>> +				 IMX7D_M4_RST_MASK,
+>> +				 IMX7D_SW_M4C_NON_SCLR_RST);
+>> +	if (ret)
+>> +		dev_err(dev, "Filed to stop M4!\n");
+>> +
+>> +	clk_disable(priv->clk);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
+>> +{
+>> +	struct imx_rproc *priv = rproc->priv;
+>> +	void *va = NULL;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < IMX7D_RPROC_MEM_MAX; i++) {
+>> +		if (da != priv->mem[i].bus_addr)
+>> +			continue;
+>> +
+>> +		if (len <= priv->mem[i].size) {
+>> +			/* __force to make sparse happy with type conversion */
+>> +			va = (__force void *)priv->mem[i].cpu_addr;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
+>> +
+>> +	return va;
+>> +}
+>> +
+>> +static const struct rproc_ops imx_rproc_ops = {
+>> +	.start		= imx_rproc_start,
+>> +	.stop		= imx_rproc_stop,
+>> +	.da_to_va       = imx_rproc_da_to_va,
+>> +};
+>> +
+>> +static const struct of_device_id imx_rproc_of_match[] = {
+>> +	{ .compatible = "fsl,imx7d-rproc", .data = &imx_rproc_cfg_imx7d },
 >
-> since aletera_quadspi_{read|erase} just don't care about
-> nor->read_opcode, nor->program_opcode and so on and anyway override all
-> settings chosen by spi-nor.c, it means they will use Dual or Quad SPI
-> controllers as they want, whether SNOR_HWCAPS_READ_1_1_{2|4} are set or n=
-ot.
-> Then I think it's risky to declare the READ_1_1_2 and READ_1_1_4 hwcaps
-> because it may trigger additionnal calls of nor->read_reg() /
-> nor->write_reg() from spi_nor_scan() with op codes not supported by
-> altera_quadspi_{read|write}_reg().
+> .data = (void*)0xc
+>
+>> +	{},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, imx_rproc_of_match);
+>
+> By using of_device_get_match_data() you don't need to reference your
+> of_device_id table, so please move it down to your definition of
+> imx_rproc_driver.
+>
+> [..]
+>> +static int imx_rproc_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct imx_rproc *priv;
+>> +	struct rproc *rproc;
+>> +	struct regmap_config config = { .name = "imx_rproc" };
+>> +	const struct imx_rproc_dcfg *dcfg;
+>> +	struct regmap *regmap;
+>> +	int ret;
+>> +
+>> +	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
+>> +	if (IS_ERR(regmap)) {
+>> +		dev_err(dev, "failed to find syscon\n");
+>> +		return PTR_ERR(regmap);
+>> +	}
+>> +        regmap_attach_dev(dev, regmap, &config);
+>
+> Indentation...
 >
 >> +
->> +     if (bank > q->num_flashes - 1)
->> +             return -EINVAL;
+>> +	/* set some other name then imx */
+>> +	rproc = rproc_alloc(dev, "imx_rproc", &imx_rproc_ops, NULL, sizeof(*priv));
+>> +	if (!rproc) {
+>> +		ret = -ENOMEM;
+>> +		goto err;
+>> +	}
 >> +
->> +     altera_quadspi_chip_select(q, bank);
+>> +	dcfg = of_device_get_match_data(dev);
+>
+> priv->cfg_offset = (unsigned long)of_device_get_match_data(dev);
+>
+>> +	if (!dcfg)
+>> +		return -EINVAL;
 >> +
->> +     flash =3D devm_kzalloc(q->dev, sizeof(*flash), GFP_KERNEL);
->> +     if (!flash)
->> +             return -ENOMEM;
+>> +	priv = rproc->priv;
+>> +	priv->rproc = rproc;
+>> +	priv->regmap = regmap;
+>> +	priv->dcfg = dcfg;
 >> +
->> +     q->flash[bank] =3D flash;
->> +     nor =3D &flash->nor;
->> +     nor->dev =3D dev;
->> +     nor->priv =3D flash;
->> +     nor->mtd.priv =3D nor;
->> +     flash->q =3D q;
->> +     flash->bank =3D bank;
->> +     spi_nor_set_flash_node(nor, np);
+>> +	dev_set_drvdata(dev, rproc);
 >> +
->> +     /* spi nor framework*/
->> +     nor->read_reg =3D altera_quadspi_read_reg;
->> +     nor->write_reg =3D altera_quadspi_write_reg;
->> +     nor->read =3D altera_quadspi_read;
->> +     nor->write =3D altera_quadspi_write;
->> +     nor->erase =3D altera_quadspi_erase;
->> +     nor->flash_lock =3D altera_quadspi_lock;
->> +     nor->flash_unlock =3D altera_quadspi_unlock;
+>> +	ret = imx_rproc_addr_init(priv, pdev);
+>> +	if (ret) {
+>> +		dev_err(dev, "filed on imx_rproc_addr_init\n");
+>> +		goto err_put_rproc;
+>> +	}
+>> +
+>> +	priv->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(priv->clk)) {
+>> +		dev_err(dev, "Failed to get clock\n");
 >
-> nor->flash_lock and nor->flash_unlock are described as "FLASH SPECIFIC"
-> in include/linux/mtd/spi-nor.h as opposed to "DRIVER SPECIFIC" functions
-> like nor->read, nor->read_reg, ...
+> rproc_free()
 >
-> It means the actual implementations should be provided by the spi-nor
-> sub-system but not by each SPI controller driver.
+>> +		return PTR_ERR(priv->clk);
+>> +	}
+>> +
+>> +	ret = rproc_add(rproc);
+>> +	if (ret) {
+>> +		dev_err(dev, "rproc_add failed\n");
+>> +		goto err_put_rproc;
+>> +	}
+>> +
+>> +	ret = clk_prepare(priv->clk);
 >
+> 1) You're not unpreparing this clock in remove.
 >
+> 2) Why do you prepare the clock here instead of prepare_enable &
+> disable_unprepare it during start/stop?
 >
-> For me, it really sounds like a bad idea that this driver tries so much
-> to mystify the spi-nor sub-system.
+> 3) This is racy as you could have start() being called between
+> rproc_add() and clk_prepare() (although highly unlikely...).
 >
-> I can understand that you have to cope with the hardware design and its
-> limitations but clearly it looks the spi-nor API is not suited to this
-> hardware. This driver ignores and by-passes any settings selected by
-> spi_nor_scan().
-> Duplicating code is generally a bad idea but in this case, I don't know
-> if trying to reuse spi_nor_read() / spi_nor_write() and spi_nor_erase()
-> from spi-nor.c is that helpful.
+>> +	if (ret)
+>> +		dev_err(dev, "failed to get clock\n");
 >
-> Why not directly plug your driver into the above mtd layer implementing
-> you own version of mtd->_read(), mtd->_write() and mtd->_erase() then
-> registering the mtd device? It may be not the way to go but at least we
-> should study this alternative.
-
-AFAICT fsl-quadspi does just that preventing the use of the SPI
-controller for non-flash devices.
-
-There is at least one accelerated driver that is passed the opcodes to
-program in the controller for read acceleration in spi_flash_read so
-reusing that should be viable. If the opcodes can be programmed or
-match what is hardcoded in the controller use the acceleration and
-fallback to plain spi transfer if there is mismatch between what
-m25p80_read requests and what the controller can do.
-
-If this works and you can still use the plain SPI trnsfers the
-controller will be much morer useful than fsl-quadspi.
-
-Thanks
-
-Michal
+> s/get/prepare/
+>
+> Regards,
+> Bjorn
+>
