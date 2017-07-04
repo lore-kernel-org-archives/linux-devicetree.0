@@ -1,53 +1,125 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 4 Jul 2017 11:15:30 +0200
-Message-ID: <20170704091530.GC21263@kroah.com>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
- <20170704074159.GA21747@kroah.com>
- <4d222fcd-184d-92e6-7c9f-370614c23d38@collabora.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: dts: rockchip: add regulator nodes for
+ rk3229-evb
+Date: Tue, 4 Jul 2017 17:37:19 +0800
+Message-ID: <49a73ff1-ec3b-846a-9b6c-1e7edb85a275@rock-chips.com>
+References: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
+ <1499155967-26090-2-git-send-email-frank.wang@rock-chips.com>
+ <8062361.VWy3dYvDhe@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4d222fcd-184d-92e6-7c9f-370614c23d38-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+In-Reply-To: <8062361.VWy3dYvDhe@diego>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 04, 2017 at 10:15:23AM +0200, Romain Perier wrote:
-> Hello,
-> 
-> 
-> Le 04/07/2017 à 09:41, Greg Kroah-Hartman a écrit :
-> > On Mon, Jul 03, 2017 at 08:17:38PM +0200, Uwe Kleine-König wrote:
-> >> Hello Greg,
-> > Please don't top-post :(
-> >
-> >> I'm a bit disappointed that you didn't drop this patch. At the time I
-> >> sent my review it was still in your tty-testing branch and now it's part
-> >> of your pull request for 4.13-rc1 (as commit
-> >> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
-> > And now it's in Linus's tree! :)
-> >
-> >> I'm still convinced that this patch is wrong in its current form.
-> > Should I revert it, or can I get a fix for it?  Reviewing the patch
-> > when it was submitted would have been best, not after it ends up in one
-> > of my trees...
-> 
-> I don't think there is a fix for it. Either you revert the patch and you
-> code the fix differently, as I suggested by changing dma_rx_callback...
-> but that's more intrusive... or you keep this patch.
+Hi Heiko,
 
-I'll revert it after 4.13-rc1 is out, unless there are major objections
-to that...
+On 2017/7/4 16:34, Heiko StÃ¼bner wrote:
+> Hi Frank,
+>
+> Am Dienstag, 4. Juli 2017, 16:12:42 CEST schrieb Frank Wang:
+>> This patch adds vcc_io, vdd_arm and vdd_log regulator nodes
+>> for rk3229-evb board.
+>>
+>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/rk3229-evb.dts | 54
+>> ++++++++++++++++++++++++++++++++++++++++ 1 file changed, 54 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/rk3229-evb.dts
+>> b/arch/arm/boot/dts/rk3229-evb.dts index 82e8a53..8b10c64 100644
+>> --- a/arch/arm/boot/dts/rk3229-evb.dts
+>> +++ b/arch/arm/boot/dts/rk3229-evb.dts
+>> @@ -78,6 +78,52 @@
+>>   		regulator-always-on;
+>>   		regulator-boot-on;
+>>   	};
+>> +
+>> +	vdd_arm: vdd-arm-regulator {
+>> +		compatible = "pwm-regulator";
+>> +		rockchip,pwm_id = <1>;
+>> +		rockchip,pwm_voltage = <1100000>;
+> This doesn't look like a part of the mainline pwm-regulator binding
+> (both rockchip,* properties)
+>
+>> +		pwms = <&pwm1 0 25000 1>;
+>> +		regulator-name = "vdd_arm";
+>> +		regulator-min-microvolt = <950000>;
+>> +		regulator-max-microvolt = <1400000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+> please also add supplies for regulators. Information on supplies
+> should be easily extractable from the board schematics.
+>
+> This not only results in a nice tree in debugfs (regulator/regulator_summary)
+> but also makes sure supplying regulators are not accidentially turned off.
+> (pwm-supply for pwm-regulators, vin-supply for fixed regulators)
+>
+>
+>> +
+>> +	vdd_log: vdd-log-regulator {
+>> +		compatible = "pwm-regulator";
+>> +		rockchip,pwm_id = <2>;
+>> +		rockchip,pwm_voltage = <1200000>;
+>> +		pwms = <&pwm2 0 25000 1>;
+>> +		regulator-name = "vdd_log";
+>> +		regulator-min-microvolt = <1000000>;
+>> +		regulator-max-microvolt = <1300000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>> +
+>> +	regulators {
+>> +		compatible = "simple-bus";
+> don't create a subnode/bus for regulators. Just add them
+> regularly. Take a look at all the other boards (like rk3399-firefly,
+> gru, veyron) for reference.
+>
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		vccio_1v8_reg: regulator@0 {
+> Same here, no regulator@0 please, just name this one
+> 	vccio_1v8: vccio-1v8-regulator {
+>
+> (removed _reg from phandle and changed node name)
+>
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "vccio_1v8";
+>> +			regulator-min-microvolt = <1800000>;
+>> +			regulator-max-microvolt = <1800000>;
+>> +			regulator-always-on;
+>> +		};
+>> +
+>> +		vccio_3v3_reg: regulator@1 {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "vccio_3v3";
+>> +			regulator-min-microvolt = <3300000>;
+>> +			regulator-max-microvolt = <3300000>;
+>> +			regulator-always-on;
+>> +		};
+>> +	};
+>>   };
 
-thanks,
+Thanks and noted your comments above. I will fix them (also include 
+another comment about eMMC in PATCH 4/6 ) and resend these series soon.
 
-greg k-h
+
+BR.
+Frank
+
+>
+> Thanks
+> Heiko
+>
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
