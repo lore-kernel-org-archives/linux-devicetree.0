@@ -1,109 +1,186 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/3] dts: RISC-V local interrupt controller docs
-Date: Tue, 4 Jul 2017 12:18:12 +0100
-Message-ID: <20170704111501.GA21587@leverpostej>
-References: <20170627052124.426-1-palmer@dabbelt.com>
- <20170627052124.426-3-palmer@dabbelt.com>
+From: "Wangtao (Kevin, Kirin)" <kevin.wangtao@hisilicon.com>
+Subject: RE: [Patch v2 2/3] thermal: hisilicon: add thermal sensor driver
+ for Hi3660
+Date: Tue, 4 Jul 2017 11:24:06 +0000
+Message-ID: <68C6844FB78C6946B9DB8EACE2D237B0985B5A55@dggeml507-mbx.china.huawei.com>
+References: <1497930035-60894-3-git-send-email-kevin.wangtao@hisilicon.com>
+ <1498102923-68481-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1498102923-68481-2-git-send-email-kevin.wangtao@hisilicon.com>
+ <20170701030426.GA11424@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170627052124.426-3-palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170701030426.GA11424@localhost.localdomain>
+Content-Language: zh-CN
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Sunzhaosheng Sun(Zhaosheng)" <sunzhaosheng@hisilicon.com>, "leo.yan@linaro.org" <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 10:21:23PM -0700, Palmer Dabbelt wrote:
-> This patch adds documentation on the RISC-V local interrupt controller,
-> which is a per-hart interrupt controller that manages all interrupts
-> entering a RISC-V hart.  This interrupt controller is present on all
-> RISC-V systems.
-> 
-> Signed-off-by: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../interrupt-controller/riscv,cpu-intc.txt        | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> new file mode 100644
-> index 000000000000..f4906f49a1b4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -0,0 +1,70 @@
-> +RISC-V Hart-Level Interrupt Controller (HLIC)
-> +---------------------------------------------
-> +
-> +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> +hart and can be read or written by software. Some of these CSRs are used to
-> +control local interrupts connected to the core.  Every interrupt is ultimately
-> +routed through a hart's HLIC before it interrupts that hart.
-> +
-> +The RISC-V supervisor ISA manual specifices three interrupt sources that are
-> +attached to every HLIC: software interrupts, the timer interrupt, and external
-> +interrupts.  Software interrupts are used to send IPIs between cores.  The
-> +timer interrupt comes from an architectually mandated real-time timer that is
-> +controller via SBI calls and CSR reads.  External interrupts connect all other
-> +device interrupts to the HLIC, which are routed via the platforw-level
-> +interrupt contrellor (PLIC).
-> +
-> +All RISC-V systems that conform to the supervisor ISA specification are
-> +required to have a HLIC with these three interrupt sources present.
-> +
-> +Required properties:
-> +- compatible : "riscv,cpu-intc"
-> +- #interrupt-cells : should be <1>
-
-I know this'll sound trivial, but it would be worth defining what that
-cell encodes. I guess it corresponds to a particular HW(?) notion of
-interrupt ID -- it would be worth calling out which one.
-
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +
-> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> +definition of the hart whose CSRs control these local interrupts.
-> +
-> +An example of a device tree entry for a standard RISC-V hart is as follows:
-> +
-> +	cpu1: cpu@1 {
-> +		clock-frequency = <1600000000>;
-> +		compatible = "riscv";
-> +		d-cache-block-size = <64>;
-> +		d-cache-sets = <64>;
-> +		d-cache-size = <16384>;
-> +		d-tlb-sets = <1>;
-> +		d-tlb-size = <32>;
-> +		device_type = "cpu";
-> +		i-cache-block-size = <64>;
-> +		i-cache-sets = <64>;
-> +		i-cache-size = <16384>;
-> +		i-tlb-sets = <1>;
-> +		i-tlb-size = <32>;
-> +		mmu-type = "riscv,sv39";
-> +		next-level-cache = <&L2>;
-> +		reg = <1>;
-> +		riscv,isa = "rv64imac";
-> +		status = "okay";
-> +		tlb-split;
-> +		cpu1-intc: interrupt-controller {
-> +			#interrupt-cells = <1>;
-> +			compatible = "riscv,cpu-intc";
-> +			interrupt-controller;
-> +		};
-> +	};
-
-As with Rob's comments, you'll need to document the RISC-V cpu binding,
-as we do for ARM in Documentation/devicetree/bindings/arm/cpus.txt. That
-should describe the format of your reg entry, which common properties
-are meaningful, and any RISC-V specific properties or values.
-
-I also don't see anything like an enable-method. Is your SMP bringup
-mechanism defined by the architecture?
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQpPbiAyMDE3LzcvMSAxMTowNiwgIkVkdWFyZG8gVmFsZW50aW4iIDxlZHViZXp2YWxAZ21haWwu
+Y29tPiB3cm90ZTo+IA0KPiBIZXkgVGFvLA0KPiANCj4gT24gVGh1LCBKdW4gMjIsIDIwMTcgYXQg
+MTE6NDI6MDJBTSArMDgwMCwgVGFvIFdhbmcgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIHRo
+ZSBzdXBwb3J0IGZvciB0aGVybWFsIHNlbnNvciBvZiBIaTM2NjAgU29DLg0KPiA+IHRoaXMgd2ls
+bCByZWdpc3RlciBzZW5zb3JzIGZvciB0aGVybWFsIGZyYW1ld29yayBhbmQgdXNlIGRldmljZQ0K
+PiA+IHRyZWUgdG8gYmluZCBjb29saW5nIGRldmljZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6
+IFRhbyBXYW5nIDxrZXZpbi53YW5ndGFvQGhpc2lsaWNvbi5jb20+DQo+ID4gU2lnbmVkLW9mZi1i
+eTogTGVvIFlhbiA8bGVvLnlhbkBsaW5hcm8ub3JnPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgaW4g
+djI6DQo+ID4gLSBjb3JyZWN0IGFscGhhYmV0IG9yZGVyDQo+ID4gLSBjb3JyZWN0IGNvbXBhdGli
+bGUgbmFtZQ0KPiA+DQo+ID4gIGRyaXZlcnMvdGhlcm1hbC9LY29uZmlnICAgICAgICAgIHwgICAx
+MCArKw0KPiA+ICBkcml2ZXJzL3RoZXJtYWwvTWFrZWZpbGUgICAgICAgICB8ICAgIDEgKw0KPiA+
+ICBkcml2ZXJzL3RoZXJtYWwvaGkzNjYwX3RoZXJtYWwuYyB8ICAxOTgNCj4gKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAyMDkgaW5z
+ZXJ0aW9ucygrKQ0KPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90aGVybWFsL2hpMzY2
+MF90aGVybWFsLmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3RoZXJtYWwvS2NvbmZp
+ZyBiL2RyaXZlcnMvdGhlcm1hbC9LY29uZmlnDQo+ID4gaW5kZXggYjViNWZhYy4uZWQyMmE5MCAx
+MDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3RoZXJtYWwvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZl
+cnMvdGhlcm1hbC9LY29uZmlnDQo+ID4gQEAgLTE5Miw2ICsxOTIsMTYgQEAgY29uZmlnIFRIRVJN
+QUxfRU1VTEFUSU9ODQo+ID4gIAkgIGJlY2F1c2UgdXNlcmxhbmQgY2FuIGVhc2lseSBkaXNhYmxl
+IHRoZSB0aGVybWFsIHBvbGljeSBieSBzaW1wbHkNCj4gPiAgCSAgZmxvb2RpbmcgdGhpcyBzeXNm
+cyBub2RlIHdpdGggbG93IHRlbXBlcmF0dXJlIHZhbHVlcy4NCj4gPg0KPiA+ICtjb25maWcgSEkz
+NjYwX1RIRVJNQUwNCj4gPiArCXRyaXN0YXRlICJIaTM2NjAgdGhlcm1hbCBkcml2ZXIiDQo+ID4g
+KwlkZXBlbmRzIG9uIEFSQ0hfSElTSSB8fCBDT01QSUxFX1RFU1QNCj4gPiArCWRlcGVuZHMgb24g
+SEFTX0lPTUVNDQo+ID4gKwlkZXBlbmRzIG9uIE9GDQo+ID4gKwlkZWZhdWx0IHkNCj4gPiArCWhl
+bHANCj4gPiArCSAgRW5hYmxlIHRoaXMgdG8gcGx1ZyBIaTM2NjAgdGhlcm1hbCBkcml2ZXIgaW50
+byB0aGUgTGludXggdGhlcm1hbA0KPiA+ICsJICBmcmFtZXdvcmsuDQo+ID4gKw0KPiA+ICBjb25m
+aWcgSElTSV9USEVSTUFMDQo+ID4gIAl0cmlzdGF0ZSAiSGlzaWxpY29uIHRoZXJtYWwgZHJpdmVy
+Ig0KPiA+ICAJZGVwZW5kcyBvbiBBUkNIX0hJU0kgfHwgQ09NUElMRV9URVNUDQo+ID4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvdGhlcm1hbC9NYWtlZmlsZSBiL2RyaXZlcnMvdGhlcm1hbC9NYWtlZmls
+ZQ0KPiA+IGluZGV4IDA5NGQ3MDMuLmYyOWQwYTUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy90
+aGVybWFsL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy90aGVybWFsL01ha2VmaWxlDQo+ID4g
+QEAgLTU1LDYgKzU1LDcgQEAgb2JqLSQoQ09ORklHX0lOVEVMX1BDSF9USEVSTUFMKQkrPQ0KPiBp
+bnRlbF9wY2hfdGhlcm1hbC5vDQo+ID4gIG9iai0kKENPTkZJR19TVF9USEVSTUFMKQkrPSBzdC8N
+Cj4gPiAgb2JqLSQoQ09ORklHX1FDT01fVFNFTlMpCSs9IHFjb20vDQo+ID4gIG9iai0kKENPTkZJ
+R19URUdSQV9TT0NUSEVSTSkJKz0gdGVncmEvDQo+ID4gK29iai0kKENPTkZJR19ISTM2NjBfVEhF
+Uk1BTCkJKz0gaGkzNjYwX3RoZXJtYWwubw0KPiA+ICBvYmotJChDT05GSUdfSElTSV9USEVSTUFM
+KSAgICAgKz0gaGlzaV90aGVybWFsLm8NCj4gPiAgb2JqLSQoQ09ORklHX01US19USEVSTUFMKQkr
+PSBtdGtfdGhlcm1hbC5vDQo+ID4gIG9iai0kKENPTkZJR19HRU5FUklDX0FEQ19USEVSTUFMKQkr
+PSB0aGVybWFsLWdlbmVyaWMtYWRjLm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy90aGVybWFs
+L2hpMzY2MF90aGVybWFsLmMNCj4gYi9kcml2ZXJzL3RoZXJtYWwvaGkzNjYwX3RoZXJtYWwuYw0K
+PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uNjhmYTkwMTgNCj4g
+PiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVycy90aGVybWFsL2hpMzY2MF90aGVybWFs
+LmMNCj4gPiBAQCAtMCwwICsxLDE5OCBAQA0KPiA+ICsvKg0KPiA+ICsgKiAgbGludXgvZHJpdmVy
+cy90aGVybWFsL2hpMzY2MF90aGVybWFsLmMNCj4gPiArICoNCj4gPiArICogIENvcHlyaWdodCAo
+YykgMjAxNyBIaXNpbGljb24gTGltaXRlZC4NCj4gPiArICogIENvcHlyaWdodCAoYykgMjAxNyBM
+aW5hcm8gTGltaXRlZC4NCj4gPiArICoNCj4gPiArICogIEF1dGhvcjogVGFvIFdhbmcgPGtldmlu
+Lndhbmd0YW9AaGlzaWxpY29uLmNvbT4NCj4gPiArICogIEF1dGhvcjogTGVvIFlhbiA8bGVvLnlh
+bkBsaW5hcm8ub3JnPg0KPiA+ICsgKg0KPiA+ICsgKiAgVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29m
+dHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkNCj4gPiArICogIGl0
+IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVi
+bGlzaGVkIGJ5DQo+ID4gKyAqICB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyB2ZXJzaW9u
+IDIgb2YgdGhlIExpY2Vuc2UuDQo+ID4gKyAqDQo+ID4gKyAqICBUaGlzIHByb2dyYW0gaXMgZGlz
+dHJpYnV0ZWQgaW4gdGhlIGhvcGUgdGhhdCBpdCB3aWxsIGJlIHVzZWZ1bCwNCj4gPiArICogIGJ1
+dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBpbXBsaWVkIHdhcnJhbnR5
+IG9mDQo+ID4gKyAqICBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1IgQSBQQVJUSUNVTEFS
+IFBVUlBPU0UuICBTZWUgdGhlDQo+ID4gKyAqICBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBm
+b3IgbW9yZSBkZXRhaWxzLg0KPiA+ICsgKg0KPiA+ICsgKiAgWW91IHNob3VsZCBoYXZlIHJlY2Vp
+dmVkIGEgY29weSBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UNCj4gPiArICogIGFs
+b25nIHdpdGggdGhpcyBwcm9ncmFtLiAgSWYgbm90LCBzZWUgPGh0dHA6Ly93d3cuZ251Lm9yZy9s
+aWNlbnNlcy8+Lg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGsuaD4N
+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L2RldmljZS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvZXJy
+Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgva2Vy
+bmVsLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgv
+bW9kdWxlLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiAr
+I2luY2x1ZGUgPGxpbnV4L3RoZXJtYWwuaD4NCj4gPiArDQo+ID4gKyNpbmNsdWRlICJ0aGVybWFs
+X2NvcmUuaCINCj4gPiArDQo+ID4gKyNkZWZpbmUgSFdfTUFYX1NFTlNPUlMJCQk0DQo+ID4gKyNk
+ZWZpbmUgSElTSV9NQVhfU0VOU09SUwkJNg0KPiA+ICsjZGVmaW5lIFNFTlNPUl9NQVgJCQk0DQo+
+ID4gKyNkZWZpbmUgU0VOU09SX0FWRwkJCTUNCj4gPiArDQo+ID4gKyNkZWZpbmUgQURDX01JTgkJ
+MTE2DQo+ID4gKyNkZWZpbmUgQURDX01BWAkJOTIyDQo+ID4gKw0KPiA+ICsvKiBoaTM2NjAgVGhl
+cm1hbCBTZW5zb3IgRGV2IFN0cnVjdHVyZSAqLw0KPiA+ICtzdHJ1Y3QgaGkzNjYwX3RoZXJtYWxf
+c2Vuc29yIHsNCj4gPiArCXN0cnVjdCBoaTM2NjBfdGhlcm1hbF9kYXRhICp0aGVybWFsOw0KPiA+
+ICsJc3RydWN0IHRoZXJtYWxfem9uZV9kZXZpY2UgKnR6ZDsNCj4gPiArDQo+ID4gKwl1aW50MzJf
+dCBpZDsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0cnVjdCBoaTM2NjBfdGhlcm1hbF9kYXRhIHsN
+Cj4gPiArCXN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXY7DQo+ID4gKwlzdHJ1Y3QgaGkzNjYw
+X3RoZXJtYWxfc2Vuc29yIHNlbnNvcnNbSElTSV9NQVhfU0VOU09SU107DQo+ID4gKwl2b2lkIF9f
+aW9tZW0gKnRoZXJtYWxfYmFzZTsNCj4gPiArfTsNCj4gPiArDQo+ID4gK3Vuc2lnbmVkIGludCBz
+ZW5zb3JfcmVnX29mZnNldFtIV19NQVhfU0VOU09SU10gPSB7IDB4MWMsIDB4NWMsIDB4OWMsDQo+
+IDB4ZGMgfTsNCj4gPiArDQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IGhpMzY2MF90aGVybWFsX2dl
+dF90ZW1wKHZvaWQgKl9zZW5zb3IsIGludCAqdGVtcCkNCj4gPiArew0KPiA+ICsJc3RydWN0IGhp
+MzY2MF90aGVybWFsX3NlbnNvciAqc2Vuc29yID0gX3NlbnNvcjsNCj4gPiArCXN0cnVjdCBoaTM2
+NjBfdGhlcm1hbF9kYXRhICpkYXRhID0gc2Vuc29yLT50aGVybWFsOw0KPiA+ICsJdW5zaWduZWQg
+aW50IGlkeDsNCj4gPiArCWludCB2YWwsIGF2ZXJhZ2UgPSAwLCBtYXggPSAwOw0KPiA+ICsNCj4g
+PiArCWlmIChzZW5zb3ItPmlkIDwgSFdfTUFYX1NFTlNPUlMpIHsNCj4gPiArCQl2YWwgPSByZWFk
+bChkYXRhLT50aGVybWFsX2Jhc2UgKyBzZW5zb3JfcmVnX29mZnNldFtzZW5zb3ItDQo+ID5pZF0p
+Ow0KPiA+ICsJCXZhbCA9IGNsYW1wX3ZhbCh2YWwsIEFEQ19NSU4sIEFEQ19NQVgpOw0KPiA+ICsJ
+fSBlbHNlIHsNCj4gPiArCQlmb3IgKGlkeCA9IDA7IGlkeCA8IEhXX01BWF9TRU5TT1JTOyBpZHgr
+Kykgew0KPiA+ICsJCQl2YWwgPSByZWFkbChkYXRhLT50aGVybWFsX2Jhc2UNCj4gPiArCQkJCQkr
+IHNlbnNvcl9yZWdfb2Zmc2V0W2lkeF0pOw0KPiA+ICsJCQl2YWwgPSBjbGFtcF92YWwodmFsLCBB
+RENfTUlOLCBBRENfTUFYKTsNCj4gPiArCQkJYXZlcmFnZSArPSB2YWw7DQo+ID4gKwkJCWlmICh2
+YWwgPiBtYXgpDQo+ID4gKwkJCQltYXggPSB2YWw7DQo+ID4gKwkJfQ0KPiA+ICsNCj4gPiArCQlp
+ZiAoc2Vuc29yLT5pZCA9PSBTRU5TT1JfTUFYKQ0KPiA+ICsJCQl2YWwgPSBtYXg7DQo+ID4gKwkJ
+ZWxzZSBpZiAoc2Vuc29yLT5pZCA9PSBTRU5TT1JfQVZHKQ0KPiA+ICsJCQl2YWwgPSBhdmVyYWdl
+IC8gSFdfTUFYX1NFTlNPUlM7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJKnRlbXAgPSAoKHZhbCAt
+IEFEQ19NSU4pICogMTY1MDAwKSAvIChBRENfTUFYIC0gQURDX01JTikgLQ0KPiA0MDAwMDsNCj4g
+DQo+IFdoZXJlIGRvIHRoZXNlIGNvbnN0YW50cyBjb21lIGZyb20gKDE2NTAwMCBhbmQgNDAwMDAp
+IGNhbiB0aGVzZSBzb21lDQoNClRoZSBzZW5zb3IncyB0ZW1wZXJhdHVyZSByYW5nZSBpcyAtNDAg
+dG8gMTI1LCB0aGF0J3MgdGhlIHNvdXJjZSBvZiB0aGUgY29uc3RhbnRzLg0KDQo+IGhvdw0KPiBi
+ZSByZWFycmFuZ2VkIGFuZCBkZXNjcmliZWQgaW4gRFQgKGNvZWZmaWNpZW50cykgYW5kIHVzaW5n
+IHRoZSBvZmZzZXQgYW5kDQo+IHNsb3BlIGZpZWxkcz8NCg0KVGhhdCBtYWtlIHNlbnNlLCBJIHdp
+bGwgcmVjb25zaWRlciBhYm91dCBpdC4NCg0KPiANCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4g
+PiArfQ0KPiA+ICsNCj4gPiArc3RhdGljIHN0cnVjdCB0aGVybWFsX3pvbmVfb2ZfZGV2aWNlX29w
+cyBoaTM2NjBfb2ZfdGhlcm1hbF9vcHMgPSB7DQo+ID4gKwkuZ2V0X3RlbXAgPSBoaTM2NjBfdGhl
+cm1hbF9nZXRfdGVtcCwNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaGkzNjYwX3Ro
+ZXJtYWxfcmVnaXN0ZXJfc2Vuc29yKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsDQo+ID4g
+KwkJc3RydWN0IGhpMzY2MF90aGVybWFsX2RhdGEgKmRhdGEsDQo+ID4gKwkJc3RydWN0IGhpMzY2
+MF90aGVybWFsX3NlbnNvciAqc2Vuc29yLA0KPiA+ICsJCWludCBpbmRleCkNCj4gPiArew0KPiA+
+ICsJaW50IHJldCA9IDA7DQo+ID4gKw0KPiA+ICsJc2Vuc29yLT5pZCA9IGluZGV4Ow0KPiA+ICsJ
+c2Vuc29yLT50aGVybWFsID0gZGF0YTsNCj4gPiArDQo+ID4gKwlzZW5zb3ItPnR6ZCA9IGRldm1f
+dGhlcm1hbF96b25lX29mX3NlbnNvcl9yZWdpc3RlcigmcGRldi0NCj4gPmRldiwNCj4gPiArCQkJ
+CXNlbnNvci0+aWQsIHNlbnNvciwNCj4gJmhpMzY2MF9vZl90aGVybWFsX29wcyk7DQo+ID4gKwlp
+ZiAoSVNfRVJSKHNlbnNvci0+dHpkKSkgew0KPiA+ICsJCXJldCA9IFBUUl9FUlIoc2Vuc29yLT50
+emQpOw0KPiA+ICsJCXNlbnNvci0+dHpkID0gTlVMTDsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwly
+ZXR1cm4gcmV0Ow0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBoaTM2NjBfdGhlcm1h
+bF90b2dnbGVfc2Vuc29yKHN0cnVjdCBoaTM2NjBfdGhlcm1hbF9zZW5zb3INCj4gKnNlbnNvciwN
+Cj4gPiArCQkJCSAgICAgICBib29sIG9uKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgdGhlcm1hbF96
+b25lX2RldmljZSAqdHpkID0gc2Vuc29yLT50emQ7DQo+ID4gKw0KPiA+ICsJdHpkLT5vcHMtPnNl
+dF9tb2RlKHR6ZCwNCj4gPiArCQlvbiA/IFRIRVJNQUxfREVWSUNFX0VOQUJMRUQgOg0KPiBUSEVS
+TUFMX0RFVklDRV9ESVNBQkxFRCk7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaGkz
+NjYwX3RoZXJtYWxfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0K
+PiA+ICsJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsNCj4gPiArCXN0cnVjdCBoaTM2
+NjBfdGhlcm1hbF9kYXRhICpkYXRhOw0KPiA+ICsJc3RydWN0IHJlc291cmNlICpyZXM7DQo+ID4g
+KwlpbnQgcmV0ID0gMDsNCj4gPiArCWludCBpOw0KPiA+ICsNCj4gPiArCWRhdGEgPSBkZXZtX2t6
+YWxsb2MoZGV2LCBzaXplb2YoKmRhdGEpLCBHRlBfS0VSTkVMKTsNCj4gPiArCWlmICghZGF0YSkN
+Cj4gPiArCQlyZXR1cm4gLUVOT01FTTsNCj4gPiArDQo+ID4gKwlkYXRhLT5wZGV2ID0gcGRldjsN
+Cj4gPiArCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwg
+MCk7DQo+ID4gKwlkYXRhLT50aGVybWFsX2Jhc2UgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2
+LCByZXMpOw0KPiA+ICsJaWYgKElTX0VSUihkYXRhLT50aGVybWFsX2Jhc2UpKSB7DQo+ID4gKwkJ
+ZGV2X2VycihkZXYsICJmYWlsZWQgZ2V0IHJlZyBiYXNlXG4iKTsNCj4gPiArCQlyZXR1cm4gLUVO
+T01FTTsNCj4gPiArCX0NCj4gPiArDQo+ID4gKwlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShwZGV2LCBk
+YXRhKTsNCj4gPiArDQo+ID4gKwlmb3IgKGkgPSAwOyBpIDwgSElTSV9NQVhfU0VOU09SUzsgKytp
+KSB7DQo+ID4gKwkJcmV0ID0gaGkzNjYwX3RoZXJtYWxfcmVnaXN0ZXJfc2Vuc29yKHBkZXYsIGRh
+dGEsDQo+ID4gKwkJCQkJCSAgICAgJmRhdGEtPnNlbnNvcnNbaV0sIGkpOw0KPiA+ICsJCWlmIChy
+ZXQpDQo+ID4gKwkJCWRldl9lcnIoJnBkZXYtPmRldiwNCj4gPiArCQkJCSJmYWlsZWQgdG8gcmVn
+aXN0ZXIgdGhlcm1hbCBzZW5zb3IlZDogJWRcbiIsDQo+ID4gKwkJCQlpLCByZXQpOw0KPiANCj4g
+RG8geW91IHJlYWxseSB3YW50IHRvIGNvbnRpbnVlIGlmIHNvbWUgb2YgdGhlIHNlbnNvcnMgZmFp
+bCB0byByZWdpc3Rlcj8NCg0KWWVzLCAgYmVjYXVzZSBjdXJyZW50bHkgd2Ugb25seSB1c2Ugb25l
+IG9mIHRoZXNlIHNlbnNvcnMsIHRoZSBvdGhlcnMgd2lsbCByZWdpc3RlciBmYWlsIA0KDQo+IA0K
+PiA+ICsJCWVsc2UNCj4gPiArCQkJaGkzNjYwX3RoZXJtYWxfdG9nZ2xlX3NlbnNvcigmZGF0YS0+
+c2Vuc29yc1tpXSwNCj4gdHJ1ZSk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJZGV2X2luZm8oJnBk
+ZXYtPmRldiwgIlRoZXJtYWwgU2Vuc29yIExvYWRlZFxuIik7DQo+IA0KPiBEbyB5b3UgcmVhbGx5
+IG5lZWQgdGhlIGFib3ZlIGluZm8gaW4gdGhlIGtlcm5lbCBsb2c/DQoNClRoYXQgc2hvdWxkIGJl
+IHVubmVjZXNzYXJ5LCBJIHdpbGwgcmVtb3ZlIGl0Lg0KDQo+IA0KPiA+ICsJcmV0dXJuIDA7DQo+
+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaGkzNjYwX3RoZXJtYWxfZXhpdChzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgaGkzNjYwX3RoZXJt
+YWxfZGF0YSAqZGF0YSA9IHBsYXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOw0KPiA+ICsJaW50IGk7
+DQo+ID4gKw0KPiA+ICsJZm9yIChpID0gMDsgaSA8IEhJU0lfTUFYX1NFTlNPUlM7IGkrKykgew0K
+PiA+ICsJCXN0cnVjdCBoaTM2NjBfdGhlcm1hbF9zZW5zb3IgKnNlbnNvciA9ICZkYXRhLT5zZW5z
+b3JzW2ldOw0KPiA+ICsNCj4gPiArCQlpZiAoIXNlbnNvci0+dHpkKQ0KPiA+ICsJCQljb250aW51
+ZTsNCj4gDQo+IFdoeSBhcmUgeW91IGNvbnNpZGVyaW5nIGEgdmFsaWQgY2FzZSBvZiBub3QgcmVn
+aXN0ZXJpbmcgYWxsIGV4cGVjdGVkDQo+IHNlbnNvcnM/DQoNCkJlY2F1c2UgY3VycmVudGx5IHdl
+IG9ubHkgdXNlIG9uZSBvZiB0aGVzZSBzZW5zb3JzLg0KDQo+ID4gKw0KPiA+ICsJCWhpMzY2MF90
+aGVybWFsX3RvZ2dsZV9zZW5zb3Ioc2Vuc29yLCBmYWxzZSk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+
+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
+ZGV2aWNlX2lkIGhpMzY2MF90aGVybWFsX2lkX3RhYmxlW10gPSB7DQo+ID4gKwl7IC5jb21wYXRp
+YmxlID0gImhpc2lsaWNvbixoaTM2NjAtdGhlcm1hbCIgfSwNCj4gPiArCXt9DQo+ID4gK307DQo+
+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGhpMzY2MF90aGVybWFsX2lkX3RhYmxlKTsNCj4g
+PiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGhpMzY2MF90aGVybWFsX2Ry
+aXZlciA9IHsNCj4gPiArCS5wcm9iZSA9IGhpMzY2MF90aGVybWFsX3Byb2JlLA0KPiA+ICsJLnJl
+bW92ZSA9IGhpMzY2MF90aGVybWFsX2V4aXQsDQo+ID4gKwkuZHJpdmVyID0gew0KPiA+ICsJCS5u
+YW1lID0gImhpMzY2MF90aGVybWFsIiwNCj4gPiArCQkub2ZfbWF0Y2hfdGFibGUgPSBoaTM2NjBf
+dGhlcm1hbF9pZF90YWJsZSwNCj4gPiArCX0sDQo+ID4gK307DQo+ID4gKw0KPiA+ICttb2R1bGVf
+cGxhdGZvcm1fZHJpdmVyKGhpMzY2MF90aGVybWFsX2RyaXZlcik7DQo+ID4gKw0KPiA+ICtNT0RV
+TEVfQVVUSE9SKCJUYW8gV2FuZyA8a2V2aW4ud2FuZ3Rhb0BoaXNpbGljb24uY29tPiIpOw0KPiA+
+ICtNT0RVTEVfQVVUSE9SKCJMZW8gWWFuIDxsZW8ueWFuQGxpbmFyby5vcmc+Iik7DQo+ID4gK01P
+RFVMRV9ERVNDUklQVElPTigiaGkzNjYwIHRoZXJtYWwgZHJpdmVyIik7DQo+ID4gK01PRFVMRV9M
+SUNFTlNFKCJHUEwgdjIiKTsNCj4gPiAtLQ0KPiA+IDEuNy45LjUNCj4gPg0K
