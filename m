@@ -1,91 +1,45 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/9] ARM: shmobile: rcar-gen2: Obtain jump stub region from DT
-Date: Tue,  4 Jul 2017 17:41:36 +0200
-Message-ID: <1499182903-31339-3-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 7/9] ARM: dts: r8a7792: Reserve SRAM for the SMP jump stub
+Date: Tue,  4 Jul 2017 17:41:41 +0200
+Message-ID: <1499182903-31339-8-git-send-email-geert+renesas@glider.be>
 References: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499182903-31339-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for obtaining from DT the SRAM region to store the jump stub
-for CPU core bringup, according to the renesas,smp-sram DT bindings.
+Reserve SRAM for the jump stub for CPU core bringup.
 
-If no region is specified in DT, the code falls back to hardcoded ICRAM1
-as before, to maintain backwards compatibility.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/mach-shmobile/pm-rcar-gen2.c | 33 ++++++++++++++++++++++++++++++---
- 1 file changed, 30 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/r8a7792.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/mach-shmobile/pm-rcar-gen2.c b/arch/arm/mach-shmobile/pm-rcar-gen2.c
-index 0178da7ace82dcbd..e5f215c8b218100a 100644
---- a/arch/arm/mach-shmobile/pm-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/pm-rcar-gen2.c
-@@ -11,7 +11,9 @@
-  */
- 
- #include <linux/kernel.h>
-+#include <linux/ioport.h>
- #include <linux/of.h>
-+#include <linux/of_address.h>
- #include <linux/smp.h>
- #include <linux/soc/renesas/rcar-sysc.h>
- #include <asm/io.h>
-@@ -69,8 +71,9 @@ void __init rcar_gen2_pm_init(void)
- 	struct device_node *np, *cpus;
- 	bool has_a7 = false;
- 	bool has_a15 = false;
--	phys_addr_t boot_vector_addr = ICRAM1;
-+	struct resource res;
- 	u32 syscier = 0;
-+	int error;
- 
- 	if (once++)
- 		return;
-@@ -91,14 +94,38 @@ void __init rcar_gen2_pm_init(void)
- 	else if (of_machine_is_compatible("renesas,r8a7791"))
- 		syscier = 0x00111003;
- 
-+	np = of_find_compatible_node(NULL, NULL, "renesas,smp-sram");
-+	if (!np) {
-+		/* No smp-sram in DT, fall back to hardcoded address */
-+		res = (struct resource)DEFINE_RES_MEM(ICRAM1,
-+						      shmobile_boot_size);
-+		goto map;
-+	}
+diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
+index 136a86ac64974adb..2623f39bed2b73bb 100644
+--- a/arch/arm/boot/dts/r8a7792.dtsi
++++ b/arch/arm/boot/dts/r8a7792.dtsi
+@@ -473,6 +473,14 @@
+ 		icram1:	sram@e63c0000 {
+ 			compatible = "mmio-sram";
+ 			reg = <0 0xe63c0000 0 0x1000>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0 0 0xe63c0000 0x1000>;
 +
-+	error = of_address_to_resource(np, 0, &res);
-+	if (error) {
-+		pr_err("Failed to get smp-sram address: %d\n", error);
-+		return;
-+	}
-+
-+map:
- 	/* RAM for jump stub, because BAR requires 256KB aligned address */
--	p = ioremap_nocache(boot_vector_addr, shmobile_boot_size);
-+	if (res.start & (256 * 1024 - 1) ||
-+	    resource_size(&res) < shmobile_boot_size) {
-+		pr_err("Invalid smp-sram region\n");
-+		return;
-+	}
-+
-+	p = ioremap(res.start, resource_size(&res));
-+	if (!p)
-+		return;
-+
- 	memcpy_toio(p, shmobile_boot_vector, shmobile_boot_size);
- 	iounmap(p);
++			smp-sram@0 {
++				compatible = "renesas,smp-sram";
++				reg = <0 0x10>;
++			};
+ 		};
  
- 	/* setup reset vectors */
- 	p = ioremap_nocache(RST, 0x63);
--	bar = phys_to_sbar(boot_vector_addr);
-+	bar = phys_to_sbar(res.start);
- 	if (has_a15) {
- 		writel_relaxed(bar, p + CA15BAR);
- 		writel_relaxed(bar | SBAR_BAREN, p + CA15BAR);
+ 		sdhi0: sd@ee100000 {
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
