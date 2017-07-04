@@ -1,25 +1,43 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH 4/5] pwm: rockchip: Add atomic updated feature for rk3328
-Date: Tue, 4 Jul 2017 15:37:54 +0800
-Message-ID: <05cccb3d-2b35-1878-6173-9a96adef17ba@rock-chips.com>
-References: <1498739271-27431-1-git-send-email-david.wu@rock-chips.com>
- <1498739271-27431-5-git-send-email-david.wu@rock-chips.com>
- <20170703203957.03f3d1db@bbrezillon>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
+Date: Tue, 4 Jul 2017 09:41:59 +0200
+Message-ID: <20170704074159.GA21747@kroah.com>
+References: <20170628101514.22610-1-romain.perier@collabora.com>
+ <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
+ <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170703203957.03f3d1db@bbrezillon>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: thierry.reding@gmail.com, heiko@sntech.de, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170703181738.xyxtwe246cfrkyd7-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Mon, Jul 03, 2017 at 08:17:38PM +0200, Uwe Kleine-König wrote:
+> Hello Greg,
 
-ÔÚ 2017/7/4 2:39, Boris Brezillon Ð´µÀ:
-> Yet another customization. Don't you think we can extract common parts,
-> expose them as helpers and then have 3 different pwm_ops (with 3
-> different ->apply() implementation), one for each IP revision.
+Please don't top-post :(
 
-Sounds reasonable.I will try to implement 3 different apply().
+> I'm a bit disappointed that you didn't drop this patch. At the time I
+> sent my review it was still in your tty-testing branch and now it's part
+> of your pull request for 4.13-rc1 (as commit
+> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
+
+And now it's in Linus's tree! :)
+
+> I'm still convinced that this patch is wrong in its current form.
+
+Should I revert it, or can I get a fix for it?  Reviewing the patch
+when it was submitted would have been best, not after it ends up in one
+of my trees...
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
