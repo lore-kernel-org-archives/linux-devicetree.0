@@ -1,46 +1,57 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 4/7] ARM: dts: r8a7791: Add Inter Connect RAM
-Date: Tue,  4 Jul 2017 17:23:15 +0200
-Message-ID: <1499181798-28859-5-git-send-email-geert+renesas@glider.be>
-References: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 0/7] ARM: dts: renesas: Add Inter Connect RAM
+Date: Tue,  4 Jul 2017 17:23:11 +0200
+Message-ID: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499181798-28859-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-R-Car M2-W has 2 regions of Inter Connect RAM (72 + 4 KiB).
+	Hi Simon, Magnus,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
+R-Car Gen2 and RZ/G1 SoCs contain two or three blocks of SRAM, which can be
+used for several purposes.  One such purpose is holding a jump stub for CPU
+core bringup.
+
+This patch series adds the SRAM blocks to the various DTS files, following
+the generic DT bindings for "mmio-sram" in
+Documentation/devicetree/bindings/sram/sram.txt.  Reserving SRAM for jump
+stub for CPU core bringup will be handled in a follow-up series.
+
+Thanks!
+
+Geert Uytterhoeven (7):
+  ARM: dts: r8a7743: Add Inter Connect RAM
+  ARM: dts: r8a7745: Add Inter Connect RAM
+  ARM: dts: r8a7790: Add Inter Connect RAM
+  ARM: dts: r8a7791: Add Inter Connect RAM
+  ARM: dts: r8a7792: Add Inter Connect RAM
+  ARM: dts: r8a7793: Add Inter Connect RAM
+  ARM: dts: r8a7794: Add Inter Connect RAM
+
+ arch/arm/boot/dts/r8a7743.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/r8a7745.dtsi | 15 +++++++++++++++
+ arch/arm/boot/dts/r8a7790.dtsi | 10 ++++++++++
  arch/arm/boot/dts/r8a7791.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/r8a7792.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/r8a7793.dtsi | 10 ++++++++++
+ arch/arm/boot/dts/r8a7794.dtsi | 10 ++++++++++
+ 7 files changed, 80 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index bd93f699ad840987..f4748a9cb0375e4d 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -890,6 +890,16 @@
- 		status = "disabled";
- 	};
- 
-+	icram0:	sram@e63a0000 {
-+		compatible = "mmio-sram";
-+		reg = <0 0xe63a0000 0 0x12000>;
-+	};
-+
-+	icram1:	sram@e63c0000 {
-+		compatible = "mmio-sram";
-+		reg = <0 0xe63c0000 0 0x1000>;
-+	};
-+
- 	ether: ethernet@ee700000 {
- 		compatible = "renesas,ether-r8a7791";
- 		reg = <0 0xee700000 0 0x400>;
 -- 
 2.7.4
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
