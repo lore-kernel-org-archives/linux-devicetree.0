@@ -1,115 +1,55 @@
-From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 4 Jul 2017 09:01:24 +0200
-Message-ID: <e1601aa2-6eaf-7212-369f-9c67a3159f64@collabora.com>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] media: V3s: Add support for Allwinner CSI.
+Date: Tue, 4 Jul 2017 15:25:45 +0800
+Message-ID: <20170704152545.4a70f04db2c984d4d54bf9dd@magewell.com>
+References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
+        <1498561654-14658-2-git-send-email-yong.deng@magewell.com>
+        <667c858b-2655-88c5-6bbc-9d70d06c1ff1@xs4all.nl>
+        <20170703185952.18a97e9b7b05cbe321cb1268@magewell.com>
+        <20170703112521.ca253erguut5v7se@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170703181738.xyxtwe246cfrkyd7-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170703112521.ca253erguut5v7se@flea>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 3 Jul 2017 13:25:21 +0200
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
+> Hi,
+> 
+> On Mon, Jul 03, 2017 at 06:59:52PM +0800, Yong wrote:
+> > > > +	select VIDEOBUF2_DMA_CONTIG
+> > > > +	select REGMAP_MMIO
+> > > > +	---help---
+> > > > +	   Support for the Allwinner Camera Sensor Interface Controller.
+> > > 
+> > > This controller is the same for all Allwinner SoC models?
+> > 
+> > No.
+> > I will change the Kconfig and Makefile.
+> 
+> This is basically a design that has been introduced in the A31 (sun6i
+> family). I guess we should just call the driver and Kconfig symbols
+> sun6i_csi (even though we don't support it yet). It also used on the
+> A23, A33, A80, A83T, H3, and probably the H5 and A64.
+> 
+> Maxime
+> 
+> -- 
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
 
-Le 03/07/2017 à 20:17, Uwe Kleine-König a écrit :
-> Hello Greg,
->
-> I'm a bit disappointed that you didn't drop this patch. At the time I
-> sent my review it was still in your tty-testing branch and now it's part
-> of your pull request for 4.13-rc1 (as commit
-> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
->
-> I'm still convinced that this patch is wrong in its current form.
->
-> Best regards
-> Uwe
->
-> On Thu, Jun 29, 2017 at 08:26:18PM +0200, Uwe Kleine-König wrote:
->> Cc: += devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>
->> On Wed, Jun 28, 2017 at 12:15:14PM +0200, Romain Perier wrote:
->>> From: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
->>>
->>> The size of the DMA buffer can affect the delta time between data being
->>> produced and data being consumed. Basically the DMA system will move
->>> data to tty buffer when a) DMA buffer is full b) serial line is idle.
->>> The situation is visible when producer generates data continuously and
->>> there is no possibility for idle line. At this point the DMA buffer is
->>> directly affecting the delta time.
->> This doesn't look like a hw property but a configuration item. Also I
->> don't understand the problematic case. The i.MX is sending continuously
->> and then doesn't receive bytes until the DMA buffer is full? What is the
->> DMA buffer? You don't mean the FIFO here, do you?
-
-by DMA buffer, I mean the size of the RX FIFO. Data will be moved to tty
-when the FIFO
-is full or the serial line is idle. Now suppose you have an important
-work load and the serial line is never idle,
-with the current size of the DMA buffer (PAGE_SIZE) you might introduce
-latencies between data being produced and data being consumed.
-
-
-We could also modify dma_rx_callback(), but this current solution is
-less intrusive, imho.
-
-Regards,
-Romain
-
->>> The patch will add the possibility to configure the DMA buffers in DT,
->>> which case by case can be configured separately for every driver
->>> instance. The DT configuration is optional and in case missing the
->>> driver will use the 4096 buffer with 4 periods (as before), therefore no
->>> clients are impacted by this change.
->>>
->>> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
->>> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/serial/fsl-imx-uart.txt    |  2 ++
->>>  drivers/tty/serial/imx.c                           | 25 +++++++++++++++-------
->>>  2 files changed, 19 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
->>> index 574c3a2..e6b5724 100644
->>> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
->>> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
->>> @@ -9,6 +9,7 @@ Optional properties:
->>>  - fsl,irda-mode : Indicate the uart supports irda mode
->>>  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
->>>                    in DCE mode by default.
->>> +- fsl,dma-size : Indicate the size of the DMA buffer and its periods
->> This is a sparse description, just from reading that I don't understand
->> what it does.
->>  
->>>  Please check Documentation/devicetree/bindings/serial/serial.txt
->>>  for the complete list of generic properties.
->>> @@ -28,4 +29,5 @@ uart1: serial@73fbc000 {
->>>  	interrupts = <31>;
->>>  	uart-has-rtscts;
->>>  	fsl,dte-mode;
->>> +	fsl,dma-size = <1024 4>;
->>>  };
->>> diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
->>> index bbefddd..7327477 100644
->>> --- a/drivers/tty/serial/imx.c
->>> +++ b/drivers/tty/serial/imx.c
->>> @@ -186,6 +186,11 @@
->>>  
->>>  #define UART_NR 8
->>>  
->>> +/* RX DMA buffer periods */
->>> +#define RX_DMA_PERIODS 4
->>> +#define RX_BUF_SIZE	(PAGE_SIZE)
->> These names should include "DEFAULT" in their name now to fit their new
->> semantic.
-
+Thanks for the advice. That's good.
+My purpose is to make the code reusable. People working on other
+Allwinner SoC could easily make their CSI working by just filling the
+SoC specific code. But I'm not familiar with other Allwinner SoCs 
+except V3s. I hope to get more advice.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
