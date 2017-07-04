@@ -1,70 +1,62 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 4 Jul 2017 10:36:08 +0200
-Message-ID: <20170704083608.y3wra6afs6dm7pum@pengutronix.de>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
- <e1601aa2-6eaf-7212-369f-9c67a3159f64@collabora.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: Clocks used by another OS/CPU (was: Re: [RFC PATCH] clk: renesas:
+ cpg-mssr: Add interface for critical core clocks)
+Date: Tue, 4 Jul 2017 09:49:25 +0100
+Message-ID: <c1a323ee-a4ca-4f8d-b57a-398b7318694d@arm.com>
+References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
+ <CAL_JsqKGrZeR7z80beY_XEjqd5fEQQwPxusJ1FADoALgNE3fEg@mail.gmail.com>
+ <20170630202453.eh6vaehkap3as4np@pengutronix.de>
+ <8d86a9aa-1928-6b52-1487-d5fb9dae17f4@gmail.com>
+ <20170701181408.yuocymwtj5dgt74d@pengutronix.de>
+ <8d255a76-babe-312d-15b3-3474969f2410@arm.com>
+ <20170704073137.GG14819@tbergstrom-lnx.Nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e1601aa2-6eaf-7212-369f-9c67a3159f64-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170704073137.GG14819@tbergstrom-lnx.Nvidia.com>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Dirk Behme <dirk.behme@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Linux PM list <linux-pm@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Kevin Hilman <khilman@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 04, 2017 at 09:01:24AM +0200, Romain Perier wrote:
-> Le 03/07/2017 à 20:17, Uwe Kleine-König a écrit :
-> > On Thu, Jun 29, 2017 at 08:26:18PM +0200, Uwe Kleine-König wrote:
-> >> On Wed, Jun 28, 2017 at 12:15:14PM +0200, Romain Perier wrote:
-> >>> From: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-> >>>
-> >>> The size of the DMA buffer can affect the delta time between data being
-> >>> produced and data being consumed. Basically the DMA system will move
-> >>> data to tty buffer when a) DMA buffer is full b) serial line is idle.
-> >>> The situation is visible when producer generates data continuously and
-> >>> there is no possibility for idle line. At this point the DMA buffer is
-> >>> directly affecting the delta time.
-> >> This doesn't look like a hw property but a configuration item. Also I
-> >> don't understand the problematic case. The i.MX is sending continuously
-> >> and then doesn't receive bytes until the DMA buffer is full? What is the
-> >> DMA buffer? You don't mean the FIFO here, do you?
+
+
+On 04/07/17 08:31, Peter De Schrijver wrote:
+> On Mon, Jul 03, 2017 at 10:17:22AM +0100, Sudeep Holla wrote:
+>>
+>>
+>> On 01/07/17 19:14, Uwe Kleine-KÃ¶nig wrote:
+>>> Hello,
+>>>
+>>> On Sat, Jul 01, 2017 at 07:02:48AM +0200, Dirk Behme wrote:
+>>
+>> [...]
+>>
+>>>>
+>>>>
+>>>> The other problem is security related. If, at all, you have to do it the
+>>>> other way around, then:
+>>>>
+>>>> Make Linux a consumer of the other CPU's (trusted/trustzone/whatever
+>>>> secured) OS clock driver.
+>>
+>> Yes, that's better and is getting common on newer platforms. They have
+>> separate M-class(or even low A-class e.g. A5/A7) processors to handle
+>> all the system management.
+>>
+>> The new ARM SCMI specification[0][1] is designed to standardize the
+>> interface. It covers the clocks in clock protocol.
+>>
 > 
-> by DMA buffer, I mean the size of the RX FIFO. Data will be moved to tty
-> when the FIFO
-> is full or the serial line is idle. Now suppose you have an important
-> work load and the serial line is never idle,
+> Yes, however this doesn't exist on older SoCs which still have multiple CPU's
+> 
 
-That means you're waiting for urgent data that already sits in the
-hardware's RX fifo but as you send in parallel the hardware is busy and
-doesn't process the RX fifo?
-
-Would it help to decrease UFCR.RXTL? Or is this a HW bug that the RX
-fifo isn't considered idle when you send much?
-
-Or is this a software problem and the urgent data sits somewhere in the
-tty or dma layer already?
-
-> with the current size of the DMA buffer (PAGE_SIZE) you might introduce
-> latencies between data being produced and data being consumed.
-
-Making DMA buffers smaller doesn't sound like the right approach to
-minimize delays. If you choose to do so you increase the number of irqs
-and so this is a user policy what you want and shouldn't fixed in the
-oftree.
-
-Best regards
-Uwe
-
+Agreed. But if someone is fixing/adding support in Linux as well as in
+the other OS running on those cores, why not consider this interface
+instead of trying to generalize something which will invariably SoC
+specific.
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sudeep
