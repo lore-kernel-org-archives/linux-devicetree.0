@@ -1,67 +1,49 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 6/6] ARM: dts: rockchip: add gpio power-key for rk3229-evb
-Date: Tue,  4 Jul 2017 16:15:01 +0800
-Message-ID: <1499156101-26404-1-git-send-email-frank.wang@rock-chips.com>
-References: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
+Date: Tue, 4 Jul 2017 10:15:23 +0200
+Message-ID: <4d222fcd-184d-92e6-7c9f-370614c23d38@collabora.com>
+References: <20170628101514.22610-1-romain.perier@collabora.com>
+ <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
+ <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
+ <20170704074159.GA21747@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499155967-26090-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170704074159.GA21747-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds gpio power-key support for rk3229-evb board.
+Hello,
 
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- arch/arm/boot/dts/rk3229-evb.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
-index 43c3ad2..7cfe893 100644
---- a/arch/arm/boot/dts/rk3229-evb.dts
-+++ b/arch/arm/boot/dts/rk3229-evb.dts
-@@ -124,6 +124,24 @@
- 			regulator-always-on;
- 		};
- 	};
-+
-+	gpio_keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwr_key>;
-+
-+		power_key: power-key {
-+			label = "GPIO Key Power";
-+			gpios = <&gpio3 23 GPIO_ACTIVE_LOW>;
-+			linux,code = <116>;
-+			debounce-interval = <100>;
-+			wakeup-source;
-+		};
-+	};
- };
- 
- &cpu0 {
-@@ -166,6 +184,12 @@
- };
- 
- &pinctrl {
-+	keys {
-+		pwr_key: pwr-key {
-+			rockchip,pins = <3 RK_PC7 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <3 RK_PC4 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.0.0
+Le 04/07/2017 à 09:41, Greg Kroah-Hartman a écrit :
+> On Mon, Jul 03, 2017 at 08:17:38PM +0200, Uwe Kleine-König wrote:
+>> Hello Greg,
+> Please don't top-post :(
+>
+>> I'm a bit disappointed that you didn't drop this patch. At the time I
+>> sent my review it was still in your tty-testing branch and now it's part
+>> of your pull request for 4.13-rc1 (as commit
+>> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
+> And now it's in Linus's tree! :)
+>
+>> I'm still convinced that this patch is wrong in its current form.
+> Should I revert it, or can I get a fix for it?  Reviewing the patch
+> when it was submitted would have been best, not after it ends up in one
+> of my trees...
 
+I don't think there is a fix for it. Either you revert the patch and you
+code the fix differently, as I suggested by changing dma_rx_callback...
+but that's more intrusive... or you keep this patch.
+
+>
+> thanks,
+>
+> greg k-h
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
