@@ -1,67 +1,45 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v11 0/3]add PCIe driver for Kirin PCIe
-Date: Tue, 4 Jul 2017 10:03:08 +0800
-Message-ID: <CAFGCpxy-Rn4aeRs6GwGu7kaXvk5ftQxSpho8D2kQ4OG5MgCA8w@mail.gmail.com>
-References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
- <20170702233657.GA13507@bhelgaas-glaptop.roam.corp.google.com>
- <20170703104727.GB1573@arm.com> <CAFGCpxx+92PSs1VaryFOXau7CjBYEP4H6wT-o=bNMwkSznjQuw@mail.gmail.com>
- <595A4768.20404@hisilicon.com>
+From: Xiaowei Song <songxiaowei@hisilicon.com>
+Subject: [PATCH] MAINTAINERS:add maintainer for kirin pcie
+Date: Tue, 4 Jul 2017 10:08:29 +0800
+Message-ID: <20170704020829.94912-1-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <595A4768.20404-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suzhuangluan <suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: guodong.xu@linaro.org, bhelgaas@kernel.org, robh+dt@kernel.org
+Cc: songxiaowei@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 3, 2017 at 9:32 PM, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
-> Hi Guodong,
->
-> On 2017/7/3 14:04, Guodong Xu wrote:
->> Hi, Xu Wei
->>
->>
->>
->> On Mon, Jul 3, 2017 at 6:47 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
->>> On Sun, Jul 02, 2017 at 06:36:57PM -0500, Bjorn Helgaas wrote:
->>>> [+cc Catalin, Will, linux-arm-kernel]
->>>>
->>>> Applied patches 2 & 3 to pci/host-kirin for v4.13.
->>>>
->>>> I would like a MAINTAINERS update, too.  If you send me that, I'll
->>>> squash it into the driver patch.
->>>>
->>>> Catalin, Will, how do you want to handle the
->>>> arch/arm64/configs/defconfig change (patch 3)?  It's currently on my
->>>> branch, but I'm happy to drop it if another route is better.
->>>
->>> defconfig updates usually go through arm-soc, via the relevant platform
->>> maintainer, so it would be best to follow that route here too otherwise
->>> you'll probably see conflicts in -next.
->>>
->>
->> Is it ok for you to pick up the arch/arm64/configs/defconfig change (patch 3)?
->
-> Since it is already 4.12-rc7, I will pick up it and queue for the v4.14.
-> Are you fine about that?
-> Thanks!
+Kirin PCIe Driver does not have a maintainer at present,
 
-Sure.
+Add maintainers for kirin pcie driver and Doc, the two fellowing files.
+Documentation/devicetree/bindings/pci/pcie-kirin.txt
+drivers/pci/dwc/pcie-kirin.c
 
->
-> Best Regards,
-> Wei
->
->>
->> -Guodong
->>
->>> Will
->>
->> .
->>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
+Cc: Guodong Xu <guodong.xu@linaro.org>
+---
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5ee3125f8341..c64ff79587c8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9851,6 +9851,14 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/pci/hisilicon-pcie.txt
+ F:	drivers/pci/dwc/pcie-hisi.c
+ 
++PCIE DRIVER FOR Kirin
++M:	Xiaowei Song <songxiaowei@hisilicon.com>
++M:	Binghui Wang <wangbinghui@hisilicon.com>
++L:	linux-pci@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/pci/pcie-kirin.txt
++F:	drivers/pci/dwc/pcie-kirin.c
++
+ PCIE DRIVER FOR ROCKCHIP
+ M:	Shawn Lin <shawn.lin@rock-chips.com>
+ M:	Wenrui Li <wenrui.li@rock-chips.com>
+-- 
+2.11.GIT
