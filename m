@@ -1,53 +1,108 @@
-From: "Wangtao (Kevin, Kirin)" <kevin.wangtao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: RE: [Patch v2 1/3] dt-bindings: Document the hi3660 thermal sensor
- bindings
-Date: Tue, 4 Jul 2017 11:03:22 +0000
-Message-ID: <68C6844FB78C6946B9DB8EACE2D237B0985B5A3B@dggeml507-mbx.china.huawei.com>
-References: <1497930035-60894-3-git-send-email-kevin.wangtao@hisilicon.com>
- <1498102923-68481-1-git-send-email-kevin.wangtao@hisilicon.com>
- <20170701030534.GB11424@localhost.localdomain>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/3] dts: RISC-V local interrupt controller docs
+Date: Tue, 4 Jul 2017 12:18:12 +0100
+Message-ID: <20170704111501.GA21587@leverpostej>
+References: <20170627052124.426-1-palmer@dabbelt.com>
+ <20170627052124.426-3-palmer@dabbelt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170701030534.GB11424-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Content-Language: zh-CN
+Content-Disposition: inline
+In-Reply-To: <20170627052124.426-3-palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Sunzhaosheng Sun(Zhaosheng)" <sunzhaosheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, "leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAyMDE3LzcvMSAxMTowNiwgIkVkdWFyZG8gVmFsZW50aW4iIDxlZHViZXp2YWxAZ21haWwu
-Y29tPiB3cm90ZToNCj4gDQo+IE9uIFRodSwgSnVuIDIyLCAyMDE3IGF0IDExOjQyOjAxQU0gKzA4
-MDAsIFRhbyBXYW5nIHdyb3RlOg0KPiA+IFRoaXMgYWRkcyBkb2N1bWVudGF0aW9uIG9mIGRldmlj
-ZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUNCj4gPiB0aGVybWFsIHNlbnNvciBjb250cm9sbGVyIG9m
-IGhpMzY2MCBTb0MuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUYW8gV2FuZyA8a2V2aW4ud2Fu
-Z3Rhb0BoaXNpbGljb24uY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZXMgaW4gdjI6DQo+ID4gLSBy
-ZW1vdmUgcmVkdW5kYW50IHByb3BlcnR5DQo+ID4NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGhlcm1hbC9oaTM2NjAtdGhlcm1hbC50eHQgfCAgIDE2DQo+ICsrKysrKysrKysrKysrKysN
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL2hpMzY2MC0N
-Cj4gdGhlcm1hbC50eHQNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvdGhlcm1hbC9oaTM2NjAtDQo+IHRoZXJtYWwudHh0IGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RoZXJtYWwvaGkzNjYwLQ0KPiB0aGVybWFsLnR4dA0K
-PiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uZjNkZGRjZg0KPiA+
-IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGhlcm1hbC9oaTM2NjAtdGhlcm1hbC50eHQNCj4gPiBAQCAtMCwwICsxLDE2IEBADQo+ID4g
-KyogVGVtcGVyYXR1cmUgU2Vuc29yIG9uIGhpc2lsaWNvbiBoaTM2NjAgU29DDQo+ID4gKw0KPiAN
-Cj4gV291bGQgeW91IG1pbmQgYWRkIHNvbWUgbW9yZSBkZXNjcmlwdGlvbiBvZiB0aGUgc2Vuc29y
-cy93aGVyZSB0byBmaW5kDQo+IGZ1cnRoZXIgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbj8NClN1cmUs
-ICBkb2N1bWVudGF0aW9uIGlzIG9uDQpodHRwczovL2dpdGh1Yi5jb20vOTZib2FyZHMvZG9jdW1l
-bnRhdGlvbi9ibG9iL21hc3Rlci9Db25zdW1lckVkaXRpb24vSGlLZXk5NjAvSGFyZHdhcmVEb2Nz
-L0hpS2V5OTYwX1NvQ19SZWZlcmVuY2VfTWFudWFsLnBkZg0KDQo+IA0KPiA+ICsqKiBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzIDoNCj4gPiArDQo+ID4gKy0gY29tcGF0aWJsZTogImhpc2lsaWNvbix0aGVy
-bWFsLWhpMzY2MCIuDQo+ID4gKy0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlcm1h
-bCBzZW5zb3IgYW5kIGxlbmd0aCBvZiBtZW1vcnkNCj4gbWFwcGVkDQo+ID4gKyAgcmVnaW9uLg0K
-PiA+ICstICN0aGVybWFsLXNlbnNvci1jZWxsczogU2hvdWxkIGJlIDEuIFNlZSAuL3RoZXJtYWwu
-dHh0IGZvciBhIGRlc2NyaXB0aW9uLg0KPiA+ICsNCj4gPiArRXhhbXBsZSA6DQo+ID4gKw0KPiA+
-ICsJdHNlbnNvcjogdHNlbnNvciB7DQo+ID4gKwkJY29tcGF0aWJsZSA9ICJoaXNpbGljb24sdGhl
-cm1hbC1oaTM2NjAiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmZmYzMDAwMCAweDAgMHgxMDAwPjsN
-Cj4gPiArCQkjdGhlcm1hbC1zZW5zb3ItY2VsbHMgPSA8MT47DQo+ID4gKwkgfTsNCj4gPiAtLQ0K
-PiA+IDEuNy45LjUNCj4gPg0K
+On Mon, Jun 26, 2017 at 10:21:23PM -0700, Palmer Dabbelt wrote:
+> This patch adds documentation on the RISC-V local interrupt controller,
+> which is a per-hart interrupt controller that manages all interrupts
+> entering a RISC-V hart.  This interrupt controller is present on all
+> RISC-V systems.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../interrupt-controller/riscv,cpu-intc.txt        | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> new file mode 100644
+> index 000000000000..f4906f49a1b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> @@ -0,0 +1,70 @@
+> +RISC-V Hart-Level Interrupt Controller (HLIC)
+> +---------------------------------------------
+> +
+> +RISC-V cores include Control Status Registers (CSRs) which are local to each
+> +hart and can be read or written by software. Some of these CSRs are used to
+> +control local interrupts connected to the core.  Every interrupt is ultimately
+> +routed through a hart's HLIC before it interrupts that hart.
+> +
+> +The RISC-V supervisor ISA manual specifices three interrupt sources that are
+> +attached to every HLIC: software interrupts, the timer interrupt, and external
+> +interrupts.  Software interrupts are used to send IPIs between cores.  The
+> +timer interrupt comes from an architectually mandated real-time timer that is
+> +controller via SBI calls and CSR reads.  External interrupts connect all other
+> +device interrupts to the HLIC, which are routed via the platforw-level
+> +interrupt contrellor (PLIC).
+> +
+> +All RISC-V systems that conform to the supervisor ISA specification are
+> +required to have a HLIC with these three interrupt sources present.
+> +
+> +Required properties:
+> +- compatible : "riscv,cpu-intc"
+> +- #interrupt-cells : should be <1>
+
+I know this'll sound trivial, but it would be worth defining what that
+cell encodes. I guess it corresponds to a particular HW(?) notion of
+interrupt ID -- it would be worth calling out which one.
+
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +
+> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
+> +definition of the hart whose CSRs control these local interrupts.
+> +
+> +An example of a device tree entry for a standard RISC-V hart is as follows:
+> +
+> +	cpu1: cpu@1 {
+> +		clock-frequency = <1600000000>;
+> +		compatible = "riscv";
+> +		d-cache-block-size = <64>;
+> +		d-cache-sets = <64>;
+> +		d-cache-size = <16384>;
+> +		d-tlb-sets = <1>;
+> +		d-tlb-size = <32>;
+> +		device_type = "cpu";
+> +		i-cache-block-size = <64>;
+> +		i-cache-sets = <64>;
+> +		i-cache-size = <16384>;
+> +		i-tlb-sets = <1>;
+> +		i-tlb-size = <32>;
+> +		mmu-type = "riscv,sv39";
+> +		next-level-cache = <&L2>;
+> +		reg = <1>;
+> +		riscv,isa = "rv64imac";
+> +		status = "okay";
+> +		tlb-split;
+> +		cpu1-intc: interrupt-controller {
+> +			#interrupt-cells = <1>;
+> +			compatible = "riscv,cpu-intc";
+> +			interrupt-controller;
+> +		};
+> +	};
+
+As with Rob's comments, you'll need to document the RISC-V cpu binding,
+as we do for ARM in Documentation/devicetree/bindings/arm/cpus.txt. That
+should describe the format of your reg entry, which common properties
+are meaningful, and any RISC-V specific properties or values.
+
+I also don't see anything like an enable-method. Is your SMP bringup
+mechanism defined by the architecture?
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
