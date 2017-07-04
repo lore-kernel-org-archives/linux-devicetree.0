@@ -1,74 +1,91 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/9] ARM: renesas: Use SMP jump stub SRAM region from DT
-Date: Tue,  4 Jul 2017 17:41:34 +0200
-Message-ID: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 2/9] ARM: shmobile: rcar-gen2: Obtain jump stub region from DT
+Date: Tue,  4 Jul 2017 17:41:36 +0200
+Message-ID: <1499182903-31339-3-git-send-email-geert+renesas@glider.be>
+References: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Magnus, Mark, Rob, Simon,
+Add support for obtaining from DT the SRAM region to store the jump stub
+for CPU core bringup, according to the renesas,smp-sram DT bindings.
 
-The R-Car Gen2 platform code for CPU core bringup needs to copy a jump
-stub to on-SoC SRAM.  Currently it uses a hardcoded address pointing to
-ICRAM1.
+If no region is specified in DT, the code falls back to hardcoded ICRAM1
+as before, to maintain backwards compatibility.
 
-This patch series adds support to specify this region from DT.  It
-consists of 3 parts:
-  - DT binding documentation for reserving SRAM for the jump stub,
-  - A platform code update to retrieve the information from DT, if
-    present (of course backwards-compatibility with old DTBs is
-    preserved),
-  - DT updates to reserve an SRAM region in DT on all R-Car Gen2 and
-    RZ/G1 SoCs.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/mach-shmobile/pm-rcar-gen2.c | 33 ++++++++++++++++++++++++++++++---
+ 1 file changed, 30 insertions(+), 3 deletions(-)
 
-The DT patches in this series depend on "[PATCH 0/7] ARM: dts: renesas:
-Add Inter Connect RAM".
-
-Note that the current jump stub in Linux is 12 bytes long.  The patches
-reserve 16 bytes of SRAM.  Should this be increased?  The mapping
-granularity is PAGE_SIZE anyway.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (9):
-  dt-bindings: sram: Document renesas,smp-sram
-  ARM: shmobile: rcar-gen2: Obtain jump stub region from DT
-  ARM: dts: r8a7743: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7745: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7790: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7791: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7792: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7793: Reserve SRAM for the SMP jump stub
-  ARM: dts: r8a7794: Reserve SRAM for the SMP jump stub
-
- .../devicetree/bindings/sram/renesas,smp-sram.txt  | 27 ++++++++++++++++++
- arch/arm/boot/dts/r8a7743.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7745.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7790.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7791.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7792.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7793.dtsi                     |  8 ++++++
- arch/arm/boot/dts/r8a7794.dtsi                     |  8 ++++++
- arch/arm/mach-shmobile/pm-rcar-gen2.c              | 33 ++++++++++++++++++++--
- 9 files changed, 113 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sram/renesas,smp-sram.txt
-
+diff --git a/arch/arm/mach-shmobile/pm-rcar-gen2.c b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+index 0178da7ace82dcbd..e5f215c8b218100a 100644
+--- a/arch/arm/mach-shmobile/pm-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+@@ -11,7 +11,9 @@
+  */
+ 
+ #include <linux/kernel.h>
++#include <linux/ioport.h>
+ #include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/smp.h>
+ #include <linux/soc/renesas/rcar-sysc.h>
+ #include <asm/io.h>
+@@ -69,8 +71,9 @@ void __init rcar_gen2_pm_init(void)
+ 	struct device_node *np, *cpus;
+ 	bool has_a7 = false;
+ 	bool has_a15 = false;
+-	phys_addr_t boot_vector_addr = ICRAM1;
++	struct resource res;
+ 	u32 syscier = 0;
++	int error;
+ 
+ 	if (once++)
+ 		return;
+@@ -91,14 +94,38 @@ void __init rcar_gen2_pm_init(void)
+ 	else if (of_machine_is_compatible("renesas,r8a7791"))
+ 		syscier = 0x00111003;
+ 
++	np = of_find_compatible_node(NULL, NULL, "renesas,smp-sram");
++	if (!np) {
++		/* No smp-sram in DT, fall back to hardcoded address */
++		res = (struct resource)DEFINE_RES_MEM(ICRAM1,
++						      shmobile_boot_size);
++		goto map;
++	}
++
++	error = of_address_to_resource(np, 0, &res);
++	if (error) {
++		pr_err("Failed to get smp-sram address: %d\n", error);
++		return;
++	}
++
++map:
+ 	/* RAM for jump stub, because BAR requires 256KB aligned address */
+-	p = ioremap_nocache(boot_vector_addr, shmobile_boot_size);
++	if (res.start & (256 * 1024 - 1) ||
++	    resource_size(&res) < shmobile_boot_size) {
++		pr_err("Invalid smp-sram region\n");
++		return;
++	}
++
++	p = ioremap(res.start, resource_size(&res));
++	if (!p)
++		return;
++
+ 	memcpy_toio(p, shmobile_boot_vector, shmobile_boot_size);
+ 	iounmap(p);
+ 
+ 	/* setup reset vectors */
+ 	p = ioremap_nocache(RST, 0x63);
+-	bar = phys_to_sbar(boot_vector_addr);
++	bar = phys_to_sbar(res.start);
+ 	if (has_a15) {
+ 		writel_relaxed(bar, p + CA15BAR);
+ 		writel_relaxed(bar | SBAR_BAREN, p + CA15BAR);
 -- 
 2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
