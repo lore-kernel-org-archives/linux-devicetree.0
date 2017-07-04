@@ -1,42 +1,35 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 4 Jul 2017 09:41:59 +0200
-Message-ID: <20170704074159.GA21747@kroah.com>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/6] add and enable some device nodes for rk3229-evb board
+Date: Tue,  4 Jul 2017 16:12:41 +0800
+Message-ID: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170703181738.xyxtwe246cfrkyd7-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 03, 2017 at 08:17:38PM +0200, Uwe Kleine-König wrote:
-> Hello Greg,
+These series add and enable regulators, gpio-keys, eMMC and other device
+nodes support for rk3229-evb board.
 
-Please don't top-post :(
+David Wu (1):
+  ARM: dts: rockchip: enable io-domain for rk3229-evb
 
-> I'm a bit disappointed that you didn't drop this patch. At the time I
-> sent my review it was still in your tty-testing branch and now it's part
-> of your pull request for 4.13-rc1 (as commit
-> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
+Finley Xiao (1):
+  ARM: dts: rockchip: add cpu-supply property for cpu node of rk3229-evb
 
-And now it's in Linus's tree! :)
+Frank Wang (4):
+  ARM: dts: rockchip: add regulator nodes for rk3229-evb
+  ARM: dts: rockchip: enable eMMC for rk3229-evb
+  ARM: dts: rockchip: enable tsadc for rk3229-evb
+  ARM: dts: rockchip: add gpio power-key for rk3229-evb
 
-> I'm still convinced that this patch is wrong in its current form.
+ arch/arm/boot/dts/rk3229-evb.dts | 106 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 106 insertions(+)
 
-Should I revert it, or can I get a fix for it?  Reviewing the patch
-when it was submitted would have been best, not after it ends up in one
-of my trees...
+-- 
+2.0.0
 
-thanks,
 
-greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
