@@ -1,51 +1,67 @@
-From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH] serial: imx-serial - move DMA buffer configuration to DT
-Date: Tue, 4 Jul 2017 10:15:23 +0200
-Message-ID: <4d222fcd-184d-92e6-7c9f-370614c23d38@collabora.com>
-References: <20170628101514.22610-1-romain.perier@collabora.com>
- <20170629182618.jpahpmuq364ldcv2@pengutronix.de>
- <20170703181738.xyxtwe246cfrkyd7@pengutronix.de>
- <20170704074159.GA21747@kroah.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v7 10/16] reset: Add a reset controller driver for the
+ Lantiq XWAY based SoCs
+Date: Tue, 04 Jul 2017 10:30:09 +0200
+Message-ID: <1499157009.4045.4.camel@pengutronix.de>
+References: <20170702224051.15109-1-hauke@hauke-m.de>
+         <20170702224051.15109-11-hauke@hauke-m.de>
+         <CAHp75VexwnVsb-ojXaZDN7QPVRKUeP-R=5C+j5ZSkE37Dtyp1Q@mail.gmail.com>
+         <e1160f30-eeff-3db2-884c-9cd4af35a37d@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170704074159.GA21747-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e1160f30-eeff-3db2-884c-9cd4af35a37d-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 2017-07-03 at 23:30 +0200, Hauke Mehrtens wrote:
+> On 07/03/2017 09:51 AM, Andy Shevchenko wrote:
+> > On Mon, Jul 3, 2017 at 1:40 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+> >> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> >>
+> >> The reset controllers (on xRX200 and newer SoCs have two of them) are
+> >> provided by the RCU module. This was initially implemented as a simple
+> >> reset controller. However, the RCU module provides more functionality
+> >> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
+> >> The old reset controller driver implementation from
+> >> arch/mips/lantiq/xway/reset.c did not honor this fact.
+> >>
+> >> For some devices the request and the status bits are different.
+> > 
+> >> +Required properties:
+> >> +- compatible           : Should be one of
+> >> +                               "lantiq,danube-reset"
+> >> +                               "lantiq,xrx200-reset"
+> >> +- offset-set           : Offset of the reset set register
+> >> +- offset-status                : Offset of the reset status register
+> > 
+> > Just one side comment (I'm fine with either choice, just for your
+> > information). Recently I have reviewed at24 patch which adds a
+> > property for getting MAC offset and my reseach ends up with the naming
+> > pattern mac-offset (as many others are doing this way). So, perhaps in
+> > your case it might make sense to do that way? Anyway, it's a matter of
+> > a (bit of a) chaos in DT bindings, whatever you decide users will live
+> > with.
+> > 
+> I put the offset first to group them better together, but I have no
+> problem in reversing the order, then it is in a more natural speaking form.
 
+Either way, I would like to see an Acked-by from the device tree
+maintainers for the bindings. Given that,
 
-Le 04/07/2017 à 09:41, Greg Kroah-Hartman a écrit :
-> On Mon, Jul 03, 2017 at 08:17:38PM +0200, Uwe Kleine-König wrote:
->> Hello Greg,
-> Please don't top-post :(
->
->> I'm a bit disappointed that you didn't drop this patch. At the time I
->> sent my review it was still in your tty-testing branch and now it's part
->> of your pull request for 4.13-rc1 (as commit
->> a3015affdf76ef279fbbb3710a220bab7e9ea04b). :-|
-> And now it's in Linus's tree! :)
->
->> I'm still convinced that this patch is wrong in its current form.
-> Should I revert it, or can I get a fix for it?  Reviewing the patch
-> when it was submitted would have been best, not after it ends up in one
-> of my trees...
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I don't think there is a fix for it. Either you revert the patch and you
-code the fix differently, as I suggested by changing dma_rx_callback...
-but that's more intrusive... or you keep this patch.
+to merge this driver through the mips tree, since a git merge with
+    git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git drivers/reset-2
+is conflict free.
 
->
-> thanks,
->
-> greg k-h
+regards
+Philipp
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
