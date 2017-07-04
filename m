@@ -1,36 +1,39 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 0/6] add and enable some device nodes for rk3229-evb board
-Date: Tue,  4 Jul 2017 16:12:41 +0800
-Message-ID: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH 2/6] ARM: dts: rockchip: add cpu-supply property for cpu node of rk3229-evb
+Date: Tue,  4 Jul 2017 16:12:43 +0800
+Message-ID: <1499155967-26090-3-git-send-email-frank.wang@rock-chips.com>
+References: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-These series add and enable regulators, gpio-keys, eMMC and other device
-nodes support for rk3229-evb board.
+From: Finley Xiao <finley.xiao@rock-chips.com>
 
-David Wu (1):
-  ARM: dts: rockchip: enable io-domain for rk3229-evb
+This patch adds the cpu-supply property so that cpu can do dvfs
+on rk3229-evb board.
 
-Finley Xiao (1):
-  ARM: dts: rockchip: add cpu-supply property for cpu node of rk3229-evb
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+---
+ arch/arm/boot/dts/rk3229-evb.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Frank Wang (4):
-  ARM: dts: rockchip: add regulator nodes for rk3229-evb
-  ARM: dts: rockchip: enable eMMC for rk3229-evb
-  ARM: dts: rockchip: enable tsadc for rk3229-evb
-  ARM: dts: rockchip: add gpio power-key for rk3229-evb
-
- arch/arm/boot/dts/rk3229-evb.dts | 106 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 106 insertions(+)
-
+diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
+index 8b10c64..cfa7baa 100644
+--- a/arch/arm/boot/dts/rk3229-evb.dts
++++ b/arch/arm/boot/dts/rk3229-evb.dts
+@@ -126,6 +126,10 @@
+ 	};
+ };
+ 
++&cpu0 {
++	cpu-supply = <&vdd_arm>;
++};
++
+ &gmac {
+ 	assigned-clocks = <&cru SCLK_MAC_EXTCLK>, <&cru SCLK_MAC>;
+ 	assigned-clock-parents = <&ext_gmac>, <&cru SCLK_MAC_EXTCLK>;
 -- 
 2.0.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
