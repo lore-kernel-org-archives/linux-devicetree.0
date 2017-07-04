@@ -1,67 +1,109 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v7 10/16] reset: Add a reset controller driver for the
- Lantiq XWAY based SoCs
-Date: Tue, 04 Jul 2017 10:30:09 +0200
-Message-ID: <1499157009.4045.4.camel@pengutronix.de>
-References: <20170702224051.15109-1-hauke@hauke-m.de>
-         <20170702224051.15109-11-hauke@hauke-m.de>
-         <CAHp75VexwnVsb-ojXaZDN7QPVRKUeP-R=5C+j5ZSkE37Dtyp1Q@mail.gmail.com>
-         <e1160f30-eeff-3db2-884c-9cd4af35a37d@hauke-m.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/6] ARM: dts: rockchip: add regulator nodes for rk3229-evb
+Date: Tue, 04 Jul 2017 10:34:05 +0200
+Message-ID: <8062361.VWy3dYvDhe@diego>
+References: <1499155967-26090-1-git-send-email-frank.wang@rock-chips.com> <1499155967-26090-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e1160f30-eeff-3db2-884c-9cd4af35a37d-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499155967-26090-2-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-07-03 at 23:30 +0200, Hauke Mehrtens wrote:
-> On 07/03/2017 09:51 AM, Andy Shevchenko wrote:
-> > On Mon, Jul 3, 2017 at 1:40 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> >> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> >>
-> >> The reset controllers (on xRX200 and newer SoCs have two of them) are
-> >> provided by the RCU module. This was initially implemented as a simple
-> >> reset controller. However, the RCU module provides more functionality
-> >> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
-> >> The old reset controller driver implementation from
-> >> arch/mips/lantiq/xway/reset.c did not honor this fact.
-> >>
-> >> For some devices the request and the status bits are different.
-> > 
-> >> +Required properties:
-> >> +- compatible           : Should be one of
-> >> +                               "lantiq,danube-reset"
-> >> +                               "lantiq,xrx200-reset"
-> >> +- offset-set           : Offset of the reset set register
-> >> +- offset-status                : Offset of the reset status register
-> > 
-> > Just one side comment (I'm fine with either choice, just for your
-> > information). Recently I have reviewed at24 patch which adds a
-> > property for getting MAC offset and my reseach ends up with the naming
-> > pattern mac-offset (as many others are doing this way). So, perhaps in
-> > your case it might make sense to do that way? Anyway, it's a matter of
-> > a (bit of a) chaos in DT bindings, whatever you decide users will live
-> > with.
-> > 
-> I put the offset first to group them better together, but I have no
-> problem in reversing the order, then it is in a more natural speaking form.
+Hi Frank,
 
-Either way, I would like to see an Acked-by from the device tree
-maintainers for the bindings. Given that,
+Am Dienstag, 4. Juli 2017, 16:12:42 CEST schrieb Frank Wang:
+> This patch adds vcc_io, vdd_arm and vdd_log regulator nodes
+> for rk3229-evb board.
+> 
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> ---
+>  arch/arm/boot/dts/rk3229-evb.dts | 54
+> ++++++++++++++++++++++++++++++++++++++++ 1 file changed, 54 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3229-evb.dts
+> b/arch/arm/boot/dts/rk3229-evb.dts index 82e8a53..8b10c64 100644
+> --- a/arch/arm/boot/dts/rk3229-evb.dts
+> +++ b/arch/arm/boot/dts/rk3229-evb.dts
+> @@ -78,6 +78,52 @@
+>  		regulator-always-on;
+>  		regulator-boot-on;
+>  	};
+> +
+> +	vdd_arm: vdd-arm-regulator {
+> +		compatible = "pwm-regulator";
+> +		rockchip,pwm_id = <1>;
+> +		rockchip,pwm_voltage = <1100000>;
 
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This doesn't look like a part of the mainline pwm-regulator binding
+(both rockchip,* properties)
 
-to merge this driver through the mips tree, since a git merge with
-    git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc.git drivers/reset-2
-is conflict free.
+> +		pwms = <&pwm1 0 25000 1>;
+> +		regulator-name = "vdd_arm";
+> +		regulator-min-microvolt = <950000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
 
-regards
-Philipp
+please also add supplies for regulators. Information on supplies
+should be easily extractable from the board schematics.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This not only results in a nice tree in debugfs (regulator/regulator_summary)
+but also makes sure supplying regulators are not accidentially turned off.
+(pwm-supply for pwm-regulators, vin-supply for fixed regulators)
+
+
+> +
+> +	vdd_log: vdd-log-regulator {
+> +		compatible = "pwm-regulator";
+> +		rockchip,pwm_id = <2>;
+> +		rockchip,pwm_voltage = <1200000>;
+> +		pwms = <&pwm2 0 25000 1>;
+> +		regulator-name = "vdd_log";
+> +		regulator-min-microvolt = <1000000>;
+> +		regulator-max-microvolt = <1300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	regulators {
+> +		compatible = "simple-bus";
+
+don't create a subnode/bus for regulators. Just add them
+regularly. Take a look at all the other boards (like rk3399-firefly,
+gru, veyron) for reference.
+
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		vccio_1v8_reg: regulator@0 {
+
+Same here, no regulator@0 please, just name this one
+	vccio_1v8: vccio-1v8-regulator {
+
+(removed _reg from phandle and changed node name)
+
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "vccio_1v8";
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <1800000>;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vccio_3v3_reg: regulator@1 {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "vccio_3v3";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+>  };
+
+
+Thanks
+Heiko
