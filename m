@@ -1,64 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] arm64: dts: r8a7796: add IMR-LX4 support
-Date: Wed, 5 Jul 2017 15:03:37 +0300
-Message-ID: <e901ed94-c937-23cd-c43c-f2530dedd50f@cogentembedded.com>
-References: <20170627173400.581660959@cogentembedded.com>
- <CAMuHMdXxcbkPV+Jt7Xo5emQ4fyDHm1p1RgD9nsRfR78va4XFSA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Add R8A7743/SK-RZG1M PFC support
+Date: Wed, 5 Jul 2017 15:06:59 +0300
+Message-ID: <1ef81381-d558-7cad-0df4-bbd63d7055e1@cogentembedded.com>
+References: <20170420185132.258111787@cogentembedded.com>
+ <20170424061217.GC14843@verge.net.au> <20170705103308.GA29876@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXxcbkPV+Jt7Xo5emQ4fyDHm1p1RgD9nsRfR78va4XFSA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170705103308.GA29876-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 07/05/2017 01:33 PM, Simon Horman wrote:
 
-On 07/05/2017 12:54 PM, Geert Uytterhoeven wrote:
-
->> Describe the IMR-LX4 devices in the R8A7796 device tree.
+>>>    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+>>> 'renesas-devel-20170420-v4.11-rc7' tag.  We're adding the R8A7743 PFC node
+>>> and then describing the pins for SCIF0 and Ether devices declared earlier.
+>>> These patches depend on the R8A7743 PFC suport in order to work properly.
 >>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Thanks. I have marked these as deferred pending acceptance of the PFC
+>> driver changes. Please repost or otherwise let me know when dependency
+>> is satisfied.
 >
->> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a7796.dtsi
->> +++ renesas/arch/arm64/boot/dts/renesas/r8a7796.dtsi
->> @@ -1454,5 +1454,23 @@
->>                                 };
->>                         };
->>                 };
->> +
->> +               imr-lx4@fe860000 {
->> +                       compatible = "renesas,r8a7796-imr-lx4",
->> +                                    "renesas,imr-lx4";
->> +                       reg = <0 0xfe860000 0 0x2000>;
->> +                       interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
->> +                       clocks = <&cpg CPG_MOD 823>;
->> +                       power-domains = <&sysc R8A7796_PD_A3VC>;
+> It appears that the driver changes have been acceptedi[1] so
+> I have queued these up for v4.14.
 >
-> resets = <&cpg 823>;
->
->> +               };
->> +
->> +               imr-lx4@fe870000 {
->> +                       compatible = "renesas,r8a7796-imr-lx4",
->> +                                    "renesas,imr-lx4";
->> +                       reg = <0 0xfe870000 0 0x2000>;
->> +                       interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
->> +                       clocks = <&cpg CPG_MOD 822>;
->> +                       power-domains = <&sysc R8A7796_PD_A3VC>;
->
-> resets = <&cpg 822>;
->
-> With the issues above fixed:
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> [1] https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg15744.html
 
-    I'm afraid it's already merged by Simon...
-
-> Gr{oetje,eeting}s,
->
->                         Geert
+    This points to Biju Das' patch acceptance, not mine. :-)
 
 MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
