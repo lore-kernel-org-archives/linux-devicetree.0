@@ -1,32 +1,51 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 4/6] dt-bindings: List devicetree binding
- for the CCU of Allwinner A10
-Date: Wed, 5 Jul 2017 12:07:20 +0800
-Message-ID: <CAGb2v64WwzV_u5qnkiQsWeOtCY-rGcpvMqYMiwBuiuYEZeT-OA@mail.gmail.com>
-References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
- <0f68552ad8214115634d649ed34ea450461f9b5d.1499197129.git-series.plaes@plaes.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: cpufreq: enhance MediaTek cpufreq
+ dt-binding document
+Date: Wed, 5 Jul 2017 09:52:12 +0530
+Message-ID: <20170705042212.GK3532@vireshk-i7>
+References: <cover.1499194061.git.sean.wang@mediatek.com>
+ <ce40386c0ae1e574d8d03354aa665bf9de6b0bbc.1499194061.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBEGM6HFAKGQEOVCQ3CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <0f68552ad8214115634d649ed34ea450461f9b5d.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <ce40386c0ae1e574d8d03354aa665bf9de6b0bbc.1499194061.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 5, 2017 at 4:04 AM, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
-> Allwinner A10 is now driven by sunxi-ng CCU driver.
->
-> Add devicetree binding for it.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+On 05-07-17, 02:55, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Update binding document with adding operating-points-v2 as the required
+> property and the cooling level as the optional properties and adding more
+> examples guiding people how to use MediaTek cpufreq driver for MediaTek
+> SoCs.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> ---
+>  .../bindings/cpufreq/cpufreq-mediatek.txt          | 170 ++++++++++++++++++++-
+>  1 file changed, 167 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> index 52b457c..e919ca7 100644
+> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+> @@ -1,4 +1,5 @@
+> -Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
+> +Binding for MediaTek's CPUFreq driver
+> +=====================================
+>  
+>  Required properties:
+>  - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
+> @@ -9,6 +10,8 @@ Required properties:
+>  			  transition and not stable yet.
+>  	Please refer to Documentation/devicetree/bindings/clk/clock-bindings.txt for
+>  	generic clock consumer properties.
+> +- operating-points-v2: Pleaser refer to Documentation/devicetree/bindings/opp/opp.txt
 
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+s/Pleaser/Please
+
+-- 
+viresh
