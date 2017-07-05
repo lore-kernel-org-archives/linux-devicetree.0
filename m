@@ -1,61 +1,41 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27
- SoM1 support
-Date: Wed, 5 Jul 2017 17:29:52 +0200
-Message-ID: <a74f9110-ced4-5412-8ed2-f57f65557f7e@microchip.com>
-References: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
- <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
- <20170705152343.b735on6edg3vfsp3@rfolt0960.corp.atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170705152343.b735on6edg3vfsp3@rfolt0960.corp.atmel.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, devicetree@vger.kernel.org, cristian.birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 0/2] Add RZ/G1M (R8A7743) Ethernet AVB support
+Date: Wed,  5 Jul 2017 16:56:27 +0100
+Message-ID: <1499270189-29945-1-git-send-email-biju.das@bp.renesas.com>
+References: <afcd181c-c805-8f3c-955f-652d001a03d4@cogentembedded.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <afcd181c-c805-8f3c-955f-652d001a03d4@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2017 at 17:23, Ludovic Desroches wrote:
-> On Mon, Jul 03, 2017 at 03:56:11PM +0300, Claudiu Beznea wrote:
->> Add specific DTS file and bindings for sama5d27 SoM1 board.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
->> ---
->>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
->>  1 file changed, 178 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
->>
->> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
->> new file mode 100644
->> index 0000000..c3a1dc8
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-> 
-> [...]
-> 
->> +
->> +			i2c0: i2c@f8028000 {
->> +				dmas = <0>, <0>;
->> +				pinctrl-names = "default";
->> +				pinctrl-0 = <&pinctrl_i2c0_default>;
->> +				i2c-sda-hold-time-ns = <350>;
->> +				status = "disabled";
->> +
->> +				24aa@50 {
->> +					compatible = "24mac602";
->> +					reg = <0x50>;
->> +					pagesize = <8>;
->> +					start-offset = /bits/ 8 <0xf8>;
-> 
-> Are you sure about the offset? I thought it was 0xfa but maybe I am
-> wrong.
+Hi All,
 
-Moreover, as the binding for this is not yet accepted I would advice to
-remove this part for now. It will be easier for synchronization with i2c
-eeprom.
+This series aims to upstream the Ethernet AVB driver support for RZ/G1M (r8a7743) SoC . 
 
-Best regards,
+The iWave RZ/G1M Qseven SOM supports Gigabit Ethernet Phy from Micrel(KSZ9031MNX).
+Gigabit Ethernet support is available in Renesas AVB driver.
+
+This series has been tested against linux-next tag next-20170704.
+
+Modifications:
+v1->v2
+-Dropped the driver update,as is it not needed due to the presence of family-specific compatible values.
+-Added Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be> for the DT binding patch
+-Added Acked-by: Geert Uytterhoeven <geert+renesas@glider.be> for the defconfig: Enable Ethernet AVB patch
+
+History:
+-------
+[v1]: https://www.spinics.net/lists/arm-kernel/msg592366.html
+
+Biju Das (2):
+  ravb: Document binding for r8a7743 SoC
+  ARM: shmobile: defconfig: Enable Ethernet AVB
+
+ Documentation/devicetree/bindings/net/renesas,ravb.txt | 3 ++-
+ arch/arm/configs/shmobile_defconfig                    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
 -- 
-Nicolas Ferre
+1.9.1
