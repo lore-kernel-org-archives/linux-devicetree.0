@@ -1,122 +1,34 @@
 From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v2 1/6] ARM: dts: rockchip: add regulator nodes for rk3229-evb
-Date: Wed,  5 Jul 2017 16:30:16 +0800
-Message-ID: <1499243421-21460-2-git-send-email-frank.wang@rock-chips.com>
-References: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com>
+Subject: [PATCH v2 0/6] add and enable some device nodes for rk3229-evb board
+Date: Wed,  5 Jul 2017 16:30:15 +0800
+Message-ID: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, zhangqing@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds regulator info for rk3229-evb board.
+These series add and enable regulators, gpio-keys, eMMC and other device
+nodes support for rk3229-evb board.
 
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
----
- arch/arm/boot/dts/rk3229-evb.dts | 69 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Changes from v1:
+ - Fixed the name and supply for regulator nodes in [PATCH 1/6].
+ - Deleted some redundant properties of eMMC in [PATCH 4/6].
 
-diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
-index 82e8a53..394be63 100644
---- a/arch/arm/boot/dts/rk3229-evb.dts
-+++ b/arch/arm/boot/dts/rk3229-evb.dts
-@@ -51,6 +51,15 @@
- 		reg = <0x60000000 0x40000000>;
- 	};
- 
-+	dc_12v: dc-12v-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dc_12v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-max-microvolt = <12000000>;
-+	};
-+
- 	ext_gmac: ext_gmac {
- 		compatible = "fixed-clock";
- 		clock-frequency = <125000000>;
-@@ -67,6 +76,7 @@
- 		regulator-name = "vcc_host";
- 		regulator-always-on;
- 		regulator-boot-on;
-+		vin-supply = <&vcc_sys>;
- 	};
- 
- 	vcc_phy: vcc-phy-regulator {
-@@ -77,6 +87,57 @@
- 		regulator-max-microvolt = <1800000>;
- 		regulator-always-on;
- 		regulator-boot-on;
-+		vin-supply = <&vccio_1v8>;
-+	};
-+
-+	vcc_sys: vcc-sys-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_sys";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&dc_12v>;
-+	};
-+
-+	vccio_1v8: vccio-1v8-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vccio_3v3: vccio-3v3-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vccio_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&vcc_sys>;
-+	};
-+
-+	vdd_arm: vdd-arm-regulator {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm1 0 25000 1>;
-+		regulator-name = "vdd_arm";
-+		regulator-min-microvolt = <950000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		pwm-supply = <&vcc_sys>;
-+	};
-+
-+	vdd_log: vdd-log-regulator {
-+		compatible = "pwm-regulator";
-+		pwms = <&pwm2 0 25000 1>;
-+		regulator-name = "vdd_log";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+		pwm-supply = <&vcc_sys>;
- 	};
- };
- 
-@@ -104,6 +165,14 @@
- 	};
- };
- 
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
- &uart2 {
- 	status = "okay";
- };
+David Wu (1):
+  ARM: dts: rockchip: enable io-domain for rk3229-evb
+
+Finley Xiao (1):
+  ARM: dts: rockchip: add cpu-supply property for cpu node of rk3229-evb
+
+Frank Wang (4):
+  ARM: dts: rockchip: add regulator nodes for rk3229-evb
+  ARM: dts: rockchip: enable eMMC for rk3229-evb
+  ARM: dts: rockchip: enable tsadc for rk3229-evb
+  ARM: dts: rockchip: add gpio power-key for rk3229-evb
+
+ arch/arm/boot/dts/rk3229-evb.dts | 117 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+
 -- 
 2.0.0
