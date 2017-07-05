@@ -1,59 +1,32 @@
-From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] misc: added Spreadtrum's radio driver
-Date: Wed, 5 Jul 2017 18:18:56 +0800
-Message-ID: <CAAfSe-vj76psYw2uzC2w0pASRT-FGHqXph0zWE_3tmMVzMHKvg@mail.gmail.com>
-References: <20170704101508.30946-1-chunyan.zhang@spreadtrum.com>
- <20170704101508.30946-3-chunyan.zhang@spreadtrum.com> <CAK8P3a0i-H=uU=9DNJbtK2EMX2GJ5cL_TW0roSHpa6tHTcZ2sg@mail.gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH V4 0/3] add UniPhier watchdog support
+Date: Wed, 5 Jul 2017 19:26:05 +0900
+Message-ID: <CAK7LNAR7kbXPFGywpnWRCFibwp350kmZ7CpSUO6GTFG3pxG=zw@mail.gmail.com>
+References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com>
+ <000001d2f576$5f011c20$1d035460$@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a0i-H=uU=9DNJbtK2EMX2GJ5cL_TW0roSHpa6tHTcZ2sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Songhe Wei <songhe.wei-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Zhongping Tan <zhongping.tan-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <000001d2f576$5f011c20$1d035460$@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: wim@iguana.be, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>, =?UTF-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4 July 2017 at 18:51, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tue, Jul 4, 2017 at 12:15 PM, Chunyan Zhang
-> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->> This patch added FM radio driver for Spreadtrum's SC2342, which's
->> a WCN SoC, also added a new directory for Spreadtrum's WCN SoCs.
->>
->> Signed-off-by: Songhe Wei <songhe.wei-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+2017-07-05 19:06 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
+> Hi Guenter,
 >
-> (adding linux-media folks to Cc)
-
-(You forgot to add them in :))
-
+> Let me confirm if I got it.
 >
-> Hi Chunyan,
+> I guess that this series finished the review.
+> Could you tell me the current state of this series?
 
-Hi Arnd,
 
->
-> Thanks for posting this for inclusion as Greg asked for. I'm not sure what
-> the policy is for new radio drivers, but I assume this would have to go
-> to drivers/staging/media/ as it is a driver for hardware that fits into
-> drivers/media/radio but doesn't use the respective APIs.
+I will pick up 3/3.  (It should have been sent to ARM-SoC ML, though.)
 
-Ok, I agree to let it go to drivers/staging/media/.
+I had sent my PRs for v4.13 before Rob acked the DT binding.
+Please look forward to v4.14.
 
-Like I mentioned, SC2342 includes many functions, this patch is only
-adding FM radio function included in SC2342 to the kernel tree.  So I
-figure that its lifetime probably will not be too long, will remove it
-from the kernel tree when we have a clean enough version of the whole
-SC2342 drivers for the official upstreaming.
-
-Thanks,
-Chunyan
-
->
->         Arnd
-> ---
-> end of message, full patch quoted for reference below
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Best Regards
+Masahiro Yamada
