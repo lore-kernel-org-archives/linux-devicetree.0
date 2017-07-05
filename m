@@ -1,71 +1,50 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V4 1/2] dt-bindings: timer: add nxp tpm timer binding doc
-Date: Wed, 5 Jul 2017 10:35:11 +0800
-Message-ID: <1499222112-9988-2-git-send-email-aisheng.dong@nxp.com>
-References: <1499222112-9988-1-git-send-email-aisheng.dong@nxp.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH] arm64: dts: ls1012a: add USB host controller nodes
+Date: Wed, 5 Jul 2017 10:54:03 +0800
+Message-ID: <1499223243-13253-1-git-send-email-ran.wang_1@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499222112-9988-1-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, shawnguo@kernel.org, ping.bai@nxp.com, anson.huang@nxp.com, dongas86@gmail.com, kernel@pengutronix.de, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Yuantian Tang <andy.tang@nxp.com>, Harninder Rai <harninder.rai@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, horia.geanta@nxp.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding NXP Low Power Timer/Pulse Width Modulation Module (TPM)
-binding doc.
+LS1012A has one USB 3.0(DWC3) controller and
+one USB 2.0 controller.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Bai Ping <ping.bai@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
-ChangeLog:
- v1->v4:
- * No changes
----
- .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-new file mode 100644
-index 0000000..b4aa7dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-@@ -0,0 +1,28 @@
-+NXP Low Power Timer/Pulse Width Modulation Module (TPM)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index b497ac1..8aa2dcf 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -411,6 +411,23 @@
+ 				 <&clockgen 4 3>;
+ 		};
+ 
++		usb0: usb3@2f00000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x2f00000 0x0 0x10000>;
++			interrupts = <0 60 0x4>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++		};
 +
-+The Timer/PWM Module (TPM) supports input capture, output compare,
-+and the generation of PWM signals to control electric motor and power
-+management applications. The counter, compare and capture registers
-+are clocked by an asynchronous clock that can remain enabled in low
-+power modes. TPM can support global counter bus where one TPM drives
-+the counter bus for the others, provided bit width is the same.
++		usb1: usb2@8600000 {
++			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++			reg = <0x0 0x8600000 0x0 0x1000>;
++			interrupts = <0 139 0x4>;
++			dr_mode = "host";
++			phy_type = "ulpi";
++		};
 +
-+Required properties:
-+
-+- compatible :	should be "fsl,imx7ulp-tpm"
-+- reg :		Specifies base physical address and size of the register sets
-+		for the clock event device and clock source device.
-+- interrupts :	Should be the clock event device interrupt.
-+- clocks :	The clocks provided by the SoC to drive the timer, must contain
-+		an entry for each entry in clock-names.
-+- clock-names : Must include the following entries: "igp" and "per".
-+
-+Example:
-+tpm5: tpm@40260000 {
-+	compatible = "fsl,imx7ulp-tpm";
-+	reg = <0x40260000 0x1000>;
-+	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
-+		 <&clks IMX7ULP_CLK_LPTPM5>;
-+	clock-names = "ipg", "per";
-+};
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
 -- 
-2.7.4
+2.1.0.27.g96db324
