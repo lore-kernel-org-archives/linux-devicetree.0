@@ -1,261 +1,116 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v16 2/7] power: add power sequence library
-Date: Wed, 5 Jul 2017 19:54:00 +0800
-Message-ID: <20170705115400.GA17226@b29397-desktop>
-References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com>
- <1498027328-25078-3-git-send-email-peter.chen@nxp.com>
- <1868803.ffQpiaMTN5@aspire.rjw.lan>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
+ clock selector PHY
+Date: Wed, 5 Jul 2017 11:57:17 +0000
+Message-ID: <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1868803.ffQpiaMTN5@aspire.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Peter Chen <peter.chen@nxp.com>, mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, p.zabel@pe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
+Content-Language: ja-JP
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 02:44:56AM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, June 21, 2017 02:42:03 PM Peter Chen wrote:
-> > We have an well-known problem that the device needs to do some power
-> > sequence before it can be recognized by related host, the typical
-> > example like hard-wired mmc devices and usb devices.
-> > 
-> > This power sequence is hard to be described at device tree and handled by
-> > related host driver, so we have created a common power sequence
-> > library to cover this requirement. The core code has supplied
-> > some common helpers for host driver, and individual power sequence
-> > libraries handle kinds of power sequence for devices. The pwrseq
-> > librares always need to allocate extra instance for compatible
-> > string match.
-> > 
-> > pwrseq_generic is intended for general purpose of power sequence, which
-> > handles gpios and clocks currently, and can cover other controls in
-> > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > if only one power sequence is needed, else call of_pwrseq_on_list
-> > /of_pwrseq_off_list instead (eg, USB hub driver).
-> > 
-> > For new power sequence library, it needs to add its compatible string
-> > and allocation function at pwrseq_match_table_list, then the pwrseq
-> > core will match it with DT's, and choose this library at runtime.
-> > 
-> > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> 
-> The executive summary here is that I'm not going to apply this patch (and the
-> following series depending on it), because in my opinion it is misguided and
-> I quite fundamentally disagree with the basic concept.
-> 
-> The code has problems too, but we first need to agree on the basics.
-> 
-
-Thanks for valuable comments, let's agree on the concept and design
-first.
-
-> > ---
-> >  Documentation/power/power-sequence/design.rst |  54 +++++
-> >  MAINTAINERS                                   |   9 +
-> >  drivers/power/Kconfig                         |   1 +
-> >  drivers/power/Makefile                        |   1 +
-> >  drivers/power/pwrseq/Kconfig                  |  20 ++
-> >  drivers/power/pwrseq/Makefile                 |   2 +
-> >  drivers/power/pwrseq/core.c                   | 293 ++++++++++++++++++++++++++
-> >  drivers/power/pwrseq/pwrseq_generic.c         | 210 ++++++++++++++++++
-> >  include/linux/power/pwrseq.h                  |  84 ++++++++
-> >  9 files changed, 674 insertions(+)
-> >  create mode 100644 Documentation/power/power-sequence/design.rst
-> >  create mode 100644 drivers/power/pwrseq/Kconfig
-> >  create mode 100644 drivers/power/pwrseq/Makefile
-> >  create mode 100644 drivers/power/pwrseq/core.c
-> >  create mode 100644 drivers/power/pwrseq/pwrseq_generic.c
-> >  create mode 100644 include/linux/power/pwrseq.h
-> > 
-> > diff --git a/Documentation/power/power-sequence/design.rst b/Documentation/power/power-sequence/design.rst
-> > new file mode 100644
-> > index 0000000..554608e
-> > --- /dev/null
-> > +++ b/Documentation/power/power-sequence/design.rst
-> > @@ -0,0 +1,54 @@
-> > +====================================
-> > +Power Sequence Library
-> > +====================================
-> > +
-> > +:Date: Feb, 2017
-> > +:Author: Peter Chen <peter.chen@nxp.com>
-> > +
-> > +
-> > +Introduction
-> > +============
-> > +
-> > +We have an well-known problem that the device needs to do a power
-> > +sequence before it can be recognized by related host, the typical
-> > +examples are hard-wired mmc devices and usb devices. The host controller
-> > +can't know what kinds of this device is in its bus if the power
-> > +sequence has not done, since the related devices driver's probe calling
-> > +is determined by runtime according to eunumeration results. Besides,
-> > +the devices may have custom power sequence, so the power sequence library
-> > +which is independent with the devices is needed.
-> 
-> In other words, devices can be in different power states and there are power
-> states in which they are not accessible to software.  In order to be accessed
-> by software, they need to be put into power states in which that is actually
-> possible.
-> 
-> That has been known for over 20 years and by no means it is limited to MMC
-> or USB.
-> 
-> Moreover, power states of devices generally depend on the platform and if
-> the same IP block is used in two different platforms (or even in two different
-> SoCs for that matter), the power states of it can be defined differently in
-> each case.
-> 
-> It also is quite well known how to define a power state of a device.  There
-> usually is a list of power resources (clocks, regulators, etc) that have to
-> be "on" for the device to be in the given power state.  In addition to that,
-> it may be necessary to carry out some operations after turning those
-> power resources "on" in order to trigger the power state change (like
-> toggling a GPIO or writing to a specific register etc).
-> 
-> Now, of course, it is not generally guaranteed that devices will be in
-> software-accessible power states initially, so it is necessary to put them
-> into those power states before trying to access them.
-> 
-> Again, this isn't anything new, but it has always been about power states.
-> 
-> By defining a "power sequence" you generally define two power states for
-> the device, say "on" and "off", and a way to switch between them, but what
-> about simply treating power states as the primary concept in the first place?
-> 
-> That would be more general, because there are platforms with more than
-> two power states per device.  In those cases, the power state choice may
-> depend on additional factors, like say during system suspend it may matter
-> whether or not the device is a wakeup one (and it may not be able to
-> generate wakeup signals from certain power states).  Using a single "power
-> sequence" would not be sufficient then.
-
-I agree on the concept of "power state" for it,
-but I have several questions for above:
-
-- Can I write new code for it or I need to depend on something?
-I find there is already "power state" concept at documentation.
-Documentation/ABI/testing/sysfs-devices-power_state
-- If I can write the new code for it, except the problems I want
-to fix, are there any other use cases I need to consider?
-> 
-> > +
-> > +Design
-> > +============
-> > +
-> > +The power sequence library includes the core file and customer power
-> > +sequence library. The core file exports interfaces are called by
-> > +host controller driver for power sequence and customer power sequence
-> > +library files to register its power sequence instance to global
-> > +power sequence list. The custom power sequence library creates power
-> > +sequence instance and implement custom power sequence.
-> 
-> The above paragraph is really hard to decode.
-> 
-> There is no explanation of basic concepts at all.  What exactly do you mean by
-> "power sequence"?  What is a "power sequence instance"?  What do you mean
-> by "custom power sequence"?
-
-"power sequence" means the sequence for power on/off device
-"power sequence instance" means when carry out power on, it
-need to allocate one "power sequence" structure, and this structure
-includes all operations during power on/off sequence.
-"custom power sequence" means different devices need different
-power on sequence, eg, one may need to open regulator before
-toggle gpio, but another may need opposite sequence.
-
-> 
-> > +
-> > +Since the power sequence describes hardware design, the description is
-> > +located at board description file, eg, device tree dts file. And
-> > +a specific power sequence belongs to device, so its description
-> > +is under the device node, please refer to:
-> > +Documentation/devicetree/bindings/power/pwrseq/pwrseq-generic.txt
-> 
-> This, again, is really difficult to understand, especially the difference between
-> "the power sequence" and "a specific power sequence" is quite unclear.
-> 
-
-"a specific power sequence" for one custom power sequence
-
-> > +
-> > +Custom power sequence library allocates one power sequence instance at
-> > +bootup periods using postcore_initcall, this static allocated instance is
-> > +used to compare with device-tree (DT) node to see if this library can be
-> > +used for the node or not.
-> 
-> Same here.
-> 
-> > When the result is matched, the core API will
-> > +try to get resourses (->get, implemented at each library) for power
-> > +sequence, if all resources are got, it will try to allocate another
-> > +instance for next possible request from host driver.
-> > +
-> > +Then, the host controller driver can carry out power sequence on for this
-> > +DT node, the library will do corresponding operations, like open clocks,
-> > +toggle gpio, etc. The power sequence off routine will close and free the
-> > +resources, and is called when the parent is removed. And the power
-> > +sequence suspend and resume routine can be called at host driver's
-> > +suspend and resume routine if needed.
-> 
-> Let me try to say what I understood from this.
-> 
-> If there is a DT node with a matching "compatible" string, the initialization
-> code will try to acquire resources needed for "power sequencing" of the
-> corresponding device.  It is expected that host controller drivers will
-> then use the provided helper functions to turn the subordinate devices
-> "on" during enumeration and "off" on the (host controller) driver removal.
-> They also are expected to use the "suspend" and "resume" helpers when
-> the host controller is suspended or resumed, respectively.
-> 
-> If the above is what you intended, then it is not the right model IMO.
-> 
-> In particular, I don't see why the controller driver suspend and resume
-> should operate "power sequences" of subordinate devices directly as the
-> subordinate devices are expected to be suspended (in which case they
-> also should have been turned "off" already) when the controller is
-> suspending and the controller resume need not affect the subordinate
-> devices at all.
-
-For example, one device's clock needs to be opened before it can be
-seen by the controller, but the device's clock isn't controlled by
-controller driver, controller driver only operate its own clocks.
-So, after the controller suspends the device, it can turn off
-device's clock for power consumption, and when the controller
-resumes, it needs to turn on the device's clock before talking
-to device.
-> 
-> Moreover, it assumes that all of the platforms including the IP block driven
-> by the controller driver in question will use the "power sequences" model,
-> but what if there are more generally defined power domains on them?
-
-No, the IP block doesn't need this "power sequence", the power stuffs
-(clock, gpio, regulator) are described at firmware (eg, DT), and power
-operations are carried out during the probe, the device and driver match
-happens before power operation.
-
-But for devices on the bus (bus is controlled by controller), the match
-information (eg, product id/vendor id) is stored at device's firmware, the
-controller device needs to talk with its child first to get the match
-information before the child device's probe.
-
-> 
-> It looks like the power management should really be carried out by an
-> additional layer of code to avoid imposing platform dependencies on
-> controller drivers.
-> 
-> Further, what if there are "power sequences" for the host controllers
-> themselves?  Who's expected to operate those "power sequences" then?
-
-See above.
-
--- 
-
-Best Regards,
-Peter Chen
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBXZWRu
+ZXNkYXksIEp1bHkgNSwgMjAxNyA3OjA5IFBNDQo+IA0KPiBIaSBTaW1vZGEtc2FuLA0KPiANCj4g
+T24gV2VkLCBKdW4gMjgsIDIwMTcgYXQgODoyOCBBTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
+c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBSLUNhciBVU0IgMi4w
+IGNvbnRyb2xsZXIgY2FuIGNoYW5nZSB0aGUgY2xvY2sgc291cmNlIGZyb20gYW4gb3NjaWxsYXRv
+cg0KPiA+IHRvIGFuIGV4dGVybmFsIGNsb2NrIHZpYSBhIHJlZ2lzdGVyLiBTbywgdGhpcyBwYXRj
+aCBhZGRzIHN1cHBvcnQNCj4gPiB0aGUgY2xvY2sgc291cmNlIHNlbGVjdG9yIGFzIGEgY2xvY2sg
+ZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogWW9zaGloaXJvIFNoaW1vZGEgPHlvc2hp
+aGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNo
+IQ0KDQpUaGFuayB5b3UgdmVyeSBtdWNoIGZvciB0aGUgY29tbWVudHMhDQoNCj4gPiAtLS0gL2Rl
+di9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvcmVuZXNhcy9yY2FyLXVzYjItY2xvY2stc2Vs
+LmMNCj4gDQo+ID4gK3N0YXRpYyB2b2lkIHVzYjJfY2xvY2tfc2VsX2VuYWJsZV9leHRhbF9vbmx5
+KHN0cnVjdCB1c2IyX2Nsb2NrX3NlbF9wcml2ICpwcml2KQ0KPiA+ICt7DQo+ID4gKyAgICAgICB1
+MTYgdmFsID0gcmVhZHcocHJpdi0+YmFzZSArIFVTQjIwX0NMS1NFVDApOw0KPiA+ICsNCj4gPiAr
+ICAgICAgIHByX2RlYnVnKCIlczogZW50ZXIgJWQgJWQgJXhcbiIsIF9fZnVuY19fLA0KPiA+ICsg
+ICAgICAgICAgICAgICAgcHJpdi0+ZXh0YWwsIHByaXYtPnh0YWwsIHZhbCk7DQo+ID4gKw0KPiA+
+ICsgICAgICAgaWYgKHByaXYtPmV4dGFsICYmICFwcml2LT54dGFsICYmIHZhbCAhPSBDTEtTRVQw
+X0VYVEFMX09OTFkpDQo+ID4gKyAgICAgICAgICAgICAgIHdyaXRldyhDTEtTRVQwX0VYVEFMX09O
+TFksIHByaXYtPmJhc2UgKyBVU0IyMF9DTEtTRVQwKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
+dGljIHZvaWQgdXNiMl9jbG9ja19zZWxfZGlzYWJsZV9leHRhbF9vbmx5KHN0cnVjdCB1c2IyX2Ns
+b2NrX3NlbF9wcml2ICpwcml2KQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpZiAocHJpdi0+ZXh0YWwg
+JiYgIXByaXYtPnh0YWwpDQo+ID4gKyAgICAgICAgICAgICAgIHdyaXRldyhDTEtTRVQwX1BSSVZB
+VEUsIHByaXYtPmJhc2UgKyBVU0IyMF9DTEtTRVQwKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
+dGljIGludCB1c2IyX2Nsb2NrX3NlbF9lbmFibGUoc3RydWN0IGNsa19odyAqaHcpDQo+ID4gK3sN
+Cj4gPiArICAgICAgIHVzYjJfY2xvY2tfc2VsX2VuYWJsZV9leHRhbF9vbmx5KHRvX3ByaXYoaHcp
+KTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiArc3Rh
+dGljIHZvaWQgdXNiMl9jbG9ja19zZWxfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykNCj4gPiAr
+ew0KPiA+ICsgICAgICAgdXNiMl9jbG9ja19zZWxfZGlzYWJsZV9leHRhbF9vbmx5KHRvX3ByaXYo
+aHcpKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICogVGhpcyBtb2R1bGUgc2VlbXMg
+YSBtdXgsIGJ1dCB0aGlzIGRyaXZlciBhc3N1bWVzIGEgZ2F0ZSBiZWNhdXNlDQo+ID4gKyAqIGVo
+Y2kvb2hjaSBwbGF0Zm9ybSBkcml2ZXJzIGRvbid0IHN1cHBvcnQgY2xrX3NldF9wYXJlbnQoKSBm
+b3Igbm93Lg0KPiA+ICsgKiBJZiB0aGlzIGRyaXZlciBhY3RzIGFzIGEgZ2F0ZSwgZWhjaS9vaGNp
+LXBsYXRmb3JtIGRyaXZlcnMgZG9uJ3QgbmVlZA0KPiA+ICsgKiBhbnkgbW9kaWZpY2F0aW9uLg0K
+PiA+ICsgKi8NCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBjbGtfb3BzIHVzYjJfY2xvY2tfc2Vs
+X2Nsb2NrX29wcyA9IHsNCj4gPiArICAgICAgIC5lbmFibGUgPSB1c2IyX2Nsb2NrX3NlbF9lbmFi
+bGUsDQo+ID4gKyAgICAgICAuZGlzYWJsZSA9IHVzYjJfY2xvY2tfc2VsX2Rpc2FibGUsDQo+ID4g
+K307DQo+IA0KPiBTbyB5b3UgZG8gInNtYXJ0IG11eGluZyIgaW4gdGhlIGVuYWJsZSByb3V0aW5l
+IGFib3ZlPw0KDQpZZXMuDQoNCj4gPiArc3RhdGljIGludCBfX2luaXQgcmNhcl91c2IyX2Nsb2Nr
+X3NlbF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ICt7DQo+ID4gKyAg
+ICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Ow0KPiA+ICsgICAgICAgc3RydWN0
+IGRldmljZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsNCj4gPiArICAgICAgIHN0cnVjdCB1c2Iy
+X2Nsb2NrX3NlbF9wcml2ICpwcml2Ow0KPiA+ICsgICAgICAgc3RydWN0IHJlc291cmNlICpyZXM7
+DQo+ID4gKyAgICAgICBzdHJ1Y3QgY2xrICpjbGs7DQo+ID4gKyAgICAgICBzdHJ1Y3QgY2xrX2lu
+aXRfZGF0YSBpbml0Ow0KPiA+ICsgICAgICAgaW50IGVycm9yOw0KPiA+ICsNCj4gPiArICAgICAg
+IHByaXYgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKnByaXYpLCBHRlBfS0VSTkVMKTsNCj4g
+PiArICAgICAgIGlmICghcHJpdikNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07
+DQo+ID4gKw0KPiA+ICsgICAgICAgcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElP
+UkVTT1VSQ0VfTUVNLCAwKTsNCj4gPiArICAgICAgIHByaXYtPmJhc2UgPSBkZXZtX2lvcmVtYXBf
+cmVzb3VyY2UoZGV2LCByZXMpOw0KPiA+ICsgICAgICAgaWYgKElTX0VSUihwcml2LT5iYXNlKSkN
+Cj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIFBUUl9FUlIocHJpdi0+YmFzZSk7DQo+ID4gKw0K
+PiA+ICsgICAgICAgcHJpdi0+ZWhjaV9jbGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAiZWhjaV9vaGNp
+Iik7DQo+ID4gKyAgICAgICBpZiAoIUlTX0VSUihwcml2LT5laGNpX2NsaykpIHsNCj4gPiArICAg
+ICAgICAgICAgICAgZXJyb3IgPSBjbGtfcHJlcGFyZV9lbmFibGUocHJpdi0+ZWhjaV9jbGspOw0K
+PiA+ICsgICAgICAgICAgICAgICBpZiAoZXJyb3IpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgcmV0dXJuIGVycm9yOw0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIGNsayA9
+IGRldm1fY2xrX2dldChkZXYsICJ1c2JfZXh0YWwiKTsNCj4gPiArICAgICAgIGlmICghSVNfRVJS
+KGNsaykgJiYgIWNsa19wcmVwYXJlX2VuYWJsZShjbGspKSB7DQo+ID4gKyAgICAgICAgICAgICAg
+IHByaXYtPmV4dGFsID0gISFjbGtfZ2V0X3JhdGUoY2xrKTsNCj4gPiArICAgICAgICAgICAgICAg
+Y2xrX2Rpc2FibGVfdW5wcmVwYXJlKGNsayk7DQo+ID4gKyAgICAgICB9DQo+ID4gKyAgICAgICBj
+bGsgPSBkZXZtX2Nsa19nZXQoZGV2LCAidXNiX3h0YWwiKTsNCj4gPiArICAgICAgIGlmICghSVNf
+RVJSKGNsaykgJiYgIWNsa19wcmVwYXJlX2VuYWJsZShjbGspKSB7DQo+ID4gKyAgICAgICAgICAg
+ICAgIHByaXYtPnh0YWwgPSAhIWNsa19nZXRfcmF0ZShjbGspOw0KPiA+ICsgICAgICAgICAgICAg
+ICBjbGtfZGlzYWJsZV91bnByZXBhcmUoY2xrKTsNCj4gPiArICAgICAgIH0NCj4gPiArDQo+ID4g
+KyAgICAgICBpZiAoIXByaXYtPmV4dGFsICYmICFwcml2LT5leHRhbCkgew0KPiA+ICsgICAgICAg
+ICAgICAgICBkZXZfZXJyKGRldiwgIlRoaXMgZHJpdmVyIG5lZWRzIHVzYl9leHRhbCBvciB1c2Jf
+eHRhbFxuIik7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAtRU5PRU5UOw0KPiANCj4gUGVy
+aGFwcyBlbmFibGVkIGNsb2NrcyBzaG91bGQgYmUgZGlzYWJsZWQgb24gZXJyb3I/DQoNCk9vcHMh
+IEkgc2hvdWxkIGNhbGwgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmVoY2lfY2xrKSBoZXJl
+Lg0KSSB3aWxsIGZpeCBpdC4NCg0KPiA+ICsgICAgICAgfQ0KPiA+ICsNCj4gPiArICAgICAgIHBs
+YXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHByaXYpOw0KPiA+ICsgICAgICAgZGV2X3NldF9kcnZk
+YXRhKGRldiwgcHJpdik7DQo+ID4gKw0KPiA+ICsgICAgICAgaW5pdC5uYW1lID0gInJjYXJfdXNi
+Ml9jbG9ja19zZWwiOw0KPiA+ICsgICAgICAgaW5pdC5vcHMgPSAmdXNiMl9jbG9ja19zZWxfY2xv
+Y2tfb3BzOw0KPiA+ICsgICAgICAgaW5pdC5mbGFncyA9IENMS19JU19CQVNJQzsNCj4gPiArICAg
+ICAgIGluaXQucGFyZW50X25hbWVzID0gTlVMTDsNCj4gPiArICAgICAgIGluaXQubnVtX3BhcmVu
+dHMgPSAwOw0KPiA+ICsgICAgICAgcHJpdi0+aHcuaW5pdCA9ICZpbml0Ow0KPiA+ICsNCj4gPiAr
+ICAgICAgIGNsayA9IGNsa19yZWdpc3RlcihOVUxMLCAmcHJpdi0+aHcpOw0KPiA+ICsgICAgICAg
+aWYgKElTX0VSUihjbGspKQ0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gUFRSX0VSUihjbGsp
+Ow0KPiANCj4gTGlrZXdpc2UuDQoNClNhbWUgaGVyZS4gU28sIEkgd2lsbCB1c2UgImdvdG8iIGZv
+ciBpdC4NCg0KPiA+ICsgICAgICAgZXJyb3IgPSBvZl9jbGtfYWRkX3Byb3ZpZGVyKG5wLCBvZl9j
+bGtfc3JjX3NpbXBsZV9nZXQsIGNsayk7DQo+ID4gKyAgICAgICBpZiAoZXJyb3IpDQo+ID4gKyAg
+ICAgICAgICAgICAgIHJldHVybiBlcnJvcjsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gMDsN
+Cj4gDQo+IHJldHVybiBvZl9jbGtfYWRkX3Byb3ZpZGVyKG5wLCBvZl9jbGtfc3JjX3NpbXBsZV9n
+ZXQsIGNsayk7DQoNClRoYW5rcy4gSSB3aWxsIGZpeCBpdC4NCg0KPiA+ICsvKiBTaW5jZSB0aGlz
+IGRyaXZlciBuZWVkcyBvdGhlciBjY2YgZHJpdmVycywgdGhpcyB1c2VzIHN1YnN5c19pbml0Y2Fs
+bF9zeW5jICovDQo+ID4gK3N1YnN5c19pbml0Y2FsbF9zeW5jKHJjYXJfdXNiMl9jbG9ja19zZWxf
+aW5pdCk7DQo+IA0KPiBJIHN1cHBvc2UgdGhpcyBpcyBhIHdvcmthcm91bmQgZm9yIHRoZSBsYWNr
+IG9mIHByb2JlIGRlZmVycmFsIHN1cHBvcnQgaW4gdGhlDQo+IFVTQiBzdWJzeXN0ZW0/DQoNClRo
+aXMgaXMgbXkgZmF1bHQuIEkgYWRkZWQgInBvd2VyLWRvbWFpbnMiIHByb3BlcnR5IGludG8gdGhp
+cyBkZXZpY2UncyBub2RlLg0KQWZ0ZXIgSSByZW1vdmUgdGhlIHBvd2VyLWRvbWFpbnMgbGlrZSB0
+aGUgY3BnIG5vZGUsIHRoaXMgZHJpdmVyIGNhbiB1c2Ugc3Vic3lzX2luaXRjYWxsKCkNCmluc3Rl
+YWQgb2Ygc3Vic3lzX2luaXRjYWxsX3N5bmMoKS4NCg0KQmVzdCByZWdhcmRzLA0KWW9zaGloaXJv
+IFNoaW1vZGENCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBs
+b3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+IA0KPiBJ
+biBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15
+c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBq
+dXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
