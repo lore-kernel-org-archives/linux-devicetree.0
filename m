@@ -1,55 +1,58 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: add IMR-LX4 support
-Date: Wed, 5 Jul 2017 12:18:01 +0200
-Message-ID: <CAMuHMdV9o0HhZgJS2cyWPmsdqgRmXpjSfKrKQMN=x5VTpXZoUw@mail.gmail.com>
-References: <20170627173152.532417992@cogentembedded.com>
+From: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] misc: added Spreadtrum's radio driver
+Date: Wed, 5 Jul 2017 18:18:56 +0800
+Message-ID: <CAAfSe-vj76psYw2uzC2w0pASRT-FGHqXph0zWE_3tmMVzMHKvg@mail.gmail.com>
+References: <20170704101508.30946-1-chunyan.zhang@spreadtrum.com>
+ <20170704101508.30946-3-chunyan.zhang@spreadtrum.com> <CAK8P3a0i-H=uU=9DNJbtK2EMX2GJ5cL_TW0roSHpa6tHTcZ2sg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627173152.532417992-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <CAK8P3a0i-H=uU=9DNJbtK2EMX2GJ5cL_TW0roSHpa6tHTcZ2sg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Songhe Wei <songhe.wei-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Zhongping Tan <zhongping.tan-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On 4 July 2017 at 18:51, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tue, Jul 4, 2017 at 12:15 PM, Chunyan Zhang
+> <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+>> This patch added FM radio driver for Spreadtrum's SC2342, which's
+>> a WCN SoC, also added a new directory for Spreadtrum's WCN SoCs.
+>>
+>> Signed-off-by: Songhe Wei <songhe.wei-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>
+> (adding linux-media folks to Cc)
 
-On Tue, Jun 27, 2017 at 7:30 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Describe the IMR-LX4 devices in the R8A7795 device tree.
+(You forgot to add them in :))
+
 >
-> Based on the original (and large) patch by Konstantin Kozhevnikov
-> <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
+> Hi Chunyan,
+
+Hi Arnd,
+
 >
-> Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Thanks for posting this for inclusion as Greg asked for. I'm not sure what
+> the policy is for new radio drivers, but I assume this would have to go
+> to drivers/staging/media/ as it is a driver for hardware that fits into
+> drivers/media/radio but doesn't use the respective APIs.
+
+Ok, I agree to let it go to drivers/staging/media/.
+
+Like I mentioned, SC2342 includes many functions, this patch is only
+adding FM radio function included in SC2342 to the kernel tree.  So I
+figure that its lifetime probably will not be too long, will remove it
+from the kernel tree when we have a clean enough version of the whole
+SC2342 drivers for the official upstreaming.
+
+Thanks,
+Chunyan
+
 >
+>         Arnd
 > ---
-> This patch is against the 'renesas-devel-20170626-v4.12-rc7' tag of Simon
-> Horman's 'renesas.git' repo.
+> end of message, full patch quoted for reference below
 >
-> The IMR-LX4 bindings were documented in the IMR driver patch and ACK'ed by Rob
-> Herring, so I don't expect them to change...
->
-> Changes in version 2:
-> - added SoC specific "compatible" prop values;
-> - refreshed the patch;
-> - added Geert's tag.
-
-In the mean time, r8a7795.dtsi gained reset controller support, so
-you should add "resets" properties were appropriate.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
