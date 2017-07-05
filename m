@@ -1,87 +1,52 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: r8a7795: add IMR-LX4 support
-Date: Wed, 5 Jul 2017 11:45:47 +0100
-Message-ID: <20170705104547.GE24043@verge.net.au>
-References: <20170627173152.532417992@cogentembedded.com>
- <CAMuHMdV9o0HhZgJS2cyWPmsdqgRmXpjSfKrKQMN=x5VTpXZoUw@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 2/6] pwm: mediatek: fix pwm source clock selection
+Date: Wed, 5 Jul 2017 13:09:44 +0200
+Message-ID: <d009712e-f0a2-2dc7-2f64-ad8cfa21f98d@gmail.com>
+References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
+ <1498802721-32455-3-git-send-email-zhi.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV9o0HhZgJS2cyWPmsdqgRmXpjSfKrKQMN=x5VTpXZoUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1498802721-32455-3-git-send-email-zhi.mao@mediatek.com>
+Content-Language: en-US
+Sender: linux-pwm-owner@vger.kernel.org
+To: Zhi Mao <zhi.mao@mediatek.com>, john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 12:18:01PM +0200, Geert Uytterhoeven wrote:
-> Hi Sergei,
-> 
-> On Tue, Jun 27, 2017 at 7:30 PM, Sergei Shtylyov
-> <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> > Describe the IMR-LX4 devices in the R8A7795 device tree.
-> >
-> > Based on the original (and large) patch by Konstantin Kozhevnikov
-> > <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>.
-> >
-> > Signed-off-by: Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >
-> > ---
-> > This patch is against the 'renesas-devel-20170626-v4.12-rc7' tag of Simon
-> > Horman's 'renesas.git' repo.
-> >
-> > The IMR-LX4 bindings were documented in the IMR driver patch and ACK'ed by Rob
-> > Herring, so I don't expect them to change...
-> >
-> > Changes in version 2:
-> > - added SoC specific "compatible" prop values;
-> > - refreshed the patch;
-> > - added Geert's tag.
-> 
-> In the mean time, r8a7795.dtsi gained reset controller support, so
-> you should add "resets" properties were appropriate.
 
-Thanks, I have squashed-in the following.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index f76cb360e110..31d1ba586ec2 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1542,6 +1542,7 @@
- 			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 823>;
- 			power-domains = <&sysc R8A7795_PD_A3VC>;
-+			resets = <&cpg 823>;
- 		};
- 
- 		imr-lx4@fe870000 {
-@@ -1551,6 +1552,7 @@
- 			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 822>;
- 			power-domains = <&sysc R8A7795_PD_A3VC>;
-+			resets = <&cpg 822>;
- 		};
- 
- 		imr-lx4@fe880000 {
-@@ -1560,6 +1562,7 @@
- 			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 821>;
- 			power-domains = <&sysc R8A7795_PD_A3VC>;
-+			resets = <&cpg 821>;
- 		};
- 
- 		imr-lx4@fe890000 {
-@@ -1569,6 +1572,7 @@
- 			interrupts = <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 820>;
- 			power-domains = <&sysc R8A7795_PD_A3VC>;
-+			resets = <&cpg 820>;
- 		};
- 
- 		vspbc: vsp@fe920000 {
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 06/30/2017 08:05 AM, Zhi Mao wrote:
+> In original code, the pwm output frequency is not correct
+> when set bit<3>=1 to PWMCON register.
+> 
+> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+> ---
+>   drivers/pwm/pwm-mediatek.c |    2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index 5c11bc7..d08b5b3 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -91,7 +91,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	if (clkdiv > 7)
+>   		return -EINVAL;
+>   
+> -	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | BIT(3) | clkdiv);
+> +	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+
+Just for clarification, BIT(15) enables old PWM mode, which ignores 
+CLKSEL (BIT(3)). Therefore setting BIT(3) does not have any effect and 
+can be discarded.
+
+Am I correct? I took mt7623n datasheet for reference.
+
+Regards,
+Matthias
+
+>   	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
+>   	mtk_pwm_writel(pc, pwm->hwpwm, PWMTHRES, duty_ns / resolution);
+>   
+> 
