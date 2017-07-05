@@ -1,53 +1,66 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH v 1/2] ravb: Add support for r8a7743 SoC
-Date: Wed, 5 Jul 2017 13:51:50 +0000
-Message-ID: <TY1PR06MB0702B8D1C817F6C3CBD93D99B7D40@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1499259711-56175-1-git-send-email-biju.das@bp.renesas.com>
- <1499259711-56175-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVMunZ0trcNmMg4KkEd+d88foep7C0kU=yLQNk5JojosA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] DT bindings: add bindings for ov965x camera module
+Date: Wed, 5 Jul 2017 09:03:05 -0500
+Message-ID: <20170705140305.pixlhd65xu6g3nlf@rob-hp-laptop>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+ <1499073368-31905-2-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVMunZ0trcNmMg4KkEd+d88foep7C0kU=yLQNk5JojosA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1499073368-31905-2-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, " H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsIFNlcmdlaSwNCg0KPiBGcm9tOiBnZWVydC51eXR0ZXJob2V2ZW5AZ21haWwu
-Y29tDQo+IFttYWlsdG86Z2VlcnQudXl0dGVyaG9ldmVuQGdtYWlsLmNvbV0gT24gQmVoYWxmIE9m
-IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAwNSBKdWx5IDIwMTcgMTQ6NDcNCj4gDQo+IEhp
-IEJpanUsDQo+IA0KPiBPbiBXZWQsIEp1bCA1LCAyMDE3IGF0IDM6MDEgUE0sIEJpanUgRGFzIDxi
-aWp1LmRhc0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIEdpZ2Fi
-aXQgRXRoZXJuZXQgRS1NQUMgb24gcjhhNzc0MyAoUlovRzFNKSBTb0MuDQo+ID4gUmVuZXNhcyBS
-Wi9HMU0gKFI4QTc3NDMpIFNvQyBFdGhlcm5ldCBBVkIgSVAgaXMgaWRlbnRpY2FsIHRvIHRoZSBS
-LUNhcg0KPiA+IEdlbjIgZmFtaWx5Lg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMg
-PGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBDaHJpcyBQYXRlcnNv
-biA8Y2hyaXMucGF0ZXJzb24yQHJlbmVzYXMuY29tPg0KPiANCj4gVGhhbmtzIGZvciB5b3VyIHBh
-dGNoIQ0KPiANCj4gPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9yZW5lc2FzL3JhdmJfbWFp
-bi5jDQo+ID4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvcmVuZXNhcy9yYXZiX21haW4uYw0K
-PiA+IEBAIC0xODY5LDYgKzE4NjksNyBAQCBzdGF0aWMgaW50IHJhdmJfbWRpb19yZWxlYXNlKHN0
-cnVjdCByYXZiX3ByaXZhdGUNCj4gPiAqcHJpdikgIH0NCj4gPg0KPiA+ICBzdGF0aWMgY29uc3Qg
-c3RydWN0IG9mX2RldmljZV9pZCByYXZiX21hdGNoX3RhYmxlW10gPSB7DQo+ID4gKyAgICAgICB7
-IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZXRoZXJhdmItcjhhNzc0MyIsIC5kYXRhID0gKHZvaWQN
-Cj4gPiArICopUkNBUl9HRU4yIH0sDQo+ID4gICAgICAgICB7IC5jb21wYXRpYmxlID0gInJlbmVz
-YXMsZXRoZXJhdmItcjhhNzc5MCIsIC5kYXRhID0gKHZvaWQNCj4gKilSQ0FSX0dFTjIgfSwNCj4g
-PiAgICAgICAgIHsgLmNvbXBhdGlibGUgPSAicmVuZXNhcyxldGhlcmF2Yi1yOGE3Nzk0IiwgLmRh
-dGEgPSAodm9pZA0KPiAqKVJDQVJfR0VOMiB9LA0KPiA+ICAgICAgICAgeyAuY29tcGF0aWJsZSA9
-ICJyZW5lc2FzLGV0aGVyYXZiLXJjYXItZ2VuMiIsIC5kYXRhID0gKHZvaWQNCj4gPiAqKVJDQVJf
-R0VOMiB9LA0KPiANCj4gQXMgU2VyZ2VpIGFscmVhZHkgbWVudGlvbmVkLCBhIGRyaXZlciB1cGRh
-dGUgaXMgbm90IG5lZWRlZCBkdWUgdG8gdGhlDQo+IHByZXNlbmNlIG9mIGZhbWlseS1zcGVjaWZp
-YyBjb21wYXRpYmxlIHZhbHVlcy4NCj4gUGxlYXNlIGRyb3AgdGhhdCBwYXJ0LCBhbmQgeW91IGNh
-biBhZGQgbXk6DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVz
-YXNAZ2xpZGVyLmJlPg0KDQpTaG91bGQgdGhlIG90aGVyIGNvbXBhdGlibGUgdmFsdWVzIChyOGE3
-NzkwLCA5NCBldGMpIGJlIHJlbW92ZWQgdGhlbj8gT3IgYXJlIHRoZXkgbmVlZGVkIGZvciBiYWNr
-d2FyZHMgY29tcGF0aWJpbGl0eT8NCg0KS2luZCByZWdhcmRzLCBDaHJpcw0KDQo+IA0KPiBHcntv
-ZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+IA0K
-PiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9u
-ZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29u
-dmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIu
-IEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dy
-YW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg==
+On Mon, Jul 03, 2017 at 11:16:02AM +0200, Hugues Fruchet wrote:
+> From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> 
+> This adds documentation of device tree bindings
+> for the OV965X family camera sensor module.
+> 
+> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/i2c/ov965x.txt       | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov965x.txt b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
+> new file mode 100644
+> index 0000000..4ceb727
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
+> @@ -0,0 +1,45 @@
+> +* Omnivision OV9650/9652/9655 CMOS sensor
+> +
+> +The Omnivision OV965x sensor support multiple resolutions output, such as
+> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
+> +output format.
+> +
+> +Required Properties:
+> +- compatible: should be one of
+> +	"ovti,ov9650"
+> +	"ovti,ov9652"
+> +	"ovti,ov9655"
+> +- clocks: reference to the mclk input clock.
+> +
+> +Optional Properties:
+> +- resetb-gpios: reference to the GPIO connected to the RESETB pin, if any,
+> +		polarity is active low.
+
+reset-gpios
+
+> +- pwdn-gpios: reference to the GPIO connected to the PWDN pin, if any,
+> +		polarity is active high.
+
+powerdown-gpios
+
+Both are standardish names for such signals.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
