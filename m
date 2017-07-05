@@ -1,63 +1,41 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: dts: r8a7796: add IMR-LX4 support
-Date: Wed, 5 Jul 2017 14:04:58 +0100
-Message-ID: <20170705130458.GG24043@verge.net.au>
-References: <20170627173400.581660959@cogentembedded.com>
- <CAMuHMdXxcbkPV+Jt7Xo5emQ4fyDHm1p1RgD9nsRfR78va4XFSA@mail.gmail.com>
- <e901ed94-c937-23cd-c43c-f2530dedd50f@cogentembedded.com>
+Subject: Re: [PATCH v2 0/3] Add R8A7743/SK-RZG1M PFC support
+Date: Wed, 5 Jul 2017 14:10:19 +0100
+Message-ID: <20170705131019.GH24043@verge.net.au>
+References: <20170420185132.258111787@cogentembedded.com>
+ <20170424061217.GC14843@verge.net.au>
+ <20170705103308.GA29876@verge.net.au>
+ <1ef81381-d558-7cad-0df4-bbd63d7055e1@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e901ed94-c937-23cd-c43c-f2530dedd50f@cogentembedded.com>
+In-Reply-To: <1ef81381-d558-7cad-0df4-bbd63d7055e1@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 03:03:37PM +0300, Sergei Shtylyov wrote:
-> Hello.
+On Wed, Jul 05, 2017 at 03:06:59PM +0300, Sergei Shtylyov wrote:
+> On 07/05/2017 01:33 PM, Simon Horman wrote:
 > 
-> On 07/05/2017 12:54 PM, Geert Uytterhoeven wrote:
-> 
-> >>Describe the IMR-LX4 devices in the R8A7796 device tree.
+> >>>   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+> >>>'renesas-devel-20170420-v4.11-rc7' tag.  We're adding the R8A7743 PFC node
+> >>>and then describing the pins for SCIF0 and Ether devices declared earlier.
+> >>>These patches depend on the R8A7743 PFC suport in order to work properly.
 > >>
-> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >>Thanks. I have marked these as deferred pending acceptance of the PFC
+> >>driver changes. Please repost or otherwise let me know when dependency
+> >>is satisfied.
 > >
-> >>--- renesas.orig/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> >>+++ renesas/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> >>@@ -1454,5 +1454,23 @@
-> >>                                };
-> >>                        };
-> >>                };
-> >>+
-> >>+               imr-lx4@fe860000 {
-> >>+                       compatible = "renesas,r8a7796-imr-lx4",
-> >>+                                    "renesas,imr-lx4";
-> >>+                       reg = <0 0xfe860000 0 0x2000>;
-> >>+                       interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-> >>+                       clocks = <&cpg CPG_MOD 823>;
-> >>+                       power-domains = <&sysc R8A7796_PD_A3VC>;
+> >It appears that the driver changes have been acceptedi[1] so
+> >I have queued these up for v4.14.
 > >
-> >resets = <&cpg 823>;
-> >
-> >>+               };
-> >>+
-> >>+               imr-lx4@fe870000 {
-> >>+                       compatible = "renesas,r8a7796-imr-lx4",
-> >>+                                    "renesas,imr-lx4";
-> >>+                       reg = <0 0xfe870000 0 0x2000>;
-> >>+                       interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-> >>+                       clocks = <&cpg CPG_MOD 822>;
-> >>+                       power-domains = <&sysc R8A7796_PD_A3VC>;
-> >
-> >resets = <&cpg 822>;
-> >
-> >With the issues above fixed:
-> >
-> >Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> >[1] https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg15744.html
 > 
->    I'm afraid it's already merged by Simon...
+>    This points to Biju Das' patch acceptance, not mine. :-)
 
-I've gone through and added Geert's tags to patches that I merged recently.
-I'm planning to push the updated patches later today.
+Sorry, I was a bit confused there.
+
+This is a link to the patch acceptance in question.
+https://www.spinics.net/lists/linux-renesas-soc/msg14287.html
