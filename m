@@ -1,62 +1,42 @@
-From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Subject: [PATCHv4 4/9] arm: dts: ls1021a: share all MSIs
-Date: Wed, 5 Jul 2017 14:58:58 +0800
-Message-ID: <1499237943-24203-4-git-send-email-Zhiqiang.Hou@nxp.com>
-References: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 00/10] irqchip: sunxi-nmi: Cleanups and fix A31 R_INTC
+ register offset
+Date: Wed, 5 Jul 2017 15:22:29 +0800
+Message-ID: <CAGb2v67p_ncLZACMrcPoYSgCxe2m5n1JK+HhT-XLUNA+atk4yg@mail.gmail.com>
+References: <20170606055932.22548-1-wens@csie.org> <20170606184713.4qxvap65o33rkzwz@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, shawnguo@kernel.org, Minghuan.Lian@nxp.com
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606184713.4qxvap65o33rkzwz@flea.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-From: Minghuan Lian <Minghuan.Lian@nxp.com>
+On Wed, Jun 7, 2017 at 2:47 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Tue, Jun 06, 2017 at 01:59:22PM +0800, Chen-Yu Tsai wrote:
+>> Hi everyone,
+>>
+>> This is an alternative to Icenowy's recent A64 R_INTC patches.
+>>
+>> This is a two part series. The first four patches clean up the existing
+>> sunxi-nmi driver. Patches five and six add a new "sun6i-a31-r-intc"
+>> compatible, which mainly adjusts or removes the awkward register region
+>> offset the old "sun6i-a31-sc-nmi" compatible needed. The remaining
+>> patches fix or add device nodes for SoC's having this hardware.
+>>
+>> Using "sun6i-a31-r-intc" introduced in this series, instead of Icenowy's
+>> "sun50i-a64-r-intc" is preferred. This follows our policy of naming
+>> hardware blocks and compatibles after their first occurrence.
+>>
+>> The first six patches should go through the irqchip tree, while we
+>> (sunxi) can take the device tree changes after the driver has been
+>> merged, to avoid breaking linux-next as a whole.
+>
+> For the whole serie:
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-In order to maximize the use of MSI, a PCIe controller will share
-all MSI controllers. The patch changes msi-parent to refer to all
-MSI controller dts nodes.
+Queued the remaining 4 device tree patches for 4.14.
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
-v4-v1:
- - None
-
- arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 51b0f69..9319e1f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -699,7 +699,7 @@
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
- 				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
--			msi-parent = <&msi1>;
-+			msi-parent = <&msi1>, <&msi2>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
-@@ -722,7 +722,7 @@
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
- 				  0x82000000 0x0 0x40000000 0x48 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
--			msi-parent = <&msi2>;
-+			msi-parent = <&msi1>, <&msi2>;
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 7>;
- 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 92  IRQ_TYPE_LEVEL_HIGH>,
--- 
-2.1.0.27.g96db324
+ChenYu
