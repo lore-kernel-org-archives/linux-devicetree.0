@@ -1,113 +1,50 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 0/3] Tango PCIe controller support
-Date: Wed, 5 Jul 2017 16:34:19 -0500
-Message-ID: <20170705213419.GD25063@bhelgaas-glaptop.roam.corp.google.com>
-References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
- <20170704202412.GK13824@bhelgaas-glaptop.roam.corp.google.com>
- <6256cab3-dd77-c0f6-66b8-be261695bbb1@free.fr>
- <20170705180359.GL13824@bhelgaas-glaptop.roam.corp.google.com>
- <5a1207cb-31fd-6b85-86af-8c37bd57ad4f@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5a1207cb-31fd-6b85-86af-8c37bd57ad4f-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-Cc: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/5] drivers/fsi: Add SBEFIFO and OCC drivers
+Date: Wed,  5 Jul 2017 16:36:52 -0500
+Message-ID: <1499290617-2598-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bradleyb@fuzziesquirrel.com, jk@ozlabs.org, cbostic@linux.vnet.ibm.com, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 10:39:19PM +0200, Mason wrote:
-> On 05/07/2017 20:03, Bjorn Helgaas wrote:
-> 
-> > On Wed, Jul 05, 2017 at 12:55:37AM +0200, Mason wrote:
-> >
-> >> On 04/07/2017 22:24, Bjorn Helgaas wrote:
-> >>
-> >>> I made the trivial changes I mentioned, added a dependency on
-> >>> CONFIG_BROKEN (for the config/MMIO muxing issue), and put these on
-> >>> pci/host-tango.  I can't build or test this, so I probably broke
-> >>> something in the process.  I think the combination of the boot-time
-> >>> warning, the taint, and CONFIG_BROKEN is a reasonable amount of
-> >>> warning that a user should expect issues.
-> >>>
-> >>> Can you take a look and see if it works for you?
-> >>>
-> >>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-tango
-> >>
-> >> Thanks. I'll take it for a spin ASAP.
-> >>
-> >> TAINT_CRAP... Smirk. I didn't see that one in the docs:
-> >> https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
-> >>
-> >> Oh wait... TAINT_CRAP is "C" => a staging driver has been loaded
-> > 
-> > I wish it had a less pejorative, more descriptive name.  But it seems like
-> > the closest to this situation.
-> 
-> Maybe it is not too late to submit a patch to Linus
-> renaming TAINT_CRAP?
-> 
-> Here are a few candidates, off the top of my head:
-> 
-> TAINT_STAGING
-> TAINT_STAGING_DRIVER
-> TAINT_BROKEN_HW
-> TAINT_BROKEN_HARDWARE
-> TAINT_USE_AT_YOUR_OWN_RISK
+From: "Edward A. James" <eajames@us.ibm.com>
 
-I personally wouldn't object, but it's not a PCI thing so that can all
-be separate from this driver.
+This series adds two FSI-based device drivers. The OCC driver is dependent on
+the SBEFIFO driver, as a user of it's in-kernel API. The in-kernel API provided
+by the OCC driver will be used by a hwmon driver (on the lkml as "Add On-Chip
+Controller (OCC) hwmon driver").
 
-> >> The one issue I anticipate with "depends on BROKEN" is
-> >> when I add support for revision 2, which isn't broken.
-> > 
-> > How about this:
-> > 
-> >   - Rename PCIE_TANGO to PCIE_TANGO_REV1
-> >   - PCIE_TANGO_REV1 depends on BROKEN
-> >   - Add rev2 support later, enabled by PCIE_TANGO
-> >   - PCIE_TANGO_REV1 depends on PCIE_TANGO && BROKEN
-> > 
-> > I updated pci/host-tango along these lines (without rev2 support,
-> > obviously).
-> 
-> And support for REV1 wouldn't be compiled in, unless
-> BROKEN is selected? Yes, I think that could fly.
+Changes since v1:
+ * Split bindings into separate patch and added SBEFIFO device binding
+ * Fixed #includes
+ * Fix SBEFIFO race condition between write() and poll_timer().
+ * Followed Rob's suggestion to just create one platform device for hwmon
+   driver, instead of using the device tree.
+ * Also check for "command in progress" response from OCC and try a while
 
-Right.
+Edward A. James (5):
+  drivers/fsi: Add SBEFIFO FSI client device driver
+  drivers/fsi/sbefifo: Add in-kernel API
+  drivers/fsi: Add On-Chip Controller (OCC) driver
+  drivers/fsi/occ: Add in-kernel API
+  Documentation/devicetree/bindings: Add FSI device documentation
 
-> Don't you think the naming should follow the DT
-> convention of using the first SoC embedding the
-> IP (for the compatible string) ?
-> 
-> PCIE_TANGO_REV1 vs PCIE_TANGO_SMP8759
+ .../devicetree/bindings/fsi/ibm,p9-occ.txt         |  15 +
+ .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt     |  20 +
+ drivers/fsi/Kconfig                                |  17 +
+ drivers/fsi/Makefile                               |   2 +
+ drivers/fsi/fsi-sbefifo.c                          | 932 +++++++++++++++++++++
+ drivers/fsi/occ.c                                  | 803 ++++++++++++++++++
+ include/linux/fsi-sbefifo.h                        |  30 +
+ include/linux/occ.h                                |  41 +
+ 8 files changed, 1860 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+ create mode 100644 drivers/fsi/fsi-sbefifo.c
+ create mode 100644 drivers/fsi/occ.c
+ create mode 100644 include/linux/fsi-sbefifo.h
+ create mode 100644 include/linux/occ.h
 
-Sounds reasonable.  So v2 will be something other than SMP8759?
-I renamed it to CONFIG_PCIE_TANGO_SMP8759.
-
-> > I forgot to ask for a MAINTAINERS update.  Can you send that, too,
-> > please?
-> 
-> There's a "catch-all" rule for everything tango-related:
-> 
-> ARM/TANGO ARCHITECTURE
-> M:	Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
-> L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> S:	Maintained
-> N:	tango
-> 
-> Is that enough?
-
-Yep, sorry I didn't notice that.  That's enough for
-scripts/get_maintainer.pl to work, which is what I'm looking for.
-
-If you confirm that
-https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/?h=pci/host-tango&id=d752a8b29345
-works for you, I'll include it in my v4.13 pull request.
-
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.8.3.1
