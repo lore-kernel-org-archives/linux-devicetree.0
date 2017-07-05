@@ -1,88 +1,110 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: serial: Document RDA Micro UART
-Date: Wed, 5 Jul 2017 09:12:22 -0500
-Message-ID: <20170705141222.t6yskhdeqaqf2h4b@rob-hp-laptop>
-References: <20170627005520.23731-1-afaerber@suse.de>
- <20170627005520.23731-5-afaerber@suse.de>
- <20170629201051.cfr37kh2gozompqo@rob-hp-laptop>
- <e8b8eb0c-0362-0cfb-4d18-3e1ab2b77412@suse.de>
- <CAL_JsqLatRUwdA6GeWCHXFTHMUYY27pdmUpPEoHwCCFMg2F21Q@mail.gmail.com>
- <d9b00fd8-2e9e-fb01-9056-db0d32b3e80b@suse.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
+ clock selector PHY
+Date: Wed, 5 Jul 2017 09:15:32 -0500
+Message-ID: <20170705141532.slvvbxh33sgwotje@rob-hp-laptop>
+References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d9b00fd8-2e9e-fb01-9056-db0d32b3e80b@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, service@rdamicro.com, zhao_steven@263.net, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 02, 2017 at 03:52:39AM +0200, Andreas Färber wrote:
-> Am 30.06.2017 um 16:27 schrieb Rob Herring:
-> > On Fri, Jun 30, 2017 at 6:12 AM, Andreas Färber <afaerber@suse.de> wrote:
-> >> Am 29.06.2017 um 22:10 schrieb Rob Herring:
-> >>> On Tue, Jun 27, 2017 at 02:55:18AM +0200, Andreas Färber wrote:
-> >>>> Add an initial binding for the RDA8810PL UART.
-> >>>>
-> >>>> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> >>>> ---
-> >>>>  Documentation/devicetree/bindings/serial/rda-uart.txt | 13 +++++++++++++
-> >>>>  1 file changed, 13 insertions(+)
-> >>>>  create mode 100644 Documentation/devicetree/bindings/serial/rda-uart.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/serial/rda-uart.txt b/Documentation/devicetree/bindings/serial/rda-uart.txt
-> >>>> new file mode 100644
-> >>>> index 000000000000..6840a8aee035
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/serial/rda-uart.txt
-> >>>> @@ -0,0 +1,13 @@
-> >>>> +RDA Micro UART
-> >>>> +
-> >>>> +Required properties:
-> >>>> +- compatible :  "rda,8810pl-uart" for RDA8810PL
-> >>>> +- reg        :  Offset and length of the register set for the device.
-> >>>
-> >>> No clocks or interrupts?
-> >>
-> >> Not yet. I've only pieced together an earlycon driver so far, no full
-> >> serial driver. The .dtsi doesn't even have an interrupt-controller node
-> >> yet - wasn't clear to me whether this SoC even has a GIC and, if so,
-> >> where, from the downstream pre-DT code.
-> > 
-> > How far can you boot with no interrupts?
+On Wed, Jun 28, 2017 at 03:28:35PM +0900, Yoshihiro Shimoda wrote:
+> R-Car USB 2.0 controller can change the clock source from an oscillator
+> to an external clock via a register. So, this patch adds support
+> the clock source selector as a clock driver.
 > 
-> That was described in the cover letter, as usual.
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  This patch is based on the renesas-drivers.git /
+> renesas-drivers-2017-06-27-v4.12-rc7 tag.
 > 
-> > DT bindings shouldn't unnecessarily evolve. Really, anything added
-> > should be optional to maintain compatibility. Sometimes that's
-> > unavoidable, but this isn't one of those cases.
+>  Changes from v1:
+>   - Change this driver as a clock driver from a generic phy driver.
+>     https://patchwork.kernel.org/patch/9788697/
+>   - Remove "RFC" tag.
 > 
-> Makes sense. Maybe this series should've been marked RFC. It's too late
-> for 4.13 anyway, so there's lots of time left to extend the bindings.
+>  .../bindings/clock/renesas,rcar-usb2-clock-sel.txt |  54 ++++++
+>  drivers/clk/renesas/Kconfig                        |   5 +
+>  drivers/clk/renesas/Makefile                       |   1 +
+>  drivers/clk/renesas/rcar-usb2-clock-sel.c          | 205 +++++++++++++++++++++
+>  4 files changed, 265 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+>  create mode 100644 drivers/clk/renesas/rcar-usb2-clock-sel.c
 > 
-> BTW I saw that Kevin was adding a disclaimer to the Amlogic bindings
-> that they are not stable. Is that required here, too?
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+> new file mode 100644
+> index 0000000..75ccafc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+> @@ -0,0 +1,54 @@
+> +* Renesas R-Car USB 2.0 clock selector
+> +
+> +This file provides information on what the device node for the R-Car USB 2.0
+> +clock selector.
+> +
+> +If you connect an external clock to the USB_EXTAL pin only, you should set
+> +the clock rate to "usb_extal" node only.
+> +If you connect an oscillator to both the USB_XTAL and USB_EXTAL, this module
+> +is not needed because this is default setting. (Of course, you can set the
+> +clock rates to both "usb_extal" and "usb_xtal" nodes.
+> +
+> +Case 1: An external clock connects to R-Car SoC
+> +        +----------+   +--- R-Car ---------------------+
+> +        |External  |---|USB_EXTAL ---> all usb channels|
+> +        |clock     |   |USB_XTAL                       |
+> +        +----------+   +-------------------------------+
+> +In this case, we need this driver with "usb_extal" clock.
+> +
+> +Case 2: An oscillator connects to R-Car SoC
+> +        +----------+   +--- R-Car ---------------------+
+> +        |Oscillator|---|USB_EXTAL -+-> all usb channels|
+> +        |          |---|USB_XTAL --+                   |
+> +        +----------+   +-------------------------------+
+> +In this case, we don't need this selector.
+> +
+> +Required properties:
+> +- compatible: "renesas,r8a7795-rcar-usb2-clock-sel" if the device is a part of
+> +	      an R8A7795 SoC.
+> +              "renesas,r8a7796-rcar-usb2-clock-sel" if the device if a part of
+> +	      an R8A7796 SoC.
+> +              "renesas,rcar-gen3-usb2-clock-sel" for a generic R-Car Gen3
+> +              compatible device.
+> +
+> +              When compatible with the generic version, nodes must list the
+> +              SoC-specific version corresponding to the platform first
+> +              followed by the generic version.
+> +
+> +- reg: offset and length of the USB 2.0 clock selector register block.
+> +- clocks: A list of phandles and specifier pairs.
+> +- clock-names: Name of the clocks.
+> + - The functional clock must be "ehci_ohci"
+> + - The USB_EXTAL clock pin must be "usb_extal"
+> + - The USB_XTAL clock pin must be "usb_xtal"
+> +- #clock-cells: Must be 0
+> +
+> +Exxample (R-Car H3):
+> +
+> +        usb2_clksel: clock-controller@e6590630 {
+> +                compatible = "renesas,r8a77950-rcar-usb2-clock-sel",
+> +                             "renesas,rcar-gen3-usb2-clock-sel";
+> +                reg = <0 0xe6590630 0 0x02>;
+> +                clocks = <&cpg CPG_MOD 703>, <&usb_extal>, <&usb_xtal>;
+> +                clock-names = "ehci_ohci", "usb_extal", "usb_xtal";
 
-I'm not really a fan of that. I've yet to see anyone remove an unstable 
-tag. I'd rather see it for specific bindings, rather than platforms as a 
-whole. It shouldn't be that hard to get most bindings complete enough 
-and to a point that can be extended in a compatible way. In the end, 
-decisions about breaking compatibility are up to the platform maintainer 
-regardless of any text in some document.
+Missing #clock-cells
 
+With that, for the binding:
 
-> > So submit this when
-> > you have something more complete.
-> 
-> Negative. I worked weeks and months towards perfect STM32 drivers, and
-> despite showing it to ST and at a LinuxCon Japan, someone else sent less
-> sophisticated patches (e.g., fixed-clocks) and took all the credit. Same
-> with Turris Omnia. Therefore I am now submitting my new patches early,
-> not just when everything is complete.
-
-Fair enough. I should have said, we'll apply/ack when more complete. 
-Submit it as often as you want.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
