@@ -1,63 +1,55 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v 1/2] ravb: Add support for r8a7743 SoC
-Date: Wed, 5 Jul 2017 15:02:04 +0000
-Message-ID: <KL1PR06MB1702A7AAAE97FBC67578E985B8D40@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1499259711-56175-1-git-send-email-biju.das@bp.renesas.com>
- <1499259711-56175-2-git-send-email-biju.das@bp.renesas.com>
- <afcd181c-c805-8f3c-955f-652d001a03d4@cogentembedded.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27
+ SoM1 support
+Date: Wed, 5 Jul 2017 17:23:43 +0200
+Message-ID: <20170705152343.b735on6edg3vfsp3@rfolt0960.corp.atmel.com>
+References: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
+ <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <afcd181c-c805-8f3c-955f-652d001a03d4-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, devicetree@vger.kernel.org, cristian.birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgW21haWx0bzpkZXZpY2V0cmVlLQ0KPiBvd25lckB2Z2VyLmtlcm5l
-bC5vcmddIE9uIEJlaGFsZiBPZiBTZXJnZWkgU2h0eWx5b3YNCj4gU2VudDogMDUgSnVseSAyMDE3
-IDE0OjIxDQo+IFRvOiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+OyBSb2IgSGVy
-cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
-YXJtLmNvbT47IFJ1c3NlbGwgS2luZw0KPiA8bGludXhAYXJtbGludXgub3JnLnVrPg0KPiBDYzog
-U2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMgRGFtbQ0KPiA8bWFnbnVz
-LmRhbW1AZ21haWwuY29tPjsgQ2hyaXMgUGF0ZXJzb24NCj4gPENocmlzLlBhdGVyc29uMkByZW5l
-c2FzLmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1yZW5lc2FzLQ0KPiBz
-b2NAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-DQo+IG5ldGRldkB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2IDEvMl0g
-cmF2YjogQWRkIHN1cHBvcnQgZm9yIHI4YTc3NDMgU29DDQo+DQo+IEhlbGxvIQ0KPg0KPiBPbiAw
-Ny8wNS8yMDE3IDA0OjAxIFBNLCBCaWp1IERhcyB3cm90ZToNCj4NCj4gPiBBZGQgc3VwcG9ydCBm
-b3IgR2lnYWJpdCBFdGhlcm5ldCBFLU1BQyBvbiByOGE3NzQzIChSWi9HMU0pIFNvQy4NCj4gPiBS
-ZW5lc2FzIFJaL0cxTSAoUjhBNzc0MykgU29DIEV0aGVybmV0IEFWQiBJUCBpcyBpZGVudGljYWwg
-dG8gdGhlIFItQ2FyDQo+ID4gR2VuMiBmYW1pbHkuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBC
-aWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IENocmlz
-IFBhdGVyc29uIDxjaHJpcy5wYXRlcnNvbjJAcmVuZXNhcy5jb20+DQo+IFsuLi5dDQo+ID4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3JlbmVzYXMvcmF2Yl9tYWluLmMNCj4gPiBi
-L2RyaXZlcnMvbmV0L2V0aGVybmV0L3JlbmVzYXMvcmF2Yl9tYWluLmMNCj4gPiBpbmRleCA1OTMx
-ZTg1Li5lMzViMzBmIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L3JlbmVz
-YXMvcmF2Yl9tYWluLmMNCj4gPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9yZW5lc2FzL3Jh
-dmJfbWFpbi5jDQo+ID4gQEAgLTE4NjksNiArMTg2OSw3IEBAIHN0YXRpYyBpbnQgcmF2Yl9tZGlv
-X3JlbGVhc2Uoc3RydWN0IHJhdmJfcHJpdmF0ZQ0KPiA+ICpwcml2KSAgfQ0KPiA+DQo+ID4gIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHJhdmJfbWF0Y2hfdGFibGVbXSA9IHsNCj4g
-PiAreyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLGV0aGVyYXZiLXI4YTc3NDMiLCAuZGF0YSA9ICh2
-b2lkDQo+ID4gKyopUkNBUl9HRU4yIH0sDQo+DQo+ICAgICBObywgdGhpcyBzaG91bGRuJ3QgYmUg
-bmVlZGVkIGlmIHlvdSBzcGVjaWZ5ICJyZW5lc2FzLGV0aGVyYXZiLXJjYXItZ2VuMiIuDQo+DQoN
-ClRoYW5rcyBmb3IgdGhlIHJldmlldy4gSSB3aWxsIHJlbW92ZSB0aGlzIGNoYW5nZS4NCg0KPiA+
-ICB7IC5jb21wYXRpYmxlID0gInJlbmVzYXMsZXRoZXJhdmItcjhhNzc5MCIsIC5kYXRhID0gKHZv
-aWQNCj4gKilSQ0FSX0dFTjIgfSwNCj4gPiAgeyAuY29tcGF0aWJsZSA9ICJyZW5lc2FzLGV0aGVy
-YXZiLXI4YTc3OTQiLCAuZGF0YSA9ICh2b2lkDQo+ICopUkNBUl9HRU4yIH0sDQo+ID4gIHsgLmNv
-bXBhdGlibGUgPSAicmVuZXNhcyxldGhlcmF2Yi1yY2FyLWdlbjIiLCAuZGF0YSA9ICh2b2lkDQo+
-ID4gKilSQ0FSX0dFTjIgfSwNCj4NCj4gTUJSLCBTZXJnZWkNCj4NCj4gLS0NCj4gVG8gdW5zdWJz
-Y3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJlIGRldmljZXRy
-ZWUiIGluIHRoZSBib2R5DQo+IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5rZXJuZWwu
-b3JnIE1vcmUgbWFqb3Jkb21vIGluZm8gYXQNCj4gaHR0cDovL3ZnZXIua2VybmVsLm9yZy9tYWpv
-cmRvbW8taW5mby5odG1sDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1
-a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwg
-U0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVy
-ZWQgTm8uIDA0NTg2NzA5Lg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jul 03, 2017 at 03:56:11PM +0300, Claudiu Beznea wrote:
+> Add specific DTS file and bindings for sama5d27 SoM1 board.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+> ---
+>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
+>  1 file changed, 178 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+> new file mode 100644
+> index 0000000..c3a1dc8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+
+[...]
+
+> +
+> +			i2c0: i2c@f8028000 {
+> +				dmas = <0>, <0>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_i2c0_default>;
+> +				i2c-sda-hold-time-ns = <350>;
+> +				status = "disabled";
+> +
+> +				24aa@50 {
+> +					compatible = "24mac602";
+> +					reg = <0x50>;
+> +					pagesize = <8>;
+> +					start-offset = /bits/ 8 <0xf8>;
+
+Are you sure about the offset? I thought it was 0xfa but maybe I am
+wrong.
+
+Regards
+
+Ludovic
