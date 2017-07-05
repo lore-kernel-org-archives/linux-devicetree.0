@@ -1,65 +1,46 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] arm64: dts: r8a7796: add IMR-LX4 support
-Date: Wed, 5 Jul 2017 11:54:20 +0200
-Message-ID: <CAMuHMdXxcbkPV+Jt7Xo5emQ4fyDHm1p1RgD9nsRfR78va4XFSA@mail.gmail.com>
-References: <20170627173400.581660959@cogentembedded.com>
+Subject: Re: [PATCH v2.1 1/2] dt-bindings: display: rcar-du: Add a VSP channel
+ index to the vsps DT property
+Date: Wed, 5 Jul 2017 11:57:24 +0200
+Message-ID: <CAMuHMdXi2=ELnyBPzDruNdHysOHXvZS+U-yxREyEEPQYm8D-cg@mail.gmail.com>
+References: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20170702134001.4752-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170627173400.581660959@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170702134001.4752-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, DRI Development <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Tue, Jun 27, 2017 at 7:33 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Describe the IMR-LX4 devices in the R8A7796 device tree.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> +++ renesas/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> @@ -1454,5 +1454,23 @@
->                                 };
->                         };
->                 };
-> +
-> +               imr-lx4@fe860000 {
-> +                       compatible = "renesas,r8a7796-imr-lx4",
-> +                                    "renesas,imr-lx4";
-> +                       reg = <0 0xfe860000 0 0x2000>;
-> +                       interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 823>;
-> +                       power-domains = <&sysc R8A7796_PD_A3VC>;
-
-resets = <&cpg 823>;
-
-> +               };
-> +
-> +               imr-lx4@fe870000 {
-> +                       compatible = "renesas,r8a7796-imr-lx4",
-> +                                    "renesas,imr-lx4";
-> +                       reg = <0 0xfe870000 0 0x2000>;
-> +                       interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&cpg CPG_MOD 822>;
-> +                       power-domains = <&sysc R8A7796_PD_A3VC>;
-
-resets = <&cpg 822>;
-
-With the issues above fixed:
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gU3VuLCBKdWwgMiwgMjAxNyBhdCAzOjQwIFBNLCBMYXVyZW50IFBpbmNoYXJ0CjxsYXVyZW50
+LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4gd3JvdGU6Cj4gT24gc29tZSBSLUNh
+ciBTb0NzIGEgc2luZ2xlIFZTUCBjYW4gc2VydmUgbXVsdGlwbGUgRFUgY2hhbm5lbHMgdGhyb3Vn
+aAo+IG11bHRpcGxlIExJRiBpbnN0YW5jZXMgaW4gdGhlIFZTUC4gVGhlIGN1cnJlbnQgRFQgYmlu
+ZGluZ3MgZG9uJ3Qgc3VwcG9ydAo+IHNwZWNpZnlpbmcgdGhhdCBraW5kIG9mIFNvQyBpbnRlZ3Jh
+dGlvbiBzY2hlbWUuIEV4dGVuZCB0aGVtIHdpdGggYSBWU1AKPiBjaGFubmVsIGluZGV4Lgo+Cj4g
+QmFja3dhcmQgY29tcGF0aWJpbGl0eSBjYW4gYmUgZW5zdXJlZCBpbiBkcml2ZXJzIGJ5IGNoZWNr
+aW5nIHRoZSBsZW5ndGgKPiBvZiB0aGUgdnNwcyBwcm9wZXJ0eSBhbmQgc2V0dGluZyB0aGUgY2hh
+bm5lbCB0byAwIHdoZW4gdGhlIHByb3BlcnR5Cj4gZG9lc24ndCBjb250YWluIGNoYW5uZWwgaW5k
+aWNlcy4KPgo+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQucGluY2hh
+cnQrcmVuZXNhc0BpZGVhc29uYm9hcmQuY29tPgoKUmV2aWV3ZWQtYnk6IEdlZXJ0IFV5dHRlcmhv
+ZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+CgpHcntvZXRqZSxlZXRpbmd9cywKCiAgICAg
+ICAgICAgICAgICAgICAgICAgIEdlZXJ0CgotLQpHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUn
+cyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnCgpJbiBw
+ZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2Vs
+ZiBhIGhhY2tlci4gQnV0CndoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNh
+eSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4KICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcwpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
