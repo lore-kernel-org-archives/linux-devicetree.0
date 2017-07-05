@@ -1,45 +1,71 @@
-From: songxiaowei <songxiaowei@hisilicon.com>
-Subject: RE: [PATCH] MAINTAINERS:add maintainer for kirin pcie
-Date: Wed, 5 Jul 2017 01:00:57 +0000
-Message-ID: <99B4C6BADD9E3241B25E52B02BA737C54118F33F@DGGEMA505-MBS.china.huawei.com>
-References: <20170704021516.96575-1-songxiaowei@hisilicon.com>
- <20170704162538.GJ13824@bhelgaas-glaptop.roam.corp.google.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V4 1/2] dt-bindings: timer: add nxp tpm timer binding doc
+Date: Wed, 5 Jul 2017 10:35:11 +0800
+Message-ID: <1499222112-9988-2-git-send-email-aisheng.dong@nxp.com>
+References: <1499222112-9988-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170704162538.GJ13824@bhelgaas-glaptop.roam.corp.google.com>
-Content-Language: zh-CN
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: "guodong.xu@linaro.org" <guodong.xu@linaro.org>, "bhelgaas@google.com" <bhelgaas@google.com>, Suzhuangluan <suzhuangluan@hisilicon.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499222112-9988-1-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, shawnguo@kernel.org, ping.bai@nxp.com, anson.huang@nxp.com, dongas86@gmail.com, kernel@pengutronix.de, Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhhbmsgeW91IHNvIG11Y2ghDQoNCi0tLS0t08q8/tStvP4tLS0tLQ0Kt6K8/sjLOiBCam9ybiBI
-ZWxnYWFzIFttYWlsdG86aGVsZ2Fhc0BrZXJuZWwub3JnXSANCreiy83KsbzkOiAyMDE3xOo31MI1
-yNUgMDoyNg0KytW8/sjLOiBzb25neGlhb3dlaQ0Ks63LzTogZ3VvZG9uZy54dUBsaW5hcm8ub3Jn
-OyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBTdXpodWFuZ2x1YW47IGxpbnV4LXBjaUB2Z2VyLmtlcm5l
-bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJu
-ZWwub3JnDQrW98ziOiBSZTogW1BBVENIXSBNQUlOVEFJTkVSUzphZGQgbWFpbnRhaW5lciBmb3Ig
-a2lyaW4gcGNpZQ0KDQpPbiBUdWUsIEp1bCAwNCwgMjAxNyBhdCAxMDoxNToxNkFNICswODAwLCBY
-aWFvd2VpIFNvbmcgd3JvdGU6DQo+IEtpcmluIFBDSWUgRHJpdmVyIGRvZXMgbm90IGhhdmUgYSBt
-YWludGFpbmVyIGF0IHByZXNlbnQsDQo+IA0KPiBBZGQgbWFpbnRhaW5lcnMgZm9yIGtpcmluIHBj
-aWUgZHJpdmVyIGFuZCBEb2MsIHRoZSB0d28gZmVsbG93aW5nIGZpbGVzLg0KPiBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3BjaWUta2lyaW4udHh0DQo+IGRyaXZlcnMvcGNp
-L2R3Yy9wY2llLWtpcmluLmMNCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgU29uZyA8c29u
-Z3hpYW93ZWlAaGlzaWxpY29uLmNvbT4NCj4gQ2M6IEd1b2RvbmcgWHUgPGd1b2RvbmcueHVAbGlu
-YXJvLm9yZz4NCg0KQXBwbGllZCB0byBwY2kvaG9zdC1raXJpbiBmb3IgdjQuMTMsIHRoYW5rcyEN
-Cg0KPiAtLS0NCj4gIE1BSU5UQUlORVJTIHwgOCArKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQs
-IDggaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
-SU5FUlMgaW5kZXggDQo+IDVlZTMxMjVmODM0MS4uYzY0ZmY3OTU4N2M4IDEwMDY0NA0KPiAtLS0g
-YS9NQUlOVEFJTkVSUw0KPiArKysgYi9NQUlOVEFJTkVSUw0KPiBAQCAtOTg1MSw2ICs5ODUxLDE0
-IEBAIFM6CU1haW50YWluZWQNCj4gIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wY2kvaGlzaWxpY29uLXBjaWUudHh0DQo+ICBGOglkcml2ZXJzL3BjaS9kd2MvcGNpZS1oaXNp
-LmMNCj4gIA0KPiArUENJRSBEUklWRVIgRk9SIEtpcmluDQo+ICtNOglYaWFvd2VpIFNvbmcgPHNv
-bmd4aWFvd2VpQGhpc2lsaWNvbi5jb20+DQo+ICtNOglCaW5naHVpIFdhbmcgPHdhbmdiaW5naHVp
-QGhpc2lsaWNvbi5jb20+DQo+ICtMOglsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnDQo+ICtTOglN
-YWludGFpbmVkDQo+ICtGOglEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGNpL3Bj
-aWUta2lyaW4udHh0DQo+ICtGOglkcml2ZXJzL3BjaS9kd2MvcGNpZS1raXJpbi5jDQo+ICsNCj4g
-IFBDSUUgRFJJVkVSIEZPUiBST0NLQ0hJUA0KPiAgTToJU2hhd24gTGluIDxzaGF3bi5saW5Acm9j
-ay1jaGlwcy5jb20+DQo+ICBNOglXZW5ydWkgTGkgPHdlbnJ1aS5saUByb2NrLWNoaXBzLmNvbT4N
-Cj4gLS0NCj4gMi4xMS5HSVQNCj4gDQo=
+Adding NXP Low Power Timer/Pulse Width Modulation Module (TPM)
+binding doc.
+
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Bai Ping <ping.bai@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+---
+ChangeLog:
+ v1->v4:
+ * No changes
+---
+ .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+new file mode 100644
+index 0000000..b4aa7dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+@@ -0,0 +1,28 @@
++NXP Low Power Timer/Pulse Width Modulation Module (TPM)
++
++The Timer/PWM Module (TPM) supports input capture, output compare,
++and the generation of PWM signals to control electric motor and power
++management applications. The counter, compare and capture registers
++are clocked by an asynchronous clock that can remain enabled in low
++power modes. TPM can support global counter bus where one TPM drives
++the counter bus for the others, provided bit width is the same.
++
++Required properties:
++
++- compatible :	should be "fsl,imx7ulp-tpm"
++- reg :		Specifies base physical address and size of the register sets
++		for the clock event device and clock source device.
++- interrupts :	Should be the clock event device interrupt.
++- clocks :	The clocks provided by the SoC to drive the timer, must contain
++		an entry for each entry in clock-names.
++- clock-names : Must include the following entries: "igp" and "per".
++
++Example:
++tpm5: tpm@40260000 {
++	compatible = "fsl,imx7ulp-tpm";
++	reg = <0x40260000 0x1000>;
++	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
++		 <&clks IMX7ULP_CLK_LPTPM5>;
++	clock-names = "ipg", "per";
++};
+-- 
+2.7.4
