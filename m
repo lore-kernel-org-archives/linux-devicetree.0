@@ -1,32 +1,56 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH V4 0/3] add UniPhier watchdog support
-Date: Wed, 5 Jul 2017 19:26:05 +0900
-Message-ID: <CAK7LNAR7kbXPFGywpnWRCFibwp350kmZ7CpSUO6GTFG3pxG=zw@mail.gmail.com>
-References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com>
- <000001d2f576$5f011c20$1d035460$@socionext.com>
+From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+Subject: [PATCH 0/2] add support for Spreadtrum's FM driver
+Date: Wed, 5 Jul 2017 18:25:02 +0800
+Message-ID: <20170705102502.2295-1-chunyan.zhang@spreadtrum.com>
+References: <20170704101508.30946-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <000001d2f576$5f011c20$1d035460$@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: wim@iguana.be, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>, =?UTF-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170704101508.30946-1-chunyan.zhang@spreadtrum.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Songhe Wei <songhe.wei@spreadtrum.com>, Zhongping Tan <zhongping.tan@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-07-05 19:06 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
-> Hi Guenter,
->
-> Let me confirm if I got it.
->
-> I guess that this series finished the review.
-> Could you tell me the current state of this series?
+[add linux-media list and Mauro Carvalho Chehab]
 
+According to GregKH's suggestion [1], we tried to simply sort out the
+FM driver source code which has been using in the internal projects.
 
-I will pick up 3/3.  (It should have been sent to ARM-SoC ML, though.)
+Hopes it can help for fixing the problem raised in [1].
 
-I had sent my PRs for v4.13 before Rob acked the DT binding.
-Please look forward to v4.14.
+[1] https://lkml.org/lkml/2017/6/28/222
+
+Chunyan Zhang (2):
+  arm64: dts: add Spreadtrum's fm support
+  misc: added Spreadtrum's radio driver
+
+ arch/arm64/boot/dts/sprd/sp9860g-1h10.dts      |    4 +
+ drivers/misc/Kconfig                           |    1 +
+ drivers/misc/Makefile                          |    1 +
+ drivers/misc/sprd-wcn/Kconfig                  |   14 +
+ drivers/misc/sprd-wcn/Makefile                 |    1 +
+ drivers/misc/sprd-wcn/radio/Kconfig            |    8 +
+ drivers/misc/sprd-wcn/radio/Makefile           |    2 +
+ drivers/misc/sprd-wcn/radio/fmdrv.h            |  595 +++++++++++
+ drivers/misc/sprd-wcn/radio/fmdrv_main.c       | 1245 ++++++++++++++++++++++++
+ drivers/misc/sprd-wcn/radio/fmdrv_main.h       |  117 +++
+ drivers/misc/sprd-wcn/radio/fmdrv_ops.c        |  447 +++++++++
+ drivers/misc/sprd-wcn/radio/fmdrv_ops.h        |   17 +
+ drivers/misc/sprd-wcn/radio/fmdrv_rds_parser.c |  753 ++++++++++++++
+ drivers/misc/sprd-wcn/radio/fmdrv_rds_parser.h |  103 ++
+ 14 files changed, 3308 insertions(+)
+ create mode 100644 drivers/misc/sprd-wcn/Kconfig
+ create mode 100644 drivers/misc/sprd-wcn/Makefile
+ create mode 100644 drivers/misc/sprd-wcn/radio/Kconfig
+ create mode 100644 drivers/misc/sprd-wcn/radio/Makefile
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv.h
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_main.c
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_main.h
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_ops.c
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_ops.h
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_rds_parser.c
+ create mode 100644 drivers/misc/sprd-wcn/radio/fmdrv_rds_parser.h
 
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
