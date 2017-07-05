@@ -1,29 +1,63 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH][RESEND] ARM: dts: iwg20d-q7: Add pinctl support for scif0
-Date: Wed, 5 Jul 2017 13:53:10 +0100
-Message-ID: <20170705125307.GF24043@verge.net.au>
-References: <1499252255-35283-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdXV86iApm9kvkLJP96T1OY1-41H2J8e7QOfpfKN=mDHCw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] arm64: dts: r8a7796: add IMR-LX4 support
+Date: Wed, 5 Jul 2017 14:04:58 +0100
+Message-ID: <20170705130458.GG24043@verge.net.au>
+References: <20170627173400.581660959@cogentembedded.com>
+ <CAMuHMdXxcbkPV+Jt7Xo5emQ4fyDHm1p1RgD9nsRfR78va4XFSA@mail.gmail.com>
+ <e901ed94-c937-23cd-c43c-f2530dedd50f@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdXV86iApm9kvkLJP96T1OY1-41H2J8e7QOfpfKN=mDHCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <e901ed94-c937-23cd-c43c-f2530dedd50f@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 01:18:30PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Jul 5, 2017 at 12:57 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> > Adding pinctrl support for scif0 interface.
-> >
-> > Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On Wed, Jul 05, 2017 at 03:03:37PM +0300, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> On 07/05/2017 12:54 PM, Geert Uytterhoeven wrote:
+> 
+> >>Describe the IMR-LX4 devices in the R8A7796 device tree.
+> >>
+> >>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> >>--- renesas.orig/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> >>+++ renesas/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> >>@@ -1454,5 +1454,23 @@
+> >>                                };
+> >>                        };
+> >>                };
+> >>+
+> >>+               imr-lx4@fe860000 {
+> >>+                       compatible = "renesas,r8a7796-imr-lx4",
+> >>+                                    "renesas,imr-lx4";
+> >>+                       reg = <0 0xfe860000 0 0x2000>;
+> >>+                       interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
+> >>+                       clocks = <&cpg CPG_MOD 823>;
+> >>+                       power-domains = <&sysc R8A7796_PD_A3VC>;
+> >
+> >resets = <&cpg 823>;
+> >
+> >>+               };
+> >>+
+> >>+               imr-lx4@fe870000 {
+> >>+                       compatible = "renesas,r8a7796-imr-lx4",
+> >>+                                    "renesas,imr-lx4";
+> >>+                       reg = <0 0xfe870000 0 0x2000>;
+> >>+                       interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
+> >>+                       clocks = <&cpg CPG_MOD 822>;
+> >>+                       power-domains = <&sysc R8A7796_PD_A3VC>;
+> >
+> >resets = <&cpg 822>;
+> >
+> >With the issues above fixed:
+> >
+> >Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+>    I'm afraid it's already merged by Simon...
 
-Thanks, applied for v4.14.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've gone through and added Geert's tags to patches that I merged recently.
+I'm planning to push the updated patches later today.
