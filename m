@@ -1,56 +1,59 @@
-From: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCHv4 2/9] arm: dts: ls1021a: fix typo of MSI compatible string
-Date: Wed, 5 Jul 2017 14:58:56 +0800
-Message-ID: <1499237943-24203-2-git-send-email-Zhiqiang.Hou@nxp.com>
+From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
+Subject: [PATCHv4 3/9] arm64: dts: ls1043a: fix typo of MSI compatible string
+Date: Wed, 5 Jul 2017 14:58:57 +0800
+Message-ID: <1499237943-24203-3-git-send-email-Zhiqiang.Hou@nxp.com>
 References: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499237943-24203-1-git-send-email-Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Minghuan.Lian-3arQi8VN3Tc@public.gmane.org
-Cc: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499237943-24203-1-git-send-email-Zhiqiang.Hou@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, shawnguo@kernel.org, Minghuan.Lian@nxp.com
+Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
 
 "1" should be replaced by "l". This is a typo.
 The patch is to fix it.
 
-Signed-off-by: Minghuan Lian <Minghuan.Lian-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
 ---
 v4-v1:
  - None
 
- arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 7bb9df2..51b0f69 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -129,14 +129,14 @@
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 31fd77f..7ff98f4 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -653,21 +653,21 @@
  		};
  
- 		msi1: msi-controller@1570e00 {
--			compatible = "fsl,1s1021a-msi";
-+			compatible = "fsl,ls1021a-msi";
- 			reg = <0x0 0x1570e00 0x0 0x8>;
+ 		msi1: msi-controller1@1571000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1571000 0x0 0x8>;
  			msi-controller;
- 			interrupts =  <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupts = <0 116 0x4>;
  		};
  
- 		msi2: msi-controller@1570e08 {
--			compatible = "fsl,1s1021a-msi";
-+			compatible = "fsl,ls1021a-msi";
- 			reg = <0x0 0x1570e08 0x0 0x8>;
+ 		msi2: msi-controller2@1572000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1572000 0x0 0x8>;
  			msi-controller;
- 			interrupts = <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupts = <0 126 0x4>;
+ 		};
+ 
+ 		msi3: msi-controller3@1573000 {
+-			compatible = "fsl,1s1043a-msi";
++			compatible = "fsl,ls1043a-msi";
+ 			reg = <0x0 0x1573000 0x0 0x8>;
+ 			msi-controller;
+ 			interrupts = <0 160 0x4>;
 -- 
 2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
