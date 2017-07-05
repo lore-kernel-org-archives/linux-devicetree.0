@@ -1,35 +1,29 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH][RESEND] ARM: dts: iwg20d-q7: Add pinctl support for scif0
-Date: Wed, 5 Jul 2017 13:18:30 +0200
-Message-ID: <CAMuHMdXV86iApm9kvkLJP96T1OY1-41H2J8e7QOfpfKN=mDHCw@mail.gmail.com>
-References: <1499252255-35283-1-git-send-email-biju.das@bp.renesas.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/2] misc: added Spreadtrum's radio driver
+Date: Wed, 5 Jul 2017 13:43:15 +0200
+Message-ID: <CAK8P3a0izOmWY=v=rv4Na-pcr1Odx6g4w5q3F1N=aU25bEecQA@mail.gmail.com>
+References: <20170704101508.30946-1-chunyan.zhang@spreadtrum.com>
+ <20170704101508.30946-3-chunyan.zhang@spreadtrum.com> <CAK8P3a0i-H=uU=9DNJbtK2EMX2GJ5cL_TW0roSHpa6tHTcZ2sg@mail.gmail.com>
+ <CAAfSe-vj76psYw2uzC2w0pASRT-FGHqXph0zWE_3tmMVzMHKvg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499252255-35283-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAfSe-vj76psYw2uzC2w0pASRT-FGHqXph0zWE_3tmMVzMHKvg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Songhe Wei <songhe.wei@spreadtrum.com>, Zhongping Tan <zhongping.tan@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Linux Media Mailing List <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 5, 2017 at 12:57 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Adding pinctrl support for scif0 interface.
->
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On Wed, Jul 5, 2017 at 12:18 PM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+> On 4 July 2017 at 18:51, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Tue, Jul 4, 2017 at 12:15 PM, Chunyan Zhang
+> Like I mentioned, SC2342 includes many functions, this patch is only
+> adding FM radio function included in SC2342 to the kernel tree.  So I
+> figure that its lifetime probably will not be too long, will remove it
+> from the kernel tree when we have a clean enough version of the whole
+> SC2342 drivers for the official upstreaming.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Would it make sense to add some or all of the other drivers to drivers/staging/
+as well in the meantime?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+       Arnd
