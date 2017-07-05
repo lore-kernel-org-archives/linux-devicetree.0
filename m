@@ -1,40 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Add R8A7743/SK-RZG1M PFC support
-Date: Wed, 5 Jul 2017 15:06:59 +0300
-Message-ID: <1ef81381-d558-7cad-0df4-bbd63d7055e1@cogentembedded.com>
-References: <20170420185132.258111787@cogentembedded.com>
- <20170424061217.GC14843@verge.net.au> <20170705103308.GA29876@verge.net.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
+ clock selector PHY
+Date: Wed, 5 Jul 2017 14:22:12 +0200
+Message-ID: <CAMuHMdWkSqNdzDNTyvHvGaG-Tw2md_aGHSWh7jXVyoBYMJ8m7w@mail.gmail.com>
+References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com> <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170705103308.GA29876-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/05/2017 01:33 PM, Simon Horman wrote:
+Hi Shimoda-san,
 
->>>    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
->>> 'renesas-devel-20170420-v4.11-rc7' tag.  We're adding the R8A7743 PFC node
->>> and then describing the pins for SCIF0 and Ether devices declared earlier.
->>> These patches depend on the R8A7743 PFC suport in order to work properly.
+On Wed, Jul 5, 2017 at 1:57 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+>> From: Geert Uytterhoeven
+>> Sent: Wednesday, July 5, 2017 7:09 PM
+>> On Wed, Jun 28, 2017 at 8:28 AM, Yoshihiro Shimoda
+>> <yoshihiro.shimoda.uh@renesas.com> wrote:
+>> > R-Car USB 2.0 controller can change the clock source from an oscillator
+>> > to an external clock via a register. So, this patch adds support
+>> > the clock source selector as a clock driver.
+
+>> > --- /dev/null
+>> > +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
+
+>> > +/* Since this driver needs other ccf drivers, this uses subsys_initcall_sync */
+>> > +subsys_initcall_sync(rcar_usb2_clock_sel_init);
 >>
->> Thanks. I have marked these as deferred pending acceptance of the PFC
->> driver changes. Please repost or otherwise let me know when dependency
->> is satisfied.
+>> I suppose this is a workaround for the lack of probe deferral support in the
+>> USB subsystem?
 >
-> It appears that the driver changes have been acceptedi[1] so
-> I have queued these up for v4.14.
->
-> [1] https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg15744.html
+> This is my fault. I added "power-domains" property into this device's node.
+> After I remove the power-domains like the cpg node, this driver can use subsys_initcall()
+> instead of subsys_initcall_sync().
 
-    This points to Biju Das' patch acceptance, not mine. :-)
+Does the clock sel module requires the functional clock "ehci_ohci" to be
+running before you can access its registers?
+If yes, I think there should be a "power-domains" property.
 
-MBR, Sergei
+Then, you can simplify the code by calling
+
+        pm_runtime_enable(dev);
+        pm_runtime_get_sync(dev);
+
+and remove the explicit handling of the functional clock.
+
+That does not solve probe deferral handling in the USB subsystem, though.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
