@@ -1,31 +1,68 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RESEND PATCH] ARM: dts: imx: update snvs-poweroff mask
-Date: Wed, 5 Jul 2017 13:19:57 -0300
-Message-ID: <CAOMZO5DMuv-VEBOT4QNAdGn=e2qGS3ZcrJ6ZOvYMuBkzdB_Ejg@mail.gmail.com>
-References: <20170704161912.29618-1-m.niestroj@grinn-global.com>
+From: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 RESEND 1/2] Documentation: tpm: add powered-while-suspended
+ binding documentation
+Date: Wed, 5 Jul 2017 10:19:02 -0700
+Message-ID: <CAPz6YkWN8jQcJdah8wqM+O-5ST+eZ1qpzQvGerXX_u1Tm6soFg@mail.gmail.com>
+References: <20170627102724.23861-1-enric.balletbo@collabora.com> <20170703125735.dsrl6bs7ttj27zrt@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170704161912.29618-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+In-Reply-To: <20170703125735.dsrl6bs7ttj27zrt-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 4, 2017 at 1:19 PM, Marcin Niestroj
-<m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> wrote:
-> From: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
+On Mon, Jul 3, 2017 at 5:57 AM, Jarkko Sakkinen
+<jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> On Tue, Jun 27, 2017 at 12:27:23PM +0200, Enric Balletbo i Serra wrote:
+>> Add a new powered-while-suspended property to control the behavior of the
+>> TPM suspend/resume.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+>> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> Changes since v3.
+>>   - Rebased on top of linux-next
+>>  Rob Herring
+>>   - Split DT binding from code patch as is preferred.
+>>
+>> Did not exist on previous versions.
+>>
+>>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> index 8cb638b..85c8216 100644
+>> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
+>> @@ -8,6 +8,12 @@ Required properties:
+>>                     the firmware event log
+>>  - linux,sml-size : size of the memory allocated for the firmware event log
+>>
+>> +Optional properties:
+>> +
+>> +- powered-while-suspended: present when the TPM is left powered on between
+>> +                           suspend and resume (makes the suspend/resume
+>> +                           callbacks do nothing).
+>> +
+>>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
+>>  ----------------------------------------------------------
+>>
+>> --
+>> 2.9.3
+>>
 >
-> Make the syscon-poweroff driver change only the shutdown bits on the
-> SNVS_LP control register.
->
-> This change fixes an issue with the RTC wakeup alarm, that was
-> previously disabled during power off.
->
-> Signed-off-by: Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>
-> Reviewed-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> So... should I apply this?
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Hi, since you applied the code part, it would make sense to apply the
+documentation too.
+
+>
+> /Jarkko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
