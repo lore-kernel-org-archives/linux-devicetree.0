@@ -1,106 +1,145 @@
-From: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v9 0/3] Tango PCIe controller support
-Date: Wed, 5 Jul 2017 22:39:19 +0200
-Message-ID: <5a1207cb-31fd-6b85-86af-8c37bd57ad4f@free.fr>
-References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
- <20170704202412.GK13824@bhelgaas-glaptop.roam.corp.google.com>
- <6256cab3-dd77-c0f6-66b8-be261695bbb1@free.fr>
- <20170705180359.GL13824@bhelgaas-glaptop.roam.corp.google.com>
+From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 4/4] dt-bindings: media: Document Synopsys Designware
+ HDMI RX
+Date: Wed, 5 Jul 2017 22:52:03 +0200
+Message-ID: <4dc8f06f-b9cf-6d3d-da88-51abb24c1724@kernel.org>
+References: <cover.1499176790.git.joabreu@synopsys.com>
+ <d6da0a3ec47a46d30b74e9d41fb4bf9ef392d969.1499176790.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170705180359.GL13824-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <d6da0a3ec47a46d30b74e9d41fb4bf9ef392d969.1499176790.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/07/2017 20:03, Bjorn Helgaas wrote:
-
-> On Wed, Jul 05, 2017 at 12:55:37AM +0200, Mason wrote:
->
->> On 04/07/2017 22:24, Bjorn Helgaas wrote:
->>
->>> I made the trivial changes I mentioned, added a dependency on
->>> CONFIG_BROKEN (for the config/MMIO muxing issue), and put these on
->>> pci/host-tango.  I can't build or test this, so I probably broke
->>> something in the process.  I think the combination of the boot-time
->>> warning, the taint, and CONFIG_BROKEN is a reasonable amount of
->>> warning that a user should expect issues.
->>>
->>> Can you take a look and see if it works for you?
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/host-tango
->>
->> Thanks. I'll take it for a spin ASAP.
->>
->> TAINT_CRAP... Smirk. I didn't see that one in the docs:
->> https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html
->>
->> Oh wait... TAINT_CRAP is "C" => a staging driver has been loaded
+On 07/04/2017 04:11 PM, Jose Abreu wrote:
+> Document the bindings for the Synopsys Designware HDMI RX.
 > 
-> I wish it had a less pejorative, more descriptive name.  But it seems like
-> the closest to this situation.
+> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
-Maybe it is not too late to submit a patch to Linus
-renaming TAINT_CRAP?
+> ---
+>   .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 70 ++++++++++++++++++++++
+>   1 file changed, 70 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
 
-Here are a few candidates, off the top of my head:
+Could you make the DT binding documentation patch first patch in the series?
+Now checkpatch will complain about undocumented compatible string when 
+the driver patches are applied alone.
 
-TAINT_STAGING
-TAINT_STAGING_DRIVER
-TAINT_BROKEN_HW
-TAINT_BROKEN_HARDWARE
-TAINT_USE_AT_YOUR_OWN_RISK
+> diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt 
+>b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> new file mode 100644
+> index 0000000..449b8a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> @@ -0,0 +1,70 @@
+> +Synopsys DesignWare HDMI RX Decoder
+> +===================================
+> +
+> +This document defines device tree properties for the Synopsys DesignWare HDMI
+> +RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
+> +specification by itself but is meant to be referenced by platform-specific
+> +device tree bindings.
+> +
+> +When referenced from platform device tree bindings the properties defined in
+> +this document are defined as follows.
 
->> The one issue I anticipate with "depends on BROKEN" is
->> when I add support for revision 2, which isn't broken.
-> 
-> How about this:
-> 
->   - Rename PCIE_TANGO to PCIE_TANGO_REV1
->   - PCIE_TANGO_REV1 depends on BROKEN
->   - Add rev2 support later, enabled by PCIE_TANGO
->   - PCIE_TANGO_REV1 depends on PCIE_TANGO && BROKEN
-> 
-> I updated pci/host-tango along these lines (without rev2 support,
-> obviously).
+It would be good to make it clear which properties are required and which are
+optional. And also to mention the properties below belong to the HDMI RX node.
 
-And support for REV1 wouldn't be compiled in, unless
-BROKEN is selected? Yes, I think that could fly.
+> +- compatible: Shall be "snps,dw-hdmi-rx".
+> +
+> +- reg: Memory mapped base address and length of the DWC HDMI RX registers.
+> +
+> +- interrupts: Reference to the DWC HDMI RX interrupt and 5v sense interrupt.
 
-Don't you think the naming should follow the DT
-convention of using the first SoC embedding the
-IP (for the compatible string) ?
+s/5v/HDMI 5V ?
 
-PCIE_TANGO_REV1 vs PCIE_TANGO_SMP8759
+> +
+> +- clocks: Phandle to the config clock block.
+> +
+> +- clock-names: Shall be "cfg".
+> +
+> +- edid-phandle: phandle to the EDID handler block.
 
-> I forgot to ask for a MAINTAINERS update.  Can you send that, too,
-> please?
+Could you make this property optional and when it is missing assume that device
+corresponding to the parent node of this node handles EDID? This way we could
+avoid having property pointing to the parent node.
 
-There's a "catch-all" rule for everything tango-related:
+> +- #address-cells: Shall be 1.
+> +
+> +- #size-cells: Shall be 0.
+> +
+> +You also have to create a subnode for phy driver. Phy properties are as follows.
 
-ARM/TANGO ARCHITECTURE
-M:	Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
-L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-S:	Maintained
-N:	tango
+s/phy driver. Phy/the PHY device. PHY ?
 
-Is that enough?
+Might be also worth to make it explicit these are all required properties.
 
-> Which reminds me -- are these two addreses
-> 
->   Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
->   Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-> 
-> different names for the same person?  Conversations are easier for me
-> if I can keep who's who straight :)
+> +- compatible: Shall be "snps,dw-hdmi-phy-e405".
+> +
+> +- reg: Shall be JTAG address of phy.
 
-Well, there are many voices inside my head, but yes,
-respectively professional and personal addresses.
+s/phy/the PHY ?
 
-Regards.
+> +- clocks: Phandle for cfg clock.
+> +
+> +- clock-names:Shall be "cfg".
+> +
+> +A sample binding is now provided. The compatible string is for a SoC which has
+> +has a Synopsys DesignWare HDMI RX decoder inside.
+> +
+> +Example:
+> +
+> +dw_hdmi_soc: dw-hdmi-soc@0 {
+> +	compatible = "snps,dw-hdmi-soc";
+
+Perhaps just make it
+
+	compatible = "...";
+?
+
+> +	reg = <0x11c00 0x1000>; /* EDIDs */
+
+This is not relevant and undocumented, will likely be part of documentation 
+of other binding thus I'd suggest dropping this reg property.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	hdmi-rx@0 {
+> +		compatible = "snps,dw-hdmi-rx";
+> +		reg = <0x0 0x10000>;
+> +		interrupts = <1 2>;
+> +		edid-phandle = <&dw_hdmi_soc>;
+> +
+> +		clocks = <&dw_hdmi_refclk>;
+> +		clock-names = "cfg";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		hdmi-phy@fc {
+> +			compatible = "snps,dw-hdmi-phy-e405";
+> +			reg = <0xfc>;
+> +
+> +			clocks = <&dw_hdmi_refclk>;
+> +			clock-names = "cfg";
+> +		};
+> +	};
+> +};
+
+Otherwise looks good. I'll likely not have comments to the other patches.
+
+--
+Regards,
+Sylwester
+ 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
