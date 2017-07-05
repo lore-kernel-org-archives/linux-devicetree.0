@@ -1,48 +1,39 @@
-From: Alexander Syring <alex@asyring.de>
-Subject: [PATCH] ARM: sun7i: dts: enable battery power supply subnode on
- cubietruck
-Date: Wed,  5 Jul 2017 10:30:20 +0200
-Message-ID: <20170705083020.14865-1-alex@asyring.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, maxime.ripard@free-electrons.com, Alexander Syring <alex@asyring.de>, linux-arm-kernel@lists.infradead.org
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v2 4/6] ARM: dts: rockchip: enable eMMC for rk3229-evb
+Date: Wed,  5 Jul 2017 16:30:19 +0800
+Message-ID: <1499243421-21460-5-git-send-email-frank.wang@rock-chips.com>
+References: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, huangtao@rock-chips.com, kever.yang@rock-chips.com, david.wu@rock-chips.com, finley.xiao@rock-chips.com, zhangqing@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-The Cubietruck has an AXP209 PMIC with battery connector.
+This patch enables eMMC support for rk3229-evb board.
 
-This enables the battery power supply subnode.
-
-Signed-off-by: Alexander Syring <alex@asyring.de>
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 ---
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/rk3229-evb.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 102903e83bd2..13bbf2361f9c 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -271,6 +271,10 @@
- 	status = "okay";
+diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
+index 78a3ea1..a51ca01 100644
+--- a/arch/arm/boot/dts/rk3229-evb.dts
++++ b/arch/arm/boot/dts/rk3229-evb.dts
+@@ -145,6 +145,13 @@
+ 	cpu-supply = <&vdd_arm>;
  };
  
-+&battery_power_supply {
++&emmc {
++	cap-mmc-highspeed;
++	disable-wp;
++	non-removable;
 +	status = "okay";
 +};
 +
- &reg_dcdc2 {
- 	regulator-always-on;
- 	regulator-min-microvolt = <1000000>;
+ &gmac {
+ 	assigned-clocks = <&cru SCLK_MAC_EXTCLK>, <&cru SCLK_MAC>;
+ 	assigned-clock-parents = <&ext_gmac>, <&cru SCLK_MAC_EXTCLK>;
 -- 
-2.11.0
+2.0.0
