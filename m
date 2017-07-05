@@ -1,149 +1,100 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
- clock selector PHY
-Date: Wed, 5 Jul 2017 12:09:00 +0200
-Message-ID: <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
-References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: Add CA7 arch_timer initialization for
+ secondary CPUs
+Date: Wed, 5 Jul 2017 12:12:30 +0200
+Message-ID: <CAMuHMdU7RCd=xK4ttTem0Ev-TfaN=ynDdt6dNikSb4dvW=UTDA@mail.gmail.com>
+References: <1499187733-1430-1-git-send-email-geert+renesas@glider.be>
+ <1499187733-1430-2-git-send-email-geert+renesas@glider.be>
+ <2f7ef764-c511-9598-c136-13966f810c95@arm.com> <CAMuHMdXFAZ2Gvgk7oJhkQo7ygCKE_MPqtypccwqj9NTW30q57A@mail.gmail.com>
+ <af12382f-4953-44fd-8f61-0aad2c309476@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <af12382f-4953-44fd-8f61-0aad2c309476@arm.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simoda-san,
+Hi Marc,
 
-On Wed, Jun 28, 2017 at 8:28 AM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> R-Car USB 2.0 controller can change the clock source from an oscillator
-> to an external clock via a register. So, this patch adds support
-> the clock source selector as a clock driver.
+On Wed, Jul 5, 2017 at 12:07 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On 04/07/17 19:20, Geert Uytterhoeven wrote:
+>> On Tue, Jul 4, 2017 at 7:32 PM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+>>> On 04/07/17 18:02, Geert Uytterhoeven wrote:
+>>>> On Cortex-A7, the arch timer CNTVOFF register is uninitialized.
+>>>> Hence when enabling SMP on r8a7794, the kernel log is spammed with:
+>>>>
+>>>>     WARNING: Underflow in clocksource 'arch_sys_counter' observed, time update ignored.
+>>>>            Please report this, consider using a different clocksource, if possible.
+>>>>            Your kernel is probably still fine.
+>>>>
+>>>> To fix this, wrap the standard secondary_startup routine inside a
+>>>> routine which initializes CNTVOFF when running on a Cortex-A7.
+>>>> As the only possibilities are Cortex-A7 or Cortex-A15, checking the low
+>>>> nibble of the Primary Part Number is sufficient.
+>>>>
+>>>> The initialization is identical to what is already done for the boot CPU
+>>>> since commit 9ce3fa6816c2fb59 ("ARM: shmobile: rcar-gen2: Add CA7
+>>>> arch_timer initialization for r8a7794").
+>>>
+>>> Humfff... Pretty horrible. Comments below.
+>>
+>> I know.  I suppose this should be done by the firmware/boot loader?
 >
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> That's what is normally expected.
+>
+>> But we have to live with firmware/boot loaders in the wild...
+>
+> Yeah, I can tell. It is a shame that firmware people didn't realize that
+> just because the old firmware seems to work on a new revision of the
+> architecture, it doesn't mean it does everything right for that
+> particular revision... Oh well.
+>
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/mach-shmobile/headsmp-apmu.S
+>>>> @@ -0,0 +1,38 @@
+>>>> +/*
+>>>> + * SMP support for APMU based systems
+>>>> + *
+>>>> + * Copyright (C) 2014  Renesas Electronics Corporation
+>>>> + *
+>>>> + * This program is free software; you can redistribute it and/or modify
+>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>> + * published by the Free Software Foundation.
+>>>> + */
+>>>> +
+>>>> +#include <linux/linkage.h>
+>>>> +
+>>>> +ENTRY(shmobile_boot_apmu)
+>>>> +     mrc     p15, 0, r0, c0, c0, 0           /* Get Main ID */
+>>>> +     ubfx    r1, r0, #4, #4                  /* r1=Lo 4bit of Primary Part */
+>>>> +     cmp     r1, #0x7                        /* 0x7 = CA7, 0xf = CA15 */
+>>>> +     bne     1f
+>>>
+>>> Why don't you deal with the A15 parts as well? And TBH, you'd be better
+>>> off checking ID_PFR1 for both Generic Timers and Virtualization Extensions.
+>>
+>> Do we have to deal with the A15 parts here?
+>> We're not having issues with the A15 parts, so that's why I left it out.
+>
+> Well, A15 has the exact same features as A7 when it comes to the timer,
+> and CNTVOFF definitely resets as UNKNOWN.
 
-Thanks for your patch!
+IC.
 
-> --- /dev/null
-> +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
+>> I'm trying to understand what's different between A15 and A7, and why A7
+>> needs this code, while A15 apparently doesn't.
+>> I'm not seeing any obvious differences in the U-Boot sources handling
+>> e.g. r8a7791/koelsch (dual A15) vs. r8a7794/alt (dual A7).
+>
+> The UNKNOWN above might well be 0 on A15, but I wouldn't bet on it. If
+> nothing sets CNTVOFF on these systems, consider yourself lucky!
 
-> +static void usb2_clock_sel_enable_extal_only(struct usb2_clock_sel_priv *priv)
-> +{
-> +       u16 val = readw(priv->base + USB20_CLKSET0);
-> +
-> +       pr_debug("%s: enter %d %d %x\n", __func__,
-> +                priv->extal, priv->xtal, val);
-> +
-> +       if (priv->extal && !priv->xtal && val != CLKSET0_EXTAL_ONLY)
-> +               writew(CLKSET0_EXTAL_ONLY, priv->base + USB20_CLKSET0);
-> +}
-> +
-> +static void usb2_clock_sel_disable_extal_only(struct usb2_clock_sel_priv *priv)
-> +{
-> +       if (priv->extal && !priv->xtal)
-> +               writew(CLKSET0_PRIVATE, priv->base + USB20_CLKSET0);
-> +}
-> +
-> +static int usb2_clock_sel_enable(struct clk_hw *hw)
-> +{
-> +       usb2_clock_sel_enable_extal_only(to_priv(hw));
-> +
-> +       return 0;
-> +}
-> +
-> +static void usb2_clock_sel_disable(struct clk_hw *hw)
-> +{
-> +       usb2_clock_sel_disable_extal_only(to_priv(hw));
-> +}
-> +
-> +/*
-> + * This module seems a mux, but this driver assumes a gate because
-> + * ehci/ohci platform drivers don't support clk_set_parent() for now.
-> + * If this driver acts as a gate, ehci/ohci-platform drivers don't need
-> + * any modification.
-> + */
-> +static const struct clk_ops usb2_clock_sel_clock_ops = {
-> +       .enable = usb2_clock_sel_enable,
-> +       .disable = usb2_clock_sel_disable,
-> +};
+OK.  That means I can just drop the Primary Part check, as this code path
+is exercised only on systems with Cortex-A15 and/or A7 CPU cores.
 
-So you do "smart muxing" in the enable routine above?
-
-> +static int __init rcar_usb2_clock_sel_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct device_node *np = dev->of_node;
-> +       struct usb2_clock_sel_priv *priv;
-> +       struct resource *res;
-> +       struct clk *clk;
-> +       struct clk_init_data init;
-> +       int error;
-> +
-> +       priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +       if (!priv)
-> +               return -ENOMEM;
-> +
-> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +       priv->base = devm_ioremap_resource(dev, res);
-> +       if (IS_ERR(priv->base))
-> +               return PTR_ERR(priv->base);
-> +
-> +       priv->ehci_clk = devm_clk_get(dev, "ehci_ohci");
-> +       if (!IS_ERR(priv->ehci_clk)) {
-> +               error = clk_prepare_enable(priv->ehci_clk);
-> +               if (error)
-> +                       return error;
-> +       }
-> +
-> +       clk = devm_clk_get(dev, "usb_extal");
-> +       if (!IS_ERR(clk) && !clk_prepare_enable(clk)) {
-> +               priv->extal = !!clk_get_rate(clk);
-> +               clk_disable_unprepare(clk);
-> +       }
-> +       clk = devm_clk_get(dev, "usb_xtal");
-> +       if (!IS_ERR(clk) && !clk_prepare_enable(clk)) {
-> +               priv->xtal = !!clk_get_rate(clk);
-> +               clk_disable_unprepare(clk);
-> +       }
-> +
-> +       if (!priv->extal && !priv->extal) {
-> +               dev_err(dev, "This driver needs usb_extal or usb_xtal\n");
-> +               return -ENOENT;
-
-Perhaps enabled clocks should be disabled on error?
-
-> +       }
-> +
-> +       platform_set_drvdata(pdev, priv);
-> +       dev_set_drvdata(dev, priv);
-> +
-> +       init.name = "rcar_usb2_clock_sel";
-> +       init.ops = &usb2_clock_sel_clock_ops;
-> +       init.flags = CLK_IS_BASIC;
-> +       init.parent_names = NULL;
-> +       init.num_parents = 0;
-> +       priv->hw.init = &init;
-> +
-> +       clk = clk_register(NULL, &priv->hw);
-> +       if (IS_ERR(clk))
-> +               return PTR_ERR(clk);
-
-Likewise.
-
-> +       error = of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +       if (error)
-> +               return error;
-> +
-> +       return 0;
-
-return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-
-> +/* Since this driver needs other ccf drivers, this uses subsys_initcall_sync */
-> +subsys_initcall_sync(rcar_usb2_clock_sel_init);
-
-I suppose this is a workaround for the lack of probe deferral support in the
-USB subsystem?
+Thanks!
 
 Gr{oetje,eeting}s,
 
