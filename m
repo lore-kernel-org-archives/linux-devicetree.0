@@ -1,53 +1,72 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] DT bindings: add bindings for ov965x camera module
-Date: Wed, 5 Jul 2017 14:48:15 +0000
-Message-ID: <6fa2e20e-ac19-0296-d481-f0cb4aa4a231@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <1499073368-31905-2-git-send-email-hugues.fruchet@st.com>
- <20170705140305.pixlhd65xu6g3nlf@rob-hp-laptop>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v 1/2] ravb: Add support for r8a7743 SoC
+Date: Wed, 5 Jul 2017 16:55:53 +0200
+Message-ID: <CAMuHMdUXxHU8JaO0riJ7h7hJpCwAw27titTfo3Ox6CqO3i8E9A@mail.gmail.com>
+References: <1499259711-56175-1-git-send-email-biju.das@bp.renesas.com>
+ <1499259711-56175-2-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVMunZ0trcNmMg4KkEd+d88foep7C0kU=yLQNk5JojosA@mail.gmail.com> <TY1PR06MB0702B8D1C817F6C3CBD93D99B7D40@TY1PR06MB0702.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170705140305.pixlhd65xu6g3nlf@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <5B72E720168E7A4888E0005E8C16AB31-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <TY1PR06MB0702B8D1C817F6C3CBD93D99B7D40@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQpPbiAwNy8wNS8yMDE3IDA0OjAzIFBNLCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gTW9uLCBK
-dWwgMDMsIDIwMTcgYXQgMTE6MTY6MDJBTSArMDIwMCwgSHVndWVzIEZydWNoZXQgd3JvdGU6DQo+
-PiBGcm9tOiAiSC4gTmlrb2xhdXMgU2NoYWxsZXIiIDxobnNAZ29sZGVsaWNvLmNvbT4NCj4+DQo+
-PiBUaGlzIGFkZHMgZG9jdW1lbnRhdGlvbiBvZiBkZXZpY2UgdHJlZSBiaW5kaW5ncw0KPj4gZm9y
-IHRoZSBPVjk2NVggZmFtaWx5IGNhbWVyYSBzZW5zb3IgbW9kdWxlLg0KPj4NCj4+IFNpZ25lZC1v
-ZmYtYnk6IEguIE5pa29sYXVzIFNjaGFsbGVyIDxobnNAZ29sZGVsaWNvLmNvbT4NCj4+IFNpZ25l
-ZC1vZmYtYnk6IEh1Z3VlcyBGcnVjaGV0IDxodWd1ZXMuZnJ1Y2hldEBzdC5jb20+DQo+PiAtLS0N
-Cj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292OTY1eC50eHQgICAgICAg
-fCA0NSArKysrKysrKysrKysrKysrKysrKysrDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNl
-cnRpb25zKCspDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvbWVkaWEvaTJjL292OTY1eC50eHQNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2NXgudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2NXgudHh0DQo+PiBu
-ZXcgZmlsZSBtb2RlIDEwMDY0NA0KPj4gaW5kZXggMDAwMDAwMC4uNGNlYjcyNw0KPj4gLS0tIC9k
-ZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
-L2kyYy9vdjk2NXgudHh0DQo+PiBAQCAtMCwwICsxLDQ1IEBADQo+PiArKiBPbW5pdmlzaW9uIE9W
-OTY1MC85NjUyLzk2NTUgQ01PUyBzZW5zb3INCj4+ICsNCj4+ICtUaGUgT21uaXZpc2lvbiBPVjk2
-NXggc2Vuc29yIHN1cHBvcnQgbXVsdGlwbGUgcmVzb2x1dGlvbnMgb3V0cHV0LCBzdWNoIGFzDQo+
-PiArQ0lGLCBTVkdBLCBVWEdBLiBJdCBhbHNvIGNhbiBzdXBwb3J0IFlVVjQyMi80MjAsIFJHQjU2
-NS81NTUgb3IgcmF3IFJHQg0KPj4gK291dHB1dCBmb3JtYXQuDQo+PiArDQo+PiArUmVxdWlyZWQg
-UHJvcGVydGllczoNCj4+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSBvbmUgb2YNCj4+ICsJIm92
-dGksb3Y5NjUwIg0KPj4gKwkib3Z0aSxvdjk2NTIiDQo+PiArCSJvdnRpLG92OTY1NSINCj4+ICst
-IGNsb2NrczogcmVmZXJlbmNlIHRvIHRoZSBtY2xrIGlucHV0IGNsb2NrLg0KPj4gKw0KPj4gK09w
-dGlvbmFsIFByb3BlcnRpZXM6DQo+PiArLSByZXNldGItZ3Bpb3M6IHJlZmVyZW5jZSB0byB0aGUg
-R1BJTyBjb25uZWN0ZWQgdG8gdGhlIFJFU0VUQiBwaW4sIGlmIGFueSwNCj4+ICsJCXBvbGFyaXR5
-IGlzIGFjdGl2ZSBsb3cuDQo+IA0KPiByZXNldC1ncGlvcw0KPiANCj4+ICstIHB3ZG4tZ3Bpb3M6
-IHJlZmVyZW5jZSB0byB0aGUgR1BJTyBjb25uZWN0ZWQgdG8gdGhlIFBXRE4gcGluLCBpZiBhbnks
-DQo+PiArCQlwb2xhcml0eSBpcyBhY3RpdmUgaGlnaC4NCj4gDQo+IHBvd2VyZG93bi1ncGlvcw0K
-PiANCj4gQm90aCBhcmUgc3RhbmRhcmRpc2ggbmFtZXMgZm9yIHN1Y2ggc2lnbmFscy4NCj4gDQo+
-IFJvYg0KDQpUaGFua3MgUm9iLCBJIHdpbGwgZml4LA0KSHVndWVzLg0KDQo+IA==
+Hi Chris,
+
+On Wed, Jul 5, 2017 at 3:51 PM, Chris Paterson
+<Chris.Paterson2@renesas.com> wrote:
+>> From: geert.uytterhoeven@gmail.com
+>> [mailto:geert.uytterhoeven@gmail.com] On Behalf Of Geert Uytterhoeven
+>> Sent: 05 July 2017 14:47
+>> On Wed, Jul 5, 2017 at 3:01 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+>> > Add support for Gigabit Ethernet E-MAC on r8a7743 (RZ/G1M) SoC.
+>> > Renesas RZ/G1M (R8A7743) SoC Ethernet AVB IP is identical to the R-Car
+>> > Gen2 family.
+>> >
+>> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>> > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+>>
+>> Thanks for your patch!
+>>
+>> > --- a/drivers/net/ethernet/renesas/ravb_main.c
+>> > +++ b/drivers/net/ethernet/renesas/ravb_main.c
+>> > @@ -1869,6 +1869,7 @@ static int ravb_mdio_release(struct ravb_private
+>> > *priv)  }
+>> >
+>> >  static const struct of_device_id ravb_match_table[] = {
+>> > +       { .compatible = "renesas,etheravb-r8a7743", .data = (void
+>> > + *)RCAR_GEN2 },
+>> >         { .compatible = "renesas,etheravb-r8a7790", .data = (void
+>> *)RCAR_GEN2 },
+>> >         { .compatible = "renesas,etheravb-r8a7794", .data = (void
+>> *)RCAR_GEN2 },
+>> >         { .compatible = "renesas,etheravb-rcar-gen2", .data = (void
+>> > *)RCAR_GEN2 },
+>>
+>> As Sergei already mentioned, a driver update is not needed due to the
+>> presence of family-specific compatible values.
+>> Please drop that part, and you can add my:
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Should the other compatible values (r8a7790, 94 etc) be removed then? Or are they needed for backwards compatibility?
+
+The other compatible values in DT bindings and DTS files should be kept,
+to allow handling of SoC-specific quirks if/when they are ever detected.
+
+The other compatible values in the driver should be kept for
+backwards-compatibility with old DTB files that lack the (newer)
+family-specific compatible values.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
