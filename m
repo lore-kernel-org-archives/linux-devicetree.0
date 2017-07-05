@@ -1,16 +1,16 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v5 3/6] dt-bindings: List devicetree binding
- for the CCU of Allwinner A20
-Date: Wed, 5 Jul 2017 12:07:07 +0800
-Message-ID: <CAGb2v64PoW5ddk_1zAw0hH=+hdhE=wX1ABL7_iQfJ2smunrzWg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/6] dt-bindings: List devicetree binding
+ for the CCU of Allwinner A10
+Date: Wed, 5 Jul 2017 12:07:20 +0800
+Message-ID: <CAGb2v64WwzV_u5qnkiQsWeOtCY-rGcpvMqYMiwBuiuYEZeT-OA@mail.gmail.com>
 References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
- <68788c4452291977ab16168d89cb91c4611e1a41.1499197129.git-series.plaes@plaes.org>
+ <0f68552ad8214115634d649ed34ea450461f9b5d.1499197129.git-series.plaes@plaes.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBA6M6HFAKGQELXBIP7A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBEGM6HFAKGQEOVCQ3CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <68788c4452291977ab16168d89cb91c4611e1a41.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <0f68552ad8214115634d649ed34ea450461f9b5d.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -22,7 +22,7 @@ Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Step
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Jul 5, 2017 at 4:04 AM, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
-> Allwinner A20 is now driven by sunxi-ng CCU driver.
+> Allwinner A10 is now driven by sunxi-ng CCU driver.
 >
 > Add devicetree binding for it.
 >
