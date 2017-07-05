@@ -1,75 +1,56 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 5/5] Documentation/devicetree/bindings: Add FSI device documentation
-Date: Wed,  5 Jul 2017 16:36:57 -0500
-Message-ID: <1499290617-2598-6-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1499290617-2598-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499290617-2598-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bradleyb@fuzziesquirrel.com, jk@ozlabs.org, cbostic@linux.vnet.ibm.com, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: stm32: add STM32H7 RTC support
+Date: Wed, 5 Jul 2017 23:37:46 +0200
+Message-ID: <20170705213746.6hf5af57ty6wsfgs@piout.net>
+References: <1498470689-26829-1-git-send-email-amelie.delaunay@st.com>
+ <1498470689-26829-3-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBNNY6XFAKGQE22QRDSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1498470689-26829-3-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+Hi,
 
-Document the bindings for the SBE and OCC devices. SBE devices are
-located on a CFAM on an FSI bus, and OCC devices are accessed through
-the SBEFIFO.
+This is mostly fine, even if I'm not too happy with the
+s/ck_rtc/rtc_ck/.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
----
- Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 15 +++++++++++++++
- .../devicetree/bindings/fsi/ibm,p9-sbefifo.txt       | 20 ++++++++++++++++++++
- 2 files changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
+On 26/06/2017 at 11:51:29 +0200, Amelie Delaunay wrote:
+> -	rtc->ck_rtc = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(rtc->ck_rtc)) {
+> -		dev_err(&pdev->dev, "no ck_rtc clock");
+> -		return PTR_ERR(rtc->ck_rtc);
+> +	match = of_match_device(stm32_rtc_of_match, &pdev->dev);
+> +	if (match && match->data)
+> +		rtc->data = (struct stm32_rtc_data *)match->data;
+> +	else
+> +		return -EINVAL;
 
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-new file mode 100644
-index 0000000..766b706
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-@@ -0,0 +1,15 @@
-+Device-tree bindings for FSI-based On-Chip Controller driver
-+------------------------------------------------------------
-+
-+Required properties:
-+ - compatible = "ibm,p9-occ";
-+
-+Optional properties:
-+ - reg = <processor index>;	: Index for the processor this OCC is on.
-+
-+Examples:
-+
-+    occ@1 {
-+        compatible = "ibm,p9-occ";
-+        reg = <1>;
-+    };
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
-new file mode 100644
-index 0000000..d16ab9d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,p9-sbefifo.txt
-@@ -0,0 +1,20 @@
-+Device-tree bindings for FSI-based SBEFIFO driver
-+-------------------------------------------------
-+
-+Required properties:
-+ - reg = < address size >		: FSI CFAM address for the SBE engine
-+					  and address space size.
-+
-+Optional properties:
-+ - <child nodes>			: Devices that are accessible through
-+					  the SBEFIFO.
-+
-+Examples:
-+
-+    sbefifo@2400 {
-+        reg = < 0x2400 0x400 >;
-+
-+        occ@1 {
-+            ...
-+        };
-+    };
+This will never happen, you can remove that test.
+
+
 -- 
-1.8.3.1
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
