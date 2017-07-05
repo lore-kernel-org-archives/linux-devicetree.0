@@ -1,55 +1,38 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27
- SoM1 support
-Date: Wed, 5 Jul 2017 17:23:43 +0200
-Message-ID: <20170705152343.b735on6edg3vfsp3@rfolt0960.corp.atmel.com>
-References: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
- <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V4 0/3] add UniPhier watchdog support
+Date: Wed, 5 Jul 2017 08:25:37 -0700
+Message-ID: <8ceaf917-c4fc-23c7-a7f4-5694bd8b4e88@roeck-us.net>
+References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com>
+ <000001d2f576$5f011c20$1d035460$@socionext.com>
+ <CAK7LNAR7kbXPFGywpnWRCFibwp350kmZ7CpSUO6GTFG3pxG=zw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
+In-Reply-To: <CAK7LNAR7kbXPFGywpnWRCFibwp350kmZ7CpSUO6GTFG3pxG=zw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, devicetree@vger.kernel.org, cristian.birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: wim@iguana.be, linux-watchdog@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?UTF-8?B?SGF5YXNoaSwgS3VuaWhpa28v5p6XIOmCpuW9pg==?= <hayashi.kunihiko@socionext.com>, =?UTF-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 03, 2017 at 03:56:11PM +0300, Claudiu Beznea wrote:
-> Add specific DTS file and bindings for sama5d27 SoM1 board.
+On 07/05/2017 03:26 AM, Masahiro Yamada wrote:
+> 2017-07-05 19:06 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
+>> Hi Guenter,
+>>
+>> Let me confirm if I got it.
+>>
+>> I guess that this series finished the review.
+>> Could you tell me the current state of this series?
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-> ---
->  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
->  1 file changed, 178 insertions(+)
->  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
 > 
-> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-> new file mode 100644
-> index 0000000..c3a1dc8
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+> I will pick up 3/3.  (It should have been sent to ARM-SoC ML, though.)
+> 
+> I had sent my PRs for v4.13 before Rob acked the DT binding.
+> Please look forward to v4.14.
+> 
 
-[...]
+1/3 and 2/3 are in -next, so they should be be included in Wim's pull request
+for 4.13.
 
-> +
-> +			i2c0: i2c@f8028000 {
-> +				dmas = <0>, <0>;
-> +				pinctrl-names = "default";
-> +				pinctrl-0 = <&pinctrl_i2c0_default>;
-> +				i2c-sda-hold-time-ns = <350>;
-> +				status = "disabled";
-> +
-> +				24aa@50 {
-> +					compatible = "24mac602";
-> +					reg = <0x50>;
-> +					pagesize = <8>;
-> +					start-offset = /bits/ 8 <0xf8>;
-
-Are you sure about the offset? I thought it was 0xfa but maybe I am
-wrong.
-
-Regards
-
-Ludovic
+Guenter
