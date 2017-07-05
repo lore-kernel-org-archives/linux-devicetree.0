@@ -1,146 +1,59 @@
-From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] dt-bindings: media: Document Synopsys Designware
- HDMI RX
-Date: Wed, 5 Jul 2017 22:52:03 +0200
-Message-ID: <4dc8f06f-b9cf-6d3d-da88-51abb24c1724@kernel.org>
-References: <cover.1499176790.git.joabreu@synopsys.com>
- <d6da0a3ec47a46d30b74e9d41fb4bf9ef392d969.1499176790.git.joabreu@synopsys.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3 v2] rtc: gemini: Augment DT bindings for Faraday
+Date: Wed, 5 Jul 2017 23:01:19 +0200
+Message-ID: <20170705210119.fzzc2hqlj3hftmi7@piout.net>
+References: <20170530075332.3740-1-linus.walleij@linaro.org>
+ <20170530075332.3740-2-linus.walleij@linaro.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d6da0a3ec47a46d30b74e9d41fb4bf9ef392d969.1499176790.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBIFH6XFAKGQEXP2HGMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170530075332.3740-2-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/04/2017 04:11 PM, Jose Abreu wrote:
-> Document the bindings for the Synopsys Designware HDMI RX.
+On 30/05/2017 at 09:53:31 +0200, Linus Walleij wrote:
+> The Gemini RTC is actually a standard IP block from Faraday
+> Technology called FTRTC010. Rename the bindings, add the
+> generic compatible string and add definitions for the two
+> available clocks.
 > 
-> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->   .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 70 ++++++++++++++++++++++
->   1 file changed, 70 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> ChangeLog v1->v2:
+> - Add Rob's ACK.
+> ---
+>  .../devicetree/bindings/rtc/cortina,gemini.txt     | 14 -----------
+>  .../devicetree/bindings/rtc/faraday,ftrtc010.txt   | 28 ++++++++++++++++++++++
+>  2 files changed, 28 insertions(+), 14 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+>  create mode 100644 Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+> 
+Applied, thanks.
 
-Could you make the DT binding documentation patch first patch in the series?
-Now checkpatch will complain about undocumented compatible string when 
-the driver patches are applied alone.
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt 
->b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-> new file mode 100644
-> index 0000000..449b8a2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-> @@ -0,0 +1,70 @@
-> +Synopsys DesignWare HDMI RX Decoder
-> +===================================
-> +
-> +This document defines device tree properties for the Synopsys DesignWare HDMI
-> +RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
-> +specification by itself but is meant to be referenced by platform-specific
-> +device tree bindings.
-> +
-> +When referenced from platform device tree bindings the properties defined in
-> +this document are defined as follows.
-
-It would be good to make it clear which properties are required and which are
-optional. And also to mention the properties below belong to the HDMI RX node.
-
-> +- compatible: Shall be "snps,dw-hdmi-rx".
-> +
-> +- reg: Memory mapped base address and length of the DWC HDMI RX registers.
-> +
-> +- interrupts: Reference to the DWC HDMI RX interrupt and 5v sense interrupt.
-
-s/5v/HDMI 5V ?
-
-> +
-> +- clocks: Phandle to the config clock block.
-> +
-> +- clock-names: Shall be "cfg".
-> +
-> +- edid-phandle: phandle to the EDID handler block.
-
-Could you make this property optional and when it is missing assume that device
-corresponding to the parent node of this node handles EDID? This way we could
-avoid having property pointing to the parent node.
-
-> +- #address-cells: Shall be 1.
-> +
-> +- #size-cells: Shall be 0.
-> +
-> +You also have to create a subnode for phy driver. Phy properties are as follows.
-
-s/phy driver. Phy/the PHY device. PHY ?
-
-Might be also worth to make it explicit these are all required properties.
-
-> +- compatible: Shall be "snps,dw-hdmi-phy-e405".
-> +
-> +- reg: Shall be JTAG address of phy.
-
-s/phy/the PHY ?
-
-> +- clocks: Phandle for cfg clock.
-> +
-> +- clock-names:Shall be "cfg".
-> +
-> +A sample binding is now provided. The compatible string is for a SoC which has
-> +has a Synopsys DesignWare HDMI RX decoder inside.
-> +
-> +Example:
-> +
-> +dw_hdmi_soc: dw-hdmi-soc@0 {
-> +	compatible = "snps,dw-hdmi-soc";
-
-Perhaps just make it
-
-	compatible = "...";
-?
-
-> +	reg = <0x11c00 0x1000>; /* EDIDs */
-
-This is not relevant and undocumented, will likely be part of documentation 
-of other binding thus I'd suggest dropping this reg property.
-
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
-> +
-> +	hdmi-rx@0 {
-> +		compatible = "snps,dw-hdmi-rx";
-> +		reg = <0x0 0x10000>;
-> +		interrupts = <1 2>;
-> +		edid-phandle = <&dw_hdmi_soc>;
-> +
-> +		clocks = <&dw_hdmi_refclk>;
-> +		clock-names = "cfg";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		hdmi-phy@fc {
-> +			compatible = "snps,dw-hdmi-phy-e405";
-> +			reg = <0xfc>;
-> +
-> +			clocks = <&dw_hdmi_refclk>;
-> +			clock-names = "cfg";
-> +		};
-> +	};
-> +};
-
-Otherwise looks good. I'll likely not have comments to the other patches.
-
---
-Regards,
-Sylwester
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
