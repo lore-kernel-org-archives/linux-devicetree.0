@@ -1,96 +1,140 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 0/3] Tango PCIe controller support
-Date: Thu, 6 Jul 2017 13:40:37 +0100
-Message-ID: <37d9f990-c037-5ccd-c162-786ca2bd07b5@arm.com>
-References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
- <20170704202412.GK13824@bhelgaas-glaptop.roam.corp.google.com>
- <6256cab3-dd77-c0f6-66b8-be261695bbb1@free.fr>
- <20170705180359.GL13824@bhelgaas-glaptop.roam.corp.google.com>
- <5a1207cb-31fd-6b85-86af-8c37bd57ad4f@free.fr>
- <20170705213419.GD25063@bhelgaas-glaptop.roam.corp.google.com>
- <8dcab663-245b-880a-be3a-2965fd12d663@free.fr>
- <20170706033946.GO13824@bhelgaas-glaptop.roam.corp.google.com>
- <d04e1632-17b8-85f9-31c4-b789d55cc853@free.fr>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable option
+Date: Thu, 6 Jul 2017 15:05:30 +0200
+Message-ID: <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
+References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d04e1632-17b8-85f9-31c4-b789d55cc853-GANU6spQydw@public.gmane.org>
+In-Reply-To: <1499346330-12166-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mason <slash.tmp-GANU6spQydw@public.gmane.org>, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thibaud Cornic <thibaud_cornic-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>
+To: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/17 13:26, Mason wrote:
-> On 06/07/2017 05:39, Bjorn Helgaas wrote:
-> 
->> On Wed, Jul 05, 2017 at 11:59:33PM +0200, Mason wrote:
->>
->>> There were a few nits I wanted to address:
->>>
->>> - Since we added suppress_bind_attrs = true, probe()
->>> can only be called at init, so I wanted to mark __init
->>> all the probe functions, to save space.
->>>
->>> - I left the definition of MSI_MAX in the wrong patch
->>>
->>> - You put a pointer to the pdev in the struct tango_pcie.
->>> I think this is redundant, since the pdev already has a
->>> pointer to the struct, as drvdata.
->>> So I wanted to change tango_msi_probe() to take a pdev
->>> as argument (to make it more like an actual probe function)
->>> and derive pcie from pdev, instead of the other way around.
->>
->> I don't think tango_msi_probe() is really a "probe" function.  It's
->> all part of the tango driver, and it's not claiming a separate piece
->> of hardware.
-> 
-> I agree that tango_msi_probe() is not a probe function;
-> it is merely a piece of the actual probe function (static
-> with single call site). I split the probe function in two,
-> because it seemed to make sense at the time.
-> 
-> Perhaps it's better to inline tango_msi_probe? That would
-> avoid the issues of that function's name and parameters.
-> 
-> If you think it's better to keep the two pieces separate,
-> I can rename the MSI part to tango_msi_init() or some such.
-> But I'd like to avoid adding unnecessary fields to the struct.
-> 
->>  So I would keep the name and structure similar to these:
->>
->>   advk_pcie_init_msi_irq_domain()
->>   nwl_pcie_init_msi_irq_domain()
->>
->> BTW, those functions use irq_domain_add_linear(), while you are one of
->> the very few callers of irq_domain_create_linear().  Why the difference?
->> If your code does basically the same thing, it's very helpful to me if
->> it *looks* basically the same.
+Some PHYs (for example the LAN8710) doesn't allow turning the clocks off
+and on again without reset (according to their datasheet). Exactly this
+behaviour was introduced for power saving reasons by commit e8fcfcd5684a
+("net: fec: optimize the clock management to save power")
+Therefore add a devictree option to perform a PHY reset and
+configuration after every clock enable.
 
-irq_domain_add_linear() can only take an of_node as the identifier for
-the domain, while the _create_ variants use a fwnode. Given that an
-of+node is also a fwnode, the former is now deprecated in favour of the
-latter.
+For a better understanding here's a outline of the time response of the
+clock and reset lines before and after this patch:
 
-> 
-> It was a suggestion from Marc Z on 2017-03-23.
-> 
-> <QUOTE>
-> + irq_dom = irq_domain_add_linear(NULL, MSI_COUNT, &msi_domain_ops, pcie);
-> 
-> Use irq_domain_create_linear, pass the same fwnode.
-> </QUOTE>
-> 
-> It seems odd to pass NULL as the first argument.
-> (As I had first done, when copying the Altera driver.)
+			  v--fec_probe()              v--fec_enet_open()
+			  v                           v
+	w/o patch eCLK: ___||||||||____________________|||||||||||||||||
+	w/o patch nRST: ----__------------------------------------------
+	w/o patch CONF: _______XX_______________________________________
 
-Indeed, as it creates a "default" domain, which is almost always wrong.
+	w/  patch eCLK: ___||||||||____________________|||||||||||||||||
+	w/  patch nRST: ----__--------------------------__--------------
+	w/  patch CONF: _______XX__________________________XX___________
+			  ^                           ^
+			  ^--fec_probe()              ^--fec_enet_open()
 
-Thanks,
+In our case this problem does occur at about every 10th to 50th POR of
+an LAN8710 connected to an i.MX6 SoC. The typical symptom of this
+problem is a "swinging" ethernet link. Similar issues were experienced
+by users of the NXP forum:
+	https://community.nxp.com/thread/389902
+	https://community.nxp.com/message/309354
+With this patch applied the issue didn't occur for at least a few
+hundred PORs of our board.
 
-	M.
+Fixes: e8fcfcd5684a ("net: fec: optimize the clock management to sa...")
+Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/fsl-fec.txt |  3 +++
+ drivers/net/ethernet/freescale/fec.h              |  1 +
+ drivers/net/ethernet/freescale/fec_main.c         | 16 ++++++++++++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+index 6f55bdd..1766579 100644
+--- a/Documentation/devicetree/bindings/net/fsl-fec.txt
++++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+@@ -23,6 +23,9 @@ Optional properties:
+ - phy-handle : phandle to the PHY device connected to this device.
+ - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+   Use instead of phy-handle.
++- phy-reset-after-clk-enable : If present then a phy reset and configuration
++  will be performed everytime after the clocks are enabled. This is required
++  for some PHYs to work properly.
+ - fsl,num-tx-queues : The property is valid for enet-avb IP, which supports
+   hw multi queues. Should specify the tx queue number, otherwise set tx queue
+   number to 1.
+diff --git a/drivers/net/ethernet/freescale/fec.h b/drivers/net/ethernet/freescale/fec.h
+index 3da8084..d4f658a 100644
+--- a/drivers/net/ethernet/freescale/fec.h
++++ b/drivers/net/ethernet/freescale/fec.h
+@@ -538,6 +538,7 @@ struct fec_enet_private {
+ 	int	phy_reset_duration;
+ 	int	phy_reset_post_delay;
+ 	bool	phy_reset_active_high;
++	bool	phy_reset_after_clk_enable;
+ 
+ 	struct	napi_struct napi;
+ 	int	csum_flags;
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index cbbf7b8..4e744f3 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -68,6 +68,7 @@
+ 
+ static void set_multicast_list(struct net_device *ndev);
+ static void fec_enet_itr_coal_init(struct net_device *ndev);
++static int fec_reset_phy(struct net_device *ndev);
+ 
+ #define DRIVER_NAME	"fec"
+ 
+@@ -1862,6 +1863,18 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 		ret = clk_prepare_enable(fep->clk_ref);
+ 		if (ret)
+ 			goto failed_clk_ref;
++
++		/* reset the phy after clk is enabled if it's configured */
++		if (fep->phy_reset_after_clk_enable) {
++			ret = fec_reset_phy(ndev);
++			if (ret)
++				goto failed_reset;
++			if (ndev->phydev) {
++				ret = phy_init_hw(ndev->phydev);
++				if (ret)
++					goto failed_reset;
++			}
++		}
+ 	} else {
+ 		clk_disable_unprepare(fep->clk_ahb);
+ 		clk_disable_unprepare(fep->clk_enet_out);
+@@ -1876,6 +1889,7 @@ static int fec_enet_clk_enable(struct net_device *ndev, bool enable)
+ 
+ 	return 0;
+ 
++failed_reset:
+ failed_clk_ref:
+ 	if (fep->clk_ref)
+ 		clk_disable_unprepare(fep->clk_ref);
+@@ -3350,6 +3364,7 @@ fec_probe(struct platform_device *pdev)
+ 			fep->phy_reset_post_delay = 1;
+ 
+ 		fep->phy_reset_active_high =  of_property_read_bool(np, "phy-reset-active-high");
++		fep->phy_reset_after_clk_enable = of_property_read_bool(np, "phy-reset-after-clk-enable");
+ 
+ 		ret = devm_gpio_request_one(&pdev->dev, fep->phy_reset,
+ 					    fep->phy_reset_active_high ? GPIOF_OUT_INIT_HIGH : GPIOF_OUT_INIT_LOW,
+@@ -3360,6 +3375,7 @@ fec_probe(struct platform_device *pdev)
+ 		}
+ 	} else {
+ 		fep->phy_reset = 0;
++		fep->phy_reset_after_clk_enable = false;
+ 	}
+ 
+ 	ret = of_get_phy_mode(pdev->dev.of_node);
 -- 
-Jazz is not dead. It just smells funny...
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
