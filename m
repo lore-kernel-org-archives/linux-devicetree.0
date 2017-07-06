@@ -1,77 +1,71 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
-Date: Wed, 5 Jul 2017 23:02:43 -0700
-Message-ID: <20170706060243.GP18666@tuxbook>
-References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
- <1975629.nrP45RYYW5@debian64>
- <20170520050824.GS12920@tuxbook>
- <2018547.lycQhaDrJg@debian64>
- <20170523192857.GW12920@tuxbook>
- <001b01d2d48e$3f366660$bda33320$@codeaurora.org>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+ (fwd)
+Date: Thu, 6 Jul 2017 08:04:46 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1707060803210.2028@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <001b01d2d48e$3f366660$bda33320$@codeaurora.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: 'Christian Lamparter' <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Linus Walleij' <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'John Crispin' <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Neil Webb <neilw@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, =?ISO-8859-15?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 24 May 06:04 PDT 2017, Ram Chandra Jangir wrote:
+Please check on this (line 199).
 
-> 
-> 
-> On Wednesday, May 24, 2017 12:59 AM CEST Bjorn Andersson wrote:
-[..]
-> >This makes me wonder what wifi1_uart (and uart1) actually is...
-> 
-> >The wifi\d_uart seems to have 5 pins in its group and wifi\d_uart\d seems
-> to be two sets of two pins. So perhaps this is some alternative routing and
-> wifi0_uart0 and wifi0_uart1 is actually the same function?
-> 
-> >@Ram, can you help us out here?
-> 
+julia
 
-Ram, thanks for your answer. Unfortunately I missed this mail until
-Christian posted the new version of the patch.
+---------- Forwarded message ----------
+Date: Thu, 6 Jul 2017 13:58:29 +0800
+From: kbuild test robot <fengguang.wu@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
 
-Unfortunately I don't understand the functions provided here, so I hope
-you can help me better understand what's going on.
+Hi Maxime,
 
-> wifi0_uart0 and wifi0_uart1 are different functions,  and they are mapped as
-> below:
-> wifi0_uart    -->  wifi0   uart   RTS
-> wifi0_uart0  -->  wifi0  uart   RxD
-> wifi0_uart1  -->  wifi0  uart   CTS
+[auto build test WARNING on linuxtv-media/master]
+[also build test WARNING on v4.12]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Christian has the following groups of pins for each function:
+url:    https://github.com/0day-ci/linux/commits/Maxime-Ripard/dt-bindings-media-Add-Cadence-MIPI-CSI2RX-Device-Tree-bindings/20170705-205643
+base:   git://linuxtv.org/media_tree.git master
+:::::: branch date: 17 hours ago
+:::::: commit date: 17 hours ago
 
-wifi0_uart: pin 8, 9, 11, 19 and 62
-wifi0_uart0: pin 9 and 10
-wifi0_uart1: pin 18 and 63
+>> drivers/media/platform/cadence/cdns-csi2rx.c:199:5-23: WARNING: Unsigned expression compared with zero: csi2rx -> sensor_pad < 0
 
-It's common to see alternative muxing of functions, so I'm guessing that
-wifi0_uart1 is one of these. Is this correct?
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout fb3d2879ba0623bcdc83c99ba70229ec1713feaf
+vim +199 drivers/media/platform/cadence/cdns-csi2rx.c
 
-But why is there 5 pins for RTS?
+fb3d2879 Maxime Ripard 2017-07-03  183  	return media_create_pad_link(&csi2rx->sensor_subdev->entity,
+fb3d2879 Maxime Ripard 2017-07-03  184  				     csi2rx->sensor_pad,
+fb3d2879 Maxime Ripard 2017-07-03  185  				     &csi2rx->subdev.entity, 0,
+fb3d2879 Maxime Ripard 2017-07-03  186  				     MEDIA_LNK_FL_ENABLED |
+fb3d2879 Maxime Ripard 2017-07-03  187  				     MEDIA_LNK_FL_IMMUTABLE);
+fb3d2879 Maxime Ripard 2017-07-03  188  }
+fb3d2879 Maxime Ripard 2017-07-03  189
+fb3d2879 Maxime Ripard 2017-07-03  190  static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
+fb3d2879 Maxime Ripard 2017-07-03  191  			      struct v4l2_subdev *subdev,
+fb3d2879 Maxime Ripard 2017-07-03  192  			      struct v4l2_async_subdev *asd)
+fb3d2879 Maxime Ripard 2017-07-03  193  {
+fb3d2879 Maxime Ripard 2017-07-03  194  	struct csi2rx_priv *csi2rx = v4l2_notifier_to_csi2rx(notifier);
+fb3d2879 Maxime Ripard 2017-07-03  195
+fb3d2879 Maxime Ripard 2017-07-03  196  	csi2rx->sensor_pad = media_entity_get_fwnode_pad(&subdev->entity,
+fb3d2879 Maxime Ripard 2017-07-03  197  							 &csi2rx->sensor_node->fwnode,
+fb3d2879 Maxime Ripard 2017-07-03  198  							 MEDIA_PAD_FL_SOURCE);
+fb3d2879 Maxime Ripard 2017-07-03 @199  	if (csi2rx->sensor_pad < 0) {
+fb3d2879 Maxime Ripard 2017-07-03  200  		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
+fb3d2879 Maxime Ripard 2017-07-03  201  			subdev->name);
+fb3d2879 Maxime Ripard 2017-07-03  202  		return csi2rx->sensor_pad;
+fb3d2879 Maxime Ripard 2017-07-03  203  	}
+fb3d2879 Maxime Ripard 2017-07-03  204
+fb3d2879 Maxime Ripard 2017-07-03  205  	csi2rx->sensor_subdev = subdev;
+fb3d2879 Maxime Ripard 2017-07-03  206
+fb3d2879 Maxime Ripard 2017-07-03  207  	dev_dbg(csi2rx->dev, "Bound %s pad: %d\n", subdev->name,
 
-Why is receive (wifi0_uart0) two adjacent pins? Are they perhaps Rx and
-Tx?
-
-Why do we have a CTS line if we only have RxD, no TxD?
-
-> 
-> wifi1_uart    -->  wifi1   uart   TxD
-> wifi1_uart0  -->  wifi1   uart   RxD  
-> wifi1_uart1  -->  wifi1   uart   CTS
-> 
-
-Why is there no RTS for this when it seems bidirectional?
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
