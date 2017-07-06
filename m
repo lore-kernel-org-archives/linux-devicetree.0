@@ -1,55 +1,215 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: "Generic" MMIO ADC
-Date: Thu, 6 Jul 2017 23:37:04 +0200
-Message-ID: <CACRpkdaZ=qSbdVxgw4DH_tOeZb0pZBYhhJJOozFn2pn25F_Kag@mail.gmail.com>
-References: <b60def9a-45dc-bf97-e059-abbe105648b2@topic.nl>
- <20170630145319.20ec3696@jic23.retrosnub.co.uk> <b9dc2313-53da-1566-c0e8-ac18599f59da@topic.nl>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [RFC] interrupts DT property for irqdomain hierarchy
+Date: Fri, 7 Jul 2017 06:58:47 +0900
+Message-ID: <CAK7LNATme8P1uHx5hZr6Eez4KGweUi=jQ6zJ=bdBf1XmxZVoLg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b9dc2313-53da-1566-c0e8-ac18599f59da-Oq418RWZeHk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 3, 2017 at 2:37 PM, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org> wrote:
+Hi IRQ experts, DT exports,
 
-> I was thinking along these lines:
->
-> ... {
->    compatible = "iio-adc-generic-mmio";
->    reg = <0x43210000 4096>;
->    interrupt = <&gic 42 0>;
->    iio,start-sequence = <0x0 0x3> <0x4 0xff>;
->    iio,stop-sequence = <0x0 0x0>;
 
-Nope. We are not going to invent scripting languages inside device tree.
-No sequences please. This is the start of what we call a jam table.
+I have a question about CONFIG_IRQ_DOMAIN_HIERARCHY.
 
-We had this discussion a long time ago when starting to convert all the ARM
-platforms to device tree: sequences should be expressed in code, not in
-the device tree. Because next thing that happens is that you want to encode
-a for() loop or if() or while().
+When IRQ domains are hierarchy,
+how can we specify IRQ number re-mapping between the
+parent irqchip and the child irqchip?
 
-The reason is that device tree is already part of open firmware, which already
-has a scripting language: FCode (based on forth). This is then used to create
-BIOS routines along the lines of what you're suggesting. So if you insist on
-writing a BIOS, by all means write a BIOS, but not inside DT, use FCode
-and figure out how to bridge that.
+The following figure shows a simplified example.
 
-But I think it's easier to just write a normal driver really.
+|----------|        |----------|       |----------|
+| parent   |        | child    |       |  IRQ     |
+| IRQ chip | <----- | IRQ chip |<----- | consumer |
+|          |        |          |       | Device   |
+|----------|        |----------|       |----------|
 
-Compare to ACPI, which has AML, for the very same purpose, and DSDT
-for describing the hardware.
+Perhaps, we may describe DT like follows
 
-Since ACPI is now starting to share parts of the DT bindings), things would
-get very weird if we did things like this. Should they also implement a
-compatible interpreter, rather than call their (very much in-use) AML
-snippets?
+    gic: interrupt-controller {
+            ...
+            interrupt-controller;
+            #interrupt-cells = <3>;
+    };
 
-Yours,
-Linus Walleij
+    child_intc: child-interrupt-controller {
+            ...
+            interrupt-parent = <&gic>;
+            interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
+            interrupt-controller;
+            #interrupt-cells = <2>;
+    };
+
+    i2c: i2c {
+            ...
+            interrupt-parent = <&child_intc>;
+            interrupts = <0 4>;
+    };
+
+
+In this example, the I2C controller takes HWIRQ=0 of the child_intc device.
+This goes through the child IRQ chip,
+then connected to HWIRQ=50 of the parent intc.
+
+The DT above describes the hardware connection well,
+but it actually does not work.
+
+The root irqchip is usually declared with IRQCHIP_DECLARE().
+So, IRQ resources are allocated when platform devices are populated from DT.
+This means IRQ allocation happens before drivers are probed.
+
+of_pupulate_default_populate() does not know the fact about irqdomain hierarchy.
+
+As a result, interrupts = <0 50 0> in the child_intc,
+and interrupts = <0 4> of the I2C are allocated with different virtual
+IRQ numbers.
+
+We want to assign the same IRQ number if we want handle them
+in the hierarchy IRQ manner.
+
+How can we make it work?
+
+Of course, we can remove the
+          interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
+from the child_intc device node.
+
+But, we can not retrieve the IRQ remapping information from DT.
+
+
+I saw some irqchip implementations and .alloc hook are often
+hard-coded in the case.
+
+
+For example, like this.
+
+static int child_intc_domain_alloc(struct irq_domain *domain,
+                          unsigned int virq, unsigned int nr_irqs, void *arg)
+{
+        ....
+
+        for (i = 0; i < nr_irqs; i++) {
+                struct irq_fwspec parent_fwspec;
+
+                ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+                                                    &priv->chip, priv);
+                if (ret)
+                        return ret;
+
+                /* CAUTION: parent irqchip must be GIC. */
+
+                parent_fwspec.fwnode = domain->parent->fwnode;
+                parent_fwspec.param_count = 3;  /*GIC: #interrupt-cells = <3> */
+                parent_fwspec.param[0] = 0;   /* SPI of GIC */
+                /* HWIRQ=0 of this chip corresponds to HWIRQ=50 of the parent */
+                parent_fwspec.param[1] = hwirq + 50;
+                parent_fwspec.param[2] = type;
+
+                ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
+                                                   &parent_fwspec);
+                if (ret)
+                        return ret;
+
+                virq++;
+                hwirq++;
+        }
+
+        return 0;
+}
+
+
+
+In order to avoid hard-coding, one possible idea is
+to retrieve the IRQ information from DT, like this:
+
+        for (i = 0; i < nr_irqs; i++) {
+                struct of_phandle_args parent_irq;
+                struct irq_fwspec parent_fwspec;
+
+                ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+                                                   &priv->chip, priv);
+                if (ret)
+                        return ret;
+
+                /* retrieve interrupt spec from DT */
+                ret = of_irq_parse_one(irq_domain_get_of_node(domain), hwirq,
+                                       &parent_irq);
+                if (ret)
+                        return ret;
+
+                of_phandle_args_to_fwspec(&parent_irq, &parent_fwspec);
+
+                ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
+                                                  &parent_fwspec);
+                if (ret)
+                        return ret;
+
+                virq++;
+                hwirq++;
+        }
+
+
+
+Some possible solutions:
+
+[1] stop early irq allocation and make it completely on-the-fly
+i.e. IRQ are allocated only when drivers explicitly call of_irq_get()
+or friends.
+
+This does not address one problem.
+
+If there are many IRQ lines connected between the parent and the child,
+interrupts will be very long.
+
+   #interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>,
+                 <0 54 0>, <0 55 0>, <0 56 0>, <0 57 0>,
+                  ...
+
+This is a mess.
+
+
+
+
+[2] Introduce DT property something like "interrupt-range"
+
+The idea is similar like "ranges" property transforms "reg".
+
+"interrupt-range" is an arbitrary number of
+(child irqchip interrupt) (parent irqchip interrupt) (length) triplets.
+
+For example,
+
+   interrupt-ranges = <0 0 0 50 0 4>;
+
+This means   <0 0>, <0 1>, <0 2>, <0 3> in the child
+should be mapped to  <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0> in the parent,
+respectively.
+
+
+
+Actually, "git grep interrupt-ranges" has 3 hits
+arch/powerpc/platforms/chrp/setup.c:    iranges = of_get_property(np,
+"interrupt-ranges", &len);
+arch/powerpc/platforms/chrp/setup.c:     * The first pair of cells in
+interrupt-ranges refers to the
+drivers/misc/cxl/of.c:  ranges = of_get_property(np, "interrupt-ranges", &len);
+
+I do not know how they are actually used because I see neither DTS
+files nor binding documents
+that describe it.
+
+
+
+That is my rough thought.
+
+
+Thanks for reading my message.
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
