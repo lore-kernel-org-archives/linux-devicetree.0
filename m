@@ -1,47 +1,79 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Thu, 6 Jul 2017 11:58:33 +0530
-Message-ID: <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
- <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
- <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com> <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 00/58] ARM: at91: rework Atmel TCB drivers
+Date: Thu, 6 Jul 2017 08:40:55 +0200
+Message-ID: <20170706064055.GE16144@ulmo.fritz.box>
+References: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <73cf3d55-f2ec-eb15-746a-0db5e7e28dad-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OZkY3AIuv2LYvjdk"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Antoine Aubert <a.aubert@overkiz.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Fabio Porcedda <fabio.porcedda@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gregory Hermant <gregory.hermant@calao-systems.com>, Joachim Eastwood <manabian@gmail.com>, linux-pwm@vger.kernel.org, Marek Vasut <marex@denx.de>, Martin Reimann <martin.reimann@egnite.de>, Peter Rosin <peda@axentia.se>, Raashid Muhammed <raashidmuhammed@zilogic.com>, Rob Herring <robh+dt@kernel.org>, Rodolfo Giometti <giometti@linux.it>, Se
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 5, 2017 at 11:32 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
->
-> I have posted the SCMI patches now[1],
->
-I wish I was CC'ed on that. Now LKML seems too busy to forward it.
+--OZkY3AIuv2LYvjdk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> please let me know how to get
-> both SCPI and SCMI working together with different doorbell bits on the
-> same channel.
->
-You say in the cover letter :
-"Let me begin admitting that we are introducing yet another protocol to
-achieve same things as many existing protocols like ARM SCPI, TI SCI,
-QCOM RPM, Nvidia Tegra BPMP, and so on"
+On Tue, May 30, 2017 at 11:50:41PM +0200, Alexandre Belloni wrote:
+> Hi,
+>=20
+> This series reworks the Atmel Timer counter Block drivers. Those blocks
+> each have 3 counters with 2 channels each and can be used for
+> multiple functions:
+>  - timers
+>  - PWMs
+>  - Quadrature decoders
+>  - Stepper motor counters
+>=20
+> Up until now, each TCB was fully used by each driver, possibly wasting
+> counters/channels.
+>=20
+> There is a second issue motivating that rework. Until now, the PIT is
+> still used to boot then later in the boot sequence, the clocksource is
+> switched to the TCB. This ends up not working well with preempt-rt
+> because on some SoCs, the PIT interrupt is shared with the DBGU uart.
+> When using preempt-rt the interrupt flags for the PIT and the DBGU end
+> up being incompatible.
+>=20
+> The rework breaks the DT ABI. Backward compatibility can be kept by
+> keeping tcb_clksrc and atmel_tclib but as AVR32 is now gone from the
+> kernel, I don't think it makes much sense to keep them.
+>=20
+> Also, there is no other choice than breaking the mainly unused
+> pwm-atmel-tcb binding. Only the kizbox is actually using it.
+>=20
+> I think the bindings are now ok and I hope we can take the DT changes
+> for 4.13.
 
- So SCMI is supposed to replace SCPI, SCI, RPM and BPMP   or   SCMI is
-to be used for future platforms.
-If SCPI and SCMI achieve the same, why have them both active simultaneously?
+Has anyone volunteered to pick this up? What are the dependencies here
+and how did you plan to get this merged?
 
-Assuming there really is some sane excuse :-
-    SCPI and SCMI are two separate client working over an MHU channel.
-So, as is the case with users relying on a common resource, you need a
-shim arbitrator that serialises access to the resource.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--OZkY3AIuv2LYvjdk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlld23UACgkQ3SOs138+
+s6F+DA/+KdAUGMhEpPB0KMsaOP7UCTYmwrqhfC2hIoQwOCpmFXe9e3W+W2cKAHuz
+2VTtVmcJY1wCASJM0xB/a2g6WRHUELLgUbU9uaAfPtwKOIwNoeMyBtgp5oNLx+4s
+GDm/jevMQcoTG00vNyRKNi86DJxM/ZR2X4msAO8f+nuByj0KB3/OTW6sYq8lzS8N
+/jJ91nFrXIhsBdwO8k+xQkF4VUCVA9rKKg/dgUMw8uiTXfmbj3RbKyOOfjGjLW+w
+xngjhI2pNRg5n3A5Exh5jVouf4XtNn3qhvviGjkgaBMEUUIXdXuqi+AUqTdxqhl/
+qXrPSfWh45GHqZO10GOhc9sOexF+vF7eVEFWXug8w/FsupRMRlILvTIQt73Mv4Iu
++9Jp2jdQzKNM/bS+EBnDTF6JQjoF1VSW7i1xxFtD7WsIfsvw7K9ZTEBFFAaoIbEU
+UTrvl4ygkmgIJtNxseifPZWbUKVAp/g2/Rj1/lmLYlN4CUR0fNAArCjyC8VYO5fv
+48BMuZGMPYMGrdE/z+CGL4c94KHzBlMlQciUMHaUbi131yzdOlMOI2+WmmH1DscZ
+vXq8CpHdU8wg4RaYEP/ICMi24uuKRCojgcAIDItTw+1p8iwjRdZy5yT3jlW1bQKz
+llFDpjkUaBBxeE9kdx8IzS4YCkhq5H8JgWzh/WKMgJu/PUd11Jw=
+=c4jJ
+-----END PGP SIGNATURE-----
+
+--OZkY3AIuv2LYvjdk--
