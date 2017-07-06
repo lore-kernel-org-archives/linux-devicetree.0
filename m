@@ -1,29 +1,54 @@
-From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 0/2] nvmem: rockchip-efuse: add support for rk3328-efuse
-Date: Thu,  6 Jul 2017 15:36:35 +0800
-Message-ID: <1499326597-10821-1-git-send-email-finley.xiao@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Finley Xiao <finley.xiao@rock-chips.com>
+Subject: [PATCH 1/2] nvmem: rockchip-efuse: parse 'rockchip,efuse-size'
+Date: Thu,  6 Jul 2017 15:36:36 +0800
+Message-ID: <1499326597-10821-2-git-send-email-finley.xiao@rock-chips.com>
+References: <1499326597-10821-1-git-send-email-finley.xiao@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499326597-10821-1-git-send-email-finley.xiao@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: srinivas.kandagatla@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, heiko@sntech.de
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jay.xu@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com, cl@rock-chips.com, Finley Xiao <finley.xiao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new property to define eFuse size and add the necessary data
-for handling eFuse on the rk3328.
+The eFuse size is defined in property <reg> before, but the length
+of registers is not equal to the size on some platforms, so we
+add a new property to redefine it.
 
-Finley Xiao (2):
-  nvmem: rockchip-efuse: parse 'rockchip,efuse-size'
-  nvmem: rockchip-efuse: add support for rk3328-efuse
+Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+---
+ Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 4 ++++
+ drivers/nvmem/rockchip-efuse.c                             | 4 +++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/nvmem/rockchip-efuse.txt   |  5 ++
- drivers/nvmem/rockchip-efuse.c                     | 70 +++++++++++++++++++++-
- 2 files changed, 74 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+index 194926f..d206aa1 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
+@@ -11,6 +11,10 @@ Required properties:
+ - clocks: Should be the clock id of eFuse
+ - clock-names: Should be "pclk_efuse"
+ 
++Optional properties:
++- rockchip,efuse-size: Should be exact eFuse size in byte, the eFuse
++  size in property <reg> will be invalid if define this property.
++
+ Deprecated properties:
+ - compatible: "rockchip,rockchip-efuse"
+   Old efuse compatible value compatible to rk3066a, rk3188 and rk3288
+diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
+index a0d4ede..8e3e5d0 100644
+--- a/drivers/nvmem/rockchip-efuse.c
++++ b/drivers/nvmem/rockchip-efuse.c
+@@ -214,7 +214,9 @@ static int rockchip_efuse_probe(struct platform_device *pdev)
+ 		return PTR_ERR(efuse->clk);
+ 
+ 	efuse->dev = &pdev->dev;
+-	econfig.size = resource_size(res);
++	if (of_property_read_u32(dev->of_node, "rockchip,efuse-size",
++				 &econfig.size))
++		econfig.size = resource_size(res);
+ 	econfig.reg_read = match->data;
+ 	econfig.priv = efuse;
+ 	econfig.dev = efuse->dev;
 -- 
 2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
