@@ -1,76 +1,87 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH v2 2/2] ARM: shmobile: defconfig: Enable Ethernet AVB
-Date: Thu, 6 Jul 2017 08:05:43 +0000
-Message-ID: <TY1PR06MB07020F58F15C964FC1AA1D22B7D50@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <afcd181c-c805-8f3c-955f-652d001a03d4@cogentembedded.com>
- <1499270189-29945-1-git-send-email-biju.das@bp.renesas.com>
- <1499270189-29945-3-git-send-email-biju.das@bp.renesas.com>
- <12c32eee-8e4d-457e-97d7-625a5c63ad59@cogentembedded.com>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Thu, 6 Jul 2017 16:30:16 +0800
+Message-ID: <20170706083015.GA6751@spreadtrum.com>
+References: <2083c9d6e96a72f9c1324c8a277acfd780a34094.1498472593.git.baolin.wang@spreadtrum.com>
+ <6941c6866078fac8fe81d108b573f7408245a0b9.1498472593.git.baolin.wang@spreadtrum.com>
+ <CAAfSe-uJZFMA4nr8Ah3OKz0Wx9bJOLHXcWK9Ujxx3kSi=PvaLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <12c32eee-8e4d-457e-97d7-625a5c63ad59@cogentembedded.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAfSe-uJZFMA4nr8Ah3OKz0Wx9bJOLHXcWK9Ujxx3kSi=PvaLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Orson Zhai =?utf-8?B?KOe/n+S6rCk=?= <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sergei, 
+Hi Chunyan,
 
-Thank you for your comments.
-
-> From: Sergei Shtylyov [mailto:sergei.shtylyov@cogentembedded.com]
-> Sent: 05 July 2017 17:14
+On 一,  7月 03, 2017 at 05:29:57下午 +0800, Chunyan Zhang wrote:
+> Hi Baolin,
 > 
-> Hello!
-> 
-> On 07/05/2017 06:56 PM, Biju Das wrote:
-> 
-> > The iWave RZ/G1M Q7 SOM supports Gigabit Ethernet Phy (Micrel
-> KSZ9031MNX).
-> > Gigabit Ethernet support is available in Renesas AVB driver.
-> > To increase hardware support enable the driver in the
-> > shmobile_defconfig multiplatform configuration.
+> On 26 June 2017 at 18:28, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> > This patch adds the I2C controller driver for Spreadtrum SC9860 platform.
 > >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 > > ---
-> >  arch/arm/configs/shmobile_defconfig | 1 +
-> >  1 file changed, 1 insertion(+)
+> > Changes since v2:
+> >  - Remove some redundant comments and parens.
+> >  - Define macros instead of magic number.
+> >  - Add some comments to explain clock formula.
+> >  - Change of_clk_get_by_name() to devm_clk_get().
+> >  - Deal with other frequency.
+> >  - Change register definiton to low case.
+> >  - Change is_last_msg to boolean.
+> >  - Other optimization.
 > >
-> > diff --git a/arch/arm/configs/shmobile_defconfig
-> > b/arch/arm/configs/shmobile_defconfig
-> > index 3c66a42..d992911 100644
-> > --- a/arch/arm/configs/shmobile_defconfig
-> > +++ b/arch/arm/configs/shmobile_defconfig
-> > @@ -83,6 +83,7 @@ CONFIG_NETDEVICES=y
-> >  # CONFIG_NET_VENDOR_MICREL is not set  #
-> CONFIG_NET_VENDOR_NATSEMI is
-> > not set  CONFIG_SH_ETH=y
-> > +CONFIG_RAVB=y
+> > Changes sice v1:
+> >  - Power on I2C device in probe().
+> >  - Remove redundant macros and usb __maybe_unused.
+> >  - Remove redundant 'of_match_ptr'.
+> >  - Modify return values and check the return value for 'clk_prepare_enable'.
+> > ---
+> >  drivers/i2c/busses/Kconfig    |    7 +
+> >  drivers/i2c/busses/Makefile   |    1 +
+> >  drivers/i2c/busses/i2c-sprd.c |  683 +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 691 insertions(+)
+> >  create mode 100644 drivers/i2c/busses/i2c-sprd.c
+> >
 > 
->     Hm, I would enable it only as a module, given it's not easy to make use of
-> AVB on the 32-bit boards.
+> [snip]
+> 
+> > diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+> > new file mode 100644
+> > index 0000000..a070f61
+> > --- /dev/null
+> > +++ b/drivers/i2c/busses/i2c-sprd.c
+> > @@ -0,0 +1,683 @@
+> > +/*
+> > + * Copyright (C) 2017 Spreadtrum Communications Inc.
+> > + *
+> > + * This software is licensed under the terms of the GNU General Public
+> > + * License version 2, as published by the Free Software Foundation, and
+> > + * may be copied, distributed, and modified under those terms.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> 
+> According to RobH's comments [1], we're switching to use
+> SPDX-License-Identifier tag instead, like [2].
+> 
+> [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.2/05122.html
+> [2] http://elixir.free-electrons.com/linux/v4.12/source/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts#L6
 
-On the iWave-M platforms the only available Ethernet interface is AVB. Without including the RAVB driver in the Kernel we won't be able to use NFS.
-
-I know adding CONFIG_RAVB for all shmobile devices may increase the Kernel size for everyone, especially when most cannot use AVB without an add-on board, but I don't think the increase will be big.
-
-
-Kind regards, Chris 
+Will use SPDX-License-Identifier tag instead and resend. Thanks.
 
 > 
-> [...]
-> 
-> MBR Sergei
+> Thanks,
+> Chunyan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
