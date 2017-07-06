@@ -1,59 +1,77 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 3/3] dt-bindings: pwm: update STM32 timers clock names
-Date: Thu, 6 Jul 2017 07:49:15 +0200
-Message-ID: <20170706054915.GB16144@ulmo.fritz.box>
-References: <1497453196-31470-1-git-send-email-fabrice.gasnier@st.com>
- <1497453196-31470-4-git-send-email-fabrice.gasnier@st.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: qcom: ipq4019: add remaining pin definitions
+Date: Wed, 5 Jul 2017 23:02:43 -0700
+Message-ID: <20170706060243.GP18666@tuxbook>
+References: <d53b7a9b1bab818536680123136ac58481d959c8.1494415174.git.chunkeey@googlemail.com>
+ <1975629.nrP45RYYW5@debian64>
+ <20170520050824.GS12920@tuxbook>
+ <2018547.lycQhaDrJg@debian64>
+ <20170523192857.GW12920@tuxbook>
+ <001b01d2d48e$3f366660$bda33320$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
-Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497453196-31470-4-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+In-Reply-To: <001b01d2d48e$3f366660$bda33320$@codeaurora.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: 'Christian Lamparter' <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Linus Walleij' <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, 'John Crispin' <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 24 May 06:04 PDT 2017, Ram Chandra Jangir wrote:
 
---oLBj+sq0vYjzfsbl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+> 
+> On Wednesday, May 24, 2017 12:59 AM CEST Bjorn Andersson wrote:
+[..]
+> >This makes me wonder what wifi1_uart (and uart1) actually is...
+> 
+> >The wifi\d_uart seems to have 5 pins in its group and wifi\d_uart\d seems
+> to be two sets of two pins. So perhaps this is some alternative routing and
+> wifi0_uart0 and wifi0_uart1 is actually the same function?
+> 
+> >@Ram, can you help us out here?
+> 
 
-On Wed, Jun 14, 2017 at 05:13:16PM +0200, Fabrice Gasnier wrote:
-> Clock name has been updated during driver/DT binding review:
-> https://lkml.org/lkml/2016/12/13/718
-> Update DT binding doc to reflect this.
->=20
-> Fixes: cd9a99c2f8e8 (dt-bindings: pwm: Add STM32 bindings)
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Ram, thanks for your answer. Unfortunately I missed this mail until
+Christian posted the new version of the patch.
 
-Applied, thanks.
+Unfortunately I don't understand the functions provided here, so I hope
+you can help me better understand what's going on.
 
-Thierry
+> wifi0_uart0 and wifi0_uart1 are different functions,  and they are mapped as
+> below:
+> wifi0_uart    -->  wifi0   uart   RTS
+> wifi0_uart0  -->  wifi0  uart   RxD
+> wifi0_uart1  -->  wifi0  uart   CTS
 
---oLBj+sq0vYjzfsbl
-Content-Type: application/pgp-signature; name="signature.asc"
+Christian has the following groups of pins for each function:
 
------BEGIN PGP SIGNATURE-----
+wifi0_uart: pin 8, 9, 11, 19 and 62
+wifi0_uart0: pin 9 and 10
+wifi0_uart1: pin 18 and 63
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlldz1sACgkQ3SOs138+
-s6GlERAAqizstPfL2AWZTMPWwHrg6Ag4ArgczreDTV5rqKF9t6CxQ51oFtdt7EzD
-xAKnK+b6cbPmD5xkBJniTKqi8eSCPhs3S2XpzO9T9tSMCL1Mue0DhqOvlExm1+OZ
-Zet9jTiPDDWOAW7PlSl7lkYTU/YbSx4Ngs3ttoaXdcZPz3gm+tJ+KmOb6i+ZgYjE
-/YqdNUPidRA/zrw/0IxFRRd/1M91Mzy0hfXniK4Wx+doJ5yZeDA/GOijkzL5TIag
-/0XqGQDUiVfr6pBa4imVjhET1kLBleJwgWC3Zn+QgeiYdWGLOh4ZCNBH0Ps01p+Y
-orBfdmArUlSKVoYNutK/wcUiRVdB7sBPrOPtvVxJZoOwbpATTNOUYLQ6Ht+QuUB4
-BvHmBLRYpMHFIGQRcLL+TUUjzuOqgSSXGZxFanUKhyKfcujHMMHvIjzsKGjK96k3
-0AeTcdVwhmB4zOontfqcDuR/qB/m8YTnPOFVms5xvuNvozfXoavBMzIZI6Zw4Tjt
-ErO0m5WrdhwpKsRrEwjwbBvIYa2YqNzwKEoeoiyYbazIs+DCeRip7ocQATjr/cR4
-YXlHHfnnMBNeDo0jxrzVQV483LEqCtHKpTDQ9/pd4SQuAkXFxd8eH5NOZLj8mRJY
-tJsTfwnfn4bURg9xIobkNd5hDt7TdPp/9OtN8FlSiK9guaB9mhY=
-=7zbU
------END PGP SIGNATURE-----
+It's common to see alternative muxing of functions, so I'm guessing that
+wifi0_uart1 is one of these. Is this correct?
 
---oLBj+sq0vYjzfsbl--
+But why is there 5 pins for RTS?
+
+Why is receive (wifi0_uart0) two adjacent pins? Are they perhaps Rx and
+Tx?
+
+Why do we have a CTS line if we only have RxD, no TxD?
+
+> 
+> wifi1_uart    -->  wifi1   uart   TxD
+> wifi1_uart0  -->  wifi1   uart   RxD  
+> wifi1_uart1  -->  wifi1   uart   CTS
+> 
+
+Why is there no RTS for this when it seems bidirectional?
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
