@@ -1,133 +1,43 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH v3 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support
-Date: Thu, 6 Jul 2017 11:35:28 +0300
-Message-ID: <1499330129-29319-5-git-send-email-claudiu.beznea@microchip.com>
-References: <1499330129-29319-1-git-send-email-claudiu.beznea@microchip.com>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCHv2 0/2] rtc: add support for STM32H7 RTC
+Date: Thu, 6 Jul 2017 10:47:43 +0200
+Message-ID: <1499330865-17232-1-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499330129-29319-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cristian.birsan@microchip.com, ludovic.desroches@microchip.com, Claudiu Beznea <claudiu.beznea@microchip.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBC2IT2GSZUDRBP7S67FAKGQEUGHKQJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add specific DTS file and bindings for sama5d27 SoM1 board.
+Add support for STM32H7 Real Time Clock variant.
+Difference is regarding clocks: there is a 'pclk' clock on STM32H7
+for register access.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
----
- arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 102 ++++++++++++++++++++++++++++++
- 1 file changed, 102 insertions(+)
- create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+Amelie Delaunay (2):
+  dt-bindings: rtc: stm32: add support for STM32H7
+  rtc: stm32: add STM32H7 RTC support
 
-diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-new file mode 100644
-index 0000000..63a5af8
---- /dev/null
-+++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-@@ -0,0 +1,102 @@
-+/*
-+ * at91-sama5d27_som1.dtsi - Device Tree file for SAMA5D27 SoM1 board
-+ *
-+ *  Copyright (c) 2017, Microchip Technology Inc.
-+ *                2017 Cristian Birsan <cristian.birsan@microchip.com>
-+ *                2017 Claudiu Beznea <claudiu.beznea@microchip.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+#include "sama5d2.dtsi"
-+#include "sama5d2-pinfunc.h"
-+
-+/ {
-+	model = "Atmel SAMA5D27 SoM1";
-+	compatible = "atmel,sama5d27-som1", "atmel,sama5d27", "atmel,sama5d2", "atmel,sama5";
-+
-+	clocks {
-+		slow_xtal {
-+			clock-frequency = <32768>;
-+		};
-+
-+		main_xtal {
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	ahb {
-+		apb {
-+			macb0: ethernet@f8008000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_macb0_default>;
-+				phy-mode = "rmii";
-+
-+				ethernet-phy@1 {
-+					reg = <0x1>;
-+					interrupt-parent = <&pioA>;
-+					interrupts = <PIN_PD31 IRQ_TYPE_LEVEL_LOW>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&pinctrl_macb0_phy_irq>;
-+				};
-+			};
-+
-+			pinctrl@fc038000 {
-+
-+				pinctrl_macb0_default: macb0_default {
-+					pinmux = <PIN_PD9__GTXCK>,
-+						 <PIN_PD10__GTXEN>,
-+						 <PIN_PD11__GRXDV>,
-+						 <PIN_PD12__GRXER>,
-+						 <PIN_PD13__GRX0>,
-+						 <PIN_PD14__GRX1>,
-+						 <PIN_PD15__GTX0>,
-+						 <PIN_PD16__GTX1>,
-+						 <PIN_PD17__GMDC>,
-+						 <PIN_PD18__GMDIO>;
-+					bias-disable;
-+				};
-+
-+				pinctrl_macb0_phy_irq: macb0_phy_irq {
-+					pinmux = <PIN_PD31__GPIO>;
-+					bias-disable;
-+				};
-+			};
-+		};
-+	};
-+};
+ .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 32 +++++++--
+ drivers/rtc/rtc-stm32.c                            | 82 +++++++++++++++++-----
+ 2 files changed, 92 insertions(+), 22 deletions(-)
+
 -- 
-2.7.4
+1.9.1
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
