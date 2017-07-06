@@ -1,32 +1,37 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 6/6] net: stmmac: revert "support future possible
- different internal phy mode"
-Date: Thu, 6 Jul 2017 10:51:47 +0200
-Message-ID: <20170706085147.GA15728@Red>
-References: <20170702123159.6939-1-clabbe.montjoie@gmail.com>
- <20170702123159.6939-7-clabbe.montjoie@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170702123159.6939-7-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux-sunxi@googlegroups.com
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: sunxi: h3/h5: Correct emac register size
+Date: Thu,  6 Jul 2017 10:53:34 +0200
+Message-ID: <20170706085334.25380-1-clabbe.montjoie@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 02, 2017 at 02:31:59PM +0200, Corentin Labbe wrote:
-> Since internal phy-mode is reserved for non-xMII protocol we cannot use
-> it with dwmac-sun8i
-> This reverts commit 1c2fa5f84683 ("net: stmmac: support future possible different internal phy mode")
-> 
-> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> ---
+The datasheet said that emac register size is 0x1000 not 0x104
 
-Hello
+Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This patch was left not applied but all other patch from this serie was.
-Could you apply it, or perhaps you prefer I resend it with some "Fixes:"
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index 716e7d668dec..5a57b67c9b77 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -406,7 +406,7 @@
+ 		emac: ethernet@1c30000 {
+ 			compatible = "allwinner,sun8i-h3-emac";
+ 			syscon = <&syscon>;
+-			reg = <0x01c30000 0x104>;
++			reg = <0x01c30000 0x1000>;
+ 			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "macirq";
+ 			resets = <&ccu RST_BUS_EMAC>;
+-- 
+2.13.0
 
-Regards
-Corentin Labbe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
