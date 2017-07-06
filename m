@@ -1,48 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] input: keyboard: Add lm8333 devicetree bindings
-Date: Thu, 6 Jul 2017 11:09:40 -0500
-Message-ID: <20170706160940.ljunxsk2y7ok55c6@rob-hp-laptop>
-References: <20170629122220.12425-3-gordan.markus@gmail.com>
- <20170629122220.12425-4-gordan.markus@gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Thu, 6 Jul 2017 17:44:50 +0100
+Message-ID: <36ea8010-f22a-e0d9-b9a9-bb6be19db45d@arm.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
+ <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
+ <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+ <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+ <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
+ <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
+ <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
+ <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com>
+ <CABb+yY3QRz9pcSTMsgNUnBkzQAedFFbbwu0fXY-2oJCFARz60g@mail.gmail.com>
+ <012a9039-23e0-be8c-add9-2c0e83a1d97e@arm.com>
+ <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170629122220.12425-4-gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gordan =?utf-8?Q?Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 02:22:20PM +0200, Gordan Markuš wrote:
-> This adds LM8333 devicetree bindings documentation.
+
+
+On 06/07/17 15:37, Jassi Brar wrote:
+> On Thu, Jul 6, 2017 at 3:03 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+
+[...]
+
+>>
+>> I said it *may not be used*, currently it is used.
+>>
+> SCPI provides more than what SCMI currently does - dvfs, clock, sensor.
+
+Not sure what you mean by that, but that's not true.
+
+> I see no reason why you must have SCPI and SCMI both running.
 > 
-> Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
+
+We can still have 2 different protocols using same MHU channel with
+different doorbells, what's wrong with that ?
+
+> And even then there is a solution - a shim arbitrator. Other
+> platforms, those share a channel, do that. No big deal.
 > 
-> diff --git a/Documentation/devicetree/bindings/input/ti,lm8333.txt b/Documentation/devicetree/bindings/input/ti,lm8333.txt
-> new file mode 100644
-> index 0000000..dda01e2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/ti,lm8333.txt
-> @@ -0,0 +1,45 @@
-> +LM8333 Keypad
-> +
-> +Required properties:
-> +- compatible: Compatible property value should be "ti,lm8333".
-> +
-> +- reg: Physical base address of the peripheral and length of memory mapped
-> +  region.
 
-Isn't this I2C based?
+Example please ? Please remember these protocols are generic and we
+can't add any platform specific code into them.
 
-With that fixed,
+>  BTW, I hope you realise that we need a 'transport layer' which will
+> be the platform specific glue between mailbox controller specifics and
+> the generic SCMI code.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Why ? Clearly you have not made a since technical argument so far as why
+MHU doorbell is not correct way even when MHU specification is clearly
+allows it. I have given example of ST mailbox which has this doorbell
+kind of support.
+
+> I see your confusion in the form of some issues in the SCMI
+> implementation, please CC me on the next revision.
+> 
+
+Care to elaborate on what's my confusion or at-least what you think so ?
+
+Also if you have concern on implementation, ok we can discuss further.
+But can you make it clear as what your objections are for the doorbell
+MHU binding. How will I get the bit assigned for different protocols
+which are platform specific ? I still need some binding , right ?
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
