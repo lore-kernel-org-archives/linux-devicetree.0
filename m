@@ -1,57 +1,59 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
-Date: Thu,  6 Jul 2017 12:27:50 +0200
-Message-ID: <1499336870-24118-3-git-send-email-narmstrong@baylibre.com>
-References: <1499336870-24118-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499336870-24118-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, hans.verkuil@cisco.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 6/6] net: stmmac: revert "support future
+ possible different internal phy mode"
+Date: Thu, 6 Jul 2017 18:37:59 +0800
+Message-ID: <CAGb2v64SY5L9gJP3ZBViskWoUJ8V_9FTdtevGPiBW2EzgSyOAQ@mail.gmail.com>
+References: <20170702123159.6939-1-clabbe.montjoie@gmail.com>
+ <20170702123159.6939-7-clabbe.montjoie@gmail.com> <20170706085147.GA15728@Red>
+ <20170706.104514.1212305295126379350.davem@davemloft.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBH5G7DFAKGQESZTF6AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170706.104514.1212305295126379350.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
-device bindings.
+Hi Corentin,
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
+On Thu, Jul 6, 2017 at 5:45 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Thu, 6 Jul 2017 10:51:47 +0200
+>
+>> On Sun, Jul 02, 2017 at 02:31:59PM +0200, Corentin Labbe wrote:
+>>> Since internal phy-mode is reserved for non-xMII protocol we cannot use
+>>> it with dwmac-sun8i
+>>> This reverts commit 1c2fa5f84683 ("net: stmmac: support future possible different internal phy mode")
+>>>
+>>> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>
+>> Hello
+>>
+>> This patch was left not applied but all other patch from this serie was.
+>> Could you apply it, or perhaps you prefer I resend it with some "Fixes:"
+>
+> You never need to ask questions like this.
+>
+> If it's not active in my patchwork queue, you must resend.
+>
+> Thank you.
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-new file mode 100644
-index 0000000..8671bdb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-@@ -0,0 +1,28 @@
-+* Amlogic Meson AO-CEC driver
-+
-+The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
-+to handle communication between HDMI connected devices over the CEC bus.
-+
-+Required properties:
-+  - compatible : value should be following
-+	"amlogic,meson-gx-ao-cec"
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : AO-CEC interrupt number to the CPU.
-+  - clocks : from common clock binding: handle to AO-CEC clock.
-+  - clock-names : from common clock binding: must contain "core",
-+		  corresponding to entry in the clocks property.
-+  - hdmi-phandle: phandle to the HDMI controller
-+
-+Example:
-+
-+cec_AO: cec@100 {
-+	compatible = "amlogic,meson-gx-ao-cec";
-+	reg = <0x0 0x00100 0x0 0x14>;
-+	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
-+	clock-names = "core";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
--- 
-1.9.1
+Your series was not applied at all. See the status on patchwork:
+
+    http://patchwork.ozlabs.org/patch/783179/
+
+Maxime's patch to revert all device tree changes in net-next was
+applied first.
+
+Please rebase and resend this patch for netdev (not net-next).
+
+ChenYu
