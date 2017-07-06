@@ -1,81 +1,32 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Thu, 6 Jul 2017 17:44:50 +0100
-Message-ID: <36ea8010-f22a-e0d9-b9a9-bb6be19db45d@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
- <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
- <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
- <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
- <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
- <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
- <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
- <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com>
- <CABb+yY3QRz9pcSTMsgNUnBkzQAedFFbbwu0fXY-2oJCFARz60g@mail.gmail.com>
- <012a9039-23e0-be8c-add9-2c0e83a1d97e@arm.com>
- <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] pwm: rockchip: Add APB and function both clocks
+ support
+Date: Thu, 6 Jul 2017 12:12:54 -0500
+Message-ID: <20170706171254.cdjc4dwfwcoitm44@rob-hp-laptop>
+References: <1498739271-27431-1-git-send-email-david.wu@rock-chips.com>
+ <1498739271-27431-2-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1498739271-27431-2-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/07/17 15:37, Jassi Brar wrote:
-> On Thu, Jul 6, 2017 at 3:03 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
-
-[...]
-
->>
->> I said it *may not be used*, currently it is used.
->>
-> SCPI provides more than what SCMI currently does - dvfs, clock, sensor.
-
-Not sure what you mean by that, but that's not true.
-
-> I see no reason why you must have SCPI and SCMI both running.
+On Thu, Jun 29, 2017 at 08:27:47PM +0800, David Wu wrote:
+> New PWM module provides two individual clocks of APB clock
+> and function clock.
 > 
+> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pwm/pwm-rockchip.txt       |  8 +++-
 
-We can still have 2 different protocols using same MHU channel with
-different doorbells, what's wrong with that ?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> And even then there is a solution - a shim arbitrator. Other
-> platforms, those share a channel, do that. No big deal.
-> 
-
-Example please ? Please remember these protocols are generic and we
-can't add any platform specific code into them.
-
->  BTW, I hope you realise that we need a 'transport layer' which will
-> be the platform specific glue between mailbox controller specifics and
-> the generic SCMI code.
-
-Why ? Clearly you have not made a since technical argument so far as why
-MHU doorbell is not correct way even when MHU specification is clearly
-allows it. I have given example of ST mailbox which has this doorbell
-kind of support.
-
-> I see your confusion in the form of some issues in the SCMI
-> implementation, please CC me on the next revision.
-> 
-
-Care to elaborate on what's my confusion or at-least what you think so ?
-
-Also if you have concern on implementation, ok we can discuss further.
-But can you make it clear as what your objections are for the doorbell
-MHU binding. How will I get the bit assigned for different protocols
-which are platform specific ? I still need some binding , right ?
--- 
-Regards,
-Sudeep
+>  drivers/pwm/pwm-rockchip.c                         | 53 ++++++++++++++++++----
+>  2 files changed, 51 insertions(+), 10 deletions(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
