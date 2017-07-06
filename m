@@ -1,388 +1,783 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC] pwm: Add Xilinx AXI Timer in PWM mode support
-Date: Thu, 6 Jul 2017 11:13:44 +0200
-Message-ID: <20170706091344.GO16144@ulmo.fritz.box>
-References: <20170627100522.30447-1-alvaro.gamez@hazent.com>
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: Re: [PATCH v4 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Thu, 6 Jul 2017 17:10:21 +0800
+Message-ID: <20170706091021.GA6983@spreadtrum.com>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1499330475.git.baolin.wang@spreadtrum.com>
+ <7b2286a07cec8be20d30fd1b32d4762ec0419ef1.1499330476.git.baolin.wang@spreadtrum.com>
+ <CAHp75VdOH9QOFqzAaRUXXEObJQq5HNe-Cg41CxUdBXMwDJyJCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="E+IgQzR66AIOcbjA"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170627100522.30447-1-alvaro.gamez@hazent.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <CAHp75VdOH9QOFqzAaRUXXEObJQq5HNe-Cg41CxUdBXMwDJyJCw@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Andy,
 
---E+IgQzR66AIOcbjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 四,  7月 06, 2017 at 12:00:29下午 +0300, Andy Shevchenko wrote:
+> On Thu, Jul 6, 2017 at 11:47 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+> > This patch adds the I2C controller driver for Spreadtrum SC9860 platform.
+> >
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> 
+> P.S. There is still room for improvement, though it either requires
+> additional changes to the kernel or minor on this stage. Would be done
+> later.
 
-On Tue, Jun 27, 2017 at 12:05:22PM +0200, Alvaro Gamez Machado wrote:
-> This patch adds support for the IP core provided by Xilinx.
-> This IP core can function as a two independent timers, but can also use
-> both counters as values for period and duty cycle of a PWM output.
->=20
-> Signed-off-by: Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-> ---
->=20
-> Hi!
->=20
-> AXI timer IP core is also used on Microblaze based systems to generate a
-> periodic interrupt, as defined in arch/microblaze/kernel/timer.c
->=20
-> If this patch is applied as is on a hardware that defines two timers (one
-> intended to generate the periodic interrupt and the other one to be the
-> PWM controller), the driver finds two devices:
->=20
-> axi_timer-pwm 41c00000.timer: at 0x41C00000 mapped to 0xf0080000
-> axi_timer-pwm 41c10000.timer: at 0x41C10000 mapped to 0xf00a0000
->=20
-> Of course, the first one is the interrupt generator, so using this PWM
-> would alter its configuration and screw everything up.
->=20
-> I'm quite new tinkering with the kernel, so I'd like to know which would
-> be a nice solution for this:
->=20
-> a) Changing "xlnx,axi-timer-2.0" compatible string for this device to som=
-ething
->    different like xlnx,axi-pwm-2.0?
+Thanks for your reviewed tag, and I saw your patches to add writesb/readsb
+on x86 platform, I will create fix patch if your patches were applied.
 
-I don't see a xlnx,axi-timer-2.0 compatible string defined in the
-kernel. There's an xlnx,xps-timer-1.00.a used in Microblaze and PowerPC,
-but it might not be related.
-
-> b) Is there a way to make arch/microblaze/kernel/timer.c take full posess=
-ion
->    of its axi timer device so that any further driver can't access it?
-
-Typically a driver would call request_resource(), which marks the given
-resource (i.e. memory-mapped I/O region) as in-use, before mapping it.
-However, the Microblaze code doesn't do that. Instead it uses of_iomap()
-which maps the region without requesting it.
-
-However, request_resource() isn't a complete solution to this problem
-either because it works on a first-come, first-serve basis. That is, if
-you've requested the region in the Microblaze timer code, then the PWM
-driver won't be able to claim it, and vice versa. So this gives you a
-simple solution to prevent the PWM driver from messing with the timer
-code.
-
-However, you wouldn't be able to configure the two blocks in your
-example differently. The reason is that both will be claimed by the same
-driver (timer code or PWM driver). At least in general terms. In this
-particular case, the Microblaze timer code only initializes one instance
-and leaves the second alone. So in fact simply claiming the region via a
-call to request_resource() should be enough to make this work for your
-particular use-case. The PWM driver would still try to bind to both
-devices, but it will fail during devm_ioremap_resource() for the first
-instance because the timer code would've claimed the region. The
-downside is that you'd get an error in the boot log because the driver
-probe failed.
-
-As for ARCH_ZYNQ the problem can likely be ignored because it doesn't
-use the Microblaze timer code. So you could simply enable the driver and
-have it claim whatever devices match. For the sake of completeness I
-should say that this only works (reliably) if you have a single driver
-claiming to be compatible with a given string. Only a single driver can
-bind to a given device (inherently, even before trying to request the
-I/O region).
-
-> I've tried option (a) and works flawlessly as far as I can tell (tested
-> through /sys interface), but I think option (b) would be better, if it's
-> something that can be done.
-
-I think (a) is certainly the cleaner approach because it lets you select
-the mode via DT. However, it's probably best to get DT maintainers'
-opinion on this. Cc'ing them. Quoting in full for context.
-
-As you point out, using a completely different compatible string is the
-easiest way to side-step the problem. However, it's also "wrong" in that
-you're still dealing with the same hardware, and consequently should be
-identified by the same compatible string.
-
-One possible option I can think of would be to define a somewhat generic
-compatible string to identify the block as a whole and require a second
-compatible string to specify what mode to use the block in.
-
-Another alternative would be to mark the node as PWM controller with an
-additional property (e.g. pwm-controller) and use that as the selector
-for the mode. The timer code would have to be modified to abort if it
-encounters a node marked with this property, and similarily the PWM
-driver would abort if the property is absent.
-
-Anyway, let's see what the device tree maintainers think about it.
-
-Thierry
-
->  drivers/pwm/Kconfig         |   9 ++
->  drivers/pwm/Makefile        |   1 +
->  drivers/pwm/pwm-axi-timer.c | 196 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 206 insertions(+)
->  create mode 100644 drivers/pwm/pwm-axi-timer.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 313c10789ca2..d4e9fa4ed40e 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -74,6 +74,15 @@ config PWM_ATMEL_TCB
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-atmel-tcb.
-> =20
-> +config PWM_AXI_TIMER
-> +	tristate "AXI Timer PWM support"
-> +	depends on ARCH_ZYNQ || MICROBLAZE
-> +	help
-> +	  Generic PWM framework driver for Xilinx's AXI Timer
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-axi-timer.
-> +
->  config PWM_BCM_IPROC
->  	tristate "iProc PWM support"
->  	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 93da1f79a3b8..773f99f20d4b 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
->  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
->  obj-$(CONFIG_PWM_ATMEL_HLCDC_PWM)	+=3D pwm-atmel-hlcdc.o
->  obj-$(CONFIG_PWM_ATMEL_TCB)	+=3D pwm-atmel-tcb.o
-> +obj-$(CONFIG_PWM_AXI_TIMER)	+=3D pwm-axi-timer.o
->  obj-$(CONFIG_PWM_BCM_IPROC)	+=3D pwm-bcm-iproc.o
->  obj-$(CONFIG_PWM_BCM_KONA)	+=3D pwm-bcm-kona.o
->  obj-$(CONFIG_PWM_BCM2835)	+=3D pwm-bcm2835.o
-> diff --git a/drivers/pwm/pwm-axi-timer.c b/drivers/pwm/pwm-axi-timer.c
-> new file mode 100644
-> index 000000000000..94748e526eb8
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-axi-timer.c
-> @@ -0,0 +1,196 @@
-> +/*
-> + * Copyright 2017 Alvaro Gamez Machado <alvaro.gamez@hazent.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +
-> +struct axi_timer_pwm_chip {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	void __iomem *regs;  /* virt. address of the control registers */
-> +};
-> +
-> +#define TCSR0   (0x00)
-> +#define TLR0    (0x04)
-> +#define TCR0    (0x08)
-> +#define TCSR1   (0x10)
-> +#define TLR1    (0x14)
-> +#define TCR1    (0x18)
-> +
-> +#define TCSR_MDT        BIT(0)
-> +#define TCSR_UDT        BIT(1)
-> +#define TCSR_GENT       BIT(2)
-> +#define TCSR_CAPT       BIT(3)
-> +#define TCSR_ARHT       BIT(4)
-> +#define TCSR_LOAD       BIT(5)
-> +#define TCSR_ENIT       BIT(6)
-> +#define TCSR_ENT        BIT(7)
-> +#define TCSR_TINT       BIT(8)
-> +#define TCSR_PWMA       BIT(9)
-> +#define TCSR_ENALL      BIT(10)
-> +#define TCSR_CASC       BIT(11)
-> +
-> +#define to_axi_timer_pwm_chip(_chip) \
-> +	container_of(_chip, struct axi_timer_pwm_chip, chip)
-> +
-> +static int axi_timer_pwm_config(struct pwm_chip *chip, struct pwm_device=
- *pwm,
-> +				int duty_ns, int period_ns)
-> +{
-> +	struct axi_timer_pwm_chip *axi_timer =3D to_axi_timer_pwm_chip(chip);
-> +	unsigned long long c;
-> +	int period_cycles, duty_cycles;
-> +
-> +	c =3D clk_get_rate(axi_timer->clk);
-> +
-> +	/* When counters are configured to count down, UDT=3D1 (see datasheet):
-> +	 * PWM_PERIOD =3D (TLR0 + 2) * AXI_CLOCK_PERIOD
-> +	 * PWM_HIGH_TIME =3D (TLR1 + 2) * AXI_CLOCK_PERIOD
-> +	 */
-> +	period_cycles =3D div64_u64(c * period_ns, NSEC_PER_SEC) - 2;
-> +	duty_cycles =3D div64_u64(c * duty_ns, NSEC_PER_SEC) - 2;
-> +
-> +	iowrite32(period_cycles, axi_timer->regs + TLR0);
-> +	iowrite32(duty_cycles, axi_timer->regs + TLR1);
-> +
-> +	/* Load timer values */
-> +	u32 tcsr;
-> +
-> +	tcsr =3D ioread32(axi_timer->regs + TCSR0);
-> +	iowrite32(tcsr | TCSR_LOAD, axi_timer->regs + TCSR0);
-> +	iowrite32(tcsr, axi_timer->regs + TCSR0);
-> +
-> +	tcsr =3D ioread32(axi_timer->regs + TCSR1);
-> +	iowrite32(tcsr | TCSR_LOAD, axi_timer->regs + TCSR1);
-> +	iowrite32(tcsr, axi_timer->regs + TCSR1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_timer_pwm_enable(struct pwm_chip *chip, struct pwm_device=
- *pwm)
-> +{
-> +	struct axi_timer_pwm_chip *axi_timer =3D to_axi_timer_pwm_chip(chip);
-> +
-> +	/* see timer data sheet for detail
-> +	 * !CASC - disable cascaded operation
-> +	 * ENALL - enable all
-> +	 * PWMA - enable PWM
-> +	 * !TINT - don't care about interrupts
-> +	 * ENT- enable timer itself
-> +	 * !ENIT - disable interrupt
-> +	 * !LOAD - clear the bit to let go
-> +	 * ARHT - auto reload
-> +	 * !CAPT - no external trigger
-> +	 * GENT - required for PWM
-> +	 * UDT - set the timer as down counter
-> +	 * !MDT - generate mode
-> +	 */
-> +	iowrite32(TCSR_ENALL | TCSR_PWMA | TCSR_ENT | TCSR_ARHT |
-> +		  TCSR_GENT | TCSR_UDT, axi_timer->regs + TCSR0);
-> +	iowrite32(TCSR_ENALL | TCSR_PWMA | TCSR_ENT | TCSR_ARHT |
-> +		  TCSR_GENT | TCSR_UDT, axi_timer->regs + TCSR1);
-> +
-> +	return 0;
-> +}
-> +
-> +static void axi_timer_pwm_disable(struct pwm_chip *chip, struct pwm_devi=
-ce *pwm)
-> +{
-> +	struct axi_timer_pwm_chip *axi_timer =3D to_axi_timer_pwm_chip(chip);
-> +
-> +	u32 tcsr;
-> +
-> +	tcsr =3D ioread32(axi_timer->regs + TCSR0);
-> +	iowrite32(tcsr & ~TCSR_PWMA, axi_timer->regs + TCSR0);
-> +
-> +	tcsr =3D ioread32(axi_timer->regs + TCSR1);
-> +	iowrite32(tcsr & ~TCSR_PWMA, axi_timer->regs + TCSR1);
-> +}
-> +
-> +static const struct pwm_ops axi_timer_pwm_ops =3D {
-> +	.config =3D axi_timer_pwm_config,
-> +	.enable =3D axi_timer_pwm_enable,
-> +	.disable =3D axi_timer_pwm_disable,
-> +	.owner =3D THIS_MODULE,
-> +};
-> +
-> +static int axi_timer_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct axi_timer_pwm_chip *axi_timer;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	axi_timer =3D devm_kzalloc(&pdev->dev, sizeof(*axi_timer), GFP_KERNEL);
-> +	if (!axi_timer)
-> +		return -ENOMEM;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	axi_timer->regs =3D devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(axi_timer->regs))
-> +		return PTR_ERR(axi_timer->regs);
-> +
-> +	axi_timer->clk =3D devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(axi_timer->clk))
-> +		return PTR_ERR(axi_timer->clk);
-> +
-> +	axi_timer->chip.dev =3D &pdev->dev;
-> +	axi_timer->chip.ops =3D &axi_timer_pwm_ops;
-> +	axi_timer->chip.npwm =3D 1;
-> +	axi_timer->chip.base =3D -1;
-> +
-> +	dev_info(&pdev->dev, "at 0x%08llX mapped to 0x%p\n",
-> +		 (unsigned long long)res->start, axi_timer->regs);
-> +
-> +	ret =3D pwmchip_add(&axi_timer->chip);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "failed to add PWM chip, error %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, axi_timer);
-> +
-> +	return 0;
-> +}
-> +
-> +static int axi_timer_pwm_remove(struct platform_device *pdev)
-> +{
-> +	struct axi_timer_pwm_chip *axi_timer =3D platform_get_drvdata(pdev);
-> +	unsigned int i;
-> +
-> +	for (i =3D 0; i < axi_timer->chip.npwm; i++)
-> +		pwm_disable(&axi_timer->chip.pwms[i]);
-> +
-> +	return pwmchip_remove(&axi_timer->chip);
-> +}
-> +
-> +static const struct of_device_id axi_timer_pwm_dt_ids[] =3D {
-> +	{ .compatible =3D "xlnx,axi-timer-2.0", },
-> +};
-> +MODULE_DEVICE_TABLE(of, axi_timer_pwm_dt_ids);
-> +
-> +static struct platform_driver axi_timer_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "axi_timer-pwm",
-> +		.of_match_table =3D axi_timer_pwm_dt_ids,
-> +	},
-> +	.probe =3D axi_timer_pwm_probe,
-> +	.remove =3D axi_timer_pwm_remove,
-> +};
-> +module_platform_driver(axi_timer_pwm_driver);
-> +
-> +MODULE_ALIAS("platform:axi_timer-pwm");
-> +MODULE_AUTHOR("Alvaro Gamez Machado <alvaro.gamez@hazent.com>");
-> +MODULE_DESCRIPTION("AXI TIMER PWM Driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 2.11.0
->=20
-
---E+IgQzR66AIOcbjA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlld/0YACgkQ3SOs138+
-s6G8WRAAp1xNkzD+ODz1hR37WDWd9iQvJLE48Uv2tiRY5FbCQgydZxvJIWOv+OQx
-36jDrP60Z3h/kRDIvdyGBzF1EHaBhot8fmbDWUEwCOM1tAFuWEPBiKNXx2jrC1VV
-dadOhyKJwZmHl8kP6y5oTbo7SaelIrHrGsm3aKpLNnlv7UDBs9VHNIzwpdT5DnYf
-v/PfSkvOg304AhMtq8Sp799ANXNDwu3MbNVl6XAxgz5qQFI4ZHN9iPeS0QxeJm0M
-35sUsUziiKkDQ+eXRsmtjdd888dDBb3sqM+PgNkoKS4RES/M5trXcbZa67R4WXJE
-ONvAzZpHtq81Ts3PvE3YfbQmisnRAKn8YRSCNp3SzOaU6Rs9WBNozqbRTkrw0MPf
-olYiez9AhrRHWyz5bqY7cpbKl0shoQH2bPZHAT26093DmifTz0ZU3IiXeU3pg+yU
-JKGFFgyAaAcoDlZfeBPaCr/IHY5lhqC320wLMsGP6qu26OT/6isMSMpCnzt2l98W
-iO2Vtudn2tGxbAn1K44+yWAnRcBW95EgbxEMnQiBCR73Rw/NIXQicG/dGHAqTodS
-Mbj3AhZ3TY4Vne/3Jh3/M6SQmwW+TFnBr0bH04s2Fb745qlw/Q3DfpSL8sdTfTje
-dUm/6dUrx53/9qoCZi938a5c/BmdyNH5YoB40cT2WU5Mlp/4IQM=
-=djcm
------END PGP SIGNATURE-----
-
---E+IgQzR66AIOcbjA--
+> 
+> > Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> > ---
+> > Changes since v3:
+> >  - Use SPDX-License-Identifier tag instead.
+> >
+> > Changes since v2:
+> >  - Remove some redundant comments and parens.
+> >  - Define macros instead of magic number.
+> >  - Add some comments to explain clock formula.
+> >  - Change of_clk_get_by_name() to devm_clk_get().
+> >  - Deal with other frequency.
+> >  - Change register definiton to low case.
+> >  - Change is_last_msg to boolean.
+> >  - Other optimization.
+> >
+> > Changes sice v1:
+> >  - Power on I2C device in probe().
+> >  - Remove redundant macros and usb __maybe_unused.
+> >  - Remove redundant 'of_match_ptr'.
+> >  - Modify return values and check the return value for 'clk_prepare_enable'.
+> > ---
+> >  drivers/i2c/busses/Kconfig    |    7 +
+> >  drivers/i2c/busses/Makefile   |    1 +
+> >  drivers/i2c/busses/i2c-sprd.c |  676 +++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 684 insertions(+)
+> >  create mode 100644 drivers/i2c/busses/i2c-sprd.c
+> >
+> > diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> > index 8adc0f1..86476b9 100644
+> > --- a/drivers/i2c/busses/Kconfig
+> > +++ b/drivers/i2c/busses/Kconfig
+> > @@ -877,6 +877,13 @@ config I2C_SIRF
+> >           This driver can also be built as a module.  If so, the module
+> >           will be called i2c-sirf.
+> >
+> > +config I2C_SPRD
+> > +       bool "Spreadtrum I2C interface"
+> > +       depends on ARCH_SPRD
+> > +       help
+> > +         If you say yes to this option, support will be included for the
+> > +         Spreadtrum I2C interface.
+> > +
+> >  config I2C_ST
+> >         tristate "STMicroelectronics SSC I2C support"
+> >         depends on ARCH_STI
+> > diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> > index 30b6085..dd46c21 100644
+> > --- a/drivers/i2c/busses/Makefile
+> > +++ b/drivers/i2c/busses/Makefile
+> > @@ -84,6 +84,7 @@ obj-$(CONFIG_I2C_SH7760)      += i2c-sh7760.o
+> >  obj-$(CONFIG_I2C_SH_MOBILE)    += i2c-sh_mobile.o
+> >  obj-$(CONFIG_I2C_SIMTEC)       += i2c-simtec.o
+> >  obj-$(CONFIG_I2C_SIRF)         += i2c-sirf.o
+> > +obj-$(CONFIG_I2C_SPRD)         += i2c-sprd.o
+> >  obj-$(CONFIG_I2C_ST)           += i2c-st.o
+> >  obj-$(CONFIG_I2C_STM32F4)      += i2c-stm32f4.o
+> >  obj-$(CONFIG_I2C_STU300)       += i2c-stu300.o
+> > diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+> > new file mode 100644
+> > index 0000000..4193f4d
+> > --- /dev/null
+> > +++ b/drivers/i2c/busses/i2c-sprd.c
+> > @@ -0,0 +1,676 @@
+> > +/*
+> > + * Copyright (C) 2017 Spreadtrum Communications Inc.
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/delay.h>
+> > +#include <linux/err.h>
+> > +#include <linux/io.h>
+> > +#include <linux/i2c.h>
+> > +#include <linux/init.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_runtime.h>
+> > +
+> > +#define I2C_CTL                        0x00
+> > +#define I2C_ADDR_CFG           0x04
+> > +#define I2C_COUNT              0x08
+> > +#define I2C_RX                 0x0c
+> > +#define I2C_TX                 0x10
+> > +#define I2C_STATUS             0x14
+> > +#define I2C_HSMODE_CFG         0x18
+> > +#define I2C_VERSION            0x1c
+> > +#define ADDR_DVD0              0x20
+> > +#define ADDR_DVD1              0x24
+> > +#define ADDR_STA0_DVD          0x28
+> > +#define ADDR_RST               0x2c
+> > +
+> > +/* I2C_CTL */
+> > +#define STP_EN                 BIT(20)
+> > +#define FIFO_AF_LVL_MASK       GENMASK(19, 16)
+> > +#define FIFO_AF_LVL            16
+> > +#define FIFO_AE_LVL_MASK       GENMASK(15, 12)
+> > +#define FIFO_AE_LVL            12
+> > +#define I2C_DMA_EN             BIT(11)
+> > +#define FULL_INTEN             BIT(10)
+> > +#define EMPTY_INTEN            BIT(9)
+> > +#define I2C_DVD_OPT            BIT(8)
+> > +#define I2C_OUT_OPT            BIT(7)
+> > +#define I2C_TRIM_OPT           BIT(6)
+> > +#define I2C_HS_MODE            BIT(4)
+> > +#define I2C_MODE               BIT(3)
+> > +#define I2C_EN                 BIT(2)
+> > +#define I2C_INT_EN             BIT(1)
+> > +#define I2C_START              BIT(0)
+> > +
+> > +/* I2C_STATUS */
+> > +#define SDA_IN                 BIT(21)
+> > +#define SCL_IN                 BIT(20)
+> > +#define FIFO_FULL              BIT(4)
+> > +#define FIFO_EMPTY             BIT(3)
+> > +#define I2C_INT                        BIT(2)
+> > +#define I2C_RX_ACK             BIT(1)
+> > +#define I2C_BUSY               BIT(0)
+> > +
+> > +/* ADDR_RST */
+> > +#define I2C_RST                        BIT(0)
+> > +
+> > +#define I2C_FIFO_DEEP          12
+> > +#define I2C_FIFO_FULL_THLD     15
+> > +#define I2C_FIFO_EMPTY_THLD    4
+> > +#define I2C_DATA_STEP          8
+> > +#define I2C_ADDR_DVD0_CALC(high, low)  \
+> > +       ((((high) & GENMASK(15, 0)) << 16) | ((low) & GENMASK(15, 0)))
+> > +#define I2C_ADDR_DVD1_CALC(high, low)  \
+> > +       (((high) & GENMASK(31, 16)) | (((low) & GENMASK(31, 16)) >> 16))
+> > +
+> > +/* timeout (ms) for pm runtime autosuspend */
+> > +#define SPRD_I2C_PM_TIMEOUT    1000
+> > +
+> > +/* SPRD i2c data structure */
+> > +struct sprd_i2c {
+> > +       struct i2c_adapter adap;
+> > +       struct device *dev;
+> > +       void __iomem *base;
+> > +       struct i2c_msg *msg;
+> > +       struct clk *clk;
+> > +       unsigned int src_clk;
+> > +       unsigned int bus_freq;
+> > +       struct completion complete;
+> > +       u8 *buf;
+> > +       u16 count;
+> > +       int irq;
+> > +       int err;
+> > +};
+> > +
+> > +static void sprd_i2c_dump_reg(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       dev_err(&i2c_dev->adap.dev, ": ======dump i2c-%d reg=======\n",
+> > +               i2c_dev->adap.nr);
+> > +       dev_err(&i2c_dev->adap.dev, ": I2C_CTRL:0x%x\n",
+> > +               readl(i2c_dev->base + I2C_CTL));
+> > +       dev_err(&i2c_dev->adap.dev, ": I2C_ADDR_CFG:0x%x\n",
+> > +               readl(i2c_dev->base + I2C_ADDR_CFG));
+> > +       dev_err(&i2c_dev->adap.dev, ": I2C_COUNT:0x%x\n",
+> > +               readl(i2c_dev->base + I2C_COUNT));
+> > +       dev_err(&i2c_dev->adap.dev, ": I2C_RX:0x%x\n",
+> > +               readl(i2c_dev->base + I2C_RX));
+> > +       dev_err(&i2c_dev->adap.dev, ": I2C_STATUS:0x%x\n",
+> > +               readl(i2c_dev->base + I2C_STATUS));
+> > +       dev_err(&i2c_dev->adap.dev, ": ADDR_DVD0:0x%x\n",
+> > +               readl(i2c_dev->base + ADDR_DVD0));
+> > +       dev_err(&i2c_dev->adap.dev, ": ADDR_DVD1:0x%x\n",
+> > +               readl(i2c_dev->base + ADDR_DVD1));
+> > +       dev_err(&i2c_dev->adap.dev, ": ADDR_STA0_DVD:0x%x\n",
+> > +               readl(i2c_dev->base + ADDR_STA0_DVD));
+> > +       dev_err(&i2c_dev->adap.dev, ": ADDR_RST:0x%x\n",
+> > +               readl(i2c_dev->base + ADDR_RST));
+> > +}
+> > +
+> > +static void sprd_i2c_set_count(struct sprd_i2c *i2c_dev, u32 count)
+> > +{
+> > +       writel(count, i2c_dev->base + I2C_COUNT);
+> > +}
+> > +
+> > +static void sprd_i2c_send_stop(struct sprd_i2c *i2c_dev, int stop)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       if (stop)
+> > +               writel(tmp & ~STP_EN, i2c_dev->base + I2C_CTL);
+> > +       else
+> > +               writel(tmp | STP_EN, i2c_dev->base + I2C_CTL);
+> > +}
+> > +
+> > +static void sprd_i2c_clear_start(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       writel(tmp & ~I2C_START, i2c_dev->base + I2C_CTL);
+> > +}
+> > +
+> > +static void sprd_i2c_clear_ack(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_STATUS);
+> > +
+> > +       writel(tmp & ~I2C_RX_ACK, i2c_dev->base + I2C_STATUS);
+> > +}
+> > +
+> > +static void sprd_i2c_clear_irq(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_STATUS);
+> > +
+> > +       writel(tmp & ~I2C_INT, i2c_dev->base + I2C_STATUS);
+> > +}
+> > +
+> > +static void sprd_i2c_reset_fifo(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       writel(I2C_RST, i2c_dev->base + ADDR_RST);
+> > +}
+> > +
+> > +static void sprd_i2c_set_devaddr(struct sprd_i2c *i2c_dev, struct i2c_msg *m)
+> > +{
+> > +       writel(m->addr << 1, i2c_dev->base + I2C_ADDR_CFG);
+> > +}
+> > +
+> > +static void sprd_i2c_write_bytes(struct sprd_i2c *i2c_dev, u8 *buf, u32 len)
+> > +{
+> > +       u32 i;
+> > +
+> > +       for (i = 0; i < len; i++)
+> > +               writeb(buf[i], i2c_dev->base + I2C_TX);
+> > +}
+> > +
+> > +static void sprd_i2c_read_bytes(struct sprd_i2c *i2c_dev, u8 *buf, u16 len)
+> > +{
+> > +       u32 i;
+> > +
+> > +       for (i = 0; i < len; i++)
+> > +               buf[i] = readb(i2c_dev->base + I2C_RX);
+> > +}
+> > +
+> > +static void sprd_i2c_set_full_thld(struct sprd_i2c *i2c_dev, u32 full_thld)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       tmp &= ~FIFO_AF_LVL_MASK;
+> > +       tmp |= full_thld << FIFO_AF_LVL;
+> > +       writel(tmp, i2c_dev->base + I2C_CTL);
+> > +};
+> > +
+> > +static void sprd_i2c_set_empty_thld(struct sprd_i2c *i2c_dev, u32 empty_thld)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       tmp &= ~FIFO_AE_LVL_MASK;
+> > +       tmp |= empty_thld << FIFO_AE_LVL;
+> > +       writel(tmp, i2c_dev->base + I2C_CTL);
+> > +};
+> > +
+> > +static void sprd_i2c_set_fifo_full_int(struct sprd_i2c *i2c_dev, int enable)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       if (enable)
+> > +               tmp |= FULL_INTEN;
+> > +       else
+> > +               tmp &= ~FULL_INTEN;
+> > +
+> > +       writel(tmp, i2c_dev->base + I2C_CTL);
+> > +};
+> > +
+> > +static void sprd_i2c_set_fifo_empty_int(struct sprd_i2c *i2c_dev, int enable)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       if (enable)
+> > +               tmp |= EMPTY_INTEN;
+> > +       else
+> > +               tmp &= ~EMPTY_INTEN;
+> > +
+> > +       writel(tmp, i2c_dev->base + I2C_CTL);
+> > +};
+> > +
+> > +static void sprd_i2c_opt_start(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
+> > +
+> > +       writel(tmp | I2C_START, i2c_dev->base + I2C_CTL);
+> > +}
+> > +
+> > +static void sprd_i2c_opt_mode(struct sprd_i2c *i2c_dev, int rw)
+> > +{
+> > +       unsigned int cmd = readl(i2c_dev->base + I2C_CTL) & ~I2C_MODE;
+> > +
+> > +       writel(cmd | rw << 3, i2c_dev->base + I2C_CTL);
+> > +}
+> > +
+> > +static void sprd_i2c_data_transfer(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       u32 i2c_count = i2c_dev->count;
+> > +       u32 need_tran = i2c_count <= I2C_FIFO_DEEP ? i2c_count : I2C_FIFO_DEEP;
+> > +       struct i2c_msg *msg = i2c_dev->msg;
+> > +
+> > +       if (msg->flags & I2C_M_RD) {
+> > +               sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, I2C_FIFO_FULL_THLD);
+> > +               i2c_dev->count -= I2C_FIFO_FULL_THLD;
+> > +               i2c_dev->buf += I2C_FIFO_FULL_THLD;
+> > +
+> > +               /*
+> > +                * If the read data count is larger than rx fifo full threshold,
+> > +                * we should enable the rx fifo full interrupt to read data
+> > +                * again.
+> > +                */
+> > +               if (i2c_dev->count >= I2C_FIFO_FULL_THLD)
+> > +                       sprd_i2c_set_fifo_full_int(i2c_dev, 1);
+> > +       } else {
+> > +               sprd_i2c_write_bytes(i2c_dev, i2c_dev->buf, need_tran);
+> > +               i2c_dev->buf += need_tran;
+> > +               i2c_dev->count -= need_tran;
+> > +
+> > +               /*
+> > +                * If the write data count is arger than tx fifo depth which
+> > +                * means we can not write all data in one time, then we should
+> > +                * enable the tx fifo empty interrupt to write again.
+> > +                */
+> > +               if (i2c_count > I2C_FIFO_DEEP)
+> > +                       sprd_i2c_set_fifo_empty_int(i2c_dev, 1);
+> > +       }
+> > +}
+> > +
+> > +static int sprd_i2c_handle_msg(struct i2c_adapter *i2c_adap,
+> > +                              struct i2c_msg *msg, bool is_last_msg)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
+> > +
+> > +       i2c_dev->msg = msg;
+> > +       i2c_dev->buf = msg->buf;
+> > +       i2c_dev->count = msg->len;
+> > +
+> > +       reinit_completion(&i2c_dev->complete);
+> > +       sprd_i2c_reset_fifo(i2c_dev);
+> > +       sprd_i2c_set_devaddr(i2c_dev, msg);
+> > +       sprd_i2c_set_count(i2c_dev, msg->len);
+> > +
+> > +       if ((msg->flags & I2C_M_RD)) {
+> > +               sprd_i2c_opt_mode(i2c_dev, 1);
+> > +               sprd_i2c_send_stop(i2c_dev, 1);
+> > +       } else {
+> > +               sprd_i2c_opt_mode(i2c_dev, 0);
+> > +               sprd_i2c_send_stop(i2c_dev, !!is_last_msg);
+> > +       }
+> > +
+> > +       /*
+> > +        * We should enable rx fifo full interrupt to get data when receiving
+> > +        * full data.
+> > +        */
+> > +       if ((msg->flags & I2C_M_RD))
+> > +               sprd_i2c_set_fifo_full_int(i2c_dev, 1);
+> > +       else
+> > +               sprd_i2c_data_transfer(i2c_dev);
+> > +
+> > +       sprd_i2c_opt_start(i2c_dev);
+> > +
+> > +       wait_for_completion(&i2c_dev->complete);
+> > +
+> > +       return i2c_dev->err;
+> > +}
+> > +
+> > +static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
+> > +                               struct i2c_msg *msgs, int num)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
+> > +       int im, ret;
+> > +
+> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       for (im = 0; im < num - 1; im++) {
+> > +               ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im], 0);
+> > +               if (ret)
+> > +                       goto err_msg;
+> > +       }
+> > +
+> > +       ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im++], 1);
+> > +
+> > +err_msg:
+> > +       pm_runtime_mark_last_busy(i2c_dev->dev);
+> > +       pm_runtime_put_autosuspend(i2c_dev->dev);
+> > +
+> > +       return ret < 0 ? ret : im;
+> > +}
+> > +
+> > +static u32 sprd_i2c_func(struct i2c_adapter *adap)
+> > +{
+> > +       return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+> > +}
+> > +
+> > +static const struct i2c_algorithm sprd_i2c_algo = {
+> > +       .master_xfer = sprd_i2c_master_xfer,
+> > +       .functionality = sprd_i2c_func,
+> > +};
+> > +
+> > +static void sprd_i2c_set_clk(struct sprd_i2c *i2c_dev, unsigned int freq)
+> > +{
+> > +       u32 apb_clk = i2c_dev->src_clk;
+> > +       /*
+> > +        * From I2C databook, the prescale calculation formula:
+> > +        * prescale = freq_i2c / (4 * freq_scl) - 1;
+> > +        */
+> > +       u32 i2c_dvd = apb_clk / (4 * freq) - 1;
+> > +       /*
+> > +        * From I2C databook, the high period of SCL clock is recommended as
+> > +        * 40% (2/5), and the low period of SCL clock is recommended as 60%
+> > +        * (3/5), then the formula should be:
+> > +        * high = (prescale * 2 * 2) / 5
+> > +        * low = (prescale * 2 * 3) / 5
+> > +        */
+> > +       u32 high = ((i2c_dvd << 1) * 2) / 5;
+> > +       u32 low = ((i2c_dvd << 1) * 3) / 5;
+> > +       u32 div0 = I2C_ADDR_DVD0_CALC(high, low);
+> > +       u32 div1 = I2C_ADDR_DVD1_CALC(high, low);
+> > +
+> > +       writel(div0, i2c_dev->base + ADDR_DVD0);
+> > +       writel(div1, i2c_dev->base + ADDR_DVD1);
+> > +
+> > +       /* Start hold timing = hold time(us) * source clock */
+> > +       if (freq == 400000)
+> > +               writel((6 * apb_clk) / 10000000, i2c_dev->base + ADDR_STA0_DVD);
+> > +       else if (freq == 100000)
+> > +               writel((4 * apb_clk) / 1000000, i2c_dev->base + ADDR_STA0_DVD);
+> > +}
+> > +
+> > +static void sprd_i2c_enable(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       unsigned int tmp = I2C_DVD_OPT;
+> > +
+> > +       writel(tmp, i2c_dev->base + I2C_CTL);
+> > +
+> > +       sprd_i2c_set_full_thld(i2c_dev, I2C_FIFO_FULL_THLD);
+> > +       sprd_i2c_set_empty_thld(i2c_dev, I2C_FIFO_EMPTY_THLD);
+> > +
+> > +       sprd_i2c_set_clk(i2c_dev, i2c_dev->bus_freq);
+> > +       sprd_i2c_reset_fifo(i2c_dev);
+> > +       sprd_i2c_clear_irq(i2c_dev);
+> > +
+> > +       tmp = readl(i2c_dev->base + I2C_CTL);
+> > +       writel(tmp | I2C_EN | I2C_INT_EN, i2c_dev->base + I2C_CTL);
+> > +}
+> > +
+> > +static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = dev_id;
+> > +       struct i2c_msg *msg = i2c_dev->msg;
+> > +       int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
+> > +       u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
+> > +       u32 i2c_tran;
+> > +
+> > +       if (msg->flags & I2C_M_RD)
+> > +               i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
+> > +       else
+> > +               i2c_tran = i2c_count;
+> > +
+> > +       /*
+> > +        * If we got one ACK from slave when writing data, and we did not
+> > +        * finish this transmission (i2c_tran is not zero), then we should
+> > +        * continue to write data.
+> > +        *
+> > +        * For reading data, ack is always 0, if i2c_tran is not 0 which
+> > +        * means we still need to contine to read data from slave.
+> > +        */
+> > +       if (i2c_tran && !ack) {
+> > +               sprd_i2c_data_transfer(i2c_dev);
+> > +               return IRQ_HANDLED;
+> > +       }
+> > +
+> > +       i2c_dev->err = 0;
+> > +
+> > +       /*
+> > +        * If we did not get one ACK from slave when writing data, we should
+> > +        * dump all registers to check I2C status.
+> > +        */
+> > +       if (ack) {
+> > +               i2c_dev->err = -EIO;
+> > +               sprd_i2c_dump_reg(i2c_dev);
+> > +       } else if (msg->flags & I2C_M_RD && i2c_dev->count) {
+> > +               sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, i2c_dev->count);
+> > +       }
+> > +
+> > +       /* Transmission is done and clear ack and start operation */
+> > +       sprd_i2c_clear_ack(i2c_dev);
+> > +       sprd_i2c_clear_start(i2c_dev);
+> > +       complete(&i2c_dev->complete);
+> > +
+> > +       return IRQ_HANDLED;
+> > +}
+> > +
+> > +static irqreturn_t sprd_i2c_isr(int irq, void *dev_id)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = dev_id;
+> > +       struct i2c_msg *msg = i2c_dev->msg;
+> > +       u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
+> > +       int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
+> > +       u32 i2c_tran;
+> > +
+> > +       if (msg->flags & I2C_M_RD)
+> > +               i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
+> > +       else
+> > +               i2c_tran = i2c_count;
+> > +
+> > +       /*
+> > +        * If ack == 0 means we got one ACK, if ack != 0 means we did not
+> > +        * get one ACK from slave when writing data, then we should finish
+> > +        * this transmission since we got some errors.
+> > +        *
+> > +        * When writing data, if i2c_tran == 0 which means we have writen
+> > +        * done all data, then we can finish this transmission.
+> > +        *
+> > +        * When reading data, if conut < rx fifo full threshold, which
+> > +        * means we can read all data in one time, then we can finish this
+> > +        * transmission too.
+> > +        */
+> > +       if (!i2c_tran || ack) {
+> > +               sprd_i2c_clear_start(i2c_dev);
+> > +               sprd_i2c_clear_irq(i2c_dev);
+> > +       }
+> > +
+> > +       sprd_i2c_set_fifo_empty_int(i2c_dev, 0);
+> > +       sprd_i2c_set_fifo_full_int(i2c_dev, 0);
+> > +
+> > +       return IRQ_WAKE_THREAD;
+> > +}
+> > +
+> > +static int sprd_i2c_clk_init(struct sprd_i2c *i2c_dev)
+> > +{
+> > +       struct clk *clk_i2c, *clk_parent;
+> > +
+> > +       clk_i2c = devm_clk_get(i2c_dev->dev, "i2c");
+> > +       if (IS_ERR(clk_i2c)) {
+> > +               dev_warn(i2c_dev->dev, "i2c%d can't get the i2c clock\n",
+> > +                        i2c_dev->adap.nr);
+> > +               clk_i2c = NULL;
+> > +       }
+> > +
+> > +       clk_parent = devm_clk_get(i2c_dev->dev, "source");
+> > +       if (IS_ERR(clk_parent)) {
+> > +               dev_warn(i2c_dev->dev, "i2c%d can't get the source clock\n",
+> > +                        i2c_dev->adap.nr);
+> > +               clk_parent = NULL;
+> > +       }
+> > +
+> > +       if (clk_set_parent(clk_i2c, clk_parent))
+> > +               i2c_dev->src_clk = clk_get_rate(clk_i2c);
+> > +       else
+> > +               i2c_dev->src_clk = 26000000;
+> > +
+> > +       dev_dbg(i2c_dev->dev, "i2c%d set source clock is %d\n",
+> > +               i2c_dev->adap.nr, i2c_dev->src_clk);
+> > +
+> > +       i2c_dev->clk = devm_clk_get(i2c_dev->dev, "enable");
+> > +       if (IS_ERR(i2c_dev->clk)) {
+> > +               dev_warn(i2c_dev->dev, "i2c%d can't get the enable clock\n",
+> > +                        i2c_dev->adap.nr);
+> > +               i2c_dev->clk = NULL;
+> > +       }
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int sprd_i2c_probe(struct platform_device *pdev)
+> > +{
+> > +       struct device *dev = &pdev->dev;
+> > +       struct sprd_i2c *i2c_dev;
+> > +       struct resource *res;
+> > +       u32 prop;
+> > +       int ret;
+> > +
+> > +       pdev->id = of_alias_get_id(dev->of_node, "i2c");
+> > +
+> > +       i2c_dev = devm_kzalloc(dev, sizeof(struct sprd_i2c), GFP_KERNEL);
+> > +       if (!i2c_dev)
+> > +               return -ENOMEM;
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       i2c_dev->base = devm_ioremap_resource(dev, res);
+> > +       if (IS_ERR(i2c_dev->base))
+> > +               return PTR_ERR(i2c_dev->base);
+> > +
+> > +       i2c_dev->irq = platform_get_irq(pdev, 0);
+> > +       if (i2c_dev->irq < 0) {
+> > +               dev_err(&pdev->dev, "failed to get irq resource\n");
+> > +               return i2c_dev->irq;
+> > +       }
+> > +
+> > +       i2c_set_adapdata(&i2c_dev->adap, i2c_dev);
+> > +       init_completion(&i2c_dev->complete);
+> > +       snprintf(i2c_dev->adap.name, sizeof(i2c_dev->adap.name),
+> > +                "%s", "sprd-i2c");
+> > +
+> > +       i2c_dev->bus_freq = 100000;
+> > +       i2c_dev->adap.owner = THIS_MODULE;
+> > +       i2c_dev->dev = dev;
+> > +       i2c_dev->adap.retries = 3;
+> > +       i2c_dev->adap.algo = &sprd_i2c_algo;
+> > +       i2c_dev->adap.algo_data = i2c_dev;
+> > +       i2c_dev->adap.dev.parent = dev;
+> > +       i2c_dev->adap.nr = pdev->id;
+> > +       i2c_dev->adap.dev.of_node = dev->of_node;
+> > +
+> > +       if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
+> > +               i2c_dev->bus_freq = prop;
+> > +
+> > +       /* We only support 100k and 400k now, otherwise will return error. */
+> > +       if (i2c_dev->bus_freq != 100000 && i2c_dev->bus_freq != 400000)
+> > +               return -EINVAL;
+> > +
+> > +       sprd_i2c_clk_init(i2c_dev);
+> > +       platform_set_drvdata(pdev, i2c_dev);
+> > +
+> > +       ret = clk_prepare_enable(i2c_dev->clk);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       sprd_i2c_enable(i2c_dev);
+> > +
+> > +       pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
+> > +       pm_runtime_use_autosuspend(i2c_dev->dev);
+> > +       pm_runtime_set_active(i2c_dev->dev);
+> > +       pm_runtime_enable(i2c_dev->dev);
+> > +
+> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> > +       if (ret < 0) {
+> > +               dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
+> > +                       pdev->id);
+> > +               goto err_rpm_put;
+> > +       }
+> > +
+> > +       ret = devm_request_threaded_irq(dev, i2c_dev->irq,
+> > +               sprd_i2c_isr, sprd_i2c_isr_thread,
+> > +               IRQF_NO_SUSPEND | IRQF_ONESHOT,
+> > +               pdev->name, i2c_dev);
+> > +       if (ret) {
+> > +               dev_err(&pdev->dev, "failed to request irq %d\n", i2c_dev->irq);
+> > +               goto err_rpm_put;
+> > +       }
+> > +
+> > +       ret = i2c_add_numbered_adapter(&i2c_dev->adap);
+> > +       if (ret) {
+> > +               dev_err(&pdev->dev, "add adapter failed\n");
+> > +               goto err_rpm_put;
+> > +       }
+> > +
+> > +       pm_runtime_mark_last_busy(i2c_dev->dev);
+> > +       pm_runtime_put_autosuspend(i2c_dev->dev);
+> > +       return 0;
+> > +
+> > +err_rpm_put:
+> > +       pm_runtime_put_noidle(i2c_dev->dev);
+> > +       pm_runtime_disable(i2c_dev->dev);
+> > +       clk_disable_unprepare(i2c_dev->clk);
+> > +       return ret;
+> > +}
+> > +
+> > +static int sprd_i2c_remove(struct platform_device *pdev)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = platform_get_drvdata(pdev);
+> > +       int ret;
+> > +
+> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> > +       if (ret < 0)
+> > +               return ret;
+> > +
+> > +       i2c_del_adapter(&i2c_dev->adap);
+> > +       clk_disable_unprepare(i2c_dev->clk);
+> > +
+> > +       pm_runtime_put_noidle(i2c_dev->dev);
+> > +       pm_runtime_disable(i2c_dev->dev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused sprd_i2c_suspend_noirq(struct device *pdev)
+> > +{
+> > +       return pm_runtime_force_suspend(pdev);
+> > +}
+> > +
+> > +static int __maybe_unused sprd_i2c_resume_noirq(struct device *pdev)
+> > +{
+> > +       return pm_runtime_force_resume(pdev);
+> > +}
+> > +
+> > +static int __maybe_unused sprd_i2c_runtime_suspend(struct device *pdev)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = dev_get_drvdata(pdev);
+> > +
+> > +       clk_disable_unprepare(i2c_dev->clk);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static int __maybe_unused sprd_i2c_runtime_resume(struct device *pdev)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = dev_get_drvdata(pdev);
+> > +       int ret;
+> > +
+> > +       ret = clk_prepare_enable(i2c_dev->clk);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       sprd_i2c_enable(i2c_dev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static const struct dev_pm_ops sprd_i2c_pm_ops = {
+> > +       SET_RUNTIME_PM_OPS(sprd_i2c_runtime_suspend,
+> > +                          sprd_i2c_runtime_resume, NULL)
+> > +
+> > +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(sprd_i2c_suspend_noirq,
+> > +                                     sprd_i2c_resume_noirq)
+> > +};
+> > +
+> > +static const struct of_device_id sprd_i2c_of_match[] = {
+> > +       { .compatible = "sprd,sc9860-i2c", },
+> > +};
+> > +
+> > +static struct platform_driver sprd_i2c_driver = {
+> > +       .probe = sprd_i2c_probe,
+> > +       .remove = sprd_i2c_remove,
+> > +       .driver = {
+> > +                  .name = "sprd-i2c",
+> > +                  .of_match_table = sprd_i2c_of_match,
+> > +                  .pm = &sprd_i2c_pm_ops,
+> > +       },
+> > +};
+> > +
+> > +static int sprd_i2c_init(void)
+> > +{
+> > +       return platform_driver_register(&sprd_i2c_driver);
+> > +}
+> > +arch_initcall_sync(sprd_i2c_init);
+> > --
+> > 1.7.9.5
+> >
+> 
+> 
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
