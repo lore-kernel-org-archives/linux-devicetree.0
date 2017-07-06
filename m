@@ -1,361 +1,86 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 4/8] pwm: Add STM32 LPTimer PWM driver
-Date: Thu, 6 Jul 2017 09:43:20 +0200
-Message-ID: <20170706074320.GK16144@ulmo.fritz.box>
-References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
- <1498055415-31513-5-git-send-email-fabrice.gasnier@st.com>
+From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
+Date: Thu, 6 Jul 2017 07:51:28 +0000
+Message-ID: <26a55285-509c-b7f4-7806-db537a582631@st.com>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="IA03tywDYuoVKXrw"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1498055415-31513-5-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Content-ID: <415F1E55B17EAC40A4EBEE19A8753DEF-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---IA03tywDYuoVKXrw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jun 21, 2017 at 04:30:11PM +0200, Fabrice Gasnier wrote:
-> Add support for single PWM channel on Low-Power Timer, that can be
-> found on some STM32 platforms.
->=20
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
-> Changes in v2:
-> - s/Low Power/Low-Power
-> - update few comment lines
-> ---
->  drivers/pwm/Kconfig        |  10 +++
->  drivers/pwm/Makefile       |   1 +
->  drivers/pwm/pwm-stm32-lp.c | 216 +++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 227 insertions(+)
->  create mode 100644 drivers/pwm/pwm-stm32-lp.c
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 313c107..7cb982b 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -417,6 +417,16 @@ config PWM_STM32
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-stm32.
-> =20
-> +config PWM_STM32_LP
-> +	tristate "STMicroelectronics STM32 PWM LP"
-> +	depends on MFD_STM32_LPTIMER || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for STMicroelectronics STM32 SoCs
-> +	  with Low-Power Timer (LPTIM).
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-stm32-lp.
-> +
->  config PWM_STMPE
->  	bool "STMPE expander PWM export"
->  	depends on MFD_STMPE
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 93da1f7..a3a4bee 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -40,6 +40,7 @@ obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
->  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
->  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
->  obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
-> +obj-$(CONFIG_PWM_STM32_LP)	+=3D pwm-stm32-lp.o
->  obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
->  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
->  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
-> diff --git a/drivers/pwm/pwm-stm32-lp.c b/drivers/pwm/pwm-stm32-lp.c
-> new file mode 100644
-> index 0000000..eb997a8
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-stm32-lp.c
-> @@ -0,0 +1,216 @@
-> +/*
-> + * STM32 Low-Power Timer PWM driver
-> + *
-> + * Copyright (C) STMicroelectronics 2017
-> + *
-> + * Author: Gerald Baeza <gerald.baeza@st.com>
-> + *
-> + * License terms: GNU General Public License (GPL), version 2
-> + *
-> + * Inspired by Gerald Baeza's pwm-stm32 driver
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/mfd/stm32-lptimer.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +
-> +struct stm32_pwm_lp {
-> +	struct pwm_chip chip;
-> +	struct clk *clk;
-> +	struct regmap *regmap;
-> +};
-> +
-> +static inline struct stm32_pwm_lp *to_stm32_pwm_lp(struct pwm_chip *chip)
-> +{
-> +	return container_of(chip, struct stm32_pwm_lp, chip);
-> +}
-> +
-> +static const u8 prescalers[] =3D {1, 2, 4, 8, 16, 32, 64, 128};
-> +
-> +static int stm32_pwm_lp_apply(struct pwm_chip *chip, struct pwm_device *=
-pwm,
-> +			      struct pwm_state *state)
-> +{
-> +	struct stm32_pwm_lp *priv =3D to_stm32_pwm_lp(chip);
-> +	unsigned long long prd, div, dty;
-> +	struct pwm_state cstate;
-> +	u32 val, mask, cfgr, wavpol, presc =3D 0;
-> +	bool reenable =3D false;
-> +	int ret;
-> +
-> +	pwm_get_state(pwm, &cstate);
-> +
-> +	if (!state->enabled) {
-> +		if (cstate.enabled) {
-> +			/* Disable LP timer */
-> +			ret =3D regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
-> +			if (ret)
-> +				return ret;
-> +			clk_disable(priv->clk);
-> +		}
-> +		return 0;
-> +	}
-> +
-> +	/* Calculate the period and prescaler value */
-> +	div =3D (unsigned long long)clk_get_rate(priv->clk) * state->period;
-> +	do_div(div, NSEC_PER_SEC);
-> +	prd =3D div;
-> +	while (div > STM32_LPTIM_MAX_ARR) {
-> +		presc++;
-> +		if (presc >=3D ARRAY_SIZE(prescalers)) {
-> +			dev_err(priv->chip.dev, "max prescaler exceeded\n");
-> +			return -EINVAL;
-> +		}
-> +		div =3D prd;
-> +		do_div(div, prescalers[presc]);
-> +	}
-> +	prd =3D div;
-> +
-> +	/* Calculate the duty cycle */
-> +	dty =3D prd * state->duty_cycle;
-> +	do_div(dty, state->period);
-> +
-> +	wavpol =3D FIELD_PREP(STM32_LPTIM_WAVPOL, state->polarity);
-> +
-> +	if (!cstate.enabled) {
-> +		ret =3D clk_enable(priv->clk);
-> +		if (ret)
-> +			return ret;
-> +	}
-
-Why do you need the checks here? Clock enabled are reference counted, so
-you could do the clk_enable() unconditionally.
-
-Speaking of which, I don't see a clk_prepare() anywhere. Doesn't the clk
-core warn about clk_enable() being called on a clock that's not been
-prepared?
-
-> +
-> +	ret =3D regmap_read(priv->regmap, STM32_LPTIM_CFGR, &cfgr);
-> +	if (ret)
-> +		goto err;
-> +
-> +	if ((wavpol !=3D FIELD_GET(STM32_LPTIM_WAVPOL, cfgr)) ||
-
-This looks wrong to me. Looking at the macro definitions, FIELD_PREP()
-will store the shifted value in wavpol, but FIELD_GET() will shift the
-value before returning, so you will compare an in-register value with
-a field value. I don't see how those could ever match (unless they're
-0 or the field is at position 0, which isn't the case for WAVPOL).
-
-> +	    (presc !=3D FIELD_GET(STM32_LPTIM_PRESC, cfgr))) {
-> +		val =3D FIELD_PREP(STM32_LPTIM_PRESC, presc) | wavpol;
-> +		mask =3D STM32_LPTIM_PRESC | STM32_LPTIM_WAVPOL;
-> +
-> +		/* Must disable LP timer to modify CFGR */
-> +		ret =3D regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
-> +		if (ret)
-> +			goto err;
-> +		reenable =3D true;
-
-The placement of this is somewhat odd. It suggests that it is somehow
-related to the disabling of the LP timer, whereas it really isn't.
-
-> +		ret =3D regmap_update_bits(priv->regmap, STM32_LPTIM_CFGR, mask,
-> +					 val);
-> +		if (ret)
-> +			goto err;
-> +	}
-> +
-> +	if (!cstate.enabled || reenable) {
-
-You have this condition in a couple of places and it's rather difficult
-to parse. Maybe this could be simplified a little:
-
-	bool reenable =3D !cstate.enabled;
-	...
-	if (...) {
-		...
-		reenable =3D true;
-		...
-	}
-	...
-	if (reenable) {
-		...
-	}
-
-> +		/* Must enable LP timer to modify CMP & ARR */
-> +		ret =3D regmap_write(priv->regmap, STM32_LPTIM_CR,
-> +				   STM32_LPTIM_ENABLE);
-> +		if (ret)
-> +			goto err;
-> +	}
-> +
-> +	ret =3D regmap_write(priv->regmap, STM32_LPTIM_ARR, prd - 1);
-> +	if (ret)
-> +		goto err;
-> +
-> +	ret =3D regmap_write(priv->regmap, STM32_LPTIM_CMP, prd - (1 + dty));
-> +	if (ret)
-> +		goto err;
-> +
-> +	/* ensure CMP & ARR registers are properly written */
-> +	ret =3D regmap_read_poll_timeout(priv->regmap, STM32_LPTIM_ISR, val,
-> +				       (val & STM32_LPTIM_CMPOK_ARROK),
-> +				       100, 1000);
-> +	if (ret) {
-> +		dev_err(priv->chip.dev, "ARR/CMP registers write issue\n");
-> +		goto err;
-> +	}
-> +	ret =3D regmap_write(priv->regmap, STM32_LPTIM_ICR,
-> +			   STM32_LPTIM_CMPOKCF_ARROKCF);
-> +	if (ret)
-> +		goto err;
-> +
-> +	if (!cstate.enabled || reenable) {
-> +		/* Start LP timer in continuous mode */
-> +		ret =3D regmap_update_bits(priv->regmap, STM32_LPTIM_CR,
-> +					 STM32_LPTIM_CNTSTRT,
-> +					 STM32_LPTIM_CNTSTRT);
-> +		if (ret) {
-> +			regmap_write(priv->regmap, STM32_LPTIM_CR, 0);
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	if (!cstate.enabled)
-> +		clk_disable(priv->clk);
-
-I think you can drop the clk_disable() here as well.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct pwm_ops stm32_pwm_lp_ops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.apply =3D stm32_pwm_lp_apply,
-> +};
-
-You should implement the .get_state() callback as well, otherwise the
-atomic PWM support will be somewhat handicapped.
-
-> +
-> +static int stm32_pwm_lp_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_lptimer *ddata =3D dev_get_drvdata(pdev->dev.parent);
-> +	struct stm32_pwm_lp *priv;
-> +	int ret;
-> +
-> +	if (IS_ERR_OR_NULL(ddata))
-> +		return -EINVAL;
-
-It seems to me like this can never happen. How would you trigger this
-condition?
-
-> +
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->regmap =3D ddata->regmap;
-> +	priv->clk =3D ddata->clk;
-> +	if (!priv->regmap || !priv->clk)
-> +		return -EINVAL;
-
-Likewise for these. the stm32-lptimer driver already checks that these
-are valid, which do you need to do it again?
-
-Well, technically you check for !NULL here, whereas stm32-lptimer does
-check for IS_ERR(), but neither regmap nor clk looks as though they're
-optional, and you won't ever get here if they can't be requested by
-stm32-lptimer in the first place.
-
-> +
-> +	priv->chip.base =3D -1;
-> +	priv->chip.dev =3D &pdev->dev;
-> +	priv->chip.ops =3D &stm32_pwm_lp_ops;
-> +	priv->chip.npwm =3D 1;
-> +
-> +	ret =3D pwmchip_add(&priv->chip);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stm32_pwm_lp_remove(struct platform_device *pdev)
-> +{
-> +	struct stm32_pwm_lp *priv =3D platform_get_drvdata(pdev);
-> +
-> +	if (pwm_is_enabled(priv->chip.pwms))
-> +		pwm_disable(priv->chip.pwms);
-
-It'd be better to use the more idiomatic variant for this:
-
-	for (i =3D 0; i < priv->chip.npwm; i++)
-		if (pwm_is_enabled(priv->chip.npwm))
-			pwm_disable(&priv->chip.pwms[i]);
-
-That makes it easier to discern the common pattern and extract a helper,
-or move this to the core.
-
-Thierry
-
---IA03tywDYuoVKXrw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlld6hUACgkQ3SOs138+
-s6FLpw/+OgdoeLDgCv4b/cyYbN+ec3FIm/nbJctGlBDeI1rJB2wyaK5CZl0ArM5a
-ut6pHaxqyu9a2ZkkyBnkt6mlIZVKocehJiA4TVYLQeOikMuTnxzZaJEdMgULuLSU
-Lo6CLsXhSCMgf8nBhm+D1Q+hNjVOXUFBSwehzhAIW7WnSf+5pDMK4cKdsVXZdNIn
-jbdHdOj84B5QsrVU1M69FGwod8UK7mVnIUDXYabFoZi87itdY8MnOJr/A/61mtxn
-P7PHEbIb96cBQ7sAJCeYHJZSQEw0Q6ta70yL4U4u2hCVc4adKYh1GQxBlXqsXnbI
-BLJS0wWoBnkCoRJYIqEXRSOf+Xjg9uifLAjUsPT51UL+ePgnhDqaw/KGu/vt0Fz4
-KlkeQJcHOYt/yXfLywiLRZzqsf84jp86MZn641KQByEQhha9q+hY6KnAVmnPIg+9
-HGCDeORCCWWRBGYgZ3qVhvgje30AuJEfu8yXWh2twWiq2qVhv+9szEV51HmdfaDq
-NYIT5L4KxfYsg3xNKaqTjaXGamh7aTPyJk0XXYhTXMMTHUTdmicGFdRmVhKitlgf
-ZdavgFztpXLK5Xb+oIOSlCg7dxgaXw8BJB4BYsKrkSX78JX8XyiUxsZkfYJbOghW
-sxmBjAhR+0VHyeFa0LnE1+6JqNr83n0ANraKdI4OoxQZWpUv5o4=
-=NCxH
------END PGP SIGNATURE-----
-
---IA03tywDYuoVKXrw--
+SGkgU3lsd2VzdGVyLA0KDQpEbyB5b3UgaGF2ZSB0aGUgcG9zc2liaWxpdHkgdG8gY2hlY2sgZm9y
+IG5vbi1yZWdyZXNzaW9uIG9mIHRoaXMgcGF0Y2hzZXQgDQpvbiA5NjUwLzUyIGNhbWVyYSA/DQoN
+CkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4NCg0KT24gMDcvMDMvMjAxNyAxMToxNiBBTSwgSHVndWVz
+IEZydWNoZXQgd3JvdGU6DQo+IFRoaXMgcGF0Y2hzZXQgZW5hYmxlcyBPVjk2NTUgY2FtZXJhIHN1
+cHBvcnQuDQo+IA0KPiBPVjk2NTUgc3VwcG9ydCBoYXMgYmVlbiB0ZXN0ZWQgdXNpbmcgU1RNMzJG
+NERJUy1DQU0gZXh0ZW5zaW9uIGJvYXJkDQo+IHBsdWdnZWQgb24gY29ubmVjdG9yIFAxIG9mIFNU
+TTMyRjc0NkctRElTQ08gYm9hcmQuDQo+IER1ZSB0byBsYWNrIG9mIE9WOTY1MC81MiBoYXJkd2Fy
+ZSBzdXBwb3J0LCB0aGUgbW9kaWZpZWQgcmVsYXRlZCBjb2RlDQo+IGNvdWxkIG5vdCBoYXZlIGJl
+ZW4gY2hlY2tlZCBmb3Igbm9uLXJlZ3Jlc3Npb24uDQo+IA0KPiBGaXJzdCBwYXRjaGVzIHVwZ3Jh
+ZGUgY3VycmVudCBzdXBwb3J0IG9mIE9WOTY1MC81MiB0byBwcmVwYXJlIHRoZW4NCj4gaW50cm9k
+dWN0aW9uIG9mIE9WOTY1NSB2YXJpYW50IHBhdGNoLg0KPiBCZWNhdXNlIG9mIE9WOTY1NSByZWdp
+c3RlciBzZXQgc2xpZ2h0bHkgZGlmZmVyZW50IGZyb20gT1Y5NjUwLzk2NTIsDQo+IG5vdCBhbGwg
+b2YgdGhlIGRyaXZlciBmZWF0dXJlcyBhcmUgc3VwcG9ydGVkIChjb250cm9scykuIFN1cHBvcnRl
+ZA0KPiByZXNvbHV0aW9ucyBhcmUgbGltaXRlZCB0byBWR0EsIFFWR0EsIFFRVkdBLg0KPiBTdXBw
+b3J0ZWQgZm9ybWF0IGlzIGxpbWl0ZWQgdG8gUkdCNTY1Lg0KPiBDb250cm9scyBhcmUgbGltaXRl
+ZCB0byBjb2xvciBiYXIgdGVzdCBwYXR0ZXJuIGZvciB0ZXN0IHB1cnBvc2UuDQo+IA0KPiBPVjk2
+NTUgaW5pdGlhbCBzdXBwb3J0IGlzIGJhc2VkIG9uIGEgZHJpdmVyIHdyaXR0ZW4gYnkgSC4gTmlr
+b2xhdXMgU2NoYWxsZXIgWzFdLg0KPiBPVjk2NTUgcmVnaXN0ZXJzIHNlcXVlbmNlcyBjb21lIGZy
+b20gU1RNMzJDdWJlRjcgZW1iZWRkZWQgc29mdHdhcmUgWzJdLg0KPiANCj4gWzFdIGh0dHA6Ly9n
+aXQuZ29sZGVsaWNvLmNvbS8/cD1ndGEwNC1rZXJuZWwuZ2l0O2E9c2hvcnRsb2c7aD1yZWZzL2hl
+YWRzL3dvcmsvaG5zL3ZpZGVvL292OTY1NQ0KPiBbMl0gaHR0cHM6Ly9kZXZlbG9wZXIubWJlZC5v
+cmcvdGVhbXMvU1QvY29kZS9CU1BfRElTQ09fRjc0Nk5HL2ZpbGUvZTFkOWRhN2ZlODU2L0RyaXZl
+cnMvQlNQL0NvbXBvbmVudHMvb3Y5NjU1L292OTY1NS5jDQo+IA0KPiA9PT09PT09PT09PQ0KPiA9
+IGhpc3RvcnkgPQ0KPiA9PT09PT09PT09PQ0KPiB2ZXJzaW9uIDI6DQo+ICAgIC0gUmVtb3ZlIHNv
+bWUgdW5uZWVkZWQgc2VtaWNvbG9ucyAoa2J1aWxkIHRlc3Qgcm9ib3QpOg0KPiAgICAgICAgaHR0
+cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cx
+MTQ2MTYuaHRtbA0KPiAgICAtIFJlbW92ZSBwYXRjaCBbbWVkaWFdIG92OTY1MDogc2VsZWN0IHRo
+ZSBuZWFyZXN0IGhpZ2hlciByZXNvbHV0aW9uOg0KPiAgICAgIGl0IGlzIHVwIHRvIHRoZSBhcHBs
+aWNhdGlvbiB0byBmaW5kIHRoZSBiZXN0IG1hdGNoaW5nIHJlc29sdXRpb24NCj4gICAgICB1c2lu
+ZyBFTlVNX0ZSQU1FU0laRVMvU19GTVQvU19TRUxFQ1RJT04gKFNfQ1JPUCksIHNlZQ0KPiAgICAg
+ICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9y
+Zy9tc2cxMTQ2NjcuaHRtbA0KPiAgICAtIGR0LWJpbmRpbmdzOiBGaXggcmVtYXJrcyBmcm9tIFJv
+YiBIZXJyaW5nIGFib3V0IHBvbGFyaXR5Og0KPiAgICAgICAgaHR0cDovL3d3dy5tYWlsLWFyY2hp
+dmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMTQ3MDUuaHRtbA0KPiAgICAt
+IGR0LWJpbmRpbmdzOiBBZGQgb3B0aW9uYWwgcmVndWxhdG9ycyBhdmRkLCBkdmRkLCBkb3ZkZDoN
+Cj4gICAgICAgIGh0dHA6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9saW51eC1tZWRpYUB2Z2VyLmtl
+cm5lbC5vcmcvbXNnMTE0Nzg1Lmh0bWwNCj4gICAgLSBmaXggbWlzc2luZyBzZW1pY29sb25zIGlu
+IGlmIGNvbmRpdGlvbjoNCj4gICAgICAgIGh0dHA6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9saW51
+eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTE0NjExLmh0bWwNCj4gICAgLSBtb3ZlIG92OTY1
+eF9waXhmbXQgcmVsb2NhdGlvbiBpbiByaWdodCBwYXRjaDoNCj4gICAgICAgIGh0dHA6Ly93d3cu
+bWFpbC1hcmNoaXZlLmNvbS9saW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTE0ODQ5Lmh0
+bWwNCj4gICAgLSByZXZpc2l0IE9WOTY1eCByZW5hbWluZyB0byBvdjk2NXggZm9yIGRldmljZSBp
+ZCBuYW1lcyBhbmQgRFQgY29tcGF0aWJsZSBzdHJpbmdzLA0KPiAgICAgIGRyb3Agb2ZfZGV2aWNl
+X2lkIC5kYXRhIGRldmljZSBpZGVudGlmaWNhdGlvbg0KPiAgICAgICAgaHR0cDovL3d3dy5tYWls
+LWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMTQ2MzUuaHRtbA0K
+PiAgICAgICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2Vy
+bmVsLm9yZy9tc2cxMTQ3MzguaHRtbA0KPiAgICAtIEFkZCBhbmFsb2cgcG93ZXIgc3VwcGx5IGFu
+ZCBjbG9jayBnYXRpbmcsIG5lZWRlZCBmb3IgR1RBMDQgcGxhdGZvcm06DQo+ICAgICAgICBodHRw
+Oi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEx
+NDUxOS5odG1sDQo+IA0KPiB2ZXJzaW9uIDE6DQo+ICAgIC0gSW5pdGlhbCBzdWJtaXNzaW9uLg0K
+PiANCj4gSC4gTmlrb2xhdXMgU2NoYWxsZXIgKDEpOg0KPiAgICBEVCBiaW5kaW5nczogYWRkIGJp
+bmRpbmdzIGZvciBvdjk2NXggY2FtZXJhIG1vZHVsZQ0KPiANCj4gSHVndWVzIEZydWNoZXQgKDYp
+Og0KPiAgICBbbWVkaWFdIG92OTY1MDogc3dpdGNoIGkyYyBkZXZpY2UgaWQgdG8gbG93ZXIgY2Fz
+ZQ0KPiAgICBbbWVkaWFdIG92OTY1MDogYWRkIGRldmljZSB0cmVlIHN1cHBvcnQNCj4gICAgW21l
+ZGlhXSBvdjk2NTA6IHVzZSB3cml0ZV9hcnJheSgpIGZvciByZXNvbHV0aW9uIHNlcXVlbmNlcw0K
+PiAgICBbbWVkaWFdIG92OTY1MDogYWRkIG11bHRpcGxlIHZhcmlhbnQgc3VwcG9ydA0KPiAgICBb
+bWVkaWFdIG92OTY1MDogYWRkIHN1cHBvcnQgb2YgT1Y5NjU1IHZhcmlhbnQNCj4gICAgW21lZGlh
+XSBvdjk2NTA6IGFkZCBhbmFsb2cgcG93ZXIgc3VwcGx5IGFuZCBjbG9jayBnYXRpbmcNCj4gDQo+
+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292OTY1eC50eHQgICAgICAgfCAg
+NDUgKysNCj4gICBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAgNiArLQ0KPiAgIGRyaXZlcnMvbWVkaWEvaTJjL292OTY1MC5jICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgODE2ICsrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDMgZmlsZXMgY2hh
+bmdlZCwgNzM2IGluc2VydGlvbnMoKyksIDEzMSBkZWxldGlvbnMoLSkNCj4gICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2
+NXgudHh0DQo+IA==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
