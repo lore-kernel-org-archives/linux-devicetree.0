@@ -1,114 +1,87 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/3] pwm: add pwm AO on meson gx
-Date: Thu, 6 Jul 2017 11:17:43 +0200
-Message-ID: <20170706091743.GP16144@ulmo.fritz.box>
-References: <20170608122416.1993-1-jbrunet@baylibre.com>
- <20170706065910.GJ16144@ulmo.fritz.box>
- <1499331740.15362.11.camel@baylibre.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Thu, 6 Jul 2017 10:18:39 +0100
+Message-ID: <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
+ <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
+ <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+ <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+ <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
+ <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
+ <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="iq/fWD14IMVFWBCD"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1499331740.15362.11.camel@baylibre.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Jeremy Kerr <jk@ozlabs.org>
-Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jassi,
 
---iq/fWD14IMVFWBCD
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/07/17 07:28, Jassi Brar wrote:
+> On Wed, Jul 5, 2017 at 11:32 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> 
+>>
+>> I have posted the SCMI patches now[1],
+>>
+> I wish I was CC'ed on that. Now LKML seems too busy to forward it.
+> 
 
-On Thu, Jul 06, 2017 at 11:02:20AM +0200, Jerome Brunet wrote:
-> On Thu, 2017-07-06 at 08:59 +0200, Thierry Reding wrote:
-> > On Thu, Jun 08, 2017 at 02:24:13PM +0200, Jerome Brunet wrote:
-> > > The pwms found in the AO domain of the meson gx family have different
-> > > clock sources than the ones found in the EE domain. The AO pwms only
-> > > have 2 connected clock input which are clk81 and the crytal.
-> > >=20
-> > > This patchset adds the necessary compatible and the clock data for it.
-> > >=20
-> > > Changes since v1: [0]
-> > > * Correct clock source order for gxbb pwm ao. Documenation shows xtal=
- as
-> > > =C2=A0 source #1 while it is actually source #0
-> > > * Add patch 3 to fix pwm calculation. Issue while testing pwm with cl=
-k81
-> > > =C2=A0 as clock source.
-> > >=20
-> > > [0]:=C2=A0=C2=A0https://lkml.kernel.org/r/20170607133013.4766-1-jbrun=
-et@baylibre.com
-> > >=20
-> > > Jerome Brunet (3):
-> > > =C2=A0 dt-bindings: pwm: meson: add comptabible for gxbb ao pwms
-> > > =C2=A0 pwm: meson: add compatible for the gxbb ao pwms
-> > > =C2=A0 pwm: meson: improve pwm calculation precision.
-> > >=20
-> > > =C2=A0.../devicetree/bindings/pwm/pwm-meson.txt=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A04 +-
-> > > =C2=A0drivers/pwm/pwm-meson.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 47 +++++++++++++++++
-> > > -----
-> > > =C2=A02 files changed, 41 insertions(+), 10 deletions(-)
-> >=20
-> > For some reason the Author field keeps getting set to:
-> >=20
-> > 	jbrunet <jbrunet@baylibre.com>
-> >=20
-> > It seems like the headers are correct, so maybe this is patchwork
-> > messing things up?
->=20
-> And it strikes again ... :(
-> I already had the issue with https://patchwork.kernel.org a few month ago.
-> I have contacted the kernel.org helpdesk about it and here is the explana=
-tion:
->=20
-> "Patchwork treats users and patch submitters slightly differently, so onc=
-e your
-> entry is created upon first patch submission, it sticks forever. I've adj=
-usted
-> your entry manually per your request."
->=20
-> So my very first patch on the ML must have been malformed somehow.
->=20
-> >=20
-> > Anyway, I've applied the series and manually fixed up the Author field.
->=20
-> Thanks a lot for this !=20
-> Any idea who I may contact to get this "manual adjustment" done on https:=
-//patch
-> work.ozlabs.org/ ?
+Yes, my mistake, I should have cc-ed you.
 
-I /think/ Jeremy Kerr (To'ed) would be a good person to contact about
-this.
+>> please let me know how to get
+>> both SCPI and SCMI working together with different doorbell bits on the
+>> same channel.
+>>
+> You say in the cover letter :
+> "Let me begin admitting that we are introducing yet another protocol to
+> achieve same things as many existing protocols like ARM SCPI, TI SCI,
+> QCOM RPM, Nvidia Tegra BPMP, and so on"
+> 
+>  So SCMI is supposed to replace SCPI, SCI, RPM and BPMP   or   SCMI is
+> to be used for future platforms.
+> If SCPI and SCMI achieve the same, why have them both active simultaneously?
+> 
 
-Jeremy, anything you can do about this?
+Yes it may not be used, but the firmware might support both for backward
+compatibility. E.g. on Juno, we still may continue supporting SCPI while
+we transition to SCMI. So both old and new DTs must work.
 
-Thanks,
-Thierry
+> Assuming there really is some sane excuse :-
 
---iq/fWD14IMVFWBCD
-Content-Type: application/pgp-signature; name="signature.asc"
+Yes as I mentioned above.
 
------BEGIN PGP SIGNATURE-----
+>     SCPI and SCMI are two separate client working over an MHU channel.
+> So, as is the case with users relying on a common resource, you need a
+> shim arbitrator that serialises access to the resource.>
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlleADYACgkQ3SOs138+
-s6HVAxAAjblEyF4Kjv4FUEIzUf/75caQWWOV4NWm5AjR2mbEUox+mikJ5ebpvTFg
-I/qH9knRNTpcx7Wx+F6V1UHYPreQ/E6cu2govT/Bl9NcfECEsdpXlhgiAFRRehf+
-Ionf+1WtbidSHIDgrEVjahk2Wq3IXDjkCx87RHVBmoQM0dNrXUA0qXjeYny35MOi
-7KCwnjuFN4Xy93R2sZxATsZPYv7RD4jbXnvcc9Y7IORWOFOZRHt4HZ4kpFPa2YOs
-AgR/BFMxVF2/v9yhkGYd9GhHktuVKcgJHM25i/9RcDPS+RehwZ+f+3CqBq+IgiLP
-2FjpXJX2JL94/Z6iWMWa97ba1l9mJmGvEqiJtG92F9Vwv9LKdOKEDYtSDihoUshj
-1vxofyE/jJbF8EEzSWSqv4vM/J1LrAf9q+gowzE6jRq2ztcbaghh9THP3UFZ44zF
-nBKbah10lF4fBpU2CXbtvD6yeBwEJJ1zb1dj8rcRlF0oLDClbCLbbywkDyqvxJab
-+0qNQYZDtTM41o+27Q7wT8IcjGFs9xFMpgoVVj+wYT4RMllJLiZVSRuzuAiRqP0v
-j48EXB5PHn5qlNlvWuHOn04+SC06X6b16uwflN+Z0mOpHFXJoSmmC2/pw46doLAY
-r87kkBtNySzi0UX7m8HQd4v7Q9xrUbM49UbufJ2Ta8t71CHVL0g=
-=TbsQ
------END PGP SIGNATURE-----
+Yes, that's what I have done with this series of patches retaining the
+backward compatibility. I have made it generic to ARM MHU instead of
+specifically addressing couple of protocols on a particular platform.
 
---iq/fWD14IMVFWBCD--
+If I try to come up with an additional shim driver, I bet it will become
+much ugly, bigger and platform specific.
+
+The specification of MHU mentions on how to use it as doorbell bit and I
+am doing that to provide cleaner and generic solution which I you seem
+to disagree with. So please suggest/provide alternative solution.
+
+A shim layer may get complicated as both SCMI and SCPI will call
+standard mailbox APIs. Do you mean I need to replace those calls with
+shim layer API ? If I do that it may break on other platforms which are
+using SCPI.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
