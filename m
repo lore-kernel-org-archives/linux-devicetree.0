@@ -1,51 +1,34 @@
-From: "Keiji Hayashibara" <hayashibara.keiji@socionext.com>
-Subject: RE: [PATCH V4 0/3] add UniPhier watchdog support
-Date: Thu, 6 Jul 2017 13:06:27 +0900
-Message-ID: <000101d2f60d$3e0d4330$ba27c990$@socionext.com>
-References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com> <000001d2f576$5f011c20$1d035460$@socionext.com> <CAK7LNAR7kbXPFGywpnWRCFibwp350kmZ7CpSUO6GTFG3pxG=zw@mail.gmail.com> <8ceaf917-c4fc-23c7-a7f4-5694bd8b4e88@roeck-us.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V1 1/3] pinctrl: qcom: spmi-gpio: Add support for GPIO
+ LV/MV subtype
+Date: Wed, 5 Jul 2017 22:02:55 -0700
+Message-ID: <20170706050255.GN18666@tuxbook>
+References: <20170613061707.13892-1-fenglinw@codeaurora.org>
+ <20170613061707.13892-2-fenglinw@codeaurora.org>
+ <CACRpkdYrsOB71gJjXeQn0Q8xBTEvYSeDnRpSGm4GQ0h-=Pk3=Q@mail.gmail.com>
+ <5cdf4344-7298-055b-70cb-84cfd96110af@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8ceaf917-c4fc-23c7-a7f4-5694bd8b4e88@roeck-us.net>
-Content-Language: ja
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Guenter Roeck' <linux@roeck-us.net>, =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro@socionext.com>
-Cc: wim@iguana.be, linux-watchdog@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko@socionext.com>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi@socionext.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5cdf4344-7298-055b-70cb-84cfd96110af@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Fenglin Wu <fenglinw@codeaurora.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Ivan Ivanov <iivanov.xz@gmail.com>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter and Yamada-san,
+On Wed 05 Jul 16:51 PDT 2017, Fenglin Wu wrote:
 
-I am grateful for your support.
-Thank you.
-
-----------
-Best Regards,
-Keiji Hayashibara
-
-
-> From: Guenter Roeck [mailto:linux@roeck-us.net]
-> Sent: Thursday, July 06, 2017 12:26 AM
-> Subject: Re: [PATCH V4 0/3] add UniPhier watchdog support
+> Hi Bjorn and Ivan,
 > 
-> On 07/05/2017 03:26 AM, Masahiro Yamada wrote:
-> > 2017-07-05 19:06 GMT+09:00 Keiji Hayashibara <hayashibara.keiji@socionext.com>:
-> >> Hi Guenter,
-> >>
-> >> Let me confirm if I got it.
-> >>
-> >> I guess that this series finished the review.
-> >> Could you tell me the current state of this series?
-> >
-> >
-> > I will pick up 3/3.  (It should have been sent to ARM-SoC ML, though.)
-> >
-> > I had sent my PRs for v4.13 before Rob acked the DT binding.
-> > Please look forward to v4.14.
-> >
-> 
-> 1/3 and 2/3 are in -next, so they should be be included in Wim's pull request
-> for 4.13.
-> 
-> Guenter
+> Could you help to take some time to look at these spmi-gpio pinctrl
+> patches?
+> Thanks.
+
+Hi Fenglin,
+
+Sorry for not getting to this earlier, I'll try to finalize my review of
+this tomorrow.
+
+Regards,
+Bjorn
