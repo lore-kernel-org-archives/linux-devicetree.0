@@ -1,131 +1,106 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v3 4/5] dmaengine: stm32-dma: Add support for STM32 DMAMUX
-Date: Thu, 6 Jul 2017 14:20:22 +0200
-Message-ID: <1499343623-5964-5-git-send-email-pierre-yves.mordret@st.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v3 1/5] dt-bindings: Document the STM32 DMAMUX bindings
+Date: Thu, 6 Jul 2017 14:20:19 +0200
+Message-ID: <1499343623-5964-2-git-send-email-pierre-yves.mordret@st.com>
 References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba
- Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499343623-5964-1-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for STM32 DMAMUX.
-When the STM32 DMA controller is behind a STM32 DMAMUX the request line
-number has not to be handled by DMA but DMAMUX.
+This patch adds the documentation of device tree bindings for the STM32
+DMAMUX.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 ---
  Version history:
-    V3:
-        * None
+    v3:
+        * change compatible to st,stm32h7-dmamux to be mode Soc specific
+        * add verbosity in dma-cells
     v2:
-        * Use DMAMUX Configuration API's
-        * DMAXMUX(if used) provides ChannelID
+        * Move clock bindings from optional to mandatory one
+        * Drop channelID bindings as managed dynamically from now on by
+          DMAMUX driver.
 ---
 ---
- drivers/dma/stm32-dma.c | 44 +++++++++++++++++++++++++++++++-------------
- 1 file changed, 31 insertions(+), 13 deletions(-)
+ .../devicetree/bindings/dma/stm32-dmamux.txt       | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/stm32-dmamux.txt
 
-diff --git a/drivers/dma/stm32-dma.c b/drivers/dma/stm32-dma.c
-index 786fc8f..a9e5884 100644
---- a/drivers/dma/stm32-dma.c
-+++ b/drivers/dma/stm32-dma.c
-@@ -13,6 +13,7 @@
- #include <linux/delay.h>
- #include <linux/dmaengine.h>
- #include <linux/dma-mapping.h>
-+#include <linux/dma/stm32-dmamux.h>
- #include <linux/err.h>
- #include <linux/init.h>
- #include <linux/jiffies.h>
-@@ -179,6 +180,7 @@ struct stm32_dma_device {
- 	struct clk *clk;
- 	struct reset_control *rst;
- 	bool mem2mem;
-+	bool dmamux;
- 	struct stm32_dma_chan chan[STM32_DMA_MAX_CHANNELS];
- };
- 
-@@ -272,12 +274,18 @@ static int stm32_dma_slave_config(struct dma_chan *c,
- 				  struct dma_slave_config *config)
- {
- 	struct stm32_dma_chan *chan = to_stm32_dma_chan(c);
-+	int ret = 0;
- 
- 	memcpy(&chan->dma_sconfig, config, sizeof(*config));
- 
--	chan->config_init = true;
-+	if (c->router)
-+		ret = stm32_dmamux_set_config(c->router->dev, c->route_data,
-+					      c->chan_id);
- 
--	return 0;
-+	if (!ret)
-+		chan->config_init = true;
+diff --git a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+new file mode 100644
+index 0000000..abdb5ed
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+@@ -0,0 +1,60 @@
++STM32 DMA MUX (DMA request router)
 +
-+	return ret;
- }
- 
- static u32 stm32_dma_irq_status(struct stm32_dma_chan *chan)
-@@ -998,18 +1006,26 @@ static struct dma_chan *stm32_dma_of_xlate(struct of_phandle_args *dma_spec,
- 	cfg.stream_config = dma_spec->args[2];
- 	cfg.threshold = dma_spec->args[3];
- 
--	if ((cfg.channel_id >= STM32_DMA_MAX_CHANNELS) ||
--	    (cfg.request_line >= STM32_DMA_MAX_REQUEST_ID)) {
--		dev_err(dev, "Bad channel and/or request id\n");
--		return NULL;
--	}
--
--	chan = &dmadev->chan[cfg.channel_id];
-+	if (dmadev->dmamux) {
-+		c = dma_get_any_slave_channel(&dmadev->ddev);
-+		if (!c) {
-+			dev_err(dev, "No more channel avalaible\n");
-+			return NULL;
-+		}
-+		chan = &dmadev->chan[c->chan_id];
-+	} else {
-+		if ((cfg.channel_id >= STM32_DMA_MAX_CHANNELS) ||
-+		    (cfg.request_line >= STM32_DMA_MAX_REQUEST_ID)) {
-+			dev_err(dev, "Bad channel and/or request id\n");
-+			return NULL;
-+		}
- 
--	c = dma_get_slave_channel(&chan->vchan.chan);
--	if (!c) {
--		dev_err(dev, "No more channels available\n");
--		return NULL;
-+		chan = &dmadev->chan[cfg.channel_id];
-+		c = dma_get_slave_channel(&chan->vchan.chan);
-+		if (!c) {
-+			dev_err(dev, "No more channel avalaible\n");
-+			return NULL;
-+		}
- 	}
- 
- 	stm32_dma_set_config(chan, &cfg);
-@@ -1058,6 +1074,8 @@ static int stm32_dma_probe(struct platform_device *pdev)
- 	dmadev->mem2mem = of_property_read_bool(pdev->dev.of_node,
- 						"st,mem2mem");
- 
-+	dmadev->dmamux = of_property_read_bool(pdev->dev.of_node, "st,dmamux");
++Required properties:
++- compatible:	"st,stm32h7-dmamux"
++- reg:		Memory map for accessing module
++- #dma-cells:	Should be set to <3>.
++		First parameter is request line number.
++		Second is DMA channel configuration
++		Third is Fifo threshold
++		For more details about the three cells, please see
++		stm32-dma.txt documentation binding file
++- dma-masters:	Phandle pointing to the DMA controller
 +
- 	dmadev->rst = devm_reset_control_get(&pdev->dev, NULL);
- 	if (!IS_ERR(dmadev->rst)) {
- 		reset_control_assert(dmadev->rst);
++Optional properties:
++- dma-channels : Number of DMA channels supported.
++- dma-requests : Number of DMA requests supported.
++- resets: Reference to a reset controller asserting the DMA controller
++- clocks: Input clock of the DMAMUX instance.
++
++Example:
++
++/* DMA controller */
++dma2: dma-controller@40026400 {
++	compatible = "st,stm32-dma";
++	reg = <0x40026400 0x400>;
++	interrupts = <56>,
++		     <57>,
++		     <58>,
++		     <59>,
++		     <60>,
++		     <68>,
++		     <69>,
++		     <70>;
++	clocks = <&clk_hclk>;
++	#dma-cells = <4>;
++	st,mem2mem;
++	resets = <&rcc 150>;
++	st,dmamux;
++	dma-channels = <8>;
++};
++
++/* DMA mux */
++dmamux2: dma-router@40020820 {
++	compatible = "st,stm32h7-dmamux";
++	reg = <0x40020800 0x1c>;
++	#dma-cells = <3>;
++	dma-requests = <128>;
++	dma-masters = <&dma2>;
++};
++
++/* DMA client */
++usart1: serial@40011000 {
++	compatible = "st,stm32-usart", "st,stm32-uart";
++	reg = <0x40011000 0x400>;
++	interrupts = <37>;
++	clocks = <&clk_pclk2>;
++	dmas = <&dmamux2 41 0x414 0>,
++	       <&dmamux2 42 0x414 0>;
++	dma-names = "rx", "tx";
++};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
