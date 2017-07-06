@@ -1,215 +1,81 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [RFC] interrupts DT property for irqdomain hierarchy
-Date: Fri, 7 Jul 2017 06:58:47 +0900
-Message-ID: <CAK7LNATme8P1uHx5hZr6Eez4KGweUi=jQ6zJ=bdBf1XmxZVoLg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/4] Broadcom STB S2/S3/S5 support for ARM and MIPS
+Date: Thu,  6 Jul 2017 15:22:21 -0700
+Message-ID: <20170706222225.9758-1-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>linu
 List-Id: devicetree@vger.kernel.org
 
-Hi IRQ experts, DT exports,
-
-
-I have a question about CONFIG_IRQ_DOMAIN_HIERARCHY.
-
-When IRQ domains are hierarchy,
-how can we specify IRQ number re-mapping between the
-parent irqchip and the child irqchip?
-
-The following figure shows a simplified example.
-
-|----------|        |----------|       |----------|
-| parent   |        | child    |       |  IRQ     |
-| IRQ chip | <----- | IRQ chip |<----- | consumer |
-|          |        |          |       | Device   |
-|----------|        |----------|       |----------|
-
-Perhaps, we may describe DT like follows
-
-    gic: interrupt-controller {
-            ...
-            interrupt-controller;
-            #interrupt-cells = <3>;
-    };
-
-    child_intc: child-interrupt-controller {
-            ...
-            interrupt-parent = <&gic>;
-            interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
-            interrupt-controller;
-            #interrupt-cells = <2>;
-    };
-
-    i2c: i2c {
-            ...
-            interrupt-parent = <&child_intc>;
-            interrupts = <0 4>;
-    };
-
-
-In this example, the I2C controller takes HWIRQ=0 of the child_intc device.
-This goes through the child IRQ chip,
-then connected to HWIRQ=50 of the parent intc.
-
-The DT above describes the hardware connection well,
-but it actually does not work.
-
-The root irqchip is usually declared with IRQCHIP_DECLARE().
-So, IRQ resources are allocated when platform devices are populated from DT.
-This means IRQ allocation happens before drivers are probed.
-
-of_pupulate_default_populate() does not know the fact about irqdomain hierarchy.
-
-As a result, interrupts = <0 50 0> in the child_intc,
-and interrupts = <0 4> of the I2C are allocated with different virtual
-IRQ numbers.
-
-We want to assign the same IRQ number if we want handle them
-in the hierarchy IRQ manner.
-
-How can we make it work?
-
-Of course, we can remove the
-          interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
-from the child_intc device node.
-
-But, we can not retrieve the IRQ remapping information from DT.
-
-
-I saw some irqchip implementations and .alloc hook are often
-hard-coded in the case.
-
-
-For example, like this.
-
-static int child_intc_domain_alloc(struct irq_domain *domain,
-                          unsigned int virq, unsigned int nr_irqs, void *arg)
-{
-        ....
-
-        for (i = 0; i < nr_irqs; i++) {
-                struct irq_fwspec parent_fwspec;
-
-                ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-                                                    &priv->chip, priv);
-                if (ret)
-                        return ret;
-
-                /* CAUTION: parent irqchip must be GIC. */
-
-                parent_fwspec.fwnode = domain->parent->fwnode;
-                parent_fwspec.param_count = 3;  /*GIC: #interrupt-cells = <3> */
-                parent_fwspec.param[0] = 0;   /* SPI of GIC */
-                /* HWIRQ=0 of this chip corresponds to HWIRQ=50 of the parent */
-                parent_fwspec.param[1] = hwirq + 50;
-                parent_fwspec.param[2] = type;
-
-                ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
-                                                   &parent_fwspec);
-                if (ret)
-                        return ret;
-
-                virq++;
-                hwirq++;
-        }
-
-        return 0;
-}
-
-
-
-In order to avoid hard-coding, one possible idea is
-to retrieve the IRQ information from DT, like this:
-
-        for (i = 0; i < nr_irqs; i++) {
-                struct of_phandle_args parent_irq;
-                struct irq_fwspec parent_fwspec;
-
-                ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-                                                   &priv->chip, priv);
-                if (ret)
-                        return ret;
-
-                /* retrieve interrupt spec from DT */
-                ret = of_irq_parse_one(irq_domain_get_of_node(domain), hwirq,
-                                       &parent_irq);
-                if (ret)
-                        return ret;
-
-                of_phandle_args_to_fwspec(&parent_irq, &parent_fwspec);
-
-                ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
-                                                  &parent_fwspec);
-                if (ret)
-                        return ret;
-
-                virq++;
-                hwirq++;
-        }
-
-
-
-Some possible solutions:
-
-[1] stop early irq allocation and make it completely on-the-fly
-i.e. IRQ are allocated only when drivers explicitly call of_irq_get()
-or friends.
-
-This does not address one problem.
-
-If there are many IRQ lines connected between the parent and the child,
-interrupts will be very long.
-
-   #interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>,
-                 <0 54 0>, <0 55 0>, <0 56 0>, <0 57 0>,
-                  ...
-
-This is a mess.
-
-
-
-
-[2] Introduce DT property something like "interrupt-range"
-
-The idea is similar like "ranges" property transforms "reg".
-
-"interrupt-range" is an arbitrary number of
-(child irqchip interrupt) (parent irqchip interrupt) (length) triplets.
-
-For example,
-
-   interrupt-ranges = <0 0 0 50 0 4>;
-
-This means   <0 0>, <0 1>, <0 2>, <0 3> in the child
-should be mapped to  <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0> in the parent,
-respectively.
-
-
-
-Actually, "git grep interrupt-ranges" has 3 hits
-arch/powerpc/platforms/chrp/setup.c:    iranges = of_get_property(np,
-"interrupt-ranges", &len);
-arch/powerpc/platforms/chrp/setup.c:     * The first pair of cells in
-interrupt-ranges refers to the
-drivers/misc/cxl/of.c:  ranges = of_get_property(np, "interrupt-ranges", &len);
-
-I do not know how they are actually used because I see neither DTS
-files nor binding documents
-that describe it.
-
-
-
-That is my rough thought.
-
-
-Thanks for reading my message.
+Hi,
+
+This patch series adds support for S2/S3/S5 suspend/resume states on
+ARM and MIPS based Broadcom STB SoCs.
+
+This was submitted a long time ago by Brian, and I am now picking this
+up and trying to get this included with support for our latest chips.
+
+Provided that I can collect the necessary Acks from Rob (DT) and other
+people (Rafael?) I would probably take this via the Broadcom ARM SoC
+pull requests.
+
+Thank you!
+
+Changes in v3:
+
+- make SRAM mapping uncached
+- make SWAP_STACK + brcmstb_pm_s3_finish a single asm volatile statement
+- added Rob's Acked-by to first patch
+
+Changes in v2:
+
+- clarify the first patch's subject (Rob)
+- removed patch #2 which was creating a bisectability problem (kbuild)
+- added proper AFLAGS to get s2-arm.S to build properly (kbuild)
+- improved MIPS power management binding document (Rob)
+
+Brian Norris (1):
+  soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)
+
+Florian Fainelli (2):
+  dt-bindings: ARM: brcmstb: Update Broadcom STB Power Management
+    binding
+  dt-bindings: Document MIPS Broadcom STB power management nodes
+
+Justin Chen (1):
+  soc bcm: brcmstb: Add support for S2/S3/S5 suspend states (MIPS)
+
+ .../devicetree/bindings/arm/bcm/brcm,brcmstb.txt   |   6 +-
+ .../devicetree/bindings/mips/brcm/soc.txt          | 153 ++++
+ drivers/soc/bcm/Kconfig                            |   2 +
+ drivers/soc/bcm/brcmstb/Kconfig                    |   9 +
+ drivers/soc/bcm/brcmstb/Makefile                   |   1 +
+ drivers/soc/bcm/brcmstb/pm/Makefile                |   3 +
+ drivers/soc/bcm/brcmstb/pm/aon_defs.h              | 113 +++
+ drivers/soc/bcm/brcmstb/pm/pm-arm.c                | 836 +++++++++++++++++++++
+ drivers/soc/bcm/brcmstb/pm/pm-mips.c               | 461 ++++++++++++
+ drivers/soc/bcm/brcmstb/pm/pm.h                    |  89 +++
+ drivers/soc/bcm/brcmstb/pm/s2-arm.S                |  76 ++
+ drivers/soc/bcm/brcmstb/pm/s2-mips.S               | 200 +++++
+ drivers/soc/bcm/brcmstb/pm/s3-mips.S               | 146 ++++
+ 13 files changed, 2094 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/soc/bcm/brcmstb/Kconfig
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/Makefile
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/aon_defs.h
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/pm-arm.c
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/pm-mips.c
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/pm.h
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/s2-arm.S
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/s2-mips.S
+ create mode 100644 drivers/soc/bcm/brcmstb/pm/s3-mips.S
 
 -- 
-Best Regards
-Masahiro Yamada
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
