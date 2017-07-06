@@ -1,37 +1,159 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: add bindings doc for ZTE ZX PWM
- controller
-Date: Thu, 6 Jul 2017 09:57:38 -0500
-Message-ID: <20170706145738.5w3vk4cscvbki6vl@rob-hp-laptop>
-References: <1498704874-14599-1-git-send-email-shawnguo@kernel.org>
- <1498704874-14599-2-git-send-email-shawnguo@kernel.org>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v2 6/9] clk: at91: clk-generated: make gclk
+ determine audio_pll rate
+Date: Thu, 6 Jul 2017 17:29:22 +0200
+Message-ID: <ab11f002-b761-cdb4-eb0c-ce24dcb9c5d4@microchip.com>
+References: <20170704115927.32662-1-quentin.schulz@free-electrons.com>
+ <20170704115927.32662-7-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498704874-14599-2-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170704115927.32662-7-quentin.schulz@free-electrons.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 10:54:33AM +0800, Shawn Guo wrote:
-> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 04/07/2017 at 13:59, Quentin Schulz wrote:
+> This allows gclk to determine audio_pll rate and set the parent rate
+> accordingly.
 > 
-> It adds bindings document for ZTE ZX PWM controller.  The device
-> has two clocks: PCLK and WCLK.  The PCLK is for register access, and
-> WCLK is the reference clock for calculating period and duty cycles.
-> Also, the device supports polarity configuration, so #pwm-cells should
-> be 3.
+> However, there are multiple children clocks that could technically
+> change the rate of audio_pll (via gck). With the rate locking, the first
+> consumer to enable the clock will be the one definitely setting the rate
+> of the clock.
 > 
-> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Since audio IPs are most likely to request the same rate, we enforce
+> that the only clks able to modify gck rate are those of audio IPs.
+> 
+> To remain consistent, we deny other clocks to be children of audio_pll.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-zx.txt | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-zx.txt
+> 
+> v2:
+>   - added conditions for audio pll rate setting restriction for SSC and
+> I2S,
+> 
+>  drivers/clk/at91/clk-generated.c | 48 +++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 42 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+> index 6530a2e7e84d..87866786a6ab 100644
+> --- a/drivers/clk/at91/clk-generated.c
+> +++ b/drivers/clk/at91/clk-generated.c
+> @@ -26,6 +26,13 @@
+>  #define GENERATED_SOURCE_MAX	6
+>  #define GENERATED_MAX_DIV	255
+>  
+> +#define GCK_ID_SSC0		43
+> +#define GCK_ID_SSC1		44
+> +#define GCK_ID_I2S0		54
+> +#define GCK_ID_I2S1		55
+> +#define GCK_ID_CLASSD		59
+> +#define GCK_INDEX_DT_AUDIO_PLL	5
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+hum...
+
+> +
+>  struct clk_generated {
+>  	struct clk_hw hw;
+>  	struct regmap *regmap;
+> @@ -126,15 +133,14 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+>  {
+>  	struct clk_generated *gck = to_clk_generated(hw);
+>  	struct clk_hw *parent = NULL;
+> +	struct clk_rate_request req_parent = *req;
+>  	long best_rate = -EINVAL;
+> -	unsigned long min_rate;
+> +	unsigned long min_rate, parent_rate;
+>  	int best_diff = -1;
+>  	int i;
+> +	u32 div;
+>  
+> -	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
+> -		u32 div;
+> -		unsigned long parent_rate;
+> -
+> +	for (i = 0; i < clk_hw_get_num_parents(hw) - 1; i++) {
+>  		parent = clk_hw_get_parent_by_index(hw, i);
+>  		if (!parent)
+>  			continue;
+> @@ -150,11 +156,40 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+>  		clk_generated_best_diff(req, parent, parent_rate, div,
+>  					&best_diff, &best_rate);
+>  
+> +		if (!best_diff)
+> +			break;
+> +	}
+> +
+> +	/*
+> +	 * The audio_pll rate can be modified, unlike the five others clocks
+> +	 * that should never be altered.
+> +	 * The audio_pll can technically be used by multiple consumers. However,
+> +	 * with the rate locking, the first consumer to enable to clock will be
+> +	 * the one definitely setting the rate of the clock.
+> +	 * Since audio IPs are most likely to request the same rate, we enforce
+> +	 * that the only clks able to modify gck rate are those of audio IPs.
+> +	 */
+> +
+> +	if (gck->id != GCK_ID_SSC0 && gck->id != GCK_ID_SSC1 &&
+> +	    gck->id != GCK_ID_I2S0 && gck->id != GCK_ID_I2S1 &&
+> +	    gck->id != GCK_ID_CLASSD)
+> +		goto end;
+
+...well... maybe for a temporary solution, but what about the next
+product that will also have such feature but without the same set of IDs?
+
+I know that the main use of this clock is the "audio" subsystem (so its
+name) but in a machine without audio needs, it can be interesting to use
+this fractional PLL for other devices that can handle a GCK (and I'm
+thinking about the SDHCI interface that then could be configured with
+maximum clock speed).
+
+> +	parent = clk_hw_get_parent_by_index(hw, GCK_INDEX_DT_AUDIO_PLL);
+> +	if (!parent)
+> +		goto end;
+
+Here, if the audio pll id changes in the DT, we don't retrieve the
+proper parent... And again, not very future proof.
+
+> +	for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
+> +		req_parent.rate = req->rate * div;
+> +		__clk_determine_rate(parent, &req_parent);
+> +		clk_generated_best_diff(req, parent, req_parent.rate, div,
+> +					&best_diff, &best_rate);
+>  
+>  		if (!best_diff)
+>  			break;
+>  	}
+>  
+> +end:
+>  	pr_debug("GCLK: %s, best_rate = %ld, parent clk: %s @ %ld\n",
+>  		 __func__, best_rate,
+>  		 __clk_get_name((req->best_parent_hw)->clk),
+> @@ -264,7 +299,8 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
+>  	init.ops = &generated_ops;
+>  	init.parent_names = parent_names;
+>  	init.num_parents = num_parents;
+> -	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
+> +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
+> +		CLK_SET_RATE_PARENT;
+>  
+>  	gck->id = id;
+>  	gck->hw.init = &init;
+> 
+
+
+-- 
+Nicolas Ferre
