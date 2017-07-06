@@ -1,41 +1,89 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 0/4] Add STM32 MDMA driver
-Date: Thu, 6 Jul 2017 14:25:37 +0200
-Message-ID: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
+From: Mason <slash.tmp@free.fr>
+Subject: Re: [PATCH v9 0/3] Tango PCIe controller support
+Date: Thu, 6 Jul 2017 14:26:44 +0200
+Message-ID: <d04e1632-17b8-85f9-31c4-b789d55cc853@free.fr>
+References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
+ <20170704202412.GK13824@bhelgaas-glaptop.roam.corp.google.com>
+ <6256cab3-dd77-c0f6-66b8-be261695bbb1@free.fr>
+ <20170705180359.GL13824@bhelgaas-glaptop.roam.corp.google.com>
+ <5a1207cb-31fd-6b85-86af-8c37bd57ad4f@free.fr>
+ <20170705213419.GD25063@bhelgaas-glaptop.roam.corp.google.com>
+ <8dcab663-245b-880a-be3a-2965fd12d663@free.fr>
+ <20170706033946.GO13824@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170706033946.GO13824@bhelgaas-glaptop.roam.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Thomas Gleixner <tglx@linutronix.de>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the STM32 MDMA controller.
-The Master Direct memory access (MDMA) provides high-speed data transfer
-between memory and memory or between peripherals and memory.
-Contrary to STM32 DMA, the STM32 MDMA controller supports hardware LLI and
-uses a larger integrated FIFO (128 vs 16 bytes)
----
-  Version history:
-     v2:
-         * change compatible into st,stm32h7-mdma to be more SoC specific
-         * Add MDMA support in DT for H7
-         * Add MDMA support in STM32 defconfig
----
-Pierre-Yves MORDRET (4):
-  dt-bindings: Document the STM32 MDMA bindings
-  dmaengine: Add STM32 MDMA driver
-  ARM: dts: stm32: Add MDMA support for STM32H743 SoC
-  ARM: configs: stm32: Add MDMA support in STM32 defconfig
+On 06/07/2017 05:39, Bjorn Helgaas wrote:
 
- .../devicetree/bindings/dma/stm32-mdma.txt         |   94 ++
- arch/arm/boot/dts/stm32h743.dtsi                   |   10 +
- arch/arm/configs/stm32_defconfig                   |    1 +
- drivers/dma/Kconfig                                |   12 +
- drivers/dma/Makefile                               |    1 +
- drivers/dma/stm32-mdma.c                           | 1536 ++++++++++++++++++++
- 6 files changed, 1654 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
- create mode 100644 drivers/dma/stm32-mdma.c
+> On Wed, Jul 05, 2017 at 11:59:33PM +0200, Mason wrote:
+>
+>> There were a few nits I wanted to address:
+>>
+>> - Since we added suppress_bind_attrs = true, probe()
+>> can only be called at init, so I wanted to mark __init
+>> all the probe functions, to save space.
+>>
+>> - I left the definition of MSI_MAX in the wrong patch
+>>
+>> - You put a pointer to the pdev in the struct tango_pcie.
+>> I think this is redundant, since the pdev already has a
+>> pointer to the struct, as drvdata.
+>> So I wanted to change tango_msi_probe() to take a pdev
+>> as argument (to make it more like an actual probe function)
+>> and derive pcie from pdev, instead of the other way around.
+> 
+> I don't think tango_msi_probe() is really a "probe" function.  It's
+> all part of the tango driver, and it's not claiming a separate piece
+> of hardware.
 
--- 
-2.7.4
+I agree that tango_msi_probe() is not a probe function;
+it is merely a piece of the actual probe function (static
+with single call site). I split the probe function in two,
+because it seemed to make sense at the time.
+
+Perhaps it's better to inline tango_msi_probe? That would
+avoid the issues of that function's name and parameters.
+
+If you think it's better to keep the two pieces separate,
+I can rename the MSI part to tango_msi_init() or some such.
+But I'd like to avoid adding unnecessary fields to the struct.
+
+>  So I would keep the name and structure similar to these:
+> 
+>   advk_pcie_init_msi_irq_domain()
+>   nwl_pcie_init_msi_irq_domain()
+> 
+> BTW, those functions use irq_domain_add_linear(), while you are one of
+> the very few callers of irq_domain_create_linear().  Why the difference?
+> If your code does basically the same thing, it's very helpful to me if
+> it *looks* basically the same.
+
+It was a suggestion from Marc Z on 2017-03-23.
+
+<QUOTE>
++ irq_dom = irq_domain_add_linear(NULL, MSI_COUNT, &msi_domain_ops, pcie);
+
+Use irq_domain_create_linear, pass the same fwnode.
+</QUOTE>
+
+It seems odd to pass NULL as the first argument.
+(As I had first done, when copying the Altera driver.)
+
+>> Can I send you a patch series with these changes on Friday?
+> 
+> I was planning to ask Linus to pull my branch tomorrow or Friday
+> because I'm going on vacation next week and I don't want to leave
+> right after he pulls it.  So the sooner the better.
+
+I'm not at the office today, but I'll do it first thing
+tomorrow. If it works out, great. If I'm too late, well
+there's 4.14 to look forward to.
+
+Regards.
