@@ -1,93 +1,76 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Fri, 7 Jul 2017 00:07:20 +0530
-Message-ID: <CABb+yY0j--t-VcOJnMxq25gnsb+QGi5ifw_K4qu1vgTJjKXBxg@mail.gmail.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
- <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
- <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com> <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
- <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
- <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com> <CABb+yY3QRz9pcSTMsgNUnBkzQAedFFbbwu0fXY-2oJCFARz60g@mail.gmail.com>
- <012a9039-23e0-be8c-add9-2c0e83a1d97e@arm.com> <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ@mail.gmail.com>
- <36ea8010-f22a-e0d9-b9a9-bb6be19db45d@arm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] ARM: sunxi: h3/h5: Correct emac register size
+Date: Thu, 6 Jul 2017 20:52:05 +0200
+Message-ID: <20170706185205.f4jwskpnz4d3udvv@flea>
+References: <20170706085334.25380-1-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <36ea8010-f22a-e0d9-b9a9-bb6be19db45d-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="fcgbg44eaedy3lba"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170706085334.25380-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, wens@csie.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 6, 2017 at 10:14 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
-> On 06/07/17 15:37, Jassi Brar wrote:
->> On Thu, Jul 6, 2017 at 3:03 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
 
->> I see no reason why you must have SCPI and SCMI both running.
->>
->
-> We can still have 2 different protocols using same MHU channel with
-> different doorbells, what's wrong with that ?
->
-Only for SCMI and SCPI - both written by same person to achieve the
-same thing - I think it should not be necessary.
+--fcgbg44eaedy3lba
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But yes, SCMI running alongside some complementary protocol (that
-implements what SCMI doesn't provide) is a very solid usecase. And
-that is the reason you need a platform specific 'transport layer'.
+On Thu, Jul 06, 2017 at 10:53:34AM +0200, Corentin Labbe wrote:
+> The datasheet said that emac register size is 0x1000 not 0x104
+>=20
+> Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> ---
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi=
+-h3-h5.dtsi
+> index 716e7d668dec..5a57b67c9b77 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -406,7 +406,7 @@
+>  		emac: ethernet@1c30000 {
+>  			compatible =3D "allwinner,sun8i-h3-emac";
+>  			syscon =3D <&syscon>;
+> -			reg =3D <0x01c30000 0x104>;
+> +			reg =3D <0x01c30000 0x1000>;
 
->> And even then there is a solution - a shim arbitrator. Other
->> platforms, those share a channel, do that. No big deal.
->>
->
-> Example please? Please remember these protocols are generic and we
-> can't add any platform specific code into them.
->
-You do need to have platform specific glue as I said.
+The size is actually 0x10000. I fixed it and applied.
 
->>  BTW, I hope you realise that we need a 'transport layer' which will
->> be the platform specific glue between mailbox controller specifics and
->> the generic SCMI code.
->
-> Why ?
->
-Because you should not restrict the usage of SCMI to only platforms
-with mailbox controller that does not require any information to
-trigger a signal on the other side -- what you call "doorbell".
+The A64 DTSI has the same issue, can you send a patch for this one
+too?
 
-Why shouldn't Rockchip be able to implement SCMI? Just because it uses
-different mechanism to signal the other end?
+Thanks,
+Maxime
 
-You are actually putting in effort to restrict the usage of SCMI. Its
-like you buy a usb device and the first thing you do is solder it to
-the plug.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
+--fcgbg44eaedy3lba
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Clearly you have not made a since technical argument so far as why
-> MHU doorbell is not correct way even when MHU specification is clearly
-> allows it. I have given example of ST mailbox which has this doorbell
-> kind of support.
->
->> I see your confusion in the form of some issues in the SCMI
->> implementation, please CC me on the next revision.
->>
->
-> Care to elaborate on what's my confusion or at-least what you think so ?
->
-See me last point.
+-----BEGIN PGP SIGNATURE-----
 
-> Also if you have concern on implementation, ok we can discuss further.
-> But can you make it clear as what your objections are for the doorbell
-> MHU binding. How will I get the bit assigned for different protocols
-> which are platform specific ? I still need some binding , right ?
->
-Sorry, No. I'll try to get lkml fwd me the patchset so I can explain
-there further.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJZXobVAAoJEBx+YmzsjxAgJcEP/iLNTR1rF5E7iJKPEO3KgnQN
+wNkVyIvQueEDVK/GOUgWp+JxOh8dZrUnXS9oTodAH6Fi27TOZYwTG/2Xwp+nxs5C
+UlcAUiHxK4ovJIHJYePcYss3X3/lHvMNUBWr8WxFwToRkEoYLWG6xtgA+Hr6Gg89
+mBpsUBIgwcaiZI6VyKH02d5rl1dtgeabE7VOwRaO8yvaiaptJ7desQQGfeBjTWrp
+eR2O63lK6bU54OkyID1vnLm/ONkD/5DAZp5AW3J5gIKny/c6xkVVD+8Jnf2zrMiy
+9O7LCTJBwWlU9tpalbaN8CuiZPWjpCpOQu4sD8NQhf6j1eY8HcL4fNUqPzX0nqqv
+zJm1rV71URMyT4LijCphqTHdz6h1JEiBFGEo5XaK0FY+xeHtxH6Cv2/MOK6bKNzZ
+62oACzVOYoMstVJzmGrX31UkTExyOxIxWWUCC1TSJm/Tey9K90o2+8zON/kC3UZW
+IhZml4czxic/kaykKkuKc9V0Rn7m3gC4zxT1ITgvcQ0irksQJf3plgjOtC/TBUQj
+Zua2i3SocHCP1HQwQd4dw+9OZg9L4Qi5jftLPwihV92vkpTY4b6zLKcdxBipgDLg
+/nYUa25bgsw5vpTS8lSNERuI9WNUPHHso0f0VreKWhxDVFK+ORkFk1lgOGCeFYet
+pUauNv6aHFB10coTvVU5
+=lo78
+-----END PGP SIGNATURE-----
+
+--fcgbg44eaedy3lba--
