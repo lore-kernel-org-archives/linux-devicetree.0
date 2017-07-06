@@ -1,62 +1,57 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v1 2/3] dt-bindings: display: panel: Add support for Orise
- Tech otm8009a dsi panel
-Date: Thu, 6 Jul 2017 14:21:26 +0000
-Message-ID: <c7caa8fc-076b-c2ad-5210-19458f89dab7@st.com>
-References: <1499185805-23354-1-git-send-email-philippe.cornu@st.com>
- <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable
+ option
+Date: Thu, 6 Jul 2017 16:33:47 +0200
+Message-ID: <109f44aa-87ed-6a9c-b557-8dabb2958c8c@skidata.com>
+References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
+ <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
+ <20170706135557.GC8810@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170706135557.GC8810-g2DYL2Zd6BY@public.gmane.org>
 Content-Language: en-US
-Content-ID: <ACA8DAA4D9CF6E4299C7BA8BC526AA17@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark
- Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Archit Taneja <architt@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzA0LzIwMTcgMDY6MzAgUE0sIFBoaWxpcHBlIENPUk5VIHdyb3RlOg0KPiBUaGUg
-T3Jpc2UgVGVjaCBPVE04MDA5QSBpcyBhIDMuOTciIDQ4MHg4MDAgVEZUIExDRCBwYW5lbCBjb25u
-ZWN0ZWQgdXNpbmcNCj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0cyBiYWNrbGlnaHQg
-aXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFBo
-aWxpcHBlIENPUk5VIDxwaGlsaXBwZS5jb3JudUBzdC5jb20+DQo+IC0tLQ0KPiAgIC4uLi9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQgICAgfCAyMCArKysrKysr
-KysrKysrKysrKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspDQo+ICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3Rt
-ODAwOWEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRl
-eCAwMDAwMDAwLi4wYmI4MjM3DQo+IC0tLSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4
-dA0KPiBAQCAtMCwwICsxLDIwIEBADQo+ICtPcmlzZSBUZWNoIE9UTTgwMDlBIDMuOTciIDQ4MHg4
-MDAgVEZUIExDRCBwYW5lbCAoTUlQSS1EU0kgdmlkZW8gbW9kZSkNCj4gKw0KPiArVGhlIE9yaXNl
-IFRlY2ggT1RNODAwOUEgaXMgYSAzLjk3IiA0ODB4ODAwIFRGVCBMQ0QgcGFuZWwgY29ubmVjdGVk
-IHVzaW5nDQo+ICthIE1JUEktRFNJIHZpZGVvIGludGVyZmFjZS4gSXRzIGJhY2tsaWdodCBpcyBt
-YW5hZ2VkIHRocm91Z2ggdGhlIERTSSBsaW5rLg0KPiArDQo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
-Og0KPiArICAtIGNvbXBhdGlibGU6ICJvcmlzZXRlY2gsb3RtODAwOWEiDQo+ICsgIC0gcmVnOiB0
-aGUgdmlydHVhbCBjaGFubmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsDQo+ICsgIC0gcmVz
-ZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluIChhY3RpdmUgbG93KS4gKE9w
-dGlvbmFsKQ0KPiArDQo+ICtFeGFtcGxlOg0KPiArJmRzaSB7DQo+ICsJLi4uDQo+ICsNCj4gKwlw
-YW5lbEAwIHsNCj4gKwkJY29tcGF0aWJsZSA9ICJvcmlzZXRlY2gsb3RtODAwOWEiOw0KPiArCQly
-ZWcgPSA8MD47DQo+ICsJCXJlc2V0LWdwaW9zID0gPCZncGlvaCA3IDA+Ow0KDQpIaSBBbGwsDQpJ
-IHNob3VsZCBoYXZlIHdyaXR0ZW4gaW5zdGVhZDoNCiAgKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW9o
-IDcgR1BJT19BQ1RJVkVfTE9XPjsNCg0KcmVzZXQtZ3Bpb3MgaXMgYWN0aXZlIGxvdyBhbmQgdGhl
-IGRlZmluZSBHUElPX0FDVElWRV9MT1cgPSAxIHNvIHRoZSANCmV4YW1wbGUgd2FzIG5vdCBnb29k
-Lg0KDQpJIHdpbGwgc2VuZCBzb29uIHRoZSB2MiB3aXRoIHRoZSBjb3JyZWN0aW9uLg0KTWFueSB0
-aGFua3MNClBoaWxpcHBlDQoNCg0KPiArCX07DQo+ICt9Ow0KPiAKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+On 07/06/2017 03:55 PM, Andrew Lunn wrote:
+>> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
+>> index 6f55bdd..1766579 100644
+>> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
+>> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
+>> @@ -23,6 +23,9 @@ Optional properties:
+>>  - phy-handle : phandle to the PHY device connected to this device.
+>>  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
+>>    Use instead of phy-handle.
+>> +- phy-reset-after-clk-enable : If present then a phy reset and configuration
+>> +  will be performed everytime after the clocks are enabled. This is required
+>> +  for some PHYs to work properly.
+> 
+> It sounds like this issue will apply to any LAN8710 which has its
+> clock fiddled with. So this should be a centrally documented property,
+> which any MAC driver can implement. Please move the above text to
+> ethernet.txt, and instead have:
+> 
+>  - phy-reset-after-clk-enable : See ethernet.txt
+
+I haven't tested it on any other platform than an i.MX6, but IMHO you're
+right. It sounds reasonable that it affects any SoC which is messing
+around with the clock and not performing a reset by default.
+
+Thanks for that hint!
+I'll include that in the v2.
+
+>  Thanks
+> 	 Andrew
+> 
+
+regards,
+Richard.L
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
