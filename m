@@ -1,67 +1,57 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
-Date: Sun, 16 Jul 2017 08:45:46 +0200
-Message-ID: <20170716064546.GA11484@kroah.com>
-References: <20170712074305.GA20198@kroah.com>
- <197075499.65628.1500117344413@ox.hosteurope.de>
- <20170715112454.GB1753@kroah.com>
- <89433969.66090.1500123565835@ox.hosteurope.de>
- <20170715130220.GA22977@kroah.com>
- <826180465.66159.1500124248340@ox.hosteurope.de>
- <20170715131628.GA29222@kroah.com>
- <1152815224.66246.1500126030682@ox.hosteurope.de>
- <20170715134739.GA20360@kroah.com>
- <8d152de9387d8ebae5b3cd11277e8ada-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheXH4CVVE=-webmailer1@server05.webmailer.hosteurope.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 1/3] leds: core: Introduce generic pattern interface
+Date: Thu, 6 Jul 2017 05:18:01 +0200
+Message-ID: <20170706031801.GB12954@xo-6d-61-c0.localdomain>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170714224520.467-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8d152de9387d8ebae5b3cd11277e8ada-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheXH4CVVE=-webmailer1@server05.webmailer.hosteurope.de>
+In-Reply-To: <20170714224520.467-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolf Entwicklungen <Marcus.Wolf@Wolf-Entwicklungen.de>
-Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, grant.likely@linaro.org, devicetree@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 15, 2017 at 07:05:04PM +0200, Wolf Entwicklungen wrote:
-> Am Sa, 15.07.2017, 15:47 schrieb Greg KH:
-> > On Sat, Jul 15, 2017 at 03:40:30PM +0200, Marcus Wolf wrote:
-> >> Hi Greg,
-> >>
+Hi!
+
+> Some LED controllers have support for autonomously controlling
+> brightness over time, according to some preprogrammed pattern or
+> function.
 > 
-> Hi Greg,
-> 
-> now I added a TODO file and did a manual patchwork with lines of the old patch
-> (git format-patch master --stdout -p > pi433_patch) and the newer patch (git
-> diff master > pi433_patch). Stil don't know how to retreive multiple commits
-> in one single patch directly from git :-/
-> I did my best to meet a lot of rules of the link, you send me.If
-> there is stil something essential wrong or missing, please excuse and let me know.
-> 
-> Especially I was in doubt about the verbosity of the change log. If you'd like
-> to see the list of features of the driver over there (please see my first mail),
-> let me know and I'll add.
+> This adds a new optional operator that LED class drivers can implement
+> if they support such functionality as well as a new device attribute to
+> configure the pattern for a given LED.
 
+> @@ -61,3 +61,23 @@ Description:
+>  		gpio and backlight triggers. In case of the backlight trigger,
+>  		it is useful when driving a LED which is intended to indicate
+>  		a device in a standby like state.
+> +
+> +What:		/sys/class/leds/<led>/pattern
+> +Date:		July 2017
+> +KernelVersion:	4.14
+> +Description:
+> +		Specify a pattern for the LED, for LED hardware that support
+> +		altering the brightness as a function of time.
+> +
+> +		The pattern is given by a series of tuples, of brightness and
+> +		duration (ms). The LED is expected to traverse the series and
+> +		each brightness value for the specified duration.
+> +
+> +		Additionally a repeat marker ":|" can be appended to the
+> +		series, which should cause the pattern to be repeated
+> +		endlessly.
+> +
+> +		As LED hardware might have different capabilities and precision
+> +		the requested pattern might be slighly adjusted by the driver
+> +		and the resulting pattern of such operation should be returned
+> +		when this file is read.
 
-Can you resend it without all of this stuff here, a patch email should just
-contain the patch itself, look at all of the examples on the mailing
-lists for how they look.
+Well. I believe this is mostly useful for RGB LEDs. Unfortunately, having patterns
+per-LED will present opportunity for different channels becoming de-synchronized
+from each other, which will not look nice.
 
-> From: Marcus Wolf <linux@Wolf-Entwicklungen.de>
-> Date: Tue,15 Jul 2017 17:52:06 +0100
-> Subject: [PATCH 1/1] drivers/staging/pi433: New driver
-> 
-> Added a driver for the pi433 radio module
-> (see https://www.pi433.de/en.html for details).
-> Signed-off-by: Marcus Wolf <linux@Wolf-Entwicklungen.de>
-
-Need a blank line before signed-off-by.
-
-> Tested-by: Marcus Wolf <linux@Wolf-Entwicklungen.de> on Raspbian, running Kernel v4.12
-
-No need for a tested-by from something that wrote, that is implied :)
-
-Almost there...
-
-thanks,
-
-greg k-h
+Best regards,
+										Pavel
