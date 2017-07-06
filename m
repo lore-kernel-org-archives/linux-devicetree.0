@@ -1,86 +1,76 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
-Date: Thu, 6 Jul 2017 07:51:28 +0000
-Message-ID: <26a55285-509c-b7f4-7806-db537a582631@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH v2 2/2] ARM: shmobile: defconfig: Enable Ethernet AVB
+Date: Thu, 6 Jul 2017 08:05:43 +0000
+Message-ID: <TY1PR06MB07020F58F15C964FC1AA1D22B7D50@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <afcd181c-c805-8f3c-955f-652d001a03d4@cogentembedded.com>
+ <1499270189-29945-1-git-send-email-biju.das@bp.renesas.com>
+ <1499270189-29945-3-git-send-email-biju.das@bp.renesas.com>
+ <12c32eee-8e4d-457e-97d7-625a5c63ad59@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <12c32eee-8e4d-457e-97d7-625a5c63ad59@cogentembedded.com>
 Content-Language: en-US
-Content-ID: <415F1E55B17EAC40A4EBEE19A8753DEF-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3lsd2VzdGVyLA0KDQpEbyB5b3UgaGF2ZSB0aGUgcG9zc2liaWxpdHkgdG8gY2hlY2sgZm9y
-IG5vbi1yZWdyZXNzaW9uIG9mIHRoaXMgcGF0Y2hzZXQgDQpvbiA5NjUwLzUyIGNhbWVyYSA/DQoN
-CkJlc3QgcmVnYXJkcywNCkh1Z3Vlcy4NCg0KT24gMDcvMDMvMjAxNyAxMToxNiBBTSwgSHVndWVz
-IEZydWNoZXQgd3JvdGU6DQo+IFRoaXMgcGF0Y2hzZXQgZW5hYmxlcyBPVjk2NTUgY2FtZXJhIHN1
-cHBvcnQuDQo+IA0KPiBPVjk2NTUgc3VwcG9ydCBoYXMgYmVlbiB0ZXN0ZWQgdXNpbmcgU1RNMzJG
-NERJUy1DQU0gZXh0ZW5zaW9uIGJvYXJkDQo+IHBsdWdnZWQgb24gY29ubmVjdG9yIFAxIG9mIFNU
-TTMyRjc0NkctRElTQ08gYm9hcmQuDQo+IER1ZSB0byBsYWNrIG9mIE9WOTY1MC81MiBoYXJkd2Fy
-ZSBzdXBwb3J0LCB0aGUgbW9kaWZpZWQgcmVsYXRlZCBjb2RlDQo+IGNvdWxkIG5vdCBoYXZlIGJl
-ZW4gY2hlY2tlZCBmb3Igbm9uLXJlZ3Jlc3Npb24uDQo+IA0KPiBGaXJzdCBwYXRjaGVzIHVwZ3Jh
-ZGUgY3VycmVudCBzdXBwb3J0IG9mIE9WOTY1MC81MiB0byBwcmVwYXJlIHRoZW4NCj4gaW50cm9k
-dWN0aW9uIG9mIE9WOTY1NSB2YXJpYW50IHBhdGNoLg0KPiBCZWNhdXNlIG9mIE9WOTY1NSByZWdp
-c3RlciBzZXQgc2xpZ2h0bHkgZGlmZmVyZW50IGZyb20gT1Y5NjUwLzk2NTIsDQo+IG5vdCBhbGwg
-b2YgdGhlIGRyaXZlciBmZWF0dXJlcyBhcmUgc3VwcG9ydGVkIChjb250cm9scykuIFN1cHBvcnRl
-ZA0KPiByZXNvbHV0aW9ucyBhcmUgbGltaXRlZCB0byBWR0EsIFFWR0EsIFFRVkdBLg0KPiBTdXBw
-b3J0ZWQgZm9ybWF0IGlzIGxpbWl0ZWQgdG8gUkdCNTY1Lg0KPiBDb250cm9scyBhcmUgbGltaXRl
-ZCB0byBjb2xvciBiYXIgdGVzdCBwYXR0ZXJuIGZvciB0ZXN0IHB1cnBvc2UuDQo+IA0KPiBPVjk2
-NTUgaW5pdGlhbCBzdXBwb3J0IGlzIGJhc2VkIG9uIGEgZHJpdmVyIHdyaXR0ZW4gYnkgSC4gTmlr
-b2xhdXMgU2NoYWxsZXIgWzFdLg0KPiBPVjk2NTUgcmVnaXN0ZXJzIHNlcXVlbmNlcyBjb21lIGZy
-b20gU1RNMzJDdWJlRjcgZW1iZWRkZWQgc29mdHdhcmUgWzJdLg0KPiANCj4gWzFdIGh0dHA6Ly9n
-aXQuZ29sZGVsaWNvLmNvbS8/cD1ndGEwNC1rZXJuZWwuZ2l0O2E9c2hvcnRsb2c7aD1yZWZzL2hl
-YWRzL3dvcmsvaG5zL3ZpZGVvL292OTY1NQ0KPiBbMl0gaHR0cHM6Ly9kZXZlbG9wZXIubWJlZC5v
-cmcvdGVhbXMvU1QvY29kZS9CU1BfRElTQ09fRjc0Nk5HL2ZpbGUvZTFkOWRhN2ZlODU2L0RyaXZl
-cnMvQlNQL0NvbXBvbmVudHMvb3Y5NjU1L292OTY1NS5jDQo+IA0KPiA9PT09PT09PT09PQ0KPiA9
-IGhpc3RvcnkgPQ0KPiA9PT09PT09PT09PQ0KPiB2ZXJzaW9uIDI6DQo+ICAgIC0gUmVtb3ZlIHNv
-bWUgdW5uZWVkZWQgc2VtaWNvbG9ucyAoa2J1aWxkIHRlc3Qgcm9ib3QpOg0KPiAgICAgICAgaHR0
-cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cx
-MTQ2MTYuaHRtbA0KPiAgICAtIFJlbW92ZSBwYXRjaCBbbWVkaWFdIG92OTY1MDogc2VsZWN0IHRo
-ZSBuZWFyZXN0IGhpZ2hlciByZXNvbHV0aW9uOg0KPiAgICAgIGl0IGlzIHVwIHRvIHRoZSBhcHBs
-aWNhdGlvbiB0byBmaW5kIHRoZSBiZXN0IG1hdGNoaW5nIHJlc29sdXRpb24NCj4gICAgICB1c2lu
-ZyBFTlVNX0ZSQU1FU0laRVMvU19GTVQvU19TRUxFQ1RJT04gKFNfQ1JPUCksIHNlZQ0KPiAgICAg
-ICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9y
-Zy9tc2cxMTQ2NjcuaHRtbA0KPiAgICAtIGR0LWJpbmRpbmdzOiBGaXggcmVtYXJrcyBmcm9tIFJv
-YiBIZXJyaW5nIGFib3V0IHBvbGFyaXR5Og0KPiAgICAgICAgaHR0cDovL3d3dy5tYWlsLWFyY2hp
-dmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMTQ3MDUuaHRtbA0KPiAgICAt
-IGR0LWJpbmRpbmdzOiBBZGQgb3B0aW9uYWwgcmVndWxhdG9ycyBhdmRkLCBkdmRkLCBkb3ZkZDoN
-Cj4gICAgICAgIGh0dHA6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9saW51eC1tZWRpYUB2Z2VyLmtl
-cm5lbC5vcmcvbXNnMTE0Nzg1Lmh0bWwNCj4gICAgLSBmaXggbWlzc2luZyBzZW1pY29sb25zIGlu
-IGlmIGNvbmRpdGlvbjoNCj4gICAgICAgIGh0dHA6Ly93d3cubWFpbC1hcmNoaXZlLmNvbS9saW51
-eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTE0NjExLmh0bWwNCj4gICAgLSBtb3ZlIG92OTY1
-eF9waXhmbXQgcmVsb2NhdGlvbiBpbiByaWdodCBwYXRjaDoNCj4gICAgICAgIGh0dHA6Ly93d3cu
-bWFpbC1hcmNoaXZlLmNvbS9saW51eC1tZWRpYUB2Z2VyLmtlcm5lbC5vcmcvbXNnMTE0ODQ5Lmh0
-bWwNCj4gICAgLSByZXZpc2l0IE9WOTY1eCByZW5hbWluZyB0byBvdjk2NXggZm9yIGRldmljZSBp
-ZCBuYW1lcyBhbmQgRFQgY29tcGF0aWJsZSBzdHJpbmdzLA0KPiAgICAgIGRyb3Agb2ZfZGV2aWNl
-X2lkIC5kYXRhIGRldmljZSBpZGVudGlmaWNhdGlvbg0KPiAgICAgICAgaHR0cDovL3d3dy5tYWls
-LWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2VybmVsLm9yZy9tc2cxMTQ2MzUuaHRtbA0K
-PiAgICAgICAgaHR0cDovL3d3dy5tYWlsLWFyY2hpdmUuY29tL2xpbnV4LW1lZGlhQHZnZXIua2Vy
-bmVsLm9yZy9tc2cxMTQ3MzguaHRtbA0KPiAgICAtIEFkZCBhbmFsb2cgcG93ZXIgc3VwcGx5IGFu
-ZCBjbG9jayBnYXRpbmcsIG5lZWRlZCBmb3IgR1RBMDQgcGxhdGZvcm06DQo+ICAgICAgICBodHRw
-Oi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnL21zZzEx
-NDUxOS5odG1sDQo+IA0KPiB2ZXJzaW9uIDE6DQo+ICAgIC0gSW5pdGlhbCBzdWJtaXNzaW9uLg0K
-PiANCj4gSC4gTmlrb2xhdXMgU2NoYWxsZXIgKDEpOg0KPiAgICBEVCBiaW5kaW5nczogYWRkIGJp
-bmRpbmdzIGZvciBvdjk2NXggY2FtZXJhIG1vZHVsZQ0KPiANCj4gSHVndWVzIEZydWNoZXQgKDYp
-Og0KPiAgICBbbWVkaWFdIG92OTY1MDogc3dpdGNoIGkyYyBkZXZpY2UgaWQgdG8gbG93ZXIgY2Fz
-ZQ0KPiAgICBbbWVkaWFdIG92OTY1MDogYWRkIGRldmljZSB0cmVlIHN1cHBvcnQNCj4gICAgW21l
-ZGlhXSBvdjk2NTA6IHVzZSB3cml0ZV9hcnJheSgpIGZvciByZXNvbHV0aW9uIHNlcXVlbmNlcw0K
-PiAgICBbbWVkaWFdIG92OTY1MDogYWRkIG11bHRpcGxlIHZhcmlhbnQgc3VwcG9ydA0KPiAgICBb
-bWVkaWFdIG92OTY1MDogYWRkIHN1cHBvcnQgb2YgT1Y5NjU1IHZhcmlhbnQNCj4gICAgW21lZGlh
-XSBvdjk2NTA6IGFkZCBhbmFsb2cgcG93ZXIgc3VwcGx5IGFuZCBjbG9jayBnYXRpbmcNCj4gDQo+
-ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292OTY1eC50eHQgICAgICAgfCAg
-NDUgKysNCj4gICBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICAgICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAgNiArLQ0KPiAgIGRyaXZlcnMvbWVkaWEvaTJjL292OTY1MC5jICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgODE2ICsrKysrKysrKysrKysrKysrLS0tLQ0KPiAgIDMgZmlsZXMgY2hh
-bmdlZCwgNzM2IGluc2VydGlvbnMoKyksIDEzMSBkZWxldGlvbnMoLSkNCj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2
-NXgudHh0DQo+IA==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hello Sergei, 
+
+Thank you for your comments.
+
+> From: Sergei Shtylyov [mailto:sergei.shtylyov@cogentembedded.com]
+> Sent: 05 July 2017 17:14
+> 
+> Hello!
+> 
+> On 07/05/2017 06:56 PM, Biju Das wrote:
+> 
+> > The iWave RZ/G1M Q7 SOM supports Gigabit Ethernet Phy (Micrel
+> KSZ9031MNX).
+> > Gigabit Ethernet support is available in Renesas AVB driver.
+> > To increase hardware support enable the driver in the
+> > shmobile_defconfig multiplatform configuration.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  arch/arm/configs/shmobile_defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/configs/shmobile_defconfig
+> > b/arch/arm/configs/shmobile_defconfig
+> > index 3c66a42..d992911 100644
+> > --- a/arch/arm/configs/shmobile_defconfig
+> > +++ b/arch/arm/configs/shmobile_defconfig
+> > @@ -83,6 +83,7 @@ CONFIG_NETDEVICES=y
+> >  # CONFIG_NET_VENDOR_MICREL is not set  #
+> CONFIG_NET_VENDOR_NATSEMI is
+> > not set  CONFIG_SH_ETH=y
+> > +CONFIG_RAVB=y
+> 
+>     Hm, I would enable it only as a module, given it's not easy to make use of
+> AVB on the 32-bit boards.
+
+On the iWave-M platforms the only available Ethernet interface is AVB. Without including the RAVB driver in the Kernel we won't be able to use NFS.
+
+I know adding CONFIG_RAVB for all shmobile devices may increase the Kernel size for everyone, especially when most cannot use AVB without an add-on board, but I don't think the increase will be big.
+
+
+Kind regards, Chris 
+
+> 
+> [...]
+> 
+> MBR Sergei
