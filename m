@@ -1,139 +1,52 @@
-From: Kieran Bingham <kbingham@kernel.org>
-Subject: [PATCH v7 1/3] media: adv748x: Add adv7481, adv7482 bindings
-Date: Thu,  6 Jul 2017 12:01:15 +0100
-Message-ID: <0f27988a8f89e54c9e89eaeadf03396e6e98118a.1499336175.git-series.kieran.bingham+renesas@ideasonboard.com>
-References: <cover.f44897c9f4c2d4555dfa156cc24a755477e409bf.1499336175.git-series.kieran.bingham+renesas@ideasonboard.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.f44897c9f4c2d4555dfa156cc24a755477e409bf.1499336175.git-series.kieran.bingham+renesas@ideasonboard.com>
-In-Reply-To: <cover.f44897c9f4c2d4555dfa156cc24a755477e409bf.1499336175.git-series.kieran.bingham+renesas@ideasonboard.com>
-References: <cover.f44897c9f4c2d4555dfa156cc24a755477e409bf.1499336175.git-series.kieran.bingham+renesas@ideasonboard.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: laurent.pinchart@ideasonboard.com, kieran.bingham@ideasonboard.com, niklas.soderlund@ragnatech.se, hans.verkuil@cisco.com, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v3 5/5] ARM: configs: stm32: Add DMAMUX support in STM32
+ defconfig
+Date: Thu, 6 Jul 2017 14:20:23 +0200
+Message-ID: <1499343623-5964-6-git-send-email-pierre-yves.mordret@st.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba
+ Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+This patch adds DMAMUX support in STM32 defconfig file
 
-Create device tree bindings documentation for the ADV748x.
-The ADV748x supports both the ADV7481 and ADV7482 chips which
-provide analogue decoding and HDMI receiving capabilities
-
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 ---
-v6:
- - Clean up description and remove redundant text regarding optional
-   nodes
+ Version history:
+    v3:
+    v2:
+        * None
+---
+---
+ arch/arm/configs/stm32_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-v6.1:
- - Fix commit title
-
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 95 ++++++++++-
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/adv748x.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-new file mode 100644
-index 000000000000..21ffb5ed8183
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -0,0 +1,95 @@
-+* Analog Devices ADV748X video decoder with HDMI receiver
-+
-+The ADV7481 and ADV7482 are multi format video decoders with an integrated
-+HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
-+from three input sources HDMI, analog and TTL.
-+
-+Required Properties:
-+
-+  - compatible: Must contain one of the following
-+    - "adi,adv7481" for the ADV7481
-+    - "adi,adv7482" for the ADV7482
-+
-+  - reg: I2C slave address
-+
-+Optional Properties:
-+
-+  - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-+		     "intrq3". All interrupts are optional. The "intrq3" interrupt
-+		     is only available on the adv7481
-+  - interrupts: Specify the interrupt lines for the ADV748x
-+
-+The device node must contain one 'port' child node per device input and output
-+port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-+are numbered as follows.
-+
-+	  Name		Type		Port
-+	---------------------------------------
-+	  AIN0		sink		0
-+	  AIN1		sink		1
-+	  AIN2		sink		2
-+	  AIN3		sink		3
-+	  AIN4		sink		4
-+	  AIN5		sink		5
-+	  AIN6		sink		6
-+	  AIN7		sink		7
-+	  HDMI		sink		8
-+	  TTL		sink		9
-+	  TXA		source		10
-+	  TXB		source		11
-+
-+The digital output port nodes must contain at least one endpoint.
-+
-+Ports are optional if they are not connected to anything at the hardware level.
-+
-+Example:
-+
-+	video-receiver@70 {
-+		compatible = "adi,adv7482";
-+		reg = <0x70>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupt-names = "intrq1", "intrq2";
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
-+			     <31 IRQ_TYPE_LEVEL_LOW>;
-+
-+		port@7 {
-+			reg = <7>;
-+
-+			adv7482_ain7: endpoint {
-+				remote-endpoint = <&cvbs_in>;
-+			};
-+		};
-+
-+		port@8 {
-+			reg = <8>;
-+
-+			adv7482_hdmi: endpoint {
-+				remote-endpoint = <&hdmi_in>;
-+			};
-+		};
-+
-+		port@10 {
-+			reg = <10>;
-+
-+			adv7482_txa: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2 3 4>;
-+				remote-endpoint = <&csi40_in>;
-+			};
-+		};
-+
-+		port@11 {
-+			reg = <11>;
-+
-+			adv7482_txb: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+				remote-endpoint = <&csi20_in>;
-+			};
-+		};
-+	};
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index a097538..15fbaba 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -64,6 +64,7 @@ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_STM32=y
+ CONFIG_DMADEVICES=y
+ CONFIG_STM32_DMA=y
++CONFIG_STM32_DMAMUX=y
+ CONFIG_IIO=y
+ CONFIG_STM32_ADC_CORE=y
+ CONFIG_STM32_ADC=y
 -- 
-git-series 0.9.1
+2.7.4
