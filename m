@@ -1,51 +1,56 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 0/2] rtc: add support for STM32H7 RTC
-Date: Thu, 6 Jul 2017 22:53:38 +0200
-Message-ID: <20170706205338.oke7vnr7nh5s6ykq@piout.net>
-References: <1499330865-17232-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: "Generic" MMIO ADC
+Date: Thu, 6 Jul 2017 23:37:04 +0200
+Message-ID: <CACRpkdaZ=qSbdVxgw4DH_tOeZb0pZBYhhJJOozFn2pn25F_Kag@mail.gmail.com>
+References: <b60def9a-45dc-bf97-e059-abbe105648b2@topic.nl>
+ <20170630145319.20ec3696@jic23.retrosnub.co.uk> <b9dc2313-53da-1566-c0e8-ac18599f59da@topic.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBXOG7LFAKGQEHTCZCPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1499330865-17232-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b9dc2313-53da-1566-c0e8-ac18599f59da-Oq418RWZeHk@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2017 at 10:47:43 +0200, Amelie Delaunay wrote:
-> Add support for STM32H7 Real Time Clock variant.
-> Difference is regarding clocks: there is a 'pclk' clock on STM32H7
-> for register access.
-> 
-> Amelie Delaunay (2):
->   dt-bindings: rtc: stm32: add support for STM32H7
->   rtc: stm32: add STM32H7 RTC support
-> 
->  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 32 +++++++--
->  drivers/rtc/rtc-stm32.c                            | 82 +++++++++++++++++-----
->  2 files changed, 92 insertions(+), 22 deletions(-)
-> 
-Applied, thanks.
+On Mon, Jul 3, 2017 at 2:37 PM, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org> wrote:
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> I was thinking along these lines:
+>
+> ... {
+>    compatible = "iio-adc-generic-mmio";
+>    reg = <0x43210000 4096>;
+>    interrupt = <&gic 42 0>;
+>    iio,start-sequence = <0x0 0x3> <0x4 0xff>;
+>    iio,stop-sequence = <0x0 0x0>;
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Nope. We are not going to invent scripting languages inside device tree.
+No sequences please. This is the start of what we call a jam table.
+
+We had this discussion a long time ago when starting to convert all the ARM
+platforms to device tree: sequences should be expressed in code, not in
+the device tree. Because next thing that happens is that you want to encode
+a for() loop or if() or while().
+
+The reason is that device tree is already part of open firmware, which already
+has a scripting language: FCode (based on forth). This is then used to create
+BIOS routines along the lines of what you're suggesting. So if you insist on
+writing a BIOS, by all means write a BIOS, but not inside DT, use FCode
+and figure out how to bridge that.
+
+But I think it's easier to just write a normal driver really.
+
+Compare to ACPI, which has AML, for the very same purpose, and DSDT
+for describing the hardware.
+
+Since ACPI is now starting to share parts of the DT bindings), things would
+get very weird if we did things like this. Should they also implement a
+compatible interpreter, rather than call their (very much in-use) AML
+snippets?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
