@@ -1,58 +1,77 @@
-From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 1/4] thermal: imx: Add nvmem-cells alternate binding for OCOTP access
-Date: Thu, 6 Jul 2017 16:20:41 +0300
-Message-ID: <1bd07f44515f05d936a3c166217e844253a85d2d.1499347157.git.leonard.crestez@nxp.com>
-References: <cover.1499347157.git.leonard.crestez@nxp.com>
+From: Miodrag Dinic <Miodrag.Dinic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: RE: [PATCH v2 06/10] Documentation: Add device tree binding for
+ Goldfish FB driver
+Date: Thu, 6 Jul 2017 13:23:10 +0000
+Message-ID: <232DDC0A2B605E4F9E85F6904417885F015D929D32@BADAG02.ba.imgtec.org>
+References: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com>
+ <1498664922-28493-7-git-send-email-aleksandar.markovic@rt-rk.com>,<CAL_Jsq+m-g__T34W2-7ddAF9ehH1woT3WfuxuDnHQMfzrg86Hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1499347157.git.leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <CAL_Jsq+m-g__T34W2-7ddAF9ehH1woT3WfuxuDnHQMfzrg86Hg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aleksandar Markovic <Aleksandar.Markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Goran Ferenc <Goran.Ferenc-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Douglas Leung <Douglas.Leung-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <James.Hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Paul Burton <Paul.Burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Petar Jovanovic <Petar.Jovanovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Raghu Gandham <Raghu.Gandham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "jinqian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <jinqian-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "lfy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <lfy-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Bo Hu <bohu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On newer imx SOCs accessing OCOTP directly is wrong because the ocotp
-clock needs to be enabled first. Add a binding for accessing the same
-values through the imx-ocotp nvmem driver using nvmem-cells. This is
-similar to other thermal drivers.
+cc-ing Arve Hjønnevåg who originally upstreamed Goldfish FB driver
+cc-ing Jin Quian, Bo Hu & Lingfeng Yang from Google
 
-The old binding is preserved for compatibility and because it still
-works fine on imx6qdl series chips.
+Hi Rob,
 
-In theory this problem could be solved by adding a reference to the
-OCOTP clock instead but it is better to hide such details in a specific
-nvmem driver.
+Thanks for taking the time to review the patches
 
-Signed-off-by: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
----
- Documentation/devicetree/bindings/thermal/imx-thermal.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+> I don't know that this should even go upstream. There's no upstream
+> qemu support for goldfish-fb. Maybe this is a minor driver change, but
+> FB drivers are being replaced with DRM drivers. And the time for AOSP
+> supporting framebuffer drivers is limited I think with HWC2 and
+> explicit fence support in DRM.
 
-diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-index 3c67bd5..2842a05 100644
---- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
-@@ -7,9 +7,16 @@ Required properties:
-   is higher than panic threshold, system will auto reboot by SRC module.
- - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
-   control registers, e.g. ANATOP on imx6q.
-+
-+Properties for OCOTP access:
- - fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
-   calibration data, e.g. OCOTP on imx6q.  The details about calibration data
-   can be found in SoC Reference Manual.
-+Alternatively:
-+- nvmem-cells: A phandle to the calibration cells provided by ocotp.
-+- nvmem-cell-names: Should be "calib", "temp_grade".
-+
-+Direct access to OCOTP is deprecated, please use nvmem cells instead.
- 
- Optional properties:
- - clocks : thermal sensor's clock source.
--- 
-2.7.4
+Goldfish FB is actively used by all supported architectures in Android (Intel/ARM/MIPS)
+and is part of Android emulator project and so far, there have been no limitations in
+AOSP for using it.
 
+We have already tested this particular version of the driver for MIPS
+Ranchu virtual platform (introduced in this series) which is DT based and
+therefore we needed to integrate device tree support for this driver.
+
+> bindings/display/
+
+Did you mean to use this location instead of "bindings/goldfish/"?
+
+Kind regards,
+Miodrag
+________________________________________
+From: Rob Herring [robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+Sent: Friday, June 30, 2017 1:12 AM
+To: Aleksandar Markovic
+Cc: Linux-MIPS; Aleksandar Markovic; Miodrag Dinic; Goran Ferenc; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Douglas Leung; James Hogan; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mark Rutland; Paul Burton; Petar Jovanovic; Raghu Gandham
+Subject: Re: [PATCH v2 06/10] Documentation: Add device tree binding for Goldfish FB driver
+
+On Wed, Jun 28, 2017 at 10:46 AM, Aleksandar Markovic
+<aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org> wrote:
+> From: Aleksandar Markovic <aleksandar.markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> Add documentation for DT binding of Goldfish FB driver. The compatible
+> string used by OS for binding the driver is "google,goldfish-fb".
+>
+> Signed-off-by: Miodrag Dinic <miodrag.dinic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Goran Ferenc <goran.ferenc-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/goldfish/google,goldfish-fb.txt           | 18 ++++++++++++++++++
+
+bindings/display/
+
+I don't know that this should even go upstream. There's no upstream
+qemu support for goldfish-fb. Maybe this is a minor driver change, but
+FB drivers are being replaced with DRM drivers. And the time for AOSP
+supporting framebuffer drivers is limited I think with HWC2 and
+explicit fence support in DRM.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
