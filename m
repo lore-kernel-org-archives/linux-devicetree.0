@@ -1,80 +1,78 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 0/3] pwm: add pwm AO on meson gx
-Date: Thu, 6 Jul 2017 08:59:10 +0200
-Message-ID: <20170706065910.GJ16144@ulmo.fritz.box>
-References: <20170608122416.1993-1-jbrunet@baylibre.com>
+From: m18063 <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27
+ SoM1 support
+Date: Thu, 6 Jul 2017 10:31:04 +0300
+Message-ID: <947abe4f-af3a-78de-c800-728b56c53c6b@microchip.com>
+References: <1499086572-6083-1-git-send-email-claudiu.beznea@microchip.com>
+ <1499086572-6083-5-git-send-email-claudiu.beznea@microchip.com>
+ <20170705152343.b735on6edg3vfsp3@rfolt0960.corp.atmel.com>
+ <a74f9110-ced4-5412-8ed2-f57f65557f7e@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170608122416.1993-1-jbrunet@baylibre.com>
+In-Reply-To: <a74f9110-ced4-5412-8ed2-f57f65557f7e@microchip.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, devicetree@vger.kernel.org, cristian.birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---5me2qT3T17SWzdxI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 08, 2017 at 02:24:13PM +0200, Jerome Brunet wrote:
-> The pwms found in the AO domain of the meson gx family have different
-> clock sources than the ones found in the EE domain. The AO pwms only
-> have 2 connected clock input which are clk81 and the crytal.
->=20
-> This patchset adds the necessary compatible and the clock data for it.
->=20
-> Changes since v1: [0]
-> * Correct clock source order for gxbb pwm ao. Documenation shows xtal as
->   source #1 while it is actually source #0
-> * Add patch 3 to fix pwm calculation. Issue while testing pwm with clk81
->   as clock source.
->=20
-> [0]:  https://lkml.kernel.org/r/20170607133013.4766-1-jbrunet@baylibre.com
->=20
-> Jerome Brunet (3):
->   dt-bindings: pwm: meson: add comptabible for gxbb ao pwms
->   pwm: meson: add compatible for the gxbb ao pwms
->   pwm: meson: improve pwm calculation precision.
->=20
->  .../devicetree/bindings/pwm/pwm-meson.txt          |  4 +-
->  drivers/pwm/pwm-meson.c                            | 47 ++++++++++++++++=
-+-----
->  2 files changed, 41 insertions(+), 10 deletions(-)
+On 05.07.2017 18:29, Nicolas Ferre wrote:
+> On 05/07/2017 at 17:23, Ludovic Desroches wrote:
+>> On Mon, Jul 03, 2017 at 03:56:11PM +0300, Claudiu Beznea wrote:
+>>> Add specific DTS file and bindings for sama5d27 SoM1 board.
+>>>
+>>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>>> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+>>> ---
+>>>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
+>>>  1 file changed, 178 insertions(+)
+>>>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>>
+>>> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>> new file mode 100644
+>>> index 0000000..c3a1dc8
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>
+>> [...]
+>>
+>>> +
+>>> +			i2c0: i2c@f8028000 {
+>>> +				dmas = <0>, <0>;
+>>> +				pinctrl-names = "default";
+>>> +				pinctrl-0 = <&pinctrl_i2c0_default>;
+>>> +				i2c-sda-hold-time-ns = <350>;
+>>> +				status = "disabled";
+>>> +
+>>> +				24aa@50 {
+>>> +					compatible = "24mac602";
+>>> +					reg = <0x50>;
+>>> +					pagesize = <8>;
+>>> +					start-offset = /bits/ 8 <0xf8>;
+>>
+>> Are you sure about the offset? I thought it was 0xfa but maybe I am
+>> wrong.
+Indeed, it is 0xfa. I chose 0xf8 because at24 driver will truncate the
+eeprom size at something that is power of 2 (I don't know the reason behind
+this, maybe it is something historical, maybe it is something I don't get
+it for the moment). If I would use 24mac402 (which EEPROM size should be
+6 bytes but due to the truncation it will become of 4 bytes) and 0xfa as
+starting offset I could read only 4 octets. Due to this I chose to use
+24mac602 which length is 8 = 2^3 bytes, the reading will start from 0xf8
+but the first 2 bytes will not be of interest.
+Sorry that I forgot to mention this in the cover letter.
 
-For some reason the Author field keeps getting set to:
-
-	jbrunet <jbrunet@baylibre.com>
-
-It seems like the headers are correct, so maybe this is patchwork
-messing things up?
-
-Anyway, I've applied the series and manually fixed up the Author field.
+> 
+> Moreover, as the binding for this is not yet accepted I would advice to
+> remove this part for now. It will be easier for synchronization with i2c
+> eeprom.
+Yes, I will remove this part form in the 3rd version.
 
 Thanks,
-Thierry
-
---5me2qT3T17SWzdxI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlld374ACgkQ3SOs138+
-s6H0vA/9FMJlwUWybKpBR2fiSUdaqFzc4W7lJVvmi1n+6HuBpDvmT/H1ueZDVXJU
-ldTM8M/3pE7BrUtRI+q9KUOJ1+hVhwqGaVuTkdAcIJgFfEj0JrA5SzxRKU+2SzM8
-A/uw5/+krXq0WFiX6W3H0DX/Lsv5iR1SvuCrNpBnh/Z5vRR8pm5ct74oDpfBq80z
-55anErK4DYF/hdVKwrxILOdTXf6Wg2qayR4kmKN5hscbIqzwOniaYQ2wDLiFigym
-8rSBQEXzYcZRdSJyh6wGCsBbI2DRqMs0jAYkkSGZ8B5wD6cL5CW9aKHXy1yofO/Q
-oIHFR6JaiBjGLz2Sp3Edfn2BoCl+K14mWyRyWKh25d5/c1jj/9potOVsRgtLQopx
-Zqv67mQMLaMqdwmKFXWRcht+LR3U1LpI12B1FBdvaUbDalfiQkLTbpTUSOzn7QQT
-TEqLaSPY9W/LboGZJLCKAC18/FQToksnwkthWRgdEknRw3cnCgbCZ5fGSJPj2JBS
-OqPvlfUuLsMgZZKW8Uv/ody9pNercidWP6cWt/d+1Z7Tb1VLuvPBtTM6H1hBKks0
-Gts2KjLAMoPcE8HmjynMm4ix3v4GOASshrRweU/UkCa/H8tKHlbxdI1QTauIdiS3
-3QmI14rtyVfwvGeU2Q77k5u7HdqLBmacfuasj6F2iXZlNVRs+VQ=
-=CTmo
------END PGP SIGNATURE-----
-
---5me2qT3T17SWzdxI--
+Claudiu
+> 
+> Best regards,
+> 
