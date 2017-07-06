@@ -1,142 +1,51 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Thu, 6 Jul 2017 13:48:50 -0700
-Message-ID: <20170706204850.GA20079@roeck-us.net>
-References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
- <20170629002811.87199-2-cbostic@linux.vnet.ibm.com>
- <b51fedbb-837f-49ea-d050-4c3be82724c5@roeck-us.net>
- <21f28ed9-b73a-5c21-5557-bec1fef0d874@linux.vnet.ibm.com>
- <20170629150417.GA10226@roeck-us.net>
- <20170706143512.bmjv2gnoqp5ew4py@rob-hp-laptop>
- <e36ab090-865c-f4d4-6173-1485f77c5d31@linux.vnet.ibm.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 0/2] rtc: add support for STM32H7 RTC
+Date: Thu, 6 Jul 2017 22:53:38 +0200
+Message-ID: <20170706205338.oke7vnr7nh5s6ykq@piout.net>
+References: <1499330865-17232-1-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBXOG7LFAKGQEHTCZCPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <e36ab090-865c-f4d4-6173-1485f77c5d31-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
+In-Reply-To: <1499330865-17232-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 02:27:18PM -0500, Christopher Bostic wrote:
+On 06/07/2017 at 10:47:43 +0200, Amelie Delaunay wrote:
+> Add support for STM32H7 Real Time Clock variant.
+> Difference is regarding clocks: there is a 'pclk' clock on STM32H7
+> for register access.
 > 
+> Amelie Delaunay (2):
+>   dt-bindings: rtc: stm32: add support for STM32H7
+>   rtc: stm32: add STM32H7 RTC support
 > 
-> On 7/6/17 9:35 AM, Rob Herring wrote:
-> >On Thu, Jun 29, 2017 at 08:04:17AM -0700, Guenter Roeck wrote:
-> >>On Thu, Jun 29, 2017 at 08:39:59AM -0500, Christopher Bostic wrote:
-> >>>
-> >>>On 6/28/17 10:33 PM, Guenter Roeck wrote:
-> >>>>On 06/28/2017 05:28 PM, Christopher Bostic wrote:
-> >>>>>Describe device tree optional properties:
-> >>>>>
-> >>>>>   * aspeed,arm-reet - ARM CPU reset on signal
-> >>>>>   * aspeed,no-soc-reset - SOC reset on signal
-> >>>>>   * aspeed,no-sys-reset - System reset on signal
-> >>>>>   * aspeed,interrupt - Interrupt CPU on signal
-> >>>>>   * aspeed,external-signal - Generate external signal (WDT1 and WDT2
-> >>>>>only)
-> >>>>>   * aspeed,alt-boot - Boot from alternate block on signal
-> >>>>>
-> >>>>>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >>>>>---
-> >>>>>v3 - Invert soc and sys reset to 'no' to preserve backwards
-> >>>>>      compatibility.  SOC and SYS reset will be set by default
-> >>>>>      without any optional parameters set
-> >>>>>v2 - Add 'aspeed,' prefix to all optional properties
-> >>>>>    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> >>>>>---
-> >>>>>  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 24
-> >>>>>++++++++++++++++++++++
-> >>>>>  1 file changed, 24 insertions(+)
-> >>>>>
-> >>>>>diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>>>>b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>>>>index c5e74d7..6f18005 100644
-> >>>>>--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>>>>+++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>>>>@@ -8,9 +8,33 @@ Required properties:
-> >>>>>   - reg: physical base address of the controller and length of memory
-> >>>>>mapped
-> >>>>>     region
-> >>>>>  +Optional properties:
-> >>>>>+   Signal behavior - Whenever a timeout occurs the watchdog can be
-> >>>>>programmed
-> >>>>>+   to generate/not generate 6 types of signals:
-> >>>>>+
-> >>>>>+ - aspeed,arm-reset:    If property is present then reset ARM CPU only.
-> >>>>>+            If not specified no ARM CPU reset is done.
-> >>>>>+
-> >>>>>+ - aspeed,no-soc-reset: If property is present then do not reset SOC.
-> >>>>>+            If not specified then SOC reset is done.
-> >>>>>+
-> >>>>>+ - aspeed,no-sys-reset: If property is present then do not reset
-> >>>>>system.
-> >>>>>+            Typcally used in tandem with 'aspeed-external-signal'
-> >>>>Is this correct ? As I understand the datasheet, it could also used in
-> >>>>tandem with
-> >>>>aspeed,interrupt.
-> >>>True, that should be documented.  Will add that.
-> >>>>>+            If not specified then system reset is done.
-> >>>>>+
-> >>>>I'll leave it up to Rob to decide, but for my part I don't understand
-> >>>>no-soc-reset.
-> >>>As the aspeed watchdog driver exists prior to this change an SOC reset is
-> >>>done by
-> >>>default.   In order to preserve backwards compatibility a missing optional
-> >>>property
-> >>>should result in default behavior.  I however need to be able to specify
-> >>>that SOC
-> >>>reset be disabled in some way.  This goes back to our discussion about why
-> >>>we'd
-> >>>ever want to disable SYSTEM reset in the first place.  Same reasoning
-> >>>applies for
-> >>>SOC reset.
-> >>>
-> >>>>I would instead use four properties.
-> >>>>
-> >>>>    aspeed,arm-reset
-> >>>>    aspeed,soc-reset
-> >>>Per my response above I think it should remain as aspeed,no-soc-reset due to
-> >>>backwards compatibility requirements.
-> >>The same can be accomplished with "aspeed,no-reset", which would avoid the, in
-> >>my opinion, awkward "no-{sys,soc}-reset" poperties.
-> >>
-> >>>>    aspeed,sys-reset (which is the default)
-> >>>Again as per our discussion yesterday I need some way to specify how system
-> >>>reset is to  be done.  For backwards compatibility, a lack of parameter here
-> >>>would
-> >>>result in a system reset being configured.  Only way to indicate to the
-> >>>driver
-> >>>that no system reset is to be done is to indicate 'no' system reset in the
-> >>>optional
-> >>>parameter.
-> >>Or "aspeed,no-reset".
-> >>
-> >>>>    aspeed,no-reset
-> >>>This parameter seems ambiguous as we could be doing a 'no system reset'
-> >>>or a 'no SOC reset' in theory.
-> >>{arm,soc,sys}-reset are mutually exclusive per datasheet, and there is a
-> >>separate configuration bit which enables the reset in the first place.
-> >>I don't see how that is ambiguous.
-> >>
-> >>Anyway, I don't think we are making any progress here. Let's wait for
-> >>guidance from Rob.
-> >I tend to agree with Guenter.
-> >
-> >Maybe using the form 'aspeed,reset-type = "cpu|soc|system"' would be
-> >more aligned to the type of reset being mutually exclusive.
+>  .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 32 +++++++--
+>  drivers/rtc/rtc-stm32.c                            | 82 +++++++++++++++++-----
+>  2 files changed, 92 insertions(+), 22 deletions(-)
 > 
-> OK I'll update to this method.
-> 
+Applied, thanks.
 
-Maybe add 'aspeed,reset-type = "none"' ? The default (no property) would
-then be "system".
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Thanks,
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
