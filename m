@@ -1,71 +1,65 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
- (fwd)
-Date: Thu, 6 Jul 2017 08:04:46 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1707060803210.2028@hadrien>
+From: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] pwm: mediatek: fix pwm source clock selection
+Date: Thu, 6 Jul 2017 14:16:41 +0800
+Message-ID: <1499321801.22478.12.camel@mhfsdcap03>
+References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
+         <1498802721-32455-3-git-send-email-zhi.mao@mediatek.com>
+         <d009712e-f0a2-2dc7-2f64-ad8cfa21f98d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Neil Webb <neilw@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, =?ISO-8859-15?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d009712e-f0a2-2dc7-2f64-ad8cfa21f98d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zhenbao.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Please check on this (line 199).
+On Wed, 2017-07-05 at 13:09 +0200, Matthias Brugger wrote:
+> 
+> On 06/30/2017 08:05 AM, Zhi Mao wrote:
+> > In original code, the pwm output frequency is not correct
+> > when set bit<3>=1 to PWMCON register.
+> > 
+> > Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   drivers/pwm/pwm-mediatek.c |    2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > index 5c11bc7..d08b5b3 100644
+> > --- a/drivers/pwm/pwm-mediatek.c
+> > +++ b/drivers/pwm/pwm-mediatek.c
+> > @@ -91,7 +91,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> >   	if (clkdiv > 7)
+> >   		return -EINVAL;
+> >   
+> > -	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | BIT(3) | clkdiv);
+> > +	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+> 
+> Just for clarification, BIT(15) enables old PWM mode, which ignores 
+> CLKSEL (BIT(3)). Therefore setting BIT(3) does not have any effect and 
+> can be discarded.
+> 
+> Am I correct? I took mt7623n datasheet for reference.
+> 
+> Regards,
+> Matthias
+> 
+Yes, remove setting bit<3> will not take any effect. 
+PWMCON bit<3> is pwm source clock selecting register.
+You can check the datasheet of MT7623 for details.
 
-julia
+Regards
+Zhi
 
----------- Forwarded message ----------
-Date: Thu, 6 Jul 2017 13:58:29 +0800
-From: kbuild test robot <fengguang.wu@intel.com>
-To: kbuild@01.org
-Cc: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+> >   	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
+> >   	mtk_pwm_writel(pc, pwm->hwpwm, PWMTHRES, duty_ns / resolution);
+> >   
+> > 
 
-Hi Maxime,
 
-[auto build test WARNING on linuxtv-media/master]
-[also build test WARNING on v4.12]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Maxime-Ripard/dt-bindings-media-Add-Cadence-MIPI-CSI2RX-Device-Tree-bindings/20170705-205643
-base:   git://linuxtv.org/media_tree.git master
-:::::: branch date: 17 hours ago
-:::::: commit date: 17 hours ago
-
->> drivers/media/platform/cadence/cdns-csi2rx.c:199:5-23: WARNING: Unsigned expression compared with zero: csi2rx -> sensor_pad < 0
-
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout fb3d2879ba0623bcdc83c99ba70229ec1713feaf
-vim +199 drivers/media/platform/cadence/cdns-csi2rx.c
-
-fb3d2879 Maxime Ripard 2017-07-03  183  	return media_create_pad_link(&csi2rx->sensor_subdev->entity,
-fb3d2879 Maxime Ripard 2017-07-03  184  				     csi2rx->sensor_pad,
-fb3d2879 Maxime Ripard 2017-07-03  185  				     &csi2rx->subdev.entity, 0,
-fb3d2879 Maxime Ripard 2017-07-03  186  				     MEDIA_LNK_FL_ENABLED |
-fb3d2879 Maxime Ripard 2017-07-03  187  				     MEDIA_LNK_FL_IMMUTABLE);
-fb3d2879 Maxime Ripard 2017-07-03  188  }
-fb3d2879 Maxime Ripard 2017-07-03  189
-fb3d2879 Maxime Ripard 2017-07-03  190  static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
-fb3d2879 Maxime Ripard 2017-07-03  191  			      struct v4l2_subdev *subdev,
-fb3d2879 Maxime Ripard 2017-07-03  192  			      struct v4l2_async_subdev *asd)
-fb3d2879 Maxime Ripard 2017-07-03  193  {
-fb3d2879 Maxime Ripard 2017-07-03  194  	struct csi2rx_priv *csi2rx = v4l2_notifier_to_csi2rx(notifier);
-fb3d2879 Maxime Ripard 2017-07-03  195
-fb3d2879 Maxime Ripard 2017-07-03  196  	csi2rx->sensor_pad = media_entity_get_fwnode_pad(&subdev->entity,
-fb3d2879 Maxime Ripard 2017-07-03  197  							 &csi2rx->sensor_node->fwnode,
-fb3d2879 Maxime Ripard 2017-07-03  198  							 MEDIA_PAD_FL_SOURCE);
-fb3d2879 Maxime Ripard 2017-07-03 @199  	if (csi2rx->sensor_pad < 0) {
-fb3d2879 Maxime Ripard 2017-07-03  200  		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
-fb3d2879 Maxime Ripard 2017-07-03  201  			subdev->name);
-fb3d2879 Maxime Ripard 2017-07-03  202  		return csi2rx->sensor_pad;
-fb3d2879 Maxime Ripard 2017-07-03  203  	}
-fb3d2879 Maxime Ripard 2017-07-03  204
-fb3d2879 Maxime Ripard 2017-07-03  205  	csi2rx->sensor_subdev = subdev;
-fb3d2879 Maxime Ripard 2017-07-03  206
-fb3d2879 Maxime Ripard 2017-07-03  207  	dev_dbg(csi2rx->dev, "Bound %s pad: %d\n", subdev->name,
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
