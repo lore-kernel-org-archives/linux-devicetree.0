@@ -1,97 +1,75 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCHv2 1/2] dt-bindings: rtc: stm32: add support for STM32H7
-Date: Thu, 6 Jul 2017 10:47:44 +0200
-Message-ID: <1499330865-17232-2-git-send-email-amelie.delaunay@st.com>
-References: <1499330865-17232-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C controller documentation
+Date: Thu, 6 Jul 2017 16:47:06 +0800
+Message-ID: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1499330475.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBP7S67FAKGQEUGHKQJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1499330865-17232-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch documents support for STM32H7 Real Time Clock.
-It introduces a new compatible and rework clock definitions.
-On STM32H7 we have a 'pclk' clock for register access, in addition to
-the 'rtc_ck' clock.
+This patch adds the binding documentation for Spreadtrum I2C
+controller device.
 
+Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 ---
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 32 ++++++++++++++++++----
- 1 file changed, 27 insertions(+), 5 deletions(-)
+Changes since v3:
+ - Add Ack from RobH.
 
-diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-index e2837b9..0a4c371 100644
---- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-@@ -1,17 +1,25 @@
- STM32 Real Time Clock
- 
- Required properties:
--- compatible: "st,stm32-rtc".
-+- compatible: can be either "st,stm32-rtc" or "st,stm32h7-rtc", depending on
-+  the device is compatible with stm32(f4/f7) or stm32h7.
- - reg: address range of rtc register set.
--- clocks: reference to the clock entry ck_rtc.
-+- clocks: can use up to two clocks, depending on part used:
-+  - "rtc_ck": RTC clock source.
-+    It is required on stm32(f4/f7) and stm32h7.
-+  - "pclk": RTC APB interface clock.
-+    It is not present on stm32(f4/f7).
-+    It is required on stm32h7.
-+- clock-names: must be "rtc_ck" and "pclk".
-+    It is required only on stm32h7.
- - interrupt-parent: phandle for the interrupt controller.
- - interrupts: rtc alarm interrupt.
- - st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
-   (RTC registers) write protection.
- 
--Optional properties (to override default ck_rtc parent clock):
--- assigned-clocks: reference to the ck_rtc clock entry.
--- assigned-clock-parents: phandle of the new parent clock of ck_rtc.
-+Optional properties (to override default rtc_ck parent clock):
-+- assigned-clocks: reference to the rtc_ck clock entry.
-+- assigned-clock-parents: phandle of the new parent clock of rtc_ck.
- 
- Example:
- 
-@@ -25,3 +33,17 @@ Example:
- 		interrupts = <17 1>;
- 		st,syscfg = <&pwrcfg>;
- 	};
+Changes since v2:
+ - Change compatible strings to be SoC specific.
+
+Changes since v1:
+ - No updates.
+---
+ Documentation/devicetree/bindings/i2c/i2c-sprd.txt |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-sprd.txt b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+new file mode 100644
+index 0000000..60b7cda
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+@@ -0,0 +1,31 @@
++I2C for Spreadtrum platforms
 +
-+	rtc: rtc@58004000 {
-+		compatible = "st,stm32h7-rtc";
-+		reg = <0x58004000 0x400>;
-+		clocks = <&rcc RTCAPB_CK>, <&rcc RTC_CK>;
-+		clock-names = "pclk", "rtc_ck";
-+		assigned-clocks = <&rcc RTC_CK>;
-+		assigned-clock-parents = <&rcc LSE_CK>;
-+		interrupt-parent = <&exti>;
-+		interrupts = <17 1>;
-+		interrupt-names = "alarm";
-+		st,syscfg = <&pwrcfg>;
-+		status = "disabled";
-+	};
++Required properties:
++- compatible: Should be "sprd,sc9860-i2c".
++- reg: Specify the physical base address of the controller and length
++  of memory mapped region.
++- interrupts: Should contain I2C interrupt.
++- clock-names: Should contain following entries:
++  "i2c" for I2C clock,
++  "source" for I2C source (parent) clock,
++  "enable" for I2C module enable clock.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++- clock-frequency: Constains desired I2C bus clock frequency in Hz.
++- #address-cells: Should be 1 to describe address cells for I2C device address.
++- #size-cells: Should be 0 means no size cell for I2C device address.
++
++Optional properties:
++- Child nodes conforming to I2C bus binding
++
++Examples:
++i2c0: i2c@70500000 {
++	compatible = "sprd,sc9860-i2c";
++	reg = <0 0x70500000 0 0x1000>;
++	interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "i2c", "source", "enable";
++	clocks = <&clk_i2c3>, <&ext_26m>, <&clk_ap_apb_gates 11>;
++	clock-frequency = <400000>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++};
++
 -- 
-1.9.1
+1.7.9.5
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
