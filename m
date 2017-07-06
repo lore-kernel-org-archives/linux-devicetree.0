@@ -1,64 +1,46 @@
-From: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] pwm: mediatek: fix pwm source clock selection
-Date: Thu, 6 Jul 2017 14:16:41 +0800
-Message-ID: <1499321801.22478.12.camel@mhfsdcap03>
-References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
-         <1498802721-32455-3-git-send-email-zhi.mao@mediatek.com>
-         <d009712e-f0a2-2dc7-2f64-ad8cfa21f98d@gmail.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Thu, 6 Jul 2017 11:58:33 +0530
+Message-ID: <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+ <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+ <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com> <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d009712e-f0a2-2dc7-2f64-ad8cfa21f98d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <73cf3d55-f2ec-eb15-746a-0db5e7e28dad-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zhenbao.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-07-05 at 13:09 +0200, Matthias Brugger wrote:
-> 
-> On 06/30/2017 08:05 AM, Zhi Mao wrote:
-> > In original code, the pwm output frequency is not correct
-> > when set bit<3>=1 to PWMCON register.
-> > 
-> > Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   drivers/pwm/pwm-mediatek.c |    2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> > index 5c11bc7..d08b5b3 100644
-> > --- a/drivers/pwm/pwm-mediatek.c
-> > +++ b/drivers/pwm/pwm-mediatek.c
-> > @@ -91,7 +91,7 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> >   	if (clkdiv > 7)
-> >   		return -EINVAL;
-> >   
-> > -	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | BIT(3) | clkdiv);
-> > +	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
-> 
-> Just for clarification, BIT(15) enables old PWM mode, which ignores 
-> CLKSEL (BIT(3)). Therefore setting BIT(3) does not have any effect and 
-> can be discarded.
-> 
-> Am I correct? I took mt7623n datasheet for reference.
-> 
-> Regards,
-> Matthias
-> 
-Yes, remove setting bit<3> will not take any effect. 
-PWMCON bit<3> is pwm source clock selecting register.
-You can check the datasheet of MT7623 for details.
+On Wed, Jul 5, 2017 at 11:32 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
-Regards
-Zhi
+>
+> I have posted the SCMI patches now[1],
+>
+I wish I was CC'ed on that. Now LKML seems too busy to forward it.
 
-> >   	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
-> >   	mtk_pwm_writel(pc, pwm->hwpwm, PWMTHRES, duty_ns / resolution);
-> >   
-> > 
+> please let me know how to get
+> both SCPI and SCMI working together with different doorbell bits on the
+> same channel.
+>
+You say in the cover letter :
+"Let me begin admitting that we are introducing yet another protocol to
+achieve same things as many existing protocols like ARM SCPI, TI SCI,
+QCOM RPM, Nvidia Tegra BPMP, and so on"
 
+ So SCMI is supposed to replace SCPI, SCI, RPM and BPMP   or   SCMI is
+to be used for future platforms.
+If SCPI and SCMI achieve the same, why have them both active simultaneously?
 
+Assuming there really is some sane excuse :-
+    SCPI and SCMI are two separate client working over an MHU channel.
+So, as is the case with users relying on a common resource, you need a
+shim arbitrator that serialises access to the resource.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
