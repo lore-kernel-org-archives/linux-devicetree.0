@@ -1,60 +1,36 @@
-From: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] dt: bindings: fpga: add lattice machxo2 slave spi binding description
-Date: Thu,  6 Jul 2017 12:01:09 +0200
-Message-ID: <1499335270-6512-2-git-send-email-p.pisati@gmail.com>
-References: <1499335270-6512-1-git-send-email-p.pisati@gmail.com>
+From: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH 0/3] Add at24 functionality to read MAC form different EEPROM offsets
+Date: Thu, 6 Jul 2017 13:16:54 +0300
+Message-ID: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499335270-6512-1-git-send-email-p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding documentation details for Lattice MachXO2 FPGA configuration
-over Slave SPI interface.
+Hi all,
 
-Signed-off-by: Paolo Pisati <p.pisati-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+Please give feedback on the following approach to extends at24 EEPROM
+driver to support reading MAC from different addresses in EEPROM.  This
+will allow the at24 driver to be used as a generic driver by different
+hardwares.
 
-diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-new file mode 100644
-index 0000000..c3ef26bd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-@@ -0,0 +1,29 @@
-+Lattice MachXO2 Slave SPI FPGA Manager
-+
-+Lattice MachXO2 FPGAs support a method of loading the bitstream over
-+'slave SPI' interface.
-+
-+See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
-+
-+Required properties:
-+- compatible: should contain "lattice,machxo2-slave-spi"
-+- reg: spi chip select of the FPGA
-+
-+Example for full FPGA configuration:
-+
-+	fpga-region0 {
-+		compatible = "fpga-region";
-+		fpga-mgr = <&fpga_mgr_spi>;
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+	};
-+
-+	spi1: spi@2000 {
-+        ...
-+
-+		fpga_mgr_spi: fpga-mgr@0 {
-+			compatible = "lattice,machxo2-slave-spi";
-+			spi-max-frequency = <60000000>;
-+			reg = <0>;
-+		};
-+	};
+Thank you,
+Claudiu Beznea
+
+Claudiu Beznea (3):
+  dt-bindings: i2c: eeprom: document all at24 bindings
+  drivers: misc: eeprom: at24: support reading mac eeprom from
+    different addresses
+  dt-bindings: i2c: eeprom: document "start-offset" binding
+
+ Documentation/devicetree/bindings/eeprom/eeprom.txt | 20 +++++++++++++-------
+ drivers/misc/eeprom/at24.c                          |  5 ++++-
+ include/linux/platform_data/at24.h                  |  1 +
+ 3 files changed, 18 insertions(+), 8 deletions(-)
+
 -- 
 2.7.4
 
