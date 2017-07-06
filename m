@@ -1,201 +1,187 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v9 0/3] Tango PCIe controller support
-Date: Thu, 6 Jul 2017 14:46:28 -0500
-Message-ID: <20170706194628.GQ13824@bhelgaas-glaptop.roam.corp.google.com>
-References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
- <20170704202412.GK13824@bhelgaas-glaptop.roam.corp.google.com>
- <6256cab3-dd77-c0f6-66b8-be261695bbb1@free.fr>
- <20170705180359.GL13824@bhelgaas-glaptop.roam.corp.google.com>
- <5a1207cb-31fd-6b85-86af-8c37bd57ad4f@free.fr>
- <20170705213419.GD25063@bhelgaas-glaptop.roam.corp.google.com>
- <8dcab663-245b-880a-be3a-2965fd12d663@free.fr>
- <20170706033946.GO13824@bhelgaas-glaptop.roam.corp.google.com>
- <d04e1632-17b8-85f9-31c4-b789d55cc853@free.fr>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [GIT PULL] DeviceTree for 4.13
+Date: Thu, 6 Jul 2017 15:06:26 -0500
+Message-ID: <CAL_JsqKvMncLnmUzrLs4v-k8mse=fBAxSZbqo2s31B8yDdPi=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d04e1632-17b8-85f9-31c4-b789d55cc853@free.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mason <slash.tmp@free.fr>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Thomas Gleixner <tglx@linutronix.de>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 02:26:44PM +0200, Mason wrote:
-> On 06/07/2017 05:39, Bjorn Helgaas wrote:
-> 
-> > On Wed, Jul 05, 2017 at 11:59:33PM +0200, Mason wrote:
-> >
-> >> There were a few nits I wanted to address:
-> >>
-> >> - Since we added suppress_bind_attrs = true, probe()
-> >> can only be called at init, so I wanted to mark __init
-> >> all the probe functions, to save space.
-> >>
-> >> - I left the definition of MSI_MAX in the wrong patch
+Hi Linus,
 
-I moved this.
+Please pull DT updates for 4.13. There's one conflict with your tree
+in Documentation/devicetree/bindings/net/ethernet.txt. The conflict is
+just context lines, and the correct resolution is in -next.
 
-> >> - You put a pointer to the pdev in the struct tango_pcie.
-> >> I think this is redundant, since the pdev already has a
-> >> pointer to the struct, as drvdata.
-> >> So I wanted to change tango_msi_probe() to take a pdev
-> >> as argument (to make it more like an actual probe function)
-> >> and derive pcie from pdev, instead of the other way around.
-> > 
-> > I don't think tango_msi_probe() is really a "probe" function.  It's
-> > all part of the tango driver, and it's not claiming a separate piece
-> > of hardware.
-> 
-> I agree that tango_msi_probe() is not a probe function;
-> it is merely a piece of the actual probe function (static
-> with single call site). I split the probe function in two,
-> because it seemed to make sense at the time.
-> 
-> Perhaps it's better to inline tango_msi_probe? That would
-> avoid the issues of that function's name and parameters.
-> 
-> If you think it's better to keep the two pieces separate,
-> I can rename the MSI part to tango_msi_init() or some such.
-> But I'd like to avoid adding unnecessary fields to the struct.
+Rob
 
-I think it's better to follow the structure of existing drivers unless
-your hardware dictates a different model.  Same with adding fields to
-the struct.  If you have a better way of doing it that works for all
-the drivers, great -- but please change all the drivers to do it that
-way.  If it's a matter of saving one pointer per system, by making the
-code look different than other drivers, that's not so great.
+The following changes since commit 2ea659a9ef488125eb46da6eb571de5eae5c43f6:
 
-> >  So I would keep the name and structure similar to these:
-> > 
-> >   advk_pcie_init_msi_irq_domain()
-> >   nwl_pcie_init_msi_irq_domain()
-> > 
-> > BTW, those functions use irq_domain_add_linear(), while you are one of
-> > the very few callers of irq_domain_create_linear().  Why the difference?
-> > If your code does basically the same thing, it's very helpful to me if
-> > it *looks* basically the same.
-> 
-> It was a suggestion from Marc Z on 2017-03-23.
-> 
-> <QUOTE>
-> + irq_dom = irq_domain_add_linear(NULL, MSI_COUNT, &msi_domain_ops, pcie);
-> 
-> Use irq_domain_create_linear, pass the same fwnode.
-> </QUOTE>
-> 
-> It seems odd to pass NULL as the first argument.
-> (As I had first done, when copying the Altera driver.)
+  Linux 4.12-rc1 (2017-05-13 13:19:49 -0700)
 
-I'm a little queasy about the MSI stuff.  It doesn't feel very settled
-yet, and I don't want to keep tweaking it at this stage.
+are available in the git repository at:
 
-How about we merge the base patch for v4.13 and deal with MSIs for
-v4.14?  I need confirmation that the base patch works ASAP.  Or if
-it's not really useful by itself, we can defer it all until v4.14.
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-for-4.13
 
-For v4.14, I'd really like to see some unification of naming and
-structure across the drivers in how they handle IRQ domains, and
-then have tango follow whatever pattern that ends up being.
+for you to fetch changes up to a4485b545e2fad4d65732cb7c60089bf4246de5c:
 
-Right now we don't have much consistency in the names of legacy and
-MSI IRQ domains, what device_node they're associated with, how we
-handle the 0-3 vs 1-4 legacy numbering, pci_msi_create_irq_domain()
-usage, etc.  Some of this may be dictated by different hardware
-requirements, but I doubt all of it is.
+  Merge branch 'dt/property-move' into dt/next (2017-07-05 08:31:52 -0500)
 
-Bjorn
+----------------------------------------------------------------
+DeviceTree for 4.13:
 
+- vsprintf format specifier %pOF for device_node's. This will enable us
+  to stop storing the full node names. Conversion of users will happen
+  next cycle.
 
-P.S. Notes about current IRQ domain usage below, just for reference
-about where I'm seeing inconsistencies.
+- Update documentation to point to DT specification instead of ePAPR.
 
-    advk_pcie_probe			# "marvell,armada-3700-pcie"
-      advk_pcie_init_irq_domain
-        pcie_intc_node =  of_get_next_child(node, NULL)
-        irq_domain_add_linear(pcie_intc_node, ...)
-      advk_pcie_init_msi_irq_domain
-        pcie->msi_inner_domain = irq_domain_add_linear(NULL, ...)
-        pcie->msi_domain = pci_msi_create_irq_domain(...)
+- Split out graph and property functions to a separate file.
 
-    altera_pcie_probe			# "altr,pcie-root-port-1.0"
-      altera_pcie_init_irq_domain
-        pcie->irq_domain = irq_domain_add_linear(node, ...)
-    altera_msi_probe			# "altr,msi-1.0"
-      altera_allocate_domains
-        msi->inner_domain = irq_domain_add_linear(NULL, ...)
-        msi->msi_domain = pci_msi_create_irq_domain(fwnode, ...)
+- New of-graph functions for ALSA
 
-    iproc_pcie_pltfm_probe		# "brcm,iproc-pcie", etc
-      iproc_pcie_setup
-        iproc_pcie_msi_enable
-          iproc_msi_init
-            iproc_msi_alloc_domains
-              msi->inner_domain = irq_domain_add_linear(NULL, ...)
-              msi->msi_domain = pci_msi_create_irq_domain(...)
+- Add vendor prefixes for RISC-V, Linksys, iWave Systems, Roofull,
+  Itead, and BananaPi.
 
-    rcar_pcie_probe			# "renesas,pcie-r8a7779", etc
-      rcar_pcie_enable_msi
-        msi->domain = irq_domain_add_linear(dev->of_node, ...)
+- Improve dtx_diff utility filename printing.
 
-    rockchip_pcie_probe			# "rockchip,rk3399-pcie"
-      rockchip_pcie_init_irq_domain
-        intc = of_get_next_child(dev->of_node, NULL)
-        rockchip->irq_domain = irq_domain_add_linear(intc, ...)
-  
-    xilinx_pcie_probe			# "xlnx,axi-pcie-host-1.00.a"
-      xilinx_pcie_init_irq_domain
-        pcie_intc_node = of_get_next_child(node, NULL)
-        port->leg_domain = irq_domain_add_linear(pcie_intc_node, ...)
-        port->msi_domain = irq_domain_add_linear(node, ...)
+----------------------------------------------------------------
+Biju Das (1):
+      of: Add vendor prefix for iWave Systems Technologies Pvt. Ltd
 
-    nwl_pcie_probe			# "xlnx,nwl-pcie-2.11"
-      nwl_pcie_init_irq_domain
-        legacy_intc_node = of_get_next_child(node, NULL)
-        pcie->legacy_irq_domain = irq_domain_add_linear(legacy_intc_node, ...)
-        nwl_pcie_init_msi_irq_domain
-          msi->dev_domain = irq_domain_add_linear(NULL, ...)
-          msi->msi_domain = pci_msi_create_irq_domain(fwnode, ...)
+Frank Rowand (11):
+      MAINTAINERS: add device tree ABI documentation file
+      Documentation: remove overlay-notes reference to non-existent file
+      dt-bindings: display-timing.txt convert non-ascii characters to ascii
+      of: make of_fdt_is_compatible() static
+      of: fdt.c header comment typo
+      of: address.c header comment typo
+      of: make __of_attach_node() static
+      of: be consistent in form of file mode
+      of: detect invalid phandle in overlay
+      of: update ePAPR references to point to Devicetree Specification
+      of: document /sys/firmware/fdt
 
-    faraday_pci_probe			# "faraday,ftpci100", etc
-      faraday_pci_setup_cascaded_irq
-        intc = of_get_next_child(p->dev->of_node, NULL)
-        p->irqdomain = irq_domain_add_linear(intc, ...)
+Geert Uytterhoeven (2):
+      of: Provide dummy of_device_compatible_match() for compile-testing
+      scripts/dtc: dtx_diff - Show real file names in diff header
 
-    hv_pci_probe
-      hv_pcie_init_irq_domain
-        hbus->irq_domain = pci_msi_create_irq_domain(...)
+Kieran Bingham (1):
+      Documentation: of: Fix grammar usage in graph bindings
 
-    tegra_pcie_probe			# "nvidia,tegra210-pcie", etc
-      tegra_pcie_enable_msi
-        msi->domain = irq_domain_add_linear(dev->of_node, ...)
+Krzysztof Kozlowski (1):
+      dt-bindings: usb: exynos-usb: Add missing required VDD properties
 
-    xgene_pcie_probe_bridge		# "apm,xgene-pcie"
-    xgene_msi_probe			# "apm,xgene1-msi"
-      xgene_allocate_domains
-        msi->inner_domain = irq_domain_add_linear(NULL, ...)
-        msi->msi_domain = pci_msi_create_irq_domain(...)
+Kuninori Morimoto (4):
+      of-graph: export symbol of_phandle_iterator_init/next
+      of_graph: add of_graph_get_remote_endpoint()
+      of_graph: add of_graph_get_port_parent()
+      of_graph: add of_graph_get_endpoint_count()
 
-    vmd_probe				# [8086:201d]
-      vmd_enable_domain
-        vmd->irq_domain = pci_msi_create_irq_domain(NULL, ...)
+Madalin Bucur (1):
+      dt-bindings: net: move FMan binding
 
-    dra7xx_pcie_probe			# "ti,dra7-pcie", etc
-      dra7xx_add_pcie_port
-        dra7xx_pcie_init_irq_domain
-          pcie_intc_node =  of_get_next_child(node, NULL)
-          dra7xx->irq_domain = irq_domain_add_linear(pcie_intc_node, ...)
+Marcus Cooper (2):
+      devicetree: add Itead vendor prefix
+      devicetree: add Roofull vendor prefix
 
-    dw_pcie_host_init
-      pp->ops->msi_host_init
-        ks_dw_pcie_msi_host_init	# .msi_host_init
-          pp->irq_domain = irq_domain_add_linear(ks_pcie->msi_intc_np, ...)
+Markus Mayer (1):
+      dt-bindings: thermal: add file extension to brcm,ns-thermal
 
-    ks_pcie_probe			# "ti,keystone-pcie"
-      ks_add_pcie_port
-        ks_dw_pcie_host_init
-          ks_pcie->legacy_irq_domain = irq_domain_add_linear(ks_pcie->legacy_intc_np, ...)
+Martin Blumenstingl (1):
+      dt-binding: net: wireless: fix node name in the BCM43xx example
 
-    *_add_pcie_port
-      dw_pcie_host_init
-        pp->irq_domain = irq_domain_add_linear(dev->of_node, ...) # generic
+Matt Ranostay (1):
+      iio: proximity: as3935: add missing required spi-max-frequency
+
+Palmer Dabbelt (1):
+      dt-bindings: Add RISC-V vendor prefix
+
+Pantelis Antoniou (1):
+      vsprintf: Add %p extension "%pOF" for device tree
+
+Ralph Sennhauser (1):
+      dt-bindings: Add vendor prefix for Linksys
+
+Rob Herring (4):
+      of: use kbasename instead of open coding
+      of: find_node_by_full_name rewrite to compare each level
+      Merge branch 'topic/of-graph-base' of
+git://git.kernel.org/.../tiwai/sound into dt/property-move
+      Merge branch 'dt/property-move' into dt/next
+
+Sakari Ailus (3):
+      of: Move OF property and graph API from base.c to property.c
+      of: Make of_fwnode_handle() safer
+      of: Support const and non-const use for to_of_node()
+
+Sean Wang (1):
+      dt-bindings: add vendor prefix for bananapi
+
+Thomas Petazzoni (1):
+      of: irq: use of_irq_get() in of_irq_to_resource()
+
+ Documentation/ABI/testing/sysfs-firmware-ofw       |  26 +-
+ Documentation/devicetree/bindings/arm/cci.txt      |  15 +-
+ Documentation/devicetree/bindings/arm/cpus.txt     |  13 +-
+ .../devicetree/bindings/arm/idle-states.txt        |   4 +-
+ Documentation/devicetree/bindings/arm/l2c2x0.txt   |   4 +-
+ Documentation/devicetree/bindings/arm/topology.txt |   4 +-
+ .../devicetree/bindings/bus/simple-pm-bus.txt      |   2 +-
+ Documentation/devicetree/bindings/chosen.txt       |   3 +-
+ .../devicetree/bindings/common-properties.txt      |   2 +-
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |   4 +-
+ .../devicetree/bindings/crypto/fsl-sec6.txt        |   4 +-
+ .../bindings/display/panel/display-timing.txt      |  16 +-
+ Documentation/devicetree/bindings/graph.txt        |  13 +-
+ .../devicetree/bindings/iio/proximity/as3935.txt   |   2 +
+ .../bindings/interrupt-controller/open-pic.txt     |   5 +-
+ Documentation/devicetree/bindings/net/ethernet.txt |   9 +-
+ .../{powerpc/fsl/fman.txt => net/fsl-fman.txt}     |   0
+ .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    |   2 +-
+ .../devicetree/bindings/powerpc/fsl/cpus.txt       |   6 +-
+ .../devicetree/bindings/powerpc/fsl/l2cache.txt    |   2 +-
+ .../devicetree/bindings/powerpc/fsl/srio-rmu.txt   |   4 +-
+ .../devicetree/bindings/powerpc/fsl/srio.txt       |   3 +-
+ .../{brcm,ns-thermal => brcm,ns-thermal.txt}       |   0
+ .../devicetree/bindings/usb/exynos-usb.txt         |   4 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   6 +
+ Documentation/devicetree/booting-without-of.txt    |   2 +-
+ Documentation/devicetree/overlay-notes.txt         |   8 +-
+ Documentation/devicetree/usage-model.txt           |   2 +-
+ Documentation/printk-formats.txt                   |  36 +
+ Documentation/xtensa/mmu.txt                       |   6 +-
+ MAINTAINERS                                        |   1 +
+ drivers/of/Makefile                                |   2 +-
+ drivers/of/address.c                               |   2 +-
+ drivers/of/base.c                                  | 771 +-------------------
+ drivers/of/dynamic.c                               |   2 +-
+ drivers/of/fdt.c                                   |   4 +-
+ drivers/of/irq.c                                   |   5 +-
+ drivers/of/of_private.h                            |   4 +-
+ drivers/of/overlay.c                               |   4 +
+ drivers/of/platform.c                              |   2 +-
+ drivers/of/property.c                              | 806 +++++++++++++++++++++
+ drivers/of/resolver.c                              |  34 +-
+ drivers/of/unittest-data/tests-platform.dtsi       |   4 +-
+ drivers/of/unittest.c                              |  58 ++
+ include/linux/of.h                                 |  36 +-
+ include/linux/of_fdt.h                             |   3 -
+ include/linux/of_graph.h                           |  21 +
+ lib/vsprintf.c                                     | 136 ++++
+ scripts/checkpatch.pl                              |   2 +-
+ scripts/dtc/dtx_diff                               |   2 +-
+ 50 files changed, 1235 insertions(+), 871 deletions(-)
+ rename Documentation/devicetree/bindings/{powerpc/fsl/fman.txt =>
+net/fsl-fman.txt} (100%)
+ rename Documentation/devicetree/bindings/thermal/{brcm,ns-thermal =>
+brcm,ns-thermal.txt} (100%)
+ create mode 100644 drivers/of/property.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
