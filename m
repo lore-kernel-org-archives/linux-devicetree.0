@@ -1,159 +1,55 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH v2 6/9] clk: at91: clk-generated: make gclk
- determine audio_pll rate
-Date: Thu, 6 Jul 2017 17:29:22 +0200
-Message-ID: <ab11f002-b761-cdb4-eb0c-ce24dcb9c5d4@microchip.com>
-References: <20170704115927.32662-1-quentin.schulz@free-electrons.com>
- <20170704115927.32662-7-quentin.schulz@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC PATCH 3/3] dt-bindings: i2c: eeprom: document
+ "start-offset" binding
+Date: Thu, 6 Jul 2017 10:45:00 -0500
+Message-ID: <20170706154500.d2eyomg5kweunddg@rob-hp-laptop>
+References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736351-9021-4-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170704115927.32662-7-quentin.schulz@free-electrons.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1498736351-9021-4-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/07/2017 at 13:59, Quentin Schulz wrote:
-> This allows gclk to determine audio_pll rate and set the parent rate
-> accordingly.
+On Thu, Jun 29, 2017 at 02:39:11PM +0300, Claudiu Beznea wrote:
+> Document "start-offset" binding that will be used by at24
+> EEPROM driver.
+
+Why do we need this property?
+
+Seems like this should be handled by defining regions of the EEPROM that 
+you care about (or perhaps are reserved and don't want to touch). Just a 
+single offset value is not very flexible. 
+
 > 
-> However, there are multiple children clocks that could technically
-> change the rate of audio_pll (via gck). With the rate locking, the first
-> consumer to enable the clock will be the one definitely setting the rate
-> of the clock.
-> 
-> Since audio IPs are most likely to request the same rate, we enforce
-> that the only clks able to modify gck rate are those of audio IPs.
-> 
-> To remain consistent, we deny other clocks to be children of audio_pll.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 > ---
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> v2:
->   - added conditions for audio pll rate setting restriction for SSC and
-> I2S,
-> 
->  drivers/clk/at91/clk-generated.c | 48 +++++++++++++++++++++++++++++++++++-----
->  1 file changed, 42 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-> index 6530a2e7e84d..87866786a6ab 100644
-> --- a/drivers/clk/at91/clk-generated.c
-> +++ b/drivers/clk/at91/clk-generated.c
-> @@ -26,6 +26,13 @@
->  #define GENERATED_SOURCE_MAX	6
->  #define GENERATED_MAX_DIV	255
+> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> index a50dc01..e0bec50 100644
+> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+> @@ -35,10 +35,13 @@ Optional properties:
 >  
-> +#define GCK_ID_SSC0		43
-> +#define GCK_ID_SSC1		44
-> +#define GCK_ID_I2S0		54
-> +#define GCK_ID_I2S1		55
-> +#define GCK_ID_CLASSD		59
-> +#define GCK_INDEX_DT_AUDIO_PLL	5
-
-hum...
-
+>    - read-only: this parameterless property disables writes to the eeprom
+>  
+> +  - start-offset: offset in EEPROM to start reading from
 > +
->  struct clk_generated {
->  	struct clk_hw hw;
->  	struct regmap *regmap;
-> @@ -126,15 +133,14 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
->  {
->  	struct clk_generated *gck = to_clk_generated(hw);
->  	struct clk_hw *parent = NULL;
-> +	struct clk_rate_request req_parent = *req;
->  	long best_rate = -EINVAL;
-> -	unsigned long min_rate;
-> +	unsigned long min_rate, parent_rate;
->  	int best_diff = -1;
->  	int i;
-> +	u32 div;
+>  Example:
 >  
-> -	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-> -		u32 div;
-> -		unsigned long parent_rate;
-> -
-> +	for (i = 0; i < clk_hw_get_num_parents(hw) - 1; i++) {
->  		parent = clk_hw_get_parent_by_index(hw, i);
->  		if (!parent)
->  			continue;
-> @@ -150,11 +156,40 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
->  		clk_generated_best_diff(req, parent, parent_rate, div,
->  					&best_diff, &best_rate);
->  
-> +		if (!best_diff)
-> +			break;
-> +	}
-> +
-> +	/*
-> +	 * The audio_pll rate can be modified, unlike the five others clocks
-> +	 * that should never be altered.
-> +	 * The audio_pll can technically be used by multiple consumers. However,
-> +	 * with the rate locking, the first consumer to enable to clock will be
-> +	 * the one definitely setting the rate of the clock.
-> +	 * Since audio IPs are most likely to request the same rate, we enforce
-> +	 * that the only clks able to modify gck rate are those of audio IPs.
-> +	 */
-> +
-> +	if (gck->id != GCK_ID_SSC0 && gck->id != GCK_ID_SSC1 &&
-> +	    gck->id != GCK_ID_I2S0 && gck->id != GCK_ID_I2S1 &&
-> +	    gck->id != GCK_ID_CLASSD)
-> +		goto end;
+>  eeprom@52 {
+>  	compatible = "atmel,24c32";
+>  	reg = <0x52>;
+>  	pagesize = <32>;
+> +	start-offset = /bits/ 8 <0xf8>;
 
-...well... maybe for a temporary solution, but what about the next
-product that will also have such feature but without the same set of IDs?
+The size of the property is part of the ABI. Unless you *never* need 
+offset of more than 256, then this should be 32-bit.
 
-I know that the main use of this clock is the "audio" subsystem (so its
-name) but in a machine without audio needs, it can be interesting to use
-this fractional PLL for other devices that can handle a GCK (and I'm
-thinking about the SDHCI interface that then could be configured with
-maximum clock speed).
-
-> +	parent = clk_hw_get_parent_by_index(hw, GCK_INDEX_DT_AUDIO_PLL);
-> +	if (!parent)
-> +		goto end;
-
-Here, if the audio pll id changes in the DT, we don't retrieve the
-proper parent... And again, not very future proof.
-
-> +	for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
-> +		req_parent.rate = req->rate * div;
-> +		__clk_determine_rate(parent, &req_parent);
-> +		clk_generated_best_diff(req, parent, req_parent.rate, div,
-> +					&best_diff, &best_rate);
->  
->  		if (!best_diff)
->  			break;
->  	}
->  
-> +end:
->  	pr_debug("GCLK: %s, best_rate = %ld, parent clk: %s @ %ld\n",
->  		 __func__, best_rate,
->  		 __clk_get_name((req->best_parent_hw)->clk),
-> @@ -264,7 +299,8 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
->  	init.ops = &generated_ops;
->  	init.parent_names = parent_names;
->  	init.num_parents = num_parents;
-> -	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
-> +	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
-> +		CLK_SET_RATE_PARENT;
->  
->  	gck->id = id;
->  	gck->hw.init = &init;
-> 
-
-
--- 
-Nicolas Ferre
+Rob
