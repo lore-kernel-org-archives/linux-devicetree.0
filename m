@@ -1,84 +1,174 @@
-From: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Subject: [PATCH v2 1/8] staging: iio: tsl2x7x: add of_match table for device tree support
-Date: Thu,  6 Jul 2017 13:57:37 -0400
-Message-ID: <20170706175744.4842-2-masneyb@onstation.org>
-References: <20170706175744.4842-1-masneyb@onstation.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6] media: platform: Renesas IMR driver
+Date: Thu, 6 Jul 2017 21:16:35 +0300
+Message-ID: <45854c21-f355-37e4-b677-dddb8222e719@cogentembedded.com>
+References: <20170623203456.503714406@cogentembedded.com>
+ <589c2ca4-d1e7-86c3-1ef5-8831a54856ed@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170706175744.4842-1-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
+In-Reply-To: <589c2ca4-d1e7-86c3-1ef5-8831a54856ed-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for the tsl2x7x IIO driver with no custom
-properties.
+Hello!
 
-Signed-off-by: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/trivial-devices.txt | 10 ++++++++++
- drivers/staging/iio/light/tsl2x7x.c                   | 16 ++++++++++++++++
- 2 files changed, 26 insertions(+)
+On 07/03/2017 03:43 PM, Hans Verkuil wrote:
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 35f406d..0e6e953 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -21,6 +21,16 @@ adi,adt7490		+/-1C TDM Extended Temp Range I.C
- adi,adxl345		Three-Axis Digital Accelerometer
- adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
- ams,iaq-core		AMS iAQ-Core VOC Sensor
-+amstaos,tsl2571		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2671		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2671		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2771		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2771		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2572		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2672		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2672		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2772		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2772		AMS/TAOS ALS and proximity sensor
- at,24c08		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
-diff --git a/drivers/staging/iio/light/tsl2x7x.c b/drivers/staging/iio/light/tsl2x7x.c
-index 1467199..8148986 100644
---- a/drivers/staging/iio/light/tsl2x7x.c
-+++ b/drivers/staging/iio/light/tsl2x7x.c
-@@ -2026,6 +2026,21 @@ static struct i2c_device_id tsl2x7x_idtable[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tsl2x7x_idtable);
- 
-+static const struct of_device_id tsl2x7x_of_match[] = {
-+	{ .compatible = "amstaos,tsl2571" },
-+	{ .compatible = "amstaos,tsl2671" },
-+	{ .compatible = "amstaos,tmd2671" },
-+	{ .compatible = "amstaos,tsl2771" },
-+	{ .compatible = "amstaos,tmd2771" },
-+	{ .compatible = "amstaos,tsl2572" },
-+	{ .compatible = "amstaos,tsl2672" },
-+	{ .compatible = "amstaos,tmd2672" },
-+	{ .compatible = "amstaos,tsl2772" },
-+	{ .compatible = "amstaos,tmd2772" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, tsl2x7x_of_match);
-+
- static const struct dev_pm_ops tsl2x7x_pm_ops = {
- 	.suspend = tsl2x7x_suspend,
- 	.resume  = tsl2x7x_resume,
-@@ -2035,6 +2050,7 @@ static const struct dev_pm_ops tsl2x7x_pm_ops = {
- static struct i2c_driver tsl2x7x_driver = {
- 	.driver = {
- 		.name = "tsl2x7x",
-+		.of_match_table = tsl2x7x_of_match,
- 		.pm = &tsl2x7x_pm_ops,
- 	},
- 	.id_table = tsl2x7x_idtable,
--- 
-2.9.4
+>> Index: media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+>> ===================================================================
+>> --- /dev/null
+>> +++ media_tree/Documentation/media/v4l-drivers/rcar_imr.rst
+>> @@ -0,0 +1,86 @@
+>> +Renesas R-Car Image Rendeder (IMR) Driver
+>
+> Rendeder -> Renderer
+
+    Oops, sorry. :-)
+
+>> +=========================================
+>> +
+>> +This file documents some driver-specific aspects of the IMR driver, such as
+>> +driver-specific ioctls.
+>> +
+>> +The ioctl reference
+>> +~~~~~~~~~~~~~~~~~~~
+>> +
+>> +VIDIOC_IMR_MESH - Set mapping data
+>> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>> +
+>> +Argument: struct imr_map_desc
+>> +
+>> +**Description**:
+>> +
+>> +    This ioctl sets up the mesh using which the input frames will be
+>
+> s/using/through/
+>
+>> +    transformed into the output frames. The mesh can be strictly rectangular
+>> +    (when IMR_MAP_MESH bit is set in imr_map_desc::type) or arbitrary (when
+>> +    that bit is not set).
+>> +
+>> +    A rectangular mesh consists of the imr_mesh structure followed by M*N
+>> +    vertex objects (where M is imr_mesh::rows and N is imr_mesh::columns).
+>> +    In case either IMR_MAP_AUTOSG or IMR_MAP_AUTODG bits were set in
+>> +    imr_map_desc::type, imr_mesh::{x|y}0 specify the coordinates of the top
+>> +    left corner of the auto-generated mesh and imr_mesh::d{x|y} specify the
+>> +    mesh's X/Y steps.
+>
+> What if any of the other types are used like IMR_MAP_LUCE?
+
+    IMR_MAP_LUCE only affects the vertex object.
+
+> Is this documented in a Renesas datasheet?
+
+    Yes.
+
+> If so, add a reference to that in this
+> documentation.
+
+    Unfortunately it's not publicly available.
+
+>> +
+>> +    An arbitrary mesh consists of the imr_vbo structure followed by N
+>> +    triangle objects (where N is imr_vbo::num), consisting of 3 vertex
+>> +    objects each.
+>> +
+>> +    A vertex object has a complex structure:
+>> +
+>> +.. code-block:: none
+>> +
+>> +    __u16    v        vertical   \ source coordinates (only present
+>> +    __u16    u        horizontal / if IMR_MAP_AUTOSG isn't set)
+>> +    __u16    Y        vertical   \ destination coordinates (only here
+>> +    __u16    X        horizontal / if IMR_MAP_AUTODG isn't set)
+>> +    __s8    lofst        offset \  luminance correction parameters
+>> +    __u8    lscal        scale   > (only present if IMR_MAP_LUCE
+>> +    __u16    reserved           /  is set)
+>> +    __s8    vrofs        V value offset \  hue correction parameters
+>> +    __u8    vrscl        V value scale   \ (only present if IMR_MAP_CLCE
+>> +    __s8    ubofs        U value offset  / is set)
+>> +    __u8    ubscl        U value scale  /
+>
+> Is this the internal structure? Or something that userspace has to fill in?
+
+    Yes, the user space have to pass that to the driver which constructs the 
+display lists using these data.
+
+> It's not clear at all.
+>
+> I recommend giving a few code examples of how this should be used.
+
+    Konstantin, can we give some examples?
+
+>> +
+>> +**Return value**:
+>> +
+>> +    On success 0 is returned. On error -1 is returned and errno is set
+>> +    appropriately.
+>> +
+>> +**Data types**:
+>> +
+>> +.. code-block:: none
+>> +
+>> +    * struct imr_map_desc
+>> +
+>> +    __u32    type        mapping types
+>
+> This is a bitmask? If so, what combination of bits are allowed?
+
+    Yes, bitmask.
+
+>> +    __u32    size        total size of the mesh structure
+>> +    __u64    data        map-specific user-pointer
+>> +
+>> +    IMR_MAP_MESH        regular mesh specification
+>> +    IMR_MAP_AUTOSG        auto-generated source coordinates
+>> +    IMR_MAP_AUTODG        auto-generated destination coordinates
+>> +    IMR_MAP_LUCE        luminance correction flag
+>> +    IMR_MAP_CLCE        chromacity correction flag
+>
+> You probably mean 'chroma'. 'chromacity' isn't a word.
+
+    But it's recognized by all online translators I've tried. :-)
+
+>> +    IMR_MAP_TCM        vertex clockwise-mode order
+>> +    IMR_MAP_UVDPOR(n)    source coordinate decimal point position
+>> +    IMR_MAP_DDP        destination coordinate sub-pixel mode
+>> +    IMR_MAP_YLDPO(n)    luminance correction offset decimal point
+>> +                position
+>> +    IMR_MAP_UBDPO(n)    chromacity (U) correction offset decimal point
+>> +                position
+>> +    IMR_MAP_VRDPO(n)    chromacity (V) correction offset decimal point
+>> +                position
+>
+> There is no documentation what how these types relate to IMR_MAP_MESH and
+> IMR_MAP_AUTOS/DG.
+
+    They are basically orthogonal, IIRC.
+
+>> +
+>> +    * struct imr_mesh    regular mesh specification
+>> +
+>> +    __u16    rows, columns    rectangular mesh sizes
+>> +    __u16    x0, y0, dx, dy    auto-generated mesh parameters
+>> +
+>> +    * struct imr_vbo    vertex-buffer-object (VBO) descriptor
+>> +
+>> +    __u16    num        number of triangles
+>
+> Sorry, this needs more work.
+
+    Sigh, everybody hates writing docs, I guess... :-)
+
+> Regards,
+>
+>     Hans
+
+MBR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
