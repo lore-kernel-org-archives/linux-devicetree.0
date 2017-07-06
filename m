@@ -1,58 +1,56 @@
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 1/3] dt-bindings: i2c: eeprom: document all at24 bindings
-Date: Thu, 6 Jul 2017 13:16:55 +0300
-Message-ID: <1499336217-16913-2-git-send-email-claudiu.beznea@microchip.com>
-References: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update bindings
+Date: Thu,  6 Jul 2017 12:24:23 +0200
+Message-ID: <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
+References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jbrunet@baylibre.com, narmstrong@baylibre.com
+Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document all at24 memories specific bindings.
+On the first revision of the bindings, only the gates + resets were known
+in the AO Clock HW, but more registers used to configures AO clock are known
+to be spread among the AO register space.
+This patch adds these registers to the Ao Clock bindings with direct access
+and shared extcon access.
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/eeprom/eeprom.txt | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt         | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-index 5696eb5..a50dc01 100644
---- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
-+++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-@@ -4,9 +4,11 @@ Required properties:
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+index a55d31b..5c5ccec 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+@@ -7,7 +7,10 @@ Required Properties:
  
-   - compatible : should be "<manufacturer>,<type>", like these:
+ - compatible: should be "amlogic,gxbb-aoclkc"
+ - reg: physical base address of the clock controller and length of memory
+-       mapped region.
++       mapped region for each registers listed in reg-names.
++- reg-names: should contain the following register names :
++	"aoclk", "aocrt" and "aortc".
++- amlogic,pwr-ctrl: A phandle to the AO Power Control node.
  
--	"atmel,24c00", "atmel,24c01", "atmel,24c02", "atmel,24c04",
--	"atmel,24c08", "atmel,24c16", "atmel,24c32", "atmel,24c64",
--	"atmel,24c128", "atmel,24c256", "atmel,24c512", "atmel,24c1024"
-+	"atmel,24c00", "atmel,24c01", "atmel,24cs01", "atmel,24c02", "atmel,24cs02",
-+	"atmel,24mac402", "atmel,24mac602", "atmel,spd", "atmel,24c04",
-+	"atmel,24cs04", "atmel,24c08", "atmel,24cs08", "atmel,24c16", "atmel,24cs16",
-+	"atmel,24c32", "atmel,24cs32", "atmel,24c64", "atmel,24cs64", "atmel,24c128",
-+	"atmel,24c256", "atmel,24c512", "atmel,24c1024"
+ - #clock-cells: should be 1.
  
- 	"catalyst,24c32"
+@@ -27,9 +30,13 @@ Example: AO Clock controller node:
  
-@@ -16,10 +18,11 @@ Required properties:
+ 	clkc_AO: clock-controller@040 {
+ 		compatible = "amlogic,gxbb-aoclkc";
+-		reg = <0x0 0x040 0x0 0x4>;
++		reg = <0x0 0x00040 0x0 0x4>,
++		      <0x0 0x00068 0x0 0x4>,
++		      <0x0 0x00094 0x0 0x8>;
++		reg-names = "aoclk", "aocrt", "aortc";
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
++		amlogic,pwr-ctrl = <&pwr_AO>;
+ 	};
  
- 	"renesas,r1ex24002"
- 
--	 If there is no specific driver for <manufacturer>, a generic
--	 driver based on <type> is selected. Possible types are:
--	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
--	 "24c128", "24c256", "24c512", "24c1024", "spd"
-+	If there is no specific driver for <manufacturer>, a generic
-+	driver based on <type> is selected. Possible types are:
-+	"24c00", "24c01", "24cs01", "24c02", "24cs02", "24mac402", "24mac602", "spd",
-+	"24c04", "24cs04", "24c08", "24cs08", "24c16", "24cs16", "24c32", "24cs32",
-+	"24c64", "24cs64", "24c128", "24c256", "24c512", "24c1024"
- 
-   - reg : the I2C address of the EEPROM
- 
+ Example: UART controller node that consumes the clock and reset generated
 -- 
-2.7.4
+1.9.1
