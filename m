@@ -1,115 +1,61 @@
-From: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: input: Add Device tree bindings for
- Goodix GTx5 series touchscreen controller
-Date: Fri, 7 Jul 2017 11:49:11 +0800
-Message-ID: <20170707034911.GA1049@andrew-dell>
-References: <20170629021327.GA16992@andrew-dell>
- <20170706145657.o4lxj7w5wbai5uks@rob-hp-laptop>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/3] some fixups for MediaTek cpufreq driver
+Date: Fri, 7 Jul 2017 11:56:44 +0800
+Message-ID: <cover.1499399121.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170706145657.o4lxj7w5wbai5uks@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
+To: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 09:56:57AM -0500, Rob Herring wrote:
-> On Thu, Jun 29, 2017 at 10:13:27AM +0800, Wang Yafei wrote:
-> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-> > ---
-> > since v1:
-> >  - Change device properties name
-> >  - Modified irq property format
-> >  - Modified linux,keycode format
-> >  - Modified panel configuration property name
-> >  - Remove time-delay properties
-> > ---
-> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 61 ++++++++++++++++++++++
-> >  1 file changed, 61 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
-> > new file mode 100644
-> > index 0000000..9bb82c5
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
-> > @@ -0,0 +1,61 @@
-> > +Device tree bindings for Goodix GTx5 series touchscreen controller
-> > +
-> > +Required properties:
-> > +
-> > +- compatible		: Should be "goodix,gt7589"
-> > +				 or "goodix,gt8589"
-> > +			         or "goodix,gt9589"
-> > +- reg			: I2C address of the chip. Should be 0x5d or 0x14
-> > +- interrupt-parent	: Interrupt controller to which the chip is connected
-> > +- interrupts		: Interrupt to which the chip is connected
-> > +- touchscreen-size-x	: horizontal resolution of touchscreen(in pixels)
-> > +- touchscreen-size-y	: vertical resolution of touchscreen(in pixels)
-> > +- touchscreen-max-id	: panel supported max touch number.
-> > +- touchscreen-max-w	: panel max width value.
-> 
-> Just "see touchscreen.txt" is fine for the description of common 
-> properties.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Yes, the common properties are consistent with "touchscreen.txt"
+Changes since v2:
+- correct the typo in the binding document
 
-> > +
-> > +Optional properties:
-> > +- reset-gpios		  : reset gpio.
-> > +- touchscreen-swapped-x-y : swap  x/y axis coordinates.
-> > +- linux,keycodes	  : Specifies an array of numeric keycode values to
-> > +			    be used for reporting button presses. The array can
-> > +			    contain up to 8 entries.
-> > +- goodix,normal-cfg-X	  : touch device normal config data, this config data is
-> > +		            touchpanel manufacturer related. normal-cfg-X, X
-> > +			    represent for a panel manufacturer, X is less than 10.
-> > +- vtouch-supply		  : power supply for the touch device.
-> > +
-> > +Example:
-> > +i2c@00000000 {
-> > +	/* ... */
-> > +
-> > +	gt8589@14 {
-> > +		compatible = "goodix,gt8589";
-> > +		reg = <0x14>;
-> > +		interrupt-parent = <&msm_gpio>;
-> > +		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
-> > +		vtouch-supply = <&pm8916_l15>;
-> > +		reset-gpios = <&msm_gpio 12 0x0>;
-> > +		touchscreen-max-id = <10>;
-> > +		touchscreen-size-x = <400>;
-> > +		touchscreen-size-y = <400>;
-> > +		touchscreen-max-w = <400>;
-> > +		linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
-> > +		goodix,normal-cfg-0 = [
-> > +			02 00 00 09 09 01 07 02 00 00 00 00 01 00 3C 00 07 07
-> > +			00 00 00 00 00 00 40 01 40 01 C8 00 96 00 F4 01 F4 01
-> > +			F4 01 20 01 11 0A 0A 03 14 14 14 14 0A 0C 01 01 11 11
-> > +			11 00 14 14 14 14 14 14 14 14 14 00 00 0F 00 00 00 00
-> > +			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> > +			00 00 00 00 00 00 00 00 00 00 11 09 10 00 31 32 33 34
-> > +			00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 CA 64 00
-> > +			00 00 00 00 00 00 09 00 13 00 00 00 00 00 00 00 00 00
-> > +			50 B0 19 00 19 00 05 00 00 00 00 0A 05 00 00 00 00 00
-> > +			01 00 FF 00 0B 06 0D 02 FF 04 05 03 07 01 08 0A 0E 11
-> > +			0F 10 09 13 0C 16 17 14 18 12 19 15 1D 1E 1C 1F 1B 20
-> > +			1A 2A 29 28 25 2B 27 21 FF 24 22 2C 26 23 FF 00 00 00
-> > +			00 00 00 00 00 00 00 00 00 00 00 00 80 80 80 80 80 80
-> > +			80 80 80 80 80 80 80 80 80 80 9F 22 01 AE];
-> > +		};
-> > +	};
-> > +}
-> > +
-> > -- 
-> > 2.7.4
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v1:
+- drop those patches already accepted
+- refine the commit messages and Kconfig dependency
+- Kconfig menu entry and file name itself are updated with more
+generic name to drop "MT8173" since this driver actually supports
+all MediaTek SoCs.
+- generate patchset again with git format-patch -C -M --thread=shallow
+- fix binding examples by replacing '@' with '-' as the OPP nodes will
+never have a "reg" property.
+
+Hi,
+
+The purpose of the series is
+- (patch 1 to 3) to fix up current Mediatek cpufreq driver
+can't work with the latest tree since one required CPU clock muxer missing
+would cause the driver getting the resource fails when driver probe gets
+called.
+- (patch 4) to enable cpufreq feature on MT2701/MT7623 platform.
+- (patch 5 to 6) to update the binding document to reflect
+latest driver logic and add more examples guiding people how to apply for
+Mediatek cpufreq driver.
+
+Sean Wang (3):
+  cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
+  dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to
+    proper place
+  dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
+
+ .../devicetree/bindings/clock/mt8173-cpu-dvfs.txt  |  83 -------
+ .../bindings/cpufreq/cpufreq-mediatek.txt          | 247 +++++++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |   8 +-
+ drivers/cpufreq/Makefile                           |   2 +-
+ .../cpufreq/{mt8173-cpufreq.c => mtk-cpufreq.c}    |   2 +
+ 5 files changed, 254 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+ rename drivers/cpufreq/{mt8173-cpufreq.c => mtk-cpufreq.c} (99%)
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
