@@ -1,140 +1,167 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/9] firmware: arm_scmi: add basic driver infrastructure
- for SCMI
-Date: Fri, 7 Jul 2017 18:39:24 +0100
-Message-ID: <5f2e4f3c-297b-c5f8-9244-399c1c4e2c21@arm.com>
-References: <1498492513-29771-4-git-send-email-sudeep.holla@arm.com>
- <1499446341-5956-1-git-send-email-jaswinder.singh@linaro.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 3/3] dt-binding: remoteproc: Add the bindings required for
+ Q6 - WCSS core
+Date: Fri, 7 Jul 2017 23:40:49 +0530
+Message-ID: <da7e8914-30bc-5acf-f672-fad0cc250f43@codeaurora.org>
+References: <1498745861-20531-1-git-send-email-sricharan@codeaurora.org>
+ <1498745861-20531-4-git-send-email-sricharan@codeaurora.org>
+ <20170707134757.kfbdfk6srkmqa5ex@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499446341-5956-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170707134757.kfbdfk6srkmqa5ex@rob-hp-laptop>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexey.klimov-5wv7dgnIgG8@public.gmane.org, lho-qTEPVZfXA3Y@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
+Thanks for the review.
 
-On 07/07/17 17:52, Jassi Brar wrote:
-> Hi Arnd, Hi Rob, Hi Mark,
-> 
-> [CC'ing only those who I have the email id of]
-> 
->> +/**
->> + * scmi_do_xfer() - Do one transfer
->> + *
->> + * @info: Pointer to SCMI entity information
->> + * @xfer: Transfer to initiate and wait for response
->> + *
->> + * Return: -ETIMEDOUT in case of no response, if transmit error,
->> + *   return corresponding error, else if all goes well,
->> + *   return 0.
->> + */
->> +int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
->> +{
->> +	int ret;
->> +	int timeout;
->> +	struct scmi_info *info = handle_to_scmi_info(handle);
->> +	struct device *dev = info->dev;
->> +
->> +	ret = mbox_send_message(info->tx_chan, xfer);
->> +
+On 7/7/2017 7:17 PM, Rob Herring wrote:
+> On Thu, Jun 29, 2017 at 07:47:41PM +0530, Sricharan R wrote:
+>> IPQ8074 has an integrated Q6V5 Hexagon dsp - Lithium Wlan (WCSS) core.
+>> This patch adds the required bindings to load, boot, shutdown that
+>> remoteproc subsystem.
 >>
-> The api is
+>> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
+>> ---
+>>  .../bindings/remoteproc/qcom,q6v5-wcss.txt         | 139 +++++++++++++++++++++
+>>  1 file changed, 139 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+>> new file mode 100644
+>> index 0000000..f664c26
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+>> @@ -0,0 +1,139 @@
+>> +Qualcomm Hexagon (Q6) - WCSS Peripheral Image Loader
+>> +
+>> +This document defines the binding for a component that loads and boots firmware
+>> +on the integrated Qualcomm Hexagon - WCSS core.
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <string>
+>> +	Definition: must be one of:
+>> +		    "qcom,q6v5-wcss-pil",
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must specify the base address and size of the qdsp6 and
+>> +		    mpm (msm power manager) register blocks.
+>> +
+>> +- reg-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "q6" and "mpm"
+>> +
+>> +- interrupts-extended:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: must list the watchdog, fatal IRQs ready, handover and
 > 
->     int mbox_send_message(struct mbox_chan *chan, void *mssg)
-> 
-> where each controller driver defines its own format in which it accepts
-> the 'mssg' to be transmitted.
-> 
+> fatal, ready, ...
 
-Yes they can continue that, but SCMI just doesn't depend on that.
-
-> For example :-
-> ti_msgmgr_send_data(struct mbox_chan *, struct ti_msgmgr_message *)
-> rockchip_mbox_send_data(struct mbox_chan *, struct rockchip_mbox_msg *)
-> ....and so on...  you get the idea.
-> 
-
-Yes I am aware of that.
-
-> Some controller driver may ignore the 'mssg' because only an interrupt line
-> is shared with the remote and not some register/fifo.
-> For example,
->   sti_mbox_send_data(struct mbox_chan *, void *ignored)
-> 
-
-Exactly, now with SCMI, every controller *can do* that, as we just care
-about the signaling which in other terms I have so far referred as
-"doorbell". The data passed should not be used for any other purpose
-as there's no need to even by the remote firmware implementing SCMI.
-
-If you read the SCMI specification, it's designed to avoid all such
-issues with wide variety of mailbox controller we have in the wild.
-And hence all the command and other information are passed in the shared
-memory.
-
-> Out of 14 controller drivers today, this SCMI implementation will work with
-> only 5 (and that too by abusing the api).
-
-What do you mean by abusing the API ?
-
-> The other 9 controllers (and many
-> in future) are perfectly able to support SCMI (its just another protocol).
-
-Exactly, if and only if they adhere to the specification.
-
-> All we need is what the SCMI specification calls "Transport Layer".
-> Of course that will be a thin platform/controller specific code that will
-> encapsulate the 'struct scmi_xfer *xfer' from SCMI, into controller specified
-> format and actually call the mbox_send_message().
-
-OK, if platform had to send some platform specific data, I agree. But
-can you point me from the SCPI specification the need for the platforms
-to do that. That's the whole point. Transport is just a doorbell nothing
-more.
-
-You are trying to fit the existing platform implementation into SCMI
-which won't work.
-
-E.g. if TI/Rockchip implements SCMI, they can continue using these
-drivers as along as it does the job of "ringing the doorbell".
-
-They may be passing some data today because their existing remote
-firmware expects it. With SCMI, they don't have to. These existing
-drivers are doing additional job in the current form: passing some data
-along with triggering the remote doorbell. We just need latter in SCMI
-case as we don't need any data in the transport as it's all part of shmem.
-
-Why do you think that won't work ? Remember all the platform specific
-stuff(if platform implement own protocols) in SCMI is moved to the
-shared memory and transport just needs to do "doorbell". So I disagree
-with your concern unless I am missing something.
+ ok, will simplify.
 
 > 
->  To achieve that, we can either do similar to what platforms with DWC3
-> do - generic dwc3 child node of platform specific parent node. Or we can have
-> the SCMI protocol implemented as a library that platforms can init and use.
-> Or any other better way.
+>> +		    stop-ack IRQs
+>> +
+>> +- interrupt-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>> +
+>> +- clocks:
+>> +	Usage: required
+>> +	Value type: <phandle>
 > 
->  I just think it is a bad idea to rule out all but one classes of mailbox controllers.
+> These are not just a phandle. 
+
+ hmm ok. Will correct.
+
 > 
+>> +	Definition: references to the axim-q6, axim2-q6, axi-wcss,
+>> +		    ahb-q6, ahbs-q6, ahb-wcss, ahbs-wcss, sysnoc and mem.
+>> +		    to be held on behalf of the booting of the Hexagon and WCSS
+>> +		    core. These are the interface, bus, mem clocks required for
+>> +		    the Q6 and WCSS cores.
+>> +
+>> +- clock-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "axim-q6", "axim2-q6", "axi-wcss", "ahb-q6",
+>> +			    "ahbs-q6", "ahb-wcss", "ahbs-wcss", "sysnoc", "mem"
+>> +
+>> +- resets:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: reference to the reset-controller for the Q6-WCSS sub-system
+> 
+> This should be a list of 3 resets.
 
-Definitely neither SCMI specification nor SCMI driver is ruling out any
-class of mailbox controllers as long as there are capable of signaling
-the other end that "hey look you have something to check in shared
-memory" which I think is the case with most of the controllers.
+ ok.
 
-To be honest this whole mailbox framework is somewhat complex for simple
-doorbell kind of this, but hey I am not complaining ;).
+>> +
+>> +- reset-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
+>> +
+>> +- qcom,smem-states:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: reference to the smem state for requesting the Hexagon to
+>> +		    shut down
+>> +
+>> +- qcom,smem-state-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: must be "stop"
+>> +
+>> +- qcom,halt-regs:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: a phandle reference to a syscon representing TCSR followed
+>> +		    by the three offsets within syscon for q6, wcss and tcsr global
+>> +		    halt registers.
+>> +
+>> += SUBNODES:
+>> +The Hexagon node must contain a subnode, named "q6" representing
+>> +the memory region used by the Hexagon firmware. The sub-node must contain:
+> 
+> Why does this need a sub-node?
+
+ Right, just the property. Had it correctly in code, missed to change here.
+ 
+> 
+>> +
+>> +- memory-region:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: reference to the reserved-memory for the Q6 firmware region
+>> +
+>> += EXAMPLE
+>> +The following example describes the resources needed to boot control the
+>> +Hexagon, as it is found on IPQ8074 boards.
+>> +
+>> +	q6v5_wcss: q6v5_wcss@CD00000 {
+> 
+> s/_/-/ in the node name.
+
+ ok.
+
+Regards,
+ Sricharan
 
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
