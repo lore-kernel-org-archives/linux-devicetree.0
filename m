@@ -1,144 +1,233 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: media: Add Cadence MIPI-CSI2RX Device
- Tree bindings
-Date: Fri, 7 Jul 2017 11:21:05 -0500
-Message-ID: <20170707162105.fhafcpzwlnxco2pn@rob-hp-laptop>
-References: <20170703124023.28352-1-maxime.ripard@free-electrons.com>
- <20170703124023.28352-2-maxime.ripard@free-electrons.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCHv4 3/3] i2c: altera: Add Altera I2C Controller driver
+Date: Fri, 7 Jul 2017 19:25:50 +0300
+Message-ID: <CAHp75VcpdeGW0KXSqZwyMDkGbjT+6Ky5nBXTs7d-dN0gpYHV_w@mail.gmail.com>
+References: <1497904618-27010-1-git-send-email-thor.thayer@linux.intel.com> <1497904618-27010-4-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170703124023.28352-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1497904618-27010-4-git-send-email-thor.thayer@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Thor Thayer <thor.thayer@linux.intel.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 03, 2017 at 02:40:22PM +0200, Maxime Ripard wrote:
-> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
-> 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
-> the hardware implementation.
+On Mon, Jun 19, 2017 at 11:36 PM,  <thor.thayer@linux.intel.com> wrote:
 
-Streams and lanes are separate, right? Do you need to know how many 
-lanes are configured/connected?
+Either...
+> +#include <linux/init.h>
 
-> 
-> It can operate with an external D-PHY, an internal one or no D-PHY at all
-> in some configurations.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/cdns-csi2rx.txt      | 87 ++++++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
-> new file mode 100644
-> index 000000000000..b5bcb6ad18fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
-> @@ -0,0 +1,87 @@
-> +Cadence CSI2RX controller
-> +=========================
-> +
-> +The Cadence CSI2RX controller is a CSI-2 bridge supporting up to 4 CSI
-> +lanes in input, and 4 different pixel streams in output.
-> +
-> +Required properties:
-> +  - compatible: must be set to "cdns,csi2rx"
+...or...
+> +#include <linux/module.h>
 
-Should have a "and an SoC specific compatible string" statement.
+...choose one.
 
-> +  - reg: base address and size of the memory mapped region
-> +  - clocks: phandles to the clocks driving the controller
-> +  - clock-names: must contain:
-> +    * sys_clk: main clock
-> +    * p_clk: register bank clock
-> +    * p_free_clk: free running register bank clock
-> +    * pixel_ifX_clk: pixel stream output clock, one for each stream
-> +                     implemented in hardware, between 0 and 3
-> +    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
+> +#define ALTR_I2C_THRESHOLD     0       /*IRQ Threshold at 1 element */
 
-"if implemented in hardare" means internal D-PHY?
+Space missed.
 
-> +  - phys: phandle to the external D-PHY
-> +  - phy-names: must contain dphy, if the implementation uses an
-> +               external D-PHY
+> +/**
+> + * altr_i2c_empty_rx_fifo - Fetch data from RX FIFO until end of
+> + * transfer. Send a Stop bit on the last byte.
+> + */
+> +static void altr_i2c_empty_rx_fifo(struct altr_i2c_dev *idev)
+> +{
+> +       size_t rx_fifo_avail = readl(idev->base + ALTR_I2C_RX_FIFO_LVL);
+> +       int bytes_to_transfer = min(rx_fifo_avail, idev->msg_len);
+> +
 
-If? Should phys/phy-names be optional?
+> +       while (bytes_to_transfer-- > 0) {
+> +               *idev->buf++ = readl(idev->base + ALTR_I2C_RX_DATA);
+> +               if (idev->msg_len == 1)
+> +                       altr_i2c_stop(idev);
+> +               else
+> +                       writel(0, idev->base + ALTR_I2C_TFR_CMD);
+> +
+> +               idev->msg_len--;
+> +       }
+
+Move out invariant from the loop (and I see a bug, you might go over
+boundaries).
+
+       while (bytes_to_transfer-- > 0) {
+               *idev->buf++ = readl(idev->base + ALTR_I2C_RX_DATA);
+               if (idev->msg_len-- == 1)
+                   break;
+               writel(0, idev->base + ALTR_I2C_TFR_CMD);
+       }
+
+       altr_i2c_stop(idev);
+
+> +}
+> +
+> +/**
+> + * altr_i2c_fill_tx_fifo - Fill TX FIFO from current message buffer.
+> + * @return: Number of bytes left to transfer.
+> + */
+> +static int altr_i2c_fill_tx_fifo(struct altr_i2c_dev *idev)
+> +{
+> +       size_t tx_fifo_avail = idev->fifo_size - readl(idev->base +
+> +                                                      ALTR_I2C_TC_FIFO_LVL);
+> +       int bytes_to_transfer = min(tx_fifo_avail, idev->msg_len);
+> +       int ret = idev->msg_len - bytes_to_transfer;
+> +
+> +       while (bytes_to_transfer-- > 0) {
+> +               if (idev->msg_len == 1)
+> +                       writel(ALTR_I2C_TFR_CMD_STO | *idev->buf++,
+> +                              idev->base + ALTR_I2C_TFR_CMD);
+> +               else
+> +                       writel(*idev->buf++, idev->base + ALTR_I2C_TFR_CMD);
+> +               idev->msg_len--;
+> +       }
+
+Ditto.
 
 > +
-> +Required subnodes:
-> +  - ports: A ports node with endpoint definitions as defined in
-> +           Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> +           first port subnode should be the input endpoint, the second one the
-> +           outputs
+> +       return ret;
+> +}
+
+> +/**
+> + * altr_i2c_wait_for_core_idle - After TX, check core idle for all bytes TX.
+> + * @return: 0 on success or -ETIMEDOUT on timeout.
+> + */
+> +static int altr_i2c_wait_for_core_idle(struct altr_i2c_dev *idev)
+> +{
+> +       unsigned long timeout = jiffies + msecs_to_jiffies(ALTR_I2C_TIMEOUT);
 > +
-> +  The output port should have as many endpoints as stream supported by
-> +  the hardware implementation, between 1 and 4, their ID being the
-> +  stream output number used in the implementation.
+> +       do {
+> +               if (time_after(jiffies, timeout)) {
+> +                       dev_err(idev->dev, "Core Idle timeout\n");
+> +                       return -ETIMEDOUT;
+> +               }
+> +       } while (readl(idev->base + ALTR_I2C_STATUS) & ALTR_I2C_STAT_CORE);
 > +
-> +Example:
+> +       return 0;
+> +}
+
+readl_poll_timeout[_atomic]() please.
+
+> +static irqreturn_t altr_i2c_isr(int irq, void *_dev)
+> +{
+> +       struct altr_i2c_dev *idev = _dev;
+
+> +       /* Read IRQ status but only interested in Enabled IRQs. */
+> +       u32 status = readl(idev->base + ALTR_I2C_ISR) &
+> +                    readl(idev->base + ALTR_I2C_ISER);
+
+Don't you have cached value for mask?
+
+> +}
+
 > +
-> +csi2rx: csi-bridge@0d060000 {
-> +	compatible = "cdns,csi2rx";
-> +	reg = <0x0d060000 0x1000>;
-> +	clocks = <&byteclock>, <&byteclock>, <&byteclock>,
-> +		 <&coreclock>, <&coreclock>,
-> +		 <&coreclock>, <&coreclock>;
-> +	clock-names = "sys_clk", "p_clk", "p_free_clk",
-> +		      "pixel_if0_clk", "pixel_if1_clk",
-> +		      "pixel_if2_clk", "pixel_if3_clk";
+> +static int altr_i2c_xfer_msg(struct altr_i2c_dev *idev, struct i2c_msg *msg)
+> +{
+> +       u32 int_mask = ALTR_I2C_ISR_RXOF | ALTR_I2C_ISR_ARB | ALTR_I2C_ISR_NACK;
+
+> +       u32 addr = (msg->addr << 1) & 0xFF;
+
+i2c_8bit_addr_from_msg() ?
+
+> +       unsigned long time_left;
 > +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+
+> +       if (i2c_m_rd(msg)) {
+> +               /* Dummy read to ensure RX FIFO is empty */
+> +               readl(idev->base + ALTR_I2C_RX_DATA);
+> +               addr |= ALTR_I2C_TFR_CMD_RW_D;
+> +       }
 > +
-> +		port@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
+> +       writel(ALTR_I2C_TFR_CMD_STA | addr, idev->base + ALTR_I2C_TFR_CMD);
 > +
-> +			csi2rx_in_sensor: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&sensor_out_csi2rx>;
-> +				clock-lanes = <0>;
-> +				data-lanes = <1 2>;
-> +			};
-> +		};
+> +       if (i2c_m_rd(msg)) {
+> +               /* write the first byte to start the RX */
+> +               writel(0, idev->base + ALTR_I2C_TFR_CMD);
+> +               int_mask |= ALTR_I2C_ISER_RXOF_EN | ALTR_I2C_ISER_RXRDY_EN;
+> +       } else {
+> +               altr_i2c_fill_tx_fifo(idev);
+> +               int_mask |= ALTR_I2C_ISR_TXRDY;
+> +       }
+
+It's hard to follow. Perhaps
+
+if (read) {
+ ...do for read...
+} else {
+ ...do for write...
+}
+
+> +       if (readl(idev->base + ALTR_I2C_STATUS) & ALTR_I2C_STAT_CORE)
+> +               dev_err(idev->dev, "%s: Core Status not IDLE...\n", __func__);
+
+Better to
+
+val = readl();
+if (val)
+ ...
+
+> +static int
+> +altr_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
+> +{
+
+Why [] ?!
+
+> +       struct altr_i2c_dev *idev = i2c_get_adapdata(adap);
+
+> +       int i;
+> +       int ret = 0;
 > +
-> +		port@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
+> +       for (i = 0; ret == 0 && i < num; ++i)
+> +               ret = altr_i2c_xfer_msg(idev, &msgs[i]);
 > +
-> +			csi2rx_out_grabber0: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&grabber0_in_csi2rx>;
-> +			};
-> +
-> +			csi2rx_out_grabber1: endpoint@1 {
-> +				reg = <1>;
-> +				remote-endpoint = <&grabber1_in_csi2rx>;
-> +			};
-> +
-> +			csi2rx_out_grabber2: endpoint@2 {
-> +				reg = <2>;
-> +				remote-endpoint = <&grabber2_in_csi2rx>;
-> +			};
-> +
-> +			csi2rx_out_grabber3: endpoint@3 {
-> +				reg = <3>;
-> +				remote-endpoint = <&grabber3_in_csi2rx>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.13.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       return ret ? : i;
+
+Oy vey...
+Perhaps
+
+static int altr_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg
+*msgs, int num)
+{
+    struct altr_i2c_dev *idev = i2c_get_adapdata(adap);
+    int ret;
+
+    while (num--) {
+        ret = altr_i2c_xfer_msg(idev, msgs++);
+        if (ret)
+            return ret;
+    }
+    return 0;
+}
+
+> +static u32 altr_i2c_func(struct i2c_adapter *adap)
+> +{
+> +       return I2C_FUNC_I2C;
+> +}
+
+Useless. Use value in place.
+
+> +static int altr_i2c_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct altr_i2c_dev *idev = NULL;
+> +       struct resource *res;
+> +       int irq;
+
+> +       int ret = 0;
+
+Redundant assignment.
+
+> +       if (of_property_read_u32(np, "fifo-size", &idev->fifo_size))
+> +               idev->fifo_size = ALTR_I2C_DFLT_FIFO_SZ;
+
+Shouldn't be possible to auto detect?
+
+> +       if (of_property_read_u32(np, "clock-frequency", &idev->bus_clk_rate)) {
+
+device_property_*() ?
+
+> +               dev_err(&pdev->dev, "Default to 100kHz\n");
+> +               idev->bus_clk_rate = 100000;    /* default clock rate */
+> +       }
+
+-- 
+With Best Regards,
+Andy Shevchenko
