@@ -1,144 +1,48 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Fri, 7 Jul 2017 12:32:44 +0100
-Message-ID: <aef7fc89-5e4d-95c6-cee3-444c4c89a113@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
- <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
- <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
- <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
- <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
- <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
- <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
- <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com>
- <CABb+yY3QRz9pcSTMsgNUnBkzQAedFFbbwu0fXY-2oJCFARz60g@mail.gmail.com>
- <012a9039-23e0-be8c-add9-2c0e83a1d97e@arm.com>
- <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ@mail.gmail.com>
- <36ea8010-f22a-e0d9-b9a9-bb6be19db45d@arm.com>
- <CABb+yY0j--t-VcOJnMxq25gnsb+QGi5ifw_K4qu1vgTJjKXBxg@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ASoC: atmel-classd: remove aclk clock
+Date: Fri, 7 Jul 2017 13:44:32 +0100
+Message-ID: <20170707124432.b5h2ugtxsz3zqysx@sirena.org.uk>
+References: <20170704115927.32662-1-quentin.schulz@free-electrons.com>
+ <20170704115927.32662-9-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="exdyu7fmnfly6tbs"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY0j--t-VcOJnMxq25gnsb+QGi5ifw_K4qu1vgTJjKXBxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170704115927.32662-9-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--exdyu7fmnfly6tbs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 06/07/17 19:37, Jassi Brar wrote:
-> On Thu, Jul 6, 2017 at 10:14 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->> On 06/07/17 15:37, Jassi Brar wrote:
->>> On Thu, Jul 6, 2017 at 3:03 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
-> 
->>> I see no reason why you must have SCPI and SCMI both running.
->>>
->>
->> We can still have 2 different protocols using same MHU channel with
->> different doorbells, what's wrong with that ?
->>
-> Only for SCMI and SCPI - both written by same person to achieve the
-> same thing - I think it should not be necessary.
-> 
+On Tue, Jul 04, 2017 at 01:59:26PM +0200, Quentin Schulz wrote:
+> Since gclk (generated-clk) is now able to determine the rate of the
+> audio_pll, there is no need for classd to have a direct phandle to the
+> audio_pll while already having a phandle to gclk.
 
-Really ? you decide based on that and repeatedly ignore what ARM MHU
-specification offers. Wow, I am surprised.
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> But yes, SCMI running alongside some complementary protocol (that
-> implements what SCMI doesn't provide) is a very solid usecase. And
-> that is the reason you need a platform specific 'transport layer'.
-> 
+--exdyu7fmnfly6tbs
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The whole SCMI exercise is to reduce such platform specific code.
-It's made to work with ACPI using doorbells via PCC channels. Now, you
-say for DT we need per platform shim. Mailbox is my transport, why do I
-need anything more as I don't care what is sent in mailbox controller as
-long as the signal is sent to the other side.
+-----BEGIN PGP SIGNATURE-----
 
->>> And even then there is a solution - a shim arbitrator. Other
->>> platforms, those share a channel, do that. No big deal.
->>>
->>
->> Example please? Please remember these protocols are generic and we
->> can't add any platform specific code into them.
->>
-> You do need to have platform specific glue as I said.
-> 
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllfgi8ACgkQJNaLcl1U
+h9DzAQf/dC3hmT2cJGuO5WN2WUEdJi8i15jUGACz08lH+qnyfGQ2vIaHDa7Gk2Ro
+kZLHscJuR5tzN5xi16pUGAH2klyPaOQdVpNVXv+wzxvOsVKxsB0woKIVaFo/DhmM
+y8HfO6l6J09CReewm4Ij2LzXNJy+gz9lh4GYzfWnqtqjPcns1KBEmYhmAZtvX8lh
+/7Q6oZ9yeBJY3xWORvD8zv/vxof39ZbdXpRd1zb/7HYDQYnhoJlRPkn/1KtyWmAG
+1lJ1+r6Ao1DEYdfwDB3jvxdtdg8zD7H0ggRyPw9fpcwSzfBUEIzFr/7Y3hrlNfus
+nTT5B70tS9bBhc1bZ89tgaHoWT4yWQ==
+=4O/E
+-----END PGP SIGNATURE-----
 
-Yes, please propose along bindings to do that as you are objecting the
-one in $subject. I have asked you many times the same thing.
-
->>>  BTW, I hope you realise that we need a 'transport layer' which will
->>> be the platform specific glue between mailbox controller specifics and
->>> the generic SCMI code.
->>
->> Why ?
->>
-> Because you should not restrict the usage of SCMI to only platforms
-> with mailbox controller that does not require any information to
-> trigger a signal on the other side -- what you call "doorbell".
-> 
-
-Indeed, it's restricted, read the specification. We have all the
-information in the channel shared memory and we just need doorbell
-in the transport. It's clear in the specification. You seem to not read
-any of the specification and continue to ignore.
-
-> Why shouldn't Rockchip be able to implement SCMI? Just because it uses
-> different mechanism to signal the other end?
-> 
-
-They can, all we need is just a mailbox channel, we don't care wants
-sent in the controller as along as signal is sent. The shared memory has
-to be as per the specification. I still don't know what I am missing to
-convey you.
-
-> You are actually putting in effort to restrict the usage of SCMI. Its
-> like you buy a usb device and the first thing you do is solder it to
-> the plug.
-> 
-
-I don't think you have read the SCMI specification, sorry.
-
-> 
->> Clearly you have not made a since technical argument so far as why
->> MHU doorbell is not correct way even when MHU specification is clearly
->> allows it. I have given example of ST mailbox which has this doorbell
->> kind of support.
->>
->>> I see your confusion in the form of some issues in the SCMI
->>> implementation, please CC me on the next revision.
->>>
->>
->> Care to elaborate on what's my confusion or at-least what you think so ?
->>
-> See me last point.
-> 
-
-I think you are just fixiated on one usage of ARM MHU and so hard to
-convince otherwise..
-
->> Also if you have concern on implementation, ok we can discuss further.
->> But can you make it clear as what your objections are for the doorbell
->> MHU binding. How will I get the bit assigned for different protocols
->> which are platform specific ? I still need some binding , right ?
->>
-> Sorry, No. I'll try to get lkml fwd me the patchset so I can explain
-> there further.
-> 
-
-Sure, thanks.
-
--- 
-Regards,
-Sudeep
+--exdyu7fmnfly6tbs--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
