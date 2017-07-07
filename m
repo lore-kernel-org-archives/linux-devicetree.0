@@ -1,93 +1,144 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 4/4] [media] rc: pwm-ir-tx: add new driver
-Date: Fri, 7 Jul 2017 18:15:24 +0200
-Message-ID: <20170707161524.GA11857@amd>
-References: <cover.1498992850.git.sean@mess.org>
- <88fa0219db3388fad7bcc7b20cf30dd41e763aee.1498992850.git.sean@mess.org>
- <20170707135928.6cs6vx7z6lj3birp@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: media: Add Cadence MIPI-CSI2RX Device
+ Tree bindings
+Date: Fri, 7 Jul 2017 11:21:05 -0500
+Message-ID: <20170707162105.fhafcpzwlnxco2pn@rob-hp-laptop>
+References: <20170703124023.28352-1-maxime.ripard@free-electrons.com>
+ <20170703124023.28352-2-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170707135928.6cs6vx7z6lj3birp@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sean Young <sean@mess.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Timo Kokkonen <timo.t.kokkonen@iki.fi>
+In-Reply-To: <20170703124023.28352-2-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 03, 2017 at 02:40:22PM +0200, Maxime Ripard wrote:
+> The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+> 4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+> the hardware implementation.
 
---/9DWx/yDrRhgMJTb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Streams and lanes are separate, right? Do you need to know how many 
+lanes are configured/connected?
 
-On Fri 2017-07-07 08:59:28, Rob Herring wrote:
-> On Sun, Jul 02, 2017 at 12:06:13PM +0100, Sean Young wrote:
-> > This is new driver which uses pwm, so it is more power-efficient
-> > than the bit banging gpio-ir-tx driver.
-> >=20
-> > Signed-off-by: Sean Young <sean@mess.org>
-> > ---
-> >  .../devicetree/bindings/leds/irled/pwm-ir-tx.txt   |  13 ++
->=20
-> Please make this a separate patch.
+> 
+> It can operate with an external D-PHY, an internal one or no D-PHY at all
+> in some configurations.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/cdns-csi2rx.txt      | 87 ++++++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> new file mode 100644
+> index 000000000000..b5bcb6ad18fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+> @@ -0,0 +1,87 @@
+> +Cadence CSI2RX controller
+> +=========================
+> +
+> +The Cadence CSI2RX controller is a CSI-2 bridge supporting up to 4 CSI
+> +lanes in input, and 4 different pixel streams in output.
+> +
+> +Required properties:
+> +  - compatible: must be set to "cdns,csi2rx"
 
-Come on... The driver is trivial, and you even quoted the binding
-below. Saying "Acked-by:" would not have been that much additional
-work...
+Should have a "and an SoC specific compatible string" statement.
 
-Thanks,
-								Pavel
+> +  - reg: base address and size of the memory mapped region
+> +  - clocks: phandles to the clocks driving the controller
+> +  - clock-names: must contain:
+> +    * sys_clk: main clock
+> +    * p_clk: register bank clock
+> +    * p_free_clk: free running register bank clock
+> +    * pixel_ifX_clk: pixel stream output clock, one for each stream
+> +                     implemented in hardware, between 0 and 3
+> +    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
 
+"if implemented in hardare" means internal D-PHY?
 
-> >  drivers/media/rc/Kconfig                           |  12 ++
-> >  drivers/media/rc/Makefile                          |   1 +
-> >  drivers/media/rc/pwm-ir-tx.c                       | 165 +++++++++++++=
-++++++++
-> >  4 files changed, 191 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/irled/pwm-ir=
--tx.txt
-> >  create mode 100644 drivers/media/rc/pwm-ir-tx.c
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt=
- b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt
-> > new file mode 100644
-> > index 0000000..6887a71
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/irled/pwm-ir-tx.txt
-> > @@ -0,0 +1,13 @@
-> > +Device tree bindings for IR LED connected through pwm pin which is use=
-d as
-> > +IR transmitter.
-> > +
-> > +Required properties:
-> > +- compatible: should be "pwm-ir-tx".
-> > +- pwms : PWM property to point to the PWM device (phandle)/port (id) a=
-nd to
-> > +  specify the period time to be used: <&phandle id period_ns>;
-> > +
-> > +Example:
-> > +	irled {
-> > +		compatible =3D "pwm-ir-tx";
-> > +		pwms =3D <&pwm0 0 10000000>;
-> > +	};
+> +  - phys: phandle to the external D-PHY
+> +  - phy-names: must contain dphy, if the implementation uses an
+> +               external D-PHY
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+If? Should phys/phy-names be optional?
 
---/9DWx/yDrRhgMJTb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAllfs5wACgkQMOfwapXb+vJDsACeNBDIT0Mqy0SRsqnw4tRQ9uvn
-wtUAn19JLMxWhpJwI23ctK8xll6vdJ82
-=DDld
------END PGP SIGNATURE-----
-
---/9DWx/yDrRhgMJTb--
+> +
+> +Required subnodes:
+> +  - ports: A ports node with endpoint definitions as defined in
+> +           Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +           first port subnode should be the input endpoint, the second one the
+> +           outputs
+> +
+> +  The output port should have as many endpoints as stream supported by
+> +  the hardware implementation, between 1 and 4, their ID being the
+> +  stream output number used in the implementation.
+> +
+> +Example:
+> +
+> +csi2rx: csi-bridge@0d060000 {
+> +	compatible = "cdns,csi2rx";
+> +	reg = <0x0d060000 0x1000>;
+> +	clocks = <&byteclock>, <&byteclock>, <&byteclock>,
+> +		 <&coreclock>, <&coreclock>,
+> +		 <&coreclock>, <&coreclock>;
+> +	clock-names = "sys_clk", "p_clk", "p_free_clk",
+> +		      "pixel_if0_clk", "pixel_if1_clk",
+> +		      "pixel_if2_clk", "pixel_if3_clk";
+> +
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +
+> +			csi2rx_in_sensor: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&sensor_out_csi2rx>;
+> +				clock-lanes = <0>;
+> +				data-lanes = <1 2>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +
+> +			csi2rx_out_grabber0: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&grabber0_in_csi2rx>;
+> +			};
+> +
+> +			csi2rx_out_grabber1: endpoint@1 {
+> +				reg = <1>;
+> +				remote-endpoint = <&grabber1_in_csi2rx>;
+> +			};
+> +
+> +			csi2rx_out_grabber2: endpoint@2 {
+> +				reg = <2>;
+> +				remote-endpoint = <&grabber2_in_csi2rx>;
+> +			};
+> +
+> +			csi2rx_out_grabber3: endpoint@3 {
+> +				reg = <3>;
+> +				remote-endpoint = <&grabber3_in_csi2rx>;
+> +			};
+> +		};
+> +	};
+> +};
+> -- 
+> 2.13.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
