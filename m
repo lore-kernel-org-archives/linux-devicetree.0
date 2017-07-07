@@ -1,59 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 7/8] clk: vc5: Add bindings for IDT VersaClock
- 5P49V6901
-Date: Fri, 7 Jul 2017 08:56:19 -0500
-Message-ID: <20170707135619.l6lgvfrhqvrgu2hb@rob-hp-laptop>
-References: <20170701200459.11505-1-marek.vasut+renesas@gmail.com>
- <20170701200459.11505-7-marek.vasut+renesas@gmail.com>
+Subject: Re: [PATCH v2.1 1/2] dt-bindings: display: rcar-du: Add a VSP
+ channel index to the vsps DT property
+Date: Fri, 7 Jul 2017 09:01:35 -0500
+Message-ID: <20170707140135.btkd65gqhiznaqcl@rob-hp-laptop>
+References: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20170702134001.4752-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170701200459.11505-7-marek.vasut+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-clk@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Alexey Firago <alexey_firago@mentor.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170702134001.4752-1-laurent.pinchart+renesas@ideasonboard.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 01, 2017 at 10:04:57PM +0200, Marek Vasut wrote:
-> IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
-> Input clock source can be taken from either external crystal or from
-> external reference clock.
-> 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Alexey Firago <alexey_firago@mentor.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
-> V2: Edit the top of the DT binding document to mention VersaClock 6
-> ---
->  .../devicetree/bindings/clock/idt,versaclock5.txt   | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> index 53d7e50ed875..115ab5f75c5d 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> @@ -1,24 +1,26 @@
-> -Binding for IDT VersaClock5 programmable i2c clock generator.
-> +Binding for IDT VersaClock 5,6 programmable i2c clock generators.
->  
-> -The IDT VersaClock5 are programmable i2c clock generators providing
-> -from 3 to 12 output clocks.
-> +The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
-> +generators providing from 3 to 12 output clocks.
->  
->  ==I2C device node==
->  
->  Required properties:
->  - compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933" ,
-> -		"idt,5p49v5935".
-> +		"idt,5p49v5935" , "idt,5p49v6901".
-
-Please reformat to 1 per line. With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gU3VuLCBKdWwgMDIsIDIwMTcgYXQgMDQ6NDA6MDFQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
+dCB3cm90ZToKPiBPbiBzb21lIFItQ2FyIFNvQ3MgYSBzaW5nbGUgVlNQIGNhbiBzZXJ2ZSBtdWx0
+aXBsZSBEVSBjaGFubmVscyB0aHJvdWdoCj4gbXVsdGlwbGUgTElGIGluc3RhbmNlcyBpbiB0aGUg
+VlNQLiBUaGUgY3VycmVudCBEVCBiaW5kaW5ncyBkb24ndCBzdXBwb3J0Cj4gc3BlY2lmeWluZyB0
+aGF0IGtpbmQgb2YgU29DIGludGVncmF0aW9uIHNjaGVtZS4gRXh0ZW5kIHRoZW0gd2l0aCBhIFZT
+UAo+IGNoYW5uZWwgaW5kZXguCj4gCj4gQmFja3dhcmQgY29tcGF0aWJpbGl0eSBjYW4gYmUgZW5z
+dXJlZCBpbiBkcml2ZXJzIGJ5IGNoZWNraW5nIHRoZSBsZW5ndGgKPiBvZiB0aGUgdnNwcyBwcm9w
+ZXJ0eSBhbmQgc2V0dGluZyB0aGUgY2hhbm5lbCB0byAwIHdoZW4gdGhlIHByb3BlcnR5Cj4gZG9l
+c24ndCBjb250YWluIGNoYW5uZWwgaW5kaWNlcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBMYXVyZW50
+IFBpbmNoYXJ0IDxsYXVyZW50LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiAt
+LS0KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yZW5lc2FzLGR1LnR4dCAgICAg
+fCA1MSArKysrKysrKysrKysrLS0tLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRp
+b25zKCspLCAyMSBkZWxldGlvbnMoLSkKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
