@@ -1,50 +1,44 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH v6 4/4] dt-bindings: media: Document Synopsys Designware
- HDMI RX
-Date: Fri, 7 Jul 2017 10:31:00 +0100
-Message-ID: <258a880c-8b4d-8201-b90a-44ed4d351daa@synopsys.com>
-References: <cover.1499176790.git.joabreu@synopsys.com>
- <d6da0a3ec47a46d30b74e9d41fb4bf9ef392d969.1499176790.git.joabreu@synopsys.com>
- <4dc8f06f-b9cf-6d3d-da88-51abb24c1724@kernel.org>
- <e87124d0-d523-5dcd-5ace-6b5896ad585c@synopsys.com>
- <b0ba8226-972e-a997-e456-c342603b2ffd@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b0ba8226-972e-a997-e456-c342603b2ffd@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <snawrocki@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: [PATCH v2 5/6] [media] dt-bindings: gpio-ir-tx: add support for GPIO IR Transmitter
+Date: Fri,  7 Jul 2017 10:52:03 +0100
+Message-ID: <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
+References: <cover.1499419624.git.sean@mess.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1499419624.git.sean-hENCXIMQXOg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06-07-2017 21:30, Sylwester Nawrocki wrote:
-> On 07/06/2017 12:24 PM, Jose Abreu wrote:
->>>> +- edid-phandle: phandle to the EDID handler block.
->>> Could you make this property optional and when it is missing assume that device
->>> corresponding to the parent node of this node handles EDID? This way we could
->>> avoid having property pointing to the parent node.
->> Hmm, this is for the CEC notifier. Do you mean I should grab the
->> parent device for the notifier? This property is already optional
->> if cec is not enabled though.
->  
-> Yes, device associated with the parent node. Something like:
->
->  - edid-phandle - phandle to the EDID handler block; if this property is
->   not specified it is assumed that EDID is handled by device described 
->   by parent node of the HDMI RX node
->
-> Not sure if it is any better than always requiring edid-phandle property,
-> even when it is pointing to the parent node. We would need a DT maintainer's
-> opinion on that.
+Document the device tree bindings for the GPIO Bit Banging IR
+Transmitter.
 
-I will change and resend. I also have to fix a kbuild error when
-cec is not enabled.
+Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
 
-Best regards,
-Jose Miguel Abreu
+diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+new file mode 100644
+index 0000000..bc08d89
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+@@ -0,0 +1,11 @@
++Device tree bindings for IR LED connected through gpio pin which is used as
++remote controller transmitter.
++
++Required properties:
++	- compatible: should be "gpio-ir-tx".
++
++Example:
++	irled@0 {
++		compatible = "gpio-ir-tx";
++		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++	};
+-- 
+2.9.4
 
->
-> --
-> Thanks,
-> Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
