@@ -1,167 +1,43 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 3/3] dt-binding: remoteproc: Add the bindings required for
- Q6 - WCSS core
-Date: Fri, 7 Jul 2017 23:40:49 +0530
-Message-ID: <da7e8914-30bc-5acf-f672-fad0cc250f43@codeaurora.org>
-References: <1498745861-20531-1-git-send-email-sricharan@codeaurora.org>
- <1498745861-20531-4-git-send-email-sricharan@codeaurora.org>
- <20170707134757.kfbdfk6srkmqa5ex@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170707134757.kfbdfk6srkmqa5ex@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] arm64: dts: fix up the gic register for the Stratix10 platform
+Date: Fri,  7 Jul 2017 13:36:47 -0500
+Message-ID: <1499452607-30058-1-git-send-email-dinguyen@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The register entries for the ARM GIC-400 should have a 2nd set of address.
 
-Thanks for the review.
-
-On 7/7/2017 7:17 PM, Rob Herring wrote:
-> On Thu, Jun 29, 2017 at 07:47:41PM +0530, Sricharan R wrote:
->> IPQ8074 has an integrated Q6V5 Hexagon dsp - Lithium Wlan (WCSS) core.
->> This patch adds the required bindings to load, boot, shutdown that
->> remoteproc subsystem.
->>
->> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
->> ---
->>  .../bindings/remoteproc/qcom,q6v5-wcss.txt         | 139 +++++++++++++++++++++
->>  1 file changed, 139 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
->>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
->> new file mode 100644
->> index 0000000..f664c26
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
->> @@ -0,0 +1,139 @@
->> +Qualcomm Hexagon (Q6) - WCSS Peripheral Image Loader
->> +
->> +This document defines the binding for a component that loads and boots firmware
->> +on the integrated Qualcomm Hexagon - WCSS core.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: must be one of:
->> +		    "qcom,q6v5-wcss-pil",
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must specify the base address and size of the qdsp6 and
->> +		    mpm (msm power manager) register blocks.
->> +
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "q6" and "mpm"
->> +
->> +- interrupts-extended:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: must list the watchdog, fatal IRQs ready, handover and
-> 
-> fatal, ready, ...
-
- ok, will simplify.
-
-> 
->> +		    stop-ack IRQs
->> +
->> +- interrupt-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
->> +
->> +- clocks:
->> +	Usage: required
->> +	Value type: <phandle>
-> 
-> These are not just a phandle. 
-
- hmm ok. Will correct.
-
-> 
->> +	Definition: references to the axim-q6, axim2-q6, axi-wcss,
->> +		    ahb-q6, ahbs-q6, ahb-wcss, ahbs-wcss, sysnoc and mem.
->> +		    to be held on behalf of the booting of the Hexagon and WCSS
->> +		    core. These are the interface, bus, mem clocks required for
->> +		    the Q6 and WCSS cores.
->> +
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "axim-q6", "axim2-q6", "axi-wcss", "ahb-q6",
->> +			    "ahbs-q6", "ahb-wcss", "ahbs-wcss", "sysnoc", "mem"
->> +
->> +- resets:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: reference to the reset-controller for the Q6-WCSS sub-system
-> 
-> This should be a list of 3 resets.
-
- ok.
-
->> +
->> +- reset-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
->> +
->> +- qcom,smem-states:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: reference to the smem state for requesting the Hexagon to
->> +		    shut down
->> +
->> +- qcom,smem-state-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "stop"
->> +
->> +- qcom,halt-regs:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: a phandle reference to a syscon representing TCSR followed
->> +		    by the three offsets within syscon for q6, wcss and tcsr global
->> +		    halt registers.
->> +
->> += SUBNODES:
->> +The Hexagon node must contain a subnode, named "q6" representing
->> +the memory region used by the Hexagon firmware. The sub-node must contain:
-> 
-> Why does this need a sub-node?
-
- Right, just the property. Had it correctly in code, missed to change here.
- 
-> 
->> +
->> +- memory-region:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: reference to the reserved-memory for the Q6 firmware region
->> +
->> += EXAMPLE
->> +The following example describes the resources needed to boot control the
->> +Hexagon, as it is found on IPQ8074 boards.
->> +
->> +	q6v5_wcss: q6v5_wcss@CD00000 {
-> 
-> s/_/-/ in the node name.
-
- ok.
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
+Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 23d2ebc..1b035ed 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -75,10 +75,10 @@
+ 		compatible = "arm,gic-400", "arm,cortex-a15-gic";
+ 		#interrupt-cells = <3>;
+ 		interrupt-controller;
+-		reg = <0x0 0xfffc1000 0x1000>,
+-		      <0x0 0xfffc2000 0x2000>,
+-		      <0x0 0xfffc4000 0x2000>,
+-		      <0x0 0xfffc6000 0x2000>;
++		reg = <0x0 0xfffc1000 0x0 0x1000>,
++		      <0x0 0xfffc2000 0x0 0x1000>,
++		      <0x0 0xfffc4000 0x0 0x110>,
++		      <0x0 0xfffc6000 0x0 0x110>;
+ 	};
+ 
+ 	soc {
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
