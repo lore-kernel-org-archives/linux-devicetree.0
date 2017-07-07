@@ -1,68 +1,55 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v3 7/9] dt-bindings: iio: Add STM32 LPTimer quadrature encoder and counter
-Date: Fri, 7 Jul 2017 18:31:06 +0200
-Message-ID: <1499445068-7037-8-git-send-email-fabrice.gasnier@st.com>
-References: <1499445068-7037-1-git-send-email-fabrice.gasnier@st.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCH 0/3] Motorola Droid 4 Audio Support
+Date: Fri,  7 Jul 2017 18:42:26 +0200
+Message-ID: <20170707164229.5868-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1499445068-7037-1-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for STMicroelectronics STM32 Low-Power Timer
-quadrature encoder and counter binding.
+Hi,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes in v3:
-- Rob's comment on node name: timer@...
+I got working sound on Droid 4 with mainline \o/. The codec is
+currently missing support for detecting if something has been
+plugged into the 3.5mm connector, since that seems to require
+some closed source firmware and needs further investigation. I
+think this can be added later.
 
-Changes in v2:
-- s/Low Power/Low-Power
-- remove leading 0x in example (parent node)
-- improve properties descriptions
----
- .../bindings/iio/counter/stm32-lptimer-cnt.txt     | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
+Tested:
+ - Playing via [HiFi] using Speaker, Earpiece, Headphone
+ - Playing via [Voice] using Speaker, Earpiece, Headphone
+ - Recording via [Voice] using Mic
+ - Volume Controls
+ - Checking that DAPM graph look correct
 
-diff --git a/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt b/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
-new file mode 100644
-index 0000000..a04aa5c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/counter/stm32-lptimer-cnt.txt
-@@ -0,0 +1,27 @@
-+STMicroelectronics STM32 Low-Power Timer quadrature encoder and counter
-+
-+STM32 Low-Power Timer provides several counter modes. It can be used as:
-+- quadrature encoder to detect angular position and direction of rotary
-+  elements, from IN1 and IN2 input signals.
-+- simple counter from IN1 input signal.
-+
-+Must be a sub-node of an STM32 Low-Power Timer device tree node.
-+See ../mfd/stm32-lptimer.txt for details about the parent node.
-+
-+Required properties:
-+- compatible:		Must be "st,stm32-lptimer-counter".
-+- pinctrl-names: 	Set to "default".
-+- pinctrl-0: 		List of phandles pointing to pin configuration nodes,
-+			to set IN1/IN2 pins in mode of operation for Low-Power
-+			Timer input on external pin.
-+
-+Example:
-+	timer@40002400 {
-+		compatible = "st,stm32-lptimer";
-+		...
-+		counter {
-+			compatible = "st,stm32-lptimer-counter";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&lptim1_in_pins>;
-+		};
-+	};
+-- Sebastian
+
+Sebastian Reichel (3):
+  ASoC: codec: cpcap: new codec
+  ARM: dts: motorola-cpcap-mapphone: add audio-codec
+  ARM: dts: omap4-droid4: add soundcard
+
+ .../bindings/sound/motorola,cpcap-audio-codec.txt  |   19 +
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |    6 +
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |   76 ++
+ sound/soc/codecs/Kconfig                           |    3 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/cpcap.c                           | 1422 ++++++++++++++++++++
+ 6 files changed, 1528 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/motorola,cpcap-audio-codec.txt
+ create mode 100644 sound/soc/codecs/cpcap.c
+
 -- 
-1.9.1
+2.13.2
