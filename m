@@ -1,130 +1,45 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 3/6] dt-bindings: media: Document Synopsys Designware HDMI RX
-Date: Fri,  7 Jul 2017 12:08:06 +0100
-Message-ID: <1d0479599d90d9e7eb1360237d3097373959cee0.1499425271.git.joabreu@synopsys.com>
-References: <cover.1499425271.git.joabreu@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1499425271.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-In-Reply-To: <cover.1499425271.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-References: <cover.1499425271.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable
+ option
+Date: Fri, 7 Jul 2017 13:16:54 +0200
+Message-ID: <b68f444e-cea4-acaa-d1e9-7955a577ed35@skidata.com>
+References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
+ <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
+ <AM4PR0401MB2260ECD4508E26FF16670004FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
+ <81105c77-d48f-271b-2de1-c877b9413184@skidata.com>
+ <AM4PR0401MB226089839458F5F92C3B1F39FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
+ <6de114cb-4521-4bb2-d0a3-4aea32936bd3@skidata.com>
+ <AM4PR0401MB22609FFACD2BB51247709936FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM4PR0401MB22609FFACD2BB51247709936FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Duan <fugang.duan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dev@g0hl1n.net" <dev@g0hl1n.net>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings for the Synopsys Designware HDMI RX.
+Hi Andy,
+thanks for the clarifications!
 
-Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On 07/07/2017 01:08 PM, Andy Duan wrote:
+>> 3. Who should then trigger the "hard reset" of the PHY? phy_init_hw? The FEC?
+>>
+>> The point is that the LAN8710 is currently not always working correctly,
+>> therefore this small change was proposed. Should we really change all
+>> PHY/FECs only because of this?
+>> Furthermore one problem still remains: The enet_refclk is controlled by the
+>> FEC. How does the PHY recognize when it was disabled/enabled?
+>>
+> Your patch is workaround for the issue. As you pointed out these is a common issue.
+> So we hope to get a better solution to handle these in common code.
 
-Changes from v6:
-	- Document which properties are required/optional (Sylwester)
-	- Drop compatible string for SoC (Sylwester)
-	- Reword edid-phandle property (Sylwester)
-	- Typo fixes (Sylwester)
-Changes from v4:
-	- Use "cfg" instead of "cfg-clk" (Rob)
-	- Change node names (Rob)
-Changes from v3:
-	- Document the new DT bindings suggested by Sylwester
-Changes from v2:
-	- Document edid-phandle property
----
- .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+Ok. I'm fine with moving the phy-reset-gpios binding into the PHY. But 
+one question still remains: Who should then trigger the "hard reset" of 
+the PHY?
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-new file mode 100644
-index 0000000..6c49aae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-@@ -0,0 +1,74 @@
-+Synopsys DesignWare HDMI RX Decoder
-+===================================
-+
-+This document defines device tree properties for the Synopsys DesignWare HDMI
-+RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
-+specification by itself but is meant to be referenced by platform-specific
-+device tree bindings.
-+
-+The properties bellow belong to the Synopsys DesignWare HDMI RX Decoder node.
-+
-+- compatible: Required property. Shall be "snps,dw-hdmi-rx".
-+
-+- reg: Required property. Memory mapped base address and length of the DWC
-+HDMI RX registers.
-+
-+- interrupts: Required property. Reference to the DWC HDMI RX interrupt and
-+HDMI 5V sense interrupt.
-+
-+- clocks: Required property. Phandle to the config clock block.
-+
-+- clock-names: Required property. Shall be "cfg".
-+
-+- edid-phandle: Optional proerty. phandle to the EDID handler block; if this
-+property is not specified it is assumed that EDID is handled by device
-+described by parent node of the HDMI RX node. You should not specify this
-+property if your HDMI RX controller does not have CEC.
-+
-+- #address-cells: Required property. Shall be 1.
-+
-+- #size-cells: Required property. Shall be 0.
-+
-+You also have to create a subnode for the PHY device. PHY node properties are
-+as follows.
-+
-+- compatible: Required property. Shall be "snps,dw-hdmi-phy-e405".
-+
-+- reg: Required property. Shall be JTAG address of the PHY.
-+
-+- clocks: Required property. Phandle for cfg clock.
-+
-+- clock-names: Required property. Shall be "cfg".
-+
-+A sample binding is now provided. The compatible string is for a SoC which has
-+has a Synopsys DesignWare HDMI RX decoder inside.
-+
-+Example:
-+
-+dw_hdmi_soc: dw-hdmi-soc@0 {
-+	compatible = "...";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges;
-+
-+	hdmi-rx@0 {
-+		compatible = "snps,dw-hdmi-rx";
-+		reg = <0x0 0x10000>;
-+		interrupts = <1 2>;
-+		edid-phandle = <&dw_hdmi_soc>;
-+
-+		clocks = <&dw_hdmi_refclk>;
-+		clock-names = "cfg";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		hdmi-phy@fc {
-+			compatible = "snps,dw-hdmi-phy-e405";
-+			reg = <0xfc>;
-+
-+			clocks = <&dw_hdmi_refclk>;
-+			clock-names = "cfg";
-+		};
-+	};
-+};
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The PHY itself doesn't "know" when the refclk is turned off/on. So the 
+FEC still must call some function of the PHY after the clock was enabled 
+again. So the phy-reset-after-clk-enable property will remain in the fec 
+node? Or am I missing something?
