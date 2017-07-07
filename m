@@ -1,46 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 7/9] ASoC: atmel-classd: remove aclk clock from DT
- binding
-Date: Fri, 7 Jul 2017 13:44:20 +0100
-Message-ID: <20170707124419.jfkgyl66wi7jfhnu@sirena.org.uk>
-References: <20170704115927.32662-1-quentin.schulz@free-electrons.com>
- <20170704115927.32662-8-quentin.schulz@free-electrons.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [PATCH 2/3] media: ti-vpe: cal: use
+ of_graph_get_remote_endpoint()
+Date: Fri, 7 Jul 2017 07:50:08 -0500
+Message-ID: <20170707125007.GC28931@ti.com>
+References: <87mv8tez69.wl%kuninori.morimoto.gx@renesas.com>
+ <87k23xez30.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="woub2x6txwmvzhcf"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170704115927.32662-8-quentin.schulz@free-electrons.com>
+In-Reply-To: <87k23xez30.wl%kuninori.morimoto.gx@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---woub2x6txwmvzhcf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Benoit Parrot <bparrot@ti.com>
 
-On Tue, Jul 04, 2017 at 01:59:25PM +0200, Quentin Schulz wrote:
-> Since gclk (generated-clk) is now able to determine the rate of the
-> audio_pll, there is no need for classd to have a direct phandle to the
-> audio_pll while already having a phandle to gclk.
-
-Acked-by: Mark Brown <broonie@kernel.org>
-
---woub2x6txwmvzhcf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllfgiMACgkQJNaLcl1U
-h9D4EAf/RdCKk4UjTfyf4/fmSVtDhhexDdLPZ2dtAdyhOXP0/WJBzS4FXuHMU5V8
-vuFe96ZKhVqeQFWzDV3Hf6Xit8JmgfKbIukIOVvY9FfDHfr/cslPIebGosWvDKT9
-txSlXUdCacd2cpd8PqTfx9aeT6An6HgL38JHwQSkxVBMbVuu3ZM1oE9ReJ2TOXIG
-OSn6IvR3VYJ0G6cw+zbJ61u48vdHLj5QVEy/lm7AhLjUhp6lL9zVhBoPTYV1EiR9
-G8WJbAXxwfGkHZayulD4mI73Hr/1sMYnvrebsJDSnFOJPgk/I9hQHlm16DSv4cVo
-zw9O4tbWs7PAN7Ej/WziemoWbokP1g==
-=c1fk
------END PGP SIGNATURE-----
-
---woub2x6txwmvzhcf--
+Kuninori Morimoto <kuninori.morimoto.gx@renesas.com> wrote on Wed [2017-Jun-28 00:33:00 +0000]:
+> 
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> 
+> Now, we can use of_graph_get_remote_endpoint(). Let's use it.
+> 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+> ---
+> based on 4c9c3d595f1bad021cc126d20879df4016801736
+> ("of_graph: add of_graph_get_remote_endpoint()")
+> 
+>  drivers/media/platform/ti-vpe/cal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index 177faa3..0c7ddf8 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -1702,7 +1702,7 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+>  	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+>  	asd->match.fwnode.fwnode = of_fwnode_handle(sensor_node);
+>  
+> -	remote_ep = of_parse_phandle(ep_node, "remote-endpoint", 0);
+> +	remote_ep = of_graph_get_remote_endpoint(ep_node);
+>  	if (!remote_ep) {
+>  		ctx_dbg(3, ctx, "can't get remote-endpoint\n");
+>  		goto cleanup_exit;
+> -- 
+> 1.9.1
+> 
