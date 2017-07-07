@@ -1,95 +1,234 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] Add support for BCM7271 style interrupt controller
-Date: Fri, 7 Jul 2017 12:39:44 -0700
-Message-ID: <d8fe8d17-b330-4099-4cfe-647e18ce87ad@gmail.com>
-References: <20170707192016.13001-1-opendmb@gmail.com>
- <a801afb1-2f54-2137-6fed-d8f83fe3f8ea@gmail.com>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARC: AXS: prepare dts files for enabling PAE40 on axs103
+Date: Fri, 7 Jul 2017 12:57:29 -0700
+Message-ID: <b6f3e4d2-0569-6f06-f690-eed3de402723@synopsys.com>
+References: <20170626114725.9678-1-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a801afb1-2f54-2137-6fed-d8f83fe3f8ea-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170626114725.9678-1-Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2017 12:34 PM, Doug Berger wrote:
-> Sorry, messed up the CC list.
-> 
-> On 07/07/2017 12:20 PM, Doug Berger wrote:
->> This patch set extends the functionality of the irq-brcmstb-l2 interrupt
->> controller driver to cover a hardware variant first introduced in the
->> BCM7271 SoC.  The main difference between this variant and the block
->> found in earlier brcmstb SoCs is that this variant only supports level
->> sensitive interrupts and therefore does not latch the interrupt state
->> based on edges.  Since there is no longer a need to ack interrupts with
->> a register write to clear the latch the register map has been changed.
->>
->> Therefore the change to add support for the new hardware block is to
->> abstract the register accesses to accommodate different maps and to
->> identify the block with a new device-tree compatible string.
->>
->> I also took the opportunity to make some small efficiency enhancements
->> to the driver.  One of these was to make use of the slightly more
->> efficient irq_mask_ack method.  However, I discovered that the defined
->> irq_gc_mask_disable_reg_and_ack() generic irq function was insufficient
->> for my needs.  The first three commits of this set are intended to be a
->> correction and extension of the existing generic irq implementation to
->> provide a set of functions that can be used by interrupt controller
->> drivers for their irq_mask_ack method.
->>
->> I believe these first three commits should be added to the irq/core
->> repository and the remaining commits should be added to the Broadcom
->> github repository but have included the complete set here for improved
->> context.  This entire set is therefore based on the irq/core master
->> branch.  Please let me know if you would like a different packaging.
+On 06/26/2017 04:47 AM, Eugeniy Paltsev wrote:
+> Enable 64bit adressing, where it needed, to make possible
+> enabling PAE40 on axs103.
+>
+> This patch doesn't affect on any functionality.
+>
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> ---
+>   arch/arc/boot/dts/axc001.dtsi     | 20 +++++++++-----------
+>   arch/arc/boot/dts/axc003.dtsi     | 21 ++++++++++-----------
+>   arch/arc/boot/dts/axc003_idu.dtsi | 21 ++++++++++-----------
+>   arch/arc/boot/dts/axs10x_mb.dtsi  |  2 +-
+>   4 files changed, 30 insertions(+), 34 deletions(-)
+>
+> diff --git a/arch/arc/boot/dts/axc001.dtsi b/arch/arc/boot/dts/axc001.dtsi
+> index 53ce226..a380ffa 100644
+> --- a/arch/arc/boot/dts/axc001.dtsi
+> +++ b/arch/arc/boot/dts/axc001.dtsi
+> @@ -15,15 +15,15 @@
+>   
+>   / {
+>   	compatible = "snps,arc";
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+>   
+>   	cpu_card {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+>   
+> -		ranges = <0x00000000 0xf0000000 0x10000000>;
+> +		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
 
-The irqchip maintainers (Thomas, Jason, Marc Z.) will probably want to
-get irqchip drivers changes through their tree:
+AXS101 can't support PAE etc - but I guess you still need to make the change here 
+because the DT bits for MB are shared ?
 
-IRQCHIP DRIVERS
-M:      Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-M:      Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-M:      Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-L:      linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-S:      Maintained
-T:      git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
-irq/core
-T:      git git://git.infradead.org/users/jcooper/linux.git irqchip/core
-F:      Documentation/devicetree/bindings/interrupt-controller/
-F:      drivers/irqchip/
+>   
+>   		core_clk: core_clk {
+>   			#clock-cells = <0>;
+> @@ -91,23 +91,21 @@
+>   	mb_intc: dw-apb-ictl@0xe0012000 {
+>   		#interrupt-cells = <1>;
+>   		compatible = "snps,dw-apb-ictl";
+> -		reg = < 0xe0012000 0x200 >;
+> +		reg = < 0x0 0xe0012000 0x0 0x200 >;
+>   		interrupt-controller;
+>   		interrupt-parent = <&core_intc>;
+>   		interrupts = < 7 >;
+>   	};
+>   
+>   	memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x00000000 0x80000000 0x20000000>;
+>   		device_type = "memory";
+> -		reg = <0x80000000 0x1b000000>;	/* (512 - 32) MiB */
+> +		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
+> +		reg = <0x0 0x80000000 0x0 0x1b000000>;	/* (512 - 32) MiB */
+>   	};
+>   
+>   	reserved-memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+>   		ranges;
+>   		/*
+>   		 * We just move frame buffer area to the very end of
+> @@ -118,7 +116,7 @@
+>   		 */
+>   		frame_buffer: frame_buffer@9e000000 {
+>   			compatible = "shared-dma-pool";
+> -			reg = <0x9e000000 0x2000000>;
+> +			reg = <0x0 0x9e000000 0x0 0x2000000>;
+>   			no-map;
+>   		};
+>   	};
+> diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
+> index 14df46f..cc9239e 100644
+> --- a/arch/arc/boot/dts/axc003.dtsi
+> +++ b/arch/arc/boot/dts/axc003.dtsi
+> @@ -14,15 +14,15 @@
+>   
+>   / {
+>   	compatible = "snps,arc";
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+>   
+>   	cpu_card {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+>   
+> -		ranges = <0x00000000 0xf0000000 0x10000000>;
+> +		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+>   
+>   		core_clk: core_clk {
+>   			#clock-cells = <0>;
+> @@ -94,30 +94,29 @@
+>   	mb_intc: dw-apb-ictl@0xe0012000 {
+>   		#interrupt-cells = <1>;
+>   		compatible = "snps,dw-apb-ictl";
+> -		reg = < 0xe0012000 0x200 >;
+> +		reg = < 0x0 0xe0012000 0x0 0x200 >;
+>   		interrupt-controller;
+>   		interrupt-parent = <&core_intc>;
+>   		interrupts = < 24 >;
+>   	};
+>   
+>   	memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x00000000 0x80000000 0x40000000>;
+>   		device_type = "memory";
+> -		reg = <0x80000000 0x20000000>;	/* 512MiB */
+> +		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
+> +		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MiB low mem */
+> +		       0x1 0xc0000000 0x0 0x40000000>;	/* 1 GiB highmem */
+>   	};
+>   
+>   	reserved-memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+>   		ranges;
+>   		/*
+>   		 * Move frame buffer out of IOC aperture (0x8z-0xAz).
+>   		 */
+>   		frame_buffer: frame_buffer@be000000 {
+>   			compatible = "shared-dma-pool";
+> -			reg = <0xbe000000 0x2000000>;
+> +			reg = <0x0 0xbe000000 0x0 0x2000000>;
+>   			no-map;
+>   		};
+>   	};
+> diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
+> index 695f9fa..4ebb2170 100644
+> --- a/arch/arc/boot/dts/axc003_idu.dtsi
+> +++ b/arch/arc/boot/dts/axc003_idu.dtsi
+> @@ -14,15 +14,15 @@
+>   
+>   / {
+>   	compatible = "snps,arc";
+> -	#address-cells = <1>;
+> -	#size-cells = <1>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+>   
+>   	cpu_card {
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+>   
+> -		ranges = <0x00000000 0xf0000000 0x10000000>;
+> +		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+>   
+>   		core_clk: core_clk {
+>   			#clock-cells = <0>;
+> @@ -100,30 +100,29 @@
+>   	mb_intc: dw-apb-ictl@0xe0012000 {
+>   		#interrupt-cells = <1>;
+>   		compatible = "snps,dw-apb-ictl";
+> -		reg = < 0xe0012000 0x200 >;
+> +		reg = < 0x0 0xe0012000 0x0 0x200 >;
+>   		interrupt-controller;
+>   		interrupt-parent = <&idu_intc>;
+>   		interrupts = <0>;
+>   	};
+>   
+>   	memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ranges = <0x00000000 0x80000000 0x40000000>;
+>   		device_type = "memory";
+> -		reg = <0x80000000 0x20000000>;	/* 512MiB */
+> +		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
+> +		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MiB low mem */
+> +		       0x1 0xc0000000 0x0 0x40000000>;	/* 1 GiB highmem */
+>   	};
+>   
+>   	reserved-memory {
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+>   		ranges;
+>   		/*
+>   		 * Move frame buffer out of IOC aperture (0x8z-0xAz).
+>   		 */
+>   		frame_buffer: frame_buffer@be000000 {
+>   			compatible = "shared-dma-pool";
+> -			reg = <0xbe000000 0x2000000>;
+> +			reg = <0x0 0xbe000000 0x0 0x2000000>;
+>   			no-map;
+>   		};
+>   	};
+> diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+> index 41cfb29..0ff7e07 100644
+> --- a/arch/arc/boot/dts/axs10x_mb.dtsi
+> +++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+> @@ -13,7 +13,7 @@
+>   		compatible = "simple-bus";
+>   		#address-cells = <1>;
+>   		#size-cells = <1>;
+> -		ranges = <0x00000000 0xe0000000 0x10000000>;
+> +		ranges = <0x00000000 0x0 0xe0000000 0x10000000>;
+>   		interrupt-parent = <&mb_intc>;
+>   
+>   		i2sclk: i2sclk@100a0 {
 
-Will reply to the individual patches, thanks for getting this out.
-
->>
->> If the changes to genirq are not acceptable I can implement the
->> irq_mask_ask method locally in the irq-brcmstb-l2 driver and submit
->> that on its own.
->>
->> Doug Berger (5):
->>   genirq: generic chip: add generic irq_mask_ack functions
->>   genirq: generic chip: remove irq_gc_mask_disable_reg_and_ack()
->>   irqchip: brcmstb-l2: Remove some processing from the handler
->>   irqchip: brcmstb-l2: Abstract register accesses
->>   irqchip: brcmstb-l2: Add support for the BCM7271 L2 controller
->>
->> Florian Fainelli (1):
->>   irqchip/tango: Use irq_gc_mask_disable_and_ack_set
->>
->>  .../bindings/interrupt-controller/brcm,l2-intc.txt |   3 +-
->>  drivers/irqchip/irq-brcmstb-l2.c                   | 145 ++++++++++++++-------
->>  drivers/irqchip/irq-tango.c                        |   2 +-
->>  include/linux/irq.h                                |   7 +-
->>  kernel/irq/generic-chip.c                          | 110 +++++++++++++++-
->>  5 files changed, 214 insertions(+), 53 deletions(-)
->>
-> 
-
-
--- 
-Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
