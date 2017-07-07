@@ -1,789 +1,195 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH 2/2] phy: Add stingray usb phy driver
-Date: Fri,  7 Jul 2017 18:37:05 +0530
-Message-ID: <1499432825-15820-3-git-send-email-srinath.mannam@broadcom.com>
-References: <1499432825-15820-1-git-send-email-srinath.mannam@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499432825-15820-1-git-send-email-srinath.mannam@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v16 2/7] power: add power sequence library
+Date: Fri, 07 Jul 2017 15:03:06 +0200
+Message-ID: <2042394.b4eZkzrJ5f@aspire.rjw.lan>
+References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com> <2629938.X3D3UTyHBr@aspire.rjw.lan> <20170707080107.GC21909@b29397-desktop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170707080107.GC21909@b29397-desktop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Peter Chen <peter.chen@nxp.com>, mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org, jun.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-USB phy driver for stingray USB DRDU3 and DRDU2/USB3H
-phy modules
+On Friday, July 07, 2017 04:01:07 PM Peter Chen wrote:
+> On Fri, Jul 07, 2017 at 03:13:48AM +0200, Rafael J. Wysocki wrote:
+> > > 
+> > > - Can I write new code for it or I need to depend on something?
+> > 
+> > There is nothing this code needs to depend on AFAICS, but there are existing
+> > solutions in this problem space (ACPI power management, genpd), so it needs to
+> > be careful enough about possible overlaps etc.
+> > 
+> > > I find there is already "power state" concept at documentation.
+> > > Documentation/ABI/testing/sysfs-devices-power_state
+> > 
+> > This is ACPI-specific and only in sysfs directories representing ACPI device
+> > objects (which aren't physical devices).
+> > 
+> > Anyway, since ACPI covers the problem space you are working in already,
+> > your code has to be mutually exclusive with it.
+> > 
+> > > - If I can write the new code for it, except the problems I want
+> > > to fix, are there any other use cases I need to consider?
+> > 
+> > I would start simple and focus on the particular problem at hand, that is
+> > devices with two power states ("on" and "off") where the "on" state
+> > depends on a number of clocks and/or GPIOs.  Still, I'd also avoid making
+> > design choices that might prevent it from being extended in the future
+> > if need be.
+> > 
+> > One major problem I can see is how to "attach" the power states framework
+> > to a particular device (once we have discovered that it should be used with
+> > that device).
+> > 
+> > For bus types that don't do power management of their own you could follow
+> > ACPI (and genpd) and provide a PM domain for this purpose, but bus types
+> > doing their own PM (like USB) will probably need to be treated differently.
+> > In those cases the bus type code will have to know that it should call some
+> > helpers to switch power states of devices.
+> > 
+> 
+> After thinking more, using a power state framework is seems too heavy
+> for this use case. This use case is just do some clock and gpio
+> operations before device is created, and do some put operations
+> after device is deleted. We just need some helpers in one structure
+> (called "power sequence" or "power state") for this purpose.
+> 
+> For the use case, the clock and gpio operation can be done after device
+> is created, the power domain is more suitable.
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+There is a problem with PM domains that they only provide hooks for runtime PM
+and system suspend/resume (including hibernation) and not for generic
+"power up" and "power down" operations that may need to be carried out at
+probe time before the runtime PM framework can be used (and analogously
+at remove time).
+
+I would consider starting with the patch below or similar.
+
+Then you can define something like POWER_STATE_SEQUENCE type for your
+case and basically use almost what you have already with it, except that
+struct pwrsec_generic will now become struct power_state_sequence and
+struct power_state_info will be embedded in it instead of struct pwrsec.
+
+The major comceptual difference is that ->power_up and ->power_down are
+now available at the level of the device that needs the power sequence and
+pm_device_power_up/down() can be used wherever necessary (in the code,
+in a bus type, in a controller driver or even in the driver for this particular
+device).
+
+Most likely you will need a PM domain in addition to that, but mostly to avoid
+code duplication.
+
+And in the future other types of power state definitions may be hooked up
+to that, including ACPI etc.
+
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/phy/broadcom/Kconfig                |  13 +
- drivers/phy/broadcom/Makefile               |   1 +
- drivers/phy/broadcom/phy-bcm-stingray-usb.c | 722 ++++++++++++++++++++++++++++
- 3 files changed, 736 insertions(+)
- create mode 100644 drivers/phy/broadcom/phy-bcm-stingray-usb.c
+ drivers/base/power/common.c |   35 +++++++++++++++++++++++++++++++++++
+ include/linux/pm.h          |   33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
 
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index 37371b8..185a84b 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -58,6 +58,19 @@ config PHY_NS2_USB_DRD
+Index: linux-pm/include/linux/pm.h
+===================================================================
+--- linux-pm.orig/include/linux/pm.h
++++ linux-pm/include/linux/pm.h
+@@ -550,6 +550,30 @@ struct pm_subsys_data {
+ #endif
+ };
  
- 	  If unsure, say N.
++enum power_state_type {
++	POWER_STATE_GENERIC = 0,
++};
++
++/**
++ * struct power_state_info - information related to device power states.
++ *
++ * @type: Power states definition type.
++ * @power_up: Device power up method.
++ * @power_down: Device power down method.
++ *
++ * @power_up is expected to put the device into a power state in which it can
++ * be operated by software (it doesn't have to be the full power state in
++ * principle as long as the device will respond to all software accesses in
++ * this state) and @power_down is expected to put the device into the lowest
++ * power state the device can be put into given all of the applicable
++ * constraints and limitations (it may not mean completely off).
++ */
++struct power_state_info {
++	enum power_state_type type;
++	int (*power_up)(struct device *dev);
++	int (*power_down)(struct device *dev);
++};
++
+ struct dev_pm_info {
+ 	pm_message_t		power_state;
+ 	unsigned int		can_wakeup:1;
+@@ -600,6 +624,7 @@ struct dev_pm_info {
+ 	unsigned long		active_jiffies;
+ 	unsigned long		suspended_jiffies;
+ 	unsigned long		accounting_timestamp;
++	struct power_state_info	*state;
+ #endif
+ 	struct pm_subsys_data	*subsys_data;  /* Owned by the subsystem. */
+ 	void (*set_latency_tolerance)(struct device *, s32);
+@@ -610,6 +635,14 @@ extern void update_pm_runtime_accounting
+ extern int dev_pm_get_subsys_data(struct device *dev);
+ extern void dev_pm_put_subsys_data(struct device *dev);
  
-+config PHY_STINGRAY_USB
-+	tristate "Broadcom Stingray USB2 DRD PHY driver"
-+	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GENERIC_PHY
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable this to support the Broadcom Stingray USB PHY for DRDU3,
-+	  DRDU2 and USB3H.
-+	  This driver initializes the PHY which can be used in both
-+	  Host and Device modes.
++#ifdef CONFIG_PM
++extern int pm_device_power_up(struct device *dev);
++extern int pm_device_power_down(struct device *dev);
++#else
++static inline int pm_device_power_up(struct device *dev) { return 0; }
++static inline int pm_device_power_down(struct device *dev) { return 0; }
++#endif /* CONFIG_PM */
 +
-+	  If unsure, say N.
+ /**
+  * struct dev_pm_domain - power management domain representation.
+  *
+Index: linux-pm/drivers/base/power/common.c
+===================================================================
+--- linux-pm.orig/drivers/base/power/common.c
++++ linux-pm/drivers/base/power/common.c
+@@ -152,3 +152,38 @@ void dev_pm_domain_set(struct device *de
+ 	device_pm_check_callbacks(dev);
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_domain_set);
 +
- config PHY_BRCM_SATA
- 	tristate "Broadcom SATA PHY driver"
- 	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
-diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
-index 4eb82ec..78c1033 100644
---- a/drivers/phy/broadcom/Makefile
-+++ b/drivers/phy/broadcom/Makefile
-@@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_BCM_NS_USB2)		+= phy-bcm-ns-usb2.o
- obj-$(CONFIG_PHY_BCM_NS_USB3)		+= phy-bcm-ns-usb3.o
- obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
- obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
-+obj-$(CONFIG_PHY_STINGRAY_USB)		+= phy-bcm-stingray-usb.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
-diff --git a/drivers/phy/broadcom/phy-bcm-stingray-usb.c b/drivers/phy/broadcom/phy-bcm-stingray-usb.c
-new file mode 100644
-index 0000000..03603fd
---- /dev/null
-+++ b/drivers/phy/broadcom/phy-bcm-stingray-usb.c
-@@ -0,0 +1,722 @@
-+/*
-+ * Copyright (C) 2017 Broadcom
++/**
++ * pm_device_power_up - Power up a device using the power states framework.
++ * @dev: Device to power up.
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
++ * Put the device into a power state in which it will respond to all software
++ * accesses (that may not mean maximum power) using the callback provided
++ * through the device power state framework, if present.
++ */
++int pm_device_power_up(struct device *dev)
++{
++	if (dev->power.state && dev->power.state->power_up)
++		return dev->power.state->power_up(dev);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pm_device_power_up);
++
++/**
++ * pm_device_power_down - Power down a device using the power states framework.
++ * @dev: Device to power down.
 + *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * Put the device into the lowest power state it can be put into given the
++ * applicable constraints and limitations (that may not mean maximum power)
++ * using the callback provided through the device power state framework, if
++ * present.
 + */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+
-+#define DRDU2_U2PLL_NDIV_FRAC           0x0
-+
-+#define DRDU2_U2PLL_NDIV_INT            0x4
-+
-+#define DRDU2_U2PLL_CTRL                0x8
-+#define DRDU2_U2PLL_LOCK                BIT(6)
-+#define DRDU2_U2PLL_RESETB              BIT(5)
-+#define DRDU2_U2PLL_PDIV_MASK           0xF
-+#define DRDU2_U2PLL_PDIV_OFFSET         1
-+#define DRDU2_U2PLL_SUSPEND_EN          BIT(0)
-+
-+#define DRDU2_PHY_CTRL                  0x0C
-+#define DRDU2_U2IDDQ                    BIT(30)
-+#define DRDU2_U2SOFT_RST_N              BIT(29)
-+#define DRDU2_U2PHY_ON_FLAG             BIT(22)
-+#define DRDU2_U2PHY_PCTL_MASK           0xFFFF
-+#define DRDU2_U2PHY_PCTL_OFFSET         6
-+#define DRDU2_U2PHY_RESETB              BIT(5)
-+#define DRDU2_U2PHY_ISO                 BIT(4)
-+#define DRDU2_U2AFE_BG_PWRDWNB          BIT(3)
-+#define DRDU2_U2AFE_PLL_PWRDWNB         BIT(2)
-+#define DRDU2_U2AFE_LDO_PWRDWNB         BIT(1)
-+#define DRDU2_U2CTRL_CORERDY            BIT(0)
-+
-+#define DRDU2_STRAP_CTRL                0x18
-+#define DRDU2_FORCE_HOST_MODE           BIT(5)
-+#define DRDU2_FORCE_DEVICE_MODE         BIT(4)
-+#define BDC_USB_STP_SPD_MASK            0x7
-+#define BDC_USB_STP_SPD_OFFSET          0
-+
-+#define DRDU2_PWR_CTRL                          0x1C
-+#define DRDU2_U2PHY_DFE_SWITCH_PWROKIN_I        BIT(2)
-+#define DRDU2_U2PHY_DFE_SWITCH_PWRONIN_I        BIT(1)
-+
-+#define DRDU2_SOFT_RESET_CTRL           0x20
-+#define DRDU2_BDC_AXI_SOFT_RST_N        BIT(0)
-+
-+#define USB3H_U2PLL_NDIV_FRAC           0x4
-+
-+#define USB3H_U2PLL_NDIV_INT            0x8
-+
-+#define USB3H_U2PLL_CTRL                0xC
-+#define USB3H_U2PLL_LOCK                BIT(6)
-+#define USB3H_U2PLL_RESETB              BIT(5)
-+#define USB3H_U2PLL_PDIV_MASK           0xF
-+#define USB3H_U2PLL_PDIV_OFFSET         1
-+
-+#define USB3H_U2PHY_CTRL                0x10
-+#define USB3H_U2PHY_ON_FLAG             22
-+#define USB3H_U2PHY_PCTL_MASK           0xFFFF
-+#define USB3H_U2PHY_PCTL_OFFSET         6
-+#define USB3H_U2PHY_RESETB              BIT(5)
-+#define USB3H_U2PHY_ISO                 BIT(4)
-+#define USB3H_U2AFE_BG_PWRDWNB          BIT(3)
-+#define USB3H_U2AFE_PLL_PWRDWNB         BIT(2)
-+#define USB3H_U2AFE_LDO_PWRDWNB         BIT(1)
-+#define USB3H_U2CTRL_CORERDY            BIT(0)
-+
-+#define USB3H_U3PHY_CTRL                0x14
-+#define USB3H_U3SOFT_RST_N              BIT(30)
-+#define USB3H_U3MDIO_RESETB_I           BIT(29)
-+#define USB3H_U3POR_RESET_I             BIT(28)
-+#define USB3H_U3PHY_PCTL_MASK           0xFFFF
-+#define USB3H_U3PHY_PCTL_OFFSET         2
-+#define USB3H_U3PHY_RESETB              BIT(1)
-+
-+#define USB3H_U3PHY_PLL_CTRL            0x18
-+#define USB3H_U3PLL_REFCLK_MASK         0x7
-+#define USB3H_U3PLL_REFCLK_OFFSET       4
-+#define USB3H_U3PLL_SS_LOCK             BIT(3)
-+#define USB3H_U3PLL_SEQ_START           BIT(2)
-+#define USB3H_U3SSPLL_SUSPEND_EN        BIT(1)
-+#define USB3H_U3PLL_RESETB              BIT(0)
-+
-+#define USB3H_PWR_CTRL                  0x28
-+#define USB3H_PWR_CTRL_OVERRIDE_I_R     4
-+
-+#define USB3H_SOFT_RESET_CTRL           0x2C
-+#define USB3H_XHC_AXI_SOFT_RST_N        BIT(1)
-+
-+#define USB3H_PHY_PWR_CTRL              0x38
-+#define USB3H_DISABLE_USB30_P0          BIT(2)
-+#define USB3H_DISABLE_EUSB_P1           BIT(1)
-+#define USB3H_DISABLE_EUSB_P0           BIT(0)
-+
-+
-+#define DRDU3_U2PLL_NDIV_FRAC           0x4
-+
-+#define DRDU3_U2PLL_NDIV_INT            0x8
-+
-+#define DRDU3_U2PLL_CTRL                0xC
-+#define DRDU3_U2PLL_LOCK                BIT(6)
-+#define DRDU3_U2PLL_RESETB              BIT(5)
-+#define DRDU3_U2PLL_PDIV_MASK           0xF
-+#define DRDU3_U2PLL_PDIV_OFFSET         1
-+
-+#define DRDU3_U2PHY_CTRL                0x10
-+#define DRDU3_U2PHY_ON_FLAG             BIT(22)
-+#define DRDU3_U2PHY_PCTL_MASK           0xFFFF
-+#define DRDU3_U2PHY_PCTL_OFFSET         6
-+#define DRDU3_U2PHY_RESETB              BIT(5)
-+#define DRDU3_U2PHY_ISO                 BIT(4)
-+#define DRDU3_U2AFE_BG_PWRDWNB          BIT(3)
-+#define DRDU3_U2AFE_PLL_PWRDWNB         BIT(2)
-+#define DRDU3_U2AFE_LDO_PWRDWNB         BIT(1)
-+#define DRDU3_U2CTRL_CORERDY            BIT(0)
-+
-+#define DRDU3_U3PHY_CTRL                0x14
-+#define DRDU3_U3XHC_SOFT_RST_N          BIT(31)
-+#define DRDU3_U3BDC_SOFT_RST_N          BIT(30)
-+#define DRDU3_U3MDIO_RESETB_I           BIT(29)
-+#define DRDU3_U3POR_RESET_I             BIT(28)
-+#define DRDU3_U3PHY_PCTL_MASK           0xFFFF
-+#define DRDU3_U3PHY_PCTL_OFFSET         2
-+#define DRDU3_U3PHY_RESETB              BIT(1)
-+
-+#define DRDU3_U3PHY_PLL_CTRL            0x18
-+#define DRDU3_U3PLL_REFCLK_MASK         0x7
-+#define DRDU3_U3PLL_REFCLK_OFFSET       4
-+#define DRDU3_U3PLL_SS_LOCK             BIT(3)
-+#define DRDU3_U3PLL_SEQ_START           BIT(2)
-+#define DRDU3_U3SSPLL_SUSPEND_EN        BIT(1)
-+#define DRDU3_U3PLL_RESETB              BIT(0)
-+
-+#define DRDU3_STRAP_CTRL                0x28
-+#define BDC_USB_STP_SPD_MASK            0x7
-+#define BDC_USB_STP_SPD_OFFSET          0
-+#define BDC_USB_STP_SPD_SS              0x0
-+#define BDC_USB_STP_SPD_HS              0x2
-+
-+#define DRDU3_PWR_CTRL                  0x2c
-+#define DRDU3_PWR_CTRL_OVERRIDE_I_R     4
-+
-+#define DRDU3_SOFT_RESET_CTRL           0x30
-+#define DRDU3_XHC_AXI_SOFT_RST_N        BIT(1)
-+#define DRDU3_BDC_AXI_SOFT_RST_N        BIT(0)
-+
-+#define DRDU3_PHY_PWR_CTRL              0x3c
-+#define DRDU3_DISABLE_USB30_P0          BIT(2)
-+#define DRDU3_DISABLE_EUSB_P1           BIT(1)
-+#define DRDU3_DISABLE_EUSB_P0           BIT(0)
-+
-+#define PLL_REFCLK_PAD                  0x0
-+#define PLL_REFCLK_25MHZ                0x1
-+#define PLL_REFCLK_96MHZ                0x2
-+#define PLL_REFCLK_INTERNAL             0x3
-+#define PLL_LOCK_RETRY_COUNT            1000
-+
-+
-+#define U2PLL_NDIV_INT_VAL              0x13
-+#define U2PLL_NDIV_FRAC_VAL             0x1005
-+#define U2PLL_PDIV_VAL                  0x1
-+/*
-+ * 0x0806 of PCTL_VAL has below bits set
-+ * BIT-8 : refclk divider 1
-+ * BIT-3:2: device mode; mode is not effect
-+ * BIT-1: soft reset active low
-+ */
-+#define U2PHY_PCTL_VAL                  0x0806
-+#define U3PHY_PCTL_VAL                  0x0006
-+
-+#define MAX_NR_PORTS                    3
-+
-+#define USB3H_DRDU2_PHY                 1
-+#define DRDU3_PHY                       2
-+
-+#define USB_HOST_MODE                   1
-+#define USB_DEV_MODE                    2
-+
-+#define USB3SS_PORT                     0
-+#define DRDU2_PORT                      1
-+#define USB3HS_PORT                     2
-+
-+#define DRD3SS_PORT                     0
-+#define DRD3HS_PORT                     1
-+
-+struct sr_usb_phy {
-+	void __iomem *drdu2reg;
-+	void __iomem *usb3hreg;
-+	void __iomem *drdu3reg;
-+	uint32_t phy_id;
-+	struct sr_usb_phy_port *phy_port;
-+};
-+
-+struct sr_usb_phy_port {
-+	uint32_t port_id;
-+	uint32_t mode;
-+	struct phy *gphy;
-+	struct sr_usb_phy *p;
-+};
-+
-+static inline void reg32_clrbits(void __iomem *addr, uint32_t clear)
++int pm_device_power_down(struct device *dev)
 +{
-+	writel(readl(addr) & ~clear, addr);
-+}
-+
-+static inline void reg32_setbits(void __iomem *addr, uint32_t set)
-+{
-+	writel(readl(addr) | set, addr);
-+}
-+
-+static int pll_lock_check(void __iomem *addr, u32 bit)
-+{
-+	int retry;
-+	u32 rd_data;
-+
-+	retry = PLL_LOCK_RETRY_COUNT;
-+	do {
-+		rd_data = readl(addr);
-+		if (rd_data & bit)
-+			return 0;
-+		udelay(1);
-+	} while (--retry > 0);
-+
-+	pr_err("%s: FAIL\n", __func__);
-+	return -ETIMEDOUT;
-+}
-+
-+static struct phy *bcm_usb_phy_xlate(struct device *dev,
-+		struct of_phandle_args *args)
-+{
-+	struct sr_usb_phy_port *phy_port = dev_get_drvdata(dev);
-+	struct sr_usb_phy *p;
-+
-+	if (!phy_port)
-+		return ERR_PTR(-EINVAL);
-+
-+	p = phy_port->p;
-+
-+	if (WARN_ON(args->args[0] < 1 || args->args[0] > 2))
-+		return ERR_PTR(-EINVAL);
-+
-+	if (WARN_ON(args->args_count < 1))
-+		return ERR_PTR(-EINVAL);
-+
-+	if ((p->phy_id == USB3H_DRDU2_PHY) && (phy_port->port_id == 0) &&
-+		(args->args[0] == USB_DEV_MODE))
-+		return ERR_PTR(-EINVAL);
-+
-+	phy_port->mode |= args->args[0];
-+
-+	return phy_port->gphy;
-+}
-+
-+static int usb3h_u2_phy_power_on(void __iomem *regs)
-+{
-+	u32 rd_data;
-+	int ret = 0;
-+
-+	/* Set Core Ready high */
-+	reg32_setbits(regs + USB3H_U2PHY_CTRL, USB3H_U2CTRL_CORERDY);
-+	msleep(100);
-+
-+	rd_data = readl(regs + USB3H_U2PHY_CTRL);
-+	rd_data &= ~(USB3H_U2PHY_PCTL_MASK << USB3H_U2PHY_PCTL_OFFSET);
-+	rd_data |= (U2PHY_PCTL_VAL << USB3H_U2PHY_PCTL_OFFSET);
-+	writel(rd_data, regs + USB3H_U2PHY_CTRL);
-+
-+	msleep(300);
-+	reg32_setbits(regs + USB3H_U2PLL_CTRL,
-+			USB3H_U2PLL_RESETB);
-+
-+	reg32_setbits(regs + USB3H_U2PHY_CTRL,
-+			USB3H_U2PHY_RESETB);
-+
-+	ret = pll_lock_check(regs + USB3H_U2PLL_CTRL, USB3H_U2PLL_LOCK);
-+
-+	return ret;
-+}
-+
-+
-+static int usb3h_u3_phy_power_on(void __iomem *regs)
-+{
-+	u32 rd_data;
-+	int ret = 0;
-+
-+	/* Set pctl with mode and soft reset */
-+	rd_data = readl(regs + USB3H_U3PHY_CTRL);
-+	rd_data &= ~(USB3H_U3PHY_PCTL_MASK << USB3H_U3PHY_PCTL_OFFSET);
-+	rd_data |= (U3PHY_PCTL_VAL << USB3H_U3PHY_PCTL_OFFSET);
-+	writel(rd_data, regs + USB3H_U3PHY_CTRL);
-+
-+	reg32_clrbits(regs + USB3H_U3PHY_PLL_CTRL,
-+			USB3H_U3SSPLL_SUSPEND_EN);
-+	reg32_setbits(regs + USB3H_U3PHY_PLL_CTRL,
-+			USB3H_U3PLL_SEQ_START);
-+	reg32_setbits(regs + USB3H_U3PHY_PLL_CTRL,
-+			USB3H_U3PLL_RESETB);
-+
-+	msleep(30);
-+
-+	ret = pll_lock_check(regs + USB3H_U3PHY_PLL_CTRL, USB3H_U3PLL_SS_LOCK);
-+
-+	return ret;
-+}
-+
-+
-+static int drdu3_u2_phy_power_on(void __iomem *regs)
-+{
-+	u32 rd_data;
-+	int ret = 0;
-+
-+	/* Set Core Ready high */
-+	reg32_setbits(regs + DRDU3_U2PHY_CTRL, DRDU3_U2CTRL_CORERDY);
-+
-+	msleep(100);
-+
-+	rd_data = readl(regs + DRDU3_STRAP_CTRL);
-+	rd_data &= (~(BDC_USB_STP_SPD_MASK << BDC_USB_STP_SPD_OFFSET));
-+	rd_data |= (BDC_USB_STP_SPD_SS << BDC_USB_STP_SPD_OFFSET);
-+	writel(rd_data, regs + DRDU3_STRAP_CTRL);
-+
-+	rd_data = readl(regs + DRDU3_U2PHY_CTRL);
-+	rd_data &= ~(DRDU3_U2PHY_PCTL_MASK << DRDU3_U2PHY_PCTL_OFFSET);
-+	rd_data |= (U2PHY_PCTL_VAL << DRDU3_U2PHY_PCTL_OFFSET);
-+	writel(rd_data, regs + DRDU3_U2PHY_CTRL);
-+
-+	msleep(300);
-+
-+	reg32_setbits(regs + DRDU3_U2PLL_CTRL,
-+			DRDU3_U2PLL_RESETB);
-+
-+	reg32_setbits(regs + DRDU3_U2PHY_CTRL,
-+			DRDU3_U2PHY_RESETB);
-+
-+	ret = pll_lock_check(regs + DRDU3_U2PLL_CTRL, DRDU3_U2PLL_LOCK);
-+
-+	return ret;
-+}
-+
-+static int drdu3_u3_phy_power_on(void __iomem *regs)
-+{
-+	u32 rd_data;
-+	int ret = 0;
-+
-+	/* Set pctl with mode and soft reset */
-+	rd_data = readl(regs + DRDU3_U3PHY_CTRL);
-+	rd_data &= ~(DRDU3_U3PHY_PCTL_MASK << DRDU3_U3PHY_PCTL_OFFSET);
-+	rd_data |= (U3PHY_PCTL_VAL << DRDU3_U3PHY_PCTL_OFFSET);
-+	writel(rd_data, regs + DRDU3_U3PHY_CTRL);
-+
-+	reg32_clrbits(regs + DRDU3_U3PHY_PLL_CTRL,
-+			DRDU3_U3SSPLL_SUSPEND_EN);
-+	reg32_setbits(regs + DRDU3_U3PHY_PLL_CTRL,
-+			DRDU3_U3PLL_SEQ_START);
-+	reg32_setbits(regs + DRDU3_U3PHY_PLL_CTRL,
-+			DRDU3_U3PLL_RESETB);
-+
-+	msleep(30);
-+
-+	ret = pll_lock_check(regs + DRDU3_U3PHY_PLL_CTRL, DRDU3_U3PLL_SS_LOCK);
-+
-+	return ret;
-+}
-+
-+
-+static int drdu2_u2_phy_power_on(void __iomem *regs)
-+{
-+	u32 rd_data;
-+	int ret = 0;
-+
-+	writel(U2PLL_NDIV_INT_VAL, regs + DRDU2_U2PLL_NDIV_INT);
-+	writel(U2PLL_NDIV_FRAC_VAL, regs + DRDU2_U2PLL_NDIV_FRAC);
-+
-+	rd_data = readl(regs + DRDU2_U2PLL_CTRL);
-+	rd_data &= ~(DRDU2_U2PLL_PDIV_MASK << DRDU2_U2PLL_PDIV_OFFSET);
-+	rd_data |= (U2PLL_PDIV_VAL << DRDU2_U2PLL_PDIV_OFFSET);
-+	writel(rd_data, regs + DRDU2_U2PLL_CTRL);
-+
-+	reg32_setbits(regs + DRDU2_PHY_CTRL, DRDU2_U2CTRL_CORERDY);
-+
-+	msleep(100);
-+	reg32_setbits(regs + DRDU2_U2PLL_CTRL,
-+			DRDU2_U2PLL_RESETB);
-+
-+	reg32_setbits(regs + DRDU2_PHY_CTRL,
-+			DRDU2_U2PHY_RESETB);
-+
-+	rd_data = readl(regs + DRDU2_PHY_CTRL);
-+	rd_data &= ~(DRDU2_U2PHY_PCTL_MASK << DRDU2_U2PHY_PCTL_OFFSET);
-+	rd_data |= (U2PHY_PCTL_VAL << DRDU2_U2PHY_PCTL_OFFSET);
-+	writel(rd_data, regs + DRDU2_PHY_CTRL);
-+
-+	ret = pll_lock_check(regs + DRDU2_U2PLL_CTRL, DRDU2_U2PLL_LOCK);
-+
-+	return ret;
-+}
-+static int sr_u3h_u2drd_phy_reset(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+
-+	switch (phy_port->port_id) {
-+	case USB3HS_PORT:
-+		reg32_clrbits(p->usb3hreg + USB3H_U2PHY_CTRL,
-+				USB3H_U2CTRL_CORERDY);
-+		reg32_setbits(p->usb3hreg + USB3H_U2PHY_CTRL,
-+				USB3H_U2CTRL_CORERDY);
-+		break;
-+	case DRDU2_PORT:
-+		reg32_clrbits(p->drdu2reg + DRDU2_PHY_CTRL,
-+				DRDU2_U2CTRL_CORERDY);
-+		reg32_setbits(p->drdu2reg + DRDU2_PHY_CTRL,
-+				DRDU2_U2CTRL_CORERDY);
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static int sr_u3drd_phy_reset(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+
-+	switch (phy_port->port_id) {
-+	case DRD3HS_PORT:
-+		reg32_clrbits(p->drdu3reg + DRDU3_U2PHY_CTRL,
-+				DRDU3_U2CTRL_CORERDY);
-+		reg32_setbits(p->drdu3reg + DRDU3_U2PHY_CTRL,
-+				DRDU3_U2CTRL_CORERDY);
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static int sr_u3h_u2drd_phy_power_on(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+	int ret = 0;
-+
-+	switch (phy_port->port_id) {
-+	case USB3SS_PORT:
-+		reg32_clrbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				 USB3H_DISABLE_USB30_P0);
-+		ret = usb3h_u3_phy_power_on(p->usb3hreg);
-+		if (ret)
-+			goto err_usb3h_phy_on;
-+		break;
-+	case USB3HS_PORT:
-+		reg32_clrbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				USB3H_DISABLE_EUSB_P1);
-+		ret = usb3h_u2_phy_power_on(p->usb3hreg);
-+		if (ret)
-+			goto err_usb3h_phy_on;
-+
-+		break;
-+	case DRDU2_PORT:
-+		reg32_clrbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				USB3H_DISABLE_EUSB_P0);
-+
-+		ret = drdu2_u2_phy_power_on(p->drdu2reg);
-+		if (ret) {
-+			reg32_setbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+					USB3H_DISABLE_EUSB_P0);
-+			goto err_drdu2_phy_on;
-+		}
-+		break;
-+	}
-+
-+	/* Device Mode */
-+	if (phy_port->port_id == DRDU2_PORT) {
-+		writel(DRDU2_BDC_AXI_SOFT_RST_N,
-+				p->drdu2reg + DRDU2_SOFT_RESET_CTRL);
-+		reg32_setbits(p->drdu2reg + DRDU2_PHY_CTRL,
-+				DRDU2_U2SOFT_RST_N);
-+	}
-+	/* Host Mode */
-+	writel(USB3H_XHC_AXI_SOFT_RST_N,
-+			p->usb3hreg + USB3H_SOFT_RESET_CTRL);
-+	reg32_setbits(p->usb3hreg + USB3H_U3PHY_CTRL,
-+			USB3H_U3SOFT_RST_N);
-+
-+	return 0;
-+err_usb3h_phy_on:
-+	reg32_setbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+			(USB3H_DISABLE_EUSB_P1 |
-+			 USB3H_DISABLE_USB30_P0));
-+err_drdu2_phy_on:
-+
-+	return ret;
-+}
-+
-+static int sr_u3drd_phy_power_on(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+	int ret = 0;
-+
-+	switch (phy_port->port_id) {
-+	case DRD3SS_PORT:
-+		reg32_clrbits(p->drdu3reg + USB3H_PHY_PWR_CTRL,
-+				DRDU3_DISABLE_USB30_P0);
-+
-+		ret = drdu3_u3_phy_power_on(p->drdu3reg);
-+		if (ret)
-+			goto err_drdu3_phy_on;
-+		break;
-+	case DRD3HS_PORT:
-+		reg32_clrbits(p->drdu3reg + USB3H_PHY_PWR_CTRL,
-+				DRDU3_DISABLE_EUSB_P0);
-+			ret = drdu3_u2_phy_power_on(p->drdu3reg);
-+		if (ret)
-+			goto err_drdu3_phy_on;
-+		break;
-+	}
-+	/* Host Mode */
-+	reg32_setbits(p->drdu3reg + DRDU3_SOFT_RESET_CTRL,
-+			DRDU3_XHC_AXI_SOFT_RST_N);
-+	reg32_setbits(p->drdu3reg + DRDU3_U3PHY_CTRL,
-+			DRDU3_U3XHC_SOFT_RST_N);
-+	/* Device Mode */
-+	reg32_setbits(p->drdu3reg + DRDU3_SOFT_RESET_CTRL,
-+			DRDU3_BDC_AXI_SOFT_RST_N);
-+	reg32_setbits(p->drdu3reg + DRDU3_U3PHY_CTRL,
-+			DRDU3_U3BDC_SOFT_RST_N);
-+
-+	return 0;
-+err_drdu3_phy_on:
-+	reg32_setbits(p->drdu3reg + DRDU3_PHY_PWR_CTRL,
-+			(DRDU3_DISABLE_EUSB_P0 |
-+			 DRDU3_DISABLE_USB30_P0));
-+
-+	return ret;
-+}
-+
-+static int sr_u3h_u2drd_phy_power_off(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+
-+	switch (phy_port->port_id) {
-+	case USB3SS_PORT:
-+		reg32_setbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				 USB3H_DISABLE_USB30_P0);
-+		break;
-+	case USB3HS_PORT:
-+		reg32_setbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				USB3H_DISABLE_EUSB_P1);
-+		break;
-+	case DRDU2_PORT:
-+		reg32_setbits(p->usb3hreg + USB3H_PHY_PWR_CTRL,
-+				USB3H_DISABLE_EUSB_P0);
-+		break;
-+	}
++	if (dev->power.state && dev->power.state->power_down)
++		return dev->power.state->power_down(dev);
 +
 +	return 0;
 +}
-+
-+static int sr_u3drd_phy_power_off(struct phy *gphy)
-+{
-+	struct sr_usb_phy_port *phy_port = phy_get_drvdata(gphy);
-+	struct sr_usb_phy *p = phy_port->p;
-+
-+	switch (phy_port->port_id) {
-+	case DRD3SS_PORT:
-+		reg32_setbits(p->drdu3reg + DRDU3_PHY_PWR_CTRL,
-+				 DRDU3_DISABLE_USB30_P0);
-+		break;
-+	case DRD3HS_PORT:
-+		reg32_setbits(p->drdu3reg + DRDU3_PHY_PWR_CTRL,
-+				DRDU3_DISABLE_EUSB_P0);
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static struct phy_ops sr_u3h_u2drd_phy_ops = {
-+	.power_on	= sr_u3h_u2drd_phy_power_on,
-+	.power_off	= sr_u3h_u2drd_phy_power_off,
-+	.reset		= sr_u3h_u2drd_phy_reset,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static struct phy_ops sr_u3drd_phy_ops = {
-+	.power_on	= sr_u3drd_phy_power_on,
-+	.power_off	= sr_u3drd_phy_power_off,
-+	.reset		= sr_u3drd_phy_reset,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id sr_usb_phy_of_match[] = {
-+	{
-+		.compatible = "brcm,sr-u3h-u2drd-phy",
-+		.data = &sr_u3h_u2drd_phy_ops,
-+	},
-+	{
-+		.compatible = "brcm,sr-u3drd-phy",
-+		.data = &sr_u3drd_phy_ops,
-+	},
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(of, sr_usb_phy_of_match);
-+
-+static int sr_usb_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct sr_usb_phy *p;
-+	struct device_node *dn = dev->of_node, *child;
-+	struct resource *res;
-+	struct phy *gphy;
-+	const struct phy_ops *ops;
-+	struct phy_provider *phy_provider;
-+	const struct of_device_id *match;
-+	struct sr_usb_phy_port *phy_port;
-+	uint32_t child_cnt, cnt = 0;
-+
-+	match = of_match_node(sr_usb_phy_of_match, dn);
-+	if (!match) {
-+		dev_err(dev, "of_match_node() failed\n");
-+		return -EINVAL;
-+	}
-+	ops = match->data;
-+
-+	child_cnt = of_get_child_count(dn);
-+	if (!child_cnt || child_cnt > MAX_NR_PORTS)
-+		return -ENODEV;
-+
-+	p = devm_kzalloc(dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->phy_port = devm_kcalloc(dev, child_cnt,
-+			sizeof(struct sr_usb_phy_port),
-+			GFP_KERNEL);
-+	if (!p->phy_port)
-+		return -ENOMEM;
-+
-+	if (of_device_is_compatible(dn, "brcm,sr-u3h-u2drd-phy")) {
-+		void __iomem *drdu2reg, *usb3hreg;
-+
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+							"drdu2");
-+		drdu2reg = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(drdu2reg))
-+			return PTR_ERR(drdu2reg);
-+
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+							"usb3h");
-+		usb3hreg = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(usb3hreg))
-+			return PTR_ERR(usb3hreg);
-+
-+		p->drdu2reg = drdu2reg;
-+		p->usb3hreg = usb3hreg;
-+		p->phy_id = USB3H_DRDU2_PHY;
-+	}
-+	if (of_device_is_compatible(dn, "brcm,sr-u3drd-phy")) {
-+		void __iomem *drdu3reg;
-+
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-+							"drdu3");
-+		drdu3reg = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(drdu3reg))
-+			return PTR_ERR(drdu3reg);
-+
-+		p->drdu3reg = drdu3reg;
-+		p->phy_id = DRDU3_PHY;
-+	}
-+
-+	for_each_available_child_of_node(dn, child) {
-+		phy_port = &p->phy_port[cnt];
-+		if (of_property_read_u32(child, "reg", &phy_port->port_id)) {
-+			dev_err(dev, "missing reg property in node %s\n",
-+					child->name);
-+			return -EINVAL;
-+		}
-+		if (phy_port->port_id >= MAX_NR_PORTS)
-+			return -EINVAL;
-+
-+		gphy = devm_phy_create(dev, child, ops);
-+		if (IS_ERR(gphy))
-+			return PTR_ERR(gphy);
-+
-+		phy_set_drvdata(gphy, phy_port);
-+		dev_set_drvdata(&gphy->dev, phy_port);
-+		phy_provider = devm_of_phy_provider_register(&gphy->dev,
-+				bcm_usb_phy_xlate);
-+		if (IS_ERR(phy_provider)) {
-+			dev_err(dev, "Failed to register phy provider\n");
-+			return PTR_ERR(phy_provider);
-+		}
-+		phy_port->gphy = gphy;
-+		phy_port->p = p;
-+		cnt++;
-+	}
-+
-+	return 0;
-+}
-+
-+static struct platform_driver sr_usb_phy_driver = {
-+	.driver = {
-+		.name = "phy-bcm-sr-usb",
-+		.of_match_table = sr_usb_phy_of_match,
-+	},
-+	.probe = sr_usb_phy_probe,
-+};
-+module_platform_driver(sr_usb_phy_driver);
-+
-+MODULE_AUTHOR("Broadcom");
-+MODULE_DESCRIPTION("Broadcom stingray USB Phy driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
++EXPORT_SYMBOL_GPL(pm_device_power_down);
