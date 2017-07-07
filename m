@@ -1,45 +1,23 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: [PATCH] Documentation/devicetree: fix dead links to PCI/OF specs
-Date: Thu,  6 Jul 2017 17:43:23 -0700
-Message-ID: <20170707004323.22550-1-briannorris@chromium.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Brian Norris <briannorris@chromium.org>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v4 0/2] Add ASPEED watchdog device tree properties
+Date: Thu,  6 Jul 2017 19:48:58 -0500
+Message-ID: <20170707004901.26780-1-cbostic@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-www.firmware.org doesn't resolve for me. I found these equivalent URLs
-by taking the redirects from the previous (openfirmware.org) URLs, as
-seen before commit f517256a6867 ("Documentation/devicetree: Update PCI
-Device Tree bindings") updated them.
+Document device tree optional properties for ASPEED watchdog.
+Reference properties in ASPEED watchdog driver and configure accordingly.
 
-Signed-off-by: Brian Norris <briannorris@chromium.org>
----
-This is my best attempt at a resolution. I'm not sure what firmware.org is or
-if its owner is even legit. It does seem like openfirmware.info is a proper
-successor to openfirmware.org, and it's registered to a coreboot dev.
+Christopher Bostic (2):
+  drivers/watchdog: Add optional ASPEED device tree properties
+  drivers/watchdog: ASPEED reference dev tree properties for config
 
- Documentation/devicetree/bindings/pci/pci.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 35 ++++++++++++++++++++++
+ drivers/watchdog/aspeed_wdt.c                      | 27 +++++++++++++----
+ 2 files changed, 57 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index 50f9e2ca5b13..13a73b423233 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -1,12 +1,12 @@
- PCI bus bridges have standardized Device Tree bindings:
- 
- PCI Bus Binding to: IEEE Std 1275-1994
--http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
-+https://www.openfirmware.info/data/docs/bus.pci.pdf
- 
- And for the interrupt mapping part:
- 
- Open Firmware Recommended Practice: Interrupt Mapping
--http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
-+https://www.openfirmware.info/data/docs/rec.intmap.d09.pdf
- 
- Additionally to the properties specified in the above standards a host bridge
- driver implementation may support the following properties:
 -- 
-2.13.2.725.g09c95d1e9-goog
+1.8.2.2
