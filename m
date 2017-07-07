@@ -1,195 +1,132 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v16 2/7] power: add power sequence library
-Date: Fri, 07 Jul 2017 15:03:06 +0200
-Message-ID: <2042394.b4eZkzrJ5f@aspire.rjw.lan>
-References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com> <2629938.X3D3UTyHBr@aspire.rjw.lan> <20170707080107.GC21909@b29397-desktop>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Fri, 7 Jul 2017 18:42:21 +0530
+Message-ID: <CABb+yY1U8u1sJUH7NeDDxNRUafABmsYaPOXZCWOYctw1PbT7hw@mail.gmail.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+ <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+ <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com> <73cf3d55-f2ec-eb15-746a-0db5e7e28dad@arm.com>
+ <CABb+yY04F0zuiD8iW=m2wPCqftoe+VmcGzzRCXp184JKr25KPw@mail.gmail.com>
+ <1e1fc7b3-ba5a-da30-a601-3b79122ff959@arm.com> <CABb+yY3QRz9pcSTMsgNUnBkzQAedFFbbwu0fXY-2oJCFARz60g@mail.gmail.com>
+ <012a9039-23e0-be8c-add9-2c0e83a1d97e@arm.com> <CABb+yY3GdAGeWUUyFfofff7Y9=j5DK-QcLXua1o-a6Hb_+nNcQ@mail.gmail.com>
+ <36ea8010-f22a-e0d9-b9a9-bb6be19db45d@arm.com> <CABb+yY0j--t-VcOJnMxq25gnsb+QGi5ifw_K4qu1vgTJjKXBxg@mail.gmail.com>
+ <aef7fc89-5e4d-95c6-cee3-444c4c89a113@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170707080107.GC21909@b29397-desktop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Peter Chen <peter.chen@nxp.com>, mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org, jun.li@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <aef7fc89-5e4d-95c6-cee3-444c4c89a113-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, July 07, 2017 04:01:07 PM Peter Chen wrote:
-> On Fri, Jul 07, 2017 at 03:13:48AM +0200, Rafael J. Wysocki wrote:
-> > > 
-> > > - Can I write new code for it or I need to depend on something?
-> > 
-> > There is nothing this code needs to depend on AFAICS, but there are existing
-> > solutions in this problem space (ACPI power management, genpd), so it needs to
-> > be careful enough about possible overlaps etc.
-> > 
-> > > I find there is already "power state" concept at documentation.
-> > > Documentation/ABI/testing/sysfs-devices-power_state
-> > 
-> > This is ACPI-specific and only in sysfs directories representing ACPI device
-> > objects (which aren't physical devices).
-> > 
-> > Anyway, since ACPI covers the problem space you are working in already,
-> > your code has to be mutually exclusive with it.
-> > 
-> > > - If I can write the new code for it, except the problems I want
-> > > to fix, are there any other use cases I need to consider?
-> > 
-> > I would start simple and focus on the particular problem at hand, that is
-> > devices with two power states ("on" and "off") where the "on" state
-> > depends on a number of clocks and/or GPIOs.  Still, I'd also avoid making
-> > design choices that might prevent it from being extended in the future
-> > if need be.
-> > 
-> > One major problem I can see is how to "attach" the power states framework
-> > to a particular device (once we have discovered that it should be used with
-> > that device).
-> > 
-> > For bus types that don't do power management of their own you could follow
-> > ACPI (and genpd) and provide a PM domain for this purpose, but bus types
-> > doing their own PM (like USB) will probably need to be treated differently.
-> > In those cases the bus type code will have to know that it should call some
-> > helpers to switch power states of devices.
-> > 
-> 
-> After thinking more, using a power state framework is seems too heavy
-> for this use case. This use case is just do some clock and gpio
-> operations before device is created, and do some put operations
-> after device is deleted. We just need some helpers in one structure
-> (called "power sequence" or "power state") for this purpose.
-> 
-> For the use case, the clock and gpio operation can be done after device
-> is created, the power domain is more suitable.
+On Fri, Jul 7, 2017 at 5:02 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+>
+> On 06/07/17 19:37, Jassi Brar wrote:
+>> On Thu, Jul 6, 2017 at 10:14 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>> On 06/07/17 15:37, Jassi Brar wrote:
+>>>> On Thu, Jul 6, 2017 at 3:03 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>
+>>
+>>>> I see no reason why you must have SCPI and SCMI both running.
+>>>>
+>>>
+>>> We can still have 2 different protocols using same MHU channel with
+>>> different doorbells, what's wrong with that ?
+>>>
+>> Only for SCMI and SCPI - both written by same person to achieve the
+>> same thing - I think it should not be necessary.
+>>
+>
+> Really ? you decide based on that and repeatedly ignore what ARM MHU
+> specification offers. Wow, I am surprised.
+>
+>> But yes, SCMI running alongside some complementary protocol (that
+>> implements what SCMI doesn't provide) is a very solid usecase. And
+>> that is the reason you need a platform specific 'transport layer'.
+>>
+>
+> The whole SCMI exercise is to reduce such platform specific code.
+> It's made to work with ACPI using doorbells via PCC channels. Now, you
+> say for DT we need per platform shim. Mailbox is my transport, why do I
+> need anything more as I don't care what is sent in mailbox controller as
+> long as the signal is sent to the other side.
+>
+>>>> And even then there is a solution - a shim arbitrator. Other
+>>>> platforms, those share a channel, do that. No big deal.
+>>>>
+>>>
+>>> Example please? Please remember these protocols are generic and we
+>>> can't add any platform specific code into them.
+>>>
+>> You do need to have platform specific glue as I said.
+>>
+>
+> Yes, please propose along bindings to do that as you are objecting the
+> one in $subject. I have asked you many times the same thing.
+>
+"platform specific transport layer"  =>  no generic bindings for the controller.
 
-There is a problem with PM domains that they only provide hooks for runtime PM
-and system suspend/resume (including hibernation) and not for generic
-"power up" and "power down" operations that may need to be carried out at
-probe time before the runtime PM framework can be used (and analogously
-at remove time).
+The bindings, that already exist for mailbox controllers plus what
+properties the SCMI need, are to be used by a thin platform specific
+driver to provide an interface to the generic SCMI implementation to
+send the "doorbell".
 
-I would consider starting with the patch below or similar.
+For example, look at how the common DWC3 driver is used by platforms
+that have different h/w integrations.
+   $ grep synopsys,dwc3 -rw -B15 arch/arm/boot/dts/
 
-Then you can define something like POWER_STATE_SEQUENCE type for your
-case and basically use almost what you have already with it, except that
-struct pwrsec_generic will now become struct power_state_sequence and
-struct power_state_info will be embedded in it instead of struct pwrsec.
+That is, SCMI node as a child of platform specific SCMI node. Or maybe
+even SCMI as a library kinda thing.
 
-The major comceptual difference is that ->power_up and ->power_down are
-now available at the level of the device that needs the power sequence and
-pm_device_power_up/down() can be used wherever necessary (in the code,
-in a bus type, in a controller driver or even in the driver for this particular
-device).
-
-Most likely you will need a PM domain in addition to that, but mostly to avoid
-code duplication.
-
-And in the future other types of power state definitions may be hooked up
-to that, including ACPI etc.
+I can't explain it any better.
 
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/base/power/common.c |   35 +++++++++++++++++++++++++++++++++++
- include/linux/pm.h          |   33 +++++++++++++++++++++++++++++++++
- 2 files changed, 68 insertions(+)
+>>>>  BTW, I hope you realise that we need a 'transport layer' which will
+>>>> be the platform specific glue between mailbox controller specifics and
+>>>> the generic SCMI code.
+>>>
+>>> Why ?
+>>>
+>> Because you should not restrict the usage of SCMI to only platforms
+>> with mailbox controller that does not require any information to
+>> trigger a signal on the other side -- what you call "doorbell".
+>>
+>
+> Indeed, it's restricted, read the specification....
+>
+Its a shame to hear that.
 
-Index: linux-pm/include/linux/pm.h
-===================================================================
---- linux-pm.orig/include/linux/pm.h
-+++ linux-pm/include/linux/pm.h
-@@ -550,6 +550,30 @@ struct pm_subsys_data {
- #endif
- };
- 
-+enum power_state_type {
-+	POWER_STATE_GENERIC = 0,
-+};
-+
-+/**
-+ * struct power_state_info - information related to device power states.
-+ *
-+ * @type: Power states definition type.
-+ * @power_up: Device power up method.
-+ * @power_down: Device power down method.
-+ *
-+ * @power_up is expected to put the device into a power state in which it can
-+ * be operated by software (it doesn't have to be the full power state in
-+ * principle as long as the device will respond to all software accesses in
-+ * this state) and @power_down is expected to put the device into the lowest
-+ * power state the device can be put into given all of the applicable
-+ * constraints and limitations (it may not mean completely off).
-+ */
-+struct power_state_info {
-+	enum power_state_type type;
-+	int (*power_up)(struct device *dev);
-+	int (*power_down)(struct device *dev);
-+};
-+
- struct dev_pm_info {
- 	pm_message_t		power_state;
- 	unsigned int		can_wakeup:1;
-@@ -600,6 +624,7 @@ struct dev_pm_info {
- 	unsigned long		active_jiffies;
- 	unsigned long		suspended_jiffies;
- 	unsigned long		accounting_timestamp;
-+	struct power_state_info	*state;
- #endif
- 	struct pm_subsys_data	*subsys_data;  /* Owned by the subsystem. */
- 	void (*set_latency_tolerance)(struct device *, s32);
-@@ -610,6 +635,14 @@ extern void update_pm_runtime_accounting
- extern int dev_pm_get_subsys_data(struct device *dev);
- extern void dev_pm_put_subsys_data(struct device *dev);
- 
-+#ifdef CONFIG_PM
-+extern int pm_device_power_up(struct device *dev);
-+extern int pm_device_power_down(struct device *dev);
-+#else
-+static inline int pm_device_power_up(struct device *dev) { return 0; }
-+static inline int pm_device_power_down(struct device *dev) { return 0; }
-+#endif /* CONFIG_PM */
-+
- /**
-  * struct dev_pm_domain - power management domain representation.
-  *
-Index: linux-pm/drivers/base/power/common.c
-===================================================================
---- linux-pm.orig/drivers/base/power/common.c
-+++ linux-pm/drivers/base/power/common.c
-@@ -152,3 +152,38 @@ void dev_pm_domain_set(struct device *de
- 	device_pm_check_callbacks(dev);
- }
- EXPORT_SYMBOL_GPL(dev_pm_domain_set);
-+
-+/**
-+ * pm_device_power_up - Power up a device using the power states framework.
-+ * @dev: Device to power up.
-+ *
-+ * Put the device into a power state in which it will respond to all software
-+ * accesses (that may not mean maximum power) using the callback provided
-+ * through the device power state framework, if present.
-+ */
-+int pm_device_power_up(struct device *dev)
-+{
-+	if (dev->power.state && dev->power.state->power_up)
-+		return dev->power.state->power_up(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pm_device_power_up);
-+
-+/**
-+ * pm_device_power_down - Power down a device using the power states framework.
-+ * @dev: Device to power down.
-+ *
-+ * Put the device into the lowest power state it can be put into given the
-+ * applicable constraints and limitations (that may not mean maximum power)
-+ * using the callback provided through the device power state framework, if
-+ * present.
-+ */
-+int pm_device_power_down(struct device *dev)
-+{
-+	if (dev->power.state && dev->power.state->power_down)
-+		return dev->power.state->power_down(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(pm_device_power_down);
+
+>> Why shouldn't Rockchip be able to implement SCMI? Just because it uses
+>> different mechanism to signal the other end?
+>>
+>
+> They can, all we need is just a mailbox channel, we don't care wants
+> sent in the controller as along as signal is sent. The shared memory has
+> to be as per the specification. I still don't know what I am missing to
+> convey you.
+>
+
+In scmi_do_xfer() you pass pointer to 'struct scmi_xfer' as 'data'. That is
+
+    mbox_send_message(struct mbox_chan *, struct scmi_xfer*);
+
+A controller driver defines is own format for the data it needs to
+send a message.
+
+For example, Rockchip driver expects
+rockchip_mbox_send_data(struct mbox_chan *, struct rockchip_mbox_msg *)
+
+Fow the huck will it work ?!
+
+SCMI is purely a s/w protocol which can work over any physical link.
+But it wouldn't because you have funny notions of a "doorbell".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
