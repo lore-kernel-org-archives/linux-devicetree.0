@@ -1,52 +1,59 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] [media] rc: gpio-ir-tx: add new driver
-Date: Fri, 7 Jul 2017 08:58:16 -0500
-Message-ID: <20170707135816.5z6jzseqzqfwf3kn@rob-hp-laptop>
-References: <cover.1498992850.git.sean@mess.org>
- <616e336df6badc96ced14d14956ed7c080b39781.1498992850.git.sean@mess.org>
+Subject: Re: [PATCH V2 7/8] clk: vc5: Add bindings for IDT VersaClock
+ 5P49V6901
+Date: Fri, 7 Jul 2017 08:56:19 -0500
+Message-ID: <20170707135619.l6lgvfrhqvrgu2hb@rob-hp-laptop>
+References: <20170701200459.11505-1-marek.vasut+renesas@gmail.com>
+ <20170701200459.11505-7-marek.vasut+renesas@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <616e336df6badc96ced14d14956ed7c080b39781.1498992850.git.sean@mess.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170701200459.11505-7-marek.vasut+renesas@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-clk@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Alexey Firago <alexey_firago@mentor.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 02, 2017 at 12:06:11PM +0100, Sean Young wrote:
-> This is a simple bit-banging GPIO IR TX driver.
+On Sat, Jul 01, 2017 at 10:04:57PM +0200, Marek Vasut wrote:
+> IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
+> Input clock source can be taken from either external crystal or from
+> external reference clock.
 > 
-> Signed-off-by: Sean Young <sean@mess.org>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Alexey Firago <alexey_firago@mentor.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 > ---
->  .../devicetree/bindings/leds/irled/gpio-ir-tx.txt  |  11 ++
-
-Please make this a separate patch.
-
->  drivers/media/rc/Kconfig                           |  11 ++
->  drivers/media/rc/Makefile                          |   1 +
->  drivers/media/rc/gpio-ir-tx.c                      | 189 +++++++++++++++++++++
->  4 files changed, 212 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
->  create mode 100644 drivers/media/rc/gpio-ir-tx.c
+> V2: Edit the top of the DT binding document to mention VersaClock 6
+> ---
+>  .../devicetree/bindings/clock/idt,versaclock5.txt   | 21 +++++++++++++++------
+>  1 file changed, 15 insertions(+), 6 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-> new file mode 100644
-> index 0000000..bf4d4fb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-> @@ -0,0 +1,11 @@
-> +Device tree bindings for IR LED connected through gpio pin which is used as
-> +IR transmitter.
-> +
-> +Required properties:
-> +	- compatible: should be "gpio-ir-tx".
+> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> index 53d7e50ed875..115ab5f75c5d 100644
+> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> @@ -1,24 +1,26 @@
+> -Binding for IDT VersaClock5 programmable i2c clock generator.
+> +Binding for IDT VersaClock 5,6 programmable i2c clock generators.
+>  
+> -The IDT VersaClock5 are programmable i2c clock generators providing
+> -from 3 to 12 output clocks.
+> +The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
+> +generators providing from 3 to 12 output clocks.
+>  
+>  ==I2C device node==
+>  
+>  Required properties:
+>  - compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933" ,
+> -		"idt,5p49v5935".
+> +		"idt,5p49v5935" , "idt,5p49v6901".
 
-gpios property?
+Please reformat to 1 per line. With that,
 
-> +
-> +Example:
-> +	irled@0 {
-> +		compatible = "gpio-ir-tx";
-> +		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-> +	};
+Acked-by: Rob Herring <robh@kernel.org>
