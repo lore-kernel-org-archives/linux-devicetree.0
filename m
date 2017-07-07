@@ -1,62 +1,146 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable
- option
-Date: Fri, 7 Jul 2017 16:00:10 +0200
-Message-ID: <20170707140010.GD24237@lunn.ch>
-References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
- <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
- <AM4PR0401MB2260ECD4508E26FF16670004FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <81105c77-d48f-271b-2de1-c877b9413184@skidata.com>
- <AM4PR0401MB226089839458F5F92C3B1F39FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <6de114cb-4521-4bb2-d0a3-4aea32936bd3@skidata.com>
- <AM4PR0401MB22609FFACD2BB51247709936FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <b68f444e-cea4-acaa-d1e9-7955a577ed35@skidata.com>
+From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
+Date: Fri, 7 Jul 2017 10:01:09 -0400
+Message-ID: <20170707140109.GE22707@bill-the-cat>
+References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+ <20170703090648.GV13989@umbus.fritz.box>
+ <1499085674.4225.17.camel@hp800z>
+ <20170707070915.GD24325@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="HwnjeXAdSoek43pS"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b68f444e-cea4-acaa-d1e9-7955a577ed35-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Cc: Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org" <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+In-Reply-To: <20170707070915.GD24325-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Ok. I'm fine with moving the phy-reset-gpios binding into the PHY.
-> But one question still remains: Who should then trigger the "hard
-> reset" of the PHY?
 
-Hi Richard
+--HwnjeXAdSoek43pS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think i see a few whys to do this, but first i need to check
-something. Is the clock which is causing a problem this one:
+On Fri, Jul 07, 2017 at 05:09:15PM +1000, David Gibson wrote:
+> On Mon, Jul 03, 2017 at 03:41:14PM +0300, Pantelis Antoniou wrote:
+> > Hi David,
+> >=20
+> > On Mon, 2017-07-03 at 19:06 +1000, David Gibson wrote:
+> > > On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
+> > > > This patch enables an overlay to refer to a previous overlay's
+> > > > labels by performing a merge of symbol information at application
+> > > > time.
+> > >=20
+> > > This seems to be doing things the hard way.
+> > >=20
+> >=20
+> > It is the minimal implementation to get things to work, with the current
+> > overlay implementation.
+>=20
+> Is it, though?  I'd expect reworking the symbol creation during
+> compile to be of similar complexity to the symbol merging here.  And
+> it only needs to be done in one place, not two.  And it doesn't
+> implicitly extend the overlay spec.
+>=20
+> > I do have plans for a version 2 with fixes to
+> > a number of areas.
+>=20
+> Saying you'll fix it in v2 is missing the point.  If v1 is out there,
+> we have to keep supporting it.  The number of half-arsed overlay
+> variants out in the wild just seems to keep growing.
 
-        /* clk_ref is optional, depends on board */
-        fep->clk_ref = devm_clk_get(&pdev->dev, "enet_clk_ref");
-        if (IS_ERR(fep->clk_ref))
-                fep->clk_ref = NULL;
+Erm, v1 is out there, because the patches are posted here in public,
+where reviews happen.  If some group picks them up and runs with them,
+perhaps it's worth asking why some group would be willing to pick up and
+run with v1 of a series?  Which, AFAIK, hasn't actually happened just
+yet..
 
-Possible solutions:
+> > > You're essentially extending the semantics of overlay application to
+> > > add the symbol merging.  You've implemented these extended semantics
+> > > in libfdt, which is all very well, but that's not the only overlay
+> > > application implementation.
+> >=20
+> > This is a port of the same patch that's against the linux kernel.
+> > As far as I know there's no other implementations, or at least none
+> > that are open source.
+>=20
+> So, it's already in the wild and we have to deal with it.  Yay.
+>=20
+> The whole history of DT overlays has been this - hacking something up
+> to grab some desired feature with a complete lack of forethought about
+> what the long term, or even medium term, consequences will be.  It's
+> kind of pissing me off.
+>=20
+> That's exactly why it took so long to get the overlay patches merged
+> in the first place.  I was hoping to encourage a bit more thinking
+> *before* putting an approach in the wild that would predictably cause
+> us trouble later on.  Didn't work, alas.
 
-1) clocks are referenced counted. If it is turned on twice, it needs
-   to be turned off twice before it is actually turned off. So, make
-   the PHY driver also clk_prepare_enable() this clock. When the FEC
-   tries to turn it off, it will stay ticking. Problem avoided, at the
-   expense of some power.
+So there's literally no one that thinks the way the first part over
+overlay support happened was a good example?  Good.  Shall we try and
+fix that moving forward?  Isn't the way that open source works is that
+people develop, in the open and code evolves based on feedback from
+other developers and real world uses?
 
-2) More complex, but make the PHY driver also a clock driver. Have the
-   PHY driver export a clock which the FEC use, as "enet_clk_ref". The
-   implementation of this clock, would both turn the real clock on,
-   and the perform the reset.
+> > > It seems to me a better approach would be to change dtc's -@
+> > > implementation, so that in /plugin/ mode instead of making a global
+> > > __symbols__ node, it puts it into the individual fragments.  That way
+> > > the existing overlay application semantics will update the __symbols__
+> > > node.
+> >=20
+> > A lot of things can be made better, on the next version. These are
+> > minimally intrusive patches to address user requests for the current
+> > implementation.
+>=20
+> Except that a) I'm not really convinced of that and b) I don't see any
+> signs of really trying to approach this methodically, rather than just
+> moving from one hack to the next.
 
-Both require no changes to the FEC, or any other MAC driver using this
-PHY, so long as the MAC driver uses the common clock infrastructure to
-control the clock to the PHY.
+So to be clear for (a), you're saying the change to dtc's -@
+implementation would be less invasive?
 
-	Andrew
+> > Why don't we start by making a list, and work towards that goal?
+> >=20
+> > Care to start about what you want addressed and how?
+>=20
+> The biggest thing is a question of design culture, not any specific
+> properties.  Think in terms of specification, rather than just
+> implementation, and make at least a minimal effort to ensure that that
+> specification is both sufficient and minimal for the requirements at
+> hand.  Overlays as they stand are a long way from either.
 
+So you wish that someone had written some "overlay doc" before posting
+patches?  Documentation should come with code, not before code, as we
+already (right?) have general understanding that things like overlays
+need to exist and need to be useful because there's real use cases out
+there.
 
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Tom
+
+--HwnjeXAdSoek43pS
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJZX5QlAAoJEIf59jXTHXZS4zIP/2RzfMp4rrwZZ/ziFcaTRenb
+SwYN26eELr/p/w6itlI3VFxcGA8RIjNm29sbu0jKWJeNXbNNWYER4r5W1OajDWG0
+pzIdjL8WUMyiYsk0T2xgG96saXGRhHkmRGImHjYKjPduxa3WyZwI24jk7yJANHVC
+TfnOEq3bxrr/wPvra78TBStoK0Jg+UWDvpD5Iq6ytu6CjhYsAaYv6Yv7XwB3Yj+K
+IQShZRuvo1SWH6x21Z17rfU0/XvxUnwZsFo1HinuCAskHI/1eE53rHhK8s5KPSkr
+zWW8Yj7c+s5H74walydo84ezo9XZANGfI+rf3fg72PgVYQTgbEcihegsbjgR+QzP
+yVJ7vTfxGbl6dsKcUwLsOKbfnvL1iZSB5aIKCO9yx3Aj8oikxDfGxV0b+vMTcdJQ
+8puBXbLzV1FfcKmEKBAW+uVra3Ws4pgms4erC48Zw8d76zF8hc3T973mLr5vfSDh
+NC/NlUh5+oCUGhgI/wW9LQenXbNEmzmY8F3oqGRLal+Z+b7PTdOazvxlDaRkJu9P
+a6tNnKE7NuMVbjP/P1B9DyW9QrKJQN1WbXgzPFNy3wZG6OYv6ytaNfFVurXN38Ph
+LsRjeX0doV1zxvZshIbNsTdXPnEOm/8HRZA4mYe5zeRFv4qW9GWxhrqIVOxV8Aqv
+2U2elZJo8WNfLMkhm69U
+=OPSB
+-----END PGP SIGNATURE-----
+
+--HwnjeXAdSoek43pS--
