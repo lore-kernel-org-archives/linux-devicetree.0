@@ -1,200 +1,111 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/8] dt-bindings: mailbox: add binding doc
- for the ARM SMC mailbox
-Date: Fri, 7 Jul 2017 17:06:39 +0100
-Message-ID: <8897a028-64b4-da2a-603f-b0b56228e8bb@arm.com>
-References: <20170630095608.24943-1-andre.przywara@arm.com>
- <20170630095608.24943-3-andre.przywara@arm.com>
- <20170707143546.GD3425@leverpostej>
-Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
+From: Harvey Hunt <harvey.hunt@imgtec.com>
+Subject: [PATCH 2/2] MIPS: dts: Ci20: Add ethernet and fixed-regulator nodes
+Date: Fri, 7 Jul 2017 17:12:08 +0100
+Message-ID: <1499443928-10620-2-git-send-email-harvey.hunt@imgtec.com>
+References: <1499443928-10620-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBC7D73FAKGQEIIT7LCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170707143546.GD3425@leverpostej>
-Content-Language: en-GB
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1499443928-10620-1-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: ralf@linux-mips.org
+Cc: Harvey Hunt <harvey.hunt@imgtec.com>, Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>, Paul Burton <paul.burton@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Paul Cercueil <paul@crapouillou.net>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add devicetree nodes for the DM9000 and the ethernet power regulator.
+Additionally, add a new pinctrl node for the ethernet chip's pins.
 
-On 07/07/17 15:35, Mark Rutland wrote:
-> Hi Andre,
-> 
-> As a nit, please post bindings before drivers, as per
-> Documentation/devicetree/bindings/submitting-patches.txt.
+Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+Cc: Paul Burton <paul.burton@imgtec.com>
+Cc: Rob Herring <robh+dt@kernel.org> 
+Cc: Mark Rutland <mark.rutland@arm.com> 
+Cc: Paul Cercueil <paul@crapouillou.net> 
+Cc: Linus Walleij <linus.walleij@linaro.org> 
+Cc: devicetree@vger.kernel.org 
+Cc: linux-mips@linux-mips.org 
+Cc: linux-kernel@vger.kernel.org 
+---
+Ralf, both of these patches rely on Paul Cercueil's pinctrl
+and gpio patches from Linus Walleij's 4.13 pinctrl pull request.
 
-Sure.
+ arch/mips/boot/dts/ingenic/ci20.dts | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-> On Fri, Jun 30, 2017 at 10:56:02AM +0100, Andre Przywara wrote:
->> Add binding documentation for the generic ARM SMC mailbox.
->> This is not describing hardware, but a firmware interface.
-> 
-> Is this following some standard, or is this something that you have
-> invented?
-
-The idea was that we don't need a "full featured standard", but rather
-just a contract between currently running firmware and the OS. Since I
-consider the DT as being provided as part of the firmware, I don't see
-how this would need to be "standardized" beyond that. This is just a
-"single bit signalling channel" to implement a "poor man's mailbox", if
-you like.
-If firmware implements this, it adds the respective node, if not, there
-is nothing in the DT.
-Do you see any way this would clash with existing standards or would
-need to standardized beyond this document? I would believe the SMCCC
-covers the bits that would need to standardized already (as in to make
-sure to not call any other service tied to a particular smc call).
-
-> If the latter, why are we inventing a new standard? |How does
-> this relate to SCPI and/or SCMI?
-
-Both SCPI and SCMI build upon a shared memory region for transferring
-arguments and a mailbox channel to signal that there is "work to do".
-So this is not competing with those standards, but rather complementing
-them and making them more widely usable (in cases where you don't have
-an actual mailbox).
-SCMI introduced a notion of multiple transport protocols for signalling,
-but so far only specifies a mailbox (and does the respective proposed
-binding).
-
-Actually this driver is more of a drop-in replacement for an ARM MHU
-mailbox (for instance to implement SCPI), so this driver and binding
-actually promotes existing standards.
-
-> What exactly is "the generic ARM SMC mailbox"?
-
-That's a bridge between the requirements of having a mailbox (which the
-SCPI *binding* requires, for instance) and some firmware parts being
-implemented in an EL3 runtime on the APs (instead of running on some
-separate management processors).
-I am happy to change the name if that sounds presumptuous, the naming
-comes from "generic" as in: does not require specific hardware. The
-"ARM" in there is just to give context to "SMC", which, as every TLA, is
-probably overloaded and confusing to the casual reader.
-
->> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mailbox/arm-smc.txt        | 61 ++++++++++++++++++++++
->>  1 file changed, 61 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->> new file mode 100644
->> index 0000000..90c5926
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
->> @@ -0,0 +1,61 @@
->> +ARM SMC Mailbox Driver
-> 
-> Bindings do not document drivers. As Rob said, s/Driver/Interface/.
-
-Right, badly copied from arm-mhu.txt ;-)
-
->> +======================
->> +
->> +This mailbox uses the ARM smc (secure monitor call) instruction to
->> +trigger a mailbox-connected activity in firmware, executing on the very same
->> +core as the caller. By nature this operation is synchronous and this
->> +mailbox provides no way for asynchronous messages to be delivered the other
->> +way round, from firmware to the OS. However the value of r0/w0/x0 the firmware
->> +returns after the smc call is delivered as a received message to the
->> +mailbox framework, so a synchronous communication can be established.
-> 
-> ... where those values are what specifically, under what circumstances?
-
-OK, I will look into how far this needs to be specified in this document
-here or how much we can delegate to the actual mailbox users.
-
->> +One use case of this mailbox is the SCP interface, which uses shared memory
->> +to transfer commands and parameters, and a mailbox to trigger a function
->> +call. This allows SoCs without a separate management processor (or
->> +when such a processor is not available or used) to use this standardized
->> +interface anyway.
->> +
->> +This binding describes no hardware, but establishes a firmware interface.
->> +The communication follows the ARM SMC calling convention[1].
->> +Any core which supports the SMC or HVC instruction can be used, as long as
->> +a firmware component running in EL3 or EL2 is handling these calls.
->> +
->> +Mailbox Device Node:
->> +====================
->> +
->> +Required properties:
->> +--------------------
->> +- compatible:		Shall be "arm,smc-mbox"
->> +- #mbox-cells		Shall be 1 - the index of the channel needed.
->> +- arm,smc-func-ids	An array of 32-bit values specifying the function
->> +			IDs used by each mailbox channel. Those function IDs
->> +			follow the ARM SMC calling convention standard [1].
->> +			There is one identifier per channel and the number
->> +			of supported channels is determined by the length
->> +			of this array.
-> 
-> What does each function do? I guess it signal that FW should look at a
-> particular mailbox, but the binding doesn't actually say.
-
-Calling the smc instruction with that function ID triggers the
-associated mailbox (in the somewhat Linux/DT meaning of "mailbox").
-Basically very much like the ARM MHU mailbox, for instance.
-
-I believe the term mailbox is a bit fuzzy here. I think the least common
-denominator just signals a single bit condition (like a doorbell), which
-is the only thing that SCPI (for instance) requires. And the actual
-mailbox content is then somewhere else, for instance in shared memory.
-Which is beyond the scope of the mailbox itself.
-
-> If this is following the SMCCC, what is the function prototype?
-
-> What arguments are taken, and what return values are required under
-> which conditions?
-
-Good point, I can describe this one.
-
-> Are they fast calls, or are they pre-emptible? When does the FW return?
-
-Naturally I would expect fast calls, but I am not sure we need to
-restrict it here. The SMCCC function ID encodes the type already. And I
-couldn't find anything more detailed in the SMCCC to require me to ban
-standard calls, so it would be up to the actual firmware implementation
-to decide.
-
-> If we're inventing a standard, why have multiple function IDs rather
-> than passing a channel ID in as a paarameter?
-
-What would be the advantage of doing so? I found it necessary to have
-the SMCCC IDs in the DT anyway and also useful to support multiple
-channels, so just having a list of SMCCC IDs sounded like a natural choice.
-Do you reckon we need a combination of SMCCC ID and mailbox ID (as a
-second parameter to the SMCCC call), to support cases where we only have
-one SMCCC ID available, but need multiple mailboxes?
-
-> This needs a more rigorous definition.
-> 
->> +
->> +Optional properties:
->> +--------------------
->> +- method:		A string, either:
->> +			"hvc": if the driver shall use an HVC call, or
->> +			"smc": if the driver shall use an SMC call
->> +			If omitted, defaults to an SMC call.
-> 
-> Make this property mandatory, don't guess. Please follow the wording
-> used by ther PSCI binding.
-
-Sure.
-
-> Given one can use HVC, the "arm,smc-func-ids" property is misleading,
-> and would be better as something like "func-ids".
-
-Right, will fix this.
-
-Cheers,
-Andre.
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index fd138d99..6c38184 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -1,6 +1,7 @@
+ /dts-v1/;
+ 
+ #include "jz4780.dtsi"
++#include <dt-bindings/gpio/gpio.h>
+ 
+ / {
+ 	compatible = "img,ci20", "ingenic,jz4780";
+@@ -21,6 +22,13 @@
+ 		reg = <0x0 0x10000000
+ 		       0x30000000 0x30000000>;
+ 	};
++
++	eth0_power: fixedregulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "eth0_power";
++		gpio = <&gpb 25 GPIO_ACTIVE_LOW>;
++		enable-active-high;
++	};
+ };
+ 
+ &ext {
+@@ -123,6 +131,29 @@
+ 			};
+ 		};
+ 	};
++
++	dm9000@6 {
++		compatible = "davicom,dm9000";
++		davicom,no-eeprom;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pins_nemc_cs6>;
++
++		reg = <6 0 1   /* addr */
++		       6 2 1>; /* data */
++
++		ingenic,nemc-tAS = <15>;
++		ingenic,nemc-tAH = <10>;
++		ingenic,nemc-tBP = <20>;
++		ingenic,nemc-tAW = <50>;
++		ingenic,nemc-tSTRV = <100>;
++
++		reset-gpios = <&gpf 12 GPIO_ACTIVE_HIGH>;
++		vcc-supply = <&eth0_power>;
++
++		interrupt-parent = <&gpe>;
++		interrupts = <19 4>;
++	};
+ };
+ 
+ &bch {
+@@ -165,4 +196,10 @@
+ 		groups = "nemc-cs1";
+ 		bias-disable;
+ 	};
++
++	pins_nemc_cs6: nemc-cs6 {
++		function = "nemc-cs6";
++		groups = "nemc-cs6";
++		bias-disable;
++	};
+ };
+-- 
+2.7.4
