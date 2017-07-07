@@ -1,674 +1,188 @@
-From: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCHv1 4/4] clk: socfpga: Add a clock driver for the SoCFPGA Stratix10 platform
-Date: Fri,  7 Jul 2017 14:03:19 -0500
-Message-ID: <1499454199-31901-4-git-send-email-dinguyen@kernel.org>
-References: <1499454199-31901-1-git-send-email-dinguyen@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499454199-31901-1-git-send-email-dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Doug Berger <opendmb@gmail.com>
+Subject: [PATCH 6/6] irqchip: brcmstb-l2: Add support for the BCM7271 L2 controller
+Date: Fri,  7 Jul 2017 12:20:16 -0700
+Message-ID: <20170707192016.13001-7-opendmb@gmail.com>
+References: <20170707192016.13001-1-opendmb@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170707192016.13001-1-opendmb@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Doug Berger <opendmb@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Cernekee <cernekee@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:IRQCHIP DRIVERS" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, "moderated list:BROADCOM BCM7XXX
+        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a clock driver the SoCFPGA Stratix10 platform. The Stratix10 SOC is an
-ARM64 base and the clock tree is very similar to the SOCFPGA ARM32 platforms.
+Add the initialization of the generic irq chip for the BCM7271 L2
+interrupt controller.  This controller only supports level
+interrupts and uses the "brcm,bcm7271-l2-intc" compatibility
+string.
 
-Signed-off-by: Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Doug Berger <opendmb@gmail.com>
 ---
- drivers/clk/Makefile                 |   1 +
- drivers/clk/socfpga/Makefile         |   4 +
- drivers/clk/socfpga/clk-gate-s10.c   | 214 +++++++++++++++++++++++++++++++++++
- drivers/clk/socfpga/clk-periph-s10.c | 165 +++++++++++++++++++++++++++
- drivers/clk/socfpga/clk-pll-s10.c    | 146 ++++++++++++++++++++++++
- drivers/clk/socfpga/clk.c            |   9 ++
- drivers/clk/socfpga/clk.h            |   8 ++
- 7 files changed, 547 insertions(+)
- create mode 100644 drivers/clk/socfpga/clk-gate-s10.c
- create mode 100644 drivers/clk/socfpga/clk-periph-s10.c
- create mode 100644 drivers/clk/socfpga/clk-pll-s10.c
+ .../bindings/interrupt-controller/brcm,l2-intc.txt |  3 +-
+ drivers/irqchip/irq-brcmstb-l2.c                   | 86 ++++++++++++++++------
+ 2 files changed, 66 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index c19983a..1ce3b10 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -80,6 +80,7 @@ obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
- obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
- obj-$(CONFIG_ARCH_SIRF)			+= sirf/
- obj-$(CONFIG_ARCH_SOCFPGA)		+= socfpga/
-+obj-$(CONFIG_ARCH_STRATIX10)		+= socfpga/
- obj-$(CONFIG_PLAT_SPEAR)		+= spear/
- obj-$(CONFIG_ARCH_STI)			+= st/
- obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
-diff --git a/drivers/clk/socfpga/Makefile b/drivers/clk/socfpga/Makefile
-index d8bb239..602e2b9 100644
---- a/drivers/clk/socfpga/Makefile
-+++ b/drivers/clk/socfpga/Makefile
-@@ -1,5 +1,9 @@
- obj-y += clk.o
-+ifeq ($(CONFIG_ARCH_SOCFPGA),y)
- obj-y += clk-gate.o
- obj-y += clk-pll.o
- obj-y += clk-periph.o
- obj-y += clk-pll-a10.o clk-periph-a10.o clk-gate-a10.o
-+else
-+obj-y += clk-pll-s10.o clk-periph-s10.o clk-gate-s10.o
-+endif
-diff --git a/drivers/clk/socfpga/clk-gate-s10.c b/drivers/clk/socfpga/clk-gate-s10.c
-new file mode 100644
-index 0000000..172317f
---- /dev/null
-+++ b/drivers/clk/socfpga/clk-gate-s10.c
-@@ -0,0 +1,214 @@
-+/*
-+ * Copyright (C) 2017, Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/slab.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+
-+#include "clk.h"
-+
-+#define streq(a, b) (strcmp((a), (b)) == 0)
-+
-+#define SOCFPGA_CS_PDBG_CLK	"cs_pdbg_clk"
-+
-+#define to_socfpga_gate_clk(p) container_of(p, struct socfpga_gate_clk, hw.hw)
-+
-+/* SDMMC Group for System Manager defines */
-+#define SYSMGR_SDMMCGRP_CTRL_OFFSET	0x28
-+
-+static unsigned long socfpga_gate_clk_recalc_rate(struct clk_hw *hwclk,
-+	unsigned long parent_rate)
-+{
-+	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-+	u32 div = 1, val;
-+
-+	if (socfpgaclk->fixed_div)
-+		div = socfpgaclk->fixed_div;
-+	else if (socfpgaclk->div_reg) {
-+		val = readl(socfpgaclk->div_reg) >> socfpgaclk->shift;
-+		val &= GENMASK(socfpgaclk->width - 1, 0);
-+		div = (1 << val);
-+		if (streq(hwclk->init->name, SOCFPGA_CS_PDBG_CLK))
-+			div = div ? 4 : 1;
-+	}
-+	return parent_rate / div;
-+}
-+
-+static int socfpga_clk_prepare(struct clk_hw *hwclk)
-+{
-+	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-+	int i;
-+	u32 hs_timing;
-+	u32 clk_phase[2];
-+
-+	if (socfpgaclk->clk_phase[0] || socfpgaclk->clk_phase[1]) {
-+		for (i = 0; i < ARRAY_SIZE(clk_phase); i++) {
-+			switch (socfpgaclk->clk_phase[i]) {
-+			case 0:
-+				clk_phase[i] = 0;
-+				break;
-+			case 45:
-+				clk_phase[i] = 1;
-+				break;
-+			case 90:
-+				clk_phase[i] = 2;
-+				break;
-+			case 135:
-+				clk_phase[i] = 3;
-+				break;
-+			case 180:
-+				clk_phase[i] = 4;
-+				break;
-+			case 225:
-+				clk_phase[i] = 5;
-+				break;
-+			case 270:
-+				clk_phase[i] = 6;
-+				break;
-+			case 315:
-+				clk_phase[i] = 7;
-+				break;
-+			default:
-+				clk_phase[i] = 0;
-+				break;
-+			}
-+		}
-+
-+		hs_timing = SYSMGR_SDMMC_CTRL_SET(clk_phase[0], clk_phase[1]);
-+		if (!IS_ERR(socfpgaclk->sys_mgr_base_addr))
-+			regmap_write(socfpgaclk->sys_mgr_base_addr,
-+				     SYSMGR_SDMMCGRP_CTRL_OFFSET, hs_timing);
-+		else
-+			pr_err("%s: cannot set clk_phase because sys_mgr_base_addr is not available!\n",
-+					__func__);
-+	}
-+	return 0;
-+}
-+
-+static u8 socfpga_gate_get_parent(struct clk_hw *hwclk)
-+{
-+	struct socfpga_gate_clk *socfpgaclk = to_socfpga_gate_clk(hwclk);
-+	u32 mask;
-+	u8 parent = 0;
-+
-+	if (socfpgaclk->bypass_reg) {
-+		mask = (0x1 << socfpgaclk->bypass_shift);
-+		parent = ((readl(socfpgaclk->bypass_reg) & mask) >>
-+			  socfpgaclk->bypass_shift);
-+	}
-+	return parent;
-+}
-+
-+static struct clk_ops gateclk_ops = {
-+	.prepare = socfpga_clk_prepare,
-+	.recalc_rate = socfpga_gate_clk_recalc_rate,
-+	.get_parent = socfpga_gate_get_parent,
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+index 448273a30a11..36df06c5c567 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-intc.txt
+@@ -2,7 +2,8 @@ Broadcom Generic Level 2 Interrupt Controller
+ 
+ Required properties:
+ 
+-- compatible: should be "brcm,l2-intc"
++- compatible: should be "brcm,l2-intc" for latched interrupt controllers
++              should be "brcm,bcm7271-l2-intc" for level interrupt controllers
+ - reg: specifies the base physical address and size of the registers
+ - interrupt-controller: identifies the node as an interrupt controller
+ - #interrupt-cells: specifies the number of cells needed to encode an
+diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+index ce3850530e2b..f77e6c9530dc 100644
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -31,13 +31,34 @@
+ #include <linux/irqchip.h>
+ #include <linux/irqchip/chained_irq.h>
+ 
+-/* Register offsets in the L2 interrupt controller */
+-#define CPU_STATUS	0x00
+-#define CPU_SET		0x04
+-#define CPU_CLEAR	0x08
+-#define CPU_MASK_STATUS	0x0c
+-#define CPU_MASK_SET	0x10
+-#define CPU_MASK_CLEAR	0x14
++struct brcmstb_intc_init_params {
++	irq_flow_handler_t handler;
++	int cpu_status;
++	int cpu_clear;
++	int cpu_mask_status;
++	int cpu_mask_set;
++	int cpu_mask_clear;
 +};
 +
-+static void __init __socfpga_gate_init(struct device_node *node,
-+	const struct clk_ops *ops)
-+{
-+	u32 clk_gate[2];
-+	u32 div_reg[3];
-+	u32 bypass_reg[2];
-+	u32 clk_phase[2];
-+	u32 fixed_div;
-+	struct clk *clk;
-+	struct socfpga_gate_clk *socfpga_clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name[SOCFPGA_MAX_PARENTS];
-+	struct clk_init_data init;
-+	int rc;
-+
-+	socfpga_clk = kzalloc(sizeof(*socfpga_clk), GFP_KERNEL);
-+	if (WARN_ON(!socfpga_clk))
-+		return;
-+
-+	rc = of_property_read_u32_array(node, "clk-gate", clk_gate, 2);
-+	if (rc)
-+		clk_gate[0] = 0;
-+
-+	if (clk_gate[0]) {
-+		socfpga_clk->hw.reg = clk_mgr_s10_base_addr + clk_gate[0];
-+		socfpga_clk->hw.bit_idx = clk_gate[1];
-+
-+		gateclk_ops.enable = clk_gate_ops.enable;
-+		gateclk_ops.disable = clk_gate_ops.disable;
-+	}
-+
-+	rc = of_property_read_u32(node, "fixed-divider", &fixed_div);
-+	if (rc)
-+		socfpga_clk->fixed_div = 0;
-+	else
-+		socfpga_clk->fixed_div = fixed_div;
-+
-+	rc = of_property_read_u32_array(node, "div-reg", div_reg, 3);
-+	if (!rc) {
-+		socfpga_clk->div_reg = clk_mgr_s10_base_addr + div_reg[0];
-+		socfpga_clk->shift = div_reg[1];
-+		socfpga_clk->width = div_reg[2];
-+	} else {
-+		socfpga_clk->div_reg = NULL;
-+	}
-+
-+	rc = of_property_read_u32_array(node, "bypass-reg", bypass_reg, 2);
-+	if (!rc) {
-+		socfpga_clk->bypass_reg = clk_mgr_s10_base_addr + bypass_reg[0];
-+		socfpga_clk->bypass_shift = bypass_reg[1];
-+	} else {
-+		socfpga_clk->bypass_reg = NULL;
-+	}
-+
-+	rc = of_property_read_u32_array(node, "clk-phase", clk_phase, 2);
-+	if (!rc) {
-+		socfpga_clk->clk_phase[0] = clk_phase[0];
-+		socfpga_clk->clk_phase[1] = clk_phase[1];
-+
-+		socfpga_clk->sys_mgr_base_addr =
-+			syscon_regmap_lookup_by_compatible("altr,sys-mgr");
-+		if (IS_ERR(socfpga_clk->sys_mgr_base_addr)) {
-+			pr_err("%s: failed to find altr,sys-mgr regmap!\n",
-+					__func__);
-+			return;
-+		}
-+	}
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = ops;
-+	init.flags = 0;
-+
-+	init.num_parents = of_clk_parent_fill(node, parent_name, SOCFPGA_MAX_PARENTS);
-+	init.parent_names = parent_name;
-+	socfpga_clk->hw.hw.init = &init;
-+
-+	clk = clk_register(NULL, &socfpga_clk->hw.hw);
-+	if (WARN_ON(IS_ERR(clk))) {
-+		kfree(socfpga_clk);
-+		return;
-+	}
-+	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (WARN_ON(rc))
-+		return;
-+}
-+
-+void __init socfpga_s10_gate_init(struct device_node *node)
-+{
-+	__socfpga_gate_init(node, &gateclk_ops);
-+}
-diff --git a/drivers/clk/socfpga/clk-periph-s10.c b/drivers/clk/socfpga/clk-periph-s10.c
-new file mode 100644
-index 0000000..2180d36
---- /dev/null
-+++ b/drivers/clk/socfpga/clk-periph-s10.c
-@@ -0,0 +1,165 @@
-+/*
-+ * Copyright (C) 2017, Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/slab.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+
-+#include "clk.h"
-+
-+#define CLK_MGR_FREE_SHIFT		16
-+#define CLK_MGR_FREE_MASK		0x7
-+
-+#define SWCTRLBTCLKSEL_MASK		0x200
-+#define SWCTRLBTCLKSEL_SHIFT		9
-+#define SWCTRLBTCLKEN_MASK		0x100
-+#define SWCTRLBTCLKSEN_SHIFT		8
-+
-+
-+#define SOCFPGA_BOOT_CLK	"boot_clk"
-+
-+#define to_socfpga_periph_clk(p) container_of(p, struct socfpga_periph_clk, hw.hw)
-+
-+static unsigned long clk_periclk_recalc_rate(struct clk_hw *hwclk,
-+					     unsigned long parent_rate)
-+{
-+	struct socfpga_periph_clk *socfpgaclk = to_socfpga_periph_clk(hwclk);
-+	u32 div = 1;
-+	u32 val;
-+
-+	if (socfpgaclk->fixed_div) {
-+		div = socfpgaclk->fixed_div;
-+	} else if (socfpgaclk->div_reg) {
-+		val = readl(socfpgaclk->div_reg) >> socfpgaclk->shift;
-+		val &= GENMASK(socfpgaclk->width - 1, 0);
-+		parent_rate /= val;
-+	} else {
-+		if (streq(hwclk->init->name, SOCFPGA_BOOT_CLK)) {
-+			if ((readl(socfpgaclk->hw.reg) & SWCTRLBTCLKEN_MASK) >>
-+			     SWCTRLBTCLKSEN_SHIFT) {
-+				div = ((readl(socfpgaclk->hw.reg) &
-+					SWCTRLBTCLKSEL_MASK) >>
-+					SWCTRLBTCLKSEL_SHIFT);
-+				div += 1;
-+			}
-+		} else if (!socfpgaclk->bypass_reg)
-+			div = ((readl(socfpgaclk->hw.reg) & 0x7ff) + 1);
-+	}
-+
-+	return parent_rate / div;
-+}
-+
-+static u8 clk_periclk_get_parent(struct clk_hw *hwclk)
-+{
-+	struct socfpga_periph_clk *socfpgaclk = to_socfpga_periph_clk(hwclk);
-+	u32 clk_src, mask;
-+	u8 parent;
-+
-+	if (socfpgaclk->bypass_reg) {
-+		mask = (0x1 << socfpgaclk->bypass_shift);
-+		parent = ((readl(socfpgaclk->bypass_reg) & mask) >>
-+			   socfpgaclk->bypass_shift);
-+	} else {
-+		clk_src = readl(socfpgaclk->hw.reg);
-+		parent = (clk_src >> CLK_MGR_FREE_SHIFT) &
-+			CLK_MGR_FREE_MASK;
-+	}
-+	return parent;
-+}
-+
-+static const struct clk_ops periclk_ops = {
-+	.recalc_rate = clk_periclk_recalc_rate,
-+	.get_parent = clk_periclk_get_parent,
++/* Register offsets in the L2 latched interrupt controller */
++static const struct brcmstb_intc_init_params l2_edge_intc_init = {
++	.handler		= handle_edge_irq,
++	.cpu_status		= 0x00,
++	.cpu_clear		= 0x08,
++	.cpu_mask_status	= 0x0c,
++	.cpu_mask_set		= 0x10,
++	.cpu_mask_clear		= 0x14
 +};
 +
-+static __init void __socfpga_periph_init(struct device_node *node,
-+	const struct clk_ops *ops)
-+{
-+	u32 reg;
-+	struct clk *clk;
-+	struct socfpga_periph_clk *periph_clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name[SOCFPGA_MAX_PARENTS];
-+	struct clk_init_data init;
-+	int rc;
-+	u32 fixed_div;
-+	u32 div_reg[3];
-+	u32 bypass_reg[2];
-+
-+	of_property_read_u32(node, "reg", &reg);
-+
-+	periph_clk = kzalloc(sizeof(*periph_clk), GFP_KERNEL);
-+	if (WARN_ON(!periph_clk))
-+		return;
-+
-+	periph_clk->hw.reg = clk_mgr_s10_base_addr + reg;
-+
-+	rc = of_property_read_u32_array(node, "div-reg", div_reg, 3);
-+	if (!rc) {
-+		periph_clk->div_reg = clk_mgr_s10_base_addr + div_reg[0];
-+		periph_clk->shift = div_reg[1];
-+		periph_clk->width = div_reg[2];
-+	} else {
-+		periph_clk->div_reg = NULL;
-+	}
-+
-+	rc = of_property_read_u32_array(node, "bypass-reg", bypass_reg, 2);
-+	if (!rc) {
-+		periph_clk->bypass_reg = clk_mgr_s10_base_addr + bypass_reg[0];
-+		periph_clk->bypass_shift = bypass_reg[1];
-+	} else {
-+		periph_clk->bypass_reg = NULL;
-+	}
-+
-+	rc = of_property_read_u32(node, "fixed-divider", &fixed_div);
-+	if (rc)
-+		periph_clk->fixed_div = 0;
-+	else
-+		periph_clk->fixed_div = fixed_div;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = ops;
-+	init.flags = 0;
-+
-+	init.num_parents = of_clk_parent_fill(node, parent_name, SOCFPGA_MAX_PARENTS);
-+	init.parent_names = parent_name;
-+
-+	periph_clk->hw.hw.init = &init;
-+
-+	clk = clk_register(NULL, &periph_clk->hw.hw);
-+	if (WARN_ON(IS_ERR(clk))) {
-+		kfree(periph_clk);
-+		return;
-+	}
-+	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	if (rc < 0) {
-+		pr_err("Could not register clock provider for node:%s\n",
-+		       clk_name);
-+		goto err_clk;
-+	}
-+
-+	return;
-+
-+err_clk:
-+	clk_unregister(clk);
-+}
-+
-+void __init socfpga_s10_periph_init(struct device_node *node)
-+{
-+	__socfpga_periph_init(node, &periclk_ops);
-+}
-diff --git a/drivers/clk/socfpga/clk-pll-s10.c b/drivers/clk/socfpga/clk-pll-s10.c
-new file mode 100644
-index 0000000..3f36ad5
---- /dev/null
-+++ b/drivers/clk/socfpga/clk-pll-s10.c
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright (C) 2017, Intel Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+#include <linux/slab.h>
-+#include <linux/clk-provider.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+
-+#include "clk.h"
-+
-+/* Clock Manager offsets */
-+#define CLK_MGR_PLL_CLK_SRC_SHIFT	16
-+#define CLK_MGR_PLL_CLK_SRC_MASK	0x3
-+
-+/* PLL Clock enable bits */
-+#define SOCFPGA_PLL_POWER		0
-+#define SOCFPGA_PLL_RESET_MASK		0x2
-+#define SOCFPGA_PLL_REFDIV_MASK		0x00003F00
-+#define SOCFPGA_PLL_REFDIV_SHIFT	8
-+#define SOCFPGA_PLL_MDIV_MASK		0xFF000000
-+#define SOCFPGA_PLL_MDIV_SHIFT		24
-+#define SOCFGPA_MAX_PARENTS	5
-+
-+#define to_socfpga_clk(p) container_of(p, struct socfpga_pll, hw.hw)
-+
-+void __iomem *clk_mgr_s10_base_addr;
-+
-+static unsigned long clk_pll_recalc_rate(struct clk_hw *hwclk,
-+					 unsigned long parent_rate)
-+{
-+	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
-+	unsigned long mdiv;
-+	unsigned long refdiv;
-+	unsigned long reg;
-+	unsigned long long vco_freq;
-+
-+	/* read VCO1 reg for numerator and denominator */
-+	reg = readl(socfpgaclk->hw.reg);
-+	refdiv = (reg & SOCFPGA_PLL_REFDIV_MASK) >> SOCFPGA_PLL_REFDIV_SHIFT;
-+	vco_freq = (unsigned long long)parent_rate/refdiv;
-+
-+	/* Read mdiv and fdiv from the fdbck register */
-+	reg = readl(socfpgaclk->hw.reg + 0x4);
-+	mdiv = (reg & SOCFPGA_PLL_MDIV_MASK) >> SOCFPGA_PLL_MDIV_SHIFT;
-+	vco_freq = (unsigned long long)parent_rate * (mdiv + 6);
-+
-+	return (unsigned long)vco_freq;
-+}
-+
-+static u8 clk_pll_get_parent(struct clk_hw *hwclk)
-+{
-+	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
-+	u32 pll_src;
-+
-+	pll_src = readl(socfpgaclk->hw.reg);
-+
-+	return (pll_src >> CLK_MGR_PLL_CLK_SRC_SHIFT) &
-+		CLK_MGR_PLL_CLK_SRC_MASK;
-+}
-+
-+static int clk_pll_prepare(struct clk_hw *hwclk)
-+{
-+	struct socfpga_pll *socfpgaclk = to_socfpga_clk(hwclk);
-+	u32 reg;
-+
-+	/* Bring PLL out of reset */
-+	reg = readl(socfpgaclk->hw.reg);
-+	reg |= SOCFPGA_PLL_RESET_MASK;
-+	writel(reg, socfpgaclk->hw.reg);
-+
-+	return 0;
-+}
-+
-+static struct clk_ops clk_pll_ops = {
-+	.recalc_rate = clk_pll_recalc_rate,
-+	.get_parent = clk_pll_get_parent,
-+	.prepare = clk_pll_prepare,
++/* Register offsets in the L2 level interrupt controller */
++static const struct brcmstb_intc_init_params l2_lvl_intc_init = {
++	.handler		= handle_level_irq,
++	.cpu_status		= 0x00,
++	.cpu_clear		= -1, /* Register not present */
++	.cpu_mask_status	= 0x04,
++	.cpu_mask_set		= 0x08,
++	.cpu_mask_clear		= 0x0C
 +};
-+
-+static struct clk * __init __socfpga_pll_init(struct device_node *node,
-+	const struct clk_ops *ops)
-+{
-+	u32 reg, reg2;
-+	struct clk *clk;
-+	struct socfpga_pll *pll_clk;
-+	const char *clk_name = node->name;
-+	const char *parent_name[SOCFGPA_MAX_PARENTS];
-+	struct clk_init_data init;
-+	struct device_node *clkmgr_np;
-+	int rc;
-+	int i = 0;
-+
-+	of_property_read_u32(node, "reg", &reg);
-+
-+	pll_clk = kzalloc(sizeof(*pll_clk), GFP_KERNEL);
-+	if (WARN_ON(!pll_clk))
-+		return NULL;
-+
-+	clkmgr_np = of_find_compatible_node(NULL, NULL, "altr,clk-mgr");
-+	clk_mgr_s10_base_addr = of_iomap(clkmgr_np, 0);
-+	BUG_ON(!clk_mgr_s10_base_addr);
-+	pll_clk->hw.reg = clk_mgr_s10_base_addr + reg;
-+
-+	of_property_read_string(node, "clock-output-names", &clk_name);
-+
-+	init.name = clk_name;
-+	init.ops = ops;
-+	init.flags = 0;
-+
-+	while (i < SOCFGPA_MAX_PARENTS && (parent_name[i] =
-+			of_clk_get_parent_name(node, i)) != NULL)
-+		i++;
-+	init.num_parents = i;
-+	init.parent_names = parent_name;
-+	pll_clk->hw.hw.init = &init;
-+
-+	pll_clk->hw.bit_idx = SOCFPGA_PLL_POWER;
-+	clk_pll_ops.enable = clk_gate_ops.enable;
-+	clk_pll_ops.disable = clk_gate_ops.disable;
-+
-+	clk = clk_register(NULL, &pll_clk->hw.hw);
-+	if (WARN_ON(IS_ERR(clk))) {
-+		kfree(pll_clk);
-+		return NULL;
+ 
+ /* L2 intc private data structure */
+ struct brcmstb_l2_intc_data {
+@@ -102,7 +123,7 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
+ 	struct brcmstb_l2_intc_data *b = gc->private;
+ 
+ 	irq_gc_lock(gc);
+-	if (ct->chip.irq_ack != irq_gc_noop) {
++	if (ct->chip.irq_ack) {
+ 		/* Clear unmasked non-wakeup interrupts */
+ 		irq_reg_writel(gc, ~b->saved_mask & ~gc->wake_active,
+ 				ct->regs.ack);
+@@ -115,7 +136,9 @@ static void brcmstb_l2_intc_resume(struct irq_data *d)
+ }
+ 
+ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+-					  struct device_node *parent)
++					  struct device_node *parent,
++					  const struct brcmstb_intc_init_params
++					  *init_params)
+ {
+ 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+ 	struct brcmstb_l2_intc_data *data;
+@@ -137,12 +160,12 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	}
+ 
+ 	/* Disable all interrupts by default */
+-	writel(0xffffffff, base + CPU_MASK_SET);
++	writel(0xffffffff, base + init_params->cpu_mask_set);
+ 
+ 	/* Wakeup interrupts may be retained from S5 (cold boot) */
+ 	data->can_wake = of_property_read_bool(np, "brcm,irq-can-wake");
+-	if (!data->can_wake)
+-		writel(0xffffffff, base + CPU_CLEAR);
++	if (!data->can_wake && (init_params->cpu_clear >= 0))
++		writel(0xffffffff, base + init_params->cpu_clear);
+ 
+ 	parent_irq = irq_of_parse_and_map(np, 0);
+ 	if (!parent_irq) {
+@@ -167,7 +190,7 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 
+ 	/* Allocate a single Generic IRQ chip for this node */
+ 	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
+-				np->full_name, handle_edge_irq, clr, 0, flags);
++			np->full_name, init_params->handler, clr, 0, flags);
+ 	if (ret) {
+ 		pr_err("failed to allocate generic irq chip\n");
+ 		goto out_free_domain;
+@@ -180,21 +203,26 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	data->gc = irq_get_domain_generic_chip(data->domain, 0);
+ 	data->gc->reg_base = base;
+ 	data->gc->private = data;
+-	data->status_offset = CPU_STATUS;
+-	data->mask_offset = CPU_MASK_STATUS;
++	data->status_offset = init_params->cpu_status;
++	data->mask_offset = init_params->cpu_mask_status;
+ 
+ 	ct = data->gc->chip_types;
+ 
+-	ct->chip.irq_ack = irq_gc_ack_set_bit;
+-	ct->regs.ack = CPU_CLEAR;
++	if (init_params->cpu_clear >= 0) {
++		ct->regs.ack = init_params->cpu_clear;
++		ct->chip.irq_ack = irq_gc_ack_set_bit;
++		ct->chip.irq_mask_ack = irq_gc_mask_disable_and_ack_set;
++	} else {
++		/* No Ack - but still slightly more efficient to define this */
++		ct->chip.irq_mask_ack = irq_gc_mask_disable_reg;
 +	}
-+	rc = of_clk_add_provider(node, of_clk_src_simple_get, clk);
-+	return clk;
-+}
+ 
+ 	ct->chip.irq_mask = irq_gc_mask_disable_reg;
+-	ct->chip.irq_mask_ack = irq_gc_mask_disable_and_ack_set;
+-	ct->regs.disable = CPU_MASK_SET;
+-	ct->regs.mask = CPU_MASK_STATUS;
++	ct->regs.disable = init_params->cpu_mask_set;
++	ct->regs.mask = init_params->cpu_mask_status;
+ 
+ 	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
+-	ct->regs.enable = CPU_MASK_CLEAR;
++	ct->regs.enable = init_params->cpu_mask_clear;
+ 
+ 	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
+ 	ct->chip.irq_resume = brcmstb_l2_intc_resume;
+@@ -220,4 +248,18 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	kfree(data);
+ 	return ret;
+ }
+-IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_intc_of_init);
 +
-+void __init socfpga_s10_pll_init(struct device_node *node)
++int __init brcmstb_l2_edge_intc_of_init(struct device_node *np,
++	struct device_node *parent)
 +{
-+	__socfpga_pll_init(node, &clk_pll_ops);
++	return brcmstb_l2_intc_of_init(np, parent, &l2_edge_intc_init);
 +}
-diff --git a/drivers/clk/socfpga/clk.c b/drivers/clk/socfpga/clk.c
-index 7564d2e..abb374b 100644
---- a/drivers/clk/socfpga/clk.c
-+++ b/drivers/clk/socfpga/clk.c
-@@ -21,6 +21,7 @@
- 
- #include "clk.h"
- 
-+#ifdef CONFIG_ARCH_SOCFPGA
- CLK_OF_DECLARE(socfpga_pll_clk, "altr,socfpga-pll-clock", socfpga_pll_init);
- CLK_OF_DECLARE(socfpga_perip_clk, "altr,socfpga-perip-clk", socfpga_periph_init);
- CLK_OF_DECLARE(socfpga_gate_clk, "altr,socfpga-gate-clk", socfpga_gate_init);
-@@ -30,3 +31,11 @@ CLK_OF_DECLARE(socfpga_a10_perip_clk, "altr,socfpga-a10-perip-clk",
- 	       socfpga_a10_periph_init);
- CLK_OF_DECLARE(socfpga_a10_gate_clk, "altr,socfpga-a10-gate-clk",
- 	       socfpga_a10_gate_init);
-+#elif CONFIG_ARCH_STRATIX10
-+CLK_OF_DECLARE(socfpga_s10_pll_clk, "altr,socfpga-s10-pll-clock",
-+	       socfpga_s10_pll_init);
-+CLK_OF_DECLARE(socfpga_s10_perip_clk, "altr,socfpga-s10-perip-clk",
-+	       socfpga_s10_periph_init);
-+CLK_OF_DECLARE(socfpga_s10_gate_clk, "altr,socfpga-s10-gate-clk",
-+	       socfpga_s10_gate_init);
-+#endif
-diff --git a/drivers/clk/socfpga/clk.h b/drivers/clk/socfpga/clk.h
-index 814c724..7eeb140 100644
---- a/drivers/clk/socfpga/clk.h
-+++ b/drivers/clk/socfpga/clk.h
-@@ -34,6 +34,7 @@
- 
- extern void __iomem *clk_mgr_base_addr;
- extern void __iomem *clk_mgr_a10_base_addr;
-+extern void __iomem *clk_mgr_s10_base_addr;
- 
- void __init socfpga_pll_init(struct device_node *node);
- void __init socfpga_periph_init(struct device_node *node);
-@@ -41,6 +42,9 @@ void __init socfpga_gate_init(struct device_node *node);
- void socfpga_a10_pll_init(struct device_node *node);
- void socfpga_a10_periph_init(struct device_node *node);
- void socfpga_a10_gate_init(struct device_node *node);
-+void socfpga_s10_pll_init(struct device_node *node);
-+void socfpga_s10_periph_init(struct device_node *node);
-+void socfpga_s10_gate_init(struct device_node *node);
- 
- struct socfpga_pll {
- 	struct clk_gate	hw;
-@@ -51,9 +55,11 @@ struct socfpga_gate_clk {
- 	char *parent_name;
- 	u32 fixed_div;
- 	void __iomem *div_reg;
-+	void __iomem *bypass_reg;
- 	struct regmap *sys_mgr_base_addr;
- 	u32 width;	/* only valid if div_reg != 0 */
- 	u32 shift;	/* only valid if div_reg != 0 */
-+	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
- 	u32 clk_phase[2];
- };
- 
-@@ -62,8 +68,10 @@ struct socfpga_periph_clk {
- 	char *parent_name;
- 	u32 fixed_div;
- 	void __iomem *div_reg;
-+	void __iomem *bypass_reg;
- 	u32 width;      /* only valid if div_reg != 0 */
- 	u32 shift;      /* only valid if div_reg != 0 */
-+	u32 bypass_shift;      /* only valid if bypass_reg != 0 */
- };
- 
- #endif /* SOCFPGA_CLK_H */
++IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_edge_intc_of_init);
++
++int __init brcmstb_l2_lvl_intc_of_init(struct device_node *np,
++	struct device_node *parent)
++{
++	return brcmstb_l2_intc_of_init(np, parent, &l2_lvl_intc_init);
++}
++IRQCHIP_DECLARE(bcm7271_l2_intc, "brcm,bcm7271-l2-intc",
++	brcmstb_l2_lvl_intc_of_init);
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.0
