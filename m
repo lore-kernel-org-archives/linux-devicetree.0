@@ -1,107 +1,72 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 2/2] drivers/watchdog: ASPEED reference dev tree properties for config
-Date: Thu,  6 Jul 2017 19:49:00 -0500
-Message-ID: <20170707004901.26780-3-cbostic@linux.vnet.ibm.com>
-References: <20170707004901.26780-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170707004901.26780-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v4,3/3] mwifiex: Enable WoWLAN for both sdio and pcie
+Date: Thu, 6 Jul 2017 17:53:03 -0700
+Message-ID: <20170707005302.GA17921@google.com>
+References: <1479216964-3328-3-git-send-email-akarwar@marvell.com>
+ <595A207D.3000804@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <595A207D.3000804-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reference the system device tree when configuring the watchdog
-engines. If property 'aspeed,reset_type' is present then set
-reset behavior based on the specified value.  This can be one of
-three different mutually exclusive values
-  * cpu - Reset CPU only on watchdog timeout
-  * soc - Reset System on Chip
-  * system - Full system reset
+On Mon, Jul 03, 2017 at 06:46:21PM +0800, Jeffy Chen wrote:
+> Hi guys,
+> 
+> with this patch, the pci device's irq might be override by this
+> wakeup irq when not using msi:
 
-No reset can also be specified by indicating:
-  * none - No reset, assumes another watchdog is responsible for
-           this.
+Hmm, good point. I believe I noticed this one at some point and then
+didn't get to investigate further...
 
-Add optional property 'aspeed,external-signal'. If present then
-configure to generate external signal on watchdog timeout.
+It kind of seems like we inadvertently conflicted with the PCI OF
+interrupt spec [1]. There, the "interrupts" property for a device (if
+present) is supposed to represent INT{A...D} with values of {1...4}.
+IIUC, there should only be a single entry in this property.
 
-Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
----
-v4 - Change the three reset type parameters to a new property
-     'aspeed,reset_type' and check assignment for one of four
-     different values, cpu, soc, system, none
-v3 - Invert the logic for system reset dev tree property to
-     preserve backwards compatibility. If not specified the
-     default is to configure for system reset
-   - Add check for 'aspeed,no-soc-reset' property and only if
-     not present is SOC reset to be configured.  This preserves
-     backwards compatibility.
-v2 - Change of_get_property() to of_property_read_bool()
-   - Remove redundant check for NULL struct device_node pointer
-   - Optional property names now start with prefix 'aspeed,'
----
- drivers/watchdog/aspeed_wdt.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+If we were to extend this properly, I guess that would mean we'd need a
+second "interrupts" entry, with a different parent. I think we can use
+"interrupts-extended" for that.
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index 1c65258..3ca79565 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -36,6 +36,7 @@ struct aspeed_wdt {
- #define WDT_CTRL		0x0C
- #define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
- #define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
-+#define   WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
- #define   WDT_CTRL_1MHZ_CLK		BIT(4)
- #define   WDT_CTRL_WDT_EXT		BIT(3)
- #define   WDT_CTRL_WDT_INTR		BIT(2)
-@@ -140,6 +141,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- {
- 	struct aspeed_wdt *wdt;
- 	struct resource *res;
-+	struct device_node *np;
-+	const char *reset_type;
- 	int ret;
- 
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-@@ -164,14 +167,28 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	wdt->wdd.timeout = WDT_DEFAULT_TIMEOUT;
- 	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
- 
-+	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-+
- 	/*
- 	 * Control reset on a per-device basis to ensure the
--	 * host is not affected by a BMC reboot, so only reset
--	 * the SOC and not the full chip
-+	 * host is not affected by a BMC reboot
- 	 */
--	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
--		WDT_CTRL_1MHZ_CLK |
--		WDT_CTRL_RESET_SYSTEM;
-+	np = pdev->dev.of_node;
-+	ret = of_property_read_string(np, "aspeed,reset-type", &reset_type);
-+	if (ret) {
-+		wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
-+	} else {
-+		if (!strcmp(reset_type, "cpu"))
-+			wdt->ctrl |= WDT_CTRL_RESET_MODE_ARM_CPU;
-+		else if (!strcmp(reset_type, "soc"))
-+			wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC;
-+		else if (!strcmp(reset_type, "system"))
-+			wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
-+	}
-+	if (of_property_read_bool(np, "aspeed,external-signal"))
-+		wdt->ctrl |= WDT_CTRL_WDT_EXT;
-+
-+	writel(wdt->ctrl, wdt->base + WDT_CTRL);
- 
- 	if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
- 		aspeed_wdt_start(&wdt->wdd);
--- 
-1.8.2.2
+So we'd need to document an optional "interrupt-names" for Marvell, and
+have the driver try that first. The rough outline would be something
+like this.
 
+For the device tree (e.g., rk3399-gru):
+
+-			interrupt-parent = <&gpio0>;
+-			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
++			interrupts-extended = <&pcie0 1>, <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
++			interrupt-names = "int-A", "wake";
+
+Then mwifiex would need to check "byname" before trying "by index":
+
+	adapter->irq_wakeup = of_irq_get_byname(adapter->dt_node, "wake");
+	if (!adapter->irq_wakeup) {
+		adapter->irq_wakeup = irq_of_parse_and_map(adapter->dt_node, 0);
+		if (!adapter->irq_wakeup) {
+			dev_dbg(dev, "fail to parse irq_wakeup from device tree\n");
+			goto err_exit;
+		}
+	}
+
+Or if we want to suggest the original binding was wrong and that we
+should just ignore existing device trees that tried to use it, we can
+skip the by-index fallback.
+
+Brian
+
+[1] Documentation/devicetree/bindings/pci/pci.txt points to
+http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
+except that link is also dead now. I found the same doc here:
+https://www.openfirmware.info/data/docs/rec.intmap.d09.pdf
+Might want to update the binding doc... I've sent a patch for that
+separately.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
