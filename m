@@ -1,82 +1,62 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
- using the RCU module
-Date: Fri, 7 Jul 2017 15:11:24 -0500
-Message-ID: <CAL_JsqKSixi3v8qmEFXQpYWi8C2USx5znahmCH14-8sBe+W3ig@mail.gmail.com>
-References: <20170702224051.15109-1-hauke@hauke-m.de> <20170702224051.15109-15-hauke@hauke-m.de>
- <20170707142312.5pwily3gbntvesbm@rob-hp-laptop> <534b3592-2803-ac95-ad60-3cf5d1252413@hauke-m.de>
+Subject: Re: [PATCH 2/8] usb: bdc: Add Device Tree binding document for
+ Broadcom BDC driver
+Date: Fri, 7 Jul 2017 15:15:29 -0500
+Message-ID: <CAL_JsqJ5Osbs83dSbWht=e-aDo4fxBT2c97MtrFrvcyz3Q+57A@mail.gmail.com>
+References: <1498587806-24781-1-git-send-email-alcooperx@gmail.com>
+ <1498587806-24781-3-git-send-email-alcooperx@gmail.com> <20170706141840.lanfxjdrkaqvv3vz@rob-hp-laptop>
+ <CAGh=XACQvkb1QE=EokekiCdK9K9yktkGyVNdXaT4CxE8XP=u4A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <534b3592-2803-ac95-ad60-3cf5d1252413-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGh=XACQvkb1QE=EokekiCdK9K9yktkGyVNdXaT4CxE8XP=u4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Al Cooper <al.cooper-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yuan linyu <Linyu.Yuan-cfy2TCaE7SHLM0G2K2Xlo2/U75nxZMCp@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 7, 2017 at 1:49 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
->
->
-> On 07/07/2017 04:23 PM, Rob Herring wrote:
->> On Mon, Jul 03, 2017 at 12:40:49AM +0200, Hauke Mehrtens wrote:
->>> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
->>> the PHY interfaces for each core. The phy instances can be passed to the
->>> dwc2 driver, which already supports the generic phy interface.
->>>
->>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>> ---
->>>  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  42 ++++
->>>  arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
->>>  drivers/phy/Kconfig                                |   8 +
->>>  drivers/phy/Makefile                               |   1 +
->>>  drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++++++++
->>>  5 files changed, 338 insertions(+), 12 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
->>>  create mode 100644 drivers/phy/phy-lantiq-rcu-usb2.c
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
->>> new file mode 100644
->>> index 000000000000..c538baa2ba54
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
->>> @@ -0,0 +1,42 @@
->>> +Lantiq XWAY SoC RCU USB 1.1/2.0 PHY binding
->>> +===========================================
->>> +
->>> +This binding describes the USB PHY hardware provided by the RCU module on the
->>> +Lantiq XWAY SoCs.
->>> +
->>> +This driver has to be a sub node of the Lantiq RCU block.
->>> +
->>> +-------------------------------------------------------------------------------
->>> +Required properties (controller (parent) node):
->>> +- compatible        : Should be one of
->>> +                    "lantiq,ase-usb2-phy"
->>> +                    "lantiq,danube-usb2-phy"
->>> +                    "lantiq,xrx100-usb2-phy"
->>> +                    "lantiq,xrx200-usb2-phy"
->>> +                    "lantiq,xrx300-usb2-phy"
->>> +- offset-phy        : Offset of the USB PHY configuration register
->>> +- offset-ana        : Offset of the USB Analog configuration register
->>
->> These are not needed with the reg property used instead.
->
-> Hi Rob,
->
-> These register are also used by completely different drivers, the
-> hardware engineers used some bits of these registers for completely
-> different purposes, some bits are used for DSL instead of USB PHY. When
-> I io map them, they can only be access through this driver.
->
-> Should I get the register from the reg property and access them though
-> regmap or how should I make sure also other drivers can access the other
-> bits.
+Please only post plain text emails.
 
-Yes, just read the reg property like you would for the offset properties.
+On Fri, Jul 7, 2017 at 2:03 PM, Al Cooper <al.cooper-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>
+>
+> On Thu, Jul 6, 2017 at 10:18 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> On Tue, Jun 27, 2017 at 02:23:20PM -0400, Al Cooper wrote:
+>> > Add Device Tree binding document for Broadcom USB Device
+>> > Controller (BDC).
+>> >
+>> > Signed-off-by: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/usb/brcm,bdc-udc.txt       | 28 ++++++++++++++++++++++
+>> >  1 file changed, 28 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/usb/brcm,bdc-udc.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc-udc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc-udc.txt
+>> > new file mode 100644
+>> > index 0000000..4eeaddb
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/usb/brcm,bdc-udc.txt
+>> > @@ -0,0 +1,28 @@
+>> > +Broadcom USB Device Controller (BDC)
+>> > +====================================
+>> > +
+>> > +Required properties:
+>> > +
+>> > +- compatible: must be one of:
+>> > +                "brcm,bdc-udc-v0.16"
+>> > +                "brcm,bdc-udc"
+>>
+>> Isn't "bdc-udc" redundant?
+>
+>
+> I'll change the base name to "brcm-udc"
+
+Well, it should be "brcm,<something>" with the vendor prefix followed
+by a comma. If the block is known as the BDC, then I'd use that.
 
 Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
