@@ -1,194 +1,113 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-binding: remoteproc: Add the bindings required
- for Q6 - WCSS core
-Date: Fri, 7 Jul 2017 08:47:57 -0500
-Message-ID: <20170707134757.kfbdfk6srkmqa5ex@rob-hp-laptop>
-References: <1498745861-20531-1-git-send-email-sricharan@codeaurora.org>
- <1498745861-20531-4-git-send-email-sricharan@codeaurora.org>
+Subject: Re: [PATCH 2/8] dt-bindings: mailbox: add binding doc
+ for the ARM SMC mailbox
+Date: Fri, 7 Jul 2017 08:53:25 -0500
+Message-ID: <20170707135325.7iqntzxhnh7fzv4m@rob-hp-laptop>
+References: <20170630095608.24943-1-andre.przywara@arm.com>
+ <20170630095608.24943-3-andre.przywara@arm.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBV5E73FAKGQEQWLXRNI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1498745861-20531-4-git-send-email-sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170630095608.24943-3-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 07:47:41PM +0530, Sricharan R wrote:
-> IPQ8074 has an integrated Q6V5 Hexagon dsp - Lithium Wlan (WCSS) core.
-> This patch adds the required bindings to load, boot, shutdown that
-> remoteproc subsystem.
+On Fri, Jun 30, 2017 at 10:56:02AM +0100, Andre Przywara wrote:
+> Add binding documentation for the generic ARM SMC mailbox.
+> This is not describing hardware, but a firmware interface.
 > 
-> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 > ---
->  .../bindings/remoteproc/qcom,q6v5-wcss.txt         | 139 +++++++++++++++++++++
->  1 file changed, 139 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+>  .../devicetree/bindings/mailbox/arm-smc.txt        | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+> diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
 > new file mode 100644
-> index 0000000..f664c26
+> index 0000000..90c5926
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
-> @@ -0,0 +1,139 @@
-> +Qualcomm Hexagon (Q6) - WCSS Peripheral Image Loader
-> +
-> +This document defines the binding for a component that loads and boots firmware
-> +on the integrated Qualcomm Hexagon - WCSS core.
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be one of:
-> +		    "qcom,q6v5-wcss-pil",
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must specify the base address and size of the qdsp6 and
-> +		    mpm (msm power manager) register blocks.
-> +
-> +- reg-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "q6" and "mpm"
-> +
-> +- interrupts-extended:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: must list the watchdog, fatal IRQs ready, handover and
+> +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> @@ -0,0 +1,61 @@
+> +ARM SMC Mailbox Driver
 
-fatal, ready, ...
+s/Driver/Interface/
 
-> +		    stop-ack IRQs
+> +======================
 > +
-> +- interrupt-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+> +This mailbox uses the ARM smc (secure monitor call) instruction to
+> +trigger a mailbox-connected activity in firmware, executing on the very same
+> +core as the caller. By nature this operation is synchronous and this
+> +mailbox provides no way for asynchronous messages to be delivered the other
+> +way round, from firmware to the OS. However the value of r0/w0/x0 the firmware
+> +returns after the smc call is delivered as a received message to the
+> +mailbox framework, so a synchronous communication can be established.
 > +
-> +- clocks:
-> +	Usage: required
-> +	Value type: <phandle>
+> +One use case of this mailbox is the SCP interface, which uses shared memory
+> +to transfer commands and parameters, and a mailbox to trigger a function
+> +call. This allows SoCs without a separate management processor (or
+> +when such a processor is not available or used) to use this standardized
+> +interface anyway.
+> +
+> +This binding describes no hardware, but establishes a firmware interface.
+> +The communication follows the ARM SMC calling convention[1].
+> +Any core which supports the SMC or HVC instruction can be used, as long as
+> +a firmware component running in EL3 or EL2 is handling these calls.
+> +
+> +Mailbox Device Node:
+> +====================
 
-These are not just a phandle. 
-
-> +	Definition: references to the axim-q6, axim2-q6, axi-wcss,
-> +		    ahb-q6, ahbs-q6, ahb-wcss, ahbs-wcss, sysnoc and mem.
-> +		    to be held on behalf of the booting of the Hexagon and WCSS
-> +		    core. These are the interface, bus, mem clocks required for
-> +		    the Q6 and WCSS cores.
-> +
-> +- clock-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "axim-q6", "axim2-q6", "axi-wcss", "ahb-q6",
-> +			    "ahbs-q6", "ahb-wcss", "ahbs-wcss", "sysnoc", "mem"
-> +
-> +- resets:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: reference to the reset-controller for the Q6-WCSS sub-system
-
-This should be a list of 3 resets.
-> +
-> +- reset-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "wcss_aon_reset", "wcss_reset", "wcss_q6_reset"
-> +
-> +- qcom,smem-states:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: reference to the smem state for requesting the Hexagon to
-> +		    shut down
-> +
-> +- qcom,smem-state-names:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "stop"
-> +
-> +- qcom,halt-regs:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: a phandle reference to a syscon representing TCSR followed
-> +		    by the three offsets within syscon for q6, wcss and tcsr global
-> +		    halt registers.
-> +
-> += SUBNODES:
-> +The Hexagon node must contain a subnode, named "q6" representing
-> +the memory region used by the Hexagon firmware. The sub-node must contain:
-
-Why does this need a sub-node?
+Please state this should be a child of /firmware node.
 
 > +
-> +- memory-region:
-> +	Usage: required
-> +	Value type: <phandle>
-> +	Definition: reference to the reserved-memory for the Q6 firmware region
+> +Required properties:
+> +--------------------
+> +- compatible:		Shall be "arm,smc-mbox"
+> +- #mbox-cells		Shall be 1 - the index of the channel needed.
+> +- arm,smc-func-ids	An array of 32-bit values specifying the function
+> +			IDs used by each mailbox channel. Those function IDs
+> +			follow the ARM SMC calling convention standard [1].
+> +			There is one identifier per channel and the number
+> +			of supported channels is determined by the length
+> +			of this array.
 > +
-> += EXAMPLE
-> +The following example describes the resources needed to boot control the
-> +Hexagon, as it is found on IPQ8074 boards.
+> +Optional properties:
+> +--------------------
+> +- method:		A string, either:
+> +			"hvc": if the driver shall use an HVC call, or
+> +			"smc": if the driver shall use an SMC call
+> +			If omitted, defaults to an SMC call.
 > +
-> +	q6v5_wcss: q6v5_wcss@CD00000 {
+> +Example:
+> +--------
+> +
+> +	mailbox: smc_mbox {
 
-s/_/-/ in the node name.
+swap these. mailbox for the node name.
 
-> +		compatible = "q6v5-wcss-pil";
-> +		reg = <0xCD00000 0x4040>,
-> +		      <0x4ab000 0x20>;
-> +		reg-names = "q6",
-> +			    "mpm";
-> +		interrupts-extended = <&intc 0 325 1>,
-> +				      <&wcss_smp2p_in 0 0>,
-> +				      <&wcss_smp2p_in 1 0>,
-> +				      <&wcss_smp2p_in 3 0>;
-> +		interrupt-names = "wdog",
-> +				  "fatal",
-> +				  "handover",
-> +				  "stop-ack";
-> +		clocks = <&gcc GCC_SYS_NOC_WCSS_AHB_CLK>,
-> +			 <&gcc GCC_WCSS_AHB_S_CLK>,
-> +			 <&gcc GCC_WCSS_ECAHB_CLK>,
-> +			 <&gcc GCC_Q6_AHB_CLK>,
-> +			 <&gcc GCC_Q6_AHB_S_CLK>,
-> +			 <&gcc GCC_WCSS_AXI_M_CLK>,
-> +			 <&gcc GCC_MEM_NOC_Q6_AXI_CLK>,
-> +			 <&gcc GCC_Q6_AXIM_CLK>,
-> +			 <&gcc GCC_Q6_AXIM2_CLK>;
-> +		clock-names = "sysnoc",
-> +			      "ahb-wcss",
-> +			      "ahbs-wcss",
-> +			      "ahb-q6",
-> +			      "ahbs-q6",
-> +			      "axi-wcss",
-> +			      "memnoc",
-> +			      "axim-q6",
-> +			      "axim2-q6";
-> +
-> +		resets = <&gcc GCC_WCSSAON_RESET>,
-> +			 <&gcc GCC_WCSS_BCR>,
-> +			 <&gcc GCC_WCSS_Q6_BCR>;
-> +
-> +		reset-names = "wcss_aon_reset",
-> +			      "wcss_reset",
-> +			      "wcss_q6_reset";
-> +
-> +		qcom,halt-regs = <&tcsr_mutex_block 0x0 0xA000 0xD000>;
-> +
-> +		qcom,smem-states = <&wcss_smp2p_out 0>,
-> +				   <&wcss_smp2p_out 1>;
-> +		qcom,smem-state-names = "shutdown",
-> +					"stop";
-> +		q6 {
-> +			memory-region = <&q6_region>;
-> +		};
+> +		#mbox-cells = <1>;
+> +		compatible = "arm,smc-mbox";
+> +		identifiers = <0x82000001>, <0x82000002>;
 > +	};
+> +
+> +	scpi {
+> +		compatible = "arm,scpi";
+> +		mboxes = <&mailbox 0>;
+> +		shmem = <&cpu_scp_shmem>;
+> +	};
+> +
+> +
+> +[1]
+> +http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.den0028a/index.html
 > -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 2.9.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
