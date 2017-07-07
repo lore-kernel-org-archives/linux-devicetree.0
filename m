@@ -1,62 +1,41 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH 2/2] dt: Add bindings for IDT VersaClock 5P49V5925
-Date: Fri,  7 Jul 2017 04:57:57 +0300
-Message-ID: <1499392677-9100-1-git-send-email-vladimir.barinov@cogentembedded.com>
-References: <1499392623-9011-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499392623-9011-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+From: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] arm64: dts: renesas: ulcb: sound clock-frequency needs descending order
+Date: Fri,  7 Jul 2017 05:09:33 +0300
+Message-ID: <1499393373-11514-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+From: Vladimir Barinov <vladimir.barinov+renesas-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-IDT VersaClock 5 5P49V5925 has 4 clock outputs, 4 fractional dividers.
-Input clock source can be taken only from external reference clock.
+It will be used ADG clock initial settings, and will be
+sound codec's initial system clock which needs maximum clock frequency.
+Thus, descending order is required.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-index 53d7e50..a1ad9e0 100644
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-@@ -6,19 +6,21 @@ from 3 to 12 output clocks.
- ==I2C device node==
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index b5c6ee0..d1a3f3b 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -281,7 +281,7 @@
  
- Required properties:
--- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933" ,
--		"idt,5p49v5935".
-+- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5925" ,
-+		"idt,5p49v5933", "idt,5p49v5935".
- - reg:		i2c device address, shall be 0x68 or 0x6a.
- - #clock-cells:	from common clock binding; shall be set to 1.
- - clocks:	from common clock binding; list of parent clock handles,
--		- 5p49v5923: (required) either or both of XTAL or CLKIN
-+		- 5p49v5923 and
-+		- 5p49v5925: (required) either or both of XTAL or CLKIN
- 					reference clock.
- 		- 5p49v5933 and
- 		- 5p49v5935: (optional) property not present (internal
- 					Xtal used) or CLKIN reference
- 					clock.
- - clock-names:	from common clock binding; clock input names, can be
--		- 5p49v5923: (required) either or both of "xin", "clkin".
-+		- 5p49v5923 and
-+		- 5p49v5925: (required) either or both of "xin", "clkin".
- 		- 5p49v5933 and
- 		- 5p49v5935: (optional) property not present or "clkin".
+ 	/* audio_clkout0/1/2/3 */
+ 	#clock-cells = <1>;
+-	clock-frequency = <11289600 12288000>;
++	clock-frequency = <12288000 11289600>;
  
-@@ -37,6 +39,7 @@ clock specifier, the following mapping applies:
- 	1 -- OUT1
- 	2 -- OUT4
+ 	status = "okay";
  
-+5P49V5925 and
- 5P49V5935:
- 	0 -- OUT0_SEL_I2CB
- 	1 -- OUT1
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
