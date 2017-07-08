@@ -1,71 +1,131 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver (fwd)
-Date: Sat, 8 Jul 2017 08:14:51 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1707080813400.1971@hadrien>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] cpufreq: mediatek: Add support of cpufreq to
+ MT2701/MT7623 SoC
+Date: Sat, 8 Jul 2017 14:30:26 +0800
+Message-ID: <1499495426.16278.9.camel@mtkswgap22>
+References: <cover.1499399121.git.sean.wang@mediatek.com>
+         <de42e68d86dd161bb18b4ca7f27774c63c1bd55d.1499399121.git.sean.wang@mediatek.com>
+         <1499412649.4449.33.camel@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499412649.4449.33.camel-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+To: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Please check on the comparison on line 1489.
+On Fri, 2017-07-07 at 09:30 +0200, Jean Delvare wrote:
+> Hi Sean,
+> 
+> On ven., 2017-07-07 at 11:56 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > MT2701/MT7623 is a 32-bit ARMv7 based quad-core (4 * Cortex-A7) with
+> > single cluster and this hardware is also compatible with the existing
+> > driver through enabling CPU frequency feature with operating-points-v2
+> > bindings. Also, this driver actually supports all MediaTek SoCs, the
+> > Kconfig menu entry and file name itself should be updated with more
+> > generic name to drop "MT8173"
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/cpufreq/Kconfig.arm                         | 8 ++++----
+> >  drivers/cpufreq/Makefile                            | 2 +-
+> >  drivers/cpufreq/{mt8173-cpufreq.c => mtk-cpufreq.c} | 2 ++
+> >  3 files changed, 7 insertions(+), 5 deletions(-)
+> >  rename drivers/cpufreq/{mt8173-cpufreq.c => mtk-cpufreq.c} (99%)
+> > 
+> > diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> > index 74ed7e9..79aece7 100644
+> > --- a/drivers/cpufreq/Kconfig.arm
+> > +++ b/drivers/cpufreq/Kconfig.arm
+> > @@ -87,14 +87,14 @@ config ARM_KIRKWOOD_CPUFREQ
+> >  	  This adds the CPUFreq driver for Marvell Kirkwood
+> >  	  SoCs.
+> >  
+> > -config ARM_MT8173_CPUFREQ
+> > -	tristate "Mediatek MT8173 CPUFreq support"
+> > +config ARM_MEDIATEK_CPUFREQ
+> > +	tristate "CPU Frequency scaling support for MediaTek SoCs"
+> >  	depends on ARCH_MEDIATEK && REGULATOR
+> > -	depends on ARM64 || (ARM_CPU_TOPOLOGY && COMPILE_TEST)
+> > +	depends on ARM || ARM64 || COMPILE_TEST
+> 
+> This statement no longer serves any purpose. The whole Kconfig.arm file
+> depends on ARM || ARM64, so you can drop it. As a matter of fact no
+> other entry in this file has the dependency.
+> 
 
-julia
+Okay, the whole line seemed redundant for that's always true. 
+I will drop it in the next version.
 
----------- Forwarded message ----------
-Date: Sat, 8 Jul 2017 10:13:09 +0800
-From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-To: kbuild-JC7UmRfGjtg@public.gmane.org
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
+> >  	depends on !CPU_THERMAL || THERMAL
+> >  	select PM_OPP
+> >  	help
+> > -	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
+> > +	  This adds the CPUFreq driver support for MediaTek SoCs.
+> >  
+> >  config ARM_OMAP2PLUS_CPUFREQ
+> >  	bool "TI OMAP2+"
+> > diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> > index b7e78f0..4956f5d 100644
+> > --- a/drivers/cpufreq/Makefile
+> > +++ b/drivers/cpufreq/Makefile
+> > @@ -58,7 +58,7 @@ obj-$(CONFIG_ARM_EXYNOS5440_CPUFREQ)	+= exynos5440-cpufreq.o
+> >  obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+= highbank-cpufreq.o
+> >  obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+= imx6q-cpufreq.o
+> >  obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
+> > -obj-$(CONFIG_ARM_MT8173_CPUFREQ)	+= mt8173-cpufreq.o
+> > +obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ)	+= mtk-cpufreq.o
+> 
+> I would have preferred mediatek-cpufreq. 3-letter abbreviations are
+> likely to collide and cause confusion at some point in time. However it
+> seems I am late to the party, I see that there are already many files
+> named mtk-* or *-mtk.*... So, so be it.
+> 
+> Also the file describing the bindings is named cpufreq-mediatek.txt,
+> which is inconsistent... But the situation is the same for a few other
+> cpufreq drivers already, so I suppose this is acceptable.
+> 
 
-Hi Pierre-Yves,
+Agreed. I also prefer using whole name with mediatek as the 
+prefix than just abbreviation used. I will update it also in the
+next version.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.12 next-20170707]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+As for the file naming for other drivers, i feel it's okay for me
+changing into mediatek as file prefix, but it still depends on
+maintainers or original authors if they likes this.
 
-url:    https://github.com/0day-ci/linux/commits/Pierre-Yves-MORDRET/Add-STM32-MDMA-driver/20170708-013345
-:::::: branch date: 9 hours ago
-:::::: commit date: 9 hours ago
 
->> drivers/dma/stm32-mdma.c:1489:5-16: WARNING: Unsigned expression compared with zero: dmadev -> irq < 0
+	Sean
 
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout c6b3687d964d5a49aa0f297918bf26f6cb7444db
-vim +1489 drivers/dma/stm32-mdma.c
+> >  obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
+> >  obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
+> >  obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
+> > diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mtk-cpufreq.c
+> > similarity index 99%
+> > rename from drivers/cpufreq/mt8173-cpufreq.c
+> > rename to drivers/cpufreq/mtk-cpufreq.c
+> > index fd1886f..481ec77 100644
+> > --- a/drivers/cpufreq/mt8173-cpufreq.c
+> > +++ b/drivers/cpufreq/mtk-cpufreq.c
+> > @@ -575,6 +575,8 @@ static struct platform_driver mt8173_cpufreq_platdrv = {
+> >  
+> >  /* List of machines supported by this driver */
+> >  static const struct of_device_id mt8173_cpufreq_machines[] __initconst = {
+> > +	{ .compatible = "mediatek,mt2701", },
+> > +	{ .compatible = "mediatek,mt7623", },
+> >  	{ .compatible = "mediatek,mt817x", },
+> >  	{ .compatible = "mediatek,mt8173", },
+> >  	{ .compatible = "mediatek,mt8176", },
+> 
+> Reviewed-by: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+> 
 
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1473  		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1474  	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1475  		BIT(DMA_MEM_TO_MEM);
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1476  	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1477  	dd->max_burst = STM32_MDMA_MAX_BURST;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1478  	dd->dev = &pdev->dev;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1479  	INIT_LIST_HEAD(&dd->channels);
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1480
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1481  	for (i = 0; i < dmadev->nr_channels; i++) {
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1482  		chan = &dmadev->chan[i];
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1483  		chan->id = i;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1484  		chan->vchan.desc_free = stm32_mdma_desc_free;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1485  		vchan_init(&chan->vchan, dd);
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1486  	}
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1487
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1488  	dmadev->irq = platform_get_irq(pdev, 0);
-c6b3687d Pierre-Yves MORDRET 2017-07-06 @1489  	if (dmadev->irq < 0) {
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1490  		dev_err(&pdev->dev, "failed to get IRQ\n");
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1491  		return dmadev->irq;
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1492  	}
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1493
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1494  	ret = devm_request_irq(&pdev->dev, dmadev->irq, stm32_mdma_irq_handler,
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1495  			       0, dev_name(&pdev->dev), dmadev);
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1496  	if (ret) {
-c6b3687d Pierre-Yves MORDRET 2017-07-06  1497  		dev_err(&pdev->dev, "failed to request IRQ\n");
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
