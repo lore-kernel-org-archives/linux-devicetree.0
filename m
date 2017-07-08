@@ -1,50 +1,52 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARC: AXS: prepare dts files for enabling PAE40 on axs103
-Date: Fri, 7 Jul 2017 22:28:30 +0000
-Message-ID: <1499466509.3101.13.camel@synopsys.com>
-References: <20170626114725.9678-1-Eugeniy.Paltsev@synopsys.com>
-         <b6f3e4d2-0569-6f06-f690-eed3de402723@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 0/3] of: overlay: load overlay symbols into live device tree
+Date: Fri,  7 Jul 2017 17:28:42 -0700
+Message-ID: <1499473725-13361-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b6f3e4d2-0569-6f06-f690-eed3de402723-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <4CB424EBCBED9D4DBAEF45F33AE6677F-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmluZWV0LA0KDQpPbiBGcmksIDIwMTctMDctMDcgYXQgMTI6NTcgLTA3MDAsIFZpbmVldCBH
-dXB0YSB3cm90ZToNCj4gT24gMDYvMjYvMjAxNyAwNDo0NyBBTSwgRXVnZW5peSBQYWx0c2V2IHdy
-b3RlOg0KPiA+IA0KPiA+IEVuYWJsZSA2NGJpdCBhZHJlc3NpbmcsIHdoZXJlIGl0IG5lZWRlZCwg
-dG8gbWFrZSBwb3NzaWJsZQ0KPiA+IGVuYWJsaW5nIFBBRTQwIG9uIGF4czEwMy4NCj4gPiANCj4g
-PiBUaGlzIHBhdGNoIGRvZXNuJ3QgYWZmZWN0IG9uIGFueSBmdW5jdGlvbmFsaXR5Lg0KPiA+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEV1Z2VuaXkgUGFsdHNldiA8RXVnZW5peS5QYWx0c2V2QHN5bm9w
-c3lzLmNvbT4NCj4gPiAtLS0NCj4gPiDCoCBhcmNoL2FyYy9ib290L2R0cy9heGMwMDEuZHRzacKg
-wqDCoMKgwqB8IDIwICsrKysrKysrKy0tLS0tLS0tLS0tDQo+ID4gwqAgYXJjaC9hcmMvYm9vdC9k
-dHMvYXhjMDAzLmR0c2nCoMKgwqDCoMKgfCAyMSArKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiDC
-oCBhcmNoL2FyYy9ib290L2R0cy9heGMwMDNfaWR1LmR0c2kgfCAyMSArKysrKysrKysrLS0tLS0t
-LS0tLS0NCj4gPiDCoCBhcmNoL2FyYy9ib290L2R0cy9heHMxMHhfbWIuZHRzacKgwqB8wqDCoDIg
-Ky0NCj4gPiDCoCA0IGZpbGVzIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDM0IGRlbGV0aW9u
-cygtKQ0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9ib290L2R0cy9heGMwMDEuZHRz
-aSBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMS5kdHNpDQo+ID4gaW5kZXggNTNjZTIyNi4uYTM4
-MGZmYSAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FyYy9ib290L2R0cy9heGMwMDEuZHRzaQ0KPiA+
-ICsrKyBiL2FyY2gvYXJjL2Jvb3QvZHRzL2F4YzAwMS5kdHNpDQo+ID4gQEAgLTE1LDE1ICsxNSwx
-NSBAQA0KPiA+IMKgwqANCj4gPiDCoCAvIHsNCj4gPiDCoMKgCWNvbXBhdGlibGUgPSAic25wcyxh
-cmMiOw0KPiA+IC0JI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gLQkjc2l6ZS1jZWxscyA9IDwx
-PjsNCj4gPiArCSNhZGRyZXNzLWNlbGxzID0gPDI+Ow0KPiA+ICsJI3NpemUtY2VsbHMgPSA8Mj47
-DQo+ID4gwqDCoA0KPiA+IMKgwqAJY3B1X2NhcmQgew0KPiA+IMKgwqAJCWNvbXBhdGlibGUgPSAi
-c2ltcGxlLWJ1cyI7DQo+ID4gwqDCoAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQo+ID4gwqDCoAkJ
-I3NpemUtY2VsbHMgPSA8MT47DQo+ID4gwqDCoA0KPiA+IC0JCXJhbmdlcyA9IDwweDAwMDAwMDAw
-IDB4ZjAwMDAwMDAgMHgxMDAwMDAwMD47DQo+ID4gKwkJcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHgw
-IDB4ZjAwMDAwMDAgMHgxMDAwMDAwMD47DQo+IA0KPiBBWFMxMDEgY2FuJ3Qgc3VwcG9ydCBQQUUg
-ZXRjIC0gYnV0IEkgZ3Vlc3MgeW91IHN0aWxsIG5lZWQgdG8gbWFrZSB0aGUgY2hhbmdlIGhlcmXC
-oA0KPiBiZWNhdXNlIHRoZSBEVCBiaXRzIGZvciBNQiBhcmUgc2hhcmVkID8NCg0KQ29ycmVjdCB0
-aGF0J3MgdGhlIGNhc2UuIFNvIGl0IGxvb2tzIG1pc2xlYWRpbmcgYnV0IGFzIGxvbmcgYXMgd2Ug
-d2FudCB0byBzaGFyZSBNQidzIC5kdHNpDQpmb3IgYm90aCBheHMxMDEgYW5kIGF4czEwMyB3ZSBu
-ZWVkIHRvIGtlZXAgdGhhdCBjaGFuZ2UuDQoNCi1BbGV4ZXk=
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+Symbols in a loaded overlay are not currently available to subsequently
+loaded overlays because the properties in the overlay's __symbols__
+node are not loaded into the live device tree.
+
+Patch 1 is unittests to test patches 2 and 3.
+
+Patch 2 fixes a problem discovered while developing patch 3.  If
+a node name in an overlay has a unit-address then the overlay
+code does not correctly match the node name against an existing
+node in the live tree.
+
+Patch 3 adds the properties in an overlay's __symbol__ node to
+the overlay changeset.
+
+This patch set was created on top of v4.12, with Rob's pull request
+for 4.13 added (https://lkml.org/lkml/2017/7/6/691).  Thus this
+series should apply on 4.13-rc1 when that becomes available.  I will
+re-test on 4.13-rc1.
+
+
+Frank Rowand (3):
+  of: overlay: add overlay unittest data for node names and symbols
+  of: overlay: correctly apply overlay node with unit-address
+  of: overlay: add overlay symbols to live device tree
+
+ drivers/of/overlay.c                            | 136 ++++++++++++++++++++++--
+ drivers/of/unittest-data/Makefile               |   3 +
+ drivers/of/unittest-data/overlay.dts            |  19 +++-
+ drivers/of/unittest-data/overlay_bad_symbol.dts |  22 ++++
+ drivers/of/unittest-data/overlay_base.dts       |   7 ++
+ drivers/of/unittest.c                           |   6 ++
+ 6 files changed, 182 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_symbol.dts
+
+-- 
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
