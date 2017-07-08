@@ -1,108 +1,90 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [v4, 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Sat, 8 Jul 2017 07:59:07 -0700
-Message-ID: <20170708145907.GA19078@roeck-us.net>
-References: <20170707004901.26780-2-cbostic@linux.vnet.ibm.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,1/3] hwmon: ltc2990: refactor value conversion
+Date: Sat, 8 Jul 2017 08:45:15 -0700
+Message-ID: <20170708154515.GA6358@roeck-us.net>
+References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170707004901.26780-2-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+In-Reply-To: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Levens <tom.levens@cern.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Mike Looijmans <mike.looijmans@topic.nl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 07:48:59PM -0500, Christopher Bostic wrote:
-> Describe device tree optional properties:
+On Mon, Jul 03, 2017 at 06:28:58AM +0200, Tom Levens wrote:
+> Conversion from raw values to signed integers has been refactored using
+> bitops.h. This also fixes a bug where negative temperatures were
+> converted incorrectly.
 > 
->   * aspeed,reset-type = "cpu|soc|system|none"
->      One of three different, mutually exclusive, values
-> 
-> 	"cpu" : ARM CPU reset on signal
-> 	"soc" : 'System on chip' reset
-> 	"system" : Full system reset
-> 
->      The value can also be set to "none" which indicates that no
->      reset of any kind is to be done via this watchdog.  This assumes
->      another watchdog on the chip is to take care of resets.
-> 
->   * aspeed,interrupt - Interrupt CPU on signal
 
-After thinking about that, I wonder if this is necessary. It could be
-implied by providing an interrupt to the driver. The driver could then
-set the interrupt configuration bit automatically.
+Documentation/process/submitting-patches.rst, chapter 2: "Solve only one
+problem per patch.".
 
-[ And the bit by itself doesn't really make sense if the driver doesn't
-  also register an interrupt handler ]
+I can understand the urge to merge two sets of changes here. However,
+that creates a problem for me: The fix should be applied to stable kernels,
+but not the refactoring.
 
->   * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
->   * aspeed,alt-boot - Boot from alternate block on signal
-> 
-> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Please split the patch in two, one for the bug fix and one for the
+refactoring.
+
+Thanks,
+Guenter
+
+> Signed-off-by: Tom Levens <tom.levens@cern.ch>
 > ---
-> v4 - Add aspeed-reset-type and assign one of four values,
->      cpu, soc, system, none.
-> v3 - Invert soc and sys reset to 'no' to preserve backwards
->      compatibility.  SOC and SYS reset will be set by default
->      without any optional parameters set
-> v2 - Add 'aspeed,' prefix to all optional properties
->    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> ---
->  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  drivers/hwmon/ltc2990.c | 18 ++++--------------
+>  1 file changed, 4 insertions(+), 14 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5e74d7..f526b00 100644
-> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -8,9 +8,44 @@ Required properties:
->   - reg: physical base address of the controller and length of memory mapped
->     region
+> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+> index 8f8fe05..e320d21 100644
+> --- a/drivers/hwmon/ltc2990.c
+> +++ b/drivers/hwmon/ltc2990.c
+> @@ -11,6 +11,7 @@
+>   * the chip's internal temperature and Vcc power supply voltage.
+>   */
 >  
-> +Optional properties:
-> +
-> + - aspeed,reset-type = "cpu|soc|system|none"
-> +
-> +   Reset behavior - Whenever a timeout occurs the watchdog can be programmed
-> +   to generate one of three different, mutually exclusive, types of resets.
-> +
-> +   Type "none" can be specified to indicate that no resets are to be done.
-> +   This is useful in situations where another watchdog engine on chip is
-> +   to perform the reset.
-> +
-> +   If 'aspeed,reset-type=' is not specfied the default is to enable system
-> +   reset.
-> +
-> +   Reset types:
-> +
-> +        - cpu: Reset CPU on watchdog timeout
-> +
-> +        - soc: Reset 'System on Chip' on watchdog timeout
-> +
-> +        - system: Reset system on watchdog timeout
-> +
-> +        - none: No reset is performed on timeout. Assumes another watchdog
-> +                engine is responsible for this.
-> +
-> + - aspeed,interrupt:	If property is present then interrupt CPU.
-> +			If not specified then don't interrupt CPU.
-> +
-> + - aspeed,external-signal: If property is present then signal is sent to
-> +			external reset counter (only WDT1 and WDT2). If not
-> +			specified no external signal is sent.
-> + - aspeed,alt-boot:    If property is present then boot from alternate block.
-> +
->  Example:
+> +#include <linux/bitops.h>
+>  #include <linux/err.h>
+>  #include <linux/hwmon.h>
+>  #include <linux/hwmon-sysfs.h>
+> @@ -34,15 +35,6 @@
+>  #define LTC2990_CONTROL_MODE_CURRENT	0x06
+>  #define LTC2990_CONTROL_MODE_VOLTAGE	0x07
 >  
->  	wdt1: watchdog@1e785000 {
->  		compatible = "aspeed,ast2400-wdt";
->  		reg = <0x1e785000 0x1c>;
-> +		aspeed,reset-type = "system";
-> +		aspeed,external-signal;
->  	};
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -/* convert raw register value to sign-extended integer in 16-bit range */
+> -static int ltc2990_voltage_to_int(int raw)
+> -{
+> -	if (raw & BIT(14))
+> -		return -(0x4000 - (raw & 0x3FFF)) << 2;
+> -	else
+> -		return (raw & 0x3FFF) << 2;
+> -}
+> -
+>  /* Return the converted value from the given register in uV or mC */
+>  static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>  {
+> @@ -55,18 +47,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>  	switch (reg) {
+>  	case LTC2990_TINT_MSB:
+>  		/* internal temp, 0.0625 degrees/LSB, 13-bit  */
+> -		val = (val & 0x1FFF) << 3;
+> -		*result = (val * 1000) >> 7;
+> +		*result = sign_extend32(val, 12) * 1000 / 16;
+>  		break;
+>  	case LTC2990_V1_MSB:
+>  	case LTC2990_V3_MSB:
+>  		 /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+> -		*result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
+> +		*result = sign_extend32(val, 14) * 1942 / 100;
+>  		break;
+>  	case LTC2990_VCC_MSB:
+>  		/* Vcc, 305.18μV/LSB, 2.5V offset */
+> -		*result = (ltc2990_voltage_to_int(val) * 30518 /
+> -			   (4 * 100 * 1000)) + 2500;
+> +		*result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+>  		break;
+>  	default:
+>  		return -EINVAL; /* won't happen, keep compiler happy */
