@@ -1,55 +1,38 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] staging: iio: tsl2x7x: add device tree
- documentation
-Date: Sun, 9 Jul 2017 18:20:22 +0100
-Message-ID: <20170709182022.78f9c422@kernel.org>
-References: <20170706225626.6716-1-masneyb@onstation.org>
-        <20170706225626.6716-3-masneyb@onstation.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] of_mdio: Fix broken PHY IRQ in case of probe deferral
+Date: Sun, 9 Jul 2017 19:28:15 +0200
+Message-ID: <20170709172815.GA28183@lunn.ch>
+References: <1495112345-24795-1-git-send-email-geert+renesas@glider.be>
+ <f0ed61c3-062b-cec6-fe19-7412231e8ef1@gmail.com>
+ <CAMuHMdWYeSzofU57LmT_M3KkcHhvjfJy7nkHvcXkKzOYmvhqqA@mail.gmail.com>
+ <20170518193453.GB13759@lunn.ch>
+ <CAMuHMdV+jfh=EGt3SvjtrtVfWQ6P8ofp_JxeQZjRrSEfDWs5hA@mail.gmail.com>
+ <08a89dd5-b707-8b8f-b8e1-e20b9ed630b7@gmail.com>
+ <CAMuHMdWWfaP8=H7H+UzrmOYpydi2mGLFGzuk9FQWJtEOug6u5g@mail.gmail.com>
+ <CAMuHMdUt6yOQ9=02z_7WG58YGxFYD=_zn7SeLEqGmfTrNBFJXw@mail.gmail.com>
+ <CAMuHMdW8yzREzTE4GiW_8HU9h-T-fdDmLtZAXYkJrjuypN8BDg@mail.gmail.com>
+ <38cc7c65-e4ca-cb8a-f43b-ca53e87724cf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170706225626.6716-3-masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon.Brenner-QzQKeY2x7wg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <38cc7c65-e4ca-cb8a-f43b-ca53e87724cf@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  6 Jul 2017 18:56:19 -0400
-Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org> wrote:
-
-> Add device tree documentation for the tsl2x7x IIO driver.
+> It sure does fix a real issue, but I am really concerned about the
+> inability to test this patch in a configuration where we have multiple
+> PHY(s) or MDIO device(s) hanging off the same MDIO bus and one of those
+> requesting an EPROBE_DEFER.
 > 
-> Signed-off-by: Brian Masney <masneyb-1iNe0GrtECGEi8DpZVb4nw@public.gmane.org>
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-For what it's worth given the simplicity of the patch
+> I currently don't have a setup where I could exercise this, Andrew, do you?
 
-Acked-by: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Hi Florian
 
-> ---
->  Documentation/devicetree/bindings/trivial-devices.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-> index 35f406d..0e6e953 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/trivial-devices.txt
-> @@ -21,6 +21,16 @@ adi,adt7490		+/-1C TDM Extended Temp Range I.C
->  adi,adxl345		Three-Axis Digital Accelerometer
->  adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
->  ams,iaq-core		AMS iAQ-Core VOC Sensor
-> +amstaos,tsl2571		AMS/TAOS ALS and proximity sensor
-> +amstaos,tsl2671		AMS/TAOS ALS and proximity sensor
-> +amstaos,tmd2671		AMS/TAOS ALS and proximity sensor
-> +amstaos,tsl2771		AMS/TAOS ALS and proximity sensor
-> +amstaos,tmd2771		AMS/TAOS ALS and proximity sensor
-> +amstaos,tsl2572		AMS/TAOS ALS and proximity sensor
-> +amstaos,tsl2672		AMS/TAOS ALS and proximity sensor
-> +amstaos,tmd2672		AMS/TAOS ALS and proximity sensor
-> +amstaos,tsl2772		AMS/TAOS ALS and proximity sensor
-> +amstaos,tmd2772		AMS/TAOS ALS and proximity sensor
->  at,24c08		i2c serial eeprom  (24cxx)
->  atmel,at97sc3204t	i2c trusted platform module (TPM)
->  capella,cm32181		CM32181: Ambient Light Sensor
+What i do have, is a switch with some built in copper Marvell PHYs and
+external SFF modules which use fixed link. I can probably hack the
+fixed-link driver to return EPROBE_DEFER a few times.
+
+	   Andrew
