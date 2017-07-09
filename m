@@ -1,93 +1,91 @@
 From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V3 7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
-Date: Sun,  9 Jul 2017 15:28:13 +0200
-Message-ID: <20170709132814.2339-7-marek.vasut+renesas@gmail.com>
-References: <20170709132814.2339-1-marek.vasut+renesas@gmail.com>
+Subject: Re: [PATCH 1/2] clk: vc5: Add support for IDT VersaClock 5P49V5925
+Date: Sun, 9 Jul 2017 15:29:40 +0200
+Message-ID: <0f450e21-545e-b2e7-ed7c-1df4655cd7e3@gmail.com>
+References: <1499392623-9011-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1499392668-9062-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170709132814.2339-1-marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1499392668-9062-1-git-send-email-vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Barinov <vladimir.barinov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
-Input clock source can be taken from either external crystal or from
-external reference clock.
+On 07/07/2017 03:57 AM, Vladimir Barinov wrote:
+> From: Vladimir Barinov <vladimir.barinov+renesas-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> 
+> Update IDT VersaClock 5 driver to support 5P49V5925. This chip has only
+> external clock input, four fractional dividers (FODs) and five clock
+> outputs (four universal clock outputs and one reference clock output at
+> OUT0_SELB_I2C).
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 
-Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Alexey Firago <alexey_firago-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-V2: Edit the top of the DT binding document to mention VersaClock 6
-V3: Reformat the compatible entry to list one per line
----
- .../devicetree/bindings/clock/idt,versaclock5.txt  | 26 ++++++++++++++++------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+Reviewed-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-index 53d7e50ed875..66ef0a009b95 100644
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-@@ -1,24 +1,29 @@
--Binding for IDT VersaClock5 programmable i2c clock generator.
-+Binding for IDT VersaClock 5,6 programmable i2c clock generators.
- 
--The IDT VersaClock5 are programmable i2c clock generators providing
--from 3 to 12 output clocks.
-+The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
-+generators providing from 3 to 12 output clocks.
- 
- ==I2C device node==
- 
- Required properties:
--- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933" ,
--		"idt,5p49v5935".
-+- compatible:	shall be one of
-+		"idt,5p49v5923"
-+		"idt,5p49v5933"
-+		"idt,5p49v5935"
-+		"idt,5p49v6901"
- - reg:		i2c device address, shall be 0x68 or 0x6a.
- - #clock-cells:	from common clock binding; shall be set to 1.
- - clocks:	from common clock binding; list of parent clock handles,
--		- 5p49v5923: (required) either or both of XTAL or CLKIN
-+		- 5p49v5923 and
-+		  5p49v6901: (required) either or both of XTAL or CLKIN
- 					reference clock.
- 		- 5p49v5933 and
- 		- 5p49v5935: (optional) property not present (internal
- 					Xtal used) or CLKIN reference
- 					clock.
- - clock-names:	from common clock binding; clock input names, can be
--		- 5p49v5923: (required) either or both of "xin", "clkin".
-+		- 5p49v5923 and
-+		  5p49v6901: (required) either or both of "xin", "clkin".
- 		- 5p49v5933 and
- 		- 5p49v5935: (optional) property not present or "clkin".
- 
-@@ -44,6 +49,13 @@ clock specifier, the following mapping applies:
- 	3 -- OUT3
- 	4 -- OUT4
- 
-+5P49V6901:
-+	0 -- OUT0_SEL_I2CB
-+	1 -- OUT1
-+	2 -- OUT2
-+	3 -- OUT3
-+	4 -- OUT4
-+
- ==Example==
- 
- /* 25MHz reference crystal */
+> ---
+>  drivers/clk/clk-versaclock5.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
+> index ea7d552..88b749d 100644
+> --- a/drivers/clk/clk-versaclock5.c
+> +++ b/drivers/clk/clk-versaclock5.c
+> @@ -126,6 +126,7 @@
+>  /* Supported IDT VC5 models. */
+>  enum vc5_model {
+>  	IDT_VC5_5P49V5923,
+> +	IDT_VC5_5P49V5925,
+>  	IDT_VC5_5P49V5933,
+>  	IDT_VC5_5P49V5935,
+>  };
+> @@ -595,6 +596,7 @@ static int vc5_map_index_to_output(const enum vc5_model model,
+>  	case IDT_VC5_5P49V5933:
+>  		return (n == 0) ? 0 : 3;
+>  	case IDT_VC5_5P49V5923:
+> +	case IDT_VC5_5P49V5925:
+>  	case IDT_VC5_5P49V5935:
+>  	default:
+>  		return n;
+> @@ -785,6 +787,13 @@ static int vc5_remove(struct i2c_client *client)
+>  	.flags = 0,
+>  };
+>  
+> +static const struct vc5_chip_info idt_5p49v5925_info = {
+> +	.model = IDT_VC5_5P49V5925,
+> +	.clk_fod_cnt = 4,
+> +	.clk_out_cnt = 5,
+> +	.flags = 0,
+> +};
+> +
+>  static const struct vc5_chip_info idt_5p49v5933_info = {
+>  	.model = IDT_VC5_5P49V5933,
+>  	.clk_fod_cnt = 2,
+> @@ -801,6 +810,7 @@ static int vc5_remove(struct i2c_client *client)
+>  
+>  static const struct i2c_device_id vc5_id[] = {
+>  	{ "5p49v5923", .driver_data = IDT_VC5_5P49V5923 },
+> +	{ "5p49v5925", .driver_data = IDT_VC5_5P49V5925 },
+>  	{ "5p49v5933", .driver_data = IDT_VC5_5P49V5933 },
+>  	{ "5p49v5935", .driver_data = IDT_VC5_5P49V5935 },
+>  	{ }
+> @@ -809,6 +819,7 @@ static int vc5_remove(struct i2c_client *client)
+>  
+>  static const struct of_device_id clk_vc5_of_match[] = {
+>  	{ .compatible = "idt,5p49v5923", .data = &idt_5p49v5923_info },
+> +	{ .compatible = "idt,5p49v5925", .data = &idt_5p49v5925_info },
+>  	{ .compatible = "idt,5p49v5933", .data = &idt_5p49v5933_info },
+>  	{ .compatible = "idt,5p49v5935", .data = &idt_5p49v5935_info },
+>  	{ },
+> 
+
+
 -- 
-2.11.0
-
+Best regards,
+Marek Vasut
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
