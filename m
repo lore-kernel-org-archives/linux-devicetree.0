@@ -1,82 +1,37 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 2/2] dt: Add bindings for IDT VersaClock 5P49V5925
-Date: Sun, 9 Jul 2017 15:31:38 +0200
-Message-ID: <57a23b45-9514-00c0-aa92-00a54d68ad2e@gmail.com>
-References: <1499392623-9011-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1499392677-9100-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
+Date: Sun, 9 Jul 2017 18:18:05 +0200
+Message-ID: <24ce3de1-5994-1687-ad97-c0d15c85aff5@kernel.org>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+ <26a55285-509c-b7f4-7806-db537a582631@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499392677-9100-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <26a55285-509c-b7f4-7806-db537a582631-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/07/2017 03:57 AM, Vladimir Barinov wrote:
-> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+Hi Hugues,
+
+On 07/06/2017 09:51 AM, Hugues FRUCHET wrote:
+> Hi Sylwester,
 > 
-> IDT VersaClock 5 5P49V5925 has 4 clock outputs
+> Do you have the possibility to check for non-regression of this patchset
+> on 9650/52 camera ?
 
-In 1/2 you said it has 4 FODs and 5 outputs (and it does have 5 outputs,
-4 from FODs and 1 I2C_OUTB).
+I will try to test your patch set once I find the camera module for
+my Micro2440SDK board. I've spent already a day on setting up everything 
+and fixing multiple regressions in the kernel. I will likely try your 
+patch series in coming week.
 
->, 4 fractional dividers.
-> Input clock source can be taken only from external reference clock.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-
-You might want to rebase this on top of and retest against [1], there
-are 8 patches in total fixing some stuff and adding VC6 support.
-
-[1] https://patchwork.kernel.org/patch/9831797/
-
-> ---
->  Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> index 53d7e50..a1ad9e0 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> @@ -6,19 +6,21 @@ from 3 to 12 output clocks.
->  ==I2C device node==
->  
->  Required properties:
-> -- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5933" ,
-> -		"idt,5p49v5935".
-> +- compatible:	shall be one of "idt,5p49v5923" , "idt,5p49v5925" ,
-> +		"idt,5p49v5933", "idt,5p49v5935".
->  - reg:		i2c device address, shall be 0x68 or 0x6a.
->  - #clock-cells:	from common clock binding; shall be set to 1.
->  - clocks:	from common clock binding; list of parent clock handles,
-> -		- 5p49v5923: (required) either or both of XTAL or CLKIN
-> +		- 5p49v5923 and
-> +		- 5p49v5925: (required) either or both of XTAL or CLKIN
->  					reference clock.
->  		- 5p49v5933 and
->  		- 5p49v5935: (optional) property not present (internal
->  					Xtal used) or CLKIN reference
->  					clock.
->  - clock-names:	from common clock binding; clock input names, can be
-> -		- 5p49v5923: (required) either or both of "xin", "clkin".
-> +		- 5p49v5923 and
-> +		- 5p49v5925: (required) either or both of "xin", "clkin".
->  		- 5p49v5933 and
->  		- 5p49v5935: (optional) property not present or "clkin".
->  
-> @@ -37,6 +39,7 @@ clock specifier, the following mapping applies:
->  	1 -- OUT1
->  	2 -- OUT4
->  
-> +5P49V5925 and
->  5P49V5935:
->  	0 -- OUT0_SEL_I2CB
->  	1 -- OUT1
-> 
-
-
--- 
-Best regards,
-Marek Vasut
+--
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
