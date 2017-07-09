@@ -1,170 +1,119 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/9] iio: humidity: hts221: avoid useless ODR reconfiguration
-Date: Sun, 9 Jul 2017 23:27:23 +0200
-Message-ID: <CAA2SeNJRgyAknLo8+rnLwp2YDVW-qugDFHmrKZ8FdJVc6DKbTg@mail.gmail.com>
+Subject: Re: [PATCH 9/9] iio: humidity: hts221: move drdy enable logic in hts221_trig_set_state()
+Date: Sun, 9 Jul 2017 23:28:29 +0200
+Message-ID: <CAA2SeNLhBbTbMGDHyXGN02V4n0RHrwK-Bg0D_q9phpcEa3e7Rw@mail.gmail.com>
 References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
- <20170709165704.26311-5-lorenzo.bianconi@st.com> <20170709193208.6864b158@kernel.org>
+ <20170709165704.26311-10-lorenzo.bianconi@st.com> <20170709194123.39fd6914@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170709193208.6864b158-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170709194123.39fd6914-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On Sun,  9 Jul 2017 18:56:59 +0200
+> On Sun,  9 Jul 2017 18:57:04 +0200
 > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
->> Configure sensor ODR just in hts221_write_raw() in order to avoid
->> to set device sample rate multiple times.
->> Squash hts221_power_off()/hts221_power_on() in hts221_set_enable()
-> Two changes = two patches please.
->
-> Actual contents for each looks fine.
+>> Move data-ready configuration in hts221_buffer.c since it is only related
+>> to trigger logic
+>>
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> The rest of the series looks good to me.  We are early in the cycle
+> so should have plenty of time to pin down the question on how to handle
+> irq line inversion visibility to the kernel.
 
-Ack, will do in v2
+Fine, pretty interesting stuff :)
 Regards,
 Lorenzo
 
->>
->> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>
+> Jonathan
 >> ---
->>  drivers/iio/humidity/hts221.h        |  3 +--
->>  drivers/iio/humidity/hts221_buffer.c |  4 ++--
->>  drivers/iio/humidity/hts221_core.c   | 37 +++++++++++-------------------------
->>  3 files changed, 14 insertions(+), 30 deletions(-)
+>>  drivers/iio/humidity/hts221.h        |  1 -
+>>  drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
+>>  drivers/iio/humidity/hts221_core.c   | 14 --------------
+>>  3 files changed, 7 insertions(+), 16 deletions(-)
 >>
 >> diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
->> index 94510266e0a5..7b5691a6df53 100644
+>> index 0fbc89fe213d..2b4e5246447a 100644
 >> --- a/drivers/iio/humidity/hts221.h
 >> +++ b/drivers/iio/humidity/hts221.h
->> @@ -68,8 +68,7 @@ extern const struct dev_pm_ops hts221_pm_ops;
+>> @@ -66,7 +66,6 @@ struct hts221_hw {
 >>
->>  int hts221_config_drdy(struct hts221_hw *hw, bool enable);
+>>  extern const struct dev_pm_ops hts221_pm_ops;
+>>
+>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable);
+>>  int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
 >>  int hts221_probe(struct iio_dev *iio_dev);
->> -int hts221_power_on(struct hts221_hw *hw);
->> -int hts221_power_off(struct hts221_hw *hw);
->> +int hts221_set_enable(struct hts221_hw *hw, bool enable);
->>  int hts221_allocate_buffers(struct hts221_hw *hw);
->>  int hts221_allocate_trigger(struct hts221_hw *hw);
->>
+>>  int hts221_set_enable(struct hts221_hw *hw, bool enable);
 >> diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
->> index 7d19a3da7ab7..c4ed153ad397 100644
+>> index f29f01a22375..9690dfe9a844 100644
 >> --- a/drivers/iio/humidity/hts221_buffer.c
 >> +++ b/drivers/iio/humidity/hts221_buffer.c
->> @@ -109,12 +109,12 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
->>
->>  static int hts221_buffer_preenable(struct iio_dev *iio_dev)
+>> @@ -28,6 +28,8 @@
+>>  #define HTS221_REG_DRDY_HL_MASK              BIT(7)
+>>  #define HTS221_REG_DRDY_PP_OD_ADDR   0x22
+>>  #define HTS221_REG_DRDY_PP_OD_MASK   BIT(6)
+>> +#define HTS221_REG_DRDY_EN_ADDR              0x22
+>> +#define HTS221_REG_DRDY_EN_MASK              BIT(2)
+>>  #define HTS221_REG_STATUS_ADDR               0x27
+>>  #define HTS221_RH_DRDY_MASK          BIT(1)
+>>  #define HTS221_TEMP_DRDY_MASK                BIT(0)
+>> @@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct iio_trigger *trig, bool state)
 >>  {
->> -     return hts221_power_on(iio_priv(iio_dev));
->> +     return hts221_set_enable(iio_priv(iio_dev), true);
+>>       struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
+>>       struct hts221_hw *hw = iio_priv(iio_dev);
+>> +     int err;
+>> +
+>> +     err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
+>> +                                  HTS221_REG_DRDY_EN_MASK, state);
+>>
+>> -     return hts221_config_drdy(hw, state);
+>> +     return err < 0 ? err : 0;
 >>  }
 >>
->>  static int hts221_buffer_postdisable(struct iio_dev *iio_dev)
->>  {
->> -     return hts221_power_off(iio_priv(iio_dev));
->> +     return hts221_set_enable(iio_priv(iio_dev), false);
->>  }
->>
->>  static const struct iio_buffer_setup_ops hts221_buffer_ops = {
+>>  static const struct iio_trigger_ops hts221_trigger_ops = {
 >> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
->> index b36734b8070e..7d30e2594a58 100644
+>> index dfacf64a6f2e..12c2bc5954e4 100644
 >> --- a/drivers/iio/humidity/hts221_core.c
 >> +++ b/drivers/iio/humidity/hts221_core.c
->> @@ -207,11 +207,6 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
->>       if (err < 0)
->>               return err;
+>> @@ -23,7 +23,6 @@
 >>
->> -     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
->> -                                  HTS221_ENABLE_MASK, 1);
->> -     if (err < 0)
->> -             return err;
+>>  #define HTS221_REG_CNTRL1_ADDR               0x20
+>>  #define HTS221_REG_CNTRL2_ADDR               0x21
+>> -#define HTS221_REG_CNTRL3_ADDR               0x22
+>>
+>>  #define HTS221_REG_AVG_ADDR          0x10
+>>  #define HTS221_REG_H_OUT_L           0x28
+>> @@ -36,9 +35,6 @@
+>>  #define HTS221_BDU_MASK                      BIT(2)
+>>  #define HTS221_ENABLE_MASK           BIT(7)
+>>
+>> -#define HTS221_DRDY_MASK             BIT(2)
 >> -
->>       hw->odr = odr;
->>
+>> -
+>>  /* calibration registers */
+>>  #define HTS221_REG_0RH_CAL_X_H               0x36
+>>  #define HTS221_REG_1RH_CAL_X_H               0x3a
+>> @@ -180,16 +176,6 @@ static int hts221_check_whoami(struct hts221_hw *hw)
 >>       return 0;
->> @@ -290,29 +285,16 @@ hts221_sysfs_temp_oversampling_avail(struct device *dev,
->>       return len;
 >>  }
 >>
->> -int hts221_power_on(struct hts221_hw *hw)
+>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable)
 >> -{
 >> -     int err;
 >> -
->> -     err = hts221_update_odr(hw, hw->odr);
->> -     if (err < 0)
->> -             return err;
+>> -     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+>> -                                  HTS221_DRDY_MASK, enable);
 >> -
->> -     hw->enabled = true;
->> -
->> -     return 0;
+>> -     return err < 0 ? err : 0;
 >> -}
 >> -
->> -int hts221_power_off(struct hts221_hw *hw)
->> +int hts221_set_enable(struct hts221_hw *hw, bool enable)
+>>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
 >>  {
->>       int err;
->>
->>       err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
->> -                                  HTS221_ENABLE_MASK, false);
->> +                                  HTS221_ENABLE_MASK, enable);
->>       if (err < 0)
->>               return err;
->>
->> -     hw->enabled = false;
->> +     hw->enabled = enable;
->>
->>       return 0;
->>  }
->> @@ -467,7 +449,7 @@ static int hts221_read_oneshot(struct hts221_hw *hw, u8 addr, int *val)
->>       u8 data[HTS221_DATA_SIZE];
->>       int err;
->>
->> -     err = hts221_power_on(hw);
->> +     err = hts221_set_enable(hw, true);
->>       if (err < 0)
->>               return err;
->>
->> @@ -477,7 +459,7 @@ static int hts221_read_oneshot(struct hts221_hw *hw, u8 addr, int *val)
->>       if (err < 0)
->>               return err;
->>
->> -     hts221_power_off(hw);
->> +     hts221_set_enable(hw, false);
->>
->>       *val = (s16)get_unaligned_le16(data);
->>
->> @@ -627,8 +609,6 @@ int hts221_probe(struct iio_dev *iio_dev)
->>       if (err < 0)
->>               return err;
->>
->> -     hw->odr = hts221_odr_table[0].hz;
->> -
->>       iio_dev->modes = INDIO_DIRECT_MODE;
->>       iio_dev->dev.parent = hw->dev;
->>       iio_dev->available_scan_masks = hts221_scan_masks;
->> @@ -643,6 +623,10 @@ int hts221_probe(struct iio_dev *iio_dev)
->>       if (err < 0)
->>               return err;
->>
->> +     err = hts221_update_odr(hw, hts221_odr_table[0].hz);
->> +     if (err < 0)
->> +             return err;
->> +
->>       /* configure humidity sensor */
->>       err = hts221_parse_rh_caldata(hw);
->>       if (err < 0) {
->> @@ -706,7 +690,8 @@ static int __maybe_unused hts221_resume(struct device *dev)
->>       int err = 0;
->>
->>       if (hw->enabled)
->> -             err = hts221_update_odr(hw, hw->odr);
->> +             err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
->> +                                          HTS221_ENABLE_MASK, true);
->>
->>       return err;
->>  }
+>>       int i, err;
 >
 
 
