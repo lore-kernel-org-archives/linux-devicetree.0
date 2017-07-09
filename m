@@ -1,77 +1,176 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v2 2/2] dt: Add bindings for IDT VersaClock 5P49V5925
-Date: Sun, 9 Jul 2017 19:42:58 +0200
-Message-ID: <42b395eb-075f-54b8-cb16-7eba9c7ef186@gmail.com>
-References: <1499621970-12925-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] iio: humidity: hts221: refactor write_with_mask
+ code
+Date: Sun, 9 Jul 2017 19:28:27 +0100
+Message-ID: <20170709192827.2c343108@kernel.org>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+        <20170709165704.26311-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170709165704.26311-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2017 07:40 PM, Vladimir Barinov wrote:
-> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> 
-> IDT VersaClock 5 5P49V5925 has 5 clock outputs, 4 fractional dividers.
-> Input clock source can be taken only from external reference clock.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+On Sun,  9 Jul 2017 18:56:56 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Reviewed-by: Marek Vasut <marek.vasut@gmail.com>
+> Move bit-shift in hts221_write_with_mask() instead of coding
+> the shift depth in the configured value. That change will be necessary
+> to fix an issue in device power-down procedure
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+A could of questions inline.  
 
+Jonathan
 > ---
-> Changes in version 2:
-> - fixed typo in patch header: VC5 has 5 clock outputs
-> - rebased against patch:
->   [V3,7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
+>  drivers/iio/humidity/hts221_core.c | 74 +++++++++++++++++---------------------
+>  1 file changed, 32 insertions(+), 42 deletions(-)
 > 
->  Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> index 66ef0a0..05a245c 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> @@ -8,6 +8,7 @@ generators providing from 3 to 12 output clocks.
->  Required properties:
->  - compatible:	shall be one of
->  		"idt,5p49v5923"
-> +		"idt,5p49v5925"
->  		"idt,5p49v5933"
->  		"idt,5p49v5935"
->  		"idt,5p49v6901"
-> @@ -15,6 +16,7 @@ Required properties:
->  - #clock-cells:	from common clock binding; shall be set to 1.
->  - clocks:	from common clock binding; list of parent clock handles,
->  		- 5p49v5923 and
-> +		  5p49v5925 and
->  		  5p49v6901: (required) either or both of XTAL or CLKIN
->  					reference clock.
->  		- 5p49v5933 and
-> @@ -23,6 +25,7 @@ Required properties:
->  					clock.
->  - clock-names:	from common clock binding; clock input names, can be
->  		- 5p49v5923 and
-> +		  5p49v5925 and
->  		  5p49v6901: (required) either or both of "xin", "clkin".
->  		- 5p49v5933 and
->  		- 5p49v5935: (optional) property not present or "clkin".
-> @@ -42,6 +45,7 @@ clock specifier, the following mapping applies:
->  	1 -- OUT1
->  	2 -- OUT4
+> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+> index a56da3999e00..f5181e4e1eff 100644
+> --- a/drivers/iio/humidity/hts221_core.c
+> +++ b/drivers/iio/humidity/hts221_core.c
+> @@ -32,30 +32,12 @@
+>  #define HTS221_HUMIDITY_AVG_MASK	0x07
+>  #define HTS221_TEMP_AVG_MASK		0x38
 >  
-> +5P49V5925 and
->  5P49V5935:
->  	0 -- OUT0_SEL_I2CB
->  	1 -- OUT1
-> 
+> -#define HTS221_ODR_MASK			0x87
+> +#define HTS221_ODR_MASK			0x03
+>  #define HTS221_BDU_MASK			BIT(2)
+> +#define HTS221_ENABLE_MASK		BIT(7)
+>  
+>  #define HTS221_DRDY_MASK		BIT(2)
+>  
+> -#define HTS221_ENABLE_SENSOR		BIT(7)
+> -
+> -#define HTS221_HUMIDITY_AVG_4		0x00 /* 0.4 %RH */
+> -#define HTS221_HUMIDITY_AVG_8		0x01 /* 0.3 %RH */
+> -#define HTS221_HUMIDITY_AVG_16		0x02 /* 0.2 %RH */
+> -#define HTS221_HUMIDITY_AVG_32		0x03 /* 0.15 %RH */
+> -#define HTS221_HUMIDITY_AVG_64		0x04 /* 0.1 %RH */
+> -#define HTS221_HUMIDITY_AVG_128		0x05 /* 0.07 %RH */
+> -#define HTS221_HUMIDITY_AVG_256		0x06 /* 0.05 %RH */
+> -#define HTS221_HUMIDITY_AVG_512		0x07 /* 0.03 %RH */
+> -
+> -#define HTS221_TEMP_AVG_2		0x00 /* 0.08 degC */
+> -#define HTS221_TEMP_AVG_4		0x08 /* 0.05 degC */
+> -#define HTS221_TEMP_AVG_8		0x10 /* 0.04 degC */
+> -#define HTS221_TEMP_AVG_16		0x18 /* 0.03 degC */
+> -#define HTS221_TEMP_AVG_32		0x20 /* 0.02 degC */
+> -#define HTS221_TEMP_AVG_64		0x28 /* 0.015 degC */
+> -#define HTS221_TEMP_AVG_128		0x30 /* 0.01 degC */
+> -#define HTS221_TEMP_AVG_256		0x38 /* 0.007 degC */
+>  
+>  /* calibration registers */
+>  #define HTS221_REG_0RH_CAL_X_H		0x36
+> @@ -90,28 +72,28 @@ static const struct hts221_avg hts221_avg_list[] = {
+>  		.addr = HTS221_REG_AVG_ADDR,
+>  		.mask = HTS221_HUMIDITY_AVG_MASK,
+>  		.avg_avl = {
+> -			{ 4, HTS221_HUMIDITY_AVG_4 },
+> -			{ 8, HTS221_HUMIDITY_AVG_8 },
+> -			{ 16, HTS221_HUMIDITY_AVG_16 },
+> -			{ 32, HTS221_HUMIDITY_AVG_32 },
+> -			{ 64, HTS221_HUMIDITY_AVG_64 },
+> -			{ 128, HTS221_HUMIDITY_AVG_128 },
+> -			{ 256, HTS221_HUMIDITY_AVG_256 },
+> -			{ 512, HTS221_HUMIDITY_AVG_512 },
+> +			{   4, 0x0 }, /* 0.4 %RH */
+> +			{   8, 0x1 }, /* 0.3 %RH */
+> +			{  16, 0x2 }, /* 0.2 %RH */
+> +			{  32, 0x3 }, /* 0.15 %RH */
+> +			{  64, 0x4 }, /* 0.1 %RH */
+> +			{ 128, 0x5 }, /* 0.07 %RH */
+> +			{ 256, 0x6 }, /* 0.05 %RH */
+> +			{ 512, 0x7 }, /* 0.03 %RH */
+>  		},
+>  	},
+>  	{
+>  		.addr = HTS221_REG_AVG_ADDR,
+>  		.mask = HTS221_TEMP_AVG_MASK,
+>  		.avg_avl = {
+> -			{ 2, HTS221_TEMP_AVG_2 },
+> -			{ 4, HTS221_TEMP_AVG_4 },
+> -			{ 8, HTS221_TEMP_AVG_8 },
+> -			{ 16, HTS221_TEMP_AVG_16 },
+> -			{ 32, HTS221_TEMP_AVG_32 },
+> -			{ 64, HTS221_TEMP_AVG_64 },
+> -			{ 128, HTS221_TEMP_AVG_128 },
+> -			{ 256, HTS221_TEMP_AVG_256 },
+> +			{   2, 0x0 }, /* 0.08 degC */
+> +			{   4, 0x1 }, /* 0.05 degC */
+> +			{   8, 0x2 }, /* 0.04 degC */
+> +			{  16, 0x3 }, /* 0.03 degC */
+> +			{  32, 0x4 }, /* 0.02 degC */
+> +			{  64, 0x5 }, /* 0.015 degC */
+> +			{ 128, 0x6 }, /* 0.01 degC */
+> +			{ 256, 0x7 }, /* 0.007 degC */
+Could we potentially use the index directly here rather than
+having to explicitly store it?  Would be more elegant perhaps..
+>  		},
+>  	},
+>  };
+> @@ -166,7 +148,7 @@ static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
+>  		goto unlock;
+>  	}
+>  
+> -	data = (data & ~mask) | (val & mask);
+> +	data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+>  
+>  	err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+>  	if (err < 0)
+> @@ -201,11 +183,10 @@ static int hts221_check_whoami(struct hts221_hw *hw)
+>  
+>  int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>  {
+> -	u8 val = enable ? BIT(2) : 0;
+>  	int err;
+>  
+>  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+> -				     HTS221_DRDY_MASK, val);
+> +				     HTS221_DRDY_MASK, enable);
+>  
+>  	return err < 0 ? err : 0;
+>  }
+> @@ -213,7 +194,6 @@ int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>  {
+>  	int i, err;
+> -	u8 val;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
+>  		if (hts221_odr_table[i].hz == odr)
+> @@ -222,9 +202,19 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>  	if (i == ARRAY_SIZE(hts221_odr_table))
+>  		return -EINVAL;
+>  
+> -	val = HTS221_ENABLE_SENSOR | HTS221_BDU_MASK | hts221_odr_table[i].val;
+> +	/* enable Block Data Update */
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_BDU_MASK, 1);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_ODR_MASK, hts221_odr_table[i].val);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> -				     HTS221_ODR_MASK, val);
+This original code looks like a bug given the odr mask should only
+cover the odr bits, not the enable and bdu.
 
+Am I missing something?
 
--- 
-Best regards,
-Marek Vasut
+Taking one write and changing it to 3 isn't that nice, but I guess
+we aren't in a fast path here so fair enough given the cleaner
+resulting code.
+> +				     HTS221_ENABLE_MASK, 1);
+>  	if (err < 0)
+>  		return err;
+>  
