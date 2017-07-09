@@ -1,68 +1,64 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] iio: humidity: hts221: move BDU configuration in
- probe routine
-Date: Sun, 9 Jul 2017 19:29:43 +0100
-Message-ID: <20170709192943.1bbe5e23@kernel.org>
+Subject: Re: [PATCH 3/9] iio: humidity: hts221: do not overwrite reserved
+ data during power-down
+Date: Sun, 9 Jul 2017 19:30:42 +0100
+Message-ID: <20170709193042.330fcd60@kernel.org>
 References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
-        <20170709165704.26311-3-lorenzo.bianconi@st.com>
+        <20170709165704.26311-4-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170709165704.26311-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170709165704.26311-4-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  9 Jul 2017 18:56:57 +0200
+On Sun,  9 Jul 2017 18:56:58 +0200
 Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Enable Block Data Update in hts221_probe() in order to avoid to reconfigure
-> it every time the sensor is enabled
-> 
+> Fixes: e4a70e3e7d84 (iio: humidity: add support to hts221 rh/temp device)
+> Fixes: b7079eeac5da (iio: humidity: hts221: add power management support)
 > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Well there goes part of my concern about extra writes.
+This needs more description.  What is the effect of this?
 
-Patch looks good
+Which bits of data are we writing that we shouldn't be touching?
 
-Jonathan
+
 > ---
->  drivers/iio/humidity/hts221_core.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/iio/humidity/hts221_core.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> index f5181e4e1eff..9546b0ea6283 100644
+> index 9546b0ea6283..b36734b8070e 100644
 > --- a/drivers/iio/humidity/hts221_core.c
 > +++ b/drivers/iio/humidity/hts221_core.c
-> @@ -202,12 +202,6 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
->  	if (i == ARRAY_SIZE(hts221_odr_table))
->  		return -EINVAL;
+> @@ -305,11 +305,10 @@ int hts221_power_on(struct hts221_hw *hw)
 >  
-> -	/* enable Block Data Update */
-> -	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> -				     HTS221_BDU_MASK, 1);
-> -	if (err < 0)
-> -		return err;
-> -
->  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
->  				     HTS221_ODR_MASK, hts221_odr_table[i].val);
->  	if (err < 0)
-> @@ -644,6 +638,12 @@ int hts221_probe(struct iio_dev *iio_dev)
->  	iio_dev->name = HTS221_DEV_NAME;
->  	iio_dev->info = &hts221_info;
+>  int hts221_power_off(struct hts221_hw *hw)
+>  {
+> -	__le16 data = 0;
+>  	int err;
 >  
-> +	/* enable Block Data Update */
+> -	err = hw->tf->write(hw->dev, HTS221_REG_CNTRL1_ADDR, sizeof(data),
+> -			    (u8 *)&data);
 > +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> +				     HTS221_BDU_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
->  	/* configure humidity sensor */
->  	err = hts221_parse_rh_caldata(hw);
->  	if (err < 0) {
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +				     HTS221_ENABLE_MASK, false);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -692,11 +691,10 @@ static int __maybe_unused hts221_suspend(struct device *dev)
+>  {
+>  	struct iio_dev *iio_dev = dev_get_drvdata(dev);
+>  	struct hts221_hw *hw = iio_priv(iio_dev);
+> -	__le16 data = 0;
+>  	int err;
+>  
+> -	err = hw->tf->write(hw->dev, HTS221_REG_CNTRL1_ADDR, sizeof(data),
+> -			    (u8 *)&data);
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_ENABLE_MASK, false);
+>  
+>  	return err < 0 ? err : 0;
+>  }
