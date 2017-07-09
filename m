@@ -1,7 +1,7 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 5/9] iio: humidity: hts221: support active-low interrupts
-Date: Sun,  9 Jul 2017 18:57:00 +0200
-Message-ID: <20170709165704.26311-6-lorenzo.bianconi@st.com>
+Subject: [PATCH 9/9] iio: humidity: hts221: move drdy enable logic in hts221_trig_set_state()
+Date: Sun,  9 Jul 2017 18:57:04 +0200
+Message-ID: <20170709165704.26311-10-lorenzo.bianconi@st.com>
 References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170709165704.26311-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
@@ -10,85 +10,93 @@ To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for active low interrupts (IRQF_TRIGGER_LOW and
-IRQF_TRIGGER_FALLING). Configure the device as active high or low
-according to the requested irq line.
+Move data-ready configuration in hts221_buffer.c since it is only related
+to trigger logic
 
 Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/iio/humidity/hts221.h        |  1 +
- drivers/iio/humidity/hts221_buffer.c | 11 +++++++++++
- drivers/iio/humidity/hts221_core.c   |  3 +--
- 3 files changed, 13 insertions(+), 2 deletions(-)
+ drivers/iio/humidity/hts221.h        |  1 -
+ drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
+ drivers/iio/humidity/hts221_core.c   | 14 --------------
+ 3 files changed, 7 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
-index 7b5691a6df53..0fbc89fe213d 100644
+index 0fbc89fe213d..2b4e5246447a 100644
 --- a/drivers/iio/humidity/hts221.h
 +++ b/drivers/iio/humidity/hts221.h
-@@ -67,6 +67,7 @@ struct hts221_hw {
+@@ -66,7 +66,6 @@ struct hts221_hw {
+ 
  extern const struct dev_pm_ops hts221_pm_ops;
  
- int hts221_config_drdy(struct hts221_hw *hw, bool enable);
-+int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
+-int hts221_config_drdy(struct hts221_hw *hw, bool enable);
+ int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
  int hts221_probe(struct iio_dev *iio_dev);
  int hts221_set_enable(struct hts221_hw *hw, bool enable);
- int hts221_allocate_buffers(struct hts221_hw *hw);
 diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-index c4ed153ad397..ad5222295b2c 100644
+index f29f01a22375..9690dfe9a844 100644
 --- a/drivers/iio/humidity/hts221_buffer.c
 +++ b/drivers/iio/humidity/hts221_buffer.c
-@@ -22,6 +22,8 @@
- 
- #include "hts221.h"
- 
-+#define HTS221_REG_DRDY_HL_ADDR		0x22
-+#define HTS221_REG_DRDY_HL_MASK		BIT(7)
+@@ -28,6 +28,8 @@
+ #define HTS221_REG_DRDY_HL_MASK		BIT(7)
+ #define HTS221_REG_DRDY_PP_OD_ADDR	0x22
+ #define HTS221_REG_DRDY_PP_OD_MASK	BIT(6)
++#define HTS221_REG_DRDY_EN_ADDR		0x22
++#define HTS221_REG_DRDY_EN_MASK		BIT(2)
  #define HTS221_REG_STATUS_ADDR		0x27
  #define HTS221_RH_DRDY_MASK		BIT(1)
  #define HTS221_TEMP_DRDY_MASK		BIT(0)
-@@ -67,6 +69,7 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
- int hts221_allocate_trigger(struct hts221_hw *hw)
+@@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct iio_trigger *trig, bool state)
  {
- 	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
-+	bool irq_active_low = false;
- 	unsigned long irq_type;
- 	int err;
+ 	struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
+ 	struct hts221_hw *hw = iio_priv(iio_dev);
++	int err;
++
++	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
++				     HTS221_REG_DRDY_EN_MASK, state);
  
-@@ -76,6 +79,10 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
- 	case IRQF_TRIGGER_HIGH:
- 	case IRQF_TRIGGER_RISING:
- 		break;
-+	case IRQF_TRIGGER_LOW:
-+	case IRQF_TRIGGER_FALLING:
-+		irq_active_low = true;
-+		break;
- 	default:
- 		dev_info(hw->dev,
- 			 "mode %lx unsupported, using IRQF_TRIGGER_RISING\n",
-@@ -84,6 +91,10 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
- 		break;
- 	}
+-	return hts221_config_drdy(hw, state);
++	return err < 0 ? err : 0;
+ }
  
-+	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_HL_ADDR,
-+				     HTS221_REG_DRDY_HL_MASK, irq_active_low);
-+	if (err < 0)
-+		return err;
- 	err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
- 					hts221_trigger_handler_thread,
- 					irq_type | IRQF_ONESHOT,
+ static const struct iio_trigger_ops hts221_trigger_ops = {
 diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-index 7d30e2594a58..dfacf64a6f2e 100644
+index dfacf64a6f2e..12c2bc5954e4 100644
 --- a/drivers/iio/humidity/hts221_core.c
 +++ b/drivers/iio/humidity/hts221_core.c
-@@ -134,8 +134,7 @@ static const struct iio_chan_spec hts221_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(2),
- };
+@@ -23,7 +23,6 @@
  
--static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
--				  u8 val)
-+int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val)
+ #define HTS221_REG_CNTRL1_ADDR		0x20
+ #define HTS221_REG_CNTRL2_ADDR		0x21
+-#define HTS221_REG_CNTRL3_ADDR		0x22
+ 
+ #define HTS221_REG_AVG_ADDR		0x10
+ #define HTS221_REG_H_OUT_L		0x28
+@@ -36,9 +35,6 @@
+ #define HTS221_BDU_MASK			BIT(2)
+ #define HTS221_ENABLE_MASK		BIT(7)
+ 
+-#define HTS221_DRDY_MASK		BIT(2)
+-
+-
+ /* calibration registers */
+ #define HTS221_REG_0RH_CAL_X_H		0x36
+ #define HTS221_REG_1RH_CAL_X_H		0x3a
+@@ -180,16 +176,6 @@ static int hts221_check_whoami(struct hts221_hw *hw)
+ 	return 0;
+ }
+ 
+-int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+-{
+-	int err;
+-
+-	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+-				     HTS221_DRDY_MASK, enable);
+-
+-	return err < 0 ? err : 0;
+-}
+-
+ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
  {
- 	u8 data;
- 	int err;
+ 	int i, err;
 -- 
 2.13.1
