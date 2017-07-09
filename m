@@ -1,70 +1,110 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ASoC: codec: cpcap: new codec
-Date: Sat, 8 Jul 2017 22:39:39 -0700
-Message-ID: <20170709053939.GQ3730@atomide.com>
-References: <20170707164229.5868-1-sebastian.reichel@collabora.co.uk>
- <20170707164229.5868-2-sebastian.reichel@collabora.co.uk>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] usb:host:xhci support option to disable the xHCI
+ USB2 HW LPM
+Date: Sun, 9 Jul 2017 08:16:34 +0200
+Message-ID: <20170709061634.GB8476@kroah.com>
+References: <1498186932-29277-1-git-send-email-tqnguyen@apm.com>
+ <CAKrQpStT1=93XOA2u-W9nSMX0r0OPhixjMsRbmBO-5UW_k5FOw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170707164229.5868-2-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAKrQpStT1=93XOA2u-W9nSMX0r0OPhixjMsRbmBO-5UW_k5FOw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [170707 09:43]:
-> Motorola CPCAP is a PMIC with audio functionality, that can be
-> found on Motorola Droid 4 and probably a few other phones from
-> Motorola's Droid series.
-> 
-> The driver has been written from scratch using Motorola's Android
-> driver, register dumps from running Android and datasheet for NXP
-> MC13783UG (which is similar to Motorola CPCAP, but not the same).
-> 
-> The chip provides two audio interfaces, that can be muxed to two
-> different audio codecs. One provides support for stereo output
-> (named StDAC or HiFi), while the other only provides mono output
-> (named Voice). Only the Voice codec provides a Capture interface.
+On Sun, Jul 09, 2017 at 12:38:19PM +0700, Thang Q. Nguyen wrote:
+> On Fri, Jun 23, 2017 at 10:02 AM, Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org> wrote:
+> > XHCI specification 1.1 does not require xHCI-compliant controllers
+> > to always enable hardware USB2 LPM. However, the current xHCI
+> > driver always enable it when seeing HLC=1.
+> > This patch supports an option for users to control disabling
+> > USB2 Hardware LPM via DT/ACPI attribute.
+> > This option is needed in case user would like to disable this
+> > feature. For example, their xHCI controller has its USB2 HW LPM
+> > broken.
+> >
+> > Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
+> > Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+> > ---
+> > Changes since v2:
+> >  - Change code to disable HW LPM as an option for user which
+> >    is set via ACPI/DT.
+> > Changes since v1:
+> >  - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
+> >    be consistent with other attribute names.
+> > ---
+> >  Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
+> >  drivers/usb/host/xhci-plat.c                       |    3 +++
+> >  drivers/usb/host/xhci.c                            |    3 +++
+> >  drivers/usb/host/xhci.h                            |    1 +
+> >  4 files changed, 8 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > index 2d80b60..ae6e484 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+> > @@ -26,6 +26,7 @@ Required properties:
+> >
+> >  Optional properties:
+> >    - clocks: reference to a clock
+> > +  - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+> >    - usb3-lpm-capable: determines if platform is USB3 LPM capable
+> >    - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+> >
+> > diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> > index c04144b..9028fb5 100644
+> > --- a/drivers/usb/host/xhci-plat.c
+> > +++ b/drivers/usb/host/xhci-plat.c
+> > @@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+> >                 goto disable_clk;
+> >         }
+> >
+> > +       if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
+> > +               xhci->quirks |= XHCI_HW_LPM_DISABLE;
+> > +
+> >         if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
+> >                 xhci->quirks |= XHCI_LPM_SUPPORT;
+> >
+> > diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> > index 30f47d9..49d05c7 100644
+> > --- a/drivers/usb/host/xhci.c
+> > +++ b/drivers/usb/host/xhci.c
+> > @@ -4061,6 +4061,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+> >                         !udev->lpm_capable)
+> >                 return -EPERM;
+> >
+> > +       if (xhci->quirks & XHCI_HW_LPM_DISABLE)
+> > +               return -EPERM;
+> > +
+> >         if (!udev->parent || udev->parent->parent ||
+> >                         udev->descriptor.bDeviceClass == USB_CLASS_HUB)
+> >                 return -EPERM;
+> > diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+> > index 73a28a9..03d50e8 100644
+> > --- a/drivers/usb/host/xhci.h
+> > +++ b/drivers/usb/host/xhci.h
+> > @@ -1819,6 +1819,7 @@ struct xhci_hcd {
+> >  /* For controller with a broken Port Disable implementation */
+> >  #define XHCI_BROKEN_PORT_PED   (1 << 25)
+> >  #define XHCI_LIMIT_ENDPOINT_INTERVAL_7 (1 << 26)
+> > +#define XHCI_HW_LPM_DISABLE    (1 << 27)
+> >
+> >         unsigned int            num_active_eps;
+> >         unsigned int            limit_active_eps;
+> > --
+> > 1.7.1
+> >
+> Hi,
+> Is there any other comment on the patch?
 
-I needed the patch below for modular .config. Other than that,
-plays music fine for me, so feel free to add:
+Relax, it's the middle of the merge window, we can't do anything with
+patches until after 4.13-rc1 comes out a the earliest...
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-
-8< -----------------------
->From tony Mon Sep 17 00:00:00 2001
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Date: Sat, 8 Jul 2017 21:43:46 -0700
-Subject: [PATCH] ALSA: pcm: Export soc_dpcm_runtime_update
-
-Some drivers may need to use this from loadable modules. Otherwise we
-will get:
-
-ERROR: "soc_dpcm_runtime_update" [sound/soc/codecs/snd-soc-cpcap.ko]
-undefined!
-
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
----
- sound/soc/soc-pcm.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
---- a/sound/soc/soc-pcm.c
-+++ b/sound/soc/soc-pcm.c
-@@ -2539,6 +2539,8 @@ int soc_dpcm_runtime_update(struct snd_soc_card *card)
- 	mutex_unlock(&card->mutex);
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(soc_dpcm_runtime_update);
-+
- int soc_dpcm_be_digital_mute(struct snd_soc_pcm_runtime *fe, int mute)
- {
- 	struct snd_soc_dpcm *dpcm;
--- 
-2.13.2
+greg k-h
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
