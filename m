@@ -1,74 +1,62 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 RESEND 1/2] Documentation: tpm: add
- powered-while-suspended binding documentation
-Date: Sun, 9 Jul 2017 10:04:03 +0300
-Message-ID: <20170709070403.drxxzllnhagnxhjn@linux.intel.com>
-References: <20170627102724.23861-1-enric.balletbo@collabora.com>
- <20170703125735.dsrl6bs7ttj27zrt@linux.intel.com>
- <CAPz6YkWN8jQcJdah8wqM+O-5ST+eZ1qpzQvGerXX_u1Tm6soFg@mail.gmail.com>
+From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] clk: sunxi-ng: Add sun4i/sun7i CCU driver
+Date: Sun, 9 Jul 2017 22:25:23 +1000
+Message-ID: <CANwerB0d+2rU9gnCSKP4wwXZpzEsHXP6LtBYvxD+GnQAj6QHVQ@mail.gmail.com>
+References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
+ <65066c74b8dedfeb8de27d90b5fecfea3a700178.1499197129.git-series.plaes@plaes.org>
+Reply-To: net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPz6YkWN8jQcJdah8wqM+O-5ST+eZ1qpzQvGerXX_u1Tm6soFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCVMZKEXYEFBBNGBRDFQKGQED5UIK3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <65066c74b8dedfeb8de27d90b5fecfea3a700178.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 10:19:02AM -0700, Sonny Rao wrote:
-> On Mon, Jul 3, 2017 at 5:57 AM, Jarkko Sakkinen
-> <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > On Tue, Jun 27, 2017 at 12:27:23PM +0200, Enric Balletbo i Serra wrote:
-> >> Add a new powered-while-suspended property to control the behavior of the
-> >> TPM suspend/resume.
-> >>
-> >> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> >> Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> >> Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> >> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> >> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> ---
-> >> Changes since v3.
-> >>   - Rebased on top of linux-next
-> >>  Rob Herring
-> >>   - Split DT binding from code patch as is preferred.
-> >>
-> >> Did not exist on previous versions.
-> >>
-> >>  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> index 8cb638b..85c8216 100644
-> >> --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> >> @@ -8,6 +8,12 @@ Required properties:
-> >>                     the firmware event log
-> >>  - linux,sml-size : size of the memory allocated for the firmware event log
-> >>
-> >> +Optional properties:
-> >> +
-> >> +- powered-while-suspended: present when the TPM is left powered on between
-> >> +                           suspend and resume (makes the suspend/resume
-> >> +                           callbacks do nothing).
-> >> +
-> >>  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
-> >>  ----------------------------------------------------------
-> >>
-> >> --
-> >> 2.9.3
-> >>
-> >
-> > So... should I apply this?
-> 
-> Hi, since you applied the code part, it would make sense to apply the
-> documentation too.
+Hi Priit,
 
-I can do it.
+On 5 July 2017 at 06:04, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+> Introduce a clock controller driver for sun4i A10 and sun7i A20
+> series SoCs.
+>
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/Kconfig              |   14 +-
+>  drivers/clk/sunxi-ng/Makefile             |    1 +-
+>  drivers/clk/sunxi-ng/ccu-sun4i-a10.c      | 1448 ++++++++++++++++++++++-
+>  drivers/clk/sunxi-ng/ccu-sun4i-a10.h      |   61 +-
+>  include/dt-bindings/clock/sun4i-a10-ccu.h |  200 +++-
+>  include/dt-bindings/clock/sun7i-a20-ccu.h |   53 +-
+>  include/dt-bindings/reset/sun4i-a10-ccu.h |   67 +-
+>  7 files changed, 1844 insertions(+)
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.h
+>  create mode 100644 include/dt-bindings/clock/sun4i-a10-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sun7i-a20-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sun4i-a10-ccu.h
+>
+[snip]
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> new file mode 100644
+> index 0000000..49052b7
+> --- /dev/null
+> +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+[snip]
 
-/Jarkko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static const char *const hdmi_parents[] = { "pll-video0", "pll-video0-2x",
+> +                                           "pll-video1", "pll-video1-2x" };
+> +static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hdmi_parents,
+> +                                0x150, 0, 4, 24, 2, BIT(31), 0);
+
+hdmi_parents is in the wrong order. The correct order is "pll-video0",
+"pll-video1", "pll-video0-2x", "pll-video1-2x".
+
+Regards,
+Jonathan
