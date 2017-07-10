@@ -1,96 +1,48 @@
-From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] libfdt.h: Define FDT_PATH_MAX
-Date: Mon, 10 Jul 2017 07:36:16 -0400
-Message-ID: <20170710113616.GR22707@bill-the-cat>
-References: <1497451908-15367-1-git-send-email-pantelis.antoniou@konsulko.com>
- <20170614150522.GE2614@umbus>
- <1497468241.28265.22.camel@hp800z>
- <20170710044358.GA4083@umbus.fritz.box>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH v5 6/6] ARM: sun4i: Convert to CCU
+Date: Mon, 10 Jul 2017 13:44:18 +0200
+Message-ID: <c52b7297-76c6-1f87-e87d-149a3f469bef@schinagl.nl>
+References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
+ <796d0ecb0fe0204891387910b8222bfa43a93326.1499197129.git-series.plaes@plaes.org>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="O24KMDZ/7NA1I1FI"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170710044358.GA4083-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBFGRRXFQKGQE26ZWRHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <796d0ecb0fe0204891387910b8222bfa43a93326.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Pritt,
 
---O24KMDZ/7NA1I1FI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 04-07-17 22:05, Priit Laes wrote:
+> Convert sun4i-a10.dtsi to new CCU driver.
+>
+> Tested on Gemei G9 tablet.
+>
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 646 +++-----------------------------
+>  1 file changed, 73 insertions(+), 573 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
+> index 41c2579..fc23c41 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -45,7 +45,6 @@
+>
+>  #include <dt-bindings/thermal/thermal.h>
+>
+> -#include <dt-bindings/clock/sun4i-a10-pll2.h>
+>  #include <dt-bindings/dma/sun4i-a10.h>
 
-On Mon, Jul 10, 2017 at 02:43:58PM +1000, David Gibson wrote:
-> On Wed, Jun 14, 2017 at 10:24:01PM +0300, Pantelis Antoniou wrote:
-> > Hi David,
-> >=20
-> > On Wed, 2017-06-14 at 23:05 +0800, David Gibson wrote:
-> > > On Wed, Jun 14, 2017 at 05:51:48PM +0300, Pantelis Antoniou wrote:
-> > > > Declare the maximum path size of an FDT node.
-> > > > It is useful for manipulation methods that need to know a maximum v=
-alue.
-> > > >=20
-> > > > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> > >=20
-> > > Why do you need this.  I've really tried to avoid adding arbitrary
-> > > size limits on things.
-> > >=20
-> >=20
-> > The stacked overlay patch needs it; has to 'read' in a path into a
-> > buffer and manipulate it. Otherwise it I would have to add a new method
-> > that walks the path and returns the size of it so that I can allocate
-> > the exact amount. This seems excessive IMO compared to a hard max limit.
-> >=20
-> > It is similar to the way PATH_MAX works in *nix which makes things
-> > somewhat familiar.
->=20
-> This is not necessary.  As noted elsewhere, I'm not really convinced
-> of the need of the stacked overlay application patch at all.
+I think the same includes are missing here as well?
 
-How would you suggest handling the case of N baseboards and M add-on
-boards?  Creating a single overlay for each of the valid combinations of
-M is very unappealing and is one of those long-term support nightmares
-(change out the LCD panel part? Time to re-create those M combinations
-again).
-
-> But even
-> if we took that approach I can see fairly straightforward ways to
-> eliminate the need for a PATH_MAX (removing the arbitrary limit with
-> it).
-
-Can you suggest some of those approaches so we can try them out then?
-Thanks!
-
---=20
-Tom
-
---O24KMDZ/7NA1I1FI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJZY2awAAoJEIf59jXTHXZS9gkQAJ1xSRJohGb16C2nl4ON8XuL
-kt5s7Uc1A/+zKws11pXqr6EIhJHe/YuHlTUpLSIx9PN+Cfmck5la+6aQfec9Hvhb
-/JveaCGGiv5nykIS28F/0Me6gb7CkQXpdLB3fmGz2xufWyWhhJqQ6+eVjbqvo5Cl
-MI9VPrZNWx4I9OHQWKnkaXaOHWX+eXaEK6J5gRzUlk/skJrAUevqqaWfhkWgNSx6
-S4aJTbm2a2NdXlWfIEv+TxYVTdbFX/f1b8VQLaf0iLnD8XJojZ6yEdfH/Cn3ekRk
-myV0WrWDio3KWdf/6fnM5vQxwR4OgOOLGAMpSvbHl3Ov1gD4p9jtT8PORRr/nCXT
-KFXa6bvYl6eKF25XNI8S1urfzNm8xmNRb+SWrB8Z48K9SVDbIPai8sk213CaphCh
-9pRoEot6d3m+Dsm871Asd2uBdI76pX+dVYtMLNzI7xqMsN1Z7qibEXJ1D+uxs5dg
-2gRukH+ZlK3LGL2LBGHi1IW3KW9r1Qc8+IkzXVXEFBTwhhIbGNxaT1F/PY/mMh9n
-ptSu7O4kalqsrZ33QAwuV4ry7rC/YVYqAnBBQHu9fMhxRA515LTJYMoRfQ65pTaE
-tgHQEWLzCzwg1p7P49mWoHSq4DedSSXGrmHZ2uwpppLCNaqbiaQehwt/Cjio+StK
-Erjt+tafpwrfzx+shKez
-=0Doe
------END PGP SIGNATURE-----
-
---O24KMDZ/7NA1I1FI--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Olliver
