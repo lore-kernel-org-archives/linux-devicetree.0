@@ -1,35 +1,28 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
- bindings
-Date: Sun, 9 Jul 2017 22:50:31 -0500
-Message-ID: <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
-References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
- <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
+Date: Sun, 9 Jul 2017 22:51:37 -0500
+Message-ID: <20170710035137.nd76qgjes5pwbk7d@rob-hp-laptop>
+References: <1499336870-24118-1-git-send-email-narmstrong@baylibre.com>
+ <1499336870-24118-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499336663-23875-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1499336870-24118-3-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 12:24:23PM +0200, Neil Armstrong wrote:
-> On the first revision of the bindings, only the gates + resets were known
-> in the AO Clock HW, but more registers used to configures AO clock are known
-> to be spread among the AO register space.
-> This patch adds these registers to the Ao Clock bindings with direct access
-> and shared extcon access.
+On Thu, Jul 06, 2017 at 12:27:50PM +0200, Neil Armstrong wrote:
+> The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
+> device bindings.
 > 
 > Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt         | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-
-This looks like the binding might be too specific with a reg list of 
-single registers, and you should define a system controller node 
-instead. Depends on what else is in the "A0" block.
+>  .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
