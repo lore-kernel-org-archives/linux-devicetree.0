@@ -1,211 +1,50 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/9] iio: humidity: hts221: refactor write_with_mask
- code
-Date: Mon, 10 Jul 2017 21:47:46 +0100
-Message-ID: <20170710214746.39ea98f9@kernel.org>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
-        <20170709165704.26311-2-lorenzo.bianconi@st.com>
-        <20170709192827.2c343108@kernel.org>
-        <CAA2SeNJmUFp7WaOsAEq+yLMSKrzQVkhmyMhB2OVWsbBAmv4nCg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: stm32-dac: add support for
+ STM32F4
+Date: Mon, 10 Jul 2017 21:51:05 +0100
+Message-ID: <20170710215105.126409dc@kernel.org>
+References: <1499693040-12994-1-git-send-email-fabrice.gasnier@st.com>
+        <1499693040-12994-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA2SeNJmUFp7WaOsAEq+yLMSKrzQVkhmyMhB2OVWsbBAmv4nCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499693040-12994-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 9 Jul 2017 23:18:47 +0200
-Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Mon, 10 Jul 2017 15:23:57 +0200
+Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
 
-> > On Sun,  9 Jul 2017 18:56:56 +0200
-> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >  
-> >> Move bit-shift in hts221_write_with_mask() instead of coding
-> >> the shift depth in the configured value. That change will be necessary
-> >> to fix an issue in device power-down procedure
-> >>
-> >> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
-> > A could of questions inline.  
+> Introduce new compatible to support STM32F4 DAC (Digital-To-Analog
+> converter) variant.
 > 
-> Hi Jonathan,
-> 
-> Thanks for quick review :)
-> 
-> >
-> > Jonathan  
-> >> ---
-> >>  drivers/iio/humidity/hts221_core.c | 74 +++++++++++++++++---------------------
-> >>  1 file changed, 32 insertions(+), 42 deletions(-)
-> >>
-> >> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> >> index a56da3999e00..f5181e4e1eff 100644
-> >> --- a/drivers/iio/humidity/hts221_core.c
-> >> +++ b/drivers/iio/humidity/hts221_core.c
-> >> @@ -32,30 +32,12 @@
-> >>  #define HTS221_HUMIDITY_AVG_MASK     0x07
-> >>  #define HTS221_TEMP_AVG_MASK         0x38
-> >>
-> >> -#define HTS221_ODR_MASK                      0x87
-> >> +#define HTS221_ODR_MASK                      0x03
-> >>  #define HTS221_BDU_MASK                      BIT(2)
-> >> +#define HTS221_ENABLE_MASK           BIT(7)
-> >>
-> >>  #define HTS221_DRDY_MASK             BIT(2)
-> >>
-> >> -#define HTS221_ENABLE_SENSOR         BIT(7)
-> >> -
-> >> -#define HTS221_HUMIDITY_AVG_4                0x00 /* 0.4 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_8                0x01 /* 0.3 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_16               0x02 /* 0.2 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_32               0x03 /* 0.15 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_64               0x04 /* 0.1 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_128              0x05 /* 0.07 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_256              0x06 /* 0.05 %RH */
-> >> -#define HTS221_HUMIDITY_AVG_512              0x07 /* 0.03 %RH */
-> >> -
-> >> -#define HTS221_TEMP_AVG_2            0x00 /* 0.08 degC */
-> >> -#define HTS221_TEMP_AVG_4            0x08 /* 0.05 degC */
-> >> -#define HTS221_TEMP_AVG_8            0x10 /* 0.04 degC */
-> >> -#define HTS221_TEMP_AVG_16           0x18 /* 0.03 degC */
-> >> -#define HTS221_TEMP_AVG_32           0x20 /* 0.02 degC */
-> >> -#define HTS221_TEMP_AVG_64           0x28 /* 0.015 degC */
-> >> -#define HTS221_TEMP_AVG_128          0x30 /* 0.01 degC */
-> >> -#define HTS221_TEMP_AVG_256          0x38 /* 0.007 degC */
-> >>
-> >>  /* calibration registers */
-> >>  #define HTS221_REG_0RH_CAL_X_H               0x36
-> >> @@ -90,28 +72,28 @@ static const struct hts221_avg hts221_avg_list[] = {
-> >>               .addr = HTS221_REG_AVG_ADDR,
-> >>               .mask = HTS221_HUMIDITY_AVG_MASK,
-> >>               .avg_avl = {
-> >> -                     { 4, HTS221_HUMIDITY_AVG_4 },
-> >> -                     { 8, HTS221_HUMIDITY_AVG_8 },
-> >> -                     { 16, HTS221_HUMIDITY_AVG_16 },
-> >> -                     { 32, HTS221_HUMIDITY_AVG_32 },
-> >> -                     { 64, HTS221_HUMIDITY_AVG_64 },
-> >> -                     { 128, HTS221_HUMIDITY_AVG_128 },
-> >> -                     { 256, HTS221_HUMIDITY_AVG_256 },
-> >> -                     { 512, HTS221_HUMIDITY_AVG_512 },
-> >> +                     {   4, 0x0 }, /* 0.4 %RH */
-> >> +                     {   8, 0x1 }, /* 0.3 %RH */
-> >> +                     {  16, 0x2 }, /* 0.2 %RH */
-> >> +                     {  32, 0x3 }, /* 0.15 %RH */
-> >> +                     {  64, 0x4 }, /* 0.1 %RH */
-> >> +                     { 128, 0x5 }, /* 0.07 %RH */
-> >> +                     { 256, 0x6 }, /* 0.05 %RH */
-> >> +                     { 512, 0x7 }, /* 0.03 %RH */
-> >>               },
-> >>       },
-> >>       {
-> >>               .addr = HTS221_REG_AVG_ADDR,
-> >>               .mask = HTS221_TEMP_AVG_MASK,
-> >>               .avg_avl = {
-> >> -                     { 2, HTS221_TEMP_AVG_2 },
-> >> -                     { 4, HTS221_TEMP_AVG_4 },
-> >> -                     { 8, HTS221_TEMP_AVG_8 },
-> >> -                     { 16, HTS221_TEMP_AVG_16 },
-> >> -                     { 32, HTS221_TEMP_AVG_32 },
-> >> -                     { 64, HTS221_TEMP_AVG_64 },
-> >> -                     { 128, HTS221_TEMP_AVG_128 },
-> >> -                     { 256, HTS221_TEMP_AVG_256 },
-> >> +                     {   2, 0x0 }, /* 0.08 degC */
-> >> +                     {   4, 0x1 }, /* 0.05 degC */
-> >> +                     {   8, 0x2 }, /* 0.04 degC */
-> >> +                     {  16, 0x3 }, /* 0.03 degC */
-> >> +                     {  32, 0x4 }, /* 0.02 degC */
-> >> +                     {  64, 0x5 }, /* 0.015 degC */
-> >> +                     { 128, 0x6 }, /* 0.01 degC */
-> >> +                     { 256, 0x7 }, /* 0.007 degC */  
-> > Could we potentially use the index directly here rather than
-> > having to explicitly store it?  Would be more elegant perhaps..  
-> 
-> Ack, will do in v2
-> 
-> >>               },
-> >>       },
-> >>  };
-> >> @@ -166,7 +148,7 @@ static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
-> >>               goto unlock;
-> >>       }
-> >>
-> >> -     data = (data & ~mask) | (val & mask);
-> >> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
-> >>
-> >>       err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
-> >>       if (err < 0)
-> >> @@ -201,11 +183,10 @@ static int hts221_check_whoami(struct hts221_hw *hw)
-> >>
-> >>  int hts221_config_drdy(struct hts221_hw *hw, bool enable)
-> >>  {
-> >> -     u8 val = enable ? BIT(2) : 0;
-> >>       int err;
-> >>
-> >>       err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
-> >> -                                  HTS221_DRDY_MASK, val);
-> >> +                                  HTS221_DRDY_MASK, enable);
-> >>
-> >>       return err < 0 ? err : 0;
-> >>  }
-> >> @@ -213,7 +194,6 @@ int hts221_config_drdy(struct hts221_hw *hw, bool enable)
-> >>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
-> >>  {
-> >>       int i, err;
-> >> -     u8 val;
-> >>
-> >>       for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
-> >>               if (hts221_odr_table[i].hz == odr)
-> >> @@ -222,9 +202,19 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
-> >>       if (i == ARRAY_SIZE(hts221_odr_table))
-> >>               return -EINVAL;
-> >>
-> >> -     val = HTS221_ENABLE_SENSOR | HTS221_BDU_MASK | hts221_odr_table[i].val;
-> >> +     /* enable Block Data Update */
-> >> +     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> >> +                                  HTS221_BDU_MASK, 1);
-> >> +     if (err < 0)
-> >> +             return err;
-> >> +
-> >> +     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> >> +                                  HTS221_ODR_MASK, hts221_odr_table[i].val);
-> >> +     if (err < 0)
-> >> +             return err;
-> >> +
-> >>       err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> >> -                                  HTS221_ODR_MASK, val);  
-> > This original code looks like a bug given the odr mask should only
-> > cover the odr bits, not the enable and bdu.
-> >
-> > Am I missing something?  
-> 
-> Base on hts221_write_with_mask() code the original mask covers odr,
-> bdu and enable fields in CNTRL1 register.
-Ah.  That makes sense even if it's rather less elegant than the new
-code!
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to ignore it.
 
-Thanks for clearing that up.
+Simple addition of a supported part so, whilst welcome review
+from Rob / Mark isn't really necessary I think.
 
 Jonathan
+> ---
+>  Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> >
-> > Taking one write and changing it to 3 isn't that nice, but I guess
-> > we aren't in a fast path here so fair enough given the cleaner
-> > resulting code.  
-> >> +                                  HTS221_ENABLE_MASK, 1);
-> >>       if (err < 0)
-> >>               return err;
-> >>  
-> >  
-> 
-> Regards,
-> Lorenzo
-> 
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+> index bcee71f..bf2925c 100644
+> --- a/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+> +++ b/Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt
+> @@ -10,7 +10,9 @@ current.
+>  Contents of a stm32 dac root node:
+>  -----------------------------------
+>  Required properties:
+> -- compatible: Must be "st,stm32h7-dac-core".
+> +- compatible: Should be one of:
+> +  "st,stm32f4-dac-core"
+> +  "st,stm32h7-dac-core"
+>  - reg: Offset and length of the device's register set.
+>  - clocks: Must contain an entry for pclk (which feeds the peripheral bus
+>    interface)
