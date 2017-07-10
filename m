@@ -1,67 +1,109 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: stm32: Add DAC support on stm32f429
-Date: Mon, 10 Jul 2017 21:56:07 +0100
-Message-ID: <20170710215607.1ef3caae@kernel.org>
-References: <1499693040-12994-1-git-send-email-fabrice.gasnier@st.com>
-        <1499693040-12994-5-git-send-email-fabrice.gasnier@st.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
+ Remote Processor Controller driver
+Date: Mon, 10 Jul 2017 15:14:08 -0700
+Message-ID: <20170710221408.GD1618@tuxbook>
+References: <20170710144220.31594-1-o.rempel@pengutronix.de>
+ <20170710144220.31594-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499693040-12994-5-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170710144220.31594-2-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Jul 2017 15:24:00 +0200
-Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+On Mon 10 Jul 07:42 PDT 2017, Oleksij Rempel wrote:
 
-> Add support for DAC (Digital to Analog Converter) to STM32F429.
-> STM32F429 DAC has two output channels.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Driver support is working it's way towards mainline, though will be
-next merge window now so no real rush on this one!
-
-Acked-by: Joanthan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stm32f429.dtsi | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+>  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
 > 
-> diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
-> index b2a2b5c..f15f633 100644
-> --- a/arch/arm/boot/dts/stm32f429.dtsi
-> +++ b/arch/arm/boot/dts/stm32f429.dtsi
-> @@ -354,6 +354,31 @@
->  			status = "disabled";
->  		};
->  
-> +		dac: dac@40007400 {
-> +			compatible = "st,stm32f4-dac-core";
-> +			reg = <0x40007400 0x400>;
-> +			resets = <&rcc STM32F4_APB1_RESET(DAC)>;
-> +			clocks = <&rcc 0 STM32F4_APB1_CLOCK(DAC)>;
-> +			clock-names = "pclk";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			status = "disabled";
+> diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+> new file mode 100644
+> index 000000000000..e7c61993e1b8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+> @@ -0,0 +1,44 @@
+> +NXP iMX6SX/iMX7D Co-Processor Bindings
+> +----------------------------------------
 > +
-> +			dac1: dac@1 {
-> +				compatible = "st,stm32-dac";
-> +				#io-channels-cells = <1>;
-> +				reg = <1>;
-> +				status = "disabled";
-> +			};
+> +This binding provides support for ARM Cortex M4 Co-processor found on some
+> +NXP iMX SoCs.
 > +
-> +			dac2: dac@2 {
-> +				compatible = "st,stm32-dac";
-> +				#io-channels-cells = <1>;
-> +				reg = <2>;
-> +				status = "disabled";
-> +			};
-> +		};
+> +Required properties:
+> +- compatible		Should be one of:
+> +				"fsl,imx7d-rproc"
+> +				"fsl,imx6sx-rproc"
+> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
+> +- syscfg		Phandle to syscon block which provide access to
+
+This is called "syscon" in the code and the example.
+
+> +			System Reset Controller
 > +
->  		usart7: serial@40007800 {
->  			compatible = "st,stm32-usart", "st,stm32-uart";
->  			reg = <0x40007800 0x400>;
+> +Optional properties:
+> +- reg:			Should contain the address ranges for some of internal
+> +			memory regions.
+
+Something less hand-wavy, like: "Should list the memory regions for the
+remoteproc"
+
+> +- reg-names:		Contains the corresponding names for the memory
+> +			regions. These should be named "ddr", "ocram", "ocram-s",
+> +			"ocram-epdc" or "ocram-pxp".
+
+Make this comment define which memory regions are required for each of
+the systems.
+
+> +Fallowing memory ranges are expected:
+> +- For "fsl,imx7d-rproc"
+> +	<0x00900000 0x00020000> - "ocram"
+> +	<0x00920000 0x00020000> - "ocram-epdc"
+> +	<0x00940000 0x00008000> - "ocram-pxp"
+> +	<0x80000000 0x0FFF0000> - "ddr" (code area)
+> +	<0x80000000 0x60000000> - "ddr" (data area)
+
+There's no reason to list the actual regions in the binding
+document. Just list the requires regions for each system.
+
+> +- For "fsl,imx6sx-rproc"
+> +	<0x008F8000 0x00004000> - "ocram-s"
+> +	<0x80000000 0x0FFF8000> - "ddr" (code area)
+> +	<0x80000000 0x60000000> - "ddr" (data area)
+> +
+> +Note: the "ddr" code and data ranges are overlapping. Code area is smaller
+> +than data area.  So this range should be carefully chosen according to your
+> +system and application requirements.
+> +
+
+This is a source of future issues as this indicates that I should have
+reg-names list "ddr" twice.
+
+Also, as you warn about the user needing to pick the values for "ddr",
+does that mean that it's a carveout of System RAM?
+
+> +Example:
+> +	imx_rproc: imx7d-rp0@0 {
+
+imx7d-rproc@80000000 {
+
+And there's currently no reason to label this node.
+
+> +		compatible	= "fsl,imx7d-rproc";
+> +		reg		= <0x80000000 0x80000>, <0x00900000 0x2000>;
+> +		reg-names	= "ddr", "ocram";
+> +		syscon		= <&src>;
+> +		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
+> +	};
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
