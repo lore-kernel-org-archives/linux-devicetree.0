@@ -1,54 +1,37 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 0/5] arm64: dts: renesas: ulcb: Enable HDMI
-Date: Mon, 10 Jul 2017 16:09:52 +0300
-Message-ID: <1836107.QXaVz3MGJb@avalon>
-References: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Document the STM32 MDMA bindings
+Date: Mon, 10 Jul 2017 08:20:04 -0500
+Message-ID: <20170710132004.lwjweotvob2kqgv5@rob-hp-laptop>
+References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343941-6375-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1499343941-6375-2-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-H Vladimir,
-
-On Friday 07 Jul 2017 05:36:16 Vladimir Barinov wrote:
-> Hello,
+On Thu, Jul 06, 2017 at 02:25:38PM +0200, Pierre-Yves MORDRET wrote:
+> This patch adds documentation of device tree bindings for the STM32 MDMA
+> controller.
 > 
-> This patch series enables HDMI support for the H3 and M3-W based ULCB boards
-> 
-> This has the following dependency:
-> - [PATCH v2 series] R-Car Salvator-X M3-W: Enable DU support
-> - [PATCH] arm64: dts: renesas: ulcb: Enable I2C4
-> - [PATCH] clk: vc5: Add support for IDT VersaClock 5P49V5925
-> 
-> Vladimir Barinov (5):
-> [1/5] arm64: dts: renesas: ulcb: Add DU external dot clock sources
-> [2/5] arm64: dts: renesas: r8a7795-h3ulcb: Add DU external dot clocks
-> [3/5] arm64: dts: renesas: r8a7796-m3ulcb: Add DU external dot clocks
-> [4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
-> [5/5] arm64: dts: renesas: ulcb: Enable HDMI output
-
-Thank you for the patches.
-
-For patches 1/5, 2/5, 3/5 and 5/5,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-Please see patch 4/5 for a small comment.
-
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 > ---
-> This patchset is against the 'kernel/git/horms/renesas.git' repo.
-> 
->  r8a7795-h3ulcb.dts |   14 ++++++++++++++
->  r8a7796-m3ulcb.dts |   12 ++++++++++++
->  ulcb.dtsi          |   42 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 68 insertions(+)
+>   Version history:
+>      v2:
+>          * change compatible into st,stm32h7-mdma to be more SoC specific
+> ---
+> ---
+>  .../devicetree/bindings/dma/stm32-mdma.txt         | 94 ++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/stm32-mdma.txt
 
--- 
-Regards,
-
-Laurent Pinchart
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
