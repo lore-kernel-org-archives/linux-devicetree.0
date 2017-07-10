@@ -1,376 +1,323 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH 4/4] thermal: Add Tegra BPMP thermal sensor driver
-Date: Mon, 10 Jul 2017 11:50:20 +0300
-Message-ID: <24019d55-b4df-dd6e-f43d-57a41b208e09@kapsi.fi>
-References: <20170616112825.31025-1-mperttunen@nvidia.com>
- <20170616112825.31025-4-mperttunen@nvidia.com>
- <20170701025325.GA11217@localhost.localdomain>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: [PATCH v2 3/3] drm/panel: Add support for otm8009a panel driver
+Date: Mon, 10 Jul 2017 11:02:13 +0200
+Message-ID: <1499677333-10571-4-git-send-email-philippe.cornu@st.com>
+References: <1499677333-10571-1-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170701025325.GA11217@localhost.localdomain>
-Sender: linux-pm-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rui.zhang@intel.com, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1499677333-10571-1-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01.07.2017 05:53, Eduardo Valentin wrote:
-> Hey Mikko,
->
-> Sorry for the late answer,
-
-Likewise,
-
->
-> On Fri, Jun 16, 2017 at 02:28:25PM +0300, Mikko Perttunen wrote:
->> On Tegra186, the BPMP (Boot and Power Management Processor) exposes an
->> interface to thermal sensors on the system-on-chip. This driver
->> implements access to the interface. It supports reading the
->> temperature, setting trip points and receiving notification of a
->> tripped trip point.
->>
->> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->> ---
->>  drivers/thermal/Makefile             |   2 +-
->>  drivers/thermal/tegra/Kconfig        |   7 +
->>  drivers/thermal/tegra/Makefile       |   3 +-
->>  drivers/thermal/tegra/bpmp-thermal.c | 253 +++++++++++++++++++++++++++++++++++
->>  4 files changed, 263 insertions(+), 2 deletions(-)
->>  create mode 100644 drivers/thermal/tegra/bpmp-thermal.c
->>
->> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
->> index 094d7039981c..c03dccdba7b8 100644
->> --- a/drivers/thermal/Makefile
->> +++ b/drivers/thermal/Makefile
->> @@ -54,7 +54,7 @@ obj-$(CONFIG_INTEL_BXT_PMIC_THERMAL) += intel_bxt_pmic_thermal.o
->>  obj-$(CONFIG_INTEL_PCH_THERMAL)	+= intel_pch_thermal.o
->>  obj-$(CONFIG_ST_THERMAL)	+= st/
->>  obj-$(CONFIG_QCOM_TSENS)	+= qcom/
->> -obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra/
->> +obj-y				+= tegra/
->>  obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
->>  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
->>  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
->> diff --git a/drivers/thermal/tegra/Kconfig b/drivers/thermal/tegra/Kconfig
->> index cec586ec7e4b..36e4b03bb98b 100644
->> --- a/drivers/thermal/tegra/Kconfig
->> +++ b/drivers/thermal/tegra/Kconfig
->> @@ -10,4 +10,11 @@ config TEGRA_SOCTHERM
->>  	  zones to manage temperatures. This option is also required for the
->>  	  emergency thermal reset (thermtrip) feature to function.
->>
->> +config TEGRA_BPMP_THERMAL
->> +	tristate "Tegra BPMP thermal sensing"
->> +	depends on TEGRA_BPMP
->
-> Can you add COMPILE_TEST support here?
-
-Sure.
-
->
->> +	help
->> +	 Enable this option for support for sensing system temperature of NVIDIA
->> +	 Tegra systems-on-chip with the BPMP coprocessor (Tegra186).
->> +
->>  endmenu
->> diff --git a/drivers/thermal/tegra/Makefile b/drivers/thermal/tegra/Makefile
->> index 1ce1af2cf0f5..757abcd1feaf 100644
->> --- a/drivers/thermal/tegra/Makefile
->> +++ b/drivers/thermal/tegra/Makefile
->> @@ -1,4 +1,5 @@
->> -obj-$(CONFIG_TEGRA_SOCTHERM)	+= tegra-soctherm.o
->> +obj-$(CONFIG_TEGRA_SOCTHERM)		+= tegra-soctherm.o
->> +obj-$(CONFIG_TEGRA_BPMP_THERMAL)	+= bpmp-thermal.o
->>
->>  tegra-soctherm-y				:= soctherm.o soctherm-fuse.o
->>  tegra-soctherm-$(CONFIG_ARCH_TEGRA_124_SOC)	+= tegra124-soctherm.o
->> diff --git a/drivers/thermal/tegra/bpmp-thermal.c b/drivers/thermal/tegra/bpmp-thermal.c
->> new file mode 100644
->> index 000000000000..3465a201d1ac
->> --- /dev/null
->> +++ b/drivers/thermal/tegra/bpmp-thermal.c
->> @@ -0,0 +1,253 @@
->> +/*
->> + * Copyright (c) 2015-2017, NVIDIA CORPORATION.  All rights reserved.
->> + *
->> + * Author:
->> + *	Mikko Perttunen <mperttunen@nvidia.com>
->> + *	Aapo Vienamo	<avienamo@nvidia.com>
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/thermal.h>
->> +#include <linux/workqueue.h>
->> +
->> +#include <soc/tegra/bpmp.h>
->> +#include <soc/tegra/bpmp-abi.h>
->> +
->> +struct tegra_bpmp_thermal_zone {
->> +	struct tegra_bpmp_thermal *tegra;
->> +	struct thermal_zone_device *tzd;
->> +	struct work_struct tz_device_update_work;
->> +	unsigned int idx;
->> +};
->> +
->> +struct tegra_bpmp_thermal {
->> +	struct device *dev;
->> +	struct tegra_bpmp *bpmp;
->> +	unsigned int num_zones;
->> +	struct tegra_bpmp_thermal_zone *zones;
->> +};
->> +
->> +static int tegra_bpmp_thermal_get_temp(void *data, int *out_temp)
->> +{
->> +	struct tegra_bpmp_thermal_zone *zone = data;
->> +	struct mrq_thermal_host_to_bpmp_request req;
->> +	union mrq_thermal_bpmp_to_host_response reply;
->> +	struct tegra_bpmp_message msg;
->> +	int err;
->> +
->> +	memset(&req, 0, sizeof(req));
->> +	req.type = CMD_THERMAL_GET_TEMP;
->> +	req.get_temp.zone = zone->idx;
->> +
->> +	memset(&msg, 0, sizeof(msg));
->> +	msg.mrq = MRQ_THERMAL;
->> +	msg.tx.data = &req;
->> +	msg.tx.size = sizeof(req);
->> +	msg.rx.data = &reply;
->> +	msg.rx.size = sizeof(reply);
->> +
->> +	err = tegra_bpmp_transfer(zone->tegra->bpmp, &msg);
->> +	if (err)
->> +		return err;
->> +
->> +	*out_temp = reply.get_temp.temp;
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_bpmp_thermal_set_trips(void *data, int low, int high)
->> +{
->> +	struct tegra_bpmp_thermal_zone *zone = data;
->> +	struct mrq_thermal_host_to_bpmp_request req;
->> +	struct tegra_bpmp_message msg;
->> +
->> +	memset(&req, 0, sizeof(req));
->> +	req.type = CMD_THERMAL_SET_TRIP;
->> +	req.set_trip.zone = zone->idx;
->> +	req.set_trip.enabled = true;
->> +	req.set_trip.low = low;
->> +	req.set_trip.high = high;
->> +
->> +	memset(&msg, 0, sizeof(msg));
->> +	msg.mrq = MRQ_THERMAL;
->> +	msg.tx.data = &req;
->> +	msg.tx.size = sizeof(req);
->> +
->> +	return tegra_bpmp_transfer(zone->tegra->bpmp, &msg);
->> +}
->> +
->> +static void tz_device_update_work_fn(struct work_struct *work)
->> +{
->> +	struct tegra_bpmp_thermal_zone *zone;
->> +
->> +	zone = container_of(work, struct tegra_bpmp_thermal_zone,
->> +			    tz_device_update_work);
->> +
->> +	thermal_zone_device_update(zone->tzd, THERMAL_TRIP_VIOLATED);
->> +}
->> +
->> +static void bpmp_mrq_thermal(unsigned int mrq, struct tegra_bpmp_channel *ch,
->> +			     void *data)
->> +{
->> +	struct mrq_thermal_bpmp_to_host_request *req;
->> +	struct tegra_bpmp_thermal *tegra = data;
->> +	int zone_idx;
->> +
->> +	req = (struct mrq_thermal_bpmp_to_host_request *)ch->ib->data;
->> +
->> +	if (req->type != CMD_THERMAL_HOST_TRIP_REACHED) {
->> +		dev_err(tegra->dev, "%s: invalid request type: %d\n",
->> +			__func__, req->type);
->> +		tegra_bpmp_mrq_return(ch, -EINVAL, NULL, 0);
->> +		return;
->> +	}
->> +
->> +	zone_idx = req->host_trip_reached.zone;
->> +	if (zone_idx >= tegra->num_zones) {
->> +		dev_err(tegra->dev, "%s: invalid thermal zone: %d\n",
->> +			__func__, zone_idx);
->> +		tegra_bpmp_mrq_return(ch, -EINVAL, NULL, 0);
->> +		return;
->> +	}
->> +
->> +	tegra_bpmp_mrq_return(ch, 0, NULL, 0);
->> +
->> +	schedule_work(&tegra->zones[zone_idx].tz_device_update_work);
->
-> Why not a thermal update right here?
-
-The device update will call back to the .get_temp callback, which will 
-call tegra_bpmp_transfer - but this function may not be called from 
-atomic context. (bpmp_mrq_thermal is called from atomic context)
-
->
->> +}
->> +
->> +static int tegra_bpmp_thermal_get_num_zones(struct tegra_bpmp *bpmp,
->> +					    int *num_zones)
->> +{
->> +	struct mrq_thermal_host_to_bpmp_request req;
->> +	union mrq_thermal_bpmp_to_host_response reply;
->> +	struct tegra_bpmp_message msg;
->> +	int err;
->> +
->> +	memset(&req, 0, sizeof(req));
->> +	req.type = CMD_THERMAL_GET_NUM_ZONES;
->> +
->> +	memset(&msg, 0, sizeof(msg));
->> +	msg.mrq = MRQ_THERMAL;
->> +	msg.tx.data = &req;
->> +	msg.tx.size = sizeof(req);
->> +	msg.rx.data = &reply;
->> +	msg.rx.size = sizeof(reply);
->> +
->> +	err = tegra_bpmp_transfer(bpmp, &msg);
->> +	if (err)
->> +		return err;
->> +
->> +	*num_zones = reply.get_num_zones.num;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct thermal_zone_of_device_ops tegra_bpmp_of_thermal_ops = {
->> +	.get_temp = tegra_bpmp_thermal_get_temp,
->> +	.set_trips = tegra_bpmp_thermal_set_trips,
->> +};
->> +
->> +static int tegra_bpmp_thermal_probe(struct platform_device *pdev)
->> +{
->> +	struct tegra_bpmp *bpmp = dev_get_drvdata(pdev->dev.parent);
->> +	struct tegra_bpmp_thermal *tegra;
->> +	struct thermal_zone_device *tzd;
->> +	unsigned int i;
->> +	int err;
->> +
->> +	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
->> +	if (!tegra)
->> +		return -ENOMEM;
->> +
->> +	tegra->dev = &pdev->dev;
->> +	tegra->bpmp = bpmp;
->> +
->> +	err = tegra_bpmp_thermal_get_num_zones(bpmp, &tegra->num_zones);
->> +	if (err) {
->> +		dev_err(&pdev->dev, "failed to get the number of zones: %d\n",
->> +			err);
->> +		return err;
->> +	}
->> +
->> +	tegra->zones = devm_kcalloc(&pdev->dev, tegra->num_zones,
->> +				    sizeof(*tegra->zones), GFP_KERNEL);
->> +	if (!tegra->zones)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < tegra->num_zones; ++i) {
->> +		int temp;
->> +
->> +		tegra->zones[i].idx = i;
->> +		tegra->zones[i].tegra = tegra;
->> +
->> +		err = tegra_bpmp_thermal_get_temp(&tegra->zones[i], &temp);
->> +		if (err < 0)
->> +			continue;
->
-> Should we release the memory allocated for zones that fail to retrieve
-> temperature here, given that you are not going to use it elsewhere.
-
-That's possible, though then we will need a separate allocation for each 
-zone struct. I'll make the change.
-
->
->> +
->> +		tzd = devm_thermal_zone_of_sensor_register(
->> +			&pdev->dev, i, &tegra->zones[i],
->> +			&tegra_bpmp_of_thermal_ops);
->> +		if (IS_ERR(tzd)) {
->> +			if (PTR_ERR(tzd) == -EPROBE_DEFER)
->> +				return -EPROBE_DEFER;
->> +			continue;
->
-> same here?
->
->> +		}
->> +
->> +		tegra->zones[i].tzd = tzd;
->> +		INIT_WORK(&tegra->zones[i].tz_device_update_work,
->> +			  tz_device_update_work_fn);
->> +	}
->> +
->> +	err = tegra_bpmp_request_mrq(bpmp, MRQ_THERMAL, bpmp_mrq_thermal,
->> +				     tegra);
->> +	if (err) {
->> +		dev_err(&pdev->dev, "failed to register mrq handler: %d\n",
->> +			err);
->> +		return err;
->> +	}
->> +
->> +	platform_set_drvdata(pdev, tegra);
->> +
->> +	return 0;
->> +}
->> +
->> +static int tegra_bpmp_thermal_remove(struct platform_device *pdev)
->> +{
->> +	struct tegra_bpmp_thermal *tegra = platform_get_drvdata(pdev);
->> +
->> +	tegra_bpmp_free_mrq(tegra->bpmp, MRQ_THERMAL, tegra);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id tegra_bpmp_thermal_of_match[] = {
->> +	{ .compatible = "nvidia,tegra186-bpmp-thermal" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, tegra_bpmp_thermal_of_match);
->> +
->> +static struct platform_driver tegra_bpmp_thermal_driver = {
->> +	.probe = tegra_bpmp_thermal_probe,
->> +	.remove = tegra_bpmp_thermal_remove,
->> +	.driver = {
->> +		.name = "tegra-bpmp-thermal",
->> +		.of_match_table = tegra_bpmp_thermal_of_match,
->> +	},
->> +};
->> +module_platform_driver(tegra_bpmp_thermal_driver);
->> +
->> +MODULE_AUTHOR("Mikko Perttunen <mperttunen@nvidia.com>");
->> +MODULE_DESCRIPTION("NVIDIA Tegra BPMP thermal sensor driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.13.1
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
-
-Thanks,
-Mikko
+VGhpcyBwYXRjaCBhZGRzIE9yaXNlIFRlY2ggb3RtODAwOWEgMy45NyIgNDgweDgwMCBURlQgTENE
+CnBhbmVsIGRyaXZlciAoTUlQSS1EU0kgdmlkZW8gbW9kZSkuIFRoZSBwYW5lbCBiYWNrbGlnaHQg
+aXMKbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4gVGhpcyBwYW5lbCBkcml2ZXIgaXMgdXNl
+ZCBpbgpzZXZlcmFsIFNUTTMyIGJvYXJkcy4KClNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5V
+IDxwaGlsaXBwZS5jb3JudUBzdC5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtl
+ZmlsZSAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtb3Jpc2V0ZWNoLW90bTgwMDlhLmMgfCA0ODkgKysrKysrKysrKysrKysrKysrKysrKysKIDMg
+ZmlsZXMgY2hhbmdlZCwgNDk5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDc1NSBkcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtb3Jpc2V0ZWNoLW90bTgwMDlhLmMKCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9L
+Y29uZmlnCmluZGV4IGQ4NGEwMzEuLmMxYzkyOTEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9wYW5lbC9LY29uZmlnCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCkBAIC0x
+MTcsNCArMTE3LDEzIEBAIGNvbmZpZyBEUk1fUEFORUxfU0lUUk9OSVhfU1Q3Nzg5VgogCSAgU2F5
+IFkgaGVyZSBpZiB5b3Ugd2FudCB0byBlbmFibGUgc3VwcG9ydCBmb3IgdGhlIFNpdHJvbml4CiAJ
+ICBTVDc3ODlWIGNvbnRyb2xsZXIgZm9yIDI0MHgzMjAgTENEIHBhbmVscwogCitjb25maWcgRFJN
+X1BBTkVMX09SSVNFVEVDSF9PVE04MDA5QQorCXRyaXN0YXRlICJPcmlzZSBUZWNoIG90bTgwMDlh
+IDQ4MHAgZHNpIDJkbCB2aWRlbyBtb2RlIHBhbmVsIgorCWRlcGVuZHMgb24gT0YKKwlkZXBlbmRz
+IG9uIERSTV9NSVBJX0RTSQorCWRlcGVuZHMgb24gQkFDS0xJR0hUX0NMQVNTX0RFVklDRQorCWhl
+bHAKKwkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIE9yaXNl
+IFRlY2ggT1RNODAwOUEKKwkgIDQ4MHg4MDAgRFNJIHBhbmVsCisKIGVuZG1lbnUKZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9NYWtlZmlsZQppbmRleCA5ZjY2MTBkLi5hYzc5OGYzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vcGFuZWwvTWFrZWZpbGUKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxl
+CkBAIC0xMCwzICsxMCw0IEBAIG9iai0kKENPTkZJR19EUk1fUEFORUxfU0FNU1VOR19TNkU4QUEw
+KSArPSBwYW5lbC1zYW1zdW5nLXM2ZThhYTAubwogb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFS
+UF9MUTEwMVIxU1gwMSkgKz0gcGFuZWwtc2hhcnAtbHExMDFyMXN4MDEubwogb2JqLSQoQ09ORklH
+X0RSTV9QQU5FTF9TSEFSUF9MUzA0M1QxTEUwMSkgKz0gcGFuZWwtc2hhcnAtbHMwNDN0MWxlMDEu
+bwogb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSVRST05JWF9TVDc3ODlWKSArPSBwYW5lbC1zaXRy
+b25peC1zdDc3ODl2Lm8KK29iai0kKENPTkZJR19EUk1fUEFORUxfT1JJU0VURUNIX09UTTgwMDlB
+KSArPSBwYW5lbC1vcmlzZXRlY2gtb3RtODAwOWEubwpcIE5vIG5ld2xpbmUgYXQgZW5kIG9mIGZp
+bGUKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1vcmlzZXRlY2gtb3Rt
+ODAwOWEuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1vcmlzZXRlY2gtb3RtODAwOWEu
+YwpuZXcgZmlsZSBtb2RlIDEwMDc1NQppbmRleCAwMDAwMDAwLi4yYTNjZTQ3Ci0tLSAvZGV2L251
+bGwKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLW9yaXNldGVjaC1vdG04MDA5YS5j
+CkBAIC0wLDAgKzEsNDg5IEBACisvKgorICogQ29weXJpZ2h0IChDKSBTVE1pY3JvZWxlY3Ryb25p
+Y3MgU0EgMjAxNworICoKKyAqIEF1dGhvcnM6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3Ju
+dUBzdC5jb20+CisgKiAgICAgICAgICBZYW5uaWNrIEZlcnRyZSA8eWFubmljay5mZXJ0cmVAc3Qu
+Y29tPgorICoKKyAqIExpY2Vuc2UgdGVybXM6ICBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSAo
+R1BMKSwgdmVyc2lvbiAyCisgKi8KKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgorI2luY2x1ZGUgPGRy
+bS9kcm1fbWlwaV9kc2kuaD4KKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+CisjaW5jbHVkZSA8
+bGludXgvYmFja2xpZ2h0Lmg+CisjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgorI2lu
+Y2x1ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPgorCisjZGVmaW5lIERSVl9OQU1FICJvcmlzZXRl
+Y2hfb3RtODAwOWEiCisKKyNkZWZpbmUgT1RNODAwOUFfQkFDS0xJR0hUX0RFRkFVTFQJMjQwCisj
+ZGVmaW5lIE9UTTgwMDlBX0JBQ0tMSUdIVF9NQVgJCTI1NQorCisvKiBNYW51ZmFjdHVyZXIgQ29t
+bWFuZCBTZXQgKi8KKyNkZWZpbmUgTUNTX0FEUlNGVAkweDAwMDAJLyogQWRkcmVzcyBTaGlmdCBG
+dW5jdGlvbiAqLworI2RlZmluZSBNQ1NfUEFOU0VUCTB4QjNBNgkvKiBQYW5lbCBUeXBlIFNldHRp
+bmcgKi8KKyNkZWZpbmUgTUNTX1NEX0NUUkwJMHhDMEEyCS8qIFNvdXJjZSBEcml2ZXIgVGltaW5n
+IFNldHRpbmcgKi8KKyNkZWZpbmUgTUNTX1BfRFJWX00JMHhDMEI0CS8qIFBhbmVsIERyaXZpbmcg
+TW9kZSAqLworI2RlZmluZSBNQ1NfT1NDX0FESgkweEMxODEJLyogT3NjaWxsYXRvciBBZGp1c3Rt
+ZW50IGZvciBJZGxlL05vcm1hbCBtb2RlICovCisjZGVmaW5lIE1DU19SR0JfVklEX1NFVAkweEMx
+QTEJLyogUkdCIFZpZGVvIE1vZGUgU2V0dGluZyAqLworI2RlZmluZSBNQ1NfU0RfUENIX0NUUkwJ
+MHhDNDgwCS8qIFNvdXJjZSBEcml2ZXIgUHJlY2hhcmdlIENvbnRyb2wgKi8KKyNkZWZpbmUgTUNT
+X05PX0RPQzEJMHhDNDhBCS8qIENvbW1hbmQgbm90IGRvY3VtZW50ZWQgKi8KKyNkZWZpbmUgTUNT
+X1BXUl9DVFJMMQkweEM1ODAJLyogUG93ZXIgQ29udHJvbCBTZXR0aW5nIDEgKi8KKyNkZWZpbmUg
+TUNTX1BXUl9DVFJMMgkweEM1OTAJLyogUG93ZXIgQ29udHJvbCBTZXR0aW5nIDIgZm9yIE5vcm1h
+bCBNb2RlICovCisjZGVmaW5lIE1DU19QV1JfQ1RSTDQJMHhDNUIwCS8qIFBvd2VyIENvbnRyb2wg
+U2V0dGluZyA0IGZvciBEQyBWb2x0YWdlICovCisjZGVmaW5lIE1DU19QQU5DVFJMU0VUMQkweENC
+ODAJLyogUGFuZWwgQ29udHJvbCBTZXR0aW5nIDEgKi8KKyNkZWZpbmUgTUNTX1BBTkNUUkxTRVQy
+CTB4Q0I5MAkvKiBQYW5lbCBDb250cm9sIFNldHRpbmcgMiAqLworI2RlZmluZSBNQ1NfUEFOQ1RS
+TFNFVDMJMHhDQkEwCS8qIFBhbmVsIENvbnRyb2wgU2V0dGluZyAzICovCisjZGVmaW5lIE1DU19Q
+QU5DVFJMU0VUNAkweENCQjAJLyogUGFuZWwgQ29udHJvbCBTZXR0aW5nIDQgKi8KKyNkZWZpbmUg
+TUNTX1BBTkNUUkxTRVQ1CTB4Q0JDMAkvKiBQYW5lbCBDb250cm9sIFNldHRpbmcgNSAqLworI2Rl
+ZmluZSBNQ1NfUEFOQ1RSTFNFVDYJMHhDQkQwCS8qIFBhbmVsIENvbnRyb2wgU2V0dGluZyA2ICov
+CisjZGVmaW5lIE1DU19QQU5DVFJMU0VUNwkweENCRTAJLyogUGFuZWwgQ29udHJvbCBTZXR0aW5n
+IDcgKi8KKyNkZWZpbmUgTUNTX1BBTkNUUkxTRVQ4CTB4Q0JGMAkvKiBQYW5lbCBDb250cm9sIFNl
+dHRpbmcgOCAqLworI2RlZmluZSBNQ1NfUEFOVTJEMQkweENDODAJLyogUGFuZWwgVTJEIFNldHRp
+bmcgMSAqLworI2RlZmluZSBNQ1NfUEFOVTJEMgkweENDOTAJLyogUGFuZWwgVTJEIFNldHRpbmcg
+MiAqLworI2RlZmluZSBNQ1NfUEFOVTJEMwkweENDQTAJLyogUGFuZWwgVTJEIFNldHRpbmcgMyAq
+LworI2RlZmluZSBNQ1NfUEFORDJVMQkweENDQjAJLyogUGFuZWwgRDJVIFNldHRpbmcgMSAqLwor
+I2RlZmluZSBNQ1NfUEFORDJVMgkweENDQzAJLyogUGFuZWwgRDJVIFNldHRpbmcgMiAqLworI2Rl
+ZmluZSBNQ1NfUEFORDJVMwkweENDRDAJLyogUGFuZWwgRDJVIFNldHRpbmcgMyAqLworI2RlZmlu
+ZSBNQ1NfR09BVlNUCTB4Q0U4MAkvKiBHT0EgVlNUIFNldHRpbmcgKi8KKyNkZWZpbmUgTUNTX0dP
+QUNMS0ExCTB4Q0VBMAkvKiBHT0EgQ0xLQTEgU2V0dGluZyAqLworI2RlZmluZSBNQ1NfR09BQ0xL
+QTMJMHhDRUIwCS8qIEdPQSBDTEtBMyBTZXR0aW5nICovCisjZGVmaW5lIE1DU19HT0FFQ0xLCTB4
+Q0ZDMAkvKiBHT0EgRUNMSyBTZXR0aW5nICovCisjZGVmaW5lIE1DU19OT19ET0MyCTB4Q0ZEMAkv
+KiBDb21tYW5kIG5vdCBkb2N1bWVudGVkICovCisjZGVmaW5lIE1DU19HVkREU0VUCTB4RDgwMAkv
+KiBHVkREL05HVkREICovCisjZGVmaW5lIE1DU19WQ09NREMJMHhEOTAwCS8qIFZDT00gVm9sdGFn
+ZSBTZXR0aW5nICovCisjZGVmaW5lIE1DU19HTUNUMl8yUAkweEUxMDAJLyogR2FtbWEgQ29ycmVj
+dGlvbiAyLjIrIFNldHRpbmcgKi8KKyNkZWZpbmUgTUNTX0dNQ1QyXzJOCTB4RTIwMAkvKiBHYW1t
+YSBDb3JyZWN0aW9uIDIuMi0gU2V0dGluZyAqLworI2RlZmluZSBNQ1NfTk9fRE9DMwkweEY1QjYJ
+LyogQ29tbWFuZCBub3QgZG9jdW1lbnRlZCAqLworI2RlZmluZSBNQ1NfQ01EMl9FTkExCTB4RkYw
+MAkvKiBFbmFibGUgQWNjZXNzIENvbW1hbmQyICJDTUQyIiAqLworI2RlZmluZSBNQ1NfQ01EMl9F
+TkEyCTB4RkY4MAkvKiBFbmFibGUgQWNjZXNzIE9yaXNlIENvbW1hbmQyICovCisKK3N0cnVjdCBv
+dG04MDA5YSB7CisJc3RydWN0IGRldmljZSAqZGV2OworCXN0cnVjdCBkcm1fcGFuZWwgcGFuZWw7
+CisJc3RydWN0IGJhY2tsaWdodF9kZXZpY2UgKmJsX2RldjsKKwlzdHJ1Y3QgZ3Bpb19kZXNjICpy
+ZXNldF9ncGlvOworCWJvb2wgcHJlcGFyZWQ7CisJYm9vbCBlbmFibGVkOworfTsKKworc3RhdGlj
+IGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGRlZmF1bHRfbW9kZSA9IHsKKwkuY2xvY2sg
+PSAzMjcyOSwKKwkuaGRpc3BsYXkgPSA0ODAsCisJLmhzeW5jX3N0YXJ0ID0gNDgwICsgMTIwLAor
+CS5oc3luY19lbmQgPSA0ODAgKyAxMjAgKyA2MywKKwkuaHRvdGFsID0gNDgwICsgMTIwICsgNjMg
+KyAxMjAsCisJLnZkaXNwbGF5ID0gODAwLAorCS52c3luY19zdGFydCA9IDgwMCArIDEyLAorCS52
+c3luY19lbmQgPSA4MDAgKyAxMiArIDEyLAorCS52dG90YWwgPSA4MDAgKyAxMiArIDEyICsgMTIs
+CisJLnZyZWZyZXNoID0gNTAsCisJLmZsYWdzID0gMCwKKwkud2lkdGhfbW0gPSA1MiwKKwkuaGVp
+Z2h0X21tID0gODYsCit9OworCitzdGF0aWMgaW5saW5lIHN0cnVjdCBvdG04MDA5YSAqcGFuZWxf
+dG9fb3RtODAwOWEoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCit7CisJcmV0dXJuIGNvbnRhaW5l
+cl9vZihwYW5lbCwgc3RydWN0IG90bTgwMDlhLCBwYW5lbCk7Cit9CisKK3N0YXRpYyB2b2lkIG90
+bTgwMDlhX2Rjc193cml0ZV9idWYoc3RydWN0IG90bTgwMDlhICpjdHgsIGNvbnN0IHZvaWQgKmRh
+dGEsCisJCQkJICAgc2l6ZV90IGxlbikKK3sKKwlzdHJ1Y3QgbWlwaV9kc2lfZGV2aWNlICpkc2kg
+PSB0b19taXBpX2RzaV9kZXZpY2UoY3R4LT5kZXYpOworCisJaWYgKG1pcGlfZHNpX2Rjc193cml0
+ZV9idWZmZXIoZHNpLCBkYXRhLCBsZW4pIDwgMCkKKwkJRFJNX1dBUk4oIm1pcGkgZHNpIGRjcyB3
+cml0ZSBidWZmZXIgZmFpbGVkXG4iKTsKK30KKworI2RlZmluZSBkY3Nfd3JpdGVfc2VxKGN0eCwg
+c2VxLi4uKQkJCVwKKyh7CQkJCQkJCVwKKwlzdGF0aWMgY29uc3QgdTggZFtdID0geyBzZXEgfTsJ
+CQlcCisJb3RtODAwOWFfZGNzX3dyaXRlX2J1ZihjdHgsIGQsIEFSUkFZX1NJWkUoZCkpOwlcCit9
+KQorCisjZGVmaW5lIGRjc193cml0ZV9jbWRfYXQoY3R4LCBjbWQsIHNlcS4uLikJCVwKKyh7CQkJ
+CQkJCVwKKwlkY3Nfd3JpdGVfc2VxKGN0eCwgTUNTX0FEUlNGVCwgKGNtZCkgJiAweEZGKTsJXAor
+CWRjc193cml0ZV9zZXEoY3R4LCAoY21kKSA+PiA4LCBzZXEpOwkJXAorfSkKKworc3RhdGljIGlu
+dCBvdG04MDA5YV9pbml0X3NlcXVlbmNlKHN0cnVjdCBvdG04MDA5YSAqY3R4KQoreworCXN0cnVj
+dCBtaXBpX2RzaV9kZXZpY2UgKmRzaSA9IHRvX21pcGlfZHNpX2RldmljZShjdHgtPmRldik7CisJ
+aW50IHJldDsKKworCS8qIEVudGVyIENNRDIgKi8KKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNT
+X0NNRDJfRU5BMSwgMHg4MCwgMHgwOSwgMHgwMSk7CisKKwkvKiBFbnRlciBPcmlzZSBDb21tYW5k
+MiAqLworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfQ01EMl9FTkEyLCAweDgwLCAweDA5KTsK
+KworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfU0RfUENIX0NUUkwsIDB4MzApOworCW1kZWxh
+eSgxMCk7CisKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNTX05PX0RPQzEsIDB4NDApOworCW1k
+ZWxheSgxMCk7CisKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNTX1BXUl9DVFJMNCArIDEsIDB4
+QTkpOworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUFdSX0NUUkwyICsgMSwgMHgzNCk7CisJ
+ZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QX0RSVl9NLCAweDUwKTsKKwlkY3Nfd3JpdGVfY21k
+X2F0KGN0eCwgTUNTX1ZDT01EQywgMHg0RSk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19P
+U0NfQURKLCAweDY2KTsgLyogNjVIeiAqLworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUkdC
+X1ZJRF9TRVQsIDB4MDgpOworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUFdSX0NUUkwyICsg
+MiwgMHgwMSk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QV1JfQ1RSTDIgKyA1LCAweDM0
+KTsKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNTX1BXUl9DVFJMMiArIDQsIDB4MzMpOworCWRj
+c193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfR1ZERFNFVCwgMHg3OSwgMHg3OSk7CisJZGNzX3dyaXRl
+X2NtZF9hdChjdHgsIE1DU19TRF9DVFJMICsgMSwgMHgxQik7CisJZGNzX3dyaXRlX2NtZF9hdChj
+dHgsIE1DU19QV1JfQ1RSTDEgKyAyLCAweDgzKTsKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNT
+X1NEX1BDSF9DVFJMICsgMSwgMHg4Myk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19SR0Jf
+VklEX1NFVCwgMHgwRSk7IC8qIEZJWE1FIGJlZm9yZSAweDA4ISAqLworCWRjc193cml0ZV9jbWRf
+YXQoY3R4LCBNQ1NfUEFOU0VULCAweDAwLCAweDAxKTsKKworCWRjc193cml0ZV9jbWRfYXQoY3R4
+LCBNQ1NfR09BVlNULCAweDg1LCAweDAxLCAweDAwLCAweDg0LCAweDAxLCAweDAwKTsKKwlkY3Nf
+d3JpdGVfY21kX2F0KGN0eCwgTUNTX0dPQUNMS0ExLCAweDE4LCAweDA0LCAweDAzLCAweDM5LCAw
+eDAwLCAweDAwLAorCQkJIDB4MDAsIDB4MTgsIDB4MDMsIDB4MDMsIDB4M0EsIDB4MDAsIDB4MDAs
+IDB4MDApOworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfR09BQ0xLQTMsIDB4MTgsIDB4MDIs
+IDB4MDMsIDB4M0IsIDB4MDAsIDB4MDAsCisJCQkgMHgwMCwgMHgxOCwgMHgwMSwgMHgwMywgMHgz
+QywgMHgwMCwgMHgwMCwgMHgwMCk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19HT0FFQ0xL
+LCAweDAxLCAweDAxLCAweDIwLCAweDIwLCAweDAwLCAweDAwLAorCQkJIDB4MDEsIDB4MDIsIDB4
+MDAsIDB4MDApOworCisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19OT19ET0MyLCAweDAwKTsK
+KworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUEFOQ1RSTFNFVDEsIDAsIDAsIDAsIDAsIDAs
+IDAsIDAsIDAsIDAsIDApOworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUEFOQ1RSTFNFVDIs
+IDAsIDAsIDAsIDAsIDAsIDAsIDAsIDAsIDAsIDAsCisJCQkgMCwgMCwgMCwgMCwgMCk7CisJZGNz
+X3dyaXRlX2NtZF9hdChjdHgsIE1DU19QQU5DVFJMU0VUMywgMCwgMCwgMCwgMCwgMCwgMCwgMCwg
+MCwgMCwgMCwKKwkJCSAwLCAwLCAwLCAwLCAwKTsKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNT
+X1BBTkNUUkxTRVQ0LCAwLCAwLCAwLCAwLCAwLCAwLCAwLCAwLCAwLCAwKTsKKwlkY3Nfd3JpdGVf
+Y21kX2F0KGN0eCwgTUNTX1BBTkNUUkxTRVQ1LCAwLCA0LCA0LCA0LCA0LCA0LCAwLCAwLCAwLCAw
+LAorCQkJIDAsIDAsIDAsIDAsIDApOworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUEFOQ1RS
+TFNFVDYsIDAsIDAsIDAsIDAsIDAsIDAsIDQsIDQsIDQsIDQsCisJCQkgNCwgMCwgMCwgMCwgMCk7
+CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QQU5DVFJMU0VUNywgMCwgMCwgMCwgMCwgMCwg
+MCwgMCwgMCwgMCwgMCk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QQU5DVFJMU0VUOCwg
+MHhGRiwgMHhGRiwgMHhGRiwgMHhGRiwgMHhGRiwKKwkJCSAweEZGLCAweEZGLCAweEZGLCAweEZG
+LCAweEZGKTsKKworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfUEFOVTJEMSwgMHgwMCwgMHgy
+NiwgMHgwOSwgMHgwQiwgMHgwMSwgMHgyNSwKKwkJCSAweDAwLCAweDAwLCAweDAwLCAweDAwKTsK
+KwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNTX1BBTlUyRDIsIDB4MDAsIDB4MDAsIDB4MDAsIDB4
+MDAsIDB4MDAsIDB4MDAsCisJCQkgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgyNiwg
+MHgwQSwgMHgwQywgMHgwMik7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QQU5VMkQzLCAw
+eDI1LCAweDAwLCAweDAwLCAweDAwLCAweDAwLCAweDAwLAorCQkJIDB4MDAsIDB4MDAsIDB4MDAs
+IDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDApOworCWRjc193cml0ZV9jbWRfYXQo
+Y3R4LCBNQ1NfUEFORDJVMSwgMHgwMCwgMHgyNSwgMHgwQywgMHgwQSwgMHgwMiwgMHgyNiwKKwkJ
+CSAweDAwLCAweDAwLCAweDAwLCAweDAwKTsKKwlkY3Nfd3JpdGVfY21kX2F0KGN0eCwgTUNTX1BB
+TkQyVTIsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsCisJCQkgMHgwMCwgMHgw
+MCwgMHgwMCwgMHgwMCwgMHgwMCwgMHgyNSwgMHgwQiwgMHgwOSwgMHgwMSk7CisJZGNzX3dyaXRl
+X2NtZF9hdChjdHgsIE1DU19QQU5EMlUzLCAweDI2LCAweDAwLCAweDAwLCAweDAwLCAweDAwLCAw
+eDAwLAorCQkJIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAsIDB4MDAs
+IDB4MDApOworCisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19QV1JfQ1RSTDEgKyAxLCAweDY2
+KTsKKworCWRjc193cml0ZV9jbWRfYXQoY3R4LCBNQ1NfTk9fRE9DMywgMHgwNik7CisKKwlkY3Nf
+d3JpdGVfY21kX2F0KGN0eCwgTUNTX0dNQ1QyXzJQLCAweDAwLCAweDA5LCAweDBGLCAweDBFLCAw
+eDA3LCAweDEwLAorCQkJIDB4MEIsIDB4MEEsIDB4MDQsIDB4MDcsIDB4MEIsIDB4MDgsIDB4MEYs
+IDB4MTAsIDB4MEEsCisJCQkgMHgwMSk7CisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19HTUNU
+Ml8yTiwgMHgwMCwgMHgwOSwgMHgwRiwgMHgwRSwgMHgwNywgMHgxMCwKKwkJCSAweDBCLCAweDBB
+LCAweDA0LCAweDA3LCAweDBCLCAweDA4LCAweDBGLCAweDEwLCAweDBBLAorCQkJIDB4MDEpOwor
+CisJLyogRXhpdCBDTUQyICovCisJZGNzX3dyaXRlX2NtZF9hdChjdHgsIE1DU19DTUQyX0VOQTEs
+IDB4RkYsIDB4RkYsIDB4RkYpOworCisJcmV0ID0gbWlwaV9kc2lfZGNzX25vcChkc2kpOworCWlm
+IChyZXQpCisJCXJldHVybiByZXQ7CisKKwlyZXQgPSBtaXBpX2RzaV9kY3NfZXhpdF9zbGVlcF9t
+b2RlKGRzaSk7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsKKworCS8qIFdhaXQgZm9yIHNsZWVw
+IG91dCBleGl0ICovCisJbWRlbGF5KDEyMCk7CisKKwkvKiBEZWZhdWx0IHBvcnRyYWl0IDQ4MHg4
+MDAgcmdiMjQgKi8KKwlkY3Nfd3JpdGVfc2VxKGN0eCwgTUlQSV9EQ1NfU0VUX0FERFJFU1NfTU9E
+RSwgMHgwMCk7CisKKwlyZXQgPSBtaXBpX2RzaV9kY3Nfc2V0X2NvbHVtbl9hZGRyZXNzKGRzaSwg
+MCwKKwkJCQkJICAgICAgZGVmYXVsdF9tb2RlLmhkaXNwbGF5IC0gMSk7CisJaWYgKHJldCkKKwkJ
+cmV0dXJuIHJldDsKKworCXJldCA9IG1pcGlfZHNpX2Rjc19zZXRfcGFnZV9hZGRyZXNzKGRzaSwg
+MCwgZGVmYXVsdF9tb2RlLnZkaXNwbGF5IC0gMSk7CisJaWYgKHJldCkKKwkJcmV0dXJuIHJldDsK
+KworCS8qIFNlZSBvdG04MDA5YSBkcml2ZXIgZG9jdW1lbnRhdGlvbiBmb3IgcGl4ZWwgZm9ybWF0
+IGRlc2NyaXB0aW9ucyAqLworCXJldCA9IG1pcGlfZHNpX2Rjc19zZXRfcGl4ZWxfZm9ybWF0KGRz
+aSwgTUlQSV9EQ1NfUElYRUxfRk1UXzI0QklUIHwKKwkJCQkJICAgIE1JUElfRENTX1BJWEVMX0ZN
+VF8yNEJJVCA8PCA0KTsKKwlpZiAocmV0KQorCQlyZXR1cm4gcmV0OworCisJLyogRGlzYWJsZSBD
+QUJDIGZlYXR1cmUgKi8KKwlkY3Nfd3JpdGVfc2VxKGN0eCwgTUlQSV9EQ1NfV1JJVEVfUE9XRVJf
+U0FWRSwgMHgwMCk7CisKKwlyZXQgPSBtaXBpX2RzaV9kY3Nfc2V0X2Rpc3BsYXlfb24oZHNpKTsK
+KwlpZiAocmV0KQorCQlyZXR1cm4gcmV0OworCisJcmV0ID0gbWlwaV9kc2lfZGNzX25vcChkc2kp
+OworCWlmIChyZXQpCisJCXJldHVybiByZXQ7CisKKwkvKiBTZW5kIENvbW1hbmQgR1JBTSBtZW1v
+cnkgd3JpdGUgKG5vIHBhcmFtZXRlcnMpICovCisJZGNzX3dyaXRlX3NlcShjdHgsIE1JUElfRENT
+X1dSSVRFX01FTU9SWV9TVEFSVCk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGludCBvdG04
+MDA5YV9kaXNhYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQoreworCXN0cnVjdCBvdG04MDA5
+YSAqY3R4ID0gcGFuZWxfdG9fb3RtODAwOWEocGFuZWwpOworCXN0cnVjdCBtaXBpX2RzaV9kZXZp
+Y2UgKmRzaSA9IHRvX21pcGlfZHNpX2RldmljZShjdHgtPmRldik7CisJaW50IHJldDsKKworCWlm
+ICghY3R4LT5lbmFibGVkKQorCQlyZXR1cm4gMDsgLyogVGhpcyBpcyBub3QgYW4gaXNzdWUgc28g
+d2UgcmV0dXJuIDAgaGVyZSAqLworCisJLyogUG93ZXIgb2ZmIHRoZSBiYWNrbGlnaHQuIE5vdGU6
+IGVuZC11c2VyIHN0aWxsIGNvbnRyb2xzIGJyaWdodG5lc3MgKi8KKwljdHgtPmJsX2Rldi0+cHJv
+cHMucG93ZXIgPSBGQl9CTEFOS19QT1dFUkRPV047CisJcmV0ID0gYmFja2xpZ2h0X3VwZGF0ZV9z
+dGF0dXMoY3R4LT5ibF9kZXYpOworCWlmIChyZXQpCisJCXJldHVybiByZXQ7CisKKwlyZXQgPSBt
+aXBpX2RzaV9kY3Nfc2V0X2Rpc3BsYXlfb2ZmKGRzaSk7CisJaWYgKHJldCA8IDApCisJCXJldHVy
+biByZXQ7CisKKwlyZXQgPSBtaXBpX2RzaV9kY3NfZW50ZXJfc2xlZXBfbW9kZShkc2kpOworCWlm
+IChyZXQgPCAwKQorCQlyZXR1cm4gcmV0OworCisJbXNsZWVwKDEyMCk7CisKKwljdHgtPmVuYWJs
+ZWQgPSBmYWxzZTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgaW50IG90bTgwMDlhX3VucHJl
+cGFyZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3Qgb3RtODAwOWEgKmN0eCA9
+IHBhbmVsX3RvX290bTgwMDlhKHBhbmVsKTsKKworCWlmICghY3R4LT5wcmVwYXJlZCkKKwkJcmV0
+dXJuIDA7CisKKwlpZiAoY3R4LT5yZXNldF9ncGlvKSB7CisJCWdwaW9kX3NldF92YWx1ZV9jYW5z
+bGVlcChjdHgtPnJlc2V0X2dwaW8sIDEpOworCQltc2xlZXAoMjApOworCX0KKworCWN0eC0+cHJl
+cGFyZWQgPSBmYWxzZTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgaW50IG90bTgwMDlhX3By
+ZXBhcmUoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCit7CisJc3RydWN0IG90bTgwMDlhICpjdHgg
+PSBwYW5lbF90b19vdG04MDA5YShwYW5lbCk7CisJaW50IHJldDsKKworCWlmIChjdHgtPnByZXBh
+cmVkKQorCQlyZXR1cm4gMDsKKworCWlmIChjdHgtPnJlc2V0X2dwaW8pIHsKKwkJZ3Bpb2Rfc2V0
+X3ZhbHVlX2NhbnNsZWVwKGN0eC0+cmVzZXRfZ3BpbywgMCk7CisJCWdwaW9kX3NldF92YWx1ZV9j
+YW5zbGVlcChjdHgtPnJlc2V0X2dwaW8sIDEpOworCQltc2xlZXAoMjApOworCQlncGlvZF9zZXRf
+dmFsdWVfY2Fuc2xlZXAoY3R4LT5yZXNldF9ncGlvLCAwKTsKKwkJbXNsZWVwKDEwMCk7CisJfQor
+CisJcmV0ID0gb3RtODAwOWFfaW5pdF9zZXF1ZW5jZShjdHgpOworCWlmIChyZXQpCisJCXJldHVy
+biByZXQ7CisKKwljdHgtPnByZXBhcmVkID0gdHJ1ZTsKKworCS8qIFBvd2VyIG9uIHRoZSBiYWNr
+bGlnaHQuIE5vdGU6IGVuZC11c2VyIHN0aWxsIGNvbnRyb2xzIGJyaWdodG5lc3MgKi8KKwljdHgt
+PmJsX2Rldi0+cHJvcHMucG93ZXIgPSBGQl9CTEFOS19VTkJMQU5LOworCWJhY2tsaWdodF91cGRh
+dGVfc3RhdHVzKGN0eC0+YmxfZGV2KTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgaW50IG90
+bTgwMDlhX2VuYWJsZShzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3Qgb3RtODAw
+OWEgKmN0eCA9IHBhbmVsX3RvX290bTgwMDlhKHBhbmVsKTsKKworCWN0eC0+ZW5hYmxlZCA9IHRy
+dWU7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGludCBvdG04MDA5YV9nZXRfbW9kZXMoc3Ry
+dWN0IGRybV9wYW5lbCAqcGFuZWwpCit7CisJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7
+CisKKwltb2RlID0gZHJtX21vZGVfZHVwbGljYXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0X21vZGUp
+OworCWlmICghbW9kZSkgeworCQlEUk1fRVJST1IoImZhaWxlZCB0byBhZGQgbW9kZSAldXgldXhA
+JXVcbiIsCisJCQkgIGRlZmF1bHRfbW9kZS5oZGlzcGxheSwgZGVmYXVsdF9tb2RlLnZkaXNwbGF5
+LAorCQkJICBkZWZhdWx0X21vZGUudnJlZnJlc2gpOworCQlyZXR1cm4gLUVOT01FTTsKKwl9CisK
+Kwlkcm1fbW9kZV9zZXRfbmFtZShtb2RlKTsKKworCW1vZGUtPnR5cGUgPSBEUk1fTU9ERV9UWVBF
+X0RSSVZFUiB8IERSTV9NT0RFX1RZUEVfUFJFRkVSUkVEOworCWRybV9tb2RlX3Byb2JlZF9hZGQo
+cGFuZWwtPmNvbm5lY3RvciwgbW9kZSk7CisKKwlwYW5lbC0+Y29ubmVjdG9yLT5kaXNwbGF5X2lu
+Zm8ud2lkdGhfbW0gPSBtb2RlLT53aWR0aF9tbTsKKwlwYW5lbC0+Y29ubmVjdG9yLT5kaXNwbGF5
+X2luZm8uaGVpZ2h0X21tID0gbW9kZS0+aGVpZ2h0X21tOworCisJcmV0dXJuIDE7Cit9CisKK3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3BhbmVsX2Z1bmNzIG90bTgwMDlhX2RybV9mdW5jcyA9IHsK
+KwkuZGlzYWJsZSAgID0gb3RtODAwOWFfZGlzYWJsZSwKKwkudW5wcmVwYXJlID0gb3RtODAwOWFf
+dW5wcmVwYXJlLAorCS5wcmVwYXJlICAgPSBvdG04MDA5YV9wcmVwYXJlLAorCS5lbmFibGUgICAg
+PSBvdG04MDA5YV9lbmFibGUsCisJLmdldF9tb2RlcyA9IG90bTgwMDlhX2dldF9tb2RlcywKK307
+CisKKy8qCisgKiBEU0ktQkFTRUQgQkFDS0xJR0hUCisgKi8KKworc3RhdGljIGludCBvdG04MDA5
+YV9iYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYmQpCit7
+CisJc3RydWN0IG90bTgwMDlhICpjdHggPSBibF9nZXRfZGF0YShiZCk7CisJdTggZGF0YVsyXTsK
+KworCWlmICghY3R4LT5wcmVwYXJlZCkgeworCQlEUk1fREVCVUcoImxjZCBub3QgcmVhZHkgeWV0
+IGZvciBzZXR0aW5nIGl0cyBiYWNrbGlnaHQhXG4iKTsKKwkJcmV0dXJuIC1FTlhJTzsKKwl9CisK
+KwlpZiAoYmQtPnByb3BzLnBvd2VyIDw9IEZCX0JMQU5LX05PUk1BTCkgeworCQkvKiBQb3dlciBv
+biB0aGUgYmFja2xpZ2h0IHdpdGggdGhlIHJlcXVlc3RlZCBicmlnaHRuZXNzCisJCSAqIE5vdGUg
+V2UgY2FuIG5vdCB1c2UgbWlwaV9kc2lfZGNzX3NldF9kaXNwbGF5X2JyaWdodG5lc3MoKQorCQkg
+KiBhcyBvdG04MDA5YSBkcml2ZXIgc3VwcG9ydCBvbmx5IDgtYml0IGJyaWdodG5lc3MgKDEgcGFy
+YW0pLgorCQkgKi8KKwkJZGF0YVswXSA9IE1JUElfRENTX1NFVF9ESVNQTEFZX0JSSUdIVE5FU1M7
+CisJCWRhdGFbMV0gPSBiZC0+cHJvcHMuYnJpZ2h0bmVzczsKKwkJb3RtODAwOWFfZGNzX3dyaXRl
+X2J1ZihjdHgsIGRhdGEsIEFSUkFZX1NJWkUoZGF0YSkpOworCisJCS8qIHNldCBCcmlnaHRuZXNz
+IENvbnRyb2wgJiBCYWNrbGlnaHQgb24gKi8KKwkJZGF0YVsxXSA9IDB4MjQ7CisKKwl9IGVsc2Ug
+eworCQkvKiBQb3dlciBvZmYgdGhlIGJhY2tsaWdodDogc2V0IEJyaWdodG5lc3MgQ29udHJvbCAm
+IEJsIG9mZiAqLworCQlkYXRhWzFdID0gMDsKKwl9CisKKwkvKiBVcGRhdGUgQnJpZ2h0bmVzcyBD
+b250cm9sICYgQmFja2xpZ2h0ICovCisJZGF0YVswXSA9IE1JUElfRENTX1dSSVRFX0NPTlRST0xf
+RElTUExBWTsKKwlvdG04MDA5YV9kY3Nfd3JpdGVfYnVmKGN0eCwgZGF0YSwgQVJSQVlfU0laRShk
+YXRhKSk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGNvbnN0IHN0cnVjdCBiYWNrbGlnaHRf
+b3BzIG90bTgwMDlhX2JhY2tsaWdodF9vcHMgPSB7CisJLnVwZGF0ZV9zdGF0dXMgPSBvdG04MDA5
+YV9iYWNrbGlnaHRfdXBkYXRlX3N0YXR1cywKK307CisKK3N0YXRpYyBpbnQgb3RtODAwOWFfcHJv
+YmUoc3RydWN0IG1pcGlfZHNpX2RldmljZSAqZHNpKQoreworCXN0cnVjdCBkZXZpY2UgKmRldiA9
+ICZkc2ktPmRldjsKKwlzdHJ1Y3Qgb3RtODAwOWEgKmN0eDsKKwlpbnQgcmV0OworCisJY3R4ID0g
+ZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjdHgpLCBHRlBfS0VSTkVMKTsKKwlpZiAoIWN0eCkK
+KwkJcmV0dXJuIC1FTk9NRU07CisKKwljdHgtPnJlc2V0X2dwaW8gPSBkZXZtX2dwaW9kX2dldF9v
+cHRpb25hbChkZXYsICJyZXNldCIsIEdQSU9EX09VVF9MT1cpOworCWlmIChJU19FUlIoY3R4LT5y
+ZXNldF9ncGlvKSkgeworCQlkZXZfZXJyKGRldiwgImNhbm5vdCBnZXQgcmVzZXQtZ3Bpb1xuIik7
+CisJCXJldHVybiBQVFJfRVJSKGN0eC0+cmVzZXRfZ3Bpbyk7CisJfQorCisJbWlwaV9kc2lfc2V0
+X2RydmRhdGEoZHNpLCBjdHgpOworCisJY3R4LT5kZXYgPSBkZXY7CisKKwlkc2ktPmxhbmVzID0g
+MjsKKwlkc2ktPmZvcm1hdCA9IE1JUElfRFNJX0ZNVF9SR0I4ODg7CisJZHNpLT5tb2RlX2ZsYWdz
+ID0gTUlQSV9EU0lfTU9ERV9WSURFTyB8IE1JUElfRFNJX01PREVfVklERU9fQlVSU1QgfAorCQkJ
+ICBNSVBJX0RTSV9NT0RFX0xQTTsKKworCWRybV9wYW5lbF9pbml0KCZjdHgtPnBhbmVsKTsKKwlj
+dHgtPnBhbmVsLmRldiA9IGRldjsKKwljdHgtPnBhbmVsLmZ1bmNzID0gJm90bTgwMDlhX2RybV9m
+dW5jczsKKworCWN0eC0+YmxfZGV2ID0gYmFja2xpZ2h0X2RldmljZV9yZWdpc3RlcihEUlZfTkFN
+RSAiX2JhY2tsaWdodCIsIGRldiwgY3R4LAorCQkJCQkJJm90bTgwMDlhX2JhY2tsaWdodF9vcHMs
+IE5VTEwpOworCWlmIChJU19FUlIoY3R4LT5ibF9kZXYpKSB7CisJCWRldl9lcnIoZGV2LCAiZmFp
+bGVkIHRvIHJlZ2lzdGVyIGJhY2tsaWdodCBkZXZpY2VcbiIpOworCQlyZXR1cm4gUFRSX0VSUihj
+dHgtPmJsX2Rldik7CisJfQorCisJY3R4LT5ibF9kZXYtPnByb3BzLm1heF9icmlnaHRuZXNzID0g
+T1RNODAwOUFfQkFDS0xJR0hUX01BWDsKKwljdHgtPmJsX2Rldi0+cHJvcHMuYnJpZ2h0bmVzcyA9
+IE9UTTgwMDlBX0JBQ0tMSUdIVF9ERUZBVUxUOworCWN0eC0+YmxfZGV2LT5wcm9wcy5wb3dlciA9
+IEZCX0JMQU5LX1BPV0VSRE9XTjsKKwljdHgtPmJsX2Rldi0+cHJvcHMudHlwZSA9IEJBQ0tMSUdI
+VF9SQVc7CisKKwlkcm1fcGFuZWxfYWRkKCZjdHgtPnBhbmVsKTsKKworCXJldCA9IG1pcGlfZHNp
+X2F0dGFjaChkc2kpOworCWlmIChyZXQgPCAwKSB7CisJCWRldl9lcnIoZGV2LCAibWlwaV9kc2lf
+YXR0YWNoIGZhaWxlZC4gSXMgaG9zdCByZWFkeT9cbiIpOworCQlkcm1fcGFuZWxfcmVtb3ZlKCZj
+dHgtPnBhbmVsKTsKKwkJYmFja2xpZ2h0X2RldmljZV91bnJlZ2lzdGVyKGN0eC0+YmxfZGV2KTsK
+KwkJcmV0dXJuIHJldDsKKwl9CisKKwlEUk1fSU5GTyhEUlZfTkFNRSAiX3BhbmVsICV1eCV1QCV1
+ICV1YnBwIGRzaSAldWRsIC0gcmVhZHlcbiIsCisJCSBkZWZhdWx0X21vZGUuaGRpc3BsYXksIGRl
+ZmF1bHRfbW9kZS52ZGlzcGxheSwKKwkJIGRlZmF1bHRfbW9kZS52cmVmcmVzaCwKKwkJIG1pcGlf
+ZHNpX3BpeGVsX2Zvcm1hdF90b19icHAoZHNpLT5mb3JtYXQpLCBkc2ktPmxhbmVzKTsKKworCXJl
+dHVybiAwOworfQorCitzdGF0aWMgaW50IG90bTgwMDlhX3JlbW92ZShzdHJ1Y3QgbWlwaV9kc2lf
+ZGV2aWNlICpkc2kpCit7CisJc3RydWN0IG90bTgwMDlhICpjdHggPSBtaXBpX2RzaV9nZXRfZHJ2
+ZGF0YShkc2kpOworCisJbWlwaV9kc2lfZGV0YWNoKGRzaSk7CisJZHJtX3BhbmVsX3JlbW92ZSgm
+Y3R4LT5wYW5lbCk7CisKKwliYWNrbGlnaHRfZGV2aWNlX3VucmVnaXN0ZXIoY3R4LT5ibF9kZXYp
+OworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG9y
+aXNldGVjaF9vdG04MDA5YV9vZl9tYXRjaFtdID0geworCXsgLmNvbXBhdGlibGUgPSAib3Jpc2V0
+ZWNoLG90bTgwMDlhIiB9LAorCXsgfQorfTsKK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG9yaXNl
+dGVjaF9vdG04MDA5YV9vZl9tYXRjaCk7CisKK3N0YXRpYyBzdHJ1Y3QgbWlwaV9kc2lfZHJpdmVy
+IG9yaXNldGVjaF9vdG04MDA5YV9kcml2ZXIgPSB7CisJLnByb2JlICA9IG90bTgwMDlhX3Byb2Jl
+LAorCS5yZW1vdmUgPSBvdG04MDA5YV9yZW1vdmUsCisJLmRyaXZlciA9IHsKKwkJLm5hbWUgPSBE
+UlZfTkFNRSAiX3BhbmVsIiwKKwkJLm9mX21hdGNoX3RhYmxlID0gb3Jpc2V0ZWNoX290bTgwMDlh
+X29mX21hdGNoLAorCX0sCit9OworbW9kdWxlX21pcGlfZHNpX2RyaXZlcihvcmlzZXRlY2hfb3Rt
+ODAwOWFfZHJpdmVyKTsKKworTU9EVUxFX0FVVEhPUigiUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBl
+LmNvcm51QHN0LmNvbT4iKTsKK01PRFVMRV9BVVRIT1IoIllhbm5pY2sgRmVydHJlIDx5YW5uaWNr
+LmZlcnRyZUBzdC5jb20+Iik7CitNT0RVTEVfREVTQ1JJUFRJT04oIkRSTSBkcml2ZXIgZm9yIE9y
+aXNlIFRlY2ggT1RNODAwOUEgTUlQSSBEU0kgcGFuZWwiKTsKK01PRFVMRV9MSUNFTlNFKCJHUEwg
+djIiKTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
+ZGV2ZWwK
