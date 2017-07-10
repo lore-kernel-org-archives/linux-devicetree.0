@@ -1,36 +1,39 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W
- HDMI TX DT bindings
-Date: Mon, 10 Jul 2017 11:25:31 +0200
-Message-ID: <20170710092531.GA15635@verge.net.au>
-References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
- <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
- <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
+Subject: Re: [PATCH 0/7] ARM: dts: renesas: Add Inter Connect RAM
+Date: Mon, 10 Jul 2017 11:26:55 +0200
+Message-ID: <20170710092654.GP13680@verge.net.au>
+References: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
+ <20170710084010.GJ13680@verge.net.au>
+ <CAMuHMdU7KC4X8+kOFUBiBw2ZHs=aukf+_1iR+Gjw2M+RgJ6mBQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
+In-Reply-To: <CAMuHMdU7KC4X8+kOFUBiBw2ZHs=aukf+_1iR+Gjw2M+RgJ6mBQ@mail.gmail.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 10:56:42AM -0500, Rob Herring wrote:
-> On Wed, Jun 21, 2017 at 12:31:27PM +0300, Laurent Pinchart wrote:
-> > The M3-W HDMI TX controller seems to be compatible for the H3. No
-> > extension to the DT bindings are needed, add an SoC-specific compatible
-> > string in case differences between the IP versions are found later and
-> > require model-specific handling.
-> > 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> >  Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt | 1 +
-> >  1 file changed, 1 insertion(+)
+On Mon, Jul 10, 2017 at 10:45:23AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> On Mon, Jul 10, 2017 at 10:40 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Tue, Jul 04, 2017 at 05:23:11PM +0200, Geert Uytterhoeven wrote:
+> >> R-Car Gen2 and RZ/G1 SoCs contain two or three blocks of SRAM, which can be
+> >> used for several purposes.  One such purpose is holding a jump stub for CPU
+> >> core bringup.
+> >>
+> >> This patch series adds the SRAM blocks to the various DTS files, following
+> >> the generic DT bindings for "mmio-sram" in
+> >> Documentation/devicetree/bindings/sram/sram.txt.  Reserving SRAM for jump
+> >> stub for CPU core bringup will be handled in a follow-up series.
+> >>
+> >> Thanks!
+> >
+> > Geert, these seem nice and clean to me.
+> > Are they ready to be applied?
+> 
+> I think they are.
 
-Applied for v4.14.
-
-I am not applying the dts changes for now pending resolution of the
-potential bisection problem in patch 4 which I pointed out in response to that patch.
+Thanks, all patches applied for v4.14.
