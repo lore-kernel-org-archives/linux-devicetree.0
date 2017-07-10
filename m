@@ -1,101 +1,49 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V4 6/6] iommu/arm-smmu: Add support for
-	qcom,msm8996-smmu-v2 clocks
-Date: Mon, 10 Jul 2017 12:12:29 +0530
-Message-ID: <CAFp+6iFX=DDcK4DUC_U9h5cBa0Y1==3WKy3X6WXiQZSQ7_BNLg@mail.gmail.com>
-References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1499333825-7658-7-git-send-email-vivek.gautam@codeaurora.org>
-	<20170710034057.o5tha22rlllbxu3y@rob-hp-laptop>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [RESEND PATCH v6 0/8] mfd: Add OF device table to I2C drivers
+ that are missing it
+Date: Mon, 10 Jul 2017 09:40:46 +0200
+Message-ID: <CABxcv=k8g8c3KmLK+ZqQiG+-+j2Y=FuRpadQ=xguXG5qGGWwhg@mail.gmail.com>
+References: <20170615184928.12007-1-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170710034057.o5tha22rlllbxu3y@rob-hp-laptop>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615184928.12007-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Javier Martinez Canillas <javier@dowhile0.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux I2C <linux-i2c@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hello Lee,
 
-
-On Mon, Jul 10, 2017 at 9:10 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jul 06, 2017 at 03:07:05PM +0530, Vivek Gautam wrote:
->> qcom,msm8996-smmu-v2 is an arm,smmu-v2 implementation with
->> specific clock and power requirements. This smmu core is used
->> with multiple masters on msm8996, viz. mdss, video, etc.
->> Add bindings for the same.
->>
->> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 18 ++++++++++++++++++
->>  drivers/iommu/arm-smmu.c                             | 13 +++++++++++++
->>  2 files changed, 31 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> index 00331752d355..5d8e79775fae 100644
->> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
->> @@ -17,6 +17,7 @@ conditions.
->>                          "arm,mmu-401"
->>                          "arm,mmu-500"
->>                          "cavium,smmu-v2"
->> +                        "qcom,msm8996-smmu-v2"
->>
->>                    depending on the particular implementation and/or the
->>                    version of the architecture implemented.
->> @@ -74,11 +75,16 @@ conditions.
->>  - clock-names:    Should be "tcu" and "iface" for "arm,mmu-400",
->>                    "arm,mmu-401" and "arm,mmu-500"
->>
->> +                  Should be "bus", and "iface" for "qcom,msm8996-smmu-v2"
->> +                  implementation.
->> +
->>                    "tcu" clock is required for smmu's register access using the
->>                    programming interface and ptw for downstream bus access. This
->>                    clock is also used for access to the TBU connected to the
->>                    master locally. Sometimes however, TBU is clocked along with
->>                    the master.
->> +                  "bus" clock for "qcom,msm8996-smmu-v2" is requierd for downstream
+On Thu, Jun 15, 2017 at 8:49 PM, Javier Martinez Canillas
+<javier@dowhile0.org> wrote:
 >
-> s/requierd/required/
-
-sure, will correct it.
-
+> This series add OF device ID tables to mfd I2C drivers whose devices are
+> either used in Device Tree source files or are listed in binding docs as
+> a compatible string.
 >
->> +                  bus access and for the smmu ptw.
->>
->>                    "iface" clock is required to access the TCU's programming
->>                    interface, apart from the "tcu" clock.
->> @@ -161,3 +167,15 @@ conditions.
->>                  iommu-map = <0 &smmu3 0 0x400>;
->>                  ...
->>          };
->> +
->> +     /* Qcom's arm,smmu-v2 implementation for msm8996 */
->> +     smmu4: iommu {
->> +             compatible = "qcom,msm8996-smmu-v2";
+> That's done because the plan is to change the I2C core to report proper OF
+> modaliases instead of always reporting a MODALIAS=i2c:<foo> regardless if
+> a device was registered via DT or using the legacy platform data mechanism.
 >
-> No registers?
+> So these patches will make sure that mfd I2C drivers modules will continue
+> to be autoloaded once the I2C core is changed to report proper OF modalias.
+>
+> Users didn't have a vendor prefix in the used compatible strings, but since
+> there wasn't a DT binding document for these drivers, it can be said that
+> were working for mere luck and so this series fixes the users and add a DT
+> binding doc for the drivers.
+>
+> Most patches can be applied independently, with the exception of patches
+> 2 to 4 that should be applied in the same tree to keep bisect-ability. I
+> suggest these to go through the MFD subsystem tree.
+>
+> Best regards,
+> Javier
+>
 
-It does have registers. Will add the complete binding example.
+Are you planning to pick this series? It has been in the list for
+months and were resent many times...
 
-Thank you for the review.
-
-Best Regards
-Vivek
-
-[snip]
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Best regards,
+Javier
