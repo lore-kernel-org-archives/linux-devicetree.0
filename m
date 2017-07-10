@@ -1,110 +1,41 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: [PATCH v8 2/5] dt-bindings: media: Document Synopsys Designware HDMI RX
-Date: Mon, 10 Jul 2017 16:46:52 +0100
-Message-ID: <36ad6ab0cf3051efeb02508141e08efd56761018.1499701282.git.joabreu@synopsys.com>
-References: <cover.1499701281.git.joabreu@synopsys.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme readability
+Date: Mon, 10 Jul 2017 23:48:00 +0800
+Message-ID: <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com>
+References: <20170614063016.22069-1-wens@csie.org> <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1499701281.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1499701281.git.joabreu@synopsys.com>
-References: <cover.1499701281.git.joabreu@synopsys.com>
+In-Reply-To: <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sylwester Nawrocki <snawrocki@kernel.org>, devicetree@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the bindings for the Synopsys Designware HDMI RX.
+On Sun, Jun 18, 2017 at 10:05 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jun 14, 2017 at 02:30:16PM +0800, Chen-Yu Tsai wrote:
+>> The explanation for the endpoint ID numbering scheme is convoluted
+>> and hard to understand.
+>>
+>> This patch aims to improve the readability of it by combining the
+>> existing two paragraphs, while also providing a diagram example,
+>> and how endpoints should be numbered based on that example.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>
+>> Hope this helps. I'm not sure I can improve this even more without
+>> spelling out all cases.
+>>
+>> ---
+>>  .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++++++++------
+>>  1 file changed, 27 insertions(+), 9 deletions(-)
+>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Carlos Palminha <palminha@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Sylwester Nawrocki <snawrocki@kernel.org>
-Cc: devicetree@vger.kernel.org
+Maxime, this patch seems to have fallen through the cracks.
 
-Changes from v7:
-	- Remove SoC specific bindings (Rob)
-Changes from v6:
-	- Document which properties are required/optional (Sylwester)
-	- Drop compatible string for SoC (Sylwester)
-	- Reword edid-phandle property (Sylwester)
-	- Typo fixes (Sylwester)
-Changes from v4:
-	- Use "cfg" instead of "cfg-clk" (Rob)
-	- Change node names (Rob)
-Changes from v3:
-	- Document the new DT bindings suggested by Sylwester
-Changes from v2:
-	- Document edid-phandle property
----
- .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 58 ++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+Could you queue it as a fix for 4.13?
 
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-new file mode 100644
-index 0000000..1dc09c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-@@ -0,0 +1,58 @@
-+Synopsys DesignWare HDMI RX Decoder
-+===================================
-+
-+This document defines device tree properties for the Synopsys DesignWare HDMI
-+RX Decoder (DWC HDMI RX).
-+
-+The properties bellow belong to the Synopsys DesignWare HDMI RX Decoder node.
-+
-+Required properties:
-+
-+- compatible: Shall be "snps,dw-hdmi-rx".
-+- reg: Memory mapped base address and length of the DWC HDMI RX registers.
-+- interrupts: Reference to the DWC HDMI RX interrupt and the HDMI 5V sense
-+interrupt.
-+- clocks: Reference to the config clock.
-+- clock-names: Shall be "cfg".
-+- #address-cells: Shall be 1.
-+- #size-cells: Shall be 0.
-+
-+Optional properties:
-+
-+- edid-phandle: Reference to the EDID handler block; if this property is not
-+specified it is assumed that EDID is handled by device described by parent
-+node of the HDMI RX node. You should not specify this property if your HDMI RX
-+controller does not have CEC.
-+
-+You also have to create a subnode for the PHY device. PHY node properties are
-+as follows.
-+
-+Required properties:
-+
-+- compatible: Shall be "snps,dw-hdmi-phy-e405".
-+- reg: Shall be the JTAG address of the PHY.
-+- clocks: Reference to the config clock.
-+- clock-names: Shall be "cfg".
-+
-+Example:
-+
-+hdmi_rx: hdmi-rx@0 {
-+	compatible = "snps,dw-hdmi-rx";
-+	reg = <0x0 0x10000>;
-+	interrupts = <1 2>;
-+	edid-phandle = <&dw_hdmi_edid>;
-+
-+	clocks = <&dw_hdmi_refclk>;
-+	clock-names = "cfg";
-+
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	hdmi-phy@fc {
-+		compatible = "snps,dw-hdmi-phy-e405";
-+		reg = <0xfc>;
-+
-+		clocks = <&dw_hdmi_refclk>;
-+		clock-names = "cfg";
-+	};
-+};
--- 
-1.9.1
+Thanks
+ChenYu
