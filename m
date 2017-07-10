@@ -1,78 +1,67 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable
- option
-Date: Mon, 10 Jul 2017 08:26:47 -0500
-Message-ID: <20170710132647.evisnuc46vbxmg2e@rob-hp-laptop>
-References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
- <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] thermal: imx: Add nvmem-cells alternate binding for
+ OCOTP access
+Date: Mon, 10 Jul 2017 08:29:27 -0500
+Message-ID: <20170710132927.6brgagaymv5atiak@rob-hp-laptop>
+References: <cover.1499347157.git.leonard.crestez@nxp.com>
+ <1bd07f44515f05d936a3c166217e844253a85d2d.1499347157.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1499346330-12166-2-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
+In-Reply-To: <1bd07f44515f05d936a3c166217e844253a85d2d.1499347157.git.leonard.crestez@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 03:05:30PM +0200, Richard Leitner wrote:
-> Some PHYs (for example the LAN8710) doesn't allow turning the clocks off
-> and on again without reset (according to their datasheet). Exactly this
-> behaviour was introduced for power saving reasons by commit e8fcfcd5684a
-> ("net: fec: optimize the clock management to save power")
-> Therefore add a devictree option to perform a PHY reset and
-> configuration after every clock enable.
+On Thu, Jul 06, 2017 at 04:20:41PM +0300, Leonard Crestez wrote:
+> On newer imx SOCs accessing OCOTP directly is wrong because the ocotp
+> clock needs to be enabled first. Add a binding for accessing the same
+> values through the imx-ocotp nvmem driver using nvmem-cells. This is
+> similar to other thermal drivers.
 > 
-> For a better understanding here's a outline of the time response of the
-> clock and reset lines before and after this patch:
+> The old binding is preserved for compatibility and because it still
+> works fine on imx6qdl series chips.
 > 
-> 			  v--fec_probe()              v--fec_enet_open()
-> 			  v                           v
-> 	w/o patch eCLK: ___||||||||____________________|||||||||||||||||
-> 	w/o patch nRST: ----__------------------------------------------
-> 	w/o patch CONF: _______XX_______________________________________
+> In theory this problem could be solved by adding a reference to the
+> OCOTP clock instead but it is better to hide such details in a specific
+> nvmem driver.
 > 
-> 	w/  patch eCLK: ___||||||||____________________|||||||||||||||||
-> 	w/  patch nRST: ----__--------------------------__--------------
-> 	w/  patch CONF: _______XX__________________________XX___________
-> 			  ^                           ^
-> 			  ^--fec_probe()              ^--fec_enet_open()
-> 
-> In our case this problem does occur at about every 10th to 50th POR of
-> an LAN8710 connected to an i.MX6 SoC. The typical symptom of this
-> problem is a "swinging" ethernet link. Similar issues were experienced
-> by users of the NXP forum:
-> 	https://community.nxp.com/thread/389902
-> 	https://community.nxp.com/message/309354
-> With this patch applied the issue didn't occur for at least a few
-> hundred PORs of our board.
-> 
-> Fixes: e8fcfcd5684a ("net: fec: optimize the clock management to sa...")
-> Signed-off-by: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  Documentation/devicetree/bindings/net/fsl-fec.txt |  3 +++
->  drivers/net/ethernet/freescale/fec.h              |  1 +
->  drivers/net/ethernet/freescale/fec_main.c         | 16 ++++++++++++++++
->  3 files changed, 20 insertions(+)
+>  Documentation/devicetree/bindings/thermal/imx-thermal.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index 6f55bdd..1766579 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -23,6 +23,9 @@ Optional properties:
->  - phy-handle : phandle to the PHY device connected to this device.
->  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
->    Use instead of phy-handle.
-> +- phy-reset-after-clk-enable : If present then a phy reset and configuration
-> +  will be performed everytime after the clocks are enabled. This is required
-> +  for some PHYs to work properly.
+> diff --git a/Documentation/devicetree/bindings/thermal/imx-thermal.txt b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> index 3c67bd5..2842a05 100644
+> --- a/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/imx-thermal.txt
+> @@ -7,9 +7,16 @@ Required properties:
+>    is higher than panic threshold, system will auto reboot by SRC module.
+>  - fsl,tempmon : phandle pointer to system controller that contains TEMPMON
+>    control registers, e.g. ANATOP on imx6q.
+> +
+> +Properties for OCOTP access:
+>  - fsl,tempmon-data : phandle pointer to fuse controller that contains TEMPMON
+>    calibration data, e.g. OCOTP on imx6q.  The details about calibration data
+>    can be found in SoC Reference Manual.
+> +Alternatively:
 
-Maybe this is not needed based on the discussion, but just to make 
-sure. Since this is a property of the phy, it should be implied from the 
-phy's compatible string.
+Just put these under required props and put the deprecated one under a 
+deprecated section. IOW, make it easy to remove the deprecated part.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- nvmem-cells: A phandle to the calibration cells provided by ocotp.
+> +- nvmem-cell-names: Should be "calib", "temp_grade".
+> +
+> +Direct access to OCOTP is deprecated, please use nvmem cells instead.
+>  
+>  Optional properties:
+>  - clocks : thermal sensor's clock source.
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
