@@ -1,54 +1,58 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v 1/2] ARM: dts: r8a7743: Add Ethernet AVB support
-Date: Mon, 10 Jul 2017 09:54:40 +0200
-Message-ID: <CAMuHMdWsM_FBJ46=U69XptqpyC2cJYx_cqczaHBNq2nxZr68GQ@mail.gmail.com>
-References: <1499433165-62475-1-git-send-email-biju.das@bp.renesas.com> <1499433165-62475-2-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499433165-62475-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
+Date: Mon, 10 Jul 2017 10:01:36 +0200
+Message-ID: <1499673696-21372-3-git-send-email-narmstrong@baylibre.com>
+References: <1499673696-21372-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1499673696-21372-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-media-owner@vger.kernel.org
+To: mchehab@kernel.org, hans.verkuil@cisco.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju,
+The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
+device bindings.
 
-On Fri, Jul 7, 2017 at 3:12 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
-> Add Ethernet AVB support for r8a7743 SoC.
->
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
 
-With the minor nit below fixed:
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-
-> --- a/arch/arm/boot/dts/r8a7743.dtsi
-> +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -605,6 +605,19 @@
->                         #size-cells = <0>;
->                         status = "disabled";
->                 };
-> +
-> +               avb: ethernet@e6800000 {
-> +                       compatible = "renesas,etheravb-r8a7743",
-> +                                    "renesas,etheravb-rcar-gen2";
-> +                       reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-> +                       interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
-
-s/0/GIC_SPI/
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+new file mode 100644
+index 0000000..8671bdb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+@@ -0,0 +1,28 @@
++* Amlogic Meson AO-CEC driver
++
++The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
++to handle communication between HDMI connected devices over the CEC bus.
++
++Required properties:
++  - compatible : value should be following
++	"amlogic,meson-gx-ao-cec"
++
++  - reg : Physical base address of the IP registers and length of memory
++	  mapped region.
++
++  - interrupts : AO-CEC interrupt number to the CPU.
++  - clocks : from common clock binding: handle to AO-CEC clock.
++  - clock-names : from common clock binding: must contain "core",
++		  corresponding to entry in the clocks property.
++  - hdmi-phandle: phandle to the HDMI controller
++
++Example:
++
++cec_AO: cec@100 {
++	compatible = "amlogic,meson-gx-ao-cec";
++	reg = <0x0 0x00100 0x0 0x14>;
++	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
++	clock-names = "core";
++	hdmi-phandle = <&hdmi_tx>;
++};
+-- 
+1.9.1
