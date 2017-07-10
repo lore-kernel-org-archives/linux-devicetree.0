@@ -1,66 +1,110 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
-Date: Mon, 10 Jul 2017 16:32:56 +0100
-Message-ID: <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
-References: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: [PATCH v8 2/5] dt-bindings: media: Document Synopsys Designware HDMI RX
+Date: Mon, 10 Jul 2017 16:46:52 +0100
+Message-ID: <36ad6ab0cf3051efeb02508141e08efd56761018.1499701282.git.joabreu@synopsys.com>
+References: <cover.1499701281.git.joabreu@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1499701281.git.joabreu@synopsys.com>
+In-Reply-To: <cover.1499701281.git.joabreu@synopsys.com>
+References: <cover.1499701281.git.joabreu@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sylwester Nawrocki <snawrocki@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new compatible string for the RZ/G1M (R8A7743) SoC.
+Document the bindings for the Synopsys Designware HDMI RX.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Cc: Carlos Palminha <palminha@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Sylwester Nawrocki <snawrocki@kernel.org>
+Cc: devicetree@vger.kernel.org
+
+Changes from v7:
+	- Remove SoC specific bindings (Rob)
+Changes from v6:
+	- Document which properties are required/optional (Sylwester)
+	- Drop compatible string for SoC (Sylwester)
+	- Reword edid-phandle property (Sylwester)
+	- Typo fixes (Sylwester)
+Changes from v4:
+	- Use "cfg" instead of "cfg-clk" (Rob)
+	- Change node names (Rob)
+Changes from v3:
+	- Document the new DT bindings suggested by Sylwester
+Changes from v2:
+	- Document edid-phandle property
 ---
-v1->v2
-* Changed the subject
-* re-formatted the required properties
+ .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 58 ++++++++++++++++++++++
+ 1 file changed, 58 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
 
- .../devicetree/bindings/net/renesas,ravb.txt       | 29 +++++++++++++---------
- 1 file changed, 17 insertions(+), 12 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index b519503..4717bc2 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -4,19 +4,24 @@ This file provides information on what the device node for the Ethernet AVB
- interface contains.
- 
- Required properties:
--- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
--	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
--	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
--	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
--	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
--	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
--	      "renesas,etheravb-r8a7796" if the device is a part of R8A7796 SoC.
--	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
--	      "renesas,etheravb-rcar-gen3" for generic R-Car Gen 3 compatible interface.
-+- compatible: Must contain one or more of the following:
-+      - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
-+      - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
-+      - "renesas,etheravb-r8a7791" for the R8A7791 SoC.
-+      - "renesas,etheravb-r8a7792" for the R8A7792 SoC.
-+      - "renesas,etheravb-r8a7793" for the R8A7793 SoC.
-+      - "renesas,etheravb-r8a7794" for the R8A7794 SoC.
-+      - "renesas,etheravb-rcar-gen2" as a fallback for the above
-+		R-Car Gen2 and RZ/G1 devices.
- 
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
-+      - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
-+      - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
-+      - "renesas,etheravb-rcar-gen3" as a fallback for the above
-+		R-Car Gen3 devices.
+diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+new file mode 100644
+index 0000000..1dc09c6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+@@ -0,0 +1,58 @@
++Synopsys DesignWare HDMI RX Decoder
++===================================
 +
-+	When compatible with the generic version, nodes must list the
-+	SoC-specific version corresponding to the platform first followed by
-+	the generic version.
- 
- - reg: offset and length of (1) the register block and (2) the stream buffer.
- - interrupts: A list of interrupt-specifiers, one for each entry in
++This document defines device tree properties for the Synopsys DesignWare HDMI
++RX Decoder (DWC HDMI RX).
++
++The properties bellow belong to the Synopsys DesignWare HDMI RX Decoder node.
++
++Required properties:
++
++- compatible: Shall be "snps,dw-hdmi-rx".
++- reg: Memory mapped base address and length of the DWC HDMI RX registers.
++- interrupts: Reference to the DWC HDMI RX interrupt and the HDMI 5V sense
++interrupt.
++- clocks: Reference to the config clock.
++- clock-names: Shall be "cfg".
++- #address-cells: Shall be 1.
++- #size-cells: Shall be 0.
++
++Optional properties:
++
++- edid-phandle: Reference to the EDID handler block; if this property is not
++specified it is assumed that EDID is handled by device described by parent
++node of the HDMI RX node. You should not specify this property if your HDMI RX
++controller does not have CEC.
++
++You also have to create a subnode for the PHY device. PHY node properties are
++as follows.
++
++Required properties:
++
++- compatible: Shall be "snps,dw-hdmi-phy-e405".
++- reg: Shall be the JTAG address of the PHY.
++- clocks: Reference to the config clock.
++- clock-names: Shall be "cfg".
++
++Example:
++
++hdmi_rx: hdmi-rx@0 {
++	compatible = "snps,dw-hdmi-rx";
++	reg = <0x0 0x10000>;
++	interrupts = <1 2>;
++	edid-phandle = <&dw_hdmi_edid>;
++
++	clocks = <&dw_hdmi_refclk>;
++	clock-names = "cfg";
++
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	hdmi-phy@fc {
++		compatible = "snps,dw-hdmi-phy-e405";
++		reg = <0xfc>;
++
++		clocks = <&dw_hdmi_refclk>;
++		clock-names = "cfg";
++	};
++};
 -- 
 1.9.1
