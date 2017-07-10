@@ -1,108 +1,101 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: at91: sama5d2_xplained: use pin macros instead of numbers
-Date: Mon, 10 Jul 2017 08:12:05 +0200
-Message-ID: <20170710061205.12921-1-ludovic.desroches@microchip.com>
-References: <201707090720.uyYcbj17%fengguang.wu@intel.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V4 6/6] iommu/arm-smmu: Add support for
+	qcom,msm8996-smmu-v2 clocks
+Date: Mon, 10 Jul 2017 12:12:29 +0530
+Message-ID: <CAFp+6iFX=DDcK4DUC_U9h5cBa0Y1==3WKy3X6WXiQZSQ7_BNLg@mail.gmail.com>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+	<1499333825-7658-7-git-send-email-vivek.gautam@codeaurora.org>
+	<20170710034057.o5tha22rlllbxu3y@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201707090720.uyYcbj17%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170710034057.o5tha22rlllbxu3y@rob-hp-laptop>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use pin macros instead of magic numbers to ease interpretation.
+Hi Rob,
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
----
 
-I have remove the unexpected brace removal from the first version of this patch.
+On Mon, Jul 10, 2017 at 9:10 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Jul 06, 2017 at 03:07:05PM +0530, Vivek Gautam wrote:
+>> qcom,msm8996-smmu-v2 is an arm,smmu-v2 implementation with
+>> specific clock and power requirements. This smmu core is used
+>> with multiple masters on msm8996, viz. mdss, video, etc.
+>> Add bindings for the same.
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/iommu/arm,smmu.txt | 18 ++++++++++++++++++
+>>  drivers/iommu/arm-smmu.c                             | 13 +++++++++++++
+>>  2 files changed, 31 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> index 00331752d355..5d8e79775fae 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> @@ -17,6 +17,7 @@ conditions.
+>>                          "arm,mmu-401"
+>>                          "arm,mmu-500"
+>>                          "cavium,smmu-v2"
+>> +                        "qcom,msm8996-smmu-v2"
+>>
+>>                    depending on the particular implementation and/or the
+>>                    version of the architecture implemented.
+>> @@ -74,11 +75,16 @@ conditions.
+>>  - clock-names:    Should be "tcu" and "iface" for "arm,mmu-400",
+>>                    "arm,mmu-401" and "arm,mmu-500"
+>>
+>> +                  Should be "bus", and "iface" for "qcom,msm8996-smmu-v2"
+>> +                  implementation.
+>> +
+>>                    "tcu" clock is required for smmu's register access using the
+>>                    programming interface and ptw for downstream bus access. This
+>>                    clock is also used for access to the TBU connected to the
+>>                    master locally. Sometimes however, TBU is clocked along with
+>>                    the master.
+>> +                  "bus" clock for "qcom,msm8996-smmu-v2" is requierd for downstream
+>
+> s/requierd/required/
 
- arch/arm/boot/dts/at91-sama5d2_xplained.dts | 23 ++++++++++++-----------
- 1 file changed, 12 insertions(+), 11 deletions(-)
+sure, will correct it.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained.dts b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-index 2e2c3d1a1fa2..6eec8dc5143e 100644
---- a/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d2_xplained.dts
-@@ -68,7 +68,7 @@
- 
- 	ahb {
- 		usb0: gadget@00300000 {
--			atmel,vbus-gpio = <&pioA 31 GPIO_ACTIVE_HIGH>;
-+			atmel,vbus-gpio = <&pioA PIN_PA31 GPIO_ACTIVE_HIGH>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usba_vbus>;
- 			status = "okay";
-@@ -76,8 +76,8 @@
- 
- 		usb1: ohci@00400000 {
- 			num-ports = <3>;
--			atmel,vbus-gpio = <0 /* &pioA 41 GPIO_ACTIVE_HIGH */
--					   &pioA 42 GPIO_ACTIVE_HIGH
-+			atmel,vbus-gpio = <0 /* &pioA PIN_PB9 GPIO_ACTIVE_HIGH */
-+					   &pioA PIN_PB10 GPIO_ACTIVE_HIGH
- 					   0
- 					  >;
- 			pinctrl-names = "default";
-@@ -127,7 +127,7 @@
- 				ethernet-phy@1 {
- 					reg = <0x1>;
- 					interrupt-parent = <&pioA>;
--					interrupts = <73 IRQ_TYPE_LEVEL_LOW>;
-+					interrupts = <PIN_PC9 IRQ_TYPE_LEVEL_LOW>;
- 				};
- 			};
- 
-@@ -160,9 +160,9 @@
- 					compatible = "active-semi,act8945a";
- 					reg = <0x5b>;
- 					active-semi,vsel-high;
--					active-semi,chglev-gpios = <&pioA 12 GPIO_ACTIVE_HIGH>;
--					active-semi,lbo-gpios = <&pioA 72 GPIO_ACTIVE_LOW>;
--					active-semi,irq_gpios = <&pioA 45 GPIO_ACTIVE_LOW>;
-+					active-semi,chglev-gpios = <&pioA PIN_PA12 GPIO_ACTIVE_HIGH>;
-+					active-semi,lbo-gpios = <&pioA PIN_PC8 GPIO_ACTIVE_LOW>;
-+					active-semi,irq_gpios = <&pioA PIN_PB13 GPIO_ACTIVE_LOW>;
- 					active-semi,input-voltage-threshold-microvolt = <6600>;
- 					active-semi,precondition-timeout = <40>;
- 					active-semi,total-timeout = <3>;
-@@ -504,7 +504,7 @@
- 
- 		bp1 {
- 			label = "PB_USER";
--			gpios = <&pioA 41 GPIO_ACTIVE_LOW>;
-+			gpios = <&pioA PIN_PB9 GPIO_ACTIVE_LOW>;
- 			linux,code = <0x104>;
- 		};
- 	};
-@@ -517,17 +517,18 @@
- 
- 		red {
- 			label = "red";
--			gpios = <&pioA 38 GPIO_ACTIVE_LOW>;
-+			gpios = <&pioA PIN_PB6 GPIO_ACTIVE_LOW>;
- 		};
- 
-+
- 		green {
- 			label = "green";
--			gpios = <&pioA 37 GPIO_ACTIVE_LOW>;
-+			gpios = <&pioA PIN_PB5 GPIO_ACTIVE_LOW>;
- 		};
- 
- 		blue {
- 			label = "blue";
--			gpios = <&pioA 32 GPIO_ACTIVE_LOW>;
-+			gpios = <&pioA PIN_PB0 GPIO_ACTIVE_LOW>;
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
+>
+>> +                  bus access and for the smmu ptw.
+>>
+>>                    "iface" clock is required to access the TCU's programming
+>>                    interface, apart from the "tcu" clock.
+>> @@ -161,3 +167,15 @@ conditions.
+>>                  iommu-map = <0 &smmu3 0 0x400>;
+>>                  ...
+>>          };
+>> +
+>> +     /* Qcom's arm,smmu-v2 implementation for msm8996 */
+>> +     smmu4: iommu {
+>> +             compatible = "qcom,msm8996-smmu-v2";
+>
+> No registers?
+
+It does have registers. Will add the complete binding example.
+
+Thank you for the review.
+
+Best Regards
+Vivek
+
+[snip]
+
+
 -- 
-2.12.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
