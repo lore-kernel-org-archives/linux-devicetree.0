@@ -1,109 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] of: overlay: correctly apply overlay node with unit-address
-Date: Mon, 10 Jul 2017 11:08:42 -0500
-Message-ID: <CAL_JsqKLVX-nNiVcuxiZdpUa8LvQsX37XwpfVfO9r7oCw8woiA@mail.gmail.com>
-References: <1499473725-13361-1-git-send-email-frowand.list@gmail.com> <1499473725-13361-3-git-send-email-frowand.list@gmail.com>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
+Date: Mon, 10 Jul 2017 19:28:57 +0300
+Message-ID: <fbc99ea5-cfbb-5fcf-9162-7358fe4d667c@cogentembedded.com>
+References: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1499395056-14375-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <2531734.5WngiEmILA@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499473725-13361-3-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <2531734.5WngiEmILA@avalon>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 7, 2017 at 7:28 PM,  <frowand.list@gmail.com> wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> Correct existing node name detection when overlay node name has
-> a unit-address.
->
-> Expected test result is overlay will update the nodes and properties
-> for /testcase-data-2/fairway-1/ride@100/ after the patch is applied.
->
-> Before this patch is applied:
->
->    Console error message near end of unittest:
->       OF: Duplicate name in fairway-1, renamed to "ride@100#1"
->
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/
->    $ # extra node: ride@100#1
->    $ ls
->    #address-cells  linux,phandle   phandle         ride@200
->    #size-cells     name            ride@100        status
->    compatible      orientation     ride@100#1
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
->    $ ls track@3/incline_up
->    ls: track@3/incline_up: No such file or directory
->    $ ls track@4/incline_up
->    ls: track@4/incline_up: No such file or directory
->
-> After this patch is applied:
->
->    Console error message no longer occurs
->
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/
->    $ # no extra node: ride@100#1
->    $ ls
->    #address-cells  compatible      name            phandle         ride@200
->    #size-cells     linux,phandle   orientation     ride@100        status
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
->    $ ls track@3/incline_up
->    track@3/incline_up
->    $ ls track@4/incline_up
->    track@4/incline_up
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  drivers/of/overlay.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index c0e4ee1cd1ba..30aef51eeee5 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -118,6 +118,24 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
->         return of_changeset_update_property(&ov->cset, target, propn);
->  }
->
-> +static struct device_node *child_by_full_name(const struct device_node *np,
+Hi Laurent,
 
-It's not really the full name which currently means the whole path (my
-full_name work is going to change that), but the unit_name (at least
-that's what dtc calls it).
+Thank you for the review!
 
-> +               const char *cname)
-> +{
-> +       struct device_node *child;
-> +       struct device_node *prev;
-> +
-> +       child = np->child;
-> +       while (child) {
-
-Doesn't for_each_child_of_node() work here?
-
-> +               of_node_get(child);
-> +               if (!of_node_cmp(cname, kbasename(child->full_name)))
-> +                       break;
-> +               prev = child;
-> +               child = child->sibling;
-> +               of_node_put(prev);
-> +       }
-> +       return child;
-> +}
-> +
->  static int of_overlay_apply_single_device_node(struct of_overlay *ov,
->                 struct device_node *target, struct device_node *child)
->  {
-> @@ -130,7 +148,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
->                 return -ENOMEM;
+On 10.07.2017 16:09, Laurent Pinchart wrote:
+> Hi Vladimir,
 >
->         /* NOTE: Multiple mods of created nodes not supported */
-> -       tchild = of_get_child_by_name(target, cname);
-> +       tchild = child_by_full_name(target, cname);
->         if (tchild != NULL) {
->                 /* new overlay phandle value conflicts with existing value */
->                 if (child->phandle)
-> --
-> Frank Rowand <frank.rowand@sony.com>
+> Thank you for the patch.
 >
+> On Friday 07 Jul 2017 05:37:36 Vladimir Barinov wrote:
+>> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+>>
+>> The ULCB board has one HDMI output connector.
+>>
+>> This connector is available on both the H3 and M3-W ULCB boards.
+>> Add this to the ulcb.dtsi file.
+>>
+>> Signed-off-by: Vladimir Barinov
+>> <vladimir.barinov+renesas@cogentembedded.com> ---
+>>   arch/arm64/boot/dts/renesas/ulcb.dtsi | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> b/arch/arm64/boot/dts/renesas/ulcb.dtsi index 6f0a7ca..fc5408d 100644
+>> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> @@ -34,6 +34,17 @@
+>>   		clock-frequency = <11289600>;
+>>   	};
+>>
+>> +	hdmi0-out {
+>> +		compatible = "hdmi-connector";
+>> +		label = "HDMI0 OUT";
+> As far as I know there is no "HDMI0 OUT" label on the board or casing. You can
+> remove the label property. Apart from that,
+I was thinking that this is a label on schematic.
+
+ULCB has similar schematic label as first HDMI connector on Salvator-X  
+"HDMI output(HDMI0)", hence I've just copied label name from Salvator-X 
+file.
+
+Right, there is no such name on ULCB pcb or plastic cover.
+
+Is it okay If I resend only one patch with label field removed?
+
+Regards,
+Vladimir
