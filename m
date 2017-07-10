@@ -1,118 +1,71 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
-Date: Sun, 9 Jul 2017 20:17:15 -0500
-Message-ID: <20170710011715.r6xfjl43bhtpv57j@rob-hp-laptop>
-References: <1499235588-32219-1-git-send-email-anthony.kim@hideep.com>
+Subject: Re: [PATCH v 1/2] ravb: Add support for r8a7743 SoC
+Date: Sun, 9 Jul 2017 20:20:24 -0500
+Message-ID: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
+References: <1499259711-56175-1-git-send-email-biju.das@bp.renesas.com>
+ <1499259711-56175-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499235588-32219-1-git-send-email-anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1499259711-56175-2-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anthony Kim <ktyrun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 03:19:48PM +0900, Anthony Kim wrote:
-> The HiDeep touchscreen device is a capacitive multi-touch controller
-> mainly for multi-touch supported devices use. It use I2C interface for
-> communication to IC and provide axis X, Y, Z locations for ten finger
-> touch through input event interface to userspace.
+On Wed, Jul 05, 2017 at 02:01:50PM +0100, Biju Das wrote:
+> Add support for Gigabit Ethernet E-MAC on r8a7743 (RZ/G1M) SoC.
+> Renesas RZ/G1M (R8A7743) SoC Ethernet AVB IP is identical to the R-Car Gen2
+> family.
+
+For the subject: "dt-bindings: net: ..."
+
 > 
-> It support the Crimson and the Lime two type IC. They are different
-> the number of channel supported and FW size. But the working protocol
-> is same.
-> 
-> Signed-off-by: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > ---
->  .../bindings/input/touchscreen/hideep.txt          |   40 +
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  drivers/input/touchscreen/Kconfig                  |   32 +
->  drivers/input/touchscreen/Makefile                 |    2 +
->  drivers/input/touchscreen/hideep.h                 |  338 +++++++
->  drivers/input/touchscreen/hideep_core.c            | 1029 ++++++++++++++++++++
->  drivers/input/touchscreen/hideep_dbg.c             |  405 ++++++++
->  drivers/input/touchscreen/hideep_dbg.h             |   24 +
->  drivers/input/touchscreen/hideep_isp.c             |  584 +++++++++++
->  drivers/input/touchscreen/hideep_isp.h             |   96 ++
->  drivers/input/touchscreen/hideep_sysfs.c           |  249 +++++
->  11 files changed, 2800 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->  create mode 100644 drivers/input/touchscreen/hideep.h
->  create mode 100644 drivers/input/touchscreen/hideep_core.c
->  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
->  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
->  create mode 100644 drivers/input/touchscreen/hideep_isp.c
->  create mode 100644 drivers/input/touchscreen/hideep_isp.h
->  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 3 ++-
+>  drivers/net/ethernet/renesas/ravb_main.c               | 1 +
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/hideep.txt b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
-> new file mode 100644
-> index 0000000..f5ab5e6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
-> @@ -0,0 +1,40 @@
-> +* HiDeep Finger and Stylus touchscreen controller
-> +
-> +Required properties:
-> +- compatible		: must be "hideep,hideep_ts".
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index b519503..bc692ab 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -4,7 +4,8 @@ This file provides information on what the device node for the Ethernet AVB
+>  interface contains.
+>  
+>  Required properties:
+> -- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+> +- compatible: "renesas,etheravb-r8a7743" if the device is a part of R8A7743 SoC.
+> +	      "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
 
-s/_/-/
+Please re-format like this:
 
-Is there only 1 version or another way to determine the exact chip and 
-firmware? If not, then you need a more specific compatible.
+- compatible: Must be one of:
+...
 
-> +- reg			: I2C slave address, (e.g. 0x6C).
-> +- hideep,max_coords	: Max value for axis X, Y, W, Z.
-> +
-> +Optional properties:
-> +- pinctrl-names	: "reset_down", "reset-up", "intb-ctrl".
-> +				They are gpio pinctrl names for should be search in driver code.
-> +- pinctrl-0	: Gpio control for "reset-down".
-> +- pinctrl-1	: Gpio control for "reset-up".
-> +- pinctrl-2	: Gpio control for "intb-ctrl".
-> +- hideep,regulator_vdd	: Main voltage(3.3V) name.
-> +- hideep,regulator_vid	: IO voltage(1.8V) name.
+So it's a one line change to add new compatibles.
 
-Use standard regulator binding.
-
-> +- hideep,irq_gpio		: Define for interrupt gpio pin.
-> +						It is to use for set interrupt type.
-
-Use interrupt binding.
-
-> +- hideep,reset_gpio		: Define for reset gpio pin.
-> +						It is to use for reset IC.
-
-reset-gpios is the standard name.
-
-> +
-> +Example:
-> +
-> +i2c@00000000 {
-> +
-> +	/* ... */
-> +
-> +	hideep@6c {
-
-touchscreen@6c
-
-> +		compatible = "hideep,hideep_ts";
-> +		reg = <0x6c>;
-> +		pinctrl-names = "reset-down", "reset-up", "intb-ctrl";
-> +		pinctrl-0 = <&reset_gpio0>;
-> +		pinctrl-1 = <&reset_gpio1>;
-> +		pinctrl-2 = <&touch_int>;
-> +		hideep,regulator_vdd = "vdd_ldo33";	// need modify
-> +		hideep,regulator_vid = "vdd_ldo18";	// need modify
-> +		hideep,irq_gpio = <&gpx0 5 0x0>;	// <gpio-name gpio-num gpio-val> need modify
-> +		hideep,reset_gpio = <&gpa0 5 0x1>;	// <gpio-name gpio-num gpio-val> need modify
-> +		hideep,max_coords = <1080 1920 65535 65535>;	// x y w z, need modify
-
-Not documented. Probably should be standard touchscreen properties.
-
-> +	};
-> +};
+>  	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
+>  	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
+>  	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
+> diff --git a/drivers/net/ethernet/renesas/ravb_main.c b/drivers/net/ethernet/renesas/ravb_main.c
+> index 5931e85..e35b30f 100644
+> --- a/drivers/net/ethernet/renesas/ravb_main.c
+> +++ b/drivers/net/ethernet/renesas/ravb_main.c
+> @@ -1869,6 +1869,7 @@ static int ravb_mdio_release(struct ravb_private *priv)
+>  }
+>  
+>  static const struct of_device_id ravb_match_table[] = {
+> +	{ .compatible = "renesas,etheravb-r8a7743", .data = (void *)RCAR_GEN2 },
+>  	{ .compatible = "renesas,etheravb-r8a7790", .data = (void *)RCAR_GEN2 },
+>  	{ .compatible = "renesas,etheravb-r8a7794", .data = (void *)RCAR_GEN2 },
+>  	{ .compatible = "renesas,etheravb-rcar-gen2", .data = (void *)RCAR_GEN2 },
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
