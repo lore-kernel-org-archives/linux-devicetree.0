@@ -1,61 +1,63 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v1 2/3] dt-bindings: display: panel: Add support for Orise
- Tech otm8009a dsi panel
-Date: Mon, 10 Jul 2017 09:34:24 +0000
-Message-ID: <4f628366-d365-c55f-c26a-282f0678d147@st.com>
-References: <1499185805-23354-1-git-send-email-philippe.cornu@st.com>
- <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
- <20170710011211.b6inrhlqmkph3otl@rob-hp-laptop>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/9] iio: humidity: hts221: support active-low interrupts
+Date: Mon, 10 Jul 2017 10:36:47 +0100
+Message-ID: <ceef5860-91ee-a922-0dd7-8f2698192b9b@arm.com>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+ <20170709165704.26311-6-lorenzo.bianconi@st.com>
+ <20170709193951.14caff79@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170710011211.b6inrhlqmkph3otl@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <B0A9F91AAB41634698ACAE878DE619CC@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Yannick FERTRE <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170709193951.14caff79-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzEwLzIwMTcgMDM6MTIgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUs
-IEp1bCAwNCwgMjAxNyBhdCAwNjozMDowNFBNICswMjAwLCBQaGlsaXBwZSBDT1JOVSB3cm90ZToN
-Cj4+IFRoZSBPcmlzZSBUZWNoIE9UTTgwMDlBIGlzIGEgMy45NyIgNDgweDgwMCBURlQgTENEIHBh
-bmVsIGNvbm5lY3RlZCB1c2luZw0KPj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0cyBi
-YWNrbGlnaHQgaXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4NCj4+DQo+PiBTaWduZWQt
-b2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+
-PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQgICAg
-fCAyMCArKysrKysrKysrKysrKysrKysrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0
-aW9ucygrKQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPj4NCj4+IGRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9vcmlzZXRlY2gsb3RtODAwOWEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPj4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLjBiYjgyMzcNCj4+IC0tLSAvZGV2L251bGwNCj4+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29y
-aXNldGVjaCxvdG04MDA5YS50eHQNCj4+IEBAIC0wLDAgKzEsMjAgQEANCj4+ICtPcmlzZSBUZWNo
-IE9UTTgwMDlBIDMuOTciIDQ4MHg4MDAgVEZUIExDRCBwYW5lbCAoTUlQSS1EU0kgdmlkZW8gbW9k
-ZSkNCj4+ICsNCj4+ICtUaGUgT3Jpc2UgVGVjaCBPVE04MDA5QSBpcyBhIDMuOTciIDQ4MHg4MDAg
-VEZUIExDRCBwYW5lbCBjb25uZWN0ZWQgdXNpbmcNCj4+ICthIE1JUEktRFNJIHZpZGVvIGludGVy
-ZmFjZS4gSXRzIGJhY2tsaWdodCBpcyBtYW5hZ2VkIHRocm91Z2ggdGhlIERTSSBsaW5rLg0KPj4g
-Kw0KPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArICAtIGNvbXBhdGlibGU6ICJvcmlzZXRl
-Y2gsb3RtODAwOWEiDQo+PiArICAtIHJlZzogdGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIgb2Yg
-YSBEU0kgcGVyaXBoZXJhbA0KPj4gKyAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRo
-ZSByZXNldCBwaW4gKGFjdGl2ZSBsb3cpLiAoT3B0aW9uYWwpDQo+IA0KPiBJZiB0aGlzIGlzIG9w
-dGlvbmFsLCBtb3ZlIGl0IHRvIGl0cyBvd24gc2VjdGlvbi4NCj4gDQoNCkRlYXIgUm9iLA0KTWFu
-eSB0aGFua3MgZm9yIHlvdXIgY29tbWVudC4gRml4ZWQgaW4gdjIsIHNlbnQgZmV3IG1pbnV0ZXMg
-YWdvLg0KQmVzdCByZWdhcmRzLA0KUGhpbGlwcGUNCg0KPj4gKw0KPj4gK0V4YW1wbGU6DQo+PiAr
-JmRzaSB7DQo+PiArCS4uLg0KPj4gKw0KPj4gKwlwYW5lbEAwIHsNCj4+ICsJCWNvbXBhdGlibGUg
-PSAib3Jpc2V0ZWNoLG90bTgwMDlhIjsNCj4+ICsJCXJlZyA9IDwwPjsNCj4+ICsJCXJlc2V0LWdw
-aW9zID0gPCZncGlvaCA3IDA+Ow0KPj4gKwl9Ow0KPj4gK307DQo+PiAtLSANCj4+IDEuOS4xDQo+
-PgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Jonathan,
+
+On 09/07/17 19:39, Jonathan Cameron wrote:
+> On Sun,  9 Jul 2017 18:57:00 +0200
+> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> Add support for active low interrupts (IRQF_TRIGGER_LOW and
+>> IRQF_TRIGGER_FALLING). Configure the device as active high or low
+>> according to the requested irq line.
+>>
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> Hi Lorenzo,
+> 
+> Sorry, you are getting caught up in a more general question I'd like to 
+> pin down an answer for...
+> 
+> What should we be doing if we have a part that supports both high and
+> low interrupts and/or rising and falling?
+> 
+> We actually have more than one possible thing we are configuring with
+> one parameter.  If we are looking at shared interrupts or level
+> converters it's more than possible we have an inversion going on between
+> the two.   How is this represented to the two ends?
+> 
+> What's the right way of doing this?
+> 
+> I've added a few CCs that I think might chip in on this question!
+> 
+> My personal gut feeling is that the inverter should have explicit
+> representation in the kernel.  We should be able to instantiate an
+> irq_chip which is responsible for flipping it's sense.
+> 
+> You request an active high input on one side and it deals with
+> the active low that needs to be requested upstream.
+> 
+> Chances are I'm missing something and this is already well handled!
+
+We already have things like that, such as
+drivers/irqchip/irq-mtk-sysirq.c (whose sole purpose in life is to
+invert interrupt polarity).
+
+Hope this helps,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
