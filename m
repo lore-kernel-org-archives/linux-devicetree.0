@@ -1,54 +1,35 @@
-From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] [media] dt-bindings: gpio-ir-tx: add support for
- GPIO IR Transmitter
-Date: Mon, 10 Jul 2017 16:10:16 +0100
-Message-ID: <20170710151016.5iaokchdejxozrte@gofer.mess.org>
-References: <cover.1499419624.git.sean@mess.org>
- <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
- <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/4] [media] rc: pwm-ir-tx: add new driver
+Date: Mon, 10 Jul 2017 10:12:25 -0500
+Message-ID: <CAL_JsqJxiGh2A1ApLA364vo5CJGkW+r7mrXPcZBGZ1KuXi4HHw@mail.gmail.com>
+References: <cover.1498992850.git.sean@mess.org> <88fa0219db3388fad7bcc7b20cf30dd41e763aee.1498992850.git.sean@mess.org>
+ <20170707135928.6cs6vx7z6lj3birp@rob-hp-laptop> <20170707161524.GA11857@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170707161524.GA11857@amd>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sean Young <sean@mess.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Timo Kokkonen <timo.t.kokkonen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 10:05:38AM -0500, Rob Herring wrote:
-> On Fri, Jul 07, 2017 at 10:52:03AM +0100, Sean Young wrote:
-> > Document the device tree bindings for the GPIO Bit Banging IR
-> > Transmitter.
-> > 
-> > Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-> > new file mode 100644
-> > index 0000000..bc08d89
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
-> > @@ -0,0 +1,11 @@
-> > +Device tree bindings for IR LED connected through gpio pin which is used as
-> > +remote controller transmitter.
-> > +
-> > +Required properties:
-> > +	- compatible: should be "gpio-ir-tx".
-> 
-> As I mentioned in the prior version, missing the "gpios" property.
+On Fri, Jul 7, 2017 at 11:15 AM, Pavel Machek <pavel@ucw.cz> wrote:
+> On Fri 2017-07-07 08:59:28, Rob Herring wrote:
+>> On Sun, Jul 02, 2017 at 12:06:13PM +0100, Sean Young wrote:
+>> > This is new driver which uses pwm, so it is more power-efficient
+>> > than the bit banging gpio-ir-tx driver.
+>> >
+>> > Signed-off-by: Sean Young <sean@mess.org>
+>> > ---
+>> >  .../devicetree/bindings/leds/irled/pwm-ir-tx.txt   |  13 ++
+>>
+>> Please make this a separate patch.
+>
+> Come on... The driver is trivial, and you even quoted the binding
+> below. Saying "Acked-by:" would not have been that much additional
+> work...
 
-Absolutely right. I hadn't gotten round to sending out a new version
-yet, I'll do that soon.
+True, and I don't always ask for it especially when there is no other
+comment. However, the gpio-ir-tx patch needs other changes anyway.
 
-
-Thanks,
-
-Sean
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
