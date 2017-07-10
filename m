@@ -1,41 +1,102 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] arm64: dts: renesas: ulcb: sound clock-frequency needs
- descending order
-Date: Mon, 10 Jul 2017 10:08:25 +0200
-Message-ID: <CAMuHMdXVoEHNfq_-JX5dodC4cCQzDx9BFjqR-j1kBF9yJTO8bA@mail.gmail.com>
-References: <1499393373-11514-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+Subject: Re: [PATCH v5 1/6] clk: sunxi-ng: div: Add support for
+ fixed post-divider
+Date: Mon, 10 Jul 2017 10:13:24 +0200
+Message-ID: <3126e83a-c50c-fb12-134b-0b53f0f7eed6@schinagl.nl>
+References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
+ <805048a548031cafc890e6ea06ee773bdfb199d0.1499197129.git-series.plaes@plaes.org>
+Reply-To: oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499393373-11514-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDC2JNWXZAJBBI7ORTFQKGQETDOGZ5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <805048a548031cafc890e6ea06ee773bdfb199d0.1499197129.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 7, 2017 at 4:09 AM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+Hey Plaes,
+
+On 04-07-17 22:04, Priit Laes wrote:
+> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+> 6 is fixed post-divider.
 >
-> It will be used ADG clock initial settings, and will be
-> sound codec's initial system clock which needs maximum clock frequency.
-> Thus, descending order is required.
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/ccu_div.c | 18 ++++++++++++++++--
+>  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+>  2 files changed, 18 insertions(+), 3 deletions(-)
 >
-> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-
-Cfr. commit 5e2feac330953fe7 ("arm64: renesas: salvator-common: sound
-clock-frequency needs descending order")
-
-Fixes: 9f22774c214ada7b ("arm64: dts: ulcb: add 12288000 for sound ADG")
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+> index c0e5c10..054b12a 100644
+> --- a/drivers/clk/sunxi-ng/ccu_div.c
+> +++ b/drivers/clk/sunxi-ng/ccu_div.c
+> @@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+>  {
+>  	struct ccu_div *cd = data;
+>
+> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> +		rate /= cd->fixed_post_div;
+> +
+>  	return divider_round_rate_parent(&cd->common.hw, parent,
+>  					 rate, parent_rate,
+>  					 cd->div.table, cd->div.width,
+> @@ -62,8 +65,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
+>  	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
+>  						  parent_rate);
+>
+> -	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> -				   cd->div.flags);
+> +	val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> +				  cd->div.flags);
+> +
+> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> +		val /= cd->fixed_post_div;
+> +
+> +	return val;
+>  }
+>
+>  static int ccu_div_determine_rate(struct clk_hw *hw,
+> @@ -71,6 +79,9 @@ static int ccu_div_determine_rate(struct clk_hw *hw,
+>  {
+>  	struct ccu_div *cd = hw_to_ccu_div(hw);
+>
+> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> +		req->rate *= cd->fixed_post_div;
+> +
+>  	return ccu_mux_helper_determine_rate(&cd->common, &cd->mux,
+>  					     req, ccu_div_round_rate, cd);
+>  }
+> @@ -89,6 +100,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
+>  			      cd->div.flags);
+>
+> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> +		val /= cd->fixed_post_div;
+> +
+>  	spin_lock_irqsave(cd->common.lock, flags);
+>
+>  	reg = readl(cd->common.base + cd->common.reg);
+> diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+> index 08d0744..f3a5028 100644
+> --- a/drivers/clk/sunxi-ng/ccu_div.h
+> +++ b/drivers/clk/sunxi-ng/ccu_div.h
+> @@ -86,9 +86,10 @@ struct ccu_div_internal {
+>  struct ccu_div {
+>  	u32			enable;
+>
+> -	struct ccu_div_internal		div;
+> +	struct ccu_div_internal	div;
+>  	struct ccu_mux_internal	mux;
+>  	struct ccu_common	common;
+> +	unsigned int		fixed_post_div;
+>  };
+>
+>  #define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,	\
+>
