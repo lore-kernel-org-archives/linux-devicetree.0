@@ -1,50 +1,210 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: rockchip: Add vpcie12v-supply for
- Rockchip PCIe controller
-Date: Mon, 10 Jul 2017 15:44:33 -0500
-Message-ID: <20170710204433.GB5610@bhelgaas-glaptop.roam.corp.google.com>
-References: <1498699288-63944-1-git-send-email-shawn.lin@rock-chips.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] iio: humidity: hts221: refactor write_with_mask
+ code
+Date: Mon, 10 Jul 2017 21:47:46 +0100
+Message-ID: <20170710214746.39ea98f9@kernel.org>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+        <20170709165704.26311-2-lorenzo.bianconi@st.com>
+        <20170709192827.2c343108@kernel.org>
+        <CAA2SeNJmUFp7WaOsAEq+yLMSKrzQVkhmyMhB2OVWsbBAmv4nCg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498699288-63944-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAA2SeNJmUFp7WaOsAEq+yLMSKrzQVkhmyMhB2OVWsbBAmv4nCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 09:21:28AM +0800, Shawn Lin wrote:
-> PCIe connector provide a optional 12V power supply for high
-> power downstream components, so we add this as a optional
-> one if we need to control it.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On Sun, 9 Jul 2017 23:18:47 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Applied patches 1 & 2 with Rob's ack to pci/host-rockchip for v4.14,
-thanks!
+> > On Sun,  9 Jul 2017 18:56:56 +0200
+> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> Move bit-shift in hts221_write_with_mask() instead of coding
+> >> the shift depth in the configured value. That change will be necessary
+> >> to fix an issue in device power-down procedure
+> >>
+> >> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
+> > A could of questions inline.  
+> 
+> Hi Jonathan,
+> 
+> Thanks for quick review :)
+> 
+> >
+> > Jonathan  
+> >> ---
+> >>  drivers/iio/humidity/hts221_core.c | 74 +++++++++++++++++---------------------
+> >>  1 file changed, 32 insertions(+), 42 deletions(-)
+> >>
+> >> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+> >> index a56da3999e00..f5181e4e1eff 100644
+> >> --- a/drivers/iio/humidity/hts221_core.c
+> >> +++ b/drivers/iio/humidity/hts221_core.c
+> >> @@ -32,30 +32,12 @@
+> >>  #define HTS221_HUMIDITY_AVG_MASK     0x07
+> >>  #define HTS221_TEMP_AVG_MASK         0x38
+> >>
+> >> -#define HTS221_ODR_MASK                      0x87
+> >> +#define HTS221_ODR_MASK                      0x03
+> >>  #define HTS221_BDU_MASK                      BIT(2)
+> >> +#define HTS221_ENABLE_MASK           BIT(7)
+> >>
+> >>  #define HTS221_DRDY_MASK             BIT(2)
+> >>
+> >> -#define HTS221_ENABLE_SENSOR         BIT(7)
+> >> -
+> >> -#define HTS221_HUMIDITY_AVG_4                0x00 /* 0.4 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_8                0x01 /* 0.3 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_16               0x02 /* 0.2 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_32               0x03 /* 0.15 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_64               0x04 /* 0.1 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_128              0x05 /* 0.07 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_256              0x06 /* 0.05 %RH */
+> >> -#define HTS221_HUMIDITY_AVG_512              0x07 /* 0.03 %RH */
+> >> -
+> >> -#define HTS221_TEMP_AVG_2            0x00 /* 0.08 degC */
+> >> -#define HTS221_TEMP_AVG_4            0x08 /* 0.05 degC */
+> >> -#define HTS221_TEMP_AVG_8            0x10 /* 0.04 degC */
+> >> -#define HTS221_TEMP_AVG_16           0x18 /* 0.03 degC */
+> >> -#define HTS221_TEMP_AVG_32           0x20 /* 0.02 degC */
+> >> -#define HTS221_TEMP_AVG_64           0x28 /* 0.015 degC */
+> >> -#define HTS221_TEMP_AVG_128          0x30 /* 0.01 degC */
+> >> -#define HTS221_TEMP_AVG_256          0x38 /* 0.007 degC */
+> >>
+> >>  /* calibration registers */
+> >>  #define HTS221_REG_0RH_CAL_X_H               0x36
+> >> @@ -90,28 +72,28 @@ static const struct hts221_avg hts221_avg_list[] = {
+> >>               .addr = HTS221_REG_AVG_ADDR,
+> >>               .mask = HTS221_HUMIDITY_AVG_MASK,
+> >>               .avg_avl = {
+> >> -                     { 4, HTS221_HUMIDITY_AVG_4 },
+> >> -                     { 8, HTS221_HUMIDITY_AVG_8 },
+> >> -                     { 16, HTS221_HUMIDITY_AVG_16 },
+> >> -                     { 32, HTS221_HUMIDITY_AVG_32 },
+> >> -                     { 64, HTS221_HUMIDITY_AVG_64 },
+> >> -                     { 128, HTS221_HUMIDITY_AVG_128 },
+> >> -                     { 256, HTS221_HUMIDITY_AVG_256 },
+> >> -                     { 512, HTS221_HUMIDITY_AVG_512 },
+> >> +                     {   4, 0x0 }, /* 0.4 %RH */
+> >> +                     {   8, 0x1 }, /* 0.3 %RH */
+> >> +                     {  16, 0x2 }, /* 0.2 %RH */
+> >> +                     {  32, 0x3 }, /* 0.15 %RH */
+> >> +                     {  64, 0x4 }, /* 0.1 %RH */
+> >> +                     { 128, 0x5 }, /* 0.07 %RH */
+> >> +                     { 256, 0x6 }, /* 0.05 %RH */
+> >> +                     { 512, 0x7 }, /* 0.03 %RH */
+> >>               },
+> >>       },
+> >>       {
+> >>               .addr = HTS221_REG_AVG_ADDR,
+> >>               .mask = HTS221_TEMP_AVG_MASK,
+> >>               .avg_avl = {
+> >> -                     { 2, HTS221_TEMP_AVG_2 },
+> >> -                     { 4, HTS221_TEMP_AVG_4 },
+> >> -                     { 8, HTS221_TEMP_AVG_8 },
+> >> -                     { 16, HTS221_TEMP_AVG_16 },
+> >> -                     { 32, HTS221_TEMP_AVG_32 },
+> >> -                     { 64, HTS221_TEMP_AVG_64 },
+> >> -                     { 128, HTS221_TEMP_AVG_128 },
+> >> -                     { 256, HTS221_TEMP_AVG_256 },
+> >> +                     {   2, 0x0 }, /* 0.08 degC */
+> >> +                     {   4, 0x1 }, /* 0.05 degC */
+> >> +                     {   8, 0x2 }, /* 0.04 degC */
+> >> +                     {  16, 0x3 }, /* 0.03 degC */
+> >> +                     {  32, 0x4 }, /* 0.02 degC */
+> >> +                     {  64, 0x5 }, /* 0.015 degC */
+> >> +                     { 128, 0x6 }, /* 0.01 degC */
+> >> +                     { 256, 0x7 }, /* 0.007 degC */  
+> > Could we potentially use the index directly here rather than
+> > having to explicitly store it?  Would be more elegant perhaps..  
+> 
+> Ack, will do in v2
+> 
+> >>               },
+> >>       },
+> >>  };
+> >> @@ -166,7 +148,7 @@ static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
+> >>               goto unlock;
+> >>       }
+> >>
+> >> -     data = (data & ~mask) | (val & mask);
+> >> +     data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+> >>
+> >>       err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+> >>       if (err < 0)
+> >> @@ -201,11 +183,10 @@ static int hts221_check_whoami(struct hts221_hw *hw)
+> >>
+> >>  int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+> >>  {
+> >> -     u8 val = enable ? BIT(2) : 0;
+> >>       int err;
+> >>
+> >>       err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+> >> -                                  HTS221_DRDY_MASK, val);
+> >> +                                  HTS221_DRDY_MASK, enable);
+> >>
+> >>       return err < 0 ? err : 0;
+> >>  }
+> >> @@ -213,7 +194,6 @@ int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+> >>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+> >>  {
+> >>       int i, err;
+> >> -     u8 val;
+> >>
+> >>       for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
+> >>               if (hts221_odr_table[i].hz == odr)
+> >> @@ -222,9 +202,19 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+> >>       if (i == ARRAY_SIZE(hts221_odr_table))
+> >>               return -EINVAL;
+> >>
+> >> -     val = HTS221_ENABLE_SENSOR | HTS221_BDU_MASK | hts221_odr_table[i].val;
+> >> +     /* enable Block Data Update */
+> >> +     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> >> +                                  HTS221_BDU_MASK, 1);
+> >> +     if (err < 0)
+> >> +             return err;
+> >> +
+> >> +     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> >> +                                  HTS221_ODR_MASK, hts221_odr_table[i].val);
+> >> +     if (err < 0)
+> >> +             return err;
+> >> +
+> >>       err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> >> -                                  HTS221_ODR_MASK, val);  
+> > This original code looks like a bug given the odr mask should only
+> > cover the odr bits, not the enable and bdu.
+> >
+> > Am I missing something?  
+> 
+> Base on hts221_write_with_mask() code the original mask covers odr,
+> bdu and enable fields in CNTRL1 register.
+Ah.  That makes sense even if it's rather less elegant than the new
+code!
 
-> ---
+Thanks for clearing that up.
+
+Jonathan
 > 
->  Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 1 +
->  1 file changed, 1 insertion(+)
+> >
+> > Taking one write and changing it to 3 isn't that nice, but I guess
+> > we aren't in a fast path here so fair enough given the cleaner
+> > resulting code.  
+> >> +                                  HTS221_ENABLE_MASK, 1);
+> >>       if (err < 0)
+> >>               return err;
+> >>  
+> >  
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> index 1453a73..9b88959 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-> @@ -47,6 +47,7 @@ Optional Property:
->  	using 24MHz OSC for RC's PHY.
->  - ep-gpios: contain the entry for pre-reset gpio
->  - num-lanes: number of lanes to use
-> +- vpcie12v-supply: The phandle to the 12v regulator to use for PCIe.
->  - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
->  - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
->  - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
-> -- 
-> 1.9.1
+> Regards,
+> Lorenzo
 > 
 > 
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
