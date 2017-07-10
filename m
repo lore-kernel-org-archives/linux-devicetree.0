@@ -1,39 +1,59 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/7] ARM: dts: renesas: Add Inter Connect RAM
-Date: Mon, 10 Jul 2017 11:26:55 +0200
-Message-ID: <20170710092654.GP13680@verge.net.au>
-References: <1499181798-28859-1-git-send-email-geert+renesas@glider.be>
- <20170710084010.GJ13680@verge.net.au>
- <CAMuHMdU7KC4X8+kOFUBiBw2ZHs=aukf+_1iR+Gjw2M+RgJ6mBQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v 1/2] ravb: Add support for r8a7743 SoC
+Date: Mon, 10 Jul 2017 12:31:19 +0300
+Message-ID: <7a631876-900e-66fb-c389-a33b9a146a8e@cogentembedded.com>
+References: <1499259711-56175-1-git-send-email-biju.das@bp.renesas.com>
+ <1499259711-56175-2-git-send-email-biju.das@bp.renesas.com>
+ <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU7KC4X8+kOFUBiBw2ZHs=aukf+_1iR+Gjw2M+RgJ6mBQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 10:45:23AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Mon, Jul 10, 2017 at 10:40 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, Jul 04, 2017 at 05:23:11PM +0200, Geert Uytterhoeven wrote:
-> >> R-Car Gen2 and RZ/G1 SoCs contain two or three blocks of SRAM, which can be
-> >> used for several purposes.  One such purpose is holding a jump stub for CPU
-> >> core bringup.
-> >>
-> >> This patch series adds the SRAM blocks to the various DTS files, following
-> >> the generic DT bindings for "mmio-sram" in
-> >> Documentation/devicetree/bindings/sram/sram.txt.  Reserving SRAM for jump
-> >> stub for CPU core bringup will be handled in a follow-up series.
-> >>
-> >> Thanks!
-> >
-> > Geert, these seem nice and clean to me.
-> > Are they ready to be applied?
-> 
-> I think they are.
+Hello!
 
-Thanks, all patches applied for v4.14.
+On 7/10/2017 4:20 AM, Rob Herring wrote:
+
+>> Add support for Gigabit Ethernet E-MAC on r8a7743 (RZ/G1M) SoC.
+>> Renesas RZ/G1M (R8A7743) SoC Ethernet AVB IP is identical to the R-Car Gen2
+>> family.
+> 
+> For the subject: "dt-bindings: net: ..."
+> 
+>>
+>> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+>> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+>> ---
+>>   Documentation/devicetree/bindings/net/renesas,ravb.txt | 3 ++-
+>>   drivers/net/ethernet/renesas/ravb_main.c               | 1 +
+>>   2 files changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+>> index b519503..bc692ab 100644
+>> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+>> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+>> @@ -4,7 +4,8 @@ This file provides information on what the device node for the Ethernet AVB
+>>   interface contains.
+>>   
+>>   Required properties:
+>> -- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+>> +- compatible: "renesas,etheravb-r8a7743" if the device is a part of R8A7743 SoC.
+>> +	      "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+> 
+> Please re-format like this:
+> 
+> - compatible: Must be one of:
+> ...
+> 
+> So it's a one line change to add new compatibles.
+
+    Note that the common gen2/3 values are at end of this list, so they'll 
+need different treating if you add these words.
+
+MBR, Sergei
