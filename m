@@ -1,30 +1,68 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: [PATCH v1] MAINTAINERS: Change OV5647 Maintainer
-Date: Mon, 10 Jul 2017 15:18:03 +0100
-Message-ID: <640633f5e5cc92d72353dca78c779a4c956bfd1f.1499695886.git.roliveir@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Luis.Oliveira@synopsys.com
-Cc: CARLOS.PALMINHA@synopsys.com, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/3] some fixups for MediaTek cpufreq driver
+Date: Mon, 10 Jul 2017 22:23:07 +0800
+Message-ID: <cover.1499692967.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 749426702fa2..29dc00b2f3a6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9466,7 +9466,7 @@ S:	Maintained
- F:	drivers/media/i2c/ov5640.c
- 
- OMNIVISION OV5647 SENSOR DRIVER
--M:	Ramiro Oliveira <roliveir@synopsys.com>
-+M:	Luis Oliveira <lolivei@synopsys.com>
- L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
+Changes since v3:
+- remove the redundant line depends on ARM || ARM64 || COMPILE_TEST
+since the whole Kconfig.arm file depends on ARM || ARM64.
+- renaming from mtk-cpufreq.c to mediatek-cpufreq.c avoiding
+collide and cause confusion at some point in time.
+
+Changes since v2:
+- correct the typo in the binding document
+
+Changes since v1:
+- drop those patches already accepted
+- refine the commit messages and Kconfig dependency
+- Kconfig menu entry and file name itself are updated with more
+generic name to drop "MT8173" since this driver actually supports
+all MediaTek SoCs.
+- generate patchset again with git format-patch -C -M --thread=shallow
+- fix binding examples by replacing '@' with '-' as the OPP nodes will
+never have a "reg" property.
+
+Hi,
+
+The purpose of the series is
+- (patch 1 to 3) to fix up current Mediatek cpufreq driver
+can't work with the latest tree since one required CPU clock muxer missing
+would cause the driver getting the resource fails when driver probe gets
+called.
+- (patch 4) to enable cpufreq feature on MT2701/MT7623 platform.
+- (patch 5 to 6) to update the binding document to reflect
+latest driver logic and add more examples guiding people how to apply for
+Mediatek cpufreq driver.
+
+Sean Wang (3):
+  cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
+  dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to
+    proper place
+  dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
+
+ .../devicetree/bindings/clock/mt8173-cpu-dvfs.txt  |  83 -------
+ .../bindings/cpufreq/cpufreq-mediatek.txt          | 247 +++++++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |   7 +-
+ drivers/cpufreq/Makefile                           |   2 +-
+ .../{mt8173-cpufreq.c => mediatek-cpufreq.c}       |   2 +
+ 5 files changed, 253 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+ rename drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} (99%)
+
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
