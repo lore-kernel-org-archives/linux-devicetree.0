@@ -1,55 +1,119 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: display: panel: Add support for
- Orise Tech otm8009a dsi panel
-Date: Sun, 9 Jul 2017 20:12:11 -0500
-Message-ID: <20170710011211.b6inrhlqmkph3otl@rob-hp-laptop>
-References: <1499185805-23354-1-git-send-email-philippe.cornu@st.com>
- <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
+Date: Sun, 9 Jul 2017 20:17:15 -0500
+Message-ID: <20170710011715.r6xfjl43bhtpv57j@rob-hp-laptop>
+References: <1499235588-32219-1-git-send-email-anthony.kim@hideep.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1499235588-32219-1-git-send-email-anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anthony Kim <ktyrun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMDQsIDIwMTcgYXQgMDY6MzA6MDRQTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
-d3JvdGU6Cj4gVGhlIE9yaXNlIFRlY2ggT1RNODAwOUEgaXMgYSAzLjk3IiA0ODB4ODAwIFRGVCBM
-Q0QgcGFuZWwgY29ubmVjdGVkIHVzaW5nCj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0
-cyBiYWNrbGlnaHQgaXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+IC0tLQo+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3RtODAwOWEudHh0ICAgIHwgMjAg
-KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90
-bTgwMDlhLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4
-IDAwMDAwMDAuLjBiYjgyMzcKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dAo+
-IEBAIC0wLDAgKzEsMjAgQEAKPiArT3Jpc2UgVGVjaCBPVE04MDA5QSAzLjk3IiA0ODB4ODAwIFRG
-VCBMQ0QgcGFuZWwgKE1JUEktRFNJIHZpZGVvIG1vZGUpCj4gKwo+ICtUaGUgT3Jpc2UgVGVjaCBP
-VE04MDA5QSBpcyBhIDMuOTciIDQ4MHg4MDAgVEZUIExDRCBwYW5lbCBjb25uZWN0ZWQgdXNpbmcK
-PiArYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0cyBiYWNrbGlnaHQgaXMgbWFuYWdlZCB0
-aHJvdWdoIHRoZSBEU0kgbGluay4KPiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBj
-b21wYXRpYmxlOiAib3Jpc2V0ZWNoLG90bTgwMDlhIgo+ICsgIC0gcmVnOiB0aGUgdmlydHVhbCBj
-aGFubmVsIG51bWJlciBvZiBhIERTSSBwZXJpcGhlcmFsCj4gKyAgLSByZXNldC1ncGlvczogYSBH
-UElPIHNwZWMgZm9yIHRoZSByZXNldCBwaW4gKGFjdGl2ZSBsb3cpLiAoT3B0aW9uYWwpCgpJZiB0
-aGlzIGlzIG9wdGlvbmFsLCBtb3ZlIGl0IHRvIGl0cyBvd24gc2VjdGlvbi4KCj4gKwo+ICtFeGFt
-cGxlOgo+ICsmZHNpIHsKPiArCS4uLgo+ICsKPiArCXBhbmVsQDAgewo+ICsJCWNvbXBhdGlibGUg
-PSAib3Jpc2V0ZWNoLG90bTgwMDlhIjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJcmVzZXQtZ3Bpb3Mg
-PSA8JmdwaW9oIDcgMD47Cj4gKwl9Owo+ICt9Owo+IC0tIAo+IDEuOS4xCj4gCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jul 05, 2017 at 03:19:48PM +0900, Anthony Kim wrote:
+> The HiDeep touchscreen device is a capacitive multi-touch controller
+> mainly for multi-touch supported devices use. It use I2C interface for
+> communication to IC and provide axis X, Y, Z locations for ten finger
+> touch through input event interface to userspace.
+> 
+> It support the Crimson and the Lime two type IC. They are different
+> the number of channel supported and FW size. But the working protocol
+> is same.
+> 
+> Signed-off-by: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/hideep.txt          |   40 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  drivers/input/touchscreen/Kconfig                  |   32 +
+>  drivers/input/touchscreen/Makefile                 |    2 +
+>  drivers/input/touchscreen/hideep.h                 |  338 +++++++
+>  drivers/input/touchscreen/hideep_core.c            | 1029 ++++++++++++++++++++
+>  drivers/input/touchscreen/hideep_dbg.c             |  405 ++++++++
+>  drivers/input/touchscreen/hideep_dbg.h             |   24 +
+>  drivers/input/touchscreen/hideep_isp.c             |  584 +++++++++++
+>  drivers/input/touchscreen/hideep_isp.h             |   96 ++
+>  drivers/input/touchscreen/hideep_sysfs.c           |  249 +++++
+>  11 files changed, 2800 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+>  create mode 100644 drivers/input/touchscreen/hideep.h
+>  create mode 100644 drivers/input/touchscreen/hideep_core.c
+>  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
+>  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
+>  create mode 100644 drivers/input/touchscreen/hideep_isp.c
+>  create mode 100644 drivers/input/touchscreen/hideep_isp.h
+>  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/hideep.txt b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+> new file mode 100644
+> index 0000000..f5ab5e6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+> @@ -0,0 +1,40 @@
+> +* HiDeep Finger and Stylus touchscreen controller
+> +
+> +Required properties:
+> +- compatible		: must be "hideep,hideep_ts".
+
+s/_/-/
+
+Is there only 1 version or another way to determine the exact chip and 
+firmware? If not, then you need a more specific compatible.
+
+> +- reg			: I2C slave address, (e.g. 0x6C).
+> +- hideep,max_coords	: Max value for axis X, Y, W, Z.
+> +
+> +Optional properties:
+> +- pinctrl-names	: "reset_down", "reset-up", "intb-ctrl".
+> +				They are gpio pinctrl names for should be search in driver code.
+> +- pinctrl-0	: Gpio control for "reset-down".
+> +- pinctrl-1	: Gpio control for "reset-up".
+> +- pinctrl-2	: Gpio control for "intb-ctrl".
+> +- hideep,regulator_vdd	: Main voltage(3.3V) name.
+> +- hideep,regulator_vid	: IO voltage(1.8V) name.
+
+Use standard regulator binding.
+
+> +- hideep,irq_gpio		: Define for interrupt gpio pin.
+> +						It is to use for set interrupt type.
+
+Use interrupt binding.
+
+> +- hideep,reset_gpio		: Define for reset gpio pin.
+> +						It is to use for reset IC.
+
+reset-gpios is the standard name.
+
+> +
+> +Example:
+> +
+> +i2c@00000000 {
+> +
+> +	/* ... */
+> +
+> +	hideep@6c {
+
+touchscreen@6c
+
+> +		compatible = "hideep,hideep_ts";
+> +		reg = <0x6c>;
+> +		pinctrl-names = "reset-down", "reset-up", "intb-ctrl";
+> +		pinctrl-0 = <&reset_gpio0>;
+> +		pinctrl-1 = <&reset_gpio1>;
+> +		pinctrl-2 = <&touch_int>;
+> +		hideep,regulator_vdd = "vdd_ldo33";	// need modify
+> +		hideep,regulator_vid = "vdd_ldo18";	// need modify
+> +		hideep,irq_gpio = <&gpx0 5 0x0>;	// <gpio-name gpio-num gpio-val> need modify
+> +		hideep,reset_gpio = <&gpa0 5 0x1>;	// <gpio-name gpio-num gpio-val> need modify
+> +		hideep,max_coords = <1080 1920 65535 65535>;	// x y w z, need modify
+
+Not documented. Probably should be standard touchscreen properties.
+
+> +	};
+> +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
