@@ -1,30 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pwm-bcm2835: Increase pwm-cells
-Date: Mon, 10 Jul 2017 11:00:24 -0500
-Message-ID: <20170710160024.5uoplp7hzacereon@rob-hp-laptop>
-References: <1499508838-20715-1-git-send-email-stefan.wahren@i2se.com>
- <1499508838-20715-2-git-send-email-stefan.wahren@i2se.com>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 1/6] arm64: dts: renesas: ulcb: Enable I2C4
+Date: Mon, 10 Jul 2017 19:04:04 +0300
+Message-ID: <df0aacd3-7778-998e-f63c-3667553c3fe0@cogentembedded.com>
+References: <1499393396-11594-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <CAMuHMdVPNoCZz3fiqXOQ6Rx_jzAa4-rDAE9XD3jZH-mkZJmUhg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1499508838-20715-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVPNoCZz3fiqXOQ6Rx_jzAa4-rDAE9XD3jZH-mkZJmUhg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 08, 2017 at 12:13:57PM +0200, Stefan Wahren wrote:
-> We need to increase the pwm-cells for the optional flags parameter,
-> before we can implement support for polarity setting via DT.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-bcm2835.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Hi Geert,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thank you for review!
+
+On 10.07.2017 11:20, Geert Uytterhoeven wrote:
+> On Fri, Jul 7, 2017 at 4:09 AM, Vladimir Barinov
+> <vladimir.barinov@cogentembedded.com> wrote:
+>> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+>>
+>> This enables I2C4 for ULCB board
+>>
+>> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+>> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+>> @@ -189,6 +189,12 @@
+>>          };
+>>   };
+>>
+>> +&i2c4 {
+>> +       status = "okay";
+>> +
+>> +       clock-frequency = <400000>;
+> Is this a bus limitation, or a limitation for the VC6 that's added in a later
+> patch?
+Yes, IDT VC5 clock generator supports up to 400kHz.
+
+I've explicitly set 400kHz as default since the documentation says that 
+the default value is 100kHz if 'clock-frequency' not set:
+Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+
+Regards,
+Vladimir
