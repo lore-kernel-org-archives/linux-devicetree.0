@@ -1,63 +1,38 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v 1/2] ARM: dts: r8a7743: Add Ethernet AVB support
-Date: Mon, 10 Jul 2017 10:36:44 +0200
-Message-ID: <20170710083643.GG13680@verge.net.au>
-References: <1499433165-62475-1-git-send-email-biju.das@bp.renesas.com>
- <1499433165-62475-2-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWsM_FBJ46=U69XptqpyC2cJYx_cqczaHBNq2nxZr68GQ@mail.gmail.com>
- <20170710082350.GB13680@verge.net.au>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 5/5] arm64: dts: renesas: ulcb: Enable HDMI output
+Date: Mon, 10 Jul 2017 10:37:42 +0200
+Message-ID: <CAMuHMdWgun1e35xcO20vswnGNd9S05fwjxPujUcWv2V3syqUsg@mail.gmail.com>
+References: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1499395068-14412-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170710082350.GB13680@verge.net.au>
+In-Reply-To: <1499395068-14412-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <chris.paterson2@renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 10:23:51AM +0200, Simon Horman wrote:
-> On Mon, Jul 10, 2017 at 09:54:40AM +0200, Geert Uytterhoeven wrote:
-> > Hi Biju,
-> > 
-> > On Fri, Jul 7, 2017 at 3:12 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> > > Add Ethernet AVB support for r8a7743 SoC.
-> > >
-> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-> > 
-> > With the minor nit below fixed:
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > 
-> > > --- a/arch/arm/boot/dts/r8a7743.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> > > @@ -605,6 +605,19 @@
-> > >                         #size-cells = <0>;
-> > >                         status = "disabled";
-> > >                 };
-> > > +
-> > > +               avb: ethernet@e6800000 {
-> > > +                       compatible = "renesas,etheravb-r8a7743",
-> 
-> I do not see a patch to add "renesas,etheravb-r8a7743" to
-> Documentation/devicetree/bindings/net/renesas,ravb.txt
-> 
-> If you haven't already done so please post a patch to add this
-> once net-next re-opens.
+On Fri, Jul 7, 2017 at 4:37 AM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+>
+> Enable the HDMI encoder for ULCB board and hook it up to the HDMI connector.
+>
+> The HDMI encoder and connector are available on both the H3 and M3-W ULCB boards.
+> Add them to the ulcb.dtsi file.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
-I now see "ravb: Document binding for r8a7743 SoC"
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> 
-> > > +                                    "renesas,etheravb-rcar-gen2";
-> > > +                       reg = <0 0xe6800000 0 0x800>, <0 0xee0e8000 0 0x4000>;
-> > > +                       interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > s/0/GIC_SPI/
-> 
-> Thanks, I have applied this patch with the minor update above.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
