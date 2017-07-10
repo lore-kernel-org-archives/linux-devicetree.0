@@ -1,61 +1,33 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH v4 4/4] dt-bindings: media: Document Synopsys Designware
- HDMI RX
-Date: Mon, 10 Jul 2017 16:54:09 +0100
-Message-ID: <c38bba94-f050-5738-d955-a1d75aad333e@synopsys.com>
-References: <cover.1497978962.git.joabreu@synopsys.com>
- <8ebe3dfcd61a1c8cfa99102c376ad26b2bfbd254.1497978963.git.joabreu@synopsys.com>
- <20170623215814.ase6g4lbukaeqak2@rob-hp-laptop>
- <13f2516b-9e2b-4ad6-ecf1-76fc0d744a32@synopsys.com>
- <CAL_JsqKoW=VJ=QmLeztYJSnWEhq+KetsZY9xtoyOa8bf0BA=uw@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/6] irqchip: brcmstb-l2: Add support for the BCM7271 L2
+ controller
+Date: Mon, 10 Jul 2017 08:54:49 -0700
+Message-ID: <cdf386bc-84ad-392c-098f-fa1558cbcf1b@gmail.com>
+References: <20170707192016.13001-1-opendmb@gmail.com>
+ <20170707192016.13001-7-opendmb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKoW=VJ=QmLeztYJSnWEhq+KetsZY9xtoyOa8bf0BA=uw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Sylwester Nawrocki <snawrocki@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170707192016.13001-7-opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:IRQCHIP DRIVERS" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM BMIPS MIPS ARCHITECTURE" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 07/07/2017 12:20 PM, Doug Berger wrote:
+> Add the initialization of the generic irq chip for the BCM7271 L2
+> interrupt controller.  This controller only supports level
+> interrupts and uses the "brcm,bcm7271-l2-intc" compatibility
+> string.
+> 
+> Signed-off-by: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-
-On 10-07-2017 16:24, Rob Herring wrote:
-> On Mon, Jun 26, 2017 at 11:42 AM, Jose Abreu <Jose.Abreu@synopsys.com> wrote:
->> Hi Rob,
->>
->>
->> On 23-06-2017 22:58, Rob Herring wrote:
->>> On Tue, Jun 20, 2017 at 06:26:12PM +0100, Jose Abreu wrote:
->>>> Document the bindings for the Synopsys Designware HDMI RX.
->>>>
-> [...]
->
->>>> +A sample binding is now provided. The compatible string is for a SoC which has
->>>> +has a Synopsys Designware HDMI RX decoder inside.
->>>> +
->>>> +Example:
->>>> +
->>>> +dw_hdmi_soc: dw-hdmi-soc@0 {
->>>> +    compatible = "snps,dw-hdmi-soc";
->>> Not documented.
->> Yes, its a sample binding which reflects a wrapper driver that
->> shall instantiate the controller driver (and this wrapper driver
->> is not in this patch series), should I remove this?
-> Ah, I see. Please don't do this wrapper node like what was done on
-> DWC3. It should be all one node with the SoC specific part being a new
-> compatible string (and maybe additional properties). If there's really
-> some custom logic around the IP block, then maybe it makes sense, but
-> if it is just different clock connections, phys, resets, etc. those
-> don't need a separate node.
-
-Ok. I guess I can just drop the SoC specific bindings as this was
-more of a sample as how the EDID handle can be specified. I just
-sent v8 now with the new bindings :) Thanks!
-
-Best regards,
-Jose Miguel Abreu
-
->
-> Rob
+Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
