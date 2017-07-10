@@ -1,33 +1,140 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: cpufreq: move MediaTek cpufreq
- dt-bindings document to proper place
-Date: Mon, 10 Jul 2017 09:58:52 -0500
-Message-ID: <20170710145852.pwbpfrv2cyihy5kj@rob-hp-laptop>
-References: <cover.1499399121.git.sean.wang@mediatek.com>
- <77ada8e9c184b4a58463bfe0f2c8b0ef149d2845.1499399121.git.sean.wang@mediatek.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [v4, 2/2] drivers/watchdog: ASPEED reference dev tree properties
+ for config
+Date: Mon, 10 Jul 2017 10:00:53 -0500
+Message-ID: <6b397f06-9dde-6e8a-4c47-e210967d1db5@linux.vnet.ibm.com>
+References: <20170707004901.26780-3-cbostic@linux.vnet.ibm.com>
+ <20170708145530.GA3436@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <77ada8e9c184b4a58463bfe0f2c8b0ef149d2845.1499399121.git.sean.wang@mediatek.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: viresh.kumar@linaro.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170708145530.GA3436-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 07, 2017 at 11:56:46AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> The old place is Documentation/devicetree/bindings/clock/ that would
-> let people hard to find how to use MediaTek cpufreq driver, so moving
-> it to the appropriate place as other cpufreq drivers done would be
-> better.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  .../bindings/{clock/mt8173-cpu-dvfs.txt => cpufreq/cpufreq-mediatek.txt}  | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{clock/mt8173-cpu-dvfs.txt => cpufreq/cpufreq-mediatek.txt} (100%)
 
-Acked-by: Rob Herring <robh@kernel.org>
+
+On 7/8/17 9:55 AM, Guenter Roeck wrote:
+> On Thu, Jul 06, 2017 at 07:49:00PM -0500, Christopher Bostic wrote:
+>> Reference the system device tree when configuring the watchdog
+>> engines. If property 'aspeed,reset_type' is present then set
+>> reset behavior based on the specified value.  This can be one of
+>> three different mutually exclusive values
+>>    * cpu - Reset CPU only on watchdog timeout
+>>    * soc - Reset System on Chip
+>>    * system - Full system reset
+>>
+>> No reset can also be specified by indicating:
+>>    * none - No reset, assumes another watchdog is responsible for
+>>             this.
+>>
+>> Add optional property 'aspeed,external-signal'. If present then
+>> configure to generate external signal on watchdog timeout.
+>>
+>> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>> ---
+>> v4 - Change the three reset type parameters to a new property
+>>       'aspeed,reset_type' and check assignment for one of four
+>>       different values, cpu, soc, system, none
+>> v3 - Invert the logic for system reset dev tree property to
+>>       preserve backwards compatibility. If not specified the
+>>       default is to configure for system reset
+>>     - Add check for 'aspeed,no-soc-reset' property and only if
+>>       not present is SOC reset to be configured.  This preserves
+>>       backwards compatibility.
+>> v2 - Change of_get_property() to of_property_read_bool()
+>>     - Remove redundant check for NULL struct device_node pointer
+>>     - Optional property names now start with prefix 'aspeed,'
+>> ---
+>>   drivers/watchdog/aspeed_wdt.c | 27 ++++++++++++++++++++++-----
+>>   1 file changed, 22 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
+>> index 1c65258..3ca79565 100644
+>> --- a/drivers/watchdog/aspeed_wdt.c
+>> +++ b/drivers/watchdog/aspeed_wdt.c
+>> @@ -36,6 +36,7 @@ struct aspeed_wdt {
+>>   #define WDT_CTRL		0x0C
+>>   #define   WDT_CTRL_RESET_MODE_SOC	(0x00 << 5)
+>>   #define   WDT_CTRL_RESET_MODE_FULL_CHIP	(0x01 << 5)
+>> +#define   WDT_CTRL_RESET_MODE_ARM_CPU	(0x10 << 5)
+>>   #define   WDT_CTRL_1MHZ_CLK		BIT(4)
+>>   #define   WDT_CTRL_WDT_EXT		BIT(3)
+>>   #define   WDT_CTRL_WDT_INTR		BIT(2)
+>> @@ -140,6 +141,8 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>>   {
+>>   	struct aspeed_wdt *wdt;
+>>   	struct resource *res;
+>> +	struct device_node *np;
+>> +	const char *reset_type;
+>>   	int ret;
+>>   
+>>   	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>> @@ -164,14 +167,28 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
+>>   	wdt->wdd.timeout = WDT_DEFAULT_TIMEOUT;
+>>   	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
+>>   
+>> +	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
+>> +
+>>   	/*
+>>   	 * Control reset on a per-device basis to ensure the
+>> -	 * host is not affected by a BMC reboot, so only reset
+>> -	 * the SOC and not the full chip
+>> +	 * host is not affected by a BMC reboot
+>>   	 */
+>> -	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
+>> -		WDT_CTRL_1MHZ_CLK |
+>> -		WDT_CTRL_RESET_SYSTEM;
+>> +	np = pdev->dev.of_node;
+>> +	ret = of_property_read_string(np, "aspeed,reset-type", &reset_type);
+>> +	if (ret) {
+>> +		wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
+>> +	} else {
+>> +		if (!strcmp(reset_type, "cpu"))
+>> +			wdt->ctrl |= WDT_CTRL_RESET_MODE_ARM_CPU;
+>> +		else if (!strcmp(reset_type, "soc"))
+>> +			wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC;
+>> +		else if (!strcmp(reset_type, "system"))
+>> +			wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
+> This silently accepts 'aspeed,reset-type="junk"' as "none".
+> I think it would be better to explicitly check for "none".
+
+Will add that check.
+> Also, if I remember the datasheet correctly, bit 1 (WDT_CTRL_RESET_SYSTEM)
+> enables the reset in general, and bit 5/6 specify the reset type.
+> With that in mind, I don't think the above will work as expected.
+> I think it would have to be
+>
+> 	WDT_CTRL_RESET_MODE_FULL_CHIP | WDT_CTRL_RESET_SYSTEM
+> 	WDT_CTRL_RESET_MODE_SOC | WDT_CTRL_RESET_SYSTEM
+> 	WDT_CTRL_RESET_MODE_ARM_CPU | WDT_CTRL_RESET_SYSTEM
+>
+> To match the original code, the default should be
+>
+> 	WDT_CTRL_RESET_MODE_SOC | WDT_CTRL_RESET_SYSTEM
+
+Yes, true.  Will make the change in line above to match original code.
+
+>> +	}
+>> +	if (of_property_read_bool(np, "aspeed,external-signal"))
+>> +		wdt->ctrl |= WDT_CTRL_WDT_EXT;
+>> +
+> No plan to support the other new configuration flags ?
+
+No plan to support the other config flags at this time.
+
+Thanks,
+Chris
+>
+>> +	writel(wdt->ctrl, wdt->base + WDT_CTRL);
+>>   
+>>   	if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
+>>   		aspeed_wdt_start(&wdt->wdd);
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
