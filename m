@@ -1,56 +1,75 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH v2 0/3] of: overlay: load overlay symbols into live device tree
-Date: Mon, 10 Jul 2017 12:05:19 -0700
-Message-ID: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: frowand.list@gmail.com
+Subject: [PATCH v2 2/3] of: overlay: correctly apply overlay node with unit-address
+Date: Mon, 10 Jul 2017 12:05:21 -0700
+Message-ID: <1499713523-19184-3-git-send-email-frowand.list@gmail.com>
+References: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+From: Frank Rowand <frank.rowand@sony.com>
 
-Symbols in a loaded overlay are not currently available to subsequently
-loaded overlays because the properties in the overlay's __symbols__
-node are not loaded into the live device tree.
+Correct existing node name detection when overlay node name has
+a unit-address.
 
-Patch 1 is unittests to test patches 2 and 3.
+Expected test result is overlay will update the nodes and properties
+for /testcase-data-2/fairway-1/ride@100/ after the patch is applied.
 
-Patch 2 fixes a problem discovered while developing patch 3.  If
-a node name in an overlay has a unit-address then the overlay
-code does not correctly match the node name against an existing
-node in the live tree.
+Before this patch is applied:
 
-Patch 3 adds the properties in an overlay's __symbol__ node to
-the overlay changeset.
+   Console error message near end of unittest:
+      OF: Duplicate name in fairway-1, renamed to "ride@100#1"
 
-This patch set was created on top of v4.12, with Rob's pull request
-for 4.13 added (https://lkml.org/lkml/2017/7/6/691).  Thus this
-series should apply on 4.13-rc1 when that becomes available.  I will
-re-test on 4.13-rc1.
+   $ cd /proc/device-tree/testcase-data-2/fairway-1/
+   $ # extra node: ride@100#1
+   $ ls
+   #address-cells  linux,phandle   phandle         ride@200
+   #size-cells     name            ride@100        status
+   compatible      orientation     ride@100#1
+   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
+   $ ls track@3/incline_up
+   ls: track@3/incline_up: No such file or directory
+   $ ls track@4/incline_up
+   ls: track@4/incline_up: No such file or directory
 
-changes since v1:
-  - patch 2: Use for_each_child_of_node() instead of open coding,
-    which allowed removing the new function child_by_full_name().
+After this patch is applied:
 
-Frank Rowand (3):
-  of: overlay: add overlay unittest data for node names and symbols
-  of: overlay: correctly apply overlay node with unit-address
-  of: overlay: add overlay symbols to live device tree
+   Console error message no longer occurs
 
- drivers/of/overlay.c                            | 121 ++++++++++++++++++++++--
- drivers/of/unittest-data/Makefile               |   3 +
- drivers/of/unittest-data/overlay.dts            |  19 +++-
- drivers/of/unittest-data/overlay_bad_symbol.dts |  22 +++++
- drivers/of/unittest-data/overlay_base.dts       |   7 ++
- drivers/of/unittest.c                           |   6 ++
- 6 files changed, 167 insertions(+), 11 deletions(-)
- create mode 100644 drivers/of/unittest-data/overlay_bad_symbol.dts
+   $ cd /proc/device-tree/testcase-data-2/fairway-1/
+   $ # no extra node: ride@100#1
+   $ ls
+   #address-cells  compatible      name            phandle         ride@200
+   #size-cells     linux,phandle   orientation     ride@100        status
+   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
+   $ ls track@3/incline_up
+   track@3/incline_up
+   $ ls track@4/incline_up
+   track@4/incline_up
 
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
+ drivers/of/overlay.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index c0e4ee1cd1ba..bd3c32f2d411 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -130,7 +130,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+ 		return -ENOMEM;
+ 
+ 	/* NOTE: Multiple mods of created nodes not supported */
+-	tchild = of_get_child_by_name(target, cname);
++	for_each_child_of_node(target, tchild)
++		if (!of_node_cmp(cname, kbasename(tchild->full_name)))
++			break;
++
+ 	if (tchild != NULL) {
+ 		/* new overlay phandle value conflicts with existing value */
+ 		if (child->phandle)
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frank Rowand <frank.rowand@sony.com>
