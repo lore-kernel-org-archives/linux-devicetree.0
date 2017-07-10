@@ -1,108 +1,64 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
- Remote Processor Controller driver
-Date: Mon, 10 Jul 2017 15:14:08 -0700
-Message-ID: <20170710221408.GD1618@tuxbook>
-References: <20170710144220.31594-1-o.rempel@pengutronix.de>
- <20170710144220.31594-2-o.rempel@pengutronix.de>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v4,3/3] mwifiex: Enable WoWLAN for both sdio and pcie
+Date: Mon, 10 Jul 2017 15:31:40 -0700
+Message-ID: <20170710223138.GA145502@google.com>
+References: <1479216964-3328-3-git-send-email-akarwar@marvell.com>
+ <595A207D.3000804@rock-chips.com>
+ <20170707005302.GA17921@google.com>
+ <595EFA40.1080405@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170710144220.31594-2-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <595EFA40.1080405-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
+To: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Amitkumar Karwar <akarwar-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Cathy Luo <cluo-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nishant Sarmukadam <nishants-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, rajatja-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 10 Jul 07:42 PDT 2017, Oleksij Rempel wrote:
++ linux-pci
+- linux-wireless
 
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+On Fri, Jul 07, 2017 at 11:04:32AM +0800, Jeffy Chen wrote:
+> On 07/07/2017 08:53 AM, Brian Norris wrote:
+> >It kind of seems like we inadvertently conflicted with the PCI OF
+> >interrupt spec [1]. There, the "interrupts" property for a device (if
+> >present) is supposed to represent INT{A...D} with values of {1...4}.
+> >IIUC, there should only be a single entry in this property.
+> >
+> >If we were to extend this properly, I guess that would mean we'd need a
+> >second "interrupts" entry, with a different parent. I think we can use
+> >"interrupts-extended" for that.
+> >
+> >So we'd need to document an optional "interrupt-names" for Marvell, and
+> >have the driver try that first. The rough outline would be something
+> >like this.
+> >
+> >For the device tree (e.g., rk3399-gru):
+> >
+> >-			interrupt-parent = <&gpio0>;
+> >-			interrupts = <8 IRQ_TYPE_LEVEL_LOW>;
+> >+			interrupts-extended = <&pcie0 1>, <&gpio0 8 IRQ_TYPE_LEVEL_LOW>;
+> >+			interrupt-names = "int-A", "wake";
+> This is a great idea.
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> new file mode 100644
-> index 000000000000..e7c61993e1b8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> @@ -0,0 +1,44 @@
-> +NXP iMX6SX/iMX7D Co-Processor Bindings
-> +----------------------------------------
-> +
-> +This binding provides support for ARM Cortex M4 Co-processor found on some
-> +NXP iMX SoCs.
-> +
-> +Required properties:
-> +- compatible		Should be one of:
-> +				"fsl,imx7d-rproc"
-> +				"fsl,imx6sx-rproc"
-> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-> +- syscfg		Phandle to syscon block which provide access to
+> And how about also add a property to tell of_pci_irq to ignore of
+> irq and force using PCI_INTERRUPT_PIN? Since there might be devices
+> don't use pci irq, but using other irq(wowlan for example).
 
-This is called "syscon" in the code and the example.
+Even if they don't use the PCI IRQ, is there a way to provide an empty /
+un-mapped entry?
 
-> +			System Reset Controller
-> +
-> +Optional properties:
-> +- reg:			Should contain the address ranges for some of internal
-> +			memory regions.
+I'm a little wary on trying to "extend" (which can sometimes be read
+"break") the device tree spec here too much more. But perhaps DT or PCI
+folks have a better recommendation (if they can hold their noses long
+enough).
 
-Something less hand-wavy, like: "Should list the memory regions for the
-remoteproc"
+> Then we can specify this property and add a name("wake") to the wifi
+> wake irq here. And interrupts-extended would still be an available
+> option.
 
-> +- reg-names:		Contains the corresponding names for the memory
-> +			regions. These should be named "ddr", "ocram", "ocram-s",
-> +			"ocram-epdc" or "ocram-pxp".
-
-Make this comment define which memory regions are required for each of
-the systems.
-
-> +Fallowing memory ranges are expected:
-> +- For "fsl,imx7d-rproc"
-> +	<0x00900000 0x00020000> - "ocram"
-> +	<0x00920000 0x00020000> - "ocram-epdc"
-> +	<0x00940000 0x00008000> - "ocram-pxp"
-> +	<0x80000000 0x0FFF0000> - "ddr" (code area)
-> +	<0x80000000 0x60000000> - "ddr" (data area)
-
-There's no reason to list the actual regions in the binding
-document. Just list the requires regions for each system.
-
-> +- For "fsl,imx6sx-rproc"
-> +	<0x008F8000 0x00004000> - "ocram-s"
-> +	<0x80000000 0x0FFF8000> - "ddr" (code area)
-> +	<0x80000000 0x60000000> - "ddr" (data area)
-> +
-> +Note: the "ddr" code and data ranges are overlapping. Code area is smaller
-> +than data area.  So this range should be carefully chosen according to your
-> +system and application requirements.
-> +
-
-This is a source of future issues as this indicates that I should have
-reg-names list "ddr" twice.
-
-Also, as you warn about the user needing to pick the values for "ddr",
-does that mean that it's a carveout of System RAM?
-
-> +Example:
-> +	imx_rproc: imx7d-rp0@0 {
-
-imx7d-rproc@80000000 {
-
-And there's currently no reason to label this node.
-
-> +		compatible	= "fsl,imx7d-rproc";
-> +		reg		= <0x80000000 0x80000>, <0x00900000 0x2000>;
-> +		reg-names	= "ddr", "ocram";
-> +		syscon		= <&src>;
-> +		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
-> +	};
-
-Regards,
-Bjorn
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
