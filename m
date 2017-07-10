@@ -1,34 +1,33 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v4 2/3] dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to proper place
-Date: Mon, 10 Jul 2017 22:23:09 +0800
-Message-ID: <ff9b099839f5a83ef45771dd4fc5d72b7b807f1c.1499692967.git.sean.wang@mediatek.com>
-References: <cover.1499692967.git.sean.wang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation/devicetree: fix dead links to PCI/OF specs
+Date: Mon, 10 Jul 2017 09:33:13 -0500
+Message-ID: <20170710143313.xfa7ezbgj67clkt3@rob-hp-laptop>
+References: <20170707004323.22550-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1499692967.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170707004323.22550-1-briannorris@chromium.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On Thu, Jul 06, 2017 at 05:43:23PM -0700, Brian Norris wrote:
+> www.firmware.org doesn't resolve for me. I found these equivalent URLs
+> by taking the redirects from the previous (openfirmware.org) URLs, as
+> seen before commit f517256a6867 ("Documentation/devicetree: Update PCI
+> Device Tree bindings") updated them.
+> 
+> Signed-off-by: Brian Norris <briannorris@chromium.org>
+> ---
+> This is my best attempt at a resolution. I'm not sure what firmware.org is or
+> if its owner is even legit. It does seem like openfirmware.info is a proper
+> successor to openfirmware.org, and it's registered to a coreboot dev.
 
-The old place is Documentation/devicetree/bindings/clock/ that would
-let people hard to find how to use MediaTek cpufreq driver, so moving
-it to the appropriate place as other cpufreq drivers done would be
-better.
+This site doesn't seem to be complete. There was still a complete mirror 
+(matching playground.sun.com) at one point, but I can't seem to find it 
+now. Fortunately, I had archived off the whole mirror with the intention 
+of putting it on devicetree.org. Let me get moving on that.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../bindings/{clock/mt8173-cpu-dvfs.txt => cpufreq/cpufreq-mediatek.txt}  | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/{clock/mt8173-cpu-dvfs.txt => cpufreq/cpufreq-mediatek.txt} (100%)
-
-diff --git a/Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
-rename to Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
--- 
-2.7.4
+Rob
