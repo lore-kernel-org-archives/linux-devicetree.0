@@ -1,32 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: cpufreq: enhance MediaTek cpufreq
- dt-binding document
-Date: Mon, 10 Jul 2017 10:02:38 -0500
-Message-ID: <20170710150238.aie46rtl4anadofg@rob-hp-laptop>
-References: <cover.1499399121.git.sean.wang@mediatek.com>
- <74cfd6007e87f0fcca401b31be17dbf98808d001.1499399121.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 5/6] [media] dt-bindings: gpio-ir-tx: add support for
+ GPIO IR Transmitter
+Date: Mon, 10 Jul 2017 10:05:38 -0500
+Message-ID: <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
+References: <cover.1499419624.git.sean@mess.org>
+ <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <74cfd6007e87f0fcca401b31be17dbf98808d001.1499399121.git.sean.wang@mediatek.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: viresh.kumar@linaro.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 07, 2017 at 11:56:47AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Fri, Jul 07, 2017 at 10:52:03AM +0100, Sean Young wrote:
+> Document the device tree bindings for the GPIO Bit Banging IR
+> Transmitter.
 > 
-> Update binding document with adding operating-points-v2 as the required
-> property and the cooling level as the optional properties and adding more
-> examples guiding people how to use MediaTek cpufreq driver for MediaTek
-> SoCs.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Sean Young <sean@mess.org>
 > ---
->  .../bindings/cpufreq/cpufreq-mediatek.txt          | 170 ++++++++++++++++++++-
->  1 file changed, 167 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> new file mode 100644
+> index 0000000..bc08d89
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> @@ -0,0 +1,11 @@
+> +Device tree bindings for IR LED connected through gpio pin which is used as
+> +remote controller transmitter.
+> +
+> +Required properties:
+> +	- compatible: should be "gpio-ir-tx".
 
-Acked-by: Rob Herring <robh@kernel.org>
+As I mentioned in the prior version, missing the "gpios" property.
+
+> +
+> +Example:
+> +	irled@0 {
+> +		compatible = "gpio-ir-tx";
+> +		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +	};
+> -- 
+> 2.9.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
