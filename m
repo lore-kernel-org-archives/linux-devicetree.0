@@ -1,40 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: i2c: eeprom: document "mac-offset"
- binding
-Date: Sun, 9 Jul 2017 22:46:13 -0500
-Message-ID: <20170710034613.fc4vj6h22kagce24@rob-hp-laptop>
-References: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
- <1499336217-16913-4-git-send-email-claudiu.beznea@microchip.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
+ bindings
+Date: Sun, 9 Jul 2017 22:50:31 -0500
+Message-ID: <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
+References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
+ <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499336217-16913-4-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com
+In-Reply-To: <1499336663-23875-4-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 01:16:57PM +0300, Claudiu Beznea wrote:
-> Document "mac-offset" binding that will be used by at24 EEPROM driver.
+On Thu, Jul 06, 2017 at 12:24:23PM +0200, Neil Armstrong wrote:
+> On the first revision of the bindings, only the gates + resets were known
+> in the AO Clock HW, but more registers used to configures AO clock are known
+> to be spread among the AO register space.
+> This patch adds these registers to the Ao Clock bindings with direct access
+> and shared extcon access.
 > 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-> index a50dc01..3dd267c 100644
-> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
-> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-> @@ -35,10 +35,13 @@ Optional properties:
->  
->    - read-only: this parameterless property disables writes to the eeprom
->  
-> +  - mac-offset: offset in EEPROM where MAC address starts
-> +
+>  .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt         | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 
-This doesn't scale if you have multiple things you need the offset to, 
-and we already have a binding for this. Use the nvmem binding.
+This looks like the binding might be too specific with a reg list of 
+single registers, and you should define a system controller node 
+instead. Depends on what else is in the "A0" block.
 
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
