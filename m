@@ -1,70 +1,66 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D Remote Processor Controller driver
-Date: Mon, 10 Jul 2017 16:42:19 +0200
-Message-ID: <20170710144220.31594-2-o.rempel@pengutronix.de>
-References: <20170710144220.31594-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170710144220.31594-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org, linux@rempel-privat.de
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v1 0/2] provide imx rproc driver
+Date: Mon, 10 Jul 2017 16:42:18 +0200
+Message-ID: <20170710144220.31594-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- .../devicetree/bindings/remoteproc/imx-rproc.txt   | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+this patch set to provide remoteproc functionality on
+i.MX7D SoC.
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-new file mode 100644
-index 000000000000..e7c61993e1b8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-@@ -0,0 +1,44 @@
-+NXP iMX6SX/iMX7D Co-Processor Bindings
-+----------------------------------------
-+
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+NXP iMX SoCs.
-+
-+Required properties:
-+- compatible		Should be one of:
-+				"fsl,imx7d-rproc"
-+				"fsl,imx6sx-rproc"
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+- syscfg		Phandle to syscon block which provide access to
-+			System Reset Controller
-+
-+Optional properties:
-+- reg:			Should contain the address ranges for some of internal
-+			memory regions.
-+- reg-names:		Contains the corresponding names for the memory
-+			regions. These should be named "ddr", "ocram", "ocram-s",
-+			"ocram-epdc" or "ocram-pxp".
-+Fallowing memory ranges are expected:
-+- For "fsl,imx7d-rproc"
-+	<0x00900000 0x00020000> - "ocram"
-+	<0x00920000 0x00020000> - "ocram-epdc"
-+	<0x00940000 0x00008000> - "ocram-pxp"
-+	<0x80000000 0x0FFF0000> - "ddr" (code area)
-+	<0x80000000 0x60000000> - "ddr" (data area)
-+- For "fsl,imx6sx-rproc"
-+	<0x008F8000 0x00004000> - "ocram-s"
-+	<0x80000000 0x0FFF8000> - "ddr" (code area)
-+	<0x80000000 0x60000000> - "ddr" (data area)
-+
-+Note: the "ddr" code and data ranges are overlapping. Code area is smaller
-+than data area.  So this range should be carefully chosen according to your
-+system and application requirements.
-+
-+Example:
-+	imx_rproc: imx7d-rp0@0 {
-+		compatible	= "fsl,imx7d-rproc";
-+		reg		= <0x80000000 0x80000>, <0x00900000 0x2000>;
-+		reg-names	= "ddr", "ocram";
-+		syscon		= <&src>;
-+		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
-+	};
+For testing I used this simple counter written in ASM:
+======================================
+        .syntax unified
+        .text
+        .thumb
+        .int 0x10020000                 @ Initial SP value
+        .int reset + 1
+
+reset:
+
+        mov     r0, #0x55
+        ldr     r1, =(0x40)
+1:
+        str     r0, [r1]
+        add     r0, 1
+        b       1b
+
+        /* Dummy data, required by remoteproc loader */
+        /* Please FIXME, this part seem to be incorrect */
+        .data
+        .section .resource_table, "aw"
+        .word   1, 0, 0, 0      /* struct resource_table base */
+        .word   0               /* uint32_t offset[1] */
+============================================================
+compiled with:
+${CROSS}as -o imx7m4.o imx7m4.S
+${CROSS}ld -Ttext=0x0 -o imx7m4.elf imx7m4.o
+cp imx7m4.elf /srv/nfs/sid-armhf/lib/firmware/rproc-imx_rproc-fw
+
+Functionality was confirmed with current OpenOCD master.
+OpenOCD cfg file can be found here:
+https://github.com/olerem/openocd/blob/imx7-2017.06.14/tcl/target/imx7.cfg
+
+Oleksij Rempel (2):
+  remoteproc: dt: Provide bindings for iMX6SX/7D Remote Processor
+    Controller driver
+  remoteproc: imx_rproc: add a NXP/Freescale imx_rproc driver
+
+ .../devicetree/bindings/remoteproc/imx-rproc.txt   |  44 +++
+ drivers/remoteproc/Kconfig                         |  10 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/imx_rproc.c                     | 417 +++++++++++++++++++++
+ 4 files changed, 472 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+ create mode 100644 drivers/remoteproc/imx_rproc.c
+
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
