@@ -1,50 +1,109 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: Re: [PATCH 1/6] arm64: dts: renesas: ulcb: Enable I2C4
-Date: Mon, 10 Jul 2017 19:04:04 +0300
-Message-ID: <df0aacd3-7778-998e-f63c-3667553c3fe0@cogentembedded.com>
-References: <1499393396-11594-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdVPNoCZz3fiqXOQ6Rx_jzAa4-rDAE9XD3jZH-mkZJmUhg@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/3] of: overlay: correctly apply overlay node with unit-address
+Date: Mon, 10 Jul 2017 11:08:42 -0500
+Message-ID: <CAL_JsqKLVX-nNiVcuxiZdpUa8LvQsX37XwpfVfO9r7oCw8woiA@mail.gmail.com>
+References: <1499473725-13361-1-git-send-email-frowand.list@gmail.com> <1499473725-13361-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVPNoCZz3fiqXOQ6Rx_jzAa4-rDAE9XD3jZH-mkZJmUhg@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499473725-13361-3-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for review!
-
-On 10.07.2017 11:20, Geert Uytterhoeven wrote:
-> On Fri, Jul 7, 2017 at 4:09 AM, Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com> wrote:
->> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
->>
->> This enables I2C4 for ULCB board
->>
->> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Jul 7, 2017 at 7:28 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 >
->> --- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
->> @@ -189,6 +189,12 @@
->>          };
->>   };
->>
->> +&i2c4 {
->> +       status = "okay";
->> +
->> +       clock-frequency = <400000>;
-> Is this a bus limitation, or a limitation for the VC6 that's added in a later
-> patch?
-Yes, IDT VC5 clock generator supports up to 400kHz.
+> Correct existing node name detection when overlay node name has
+> a unit-address.
+>
+> Expected test result is overlay will update the nodes and properties
+> for /testcase-data-2/fairway-1/ride@100/ after the patch is applied.
+>
+> Before this patch is applied:
+>
+>    Console error message near end of unittest:
+>       OF: Duplicate name in fairway-1, renamed to "ride@100#1"
+>
+>    $ cd /proc/device-tree/testcase-data-2/fairway-1/
+>    $ # extra node: ride@100#1
+>    $ ls
+>    #address-cells  linux,phandle   phandle         ride@200
+>    #size-cells     name            ride@100        status
+>    compatible      orientation     ride@100#1
+>    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
+>    $ ls track@3/incline_up
+>    ls: track@3/incline_up: No such file or directory
+>    $ ls track@4/incline_up
+>    ls: track@4/incline_up: No such file or directory
+>
+> After this patch is applied:
+>
+>    Console error message no longer occurs
+>
+>    $ cd /proc/device-tree/testcase-data-2/fairway-1/
+>    $ # no extra node: ride@100#1
+>    $ ls
+>    #address-cells  compatible      name            phandle         ride@200
+>    #size-cells     linux,phandle   orientation     ride@100        status
+>    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
+>    $ ls track@3/incline_up
+>    track@3/incline_up
+>    $ ls track@4/incline_up
+>    track@4/incline_up
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
+>  drivers/of/overlay.c | 20 +++++++++++++++++++-
+>  1 file changed, 19 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index c0e4ee1cd1ba..30aef51eeee5 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -118,6 +118,24 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+>         return of_changeset_update_property(&ov->cset, target, propn);
+>  }
+>
+> +static struct device_node *child_by_full_name(const struct device_node *np,
 
-I've explicitly set 400kHz as default since the documentation says that 
-the default value is 100kHz if 'clock-frequency' not set:
-Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+It's not really the full name which currently means the whole path (my
+full_name work is going to change that), but the unit_name (at least
+that's what dtc calls it).
 
-Regards,
-Vladimir
+> +               const char *cname)
+> +{
+> +       struct device_node *child;
+> +       struct device_node *prev;
+> +
+> +       child = np->child;
+> +       while (child) {
+
+Doesn't for_each_child_of_node() work here?
+
+> +               of_node_get(child);
+> +               if (!of_node_cmp(cname, kbasename(child->full_name)))
+> +                       break;
+> +               prev = child;
+> +               child = child->sibling;
+> +               of_node_put(prev);
+> +       }
+> +       return child;
+> +}
+> +
+>  static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+>                 struct device_node *target, struct device_node *child)
+>  {
+> @@ -130,7 +148,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+>                 return -ENOMEM;
+>
+>         /* NOTE: Multiple mods of created nodes not supported */
+> -       tchild = of_get_child_by_name(target, cname);
+> +       tchild = child_by_full_name(target, cname);
+>         if (tchild != NULL) {
+>                 /* new overlay phandle value conflicts with existing value */
+>                 if (child->phandle)
+> --
+> Frank Rowand <frank.rowand@sony.com>
+>
