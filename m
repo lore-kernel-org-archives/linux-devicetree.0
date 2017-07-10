@@ -1,43 +1,36 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/5] arm64: dts: renesas: ulcb: Enable HDMI
-Date: Mon, 10 Jul 2017 11:21:17 +0200
-Message-ID: <20170710092117.GO13680@verge.net.au>
-References: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W
+ HDMI TX DT bindings
+Date: Mon, 10 Jul 2017 11:25:31 +0200
+Message-ID: <20170710092531.GA15635@verge.net.au>
+References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1499394976-14201-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
 Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 07, 2017 at 05:36:16AM +0300, Vladimir Barinov wrote:
-> Hello,
+On Mon, Jun 26, 2017 at 10:56:42AM -0500, Rob Herring wrote:
+> On Wed, Jun 21, 2017 at 12:31:27PM +0300, Laurent Pinchart wrote:
+> > The M3-W HDMI TX controller seems to be compatible for the H3. No
+> > extension to the DT bindings are needed, add an SoC-specific compatible
+> > string in case differences between the IP versions are found later and
+> > require model-specific handling.
+> > 
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > ---
+> >  Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt | 1 +
+> >  1 file changed, 1 insertion(+)
 > 
-> This patch series enables HDMI support for the H3 and M3-W based ULCB boards
-> 
-> This has the following dependency:
-> - [PATCH v2 series] R-Car Salvator-X M3-W: Enable DU support
-> - [PATCH] arm64: dts: renesas: ulcb: Enable I2C4
-> - [PATCH] clk: vc5: Add support for IDT VersaClock 5P49V5925
+> Acked-by: Rob Herring <robh@kernel.org>
 
-I am holding off on applying these pending the first dependency above.
+Applied for v4.14.
 
-> 
-> Vladimir Barinov (5):
-> [1/5] arm64: dts: renesas: ulcb: Add DU external dot clock sources
-> [2/5] arm64: dts: renesas: r8a7795-h3ulcb: Add DU external dot clocks
-> [3/5] arm64: dts: renesas: r8a7796-m3ulcb: Add DU external dot clocks
-> [4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
-> [5/5] arm64: dts: renesas: ulcb: Enable HDMI output
-> 
-> ---
-> This patchset is against the 'kernel/git/horms/renesas.git' repo.
-> 
->  r8a7795-h3ulcb.dts |   14 ++++++++++++++
->  r8a7796-m3ulcb.dts |   12 ++++++++++++
->  ulcb.dtsi          |   42 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 68 insertions(+)
-> 
+I am not applying the dts changes for now pending resolution of the
+potential bisection problem in patch 4 which I pointed out in response to that patch.
