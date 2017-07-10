@@ -1,250 +1,160 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v4 3/3] dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
-Date: Mon, 10 Jul 2017 22:23:10 +0800
-Message-ID: <8489dfbfc7ad8f849605709b1632f1835f075a33.1499692967.git.sean.wang@mediatek.com>
-References: <cover.1499692967.git.sean.wang@mediatek.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] gpio/serial: revert "linux,first-pin" property handling
+Date: Mon, 10 Jul 2017 16:23:40 +0200
+Message-ID: <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
+References: <20170710140902.21935-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1499692967.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170710140902.21935-1-linus.walleij@linaro.org>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On 2017-07-10 16:09, Linus Walleij wrote:
+> This is not a legal device tree property, because its binding has
+> not been reviewed and approved, nor does it exist in any device
+> tree binding document.
+> 
+> It is further wrong, because it is added to the GPIO offset which
+> is by definition controller-local.
+> 
+> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> This got in because I was stressed and was not paying attention.
+> Sorry about not noticing earlier, but I usually strongly nix any
+> such properties, please discuss this on the device tree list
+> first.
+> ---
+>  drivers/gpio/gpio-exar.c            | 25 +++++++++----------------
+>  drivers/tty/serial/8250/8250_exar.c |  2 --
+>  2 files changed, 9 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+> index fb8d304cfa17..d02c5260525f 100644
+> --- a/drivers/gpio/gpio-exar.c
+> +++ b/drivers/gpio/gpio-exar.c
+> @@ -31,7 +31,6 @@ struct exar_gpio_chip {
+>  	int index;
+>  	void __iomem *regs;
+>  	char name[20];
+> -	unsigned int first_pin;
+>  };
+>  
+>  static void exar_update(struct gpio_chip *chip, unsigned int reg, int val,
+> @@ -53,9 +52,9 @@ static int exar_set_direction(struct gpio_chip *chip, int direction,
+>  			      unsigned int offset)
+>  {
+>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+> +	unsigned int addr = offset / 8 ?
+>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
+> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+> +	unsigned int bit  = offset % 8;
+>  
+>  	exar_update(chip, addr, direction, bit);
+>  	return 0;
+> @@ -76,9 +75,9 @@ static int exar_get(struct gpio_chip *chip, unsigned int reg)
+>  static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+>  {
+>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+> +	unsigned int addr = offset / 8 ?
+>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
+> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+> +	unsigned int bit  = offset % 8;
+>  
+>  	return !!(exar_get(chip, addr) & BIT(bit));
+>  }
+> @@ -86,9 +85,9 @@ static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+>  static int exar_get_value(struct gpio_chip *chip, unsigned int offset)
+>  {
+>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+> +	unsigned int addr = offset / 8 ?
+>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
+> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+> +	unsigned int bit  = offset % 8;
+>  
+>  	return !!(exar_get(chip, addr) & BIT(bit));
+>  }
+> @@ -97,9 +96,9 @@ static void exar_set_value(struct gpio_chip *chip, unsigned int offset,
+>  			   int value)
+>  {
+>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+> +	unsigned int addr = offset / 8 ?
+>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
+> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+> +	unsigned int bit  = offset % 8;
+>  
+>  	exar_update(chip, addr, value, bit);
+>  }
+> @@ -120,7 +119,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>  {
+>  	struct pci_dev *pcidev = to_pci_dev(pdev->dev.parent);
+>  	struct exar_gpio_chip *exar_gpio;
+> -	u32 first_pin, ngpios;
+> +	u32 ngpios;
+>  	void __iomem *p;
+>  	int index, ret;
+>  
+> @@ -132,11 +131,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>  	if (!p)
+>  		return -ENOMEM;
+>  
+> -	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
+> -				       &first_pin);
+> -	if (ret)
+> -		return ret;
+> -
+>  	ret = device_property_read_u32(&pdev->dev, "ngpios", &ngpios);
+>  	if (ret)
+>  		return ret;
+> @@ -161,7 +155,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>  	exar_gpio->gpio_chip.ngpio = ngpios;
+>  	exar_gpio->regs = p;
+>  	exar_gpio->index = index;
+> -	exar_gpio->first_pin = first_pin;
+>  
+>  	ret = devm_gpiochip_add_data(&pdev->dev,
+>  				     &exar_gpio->gpio_chip, exar_gpio);
+> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+> index b5c98e5bf524..4fb3a4ed4a1f 100644
+> --- a/drivers/tty/serial/8250/8250_exar.c
+> +++ b/drivers/tty/serial/8250/8250_exar.c
+> @@ -261,7 +261,6 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
+>  }
+>  
+>  static const struct property_entry exar_gpio_properties[] = {
+> -	PROPERTY_ENTRY_U32("linux,first-pin", 0),
+>  	PROPERTY_ENTRY_U32("ngpios", 16),
+>  	{ }
+>  };
+> @@ -326,7 +325,6 @@ static int iot2040_rs485_config(struct uart_port *port,
+>  }
+>  
+>  static const struct property_entry iot2040_gpio_properties[] = {
+> -	PROPERTY_ENTRY_U32("linux,first-pin", 10),
+>  	PROPERTY_ENTRY_U32("ngpios", 1),
+>  	{ }
+>  };
+> 
 
-Update binding document with adding operating-points-v2 as the required
-property and the cooling level as the optional properties and adding more
-examples guiding people how to use MediaTek cpufreq driver for MediaTek
-SoCs.
+Sorry for the mess, I didn't know the proper process in details.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../bindings/cpufreq/cpufreq-mediatek.txt          | 170 ++++++++++++++++++++-
- 1 file changed, 167 insertions(+), 3 deletions(-)
+However, just reverting breaks the IOT2000, need to check if there are
+even physical risks. How can we quickly resolve this to proper mechanism?
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-index 52b457c..f640308 100644
---- a/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
-@@ -1,4 +1,5 @@
--Device Tree Clock bindins for CPU DVFS of Mediatek MT8173 SoC
-+Binding for MediaTek's CPUFreq driver
-+=====================================
- 
- Required properties:
- - clocks: A list of phandle + clock-specifier pairs for the clocks listed in clock names.
-@@ -9,6 +10,8 @@ Required properties:
- 			  transition and not stable yet.
- 	Please refer to Documentation/devicetree/bindings/clk/clock-bindings.txt for
- 	generic clock consumer properties.
-+- operating-points-v2: Please refer to Documentation/devicetree/bindings/opp/opp.txt
-+	for detail.
- - proc-supply: Regulator for Vproc of CPU cluster.
- 
- Optional properties:
-@@ -17,9 +20,166 @@ Optional properties:
- 	       Vsram to fit SoC specific needs. When absent, the voltage scaling
- 	       flow is handled by hardware, hence no software "voltage tracking" is
- 	       needed.
-+- #cooling-cells:
-+- cooling-min-level:
-+- cooling-max-level:
-+	Please refer to Documentation/devicetree/bindings/thermal/thermal.txt
-+	for detail.
-+
-+Example 1 (MT7623 SoC):
-+
-+	cpu_opp_table: opp_table {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-598000000 {
-+			opp-hz = /bits/ 64 <598000000>;
-+			opp-microvolt = <1050000>;
-+		};
-+
-+		opp-747500000 {
-+			opp-hz = /bits/ 64 <747500000>;
-+			opp-microvolt = <1050000>;
-+		};
-+
-+		opp-1040000000 {
-+			opp-hz = /bits/ 64 <1040000000>;
-+			opp-microvolt = <1150000>;
-+		};
-+
-+		opp-1196000000 {
-+			opp-hz = /bits/ 64 <1196000000>;
-+			opp-microvolt = <1200000>;
-+		};
-+
-+		opp-1300000000 {
-+			opp-hz = /bits/ 64 <1300000000>;
-+			opp-microvolt = <1300000>;
-+		};
-+	};
-+
-+	cpu0: cpu@0 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a7";
-+		reg = <0x0>;
-+		clocks = <&infracfg CLK_INFRA_CPUSEL>,
-+			 <&apmixedsys CLK_APMIXED_MAINPLL>;
-+		clock-names = "cpu", "intermediate";
-+		operating-points-v2 = <&cpu_opp_table>;
-+		#cooling-cells = <2>;
-+		cooling-min-level = <0>;
-+		cooling-max-level = <7>;
-+	};
-+	cpu@1 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a7";
-+		reg = <0x1>;
-+		operating-points-v2 = <&cpu_opp_table>;
-+	};
-+	cpu@2 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a7";
-+		reg = <0x2>;
-+		operating-points-v2 = <&cpu_opp_table>;
-+	};
-+	cpu@3 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a7";
-+		reg = <0x3>;
-+		operating-points-v2 = <&cpu_opp_table>;
-+	};
-+
-+Example 2 (MT8173 SoC):
-+	cpu_opp_table_a: opp_table_a {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-507000000 {
-+			opp-hz = /bits/ 64 <507000000>;
-+			opp-microvolt = <859000>;
-+		};
-+
-+		opp-702000000 {
-+			opp-hz = /bits/ 64 <702000000>;
-+			opp-microvolt = <908000>;
-+		};
-+
-+		opp-1001000000 {
-+			opp-hz = /bits/ 64 <1001000000>;
-+			opp-microvolt = <983000>;
-+		};
-+
-+		opp-1105000000 {
-+			opp-hz = /bits/ 64 <1105000000>;
-+			opp-microvolt = <1009000>;
-+		};
-+
-+		opp-1183000000 {
-+			opp-hz = /bits/ 64 <1183000000>;
-+			opp-microvolt = <1028000>;
-+		};
-+
-+		opp-1404000000 {
-+			opp-hz = /bits/ 64 <1404000000>;
-+			opp-microvolt = <1083000>;
-+		};
-+
-+		opp-1508000000 {
-+			opp-hz = /bits/ 64 <1508000000>;
-+			opp-microvolt = <1109000>;
-+		};
-+
-+		opp-1573000000 {
-+			opp-hz = /bits/ 64 <1573000000>;
-+			opp-microvolt = <1125000>;
-+		};
-+	};
-+
-+	cpu_opp_table_b: opp_table_b {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		opp-507000000 {
-+			opp-hz = /bits/ 64 <507000000>;
-+			opp-microvolt = <828000>;
-+		};
-+
-+		opp-702000000 {
-+			opp-hz = /bits/ 64 <702000000>;
-+			opp-microvolt = <867000>;
-+		};
-+
-+		opp-1001000000 {
-+			opp-hz = /bits/ 64 <1001000000>;
-+			opp-microvolt = <927000>;
-+		};
-+
-+		opp-1209000000 {
-+			opp-hz = /bits/ 64 <1209000000>;
-+			opp-microvolt = <968000>;
-+		};
-+
-+		opp-1404000000 {
-+			opp-hz = /bits/ 64 <1007000000>;
-+			opp-microvolt = <1028000>;
-+		};
-+
-+		opp-1612000000 {
-+			opp-hz = /bits/ 64 <1612000000>;
-+			opp-microvolt = <1049000>;
-+		};
-+
-+		opp-1807000000 {
-+			opp-hz = /bits/ 64 <1807000000>;
-+			opp-microvolt = <1089000>;
-+		};
-+
-+		opp-1989000000 {
-+			opp-hz = /bits/ 64 <1989000000>;
-+			opp-microvolt = <1125000>;
-+		};
-+	};
- 
--Example:
----------
- 	cpu0: cpu@0 {
- 		device_type = "cpu";
- 		compatible = "arm,cortex-a53";
-@@ -29,6 +189,7 @@ Example:
- 		clocks = <&infracfg CLK_INFRA_CA53SEL>,
- 			 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 		clock-names = "cpu", "intermediate";
-+		operating-points-v2 = <&cpu_opp_table_a>;
- 	};
- 
- 	cpu1: cpu@1 {
-@@ -40,6 +201,7 @@ Example:
- 		clocks = <&infracfg CLK_INFRA_CA53SEL>,
- 			 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 		clock-names = "cpu", "intermediate";
-+		operating-points-v2 = <&cpu_opp_table_a>;
- 	};
- 
- 	cpu2: cpu@100 {
-@@ -51,6 +213,7 @@ Example:
- 		clocks = <&infracfg CLK_INFRA_CA57SEL>,
- 			 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 		clock-names = "cpu", "intermediate";
-+		operating-points-v2 = <&cpu_opp_table_b>;
- 	};
- 
- 	cpu3: cpu@101 {
-@@ -62,6 +225,7 @@ Example:
- 		clocks = <&infracfg CLK_INFRA_CA57SEL>,
- 			 <&apmixedsys CLK_APMIXED_MAINPLL>;
- 		clock-names = "cpu", "intermediate";
-+		operating-points-v2 = <&cpu_opp_table_b>;
- 	};
- 
- 	&cpu0 {
+Jan
+
 -- 
-2.7.4
+Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+Corporate Competence Center Embedded Linux
