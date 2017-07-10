@@ -1,58 +1,33 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v2 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
-Date: Mon, 10 Jul 2017 10:01:36 +0200
-Message-ID: <1499673696-21372-3-git-send-email-narmstrong@baylibre.com>
-References: <1499673696-21372-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1499673696-21372-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-media-owner@vger.kernel.org
-To: mchehab@kernel.org, hans.verkuil@cisco.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v 2/2] ARM: dts: iwg20d-q7: Add Ethernet AVB support
+Date: Mon, 10 Jul 2017 10:03:52 +0200
+Message-ID: <CAMuHMdUwf+pvQ9Gat4wWuahhgmHV-Q2RHCxJDEGXJ_r4Jay8Nw@mail.gmail.com>
+References: <1499433165-62475-1-git-send-email-biju.das@bp.renesas.com> <1499433165-62475-3-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499433165-62475-3-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
-device bindings.
+On Fri, Jul 7, 2017 at 3:12 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Define the iWave RainboW-G20D-Qseven board dependent part of the Ethernet
+> AVB device node.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-new file mode 100644
-index 0000000..8671bdb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-@@ -0,0 +1,28 @@
-+* Amlogic Meson AO-CEC driver
-+
-+The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
-+to handle communication between HDMI connected devices over the CEC bus.
-+
-+Required properties:
-+  - compatible : value should be following
-+	"amlogic,meson-gx-ao-cec"
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : AO-CEC interrupt number to the CPU.
-+  - clocks : from common clock binding: handle to AO-CEC clock.
-+  - clock-names : from common clock binding: must contain "core",
-+		  corresponding to entry in the clocks property.
-+  - hdmi-phandle: phandle to the HDMI controller
-+
-+Example:
-+
-+cec_AO: cec@100 {
-+	compatible = "amlogic,meson-gx-ao-cec";
-+	reg = <0x0 0x00100 0x0 0x14>;
-+	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
-+	clock-names = "core";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
--- 
-1.9.1
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
