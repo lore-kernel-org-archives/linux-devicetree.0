@@ -1,78 +1,61 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/9] ARM: renesas: Use SMP jump stub SRAM region from DT
-Date: Mon, 10 Jul 2017 11:31:32 +0200
-Message-ID: <20170710093132.GQ13680@verge.net.au>
-References: <1499182903-31339-1-git-send-email-geert+renesas@glider.be>
- <CAMuHMdUFkaxoJCX5F3FH3vy=Sh50y02a3hF9HR3tkw-XwtiG2g@mail.gmail.com>
- <20170710083926.GI13680@verge.net.au>
- <CAMuHMdVi4YhvpEZqbdhVe3AT=8_2Yp8zvaB7sxAPMdMGrvKa9Q@mail.gmail.com>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v1 2/3] dt-bindings: display: panel: Add support for Orise
+ Tech otm8009a dsi panel
+Date: Mon, 10 Jul 2017 09:34:24 +0000
+Message-ID: <4f628366-d365-c55f-c26a-282f0678d147@st.com>
+References: <1499185805-23354-1-git-send-email-philippe.cornu@st.com>
+ <1499185805-23354-3-git-send-email-philippe.cornu@st.com>
+ <20170710011211.b6inrhlqmkph3otl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdVi4YhvpEZqbdhVe3AT=8_2Yp8zvaB7sxAPMdMGrvKa9Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170710011211.b6inrhlqmkph3otl@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <B0A9F91AAB41634698ACAE878DE619CC@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Yannick FERTRE <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 10:44:47AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Mon, Jul 10, 2017 at 10:39 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Tue, Jul 04, 2017 at 06:44:48PM +0200, Geert Uytterhoeven wrote:
-> >> On Tue, Jul 4, 2017 at 5:41 PM, Geert Uytterhoeven
-> >> <geert+renesas@glider.be> wrote:
-> >> > The R-Car Gen2 platform code for CPU core bringup needs to copy a jump
-> >> > stub to on-SoC SRAM.  Currently it uses a hardcoded address pointing to
-> >> > ICRAM1.
-> >> >
-> >> > This patch series adds support to specify this region from DT.  It
-> >> > consists of 3 parts:
-> >> >   - DT binding documentation for reserving SRAM for the jump stub,
-> >> >   - A platform code update to retrieve the information from DT, if
-> >> >     present (of course backwards-compatibility with old DTBs is
-> >> >     preserved),
-> >> >   - DT updates to reserve an SRAM region in DT on all R-Car Gen2 and
-> >> >     RZ/G1 SoCs.
-> >> >
-> >> > The DT patches in this series depend on "[PATCH 0/7] ARM: dts: renesas:
-> >> > Add Inter Connect RAM".
-> >> >
-> >> > Note that the current jump stub in Linux is 12 bytes long.  The patches
-> >> > reserve 16 bytes of SRAM.  Should this be increased?  The mapping
-> >> > granularity is PAGE_SIZE anyway.
-> >> >
-> >> > Thanks for your comments!
-> >> >
-> >> > Geert Uytterhoeven (9):
-> >> >   dt-bindings: sram: Document renesas,smp-sram
-> >> >   ARM: shmobile: rcar-gen2: Obtain jump stub region from DT
-> >> >   ARM: dts: r8a7743: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7745: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7790: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7791: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7792: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7793: Reserve SRAM for the SMP jump stub
-> >> >   ARM: dts: r8a7794: Reserve SRAM for the SMP jump stub
-> >>
-> >> Forgot to mention: this has been tested on r8a7790/lager, r8a7791/koelsch,
-> >> r8a7792/blanche, r8a7793/gose, and r8a7794/alt (r8a7794 needs an
-> >> unrelated fix to enable SMP).
-> >
-> > Geert, these seem nice and clean to me.
-> > Are they ready to be applied?
-> 
-> Now the binding has been Acked by Rob, I think they are.
-> Thanks!
-
-Thanks, all patches accepted for v4.14.
+DQoNCk9uIDA3LzEwLzIwMTcgMDM6MTIgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUs
+IEp1bCAwNCwgMjAxNyBhdCAwNjozMDowNFBNICswMjAwLCBQaGlsaXBwZSBDT1JOVSB3cm90ZToN
+Cj4+IFRoZSBPcmlzZSBUZWNoIE9UTTgwMDlBIGlzIGEgMy45NyIgNDgweDgwMCBURlQgTENEIHBh
+bmVsIGNvbm5lY3RlZCB1c2luZw0KPj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0cyBi
+YWNrbGlnaHQgaXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4NCj4+DQo+PiBTaWduZWQt
+b2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPg0KPj4gLS0tDQo+
+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQgICAg
+fCAyMCArKysrKysrKysrKysrKysrKysrKw0KPj4gICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0
+aW9ucygrKQ0KPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPj4NCj4+IGRp
+ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9vcmlzZXRlY2gsb3RtODAwOWEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvcGFuZWwvb3Jpc2V0ZWNoLG90bTgwMDlhLnR4dA0KPj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAwMDAuLjBiYjgyMzcNCj4+IC0tLSAvZGV2L251bGwNCj4+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29y
+aXNldGVjaCxvdG04MDA5YS50eHQNCj4+IEBAIC0wLDAgKzEsMjAgQEANCj4+ICtPcmlzZSBUZWNo
+IE9UTTgwMDlBIDMuOTciIDQ4MHg4MDAgVEZUIExDRCBwYW5lbCAoTUlQSS1EU0kgdmlkZW8gbW9k
+ZSkNCj4+ICsNCj4+ICtUaGUgT3Jpc2UgVGVjaCBPVE04MDA5QSBpcyBhIDMuOTciIDQ4MHg4MDAg
+VEZUIExDRCBwYW5lbCBjb25uZWN0ZWQgdXNpbmcNCj4+ICthIE1JUEktRFNJIHZpZGVvIGludGVy
+ZmFjZS4gSXRzIGJhY2tsaWdodCBpcyBtYW5hZ2VkIHRocm91Z2ggdGhlIERTSSBsaW5rLg0KPj4g
+Kw0KPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiArICAtIGNvbXBhdGlibGU6ICJvcmlzZXRl
+Y2gsb3RtODAwOWEiDQo+PiArICAtIHJlZzogdGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIgb2Yg
+YSBEU0kgcGVyaXBoZXJhbA0KPj4gKyAgLSByZXNldC1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRo
+ZSByZXNldCBwaW4gKGFjdGl2ZSBsb3cpLiAoT3B0aW9uYWwpDQo+IA0KPiBJZiB0aGlzIGlzIG9w
+dGlvbmFsLCBtb3ZlIGl0IHRvIGl0cyBvd24gc2VjdGlvbi4NCj4gDQoNCkRlYXIgUm9iLA0KTWFu
+eSB0aGFua3MgZm9yIHlvdXIgY29tbWVudC4gRml4ZWQgaW4gdjIsIHNlbnQgZmV3IG1pbnV0ZXMg
+YWdvLg0KQmVzdCByZWdhcmRzLA0KUGhpbGlwcGUNCg0KPj4gKw0KPj4gK0V4YW1wbGU6DQo+PiAr
+JmRzaSB7DQo+PiArCS4uLg0KPj4gKw0KPj4gKwlwYW5lbEAwIHsNCj4+ICsJCWNvbXBhdGlibGUg
+PSAib3Jpc2V0ZWNoLG90bTgwMDlhIjsNCj4+ICsJCXJlZyA9IDwwPjsNCj4+ICsJCXJlc2V0LWdw
+aW9zID0gPCZncGlvaCA3IDA+Ow0KPj4gKwl9Ow0KPj4gK307DQo+PiAtLSANCj4+IDEuOS4xDQo+
+PgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
