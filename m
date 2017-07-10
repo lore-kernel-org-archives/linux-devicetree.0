@@ -1,165 +1,95 @@
-From: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] memory: ti-emif-sram: introduce relocatable
- suspend/resume handlers
-Date: Mon, 10 Jul 2017 13:31:55 +0200
-Message-ID: <20170710113155.GH29638@localhost>
-References: <20170519175708.6070-1-d-gerlach@ti.com>
- <20170519175708.6070-3-d-gerlach@ti.com>
- <20170703161716.GA27842@localhost>
- <577c4595-74b4-c10d-2dbf-07b58e87a263@ti.com>
+From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] libfdt.h: Define FDT_PATH_MAX
+Date: Mon, 10 Jul 2017 07:36:16 -0400
+Message-ID: <20170710113616.GR22707@bill-the-cat>
+References: <1497451908-15367-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <20170614150522.GE2614@umbus>
+ <1497468241.28265.22.camel@hp800z>
+ <20170710044358.GA4083@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="O24KMDZ/7NA1I1FI"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <577c4595-74b4-c10d-2dbf-07b58e87a263-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170710044358.GA4083-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Keerthy J <j-keerthy-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 01:59:08PM -0500, Dave Gerlach wrote:
-> On 07/03/2017 11:17 AM, Johan Hovold wrote:
-> > On Fri, May 19, 2017 at 12:57:08PM -0500, Dave Gerlach wrote:
-> >> Certain SoCs like Texas Instruments AM335x and AM437x require parts
-> >> of the EMIF PM code to run late in the suspend sequence from SRAM,
-> >> such as saving and restoring the EMIF context and placing the memory
-> >> into self-refresh.
-> >>
-> >> One requirement for these SoCs to suspend and enter its lowest power
-> >> mode, called DeepSleep0, is that the PER power domain must be shut off.
-> >> Because the EMIF (DDR Controller) resides within this power domain, it
-> >> will lose context during a suspend operation, so we must save it so we
-> >> can restore once we resume. However, we cannot execute this code from
-> >> external memory, as it is not available at this point, so the code must
-> >> be executed late in the suspend path from SRAM.
-> >>
-> >> This patch introduces a ti-emif-sram driver that includes several
-> >> functions written in ARM ASM that are relocatable so the PM SRAM
-> >> code can use them. It also allocates a region of writable SRAM to
-> >> be used by the code running in the executable region of SRAM to save
-> >> and restore the EMIF context. It can export a table containing the
-> >> absolute addresses of the available PM functions so that other SRAM
-> >> code can branch to them. This code is required for suspend/resume on
-> >> AM335x and AM437x to work.
-> > 
-> > Thanks for pushing this forward, Dave. 
-> > 
-> > I did a quick review of this one and found a few issues.
-> > 
-> >> +static phys_addr_t ti_emif_sram_phys, ti_emif_sram_data_phys;
-> >> +static unsigned long ti_emif_sram_virt, ti_emif_sram_data_virt;
-> >> +static struct gen_pool *sram_pool_code, *sram_pool_data;
-> >> +static struct ti_emif_pm_data pm_data;
-> >> +static struct ti_emif_pm_functions pm_functions;
-> > 
-> > Should these not be driver private data rather than static as you also
-> > are tying (and need to tie) this into the device model?
-> > 
-> > Sure there might never be two of these devices in practise, but in
-> > theory there could be. A proper device abstraction would probably allow
-> > for a cleaner implementation and help with some of the dependency issues
-> > (more below).
-> > 
-> 
-> Well, I would say that at this point the hardware is well defined and there is
-> no case where we would have two instances of this. Allowing two instances of
-> this code would also unnecessarily complicate the assembly portions because of
-> the absolute SRAM memory addresses that some of the variables are stored in.
 
-Sure, but there's currently nothing preventing you from defining another
-node with the same compatible string which would overwrite that static
-data when probed, nor is anything preventing the driver from being
-unbound (and the sram-allocation from being released and possibly
-repurposed).
+--O24KMDZ/7NA1I1FI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >> +/**
-> >> + * ti_emif_copy_pm_function_table - copy mapping of pm funcs in sram
-> >> + * @sram_pool: pointer to struct gen_pool where dst resides
-> >> + * @dst: void * to address that table should be copied
-> >> + *
-> >> + * Returns 0 if success other error code if table is not available
-> >> + */
-> >> +int ti_emif_copy_pm_function_table(struct gen_pool *sram_pool, void *dst)
-> >> +{
-> >> +	void *copy_addr;
-> >> +
-> >> +	if (!ti_emif_sram_virt)
-> >> +		return -EINVAL;
-> >> +
-> >> +	copy_addr = sram_exec_copy(sram_pool, dst, &pm_functions,
-> >> +				   sizeof(pm_functions));
-> >> +	if (!copy_addr)
-> >> +		return -ENODEV;
-> >> +
-> >> +	return 0;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(ti_emif_copy_pm_function_table);
-> > 
-> > This is fragile as nothing guarantees that the pm_functions have been
-> > setup (ti_emif_sram_virt might still be non-NULL after a probe error).
-> > The driver can also have been unloaded (and then pm_functions is gone).
-> > 
-> > It seems you need to create a device link between your pm33xx device
-> > (consumer) and the ti-emif-pm device (supplier) to prevent the latter
-> > from going away (possibly after never having been fully initialised).
-> > 
-> 
-> After a probe error ti-emif-pm will not be loaded, and because of this, pm33xx
-> cannot load because it depends on ti-emif-pm directly. Furthermore, we call
-> these exported symbols directly from pm33xx so as long as pm33xx is loaded
-> ti-emif-pm cannot be unloaded.
+On Mon, Jul 10, 2017 at 02:43:58PM +1000, David Gibson wrote:
+> On Wed, Jun 14, 2017 at 10:24:01PM +0300, Pantelis Antoniou wrote:
+> > Hi David,
+> >=20
+> > On Wed, 2017-06-14 at 23:05 +0800, David Gibson wrote:
+> > > On Wed, Jun 14, 2017 at 05:51:48PM +0300, Pantelis Antoniou wrote:
+> > > > Declare the maximum path size of an FDT node.
+> > > > It is useful for manipulation methods that need to know a maximum v=
+alue.
+> > > >=20
+> > > > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> > >=20
+> > > Why do you need this.  I've really tried to avoid adding arbitrary
+> > > size limits on things.
+> > >=20
+> >=20
+> > The stacked overlay patch needs it; has to 'read' in a path into a
+> > buffer and manipulate it. Otherwise it I would have to add a new method
+> > that walks the path and returns the size of it so that I can allocate
+> > the exact amount. This seems excessive IMO compared to a hard max limit.
+> >=20
+> > It is similar to the way PATH_MAX works in *nix which makes things
+> > somewhat familiar.
+>=20
+> This is not necessary.  As noted elsewhere, I'm not really convinced
+> of the need of the stacked overlay application patch at all.
 
-The drivers (modules) can always be loaded, but the pm33xx driver
-*might* fail to bind after a failed probe of the ti-emif-pm driver. With
-the current code it is however possible that such a failed probe leaves
-the pm_data.ti_emif_base_addr_virt set to an address which is no longer
-mapped (or ti_emif_sram_virt pointing to memory that's been freed).
+How would you suggest handling the case of N baseboards and M add-on
+boards?  Creating a single overlay for each of the valid combinations of
+M is very unappealing and is one of those long-term support nightmares
+(change out the LCD panel part? Time to re-create those M combinations
+again).
 
-> The link between pm33xx and ti-emif-pm is already there because we call some
-> functions in ti-emif-pm directly.
+> But even
+> if we took that approach I can see fairly straightforward ways to
+> eliminate the need for a PATH_MAX (removing the arbitrary limit with
+> it).
 
-Yes, you're right that the emif driver module cannot be unloaded due to
-those calls, but nothing is preventing the driver from being unbound
-from the emif device (e.g. through sysfs).
+Can you suggest some of those approaches so we can try them out then?
+Thanks!
 
-So what is missing is a link expressing the dependency between the
-devices, which would prevent the supplier driver from being unbound.
-We've only recently gained support for modelling such dependencies, and
-it may not be worth using it in this case (as least as long as we do not
-allow parallel probes), but the failed probe case at least needs to be
-handled.
+--=20
+Tom
 
-> >> +
-> >> +/**
-> >> + * ti_emif_get_mem_type - return type for memory type in use
-> >> + *
-> >> + * Returns memory type value read from EMIF or error code if fails
-> >> + */
-> >> +int ti_emif_get_mem_type(void)
-> >> +{
-> >> +	unsigned long temp;
-> >> +
-> >> +	if (!pm_data.ti_emif_base_addr_virt ||
-> >> +	    IS_ERR(pm_data.ti_emif_base_addr_virt))
-> >> +		return -ENODEV;
-> >> +
-> >> +	temp = readl(pm_data.ti_emif_base_addr_virt +
-> >> +		     EMIF_SDRAM_CONFIG);
-> >> +
-> >> +	temp = (temp & SDRAM_TYPE_MASK) >> SDRAM_TYPE_SHIFT;
-> >> +	return temp;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(ti_emif_get_mem_type);
-> > 
-> > Similar problem with this one (even if you do catch one possible probe
-> > error with the IS_ERR()).
-> 
-> Yes I will look closer at the error handling. Probably need to clear
-> ti_emif_base_addr_virt on a defer.
+--O24KMDZ/7NA1I1FI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Right.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Johan
+iQIcBAEBAgAGBQJZY2awAAoJEIf59jXTHXZS9gkQAJ1xSRJohGb16C2nl4ON8XuL
+kt5s7Uc1A/+zKws11pXqr6EIhJHe/YuHlTUpLSIx9PN+Cfmck5la+6aQfec9Hvhb
+/JveaCGGiv5nykIS28F/0Me6gb7CkQXpdLB3fmGz2xufWyWhhJqQ6+eVjbqvo5Cl
+MI9VPrZNWx4I9OHQWKnkaXaOHWX+eXaEK6J5gRzUlk/skJrAUevqqaWfhkWgNSx6
+S4aJTbm2a2NdXlWfIEv+TxYVTdbFX/f1b8VQLaf0iLnD8XJojZ6yEdfH/Cn3ekRk
+myV0WrWDio3KWdf/6fnM5vQxwR4OgOOLGAMpSvbHl3Ov1gD4p9jtT8PORRr/nCXT
+KFXa6bvYl6eKF25XNI8S1urfzNm8xmNRb+SWrB8Z48K9SVDbIPai8sk213CaphCh
+9pRoEot6d3m+Dsm871Asd2uBdI76pX+dVYtMLNzI7xqMsN1Z7qibEXJ1D+uxs5dg
+2gRukH+ZlK3LGL2LBGHi1IW3KW9r1Qc8+IkzXVXEFBTwhhIbGNxaT1F/PY/mMh9n
+ptSu7O4kalqsrZ33QAwuV4ry7rC/YVYqAnBBQHu9fMhxRA515LTJYMoRfQ65pTaE
+tgHQEWLzCzwg1p7P49mWoHSq4DedSSXGrmHZ2uwpppLCNaqbiaQehwt/Cjio+StK
+Erjt+tafpwrfzx+shKez
+=0Doe
+-----END PGP SIGNATURE-----
+
+--O24KMDZ/7NA1I1FI--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
