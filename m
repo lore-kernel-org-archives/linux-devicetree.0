@@ -1,47 +1,62 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/2] pwm: bcm2835: Support for polarity setting via DT
-Date: Mon, 10 Jul 2017 09:56:06 -0700
-Message-ID: <87pod8qli1.fsf@eliezer.anholt.net>
-References: <1499508838-20715-1-git-send-email-stefan.wahren@i2se.com> <1499508838-20715-3-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1499508838-20715-3-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 0/2] ZII RAVE platform driver
+Date: Mon, 10 Jul 2017 10:04:47 -0700
+Message-ID: <20170710170449.4544-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi everyone,
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+This patch series is a driver for supervisory processor found on RAVE
+series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
 
-> This adds support for the third (optional) pwm cell to specify the
-> polarity, which is needed by display backlights for example.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+I originally submitted this driver to MFD sybsystemd[mfdv1], but it
+was suggested I add this driver to platform tree instead.
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+I suspect "bindings/mfd" is not the right place for bindings
+information, but I wasn't sure if I should create "bindings/platform"
+or "bindings/rave" to place that file into, so I left things as they
+originally were hoping to fix this in next version of the patchset.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+NOTE:
 
------BEGIN PGP SIGNATURE-----
+ * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+   submitted it yet, becuase I wanted to make sure that API exposed by
+   this MFD is acceptable and doesn't need drastic changes.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlljsacACgkQtdYpNtH8
-nuhDLw//aK5O/fh5yOw6QwCfVAxsAfp2VuDBCMh05eRZwSG2rHwAWvcIdlzsoXde
-FtpQEKRI0iMB/v04P2UG90CFSUZuMJ7Jw98+Pj0Kl5jFmtPnwFBKv+iSi9dwUu68
-aWeh4vY5uFKatYHu9o8t1beMoq4aLK4kK7SovHTvJP0LTxteyC6Jzue/3J2b2Fxd
-7HSN+MuJVlbRNCmZhgriSuLkO4jxkwYZ40JTbTXuK5dy4tNTrrtHVDrt1N1Z7RDz
-i13PzwB6COFOsYjtBw/q6NfK8jHHfY6auGk8w0A5B/GnGndjqJ5vNi5xKugPcJYm
-/W3UTjIheEBBDP9fMnta4RY7JxBuI0kxYINkwq8rR0/Mt/aqHhrJXsMUVhINexA7
-mmDd4HWwFTcMFCsxaFX8L/zeq7h7OS5FyQIwHbMob+RidyHWXseY5oX7ZDVgKjB6
-IfPYJMF2r7IfEOccRlfclCBf0iGzPSn73GvxFPspQdeq8MEw2SlmPKW3fBktdPXL
-3gMfCF8WsBgYCZEUuo7qu09SM+IWoMAHr5OZfzcqsgpyLZEHSHGk5D9Gn4R4LFxs
-w9DUmbjF56VBHZqKkss9N7p+WW4ab5zsf3pS9v+9wJGQE32phZLHqGG/Dz/4Pnfg
-fQ73fnZXxgKGy/OgsUqFFbPHlkhgfVoZPxfaxOcT3732kYGj09I=
-=pzNG
------END PGP SIGNATURE-----
---=-=-=--
+ * This driver is dependent on crc_ccitt_false() introduced in
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+
+Feedback is greatly appreciated!
+
+Thanks,
+Andrey Smirnov
+
+[mfdv1] lkml.kernel.org/r/20170606180643.14258-1-andrew.smirnov@gmail.com
+
+Andrey Smirnov (2):
+  platform: Add driver for RAVE Supervisory Processor
+  dt-bindings: mfd: Add bindings for ZII RAVE devices
+
+ .../devicetree/bindings/mfd/zii,rave-sp.txt        |   40 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/platform/Kconfig                           |    2 +
+ drivers/platform/Makefile                          |    1 +
+ drivers/platform/rave/Kconfig                      |   26 +
+ drivers/platform/rave/Makefile                     |    1 +
+ drivers/platform/rave/rave-sp.c                    | 1083 ++++++++++++++++++++
+ include/linux/rave-sp.h                            |   54 +
+ 8 files changed, 1208 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+ create mode 100644 drivers/platform/rave/Kconfig
+ create mode 100644 drivers/platform/rave/Makefile
+ create mode 100644 drivers/platform/rave/rave-sp.c
+ create mode 100644 include/linux/rave-sp.h
+
+-- 
+2.9.4
