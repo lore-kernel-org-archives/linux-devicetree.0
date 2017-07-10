@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v2 1/3] of: overlay: add overlay unittest data for node names and symbols
-Date: Mon, 10 Jul 2017 12:05:20 -0700
-Message-ID: <1499713523-19184-2-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v2 3/3] of: overlay: add overlay symbols to live device tree
+Date: Mon, 10 Jul 2017 12:05:22 -0700
+Message-ID: <1499713523-19184-4-git-send-email-frowand.list@gmail.com>
 References: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
@@ -12,52 +12,14 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Add nodes and properties to overlay_base and overlay dts files to
-test for
-   - incorrect existing node name detection when overlay node name
-     has a unit-address
-   - adding overlay __symbols__ properties to live tree when an
-     overlay is added to the live tree
+Add overlay __symbols__ properties to live tree when an overlay
+is added to the live tree so that the symbols are available to
+subsequent overlays.
 
-Expected result from patch 2/3 is overlay will update the nodes and
-properties for /testcase-data-2/fairway-1/ride@100/
+Expected test result is new __symbols__ entries for labels from
+the overlay after the patch is applied.
 
-Before patch 2/3 is applied:
-
-   Console error message near end of unittest:
-      OF: Duplicate name in fairway-1, renamed to "ride@100#1"
-
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/
-   $ # extra node: ride@100#1
-   $ ls
-   #address-cells  linux,phandle   phandle         ride@200
-   #size-cells     name            ride@100        status
-   compatible      orientation     ride@100#1
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
-   $ ls track@3/incline_up
-   ls: track@3/incline_up: No such file or directory
-   $ ls track@4/incline_up
-   ls: track@4/incline_up: No such file or directory
-
-After patch 2/3 is applied:
-
-   Console error message no longer occurs
-
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/
-   $ # no extra node: ride@100#1
-   $ ls
-   #address-cells  compatible      name            phandle         ride@200
-   #size-cells     linux,phandle   orientation     ride@100        status
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
-   $ ls track@3/incline_up
-   track@3/incline_up
-   $ ls track@4/incline_up
-   track@4/incline_up
-
-Expected result from patch 3/3 is new __symbols__ entries for labels
-from the overlay _after_ the add overlay symbols patch is also applied.
-
-Before patch 3/3 is applied:
+Before this patch is applied:
 
    Console error message near end of unittest:
       ### dt-test ### FAIL of_unittest_overlay_high_level():2296 Adding overlay 'overlay_bad_symbol' failed
@@ -79,7 +41,7 @@ Before patch 3/3 is applied:
    electric_1   lights_1     name         rides_1      spin_ctrl_2
    hvac_1       lights_2     retail_1     spin_ctrl_1
 
-After patch 3/3 is applied:
+After this patch is applied:
 
    Previous console error message no longer occurs, but expected error
    occurs:
@@ -108,151 +70,213 @@ After patch 3/3 is applied:
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/unittest-data/Makefile               |  3 +++
- drivers/of/unittest-data/overlay.dts            | 19 ++++++++++++++++++-
- drivers/of/unittest-data/overlay_bad_symbol.dts | 22 ++++++++++++++++++++++
- drivers/of/unittest-data/overlay_base.dts       |  7 +++++++
- drivers/of/unittest.c                           |  6 ++++++
- 5 files changed, 56 insertions(+), 1 deletion(-)
- create mode 100644 drivers/of/unittest-data/overlay_bad_symbol.dts
+ drivers/of/overlay.c | 116 +++++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 107 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-index 6e00a9c69e58..dae2fe23cd2e 100644
---- a/drivers/of/unittest-data/Makefile
-+++ b/drivers/of/unittest-data/Makefile
-@@ -1,11 +1,13 @@
- obj-y += testcases.dtb.o
- obj-y += overlay.dtb.o
- obj-y += overlay_bad_phandle.dtb.o
-+obj-y += overlay_bad_symbol.dtb.o
- obj-y += overlay_base.dtb.o
- 
- targets += testcases.dtb testcases.dtb.S
- targets += overlay.dtb overlay.dtb.S
- targets += overlay_bad_phandle.dtb overlay_bad_phandle.dtb.S
-+targets += overlay_bad_symbol.dtb overlay_bad_symbol.dtb.S
- targets += overlay_base.dtb overlay_base.dtb.S
- 
- .PRECIOUS: \
-@@ -15,4 +17,5 @@ targets += overlay_base.dtb overlay_base.dtb.S
- # enable creation of __symbols__ node
- DTC_FLAGS_overlay := -@
- DTC_FLAGS_overlay_bad_phandle := -@
-+DTC_FLAGS_overlay_bad_symbol := -@
- DTC_FLAGS_overlay_base := -@
-diff --git a/drivers/of/unittest-data/overlay.dts b/drivers/of/unittest-data/overlay.dts
-index 6cd7e6a0c13e..81140adbe770 100644
---- a/drivers/of/unittest-data/overlay.dts
-+++ b/drivers/of/unittest-data/overlay.dts
-@@ -25,7 +25,18 @@
- 			#size-cells = <1>;
- 			status = "ok";
- 
--			ride@200 {
-+			ride@100 {
-+
-+				track@3 {
-+					incline_up = < 48 32 16 >;
-+				};
-+
-+				track@4 {
-+					incline_up = < 47 31 15 >;
-+				};
-+			};
-+
-+			ride_200: ride@200 {
- 				compatible = "ot,ferris-wheel";
- 				reg = < 0x00000200 0x100 >;
- 				hvac-provider = < &hvac_2 >;
-@@ -36,6 +47,12 @@
- 				spin-rph = < 30 >;
- 				gondolas = < 16 >;
- 				gondola-capacity = < 6 >;
-+
-+				ride_200_left: track@1 {
-+				};
-+
-+				ride_200_right: track@2 {
-+				};
- 			};
- 		};
- 	};
-diff --git a/drivers/of/unittest-data/overlay_bad_symbol.dts b/drivers/of/unittest-data/overlay_bad_symbol.dts
-new file mode 100644
-index 000000000000..09261cb9a67e
---- /dev/null
-+++ b/drivers/of/unittest-data/overlay_bad_symbol.dts
-@@ -0,0 +1,22 @@
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+
-+	fragment@0 {
-+		target = <&electric_1>;
-+
-+		__overlay__ {
-+
-+			// This label should cause an error when the overlay
-+			// is applied.  There is already a symbol hvac_1
-+			// in the base tree
-+			hvac_1: hvac-medium-2 {
-+				compatible = "ot,hvac-medium";
-+				heat-range = < 50 75 >;
-+				cool-range = < 60 80 >;
-+			};
-+
-+		};
-+	};
-+};
-diff --git a/drivers/of/unittest-data/overlay_base.dts b/drivers/of/unittest-data/overlay_base.dts
-index 5566b27fb61a..997d807259e6 100644
---- a/drivers/of/unittest-data/overlay_base.dts
-+++ b/drivers/of/unittest-data/overlay_base.dts
-@@ -53,6 +53,13 @@
- 				spin-controller = < &spin_ctrl_2 5 &spin_ctrl_2 7 >;
- 				spin-controller-names = "track_1", "track_2";
- 				queues = < 2 >;
-+
-+				track@3 {
-+				};
-+
-+				track@4 {
-+				};
-+
- 			};
- 		};
- 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 0107fc680335..e56b8eb220d9 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -2010,6 +2010,7 @@ struct overlay_info {
- OVERLAY_INFO_EXTERN(overlay_base);
- OVERLAY_INFO_EXTERN(overlay);
- OVERLAY_INFO_EXTERN(overlay_bad_phandle);
-+OVERLAY_INFO_EXTERN(overlay_bad_symbol);
- 
- #ifdef CONFIG_OF_OVERLAY
- 
-@@ -2018,6 +2019,7 @@ struct overlay_info {
- 	OVERLAY_INFO(overlay_base, -9999),
- 	OVERLAY_INFO(overlay, 0),
- 	OVERLAY_INFO(overlay_bad_phandle, -EINVAL),
-+	OVERLAY_INFO(overlay_bad_symbol, -EINVAL),
- 	{}
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index bd3c32f2d411..b7fe9817b644 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -35,6 +35,7 @@
+ struct of_overlay_info {
+ 	struct device_node *target;
+ 	struct device_node *overlay;
++	bool is_symbols_node;
  };
  
-@@ -2289,6 +2291,10 @@ static __init void of_unittest_overlay_high_level(void)
+ /**
+@@ -55,7 +56,8 @@ struct of_overlay {
+ };
  
- 	unittest(overlay_data_add(2),
- 		 "Adding overlay 'overlay_bad_phandle' failed\n");
-+
-+	unittest(overlay_data_add(3),
-+		 "Adding overlay 'overlay_bad_symbol' failed\n");
-+
- 	return;
+ static int of_overlay_apply_one(struct of_overlay *ov,
+-		struct device_node *target, const struct device_node *overlay);
++		struct device_node *target, const struct device_node *overlay,
++		bool is_symbols_node);
  
- err_unlock:
+ static BLOCKING_NOTIFIER_HEAD(of_overlay_chain);
+ 
+@@ -92,10 +94,74 @@ static int of_overlay_notify(struct of_overlay *ov,
+ 	return 0;
+ }
+ 
++static struct property *dup_and_fixup_symbol_prop(struct of_overlay *ov,
++		const struct property *prop)
++{
++	struct of_overlay_info *ovinfo;
++	struct property *new;
++	const char *overlay_name;
++	char *label_path;
++	char *symbol_path;
++	const char *target_path;
++	int k;
++	int label_path_len;
++	int overlay_name_len;
++	int target_path_len;
++
++	if (!prop->value)
++		return NULL;
++	symbol_path = prop->value;
++
++	new = kzalloc(sizeof(*new), GFP_KERNEL);
++	if (!new)
++		return NULL;
++
++	for (k = 0; k < ov->count; k++) {
++		ovinfo = &ov->ovinfo_tab[k];
++		overlay_name = ovinfo->overlay->full_name;
++		overlay_name_len = strlen(overlay_name);
++		if (!strncasecmp(symbol_path, overlay_name, overlay_name_len))
++			break;
++	}
++
++	if (k >= ov->count)
++		goto err_free;
++
++	target_path = ovinfo->target->full_name;
++	target_path_len = strlen(target_path);
++
++	label_path = symbol_path + overlay_name_len;
++	label_path_len = strlen(label_path);
++
++	new->name = kstrdup(prop->name, GFP_KERNEL);
++	new->length = target_path_len + label_path_len + 1;
++	new->value = kzalloc(new->length, GFP_KERNEL);
++
++	if (!new->name || !new->value)
++		goto err_free;
++
++	strcpy(new->value, target_path);
++	strcpy(new->value + target_path_len, label_path);
++
++	/* mark the property as dynamic */
++	of_property_set_flag(new, OF_DYNAMIC);
++
++	return new;
++
++ err_free:
++	kfree(new->name);
++	kfree(new->value);
++	kfree(new);
++	return NULL;
++
++
++}
++
+ static int of_overlay_apply_single_property(struct of_overlay *ov,
+-		struct device_node *target, struct property *prop)
++		struct device_node *target, struct property *prop,
++		bool is_symbols_node)
+ {
+-	struct property *propn, *tprop;
++	struct property *propn = NULL, *tprop;
+ 
+ 	/* NOTE: Multiple changes of single properties not supported */
+ 	tprop = of_find_property(target, prop->name, NULL);
+@@ -106,7 +172,15 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+ 	    of_prop_cmp(prop->name, "linux,phandle") == 0)
+ 		return 0;
+ 
+-	propn = __of_prop_dup(prop, GFP_KERNEL);
++	if (is_symbols_node) {
++		/* changing a property in __symbols__ node not allowed */
++		if (tprop)
++			return -EINVAL;
++		propn = dup_and_fixup_symbol_prop(ov, prop);
++	} else {
++		propn = __of_prop_dup(prop, GFP_KERNEL);
++	}
++
+ 	if (propn == NULL)
+ 		return -ENOMEM;
+ 
+@@ -140,7 +214,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+ 			return -EINVAL;
+ 
+ 		/* apply overlay recursively */
+-		ret = of_overlay_apply_one(ov, tchild, child);
++		ret = of_overlay_apply_one(ov, tchild, child, 0);
+ 		of_node_put(tchild);
+ 	} else {
+ 		/* create empty tree as a target */
+@@ -155,7 +229,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+ 		if (ret)
+ 			return ret;
+ 
+-		ret = of_overlay_apply_one(ov, tchild, child);
++		ret = of_overlay_apply_one(ov, tchild, child, 0);
+ 		if (ret)
+ 			return ret;
+ 	}
+@@ -171,14 +245,16 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+  * by using the changeset.
+  */
+ static int of_overlay_apply_one(struct of_overlay *ov,
+-		struct device_node *target, const struct device_node *overlay)
++		struct device_node *target, const struct device_node *overlay,
++		bool is_symbols_node)
+ {
+ 	struct device_node *child;
+ 	struct property *prop;
+ 	int ret;
+ 
+ 	for_each_property_of_node(overlay, prop) {
+-		ret = of_overlay_apply_single_property(ov, target, prop);
++		ret = of_overlay_apply_single_property(ov, target, prop,
++						       is_symbols_node);
+ 		if (ret) {
+ 			pr_err("Failed to apply prop @%s/%s\n",
+ 			       target->full_name, prop->name);
+@@ -186,6 +262,10 @@ static int of_overlay_apply_one(struct of_overlay *ov,
+ 		}
+ 	}
+ 
++	/* do not allow symbols node to have any children */
++	if (is_symbols_node)
++		return 0;
++
+ 	for_each_child_of_node(overlay, child) {
+ 		ret = of_overlay_apply_single_device_node(ov, target, child);
+ 		if (ret != 0) {
+@@ -216,7 +296,8 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 	for (i = 0; i < ov->count; i++) {
+ 		struct of_overlay_info *ovinfo = &ov->ovinfo_tab[i];
+ 
+-		err = of_overlay_apply_one(ov, ovinfo->target, ovinfo->overlay);
++		err = of_overlay_apply_one(ov, ovinfo->target, ovinfo->overlay,
++					   ovinfo->is_symbols_node);
+ 		if (err != 0) {
+ 			pr_err("apply failed '%s'\n", ovinfo->target->full_name);
+ 			return err;
+@@ -314,6 +395,9 @@ static int of_build_overlay_info(struct of_overlay *ov,
+ 	for_each_child_of_node(tree, node)
+ 		cnt++;
+ 
++	if (of_get_child_by_name(tree, "__symbols__"))
++		cnt++;
++
+ 	ovinfo = kcalloc(cnt, sizeof(*ovinfo), GFP_KERNEL);
+ 	if (ovinfo == NULL)
+ 		return -ENOMEM;
+@@ -325,6 +409,20 @@ static int of_build_overlay_info(struct of_overlay *ov,
+ 			cnt++;
+ 	}
+ 
++	node = of_get_child_by_name(tree, "__symbols__");
++	if (node) {
++		ovinfo[cnt].overlay = node;
++		ovinfo[cnt].target = of_find_node_by_path("/__symbols__");
++		ovinfo[cnt].is_symbols_node = 1;
++
++		if (!ovinfo[cnt].target) {
++			pr_err("no symbols in root of device tree.\n");
++			return -EINVAL;
++		}
++
++		cnt++;
++	}
++
+ 	/* if nothing filled, return error */
+ 	if (cnt == 0) {
+ 		kfree(ovinfo);
 -- 
 Frank Rowand <frank.rowand@sony.com>
