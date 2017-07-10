@@ -1,137 +1,126 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: codec: cpcap: new codec
-Date: Mon, 10 Jul 2017 18:51:52 +0100
-Message-ID: <20170710175152.2jglyjezvptamreq@sirena.org.uk>
-References: <20170707164229.5868-1-sebastian.reichel@collabora.co.uk>
- <20170707164229.5868-2-sebastian.reichel@collabora.co.uk>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [v4, 1/2] drivers/watchdog: Add optional ASPEED device tree
+ properties
+Date: Mon, 10 Jul 2017 11:13:25 -0700
+Message-ID: <20170710181325.GA31335@roeck-us.net>
+References: <20170707004901.26780-2-cbostic@linux.vnet.ibm.com>
+ <20170708145907.GA19078@roeck-us.net>
+ <61225254-6b6c-672f-23f8-b7c9f24aa46e@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3197932348674268682=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170707164229.5868-2-sebastian.reichel@collabora.co.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <61225254-6b6c-672f-23f8-b7c9f24aa46e-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 10, 2017 at 10:07:40AM -0500, Christopher Bostic wrote:
+> 
+> 
+> On 7/8/17 9:59 AM, Guenter Roeck wrote:
+> >On Thu, Jul 06, 2017 at 07:48:59PM -0500, Christopher Bostic wrote:
+> >>Describe device tree optional properties:
+> >>
+> >>   * aspeed,reset-type = "cpu|soc|system|none"
+> >>      One of three different, mutually exclusive, values
+> >>
+> >>	"cpu" : ARM CPU reset on signal
+> >>	"soc" : 'System on chip' reset
+> >>	"system" : Full system reset
+> >>
+> >>      The value can also be set to "none" which indicates that no
+> >>      reset of any kind is to be done via this watchdog.  This assumes
+> >>      another watchdog on the chip is to take care of resets.
+> >>
+> >>   * aspeed,interrupt - Interrupt CPU on signal
+> >After thinking about that, I wonder if this is necessary. It could be
+> >implied by providing an interrupt to the driver. The driver could then
+> >set the interrupt configuration bit automatically.
+> >
+> >[ And the bit by itself doesn't really make sense if the driver doesn't
+> >   also register an interrupt handler ]
+> 
+> The 'aspeed,interrupt' property was added for the sake of documenting all
+> potential hardware configurations.  There is no plan as of now to enable
+> this so I'm inclined to just remove this part from the documentation.  When
+> and if this function is ever used the optional property can be documented at
+> that time.
+> 
+Ok.
 
---===============3197932348674268682==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rz5z5zl44dvdwzhq"
-Content-Disposition: inline
+Thanks,
+Guenter
 
-
---rz5z5zl44dvdwzhq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jul 07, 2017 at 06:42:27PM +0200, Sebastian Reichel wrote:
-
->  snd-soc-cq93vc-objs := cq93vc.o
-> +snd-soc-cpcap-objs := cpcap.o
-
-Please keep Kconfig and Makefile lexically sorted.
-
-> +static int cpcap_audio_write(struct cpcap_audio *cpcap,
-> +			     u16 reg, u16 mask, u16 val)
-> +{
-> +	struct snd_soc_codec *codec = cpcap->codec;
-> +	struct device *dev = codec->dev;
-> +	int err;
-> +
-> +	err = regmap_update_bits(cpcap->regmap, reg, mask, val);
-> +	if (err)
-> +		dev_err(dev, "write failed: reg=%04x mask=%04x val=%04x err=%d",
-> +			reg, mask, val, err);
-> +
-> +	return err;
-> +}
-
-If we're going to have wrappers for the regmap functions it'd be good if
-they were named in a similar way to the functions that they wrap, just
-for clarity.  They're also not used consistently (and TBH I'm not sure
-what they buy but if you want them that's fine).
-
-> +	switch (event) {
-> +	case SND_SOC_DAPM_PRE_PMU:
-> +		err += regmap_write(cpcap->regmap, CPCAP_REG_TEST,
-> +				    STM_STDAC_EN_TEST_PRE);
-> +		err += regmap_write(cpcap->regmap, CPCAP_REG_ST_TEST1,
-> +				    STM_STDAC_EN_ST_TEST1_PRE);
-> +		return err;
-
-This'll return a nonsense error code if both error out, better to do
-something like
-
-	if (!err)
-		err = regmap_write(...
-
-> +static const char * const cpcap_onoff_texts[] = {
-> +	"Off", "On"
-> +};
-> +static const SOC_ENUM_SINGLE_DECL(cpcap_ext_cap_l_enum,
-> +	CPCAP_REG_TXI, CPCAP_BIT_RX_L_ENCODE, cpcap_onoff_texts);
-> +static const SOC_ENUM_SINGLE_DECL(cpcap_ext_cap_r_enum,
-> +	CPCAP_REG_TXI, CPCAP_BIT_RX_R_ENCODE, cpcap_onoff_texts);
-> +static const struct snd_kcontrol_new cpcap_extr_cap_control =
-> +	SOC_DAPM_ENUM("Ext Right Capture", cpcap_ext_cap_r_enum);
-> +static const struct snd_kcontrol_new cpcap_extl_cap_control =
-> +	SOC_DAPM_ENUM("Ext Left Capture", cpcap_ext_cap_l_enum);
-
-Why are these enums and not simple Switch controls?  They appear to be
-muxes with only one arm connected.
-
-> +static int cpcap_hifi_set_mute(struct snd_soc_dai *dai, int mute)
-> +{
-> +	struct snd_soc_codec *codec = dai->codec;
-> +	struct cpcap_audio *cpcap = snd_soc_codec_get_drvdata(codec);
-> +	static const u16 reg = CPCAP_REG_RXSDOA;
-> +	static const u16 mask = BIT(CPCAP_BIT_ST_DAC_SW);
-> +	u16 val = mute ? 0 : BIT(CPCAP_BIT_ST_DAC_SW);
-
-Please write a normal if statement, this was a bit confusing at first
-glance.
-
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id cpcap_audio_of_match[] = {
-> +	{ .compatible = "motorola,cpcap-audio-codec", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, cpcap_audio_of_match);
-> +#endif
-
-If this is part of a MFD shouldn't the parent device register it without
-it needing to be in the DT?
-
---rz5z5zl44dvdwzhq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlljvrcACgkQJNaLcl1U
-h9DmLAf9EMDF438Xa0KV9bpNKE2g41Lb+gF4vs0t4Z7qPVn+nyCQ/qoKshO45shQ
-rKQi/3iP2m46e/ULkDELCbzcRX/B3Rpp8dAWjnWAUHl95gphx59Ob+B01bn+vZwL
-zLDveJxMxm5qCWnhBM+eLvu3nGAJo8lEochPfoQ6A+eWCrXXhATG2mdWsiNkdz2Y
-RcM3I11Riw1TCnJmD8SVsXfy2Rl29JYman01RHWPbTw2C6hGx6B5ii68il8qt0c6
-sa/YTH++x8ewH/FF4krKQLh4UsYqAK8MOvTg3zqdRn+oNAyrJqy1E4NJxbVnxICQ
-nGOG6O4N49HnTvLdn8MxMNLNgsMtwA==
-=XhV9
------END PGP SIGNATURE-----
-
---rz5z5zl44dvdwzhq--
-
---===============3197932348674268682==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3197932348674268682==--
+> Thanks,
+> Chris
+> 
+> >>   * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
+> >>   * aspeed,alt-boot - Boot from alternate block on signal
+> >>
+> >>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>v4 - Add aspeed-reset-type and assign one of four values,
+> >>      cpu, soc, system, none.
+> >>v3 - Invert soc and sys reset to 'no' to preserve backwards
+> >>      compatibility.  SOC and SYS reset will be set by default
+> >>      without any optional parameters set
+> >>v2 - Add 'aspeed,' prefix to all optional properties
+> >>    - Add arm-reset, soc-reset, interrupt, alt-boot properties
+> >>---
+> >>  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 35 ++++++++++++++++++++++
+> >>  1 file changed, 35 insertions(+)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>index c5e74d7..f526b00 100644
+> >>--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>+++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>@@ -8,9 +8,44 @@ Required properties:
+> >>   - reg: physical base address of the controller and length of memory mapped
+> >>     region
+> >>+Optional properties:
+> >>+
+> >>+ - aspeed,reset-type = "cpu|soc|system|none"
+> >>+
+> >>+   Reset behavior - Whenever a timeout occurs the watchdog can be programmed
+> >>+   to generate one of three different, mutually exclusive, types of resets.
+> >>+
+> >>+   Type "none" can be specified to indicate that no resets are to be done.
+> >>+   This is useful in situations where another watchdog engine on chip is
+> >>+   to perform the reset.
+> >>+
+> >>+   If 'aspeed,reset-type=' is not specfied the default is to enable system
+> >>+   reset.
+> >>+
+> >>+   Reset types:
+> >>+
+> >>+        - cpu: Reset CPU on watchdog timeout
+> >>+
+> >>+        - soc: Reset 'System on Chip' on watchdog timeout
+> >>+
+> >>+        - system: Reset system on watchdog timeout
+> >>+
+> >>+        - none: No reset is performed on timeout. Assumes another watchdog
+> >>+                engine is responsible for this.
+> >>+
+> >>+ - aspeed,interrupt:	If property is present then interrupt CPU.
+> >>+			If not specified then don't interrupt CPU.
+> >>+
+> >>+ - aspeed,external-signal: If property is present then signal is sent to
+> >>+			external reset counter (only WDT1 and WDT2). If not
+> >>+			specified no external signal is sent.
+> >>+ - aspeed,alt-boot:    If property is present then boot from alternate block.
+> >>+
+> >>  Example:
+> >>  	wdt1: watchdog@1e785000 {
+> >>  		compatible = "aspeed,ast2400-wdt";
+> >>  		reg = <0x1e785000 0x1c>;
+> >>+		aspeed,reset-type = "system";
+> >>+		aspeed,external-signal;
+> >>  	};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
