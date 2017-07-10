@@ -1,35 +1,54 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM64: allwinner: sun50i-a64: Correct emac register size
-Date: Mon, 10 Jul 2017 20:44:40 +0200
-Message-ID: <20170710184440.28946-1-clabbe.montjoie@gmail.com>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2 0/3] of: overlay: load overlay symbols into live device tree
+Date: Mon, 10 Jul 2017 12:05:19 -0700
+Message-ID: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The datasheet said that emac register size is 0x10000 not 0x100
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Symbols in a loaded overlay are not currently available to subsequently
+loaded overlays because the properties in the overlay's __symbols__
+node are not loaded into the live device tree.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index e9a41b1896df..be70f5cac447 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -464,7 +464,7 @@
- 		emac: ethernet@1c30000 {
- 			compatible = "allwinner,sun50i-a64-emac";
- 			syscon = <&syscon>;
--			reg = <0x01c30000 0x100>;
-+			reg = <0x01c30000 0x10000>;
- 			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "macirq";
- 			resets = <&ccu RST_BUS_EMAC>;
+Patch 1 is unittests to test patches 2 and 3.
+
+Patch 2 fixes a problem discovered while developing patch 3.  If
+a node name in an overlay has a unit-address then the overlay
+code does not correctly match the node name against an existing
+node in the live tree.
+
+Patch 3 adds the properties in an overlay's __symbol__ node to
+the overlay changeset.
+
+This patch set was created on top of v4.12, with Rob's pull request
+for 4.13 added (https://lkml.org/lkml/2017/7/6/691).  Thus this
+series should apply on 4.13-rc1 when that becomes available.  I will
+re-test on 4.13-rc1.
+
+changes since v1:
+  - patch 2: Use for_each_child_of_node() instead of open coding,
+    which allowed removing the new function child_by_full_name().
+
+Frank Rowand (3):
+  of: overlay: add overlay unittest data for node names and symbols
+  of: overlay: correctly apply overlay node with unit-address
+  of: overlay: add overlay symbols to live device tree
+
+ drivers/of/overlay.c                            | 121 ++++++++++++++++++++++--
+ drivers/of/unittest-data/Makefile               |   3 +
+ drivers/of/unittest-data/overlay.dts            |  19 +++-
+ drivers/of/unittest-data/overlay_bad_symbol.dts |  22 +++++
+ drivers/of/unittest-data/overlay_base.dts       |   7 ++
+ drivers/of/unittest.c                           |   6 ++
+ 6 files changed, 167 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_symbol.dts
+
 -- 
-2.13.0
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
