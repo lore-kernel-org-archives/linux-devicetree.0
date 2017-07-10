@@ -1,120 +1,53 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [v4, 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Mon, 10 Jul 2017 10:07:40 -0500
-Message-ID: <61225254-6b6c-672f-23f8-b7c9f24aa46e@linux.vnet.ibm.com>
-References: <20170707004901.26780-2-cbostic@linux.vnet.ibm.com>
- <20170708145907.GA19078@roeck-us.net>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] [media] dt-bindings: gpio-ir-tx: add support for
+ GPIO IR Transmitter
+Date: Mon, 10 Jul 2017 16:10:16 +0100
+Message-ID: <20170710151016.5iaokchdejxozrte@gofer.mess.org>
+References: <cover.1499419624.git.sean@mess.org>
+ <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
+ <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170708145907.GA19078-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 10, 2017 at 10:05:38AM -0500, Rob Herring wrote:
+> On Fri, Jul 07, 2017 at 10:52:03AM +0100, Sean Young wrote:
+> > Document the device tree bindings for the GPIO Bit Banging IR
+> > Transmitter.
+> > 
+> > Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> > new file mode 100644
+> > index 0000000..bc08d89
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+> > @@ -0,0 +1,11 @@
+> > +Device tree bindings for IR LED connected through gpio pin which is used as
+> > +remote controller transmitter.
+> > +
+> > +Required properties:
+> > +	- compatible: should be "gpio-ir-tx".
+> 
+> As I mentioned in the prior version, missing the "gpios" property.
 
+Absolutely right. I hadn't gotten round to sending out a new version
+yet, I'll do that soon.
 
-On 7/8/17 9:59 AM, Guenter Roeck wrote:
-> On Thu, Jul 06, 2017 at 07:48:59PM -0500, Christopher Bostic wrote:
->> Describe device tree optional properties:
->>
->>    * aspeed,reset-type = "cpu|soc|system|none"
->>       One of three different, mutually exclusive, values
->>
->> 	"cpu" : ARM CPU reset on signal
->> 	"soc" : 'System on chip' reset
->> 	"system" : Full system reset
->>
->>       The value can also be set to "none" which indicates that no
->>       reset of any kind is to be done via this watchdog.  This assumes
->>       another watchdog on the chip is to take care of resets.
->>
->>    * aspeed,interrupt - Interrupt CPU on signal
-> After thinking about that, I wonder if this is necessary. It could be
-> implied by providing an interrupt to the driver. The driver could then
-> set the interrupt configuration bit automatically.
->
-> [ And the bit by itself doesn't really make sense if the driver doesn't
->    also register an interrupt handler ]
-
-The 'aspeed,interrupt' property was added for the sake of documenting 
-all potential hardware configurations.  There is no plan as of now to 
-enable this so I'm inclined to just remove this part from the 
-documentation.  When and if this function is ever used the optional 
-property can be documented at that time.
 
 Thanks,
-Chris
 
->>    * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
->>    * aspeed,alt-boot - Boot from alternate block on signal
->>
->> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> ---
->> v4 - Add aspeed-reset-type and assign one of four values,
->>       cpu, soc, system, none.
->> v3 - Invert soc and sys reset to 'no' to preserve backwards
->>       compatibility.  SOC and SYS reset will be set by default
->>       without any optional parameters set
->> v2 - Add 'aspeed,' prefix to all optional properties
->>     - Add arm-reset, soc-reset, interrupt, alt-boot properties
->> ---
->>   .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 35 ++++++++++++++++++++++
->>   1 file changed, 35 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> index c5e74d7..f526b00 100644
->> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> @@ -8,9 +8,44 @@ Required properties:
->>    - reg: physical base address of the controller and length of memory mapped
->>      region
->>   
->> +Optional properties:
->> +
->> + - aspeed,reset-type = "cpu|soc|system|none"
->> +
->> +   Reset behavior - Whenever a timeout occurs the watchdog can be programmed
->> +   to generate one of three different, mutually exclusive, types of resets.
->> +
->> +   Type "none" can be specified to indicate that no resets are to be done.
->> +   This is useful in situations where another watchdog engine on chip is
->> +   to perform the reset.
->> +
->> +   If 'aspeed,reset-type=' is not specfied the default is to enable system
->> +   reset.
->> +
->> +   Reset types:
->> +
->> +        - cpu: Reset CPU on watchdog timeout
->> +
->> +        - soc: Reset 'System on Chip' on watchdog timeout
->> +
->> +        - system: Reset system on watchdog timeout
->> +
->> +        - none: No reset is performed on timeout. Assumes another watchdog
->> +                engine is responsible for this.
->> +
->> + - aspeed,interrupt:	If property is present then interrupt CPU.
->> +			If not specified then don't interrupt CPU.
->> +
->> + - aspeed,external-signal: If property is present then signal is sent to
->> +			external reset counter (only WDT1 and WDT2). If not
->> +			specified no external signal is sent.
->> + - aspeed,alt-boot:    If property is present then boot from alternate block.
->> +
->>   Example:
->>   
->>   	wdt1: watchdog@1e785000 {
->>   		compatible = "aspeed,ast2400-wdt";
->>   		reg = <0x1e785000 0x1c>;
->> +		aspeed,reset-type = "system";
->> +		aspeed,external-signal;
->>   	};
-
+Sean
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
