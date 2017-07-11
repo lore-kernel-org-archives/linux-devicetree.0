@@ -1,54 +1,52 @@
-From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/3] cpufreq: mediatek: Add support of cpufreq to
- MT2701/MT7623 SoC
-Date: Tue, 11 Jul 2017 10:49:46 +0800
-Message-ID: <1499741386.12408.11.camel@mtksdaap41>
-References: <cover.1499692967.git.sean.wang@mediatek.com>
-         <feabcfd53899954198c6620e9d9b68f4a3c55201.1499692967.git.sean.wang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open
+ drain mode
+Date: Mon, 10 Jul 2017 21:51:58 -0500
+Message-ID: <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+ <20170709165704.26311-9-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <feabcfd53899954198c6620e9d9b68f4a3c55201.1499692967.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170709165704.26311-9-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
-
-On Mon, 2017-07-10 at 22:23 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> MT2701/MT7623 is a 32-bit ARMv7 based quad-core (4 * Cortex-A7) with
-> single cluster and this hardware is also compatible with the existing
-> driver through enabling CPU frequency feature with operating-points-v2
-> bindings. Also, this driver actually supports all MediaTek SoCs, the
-> Kconfig menu entry and file name itself should be updated with more
-> generic name to drop "MT8173"
-> 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Reviewed-by: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 > ---
->  drivers/cpufreq/Kconfig.arm                              | 7 +++----
->  drivers/cpufreq/Makefile                                 | 2 +-
->  drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} | 2 ++
->  3 files changed, 6 insertions(+), 5 deletions(-)
->  rename drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} (99%)
+>  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> index fca263e13400..732b83c06c08 100644
+> --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> @@ -5,6 +5,14 @@ Required properties:
+>  - reg: i2c address of the sensor / spi cs line
+>  
+>  Optional properties:
+> +- drive-open-drain: the interrupt/data ready line will be configured
 
-As Viresh mentioned, there are already many drivers use "mtk" as
-filename prefix or postfix.To align with those files, I suggest use
-mtk-cpufreq.c.I think there are not too many values to change all "mtk-"
-to "mediatek-", but it is worth to have the same naming rule for
-mediatek upstream driver.
+Needs a vendor prefix and "drdy-open-drain" would be more specific.
 
-Regards,
-Eddie. 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +  as open drain, which is useful if several sensors share the same
+> +  interrupt line. This is a boolean property.
+> +  (This binding is taken from pinctrl/pinctrl-bindings.txt)
+> +  If the requested interrupt is configured as IRQ_TYPE_LEVEL_HIGH or
+> +  IRQ_TYPE_EDGE_RISING a pull-down resistor is needed to drive the line
+> +  when it is not active, whereas a pull-up one is needed when interrupt
+> +  line is configured as IRQ_TYPE_LEVEL_LOW or IRQ_TYPE_EDGE_FALLING.
+>  - interrupt-parent: should be the phandle for the interrupt controller
+>  - interrupts: interrupt mapping for IRQ. It should be configured with
+>    flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+> -- 
+> 2.13.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
