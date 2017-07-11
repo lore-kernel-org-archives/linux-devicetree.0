@@ -1,63 +1,126 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible
- string for SMC
-Date: Tue, 11 Jul 2017 09:58:29 +0200
-Message-ID: <20170711075829.5rzdrjgao6efiuj2@rfolt0960.corp.atmel.com>
-References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
- <20170711074015.30440-4-ludovic.desroches@microchip.com>
- <029b80a8-2d3f-11b4-d4df-55f5fc48c8e7@microchip.com>
+From: =?UTF-8?B?6rmA7YOc7JiB?= <ktyrun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
+Date: Tue, 11 Jul 2017 17:01:47 +0900
+Message-ID: <CA+d1ZXLAVrWHpgOzQMtWzPN9kz0=EdAxa7gKE=UxMbzVms3Npg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <029b80a8-2d3f-11b4-d4df-55f5fc48c8e7@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 09:52:58AM +0200, Nicolas Ferre wrote:
-> On 11/07/2017 at 09:40, Ludovic Desroches wrote:
-> > A new compatible string has been introduced for sama5d2 SMC to allow to
-> > manage the registers mapping change.
-> > 
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+2017-07-10 10:17 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>
+> On Wed, Jul 05, 2017 at 03:19:48PM +0900, Anthony Kim wrote:
+> > The HiDeep touchscreen device is a capacitive multi-touch controller
+> > mainly for multi-touch supported devices use. It use I2C interface for
+> > communication to IC and provide axis X, Y, Z locations for ten finger
+> > touch through input event interface to userspace.
+> >
+> > It support the Crimson and the Lime two type IC. They are different
+> > the number of channel supported and FW size. But the working protocol
+> > is same.
+> >
+> > Signed-off-by: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
 > > ---
-> >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> > index 4fcd5bb219e3..60e69aeacbdb 100644
-> > --- a/arch/arm/boot/dts/sama5d2.dtsi
-> > +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> > @@ -1048,7 +1048,7 @@
-> >  			};
-> >  
-> >  			hsmc: hsmc@f8014000 {
-> > -				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
-> > +				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
-> 
-> You'd better use something like:
->  compatible = "atmel,sama5d2-smc", "atmel,sama5d3-smc", "syscon", "simple-mfd";
+> >  .../bindings/input/touchscreen/hideep.txt          |   40 +
+> >  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+> >  drivers/input/touchscreen/Kconfig                  |   32 +
+> >  drivers/input/touchscreen/Makefile                 |    2 +
+> >  drivers/input/touchscreen/hideep.h                 |  338 +++++++
+> >  drivers/input/touchscreen/hideep_core.c            | 1029 ++++++++++++++++++++
+> >  drivers/input/touchscreen/hideep_dbg.c             |  405 ++++++++
+> >  drivers/input/touchscreen/hideep_dbg.h             |   24 +
+> >  drivers/input/touchscreen/hideep_isp.c             |  584 +++++++++++
+> >  drivers/input/touchscreen/hideep_isp.h             |   96 ++
+> >  drivers/input/touchscreen/hideep_sysfs.c           |  249 +++++
+> >  11 files changed, 2800 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+> >  create mode 100644 drivers/input/touchscreen/hideep.h
+> >  create mode 100644 drivers/input/touchscreen/hideep_core.c
+> >  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
+> >  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
+> >  create mode 100644 drivers/input/touchscreen/hideep_isp.c
+> >  create mode 100644 drivers/input/touchscreen/hideep_isp.h
+> >  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/hideep.txt b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+> > new file mode 100644
+> > index 0000000..f5ab5e6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+> > @@ -0,0 +1,40 @@
+> > +* HiDeep Finger and Stylus touchscreen controller
+> > +
+> > +Required properties:
+> > +- compatible         : must be "hideep,hideep_ts".
+>
+> s/_/-/
+>
+> Is there only 1 version or another way to determine the exact chip and
+> firmware? If not, then you need a more specific compatible.
 
-But it's not true, during data interface setup, we will write values in
-the wrong place if we fallback on "atmel,sama5d3-smc".
+Yes, we have to determine the chip and firmware through the firmware file name
+ and reading I2C about info.
+Also the chip can select by kernel config.
 
-Regards
+>
+> > +- reg                        : I2C slave address, (e.g. 0x6C).
+> > +- hideep,max_coords  : Max value for axis X, Y, W, Z.
+> > +
+> > +Optional properties:
+> > +- pinctrl-names      : "reset_down", "reset-up", "intb-ctrl".
+> > +                             They are gpio pinctrl names for should be search in driver code.
+> > +- pinctrl-0  : Gpio control for "reset-down".
+> > +- pinctrl-1  : Gpio control for "reset-up".
+> > +- pinctrl-2  : Gpio control for "intb-ctrl".
+> > +- hideep,regulator_vdd       : Main voltage(3.3V) name.
+> > +- hideep,regulator_vid       : IO voltage(1.8V) name.
+>
+> Use standard regulator binding.
+>
+> > +- hideep,irq_gpio            : Define for interrupt gpio pin.
+> > +                                             It is to use for set interrupt type.
+>
+> Use interrupt binding.
+>
+> > +- hideep,reset_gpio          : Define for reset gpio pin.
+> > +                                             It is to use for reset IC.
+>
+> reset-gpios is the standard name.
+>
+> > +
+> > +Example:
+> > +
+> > +i2c@00000000 {
+> > +
+> > +     /* ... */
+> > +
+> > +     hideep@6c {
+>
+> touchscreen@6c
+>
+> > +             compatible = "hideep,hideep_ts";
+> > +             reg = <0x6c>;
+> > +             pinctrl-names = "reset-down", "reset-up", "intb-ctrl";
+> > +             pinctrl-0 = <&reset_gpio0>;
+> > +             pinctrl-1 = <&reset_gpio1>;
+> > +             pinctrl-2 = <&touch_int>;
+> > +             hideep,regulator_vdd = "vdd_ldo33";     // need modify
+> > +             hideep,regulator_vid = "vdd_ldo18";     // need modify
+> > +             hideep,irq_gpio = <&gpx0 5 0x0>;        // <gpio-name gpio-num gpio-val> need modify
+> > +             hideep,reset_gpio = <&gpa0 5 0x1>;      // <gpio-name gpio-num gpio-val> need modify
+> > +             hideep,max_coords = <1080 1920 65535 65535>;    // x y w z, need modify
+>
+> Not documented. Probably should be standard touchscreen properties.
+>
+> > +     };
+> > +};
 
-Ludovic
-
-> 
-> So that this patch is independent from the rest of the series and
-> we can avoid to having to synchronize with mfd or mtd/nand for this part.
-> 
-> Regards,
-> 
-> >  				reg = <0xf8014000 0x1000>;
-> >  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
-> >  				clocks = <&hsmc_clk>;
-> > 
-> 
-> 
-> -- 
-> Nicolas Ferre
+Thank you for your comments.
+I will resend patch to modified.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
