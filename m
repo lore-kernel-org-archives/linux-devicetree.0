@@ -1,130 +1,108 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/3] of: overlay: add overlay unittest data for node
- names and symbols
-Date: Tue, 11 Jul 2017 14:29:29 -0500
-Message-ID: <CAL_Jsq+trpQsmsst=A0kZnw0S-wZ7FaLQZuB0-9e7HurPnmyxQ@mail.gmail.com>
-References: <1499713523-19184-1-git-send-email-frowand.list@gmail.com>
- <1499713523-19184-2-git-send-email-frowand.list@gmail.com>
- <CAL_Jsq+dq0nngUePGvuyELmtexJyUMaTpnN1D8uEBbSPjphVyQ@mail.gmail.com> <59645989.5050502@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme
+ readability
+Date: Tue, 11 Jul 2017 21:31:11 +0200
+Message-ID: <20170711193111.p6jdyesluuqdlu3j@flea>
+References: <20170614063016.22069-1-wens@csie.org>
+ <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
+ <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <59645989.5050502@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0460398583=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 11:52 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 07/10/17 19:31, Rob Herring wrote:
->> On Mon, Jul 10, 2017 at 2:05 PM,  <frowand.list@gmail.com> wrote:
->>> From: Frank Rowand <frank.rowand@sony.com>
->>>
->>> Add nodes and properties to overlay_base and overlay dts files to
->>> test for
->>>    - incorrect existing node name detection when overlay node name
->>>      has a unit-address
->>>    - adding overlay __symbols__ properties to live tree when an
->>>      overlay is added to the live tree
->>>
->>> Expected result from patch 2/3 is overlay will update the nodes and
->>> properties for /testcase-data-2/fairway-1/ride@100/
->>>
->>> Before patch 2/3 is applied:
->>
->> This is good information, but what is patch 2/3 is less clear when
->> this is committed.
->
-> Yes, but that is the best way I've figured out to convey the information.
-> I'm expecting the three patches to be three consecutive commits in the
-> history.  I'd love to have a way to specify what the commit id of
-> patch 3 will be in the patch 1 commit message.  Given the way that
-> I think git works, I don't think there is any way the git wizards
-> will be able to add that feature.  Maybe it would be clearer to
-> reference the short description of patch 2 and patch 3 instead.
 
-What's wrong with:
+--===============0460398583==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7m3pnjaw27vlnret"
+Content-Disposition: inline
 
-#1 - These additional tests have the following failures which are
-fixed in subsequent commits: ...
-#2 - This commit fixes these unittest failures: ...
-#3 - This commit fixes these unittest failures: ...
 
-2 and 3 already do that. So if you are assuming they are all applied
-together, then why summarize the whole series in patch 1?
+--7m3pnjaw27vlnret
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> And 1 and 2 are probably stable material? I'd just
->> note in this patch what the failures are and show before and after
->> results in the patch that changes them.
->
-> I consider overlays to be a not yet functional feature, that
-> still needs a some more code before being usable. In that case,
-> I don't think it is worth marking the patches for stable.
+On Mon, Jul 10, 2017 at 11:48:00PM +0800, Chen-Yu Tsai wrote:
+> On Sun, Jun 18, 2017 at 10:05 PM, Rob Herring <robh@kernel.org> wrote:
+> > On Wed, Jun 14, 2017 at 02:30:16PM +0800, Chen-Yu Tsai wrote:
+> >> The explanation for the endpoint ID numbering scheme is convoluted
+> >> and hard to understand.
+> >>
+> >> This patch aims to improve the readability of it by combining the
+> >> existing two paragraphs, while also providing a diagram example,
+> >> and how endpoints should be numbered based on that example.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >> ---
+> >>
+> >> Hope this helps. I'm not sure I can improve this even more without
+> >> spelling out all cases.
+> >>
+> >> ---
+> >>  .../bindings/display/sunxi/sun4i-drm.txt           | 36 +++++++++++++=
++++------
+> >>  1 file changed, 27 insertions(+), 9 deletions(-)
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+>=20
+> Maxime, this patch seems to have fallen through the cracks.
+>=20
+> Could you queue it as a fix for 4.13?
 
-Well, people are using them "in production" though you do need
-additional support. I'd hope that is all outside the core DT code
-though.
+Sorry, I don't know why I overlooked it.
 
-But okay by me if not tagged for stable.
+Is it really 4.13 material though? It doesn't look that urgent.
 
->>>    Console error message near end of unittest:
->>>       OF: Duplicate name in fairway-1, renamed to "ride@100#1"
->>>
->>>    $ cd /proc/device-tree/testcase-data-2/fairway-1/
->>>    $ # extra node: ride@100#1
->>>    $ ls
->>>    #address-cells  linux,phandle   phandle         ride@200
->>>    #size-cells     name            ride@100        status
->>>    compatible      orientation     ride@100#1
->>>    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
->>>    $ ls track@3/incline_up
->>>    ls: track@3/incline_up: No such file or directory
->>>    $ ls track@4/incline_up
->>>    ls: track@4/incline_up: No such file or directory
->>
->> [...]
->>
->>> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
->>> index 6e00a9c69e58..dae2fe23cd2e 100644
->>> --- a/drivers/of/unittest-data/Makefile
->>> +++ b/drivers/of/unittest-data/Makefile
->>> @@ -1,11 +1,13 @@
->>>  obj-y += testcases.dtb.o
->>>  obj-y += overlay.dtb.o
->>>  obj-y += overlay_bad_phandle.dtb.o
->>> +obj-y += overlay_bad_symbol.dtb.o
->>>  obj-y += overlay_base.dtb.o
->>
->> There's no reason for these all to be 1 per line.
->
-> OK.  Do you prefer something like:
->
->    obj-y += testcases.dtb.o overlay.dtb.o overlay_bad_phandle.dtb.o \
->             overlay_bad_symbol.dtb.o overlay_base.dtb.o
+Maxime
 
-I think this is more inline with other makefiles. Though it's probably
-all over the map.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-> My preference is to keep the objects in alphabetic order.  That might
-> argue for something easier to read and update, like:
->
->    obj-y += testcases.dtb.o \
->             overlay.dtb.o \
->             overlay_bad_phandle.dtb.o \
->             overlay_bad_symbol.dtb.o \
->             overlay_base.dtb.o
+--7m3pnjaw27vlnret
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Changing to this is probably not worth doing.
+-----BEGIN PGP SIGNATURE-----
 
->> Also, should the
->> overlay dtb's be conditioned on CONFIG_OF_OVERLAY (or whatever we call
->> it)?
->
-> I think so.  I'll verify that it doesn't break anything (and if so fix
-> the breakage).
->
->
->>
->> But this is fine. That can all be a followup patch.
->>
->
+iQIcBAEBAgAGBQJZZSd/AAoJEBx+YmzsjxAgzDAP/2ifXkBet9XfeWFFclTjmyI6
+Ffbd7bh9U5YTMBqZFWtR8MhuCsvSmSiqBXVEau3Qb05qT+sp+bD3K9MhdgLpRklz
+AYivZ2Jez7MG6ikqtZgLBCatK31Tcueb5U65r4swoooouErVi9gAI8ngEQOAIyzV
+PrOg3cCCQ/c6mrtoJpXHFswB1K1Zmqi4sDxB0leIuEWTzEIDdjW9oQLv2o2FIbOI
+Cscq8mi3SBlhbEHDLE2wehmRZ09BLwYIYsl3h4Hjxa9xR1Xzv/NsZFDFFCVKnwZ2
+OS1H8BC7RxikPO3BxNG9+HqkMTr+NcT6NI2XpLB5BnQlT57M1ywssPgq1Bsv6eAh
+BzQMwaMa7NpTrwvCPX+w9nzieb7AjskJybkgEZ72/MDjNZfNmkqh9bG8aMNKOoJY
+4pnhsVwUOh4Sa2GKDixysnGaY8nr8Ds2JFReURZSihGfLqZNM3yf338YSbelrNyn
+vTVrs0LiiQw3TDmvmdV7FMuQtqocgY09iJlPGReCgwZrcbMQnjwqcZ7Tjk3A0VVH
+2E8rfXn27D93w/AcjzZ05KvbJOIPnGSI/AlsgQYJBk3ncMavXlJo+cF53G4EvgEw
+/cy/eIi3LfuJ6n4nFme17w8AnXaB2GZDqzNUK6ybKa01LVNhd7P/lX2mUIjyb6sL
+OBl7SSS6LG3hoAPXb2ut
+=u1h2
+-----END PGP SIGNATURE-----
+
+--7m3pnjaw27vlnret--
+
+--===============0460398583==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0460398583==--
