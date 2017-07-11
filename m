@@ -1,28 +1,83 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3] [media] dt-bindings: gpio-ir-tx: add support for GPIO
- IR Transmitter
-Date: Tue, 11 Jul 2017 13:45:44 -0500
-Message-ID: <CAL_JsqLPHYOEdj2sEikA=NRJwForL0EFE3GYyzfeZ_gUXyL08w@mail.gmail.com>
-References: <cover.1499419624.git.sean@mess.org> <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
- <20170710150538.ql26gswdf2obch6o@rob-hp-laptop> <20170710151016.5iaokchdejxozrte@gofer.mess.org>
- <20170711115241.cprjvqirp7pyuhye@gofer.mess.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/9] iio: humidity: hts221: support active-low
+ interrupts
+Date: Tue, 11 Jul 2017 19:52:59 +0100
+Message-ID: <20170711195259.3f146762@kernel.org>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+        <20170709165704.26311-6-lorenzo.bianconi@st.com>
+        <20170709193951.14caff79@kernel.org>
+        <ceef5860-91ee-a922-0dd7-8f2698192b9b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170711115241.cprjvqirp7pyuhye@gofer.mess.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Sean Young <sean@mess.org>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ceef5860-91ee-a922-0dd7-8f2698192b9b-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 6:52 AM, Sean Young <sean@mess.org> wrote:
-> Document the device tree bindings for the GPIO Bit Banging IR
-> Transmitter.
->
-> Signed-off-by: Sean Young <sean@mess.org>
-> ---
->  .../devicetree/bindings/leds/irled/gpio-ir-tx.txt          | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+On Mon, 10 Jul 2017 10:36:47 +0100
+Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote:
 
-Acked-by: Rob Herring <robh@kernel.org>
+> Hi Jonathan,
+> 
+> On 09/07/17 19:39, Jonathan Cameron wrote:
+> > On Sun,  9 Jul 2017 18:57:00 +0200
+> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >   
+> >> Add support for active low interrupts (IRQF_TRIGGER_LOW and
+> >> IRQF_TRIGGER_FALLING). Configure the device as active high or low
+> >> according to the requested irq line.
+> >>
+> >> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
+> > Hi Lorenzo,
+> > 
+> > Sorry, you are getting caught up in a more general question I'd like to 
+> > pin down an answer for...
+> > 
+> > What should we be doing if we have a part that supports both high and
+> > low interrupts and/or rising and falling?
+> > 
+> > We actually have more than one possible thing we are configuring with
+> > one parameter.  If we are looking at shared interrupts or level
+> > converters it's more than possible we have an inversion going on between
+> > the two.   How is this represented to the two ends?
+> > 
+> > What's the right way of doing this?
+> > 
+> > I've added a few CCs that I think might chip in on this question!
+> > 
+> > My personal gut feeling is that the inverter should have explicit
+> > representation in the kernel.  We should be able to instantiate an
+> > irq_chip which is responsible for flipping it's sense.
+> > 
+> > You request an active high input on one side and it deals with
+> > the active low that needs to be requested upstream.
+> > 
+> > Chances are I'm missing something and this is already well handled!  
+> 
+> We already have things like that, such as
+> drivers/irqchip/irq-mtk-sysirq.c (whose sole purpose in life is to
+> invert interrupt polarity).
+> 
+> Hope this helps,
+> 
+> 	M.
+Thanks Marc,
+
+I think it would need generalising a fair bit, but in principle that
+is doing exactly what is needed (just run with generic irq_chip
+callbacks except for irq_set_type).
+
+The registration logic seems rather convoluted, but I haven't yet
+dug into why it is like that.  Certainly seems like we should be
+able to get away with something rather less involved by not
+trying to do it quite so efficiently.  For this particular
+case I think we'd probably instantiate an irq chip per inverted
+irq (there is no connection between them really).
+
+Now the tricky bit as ever is going to be getting the bindings right.
+The ones for the example you give are somewhat device specific.
+
+Jonathan
