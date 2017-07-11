@@ -1,65 +1,62 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open drain mode
-Date: Tue, 11 Jul 2017 19:56:06 +0100
-Message-ID: <0462CB71-6762-48F2-99B3-EA62FF81C280@jic23.retrosnub.co.uk>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com> <20170709165704.26311-9-lorenzo.bianconi@st.com> <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop> <20170711192656.7fd08a1c@kernel.org> <CAL_JsqJa7JeofpG=66AnVrTP4XtVrp9B4-QoLTyK08GzF4L5uQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] Documentation/devicetree: fix dead links to PCI/OF specs
+Date: Tue, 11 Jul 2017 14:01:38 -0500
+Message-ID: <CAL_Jsq+1NuBedduhO=RqAo9Jq4mzQXudKgTn8L+kk_=q5vpCRg@mail.gmail.com>
+References: <20170707004323.22550-1-briannorris@chromium.org>
+ <20170710143313.xfa7ezbgj67clkt3@rob-hp-laptop> <20170710174343.GA136482@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJa7JeofpG=66AnVrTP4XtVrp9B4-QoLTyK08GzF4L5uQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170710174343.GA136482@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 11 July 2017 19:42:54 BST, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->On Tue, Jul 11, 2017 at 1:26 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->wrote:
->> On Mon, 10 Jul 2017 21:51:58 -0500
->> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Mon, Jul 10, 2017 at 12:43 PM, Brian Norris <briannorris@chromium.org> wrote:
+> On Mon, Jul 10, 2017 at 09:33:13AM -0500, Rob Herring wrote:
+>> On Thu, Jul 06, 2017 at 05:43:23PM -0700, Brian Norris wrote:
+>> > www.firmware.org doesn't resolve for me. I found these equivalent URLs
+>> > by taking the redirects from the previous (openfirmware.org) URLs, as
+>> > seen before commit f517256a6867 ("Documentation/devicetree: Update PCI
+>> > Device Tree bindings") updated them.
+>> >
+>> > Signed-off-by: Brian Norris <briannorris@chromium.org>
+>> > ---
+>> > This is my best attempt at a resolution. I'm not sure what firmware.org is or
+>> > if its owner is even legit. It does seem like openfirmware.info is a proper
+>> > successor to openfirmware.org, and it's registered to a coreboot dev.
 >>
->>> On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:
->>> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->>> > ---
->>> >  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8
->++++++++
->>> >  1 file changed, 8 insertions(+)
->>> >
->>> > diff --git
->a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
->b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
->>> > index fca263e13400..732b83c06c08 100644
->>> > --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
->>> > +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
->>> > @@ -5,6 +5,14 @@ Required properties:
->>> >  - reg: i2c address of the sensor / spi cs line
->>> >
->>> >  Optional properties:
->>> > +- drive-open-drain: the interrupt/data ready line will be
->configured
->>>
->>> Needs a vendor prefix and "drdy-open-drain" would be more specific.
->> This is straight out of the pinctrl bindings and has been used in a
->few
->> other places as well.  I can see it should really be more obviously
->> associated with the drdy pin though.  A few IIO drivers already
->> use this binding (st sensors and the lsm6dsx).  If we are going
->> to decide it's a bad idea we should deprecate those bindings and
->> add whatever we do here as well.
+>> This site doesn't seem to be complete. There was still a complete mirror
+>> (matching playground.sun.com) at one point, but I can't seem to find it
+>> now. Fortunately, I had archived off the whole mirror with the intention
+>> of putting it on devicetree.org. Let me get moving on that.
 >
->Ah, okay. Then the description should have a  "see pinctrl.txt" for
->the description.
-Agreed. 
->
->Rob
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I don't really know what "complete" is; I just want my URLs to point
+> somewhere useful :) So whatever suits you best. At least these links
+> correctly have titles / reference numbers included alongside, so I can
+> search for the correct thing myself.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Here's what it looks like:
+
+http://people.linaro.org/~rob.herring/openfirmware/1275/
+
+There's a bunch of really ancient stuff that we don't care about with
+FDT and non-PC style systems.
+
+> BTW, I think I missed some other bad links in the tree. v4.12 release
+> still points to these:
+>
+> origin/master:Documentation/devicetree/bindings/usb/usb-device.txt:5:http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
+
+This should be in the above.
+
+> origin/master:Documentation/devicetree/booting-without-of.txt:1285:<http://www.openfirmware.org/ofwg/practice/>
+
+That should be this I think:
+
+http://people.linaro.org/~rob.herring/openfirmware/1275/practice/
+
+But don't send me patches with the above urls.
+
+Rob
