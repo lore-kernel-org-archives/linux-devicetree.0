@@ -1,67 +1,40 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 2/2] ARM: dts: stm32: enable ADC on stm32h743i-eval board
-Date: Tue, 11 Jul 2017 18:13:10 +0200
-Message-ID: <1499789590-13021-3-git-send-email-fabrice.gasnier@st.com>
-References: <1499789590-13021-1-git-send-email-fabrice.gasnier@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ata: sata_rcar: add gen[23] fallback compatibility
+ strings
+Date: Tue, 11 Jul 2017 19:23:40 +0300
+Message-ID: <85f13b7a-0bf4-e2fa-b57c-08d002caf892@cogentembedded.com>
+References: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499789590-13021-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: alexandre.torgue@st.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Tejun Heo <tj@kernel.org>
+Cc: linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-There's a potentiometer connected to ADC1 and ADC2 in0 on
-stm32h743i-eval board.
-- Add fixed-voltage 'vdda' regulator that supplies 'vref' pin.
-  It's used as voltage reference for ADC and/or DAC.
-- Enable ADC1 in0 input (arbitrary choice: could be ADC2 as well).
-Note: No pinctrl is needed to use in0 dedicated analog input pin
-(e.g. ADC12_INP0).
+On 07/11/2017 02:44 PM, Simon Horman wrote:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32h743i-eval.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+> Add fallback compatibility string for R-Car Gen 2 and 3.
+>
+> In the case of Renesas R-Car hardware we know that there are generations of
+> SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
+> between IP blocks might be. For example, I believe that r8a7790 is older
+> than r8a7791 but that doesn't imply that the latter is a descendant of the
+> former or vice versa.
+>
+> We can, however, by examining the documentation and behaviour of the
+> hardware at run-time observe that the current driver implementation appears
+> to be compatible with the IP blocks on SoCs within a given generation.
+>
+> For the above reasons and convenience when enabling new SoCs a
+> per-generation fallback compatibility string scheme being adopted for
+> drivers for Renesas SoCs.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+[...]
 
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index c6effbb..6c07786 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -60,6 +60,24 @@
- 	aliases {
- 		serial0 = &usart1;
- 	};
-+
-+	vdda: regulator-vdda {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdda";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&adc_12 {
-+	vref-supply = <&vdda>;
-+	status = "okay";
-+	adc1: adc@0 {
-+		/* potentiometer */
-+		st,adc-channels = <0>;
-+		status = "okay";
-+	};
- };
- 
- &clk_hse {
--- 
-1.9.1
+Acked-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+MBR, Sergei
