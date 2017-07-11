@@ -1,25 +1,28 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: ls1046a: Add dis_rxdet_inp3_quirk property
- to USB3 node
-Date: Tue, 11 Jul 2017 09:55:05 +0800
-Message-ID: <20170711015503.GA3172@dragon>
-References: <1496370600-31442-1-git-send-email-ran.wang_1@nxp.com>
- <AM3PR04MB1489D79BAAC1C8AC3823BDB1F1D40@AM3PR04MB1489.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH v4 1/3] ARM: dts: imx6ul-isiot: Move common nodes in
+ imx6ul-isiot.dtsi
+Date: Tue, 11 Jul 2017 10:05:47 +0800
+Message-ID: <20170711020545.GB3172@dragon>
+References: <1497528219-20396-1-git-send-email-jteki@openedev.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM3PR04MB1489D79BAAC1C8AC3823BDB1F1D40@AM3PR04MB1489.eurprd04.prod.outlook.com>
+In-Reply-To: <1497528219-20396-1-git-send-email-jteki@openedev.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mihai Emilian Bantea <mihai.bantea@nxp.com>, Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Gang Liu <gang.liu@nxp.com>, open list <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Jia Hongtao <hongtao.jia@nxp.com>, York Sun <york.sun@nxp.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+To: Jagan Teki <jagannadh.teki@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 03:15:19AM +0000, Ran Wang wrote:
-> Hello Sir,
->     How is the review result of this patch. I am waiting for it be merged, thanks.
+On Thu, Jun 15, 2017 at 05:33:37PM +0530, Jagan Teki wrote:
+> From: Jagan Teki <jagan@amarulasolutions.com>
+> 
+> Maintaining separate dtsi file with common nodes make unclear and
+> confusing since -isiot.dtsi is available for adding common nodes.
+> If the nodes are common between the dts files then mark status
+> as "okay" otherwise mark it "disabled" so-that respective dts
+> can mark status "okay"
+> 
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-The patch has been merged into Linus' tree.  Sorry for that I forgot to
-reply telling the patch was applied.
-
-Shawn
+Applied all, thanks.
