@@ -1,32 +1,84 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
-Date: Tue, 11 Jul 2017 11:07:27 +0200
-Message-ID: <20170711090727.GH4517@verge.net.au>
-References: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
- <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdWA-qJW8wENRYEFUmoSM7G+DR3wcT9hQ0_1Z7ysUjZkBw@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible
+ string for SMC
+Date: Tue, 11 Jul 2017 10:25:56 +0100
+Message-ID: <20170711092556.mukp4umf4r4etqvt@dell>
+References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
+ <20170711074015.30440-4-ludovic.desroches@microchip.com>
+ <029b80a8-2d3f-11b4-d4df-55f5fc48c8e7@microchip.com>
+ <20170711075829.5rzdrjgao6efiuj2@rfolt0960.corp.atmel.com>
+ <20170711080853.uxdmxocq5nhrp7vq@rfolt0960.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWA-qJW8wENRYEFUmoSM7G+DR3wcT9hQ0_1Z7ysUjZkBw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+In-Reply-To: <20170711080853.uxdmxocq5nhrp7vq-fC2aZbRiGnsAAwgTK2POJVCF2YAvjlIb@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 05:51:09PM +0200, Geert Uytterhoeven wrote:
-> On Mon, Jul 10, 2017 at 5:32 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> > Add a new compatible string for the RZ/G1M (R8A7743) SoC.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+On Tue, 11 Jul 2017, Ludovic Desroches wrote:
+
+> On Tue, Jul 11, 2017 at 09:58:29AM +0200, Ludovic Desroches wrote:
+> > On Tue, Jul 11, 2017 at 09:52:58AM +0200, Nicolas Ferre wrote:
+> > > On 11/07/2017 at 09:40, Ludovic Desroches wrote:
+> > > > A new compatible string has been introduced for sama5d2 SMC to allow to
+> > > > manage the registers mapping change.
+> > > > 
+> > > > Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> > > > ---
+> > > >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+> > > > index 4fcd5bb219e3..60e69aeacbdb 100644
+> > > > --- a/arch/arm/boot/dts/sama5d2.dtsi
+> > > > +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> > > > @@ -1048,7 +1048,7 @@
+> > > >  			};
+> > > >  
+> > > >  			hsmc: hsmc@f8014000 {
+> > > > -				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
+> > > > +				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
+> > > 
+> > > You'd better use something like:
+> > >  compatible = "atmel,sama5d2-smc", "atmel,sama5d3-smc", "syscon", "simple-mfd";
+> > 
+> > But it's not true, during data interface setup, we will write values in
+> > the wrong place if we fallback on "atmel,sama5d3-smc".
+> > 
+> > Regards
+> > 
+> > Ludovic
+> > 
+> > > 
+> > > So that this patch is independent from the rest of the series and
+> > > we can avoid to having to synchronize with mfd or mtd/nand for this part.
 > 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> If Lee and Boris agree, maybe the series can go through AT91.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+That's fine, but if the series goes though another tree, I will
+require a pull-request.
 
-I believe that as net-next is currently closed you should repost it once
-it re-opens (likely in about a week) with the following subject prefix
-and Geert's tag.
+I am also happy to carry though the MFD tree (and will of course send
+out a PR to the other affected Maintainers).
 
-[PATCH net-next repost v2]
+> > > Regards,
+> > > 
+> > > >  				reg = <0xf8014000 0x1000>;
+> > > >  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
+> > > >  				clocks = <&hsmc_clk>;
+> > > > 
+> > > 
+> > > 
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
