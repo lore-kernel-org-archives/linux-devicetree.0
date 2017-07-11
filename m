@@ -1,74 +1,43 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible
- string for SMC
-Date: Tue, 11 Jul 2017 10:08:53 +0200
-Message-ID: <20170711080853.uxdmxocq5nhrp7vq@rfolt0960.corp.atmel.com>
-References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
- <20170711074015.30440-4-ludovic.desroches@microchip.com>
- <029b80a8-2d3f-11b4-d4df-55f5fc48c8e7@microchip.com>
- <20170711075829.5rzdrjgao6efiuj2@rfolt0960.corp.atmel.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W
+ HDMI TX DT bindings
+Date: Tue, 11 Jul 2017 11:00:55 +0200
+Message-ID: <20170711090055.GE4517@verge.net.au>
+References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
+ <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
+ <20170710092531.GA15635@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170711075829.5rzdrjgao6efiuj2-fC2aZbRiGnsAAwgTK2POJVCF2YAvjlIb@public.gmane.org>
+In-Reply-To: <20170710092531.GA15635-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 09:58:29AM +0200, Ludovic Desroches wrote:
-> On Tue, Jul 11, 2017 at 09:52:58AM +0200, Nicolas Ferre wrote:
-> > On 11/07/2017 at 09:40, Ludovic Desroches wrote:
-> > > A new compatible string has been introduced for sama5d2 SMC to allow to
-> > > manage the registers mapping change.
+On Mon, Jul 10, 2017 at 11:25:31AM +0200, Simon Horman wrote:
+> On Mon, Jun 26, 2017 at 10:56:42AM -0500, Rob Herring wrote:
+> > On Wed, Jun 21, 2017 at 12:31:27PM +0300, Laurent Pinchart wrote:
+> > > The M3-W HDMI TX controller seems to be compatible for the H3. No
+> > > extension to the DT bindings are needed, add an SoC-specific compatible
+> > > string in case differences between the IP versions are found later and
+> > > require model-specific handling.
 > > > 
-> > > Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 > > > ---
-> > >  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> > > index 4fcd5bb219e3..60e69aeacbdb 100644
-> > > --- a/arch/arm/boot/dts/sama5d2.dtsi
-> > > +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> > > @@ -1048,7 +1048,7 @@
-> > >  			};
-> > >  
-> > >  			hsmc: hsmc@f8014000 {
-> > > -				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
-> > > +				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
+> > >  Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
 > > 
-> > You'd better use something like:
-> >  compatible = "atmel,sama5d2-smc", "atmel,sama5d3-smc", "syscon", "simple-mfd";
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> But it's not true, during data interface setup, we will write values in
-> the wrong place if we fallback on "atmel,sama5d3-smc".
+> Applied for v4.14.
 > 
-> Regards
-> 
-> Ludovic
-> 
-> > 
-> > So that this patch is independent from the rest of the series and
-> > we can avoid to having to synchronize with mfd or mtd/nand for this part.
+> I am not applying the dts changes for now pending resolution of the
+> potential bisection problem in patch 4 which I pointed out in response to that patch.
 
-If Lee and Boris agree, maybe the series can go through AT91.
-
-Regards
-
-Ludovic
-
-> > 
-> > Regards,
-> > 
-> > >  				reg = <0xf8014000 0x1000>;
-> > >  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
-> > >  				clocks = <&hsmc_clk>;
-> > > 
-> > 
-> > 
-> > -- 
-> > Nicolas Ferre
+That problem has now been resolved and I have applied this series for v4.14.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
