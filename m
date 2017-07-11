@@ -1,39 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: Add support for
- Orise Tech otm8009a dsi panel
-Date: Mon, 10 Jul 2017 21:57:54 -0500
-Message-ID: <20170711025754.qxb6jkdxhrj45eh3@rob-hp-laptop>
-References: <1499677333-10571-1-git-send-email-philippe.cornu@st.com>
- <1499677333-10571-3-git-send-email-philippe.cornu@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: remove arm,mali-midgard
+ compatible from rk3288
+Date: Mon, 10 Jul 2017 22:00:00 -0500
+Message-ID: <20170711030000.uj7jhiqwnzkm76w2@rob-hp-laptop>
+References: <20170710121227.14264-1-heiko@sntech.de>
+ <20170710121227.14264-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499677333-10571-3-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170710121227.14264-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMTAsIDIwMTcgYXQgMTE6MDI6MTJBTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
-d3JvdGU6Cj4gVGhlIE9yaXNlIFRlY2ggT1RNODAwOUEgaXMgYSAzLjk3IiA0ODB4ODAwIFRGVCBM
-Q0QgcGFuZWwgY29ubmVjdGVkIHVzaW5nCj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0
-cyBiYWNrbGlnaHQgaXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+IC0tLQo+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3RtODAwOWEudHh0ICAgfCAyMSAr
-KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQKCkFja2VkLWJ5OiBSb2IgSGVycmlu
-ZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Mon, Jul 10, 2017 at 02:12:27PM +0200, Heiko Stuebner wrote:
+> The binding specifies the actual implementations only (mali-t760
+> for example) but not the arm,mali-midgard used in some vendor kernels.
+> So drop that compatible property from the rk3288 where it had slipped in.
+> 
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3288.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index cb1d415d1201..e99d7ff4c939 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -1135,7 +1135,7 @@
+>  	};
+>  
+>  	gpu: mali@ffa30000 {
+
+This should also be gpu@..., not mali.
+
+> -		compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
+> +		compatible = "rockchip,rk3288-mali", "arm,mali-t760";
+>  		reg = <0xffa30000 0x10000>;
+>  		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
