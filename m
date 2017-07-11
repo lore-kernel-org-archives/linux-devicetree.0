@@ -1,105 +1,62 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 1/3] ASoC: codec: cpcap: new codec
-Date: Tue, 11 Jul 2017 14:13:31 +0200
-Message-ID: <20170711121331.7q5bhfrylwwwyyte@earth>
-References: <20170707164229.5868-1-sebastian.reichel@collabora.co.uk>
- <20170707164229.5868-2-sebastian.reichel@collabora.co.uk>
- <20170710175152.2jglyjezvptamreq@sirena.org.uk>
- <20170711051540.GV3730@atomide.com>
- <20170711104911.wmzmt5fjkzghwljz@sirena.org.uk>
+From: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
+Date: Tue, 11 Jul 2017 12:20:06 +0000
+Message-ID: <TY1PR06MB07023342440946F384B7C80EB7AE0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+References: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
+ <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
+ <52eb0b92-5d25-e1f4-df54-e4fcf648c90e@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6527179532664384158=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170711104911.wmzmt5fjkzghwljz@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <52eb0b92-5d25-e1f4-df54-e4fcf648c90e-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============6527179532664384158==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4tfxbgrb2biabhwv"
-Content-Disposition: inline
-
-
---4tfxbgrb2biabhwv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jul 11, 2017 at 11:49:11AM +0100, Mark Brown wrote:
-> On Mon, Jul 10, 2017 at 10:15:41PM -0700, Tony Lindgren wrote:
-> > * Mark Brown <broonie@kernel.org> [170710 10:52]:
->=20
-> > > If this is part of a MFD shouldn't the parent device register it with=
-out
-> > > it needing to be in the DT?
->=20
-> > Having the MFD core part just do devm_of_platform_populate() leaves out
-> > dependencies between the MFD core and it's child devices.
->=20
-> > There are also a lot of board specific configuration to be done for many
-> > child devices such as ADC wiring, GPIO pins used, and macro firmware
-> > usage.
->=20
-> > Not sure what all board specific stuff needs to be configured for this
-> > driver yet, but it seems at least the macro interrupt wiring needs to
-> > be configured. I would not be surprised to find GPIOs or ADC being used
-> > for some connector detection too.
->=20
-> We can use subnodes without compatible strings, that's not a problem,
-> but having to have compatible strings means we're encoding the way Linux
-> splits device drivers up into the DT which might not work for other OSs
-> or even future versions of Linux.  For example with CODEC drivers it's
-> common to have a good chunk of clock control in there which we might at
-> some point want to move over to the clock subsystem.
-
-How is having a subnode without a compatible property different?
-Sure we will bind the driver manually and make our code (a little
-bit) more complex, but we still encoded the way Linux splits the
-device into DT. My understanding is, that adding a node without a
-compatible value is almost always not ok.
-
--- Sebastian
-
---4tfxbgrb2biabhwv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllkwOkACgkQ2O7X88g7
-+pqWdA/+JKo7S+MZtCH5vKEnPLPr2IIF5Nfsm8N+e9BzylE/3N1ZWT6/Vjfb0w7M
-EpPWLGGT1zAOYFCV2ayx69uTeBarX4mjBFPlkZL/Rf6iDYuzmcKzuhXJSnZ6aAwr
-s/txq4vm9TU7KCgGklla8st/4FsuqeeqS99RHFkEuY5sFXresW1T/xlRFue09sjp
-GKo7QAzWyFbKqNWGKdMcETGHQ5/gXPLYHjaQVPH1AYLRDAG1DjO8M5z+DDNq9fiY
-ro3BeFEdN1mCWraPI5B7Zp9awnXwJut0xKlCLDcpl8x/dmAFPV2GXMGDslN7zrBz
-RUGz+oetfMFlcUnXwre1uWSJ4y/Vouwt3Q5Sd4ptAhZkNTE2H5nzT1j7VSFCHmRA
-dcnSa1Tti0kpuDB49MO8QfZTRy937lEBZvV7JNTT3VSWkG5hsJotq87biOfmWfzH
-fumO1Vsf03QKMtnsavQ3Ya+qG1ZFK2qN+C1h1pkh4wZNgsFrO7snOGTGZ4Y0KlsS
-5dGhzlP5dOd0hdiTVp/i2YPNDAfduN79+v2aUZ58wGoBachcEJJ2dz2f60H01yJR
-Jq5zbASShnB6XRWnRSjelDXHx9sfqx1ytku8RSvnx7SucRvUf6sO1YjT0YSQ6H6f
-KLufghKamFzt5XLyDzRIMruo5Rhcp6t0tmIaJMk94Mj3yDaS0SE=
-=qw1m
------END PGP SIGNATURE-----
-
---4tfxbgrb2biabhwv--
-
---===============6527179532664384158==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6527179532664384158==--
+SGVsbG8gU2VyZ2VpLA0KDQo+IEZyb206IFNlcmdlaSBTaHR5bHlvdiBbbWFpbHRvOnNlcmdlaS5z
+aHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb21dDQo+IFNlbnQ6IDExIEp1bHkgMjAxNyAxMzoxMg0K
+PiANCj4gSGVsbG8hDQo+IA0KPiBPbiAwNy8xMC8yMDE3IDA2OjMyIFBNLCBCaWp1IERhcyB3cm90
+ZToNCj4gDQo+ID4gQWRkIGEgbmV3IGNvbXBhdGlibGUgc3RyaW5nIGZvciB0aGUgUlovRzFNIChS
+OEE3NzQzKSBTb0MuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNA
+YnAucmVuZXNhcy5jb20+DQo+ID4gLS0tDQo+ID4gdjEtPnYyDQo+ID4gKiBDaGFuZ2VkIHRoZSBz
+dWJqZWN0DQo+ID4gKiByZS1mb3JtYXR0ZWQgdGhlIHJlcXVpcmVkIHByb3BlcnRpZXMNCj4gPg0K
+PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dCAgICAgICB8
+IDI5ICsrKysrKysrKysrKystLS0tLS0NCj4gLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNyBp
+bnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3JlbmVzYXMscmF2Yi50eHQNCj4gPiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dA0K
+PiA+IGluZGV4IGI1MTk1MDMuLjQ3MTdiYzIgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9yZW5lc2FzLHJhdmIudHh0DQo+ID4gKysrIGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9yZW5lc2FzLHJhdmIudHh0DQo+ID4g
+QEAgLTQsMTkgKzQsMjQgQEAgVGhpcyBmaWxlIHByb3ZpZGVzIGluZm9ybWF0aW9uIG9uIHdoYXQg
+dGhlIGRldmljZQ0KPiA+IG5vZGUgZm9yIHRoZSBFdGhlcm5ldCBBVkIgIGludGVyZmFjZSBjb250
+YWlucy4NCj4gPg0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+IC0tIGNvbXBhdGlibGU6
+ICJyZW5lc2FzLGV0aGVyYXZiLXI4YTc3OTAiIGlmIHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9mIFI4
+QTc3OTANCj4gU29DLg0KPiA+IC0JICAgICAgInJlbmVzYXMsZXRoZXJhdmItcjhhNzc5MSIgaWYg
+dGhlIGRldmljZSBpcyBhIHBhcnQgb2YgUjhBNzc5MSBTb0MuDQo+ID4gLQkgICAgICAicmVuZXNh
+cyxldGhlcmF2Yi1yOGE3NzkyIiBpZiB0aGUgZGV2aWNlIGlzIGEgcGFydCBvZiBSOEE3NzkyIFNv
+Qy4NCj4gPiAtCSAgICAgICJyZW5lc2FzLGV0aGVyYXZiLXI4YTc3OTMiIGlmIHRoZSBkZXZpY2Ug
+aXMgYSBwYXJ0IG9mIFI4QTc3OTMgU29DLg0KPiA+IC0JICAgICAgInJlbmVzYXMsZXRoZXJhdmIt
+cjhhNzc5NCIgaWYgdGhlIGRldmljZSBpcyBhIHBhcnQgb2YgUjhBNzc5NCBTb0MuDQo+ID4gLQkg
+ICAgICAicmVuZXNhcyxldGhlcmF2Yi1yOGE3Nzk1IiBpZiB0aGUgZGV2aWNlIGlzIGEgcGFydCBv
+ZiBSOEE3Nzk1IFNvQy4NCj4gPiAtCSAgICAgICJyZW5lc2FzLGV0aGVyYXZiLXI4YTc3OTYiIGlm
+IHRoZSBkZXZpY2UgaXMgYSBwYXJ0IG9mIFI4QTc3OTYgU29DLg0KPiA+IC0JICAgICAgInJlbmVz
+YXMsZXRoZXJhdmItcmNhci1nZW4yIiBmb3IgZ2VuZXJpYyBSLUNhciBHZW4gMiBjb21wYXRpYmxl
+DQo+IGludGVyZmFjZS4NCj4gPiAtCSAgICAgICJyZW5lc2FzLGV0aGVyYXZiLXJjYXItZ2VuMyIg
+Zm9yIGdlbmVyaWMgUi1DYXIgR2VuIDMgY29tcGF0aWJsZQ0KPiBpbnRlcmZhY2UuDQo+ID4gKy0g
+Y29tcGF0aWJsZTogTXVzdCBjb250YWluIG9uZSBvciBtb3JlIG9mIHRoZSBmb2xsb3dpbmc6DQo+
+IA0KPiAgICAgTm8sIGl0IGNhbid0IGNvbnRhaW4gbW9yZSB0aGFuIG9uZSBTb0Mgc3BlY2lmaWMg
+dmFsdWUuDQoNClN1cmVseSBpdCBjYW4gY29udGFpbiBib3RoICJyZW5lc2FzLGV0aGVyYXZiLXI4
+YTc3NDMiIGFuZCAicmVuZXNhcyxldGhlcmF2Yi1yY2FyLWdlbjIiIGZvciBleGFtcGxlPw0KDQpB
+cyBpbmRlZWQgZGljdGF0ZWQgYnkgdGhlIGluc3RydWN0aW9uIGZ1cnRoZXIgZG93bjoNCg0KPiA+
+ICsJV2hlbiBjb21wYXRpYmxlIHdpdGggdGhlIGdlbmVyaWMgdmVyc2lvbiwgbm9kZXMgbXVzdCBs
+aXN0IHRoZQ0KPiA+ICsJU29DLXNwZWNpZmljIHZlcnNpb24gY29ycmVzcG9uZGluZyB0byB0aGUg
+cGxhdGZvcm0gZmlyc3QgZm9sbG93ZWQgYnkNCj4gPiArCXRoZSBnZW5lcmljIHZlcnNpb24uDQoN
+CktpbmQgcmVnYXJkcywgQ2hyaXMNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
