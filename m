@@ -1,188 +1,175 @@
-From: Jan Kiszka <jan.kiszka@siemens.com>
-Subject: Re: [PATCH] gpio/serial: revert "linux,first-pin" property handling
-Date: Tue, 11 Jul 2017 17:42:56 +0200
-Message-ID: <5310fa81-dc0e-75b1-05fb-2ec9b558f867@siemens.com>
-References: <20170710140902.21935-1-linus.walleij@linaro.org>
- <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
+From: Dragos Bogdan <dragos.bogdan@analog.com>
+Subject: [PATCH v2] power: supply: ltc2941-battery-gauge: Add LTC2944 support
+Date: Tue, 11 Jul 2017 19:07:32 +0300
+Message-ID: <20170711160732.16170-1-dragos.bogdan@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dragos Bogdan <dragos.bogdan@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-10 16:23, Jan Kiszka wrote:
-> On 2017-07-10 16:09, Linus Walleij wrote:
->> This is not a legal device tree property, because its binding has
->> not been reviewed and approved, nor does it exist in any device
->> tree binding document.
->>
->> It is further wrong, because it is added to the GPIO offset which
->> is by definition controller-local.
+The only difference between the already supported LTC2943 and LTC2944 is the operating range (3.6V - 20V compared to 3.6V - 60V).
 
-BTW, I don't get this second statement. The parameter passed in is
-controlling which pin of the GPIO device can be controlled by the driver
-at all. And that's also a very private interface between 8250_exar and
-gpio-exar: the former tells the latter which pins are physically
-available to drive, because the former operates the others already.
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+---
+Changes in v2:
+- Fix the voltage and current conversion.
 
->>
->> Cc: Jan Kiszka <jan.kiszka@siemens.com>
->> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->> ---
->> This got in because I was stressed and was not paying attention.
->> Sorry about not noticing earlier, but I usually strongly nix any
->> such properties, please discuss this on the device tree list
->> first.
->> ---
->>  drivers/gpio/gpio-exar.c            | 25 +++++++++----------------
->>  drivers/tty/serial/8250/8250_exar.c |  2 --
->>  2 files changed, 9 insertions(+), 18 deletions(-)
->>
->> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
->> index fb8d304cfa17..d02c5260525f 100644
->> --- a/drivers/gpio/gpio-exar.c
->> +++ b/drivers/gpio/gpio-exar.c
->> @@ -31,7 +31,6 @@ struct exar_gpio_chip {
->>  	int index;
->>  	void __iomem *regs;
->>  	char name[20];
->> -	unsigned int first_pin;
->>  };
->>  
->>  static void exar_update(struct gpio_chip *chip, unsigned int reg, int val,
->> @@ -53,9 +52,9 @@ static int exar_set_direction(struct gpio_chip *chip, int direction,
->>  			      unsigned int offset)
->>  {
->>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
->> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
->> +	unsigned int addr = offset / 8 ?
->>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
->> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
->> +	unsigned int bit  = offset % 8;
->>  
->>  	exar_update(chip, addr, direction, bit);
->>  	return 0;
->> @@ -76,9 +75,9 @@ static int exar_get(struct gpio_chip *chip, unsigned int reg)
->>  static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
->>  {
->>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
->> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
->> +	unsigned int addr = offset / 8 ?
->>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
->> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
->> +	unsigned int bit  = offset % 8;
->>  
->>  	return !!(exar_get(chip, addr) & BIT(bit));
->>  }
->> @@ -86,9 +85,9 @@ static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
->>  static int exar_get_value(struct gpio_chip *chip, unsigned int offset)
->>  {
->>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
->> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
->> +	unsigned int addr = offset / 8 ?
->>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
->> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
->> +	unsigned int bit  = offset % 8;
->>  
->>  	return !!(exar_get(chip, addr) & BIT(bit));
->>  }
->> @@ -97,9 +96,9 @@ static void exar_set_value(struct gpio_chip *chip, unsigned int offset,
->>  			   int value)
->>  {
->>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
->> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
->> +	unsigned int addr = offset / 8 ?
->>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
->> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
->> +	unsigned int bit  = offset % 8;
->>  
->>  	exar_update(chip, addr, value, bit);
->>  }
->> @@ -120,7 +119,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
->>  {
->>  	struct pci_dev *pcidev = to_pci_dev(pdev->dev.parent);
->>  	struct exar_gpio_chip *exar_gpio;
->> -	u32 first_pin, ngpios;
->> +	u32 ngpios;
->>  	void __iomem *p;
->>  	int index, ret;
->>  
->> @@ -132,11 +131,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
->>  	if (!p)
->>  		return -ENOMEM;
->>  
->> -	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
->> -				       &first_pin);
->> -	if (ret)
->> -		return ret;
->> -
->>  	ret = device_property_read_u32(&pdev->dev, "ngpios", &ngpios);
->>  	if (ret)
->>  		return ret;
->> @@ -161,7 +155,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
->>  	exar_gpio->gpio_chip.ngpio = ngpios;
->>  	exar_gpio->regs = p;
->>  	exar_gpio->index = index;
->> -	exar_gpio->first_pin = first_pin;
->>  
->>  	ret = devm_gpiochip_add_data(&pdev->dev,
->>  				     &exar_gpio->gpio_chip, exar_gpio);
->> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
->> index b5c98e5bf524..4fb3a4ed4a1f 100644
->> --- a/drivers/tty/serial/8250/8250_exar.c
->> +++ b/drivers/tty/serial/8250/8250_exar.c
->> @@ -261,7 +261,6 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
->>  }
->>  
->>  static const struct property_entry exar_gpio_properties[] = {
->> -	PROPERTY_ENTRY_U32("linux,first-pin", 0),
->>  	PROPERTY_ENTRY_U32("ngpios", 16),
->>  	{ }
->>  };
->> @@ -326,7 +325,6 @@ static int iot2040_rs485_config(struct uart_port *port,
->>  }
->>  
->>  static const struct property_entry iot2040_gpio_properties[] = {
->> -	PROPERTY_ENTRY_U32("linux,first-pin", 10),
->>  	PROPERTY_ENTRY_U32("ngpios", 1),
->>  	{ }
->>  };
->>
-> 
-> Sorry for the mess, I didn't know the proper process in details.
-> 
-> However, just reverting breaks the IOT2000, need to check if there are
-> even physical risks. How can we quickly resolve this to proper mechanism?
+ .../devicetree/bindings/power/supply/ltc2941.txt   | 10 ++---
+ drivers/power/supply/ltc2941-battery-gauge.c       | 46 +++++++++++++++++-----
+ 2 files changed, 41 insertions(+), 15 deletions(-)
 
-Ping, before we half-break things with such a revert.
-
-To summarize what we discussed during the patch development:
-
-This is a private, non-device-tree interface between the creator,
-8250_exar, and the GPIO device. The original proposal was to not use
-device properties at all, rather some platform-data-like pattern [1].
-Then we switched to properties [2], but that implicitly creates an
-interfaces in the space that is under device tree control. But, for the
-given use case, gpio-exar will never be parametrized via device trees or
-ACPI.
-
-So, how to proceed?
-
-Jan
-
-[1]
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1399507.html
-[2]
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1407975.html
-
+diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+index a9d7aa60558b..ed0f02846d10 100644
+--- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
++++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+@@ -1,9 +1,9 @@
+-binding for LTC2941 and LTC2943 battery gauges
++binding for LTC2941, LTC2943 and LTC2944 battery gauges
+ 
+-Both the LTC2941 and LTC2943 measure battery capacity.
+-The LTC2943 is compatible with the LTC2941, it adds voltage and
+-temperature monitoring, and uses a slightly different conversion
+-formula for the charge counter.
++All the LTC2941, LTC2943 and LTC2944 measure battery capacity.
++The LTC2943 and LTC2944 are compatible with the LTC2941, they add voltage and
++temperature monitoring, and use a slightly different conversion formula for the
++charge counter.
+ 
+ Required properties:
+ - compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
+diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
+index 7efb908f4451..4c979b1a022b 100644
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -1,5 +1,5 @@
+ /*
+- * I2C client/driver for the Linear Technology LTC2941 and LTC2943
++ * I2C client/driver for the Linear Technology LTC2941, LTC2943 and LTC2944
+  * Battery Gas Gauge IC
+  *
+  * Copyright (C) 2014 Topic Embedded Systems
+@@ -57,6 +57,12 @@ enum ltc294x_reg {
+ #define LTC2941_NUM_REGS	0x08
+ #define LTC2943_NUM_REGS	0x18
+ 
++enum ltc294x_id {
++	LTC2941_ID,
++	LTC2943_ID,
++	LTC2944_ID,
++};
++
+ struct ltc294x_info {
+ 	struct i2c_client *client;	/* I2C Client pointer */
+ 	struct power_supply *supply;	/* Supply pointer */
+@@ -66,6 +72,7 @@ struct ltc294x_info {
+ 	int charge;	/* Last charge register content */
+ 	int r_sense;	/* mOhm */
+ 	int Qlsb;	/* nAh */
++	enum ltc294x_id id;
+ };
+ 
+ static inline int convert_bin_to_uAh(
+@@ -145,7 +152,7 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
+ 
+ 	control = LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |
+ 				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;
+-	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */
++	/* Put the 2943/4 into "monitor" mode, so it measures every 10 sec */
+ 	if (info->num_regs == LTC2943_NUM_REGS)
+ 		control |= LTC2943_REG_CONTROL_MODE_SCAN;
+ 
+@@ -248,11 +255,16 @@ static int ltc294x_get_voltage(const struct ltc294x_info *info, int *val)
+ 	int ret;
+ 	u8 datar[2];
+ 	u32 value;
++	u32 full_scale;
+ 
+ 	ret = ltc294x_read_regs(info->client,
+ 		LTC294X_REG_VOLTAGE_MSB, &datar[0], 2);
+ 	value = (datar[0] << 8) | datar[1];
+-	*val = ((value * 23600) / 0xFFFF) * 1000; /* in uV */
++	if (info->id == LTC2944_ID)
++		full_scale = 70800;
++	else
++		full_scale = 23600;
++	*val = ((value * full_scale) / 0xFFFF) * 1000; /* in uV */
+ 	return ret;
+ }
+ 
+@@ -261,15 +273,20 @@ static int ltc294x_get_current(const struct ltc294x_info *info, int *val)
+ 	int ret;
+ 	u8 datar[2];
+ 	s32 value;
++	u32 full_scale;
+ 
+ 	ret = ltc294x_read_regs(info->client,
+ 		LTC294X_REG_CURRENT_MSB, &datar[0], 2);
+ 	value = (datar[0] << 8) | datar[1];
+ 	value -= 0x7FFF;
++	if (info->id == LTC2944_ID)
++		full_scale = 64000;
++	else
++		full_scale = 60000;
+ 	/* Value is in range -32k..+32k, r_sense is usually 10..50 mOhm,
+ 	 * the formula below keeps everything in s32 range while preserving
+ 	 * enough digits */
+-	*val = 1000 * ((60000 * value) / (info->r_sense * 0x7FFF)); /* in uA */
++	*val = 1000 * ((full_scale * value) / (info->r_sense * 0x7FFF)); /* in uA */
+ 	return ret;
+ }
+ 
+@@ -388,7 +405,11 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
+ 
+ 	np = of_node_get(client->dev.of_node);
+ 
+-	info->num_regs = (unsigned long)of_device_get_match_data(&client->dev);
++	info->id = (enum ltc294x_id)of_device_get_match_data(&client->dev);
++	if (info->id == LTC2941_ID)
++		info->num_regs = LTC2941_NUM_REGS;
++	else
++		info->num_regs = LTC2943_NUM_REGS;
+ 	info->supply_desc.name = np->name;
+ 
+ 	/* r_sense can be negative, when sense+ is connected to the battery
+@@ -492,8 +513,9 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_suspend, ltc294x_resume);
+ 
+ 
+ static const struct i2c_device_id ltc294x_i2c_id[] = {
+-	{"ltc2941", LTC2941_NUM_REGS},
+-	{"ltc2943", LTC2943_NUM_REGS},
++	{"ltc2941", LTC2941_ID},
++	{"ltc2943", LTC2943_ID},
++	{"ltc2944", LTC2944_ID},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
+@@ -501,11 +523,15 @@ MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
+ static const struct of_device_id ltc294x_i2c_of_match[] = {
+ 	{
+ 		.compatible = "lltc,ltc2941",
+-		.data = (void *)LTC2941_NUM_REGS
++		.data = (void *)LTC2941_ID
+ 	},
+ 	{
+ 		.compatible = "lltc,ltc2943",
+-		.data = (void *)LTC2943_NUM_REGS
++		.data = (void *)LTC2943_ID
++	},
++	{
++		.compatible = "lltc,ltc2944",
++		.data = (void *)LTC2944_ID
+ 	},
+ 	{ },
+ };
+@@ -525,5 +551,5 @@ module_i2c_driver(ltc294x_driver);
+ 
+ MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
+ MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
+-MODULE_DESCRIPTION("LTC2941/LTC2943 Battery Gas Gauge IC driver");
++MODULE_DESCRIPTION("LTC2941/LTC2943/LTC2944 Battery Gas Gauge IC driver");
+ MODULE_LICENSE("GPL");
 -- 
-Siemens AG, Corporate Technology, CT RDA ITP SES-DE
-Corporate Competence Center Embedded Linux
+2.11.0
