@@ -1,72 +1,48 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] of: overlay: add overlay unittest data for node
- names and symbols
-Date: Mon, 10 Jul 2017 21:31:13 -0500
-Message-ID: <CAL_Jsq+dq0nngUePGvuyELmtexJyUMaTpnN1D8uEBbSPjphVyQ@mail.gmail.com>
-References: <1499713523-19184-1-git-send-email-frowand.list@gmail.com> <1499713523-19184-2-git-send-email-frowand.list@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499713523-19184-2-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Subject: [PATCH v2 4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
+Date: Tue, 11 Jul 2017 05:47:17 +0300
+Message-ID: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 2:05 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> Add nodes and properties to overlay_base and overlay dts files to
-> test for
->    - incorrect existing node name detection when overlay node name
->      has a unit-address
->    - adding overlay __symbols__ properties to live tree when an
->      overlay is added to the live tree
->
-> Expected result from patch 2/3 is overlay will update the nodes and
-> properties for /testcase-data-2/fairway-1/ride@100/
->
-> Before patch 2/3 is applied:
+From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
-This is good information, but what is patch 2/3 is less clear when
-this is committed. And 1 and 2 are probably stable material? I'd just
-note in this patch what the failures are and show before and after
-results in the patch that changes them.
+The ULCB board has one HDMI output connector.
 
->    Console error message near end of unittest:
->       OF: Duplicate name in fairway-1, renamed to "ride@100#1"
->
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/
->    $ # extra node: ride@100#1
->    $ ls
->    #address-cells  linux,phandle   phandle         ride@200
->    #size-cells     name            ride@100        status
->    compatible      orientation     ride@100#1
->    $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
->    $ ls track@3/incline_up
->    ls: track@3/incline_up: No such file or directory
->    $ ls track@4/incline_up
->    ls: track@4/incline_up: No such file or directory
+This connector is available on both the H3 and M3-W ULCB boards.
+Add this to the ulcb.dtsi file.
 
-[...]
+Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+---
+Changes in version 2:
+- removed label
 
-> diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
-> index 6e00a9c69e58..dae2fe23cd2e 100644
-> --- a/drivers/of/unittest-data/Makefile
-> +++ b/drivers/of/unittest-data/Makefile
-> @@ -1,11 +1,13 @@
->  obj-y += testcases.dtb.o
->  obj-y += overlay.dtb.o
->  obj-y += overlay_bad_phandle.dtb.o
-> +obj-y += overlay_bad_symbol.dtb.o
->  obj-y += overlay_base.dtb.o
+ arch/arm64/boot/dts/renesas/ulcb.dtsi | 10 +++++++++++
+ 1 file changed, 10 insertions(+)
 
-There's no reason for these all to be 1 per line. Also, should the
-overlay dtb's be conditioned on CONFIG_OF_OVERLAY (or whatever we call
-it)?
-
-But this is fine. That can all be a followup patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+index 6f0a7ca..fc5408d 100644
+--- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
++++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
+@@ -34,6 +34,16 @@
+ 		clock-frequency = <11289600>;
+ 	};
+ 
++	hdmi0-out {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi0_con: endpoint {
++			};
++		};
++	};
++
+ 	keyboard {
+ 		compatible = "gpio-keys";
+ 
+-- 
+1.9.1
