@@ -1,56 +1,106 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v7 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
- using the RCU module
-Date: Tue, 11 Jul 2017 23:16:31 +0200
-Message-ID: <231fc92f-5e3e-bff0-9a59-081e291f83e8@hauke-m.de>
-References: <20170702224051.15109-1-hauke@hauke-m.de>
- <20170702224051.15109-15-hauke@hauke-m.de>
- <20170707142312.5pwily3gbntvesbm@rob-hp-laptop>
- <30adb3f5-50b5-35e3-685f-9fe0fa8c31f8@ti.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [RFC 2/2] mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8
+ and Meson8b SoCs
+Date: Tue, 11 Jul 2017 23:23:44 +0200
+Message-ID: <CAFBinCA-goSsyq7bo=ozPRnOqc8br4KDJJ_Lao5h==Xneh02nw@mail.gmail.com>
+References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
+ <20170506171857.16492-3-martin.blumenstingl@googlemail.com>
+ <CAPDyKFrrSLCjbXO9R4VqPpabiFsbE6_RqR=U7otVF4Ncv0jHjQ@mail.gmail.com>
+ <CAFBinCD3modyyOpi3OY5XLhjX0UCuV+WPY2Z=mdvwdMCyeGoqg@mail.gmail.com>
+ <CAPDyKFptXRPk7mVUiRHf=hECDbeyhTxuf3K1M6NkZcVEF0Enww@mail.gmail.com>
+ <CAFBinCD=uH=oQmWAcsMpxtbJCnJZernZx3XoNaPixUUQ7pk76w@mail.gmail.com> <CAPDyKFrbxMpgDrZXKmrN4fyJWJ_ZML3jPxBs+YDEz=L1kA-BaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <30adb3f5-50b5-35e3-685f-9fe0fa8c31f8-l0cyMroinI0@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrbxMpgDrZXKmrN4fyJWJ_ZML3jPxBs+YDEz=L1kA-BaA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2017 08:38 AM, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On Friday 07 July 2017 07:53 PM, Rob Herring wrote:
->> On Mon, Jul 03, 2017 at 12:40:49AM +0200, Hauke Mehrtens wrote:
->>> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
->>> the PHY interfaces for each core. The phy instances can be passed to the
->>> dwc2 driver, which already supports the generic phy interface.
+Hi Ulf,
+
+sorry for the delay, I've been pretty busy.
+however, I'll have more time to work in this driver this and next week
+
+On Mon, Jun 19, 2017 at 1:50 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>
+>>> [...]
 >>>
->>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->>> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> 
-> I see you have added my name in cc but for some reason I don't have the patch
-> in my mailbox. Can you resend it please?
+>>>>>> +       if (!(cmd->flags & MMC_RSP_CRC))
+>>>>>> +               send |= MESON_MX_SDIO_SEND_RESP_WITHOUT_CRC7;
+>>>>>> +
+>>>>>> +       if (cmd->flags & MMC_RSP_BUSY)
+>>>>>> +               send |= MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY;
+>>>>>
+>>>>> In case the controller has HW support of busy detection, please
+>>>>> consider to enable MMC_CAP_WAIT_WHILE_BUSY for this driver. Then also
+>>>>> assign host->max_busy_timeout a good value.
+>>>> the IRQS register has bit 4 (CMD_BUSY) - but apart from that there is
+>>>> no other documentation (about timeout values, etc.). the vendor driver
+>>>> also neither uses MMC_CAP_WAIT_WHILE_BUSY nor host->max_busy_timeout
+>>>> should I leave this as it is?
+>>>
+>>> Please don't just leave it as is. This is an important thing to get right.
+>>>
+>>> You should be able to explore this area and see how the controller
+>>> behaves without too much of documentation. Regarding timeouts, it may
+>>> very well be that the controller don't have a timeout, which is why
+>>> you need a software timeout. That's not so uncommon actually.
+>> during my experiments I've never seen an interrupt when a command
+>> timed out (nor could I find information about a timeout register in
+>> the documentation). do you have any pointers (like a previous mail
+>> where you've explained) how I can "explore the controller's timeout
+>> behavior"?
+>
+> Sorry, I don't have an pointers.
+>
+> Anyway. If you do a big erase operation on an SD card, the card should
+> signal busy on DAT0 for a rather long time.
+erase operation = mount sd card; rm big_file.bin; sync ?
+or is there some other way?
 
-I send it to you and I did not receive any error message from the mail
-servers involved, I will check my mail server log files the next time.
+> You could probably explore how long it takes for the card to respond
+> under those circumstances, and try both with and without
+> MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY.
+so I simply read the card status through sysfs? or would I need to get
+some of this information from the controller?
+I found that the IRQC register contains a few interesting bits:
+    u32 sdio_force_data:6; /*[13:8]
+        * Write operation: Data forced by software
+        * Read operation: {CLK,CMD,DAT[3:0]}*/
+I dumped these while transferring some data, the values seem to be
+changing constantly (0x3f, 0x1f, 0x20, ...)
+if I interpret those bits correctly then they are the status of the
+corresponding pin
 
-I assume that your mail server just silently drops my mails.
+> Of course you also need to try with and without
+> MMC_CAP_WAIT_WHILE_BUSY, as the core may sometimes convert R1B to R1
+> responses depending on that cap.
+so MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY + MMC_CAP_WAIT_WHILE_BUSY should
+go together?
+and MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY should not be set when
+MMC_CAP_WAIT_WHILE_BUSY isn't?
 
->>> ---
->>>  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  42 ++++
->>>  arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
->>>  drivers/phy/Kconfig                                |   8 +
->>>  drivers/phy/Makefile                               |   1 +
->>>  drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++++++++
-> 
-> Please create a new directory withing phy for adding a phy driver.
+> [...]
+>
+>>>
+>>> It shouldn't be that hard to implement, although I strongly recommend
+>>> you to address this in a second step. In other words, I suggest you to
+>>> drop the entire multiple slot support in the first step, then we can
+>>> deal with that on top instead.
+>> many thanks for the detailed explanation again!
+>> I would be fine with dropping multiple slot support for the moment
+>> *if* we can agree on the fact that the devicetree binding can support
+>> multiple slots in theory (my idea here is: keep the child-nodes with
+>> compatible = "mmc-slot" mandatory - but only allow one such child node
+>> for now). I don't want to break DT compatibility after a few
+>> weeks/months for a new driver. is that OK for you as well?
+>
+> That's fine! We already have such a binding available for some other
+> mmc controllers. We could even consider to make that binding a generic
+> mmc binding.
+OK, perfect :)
 
-Should I use lantiq or intel as folder name? Lantiq was bought by Intel
-and the Lantiq brand will be replaced by the Intel brand in the future.
-
-Hauke
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Martin
