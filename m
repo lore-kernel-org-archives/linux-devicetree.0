@@ -1,189 +1,56 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: Re: [PATCH v2] power: supply: ltc2941-battery-gauge: Add LTC2944
- support
-Date: Tue, 11 Jul 2017 22:59:11 +0200
-Message-ID: <20170711205911.w6pp2kdaeo5iv2yo@lenoch>
-References: <20170711160732.16170-1-dragos.bogdan@analog.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v7 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
+ using the RCU module
+Date: Tue, 11 Jul 2017 23:16:31 +0200
+Message-ID: <231fc92f-5e3e-bff0-9a59-081e291f83e8@hauke-m.de>
+References: <20170702224051.15109-1-hauke@hauke-m.de>
+ <20170702224051.15109-15-hauke@hauke-m.de>
+ <20170707142312.5pwily3gbntvesbm@rob-hp-laptop>
+ <30adb3f5-50b5-35e3-685f-9fe0fa8c31f8@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170711160732.16170-1-dragos.bogdan@analog.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dragos Bogdan <dragos.bogdan@analog.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mike Looijmans <mike.looijmans@topic.nl>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <30adb3f5-50b5-35e3-685f-9fe0fa8c31f8-l0cyMroinI0@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 07:07:32PM +0300, Dragos Bogdan wrote:
-> The only difference between the already supported LTC2943 and LTC2944 is the operating range (3.6V - 20V compared to 3.6V - 60V).
-
-Please wrap commit message correctly.
-
-> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-> ---
-> Changes in v2:
-> - Fix the voltage and current conversion.
-
-That's better :-) However it conflicts with LTC2942 patch. I can fix
-this and extend LTC2942 patch serie to add LTC2944. Okay to proceed
-or do you want to take care about this yourself? Also it is nice to
-Cc driver author (done now).
-
-	ladis
-
->  .../devicetree/bindings/power/supply/ltc2941.txt   | 10 ++---
->  drivers/power/supply/ltc2941-battery-gauge.c       | 46 +++++++++++++++++-----
->  2 files changed, 41 insertions(+), 15 deletions(-)
+On 07/11/2017 08:38 AM, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-> index a9d7aa60558b..ed0f02846d10 100644
-> --- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-> @@ -1,9 +1,9 @@
-> -binding for LTC2941 and LTC2943 battery gauges
-> +binding for LTC2941, LTC2943 and LTC2944 battery gauges
->  
-> -Both the LTC2941 and LTC2943 measure battery capacity.
-> -The LTC2943 is compatible with the LTC2941, it adds voltage and
-> -temperature monitoring, and uses a slightly different conversion
-> -formula for the charge counter.
-> +All the LTC2941, LTC2943 and LTC2944 measure battery capacity.
-> +The LTC2943 and LTC2944 are compatible with the LTC2941, they add voltage and
-> +temperature monitoring, and use a slightly different conversion formula for the
-> +charge counter.
->  
->  Required properties:
->  - compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
-> diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-> index 7efb908f4451..4c979b1a022b 100644
-> --- a/drivers/power/supply/ltc2941-battery-gauge.c
-> +++ b/drivers/power/supply/ltc2941-battery-gauge.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * I2C client/driver for the Linear Technology LTC2941 and LTC2943
-> + * I2C client/driver for the Linear Technology LTC2941, LTC2943 and LTC2944
->   * Battery Gas Gauge IC
->   *
->   * Copyright (C) 2014 Topic Embedded Systems
-> @@ -57,6 +57,12 @@ enum ltc294x_reg {
->  #define LTC2941_NUM_REGS	0x08
->  #define LTC2943_NUM_REGS	0x18
->  
-> +enum ltc294x_id {
-> +	LTC2941_ID,
-> +	LTC2943_ID,
-> +	LTC2944_ID,
-> +};
-> +
->  struct ltc294x_info {
->  	struct i2c_client *client;	/* I2C Client pointer */
->  	struct power_supply *supply;	/* Supply pointer */
-> @@ -66,6 +72,7 @@ struct ltc294x_info {
->  	int charge;	/* Last charge register content */
->  	int r_sense;	/* mOhm */
->  	int Qlsb;	/* nAh */
-> +	enum ltc294x_id id;
->  };
->  
->  static inline int convert_bin_to_uAh(
-> @@ -145,7 +152,7 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
->  
->  	control = LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |
->  				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;
-> -	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */
-> +	/* Put the 2943/4 into "monitor" mode, so it measures every 10 sec */
->  	if (info->num_regs == LTC2943_NUM_REGS)
->  		control |= LTC2943_REG_CONTROL_MODE_SCAN;
->  
-> @@ -248,11 +255,16 @@ static int ltc294x_get_voltage(const struct ltc294x_info *info, int *val)
->  	int ret;
->  	u8 datar[2];
->  	u32 value;
-> +	u32 full_scale;
->  
->  	ret = ltc294x_read_regs(info->client,
->  		LTC294X_REG_VOLTAGE_MSB, &datar[0], 2);
->  	value = (datar[0] << 8) | datar[1];
-> -	*val = ((value * 23600) / 0xFFFF) * 1000; /* in uV */
-> +	if (info->id == LTC2944_ID)
-> +		full_scale = 70800;
-> +	else
-> +		full_scale = 23600;
-> +	*val = ((value * full_scale) / 0xFFFF) * 1000; /* in uV */
->  	return ret;
->  }
->  
-> @@ -261,15 +273,20 @@ static int ltc294x_get_current(const struct ltc294x_info *info, int *val)
->  	int ret;
->  	u8 datar[2];
->  	s32 value;
-> +	u32 full_scale;
->  
->  	ret = ltc294x_read_regs(info->client,
->  		LTC294X_REG_CURRENT_MSB, &datar[0], 2);
->  	value = (datar[0] << 8) | datar[1];
->  	value -= 0x7FFF;
-> +	if (info->id == LTC2944_ID)
-> +		full_scale = 64000;
-> +	else
-> +		full_scale = 60000;
->  	/* Value is in range -32k..+32k, r_sense is usually 10..50 mOhm,
->  	 * the formula below keeps everything in s32 range while preserving
->  	 * enough digits */
-> -	*val = 1000 * ((60000 * value) / (info->r_sense * 0x7FFF)); /* in uA */
-> +	*val = 1000 * ((full_scale * value) / (info->r_sense * 0x7FFF)); /* in uA */
->  	return ret;
->  }
->  
-> @@ -388,7 +405,11 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
->  
->  	np = of_node_get(client->dev.of_node);
->  
-> -	info->num_regs = (unsigned long)of_device_get_match_data(&client->dev);
-> +	info->id = (enum ltc294x_id)of_device_get_match_data(&client->dev);
-> +	if (info->id == LTC2941_ID)
-> +		info->num_regs = LTC2941_NUM_REGS;
-> +	else
-> +		info->num_regs = LTC2943_NUM_REGS;
->  	info->supply_desc.name = np->name;
->  
->  	/* r_sense can be negative, when sense+ is connected to the battery
-> @@ -492,8 +513,9 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_suspend, ltc294x_resume);
->  
->  
->  static const struct i2c_device_id ltc294x_i2c_id[] = {
-> -	{"ltc2941", LTC2941_NUM_REGS},
-> -	{"ltc2943", LTC2943_NUM_REGS},
-> +	{"ltc2941", LTC2941_ID},
-> +	{"ltc2943", LTC2943_ID},
-> +	{"ltc2944", LTC2944_ID},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
-> @@ -501,11 +523,15 @@ MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
->  static const struct of_device_id ltc294x_i2c_of_match[] = {
->  	{
->  		.compatible = "lltc,ltc2941",
-> -		.data = (void *)LTC2941_NUM_REGS
-> +		.data = (void *)LTC2941_ID
->  	},
->  	{
->  		.compatible = "lltc,ltc2943",
-> -		.data = (void *)LTC2943_NUM_REGS
-> +		.data = (void *)LTC2943_ID
-> +	},
-> +	{
-> +		.compatible = "lltc,ltc2944",
-> +		.data = (void *)LTC2944_ID
->  	},
->  	{ },
->  };
-> @@ -525,5 +551,5 @@ module_i2c_driver(ltc294x_driver);
->  
->  MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
->  MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
-> -MODULE_DESCRIPTION("LTC2941/LTC2943 Battery Gas Gauge IC driver");
-> +MODULE_DESCRIPTION("LTC2941/LTC2943/LTC2944 Battery Gas Gauge IC driver");
->  MODULE_LICENSE("GPL");
-> -- 
-> 2.11.0
+> On Friday 07 July 2017 07:53 PM, Rob Herring wrote:
+>> On Mon, Jul 03, 2017 at 12:40:49AM +0200, Hauke Mehrtens wrote:
+>>> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
+>>> the PHY interfaces for each core. The phy instances can be passed to the
+>>> dwc2 driver, which already supports the generic phy interface.
+>>>
+>>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>>> Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> 
+> I see you have added my name in cc but for some reason I don't have the patch
+> in my mailbox. Can you resend it please?
+
+I send it to you and I did not receive any error message from the mail
+servers involved, I will check my mail server log files the next time.
+
+I assume that your mail server just silently drops my mails.
+
+>>> ---
+>>>  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  42 ++++
+>>>  arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
+>>>  drivers/phy/Kconfig                                |   8 +
+>>>  drivers/phy/Makefile                               |   1 +
+>>>  drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++++++++
+> 
+> Please create a new directory withing phy for adding a phy driver.
+
+Should I use lantiq or intel as folder name? Lantiq was bought by Intel
+and the Lantiq brand will be replaced by the Intel brand in the future.
+
+Hauke
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
