@@ -1,27 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/9] dt-bindings: iio: humidity: hts221: support
- active-low interrupts
-Date: Mon, 10 Jul 2017 21:49:36 -0500
-Message-ID: <20170711024936.3jncjvrx37g4herl@rob-hp-laptop>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
- <20170709165704.26311-7-lorenzo.bianconi@st.com>
+From: Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] cpufreq: mediatek: Add support of cpufreq to
+ MT2701/MT7623 SoC
+Date: Tue, 11 Jul 2017 10:49:46 +0800
+Message-ID: <1499741386.12408.11.camel@mtksdaap41>
+References: <cover.1499692967.git.sean.wang@mediatek.com>
+         <feabcfd53899954198c6620e9d9b68f4a3c55201.1499692967.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170709165704.26311-7-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <feabcfd53899954198c6620e9d9b68f4a3c55201.1499692967.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 09, 2017 at 06:57:01PM +0200, Lorenzo Bianconi wrote:
-> Update hts221 device binding with active-low interrupts support
-> (IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_EDGE_FALLING).
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Sean,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Mon, 2017-07-10 at 22:23 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> MT2701/MT7623 is a 32-bit ARMv7 based quad-core (4 * Cortex-A7) with
+> single cluster and this hardware is also compatible with the existing
+> driver through enabling CPU frequency feature with operating-points-v2
+> bindings. Also, this driver actually supports all MediaTek SoCs, the
+> Kconfig menu entry and file name itself should be updated with more
+> generic name to drop "MT8173"
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm                              | 7 +++----
+>  drivers/cpufreq/Makefile                                 | 2 +-
+>  drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} | 2 ++
+>  3 files changed, 6 insertions(+), 5 deletions(-)
+>  rename drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} (99%)
+> 
+
+As Viresh mentioned, there are already many drivers use "mtk" as
+filename prefix or postfix.To align with those files, I suggest use
+mtk-cpufreq.c.I think there are not too many values to change all "mtk-"
+to "mediatek-", but it is worth to have the same naming rule for
+mediatek upstream driver.
+
+Regards,
+Eddie. 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
