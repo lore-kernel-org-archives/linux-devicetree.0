@@ -1,39 +1,80 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 00/06] clocksource: sh_cmt: DT binding rework V4
-Date: Tue, 11 Jul 2017 13:56:46 +0200
-Message-ID: <20170711115646.GL4517@verge.net.au>
-References: <20160314142342.17180.21352.sendpatchset@little-apple>
- <20161124105843.GA26737@verge.net.au>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
+Date: Tue, 11 Jul 2017 15:12:14 +0300
+Message-ID: <52eb0b92-5d25-e1f4-df54-e4fcf648c90e@cogentembedded.com>
+References: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
+ <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161124105843.GA26737@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, daniel.lezcano@linaro.org, linux-renesas-soc@vger.kernel.org, tglx@linutronix.de
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 24, 2016 at 11:58:43AM +0100, Simon Horman wrote:
-> Hi Magnus,
-> 
-> On Mon, Mar 14, 2016 at 11:23:42PM +0900, Magnus Damm wrote:
-> > clocksource: sh_cmt: DT binding rework V4
-> > 
-> > [PATCH v4 01/06] devicetree: bindings: Remove sh7372 CMT binding
-> > [PATCH v4 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
-> > [PATCH v4 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
-> > [PATCH v4 04/06] devicetree: bindings: Deprecate property, update example
-> > [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
-> > [PATCH v4 06/06] devicetree: bindings: Remove deprecated properties
-> > 
-> > Here is the latest and hopefully final take on updating the CMT DT
-> > bindings for R-Car Gen2. In total there are 6 patches that have acks
-> > and are ready to be picked up and merged. Other earlier posted changes
-> > such as driver modification and SoC DTS bits depend on this series.
-> 
-> I am wondering what the state of this work is.
-> I see only one minor review comment for this series.
-> It would be great to see it merged.
+Hello!
 
-Ping
+On 07/10/2017 06:32 PM, Biju Das wrote:
+
+> Add a new compatible string for the RZ/G1M (R8A7743) SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> v1->v2
+> * Changed the subject
+> * re-formatted the required properties
+>
+>  .../devicetree/bindings/net/renesas,ravb.txt       | 29 +++++++++++++---------
+>  1 file changed, 17 insertions(+), 12 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index b519503..4717bc2 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -4,19 +4,24 @@ This file provides information on what the device node for the Ethernet AVB
+>  interface contains.
+>
+>  Required properties:
+> -- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
+> -	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
+> -	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
+> -	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
+> -	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
+> -	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
+> -	      "renesas,etheravb-r8a7796" if the device is a part of R8A7796 SoC.
+> -	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
+> -	      "renesas,etheravb-rcar-gen3" for generic R-Car Gen 3 compatible interface.
+> +- compatible: Must contain one or more of the following:
+
+    No, it can't contain more than one SoC specific value.
+
+> +      - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
+> +      - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
+> +      - "renesas,etheravb-r8a7791" for the R8A7791 SoC.
+> +      - "renesas,etheravb-r8a7792" for the R8A7792 SoC.
+> +      - "renesas,etheravb-r8a7793" for the R8A7793 SoC.
+> +      - "renesas,etheravb-r8a7794" for the R8A7794 SoC.
+> +      - "renesas,etheravb-rcar-gen2" as a fallback for the above
+> +		R-Car Gen2 and RZ/G1 devices.
+>
+> -	      When compatible with the generic version, nodes must list the
+> -	      SoC-specific version corresponding to the platform first
+> -	      followed by the generic version.
+> +      - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
+> +      - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
+
+    Neither here.
+
+> +      - "renesas,etheravb-rcar-gen3" as a fallback for the above
+> +		R-Car Gen3 devices.
+> +
+> +	When compatible with the generic version, nodes must list the
+> +	SoC-specific version corresponding to the platform first followed by
+> +	the generic version.
+>
+>  - reg: offset and length of (1) the register block and (2) the stream buffer.
+>  - interrupts: A list of interrupt-specifiers, one for each entry in
+
+WBR, Sergei
