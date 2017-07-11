@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V2 01/10] drivers: move clock common macros out from vendor directories
-Date: Tue, 11 Jul 2017 18:56:18 +0800
-Message-ID: <20170711105627.20526-2-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V2 02/10] dt-bindings: Add Spreadtrum clock binding documentation
+Date: Tue, 11 Jul 2017 18:56:19 +0800
+Message-ID: <20170711105627.20526-3-chunyan.zhang@spreadtrum.com>
 References: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,81 +12,56 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.
 Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-These macros are used by more than one SoC vendor platforms, avoid to
-have many copies of these code, this patch moves them to the common
-clock directory which every clock drivers can access to.
+Introduce a new binding with its documentation for Spreadtrum clock
+sub-framework.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- drivers/clk/clk_common.h | 60 ++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 drivers/clk/clk_common.h
+ Documentation/devicetree/bindings/clock/sprd.txt | 36 ++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
 
-diff --git a/drivers/clk/clk_common.h b/drivers/clk/clk_common.h
+diff --git a/Documentation/devicetree/bindings/clock/sprd.txt b/Documentation/devicetree/bindings/clock/sprd.txt
 new file mode 100644
-index 0000000..21e93d2
+index 0000000..c6f3abf
 --- /dev/null
-+++ b/drivers/clk/clk_common.h
-@@ -0,0 +1,60 @@
-+/*
-+ * drivers/clk/clk_common.h
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
++++ b/Documentation/devicetree/bindings/clock/sprd.txt
+@@ -0,0 +1,36 @@
++Spreadtrum Clock Binding
++------------------------
 +
-+#ifndef _CLK_COMMON_H_
-+#define _CLK_COMMON_H_
++Required properties:
++- compatible: must contain the following compatible:
++	- "sprd,sc9860-clk" (only support SC9860 for the time being)
 +
-+#include <linux/clk-provider.h>
++- reg:	Must contain the registers base address and length.
++	Clocks on most of Spreadtrum's SoCs were designed to locate in a few
++	different address areas, so there would be more than one items under
++	this property.
 +
-+#define CLK_HW_INIT(_name, _parent, _ops, _flags)		\
-+	(&(struct clk_init_data) {				\
-+		.flags		= _flags,			\
-+		.name		= _name,			\
-+		.parent_names	= (const char *[]) { _parent },	\
-+		.num_parents	= 1,				\
-+		.ops		= _ops,				\
-+	})
++- #clock-cells: must be 1
 +
-+#define CLK_HW_INIT_PARENTS(_name, _parents, _ops, _flags)	\
-+	(&(struct clk_init_data) {				\
-+		.flags		= _flags,			\
-+		.name		= _name,			\
-+		.parent_names	= _parents,			\
-+		.num_parents	= ARRAY_SIZE(_parents),		\
-+		.ops		= _ops,				\
-+	})
++Example:
 +
-+#define CLK_HW_INIT_NO_PARENT(_name, _ops, _flags)     \
-+	(&(struct clk_init_data) {                      \
-+		.flags          = _flags,               \
-+		.name           = _name,                \
-+		.parent_names   = NULL,                 \
-+		.num_parents    = 0,                    \
-+		.ops            = _ops,                 \
-+	})
-+
-+#define CLK_FIXED_FACTOR(_struct, _name, _parent,			\
-+			_div, _mult, _flags)				\
-+	struct clk_fixed_factor _struct = {				\
-+		.div		= _div,					\
-+		.mult		= _mult,				\
-+		.hw.init	= CLK_HW_INIT(_name,			\
-+					      _parent,			\
-+					      &clk_fixed_factor_ops,	\
-+					      _flags),			\
-+	}
-+
-+#define CLK_FIXED_RATE(_struct, _name, _flags,				\
-+		       _fixed_rate, _fixed_accuracy)			\
-+	struct clk_fixed_rate _struct = {				\
-+		.fixed_rate	= _fixed_rate,				\
-+		.fixed_accuracy	= _fixed_accuracy,			\
-+		.hw.init	= CLK_HW_INIT_NO_PARENT(_name,		\
-+					  &clk_fixed_rate_ops,		\
-+							_flags),	\
-+	}
-+
-+#endif /* _CLK_COMMON_H_ */
++clk: clk {
++	compatible = "sprd,sc9860-clk";
++	#clock-cells = <1>;
++	reg = <0 0x20000000 0 0x400>,
++	      <0 0x20210000 0 0x3000>,
++	      <0 0x402b0000 0 0x4000>,
++	      <0 0x402d0000 0 0x400>,
++	      <0 0x402e0000 0 0x4000>,
++	      <0 0x40400000 0 0x400>,
++	      <0 0x40880000 0 0x400>,
++	      <0 0x415e0000 0 0x400>,
++	      <0 0x60200000 0 0x400>,
++	      <0 0x61000000 0 0x400>,
++	      <0 0x61100000 0 0x3000>,
++	      <0 0x62000000 0 0x4000>,
++	      <0 0x62100000 0 0x4000>,
++	      <0 0x63000000 0 0x400>,
++	      <0 0x63100000 0 0x3000>,
++	      <0 0x70b00000 0 0x3000>;
++};
 -- 
 2.7.4
