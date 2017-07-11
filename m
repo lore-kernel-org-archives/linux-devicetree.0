@@ -1,61 +1,73 @@
-From: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: remove arm, mali-midgard
- compatible from rk3288
-Date: Tue, 11 Jul 2017 16:04:38 +0800
-Message-ID: <972bed58-76c2-04e3-f2ab-d5b8065a92dd@gmail.com>
-References: <20170710121227.14264-1-heiko@sntech.de>
- <20170710121227.14264-2-heiko@sntech.de>
+From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible
+ string for SMC
+Date: Tue, 11 Jul 2017 10:07:00 +0200
+Message-ID: <73c25b77-856b-b4c3-7e53-8f60c72dbc6e@microchip.com>
+References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
+ <20170711074015.30440-4-ludovic.desroches@microchip.com>
+ <029b80a8-2d3f-11b4-d4df-55f5fc48c8e7@microchip.com>
+ <20170711075829.5rzdrjgao6efiuj2@rfolt0960.corp.atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170710121227.14264-2-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20170711075829.5rzdrjgao6efiuj2-fC2aZbRiGnsAAwgTK2POJVCF2YAvjlIb@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko,
+On 11/07/2017 at 09:58, Ludovic Desroches wrote:
+> On Tue, Jul 11, 2017 at 09:52:58AM +0200, Nicolas Ferre wrote:
+>> On 11/07/2017 at 09:40, Ludovic Desroches wrote:
+>>> A new compatible string has been introduced for sama5d2 SMC to allow to
+>>> manage the registers mapping change.
+>>>
+>>> Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
+>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+>>> index 4fcd5bb219e3..60e69aeacbdb 100644
+>>> --- a/arch/arm/boot/dts/sama5d2.dtsi
+>>> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+>>> @@ -1048,7 +1048,7 @@
+>>>  			};
+>>>  
+>>>  			hsmc: hsmc@f8014000 {
+>>> -				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
+>>> +				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
+>>
+>> You'd better use something like:
+>>  compatible = "atmel,sama5d2-smc", "atmel,sama5d3-smc", "syscon", "simple-mfd";
+> 
+> But it's not true, during data interface setup, we will write values in
+> the wrong place if we fallback on "atmel,sama5d3-smc".
 
-在 2017年07月10日 20:12, Heiko Stuebner 写道:
-> The binding specifies the actual implementations only (mali-t760
-> for example) but not the arm,mali-midgard used in some vendor kernels.
-> So drop that compatible property from the rk3288 where it had slipped in.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/rk3288.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index cb1d415d1201..e99d7ff4c939 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1135,7 +1135,7 @@
->   	};
->   
->   	gpu: mali@ffa30000 {
-> -		compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
-> +		compatible = "rockchip,rk3288-mali", "arm,mali-t760";
+Yes, I wrote too quickly: sorry for the noise ;-)
 
-If we remove the "arm,mali-midgard", the mali driver maybe need update 
-first.
+Bye,
 
- From the lastest MALI driver on ARM supply, the compatible only two 
-property.
-mali_kbase_core_linux.c
-4163:    { .compatible = "arm,malit6xx" },
-4164:    { .compatible = "arm,mali-midgard" },
 
-That's odd with the two compatible, the driver should support the more.
+>> So that this patch is independent from the rest of the series and
+>> we can avoid to having to synchronize with mfd or mtd/nand for this part.
+>>
+>> Regards,
+>>
+>>>  				reg = <0xf8014000 0x1000>;
+>>>  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 6>;
+>>>  				clocks = <&hsmc_clk>;
+>>>
+>>
+>>
+>> -- 
+>> Nicolas Ferre
+> 
 
--Caesar
 
->   		reg = <0xffa30000 0x10000>;
->   		interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
->   			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-
+-- 
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
