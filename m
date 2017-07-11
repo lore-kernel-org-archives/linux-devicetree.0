@@ -1,239 +1,124 @@
-From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: [PATCH v4 2/2] power: supply: ltc2941-battery-gauge: Add support for
- LTC2942
-Date: Tue, 11 Jul 2017 15:00:20 +0200
-Message-ID: <20170711130020.kfimnv6em3besr3j@lenoch>
-References: <20170711125821.nt5opxjvbjcppiaw@lenoch>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 00/16] omap_hsmmc: Add ADMA support and UHS/HS200/DDR support
+Date: Tue, 11 Jul 2017 15:10:37 +0200
+Message-ID: <CAPDyKFo+ORA=OpdikiUZWj3gpx+ssuqbC5MtqiFJneyJhu84dA@mail.gmail.com>
+References: <20170616124544.15046-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170711125821.nt5opxjvbjcppiaw@lenoch>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170616124544.15046-1-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-LTC2942 is pin compatible with LTC2941 providing additional
-informations about battery voltage and temperature. It can
-be runtime detected using bit A7 in the Status register.
+On 16 June 2017 at 14:45, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> This is the final part of the series originally sent as
+> part of [2].
+>
+> This series adds UHS, HS200, DDR mode and ADMA support to
+> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
+> SoCs.
+>
+> Changes from [2]:
+> *) No more updating omap2plus_defconfig or multi_v7_defconfig is
+>    required, so those patches are removed.
+> *) Addressed Rob Herring's comment on implementing a function
+>    instead of having a macro while getting pinctrl state.
+>
+> This series is created on top of [3], [4], [5] AND [6]
+> (i.e after
+>   ARM: dts: omap3-overo: Remove "vqmmc-supply" property from MMC dt node
+>   omap_hsmmc: use mmc_regulator_get_supply() to get regulators
+>   omap*: Fixes/Cleanups for MMC devicetree node
+>   ARM: dts: Add iodelay data for MMC)
+>
+> The functionality implemented in this series was sent before ([1]) but
+> was never followed up since supporting high speed modes in dra7 required
+> IODelay values to be configured. With IODelay driver being merged into
+> kernel, sending it as a fresh series with support for configuring IODelay
+> values.
 
-Signed-off-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
----
- Changes:
- - v2: reworked voltage computing to not overflow and keep presision
- - v3: update devicetree binding documentation
- - v4: add ltc2942 devicetree compatible
+Is it safe to queue this via mmc tree for 4.14 or is there a
+dependency I must consider? The above didn't quite tell me that, could
+you please elaborate.
 
- .../devicetree/bindings/power/supply/ltc2941.txt   | 15 ++--
- drivers/power/supply/ltc2941-battery-gauge.c       | 85 +++++++++++++++++-----
- 2 files changed, 74 insertions(+), 26 deletions(-)
+>
+> Suggestions of migrating to sdhci driver (from omap_hsmmc driver) is not
+> addressed since
+> *) tuning ratio of MMC in dra7 is different from sdhci
+> *) IOdelay is required for dra7
+> *) GPIO based card detect is not supported in sdhci
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-index a9d7aa60558b..8ec10366295d 100644
---- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-@@ -1,13 +1,14 @@
--binding for LTC2941 and LTC2943 battery gauges
-+binding for LTC2941, LTC2942 and LTC2943 battery gauges
- 
--Both the LTC2941 and LTC2943 measure battery capacity.
--The LTC2943 is compatible with the LTC2941, it adds voltage and
--temperature monitoring, and uses a slightly different conversion
--formula for the charge counter.
-+All chips measure battery capacity.
-+The LTC2942 is pin compatible with the LTC2941, it adds voltage and
-+temperature monitoring, and is runtime detected. LTC2943 is software
-+compatible, uses a slightly different conversion formula for the
-+charge counter and adds voltage, current and temperature monitoring.
- 
- Required properties:
--- compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
--    indicates the type of I2C chip attached.
-+- compatible: Should contain "lltc,ltc2941", "lltc,ltc2942" or "lltc,ltc2943"
-+    which also indicates the type of I2C chip attached.
- - reg: The 7-bit I2C address.
- - lltc,resistor-sense: The sense resistor value in milli-ohms. Can be a 32-bit
-     negative value when the battery has been connected to the wrong end of the
-diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-index 0a1b69bbca7f..c787c257451e 100644
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -44,8 +44,10 @@ enum ltc294x_reg {
- 	LTC2943_REG_TEMPERATURE_LSB	= 0x15,
- };
- 
--#define LTC2943_REG_CONTROL_MODE_MASK (BIT(7) | BIT(6))
--#define LTC2943_REG_CONTROL_MODE_SCAN BIT(7)
-+#define LTC2941_REG_STATUS_CHIP_ID	BIT(7)
-+
-+#define LTC2942_REG_CONTROL_MODE_SCAN	(BIT(7) | BIT(6))
-+#define LTC2943_REG_CONTROL_MODE_SCAN	BIT(7)
- #define LTC294X_REG_CONTROL_PRESCALER_MASK	(BIT(5) | BIT(4) | BIT(3))
- #define LTC294X_REG_CONTROL_SHUTDOWN_MASK	(BIT(0))
- #define LTC294X_REG_CONTROL_PRESCALER_SET(x) \
-@@ -144,9 +146,15 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
- 
- 	control = LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |
- 				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;
--	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */
--	if (info->num_regs == LTC2943_NUM_REGS)
-+	/* Put device into "monitor" mode */
-+	switch (info->num_regs) {
-+	case LTC2942_NUM_REGS:	/* 2942 measures every 2 sec */
-+		control |= LTC2942_REG_CONTROL_MODE_SCAN;
-+		break;
-+	case LTC2943_NUM_REGS:	/* 2943 measures every 10 sec */
- 		control |= LTC2943_REG_CONTROL_MODE_SCAN;
-+		break;
-+	}
- 
- 	if (value != control) {
- 		ret = ltc294x_write_regs(info->client,
-@@ -251,7 +259,16 @@ static int ltc294x_get_voltage(const struct ltc294x_info *info, int *val)
- 	ret = ltc294x_read_regs(info->client,
- 		LTC294X_REG_VOLTAGE_MSB, &datar[0], 2);
- 	value = (datar[0] << 8) | datar[1];
--	*val = ((value * 23600) / 0xFFFF) * 1000; /* in uV */
-+	if (info->num_regs == LTC2943_NUM_REGS) {
-+		value *= 23600 * 2;
-+		value /= 0xFFFF;
-+		value *= 1000 / 2;
-+	} else {
-+		value *= 6000 * 10;
-+		value /= 0xFFFF;
-+		value *= 1000 / 10;
-+	}
-+	*val = value;
- 	return ret;
- }
- 
-@@ -274,15 +291,22 @@ static int ltc294x_get_current(const struct ltc294x_info *info, int *val)
- 
- static int ltc294x_get_temperature(const struct ltc294x_info *info, int *val)
- {
-+	enum ltc294x_reg reg;
- 	int ret;
- 	u8 datar[2];
- 	u32 value;
- 
--	ret = ltc294x_read_regs(info->client,
--		LTC2943_REG_TEMPERATURE_MSB, &datar[0], 2);
--	value = (datar[0] << 8) | datar[1];
--	/* Full-scale is 510 Kelvin, convert to centidegrees  */
--	*val = (((51000 * value) / 0xFFFF) - 27215);
-+	if (info->num_regs == LTC2943_NUM_REGS) {
-+		reg = LTC2943_REG_TEMPERATURE_MSB;
-+		value = 51000;	/* Full-scale is 510 Kelvin */
-+	} else {
-+		reg = LTC2942_REG_TEMPERATURE_MSB;
-+		value = 60000;	/* Full-scale is 600 Kelvin */
-+	}
-+	ret = ltc294x_read_regs(info->client, reg, &datar[0], 2);
-+	value *= (datar[0] << 8) | datar[1];
-+	/* Convert to centidegrees  */
-+	*val = value / 0xFFFF - 27215;
- 	return ret;
- }
- 
-@@ -356,8 +380,8 @@ static enum power_supply_property ltc294x_properties[] = {
- 	POWER_SUPPLY_PROP_CHARGE_COUNTER,
- 	POWER_SUPPLY_PROP_CHARGE_NOW,
- 	POWER_SUPPLY_PROP_VOLTAGE_NOW,
--	POWER_SUPPLY_PROP_CURRENT_NOW,
- 	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
- };
- 
- static int ltc294x_i2c_remove(struct i2c_client *client)
-@@ -374,10 +398,11 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
- {
- 	struct power_supply_config psy_cfg = {};
- 	struct ltc294x_info *info;
-+	struct device_node *np;
- 	int ret;
- 	u32 prescaler_exp;
- 	s32 r_sense;
--	struct device_node *np;
-+	u8 status;
- 
- 	info = devm_kzalloc(&client->dev, sizeof(*info), GFP_KERNEL);
- 	if (info == NULL)
-@@ -420,21 +445,38 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
- 				(128 / (1 << prescaler_exp));
- 	}
- 
-+	/* Read status register to check for LTC2942 */
-+	if (info->num_regs != LTC2943_NUM_REGS) {
-+		ret = ltc294x_read_regs(client, LTC294X_REG_STATUS, &status, 1);
-+		if (ret < 0) {
-+			dev_err(&client->dev,
-+				"Could not read status register\n");
-+			return ret;
-+		}
-+		if (status & LTC2941_REG_STATUS_CHIP_ID)
-+			info->num_regs = LTC2941_NUM_REGS;
-+		else
-+			info->num_regs = LTC2942_NUM_REGS;
-+	}
-+
- 	info->client = client;
- 	info->supply_desc.type = POWER_SUPPLY_TYPE_BATTERY;
- 	info->supply_desc.properties = ltc294x_properties;
--	if (info->num_regs >= LTC2943_REG_TEMPERATURE_LSB)
-+	switch (info->num_regs) {
-+	case LTC2943_NUM_REGS:
- 		info->supply_desc.num_properties =
- 			ARRAY_SIZE(ltc294x_properties);
--	else if (info->num_regs >= LTC2943_REG_CURRENT_LSB)
-+		break;
-+	case LTC2942_NUM_REGS:
- 		info->supply_desc.num_properties =
- 			ARRAY_SIZE(ltc294x_properties) - 1;
--	else if (info->num_regs >= LTC294X_REG_VOLTAGE_LSB)
--		info->supply_desc.num_properties =
--			ARRAY_SIZE(ltc294x_properties) - 2;
--	else
-+		break;
-+	case LTC2941_NUM_REGS:
-+	default:
- 		info->supply_desc.num_properties =
- 			ARRAY_SIZE(ltc294x_properties) - 3;
-+		break;
-+	}
- 	info->supply_desc.get_property = ltc294x_get_property;
- 	info->supply_desc.set_property = ltc294x_set_property;
- 	info->supply_desc.property_is_writeable = ltc294x_property_is_writeable;
-@@ -492,6 +534,7 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_suspend, ltc294x_resume);
- 
- static const struct i2c_device_id ltc294x_i2c_id[] = {
- 	{"ltc2941", LTC2941_NUM_REGS},
-+	{"ltc2942", LTC2942_NUM_REGS},
- 	{"ltc2943", LTC2943_NUM_REGS},
- 	{ },
- };
-@@ -503,6 +546,10 @@ static const struct of_device_id ltc294x_i2c_of_match[] = {
- 		.data = (void *)LTC2941_NUM_REGS
- 	},
- 	{
-+		.compatible = "lltc,ltc2942",
-+		.data = (void *)LTC2942_NUM_REGS
-+	},
-+	{
- 		.compatible = "lltc,ltc2943",
- 		.data = (void *)LTC2943_NUM_REGS
- 	},
-@@ -524,5 +571,5 @@ module_i2c_driver(ltc294x_driver);
- 
- MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
- MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
--MODULE_DESCRIPTION("LTC2941/LTC2943 Battery Gas Gauge IC driver");
-+MODULE_DESCRIPTION("LTC2941/LTC2942/LTC2943 Battery Gas Gauge IC driver");
- MODULE_LICENSE("GPL");
--- 
-2.11.0
+Lots of sdhci drivers calls mmc_of_parse(), and uses the mmc slot gpio
+APIs, so I don't this this is correct statement.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> *) Some of the registers don't always have correct values as in sdhci
+>    (like PSTATE).
+> Supporting all of these in sdhci will result in adding lot of quirks in
+> sdhci driver.
+
+Is it really that much different? It would be nice if some really took
+on the challenge of converting omap_hsmmc into an sdhci variant.
+
+Especially by looking at the number new lines added in this series, I
+am starting to think that we have reached this point. That in
+conjunction with that sdhci is maintained and well supported,
+comparing to what the omap_hsmmc driver seems to be.
+
+>
+> This series has been tested on beagleboard, pandaboard, beaglebone-black,
+> beaglebone, am335x-evm, am437x-evm, dra7xx-evm, dra72x-evm, am571x-idk
+> and am572x-idk.
+>
+> I can split the series to go into Ulf Hansson's tree and Tony's tree
+> separately if that is required.
+>
+> [1] -> https://lkml.org/lkml/2015/8/25/213
+> [2] -> https://lkml.org/lkml/2017/5/19/19
+>
+> [3] -> https://lkml.org/lkml/2017/6/9/206
+> [4] -> https://lkml.org/lkml/2017/6/7/169
+> [5] -> https://www.spinics.net/lists/arm-kernel/msg586215.html /
+>        http://www.spinics.net/lists/devicetree/msg180747.html
+> [6] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1423381.html
+>
+> Kishon Vijay Abraham I (15):
+>   mmc: host: omap_hsmmc: Support pbias and vmmc_aux to switch to 1.8v
+>   mmc: host: omap_hsmmc: Separate setting voltage capabilities from bus
+>     power
+>   mmc: host: omap_hsmmc: Remove incorrect voltage switch sequence
+>   mmc: host: omap_hsmmc: Add voltage switch support for UHS SD card
+>   mmc: host: omap_hsmmc: Set clk rate to the max frequency
+>   mmc: host: omap_hsmmc: Add tuning support
+>   mmc: host: omap_hsmmc: Allow io voltage switch even for fixed vdd
+>   mmc: host: omap_hsmmc: Prepare *set_timing() to be used for iodelay
+>     setting
+>   mmc: host: omap_hsmmc: Add new compatible string to support dra7
+>   mmc: host: omap_hsmmc: Fix error path sequence
+>   mmc: host: omap_hsmmc: Add support to set IODELAY values
+>   mmc: host: omap_hsmmc: Remove *use_dma* member
+>   mmc: host: omap_hsmmc: Enable ADMA2
+>   ARM: dts: dra7: Use new dra7-specific compatible string
+>   ARM: dts: dra7: Add supported MMC/SD modes in MMC dt nodes
+>
+> Mugunthan V N (1):
+>   mmc: host: omap_hsmmc: Add software timer when timeout greater than
+>     hardware capablility
+>
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    6 +
+>  arch/arm/boot/dts/am571x-idk.dts                   |    1 +
+>  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts      |    1 +
+>  arch/arm/boot/dts/am57xx-beagle-x15.dts            |    6 +
+>  arch/arm/boot/dts/am57xx-idk-common.dtsi           |    1 +
+>  arch/arm/boot/dts/dra7.dtsi                        |   22 +-
+>  drivers/mmc/host/omap_hsmmc.c                      | 1179 ++++++++++++++++----
+>  include/linux/platform_data/hsmmc-omap.h           |    2 +
+>  8 files changed, 1021 insertions(+), 197 deletions(-)
+>
+> --
+> 2.11.0
+>
+
+Kind regards
+Ulf Hansson
