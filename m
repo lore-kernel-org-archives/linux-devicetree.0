@@ -1,60 +1,42 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/3] dt-bindings: regulator: Add STM32 Voltage Reference Buffer
-Date: Tue, 11 Jul 2017 14:30:31 +0200
-Message-ID: <1499776233-29116-2-git-send-email-fabrice.gasnier@st.com>
-References: <1499776233-29116-1-git-send-email-fabrice.gasnier@st.com>
+From: Mark Yao <mark.yao@rock-chips.com>
+Subject: [PATCH 0/5] drm/rockchip: add all full framework vop support
+Date: Tue, 11 Jul 2017 20:41:47 +0800
+Message-ID: <1499776908-16811-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499776233-29116-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, alexandre.torgue@st.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document STM32 VREFBUF (voltage reference buffer) which can be used as
-voltage reference for ADCs, DACs and external components.
-
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- .../bindings/regulator/st,stm32-vrefbuf.txt          | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
-
-diff --git a/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
-new file mode 100644
-index 0000000..3944ee3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/st,stm32-vrefbuf.txt
-@@ -0,0 +1,20 @@
-+STM32 VREFBUF - Voltage reference buffer
-+
-+Some STM32 devices embed a voltage reference buffer which can be used as
-+voltage reference for ADCs, DACs and also as voltage reference for external
-+components through the dedicated VREF+ pin.
-+
-+Required properties:
-+- compatible:		Must be "st,stm32-vrefbuf".
-+- reg:			Offset and length of VREFBUF register set.
-+- clocks:		Must contain an entry for peripheral clock.
-+
-+Example:
-+	vrefbuf: regulator@58003C00 {
-+		compatible = "st,stm32-vrefbuf";
-+		reg = <0x58003C00 0x8>;
-+		clocks = <&rcc VREF_CK>;
-+		regulator-min-microvolt = <1500000>;
-+		regulator-max-microvolt = <2500000>;
-+		vdda-supply = <&vdda>;
-+	};
--- 
-1.9.1
+VGhlc2UgcGF0Y2hlcyB0cnkgdG8gbWFrZSBhbGwgY3VycmVudCByb2NrY2hpcCBmdWxsIGZyYW1l
+d29yayB2b3Agd29ya3MKb24gZHJtLCBUaGUgbmV3ZXIgdm9wIGRlc2lnbiBhbHdheXMgaGF2ZSBz
+b21lIGRpZmZlcmVudCB0byB0aGUgb2xkIG9uZSwKU28gd2UgYWRkIGEgcmVnaXN0ZXIgdmVyaWZ5
+IG1lY2hhbmlzbSB0byBkaXN0aW5ndWlzaCB0aG9zZSByZWdpc3RlciwgdGhlbgp0aGUgcmVnaXN0
+ZXJzIHRhYmxlIGNhbiBiZSByZXVzZWQuCgpBbmQgcGVvcGxlIGNhbiBlYXN5IHRvIGtub3cgdGhl
+IGRpZmZlcmVudCBmb3IgdGhlIHZvcHMgZnJvbSByZWdpc3RlciB0YWJsZS4KCk1hcmsgWWFvICg1
+KToKICBkcm0vcm9ja2NoaXA6IHZvcDogZ2V0IHJpZCBvZiByZWdpc3RlciBpbml0IHRhYmxlCiAg
+ZHJtL3JvY2tjaGlwOiB2b3A6IHN1cHBvcnQgdmVyaWZ5IHJlZ2lzdGVycyB3aXRoIHZvcCB2ZXJz
+aW9uCiAgZHJtL3JvY2tjaGlwOiB2b3A6IG1vdmUgbGluZV9mbGFnX251bSB0byBpbnRlcnJ1cHQg
+cmVnaXN0ZXJzCiAgZHJtL3JvY2tjaGlwOiB2b3A6IGFkZCBhIHNlcmllcyBvZiB2b3Agc3VwcG9y
+dAogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBmaWxsIERvY3VtZW50cyBmb3Igc2VyaWVzIG9mIHZv
+cAoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQgICAgIHwg
+ICA0ICsKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMgICAgICAg
+IHwgIDc0ICstCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5oICAg
+ICAgICB8ICAzMiArLQogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX3ZvcF9yZWcu
+YyAgICAgICAgfCAyNTkgKysrLS0tCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
+dm9wX3JlZy5oICAgICAgICB8IDkwNSArKysrKysrKysrKysrKysrLS0tLS0KIDUgZmlsZXMgY2hh
+bmdlZCwgOTUyIGluc2VydGlvbnMoKyksIDMyMiBkZWxldGlvbnMoLSkKCi0tIAoxLjkuMQoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
