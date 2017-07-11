@@ -1,185 +1,188 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: imx: introduce fifo_size and has_dmamode in
- spi_imx_devtype_data" to the spi tree
-Date: Tue, 11 Jul 2017 15:43:33 +0100
-Message-ID: <E1dUwNx-0005RL-IS@debutante>
-References: <20170608051603.16070-2-jiada_wang@mentor.com>
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Subject: Re: [PATCH] gpio/serial: revert "linux,first-pin" property handling
+Date: Tue, 11 Jul 2017 17:42:56 +0200
+Message-ID: <5310fa81-dc0e-75b1-05fb-2ec9b558f867@siemens.com>
+References: <20170710140902.21935-1-linus.walleij@linaro.org>
+ <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170608051603.16070-2-jiada_wang@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Jiada Wang <jiada_wang@mentor.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, broonie@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2017-07-10 16:23, Jan Kiszka wrote:
+> On 2017-07-10 16:09, Linus Walleij wrote:
+>> This is not a legal device tree property, because its binding has
+>> not been reviewed and approved, nor does it exist in any device
+>> tree binding document.
+>>
+>> It is further wrong, because it is added to the GPIO offset which
+>> is by definition controller-local.
 
-   spi: imx: introduce fifo_size and has_dmamode in spi_imx_devtype_data
+BTW, I don't get this second statement. The parameter passed in is
+controlling which pin of the GPIO device can be controlled by the driver
+at all. And that's also a very private interface between 8250_exar and
+gpio-exar: the former tells the latter which pins are physically
+available to drive, because the former operates the others already.
 
-has been applied to the spi tree at
+>>
+>> Cc: Jan Kiszka <jan.kiszka@siemens.com>
+>> Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+>> ---
+>> This got in because I was stressed and was not paying attention.
+>> Sorry about not noticing earlier, but I usually strongly nix any
+>> such properties, please discuss this on the device tree list
+>> first.
+>> ---
+>>  drivers/gpio/gpio-exar.c            | 25 +++++++++----------------
+>>  drivers/tty/serial/8250/8250_exar.c |  2 --
+>>  2 files changed, 9 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+>> index fb8d304cfa17..d02c5260525f 100644
+>> --- a/drivers/gpio/gpio-exar.c
+>> +++ b/drivers/gpio/gpio-exar.c
+>> @@ -31,7 +31,6 @@ struct exar_gpio_chip {
+>>  	int index;
+>>  	void __iomem *regs;
+>>  	char name[20];
+>> -	unsigned int first_pin;
+>>  };
+>>  
+>>  static void exar_update(struct gpio_chip *chip, unsigned int reg, int val,
+>> @@ -53,9 +52,9 @@ static int exar_set_direction(struct gpio_chip *chip, int direction,
+>>  			      unsigned int offset)
+>>  {
+>>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+>> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+>> +	unsigned int addr = offset / 8 ?
+>>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
+>> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+>> +	unsigned int bit  = offset % 8;
+>>  
+>>  	exar_update(chip, addr, direction, bit);
+>>  	return 0;
+>> @@ -76,9 +75,9 @@ static int exar_get(struct gpio_chip *chip, unsigned int reg)
+>>  static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+>>  {
+>>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+>> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+>> +	unsigned int addr = offset / 8 ?
+>>  		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
+>> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+>> +	unsigned int bit  = offset % 8;
+>>  
+>>  	return !!(exar_get(chip, addr) & BIT(bit));
+>>  }
+>> @@ -86,9 +85,9 @@ static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+>>  static int exar_get_value(struct gpio_chip *chip, unsigned int offset)
+>>  {
+>>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+>> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+>> +	unsigned int addr = offset / 8 ?
+>>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
+>> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+>> +	unsigned int bit  = offset % 8;
+>>  
+>>  	return !!(exar_get(chip, addr) & BIT(bit));
+>>  }
+>> @@ -97,9 +96,9 @@ static void exar_set_value(struct gpio_chip *chip, unsigned int offset,
+>>  			   int value)
+>>  {
+>>  	struct exar_gpio_chip *exar_gpio = gpiochip_get_data(chip);
+>> -	unsigned int addr = (offset + exar_gpio->first_pin) / 8 ?
+>> +	unsigned int addr = offset / 8 ?
+>>  		EXAR_OFFSET_MPIOLVL_HI : EXAR_OFFSET_MPIOLVL_LO;
+>> -	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
+>> +	unsigned int bit  = offset % 8;
+>>  
+>>  	exar_update(chip, addr, value, bit);
+>>  }
+>> @@ -120,7 +119,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>>  {
+>>  	struct pci_dev *pcidev = to_pci_dev(pdev->dev.parent);
+>>  	struct exar_gpio_chip *exar_gpio;
+>> -	u32 first_pin, ngpios;
+>> +	u32 ngpios;
+>>  	void __iomem *p;
+>>  	int index, ret;
+>>  
+>> @@ -132,11 +131,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>>  	if (!p)
+>>  		return -ENOMEM;
+>>  
+>> -	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
+>> -				       &first_pin);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>>  	ret = device_property_read_u32(&pdev->dev, "ngpios", &ngpios);
+>>  	if (ret)
+>>  		return ret;
+>> @@ -161,7 +155,6 @@ static int gpio_exar_probe(struct platform_device *pdev)
+>>  	exar_gpio->gpio_chip.ngpio = ngpios;
+>>  	exar_gpio->regs = p;
+>>  	exar_gpio->index = index;
+>> -	exar_gpio->first_pin = first_pin;
+>>  
+>>  	ret = devm_gpiochip_add_data(&pdev->dev,
+>>  				     &exar_gpio->gpio_chip, exar_gpio);
+>> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+>> index b5c98e5bf524..4fb3a4ed4a1f 100644
+>> --- a/drivers/tty/serial/8250/8250_exar.c
+>> +++ b/drivers/tty/serial/8250/8250_exar.c
+>> @@ -261,7 +261,6 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
+>>  }
+>>  
+>>  static const struct property_entry exar_gpio_properties[] = {
+>> -	PROPERTY_ENTRY_U32("linux,first-pin", 0),
+>>  	PROPERTY_ENTRY_U32("ngpios", 16),
+>>  	{ }
+>>  };
+>> @@ -326,7 +325,6 @@ static int iot2040_rs485_config(struct uart_port *port,
+>>  }
+>>  
+>>  static const struct property_entry iot2040_gpio_properties[] = {
+>> -	PROPERTY_ENTRY_U32("linux,first-pin", 10),
+>>  	PROPERTY_ENTRY_U32("ngpios", 1),
+>>  	{ }
+>>  };
+>>
+> 
+> Sorry for the mess, I didn't know the proper process in details.
+> 
+> However, just reverting breaks the IOT2000, need to check if there are
+> even physical risks. How can we quickly resolve this to proper mechanism?
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Ping, before we half-break things with such a revert.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+To summarize what we discussed during the patch development:
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+This is a private, non-device-tree interface between the creator,
+8250_exar, and the GPIO device. The original proposal was to not use
+device properties at all, rather some platform-data-like pattern [1].
+Then we switched to properties [2], but that implicitly creates an
+interfaces in the space that is under device tree control. But, for the
+given use case, gpio-exar will never be parametrized via device trees or
+ACPI.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+So, how to proceed?
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Jan
 
-Thanks,
-Mark
+[1]
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1399507.html
+[2]
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1407975.html
 
->From 7da0ab95f90271a42cf122b158f14a5578dcf279 Mon Sep 17 00:00:00 2001
-From: jiada wang <jiada_wang@mentor.com>
-Date: Thu, 8 Jun 2017 14:16:00 +0900
-Subject: [PATCH] spi: imx: introduce fifo_size and has_dmamode in
- spi_imx_devtype_data
-
-Different ECSPI controller has different fifosize and DMA capability,
-instead of calling functions to identify these information by check
-devtype. add fifo_size and has_dmamode to spi_imx_devtype_data.
-so that these information can be directly accessed.
-
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-imx.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index f9698b7aeb3b..d3093f355dfb 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -74,6 +74,8 @@ struct spi_imx_devtype_data {
- 	void (*trigger)(struct spi_imx_data *);
- 	int (*rx_available)(struct spi_imx_data *);
- 	void (*reset)(struct spi_imx_data *);
-+	bool has_dmamode;
-+	unsigned int fifo_size;
- 	enum spi_imx_devtype devtype;
- };
- 
-@@ -125,11 +127,6 @@ static inline int is_imx51_ecspi(struct spi_imx_data *d)
- 	return d->devtype_data->devtype == IMX51_ECSPI;
- }
- 
--static inline unsigned spi_imx_get_fifosize(struct spi_imx_data *d)
--{
--	return is_imx51_ecspi(d) ? 64 : 8;
--}
--
- #define MXC_SPI_BUF_RX(type)						\
- static void spi_imx_buf_rx_##type(struct spi_imx_data *spi_imx)		\
- {									\
-@@ -219,7 +216,7 @@ static bool spi_imx_can_dma(struct spi_master *master, struct spi_device *spi,
- 	if (bytes_per_word != 1 && bytes_per_word != 2 && bytes_per_word != 4)
- 		return false;
- 
--	for (i = spi_imx_get_fifosize(spi_imx) / 2; i > 0; i--) {
-+	for (i = spi_imx->devtype_data->fifo_size / 2; i > 0; i--) {
- 		if (!(transfer->len % (i * bytes_per_word)))
- 			break;
- 	}
-@@ -693,6 +690,8 @@ static struct spi_imx_devtype_data imx1_cspi_devtype_data = {
- 	.trigger = mx1_trigger,
- 	.rx_available = mx1_rx_available,
- 	.reset = mx1_reset,
-+	.fifo_size = 8,
-+	.has_dmamode = false,
- 	.devtype = IMX1_CSPI,
- };
- 
-@@ -702,6 +701,8 @@ static struct spi_imx_devtype_data imx21_cspi_devtype_data = {
- 	.trigger = mx21_trigger,
- 	.rx_available = mx21_rx_available,
- 	.reset = mx21_reset,
-+	.fifo_size = 8,
-+	.has_dmamode = false,
- 	.devtype = IMX21_CSPI,
- };
- 
-@@ -712,6 +713,8 @@ static struct spi_imx_devtype_data imx27_cspi_devtype_data = {
- 	.trigger = mx21_trigger,
- 	.rx_available = mx21_rx_available,
- 	.reset = mx21_reset,
-+	.fifo_size = 8,
-+	.has_dmamode = false,
- 	.devtype = IMX27_CSPI,
- };
- 
-@@ -721,6 +724,8 @@ static struct spi_imx_devtype_data imx31_cspi_devtype_data = {
- 	.trigger = mx31_trigger,
- 	.rx_available = mx31_rx_available,
- 	.reset = mx31_reset,
-+	.fifo_size = 8,
-+	.has_dmamode = false,
- 	.devtype = IMX31_CSPI,
- };
- 
-@@ -731,6 +736,8 @@ static struct spi_imx_devtype_data imx35_cspi_devtype_data = {
- 	.trigger = mx31_trigger,
- 	.rx_available = mx31_rx_available,
- 	.reset = mx31_reset,
-+	.fifo_size = 8,
-+	.has_dmamode = true,
- 	.devtype = IMX35_CSPI,
- };
- 
-@@ -740,6 +747,8 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
- 	.trigger = mx51_ecspi_trigger,
- 	.rx_available = mx51_ecspi_rx_available,
- 	.reset = mx51_ecspi_reset,
-+	.fifo_size = 64,
-+	.has_dmamode = true,
- 	.devtype = IMX51_ECSPI,
- };
- 
-@@ -791,7 +800,7 @@ static void spi_imx_chipselect(struct spi_device *spi, int is_active)
- 
- static void spi_imx_push(struct spi_imx_data *spi_imx)
- {
--	while (spi_imx->txfifo < spi_imx_get_fifosize(spi_imx)) {
-+	while (spi_imx->txfifo < spi_imx->devtype_data->fifo_size) {
- 		if (!spi_imx->count)
- 			break;
- 		spi_imx->tx(spi_imx);
-@@ -938,7 +947,7 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
- 	if (of_machine_is_compatible("fsl,imx6dl"))
- 		return 0;
- 
--	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
-+	spi_imx->wml = spi_imx->devtype_data->fifo_size / 2;
- 
- 	/* Prepare for TX DMA: */
- 	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
-@@ -1262,7 +1271,7 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	 * Only validated on i.mx35 and i.mx6 now, can remove the constraint
- 	 * if validated on other chips.
- 	 */
--	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx)) {
-+	if (spi_imx->devtype_data->has_dmamode) {
- 		ret = spi_imx_sdma_init(&pdev->dev, spi_imx, master);
- 		if (ret == -EPROBE_DEFER)
- 			goto out_clk_put;
 -- 
-2.13.2
+Siemens AG, Corporate Technology, CT RDA ITP SES-DE
+Corporate Competence Center Embedded Linux
