@@ -1,69 +1,54 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: rockchip: remove arm, mali-midgard compatible from rk3288
-Date: Tue, 11 Jul 2017 13:47:03 +0200
-Message-ID: <1865386.qPV9dVK26y@phil>
-References: <20170710121227.14264-1-heiko@sntech.de> <20170710121227.14264-2-heiko@sntech.de> <972bed58-76c2-04e3-f2ab-d5b8065a92dd@gmail.com>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: [PATCH v3] [media] dt-bindings: gpio-ir-tx: add support for GPIO IR
+ Transmitter
+Date: Tue, 11 Jul 2017 12:52:41 +0100
+Message-ID: <20170711115241.cprjvqirp7pyuhye@gofer.mess.org>
+References: <cover.1499419624.git.sean@mess.org>
+ <580c648de65344e9316ff153ba316efd4d527f12.1499419624.git.sean@mess.org>
+ <20170710150538.ql26gswdf2obch6o@rob-hp-laptop>
+ <20170710151016.5iaokchdejxozrte@gofer.mess.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <972bed58-76c2-04e3-f2ab-d5b8065a92dd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170710151016.5iaokchdejxozrte-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <caesar.upstream-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+Document the device tree bindings for the GPIO Bit Banging IR
+Transmitter.
 
-Am Dienstag, 11. Juli 2017, 16:04:38 CEST schrieb Caesar Wang:
-> Heiko,
-> 
-> 在 2017年07月10日 20:12, Heiko Stuebner 写道:
-> > The binding specifies the actual implementations only (mali-t760
-> > for example) but not the arm,mali-midgard used in some vendor kernels.
-> > So drop that compatible property from the rk3288 where it had slipped in.
-> >
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/rk3288.dtsi | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> > index cb1d415d1201..e99d7ff4c939 100644
-> > --- a/arch/arm/boot/dts/rk3288.dtsi
-> > +++ b/arch/arm/boot/dts/rk3288.dtsi
-> > @@ -1135,7 +1135,7 @@
-> >   	};
-> >   
-> >   	gpu: mali@ffa30000 {
-> > -		compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
-> > +		compatible = "rockchip,rk3288-mali", "arm,mali-t760";
-> 
-> If we remove the "arm,mali-midgard", the mali driver maybe need update 
-> first.
->
->  From the lastest MALI driver on ARM supply, the compatible only two 
-> property.
-> mali_kbase_core_linux.c
-> 4163:    { .compatible = "arm,malit6xx" },
-> 4164:    { .compatible = "arm,mali-midgard" },
-> 
-> That's odd with the two compatible, the driver should support the more.
+Signed-off-by: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+---
+ .../devicetree/bindings/leds/irled/gpio-ir-tx.txt          | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
 
-Correct, the driver should be updated anyway. In general the official
-dt-binding (the one in the linux kernel) should be followed, not the random
-out-of-tree one distributed by vendor drivers :-) .
+diff --git a/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+new file mode 100644
+index 0000000..cbe8dfd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/irled/gpio-ir-tx.txt
+@@ -0,0 +1,14 @@
++Device tree bindings for IR LED connected through gpio pin which is used as
++remote controller transmitter.
++
++Required properties:
++	- compatible: should be "gpio-ir-tx".
++	- gpios :  Should specify the IR LED GPIO, see "gpios property" in
++	  Documentation/devicetree/bindings/gpio/gpio.txt.  Active low LEDs
++	  should be indicated using flags in the GPIO specifier.
++
++Example:
++	irled@0 {
++		compatible = "gpio-ir-tx";
++		gpios = <&gpio1 2 GPIO_ACTIVE_HIGH>;
++	};
+-- 
+2.9.4
 
-If you look for example at utgard (mali400 for example), the sane binding
-used in the kernel, differs a lot from the binding used by the vendor-driver
-as well (io-areas, irq-names etc).
-
-In any case, as you use the mali vendor-driver with you vendor-tree,
-it should be possible to do both in sync (dt-change from mainline; driver
-change to use better compatibles).
-
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
