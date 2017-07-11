@@ -1,162 +1,98 @@
-From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V2 07/10] clk: sprd: add composite clock support
-Date: Tue, 11 Jul 2017 18:56:24 +0800
-Message-ID: <20170711105627.20526-8-chunyan.zhang@spreadtrum.com>
-References: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH] ata: sata_rcar: add gen[23] fallback compatibility strings
+Date: Tue, 11 Jul 2017 13:44:20 +0200
+Message-ID: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduced composite driveri for Spreadtrum's SoCs. The
-functions of this composite clock simply consist of divider and
-mux clocks.
+Add fallback compatibility string for R-Car Gen 2 and 3.
 
-Original-by: Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>
-Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+In the case of Renesas R-Car hardware we know that there are generations of
+SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
+between IP blocks might be. For example, I believe that r8a7790 is older
+than r8a7791 but that doesn't imply that the latter is a descendant of the
+former or vice versa.
+
+We can, however, by examining the documentation and behaviour of the
+hardware at run-time observe that the current driver implementation appears
+to be compatible with the IP blocks on SoCs within a given generation.
+
+For the above reasons and convenience when enabling new SoCs a
+per-generation fallback compatibility string scheme being adopted for
+drivers for Renesas SoCs.
+
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 ---
- drivers/clk/sprd/Makefile    |  1 +
- drivers/clk/sprd/composite.c | 64 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/composite.h | 47 ++++++++++++++++++++++++++++++++
- 3 files changed, 112 insertions(+)
- create mode 100644 drivers/clk/sprd/composite.c
- create mode 100644 drivers/clk/sprd/composite.h
+Based on libata/for-next
+---
+ Documentation/devicetree/bindings/ata/sata_rcar.txt | 14 +++++++++++---
+ drivers/ata/sata_rcar.c                             |  8 ++++++++
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-index 80e6039..2262e76 100644
---- a/drivers/clk/sprd/Makefile
-+++ b/drivers/clk/sprd/Makefile
-@@ -4,3 +4,4 @@ clk-sprd-y	+= common.o
- clk-sprd-y	+= gate.o
- clk-sprd-y	+= mux.o
- clk-sprd-y	+= div.o
-+clk-sprd-y	+= composite.o
-diff --git a/drivers/clk/sprd/composite.c b/drivers/clk/sprd/composite.c
-new file mode 100644
-index 0000000..25b045d
---- /dev/null
-+++ b/drivers/clk/sprd/composite.c
-@@ -0,0 +1,64 @@
-+/*
-+ * Spreadtrum composite clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
+diff --git a/Documentation/devicetree/bindings/ata/sata_rcar.txt b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+index 0764f9ab63dc..e20eac7a3087 100644
+--- a/Documentation/devicetree/bindings/ata/sata_rcar.txt
++++ b/Documentation/devicetree/bindings/ata/sata_rcar.txt
+@@ -1,14 +1,22 @@
+ * Renesas R-Car SATA
+ 
+ Required properties:
+-- compatible		: should contain one of the following:
++- compatible		: should contain one or more of the following:
+ 			  - "renesas,sata-r8a7779" for R-Car H1
+-			    ("renesas,rcar-sata" is deprecated)
+ 			  - "renesas,sata-r8a7790-es1" for R-Car H2 ES1
+ 			  - "renesas,sata-r8a7790" for R-Car H2 other than ES1
+ 			  - "renesas,sata-r8a7791" for R-Car M2-W
+ 			  - "renesas,sata-r8a7793" for R-Car M2-N
+ 			  - "renesas,sata-r8a7795" for R-Car H3
++			  - "renesas,rcar-gen2-sata" for a generic R-Car Gen2 compatible device
++			  - "renesas,rcar-gen3-sata" for a generic R-Car Gen3 compatible device
++			  - "renesas,rcar-sata" is deprecated
 +
-+#include <linux/clk-provider.h>
++			  When compatible with the generic version nodes
++			  must list the SoC-specific version corresponding
++			  to the platform first followed by the generic
++			  version.
 +
-+#include "composite.h"
-+
-+DEFINE_SPINLOCK(sprd_comp_lock);
-+EXPORT_SYMBOL_GPL(sprd_comp_lock);
-+
-+static long sprd_comp_round_rate(struct clk_hw *hw, unsigned long rate,
-+				unsigned long *parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_div_helper_round_rate(&cc->common, &cc->div,
-+					 rate, parent_rate);
-+}
-+
-+static unsigned long sprd_comp_recalc_rate(struct clk_hw *hw,
-+					  unsigned long parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_div_helper_recalc_rate(&cc->common, &cc->div, parent_rate);
-+}
-+
-+static int sprd_comp_set_rate(struct clk_hw *hw, unsigned long rate,
-+			     unsigned long parent_rate)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_div_helper_set_rate(&cc->common, &cc->div,
-+				       rate, parent_rate);
-+}
-+
-+static u8 sprd_comp_get_parent(struct clk_hw *hw)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_mux_helper_get_parent(&cc->common, &cc->mux);
-+}
-+
-+static int sprd_comp_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct sprd_comp *cc = hw_to_sprd_comp(hw);
-+
-+	return sprd_mux_helper_set_parent(&cc->common, &cc->mux, index);
-+}
-+
-+const struct clk_ops sprd_comp_ops = {
-+	.get_parent	= sprd_comp_get_parent,
-+	.set_parent	= sprd_comp_set_parent,
-+
-+	.round_rate	= sprd_comp_round_rate,
-+	.recalc_rate	= sprd_comp_recalc_rate,
-+	.set_rate	= sprd_comp_set_rate,
-+};
-+EXPORT_SYMBOL_GPL(sprd_comp_ops);
-diff --git a/drivers/clk/sprd/composite.h b/drivers/clk/sprd/composite.h
-new file mode 100644
-index 0000000..f5ca0c9
---- /dev/null
-+++ b/drivers/clk/sprd/composite.h
-@@ -0,0 +1,47 @@
-+/*
-+ * Spreadtrum composite clock driver
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _SPRD_COMPOSITE_H_
-+#define _SPRD_COMPOSITE_H_
-+
-+#include "common.h"
-+#include "mux.h"
-+#include "div.h"
-+
-+struct sprd_comp {
-+	struct sprd_mux_internal	mux;
-+	struct sprd_div_internal	div;
-+	struct sprd_clk_common	common;
-+};
-+
-+#define SPRD_COMP_CLK(_struct, _name, _parent, _reg, _table,		\
-+			_mshift, _mwidth, _dshift, _dwidth, _flags)	\
-+	struct sprd_comp _struct = {					\
-+		.mux	= _SPRD_MUX_CLK(_mshift, _mwidth, _table),	\
-+		.div	= _SPRD_DIV_CLK(_dshift, _dwidth),		\
-+		.common = {						\
-+			 .reg		= _reg,				\
-+			 .lock		= &sprd_comp_lock,		\
-+			 .hw.init	= CLK_HW_INIT_PARENTS(_name,	\
-+							      _parent,	\
-+							&sprd_comp_ops,	\
-+							      _flags),	\
-+			 }						\
-+	}
-+
-+static inline struct sprd_comp *hw_to_sprd_comp(const struct clk_hw *hw)
-+{
-+	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
-+
-+	return container_of(common, struct sprd_comp, common);
-+}
-+
-+extern const struct clk_ops sprd_comp_ops;
-+extern spinlock_t sprd_comp_lock;
-+
-+#endif /* _SPRD_COMPOSITE_H_ */
+ - reg			: address and length of the SATA registers;
+ - interrupts		: must consist of one interrupt specifier.
+ - clocks		: must contain a reference to the functional clock.
+@@ -16,7 +24,7 @@ Required properties:
+ Example:
+ 
+ sata0: sata@ee300000 {
+-	compatible = "renesas,sata-r8a7791";
++	compatible = "renesas,sata-r8a7791", "renesas,rcar-gen2-sata";
+ 	reg = <0 0xee300000 0 0x2000>;
+ 	interrupt-parent = <&gic>;
+ 	interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index ee9844758736..537d11869069 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -858,6 +858,14 @@ static const struct of_device_id sata_rcar_match[] = {
+ 		.compatible = "renesas,sata-r8a7795",
+ 		.data = (void *)RCAR_GEN2_SATA
+ 	},
++	{
++		.compatible = "renesas,rcar-gen2-sata",
++		.data = (void *)RCAR_GEN2_SATA
++	},
++	{
++		.compatible = "renesas,rcar-gen3-sata",
++		.data = (void *)RCAR_GEN2_SATA
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, sata_rcar_match);
 -- 
-2.7.4
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
