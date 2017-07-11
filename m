@@ -1,68 +1,99 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH 2/2] arm64: dts: uniphier: add Denali NAND controller nodes
-Date: Tue, 11 Jul 2017 23:21:25 +0900
-Message-ID: <1499782885-29023-2-git-send-email-yamada.masahiro@socionext.com>
-References: <1499782885-29023-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499782885-29023-1-git-send-email-yamada.masahiro@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>
+From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH] power: supply: ltc2941-battery-gauge: Add LTC2944 support
+Date: Tue, 11 Jul 2017 16:23:09 +0200
+Message-ID: <20170711142309.2kumpn4mcbzp6ebo@lenoch>
+References: <20170711140509.31346-1-dragos.bogdan@analog.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170711140509.31346-1-dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add NAND controller node to LD11 and LD20.  Neither of them supports
-the CS1 line, so pinctrl is set up for a single CS line.
+On Tue, Jul 11, 2017 at 05:05:09PM +0300, Dragos Bogdan wrote:
+> The only difference between the already supported LTC2943 and LTC2944 is the
+> operating range (3.6V - 20V compared to 3.6V - 60V).
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+So it is using different voltage and current conversion, but patch does not
+handle it at all resulting into incorrect values being reported.
 
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 11 +++++++++++
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 11 +++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index bdce5b89baec..ca7eb49aa83d 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -368,6 +368,17 @@
- 				#reset-cells = <1>;
- 			};
- 		};
-+
-+		nand: nand@68000000 {
-+			compatible = "socionext,uniphier-denali-nand-v5b";
-+			status = "disabled";
-+			reg-names = "nand_data", "denali_reg";
-+			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
-+			interrupts = <0 65 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
-+			clocks = <&sys_clk 2>;
-+		};
- 	};
- };
- 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index de1e75362817..1110be4c88ca 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -389,6 +389,17 @@
- 				#reset-cells = <1>;
- 			};
- 		};
-+
-+		nand: nand@68000000 {
-+			compatible = "socionext,uniphier-denali-nand-v5b";
-+			status = "disabled";
-+			reg-names = "nand_data", "denali_reg";
-+			reg = <0x68000000 0x20>, <0x68100000 0x1000>;
-+			interrupts = <0 65 4>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_nand>;
-+			clocks = <&sys_clk 2>;
-+		};
- 	};
- };
- 
--- 
-2.7.4
+> Signed-off-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/supply/ltc2941.txt | 10 +++++-----
+>  drivers/power/supply/ltc2941-battery-gauge.c               | 11 ++++++++---
+>  2 files changed, 13 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+> index a9d7aa60558b..ed0f02846d10 100644
+> --- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
+> @@ -1,9 +1,9 @@
+> -binding for LTC2941 and LTC2943 battery gauges
+> +binding for LTC2941, LTC2943 and LTC2944 battery gauges
+>  
+> -Both the LTC2941 and LTC2943 measure battery capacity.
+> -The LTC2943 is compatible with the LTC2941, it adds voltage and
+> -temperature monitoring, and uses a slightly different conversion
+> -formula for the charge counter.
+> +All the LTC2941, LTC2943 and LTC2944 measure battery capacity.
+> +The LTC2943 and LTC2944 are compatible with the LTC2941, they add voltage and
+> +temperature monitoring, and use a slightly different conversion formula for the
+> +charge counter.
+>  
+>  Required properties:
+>  - compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
+> diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
+> index 7efb908f4451..48af7b6fb704 100644
+> --- a/drivers/power/supply/ltc2941-battery-gauge.c
+> +++ b/drivers/power/supply/ltc2941-battery-gauge.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * I2C client/driver for the Linear Technology LTC2941 and LTC2943
+> + * I2C client/driver for the Linear Technology LTC2941, LTC2943 and LTC2944
+>   * Battery Gas Gauge IC
+>   *
+>   * Copyright (C) 2014 Topic Embedded Systems
+> @@ -145,7 +145,7 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
+>  
+>  	control = LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |
+>  				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;
+> -	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */
+> +	/* Put the 2943/4 into "monitor" mode, so it measures every 10 sec */
+>  	if (info->num_regs == LTC2943_NUM_REGS)
+>  		control |= LTC2943_REG_CONTROL_MODE_SCAN;
+>  
+> @@ -494,6 +494,7 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_suspend, ltc294x_resume);
+>  static const struct i2c_device_id ltc294x_i2c_id[] = {
+>  	{"ltc2941", LTC2941_NUM_REGS},
+>  	{"ltc2943", LTC2943_NUM_REGS},
+> +	{"ltc2944", LTC2943_NUM_REGS},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
+> @@ -507,6 +508,10 @@ static const struct of_device_id ltc294x_i2c_of_match[] = {
+>  		.compatible = "lltc,ltc2943",
+>  		.data = (void *)LTC2943_NUM_REGS
+>  	},
+> +	{
+> +		.compatible = "lltc,ltc2944",
+> +		.data = (void *)LTC2943_NUM_REGS
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, ltc294x_i2c_of_match);
+> @@ -525,5 +530,5 @@ module_i2c_driver(ltc294x_driver);
+>  
+>  MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
+>  MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
+> -MODULE_DESCRIPTION("LTC2941/LTC2943 Battery Gas Gauge IC driver");
+> +MODULE_DESCRIPTION("LTC2941/LTC2943/LTC2944 Battery Gas Gauge IC driver");
+>  MODULE_LICENSE("GPL");
+> -- 
+> 2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
