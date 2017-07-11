@@ -1,58 +1,45 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] dt-bindings: clock: ti-sci: Fix incorrect usage of headers
-Date: Tue, 11 Jul 2017 17:36:15 -0500
-Message-ID: <20170711223615.29398-1-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 0/2] add the reset controller to the Meson8b clkc
+Date: Wed, 12 Jul 2017 00:49:37 +0200
+Message-ID: <20170711224939.26267-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock consumer usage description was erroneously referring to
-couple of dt-binding headers that are no longer valid. The definition
-and/or usage of these headers is incorrect and the only file present
-at the moment, dt-bindings/soc/k2g.h is also being cleaned up. The
-examples in this binding were updated properly, but the update to
-description was missed out. So, fix this.
+This registers the four CPU (soft) reset lines (one for each CPU core)
+provided by the clock controller's HHI_SYS_CPU_CLK_CNTL0 register.
 
-Fixes: 8f306cfe4383 ("Documentation: dt: Add TI SCI clock driver")
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
----
-Hi Stephen,
+This is the first preparation step for SMP and CPU hotplug support on
+Meson8/Meson8b/Meson8m2.
 
-Looks like this was missed during the update/repost of the ti-sci-clk
-driver/binding. FYI, Santosh is going to pickup the header file cleanup
-patch https://patchwork.kernel.org/patch/9741279/ for the next merge
-window.
+The reset controller part of the meson8b clock controller has to be
+registered early (which I did through CLK_OF_DECLARE_DRIVER), because
+the secondary cores are started *very* early in the boot process (and
+meson8b_clkc_probe is invoked long after we need the reset controller
+to be available for booting the secondary CPU cores).
 
-regards
-Suman
+The user of the reset-controller (= the patches which enable SMP and
+CPU hotplug support) will follow in the next days. I decided to split
+this because the SMP series will probably consist of 6 patches alone
+(and may need to go through two separate trees).
 
- Documentation/devicetree/bindings/clock/ti,sci-clk.txt | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-index 1e884c40ab50..4e59dc6b1778 100644
---- a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-+++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-@@ -14,10 +14,9 @@ Required properties:
- - compatible: Must be "ti,k2g-sci-clk"
- - #clock-cells: Shall be 2.
-   In clock consumers, this cell represents the device ID and clock ID
--  exposed by the PM firmware. The assignments can be found in the header
--  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
--  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
--  is the SoC involved, for example 'k2g'.
-+  exposed by the PM firmware. The list of valid values for the device IDs
-+  and clocks IDs for 66AK2G SoC are documented at
-+  http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
- 
- Examples:
- --------
+Martin Blumenstingl (2):
+  clk: meson: meson8b: register the built-in reset controller
+  ARM: dts: meson: mark the clock controller also as reset controller
+
+ .../bindings/clock/amlogic,meson8b-clkc.txt        |   7 +-
+ arch/arm/boot/dts/meson8.dtsi                      |   1 +
+ arch/arm/boot/dts/meson8b.dtsi                     |   1 +
+ drivers/clk/meson/Kconfig                          |   1 +
+ drivers/clk/meson/meson8b.c                        | 109 ++++++++++++++++++---
+ drivers/clk/meson/meson8b.h                        |   1 +
+ 6 files changed, 107 insertions(+), 13 deletions(-)
+
 -- 
-2.13.1
+2.13.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
