@@ -1,48 +1,27 @@
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Subject: [PATCH v2 4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
-Date: Tue, 11 Jul 2017 05:47:17 +0300
-Message-ID: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/9] dt-bindings: iio: humidity: hts221: support
+ active-low interrupts
+Date: Mon, 10 Jul 2017 21:49:36 -0500
+Message-ID: <20170711024936.3jncjvrx37g4herl@rob-hp-laptop>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+ <20170709165704.26311-7-lorenzo.bianconi@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170709165704.26311-7-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+On Sun, Jul 09, 2017 at 06:57:01PM +0200, Lorenzo Bianconi wrote:
+> Update hts221 device binding with active-low interrupts support
+> (IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_EDGE_FALLING).
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-The ULCB board has one HDMI output connector.
-
-This connector is available on both the H3 and M3-W ULCB boards.
-Add this to the ulcb.dtsi file.
-
-Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
----
-Changes in version 2:
-- removed label
-
- arch/arm64/boot/dts/renesas/ulcb.dtsi | 10 +++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/ulcb.dtsi b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-index 6f0a7ca..fc5408d 100644
---- a/arch/arm64/boot/dts/renesas/ulcb.dtsi
-+++ b/arch/arm64/boot/dts/renesas/ulcb.dtsi
-@@ -34,6 +34,16 @@
- 		clock-frequency = <11289600>;
- 	};
- 
-+	hdmi0-out {
-+		compatible = "hdmi-connector";
-+		type = "a";
-+
-+		port {
-+			hdmi0_con: endpoint {
-+			};
-+		};
-+	};
-+
- 	keyboard {
- 		compatible = "gpio-keys";
- 
--- 
-1.9.1
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
