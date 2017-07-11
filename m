@@ -1,79 +1,46 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/7] pwm: rockchip: Add APB and function both clocks support
-Date: Tue, 11 Jul 2017 10:03:34 -0700
-Message-ID: <CAD=FV=Vqkueo_cqU8bJXXT3pV5d1dZR5LF+c=O-Ka1qR-Ff-WQ@mail.gmail.com>
-References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com> <1499486629-9659-2-git-send-email-david.wu@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ata: sata_rcar: add gen[23] fallback compatibility strings
+Date: Tue, 11 Jul 2017 19:47:08 +0200
+Message-ID: <CAMuHMdWO15UCe8HgFL2wsfKTwM1M=850C3FiCJfO9_rDo18YJA@mail.gmail.com>
+References: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1499486629-9659-2-git-send-email-david.wu@rock-chips.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Brian Norris <briannorris@chromium.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?6buE5rab?= <huangtao@rock-chips.com>, linux-pwm <linux-pwm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: Tejun Heo <tj@kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Jul 7, 2017 at 9:03 PM, David Wu <david.wu@rock-chips.com> wrote:
-
-> @@ -6,7 +6,13 @@ Required properties:
->     "rockchip,rk3288-pwm": found on RK3288 SoC
->     "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
->   - reg: physical base address and length of the controller's registers
-> - - clocks: phandle and clock specifier of the PWM reference clock
-> + - clocks: See ../clock/clock-bindings.txt
-> +   - For older hardware (rk2928, rk3066, rk3188, rk3228, rk3288, rk3399):
-> +     - There is one clock that's used both to derive the functional clock
-> +       for the device and as the bus clock.
-> +   - For newer hardware (rk3328 and future socs): specified by name
-> +     - "pwm": This is used to derive the functional clock.
-> +     - "pclk": This is the APB bus clock.
-
-I'm pretty sure that that the above description doesn't quite match the code.
-
-* The above description says that for old hardware there is one clock
-and 'clock-names' was not necessary (though as I understand it it's OK
-if it's there).
-
-* The old code matched the old description.  AKA: if there was no
-"clock-names" then everything was OK.
-
-* The new code will not work if there was no "clock-names".
-
-Many of the old devices had a clock-names present (and it was "pwm"),
-but not all.  Specifically it looks like
-"arch/arm/boot/dts/rk3xxx.dtsi" doesn't specify a clock-names.
-
-> @@ -343,13 +344,38 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->         if (IS_ERR(pc->base))
->                 return PTR_ERR(pc->base);
+On Tue, Jul 11, 2017 at 1:44 PM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> Add fallback compatibility string for R-Car Gen 2 and 3.
 >
-> -       pc->clk = devm_clk_get(&pdev->dev, NULL);
-> -       if (IS_ERR(pc->clk))
-> -               return PTR_ERR(pc->clk);
-> +       pc->clk = devm_clk_get(&pdev->dev, "pwm");
-> +       count = of_property_count_strings(pdev->dev.of_node, "clock-names");
-> +       if (count == 2)
-> +               pc->pclk = devm_clk_get(&pdev->dev, "pclk");
-> +       else
-> +               pc->pclk = pc->clk;
-> +
-> +       if (IS_ERR(pc->clk)) {
-> +               ret = PTR_ERR(pc->clk);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "Can't get bus clk: %d\n", ret);
-> +               return ret;
-> +       }
-> +
-> +       if (IS_ERR(pc->pclk)) {
-> +               ret = PTR_ERR(pc->pclk);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
-> +               return ret;
-> +       }
+> In the case of Renesas R-Car hardware we know that there are generations of
+> SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
+> between IP blocks might be. For example, I believe that r8a7790 is older
+> than r8a7791 but that doesn't imply that the latter is a descendant of the
+> former or vice versa.
+>
+> We can, however, by examining the documentation and behaviour of the
+> hardware at run-time observe that the current driver implementation appears
+> to be compatible with the IP blocks on SoCs within a given generation.
+>
+> For the above reasons and convenience when enabling new SoCs a
+> per-generation fallback compatibility string scheme being adopted for
+> drivers for Renesas SoCs.
+>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 
-In the above code you need to check the count _before_ trying to get
-the clock by name.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+Gr{oetje,eeting}s,
 
--Doug
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
