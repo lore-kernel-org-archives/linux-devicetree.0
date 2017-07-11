@@ -1,93 +1,131 @@
-From: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] power: supply: ltc2941-battery-gauge: Add LTC2944 support
-Date: Tue, 11 Jul 2017 17:05:09 +0300
-Message-ID: <20170711140509.31346-1-dragos.bogdan@analog.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] ARM: dts: uniphier: use SPDX-License-Identifier (2nd)
+Date: Tue, 11 Jul 2017 23:08:56 +0900
+Message-ID: <1499782136-7744-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The only difference between the already supported LTC2943 and LTC2944 is the
-operating range (3.6V - 20V compared to 3.6V - 60V).
+Commit fa53757bca33 ("ARM: dts: uniphier: use SPDX-License-Identifier")
+missed to touch these two.  Now updating.
 
-Signed-off-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- Documentation/devicetree/bindings/power/supply/ltc2941.txt | 10 +++++-----
- drivers/power/supply/ltc2941-battery-gauge.c               | 11 ++++++++---
- 2 files changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-index a9d7aa60558b..ed0f02846d10 100644
---- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-@@ -1,9 +1,9 @@
--binding for LTC2941 and LTC2943 battery gauges
-+binding for LTC2941, LTC2943 and LTC2944 battery gauges
- 
--Both the LTC2941 and LTC2943 measure battery capacity.
--The LTC2943 is compatible with the LTC2941, it adds voltage and
--temperature monitoring, and uses a slightly different conversion
--formula for the charge counter.
-+All the LTC2941, LTC2943 and LTC2944 measure battery capacity.
-+The LTC2943 and LTC2944 are compatible with the LTC2941, they add voltage and
-+temperature monitoring, and use a slightly different conversion formula for the
-+charge counter.
- 
- Required properties:
- - compatible: Should contain "lltc,ltc2941" or "lltc,ltc2943" which also
-diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-index 7efb908f4451..48af7b6fb704 100644
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -1,5 +1,5 @@
- /*
-- * I2C client/driver for the Linear Technology LTC2941 and LTC2943
-+ * I2C client/driver for the Linear Technology LTC2941, LTC2943 and LTC2944
-  * Battery Gas Gauge IC
+ arch/arm/boot/dts/uniphier-pinctrl.dtsi | 38 +--------------------------------
+ arch/arm/boot/dts/uniphier-pro5.dtsi    | 38 +--------------------------------
+ 2 files changed, 2 insertions(+), 74 deletions(-)
+
+diff --git a/arch/arm/boot/dts/uniphier-pinctrl.dtsi b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+index 246f35ffb638..f6c5cf2281d5 100644
+--- a/arch/arm/boot/dts/uniphier-pinctrl.dtsi
++++ b/arch/arm/boot/dts/uniphier-pinctrl.dtsi
+@@ -4,43 +4,7 @@
+  * Copyright (C) 2015-2017 Socionext Inc.
+  *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
   *
-  * Copyright (C) 2014 Topic Embedded Systems
-@@ -145,7 +145,7 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
  
- 	control = LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |
- 				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;
--	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */
-+	/* Put the 2943/4 into "monitor" mode, so it measures every 10 sec */
- 	if (info->num_regs == LTC2943_NUM_REGS)
- 		control |= LTC2943_REG_CONTROL_MODE_SCAN;
+ &pinctrl {
+diff --git a/arch/arm/boot/dts/uniphier-pro5.dtsi b/arch/arm/boot/dts/uniphier-pro5.dtsi
+index 9577769a0add..140327ddde1c 100644
+--- a/arch/arm/boot/dts/uniphier-pro5.dtsi
++++ b/arch/arm/boot/dts/uniphier-pro5.dtsi
+@@ -4,43 +4,7 @@
+  * Copyright (C) 2015-2016 Socionext Inc.
+  *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+  *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License as
+- *     published by the Free Software Foundation; either version 2 of the
+- *     License, or (at your option) any later version.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+  */
  
-@@ -494,6 +494,7 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_suspend, ltc294x_resume);
- static const struct i2c_device_id ltc294x_i2c_id[] = {
- 	{"ltc2941", LTC2941_NUM_REGS},
- 	{"ltc2943", LTC2943_NUM_REGS},
-+	{"ltc2944", LTC2943_NUM_REGS},
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
-@@ -507,6 +508,10 @@ static const struct of_device_id ltc294x_i2c_of_match[] = {
- 		.compatible = "lltc,ltc2943",
- 		.data = (void *)LTC2943_NUM_REGS
- 	},
-+	{
-+		.compatible = "lltc,ltc2944",
-+		.data = (void *)LTC2943_NUM_REGS
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, ltc294x_i2c_of_match);
-@@ -525,5 +530,5 @@ module_i2c_driver(ltc294x_driver);
- 
- MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
- MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
--MODULE_DESCRIPTION("LTC2941/LTC2943 Battery Gas Gauge IC driver");
-+MODULE_DESCRIPTION("LTC2941/LTC2943/LTC2944 Battery Gas Gauge IC driver");
- MODULE_LICENSE("GPL");
+ / {
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
