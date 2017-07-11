@@ -1,88 +1,48 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
-Date: Tue, 11 Jul 2017 14:21:00 +0200
-Message-ID: <20170711122100.GM4517@verge.net.au>
-References: <20170710012024.j4cso2jyi6canws2@rob-hp-laptop>
- <1499700776-54504-1-git-send-email-biju.das@bp.renesas.com>
- <52eb0b92-5d25-e1f4-df54-e4fcf648c90e@cogentembedded.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: stm32: add vrefbuf to stm32h743
+Date: Tue, 11 Jul 2017 14:30:33 +0200
+Message-ID: <1499776233-29116-4-git-send-email-fabrice.gasnier@st.com>
+References: <1499776233-29116-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <52eb0b92-5d25-e1f4-df54-e4fcf648c90e@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499776233-29116-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 03:12:14PM +0300, Sergei Shtylyov wrote:
-> Hello!
-> 
-> On 07/10/2017 06:32 PM, Biju Das wrote:
-> 
-> >Add a new compatible string for the RZ/G1M (R8A7743) SoC.
-> >
-> >Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> >---
-> >v1->v2
-> >* Changed the subject
-> >* re-formatted the required properties
-> >
-> > .../devicetree/bindings/net/renesas,ravb.txt       | 29 +++++++++++++---------
-> > 1 file changed, 17 insertions(+), 12 deletions(-)
-> >
-> >diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> >index b519503..4717bc2 100644
-> >--- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> >+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> >@@ -4,19 +4,24 @@ This file provides information on what the device node for the Ethernet AVB
-> > interface contains.
-> >
-> > Required properties:
-> >-- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
-> >-	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
-> >-	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
-> >-	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
-> >-	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
-> >-	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
-> >-	      "renesas,etheravb-r8a7796" if the device is a part of R8A7796 SoC.
-> >-	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
-> >-	      "renesas,etheravb-rcar-gen3" for generic R-Car Gen 3 compatible interface.
-> >+- compatible: Must contain one or more of the following:
-> 
->    No, it can't contain more than one SoC specific value.
+Add STM32H743 VREFBUF (Voltage Reference Buffer) definition.
 
-The text above does not say it can unless one is under the delusion
-that, f.e. an r8a7790 SoC is also an r8a7791 SoC.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32h743.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-If you would prefer an alternate wording please provide a suggestion.
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 4685629..c57096a 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -74,6 +74,15 @@
+ 			interrupts = <50>;
+ 			clocks = <&timer_clk>;
+ 		};
++
++		vrefbuf: regulator@58003C00 {
++			compatible = "st,stm32-vrefbuf";
++			reg = <0x58003C00 0x8>;
++			clocks = <&timer_clk>;
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <2500000>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+-- 
+1.9.1
 
-> >+      - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
-> >+      - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
-> >+      - "renesas,etheravb-r8a7791" for the R8A7791 SoC.
-> >+      - "renesas,etheravb-r8a7792" for the R8A7792 SoC.
-> >+      - "renesas,etheravb-r8a7793" for the R8A7793 SoC.
-> >+      - "renesas,etheravb-r8a7794" for the R8A7794 SoC.
-> >+      - "renesas,etheravb-rcar-gen2" as a fallback for the above
-> >+		R-Car Gen2 and RZ/G1 devices.
-> >
-> >-	      When compatible with the generic version, nodes must list the
-> >-	      SoC-specific version corresponding to the platform first
-> >-	      followed by the generic version.
-> >+      - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
-> >+      - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
-> 
->    Neither here.
-> 
-> >+      - "renesas,etheravb-rcar-gen3" as a fallback for the above
-> >+		R-Car Gen3 devices.
-> >+
-> >+	When compatible with the generic version, nodes must list the
-> >+	SoC-specific version corresponding to the platform first followed by
-> >+	the generic version.
-> >
-> > - reg: offset and length of (1) the register block and (2) the stream buffer.
-> > - interrupts: A list of interrupt-specifiers, one for each entry in
-> 
-> WBR, Sergei
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
