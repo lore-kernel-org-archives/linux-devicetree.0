@@ -1,104 +1,200 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V2 00/10] add clock driver for Spreadtrum platforms
-Date: Tue, 11 Jul 2017 18:56:17 +0800
-Message-ID: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V2 05/10] clk: sprd: add mux clock support
+Date: Tue, 11 Jul 2017 18:56:22 +0800
+Message-ID: <20170711105627.20526-6-chunyan.zhang@spreadtrum.com>
+References: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a rewrite of Spreadtrum's original clock driver[1] according to the
-comments[2] from Stephen Boyd.
+This patch adds clock multiplexor support for Spreadtrum platforms,
+the mux clocks also can be found in sprd composite clocks, so
+provides two helpers that can be reused later on.
 
-This series adds Spreadtrum clock support together with its binding
-documentation and devicetree data.
-
-Any comments would be greatly appreciated.
-
-Thanks,
-Chunyan
-
-Changes from V1 (https://lkml.org/lkml/2017/6/17/356):
-* Address Stephen's comments:
-  - Switch to use platform device driver instead of the DT probing mechanism.
-  - Move the common clock macro out from vendor directory, but need to remove those
-    overlap code from other vendors (such as sunxi-ng) once this gets merged.
-  - Add support to be built as a module.
-  - Add 'sprd_' prefix for all spin locks used in these drivers.
-  - Mark input parameter of sprd_x with const.
-  - Remove unreasonable dependencies to CONFIG_64BIT.
-  - Add readl() after writing the same register.
-  - Remove CLK_IS_BASIC which is no longer used.
-  - Remove unnecessary CLK_IGNORE_UNUSED when defining a clock.
-  - Change to expose all clock index.
-  - Use clk_ instead of ccu.
-  - Add Kconfig for sprd clocks.
-  - Move the fixed clocks out from the soc node.
-  - Switch to use 64-bit math in pll driver instead of 32-bit math.
-* Revise binding documentation according to dt modification.
-* Rename sc9860.c to sc9860-clk.c
-
-
-[1] https://lwn.net/Articles/722739/
-[2] https://www.spinics.net/lists/arm-kernel/msg582017.html
-
-
-Chunyan Zhang (10):
-  drivers: move clock common macros out from vendor directories
-  dt-bindings: Add Spreadtrum clock binding documentation
-  clk: sprd: Add common infrastructure
-  clk: sprd: add gate clock support
-  clk: sprd: add mux clock support
-  clk: sprd: add divider clock support
-  clk: sprd: add composite clock support
-  clk: sprd: add adjustable pll support
-  clk: sprd: add clocks support for SC9860
-  arm64: dts: add clocks for SC9860
-
- Documentation/devicetree/bindings/clock/sprd.txt |   36 +
- arch/arm64/boot/dts/sprd/sc9860.dtsi             |   22 +
- arch/arm64/boot/dts/sprd/whale2.dtsi             |    3 +-
- drivers/clk/Kconfig                              |    1 +
- drivers/clk/Makefile                             |    1 +
- drivers/clk/clk_common.h                         |   60 +
- drivers/clk/sprd/Kconfig                         |   14 +
- drivers/clk/sprd/Makefile                        |   11 +
- drivers/clk/sprd/common.c                        |   83 ++
- drivers/clk/sprd/common.h                        |   56 +
- drivers/clk/sprd/composite.c                     |   64 +
- drivers/clk/sprd/composite.h                     |   47 +
- drivers/clk/sprd/div.c                           |   98 ++
- drivers/clk/sprd/div.h                           |   77 +
- drivers/clk/sprd/gate.c                          |  104 ++
- drivers/clk/sprd/gate.h                          |   58 +
- drivers/clk/sprd/mux.c                           |   86 ++
- drivers/clk/sprd/mux.h                           |   63 +
- drivers/clk/sprd/pll.c                           |  236 +++
- drivers/clk/sprd/pll.h                           |  133 ++
- drivers/clk/sprd/sc9860-clk.c                    | 1726 ++++++++++++++++++++++
- include/dt-bindings/clock/sprd,sc9860-clk.h      |  375 +++++
- 22 files changed, 3352 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
- create mode 100644 drivers/clk/clk_common.h
- create mode 100644 drivers/clk/sprd/Kconfig
- create mode 100644 drivers/clk/sprd/Makefile
- create mode 100644 drivers/clk/sprd/common.c
- create mode 100644 drivers/clk/sprd/common.h
- create mode 100644 drivers/clk/sprd/composite.c
- create mode 100644 drivers/clk/sprd/composite.h
- create mode 100644 drivers/clk/sprd/div.c
- create mode 100644 drivers/clk/sprd/div.h
- create mode 100644 drivers/clk/sprd/gate.c
- create mode 100644 drivers/clk/sprd/gate.h
+Original-by: Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>
+Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+---
+ drivers/clk/sprd/Makefile |  1 +
+ drivers/clk/sprd/mux.c    | 86 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/sprd/mux.h    | 63 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 150 insertions(+)
  create mode 100644 drivers/clk/sprd/mux.c
  create mode 100644 drivers/clk/sprd/mux.h
- create mode 100644 drivers/clk/sprd/pll.c
- create mode 100644 drivers/clk/sprd/pll.h
- create mode 100644 drivers/clk/sprd/sc9860-clk.c
- create mode 100644 include/dt-bindings/clock/sprd,sc9860-clk.h
 
+diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+index 8cd5592..cee36b5 100644
+--- a/drivers/clk/sprd/Makefile
++++ b/drivers/clk/sprd/Makefile
+@@ -2,3 +2,4 @@ obj-$(CONFIG_SPRD_COMMON_CLK)	+= clk-sprd.o
+ 
+ clk-sprd-y	+= common.o
+ clk-sprd-y	+= gate.o
++clk-sprd-y	+= mux.o
+diff --git a/drivers/clk/sprd/mux.c b/drivers/clk/sprd/mux.c
+new file mode 100644
+index 0000000..b5d8988
+--- /dev/null
++++ b/drivers/clk/sprd/mux.c
+@@ -0,0 +1,86 @@
++/*
++ * Spreadtrum multiplexer clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++
++#include "mux.h"
++
++DEFINE_SPINLOCK(sprd_mux_lock);
++EXPORT_SYMBOL_GPL(sprd_mux_lock);
++
++u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
++			      const struct sprd_mux_internal *mux)
++{
++	u32 reg;
++	u8 parent;
++	int num_parents;
++	int i;
++
++	reg = sprd_clk_readl(common);
++	parent = reg >> mux->shift;
++	parent &= (1 << mux->width) - 1;
++
++	if (mux->table) {
++		num_parents = clk_hw_get_num_parents(&common->hw);
++
++		for (i = 0; i < num_parents; i++)
++			if (parent == mux->table[i] ||
++			    (i < (num_parents - 1) && parent > mux->table[i] &&
++			     parent < mux->table[i + 1]))
++				return i;
++		if (i == num_parents)
++			return i - 1;
++	}
++
++	return parent;
++}
++EXPORT_SYMBOL_GPL(sprd_mux_helper_get_parent);
++
++static u8 sprd_mux_get_parent(struct clk_hw *hw)
++{
++	struct sprd_mux *cm = hw_to_sprd_mux(hw);
++
++	return sprd_mux_helper_get_parent(&cm->common, &cm->mux);
++}
++
++int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
++			       const struct sprd_mux_internal *mux,
++			       u8 index)
++{
++	unsigned long flags = 0;
++	u32 reg;
++
++	if (mux->table)
++		index = mux->table[index];
++
++	spin_lock_irqsave(common->lock, flags);
++
++	reg = sprd_clk_readl(common);
++	reg &= ~GENMASK(mux->width + mux->shift - 1, mux->shift);
++	sprd_clk_writel(reg | (index << mux->shift), common);
++
++	spin_unlock_irqrestore(common->lock, flags);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(sprd_mux_helper_set_parent);
++
++static int sprd_mux_set_parent(struct clk_hw *hw, u8 index)
++{
++	struct sprd_mux *cm = hw_to_sprd_mux(hw);
++
++	return sprd_mux_helper_set_parent(&cm->common, &cm->mux, index);
++}
++
++const struct clk_ops sprd_mux_ops = {
++	.get_parent = sprd_mux_get_parent,
++	.set_parent = sprd_mux_set_parent,
++	.determine_rate = __clk_mux_determine_rate,
++};
++EXPORT_SYMBOL_GPL(sprd_mux_ops);
+diff --git a/drivers/clk/sprd/mux.h b/drivers/clk/sprd/mux.h
+new file mode 100644
+index 0000000..aa35514
+--- /dev/null
++++ b/drivers/clk/sprd/mux.h
+@@ -0,0 +1,63 @@
++/*
++ * Spreadtrum multiplexer clock driver
++ *
++ * Copyright (C) 2017 Spreadtrum, Inc.
++ *
++ * SPDX-License-Identifier: GPL-2.0
++ */
++
++#ifndef _SPRD_MUX_H_
++#define _SPRD_MUX_H_
++
++#include "common.h"
++
++struct sprd_mux_internal {
++	u8		shift;
++	u8		width;
++	const u8	*table;
++};
++
++struct sprd_mux {
++	struct sprd_mux_internal mux;
++	struct sprd_clk_common	common;
++};
++
++#define _SPRD_MUX_CLK(_shift, _width, _table)		\
++	{						\
++		.shift	= _shift,			\
++		.width	= _width,			\
++		.table	= _table,			\
++	}
++
++#define SPRD_MUX_CLK(_struct, _name, _parents, _table,			\
++				     _reg, _shift, _width,		\
++				     _flags)				\
++	struct sprd_mux _struct = {					\
++		.mux	= _SPRD_MUX_CLK(_shift, _width, _table),	\
++		.common	= {						\
++			.reg		= _reg,				\
++			.lock		= &sprd_mux_lock,		\
++			.hw.init	= CLK_HW_INIT_PARENTS(_name,	\
++							      _parents, \
++							      &sprd_mux_ops,\
++							      _flags),	\
++		}							\
++	}
++
++static inline struct sprd_mux *hw_to_sprd_mux(const struct clk_hw *hw)
++{
++	struct sprd_clk_common *common = hw_to_sprd_clk_common(hw);
++
++	return container_of(common, struct sprd_mux, common);
++}
++
++extern const struct clk_ops sprd_mux_ops;
++extern spinlock_t sprd_mux_lock;
++
++u8 sprd_mux_helper_get_parent(const struct sprd_clk_common *common,
++			      const struct sprd_mux_internal *mux);
++int sprd_mux_helper_set_parent(const struct sprd_clk_common *common,
++			       const struct sprd_mux_internal *mux,
++			       u8 index);
++
++#endif /* _SPRD_MUX_H_ */
 -- 
 2.7.4
