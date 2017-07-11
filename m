@@ -1,37 +1,41 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
-Date: Tue, 11 Jul 2017 09:05:21 +0200
-Message-ID: <CAMuHMdW0wC3pP6RuoOJbz2hftRTBBzEi0zX2jmwtBC31pYBN4g@mail.gmail.com>
-References: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
+From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH 1/3] mfd: syscon: update Atmel SMC binding doc
+Date: Tue, 11 Jul 2017 09:40:13 +0200
+Message-ID: <20170711074015.30440-2-ludovic.desroches@microchip.com>
+References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170711074015.30440-1-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 4:47 AM, Vladimir Barinov
-<vladimir.barinov@cogentembedded.com> wrote:
-> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
->
-> The ULCB board has one HDMI output connector.
->
-> This connector is available on both the H3 and M3-W ULCB boards.
-> Add this to the ulcb.dtsi file.
->
-> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+A new compatible string is introduced for SMC on sama5d2 to manage a
+different layout of the registers.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
+diff --git a/Documentation/devicetree/bindings/mfd/atmel-smc.txt b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+index 26eeed373934..1103ce2030fb 100644
+--- a/Documentation/devicetree/bindings/mfd/atmel-smc.txt
++++ b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+@@ -8,6 +8,7 @@ Required properties:
+ - compatible:		Should be one of the following
+ 			"atmel,at91sam9260-smc", "syscon"
+ 			"atmel,sama5d3-smc", "syscon"
++			"atmel,sama5d2-smc", "syscon"
+ - reg:			Contains offset/length value of the SMC memory
+ 			region.
+ 
+-- 
+2.12.2
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
