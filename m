@@ -1,33 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt: Add bindings for IDT VersaClock 5P49V5925
-Date: Mon, 10 Jul 2017 21:53:23 -0500
-Message-ID: <20170711025323.xdzgp7jsuvfb5u5o@rob-hp-laptop>
-References: <1499621970-12925-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: display: panel: Add support for
+ Orise Tech otm8009a dsi panel
+Date: Mon, 10 Jul 2017 21:57:54 -0500
+Message-ID: <20170711025754.qxb6jkdxhrj45eh3@rob-hp-laptop>
+References: <1499677333-10571-1-git-send-email-philippe.cornu@st.com>
+ <1499677333-10571-3-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <1499677333-10571-3-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 09, 2017 at 08:40:05PM +0300, Vladimir Barinov wrote:
-> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> 
-> IDT VersaClock 5 5P49V5925 has 5 clock outputs, 4 fractional dividers.
-> Input clock source can be taken only from external reference clock.
-> 
-> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> ---
-> Changes in version 2:
-> - fixed typo in patch header: VC5 has 5 clock outputs
-> - rebased against patch:
->   [V3,7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
-> 
->  Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gTW9uLCBKdWwgMTAsIDIwMTcgYXQgMTE6MDI6MTJBTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
+d3JvdGU6Cj4gVGhlIE9yaXNlIFRlY2ggT1RNODAwOUEgaXMgYSAzLjk3IiA0ODB4ODAwIFRGVCBM
+Q0QgcGFuZWwgY29ubmVjdGVkIHVzaW5nCj4gYSBNSVBJLURTSSB2aWRlbyBpbnRlcmZhY2UuIEl0
+cyBiYWNrbGlnaHQgaXMgbWFuYWdlZCB0aHJvdWdoIHRoZSBEU0kgbGluay4KPiAKPiBTaWduZWQt
+b2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+IC0tLQo+ICAu
+Li4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9vcmlzZXRlY2gsb3RtODAwOWEudHh0ICAgfCAyMSAr
+KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIxIGluc2VydGlvbnMoKykK
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3BhbmVsL29yaXNldGVjaCxvdG04MDA5YS50eHQKCkFja2VkLWJ5OiBSb2IgSGVycmlu
+ZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
