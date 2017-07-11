@@ -1,52 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open
- drain mode
-Date: Mon, 10 Jul 2017 21:51:58 -0500
-Message-ID: <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
- <20170709165704.26311-9-lorenzo.bianconi@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt: Add bindings for IDT VersaClock 5P49V5925
+Date: Mon, 10 Jul 2017 21:53:23 -0500
+Message-ID: <20170711025323.xdzgp7jsuvfb5u5o@rob-hp-laptop>
+References: <1499621970-12925-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170709165704.26311-9-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <1499622005-13003-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+On Sun, Jul 09, 2017 at 08:40:05PM +0300, Vladimir Barinov wrote:
+> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+> 
+> IDT VersaClock 5 5P49V5925 has 5 clock outputs, 4 fractional dividers.
+> Input clock source can be taken only from external reference clock.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 > ---
->  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> Changes in version 2:
+> - fixed typo in patch header: VC5 has 5 clock outputs
+> - rebased against patch:
+>   [V3,7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> index fca263e13400..732b83c06c08 100644
-> --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> @@ -5,6 +5,14 @@ Required properties:
->  - reg: i2c address of the sensor / spi cs line
->  
->  Optional properties:
-> +- drive-open-drain: the interrupt/data ready line will be configured
+>  Documentation/devicetree/bindings/clock/idt,versaclock5.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Needs a vendor prefix and "drdy-open-drain" would be more specific.
-
-> +  as open drain, which is useful if several sensors share the same
-> +  interrupt line. This is a boolean property.
-> +  (This binding is taken from pinctrl/pinctrl-bindings.txt)
-> +  If the requested interrupt is configured as IRQ_TYPE_LEVEL_HIGH or
-> +  IRQ_TYPE_EDGE_RISING a pull-down resistor is needed to drive the line
-> +  when it is not active, whereas a pull-up one is needed when interrupt
-> +  line is configured as IRQ_TYPE_LEVEL_LOW or IRQ_TYPE_EDGE_FALLING.
->  - interrupt-parent: should be the phandle for the interrupt controller
->  - interrupts: interrupt mapping for IRQ. It should be configured with
->    flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
-> -- 
-> 2.13.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
