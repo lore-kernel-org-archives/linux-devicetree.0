@@ -1,112 +1,52 @@
-From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v1] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
-Date: Tue, 11 Jul 2017 16:18:27 +0300
-Message-ID: <20170711131827.64045-1-c_mykolak@mellanox.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] ASoC: codec: cpcap: new codec
+Date: Tue, 11 Jul 2017 14:33:06 +0100
+Message-ID: <20170711133306.ut4pjiwdl5xsu27j@sirena.org.uk>
+References: <20170707164229.5868-1-sebastian.reichel@collabora.co.uk>
+ <20170707164229.5868-2-sebastian.reichel@collabora.co.uk>
+ <20170710175152.2jglyjezvptamreq@sirena.org.uk>
+ <20170711051540.GV3730@atomide.com>
+ <20170711104911.wmzmt5fjkzghwljz@sirena.org.uk>
+ <20170711121331.7q5bhfrylwwwyyte@earth>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7owssxqsb5h6oedp"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170711121331.7q5bhfrylwwwyyte@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This binding adds description for interface supporting
-aspeed-pwm-tacho driver cooling device creation.
-This cooling device could be bound to a thermal zone
-for the thermal control.
 
-It adds extra level of hierarchy -  for tachometer channel
-with fan subnodes and pwm channels with pwm subnodes.
+--7owssxqsb5h6oedp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56 ++++++++++++++++++----
- 1 file changed, 47 insertions(+), 9 deletions(-)
+On Tue, Jul 11, 2017 at 02:13:31PM +0200, Sebastian Reichel wrote:
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-index cf4460564adb..df85aa70ed7f 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -23,9 +23,18 @@ Required properties for pwm-tacho node:
- - clocks : a fixed clock providing input clock frequency(PWM
- 	   and Fan Tach clock)
- 
-+tach-channels subnode format:
-+===================
-+Under tach-channels subnode there can be fan child nodes.
-+
-+Required properties for tach-channels node:
-+- #address-cells : should be 1.
-+
-+- #size-cells : should be 0.
-+
- fan subnode format:
- ===================
--Under fan subnode there can upto 8 child nodes, with each child node
-+Under fan subnode there can be upto 8 child nodes, with each child node
- representing a fan. If there are 8 fans each fan can have one PWM port and
- one/two Fan tach inputs.
- 
-@@ -39,6 +48,24 @@ Required properties for each child node:
- 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
- 		Atleast one Fan tach input channel is required.
- 
-+pwm-channels subnode format:
-+===================
-+Under pwm-channels subnode there can be pwm child nodes.
-+Required properties for tach-channels node:
-+- #address-cells : should be 1.
-+
-+- #size-cells : should be 0.
-+
-+- #cooling-cells : should be 2;
-+
-+pwm subnode format:
-+===================
-+- reg : should be <0x00>.
-+
-+- cooling-levels      : PWM duty cycle values in a range from 0 to 255
-+			which correspond to thermal cooling states.
-+
-+
- Examples:
- 
- pwm_tacho_fixed_clk: fixedclk {
-@@ -55,14 +82,25 @@ pwm_tacho: pwmtachocontroller@1e786000 {
- 	clocks = <&pwm_tacho_fixed_clk>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
--
--	fan@0 {
--		reg = <0x00>;
--		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	tach-channels {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		fan@0 {
-+			reg = <0x00>;
-+			aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+		};
-+		fan@1 {
-+			reg = <0x01>;
-+			aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
-+		};
- 	};
--
--	fan@1 {
--		reg = <0x01>;
--		aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
-+	pwm-channels {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		#cooling-cells = <2>;
-+		pwm@0 {
-+			reg = <0x00>;
-+			cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
-+		};
- 	};
- };
--- 
-2.11.0
+> How is having a subnode without a compatible property different?
 
+You don't *need* to have the subnode, I was only mentioning that if for
+some reason it was super useful for organizing the properties.
+
+--7owssxqsb5h6oedp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllk05EACgkQJNaLcl1U
+h9De/wf/azAIsxxbEP5Wr6pjOJsVedm0ZcdfM/ro0N5QXKwh6BGLwFESCe8DBGQV
+rf8U0T/U5LHw0FWKZ4XN6wUX0aHTiLCzBJD3PsqPGwJPk/fJUuGlh/m3D4R2I/N3
+2E8XaFReMSd10GbzNuEopRpwISAzP1wmjlYxlC8SJ/S5kw3x23s5P16KyxqsSKbb
+zwbaUVjRIVWKgN/ioYeTEaykbYNWWRMTcVG9Ru9nYT3sAFerk5H/3wh+eB/UXFdu
+uNXjOvwED9K6Seou531AT9912hePFNMyY6iMOEhN0yz7Gv5X/Ewu3ePhh58v5CIe
+h1poiYCcxYCVJLvgo5wrarher5Mjgg==
+=DSvi
+-----END PGP SIGNATURE-----
+
+--7owssxqsb5h6oedp--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
