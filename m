@@ -1,124 +1,113 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 00/16] omap_hsmmc: Add ADMA support and UHS/HS200/DDR support
-Date: Tue, 11 Jul 2017 15:10:37 +0200
-Message-ID: <CAPDyKFo+ORA=OpdikiUZWj3gpx+ssuqbC5MtqiFJneyJhu84dA@mail.gmail.com>
-References: <20170616124544.15046-1-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170616124544.15046-1-kishon@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v1] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
+Date: Tue, 11 Jul 2017 16:18:27 +0300
+Message-ID: <20170711131827.64045-1-c_mykolak@mellanox.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 June 2017 at 14:45, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> This is the final part of the series originally sent as
-> part of [2].
->
-> This series adds UHS, HS200, DDR mode and ADMA support to
-> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
-> SoCs.
->
-> Changes from [2]:
-> *) No more updating omap2plus_defconfig or multi_v7_defconfig is
->    required, so those patches are removed.
-> *) Addressed Rob Herring's comment on implementing a function
->    instead of having a macro while getting pinctrl state.
->
-> This series is created on top of [3], [4], [5] AND [6]
-> (i.e after
->   ARM: dts: omap3-overo: Remove "vqmmc-supply" property from MMC dt node
->   omap_hsmmc: use mmc_regulator_get_supply() to get regulators
->   omap*: Fixes/Cleanups for MMC devicetree node
->   ARM: dts: Add iodelay data for MMC)
->
-> The functionality implemented in this series was sent before ([1]) but
-> was never followed up since supporting high speed modes in dra7 required
-> IODelay values to be configured. With IODelay driver being merged into
-> kernel, sending it as a fresh series with support for configuring IODelay
-> values.
+This binding adds description for interface supporting
+aspeed-pwm-tacho driver cooling device creation.
+This cooling device could be bound to a thermal zone
+for the thermal control.
 
-Is it safe to queue this via mmc tree for 4.14 or is there a
-dependency I must consider? The above didn't quite tell me that, could
-you please elaborate.
+It adds extra level of hierarchy -  for tachometer channel
+with fan subnodes and pwm channels with pwm subnodes.
 
->
-> Suggestions of migrating to sdhci driver (from omap_hsmmc driver) is not
-> addressed since
-> *) tuning ratio of MMC in dra7 is different from sdhci
-> *) IOdelay is required for dra7
-> *) GPIO based card detect is not supported in sdhci
+Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56 ++++++++++++++++++----
+ 1 file changed, 47 insertions(+), 9 deletions(-)
 
-Lots of sdhci drivers calls mmc_of_parse(), and uses the mmc slot gpio
-APIs, so I don't this this is correct statement.
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+index cf4460564adb..df85aa70ed7f 100644
+--- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
++++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+@@ -23,9 +23,18 @@ Required properties for pwm-tacho node:
+ - clocks : a fixed clock providing input clock frequency(PWM
+ 	   and Fan Tach clock)
+ 
++tach-channels subnode format:
++===================
++Under tach-channels subnode there can be fan child nodes.
++
++Required properties for tach-channels node:
++- #address-cells : should be 1.
++
++- #size-cells : should be 0.
++
+ fan subnode format:
+ ===================
+-Under fan subnode there can upto 8 child nodes, with each child node
++Under fan subnode there can be upto 8 child nodes, with each child node
+ representing a fan. If there are 8 fans each fan can have one PWM port and
+ one/two Fan tach inputs.
+ 
+@@ -39,6 +48,24 @@ Required properties for each child node:
+ 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+ 		Atleast one Fan tach input channel is required.
+ 
++pwm-channels subnode format:
++===================
++Under pwm-channels subnode there can be pwm child nodes.
++Required properties for tach-channels node:
++- #address-cells : should be 1.
++
++- #size-cells : should be 0.
++
++- #cooling-cells : should be 2;
++
++pwm subnode format:
++===================
++- reg : should be <0x00>.
++
++- cooling-levels      : PWM duty cycle values in a range from 0 to 255
++			which correspond to thermal cooling states.
++
++
+ Examples:
+ 
+ pwm_tacho_fixed_clk: fixedclk {
+@@ -55,14 +82,25 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+ 	clocks = <&pwm_tacho_fixed_clk>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+-
+-	fan@0 {
+-		reg = <0x00>;
+-		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	tach-channels {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		fan@0 {
++			reg = <0x00>;
++			aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++		};
++		fan@1 {
++			reg = <0x01>;
++			aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
++		};
+ 	};
+-
+-	fan@1 {
+-		reg = <0x01>;
+-		aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
++	pwm-channels {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		#cooling-cells = <2>;
++		pwm@0 {
++			reg = <0x00>;
++			cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
++		};
+ 	};
+ };
+-- 
+2.11.0
 
-> *) Some of the registers don't always have correct values as in sdhci
->    (like PSTATE).
-> Supporting all of these in sdhci will result in adding lot of quirks in
-> sdhci driver.
-
-Is it really that much different? It would be nice if some really took
-on the challenge of converting omap_hsmmc into an sdhci variant.
-
-Especially by looking at the number new lines added in this series, I
-am starting to think that we have reached this point. That in
-conjunction with that sdhci is maintained and well supported,
-comparing to what the omap_hsmmc driver seems to be.
-
->
-> This series has been tested on beagleboard, pandaboard, beaglebone-black,
-> beaglebone, am335x-evm, am437x-evm, dra7xx-evm, dra72x-evm, am571x-idk
-> and am572x-idk.
->
-> I can split the series to go into Ulf Hansson's tree and Tony's tree
-> separately if that is required.
->
-> [1] -> https://lkml.org/lkml/2015/8/25/213
-> [2] -> https://lkml.org/lkml/2017/5/19/19
->
-> [3] -> https://lkml.org/lkml/2017/6/9/206
-> [4] -> https://lkml.org/lkml/2017/6/7/169
-> [5] -> https://www.spinics.net/lists/arm-kernel/msg586215.html /
->        http://www.spinics.net/lists/devicetree/msg180747.html
-> [6] -> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1423381.html
->
-> Kishon Vijay Abraham I (15):
->   mmc: host: omap_hsmmc: Support pbias and vmmc_aux to switch to 1.8v
->   mmc: host: omap_hsmmc: Separate setting voltage capabilities from bus
->     power
->   mmc: host: omap_hsmmc: Remove incorrect voltage switch sequence
->   mmc: host: omap_hsmmc: Add voltage switch support for UHS SD card
->   mmc: host: omap_hsmmc: Set clk rate to the max frequency
->   mmc: host: omap_hsmmc: Add tuning support
->   mmc: host: omap_hsmmc: Allow io voltage switch even for fixed vdd
->   mmc: host: omap_hsmmc: Prepare *set_timing() to be used for iodelay
->     setting
->   mmc: host: omap_hsmmc: Add new compatible string to support dra7
->   mmc: host: omap_hsmmc: Fix error path sequence
->   mmc: host: omap_hsmmc: Add support to set IODELAY values
->   mmc: host: omap_hsmmc: Remove *use_dma* member
->   mmc: host: omap_hsmmc: Enable ADMA2
->   ARM: dts: dra7: Use new dra7-specific compatible string
->   ARM: dts: dra7: Add supported MMC/SD modes in MMC dt nodes
->
-> Mugunthan V N (1):
->   mmc: host: omap_hsmmc: Add software timer when timeout greater than
->     hardware capablility
->
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |    6 +
->  arch/arm/boot/dts/am571x-idk.dts                   |    1 +
->  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts      |    1 +
->  arch/arm/boot/dts/am57xx-beagle-x15.dts            |    6 +
->  arch/arm/boot/dts/am57xx-idk-common.dtsi           |    1 +
->  arch/arm/boot/dts/dra7.dtsi                        |   22 +-
->  drivers/mmc/host/omap_hsmmc.c                      | 1179 ++++++++++++++++----
->  include/linux/platform_data/hsmmc-omap.h           |    2 +
->  8 files changed, 1021 insertions(+), 197 deletions(-)
->
-> --
-> 2.11.0
->
-
-Kind regards
-Ulf Hansson
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
