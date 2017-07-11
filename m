@@ -1,30 +1,90 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 0/2] Enable ADC support on STM32H7
-Date: Tue, 11 Jul 2017 18:13:08 +0200
-Message-ID: <1499789590-13021-1-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/2] ARM: dts: stm32: add ADC support on stm32h7
+Date: Tue, 11 Jul 2017 18:13:09 +0200
+Message-ID: <1499789590-13021-2-git-send-email-fabrice.gasnier@st.com>
+References: <1499789590-13021-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexandre.torgue-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499789590-13021-1-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alexandre.torgue@st.com, robh+dt@kernel.org
+Cc: mcoquelin.stm32@gmail.com, linux@armlinux.org.uk, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, fabrice.gasnier@st.com
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds ADC device-tree nodes to STM32H7 SoC and
-enables ADC1 by default on stm32h743i-eval board.
+Add support for ADC (Analog to Digital Converter) to STM32H7.
+It has 3 ADCs, distributed over two ADC blocks:
+- ADC1 and ADC2 @0x40022000
+- ADC3 @0x58026000 (instantiated separately)
 
-Fabrice Gasnier (2):
-  ARM: dts: stm32: add ADC support on stm32h7
-  ARM: dts: stm32: enable ADC on stm32h743i-eval board
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ arch/arm/boot/dts/stm32h743.dtsi | 53 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
- arch/arm/boot/dts/stm32h743.dtsi      | 53 +++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32h743i-eval.dts | 18 ++++++++++++
- 2 files changed, 71 insertions(+)
-
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 4685629..bc47119 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -74,6 +74,59 @@
+ 			interrupts = <50>;
+ 			clocks = <&timer_clk>;
+ 		};
++
++		adc_12: adc@40022000 {
++			compatible = "st,stm32h7-adc-core";
++			reg = <0x40022000 0x400>;
++			interrupts = <18>;
++			clocks = <&timer_clk>;
++			clock-names = "bus";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			adc1: adc@0 {
++				compatible = "st,stm32h7-adc";
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				interrupt-parent = <&adc_12>;
++				interrupts = <0>;
++				status = "disabled";
++			};
++
++			adc2: adc@100 {
++				compatible = "st,stm32h7-adc";
++				#io-channel-cells = <1>;
++				reg = <0x100>;
++				interrupt-parent = <&adc_12>;
++				interrupts = <1>;
++				status = "disabled";
++			};
++		};
++
++		adc_3: adc@58026000 {
++			compatible = "st,stm32h7-adc-core";
++			reg = <0x58026000 0x400>;
++			interrupts = <127>;
++			clocks = <&timer_clk>;
++			clock-names = "bus";
++			interrupt-controller;
++			#interrupt-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			adc3: adc@0 {
++				compatible = "st,stm32h7-adc";
++				#io-channel-cells = <1>;
++				reg = <0x0>;
++				interrupt-parent = <&adc_3>;
++				interrupts = <0>;
++				status = "disabled";
++			};
++		};
+ 	};
+ };
+ 
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
