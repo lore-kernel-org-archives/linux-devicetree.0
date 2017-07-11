@@ -1,51 +1,37 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v7 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
- using the RCU module
-Date: Tue, 11 Jul 2017 12:08:01 +0530
-Message-ID: <30adb3f5-50b5-35e3-685f-9fe0fa8c31f8@ti.com>
-References: <20170702224051.15109-1-hauke@hauke-m.de>
- <20170702224051.15109-15-hauke@hauke-m.de>
- <20170707142312.5pwily3gbntvesbm@rob-hp-laptop>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/5] arm64: dts: renesas: ulcb: Add HDMI output connector
+Date: Tue, 11 Jul 2017 09:05:21 +0200
+Message-ID: <CAMuHMdW0wC3pP6RuoOJbz2hftRTBBzEi0zX2jmwtBC31pYBN4g@mail.gmail.com>
+References: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170707142312.5pwily3gbntvesbm@rob-hp-laptop>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Rob Herring <robh@kernel.org>, Hauke Mehrtens <hauke@hauke-m.de>
-Cc: ralf@linux-mips.org, linux-mips@linux-mips.org, linux-mtd@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, martin.blumenstingl@googlemail.com, john@phrozen.org, linux-spi@vger.kernel.org, hauke.mehrtens@intel.com, andy.shevchenko@gmail.com, p.zabel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499741237-27407-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jul 11, 2017 at 4:47 AM, Vladimir Barinov
+<vladimir.barinov@cogentembedded.com> wrote:
+> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
+>
+> The ULCB board has one HDMI output connector.
+>
+> This connector is available on both the H3 and M3-W ULCB boards.
+> Add this to the ulcb.dtsi file.
+>
+> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
-On Friday 07 July 2017 07:53 PM, Rob Herring wrote:
-> On Mon, Jul 03, 2017 at 12:40:49AM +0200, Hauke Mehrtens wrote:
->> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
->> the PHY interfaces for each core. The phy instances can be passed to the
->> dwc2 driver, which already supports the generic phy interface.
->>
->> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
->> Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-I see you have added my name in cc but for some reason I don't have the patch
-in my mailbox. Can you resend it please?
+Gr{oetje,eeting}s,
 
->> ---
->>  .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  42 ++++
->>  arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
->>  drivers/phy/Kconfig                                |   8 +
->>  drivers/phy/Makefile                               |   1 +
->>  drivers/phy/phy-lantiq-rcu-usb2.c                  | 275 +++++++++++++++++++++
+                        Geert
 
-Please create a new directory withing phy for adding a phy driver.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Thanks
-Kishon
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
