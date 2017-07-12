@@ -1,105 +1,238 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC] gpio: rcar: add gen[123] fallback compatibility strings
-Date: Wed, 12 Jul 2017 08:35:59 +0200
-Message-ID: <CAMuHMdXw9pJPAtLAKFpUBnQ618fT11r2ocE+mDdOyHx9ckeF4w@mail.gmail.com>
-References: <1499776710-25450-1-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdWH_av4fiGXAtS7Xz91jW86-ntkXPdZz8Wci4dSVUmJOw@mail.gmail.com> <20170712054909.GA18990@verge.net.au>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] thermal: imx: Add support for reading OCOTP through
+ nvmem
+Date: Wed, 12 Jul 2017 14:36:31 +0800
+Message-ID: <20170712063629.GD3172@dragon>
+References: <cover.1499347157.git.leonard.crestez@nxp.com>
+ <68b476b35b0c0cbce21da0e87338323bb77e9bc4.1499347157.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170712054909.GA18990@verge.net.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <68b476b35b0c0cbce21da0e87338323bb77e9bc4.1499347157.git.leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+On Thu, Jul 06, 2017 at 04:20:42PM +0300, Leonard Crestez wrote:
+> On newer imx SOCs accessing OCOTP directly is wrong because the ocotp clock
+> needs to be enabled first. Add support for reading those same values through
+> the nvmem API instead.
+> 
+> The older path is preserved for compatibility with older dts and because it
+> works correctly on imx6qdl chips.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+> ---
+>  drivers/thermal/imx_thermal.c | 131 ++++++++++++++++++++++++++++++++----------
+>  1 file changed, 101 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
+> index fb648a4..ffbd579 100644
+> --- a/drivers/thermal/imx_thermal.c
+> +++ b/drivers/thermal/imx_thermal.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/thermal.h>
+>  #include <linux/types.h>
+> +#include <linux/nvmem-consumer.h>
+>  
+>  #define REG_SET		0x4
+>  #define REG_CLR		0x8
+> @@ -92,7 +93,7 @@ struct imx_thermal_data {
+>  	struct thermal_cooling_device *cdev;
+>  	enum thermal_device_mode mode;
+>  	struct regmap *tempmon;
+> -	u32 c1, c2; /* See formula in imx_get_sensor_data() */
+> +	u32 c1, c2; /* See formula in imx_init_calib() */
+>  	int temp_passive;
+>  	int temp_critical;
+>  	int temp_max;
+> @@ -175,7 +176,7 @@ static int imx_get_temp(struct thermal_zone_device *tz, int *temp)
+>  
+>  	n_meas = (val & TEMPSENSE0_TEMP_CNT_MASK) >> TEMPSENSE0_TEMP_CNT_SHIFT;
+>  
+> -	/* See imx_get_sensor_data() for formula derivation */
+> +	/* See imx_init_calib() for formula derivation */
+>  	*temp = data->c2 - n_meas * data->c1;
+>  
+>  	/* Update alarm value to next higher trip point for TEMPMON_IMX6Q */
+> @@ -344,29 +345,12 @@ static struct thermal_zone_device_ops imx_tz_ops = {
+>  	.set_trip_temp = imx_set_trip_temp,
+>  };
+>  
+> -static int imx_get_sensor_data(struct platform_device *pdev)
+> +static int imx_init_calib(struct platform_device *pdev, u32 val)
+>  {
+>  	struct imx_thermal_data *data = platform_get_drvdata(pdev);
+> -	struct regmap *map;
+>  	int t1, n1;
+> -	int ret;
+> -	u32 val;
+>  	u64 temp64;
+>  
+> -	map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> -					      "fsl,tempmon-data");
+> -	if (IS_ERR(map)) {
+> -		ret = PTR_ERR(map);
+> -		dev_err(&pdev->dev, "failed to get sensor regmap: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+> -	ret = regmap_read(map, OCOTP_ANA1, &val);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "failed to read sensor data: %d\n", ret);
+> -		return ret;
+> -	}
+> -
+>  	if (val == 0 || val == ~0) {
+>  		dev_err(&pdev->dev, "invalid sensor calibration data\n");
+>  		return -EINVAL;
+> @@ -403,12 +387,12 @@ static int imx_get_sensor_data(struct platform_device *pdev)
+>  	data->c1 = temp64;
+>  	data->c2 = n1 * data->c1 + 1000 * t1;
+>  
+> -	/* use OTP for thermal grade */
+> -	ret = regmap_read(map, OCOTP_MEM0, &val);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "failed to read temp grade: %d\n", ret);
+> -		return ret;
+> -	}
+> +	return 0;
+> +}
+> +
+> +static void imx_init_temp_grade(struct platform_device *pdev, u32 val)
+> +{
+> +	struct imx_thermal_data *data = platform_get_drvdata(pdev);
+>  
+>  	/* The maximum die temp is specified by the Temperature Grade */
+>  	switch ((val >> 6) & 0x3) {
+> @@ -436,10 +420,87 @@ static int imx_get_sensor_data(struct platform_device *pdev)
+>  	 */
+>  	data->temp_critical = data->temp_max - (1000 * 5);
+>  	data->temp_passive = data->temp_max - (1000 * 10);
+> +}
+> +
+> +static int imx_init_from_tempmon_data(struct platform_device *pdev)
+> +{
+> +	struct regmap *map;
+> +	int ret;
+> +	u32 val;
+> +
+> +	map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+> +					      "fsl,tempmon-data");
+> +	if (IS_ERR(map)) {
+> +		ret = PTR_ERR(map);
+> +		dev_err(&pdev->dev, "failed to get sensor regmap: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regmap_read(map, OCOTP_ANA1, &val);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to read sensor data: %d\n", ret);
+> +		return ret;
+> +	}
+> +	ret = imx_init_calib(pdev, val);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regmap_read(map, OCOTP_MEM0, &val);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to read sensor data: %d\n", ret);
+> +		return ret;
+> +	}
+> +	imx_init_temp_grade(pdev, val);
+>  
+>  	return 0;
+>  }
+>  
+> +static int nvmem_cell_read_u32(struct device* dev, const char *cell_id, u32 *val)
+> +{
+> +	struct nvmem_cell *cell;
+> +	void *buf;
+> +	size_t len;
+> +
+> +	cell = nvmem_cell_get(dev, cell_id);
+> +	if (IS_ERR(cell))
+> +		return PTR_ERR(cell);
+> +
+> +	buf = nvmem_cell_read(cell, &len);
+> +	if (IS_ERR(buf)) {
+> +		nvmem_cell_put(cell);
+> +		return PTR_ERR(buf);
+> +	}
+> +	if (len != sizeof(*val)) {
+> +		kfree(buf);
+> +		nvmem_cell_put(cell);
+> +		return -EINVAL;
+> +	}
+> +	memcpy(val, buf, sizeof(*val));
+> +
+> +	kfree(buf);
+> +	nvmem_cell_put(cell);
+> +	return 0;
+> +}
 
-CC DT
+The function looks nothing IMX specific, and could be a nvmem core
+function?
 
-On Wed, Jul 12, 2017 at 7:49 AM, Simon Horman <horms@verge.net.au> wrote:
-> On Tue, Jul 11, 2017 at 07:59:31PM +0200, Geert Uytterhoeven wrote:
->> On Tue, Jul 11, 2017 at 2:38 PM, Simon Horman
->> <horms+renesas@verge.net.au> wrote:
->> > Add fallback compatibility string for R-Car Gen 1, 2 and 3.
->> >
->> > In the case of Renesas R-Car hardware we know that there are generations of
->> > SoCs, f.e. Gen 1 and 2. But beyond that its not clear what the relationship
->> > between IP blocks might be. For example, I believe that r8a7790 is older
->> > than r8a7791 but that doesn't imply that the latter is a descendant of the
->> > former or vice versa.
->> >
->> > We can, however, by examining the documentation and behaviour of the
->> > hardware at run-time observe that the current driver implementation appears
->> > to be compatible with the IP blocks on SoCs within a given generation.
->> >
->> > For the above reasons and convenience when enabling new SoCs a
->> > per-generation fallback compatibility string scheme being adopted for
->> > drivers for Renesas SoCs.
->> >
->> > Also deprecate renesas,gpio-rcar as its name is more generic than its
->> > implementation.
->> >
->> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
->>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>
->> > ---
->> > Based on linux-gpio/for-next
->> > ---
->> >  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt        | 15 +++++++++++----
->> >  drivers/gpio/gpio-rcar.c                                  | 10 ++++++++++
->> >  2 files changed, 21 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
->> > index 6826a371fb69..48634b01f1bf 100644
->> > --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
->> > +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
->> > @@ -2,7 +2,7 @@
->> >
->> >  Required Properties:
->> >
->> > -  - compatible: should contain one of the following.
->> > +  - compatible: should contain one or more of the following:
->> >      - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
->> >      - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
->> >      - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
->> > @@ -13,7 +13,14 @@ Required Properties:
->> >      - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
->> >      - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
->> >      - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
->> > -    - "renesas,gpio-rcar": for generic R-Car GPIO controller.
->> > +    - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
->> > +    - "renesas,rcar-gen2-gpio": for a generic R-Car Gen2 or RZ/G1 GPIO controller.
->> > +    - "renesas,rcar-gen3-gpio": for a generic R-Car Gen3 GPIO controller.
->> > +    - "renesas,gpio-rcar": deprecated.
->> > +
->> > +    When compatible with the generic version nodes must list the
->> > +    SoC-specific version corresponding to the platform first followed by
->> > +    the generic version.
->>
->> Besides for consistency, does it make sense to deprecate "renesas,gpio-rcar"
->> (which means R-Car Gen1) and introduce "renesas,rcar-gen1-gpio"?
->> It's not like new R-Car Gen1 SoCs will pop up anytime soon (do we want Linux
->> support for R-Car E1?).
->
-> From my PoV the only advantage of that portion of the change is improving
-> consistency. Perhaps it would be better to substitute it with something
-> like this:
->
->         - "renesas,gpio-rcar": for a generic R-Car Gen1 GPIO controller.
+@Srinivas, thoughts?
 
-That sounds good to me. But other people may disagree.
-Oh, no CC to the devicetree folks. Fixed.
-Patch at https://patchwork.kernel.org/patch/9834611/
+Shawn
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+> +
+> +static int imx_init_from_nvmem_cells(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = nvmem_cell_read_u32(&pdev->dev, "calib", &val);
+> +	if (ret)
+> +		return ret;
+> +	imx_init_calib(pdev, val);
+> +
+> +	ret = nvmem_cell_read_u32(&pdev->dev, "temp_grade", &val);
+> +	if (ret)
+> +		return ret;
+> +	imx_init_temp_grade(pdev, val);
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  static irqreturn_t imx_thermal_alarm_irq(int irq, void *dev)
+>  {
+>  	struct imx_thermal_data *data = dev;
+> @@ -512,10 +573,20 @@ static int imx_thermal_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, data);
+>  
+> -	ret = imx_get_sensor_data(pdev);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "failed to get sensor data\n");
+> -		return ret;
+> +	if (of_find_property(pdev->dev.of_node, "nvmem-cells", NULL)) {
+> +		ret = imx_init_from_nvmem_cells(pdev);
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to init from nvmem: %d\n", ret);
+> +			return ret;
+> +		}
+> +	} else {
+> +		ret = imx_init_from_tempmon_data(pdev);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "failed to init from from fsl,tempmon-data\n");
+> +			return ret;
+> +		}
+>  	}
+>  
+>  	/* Make sure sensor is in known good state for measurements */
+> -- 
+> 2.7.4
+> 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
