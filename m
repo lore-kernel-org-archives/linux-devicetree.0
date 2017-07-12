@@ -1,44 +1,58 @@
-From: Mark Yao <mark.yao@rock-chips.com>
-Subject: [PATCH v2 5/5] dt-bindings: display: fill Documents for series of vop
-Date: Wed, 12 Jul 2017 10:04:02 +0800
-Message-ID: <1499825042-7652-1-git-send-email-mark.yao@rock-chips.com>
-References: <1499824991-7391-1-git-send-email-mark.yao@rock-chips.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme readability
+Date: Wed, 12 Jul 2017 10:38:38 +0800
+Message-ID: <CAGb2v64aoXsoE=YL_PFLkdU7rBZdpqhg37CKuQU-1F+SV9=zcw@mail.gmail.com>
+References: <20170614063016.22069-1-wens@csie.org> <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
+ <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com> <20170711193111.p6jdyesluuqdlu3j@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1499824991-7391-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170711193111.p6jdyesluuqdlu3j@flea>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Q2hhbmdlcyBpbiB2MjoKLSByZW5hbWUgcmszMjJ4IHRvIHJrMzIyOChIZWlrbyBTdMO8Ym5lcikK
-ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KLS0tCiBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hp
-cC12b3AudHh0IHwgNCArKysrCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspCgpkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2No
-aXAvcm9ja2NoaXAtdm9wLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQKaW5kZXggOWViM2YwYS4uNWQ4MzVkOSAx
-MDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9j
-a2NoaXAvcm9ja2NoaXAtdm9wLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0CkBAIC04LDggKzgsMTIgQEAg
-UmVxdWlyZWQgcHJvcGVydGllczoKIC0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlIG9uZSBv
-ZiB0aGUgZm9sbG93aW5nCiAJCSJyb2NrY2hpcCxyazMwMzYtdm9wIjsKIAkJInJvY2tjaGlwLHJr
-MzI4OC12b3AiOworCQkicm9ja2NoaXAscmszMzY4LXZvcCI7CisJCSJyb2NrY2hpcCxyazMzNjYt
-dm9wIjsKIAkJInJvY2tjaGlwLHJrMzM5OS12b3AtYmlnIjsKIAkJInJvY2tjaGlwLHJrMzM5OS12
-b3AtbGl0IjsKKwkJInJvY2tjaGlwLHJrMzIyOC12b3AiOworCQkicm9ja2NoaXAscmszMzI4LXZv
-cCI7CiAKIC0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGFsbCBWT1AgSVAg
-YmxvY2sgaW50ZXJydXB0cyBpbiB0aGUKIAkJIG9yZGVyOiBWU1lOQywgTENEX1NZU1RFTS4gVGhl
-IGludGVycnVwdCBzcGVjaWZpZXIKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, Jul 12, 2017 at 3:31 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Jul 10, 2017 at 11:48:00PM +0800, Chen-Yu Tsai wrote:
+>> On Sun, Jun 18, 2017 at 10:05 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> > On Wed, Jun 14, 2017 at 02:30:16PM +0800, Chen-Yu Tsai wrote:
+>> >> The explanation for the endpoint ID numbering scheme is convoluted
+>> >> and hard to understand.
+>> >>
+>> >> This patch aims to improve the readability of it by combining the
+>> >> existing two paragraphs, while also providing a diagram example,
+>> >> and how endpoints should be numbered based on that example.
+>> >>
+>> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> >> ---
+>> >>
+>> >> Hope this helps. I'm not sure I can improve this even more without
+>> >> spelling out all cases.
+>> >>
+>> >> ---
+>> >>  .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++++++++------
+>> >>  1 file changed, 27 insertions(+), 9 deletions(-)
+>> >
+>> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> Maxime, this patch seems to have fallen through the cracks.
+>>
+>> Could you queue it as a fix for 4.13?
+>
+> Sorry, I don't know why I overlooked it.
+>
+> Is it really 4.13 material though? It doesn't look that urgent.
+
+Unless I'm mistaken, this clarifies the numbering scheme introduced
+in 4.13. I'd say that's enough reason to have it in the same release.
+
+But I should update the diagram first. The backend <-> TCON mux is
+missing. And maybe a Fixes tag.
+
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
