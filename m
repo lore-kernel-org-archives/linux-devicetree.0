@@ -1,290 +1,105 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [RFC v2 6/6] drivers: boot_constraint: Add constraints for OF devices
-Date: Wed, 12 Jul 2017 12:04:36 +0530
-Message-ID: <2d53af367f7d912338d5d00e8fb7065b8ce45548.1499770771.git.viresh.kumar@linaro.org>
-References: <cover.1499770771.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1499770771.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1499770771.git.viresh.kumar@linaro.org>
-References: <cover.1499770771.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Shiraz Hashim <shashim@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC] gpio: rcar: add gen[123] fallback compatibility strings
+Date: Wed, 12 Jul 2017 08:35:59 +0200
+Message-ID: <CAMuHMdXw9pJPAtLAKFpUBnQ618fT11r2ocE+mDdOyHx9ckeF4w@mail.gmail.com>
+References: <1499776710-25450-1-git-send-email-horms+renesas@verge.net.au>
+ <CAMuHMdWH_av4fiGXAtS7Xz91jW86-ntkXPdZz8Wci4dSVUmJOw@mail.gmail.com> <20170712054909.GA18990@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170712054909.GA18990@verge.net.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This implements the device tree dependent part of the boot constraints.
+Hi Simon,
 
-The supply constraints are added automatically for the platform and AMBA
-devices created from DT and will be removed after the driver is
-registered for the devices.
+CC DT
 
-It is possible that some of the resources aren't available at the time
-when the devices are added and so the boot constraints core will return
--EPROBE_DEFER for them. In order to retry adding the constraints at a
-later point of time (after the resource is added and before any of its
-users come up), this patch proposes two things:
+On Wed, Jul 12, 2017 at 7:49 AM, Simon Horman <horms@verge.net.au> wrote:
+> On Tue, Jul 11, 2017 at 07:59:31PM +0200, Geert Uytterhoeven wrote:
+>> On Tue, Jul 11, 2017 at 2:38 PM, Simon Horman
+>> <horms+renesas@verge.net.au> wrote:
+>> > Add fallback compatibility string for R-Car Gen 1, 2 and 3.
+>> >
+>> > In the case of Renesas R-Car hardware we know that there are generations of
+>> > SoCs, f.e. Gen 1 and 2. But beyond that its not clear what the relationship
+>> > between IP blocks might be. For example, I believe that r8a7790 is older
+>> > than r8a7791 but that doesn't imply that the latter is a descendant of the
+>> > former or vice versa.
+>> >
+>> > We can, however, by examining the documentation and behaviour of the
+>> > hardware at run-time observe that the current driver implementation appears
+>> > to be compatible with the IP blocks on SoCs within a given generation.
+>> >
+>> > For the above reasons and convenience when enabling new SoCs a
+>> > per-generation fallback compatibility string scheme being adopted for
+>> > drivers for Renesas SoCs.
+>> >
+>> > Also deprecate renesas,gpio-rcar as its name is more generic than its
+>> > implementation.
+>> >
+>> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+>>
+>> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>>
+>> > ---
+>> > Based on linux-gpio/for-next
+>> > ---
+>> >  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt        | 15 +++++++++++----
+>> >  drivers/gpio/gpio-rcar.c                                  | 10 ++++++++++
+>> >  2 files changed, 21 insertions(+), 4 deletions(-)
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+>> > index 6826a371fb69..48634b01f1bf 100644
+>> > --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+>> > +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+>> > @@ -2,7 +2,7 @@
+>> >
+>> >  Required Properties:
+>> >
+>> > -  - compatible: should contain one of the following.
+>> > +  - compatible: should contain one or more of the following:
+>> >      - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
+>> >      - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
+>> >      - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
+>> > @@ -13,7 +13,14 @@ Required Properties:
+>> >      - "renesas,gpio-r8a7794": for R8A7794 (R-Car E2) compatible GPIO controller.
+>> >      - "renesas,gpio-r8a7795": for R8A7795 (R-Car H3) compatible GPIO controller.
+>> >      - "renesas,gpio-r8a7796": for R8A7796 (R-Car M3-W) compatible GPIO controller.
+>> > -    - "renesas,gpio-rcar": for generic R-Car GPIO controller.
+>> > +    - "renesas,rcar-gen1-gpio": for a generic R-Car Gen1 GPIO controller.
+>> > +    - "renesas,rcar-gen2-gpio": for a generic R-Car Gen2 or RZ/G1 GPIO controller.
+>> > +    - "renesas,rcar-gen3-gpio": for a generic R-Car Gen3 GPIO controller.
+>> > +    - "renesas,gpio-rcar": deprecated.
+>> > +
+>> > +    When compatible with the generic version nodes must list the
+>> > +    SoC-specific version corresponding to the platform first followed by
+>> > +    the generic version.
+>>
+>> Besides for consistency, does it make sense to deprecate "renesas,gpio-rcar"
+>> (which means R-Car Gen1) and introduce "renesas,rcar-gen1-gpio"?
+>> It's not like new R-Car Gen1 SoCs will pop up anytime soon (do we want Linux
+>> support for R-Car E1?).
+>
+> From my PoV the only advantage of that portion of the change is improving
+> consistency. Perhaps it would be better to substitute it with something
+> like this:
+>
+>         - "renesas,gpio-rcar": for a generic R-Car Gen1 GPIO controller.
 
-- Each constraint is represented by a virtual platform device, so that
-  it is re-probed again until the time all the dependencies aren't met.
-  The platform device is removed along with the constraint, with help of
-  the free_resources() callback.
+That sounds good to me. But other people may disagree.
+Oh, no CC to the devicetree folks. Fixed.
+Patch at https://patchwork.kernel.org/patch/9834611/
 
-- Enable early defer probing support by calling
-  driver_enable_deferred_probe(), so that the core retries probing
-  deferred devices every time any device is bound to a driver. This
-  makes sure that the constraint is set before any of the users of the
-  resources come up.
+Gr{oetje,eeting}s,
 
-This is tested on ARM64 Hikey board where probe was deferred for a
-device.
+                        Geert
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/base/Makefile             |   3 +
- drivers/base/base.h               |   1 +
- drivers/base/boot_constraint.c    |   2 +-
- drivers/base/boot_constraint_of.c | 122 ++++++++++++++++++++++++++++++++++++++
- drivers/base/dd.c                 |  12 ++++
- drivers/of/platform.c             |   4 ++
- include/linux/boot_constraint.h   |   2 +
- 7 files changed, 145 insertions(+), 1 deletion(-)
- create mode 100644 drivers/base/boot_constraint_of.c
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index 6094b3b75184..0f47a5de585a 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -6,6 +6,9 @@ obj-y			:= component.o core.o bus.o dd.o syscore.o \
- 			   attribute_container.o transport_class.o \
- 			   topology.o container.o property.o cacheinfo.o
- obj-$(CONFIG_BOOT_CONSTRAINTS) += boot_constraint.o
-+ifeq ($(CONFIG_OF),y)
-+obj-$(CONFIG_BOOT_CONSTRAINTS) += boot_constraint_of.o
-+endif
- obj-$(CONFIG_DEVTMPFS)	+= devtmpfs.o
- obj-$(CONFIG_DMA_CMA) += dma-contiguous.o
- obj-y			+= power/
-diff --git a/drivers/base/base.h b/drivers/base/base.h
-index e19b1008e5fb..9d6910cdbc8e 100644
---- a/drivers/base/base.h
-+++ b/drivers/base/base.h
-@@ -136,6 +136,7 @@ extern char *make_class_name(const char *name, struct kobject *kobj);
- extern int devres_release_all(struct device *dev);
- extern void device_block_probing(void);
- extern void device_unblock_probing(void);
-+extern void driver_enable_deferred_probe(void);
- 
- /* /sys/devices directory */
- extern struct kset *devices_kset;
-diff --git a/drivers/base/boot_constraint.c b/drivers/base/boot_constraint.c
-index 4e3b5e1aec7c..80ac3f9aaa72 100644
---- a/drivers/base/boot_constraint.c
-+++ b/drivers/base/boot_constraint.c
-@@ -50,7 +50,7 @@ static DEFINE_MUTEX(constraint_devices_mutex);
- static int constraint_supply_add(struct constraint *constraint, void *data);
- static void constraint_supply_remove(struct constraint *constraint);
- 
--static bool boot_constraints_disabled;
-+bool boot_constraints_disabled;
- 
- static int __init constraints_disable(char *str)
- {
-diff --git a/drivers/base/boot_constraint_of.c b/drivers/base/boot_constraint_of.c
-new file mode 100644
-index 000000000000..671241b3d3a3
---- /dev/null
-+++ b/drivers/base/boot_constraint_of.c
-@@ -0,0 +1,122 @@
-+/*
-+ * Copyright (C) 2017 Linaro.
-+ * Viresh Kumar <viresh.kumar@linaro.org>
-+ *
-+ * This file is released under the GPLv2.
-+ */
-+
-+#define pr_fmt(fmt) "Boot Constraints: " fmt
-+
-+#include <linux/boot_constraint.h>
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+
-+#include "base.h"
-+
-+extern bool boot_constraints_disabled;
-+
-+struct boot_constraint_of_pdata {
-+	struct device *dev;
-+	enum boot_constraint_type type;
-+	struct boot_constraint_supply_info info;
-+};
-+
-+static void boot_constraint_add_supply(struct device *dev, int index)
-+{
-+	struct boot_constraint_of_pdata pdata = {
-+		.dev = dev,
-+		.type = BOOT_CONSTRAINT_SUPPLY,
-+	};
-+	struct boot_constraint_supply_info *info;
-+	struct device_node *np = dev->of_node;
-+	struct platform_device *pdev;
-+	int ret;
-+
-+	info = &pdata.info;
-+
-+	ret = of_property_read_string_index(np, "boot-constraint-supplies",
-+					    index, &info->name);
-+	if (ret < 0) {
-+		dev_err(dev, "%s: Failed to read supply at index %d (%d)\n",
-+			__func__, index, ret);
-+		return;
-+	}
-+
-+	of_property_read_u32_index(np, "boot-constraint-uV", 2 * index,
-+				   &info->u_volt_min);
-+
-+	of_property_read_u32_index(np, "boot-constraint-uV", 2 * index + 1,
-+				   &info->u_volt_max);
-+
-+	pdev = platform_device_register_data(NULL, "boot-constraints-of", index,
-+					     &pdata, sizeof(pdata));
-+	if (IS_ERR(pdev)) {
-+		dev_err(dev, "%s: Failed to create pdev for index %d (%d)\n",
-+			__func__, index, ret);
-+	}
-+}
-+
-+static void boot_constraint_add_supplies(struct device *dev)
-+{
-+	struct device_node *np = dev->of_node;
-+	int i, count;
-+
-+	count = of_property_count_strings(np, "boot-constraint-supplies");
-+	if (count <= 0)
-+		return;
-+
-+	for (i = 0; i < count; i++)
-+		boot_constraint_add_supply(dev, i);
-+}
-+
-+void of_boot_constraint_init(struct device *dev)
-+{
-+	if (boot_constraints_disabled)
-+		return;
-+
-+	BUG_ON(!dev->of_node);
-+
-+	boot_constraint_add_supplies(dev);
-+}
-+
-+static void boot_constraint_remove_of(void *data)
-+{
-+	platform_device_unregister(data);
-+}
-+
-+/*
-+ * A platform device is added for each and every constraint, to handle
-+ * -EPROBE_DEFER properly.
-+ */
-+static int boot_constraint_of_probe(struct platform_device *pdev)
-+{
-+	struct boot_constraint_of_pdata *pdata = dev_get_platdata(&pdev->dev);
-+	struct boot_constraint_info info;
-+	int ret;
-+
-+	BUG_ON(!pdata);
-+
-+	info.free_resources = boot_constraint_remove_of;
-+	info.free_resources_data = pdev;
-+	info.constraint_info = &pdata->info;
-+
-+	ret = boot_constraint_add(pdata->dev, pdata->type, &info);
-+	if (ret == -EPROBE_DEFER)
-+		driver_enable_deferred_probe();
-+
-+	return ret;
-+}
-+
-+static struct platform_driver boot_constraint_of_driver = {
-+	.driver = {
-+		.name = "boot-constraints-of",
-+	},
-+	.probe = boot_constraint_of_probe,
-+};
-+
-+static int __init boot_constraint_of_init(void)
-+{
-+	return platform_driver_register(&boot_constraint_of_driver);
-+}
-+core_initcall(boot_constraint_of_init);
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 4eb9d183d647..aa761e13d8a7 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -204,6 +204,18 @@ void device_unblock_probing(void)
- }
- 
- /**
-+ * driver_enable_deferred_probe() - Enable probing of deferred devices
-+ *
-+ * We don't want to get in the way when the bulk of drivers are getting probed
-+ * and so deferred probe is disabled in the beginning. Enable it now because we
-+ * need it.
-+ */
-+void driver_enable_deferred_probe(void)
-+{
-+	driver_deferred_probe_enable = true;
-+}
-+
-+/**
-  * deferred_probe_initcall() - Enable probing of deferred devices
-  *
-  * We don't want to get in the way when the bulk of drivers are getting probed.
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 703a42118ffc..b88a1bf3e7fb 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -17,6 +17,7 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/amba/bus.h>
-+#include <linux/boot_constraint.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
- #include <linux/slab.h>
-@@ -194,6 +195,8 @@ static struct platform_device *of_platform_device_create_pdata(
- 		goto err_clear_flag;
- 	}
- 
-+	of_boot_constraint_init(&dev->dev);
-+
- 	return dev;
- 
- err_clear_flag:
-@@ -271,6 +274,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
- 		goto err_free;
- 	}
- 
-+	of_boot_constraint_init(&dev->dev);
- 	return dev;
- 
- err_free:
-diff --git a/include/linux/boot_constraint.h b/include/linux/boot_constraint.h
-index 110e5eca36c6..17bec71df228 100644
---- a/include/linux/boot_constraint.h
-+++ b/include/linux/boot_constraint.h
-@@ -33,10 +33,12 @@ struct boot_constraint_info {
- int boot_constraint_add(struct device *dev, enum boot_constraint_type type,
- 			struct boot_constraint_info *info);
- void boot_constraints_remove(struct device *dev);
-+void of_boot_constraint_init(struct device *dev);
- #else
- static inline int boot_constraint_add(struct device *dev,
- 				      enum boot_constraint_type type,
- 				      struct boot_constraint_info *info)
- { return -EINVAL; }
- static inline void boot_constraints_remove(struct device *dev) {}
-+static inline void of_boot_constraint_init(struct device *dev) {}
- #endif
--- 
-2.13.0.71.gd7076ec9c9cb
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
