@@ -1,69 +1,165 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/3] USB Mux support for Chipidea
-Date: Tue, 11 Jul 2017 18:02:52 -0700
-Message-ID: <20170712010255.26855-1-stephen.boyd@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: [PATCH 3/3] arm64: dts: qcom: Collapse usb support into one node
+Date: Tue, 11 Jul 2017 18:02:55 -0700
+Message-ID: <20170712010255.26855-4-stephen.boyd@linaro.org>
+References: <20170712010255.26855-1-stephen.boyd@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170712010255.26855-1-stephen.boyd@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Peter Chen <Peter.Chen@nxp.com>, Peter Rosin <peda@axentia.se>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the TC7USB40MU usb mux found on 
-db410c 96boards platforms via the new multiplexer framework and
-hooks that into the chipidea driver. This allows us to properly
-control host or device mode on this board via the sysfs knob.
+We currently have three device nodes for the same USB hardware
+block, as evident by the reuse of the same reg address multiple
+times. Now that the chipidea driver fully supports OTG with the
+MSM wrapper we can collapse all these nodes into one USB device
+node, reflecting the true nature of the hardware.
 
-So far I've only tested this on db410c, and there are some rough
-edges to finish off before it can merge. Also I'm experiencing
-odd behavior with switching the role while gadget is enabled and
-the micro-usb cable is kept connected. Not sure what's wrong but
-it seems like the gadget never gets disconnected? I'll investigate
-more.
+Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+---
 
-TODO:
+Should go through arm-soc via Andy.
 
- 1. The mux framework has to be selected for consumers to use it. We'll
-    need some stubs in the consumer header file to allow compilation to
-    continue without mux always enabled by consumers.
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 39 ++++++++++---------
+ arch/arm64/boot/dts/qcom/msm8916.dtsi     | 62 +++++++++++++++----------------
+ 2 files changed, 51 insertions(+), 50 deletions(-)
 
- 2. We probably need some sort of mux_control_get_optional() API so that
-    we know if there was an error getting the mux control, instead of just
-    ignoring errors. For now I can pass up EPROBE_DEFER errors and ignore
-    other errors and consider it "missing from DT".
-
- 3. Maybe we can get rid of the mux driver and just use mux-gpio.c with
-    a compatible string update? I split it off because we may want to
-    support the "S" pin on the TC7USB40MU one day that shuts off both
-    mux outputs.
-
- 4. The userspace side of things is murky. What is expected to go and toggle
-    the host/gadget side of things in userspace at this very specific location
-    for chipidea devices?
-
-Stephen Boyd (3):
-  usb: misc: Add a driver for TC7USB40MU
-  usb: chipidea: Hook into mux framework to toggle usb switch
-  arm64: dts: qcom: Collapse usb support into one node
-
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  8 +++
- .../devicetree/bindings/usb/toshiba,tc7usb40mu.txt | 31 +++++++++
- arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 39 +++++++-----
- arch/arm64/boot/dts/qcom/msm8916.dtsi              | 62 +++++++++---------
- drivers/usb/chipidea/core.c                        | 17 +++++
- drivers/usb/chipidea/host.c                        | 10 +++
- drivers/usb/chipidea/udc.c                         | 11 ++++
- drivers/usb/misc/Kconfig                           | 11 ++++
- drivers/usb/misc/Makefile                          |  1 +
- drivers/usb/misc/tc7usb40mu.c                      | 74 ++++++++++++++++++++++
- include/linux/usb/chipidea.h                       | 14 ++++
- 11 files changed, 228 insertions(+), 50 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/toshiba,tc7usb40mu.txt
- create mode 100644 drivers/usb/misc/tc7usb40mu.c
-
+diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+index f326f4fb4d72..dc950a054d0a 100644
+--- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
++++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+@@ -213,24 +213,21 @@
+ 		};
+ 
+ 		usb@78d9000 {
+-			extcon = <&usb_id>, <&usb_id>;
++			extcon = <&usb_id>;
+ 			status = "okay";
+-		};
+-
+-		ehci@78d9000 {
+-			status = "okay";
+-		};
+-
+-		phy@78d9000 {
+-			v1p8-supply = <&pm8916_l7>;
+-			v3p3-supply = <&pm8916_l13>;
+-			vddcx-supply = <&pm8916_s1>;
+-			extcon = <&usb_id>, <&usb_id>;
+-			dr_mode = "otg";
+-			status = "okay";
+-			switch-gpio = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&usb_sw_sel_pm>;
++			adp-disable;
++			hnp-disable;
++			srp-disable;
++			mux-controls = <&usb_switch>;
++			mux-control-names = "usb_switch";
++			usb-switch-states = <0>, <1>;
++
++			ulpi {
++				phy {
++					v1p8-supply = <&pm8916_l7>;
++					v3p3-supply = <&pm8916_l13>;
++				};
++			};
+ 		};
+ 
+ 		lpass@07708000 {
+@@ -348,6 +345,14 @@
+ 		pinctrl-0 = <&usb_id_default>;
+ 	};
+ 
++	usb_switch: usb-switch {
++		compatible = "toshiba,tc7usb40mu";
++		mux-gpios = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>;
++		#mux-control-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb_sw_sel_pm>;
++	};
++
+ 	hdmi-out {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 17691abea608..039991f80831 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -546,44 +546,40 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usb_dev: usb@78d9000 {
++		otg: usb@78d9000 {
+ 			compatible = "qcom,ci-hdrc";
+-			reg = <0x78d9000 0x400>;
+-			dr_mode = "peripheral";
+-			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
+-			usb-phy = <&usb_otg>;
+-			status = "disabled";
+-		};
+-
+-		usb_host: ehci@78d9000 {
+-			compatible = "qcom,ehci-host";
+-			reg = <0x78d9000 0x400>;
+-			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
+-			usb-phy = <&usb_otg>;
+-			status = "disabled";
+-		};
+-
+-		usb_otg: phy@78d9000 {
+-			compatible = "qcom,usb-otg-snps";
+-			reg = <0x78d9000 0x400>;
++			reg = <0x78d9000 0x200>,
++			      <0x78d9200 0x200>;
+ 			interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
+-
+-			qcom,vdd-levels = <500000 1000000 1320000>;
+-			qcom,phy-init-sequence = <0x44 0x6B 0x24 0x13>;
+-			dr_mode = "peripheral";
+-			qcom,otg-control = <2>; // PMIC
+-			qcom,manual-pullup;
+-
+ 			clocks = <&gcc GCC_USB_HS_AHB_CLK>,
+-				 <&gcc GCC_USB_HS_SYSTEM_CLK>,
+-				 <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
+-			clock-names = "iface", "core", "sleep";
+-
+-			resets = <&gcc GCC_USB2A_PHY_BCR>,
+-				 <&gcc GCC_USB_HS_BCR>;
+-			reset-names = "phy", "link";
++				 <&gcc GCC_USB_HS_SYSTEM_CLK>;
++			clock-names = "iface", "core";
++			assigned-clocks = <&gcc GCC_USB_HS_SYSTEM_CLK>;
++			assigned-clock-rates = <80000000>;
++			resets = <&gcc GCC_USB_HS_BCR>;
++			reset-names = "core";
++			phy_type = "ulpi";
++			dr_mode = "otg";
++			ahb-burst-config = <0>;
++			phy-names = "usb-phy";
++			phys = <&usb_hs_phy>;
+ 			status = "disabled";
++			#reset-cells = <1>;
++
++			ulpi {
++				usb_hs_phy: phy {
++					compatible = "qcom,usb-hs-phy-msm8916",
++						     "qcom,usb-hs-phy";
++					#phy-cells = <0>;
++					clocks = <&xo_board>, <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
++					clock-names = "ref", "sleep";
++					resets = <&gcc GCC_USB2A_PHY_BCR>, <&otg 0>;
++					reset-names = "phy", "por";
++					qcom,init-seq = /bits/ 8 <0x0 0x44
++						0x1 0x6b 0x2 0x24 0x3 0x13>;
++				};
++			};
+ 		};
+ 
+ 		intc: interrupt-controller@b000000 {
 -- 
 2.10.0.297.gf6727b0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
