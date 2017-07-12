@@ -1,77 +1,101 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
-Date: Wed, 12 Jul 2017 09:43:05 +0200
-Message-ID: <20170712074305.GA20198@kroah.com>
-References: <281067739.16216.1499788929736@ox.hosteurope.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "Thang Q. Nguyen" <tqnguyen@apm.com>
+Subject: [PATCH v4 1/1] usb:host:xhci support option to disable the xHCI USB2 HW LPM
+Date: Wed, 12 Jul 2017 15:06:48 +0700
+Message-ID: <1499846808-25981-1-git-send-email-tqnguyen@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <281067739.16216.1499788929736@ox.hosteurope.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Wolf <linux@wolf-entwicklungen.de>
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thang Nguyen <tqnguyen@apm.com>, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Tung Nguyen <tunguyen@apm.com>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 06:02:09PM +0200, Marcus Wolf wrote:
-> Hi folks,
-> 
-> I developed a radio shield for the 433MHz ISM band [0] for the Raspberry Pi.
-> This shield is called Pi433 [1]. It can be used to communicate between two
-> Raspberries or to control third party equipment e. g. cheap radio sockets [2].
-> The base of this radio shield is a radio module from HopeRf - a rfm69cw-433s2.
->  
-> In the beginning, I conrolled the rf69 chip by direct access via SPI, but I
-> figured out, that several tasks were hard to handle. Especially the following
-> points were annoying:
-> * Just one process could open the SPI interface so just one process was
->   able to access the module
-> * A simultaneous send and receive was very hard to implement
-> 
-> Therefore I started to implement a driver.
-> The drivers features:
-> * simple access/nice abstraction of spi registers via open, close,
->   read, write and ioctl
-> * multiple applications can open
-> * tx requests are queued, so every app can send a tx request at any time
-> * first app asking for rx will block other apps, also asking for rx until one
-> rx
->   cycle is complete
-> * rx cycle means listening on the air until something appears
-> * if an app wants to tx during the driver is waiting in rx cycle, rx will be
->   shortly interrupted to do the tx task
-> * for each tx task a seperate configuration of the rf chip (bitrate,
-> modulation, ...)
->   can be chosen
-> * wrtten in modular architecture, allowing to extend for other products with
->   rf69 chip (e.g. rfm69hcw, ...) or even to support other HopeRf chips with
-> similar
->   interface (e. g. rfm12, rfm95, ...)
->  
-> In principle the driver was intended to be used by my project (Smarthome-Pi),
-> only.
-> But while having all this nice features, I was asked, whether I could offer the
-> driver to the community. I never did that before, so I started reading about
-> submitting drivers and figured out, that there is a lot of work to do, to meet
-> all
-> concepts and ideas of complying to kernel code. I spend some days and modified
-> a lot, but still, a lot of things aren't perfect.
-> Already known tasks are:
-> 
-> * coding style does not fully comply with the kernel style guide.
-> * still TODOs, annotated in the code
-> * currently the code introduces new IOCTLs. I'm afraid this is a bad idea.
->   Replace this with another interface, hints are welcome!
->  
-> I tested the patch on Raspbian with Kernel v4.12 and applied the patch on
-> mainline Linux v4.12
->  
-> Is it posibble to integrate into the staging area to ease further development?
+XHCI specification 1.1 does not require xHCI-compliant controllers
+to always enable hardware USB2 LPM. However, the current xHCI
+driver always enable it when seeing HLC=1.
+This patch supports an option for users to control disabling
+USB2 Hardware LPM via DT/ACPI attribute.
+This option is needed in case user would like to disable this
+feature. For example, their xHCI controller has its USB2 HW LPM
+broken.
 
-Sure, I'm always glad to take new drivers, but can you submit it as just
-a single patch, and keep it self-contained (i.e. nothing outside of
-drivers/staging/YOUR_DRIVER/)?
+Signed-off-by: Tung Nguyen <tunguyen@apm.com>
+Signed-off-by: Thang Q. Nguyen <tqnguyen@apm.com>
+---
+Changes since v3:
+ - Bypass updating LPM parameters when HW LPM is optionally disabled.
+Changes since v2:
+ - Change code to disable HW LPM as an option for user which
+   is set via ACPI/DT.
+Changes since v1:
+ - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
+   be consistent with other attribute names.
+---
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
+ drivers/usb/host/xhci-plat.c                       |    3 +++
+ drivers/usb/host/xhci.c                            |    6 ++++++
+ drivers/usb/host/xhci.h                            |    1 +
+ 4 files changed, 11 insertions(+), 0 deletions(-)
 
-thanks,
-
-greg k-h
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 2d80b60..ae6e484 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 
+ Optional properties:
+   - clocks: reference to a clock
++  - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index c04144b..9028fb5 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 	}
+ 
++	if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
++		xhci->quirks |= XHCI_HW_LPM_DISABLE;
++
+ 	if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 56f85df..73b24bc 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4060,6 +4060,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 			!udev->lpm_capable)
+ 		return -EPERM;
+ 
++	if (xhci->quirks & XHCI_HW_LPM_DISABLE)
++		return -EPERM;
++
+ 	if (!udev->parent || udev->parent->parent ||
+ 			udev->descriptor.bDeviceClass == USB_CLASS_HUB)
+ 		return -EPERM;
+@@ -4177,6 +4180,9 @@ static int xhci_update_device(struct usb_hcd *hcd, struct usb_device *udev)
+ 			!udev->lpm_capable)
+ 		return 0;
+ 
++	if (xhci->quirks & XHCI_HW_LPM_DISABLE)
++		return 0;
++
+ 	/* we only support lpm for non-hub device connected to root hub yet */
+ 	if (!udev->parent || udev->parent->parent ||
+ 			udev->descriptor.bDeviceClass == USB_CLASS_HUB)
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 3c6da1f..3cbf4a9 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1820,6 +1820,7 @@ struct xhci_hcd {
+ #define XHCI_BROKEN_PORT_PED	(1 << 25)
+ #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
+ #define XHCI_U2_DISABLE_WAKE	(1 << 27)
++#define XHCI_HW_LPM_DISABLE	(1 << 28)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+-- 
+1.7.1
