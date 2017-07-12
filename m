@@ -1,77 +1,77 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] arm64: dts: rockchip: add ARM Mali GPU node for RK3399 SoCs
-Date: Wed, 12 Jul 2017 09:19:42 +0200
-Message-ID: <4066931.s766IOqHgB@phil>
-References: <1499840971-20392-1-git-send-email-wxt@rock-chips.com> <1499840971-20392-3-git-send-email-wxt@rock-chips.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
+Date: Wed, 12 Jul 2017 09:43:05 +0200
+Message-ID: <20170712074305.GA20198@kroah.com>
+References: <281067739.16216.1499788929736@ox.hosteurope.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499840971-20392-3-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <281067739.16216.1499788929736@ox.hosteurope.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcus Wolf <linux@wolf-entwicklungen.de>
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
-
-Am Mittwoch, 12. Juli 2017, 14:29:28 CEST schrieb Caesar Wang:
-> Add Mali GPU device tree node for the RK3399 SoCs, with devfreq
-> opp table.
+On Tue, Jul 11, 2017 at 06:02:09PM +0200, Marcus Wolf wrote:
+> Hi folks,
 > 
-> RK3399 and RK3399-OP1 SoCs have a different recommendation table with
-> gpu opp. As the ARM's mali driver found on
-> https://developer.arm.com/products/software/mali-drivers/midgard-kernel.
-> 
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi | 33 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi     | 33 ++++++++++++++++++++++++
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi         | 16 ++++++++++++
->  3 files changed, 82 insertions(+)
-
-[...]
-
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 1cbd7a2..8c6438b 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1443,6 +1443,22 @@
->  		status = "disabled";
->  	};
+> I developed a radio shield for the 433MHz ISM band [0] for the Raspberry Pi.
+> This shield is called Pi433 [1]. It can be used to communicate between two
+> Raspberries or to control third party equipment e. g. cheap radio sockets [2].
+> The base of this radio shield is a radio module from HopeRf - a rfm69cw-433s2.
 >  
-> +	gpu: gpu@ff9a0000 {
-> +		compatible = "arm,rk3399-mali",
-> +			     "arm,malit860",
-> +			     "arm,malit86x",
-> +			     "arm,malit8xx";
+> In the beginning, I conrolled the rf69 chip by direct access via SPI, but I
+> figured out, that several tasks were hard to handle. Especially the following
+> points were annoying:
+> * Just one process could open the SPI interface so just one process was
+>   able to access the module
+> * A simultaneous send and receive was very hard to implement
+> 
+> Therefore I started to implement a driver.
+> The drivers features:
+> * simple access/nice abstraction of spi registers via open, close,
+>   read, write and ioctl
+> * multiple applications can open
+> * tx requests are queued, so every app can send a tx request at any time
+> * first app asking for rx will block other apps, also asking for rx until one
+> rx
+>   cycle is complete
+> * rx cycle means listening on the air until something appears
+> * if an app wants to tx during the driver is waiting in rx cycle, rx will be
+>   shortly interrupted to do the tx task
+> * for each tx task a seperate configuration of the rf chip (bitrate,
+> modulation, ...)
+>   can be chosen
+> * wrtten in modular architecture, allowing to extend for other products with
+>   rf69 chip (e.g. rfm69hcw, ...) or even to support other HopeRf chips with
+> similar
+>   interface (e. g. rfm12, rfm95, ...)
+>  
+> In principle the driver was intended to be used by my project (Smarthome-Pi),
+> only.
+> But while having all this nice features, I was asked, whether I could offer the
+> driver to the community. I never did that before, so I started reading about
+> submitting drivers and figured out, that there is a lot of work to do, to meet
+> all
+> concepts and ideas of complying to kernel code. I spend some days and modified
+> a lot, but still, a lot of things aren't perfect.
+> Already known tasks are:
+> 
+> * coding style does not fully comply with the kernel style guide.
+> * still TODOs, annotated in the code
+> * currently the code introduces new IOCTLs. I'm afraid this is a bad idea.
+>   Replace this with another interface, hints are welcome!
+>  
+> I tested the patch on Raspbian with Kernel v4.12 and applied the patch on
+> mainline Linux v4.12
+>  
+> Is it posibble to integrate into the staging area to ease further development?
 
-no wildcards and correct compatibles please.
-The binding specifies arm,mali-t860 for your chip and the soc
-specific compatible needs a rockchip vendor, so you need
+Sure, I'm always glad to take new drivers, but can you submit it as just
+a single patch, and keep it self-contained (i.e. nothing outside of
+drivers/staging/YOUR_DRIVER/)?
 
-	compatible = "rockchip,rk3399-mali", "arm,mali-t860";
+thanks,
 
-
-> +		reg = <0x0 0xff9a0000 0x0 0x10000>;
-> +		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
-> +			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
-> +		interrupt-names = "GPU", "JOB", "MMU";
-
-interrupt names are job, mmu, gpu in lower case. The out-of-tree driver
-will need to conform to that.
-
-> +		clocks = <&cru ACLK_GPU>;
-> +		clock-names = "clk_mali";
-
-no clock-names property, as midgard malis only have one clock input
-
-
-Heiko
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
