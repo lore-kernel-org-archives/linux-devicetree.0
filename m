@@ -1,78 +1,164 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 0/4] arm64: dts: rockchip: support mail and IPA thermal for
- rk3399
-Date: Wed, 12 Jul 2017 14:29:26 +0800
-Message-ID: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 2/4] arm64: dts: rockchip: add ARM Mali GPU node for RK3399
+ SoCs
+Date: Wed, 12 Jul 2017 14:29:28 +0800
+Message-ID: <1499840971-20392-3-git-send-email-wxt@rock-chips.com>
+References: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Will Deacon <will.deacon@arm.com>, Kever Yang <kever.yang@rock-chips.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, Mark Rutland <mark.rutland@arm.com>, Roger Chen <roger.chen@rock-chips.com>, William wu <wulf@rock-chips.com>, rocky.hao@rock-chips.com, linux-arm-kernel@lists.infradead.org, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1499840971-20392-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgcGF0Y2hlcyBzdXBwb3J0ZWQgdGhlIG1haWwgaW4gZGV2aWNldHJlZSBhbmQg
-dXNlZCB0aGUKdGhlcm1hbCBJUEEgYnkgZGVmYXVsdC4KClZlcmlmaWVkIHdpdGggcmszMzk5IGtl
-dmluIGJvYXJkIG9uIG15IGdpdGh1YgpodHRwczovL2dpdGh1Yi5jb20vQ2Flc2FyLWdpdGh1Yi9y
-b2NrY2hpcC9jb21taXRzL2dydS9uZXh0LXN0YWJsZS1jaHJvbWVvcwpUaGUga2VybmVsIGlzIGJh
-c2VkIG9uIExpbnVzJ3MgbWFzdGVyIGJyYW5jaCBhbmQgSGVpa28ncwp2NC4xNC1hcm1zb2MtdG1w
-L2R0czY0IGJyYW5jaC4gKCBUaGUgTGludXggdmVyc2lvbiA0LjEyLjAgZm9yIG5vdykuCi0tLQoK
-VGVzdGVkIG9uIEtldmluIGJvYXJkIHdpdGggYnJpbmdpbmcgdXAgQ2hyb21lT1MuCk9TIFZFUlNJ
-T046CiAgICBDSFJPTUVPU19SRUxFQVNFX0RFU0NSSVBUSU9OPTk2OTMuMS4wIChPZmZpY2lhbCBC
-dWlsZCkgZGV2LWNoYW5uZWwga2V2aW4gdGVzdAoKQklPUyBWRVJTSU9OOgogICAgR29vZ2xlX0tl
-dmluLjg3ODUuMjExLjIwMTdfMDZfMjBfMTA0MwoKRUMgVkVSU0lPTjoKICAgIEJ1aWxkIGluZm86
-ICAgIGtldmluX3YxLjEwLjIxNy0yNDUxNDk2MWQgMjAxNy0wNy0wMyAwNzo0NjozNiB3eHRAbmIK
-CldpdGggdGhlIEFSTSdzIGxhc3Rlc3QgbWFsaSBkcml2ZXIgVFgwMTEtU1ctOTkwMDItcjE4cDAt
-MDFyZWwwIG9uCmh0dHBzOi8vZGV2ZWxvcGVyLmFybS5jb20vcHJvZHVjdHMvc29mdHdhcmUvbWFs
-aS1kcml2ZXJzL21pZGdhcmQta2VybmVsCgpGcm9tIHRoZSBib290dXAgbG9nOgogICAgbG9jYWxo
-b3N0IGRldmZyZXEwICMgZG1lc2cgfGdyZXAgbWFsaQogICAgWyAgICAwLjkzMzMzNF0gbWFsaSBm
-ZjlhMDAwMC5ncHU6IEdQVSBpZGVudGlmaWVkIGFzIDB4MDg2MCByMnAwIHN0YXR1cyAwCiAgICBb
-ICAgIDAuOTQwODMwXSBtYWxpIGZmOWEwMDAwLmdwdTogUHJvdGVjdGVkIG1vZGUgbm90IGF2YWls
-YWJsZQogICAgWyAgICAwLjk0NzMzNF0gbWFsaSBmZjlhMDAwMC5ncHU6IFVzaW5nIGNvbmZpZ3Vy
-ZWQgcG93ZXIgbW9kZWwgbWFsaS1zaW1wbGUtcG93ZXItbW9kZWwsIGFuZCBmYWxsYmFjayBtYWxp
-LXNpbXBsZS1wb3dlci1tb2RlbAogICAgWyAgICAwLjk2MDA4M10gbWFsaSBmZjlhMDAwMC5ncHU6
-IFByb2JlZCBhcyBtYWxpMAoKICAgIGxvY2FsaG9zdCBkZXZmcmVxMCAjIHB3ZAogICAgL3N5cy9k
-ZXZpY2VzL3BsYXRmb3JtL2ZmOWEwMDAwLmdwdS9kZXZmcmVxL2RldmZyZXEwCiAgICBsb2NhbGhv
-c3QgZGV2ZnJlcTAgIyBscwogICAgYXZhaWxhYmxlX2ZyZXF1ZW5jaWVzICBkZXZpY2UgICAgbWlu
-X2ZyZXEgICAgICAgICAgc3Vic3lzdGVtICAgIHVldmVudAogICAgYXZhaWxhYmxlX2dvdmVybm9y
-cyAgICBnb3Zlcm5vciAgcG9sbGluZ19pbnRlcnZhbCAgdGFyZ2V0X2ZyZXEgIHVzZXJzcGFjZQog
-ICAgY3VyX2ZyZXEgICAgICAgICAgICAgICBtYXhfZnJlcSAgcG93ZXIgICAgICAgICAgICAgdHJh
-bnNfc3RhdAoKICAgIGxvY2FsaG9zdCBmZjlhMDAwMC5ncHUgIyBscwogICAgY29yZV9hdmFpbGFi
-aWxpdHlfcG9saWN5ICBncHVpbmZvICAgICAgICAgICAgICAgbW9kYWxpYXMgICAgICAgc29mdF9q
-b2JfdGltZW91dAogICAgY29yZV9tYXNrICAgICAgICAgICAgICAgICBqc19zY2hlZHVsaW5nX3Bl
-cmlvZCAgb2Zfbm9kZSAgICAgICAgc3Vic3lzdGVtCiAgICBkZXZmcmVxICAgICAgICAgICAgICAg
-ICAgIGpzX3RpbWVvdXRzICAgICAgICAgICBwbV9wb3dlcm9mZiAgICB1ZXZlbnQKICAgIGRyaXZl
-ciAgICAgICAgICAgICAgICAgICAgbWVtX3Bvb2xfbWF4X3NpemUgICAgIHBvd2VyCiAgICBkcml2
-ZXJfb3ZlcnJpZGUgICAgICAgICAgIG1lbV9wb29sX3NpemUgICAgICAgICBwb3dlcl9wb2xpY3kK
-ICAgIGR2ZnNfcGVyaW9kICAgICAgICAgICAgICAgbWlzYyAgICAgICAgICAgICAgICAgIHJlc2V0
-X3RpbWVvdXQKLS0tCgpBbmQgZm9yIHRoZXJtYWwgd2l0aCBJUEEuClRyeSB0byBydW4gJ21kNXN1
-bSAvZGV2L3plcm8gJicgYW5kIG9jdGFuZS9iZW5jaG1hcmsgc2NyaXB0cyB0byBnbyB1cCB0aGUg
-dGVtcGVyYXR1cmUuCkZyb20gdGhlIHNjcmlwdHMgdG8gaGF2ZSBhIGxvb2sgYXQgdGhlIGFjdHVh
-bCBjb250cm9sLgoiCndoaWxlIHRydWU7IGRvIGdyZXAgIiIgL3N5cy9jbGFzcy90aGVybWFsL3Ro
-ZXJtYWxfem9uZVswLTFdL3RlbXAgL3N5cy9kZXZpY2VzL3N5c3RlbS9jcHUvY3B1WzAtNV0vY3B1
-ZnJlcS9zY2FsaW5nX2N1cl9mcmVxIC9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9mZjlhMDAwMC5ncHUv
-ZGV2ZnJlcS9mZjlhMDAwMC5ncHUvY3VyX2ZyZXE7ZGF0ZTtzbGVlcCAuNTsgZG9uZSAmCiIKCi1D
-YWVzYXIKCgoKQ2Flc2FyIFdhbmcgKDQpOgogIGR0LWJpbmRpbmdzOiBncHU6IGFkZCB0aGUgUksz
-Mzk5IG1hbGkgZm9yIHJvY2tjaGlwIHNwZWNpZmljcwogIGFybTY0OiBkdHM6IHJvY2tjaGlwOiBh
-ZGQgQVJNIE1hbGkgR1BVIG5vZGUgZm9yIFJLMzM5OSBTb0NzCiAgYXJtNjQ6IGR0czogcm9ja2No
-aXA6IGVuYWJsZSB0aGUgR1BVIGZvciBSSzMzOTktR1JVCiAgYXJtNjQ6IGR0czogcm9ja2NoaXA6
-IHVwZGF0ZSB0aGUgdGhlcm1hbCB6b25lcyBmb3IgUkszMzk5IFNvQ3MKCiAuLi4vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvYXJtLG1hbGktbWlkZ2FyZC50eHQgICB8ICAxICsKIGFyY2gvYXJtNjQv
-Ym9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LWdydS5kdHNpICAgICAgIHwgIDUgKysKIGFyY2gvYXJt
-NjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LW9wMS1vcHAuZHRzaSAgIHwgMzMgKysrKysrKysr
-CiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS1vcHAuZHRzaSAgICAgICB8IDMz
-ICsrKysrKysrKwogYXJjaC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTkuZHRzaSAgICAg
-ICAgICAgfCA3OCArKysrKysrKysrKysrLS0tLS0tLS0tCiA1IGZpbGVzIGNoYW5nZWQsIDExNyBp
-bnNlcnRpb25zKCspLCAzMyBkZWxldGlvbnMoLSkKCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Add Mali GPU device tree node for the RK3399 SoCs, with devfreq
+opp table.
+
+RK3399 and RK3399-OP1 SoCs have a different recommendation table with
+gpu opp. As the ARM's mali driver found on
+https://developer.arm.com/products/software/mali-drivers/midgard-kernel.
+
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+
+ arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi | 33 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi     | 33 ++++++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi         | 16 ++++++++++++
+ 3 files changed, 82 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
+index be7fe63..d8a120f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
+@@ -118,6 +118,35 @@
+ 			opp-microvolt = <1250000>;
+ 		};
+ 	};
++
++	gpu_opp_table: opp-table2 {
++		compatible = "operating-points-v2";
++
++		opp00 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <800000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <297000000>;
++			opp-microvolt = <800000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <400000000>;
++			opp-microvolt = <825000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <850000>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <925000>;
++		};
++		opp05 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <1075000>;
++		};
++	};
+ };
+ 
+ &cpu_l0 {
+@@ -143,3 +172,7 @@
+ &cpu_b1 {
+ 	operating-points-v2 = <&cluster1_opp>;
+ };
++
++&gpu {
++	operating-points-v2 = <&gpu_opp_table>;
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+index c83460d..81617bc 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+@@ -110,6 +110,35 @@
+ 			opp-microvolt = <1200000>;
+ 		};
+ 	};
++
++	gpu_opp_table: opp-table2 {
++		compatible = "operating-points-v2";
++
++		opp00 {
++			opp-hz = /bits/ 64 <200000000>;
++			opp-microvolt = <800000>;
++		};
++		opp01 {
++			opp-hz = /bits/ 64 <297000000>;
++			opp-microvolt = <800000>;
++		};
++		opp02 {
++			opp-hz = /bits/ 64 <400000000>;
++			opp-microvolt = <825000>;
++		};
++		opp03 {
++			opp-hz = /bits/ 64 <500000000>;
++			opp-microvolt = <875000>;
++		};
++		opp04 {
++			opp-hz = /bits/ 64 <600000000>;
++			opp-microvolt = <925000>;
++		};
++		opp05 {
++			opp-hz = /bits/ 64 <800000000>;
++			opp-microvolt = <1100000>;
++		};
++	};
+ };
+ 
+ &cpu_l0 {
+@@ -135,3 +164,7 @@
+ &cpu_b1 {
+ 	operating-points-v2 = <&cluster1_opp>;
+ };
++
++&gpu {
++	operating-points-v2 = <&gpu_opp_table>;
++};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 1cbd7a2..8c6438b 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1443,6 +1443,22 @@
+ 		status = "disabled";
+ 	};
+ 
++	gpu: gpu@ff9a0000 {
++		compatible = "arm,rk3399-mali",
++			     "arm,malit860",
++			     "arm,malit86x",
++			     "arm,malit8xx";
++		reg = <0x0 0xff9a0000 0x0 0x10000>;
++		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "GPU", "JOB", "MMU";
++		clocks = <&cru ACLK_GPU>;
++		clock-names = "clk_mali";
++		power-domains = <&power RK3399_PD_GPU>;
++		status = "disabled";
++	};
++
+ 	pinctrl: pinctrl {
+ 		compatible = "rockchip,rk3399-pinctrl";
+ 		rockchip,grf = <&grf>;
+-- 
+2.7.4
