@@ -1,85 +1,120 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH 2/2] net: ethernet: fsl: add phy reset after clk enable
- option
-Date: Wed, 12 Jul 2017 11:21:06 +0200
-Message-ID: <e6b838e5-af7a-07be-42db-59b901cc04db@skidata.com>
-References: <1499346330-12166-1-git-send-email-richard.leitner@skidata.com>
- <1499346330-12166-2-git-send-email-richard.leitner@skidata.com>
- <AM4PR0401MB2260ECD4508E26FF16670004FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <81105c77-d48f-271b-2de1-c877b9413184@skidata.com>
- <AM4PR0401MB226089839458F5F92C3B1F39FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <6de114cb-4521-4bb2-d0a3-4aea32936bd3@skidata.com>
- <AM4PR0401MB22609FFACD2BB51247709936FFAA0@AM4PR0401MB2260.eurprd04.prod.outlook.com>
- <b68f444e-cea4-acaa-d1e9-7955a577ed35@skidata.com>
- <20170707140010.GD24237@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170707140010.GD24237@lunn.ch>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Andy Duan <fugang.duan@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dev@g0hl1n.net" <dev@g0hl1n.net>, Richard Leitner <richard.leitner@skidata.com>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3 v8] hsdk: initial port for HSDK board
+Date: Wed, 12 Jul 2017 12:40:20 +0300
+Message-ID: <20170712094023.23226-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series introduces some required preparations and initial
+port of ARC HS Development Kit board with some basic features such
+as serial port, USB, SD/MMC and Ethernet.
 
-On 07/07/2017 04:00 PM, Andrew Lunn wrote:
->> Ok. I'm fine with moving the phy-reset-gpios binding into the PHY.
->> But one question still remains: Who should then trigger the "hard
->> reset" of the PHY?
-> 
-> Hi Richard
-> 
-> I think i see a few whys to do this, but first i need to check
-> something. Is the clock which is causing a problem this one:
-> 
->         /* clk_ref is optional, depends on board */
->         fep->clk_ref = devm_clk_get(&pdev->dev, "enet_clk_ref");
->         if (IS_ERR(fep->clk_ref))
->                 fep->clk_ref = NULL;
+Essentially we run Linux kernel on all 4 cores (i.e. utilize SMP) and
+heavily use IO Coherency for speeding-up DMA-aware peripherals.
 
-Yes. It's this one.
+Note as opposed to other ARC boards we link Linux kernel to
+0x9000_0000 intentionally because cores 1 and 3 configured with DCCM
+situated at our more usual link base 0x8000_0000.
 
-> 
-> Possible solutions:
-> 
-> 1) clocks are referenced counted. If it is turned on twice, it needs
->    to be turned off twice before it is actually turned off. So, make
->    the PHY driver also clk_prepare_enable() this clock. When the FEC
->    tries to turn it off, it will stay ticking. Problem avoided, at the
->    expense of some power.
+Note that two patches of this series ("ARC: Decouple linux kernel memory
+address and link address" and "ARC: Set IO-coherency aperture base to 
+LINUX_LINK_BASE") are prerequisites for HDSK support as its hardware
+configuration differs quite a bit from what we used to have on other
+ARC boards.
 
-Somehow this approach triggers a "workaround-feeling" for me...
-Furthermore as you say it "wastes" (at least some) power. For exactly
-this reason the disabling of the clock was implemented in commit
-e8fcfcd5684a ("net: fec: optimize the clock management to save power").
+Alexey Brodkin (1):
+  ARC: hsdk: initial port for HSDK board
 
-> 
-> 2) More complex, but make the PHY driver also a clock driver. Have the
->    PHY driver export a clock which the FEC use, as "enet_clk_ref". The
->    implementation of this clock, would both turn the real clock on,
->    and the perform the reset.
+Eugeniy Paltsev (2):
+  ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
+  ARC: Decouple linux kernel memory address and link address
 
-This seems as a good solution to me. Furthermore IMHO it would be good
-to move all PHY related dt bindings (reset-gpio, clk, etc.) from the MAC
-into the PHY node.
+Changes v7 -> v8:
+ * DTS: move cpu_intc, idu_intc, arcpct, timer, gfrc nodes to root
+   level and out of the cpus node.
+ * DTS: add vendor-specific compatible for ohci and ehci nodes.
+ * DTS: style fixes
 
-Or are there any reasons/arguments against this approach?
+Changes v6 -> v7:
+ * DTS: get rid of skeleton.dts, move cpus nodes to hsdk.dts
+ * DTS: style fixes
+ * Enable loadable modules, module unloading and NFS client as defaults
+ * Get rid of ARC_PLAT_HSDK board config option
 
-> 
-> Both require no changes to the FEC, or any other MAC driver using this
-> PHY, so long as the MAC driver uses the common clock infrastructure to
-> control the clock to the PHY.
-As (IMHO) the new approach likely won't be backported to stable releases
-I want to stress again the point that commit e8fcfcd5684a
-("net: fec: optimize the clock management to save power") introduced
-this problem and therefore "broke the PHY" for our board.
+Changes v5 -> v6:
+ * Add support of USB-to-HDMI adapter
+ * Revert removing of resetting CREG_PAE bits.
+   PAE remapping for DMA clients does not work due to an RTL bug, so
+   CREG_PAE register must be programmed to all zeroes, otherwise it
+   will cause problems with DMA to/from peripherals even if PAE40 is
+   not used.
 
-So would it be possible to add a "quick" bugfix patch (maybe this patch
-or another one removing the clk disable) so this fix can be backported
-to stable? Otherwise our board is only working with another
-"out-of-tree" patch (which I want to avoid)...
+Changes v4 -> v5:
+ * Move DCCM outside of 0x8000_0000 adress at kernel boot time.
+ * Decouple linux kernel memory address and link address.
+ * Remove hardcoding of IO-coherency aperture base.
+ * Remove resetting CREG_PAE bits as default value is suitable for us.
 
-kind regards,
-Richard.L
+Changes v3 -> v4:
+ * Removed senseless "ranges" property from "memory" node in .dts
+ * Refined early-boot code:
+    - ICCM relocation should be done on each and every core that sports ICCM
+      so we leave it in init_per_cpu(). Even though init_per_cpu() gets called
+      on the master core pretty late still it is way much earlier than that
+      moment when it might affect us - as it only huts us when addresses in
+      0x7z-0x7fff_ffff range are used, i.e. virtual addresses that we don't
+      use during init. This also makes code much cleaner compared to
+      additional check in case of master etc.
+
+Changes v2 -> v3:
+ * Added Rob to Cc-list for DT binding approval
+ * Removed mention of prerequsite patch from commit message
+ * Removed hsdk_early_init() as hsdk_init_per_cpu() is executed on
+   all cores anyways including master
+ * Cleaned-up board's .dts a little bit
+ * Removed CONFIG_DP83867_PHY from defconfig as it was only used on
+   FPGA prototype, on real board we use MICREL PHY which is still selected
+
+Changes v1 -> v2:
+ * Update copyright year from 2016 to more up to date 2017
+ * Merge early UART clock with AXS10x as in both cases that's 33.3 MHz
+ * Bump memory to 1Gb, we don't use more for now because it requires
+   trickier IOC setup and usage
+ * Update early platform init code:
+    - Added missing fixup_pae_regs() to per-cpu init
+    - Mark most of functions as "static __init"
+    - Use writel_relaxed() for setting CREG_PAE, CREG_PAE_UPDATE is still
+      written with stronger writel() since we don't want reordering to happen,
+      otherwise value written to CREG_PAE won't be applied
+
+ Documentation/devicetree/bindings/arc/hsdk.txt |   7 ++
+ arch/arc/Kconfig                               |   6 +
+ arch/arc/Makefile                              |   1 +
+ arch/arc/boot/dts/hsdk.dts                     | 150 +++++++++++++++++++++++++
+ arch/arc/boot/dts/include/dt-bindings          |   1 +
+ arch/arc/configs/hsdk_defconfig                |  72 ++++++++++++
+ arch/arc/include/asm/page.h                    |   2 +-
+ arch/arc/kernel/devtree.c                      |   5 +-
+ arch/arc/mm/cache.c                            |  33 ++++--
+ arch/arc/mm/init.c                             |   6 +-
+ arch/arc/plat-hsdk/Kconfig                     |  12 ++
+ arch/arc/plat-hsdk/Makefile                    |   9 ++
+ arch/arc/plat-hsdk/platform.c                  |  77 +++++++++++++
+ 13 files changed, 366 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arc/hsdk.txt
+ create mode 100644 arch/arc/boot/dts/hsdk.dts
+ create mode 120000 arch/arc/boot/dts/include/dt-bindings
+ create mode 100644 arch/arc/configs/hsdk_defconfig
+ create mode 100644 arch/arc/plat-hsdk/Kconfig
+ create mode 100644 arch/arc/plat-hsdk/Makefile
+ create mode 100644 arch/arc/plat-hsdk/platform.c
+
+-- 
+2.9.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
