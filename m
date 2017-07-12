@@ -1,99 +1,125 @@
-From: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] pwm: rockchip: Add APB and function both clocks
- support
-Date: Wed, 12 Jul 2017 16:38:09 +0800
-Message-ID: <caba81f3-d066-d64e-7e8e-6457b759e757@rock-chips.com>
-References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com>
- <1499486629-9659-2-git-send-email-david.wu@rock-chips.com>
- <CAD=FV=Vqkueo_cqU8bJXXT3pV5d1dZR5LF+c=O-Ka1qR-Ff-WQ@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: [RESEND] [PATCH v2.1 1/2] dt-bindings: display: rcar-du: Add a VSP channel index to the vsps DT property
+Date: Wed, 12 Jul 2017 11:43:36 +0300
+Message-ID: <1596663.83UpNEdgHK@avalon>
+References: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=Vqkueo_cqU8bJXXT3pV5d1dZR5LF+c=O-Ka1qR-Ff-WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170626162930.30240-2-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pwm <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+On some R-Car SoCs a single VSP can serve multiple DU channels through
+multiple LIF instances in the VSP. The current DT bindings don't support
+specifying that kind of SoC integration scheme. Extend them with a VSP
+channel index.
 
-在 2017/7/12 1:03, Doug Anderson 写道:
-> Hi,
-> 
-> On Fri, Jul 7, 2017 at 9:03 PM, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> 
->> @@ -6,7 +6,13 @@ Required properties:
->>      "rockchip,rk3288-pwm": found on RK3288 SoC
->>      "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
->>    - reg: physical base address and length of the controller's registers
->> - - clocks: phandle and clock specifier of the PWM reference clock
->> + - clocks: See ../clock/clock-bindings.txt
->> +   - For older hardware (rk2928, rk3066, rk3188, rk3228, rk3288, rk3399):
->> +     - There is one clock that's used both to derive the functional clock
->> +       for the device and as the bus clock.
->> +   - For newer hardware (rk3328 and future socs): specified by name
->> +     - "pwm": This is used to derive the functional clock.
->> +     - "pclk": This is the APB bus clock.
-> 
-> I'm pretty sure that that the above description doesn't quite match the code.
-> 
-> * The above description says that for old hardware there is one clock
-> and 'clock-names' was not necessary (though as I understand it it's OK
-> if it's there).
-> 
-> * The old code matched the old description.  AKA: if there was no
-> "clock-names" then everything was OK.
-> 
-> * The new code will not work if there was no "clock-names".
-> 
-> Many of the old devices had a clock-names present (and it was "pwm"),
-> but not all.  Specifically it looks like
-> "arch/arm/boot/dts/rk3xxx.dtsi" doesn't specify a clock-names.
-> 
+Backward compatibility can be ensured in drivers by checking the length
+of the vsps property and setting the channel to 0 when the property
+doesn't contain channel indices.
 
-So we can keep code: the pc->clk = devm_clk_get(&pdev->dev, NULL);
-If the name is NULL, we can get the first clk defined at DTB.
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/display/renesas,du.txt     | 51 +++++++++++++---------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
->> @@ -343,13 +344,38 @@ static int rockchip_pwm_probe(struct platform_device *pdev)
->>          if (IS_ERR(pc->base))
->>                  return PTR_ERR(pc->base);
->>
->> -       pc->clk = devm_clk_get(&pdev->dev, NULL);
->> -       if (IS_ERR(pc->clk))
->> -               return PTR_ERR(pc->clk);
->> +       pc->clk = devm_clk_get(&pdev->dev, "pwm");
->> +       count = of_property_count_strings(pdev->dev.of_node, "clock-names");
->> +       if (count == 2)
->> +               pc->pclk = devm_clk_get(&pdev->dev, "pclk");
->> +       else
->> +               pc->pclk = pc->clk;
->> +
->> +       if (IS_ERR(pc->clk)) {
->> +               ret = PTR_ERR(pc->clk);
->> +               if (ret != -EPROBE_DEFER)
->> +                       dev_err(&pdev->dev, "Can't get bus clk: %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       if (IS_ERR(pc->pclk)) {
->> +               ret = PTR_ERR(pc->pclk);
->> +               if (ret != -EPROBE_DEFER)
->> +                       dev_err(&pdev->dev, "Can't get APB clk: %d\n", ret);
->> +               return ret;
->> +       }
-> 
-> In the above code you need to check the count _before_ trying to get
-> the clock by name.
+Changes since v2:
 
-Okay, I will fix it.
+- Used proper prefix for subject line
+- Fixed type in vsps property description
+- Increase visibility in the vsps example
 
-> 
-> 
-> -Doug
-> 
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
+index c6cb96a4fa93..4bbd1e9bf3be 100644
+--- a/Documentation/devicetree/bindings/display/renesas,du.txt
++++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+@@ -36,8 +36,10 @@ Required Properties:
+       When supplied they must be named "dclkin.x" with "x" being the input
+       clock numerical index.
+ 
+-  - vsps: A list of phandles to the VSP nodes that handle the memory
+-    interfaces for the DU channels.
++  - vsps: A list of phandle and channel index tuples to the VSPs that handle
++    the memory interfaces for the DU channels. The phandle identifies the VSP
++    instance that serves the DU channel, and the channel index identifies the
++    LIF instance in that VSP.
+ 
+ Required nodes:
+ 
+@@ -59,24 +61,24 @@ corresponding to each DU output.
+  R8A7796 (M3-W)	DPAD		HDMI		LVDS		-
+ 
+ 
+-Example: R8A7790 (R-Car H2) DU
++Example: R8A7795 (R-Car H3) ES2.0 DU
+ 
+-	du: du@feb00000 {
+-		compatible = "renesas,du-r8a7790";
+-		reg = <0 0xfeb00000 0 0x70000>,
+-		      <0 0xfeb90000 0 0x1c>,
+-		      <0 0xfeb94000 0 0x1c>;
+-		reg-names = "du", "lvds.0", "lvds.1";
+-		interrupt-parent = <&gic>;
+-		interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 268 IRQ_TYPE_LEVEL_HIGH>,
+-			     <0 269 IRQ_TYPE_LEVEL_HIGH>;
+-		clocks = <&mstp7_clks R8A7790_CLK_DU0>,
+-		         <&mstp7_clks R8A7790_CLK_DU1>,
+-		         <&mstp7_clks R8A7790_CLK_DU2>,
+-		         <&mstp7_clks R8A7790_CLK_LVDS0>,
+-		         <&mstp7_clks R8A7790_CLK_LVDS1>;
+-		clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
++	du: display@feb00000 {
++		compatible = "renesas,du-r8a7795";
++		reg = <0 0xfeb00000 0 0x80000>,
++		      <0 0xfeb90000 0 0x14>;
++		reg-names = "du", "lvds.0";
++		interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg CPG_MOD 724>,
++			 <&cpg CPG_MOD 723>,
++			 <&cpg CPG_MOD 722>,
++			 <&cpg CPG_MOD 721>,
++			 <&cpg CPG_MOD 727>;
++		clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
++		vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+ 
+ 		ports {
+ 			#address-cells = <1>;
+@@ -89,12 +91,19 @@ Example: R8A7790 (R-Car H2) DU
+ 			};
+ 			port@1 {
+ 				reg = <1>;
+-				du_out_lvds0: endpoint {
++				du_out_hdmi0: endpoint {
++					remote-endpoint = <&dw_hdmi0_in>;
+ 				};
+ 			};
+ 			port@2 {
+ 				reg = <2>;
+-				du_out_lvds1: endpoint {
++				du_out_hdmi1: endpoint {
++					remote-endpoint = <&dw_hdmi1_in>;
++				};
++			};
++			port@3 {
++				reg = <3>;
++				du_out_lvds0: endpoint {
+ 				};
+ 			};
+ 		};
+-- 
+Regards,
+
+Laurent Pinchart
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
