@@ -1,114 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v3,1/3] hwmon: ltc2990: refactor value conversion
-Date: Tue, 11 Jul 2017 17:39:10 -0700
-Message-ID: <2e03c277-3c9f-1f12-8e55-10a0dab7a0a9@roeck-us.net>
-References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
- <20170708154515.GA6358@roeck-us.net>
- <alpine.LRH.2.20.1707120000520.28469@lxplus091.cern.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <alpine.LRH.2.20.1707120000520.28469@lxplus091.cern.ch>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Tom Levens <tom.levens@cern.ch>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Mike Looijmans <mike.looijmans@topic.nl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] USB Mux support for Chipidea
+Date: Tue, 11 Jul 2017 18:02:52 -0700
+Message-ID: <20170712010255.26855-1-stephen.boyd@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/11/2017 03:03 PM, Tom Levens wrote:
-> 
-> 
-> On Sat, 8 Jul 2017, Guenter Roeck wrote:
-> 
->> On Mon, Jul 03, 2017 at 06:28:58AM +0200, Tom Levens wrote:
->>> Conversion from raw values to signed integers has been refactored using
->>> bitops.h. This also fixes a bug where negative temperatures were
->>> converted incorrectly.
->>>
->>
->> Documentation/process/submitting-patches.rst, chapter 2: "Solve only one
->> problem per patch.".
->>
->> I can understand the urge to merge two sets of changes here. However,
->> that creates a problem for me: The fix should be applied to stable kernels,
->> but not the refactoring.
->>
->> Please split the patch in two, one for the bug fix and one for the
->> refactoring.
-> 
-> In reality the refactoring *is* the fix for this bug. I am not sure how to to fix it simply without using the bitops macro. Of course, I could fix only the temperature conversion in one patch and refactor the other two in a separate one if you prefer?
-> 
+This patchset adds support for the TC7USB40MU usb mux found on 
+db410c 96boards platforms via the new multiplexer framework and
+hooks that into the chipidea driver. This allows us to properly
+control host or device mode on this board via the sysfs knob.
 
-If so, the subject and description are reversed. The subject should then be
-something like "Fix incorrect conversion of negative temperatures",
-and the description should explain that this is accomplished by using
-existing API functions (then you can add "while at it, refactor voltage
-conversions as well").
+So far I've only tested this on db410c, and there are some rough
+edges to finish off before it can merge. Also I'm experiencing
+odd behavior with switching the role while gadget is enabled and
+the micro-usb cable is kept connected. Not sure what's wrong but
+it seems like the gadget never gets disconnected? I'll investigate
+more.
 
-Thanks,
-Guenter
+TODO:
 
-> Cheers,
-> 
->> Thanks,
->> Guenter
->>
->>> Signed-off-by: Tom Levens <tom.levens@cern.ch>
->>> ---
->>>  drivers/hwmon/ltc2990.c | 18 ++++--------------
->>>  1 file changed, 4 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
->>> index 8f8fe05..e320d21 100644
->>> --- a/drivers/hwmon/ltc2990.c
->>> +++ b/drivers/hwmon/ltc2990.c
->>> @@ -11,6 +11,7 @@
->>>   * the chip's internal temperature and Vcc power supply voltage.
->>>   */
->>>
->>> +#include <linux/bitops.h>
->>>  #include <linux/err.h>
->>>  #include <linux/hwmon.h>
->>>  #include <linux/hwmon-sysfs.h>
->>> @@ -34,15 +35,6 @@
->>>  #define LTC2990_CONTROL_MODE_CURRENT    0x06
->>>  #define LTC2990_CONTROL_MODE_VOLTAGE    0x07
->>>
->>> -/* convert raw register value to sign-extended integer in 16-bit range */
->>> -static int ltc2990_voltage_to_int(int raw)
->>> -{
->>> -    if (raw & BIT(14))
->>> -        return -(0x4000 - (raw & 0x3FFF)) << 2;
->>> -    else
->>> -        return (raw & 0x3FFF) << 2;
->>> -}
->>> -
->>>  /* Return the converted value from the given register in uV or mC */
->>>  static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
->>>  {
->>> @@ -55,18 +47,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
->>>      switch (reg) {
->>>      case LTC2990_TINT_MSB:
->>>          /* internal temp, 0.0625 degrees/LSB, 13-bit  */
->>> -        val = (val & 0x1FFF) << 3;
->>> -        *result = (val * 1000) >> 7;
->>> +        *result = sign_extend32(val, 12) * 1000 / 16;
->>>          break;
->>>      case LTC2990_V1_MSB:
->>>      case LTC2990_V3_MSB:
->>>           /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
->>> -        *result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
->>> +        *result = sign_extend32(val, 14) * 1942 / 100;
->>>          break;
->>>      case LTC2990_VCC_MSB:
->>>          /* Vcc, 305.18μV/LSB, 2.5V offset */
->>> -        *result = (ltc2990_voltage_to_int(val) * 30518 /
->>> -               (4 * 100 * 1000)) + 2500;
->>> +        *result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
->>>          break;
->>>      default:
->>>          return -EINVAL; /* won't happen, keep compiler happy */
->>
->>
+ 1. The mux framework has to be selected for consumers to use it. We'll
+    need some stubs in the consumer header file to allow compilation to
+    continue without mux always enabled by consumers.
 
+ 2. We probably need some sort of mux_control_get_optional() API so that
+    we know if there was an error getting the mux control, instead of just
+    ignoring errors. For now I can pass up EPROBE_DEFER errors and ignore
+    other errors and consider it "missing from DT".
+
+ 3. Maybe we can get rid of the mux driver and just use mux-gpio.c with
+    a compatible string update? I split it off because we may want to
+    support the "S" pin on the TC7USB40MU one day that shuts off both
+    mux outputs.
+
+ 4. The userspace side of things is murky. What is expected to go and toggle
+    the host/gadget side of things in userspace at this very specific location
+    for chipidea devices?
+
+Stephen Boyd (3):
+  usb: misc: Add a driver for TC7USB40MU
+  usb: chipidea: Hook into mux framework to toggle usb switch
+  arm64: dts: qcom: Collapse usb support into one node
+
+ .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  8 +++
+ .../devicetree/bindings/usb/toshiba,tc7usb40mu.txt | 31 +++++++++
+ arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 39 +++++++-----
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              | 62 +++++++++---------
+ drivers/usb/chipidea/core.c                        | 17 +++++
+ drivers/usb/chipidea/host.c                        | 10 +++
+ drivers/usb/chipidea/udc.c                         | 11 ++++
+ drivers/usb/misc/Kconfig                           | 11 ++++
+ drivers/usb/misc/Makefile                          |  1 +
+ drivers/usb/misc/tc7usb40mu.c                      | 74 ++++++++++++++++++++++
+ include/linux/usb/chipidea.h                       | 14 ++++
+ 11 files changed, 228 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/toshiba,tc7usb40mu.txt
+ create mode 100644 drivers/usb/misc/tc7usb40mu.c
+
+-- 
+2.10.0.297.gf6727b0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
