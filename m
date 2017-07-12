@@ -1,52 +1,31 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3: disable SD card
-Date: Wed, 12 Jul 2017 16:28:53 +0800
-Message-ID: <20170712082852.GJ3172@dragon>
-References: <20170630133557.17129-1-romain.perier@collabora.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] ARM: dts: imx: Correct B850v3 clock assignment
+Date: Wed, 12 Jul 2017 16:31:10 +0800
+Message-ID: <20170712083109.GK3172@dragon>
+References: <20170630134337.18245-1-romain.perier@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170630133557.17129-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
+In-Reply-To: <20170630134337.18245-1-romain.perier@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Romain Perier <romain.perier@collabora.com>
+Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martyn Welch <martyn.welch@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 03:35:57PM +0200, Romain Perier wrote:
-> From: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
+On Fri, Jun 30, 2017 at 03:43:37PM +0200, Romain Perier wrote:
+> From: Martyn Welch <martyn.welch@collabora.co.uk>
 > 
-> Default boot medium must be internal eMMC, we don't want the SDIO to be
-> used for these devices. This commit disables the SD card interface
-> for GE Healthcare Bx50v3 devices.
+> The IPU that drives HDMI must have its pre_sel set to pll2_pfd_396m
+> to avoid stepping on the LVDS output's toes, as the PLL can't be clocked
+> to the pixel clock and to the LVDS serial clock (3.5*pixel clock) at the
+> same time.
 > 
-> Signed-off-by: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
+> As we are using ipu1_di0 and ipu2_di0, ensure both are switched to
+> to pll2_pfd2_396m to avoid issues. The LDB driver will switch the
+> required IPU to ldb_di1 when it uses it to drive LVDS.
 > 
-> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> index 75201ca..25466372 100644
-> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-> @@ -326,3 +326,7 @@
->  		tcxo-clock-frequency = <26000000>;
->  	};
->  };
-> +
-> +&usdhc2 {
-> +	status = "disabled";
-> +};
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
+> Signed-off-by: Romain Perier <romain.perier@collabora.com>
 
-Please keep the node alphabetically sorted.
-
-Shawn
-
-> -- 
-> 1.8.3.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
