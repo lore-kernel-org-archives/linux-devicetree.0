@@ -1,22 +1,111 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx: ventana: add ADV1780 analog video decoder
-Date: Wed, 12 Jul 2017 14:55:40 +0800
-Message-ID: <20170712065538.GF3172@dragon>
-References: <1497884410-7198-1-git-send-email-tharvey@gateworks.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/1] ARM: dts: imx6: RIoTboard provide gpio-line-names
+Date: Wed, 12 Jul 2017 15:06:11 +0800
+Message-ID: <20170712070609.GG3172@dragon>
+References: <20170620142830.5119-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497884410-7198-1-git-send-email-tharvey@gateworks.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tim Harvey <tharvey@gateworks.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+In-Reply-To: <20170620142830.5119-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 19, 2017 at 08:00:10AM -0700, Tim Harvey wrote:
-> Enables the ADV7180 analog video decoder sensor connected to the
-> IMX6 IPU on various Gateworks Ventana boards.
-> 
-> Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+On Tue, Jun 20, 2017 at 04:28:30PM +0200, Oleksij Rempel wrote:
+> for each gpio controller
 
-Applied, thanks.
+Please write up a complete sentence.  If you can explain a bit why these
+names are useful would be better.
+
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6dl-riotboard.dts | 61 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+> index 2cb72824e800..b9ecb3b3792a 100644
+> --- a/arch/arm/boot/dts/imx6dl-riotboard.dts
+> +++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+> @@ -84,6 +84,67 @@
+>  	};
+>  };
+>  
+> +&gpio1 {
+> +	gpio-line-names =
+> +		"", "", "[SD2_WP]", "", "[SD2_CD]", "I2C3_SCL",
+> +			"I2C3_SDA", "I2C4_SCL",
+> +		"I2C4_SDA", "", "", "", "", "", "", "",
+> +		"", "PWM3", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "";
+> +};
+> +
+> +&gpio2 {
+> +	gpio-line-names =
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "";
+> +};
+> +
+> +&gpio3 {
+> +	gpio-line-names =
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "[USB_OTG_VBUS]", "",
+> +		"UART3_TXD", "UART3_RXD", "", "", "[EIM_D28]", "", "", "";
+> +};
+> +
+> +&gpio4 {
+> +	gpio-line-names =
+> +		"", "", "", "", "", "", "UART4_TXD", "UART4_RXD",
+> +		"UART5_TXD", "UART5_RXD", "", "", "", "", "", "",
+> +		"GPIO4_16", "GPIO4_17", "GPIO4_18", "GPIO4_19", "",
+> +			"CSPI3_CLK", "CSPI3_MOSI", "CSPI3_MISO",
+> +		"CSPI3_CS0", "CSPI3_CS1", "GPIO4_26", "GPIO4_27",
+> +			"CSPI3_RDY", "PWM1", "PWM2", "GPIO4_31";
+> +};
+> +
+> +&gpio5 {
+> +	gpio-line-names =
+> +		"", "", "[EIM_A25]", "", "", "GPIO5_05", "GPIO5_06",
+> +			"GPIO5_07",
+> +		"GPIO5_08", "CSPI2_CS1", "CSPI2_MOSI", "CSPI2_MISO",
+> +			"CSPI2_CS0", "CSPI2_CLK", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "";
+> +};
+> +
+> +&gpio6 {
+> +	gpio-line-names =
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "";
+> +};
+> +
+> +&gpio7 {
+> +	gpio-line-names =
+> +		"[SD3_CD]", "[SD3_WP]", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "",
+> +		"", "", "", "", "", "", "", "";
+> +};
+> +
+>  &audmux {
+
+Please keep the new added nodes sorted alphabetically in label name.
+
+Shawn
+
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_audmux>;
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
