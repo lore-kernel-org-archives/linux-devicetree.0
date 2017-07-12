@@ -1,58 +1,99 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme readability
-Date: Wed, 12 Jul 2017 10:38:38 +0800
-Message-ID: <CAGb2v64aoXsoE=YL_PFLkdU7rBZdpqhg37CKuQU-1F+SV9=zcw@mail.gmail.com>
-References: <20170614063016.22069-1-wens@csie.org> <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
- <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com> <20170711193111.p6jdyesluuqdlu3j@flea>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 0/3] USB Mux support for Chipidea
+Date: Wed, 12 Jul 2017 07:04:46 +0200
+Message-ID: <fc1f2836-cd9b-0905-21fc-d2d3029d1f52@axentia.se>
+References: <20170712010255.26855-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170711193111.p6jdyesluuqdlu3j@flea>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170712010255.26855-1-stephen.boyd@linaro.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <Peter.Chen@nxp.com>, Andy Gross <andy.gross@linaro.org>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 12, 2017 at 3:31 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jul 10, 2017 at 11:48:00PM +0800, Chen-Yu Tsai wrote:
->> On Sun, Jun 18, 2017 at 10:05 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> > On Wed, Jun 14, 2017 at 02:30:16PM +0800, Chen-Yu Tsai wrote:
->> >> The explanation for the endpoint ID numbering scheme is convoluted
->> >> and hard to understand.
->> >>
->> >> This patch aims to improve the readability of it by combining the
->> >> existing two paragraphs, while also providing a diagram example,
->> >> and how endpoints should be numbered based on that example.
->> >>
->> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> ---
->> >>
->> >> Hope this helps. I'm not sure I can improve this even more without
->> >> spelling out all cases.
->> >>
->> >> ---
->> >>  .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++++++++------
->> >>  1 file changed, 27 insertions(+), 9 deletions(-)
->> >
->> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Maxime, this patch seems to have fallen through the cracks.
->>
->> Could you queue it as a fix for 4.13?
->
-> Sorry, I don't know why I overlooked it.
->
-> Is it really 4.13 material though? It doesn't look that urgent.
+On 2017-07-12 03:02, Stephen Boyd wrote:
+> This patchset adds support for the TC7USB40MU usb mux found on 
+> db410c 96boards platforms via the new multiplexer framework and
+> hooks that into the chipidea driver. This allows us to properly
+> control host or device mode on this board via the sysfs knob.
+> 
+> So far I've only tested this on db410c, and there are some rough
+> edges to finish off before it can merge. Also I'm experiencing
+> odd behavior with switching the role while gadget is enabled and
+> the micro-usb cable is kept connected. Not sure what's wrong but
+> it seems like the gadget never gets disconnected? I'll investigate
+> more.
+> 
+> TODO:
+> 
+>  1. The mux framework has to be selected for consumers to use it. We'll
+>     need some stubs in the consumer header file to allow compilation to
+>     continue without mux always enabled by consumers.
 
-Unless I'm mistaken, this clarifies the numbering scheme introduced
-in 4.13. I'd say that's enough reason to have it in the same release.
+Instead of "depends on MULTIPLEXER", just add "select MULTIPLEXER"
+to the Kconfig. Otherwise, you'll have to convince Linus that we
+really do need a Kconfig question for the subsystem :-)
 
-But I should update the diagram first. The backend <-> TCON mux is
-missing. And maybe a Fixes tag.
+https://lkml.org/lkml/2017/7/4/118
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  2. We probably need some sort of mux_control_get_optional() API so that
+>     we know if there was an error getting the mux control, instead of just
+>     ignoring errors. For now I can pass up EPROBE_DEFER errors and ignore
+>     other errors and consider it "missing from DT".
+
+Yes, mux_control_get_optional should be easy to add.
+
+>  3. Maybe we can get rid of the mux driver and just use mux-gpio.c with
+>     a compatible string update? I split it off because we may want to
+>     support the "S" pin on the TC7USB40MU one day that shuts off both
+>     mux outputs.
+
+Maybe no need for a compatible update either, if it works to do something
+like this in the DT?
+
+	usb_switch: usb-switch {
+		compatible = "gpio-mux";
+		mux-gpios = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>,
+			    <&pm8916_gpios XXX GPIO_ACTIVE_XXX>;
+		idle-state = <2>;
+		#mux-control-cells = <0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&usb_sw_sel_pm>;
+	};
+
+But I obviously know little about how things are wired and really works,
+so that might be totally off...
+
+Otherwise, maybe a generic mux-pinctrl driver would do the trick?
+(compare with drivers/i2c/muxes/i2c-mux-pinctrl.c)
+
+Cheers,
+peda
+
+>  4. The userspace side of things is murky. What is expected to go and toggle
+>     the host/gadget side of things in userspace at this very specific location
+>     for chipidea devices?
+> 
+> Stephen Boyd (3):
+>   usb: misc: Add a driver for TC7USB40MU
+>   usb: chipidea: Hook into mux framework to toggle usb switch
+>   arm64: dts: qcom: Collapse usb support into one node
+> 
+>  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  8 +++
+>  .../devicetree/bindings/usb/toshiba,tc7usb40mu.txt | 31 +++++++++
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          | 39 +++++++-----
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi              | 62 +++++++++---------
+>  drivers/usb/chipidea/core.c                        | 17 +++++
+>  drivers/usb/chipidea/host.c                        | 10 +++
+>  drivers/usb/chipidea/udc.c                         | 11 ++++
+>  drivers/usb/misc/Kconfig                           | 11 ++++
+>  drivers/usb/misc/Makefile                          |  1 +
+>  drivers/usb/misc/tc7usb40mu.c                      | 74 ++++++++++++++++++++++
+>  include/linux/usb/chipidea.h                       | 14 ++++
+>  11 files changed, 228 insertions(+), 50 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/toshiba,tc7usb40mu.txt
+>  create mode 100644 drivers/usb/misc/tc7usb40mu.c
+> 
