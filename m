@@ -1,109 +1,114 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] ARM: dts: imx6: RIoTboard provide gpio-line-names
-Date: Wed, 12 Jul 2017 15:06:11 +0800
-Message-ID: <20170712070609.GG3172@dragon>
-References: <20170620142830.5119-1-o.rempel@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx6q-bx50v3: Enable i2c recovery mechanism
+Date: Wed, 12 Jul 2017 15:14:48 +0800
+Message-ID: <20170712071446.GH3172@dragon>
+References: <20170628123531.26996-1-romain.perier@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170620142830.5119-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170628123531.26996-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 04:28:30PM +0200, Oleksij Rempel wrote:
-> for each gpio controller
-
-Please write up a complete sentence.  If you can explain a bit why these
-names are useful would be better.
-
+On Wed, Jun 28, 2017 at 02:35:31PM +0200, Romain Perier wrote:
+> From: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> This commit enables i2c recovery, supported by the i2c core subsystem.
+> It defines the required GPIOs for SDA and SLC lines.
+> 
+> Signed-off-by: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+> Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/imx6dl-riotboard.dts | 61 ++++++++++++++++++++++++++++++++++
->  1 file changed, 61 insertions(+)
+>  arch/arm/boot/dts/imx6q-bx50v3.dtsi | 42 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-> index 2cb72824e800..b9ecb3b3792a 100644
-> --- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-> +++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-> @@ -84,6 +84,67 @@
+> diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> index c90b26f..75201ca 100644
+> --- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> +++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+> @@ -94,6 +94,29 @@
 >  	};
 >  };
 >  
-> +&gpio1 {
-> +	gpio-line-names =
-> +		"", "", "[SD2_WP]", "", "[SD2_CD]", "I2C3_SCL",
-> +			"I2C3_SDA", "I2C4_SCL",
-> +		"I2C4_SDA", "", "", "", "", "", "", "",
-> +		"", "PWM3", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "";
+> +&iomuxc {
+> +        pinctrl_i2c1_gpio: i2c1gpiogrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x1b0b0
+> +			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x1b0b0
+> +		>;
+> +	};
+> +
+> +        pinctrl_i2c2_gpio: i2c2gpiogrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x1b0b0
+> +			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x1b0b0
+> +		>;
+> +	};
+> +
+> +        pinctrl_i2c3_gpio: i2c3gpiogrp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_GPIO_3__GPIO1_IO03	0x1b0b0
+> +			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0
+> +		>;
+> +	};
 > +};
 > +
-> +&gpio2 {
-> +	gpio-line-names =
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "";
-> +};
-> +
-> +&gpio3 {
-> +	gpio-line-names =
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "[USB_OTG_VBUS]", "",
-> +		"UART3_TXD", "UART3_RXD", "", "", "[EIM_D28]", "", "", "";
-> +};
-> +
-> +&gpio4 {
-> +	gpio-line-names =
-> +		"", "", "", "", "", "", "UART4_TXD", "UART4_RXD",
-> +		"UART5_TXD", "UART5_RXD", "", "", "", "", "", "",
-> +		"GPIO4_16", "GPIO4_17", "GPIO4_18", "GPIO4_19", "",
-> +			"CSPI3_CLK", "CSPI3_MOSI", "CSPI3_MISO",
-> +		"CSPI3_CS0", "CSPI3_CS1", "GPIO4_26", "GPIO4_27",
-> +			"CSPI3_RDY", "PWM1", "PWM2", "GPIO4_31";
-> +};
-> +
-> +&gpio5 {
-> +	gpio-line-names =
-> +		"", "", "[EIM_A25]", "", "", "GPIO5_05", "GPIO5_06",
-> +			"GPIO5_07",
-> +		"GPIO5_08", "CSPI2_CS1", "CSPI2_MOSI", "CSPI2_MISO",
-> +			"CSPI2_CS0", "CSPI2_CLK", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "";
-> +};
-> +
-> +&gpio6 {
-> +	gpio-line-names =
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "";
-> +};
-> +
-> +&gpio7 {
-> +	gpio-line-names =
-> +		"[SD3_CD]", "[SD3_WP]", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "",
-> +		"", "", "", "", "", "", "", "";
-> +};
-> +
->  &audmux {
 
-Please keep the new added nodes sorted alphabetically in label name.
+We generally suggest to put iomuxc node at the bottom of the file, as it
+usually contains a lot of pinctrl data which might hurt the readability
+of the file.  You iomuxc doesn't have that much data, so it could be
+added in alphabetic order.
+
+>  &ecspi5 {
+>  	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
+>  	pinctrl-names = "default";
+> @@ -111,6 +134,11 @@
+>  };
+>  
+>  &i2c1 {
+> +	pinctrl-names = "default", "gpio";
+> +	pinctrl-1 = <&pinctrl_i2c1_gpio>;
+> +	sda-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
+> +	scl-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
+> +
+>  	pca9547: mux@70 {
+>  		compatible = "nxp,pca9547";
+>  		reg = <0x70>;
+> @@ -261,6 +289,20 @@
+>  	};
+>  };
+>  
+> +&i2c2 {
+> +	pinctrl-names = "default", "gpio";
+> +	pinctrl-1 = <&pinctrl_i2c2_gpio>;
+> +	sda-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
+> +	scl-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
+> +};
+> +
+> +&i2c3 {
+> +	pinctrl-names = "default", "gpio";
+> +	pinctrl-1 = <&pinctrl_i2c3_gpio>;
+> +	sda-gpios = <&gpio1 06 GPIO_ACTIVE_HIGH>;
+
+s/06/6
+
+> +	scl-gpios = <&gpio1 03 GPIO_ACTIVE_HIGH>;
+
+s/03/3
 
 Shawn
 
+> +};
+> +
+>  &usdhc4 {
 >  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_audmux>;
+>  	pinctrl-0 = <&pinctrl_usdhc4>;
 > -- 
-> 2.11.0
+> 1.8.3.1
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
