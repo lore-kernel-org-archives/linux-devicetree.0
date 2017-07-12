@@ -1,54 +1,114 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH 5/5] dt-bindings: display: fill Documents for series of vop
-Date: Wed, 12 Jul 2017 08:21:00 +0800
-Message-ID: <59656B6C.5020308@rock-chips.com>
-References: <1499776908-16811-1-git-send-email-mark.yao@rock-chips.com>
- <1499776958-17062-1-git-send-email-mark.yao@rock-chips.com>
- <7391489.lxuf2bMt0N@diego>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,1/3] hwmon: ltc2990: refactor value conversion
+Date: Tue, 11 Jul 2017 17:39:10 -0700
+Message-ID: <2e03c277-3c9f-1f12-8e55-10a0dab7a0a9@roeck-us.net>
+References: <1499056140-6064-1-git-send-email-tom.levens@cern.ch>
+ <20170708154515.GA6358@roeck-us.net>
+ <alpine.LRH.2.20.1707120000520.28469@lxplus091.cern.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <7391489.lxuf2bMt0N@diego>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <alpine.LRH.2.20.1707120000520.28469@lxplus091.cern.ch>
+Content-Language: en-US
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Tom Levens <tom.levens@cern.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Mike Looijmans <mike.looijmans@topic.nl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxN+W5tDA35pyIMTHml6UgMjA6NDUsIEhlaWtvIFN0w7xibmVyIHdyb3RlOgo+IEhpIE1h
-cmssCj4KPiBBbSBEaWVuc3RhZywgMTEuIEp1bGkgMjAxNywgMjA6NDI6MzggQ0VTVCBzY2hyaWVi
-IE1hcmsgWWFvOgo+PiBTaWduZWQtb2ZmLWJ5OiBNYXJrIFlhbyA8bWFyay55YW9Acm9jay1jaGlw
-cy5jb20+Cj4+IC0tLQo+PiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQgfCA0Cj4+ICsrKysgMSBmaWxlIGNoYW5nZWQs
-IDQgaW5zZXJ0aW9ucygrKQo+Pgo+PiBkaWZmIC0tZ2l0Cj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4dAo+PiBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlw
-LXZvcC50eHQgaW5kZXgKPj4gOWViM2YwYS4uMTFmYTNiMCAxMDA2NDQKPj4gLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9w
-LnR4dAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-b2NrY2hpcC9yb2NrY2hpcC12b3AudHh0Cj4+IEBAIC04LDggKzgsMTIgQEAgUmVxdWlyZWQgcHJv
-cGVydGllczoKPj4gICAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSBvbmUgb2YgdGhlIGZv
-bGxvd2luZwo+PiAgIAkJInJvY2tjaGlwLHJrMzAzNi12b3AiOwo+PiAgIAkJInJvY2tjaGlwLHJr
-MzI4OC12b3AiOwo+PiArCQkicm9ja2NoaXAscmszMzY4LXZvcCI7Cj4+ICsJCSJyb2NrY2hpcCxy
-azMzNjYtdm9wIjsKPj4gICAJCSJyb2NrY2hpcCxyazMzOTktdm9wLWJpZyI7Cj4+ICAgCQkicm9j
-a2NoaXAscmszMzk5LXZvcC1saXQiOwo+PiArCQkicm9ja2NoaXAscmszMjJ4LXZvcCI7Cj4gcGxl
-YXNlIGRvbid0IHVzZSB3aWxkY2FyZHMgaW4gZGV2aWNldHJlZSBjb21wYXRpYmxlcy4gV2UndmUg
-c29tZWhvdwo+IHN0YW5kYXJkaXplZCBvbiB1c2luZyByazMyMjggZm9yIGJvdGggdGhlIHJrMzIy
-OCBhbmQgcmszMjI5ICh3aGljaCBhcmUKPiBuZWFybHkgdGhlIHNhbWUgc29jIHdpdGggc29tZSBz
-cGVlZCBhZGp1c3RtZW50cykKPgo+IFNvLAo+ICsJCSJyb2NrY2hpcCxyazMyMjgtdm9wIjsKPiBw
-bGVhc2UKPgo+Cj4gVGhhbmtzCj4gSGVpa28KCkdvdCBpdCwgSSB3aWxsIGZpeCBpdCBhdCBuZXh0
-IHZlcnNpb24KClRoYW5rcwpNYXJrCgo+Cj4+ICsJCSJyb2NrY2hpcCxyazMzMjgtdm9wIjsKPj4K
-Pj4gICAtIGludGVycnVwdHM6IHNob3VsZCBjb250YWluIGEgbGlzdCBvZiBhbGwgVk9QIElQIGJs
-b2NrIGludGVycnVwdHMgaW4gdGhlCj4+ICAgCQkgb3JkZXI6IFZTWU5DLCBMQ0RfU1lTVEVNLiBU
-aGUgaW50ZXJydXB0IHNwZWNpZmllcgo+Cj4KPgo+CgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 07/11/2017 03:03 PM, Tom Levens wrote:
+> 
+> 
+> On Sat, 8 Jul 2017, Guenter Roeck wrote:
+> 
+>> On Mon, Jul 03, 2017 at 06:28:58AM +0200, Tom Levens wrote:
+>>> Conversion from raw values to signed integers has been refactored using
+>>> bitops.h. This also fixes a bug where negative temperatures were
+>>> converted incorrectly.
+>>>
+>>
+>> Documentation/process/submitting-patches.rst, chapter 2: "Solve only one
+>> problem per patch.".
+>>
+>> I can understand the urge to merge two sets of changes here. However,
+>> that creates a problem for me: The fix should be applied to stable kernels,
+>> but not the refactoring.
+>>
+>> Please split the patch in two, one for the bug fix and one for the
+>> refactoring.
+> 
+> In reality the refactoring *is* the fix for this bug. I am not sure how to to fix it simply without using the bitops macro. Of course, I could fix only the temperature conversion in one patch and refactor the other two in a separate one if you prefer?
+> 
+
+If so, the subject and description are reversed. The subject should then be
+something like "Fix incorrect conversion of negative temperatures",
+and the description should explain that this is accomplished by using
+existing API functions (then you can add "while at it, refactor voltage
+conversions as well").
+
+Thanks,
+Guenter
+
+> Cheers,
+> 
+>> Thanks,
+>> Guenter
+>>
+>>> Signed-off-by: Tom Levens <tom.levens@cern.ch>
+>>> ---
+>>>  drivers/hwmon/ltc2990.c | 18 ++++--------------
+>>>  1 file changed, 4 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/hwmon/ltc2990.c b/drivers/hwmon/ltc2990.c
+>>> index 8f8fe05..e320d21 100644
+>>> --- a/drivers/hwmon/ltc2990.c
+>>> +++ b/drivers/hwmon/ltc2990.c
+>>> @@ -11,6 +11,7 @@
+>>>   * the chip's internal temperature and Vcc power supply voltage.
+>>>   */
+>>>
+>>> +#include <linux/bitops.h>
+>>>  #include <linux/err.h>
+>>>  #include <linux/hwmon.h>
+>>>  #include <linux/hwmon-sysfs.h>
+>>> @@ -34,15 +35,6 @@
+>>>  #define LTC2990_CONTROL_MODE_CURRENT    0x06
+>>>  #define LTC2990_CONTROL_MODE_VOLTAGE    0x07
+>>>
+>>> -/* convert raw register value to sign-extended integer in 16-bit range */
+>>> -static int ltc2990_voltage_to_int(int raw)
+>>> -{
+>>> -    if (raw & BIT(14))
+>>> -        return -(0x4000 - (raw & 0x3FFF)) << 2;
+>>> -    else
+>>> -        return (raw & 0x3FFF) << 2;
+>>> -}
+>>> -
+>>>  /* Return the converted value from the given register in uV or mC */
+>>>  static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>>>  {
+>>> @@ -55,18 +47,16 @@ static int ltc2990_get_value(struct i2c_client *i2c, u8 reg, int *result)
+>>>      switch (reg) {
+>>>      case LTC2990_TINT_MSB:
+>>>          /* internal temp, 0.0625 degrees/LSB, 13-bit  */
+>>> -        val = (val & 0x1FFF) << 3;
+>>> -        *result = (val * 1000) >> 7;
+>>> +        *result = sign_extend32(val, 12) * 1000 / 16;
+>>>          break;
+>>>      case LTC2990_V1_MSB:
+>>>      case LTC2990_V3_MSB:
+>>>           /* Vx-Vy, 19.42uV/LSB. Depends on mode. */
+>>> -        *result = ltc2990_voltage_to_int(val) * 1942 / (4 * 100);
+>>> +        *result = sign_extend32(val, 14) * 1942 / 100;
+>>>          break;
+>>>      case LTC2990_VCC_MSB:
+>>>          /* Vcc, 305.18μV/LSB, 2.5V offset */
+>>> -        *result = (ltc2990_voltage_to_int(val) * 30518 /
+>>> -               (4 * 100 * 1000)) + 2500;
+>>> +        *result = sign_extend32(val, 14) * 30518 / (100 * 1000) + 2500;
+>>>          break;
+>>>      default:
+>>>          return -EINVAL; /* won't happen, keep compiler happy */
+>>
+>>
+
