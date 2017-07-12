@@ -1,40 +1,91 @@
 From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH 2/5] arm64: dts: rockchip: add pd_edp node for rk3399
-Date: Thu, 13 Jul 2017 00:03:52 +0800
-Message-ID: <1499875435-23944-3-git-send-email-jacob-chen@iotwrt.com>
+Subject: [PATCH 4/5] arm64: dts: rockchip: add rk3399 mipi nodes
+Date: Thu, 13 Jul 2017 00:03:54 +0800
+Message-ID: <1499875435-23944-5-git-send-email-jacob-chen@iotwrt.com>
 References: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, kever.yang@rock-chips.com, mark.yao@rock-chips.com, wxt@rock-chips.com, Jacob Chen <jacob-chen@iotwrt.com>, Elaine Zhang <zhangqing@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, kever.yang@rock-chips.com, mark.yao@rock-chips.com, wxt@rock-chips.com, Jacob Chen <jacob-chen@iotwrt.com>
 List-Id: devicetree@vger.kernel.org
 
-1. add pd node for RK3399 Soc
-2. create power domain tree
-3. add qos node for domain
+Add an mipi node, and also add mipi endpoints to vopb and vopl
+output port nodes.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 44 ++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 300e500..b88bd02 100644
+index b4ff50a..4965163 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -956,6 +956,10 @@
+@@ -1475,6 +1475,11 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
++			vopl_out_mipi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&mipi_in_vopl>;
++			};
++
+ 			vopl_out_edp: endpoint@1 {
+ 				reg = <1>;
+ 				remote-endpoint = <&edp_in_vopl>;
+@@ -1516,6 +1521,11 @@
+ 				remote-endpoint = <&edp_in_vopb>;
  			};
  
- 			/* These power domains are grouped by VD_LOGIC */
-+			pd_edp@RK3399_PD_EDP {
-+				reg = <RK3399_PD_EDP>;
-+				clocks = <&cru PCLK_EDP_CTRL>;
++			vopb_out_mipi: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&mipi_in_vopb>;
 +			};
- 			pd_emmc@RK3399_PD_EMMC {
- 				reg = <RK3399_PD_EMMC>;
- 				clocks = <&cru ACLK_EMMC>;
++
+ 		};
+ 	};
+ 
+@@ -1531,6 +1541,40 @@
+ 		status = "disabled";
+ 	};
+ 
++	mipi_dsi: mipi@ff960000 {
++		compatible = "rockchip,rk3399-mipi-dsi", "snps,dw-mipi-dsi";
++		reg = <0x0 0xff960000 0x0 0x8000>;
++		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru SCLK_MIPIDPHY_REF>, <&cru PCLK_MIPI_DSI0>,
++			 <&cru SCLK_DPHY_TX0_CFG>;
++		clock-names = "ref", "pclk", "phy_cfg";
++		power-domains = <&power RK3399_PD_VIO>;
++		rockchip,grf = <&grf>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		status = "disabled";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			mipi_in: port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				mipi_in_vopb: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vopb_out_mipi>;
++				};
++				mipi_in_vopl: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vopl_out_mipi>;
++				};
++			};
++		};
++	};
++
+ 	edp: edp@ff970000 {
+ 		compatible = "rockchip,rk3399-edp";
+ 		reg = <0x0 0xff970000 0x0 0x8000>;
 -- 
 2.7.4
