@@ -1,37 +1,34 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V3 7/8] clk: vc5: Add bindings for IDT VersaClock
- 5P49V6901
-Date: Wed, 12 Jul 2017 16:10:32 -0700
-Message-ID: <20170712231032.GM22780@codeaurora.org>
-References: <20170709132814.2339-1-marek.vasut+renesas@gmail.com>
- <20170709132814.2339-7-marek.vasut+renesas@gmail.com>
+Subject: Re: [PATCH v3 01/18] clk: ingenic: Use const pointer to clk_ops in
+ struct
+Date: Wed, 12 Jul 2017 16:20:37 -0700
+Message-ID: <20170712232037.GR22780@codeaurora.org>
+References: <20170607200439.24450-2-paul@crapouillou.net>
+ <20170702163016.6714-1-paul@crapouillou.net>
+ <20170702163016.6714-2-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170709132814.2339-7-marek.vasut+renesas@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-clk@vger.kernel.org, Marek Vasut <marek.vasut+renesas@gmail.com>, Alexey Firago <alexey_firago@mentor.com>, Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170702163016.6714-2-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09, Marek Vasut wrote:
-> IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
-> Input clock source can be taken from either external crystal or from
-> external reference clock.
+On 07/02, Paul Cercueil wrote:
+> The CGU common code does not modify the pointed clk_ops structure, so it
+> should be marked as const.
 > 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Alexey Firago <alexey_firago@mentor.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > ---
 
-Applied to clk-next
+Sorry I forgot, did you want an ack for these clk patches or for
+me to take them through clk tree. If it's the ack case,
+
+Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+
+for patches 1 through 6.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
