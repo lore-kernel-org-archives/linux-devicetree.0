@@ -1,214 +1,55 @@
-From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] [media] ov9650: add device tree support
-Date: Wed, 12 Jul 2017 21:33:06 +0200
-Message-ID: <a1ba8a73-ac6e-4f5d-1f41-6aefb0f5018f@kernel.org>
+From: Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
+Date: Wed, 12 Jul 2017 22:01:59 +0200
+Message-ID: <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
 References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <1499073368-31905-4-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499073368-31905-4-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hugues Fruchet <hugues.fruchet@st.com>
+Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Hugues,
+
 On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
-> Allows use of device tree configuration data.
-> If no device tree data is there, configuration is taken from platform data.
-> In order to keep GPIOs configuration compatible between both way of doing,
-> GPIOs are switched to descriptor-based interface.
+> This patchset enables OV9655 camera support.
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> ---
->   drivers/media/i2c/Kconfig  |  2 +-
->   drivers/media/i2c/ov9650.c | 77 ++++++++++++++++++++++++++++++++++------------
->   2 files changed, 59 insertions(+), 20 deletions(-)
+> OV9655 support has been tested using STM32F4DIS-CAM extension board
+> plugged on connector P1 of STM32F746G-DISCO board.
+> Due to lack of OV9650/52 hardware support, the modified related code
+> could not have been checked for non-regression.
 > 
-> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-> index 121b3b5..168115c 100644
-> --- a/drivers/media/i2c/Kconfig
-> +++ b/drivers/media/i2c/Kconfig
-> @@ -615,7 +615,7 @@ config VIDEO_OV7670
->   
->   config VIDEO_OV9650
->   	tristate "OmniVision OV9650/OV9652 sensor support"
-> -	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> +	depends on GPIOLIB && I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
->   	---help---
->   	  This is a V4L2 sensor-level driver for the Omnivision
->   	  OV9650 and OV9652 camera sensors.
-> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-> index 1e4e99e..7e9a902 100644
-> --- a/drivers/media/i2c/ov9650.c
-> +++ b/drivers/media/i2c/ov9650.c
-> @@ -11,12 +11,14 @@
->    * it under the terms of the GNU General Public License version 2 as
->    * published by the Free Software Foundation.
->    */
-> +#include <linux/clk.h>
->   #include <linux/delay.h>
->   #include <linux/gpio.h>
->   #include <linux/i2c.h>
->   #include <linux/kernel.h>
->   #include <linux/media.h>
->   #include <linux/module.h>
-> +#include <linux/of_gpio.h>
->   #include <linux/ratelimit.h>
->   #include <linux/slab.h>
->   #include <linux/string.h>
-> @@ -249,9 +251,10 @@ struct ov965x {
->   	struct v4l2_subdev sd;
->   	struct media_pad pad;
->   	enum v4l2_mbus_type bus_type;
-> -	int gpios[NUM_GPIOS];
-> +	struct gpio_desc *gpios[NUM_GPIOS];
->   	/* External master clock frequency */
->   	unsigned long mclk_frequency;
-> +	struct clk *clk;
->   
->   	/* Protects the struct fields below */
->   	struct mutex lock;
-> @@ -511,10 +514,10 @@ static int ov965x_set_color_matrix(struct ov965x *ov965x)
->   	return 0;
->   }
->   
-> -static void ov965x_gpio_set(int gpio, int val)
-> +static void ov965x_gpio_set(struct gpio_desc *gpio, int val)
->   {
-> -	if (gpio_is_valid(gpio))
-> -		gpio_set_value(gpio, val);
-> +	if (gpio)
-> +		gpiod_set_value_cansleep(gpio, val);
->   }
->   
->   static void __ov965x_set_power(struct ov965x *ov965x, int on)
-> @@ -1406,24 +1409,28 @@ static int ov965x_configure_gpios(struct ov965x *ov965x,
->   				  const struct ov9650_platform_data *pdata)
->   {
->   	int ret, i;
-> +	int gpios[NUM_GPIOS];
->   
-> -	ov965x->gpios[GPIO_PWDN] = pdata->gpio_pwdn;
-> -	ov965x->gpios[GPIO_RST]  = pdata->gpio_reset;
-> +	gpios[GPIO_PWDN] = pdata->gpio_pwdn;
-> +	gpios[GPIO_RST]  = pdata->gpio_reset;
->   
-> -	for (i = 0; i < ARRAY_SIZE(ov965x->gpios); i++) {
-> -		int gpio = ov965x->gpios[i];
-> +	for (i = 0; i < ARRAY_SIZE(gpios); i++) {
-> +		int gpio = gpios[i];
->   
->   		if (!gpio_is_valid(gpio))
->   			continue;
->   		ret = devm_gpio_request_one(&ov965x->client->dev, gpio,
-> -					    GPIOF_OUT_INIT_HIGH, "OV965X");
-> -		if (ret < 0)
-> +					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
-> +		if (ret < 0) {
-> +			dev_err(&ov965x->client->dev,
-> +				"Failed to request gpio%d (%d)\n", gpio, ret);
->   			return ret;
-> +		}
->   		v4l2_dbg(1, debug, &ov965x->sd, "set gpio %d to 1\n", gpio);
->   
->   		gpio_set_value(gpio, 1);
->   		gpio_export(gpio, 0);
-> -		ov965x->gpios[i] = gpio;
-> +		ov965x->gpios[i] = gpio_to_desc(gpio);
->   	}
->   
->   	return 0;
-> @@ -1469,14 +1476,10 @@ static int ov965x_probe(struct i2c_client *client,
->   	struct v4l2_subdev *sd;
->   	struct ov965x *ov965x;
->   	int ret;
-> +	struct device_node *np = client->dev.of_node;
->   
-> -	if (pdata == NULL) {
-> -		dev_err(&client->dev, "platform data not specified\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	if (pdata->mclk_frequency == 0) {
-> -		dev_err(&client->dev, "MCLK frequency not specified\n");
-> +	if (!pdata && !np) {
-> +		dev_err(&client->dev, "Platform data or device tree data must be provided\n");
->   		return -EINVAL;
->   	}
->   
-> @@ -1486,7 +1489,35 @@ static int ov965x_probe(struct i2c_client *client,
->   
->   	mutex_init(&ov965x->lock);
->   	ov965x->client = client;
-> -	ov965x->mclk_frequency = pdata->mclk_frequency;
-> +	mutex_init(&ov965x->lock);
+> First patches upgrade current support of OV9650/52 to prepare then
+> introduction of OV9655 variant patch.
+> Because of OV9655 register set slightly different from OV9650/9652,
+> not all of the driver features are supported (controls). Supported
+> resolutions are limited to VGA, QVGA, QQVGA.
+> Supported format is limited to RGB565.
+> Controls are limited to color bar test pattern for test purpose.
 
-Are you initializing the mutex twice?
+I appreciate your efforts towards making a common driver but IMO it would be 
+better to create a separate driver for the OV9655 sensor.  The original driver 
+is 1576 lines of code, your patch set adds half of that (816).  There are
+significant differences in the feature set of both sensors, there are 
+differences in the register layout.  I would go for a separate driver, we  
+would then have code easier to follow and wouldn't need to worry about possible
+regressions.  I'm afraid I have lost the camera module and won't be able 
+to test the patch set against regressions.
 
-> +	if (np) {
-> +		/* Device tree */
-> +		ov965x->gpios[GPIO_RST] =
-> +			devm_gpiod_get_optional(&client->dev, "resetb",
-> +						GPIOD_OUT_LOW);
-> +		ov965x->gpios[GPIO_PWDN] =
-> +			devm_gpiod_get_optional(&client->dev, "pwdn",
-> +						GPIOD_OUT_HIGH);
-> +
-> +		ov965x->clk = devm_clk_get(&client->dev, NULL);
-> +		if (IS_ERR(ov965x->clk)) {
-> +			dev_err(&client->dev, "Could not get clock\n");
-> +			return PTR_ERR(ov965x->clk);
-> +		}
-> +		ov965x->mclk_frequency = clk_get_rate(ov965x->clk);
-> +	} else {
-> +		/* Platform data */
-> +		ret = ov965x_configure_gpios(ov965x, pdata);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (pdata->mclk_frequency == 0) {
-> +			dev_err(&client->dev, "MCLK frequency is mandatory\n");
+IMHO from maintenance POV it's better to make a separate driver. In the end 
+of the day we wouldn't be adding much more code than it is being done now.
 
-I think the original message ("MCLK frequency not specified\n") was more
-helpful.
-
-Why you don't need this check in DT case? The clock is defined as mandatory 
-in the DT binding.
-
-> +			return -EINVAL;
-> +		}
-> +		ov965x->mclk_frequency = pdata->mclk_frequency;
-> +	}
->   
->   	sd = &ov965x->sd;
->   	v4l2_i2c_subdev_init(sd, client, &ov965x_subdev_ops);
-> @@ -1551,9 +1582,17 @@ static int ov965x_remove(struct i2c_client *client)
->   };
->   MODULE_DEVICE_TABLE(i2c, ov965x_id);
->   
-> +static const struct of_device_id ov965x_of_match[] = {
-> +	{ .compatible = "ovti,ov9650", },
-> +	{ .compatible = "ovti,ov9652", },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, ov965x_of_match);
-> +
->   static struct i2c_driver ov965x_i2c_driver = {
->   	.driver = {
->   		.name	= DRIVER_NAME,
-> +		.of_match_table = of_match_ptr(ov965x_of_match),
-
-You don't need of_match_ptr() as ov965x_of_match table is always built in.
-
->   	},
-
-Otherwise looks good.
+>   .../devicetree/bindings/media/i2c/ov965x.txt       |  45 ++
+>   drivers/media/i2c/Kconfig                          |   6 +-
+>   drivers/media/i2c/ov9650.c                         | 816 +++++++++++++++++----
+>   3 files changed, 736 insertions(+), 131 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
