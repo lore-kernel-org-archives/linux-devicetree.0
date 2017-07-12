@@ -1,47 +1,27 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] of: remove unused pci_space variable from address.c
-Date: Wed, 12 Jul 2017 17:59:06 +0800
-Message-ID: <1499853546-82626-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Chris Paterson <chris.paterson2@renesas.com>
+Subject: [PATCH 0/3] Add MMCIF0 support for r8a7743/iwg20m
+Date: Wed, 12 Jul 2017 11:03:22 +0100
+Message-ID: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>
+Cc: Biju Das <biju.das@bp.renesas.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <chris.paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-It was never used and could be removed, otherwise
-we could see a warning:
+This series adds MMCIF0 support for the r8a7743 SoC and the iWave-RZG1M-20M
+Qseven SOM.
 
-drivers/of/address.c: In function 'of_pci_range_parser_one':
-drivers/of/address.c:277:14: warning: variable 'pci_space' set but not
-used [-Wunused-but-set-variable]
+This series is based on renesas-devel-20170711-v4.12.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+Chris Paterson (3):
+  dt-bindings: mmc: sh_mmcif: Document r8a7743 DT bindings
+  ARM: dts: r8a7743: Add MMCIF0 support
+  ARM: dts: iwg20m: Add MMCIF0 support
 
- drivers/of/address.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ .../devicetree/bindings/mmc/renesas,mmcif.txt      |  3 ++-
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi              | 26 ++++++++++++++++++++++
+ arch/arm/boot/dts/r8a7743.dtsi                     | 16 +++++++++++++
+ 3 files changed, 44 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 580bbf6..395eedb 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -274,10 +274,9 @@ struct of_pci_range *of_pci_range_parser_one(struct of_pci_range_parser *parser,
- 
- 	/* Now consume following elements while they are contiguous */
- 	while (parser->range + parser->np <= parser->end) {
--		u32 flags, pci_space;
-+		u32 flags;
- 		u64 pci_addr, cpu_addr, size;
- 
--		pci_space = be32_to_cpup(parser->range);
- 		flags = of_bus_pci_get_flags(parser->range);
- 		pci_addr = of_read_number(parser->range + 1, ns);
- 		cpu_addr = of_translate_address(parser->node,
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
