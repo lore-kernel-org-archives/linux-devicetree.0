@@ -1,40 +1,104 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 0/5] arm64: dts: add rk3399 display-related nodes
-Date: Thu, 13 Jul 2017 00:03:50 +0800
-Message-ID: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH 1/5] arm64: dts: rockchip: Add rk3399 vop and display-subsystem
+Date: Thu, 13 Jul 2017 00:03:51 +0800
+Message-ID: <1499875435-23944-2-git-send-email-jacob-chen@iotwrt.com>
+References: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, kever.yang@rock-chips.com, mark.yao@rock-chips.com, wxt@rock-chips.com, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This series patches add the display-related nodes for rk3399.
+Add devicetree nodes for rk3399 VOP (Video Output Processors), and the
+top level display-subsystem root node.
 
-Tested with kernel base on drm-misc and below patches.
-https://cgit.freedesktop.org/drm/drm-misc/
-"drm: bridge: synopsys/dw-hdmi: Provide default configuration function for HDMI 2.0 PHY"
-"iommu/rockchip: Enable Rockchip IOMMU on ARM64"
+Later patches add endpoints (eDP, HDMI, MIPI, etc) that attach to the
+VOPs' output ports.
 
-HDMI could work and have a display output.
-eDP could link with panel but i didn't get a display(Maybe something wrong in power things).
+Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 65 ++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-For convenience, i think we should have those nodes in kernel now.
-
-
-Jacob Chen (5):
-  arm64: dts: rockchip: Add rk3399 vop and display-subsystem
-  arm64: dts: rockchip: add pd_edp node for rk3399
-  arm64: dts: rockchip: add rk3399 edp nodes
-  arm64: dts: rockchip: add rk3399 mipi nodes
-  arm64: dts: rockchip: add rk3399 hdmi nodes
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 198 +++++++++++++++++++++++++++++++
- 1 file changed, 198 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index e795135..300e500 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -1455,6 +1455,71 @@
+ 		status = "disabled";
+ 	};
+ 
++	vopl: vop@ff8f0000 {
++		compatible = "rockchip,rk3399-vop-lit";
++		reg = <0x0 0xff8f0000 0x0 0x1ffc>, <0x0 0xff8f2000 0x0 0x400>;
++		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>, <&cru DCLK_VOP1_DIV>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop", "dclk_source";
++		resets = <&cru SRST_A_VOP1>, <&cru SRST_H_VOP1>, <&cru SRST_D_VOP1>;
++		reset-names = "axi", "ahb", "dclk";
++		power-domains = <&power RK3399_PD_VOPL>;
++		iommus = <&vopl_mmu>;
++		status = "disabled";
++
++		vopl_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	vopl_mmu: iommu@ff8f3f00 {
++		compatible = "rockchip,iommu";
++		reg = <0x0 0xff8f3f00 0x0 0x100>;
++		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "vopl_mmu";
++		clocks = <&cru ACLK_VOP1>, <&cru HCLK_VOP1>;
++		clock-names = "aclk", "hclk";
++		power-domains = <&power RK3399_PD_VOPL>;
++		#iommu-cells = <0>;
++		status = "disabled";
++	};
++
++	vopb: vop@ff900000 {
++		compatible = "rockchip,rk3399-vop-big";
++		reg = <0x0 0xff900000 0x0 0x1ffc>, <0x0 0xff902000 0x0 0x1000>;
++		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
++		clocks = <&cru ACLK_VOP0>, <&cru DCLK_VOP0>, <&cru HCLK_VOP0>, <&cru DCLK_VOP0_DIV>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop", "dclk_source";
++		resets = <&cru SRST_A_VOP0>, <&cru SRST_H_VOP0>, <&cru SRST_D_VOP0>;
++		reset-names = "axi", "ahb", "dclk";
++		power-domains = <&power RK3399_PD_VOPB>;
++		iommus = <&vopb_mmu>;
++		status = "disabled";
++
++		vopb_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	vopb_mmu: iommu@ff903f00 {
++		compatible = "rockchip,iommu";
++		reg = <0x0 0xff903f00 0x0 0x100>;
++		interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH 0>;
++		interrupt-names = "vopb_mmu";
++		clocks = <&cru ACLK_VOP0>, <&cru HCLK_VOP0>;
++		clock-names = "aclk", "hclk";
++		power-domains = <&power RK3399_PD_VOPB>;
++		#iommu-cells = <0>;
++		status = "disabled";
++	};
++
++	display-subsystem {
++		compatible = "rockchip,display-subsystem";
++		ports = <&vopl_out>, <&vopb_out>;
++	};
++
+ 	pinctrl: pinctrl {
+ 		compatible = "rockchip,rk3399-pinctrl";
+ 		rockchip,grf = <&grf>;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
