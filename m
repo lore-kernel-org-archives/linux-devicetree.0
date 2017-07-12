@@ -1,50 +1,157 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 3/4] arm64: dts: rockchip: enable the GPU for RK3399-GRU
-Date: Wed, 12 Jul 2017 14:29:29 +0800
-Message-ID: <1499840971-20392-4-git-send-email-wxt@rock-chips.com>
+From: Caesar Wang <wxt@rock-chips.com>
+Subject: [PATCH 4/4] arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
+Date: Wed, 12 Jul 2017 14:29:30 +0800
+Message-ID: <1499840971-20392-5-git-send-email-wxt@rock-chips.com>
 References: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1499840971-20392-1-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, William wu <wulf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Roger Chen <roger.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the gpu and adds the mali-supply power for RK3399-GRU
-devices.
+As RK3399 had used the Power allocator thermal governor by default,
+enabled this to manage thermals by dynamically allocating and limiting
+power to devices.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Also, this patch supported the dynamic-power-coefficient/sustainable_power
+and GPU's power model for needed parameters with thermal IPA.
+
+Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 62 +++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 33 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index 90259cf..d48e98b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -595,6 +595,11 @@
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 8c6438b..139f58c 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -147,7 +147,7 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKB>;
+-			dynamic-power-coefficient = <100>;
++			dynamic-power-coefficient = <436>;
+ 		};
  
-+&gpu {
-+	mali-supply = <&ppvar_gpu>;
-+	status = "okay";
-+};
+ 		cpu_b1: cpu@101 {
+@@ -156,7 +156,7 @@
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKB>;
+-			dynamic-power-coefficient = <100>;
++			dynamic-power-coefficient = <436>;
+ 		};
+ 	};
+ 
+@@ -690,24 +690,25 @@
+ 	};
+ 
+ 	thermal_zones: thermal-zones {
+-		cpu_thermal: cpu {
++		soc_thermal: soc-thermal {
+ 			polling-delay-passive = <100>;
+ 			polling-delay = <1000>;
++			sustainable-power = <1000>;
+ 
+ 			thermal-sensors = <&tsadc 0>;
+ 
+ 			trips {
+-				cpu_alert0: cpu_alert0 {
++				threshold: trip-point@0 {
+ 					temperature = <70000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+-				cpu_alert1: cpu_alert1 {
+-					temperature = <75000>;
++				target: trip-point@1 {
++					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+-				cpu_crit: cpu_crit {
++				soc_crit: soc-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -716,45 +717,31 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert0>;
++					trip = <&target>;
+ 					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <4096>;
+ 				};
+ 				map1 {
+-					trip = <&cpu_alert1>;
++					trip = <&target>;
+ 					cooling-device =
+-						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <1024>;
++				};
++				map2 {
++					trip = <&target>;
++					cooling-device =
++						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <4096>;
+ 				};
+ 			};
+ 		};
+ 
+-		gpu_thermal: gpu {
++		gpu_thermal: gpu-thermal {
+ 			polling-delay-passive = <100>;
+ 			polling-delay = <1000>;
+ 
+ 			thermal-sensors = <&tsadc 1>;
+-
+-			trips {
+-				gpu_alert0: gpu_alert0 {
+-					temperature = <75000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-				gpu_crit: gpu_crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&gpu_alert0>;
+-					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+ 		};
+ 	};
+ 
+@@ -1455,8 +1442,17 @@
+ 		interrupt-names = "GPU", "JOB", "MMU";
+ 		clocks = <&cru ACLK_GPU>;
+ 		clock-names = "clk_mali";
++		#cooling-cells = <2>;
+ 		power-domains = <&power RK3399_PD_GPU>;
+ 		status = "disabled";
 +
- ap_i2c_mic: &i2c1 {
- 	status = "okay";
++		gpu_power_model: power_model {
++			compatible = "arm,mali-simple-power-model";
++			static-coefficient = <1079403>;
++			dynamic-coefficient = <977>;
++			ts = <32000 4700 (-80) 2>;
++			thermal-zone = "gpu-thermal";
++		};
+ 	};
  
+ 	pinctrl: pinctrl {
 -- 
 2.7.4
