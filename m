@@ -1,55 +1,70 @@
-From: Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
-Date: Wed, 12 Jul 2017 22:01:59 +0200
-Message-ID: <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v6] media: platform: Renesas IMR driver
+Date: Wed, 12 Jul 2017 23:26:58 +0300
+Message-ID: <c7126515-23de-8dd8-95cb-85141e855243@cogentembedded.com>
+References: <20170623203456.503714406@cogentembedded.com>
+ <589c2ca4-d1e7-86c3-1ef5-8831a54856ed@xs4all.nl>
+ <45854c21-f355-37e4-b677-dddb8222e719@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hugues Fruchet <hugues.fruchet@st.com>
-Cc: "H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <45854c21-f355-37e4-b677-dddb8222e719@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hugues,
+Hello!
 
-On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
-> This patchset enables OV9655 camera support.
-> 
-> OV9655 support has been tested using STM32F4DIS-CAM extension board
-> plugged on connector P1 of STM32F746G-DISCO board.
-> Due to lack of OV9650/52 hardware support, the modified related code
-> could not have been checked for non-regression.
-> 
-> First patches upgrade current support of OV9650/52 to prepare then
-> introduction of OV9655 variant patch.
-> Because of OV9655 register set slightly different from OV9650/9652,
-> not all of the driver features are supported (controls). Supported
-> resolutions are limited to VGA, QVGA, QQVGA.
-> Supported format is limited to RGB565.
-> Controls are limited to color bar test pattern for test purpose.
+On 07/06/2017 09:16 PM, Sergei Shtylyov wrote:
 
-I appreciate your efforts towards making a common driver but IMO it would be 
-better to create a separate driver for the OV9655 sensor.  The original driver 
-is 1576 lines of code, your patch set adds half of that (816).  There are
-significant differences in the feature set of both sensors, there are 
-differences in the register layout.  I would go for a separate driver, we  
-would then have code easier to follow and wouldn't need to worry about possible
-regressions.  I'm afraid I have lost the camera module and won't be able 
-to test the patch set against regressions.
+[...]
+>>> +=========================================
+>>> +
+>>> +This file documents some driver-specific aspects of the IMR driver, such as
+>>> +driver-specific ioctls.
+>>> +
+>>> +The ioctl reference
+>>> +~~~~~~~~~~~~~~~~~~~
+>>> +
+>>> +VIDIOC_IMR_MESH - Set mapping data
+>>> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>> +
+>>> +Argument: struct imr_map_desc
+>>> +
+>>> +**Description**:
+>>> +
+>>> +    This ioctl sets up the mesh using which the input frames will be
+>>
+>> s/using/through/
+>>
+>>> +    transformed into the output frames. The mesh can be strictly rectangular
+>>> +    (when IMR_MAP_MESH bit is set in imr_map_desc::type) or arbitrary (when
+>>> +    that bit is not set).
+>>> +
+>>> +    A rectangular mesh consists of the imr_mesh structure followed by M*N
+>>> +    vertex objects (where M is imr_mesh::rows and N is imr_mesh::columns).
+>>> +    In case either IMR_MAP_AUTOSG or IMR_MAP_AUTODG bits were set in
+>>> +    imr_map_desc::type, imr_mesh::{x|y}0 specify the coordinates of the top
+>>> +    left corner of the auto-generated mesh and imr_mesh::d{x|y} specify the
+>>> +    mesh's X/Y steps.
+>>
+>> What if any of the other types are used like IMR_MAP_LUCE?
+>
+>    IMR_MAP_LUCE only affects the vertex object.
+>
+>> Is this documented in a Renesas datasheet?
+>
+>    Yes.
 
-IMHO from maintenance POV it's better to make a separate driver. In the end 
-of the day we wouldn't be adding much more code than it is being done now.
+    Well, not exactly. The different mesh types are a software concept, the 
+hardware only understands series of triangles.
 
->   .../devicetree/bindings/media/i2c/ov965x.txt       |  45 ++
->   drivers/media/i2c/Kconfig                          |   6 +-
->   drivers/media/i2c/ov9650.c                         | 816 +++++++++++++++++----
->   3 files changed, 736 insertions(+), 131 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
+[...]
 
---
-Thanks,
-Sylwester
+>> Regards,
+>>
+>>     Hans
+
+MBR, Sergei
