@@ -1,34 +1,66 @@
-From: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: [PATCH v5 0/3] power: supply: ltc2941-battery-gauge: Support LTC2942
- and LTC2944
-Date: Wed, 12 Jul 2017 03:07:58 +0200
-Message-ID: <20170712010758.66jx54qbdjfyt6x6@lenoch>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: clock: ti-sci: Fix incorrect usage of
+ headers
+Date: Tue, 11 Jul 2017 18:09:23 -0700
+Message-ID: <20170712010923.GP22780@codeaurora.org>
+References: <20170711223615.29398-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170711223615.29398-1-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is the 5th version of patch.
-Changelog:
-- v2: reworked voltage computing to not overflow and keep precision
-- v3: update devicetree binding documentation
-- v4: add ltc2942 devicetree compatible
-- v5: reworked to incorporate Dragos' LTC2944 patch
- 
-LTC2942 is pin compatible with LTC2941 providing few more registers
-holding information about battery voltage and temperature. It can
-be runtime detected using bit A7 in the Status register.
+On 07/11, Suman Anna wrote:
+> The clock consumer usage description was erroneously referring to
+> couple of dt-binding headers that are no longer valid. The definition
+> and/or usage of these headers is incorrect and the only file present
+> at the moment, dt-bindings/soc/k2g.h is also being cleaned up. The
+> examples in this binding were updated properly, but the update to
+> description was missed out. So, fix this.
+> 
+> Fixes: 8f306cfe4383 ("Documentation: dt: Add TI SCI clock driver")
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> ---
+> Hi Stephen,
+> 
+> Looks like this was missed during the update/repost of the ti-sci-clk
+> driver/binding. FYI, Santosh is going to pickup the header file cleanup
+> patch https://patchwork.kernel.org/patch/9741279/ for the next merge
+> window.
 
-LTC2944 is compatible with LTC2943, but uses different
-voltage and current computing constants.
+I'll let Rob apply this as it is purely a binding document update.
 
-Comments welcome,
-	ladis
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> regards
+> Suman
+> 
+>  Documentation/devicetree/bindings/clock/ti,sci-clk.txt | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+> index 1e884c40ab50..4e59dc6b1778 100644
+> --- a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+> @@ -14,10 +14,9 @@ Required properties:
+>  - compatible: Must be "ti,k2g-sci-clk"
+>  - #clock-cells: Shall be 2.
+>    In clock consumers, this cell represents the device ID and clock ID
+> -  exposed by the PM firmware. The assignments can be found in the header
+> -  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+> -  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+> -  is the SoC involved, for example 'k2g'.
+> +  exposed by the PM firmware. The list of valid values for the device IDs
+> +  and clocks IDs for 66AK2G SoC are documented at
+> +  http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
+>  
+
+I hope the weblink doesn't die in the future. Why can't we copy
+it into the binding document here for safe keeping?
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
