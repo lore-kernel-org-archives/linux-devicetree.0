@@ -1,32 +1,76 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/3] ARM: dts: r8a7743: Add MMCIF0 support
-Date: Wed, 12 Jul 2017 13:21:20 +0200
-Message-ID: <CAMuHMdV9V56kU8PtZb3jHwQeocj2_uUDYN3D=g2ZxHGN0cSbhQ@mail.gmail.com>
-References: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com> <1499853805-5915-3-git-send-email-chris.paterson2@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499853805-5915-3-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <chris.paterson2@renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v2 1/1] device property: Introduce fwnode_call_bool_op() for ops that return bool
+Date: Wed, 12 Jul 2017 14:20:33 +0300
+Message-ID: <1499858433-17655-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 12, 2017 at 12:03 PM, Chris Paterson
-<chris.paterson2@renesas.com> wrote:
-> Add the MMCIF0 device to the r8a7743 device tree.
->
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+fwnode_call_int_op() isn't suitable for calling ops that return bool since
+it effectively causes the result returned to the user to be true when an
+op hasn't been defined or the fwnode is NULL. Address this by introducing
+fwnode_call_bool_op() for calling ops that return bool.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Fixes: 3708184afc77 ("device property: Move FW type specific functionality to FW specific files")
+Fixes: 2294b3af05e9 ("device property: Introduce fwnode_device_is_available()")
+Reported-by: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+since v1:
 
-Gr{oetje,eeting}s,
+- Added missing Reported-by: tag.
 
-                        Geert
+ drivers/base/property.c | 6 +++---
+ include/linux/fwnode.h  | 4 ++++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 692007e..edf02c1 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -253,10 +253,10 @@ bool fwnode_property_present(struct fwnode_handle *fwnode, const char *propname)
+ {
+ 	bool ret;
+ 
+-	ret = fwnode_call_int_op(fwnode, property_present, propname);
++	ret = fwnode_call_bool_op(fwnode, property_present, propname);
+ 	if (ret == false && !IS_ERR_OR_NULL(fwnode) &&
+ 	    !IS_ERR_OR_NULL(fwnode->secondary))
+-		ret = fwnode_call_int_op(fwnode->secondary, property_present,
++		ret = fwnode_call_bool_op(fwnode->secondary, property_present,
+ 					 propname);
+ 	return ret;
+ }
+@@ -1027,7 +1027,7 @@ EXPORT_SYMBOL_GPL(fwnode_handle_put);
+  */
+ bool fwnode_device_is_available(struct fwnode_handle *fwnode)
+ {
+-	return fwnode_call_int_op(fwnode, device_is_available);
++	return fwnode_call_bool_op(fwnode, device_is_available);
+ }
+ EXPORT_SYMBOL_GPL(fwnode_device_is_available);
+ 
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 9ab3754..50893a1 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -99,6 +99,10 @@ struct fwnode_operations {
+ 	(fwnode ? (fwnode_has_op(fwnode, op) ?				\
+ 		   (fwnode)->ops->op(fwnode, ## __VA_ARGS__) : -ENXIO) : \
+ 	 -EINVAL)
++#define fwnode_call_bool_op(fwnode, op, ...)				\
++	(fwnode ? (fwnode_has_op(fwnode, op) ?				\
++		   (fwnode)->ops->op(fwnode, ## __VA_ARGS__) : false) : \
++	 false)
+ #define fwnode_call_ptr_op(fwnode, op, ...)		\
+ 	(fwnode_has_op(fwnode, op) ?			\
+ 	 (fwnode)->ops->op(fwnode, ## __VA_ARGS__) : NULL)
+-- 
+2.7.4
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
