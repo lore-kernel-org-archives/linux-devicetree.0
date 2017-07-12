@@ -1,35 +1,28 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 01/18] clk: ingenic: Use const pointer to clk_ops in
- struct
-Date: Wed, 12 Jul 2017 16:20:37 -0700
-Message-ID: <20170712232037.GR22780@codeaurora.org>
-References: <20170607200439.24450-2-paul@crapouillou.net>
- <20170702163016.6714-1-paul@crapouillou.net>
- <20170702163016.6714-2-paul@crapouillou.net>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [RESEND PATCH v2 1/7] ARM: dts: rockchip: add cpu enable method for rk3228 SoC
+Date: Thu, 13 Jul 2017 01:34:10 +0200
+Message-ID: <48386264.sWdhVGKZz6@phil>
+References: <1498127402-6705-1-git-send-email-frank.wang@rock-chips.com> <1498127402-6705-2-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170702163016.6714-2-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1498127402-6705-2-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/02, Paul Cercueil wrote:
-> The CGU common code does not modify the pointed clk_ops structure, so it
-> should be marked as const.
+Am Donnerstag, 22. Juni 2017, 18:29:56 CEST schrieb Frank Wang:
+> This patch sets PSCI as the default cpu enable-method for RK3228 SoC.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
 
-Sorry I forgot, did you want an ack for these clk patches or for
-me to take them through clk tree. If it's the ack case,
+I've seen the work on OP-TEE mainlining for the psci implementation
+which seems to be progressing nicely and with the code in the open
+now, it's possible to replace the firmware if needed.
 
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+So I've applied this patch for 4.14.
 
-for patches 1 through 6.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Heiko
