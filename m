@@ -1,85 +1,60 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/7] pwm: rockchip: Add APB and function both clocks support
-Date: Wed, 12 Jul 2017 21:09:30 +0200
-Message-ID: <2474407.Xar3q3nCx6@diego>
-References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com> <CAD=FV=Vqkueo_cqU8bJXXT3pV5d1dZR5LF+c=O-Ka1qR-Ff-WQ@mail.gmail.com> <caba81f3-d066-d64e-7e8e-6457b759e757@rock-chips.com>
+From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/7] [media] ov9650: switch i2c device id to lower case
+Date: Wed, 12 Jul 2017 21:18:52 +0200
+Message-ID: <8b84296e-b3c7-f5d1-5e90-5890b1b0ed48@kernel.org>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+ <1499073368-31905-3-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <caba81f3-d066-d64e-7e8e-6457b759e757-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1499073368-31905-3-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pwm <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
+> Switch i2c device id to lower case as it is
 
-Am Mittwoch, 12. Juli 2017, 16:38:09 CEST schrieb David.Wu:
-> Hi Doug,
+s/i2c/I2C ?
+
+> done for other omnivision cameras.
+
+s/omnivision/Omnivision
+
+This is required for properly matching driver with device on DT platforms,
+right? It might be worth to mention that so it is clear why we break any
+non-dt platform that could be already using this driver. There seem to be 
+none in the mainline kernel tree though.
+
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+
+Reviewed-by: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> ---
+>   drivers/media/i2c/ov9650.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> 在 2017/7/12 1:03, Doug Anderson 写道:
-> > Hi,
-> > 
-> > On Fri, Jul 7, 2017 at 9:03 PM, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> >> @@ -6,7 +6,13 @@ Required properties:
-> >>      "rockchip,rk3288-pwm": found on RK3288 SoC
-> >>      "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
-> >>    
-> >>    - reg: physical base address and length of the controller's registers
-> >> 
-> >> - - clocks: phandle and clock specifier of the PWM reference clock
-> >> + - clocks: See ../clock/clock-bindings.txt
-> >> +   - For older hardware (rk2928, rk3066, rk3188, rk3228, rk3288,
-> >> rk3399):
-> >> +     - There is one clock that's used both to derive the functional
-> >> clock
-> >> +       for the device and as the bus clock.
-> >> +   - For newer hardware (rk3328 and future socs): specified by name
-> >> +     - "pwm": This is used to derive the functional clock.
-> >> +     - "pclk": This is the APB bus clock.
-> > 
-> > I'm pretty sure that that the above description doesn't quite match the
-> > code.
-> > 
-> > * The above description says that for old hardware there is one clock
-> > and 'clock-names' was not necessary (though as I understand it it's OK
-> > if it's there).
-> > 
-> > * The old code matched the old description.  AKA: if there was no
-> > "clock-names" then everything was OK.
-> > 
-> > * The new code will not work if there was no "clock-names".
-> > 
-> > Many of the old devices had a clock-names present (and it was "pwm"),
-> > but not all.  Specifically it looks like
-> > "arch/arm/boot/dts/rk3xxx.dtsi" doesn't specify a clock-names.
-> 
-> So we can keep code: the pc->clk = devm_clk_get(&pdev->dev, NULL);
-> If the name is NULL, we can get the first clk defined at DTB.
+> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+> index 2de2fbb..1e4e99e 100644
+> --- a/drivers/media/i2c/ov9650.c
+> +++ b/drivers/media/i2c/ov9650.c
+> @@ -1545,8 +1545,8 @@ static int ov965x_remove(struct i2c_client *client)
+>   }
+>   
+>   static const struct i2c_device_id ov965x_id[] = {
+> -	{ "OV9650", 0 },
+> -	{ "OV9652", 0 },
+> +	{ "ov9650", 0 },
+> +	{ "ov9652", 0 },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(i2c, ov965x_id);
+ 
 
-I don't think it will work that way.
-
-clk_get with NULL argument will likely grab the first clock of the list
-independent of clock-names being present.
-
-It might be better to do something like [pseudo-code]:
-
-pwm->pclk = clk_get( ..., "pclk");
-if (IS_ERR(pwm->pclk))
-	pwm->pclk = NULL;
-
-pwm->pwm_clk = clk_get(..., "pwm");
-if (IS_ERR(pwm->pwm_clk))
-	pwm->pwm_clk = clk_get(..., NULL);
-if (IS_ERR(pwm->pwm_clk))
-	return PTR_ERR(pwm->pwm_clk);
-
-That way, you make your way backwards through the pwm-binding-history.
-Ending at the single-clock without clock-names property as the last fallback.
-
-
-Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
