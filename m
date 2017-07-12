@@ -1,198 +1,85 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
-Date: Wed, 12 Jul 2017 20:44:51 +0200
-Message-ID: <1962948.PJPnbPYrr4@phil>
-References: <1499840971-20392-1-git-send-email-wxt@rock-chips.com> <1499840971-20392-5-git-send-email-wxt@rock-chips.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] pwm: rockchip: Add APB and function both clocks support
+Date: Wed, 12 Jul 2017 21:09:30 +0200
+Message-ID: <2474407.Xar3q3nCx6@diego>
+References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com> <CAD=FV=Vqkueo_cqU8bJXXT3pV5d1dZR5LF+c=O-Ka1qR-Ff-WQ@mail.gmail.com> <caba81f3-d066-d64e-7e8e-6457b759e757@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499840971-20392-5-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <caba81f3-d066-d64e-7e8e-6457b759e757-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?B?6buE5rab?= <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-pwm <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Caesar,
+Hi David,
 
-Am Mittwoch, 12. Juli 2017, 14:29:30 CEST schrieb Caesar Wang:
-> As RK3399 had used the Power allocator thermal governor by default,
-> enabled this to manage thermals by dynamically allocating and limiting
-> power to devices.
-
-Does this still run with other thermal governors? The devicetree describes
-the hardware, but should not mandate or exclude specific implementations.
-
-
-> Also, this patch supported the dynamic-power-coefficient/sustainable_power
-> and GPU's power model for needed parameters with thermal IPA.
-
-As written below, this doesn't look like a reviewed binding (otherwise
-please point me to the binding patch), but even if it is a real binding
-it should get its separate patch.
-
-
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Am Mittwoch, 12. Juli 2017, 16:38:09 CEST schrieb David.Wu:
+> Hi Doug,
 > 
-> ---
+> 在 2017/7/12 1:03, Doug Anderson 写道:
+> > Hi,
+> > 
+> > On Fri, Jul 7, 2017 at 9:03 PM, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> >> @@ -6,7 +6,13 @@ Required properties:
+> >>      "rockchip,rk3288-pwm": found on RK3288 SoC
+> >>      "rockchip,vop-pwm": found integrated in VOP on RK3288 SoC
+> >>    
+> >>    - reg: physical base address and length of the controller's registers
+> >> 
+> >> - - clocks: phandle and clock specifier of the PWM reference clock
+> >> + - clocks: See ../clock/clock-bindings.txt
+> >> +   - For older hardware (rk2928, rk3066, rk3188, rk3228, rk3288,
+> >> rk3399):
+> >> +     - There is one clock that's used both to derive the functional
+> >> clock
+> >> +       for the device and as the bus clock.
+> >> +   - For newer hardware (rk3328 and future socs): specified by name
+> >> +     - "pwm": This is used to derive the functional clock.
+> >> +     - "pclk": This is the APB bus clock.
+> > 
+> > I'm pretty sure that that the above description doesn't quite match the
+> > code.
+> > 
+> > * The above description says that for old hardware there is one clock
+> > and 'clock-names' was not necessary (though as I understand it it's OK
+> > if it's there).
+> > 
+> > * The old code matched the old description.  AKA: if there was no
+> > "clock-names" then everything was OK.
+> > 
+> > * The new code will not work if there was no "clock-names".
+> > 
+> > Many of the old devices had a clock-names present (and it was "pwm"),
+> > but not all.  Specifically it looks like
+> > "arch/arm/boot/dts/rk3xxx.dtsi" doesn't specify a clock-names.
 > 
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 62 +++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 33 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index 8c6438b..139f58c 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -147,7 +147,7 @@
->  			enable-method = "psci";
->  			#cooling-cells = <2>; /* min followed by max */
->  			clocks = <&cru ARMCLKB>;
-> -			dynamic-power-coefficient = <100>;
-> +			dynamic-power-coefficient = <436>;
->  		};
->  
->  		cpu_b1: cpu@101 {
-> @@ -156,7 +156,7 @@
->  			reg = <0x0 0x101>;
->  			enable-method = "psci";
->  			clocks = <&cru ARMCLKB>;
-> -			dynamic-power-coefficient = <100>;
-> +			dynamic-power-coefficient = <436>;
->  		};
->  	};
->  
-> @@ -690,24 +690,25 @@
->  	};
->  
->  	thermal_zones: thermal-zones {
-> -		cpu_thermal: cpu {
-> +		soc_thermal: soc-thermal {
->  			polling-delay-passive = <100>;
->  			polling-delay = <1000>;
-> +			sustainable-power = <1000>;
->  
->  			thermal-sensors = <&tsadc 0>;
->  
->  			trips {
-> -				cpu_alert0: cpu_alert0 {
-> +				threshold: trip-point@0 {
+> So we can keep code: the pc->clk = devm_clk_get(&pdev->dev, NULL);
+> If the name is NULL, we can get the first clk defined at DTB.
 
-foo@0 will produce warnings when used without reg property. Also,
-why all that renaming, the previous names sounded fine to me.
+I don't think it will work that way.
 
+clk_get with NULL argument will likely grab the first clock of the list
+independent of clock-names being present.
 
->  					temperature = <70000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
-> -				cpu_alert1: cpu_alert1 {
-> -					temperature = <75000>;
-> +				target: trip-point@1 {
-> +					temperature = <85000>;
+It might be better to do something like [pseudo-code]:
 
-When raising the target-temperature to 85 degrees I really
-do expect some sort of reassurement in the commit message
-why that is really safe - especially when the old limit was 10 degrees
-lower.
+pwm->pclk = clk_get( ..., "pclk");
+if (IS_ERR(pwm->pclk))
+	pwm->pclk = NULL;
 
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
-> -				cpu_crit: cpu_crit {
-> +				soc_crit: soc-crit {
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "critical";
-> @@ -716,45 +717,31 @@
->  
->  			cooling-maps {
->  				map0 {
-> -					trip = <&cpu_alert0>;
-> +					trip = <&target>;
->  					cooling-device =
-> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					contribution = <4096>;
->  				};
->  				map1 {
-> -					trip = <&cpu_alert1>;
-> +					trip = <&target>;
+pwm->pwm_clk = clk_get(..., "pwm");
+if (IS_ERR(pwm->pwm_clk))
+	pwm->pwm_clk = clk_get(..., NULL);
+if (IS_ERR(pwm->pwm_clk))
+	return PTR_ERR(pwm->pwm_clk);
 
-Is it correct to use the _same_ trip point all the time? ... what about
-the threshold and soc_crit ones?
-
->  					cooling-device =
-> -						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->  						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					contribution = <1024>;
-> +				};
-> +				map2 {
-> +					trip = <&target>;
-> +					cooling-device =
-> +						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +					contribution = <4096>;
->  				};
->  			};
->  		};
->  
-> -		gpu_thermal: gpu {
-> +		gpu_thermal: gpu-thermal {
->  			polling-delay-passive = <100>;
->  			polling-delay = <1000>;
->  
->  			thermal-sensors = <&tsadc 1>;
-> -
-> -			trips {
-> -				gpu_alert0: gpu_alert0 {
-> -					temperature = <75000>;
-> -					hysteresis = <2000>;
-> -					type = "passive";
-> -				};
-> -				gpu_crit: gpu_crit {
-> -					temperature = <95000>;
-> -					hysteresis = <2000>;
-> -					type = "critical";
-> -				};
-> -			};
-> -
-> -			cooling-maps {
-> -				map0 {
-> -					trip = <&gpu_alert0>;
-> -					cooling-device =
-> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> -				};
-> -			};
->  		};
->  	};
->  
-> @@ -1455,8 +1442,17 @@
->  		interrupt-names = "GPU", "JOB", "MMU";
->  		clocks = <&cru ACLK_GPU>;
->  		clock-names = "clk_mali";
-> +		#cooling-cells = <2>;
->  		power-domains = <&power RK3399_PD_GPU>;
->  		status = "disabled";
-> +
-> +		gpu_power_model: power_model {
-> +			compatible = "arm,mali-simple-power-model";
-
-Is this binding documented / reviewed somewhere? Because it looks
-quite suspcicious :-) .
+That way, you make your way backwards through the pwm-binding-history.
+Ending at the single-clock without clock-names property as the last fallback.
 
 
 Heiko
-
-> +			static-coefficient = <1079403>;
-> +			dynamic-coefficient = <977>;
-> +			ts = <32000 4700 (-80) 2>;
-> +			thermal-zone = "gpu-thermal";
-> +		};
->  	};
->  
->  	pinctrl: pinctrl {
-> 
-
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
