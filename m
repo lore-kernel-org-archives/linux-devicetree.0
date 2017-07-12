@@ -1,157 +1,99 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH 4/4] arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
-Date: Wed, 12 Jul 2017 14:29:30 +0800
-Message-ID: <1499840971-20392-5-git-send-email-wxt@rock-chips.com>
-References: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [RFC v2 5/6] drivers: boot_constraint: Add initial DT bindings
+Date: Wed, 12 Jul 2017 12:04:35 +0530
+Message-ID: <0610277aef9830cff53b7b53cf41cc54886fdc7f.1499770771.git.viresh.kumar@linaro.org>
+References: <cover.1499770771.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499840971-20392-1-git-send-email-wxt@rock-chips.com>
+In-Reply-To: <cover.1499770771.git.viresh.kumar@linaro.org>
+In-Reply-To: <cover.1499770771.git.viresh.kumar@linaro.org>
+References: <cover.1499770771.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, William wu <wulf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Roger Chen <roger.chen@rock-chips.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Shiraz Hashim <shashim@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As RK3399 had used the Power allocator thermal governor by default,
-enabled this to manage thermals by dynamically allocating and limiting
-power to devices.
+This adds device tree bindings for boot constraints. Only power supply
+constraint types are supported currently.
 
-Also, this patch supported the dynamic-power-coefficient/sustainable_power
-and GPU's power model for needed parameters with thermal IPA.
-
-Signed-off-by: Caesar Wang <wxt@rock-chips.com>
-
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
+ .../devicetree/bindings/boot-constraints.txt       | 68 ++++++++++++++++++++++
+ 1 file changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/boot-constraints.txt
 
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 62 +++++++++++++++-----------------
- 1 file changed, 29 insertions(+), 33 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 8c6438b..139f58c 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -147,7 +147,7 @@
- 			enable-method = "psci";
- 			#cooling-cells = <2>; /* min followed by max */
- 			clocks = <&cru ARMCLKB>;
--			dynamic-power-coefficient = <100>;
-+			dynamic-power-coefficient = <436>;
- 		};
- 
- 		cpu_b1: cpu@101 {
-@@ -156,7 +156,7 @@
- 			reg = <0x0 0x101>;
- 			enable-method = "psci";
- 			clocks = <&cru ARMCLKB>;
--			dynamic-power-coefficient = <100>;
-+			dynamic-power-coefficient = <436>;
- 		};
- 	};
- 
-@@ -690,24 +690,25 @@
- 	};
- 
- 	thermal_zones: thermal-zones {
--		cpu_thermal: cpu {
-+		soc_thermal: soc-thermal {
- 			polling-delay-passive = <100>;
- 			polling-delay = <1000>;
-+			sustainable-power = <1000>;
- 
- 			thermal-sensors = <&tsadc 0>;
- 
- 			trips {
--				cpu_alert0: cpu_alert0 {
-+				threshold: trip-point@0 {
- 					temperature = <70000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
--				cpu_alert1: cpu_alert1 {
--					temperature = <75000>;
-+				target: trip-point@1 {
-+					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
--				cpu_crit: cpu_crit {
-+				soc_crit: soc-crit {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -716,45 +717,31 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert0>;
-+					trip = <&target>;
- 					cooling-device =
--						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					contribution = <4096>;
- 				};
- 				map1 {
--					trip = <&cpu_alert1>;
-+					trip = <&target>;
- 					cooling-device =
--						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					contribution = <1024>;
-+				};
-+				map2 {
-+					trip = <&target>;
-+					cooling-device =
-+						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+					contribution = <4096>;
- 				};
- 			};
- 		};
- 
--		gpu_thermal: gpu {
-+		gpu_thermal: gpu-thermal {
- 			polling-delay-passive = <100>;
- 			polling-delay = <1000>;
- 
- 			thermal-sensors = <&tsadc 1>;
--
--			trips {
--				gpu_alert0: gpu_alert0 {
--					temperature = <75000>;
--					hysteresis = <2000>;
--					type = "passive";
--				};
--				gpu_crit: gpu_crit {
--					temperature = <95000>;
--					hysteresis = <2000>;
--					type = "critical";
--				};
--			};
--
--			cooling-maps {
--				map0 {
--					trip = <&gpu_alert0>;
--					cooling-device =
--						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
--				};
--			};
- 		};
- 	};
- 
-@@ -1455,8 +1442,17 @@
- 		interrupt-names = "GPU", "JOB", "MMU";
- 		clocks = <&cru ACLK_GPU>;
- 		clock-names = "clk_mali";
-+		#cooling-cells = <2>;
- 		power-domains = <&power RK3399_PD_GPU>;
- 		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/boot-constraints.txt b/Documentation/devicetree/bindings/boot-constraints.txt
+new file mode 100644
+index 000000000000..9a01ea1e6e72
+--- /dev/null
++++ b/Documentation/devicetree/bindings/boot-constraints.txt
+@@ -0,0 +1,68 @@
++BOOT CONSTRAINTS
++================
 +
-+		gpu_power_model: power_model {
-+			compatible = "arm,mali-simple-power-model";
-+			static-coefficient = <1079403>;
-+			dynamic-coefficient = <977>;
-+			ts = <32000 4700 (-80) 2>;
-+			thermal-zone = "gpu-thermal";
-+		};
- 	};
- 
- 	pinctrl: pinctrl {
++Some devices are powered ON by the bootloader before the bootloader handovers
++control to the Operating System (OS). It maybe important for those devices to
++keep working until the time the OS takes over and starts configuring the devices
++again.
++
++A typical example of that can be the LCD controller, which is used by the
++bootloaders to show image(s) while the platform is booting into the Operating
++System. The LCD controller can be using some resources, like clk, supplies, etc,
++that are shared between several devices. These shared resources should be
++configured to satisfy need of all the users. If another device's (X) driver gets
++probed before the LCD controller driver in this case, then it may end up
++reconfiguring these resources to ranges satisfying the current users (only
++device X) and that can make the LCD screen unstable.
++
++This document describes the binding used to specify such boot constraints to the
++OS.
++
++Power Supply Constraints:
++-------------------------
++
++This describes the binding of constraints for the power supply resources. These
++must be present directly in the consumer device's node.
++
++Required properties:
++- boot-constraint-supplies:
++
++  This contains an array of (one or more) strings, each of which must match with
++  the <name> of a corresponding <name>-supply property in the same device node.
++  This is required for the OS to know about the power supplies that are
++  configured (and enabled) by the bootloader for the consumer device.
++
++  It is assumed that the power supply is already enabled by the bootloader.
++
++- boot-constraint-uV:
++
++  This contains an array of {min max} microvolt tuples for the power supplies in
++  the same order in which they are present in "boot-constraint-supplies"
++  property. Here, min is the smallest and max is the largest voltage that the
++  consumer (corresponding to the device node where this property is present) may
++  set.
++
++Example of a consumer device node (mmc) referencing two regulators and setting
++their boot constraints (twl_reg1 and twl_reg2):
++
++	twl_reg1: regulator@0 {
++		...
++		...
++		...
++	};
++
++	twl_reg2: regulator@1 {
++		...
++		...
++		...
++	};
++
++	mmc: mmc@0x0 {
++		...
++		...
++		vmmc-supply = <&twl_reg1>;
++		vmmcaux-supply = <&twl_reg2>;
++		boot-constraint-supplies = "vmmc", "vmmcaux";
++		boot-constraint-uV = <1800000 2000000>, /* vmmc */
++				     <2000000 2000000>; /* vmmcaux */
++	};
 -- 
-2.7.4
+2.13.0.71.gd7076ec9c9cb
