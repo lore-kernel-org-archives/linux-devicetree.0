@@ -1,56 +1,47 @@
-From: Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] gpio/serial: revert "linux,first-pin" property handling
-Date: Wed, 12 Jul 2017 13:56:17 +0200
-Message-ID: <44be7013-b849-a784-90e9-5f4ba4ac07e7@siemens.com>
-References: <20170710140902.21935-1-linus.walleij@linaro.org>
- <db1ae5e9-dc03-403e-2f46-e05cbd4a7b4f@siemens.com>
- <5310fa81-dc0e-75b1-05fb-2ec9b558f867@siemens.com>
- <CACRpkdb9sOj5DgeCwD1FK5yCNUmMiC0JKXL4H7z0RfK1DfUH8g@mail.gmail.com>
- <6b28ae9a-9393-1c97-4ef2-aaf69ec6a522@siemens.com>
- <CACRpkdZAwXZn+dJ-XB6wEbVLLiOfhumdrXDx4K-bMFN-p3-PSA@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Wed, 12 Jul 2017 14:04:15 +0200
+Message-ID: <CACRpkdZg018Q7EE-LvsLqWDm3=P2_L58MxR3fcgcUtGaAXk45A@mail.gmail.com>
+References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496664241.git.baolin.wang@spreadtrum.com>
+ <CACRpkdbtuPKr=tWGoJC-sg2Oj47rYMpo6fs_Us=Nynew1Wkz=w@mail.gmail.com>
+ <20170612060718.GA8566@spreadtrum.com> <20170613031547.GA29679@spreadtrum.com>
+ <CACRpkdbaP1U3pefTbPj-wOa1AibcJHBBALfKWO8dBR=YW8f7zA@mail.gmail.com>
+ <CAMz4ku+jZ-S6sBL=ib++j+ooqweU9UC+MTgFca7ScrQiJDeZVQ@mail.gmail.com>
+ <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com> <CAMz4kuJigdhbV5+J1CcqP6zb7pqi9HaW=dxe_rsNi-=RsQ70vA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZAwXZn+dJ-XB6wEbVLLiOfhumdrXDx4K-bMFN-p3-PSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAMz4kuJigdhbV5+J1CcqP6zb7pqi9HaW=dxe_rsNi-=RsQ70vA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-12 13:39, Linus Walleij wrote:
-> On Wed, Jul 12, 2017 at 1:30 PM, Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org> wrote:
->> On 2017-07-12 11:30, Linus Walleij wrote:
-> 
->>> What you are talking about should be hardware-and-vendor specific
->>> info and prefixed "exar,*".
->>
->> "exar," or rather "gpio-exar,", like in [1]?
-> 
-> HW-specific DT bindings have this form: "vendor,foo".
-> 
-> So "exar,gpio-first-exported-pin" is some kind of overstating of the
-> fact, but correct.
+On Tue, Jun 27, 2017 at 9:59 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 26 June 2017 at 06:19, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-OK.
+>> I meant, as part of setting the "default" state or even the "init"
+>> state, we would inspect the "sleep" state, use those settings, and
+>> program them into the registers at this early point.
+>
+> I understood your points. But we can not program all into the
+> registers at one early point, sometimes these sleep-related configs
+> need depend on some conditions in users' drivers, like on condition 1:
+> driver need to set one pin as input-enable when specified system goes
+> into deep sleep, on condition 2: driver need set this pin as
+> output-enable when specified system goes into deep sleep. So I still
+> think it is better if we introduce some standard sleep related
+> configs.
 
-> 
-> The bindings (put with the rest of the exar DT bindings if there
-> are such somewhere in Documentation/devicetree/bindings/* else
-> in a new file) should make it very clear that this is a
-> hardware-specific thing telling us which hardware pin is the
-> first offset to be used for GPIO.
+So you mean you need special runtime states to set up sleep states?
 
-This binding will lack any compatible value, so I'm not yet sure how to
-name/document things properly. Is there a precedence for such a case?
-Well, I can add some gpio-exar.txt and just put those two properties in it.
+Do you have an example of how this would look in the device tree?
 
-Jan
+I am sorry but I have a hard time following the use case :(
 
--- 
-Siemens AG, Corporate Technology, CT RDA ITP SES-DE
-Corporate Competence Center Embedded Linux
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
