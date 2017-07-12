@@ -1,33 +1,80 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 5/6] ARM: dts: motorola-cpcap-mapphone: set initial mode for vaudio
-Date: Wed, 12 Jul 2017 17:18:45 +0200
-Message-ID: <20170712151846.24621-6-sebastian.reichel@collabora.co.uk>
-References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH] dt-bindings: clock: ti-sci: Fix incorrect usage of
+ headers
+Date: Wed, 12 Jul 2017 10:21:10 -0500
+Message-ID: <539129c3-8214-4e0d-0e97-7c6784a9b2b5@ti.com>
+References: <20170711223615.29398-1-s-anna@ti.com>
+ <20170712010923.GP22780@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170712010923.GP22780@codeaurora.org>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Set default mode for vaudio, which may be left in standby mode
-if the system is booted via kexec from Android.
+On 07/11/2017 08:09 PM, Stephen Boyd wrote:
+> On 07/11, Suman Anna wrote:
+>> The clock consumer usage description was erroneously referring to
+>> couple of dt-binding headers that are no longer valid. The definition
+>> and/or usage of these headers is incorrect and the only file present
+>> at the moment, dt-bindings/soc/k2g.h is also being cleaned up. The
+>> examples in this binding were updated properly, but the update to
+>> description was missed out. So, fix this.
+>>
+>> Fixes: 8f306cfe4383 ("Documentation: dt: Add TI SCI clock driver")
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> Hi Stephen,
+>>
+>> Looks like this was missed during the update/repost of the ti-sci-clk
+>> driver/binding. FYI, Santosh is going to pickup the header file cleanup
+>> patch https://patchwork.kernel.org/patch/9741279/ for the next merge
+>> window.
+> 
+> I'll let Rob apply this as it is purely a binding document update.
 
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
----
- arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+OK, thanks.
 
-diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-index 86033aee8a29..7c6d61fb5cf2 100644
---- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-+++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-@@ -261,5 +261,6 @@
- 		regulator-min-microvolt = <2775000>;
- 		regulator-max-microvolt = <2775000>;
- 		regulator-enable-ramp-delay = <1000>;
-+		regulator-initial-mode = <0x00>; /* NORMAL */
- 	};
- };
--- 
-2.13.2
+> 
+>>
+>> regards
+>> Suman
+>>
+>>  Documentation/devicetree/bindings/clock/ti,sci-clk.txt | 7 +++----
+>>  1 file changed, 3 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>> index 1e884c40ab50..4e59dc6b1778 100644
+>> --- a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>> +++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>> @@ -14,10 +14,9 @@ Required properties:
+>>  - compatible: Must be "ti,k2g-sci-clk"
+>>  - #clock-cells: Shall be 2.
+>>    In clock consumers, this cell represents the device ID and clock ID
+>> -  exposed by the PM firmware. The assignments can be found in the header
+>> -  files <dt-bindings/genpd/<soc>.h> (which covers the device IDs) and
+>> -  <dt-bindings/clock/<soc>.h> (which covers the clock IDs), where <soc>
+>> -  is the SoC involved, for example 'k2g'.
+>> +  exposed by the PM firmware. The list of valid values for the device IDs
+>> +  and clocks IDs for 66AK2G SoC are documented at
+>> +  http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
+>>  
+> 
+> I hope the weblink doesn't die in the future. Why can't we copy
+> it into the binding document here for safe keeping?
+
+Yeah, the weblink will be maintained, it explains our TI-SCI protocol
+information and we also have couple more references to it. I don't think
+the values themselves do not belong to any binding and they are specific
+to each SoC. We have initially added them to dt-bindings header files,
+but since those files are not really leveraged by any drivers and only
+provided macro usage in DTS files, they are being cleaned up. DT nodes
+will directly use the required values instead.
+
+regards
+Suman
+
