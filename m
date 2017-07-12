@@ -1,75 +1,202 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 5/6] drivers: boot_constraint: Add initial DT bindings
-Date: Wed, 12 Jul 2017 16:28:16 -0500
-Message-ID: <CAL_Jsq+oAB3gejRMXuY0q9+Et4GrtvF3RwGzPNJ08TPooVyXJg@mail.gmail.com>
-References: <cover.1499770771.git.viresh.kumar@linaro.org> <0610277aef9830cff53b7b53cf41cc54886fdc7f.1499770771.git.viresh.kumar@linaro.org>
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCHv4 3/3] i2c: altera: Add Altera I2C Controller driver
+Date: Wed, 12 Jul 2017 17:39:59 -0500
+Message-ID: <41d47a3c-cff6-a24c-da96-3e7901e9334d@linux.intel.com>
+References: <1497904618-27010-1-git-send-email-thor.thayer@linux.intel.com>
+ <1497904618-27010-4-git-send-email-thor.thayer@linux.intel.com>
+ <CAHp75VcpdeGW0KXSqZwyMDkGbjT+6Ky5nBXTs7d-dN0gpYHV_w@mail.gmail.com>
+ <f049d174-5a64-2a20-5f47-1638963ea475@linux.intel.com>
+ <CAHp75Vdr6tomrzKMtJ2LQ+k-jU274VMEfHN-MTzvO-PYN_8DHw@mail.gmail.com>
+Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0610277aef9830cff53b7b53cf41cc54886fdc7f.1499770771.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAHp75Vdr6tomrzKMtJ2LQ+k-jU274VMEfHN-MTzvO-PYN_8DHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shiraz Hashim <shashim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 12, 2017 at 1:34 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This adds device tree bindings for boot constraints. Only power supply
-> constraint types are supported currently.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/boot-constraints.txt       | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/boot-constraints.txt
->
-> diff --git a/Documentation/devicetree/bindings/boot-constraints.txt b/Documentation/devicetree/bindings/boot-constraints.txt
-> new file mode 100644
-> index 000000000000..9a01ea1e6e72
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/boot-constraints.txt
-> @@ -0,0 +1,68 @@
-> +BOOT CONSTRAINTS
-> +================
-> +
-> +Some devices are powered ON by the bootloader before the bootloader handovers
-> +control to the Operating System (OS). It maybe important for those devices to
-> +keep working until the time the OS takes over and starts configuring the devices
-> +again.
-> +
-> +A typical example of that can be the LCD controller, which is used by the
-> +bootloaders to show image(s) while the platform is booting into the Operating
-> +System. The LCD controller can be using some resources, like clk, supplies, etc,
-> +that are shared between several devices. These shared resources should be
-> +configured to satisfy need of all the users. If another device's (X) driver gets
-> +probed before the LCD controller driver in this case, then it may end up
-> +reconfiguring these resources to ranges satisfying the current users (only
-> +device X) and that can make the LCD screen unstable.
+Hi Andy,
 
-Display is a pretty well known use case here. Do you have other
-examples in mind? Other cases I've seen are automotive with keeping
-the backup camera going and CAN bus handling. Though my new car has a
-flicker shortly after coming on, so I guess the handoff doesn't have
-to be completely seemless. :)
+On 07/08/2017 04:41 PM, Andy Shevchenko wrote:
+> On Sat, Jul 8, 2017 at 12:08 AM, Thor Thayer
+> <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>> On 07/07/2017 11:25 AM, Andy Shevchenko wrote:
+>>> On Mon, Jun 19, 2017 at 11:36 PM,  <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> 
+>>>> +       while (bytes_to_transfer-- > 0) {
+>>>> +               *idev->buf++ = readl(idev->base + ALTR_I2C_RX_DATA);
+>>>> +               if (idev->msg_len == 1)
+>>>> +                       altr_i2c_stop(idev);
+>>>> +               else
+>>>> +                       writel(0, idev->base + ALTR_I2C_TFR_CMD);
+>>>> +
+>>>> +               idev->msg_len--;
+>>>> +       }
+>>>
+>>>
+>>> Move out invariant from the loop (and I see a bug, you might go over
+>>> boundaries).
+>>>
+>>>          while (bytes_to_transfer-- > 0) {
+>>>                  *idev->buf++ = readl(idev->base + ALTR_I2C_RX_DATA);
+>>>                  if (idev->msg_len-- == 1)
+>>>                      break;
+>>>                  writel(0, idev->base + ALTR_I2C_TFR_CMD);
+>>>          }
+>>>
+>>>          altr_i2c_stop(idev);
+>>>
+>> I see your point on the boundary.
+> 
+> Actually I didn't notice min() call above. So, you may ignore that part.
+> 
+>> However your change is slightly different
+>> from what I'm trying to do.
+> 
+> I don't see how it differs to what you wrote.
 
-[...]
+The stop condition is sent after every FIFO read but I only want the 
+stop condition when the entire message has been sent (at msg_len == 1) 
+which will be the last byte.
 
-> +       mmc: mmc@0x0 {
-> +               ...
-> +               ...
-> +               vmmc-supply = <&twl_reg1>;
-> +               vmmcaux-supply = <&twl_reg2>;
-> +               boot-constraint-supplies = "vmmc", "vmmcaux";
-> +               boot-constraint-uV = <1800000 2000000>, /* vmmc */
-> +                                    <2000000 2000000>; /* vmmcaux */
+> 
+>> I think you assumed the alt_i2c_stop() call can cause a stop condition. This
+>> soft IP can't send just a start or a stop condition by itself - both of
+>> these conditions need to be paired with a byte.
+> 
+> OK.
+> 
+>> The other subtle side effect is the start condition + byte write is the
+>> first write which is why the last write is skipped.
+> 
+>> I need to send a byte with a stop condition on the last expected byte
+>> (idev->msg_len == 1) while this change would send it after the FIFO is empty
+>> or after (msg_len == 1).
+> 
+> Consider the corner case when msg_len _is_ 1 at the beginning.
+> Then continue with 2. I really didn't see the difference in two
+> snippets. Perhaps you have a bug there.
 
-No. I don't like how this is going to extend to all the other bindings
-people are going to want constraints for. We don't need a parallel set
-of properties for each type of binding.
+I see your point about a bug. I'm sending an extra byte. I'll fix it in 
+the next revision. Thanks.
 
-I'm not convinced that we need a general solution for what's probably
-a handful of things that need a handoff versus just re-initialize.
+> 
+>> Your version is cleaner so I'll just add the alt_i2c_stop(idev) call inside
+>> the (msg_len == 1) condition and before the break.
+> 
+>>>> +static int altr_i2c_fill_tx_fifo(struct altr_i2c_dev *idev)
+>>>> +{
+>>>> +       size_t tx_fifo_avail = idev->fifo_size - readl(idev->base +
+>>>> +
+>>>> ALTR_I2C_TC_FIFO_LVL);
+>>>> +       int bytes_to_transfer = min(tx_fifo_avail, idev->msg_len);
+>>>> +       int ret = idev->msg_len - bytes_to_transfer;
+>>>> +
+>>>> +       while (bytes_to_transfer-- > 0) {
+>>>> +               if (idev->msg_len == 1)
+>>>> +                       writel(ALTR_I2C_TFR_CMD_STO | *idev->buf++,
+>>>> +                              idev->base + ALTR_I2C_TFR_CMD);
+>>>> +               else
+>>>> +                       writel(*idev->buf++, idev->base +
+>>>> ALTR_I2C_TFR_CMD);
+>>>> +               idev->msg_len--;
+>>>> +       }
+>>>
+>>>
+>>> Ditto.
+>>>
+>> See above but I will move the msg_len-- inside the condition check like you
+>> had.
+> 
+> Ditto.
 
-Rob
+I'll check this one as well.
+
+> 
+>>>> +static int altr_i2c_wait_for_core_idle(struct altr_i2c_dev *idev)
+>>>> +{
+>>>> +       unsigned long timeout = jiffies +
+>>>> msecs_to_jiffies(ALTR_I2C_TIMEOUT);
+>>>> +
+>>>> +       do {
+>>>> +               if (time_after(jiffies, timeout)) {
+>>>> +                       dev_err(idev->dev, "Core Idle timeout\n");
+>>>> +                       return -ETIMEDOUT;
+>>>> +               }
+>>>> +       } while (readl(idev->base + ALTR_I2C_STATUS) &
+>>>> ALTR_I2C_STAT_CORE);
+>>>> +
+>>>> +       return 0;
+>>>> +}
+> 
+>>> readl_poll_timeout[_atomic]() please.
+> 
+> You ignored some of my comments including this one. Why? Can you go
+> again through my rreview and answer the rest?
+
+I wasn't aware of this function but it simplifies the code. I'll add it. 
+Thanks.
+
+I addressed most of your comments. In some cases, I grouped the comments 
+together - for instance in the msg[], the comments addressed the same 
+function.
+
+> 
+>>>> +       if (of_property_read_u32(np, "fifo-size", &idev->fifo_size))
+>>>> +               idev->fifo_size = ALTR_I2C_DFLT_FIFO_SZ;
+> 
+>>> Shouldn't be possible to auto detect?
+>>>
+>> I agree. That would have been SO much better but the hardware designers
+>> released this without capturing the size in a register - they come from a
+>> bare-metal project perspective.  Since the FIFO size is configurable in the
+>> FPGA from 4 to 256 levels deep, I need to capture this with the device tree.
+> 
+> You may do it manually, right? There are examples for similar cases
+> like writing the offset into FIFO until it returns the written value
+> and FIFO maximum possible size is not achieved.
+> 
+While I agree that some FIFOs could be discovered that way, data pushed 
+into this FIFO will be transmitted which isn't good.
+
+Reading from the device tree is quite clean.  Additionally, there is a 
+precedence for the "fifo-size" being read from the device tree in 
+i2c-at91.c.
+
+I have an addition question about a comment that isn't in this reply so 
+I'm copying it here to keep the thread clean.
+
+<snip> Copying my previous reply
+
+ >>> +static u32 altr_i2c_func(struct i2c_adapter *adap)
+ >>> +{
+ >>> +       return I2C_FUNC_I2C;
+ >>> +}
+ >>
+ >> Useless. Use value in place.
+ >
+ >Got it. Thanks!
+
+After looking at this, I'm not clear what you mean. The 
+i2c_algorithm.functionality parameter requires a function pointer which 
+is why the altr_i2c_func() is assigned to that parameter as shown below. 
+Am I missing something?
+
++
++static const struct i2c_algorithm altr_i2c_algo = {
++	.master_xfer = altr_i2c_xfer,
++	.functionality = altr_i2c_func,
++};
+
+</snip>
+
+Thanks again for reviewing and for the helpful comments.
+
+Thor
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
