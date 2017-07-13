@@ -1,81 +1,245 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFCv2 usb-next 0/3] initialize (multiple) PHYs in xhci-plat
-Date: Thu, 13 Jul 2017 12:59:36 +0200
-Message-ID: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
+Subject: [RFCv2 usb-next 2/3] usb: host: add a generic platform USB roothub driver
+Date: Thu, 13 Jul 2017 12:59:38 +0200
+Message-ID: <20170713105939.31566-3-martin.blumenstingl@googlemail.com>
+References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170713105939.31566-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series is the outcome of a discussion with Felipe Balbi,
-see [0] and [1].
-The quick-summary of this is:
-- dwc3 already takes one USB2 and one USB3 PHY and initializes these
-  correct
-- some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
-  ohci-platform.c) do not have a limitation on the number of PHYs - they
-  support one PHY per actual host port
-- Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
-  or three USB2 ports enabled on the internal root-hub. The SoCs also
-  provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
-  internally "connected" to the dwc3 roothub) need to be powered on,
-  otherwise USB devices cannot be enumerated (even if just one PHY is
-  disabled and if the device is plugged into another, enabled port)
+Many SoC platforms have separate devices for the USB PHY which are
+registered through the generic PHY framework. These PHYs have to be
+enabled to make the USB controller actually work. They also have to be
+disabled again on shutdown/suspend.
 
-In my first attempt to get USB supported on the GXL and GXM SoCs I tried
-to work-around the problem that I could not pass multiple PHYs to the
-dwc3 controller.
-This was rejected by Rob Herring (which was definitely the thing to do in
-my opinion), see [2]
+Currently (at least) the following HCI platform drivers are using custom
+code to obtain all PHYs via devicetree for the roothub/controller and
+disable/enable them when required:
+- ehci-platform.c has ehci_platform_power_{on,off}
+- xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+- ohci-platform.c has ohci_platform_power_{on,off}
 
-This series adds a new "platform-roothub". This can be configured through
-devicetree by passing a child-node with "reg = <0>" to the USB
-controller. Additionally there has to be a child-node for each port on
-the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
-property. This allows modeling the root-hub in devicetree similar to the
-USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
-This avoids and backwards-compatibility problems (which was a concern
-regardless of the solution, see [3]) since the binding for the root-hub
-was previously not specified (and we're not using the "phys" property of
-the controller, which might have served different purposes before,
-depending on the drivers).
+These drivers are not using the generic devicetree USB device bindings
+yet which were only introduced recently (documentation is available in
+devicetree/bindings/usb/usb-device.txt).
+With this new driver the usb2-phy and usb3-phy can be specified directly
+in the child-node of the corresponding port of the roothub via
+devicetree. This can be extended by not just parsing PHYs (some of the
+other drivers listed above are for example also parsing a list of clocks
+as well) when required.
 
-Additionally this integrates the new platform-roothub into xhci-plat.c
-which automatically enables it for the dwc3 driver (in host-mode).
-
-
-Changes since RFCv1 at [4]:
-- split the usb-xhci dt-binding documentation into a separate patch
-- fixed a typo ("usb-phy" -> "phys" in the dt-binding example)
-- rebased to apply against latest usb-next
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001945.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001947.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001818.html
-[3] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001948.html
-[4] http://marc.info/?l=linux-usb&m=148414866303604&w=2
-
-
-Martin Blumenstingl (3):
-  dt-bindings: usb: add the documentation for USB root-hub
-  usb: host: add a generic platform USB roothub driver
-  usb: host: xhci: plat: integrate the platform-roothub
-
- .../devicetree/bindings/usb/usb-roothub.txt        |  46 +++++++
- Documentation/devicetree/bindings/usb/usb-xhci.txt |   7 +
- drivers/usb/host/Kconfig                           |   4 +
- drivers/usb/host/Makefile                          |   2 +
- drivers/usb/host/platform-roothub.c                | 146 +++++++++++++++++++++
- drivers/usb/host/platform-roothub.h                |  14 ++
- drivers/usb/host/xhci-plat.c                       |  27 +++-
- drivers/usb/host/xhci.h                            |   2 +
- 8 files changed, 247 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/usb/host/Kconfig            |   3 +
+ drivers/usb/host/Makefile           |   2 +
+ drivers/usb/host/platform-roothub.c | 146 ++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/platform-roothub.h |  14 ++++
+ 4 files changed, 165 insertions(+)
  create mode 100644 drivers/usb/host/platform-roothub.c
  create mode 100644 drivers/usb/host/platform-roothub.h
 
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index fa5692dec832..b8b05c786b2a 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -805,6 +805,9 @@ config USB_HCD_SSB
+ 
+ 	  If unsure, say N.
+ 
++config USB_PLATFORM_ROOTHUB
++	bool
++
+ config USB_HCD_TEST_MODE
+ 	bool "HCD test mode support"
+ 	---help---
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index cf2691fffcc0..dc817f82d632 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+ 
+ obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
+ 
++obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
++
+ obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
+ obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
+ obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
+diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
+new file mode 100644
+index 000000000000..84837e42b006
+--- /dev/null
++++ b/drivers/usb/host/platform-roothub.c
+@@ -0,0 +1,146 @@
++/*
++ * platform roothub driver - a virtual PHY device which passes all phy_*
++ * function calls to multiple (actual) PHY devices. This is comes handy when
++ * initializing all PHYs on a root-hub (to keep them all in the same state).
++ *
++ * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include <linux/device.h>
++#include <linux/list.h>
++#include <linux/phy/phy.h>
++#include <linux/of.h>
++#include <linux/usb/of.h>
++
++#include "platform-roothub.h"
++
++#define ROOTHUB_PORTNUM		0
++
++struct platform_roothub {
++	struct phy		*phy;
++	struct list_head	list;
++};
++
++static struct platform_roothub *platform_roothub_alloc(struct device *dev)
++{
++	struct platform_roothub *roothub_entry;
++
++	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
++	if (!roothub_entry)
++		return ERR_PTR(-ENOMEM);
++
++	INIT_LIST_HEAD(&roothub_entry->list);
++
++	return roothub_entry;
++}
++
++static int platform_roothub_add_phy(struct device *dev,
++				    struct device_node *port_np,
++				    const char *con_id, struct list_head *list)
++{
++	struct platform_roothub *roothub_entry;
++	struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
++
++	if (IS_ERR_OR_NULL(phy)) {
++		if (!phy || PTR_ERR(phy) == -ENODEV)
++			return 0;
++		else
++			return PTR_ERR(phy);
++	}
++
++	roothub_entry = platform_roothub_alloc(dev);
++	if (IS_ERR(roothub_entry))
++		return PTR_ERR(roothub_entry);
++
++	roothub_entry->phy = phy;
++
++	list_add_tail(&roothub_entry->list, list);
++
++	return 0;
++}
++
++struct platform_roothub *platform_roothub_init(struct device *dev)
++{
++	struct device_node *roothub_np, *port_np;
++	struct platform_roothub *plat_roothub;
++	int err;
++
++	roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
++	if (!of_device_is_available(roothub_np))
++		return NULL;
++
++	plat_roothub = platform_roothub_alloc(dev);
++	if (IS_ERR(plat_roothub))
++		return plat_roothub;
++
++	for_each_available_child_of_node(roothub_np, port_np) {
++		err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
++					       &plat_roothub->list);
++		if (err)
++			return ERR_PTR(err);
++
++		err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
++					       &plat_roothub->list);
++		if (err)
++			return ERR_PTR(err);
++	}
++
++	return plat_roothub;
++}
++EXPORT_SYMBOL_GPL(platform_roothub_init);
++
++int platform_roothub_power_on(struct platform_roothub *plat_roothub)
++{
++	struct platform_roothub *roothub_entry;
++	struct list_head *head;
++	int err;
++
++	if (!plat_roothub)
++		return 0;
++
++	head = &plat_roothub->list;
++
++	list_for_each_entry(roothub_entry, head, list) {
++		err = phy_init(roothub_entry->phy);
++		if (err)
++			goto err_out;
++
++		err = phy_power_on(roothub_entry->phy);
++		if (err) {
++			phy_exit(roothub_entry->phy);
++			goto err_out;
++		}
++	}
++
++	return 0;
++
++err_out:
++	list_for_each_entry_continue_reverse(roothub_entry, head, list) {
++		phy_power_off(roothub_entry->phy);
++		phy_exit(roothub_entry->phy);
++	}
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(platform_roothub_power_on);
++
++void platform_roothub_power_off(struct platform_roothub *plat_roothub)
++{
++	struct platform_roothub *roothub_entry;
++
++	if (!plat_roothub)
++		return;
++
++	list_for_each_entry_reverse(roothub_entry, &plat_roothub->list, list) {
++		phy_power_off(roothub_entry->phy);
++		phy_exit(roothub_entry->phy);
++	}
++}
++EXPORT_SYMBOL_GPL(platform_roothub_power_off);
+diff --git a/drivers/usb/host/platform-roothub.h b/drivers/usb/host/platform-roothub.h
+new file mode 100644
+index 000000000000..bde0bf299e3b
+--- /dev/null
++++ b/drivers/usb/host/platform-roothub.h
+@@ -0,0 +1,14 @@
++#ifndef USB_HOST_PLATFORM_ROOTHUB_H
++#define USB_HOST_PLATFORM_ROOTHUB_H
++
++struct phy;
++struct device_node;
++
++struct platform_roothub;
++
++struct platform_roothub *platform_roothub_init(struct device *dev);
++
++int platform_roothub_power_on(struct platform_roothub *plat_roothub);
++void platform_roothub_power_off(struct platform_roothub *plat_roothub);
++
++#endif /* USB_HOST_PLATFORM_ROOTHUB_H */
 -- 
 2.13.2
 
