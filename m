@@ -1,66 +1,153 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] clk: qcom: Add RPM clocks for msm8996
-Date: Thu, 13 Jul 2017 11:58:21 +0530
-Message-ID: <50b050b9-c5a4-71d9-12cd-4e1e5b649f23@codeaurora.org>
-References: <1490175566-4084-1-git-send-email-rnayak@codeaurora.org>
- <20170710201847.GL22780@codeaurora.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 1/3] pinctrl: Add sleep related configuration
+Date: Thu, 13 Jul 2017 14:35:23 +0800
+Message-ID: <CAMz4kuLFyw4gGbvXFmPozM2J85kkEXf-UGm0FhwxZWSvvBWKWA@mail.gmail.com>
+References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
+ <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop> <20170627082132.GB32447@spreadtrum.com>
+ <20170627120626.GA1067@spreadtrum.com> <CACRpkdapE2+7jR3J0Qw5Hnvg-19-sR5uCYnvMoHiAbowm8-Uug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170710201847.GL22780-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdapE2+7jR3J0Qw5Hnvg-19-sR5uCYnvMoHiAbowm8-Uug@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 07/11/2017 01:48 AM, Stephen Boyd wrote:
-> On 03/22, Rajendra Nayak wrote:
->> This patchset adds all the RPM clocks on msm8996 platforms,
->> while at it, we also remove some of the RCGs from the GCC
->> driver as they are controlled by RPM and hence should not
->> be part of GCC.
+On 12 July 2017 at 20:30, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Jun 27, 2017 at 2:06 PM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+>
+>> If we introduce "sleep-input-enable" config, we can set the pin's config
+>> as below:
 >>
->> Series depends on Bjorns patches which add support for glink
->> on msm8996
->> https://www.spinics.net/lists/linux-wireless/msg160393.html
->> http://www.spinics.net/lists/devicetree/msg168445.html
->>
->> Rajendra Nayak (2):
->>   clk: qcom: clk-smd-rpm: add msm8996 rpmclks
->>   clk: qcom: gcc-msm8996: Remove RPM controlled clocks
-> 
-> The first patch looks ok, but the second patch is quite scary. So
-> far we haven't hooked up the bus RPM clks into the clk tree quite
-> like that. I suppose if everything works fine though it should be
-> OK.
-> 
-> One case I can think of is when we're enabling branch clks that
-> are children of some RPM controlled bus clk. Right now in the
-> downstream kernel we don't enable the RPM clk in this case.
-> Instead, we rely on the bus driver to make sure the bus is
-> enabled. And for things like suspend, I'm not sure if drivers are
-> calling clk_disable() and unprepare on their branches, so we may
-> be leaving them on in the downstream kernel and relying on the
-> bus driver dropping requests to explicitly turn things off. I
-> suppose this is OK though, because those drivers are broken if
-> they exist.
-> 
-> Also, probe deferal may be an issue, where we hand out branch
-> clks to drivers before the RPM is up and ready. If an enable
-> appears on an orphan things get confusing. We should merge that
-> probe defer orphan series too.
+>> vio_sd0_ms_3: regctrl3 {
+>>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
+>>         function = "func1";
+>>         sprd,sleep-mode = <0x3>;
+>>         sleep-input-enable;
+>> };
+>
+> This looks like a "default" mode. Is that correct?
 
-I am not sure what the state of the probe defer orphan series is,
-so in the meantime if it makes sense we could just pull in one
-patch from this series and leave the second one out until we
-get the probe defer for orphans merged.
+This can be not default. In some situation, user can change the pins
+function and other config.
+
+> I.e. do you set up this on probe then do not touch it?
+>
+> It seems some of the problems come from the insistance to use a single
+> node for all configuration. Compare to this nomadik:
+>
+>                i2c0 {
+>                         i2c0_default_mux: i2c0_mux {
+>                                 i2c0_default_mux {
+>                                         function = "i2c0";
+>                                         groups = "i2c0_a_1";
+>                                 };
+>                         };
+>                         i2c0_default_mode: i2c0_default {
+>                                 i2c0_default_cfg {
+>                                         pins = "GPIO62_D3", "GPIO63_D2";
+>                                         input-enable;
+>                                 };
+>                         };
+>                 };
+>
+> It is easy to imagine:
+>
+>                i2c0 {
+>                         i2c0_default_mux: i2c0_mux {
+>                                 i2c0_default_mux {
+>                                         function = "i2c0";
+>                                         groups = "i2c0_a_1";
+>                                 };
+>                         };
+>                         i2c0_default_mode: i2c0_default {
+>                                 i2c0_default_cfg {
+>                                         pins = "GPIO62_D3", "GPIO63_D2";
+>                                         input-enable;
+>                                 };
+>                         };
+>                         i2c0_default_mode_sleep: i2c0_default_sleep {
+>                                 i2c0_default_cfg {
+>                                         pins = "GPIO62_D3", "GPIO63_D2";
+>                                         sleep-hardware-state;
+>                                         input-disable;
+>                                 };
+>                         };
+>                 };
+>
+> Notice the new bool property "sleep-hardware-state" that just
+> indicate that this should be programmed into the registers for
+> the sleep state.
+
+That means we should introduce one "sleep-hardware-state" config.
+
+So my instance can change to be :
+grp1: regctrl3 {
+        pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
+        function = "func1";
+        sprd,sleep-mode = <0x3>;
+
+        grp1_sleep_mode: regctrl3_default_sleep {
+                 pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
+                 sleep-hardware-state;
+                 input-enable;
+       }
+};
+
+That sounds reasonable and I will try to check if it can work.
+
+>
+>> But If we create one extra "sleep-xxx" state for sleep-related configs,
+>> it will be like:
+>>
+>> grp1: regctrl3 {
+>>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31";
+>>         function = "func1";
+>>         sprd,sleep-mode = <0x3>;
+>> };
+>>
+>> sleep-input: input_grp {
+>>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
+>>         input-enable;
+>> };
+>>
+>> pinctrl-names = "sleep-input";
+>> pinctrl-0 = <&sleep-input>;
+>>
+>> "sleep-input" state will be selected when initializing pinctrl driver,
+>
+> The state you should use for initial configuration should be called
+> just "init".
+
+Yes.
+
+>
+>> "grp1"
+>> will be selected by user to set other pin configuration.
+>
+> Like "default"?
+>
+>> Then we need config "SC9860_RFCTL30" pin in 2 different places, which is
+>> more inconvenient for users.
+>
+> I'm not so sure about that. Having a lot more sleep,* config options
+> may be even more inconvenient for users, and especially for the
+> community of developers as a whole.
+
+Make sense. Thanks for your suggestion.
+
+>
+> Several config nodes on the other hand, we have had in the pin
+> control subsystem since day 1.
+>
+> Yours,
+> Linus Walleij
+
+
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Baolin.wang
+Best Regards
