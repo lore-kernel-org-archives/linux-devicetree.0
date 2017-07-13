@@ -1,27 +1,28 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V1]: clk: qcom: support qpnp clock divider configuration
-Date: Thu, 13 Jul 2017 10:50:48 -0700
-Message-ID: <20170713175048.GB22780@codeaurora.org>
-References: <1499945536-18281-1-git-send-email-tirupath@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1499945536-18281-1-git-send-email-tirupath@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tirupathi Reddy <tirupath@codeaurora.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+From: Abhishek Shah <abhishek.shah@broadcom.com>
+Subject: [PATCH 0/3] Extend BGMAC driver for Stingray SoC
+Date: Fri, 14 Jul 2017 00:34:06 +0530
+Message-ID: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jon Mason <jon.mason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Abhishek Shah <abhishek.shah@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/13, Tirupathi Reddy wrote:
-> This patch adds a new device driver for configuring the clkdiv module
-> presents on the Qualcomm QPNP PMIC. The driver configures the frequency
-> of clkdiv outputs. The driver provides callback functions for different
-> clock operations and register the clkdiv module to clock framework.
-> 
+The patchset extends Broadcom BGMAC driver for Broadcom Stingray SoC.
 
-Please don't send cover letters for single patches.
+This patchset is based on Linux-4.12 and tested on NS2 and Stingray.
+
+Abhishek Shah (3):
+  net: ethernet: bgmac: Remove unnecessary 'return' from
+    platform_bgmac_idm_write
+  net: ethernet: bgmac: Make IDM register space optional in BGMAC driver
+  Documentation: devicetree: net: optional idm regs for bgmac
+
+ .../devicetree/bindings/net/brcm,amac.txt          |  1 +
+ drivers/net/ethernet/broadcom/bgmac-platform.c     | 21 ++++---
+ drivers/net/ethernet/broadcom/bgmac.c              | 70 +++++++++++++---------
+ drivers/net/ethernet/broadcom/bgmac.h              |  1 +
+ 4 files changed, 57 insertions(+), 36 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
