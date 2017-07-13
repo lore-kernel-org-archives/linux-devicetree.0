@@ -1,47 +1,67 @@
-From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [PATCH 1/3] dts: ls2088a: add pcie support
-Date: Thu, 13 Jul 2017 08:27:47 +0000
-Message-ID: <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dts: ls2088a: add pcie support
+Date: Thu, 13 Jul 2017 16:31:22 +0800
+Message-ID: <20170713083121.GR3172@dragon>
 References: <1499331330-38362-1-git-send-email-Zhiqiang.Hou@nxp.com>
  <20170713081728.GQ3172@dragon>
+ <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170713081728.GQ3172@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0-9IDQY6o3qQhW5Nc2rBmepo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+To: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNClRoYW5rcyBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTaGF3biBHdW8gW21haWx0bzpzaGF3bmd1b0BrZXJuZWwu
-b3JnXQ0KPiBTZW50OiAyMDE3xOo31MIxM8jVIDE2OjE4DQo+IFRvOiBaLnEuIEhvdSA8emhpcWlh
-bmcuaG91QG54cC5jb20+DQo+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1h
-cmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsNCj4gd2lsbC5kZWFj
-b25AYXJtLmNvbTsgUHJhYmhha2FyIEt1c2h3YWhhIDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNv
-bT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGR0czogbHMyMDg4YTogYWRkIHBjaWUgc3Vw
-cG9ydA0KPiANCj4gT24gVGh1LCBKdWwgMDYsIDIwMTcgYXQgMDQ6NTU6MjhQTSArMDgwMCwgWmhp
-cWlhbmcgSG91IHdyb3RlOg0KPiA+IEZyb206IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54
-cC5jb20+DQo+ID4NCj4gPiBUaGUgcGh5c2ljYWwgbWVtb3J5IG1hcCBhZGRyZXNzIGFuZCBDQ1NS
-IHJlZ2lzdGVycyBtYXAgYWRkcmVzcyBhcmUNCj4gPiBkaWZmZXJlbnQgYmV0d2VlbiBMUzIwODhB
-IGFuZCBvdGhlciBMUzIwODBBIHNlcmllcyBTb0NzLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-SG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaSB8IDQgKysrKw0KPiA+ICAx
-IGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaQ0KPiA+IGIvYXJjaC9h
-cm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMjA4OGEuZHRzaQ0KPiA+IGluZGV4IDVjNjk1
-YzYuLjdkMjY1MzEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvZnNsLWxzMjA4OGEuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNj
-YWxlL2ZzbC1sczIwODhhLmR0c2kNCj4gPiBAQCAtMTM0LDYgKzEzNCw3IEBADQo+ID4gIH07DQo+
-ID4NCj4gPiAgJnBjaWUxIHsNCj4gPiArCWNvbXBhdGlibGUgPSAiZnNsLGxzMjA4OGEtcGNpZSIs
-ICJzbnBzLGR3LXBjaWUiOw0KPiANCj4gSSBkbyBub3Qgc2VlICJmc2wsbHMyMDg4YS1wY2llIiBp
-biBlaXRoZXIgYmluZGluZ3MgZG9jIG9yIGtlcm5lbCBkcml2ZXIuDQo+IA0KDQpJIHN1Ym1pdHRl
-ZCB0aGUgRFQgbm9kZSBwYXRjaCBhbmQgZHJpdmVyIGNvZGUgcGF0Y2ggc2VwYXJhdGVseSwgc2Vl
-IHRoZSBkcml2ZXIgcGF0Y2g6DQpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk4
-Mjc5MTUvDQoNClRoYW5rcywNClpoaXFpYW5nDQoNCg==
+On Thu, Jul 13, 2017 at 08:27:47AM +0000, Z.q. Hou wrote:
+> Hi Shawn,
+> 
+> Thanks for your comments!
+> 
+> > -----Original Message-----
+> > From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> > Sent: 2017年7月13日 16:18
+> > To: Z.q. Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org;
+> > will.deacon-5wv7dgnIgG8@public.gmane.org; Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
+> > Subject: Re: [PATCH 1/3] dts: ls2088a: add pcie support
+> > 
+> > On Thu, Jul 06, 2017 at 04:55:28PM +0800, Zhiqiang Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+> > >
+> > > The physical memory map address and CCSR registers map address are
+> > > different between LS2088A and other LS2080A series SoCs.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+> > > ---
+> > >  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+> > > index 5c695c6..7d26531 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+> > > @@ -134,6 +134,7 @@
+> > >  };
+> > >
+> > >  &pcie1 {
+> > > +	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
+> > 
+> > I do not see "fsl,ls2088a-pcie" in either bindings doc or kernel driver.
+> > 
+> 
+> I submitted the DT node patch and driver code patch separately, see the driver patch:
+> https://patchwork.kernel.org/patch/9827915/
+
+Send me the dts changes after bindings and driver patch land on
+mainline.
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
