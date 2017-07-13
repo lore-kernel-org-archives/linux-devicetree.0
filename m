@@ -1,69 +1,66 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
-	add/remove device
-Date: Thu, 13 Jul 2017 11:05:59 +0530
-Message-ID: <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org>
-References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
-	<1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
-	<20170712225459.GZ22780@codeaurora.org>
-	<5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] clk: qcom: Add RPM clocks for msm8996
+Date: Thu, 13 Jul 2017 11:58:21 +0530
+Message-ID: <50b050b9-c5a4-71d9-12cd-4e1e5b649f23@codeaurora.org>
+References: <1490175566-4084-1-git-send-email-rnayak@codeaurora.org>
+ <20170710201847.GL22780@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5ee0bacd-e557-a6c4-a897-844fb12ea6ae-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170710201847.GL22780-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
 
-On 7/13/2017 10:43 AM, Vivek Gautam wrote:
-> Hi Stephen,
+On 07/11/2017 01:48 AM, Stephen Boyd wrote:
+> On 03/22, Rajendra Nayak wrote:
+>> This patchset adds all the RPM clocks on msm8996 platforms,
+>> while at it, we also remove some of the RCGs from the GCC
+>> driver as they are controlled by RPM and hence should not
+>> be part of GCC.
+>>
+>> Series depends on Bjorns patches which add support for glink
+>> on msm8996
+>> https://www.spinics.net/lists/linux-wireless/msg160393.html
+>> http://www.spinics.net/lists/devicetree/msg168445.html
+>>
+>> Rajendra Nayak (2):
+>>   clk: qcom: clk-smd-rpm: add msm8996 rpmclks
+>>   clk: qcom: gcc-msm8996: Remove RPM controlled clocks
 > 
+> The first patch looks ok, but the second patch is quite scary. So
+> far we haven't hooked up the bus RPM clks into the clk tree quite
+> like that. I suppose if everything works fine though it should be
+> OK.
 > 
-> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
->> On 07/06, Vivek Gautam wrote:
->>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
->>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
->>>                    size_t size)
->>>   {
->>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
->>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
->>> +    size_t ret;
->>>         if (!ops)
->>>           return 0;
->>>   -    return ops->unmap(ops, iova, size);
->>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
->> Can these map/unmap ops be called from an atomic context? I seem
->> to recall that being a problem before.
+> One case I can think of is when we're enabling branch clks that
+> are children of some RPM controlled bus clk. Right now in the
+> downstream kernel we don't enable the RPM clk in this case.
+> Instead, we rely on the bus driver to make sure the bus is
+> enabled. And for things like suspend, I'm not sure if drivers are
+> calling clk_disable() and unprepare on their branches, so we may
+> be leaving them on in the downstream kernel and relying on the
+> bus driver dropping requests to explicitly turn things off. I
+> suppose this is OK though, because those drivers are broken if
+> they exist.
 > 
-> That's something which was dropped in the following patch merged in master:
-> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
-> 
-> Looks like we don't  need locks here anymore?
+> Also, probe deferal may be an issue, where we hand out branch
+> clks to drivers before the RPM is up and ready. If an enable
+> appears on an orphan things get confusing. We should merge that
+> probe defer orphan series too.
 
- Apart from the locking, wonder why a explicit pm_runtime is needed
- from unmap. Somehow looks like some path in the master using that
- should have enabled the pm ?
-
-Regards,
- Sricharan
+I am not sure what the state of the probe defer orphan series is,
+so in the meantime if it makes sense we could just pull in one
+patch from this series and leave the second one out until we
+get the probe defer for orphans merged.
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
