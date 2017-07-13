@@ -1,66 +1,84 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] ARM: meson: Add SMP bringup code for Meson8 and
- Meson8b
-Date: Thu, 13 Jul 2017 14:16:26 +0100
-Message-ID: <20170713131625.GC31807@n2100.armlinux.org.uk>
-References: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
- <20170713103113.21560-5-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: [PATCH v2 3/7] ACPI: Prepare for constifying acpi_get_next_subnode() fwnode argument
+Date: Thu, 13 Jul 2017 16:27:03 +0300
+Message-ID: <1499952427-16130-4-git-send-email-sakari.ailus@linux.intel.com>
+References: <1499952427-16130-1-git-send-email-sakari.ailus@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170713103113.21560-5-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1499952427-16130-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 12:31:11PM +0200, Martin Blumenstingl wrote:
-> +static DEFINE_SPINLOCK(boot_lock);
-> +
-> +/*
-> + * Write pen_release in a way that is guaranteed to be visible to all
-> + * observers, irrespective of whether they're taking part in coherency
-> + * or not.  This is necessary for the hotplug code to work reliably.
-> + */
-> +static void write_pen_release(int val)
-> +{
-> +	pen_release = val;
-> +	smp_wmb();
-> +	sync_cache_w(&pen_release);
-> +}
+Make local variables const (head) or add new variables; adev was used for
+two purposes: to refer the root device node and its children. The two
+purposes are separated by this patch.
 
-Hi Martin,
+This is preparation for making fwnode arguments const for fwnode ops.
+Don't constify the argument itself quite yet as this is used as a callback
+function.
 
-This looks like a classic case of cargo-cult copying of the early ARM
-Ltd Realview SMP code, and people really need to understand that is
-not a good implementation to copy.  The Realview platforms are very
-limited in what they can do: there's no power control of the CPU cores,
-and there's no individual reset.  These platforms are evaluation
-platforms for the CPUs, where the CPUs themselves are often "test chips".
-They are not production systems.
+Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ drivers/acpi/property.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-The only way to control the cores on these platforms is via software
-loops such as the holding pen and loops in the hotplug code, since the
-CPUs always have to be executing some code somewhere.  There are other
-issues too which required the boot_lock (to ensure local timer
-calibration worked.)
-
-None of these issues apply to production SMP platforms, so you likely do
-not need any of this - and I see from your code that you do have power
-and reset controls for the CPUs.  What I'm basically saying here is:
-please rip out the holding pen and boot_lock code from your SMP
-implementation.
-
-If you do need it, please include a detailed explanation why it's
-required - requiring it suggests that the hardware is broken, and
-probably doesn't support hotplug and therefore does not support suspend/
-resume.
-
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index cb6a3b3..04c60a2 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -899,8 +899,10 @@ int acpi_node_prop_read(struct fwnode_handle *fwnode,  const char *propname,
+ struct fwnode_handle *acpi_get_next_subnode(struct fwnode_handle *fwnode,
+ 					    struct fwnode_handle *child)
+ {
+-	struct acpi_device *adev = to_acpi_device_node(fwnode);
+-	struct list_head *head, *next;
++	const struct acpi_device *adev = to_acpi_device_node(fwnode);
++	struct acpi_device *child_adev = NULL;
++	const struct list_head *head;
++	struct list_head *next;
+ 
+ 	if (!child || is_acpi_device_node(child)) {
+ 		if (adev)
+@@ -912,26 +914,27 @@ struct fwnode_handle *acpi_get_next_subnode(struct fwnode_handle *fwnode,
+ 			goto nondev;
+ 
+ 		if (child) {
+-			adev = to_acpi_device_node(child);
+-			next = adev->node.next;
++			child_adev = to_acpi_device_node(child);
++			next = child_adev->node.next;
+ 			if (next == head) {
+ 				child = NULL;
+ 				goto nondev;
+ 			}
+-			adev = list_entry(next, struct acpi_device, node);
++			child_adev = list_entry(next, struct acpi_device, node);
+ 		} else {
+-			adev = list_first_entry(head, struct acpi_device, node);
++			child_adev = list_first_entry(head, struct acpi_device,
++						      node);
+ 		}
+-		return acpi_fwnode_handle(adev);
++		return acpi_fwnode_handle(child_adev);
+ 	}
+ 
+  nondev:
+ 	if (!child || is_acpi_data_node(child)) {
+-		struct acpi_data_node *data = to_acpi_data_node(fwnode);
++		const struct acpi_data_node *data = to_acpi_data_node(fwnode);
+ 		struct acpi_data_node *dn;
+ 
+-		if (adev)
+-			head = &adev->data.subnodes;
++		if (child_adev)
++			head = &child_adev->data.subnodes;
+ 		else if (data)
+ 			head = &data->data.subnodes;
+ 		else
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
