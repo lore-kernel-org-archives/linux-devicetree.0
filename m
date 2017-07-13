@@ -1,55 +1,99 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 09/18] drm/sun4i: tcon: Adjust dotclock dividers range
-Date: Thu, 13 Jul 2017 16:13:04 +0200
-Message-ID: <74db696da66cffafe1e729fe2df73b437c8fd483.1499955058.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 16/18] arm: dts: sun8i: a33: Add the DSI-related nodes
+Date: Thu, 13 Jul 2017 16:13:11 +0200
+Message-ID: <79e7043a909e0fe56207c42c51695fb14e27bae0.1499955058.git-series.maxime.ripard@free-electrons.com>
 References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SXQgc2VlbXMgbGlrZSB0aGUgZG90Y2xvY2sgZGl2aWRlcnMgYXJlIGEgYml0IGxlc3Mgc3RyaWN0
-IHJhbmdlLCBhbmQgY2FuCm9wZXJhdGUgZXZlbiB3aXRoIGEgc21hbGxlciB0aGFuIDYgZGl2aWRl
-ci4gTG9vc2UgdGhlIGJvdW5kYXJpZXMgYSBiaXQuCgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlw
-YXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9k
-cm0vc3VuNGkvc3VuNGlfZG90Y2xvY2suYyB8IDIwICsrKysrKysrKysrKysrKysrKystCiAxIGZp
-bGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jIGIvZHJpdmVycy9ncHUvZHJt
-L3N1bjRpL3N1bjRpX2RvdGNsb2NrLmMKaW5kZXggZDQwMTE1NjQ5MGYzLi4wYjg0NGMwZGQxMDIg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jCisrKyBi
-L2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jCkBAIC03Nyw3ICs3NywyNSBA
-QCBzdGF0aWMgbG9uZyBzdW40aV9kY2xrX3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVu
-c2lnbmVkIGxvbmcgcmF0ZSwKIAl1OCBiZXN0X2RpdiA9IDE7CiAJaW50IGk7CiAKLQlmb3IgKGkg
-PSA2OyBpIDw9IDEyNzsgaSsrKSB7CisJLyoKKwkgKiBUaGVyZSdzIHNvbWV0aGluZyBvZGQgaGVy
-ZS4KKwkgKgorCSAqIEluIHRoZSBBMTMgdXNlciBtYW51YWwsIHRoaXMgaXMgc3RhdGVkIHRvIGJl
-ID49IDYgd2hlbgorCSAqIGRjbGsxIGFuZCBkY2xrMiBhcmUgdXNlZCAod2l0aG91dCBhbnkgaGlu
-dCBvbiBob3cgdG8gdXNlCisJICogdGhlbSksIGFuZCA+PSA0IHdoZW4gb25seSBkY2xrIGlzIHVz
-ZWQuCisJICoKKwkgKiBJbiB0aGUgQTMzIHVzZXIgbWFudWFsLCB3aGVuIG9ubHkgZGNsayBpcyB1
-c2VkLCBpdCBpcyBzZXQKKwkgKiB0byBiZSA+PSA2IGluIHRoZSBmb3JtZXIgY2FzZSwgYW5kID49
-IDEgaW4gdGhlCisJICogbGF0dGVyLiBUaGVyZSdzIGFsc28gc29tZSAob2JzY3VyZSkgZXhwbGFu
-YXRpb25zIGFib3V0IHRoZQorCSAqIGRjbGsxIGFuZCBkY2xrMiB2cyBkY2xrIHRoYXQgc2VlbXMg
-dG8gYmUgaW4gdGhlIHVwcGVyIDQKKwkgKiBiaXRzLiBXaGF0IHRob3NlIGNsb2NrcyBhcmUgYW5k
-IHdoYXQgYml0IGRvZXMgd2hhdCBpcyBub3QKKwkgKiByZWFsbHkgY2xlYXIuCisJICoKKwkgKiBP
-biB0aGUgQTMzIGhvd2V2ZXIsIHdoaWxlIHNvbWV0aGluZyBsb3dlciB0aGFuIDQgd29ya3MsIGl0
-CisJICogZG9lcyBoYXZlIGEgZmV3IGFydGlmYWN0cy4gTGV0J3Mgbm90IHVzZSB0aG9zZSB2YWx1
-ZXMsIGFuZAorCSAqIHNlZSBob3cgaXQgZ29lcy4KKwkgKi8KKwlmb3IgKGkgPSA0OyBpIDw9IDEy
-NzsgaSsrKSB7CiAJCXVuc2lnbmVkIGxvbmcgaWRlYWwgPSByYXRlICogaTsKIAkJdW5zaWduZWQg
-bG9uZyByb3VuZGVkOwogCi0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The A33 has a MIPI-DSI block, along with its D-PHY. Let's add it in order
+to use it in the relevant boards.
+
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a33.dtsi | 50 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 49 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index 22660919bd08..18d1bf9f8e84 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -236,10 +236,14 @@
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
+ 					reg = <1>;
++
++					tcon0_out_dsi0: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&dsi0_in_tcon0>;
++					};
+ 				};
+ 			};
+ 		};
+-
+ 		crypto: crypto-engine@01c15000 {
+ 			compatible = "allwinner,sun4i-a10-crypto";
+ 			reg = <0x01c15000 0x1000>;
+@@ -280,6 +284,50 @@
+ 			#io-channel-cells = <0>;
+ 		};
+ 
++		dsi0: dsi@01ca0000 {
++			compatible = "allwinner,sun6i-a31-mipi-dsi";
++			reg = <0x01ca0000 0x1000>;
++			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>,
++				 <&ccu CLK_DSI_SCLK>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			phys = <&dphy0>;
++			phy-names = "dphy";
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				dsi0_in: port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++
++					dsi0_in_tcon0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&tcon0_out_dsi0>;
++					};
++				};
++			};
++		};
++
++		dphy0: d-phy@01ca1000 {
++			compatible = "allwinner,sun6i-a31-mipi-dphy";
++			reg = <0x01ca1000 0x1000>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>,
++				 <&ccu CLK_DSI_DPHY>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#phy-cells = <0>;
++		};
++
+ 		fe0: display-frontend@01e00000 {
+ 			compatible = "allwinner,sun8i-a33-display-frontend";
+ 			reg = <0x01e00000 0x20000>;
+-- 
+git-series 0.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
