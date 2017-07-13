@@ -1,153 +1,77 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v4 1/3] pinctrl: Add sleep related configuration
-Date: Thu, 13 Jul 2017 14:35:23 +0800
-Message-ID: <CAMz4kuLFyw4gGbvXFmPozM2J85kkEXf-UGm0FhwxZWSvvBWKWA@mail.gmail.com>
-References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
- <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop> <20170627082132.GB32447@spreadtrum.com>
- <20170627120626.GA1067@spreadtrum.com> <CACRpkdapE2+7jR3J0Qw5Hnvg-19-sR5uCYnvMoHiAbowm8-Uug@mail.gmail.com>
+From: Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] gpio-exar: Use correct property prefix and document bindings
+Date: Thu, 13 Jul 2017 08:44:26 +0200
+Message-ID: <491bf615-f1d2-13ff-fa6e-fe5350a0b3b0@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdapE2+7jR3J0Qw5Hnvg-19-sR5uCYnvMoHiAbowm8-Uug@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-gpio <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The device-specific property should be prefixed with the vendor name
+Change this and document the bindings of this platform device.
 
-On 12 July 2017 at 20:30, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Jun 27, 2017 at 2:06 PM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
->
->> If we introduce "sleep-input-enable" config, we can set the pin's config
->> as below:
->>
->> vio_sd0_ms_3: regctrl3 {
->>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
->>         function = "func1";
->>         sprd,sleep-mode = <0x3>;
->>         sleep-input-enable;
->> };
->
-> This looks like a "default" mode. Is that correct?
+Signed-off-by: Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/gpio/gpio-exar.txt | 5 +++++
+ drivers/gpio/gpio-exar.c                             | 2 +-
+ drivers/tty/serial/8250/8250_exar.c                  | 4 ++--
+ 3 files changed, 8 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-exar.txt
 
-This can be not default. In some situation, user can change the pins
-function and other config.
-
-> I.e. do you set up this on probe then do not touch it?
->
-> It seems some of the problems come from the insistance to use a single
-> node for all configuration. Compare to this nomadik:
->
->                i2c0 {
->                         i2c0_default_mux: i2c0_mux {
->                                 i2c0_default_mux {
->                                         function = "i2c0";
->                                         groups = "i2c0_a_1";
->                                 };
->                         };
->                         i2c0_default_mode: i2c0_default {
->                                 i2c0_default_cfg {
->                                         pins = "GPIO62_D3", "GPIO63_D2";
->                                         input-enable;
->                                 };
->                         };
->                 };
->
-> It is easy to imagine:
->
->                i2c0 {
->                         i2c0_default_mux: i2c0_mux {
->                                 i2c0_default_mux {
->                                         function = "i2c0";
->                                         groups = "i2c0_a_1";
->                                 };
->                         };
->                         i2c0_default_mode: i2c0_default {
->                                 i2c0_default_cfg {
->                                         pins = "GPIO62_D3", "GPIO63_D2";
->                                         input-enable;
->                                 };
->                         };
->                         i2c0_default_mode_sleep: i2c0_default_sleep {
->                                 i2c0_default_cfg {
->                                         pins = "GPIO62_D3", "GPIO63_D2";
->                                         sleep-hardware-state;
->                                         input-disable;
->                                 };
->                         };
->                 };
->
-> Notice the new bool property "sleep-hardware-state" that just
-> indicate that this should be programmed into the registers for
-> the sleep state.
-
-That means we should introduce one "sleep-hardware-state" config.
-
-So my instance can change to be :
-grp1: regctrl3 {
-        pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
-        function = "func1";
-        sprd,sleep-mode = <0x3>;
-
-        grp1_sleep_mode: regctrl3_default_sleep {
-                 pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
-                 sleep-hardware-state;
-                 input-enable;
-       }
-};
-
-That sounds reasonable and I will try to check if it can work.
-
->
->> But If we create one extra "sleep-xxx" state for sleep-related configs,
->> it will be like:
->>
->> grp1: regctrl3 {
->>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31";
->>         function = "func1";
->>         sprd,sleep-mode = <0x3>;
->> };
->>
->> sleep-input: input_grp {
->>         pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
->>         input-enable;
->> };
->>
->> pinctrl-names = "sleep-input";
->> pinctrl-0 = <&sleep-input>;
->>
->> "sleep-input" state will be selected when initializing pinctrl driver,
->
-> The state you should use for initial configuration should be called
-> just "init".
-
-Yes.
-
->
->> "grp1"
->> will be selected by user to set other pin configuration.
->
-> Like "default"?
->
->> Then we need config "SC9860_RFCTL30" pin in 2 different places, which is
->> more inconvenient for users.
->
-> I'm not so sure about that. Having a lot more sleep,* config options
-> may be even more inconvenient for users, and especially for the
-> community of developers as a whole.
-
-Make sense. Thanks for your suggestion.
-
->
-> Several config nodes on the other hand, we have had in the pin
-> control subsystem since day 1.
->
-> Yours,
-> Linus Walleij
-
-
-
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-exar.txt b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
+new file mode 100644
+index 000000000000..452180229b36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
+@@ -0,0 +1,5 @@
++Exportable MPIO interface of Exar UART chips
++
++Required properties of platform device:
++ - exar,first-pin: first exportable pins (0..15)
++ - ngpios: number of exportable pins (1..16)
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index fb8d304cfa17..0ecd2369c2ca 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -132,7 +132,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
+ 	if (!p)
+ 		return -ENOMEM;
+ 
+-	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
++	ret = device_property_read_u32(&pdev->dev, "exar,first-pin",
+ 				       &first_pin);
+ 	if (ret)
+ 		return ret;
+diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
+index b5c98e5bf524..c6360fbdf808 100644
+--- a/drivers/tty/serial/8250/8250_exar.c
++++ b/drivers/tty/serial/8250/8250_exar.c
+@@ -261,7 +261,7 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
+ }
+ 
+ static const struct property_entry exar_gpio_properties[] = {
+-	PROPERTY_ENTRY_U32("linux,first-pin", 0),
++	PROPERTY_ENTRY_U32("exar,first-pin", 0),
+ 	PROPERTY_ENTRY_U32("ngpios", 16),
+ 	{ }
+ };
+@@ -326,7 +326,7 @@ static int iot2040_rs485_config(struct uart_port *port,
+ }
+ 
+ static const struct property_entry iot2040_gpio_properties[] = {
+-	PROPERTY_ENTRY_U32("linux,first-pin", 10),
++	PROPERTY_ENTRY_U32("exar,first-pin", 10),
+ 	PROPERTY_ENTRY_U32("ngpios", 1),
+ 	{ }
+ };
 -- 
-Baolin.wang
-Best Regards
+2.12.3
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
