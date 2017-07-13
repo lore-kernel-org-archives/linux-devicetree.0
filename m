@@ -1,63 +1,55 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: ls1012a: add USB host controller nodes
-Date: Thu, 13 Jul 2017 16:07:18 +0800
-Message-ID: <20170713080717.GP3172@dragon>
-References: <1499223243-13253-1-git-send-email-ran.wang_1@nxp.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: iwg20m: Add MMCIF0 support
+Date: Thu, 13 Jul 2017 10:12:14 +0200
+Message-ID: <20170713081213.GL5580@verge.net.au>
+References: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com>
+ <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com>
+ <CAMuHMdXMFkXopGiLOVf0jDDQTKig-wFrgMOKrf14341h85kPNw@mail.gmail.com>
+ <20170713080228.GI5580@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499223243-13253-1-git-send-email-ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170713080228.GI5580-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>, Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>, horia.geanta-3arQi8VN3Tc@public.gmane.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 05, 2017 at 10:54:03AM +0800, Ran Wang wrote:
-> LS1012A has one USB 3.0(DWC3) controller and
-> one USB 2.0 controller.
+On Thu, Jul 13, 2017 at 10:02:29AM +0200, Simon Horman wrote:
+> On Wed, Jul 12, 2017 at 01:52:49PM +0200, Geert Uytterhoeven wrote:
+> > Hi Chris,
+> > 
+> > On Wed, Jul 12, 2017 at 12:03 PM, Chris Paterson
+> > <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > Define the iwg20m board dependent part of the MMCIF0 device node.
+> > >
+> > > Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> > >
+> > > diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > > index 001ca91..ffce1b6 100644
+> > > --- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > > +++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> > 
+> > > +&pfc {
+> > > +       mmcif0_pins: mmc {
+> > > +               groups = "mmc_data8", "mmc_ctrl";
+> > 
+> > "mmc_data8" is not correct, as D6/D7 of the eMMC are not connected to GP6_28
+> > resp. GP6_29, but to GP6_6 resp. GP6_7.
+> > So it should be "mmc_data8_b".
+> > 
+> > Unfortunately the latter pin group isn't supported by the PFC driver yet.
+> > Cooking a patch...
 > 
-> Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> index b497ac1..8aa2dcf 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-> @@ -411,6 +411,23 @@
->  				 <&clockgen 4 3>;
->  		};
->  
-> +		usb0: usb3@2f00000 {
-> +			compatible = "snps,dwc3";
-> +			reg = <0x0 0x2f00000 0x0 0x10000>;
-> +			interrupts = <0 60 0x4>;
-> +			dr_mode = "host";
-> +			snps,quirk-frame-length-adjustment = <0x20>;
-> +			snps,dis_rxdet_inp3_quirk;
-> +		};
-> +
-> +		usb1: usb2@8600000 {
-> +			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
-> +			reg = <0x0 0x8600000 0x0 0x1000>;
-> +			interrupts = <0 139 0x4>;
-> +			dr_mode = "host";
-> +			phy_type = "ulpi";
-> +		};
+> The above notwithstanding I have applied this patch for v4.14.
 
-Please keep the nodes sorted in unit-address.
+...
 
-Shawn
+Sorry, I think I need more coffee.
 
-> +
->  		sata: sata@3200000 {
->  			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
->  			reg = <0x0 0x3200000 0x0 0x10000>,
-> -- 
-> 2.1.0.27.g96db324
-> 
+I misread Geert's comment above. I have dropped this patch.
+Please post a corrected v2 of this patch.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
