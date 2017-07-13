@@ -1,72 +1,96 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 08/18] drm/sun4i: tcon: Add TRI finish interrupt for vblank
-Date: Thu, 13 Jul 2017 16:13:03 +0200
-Message-ID: <8114707d8063d0c9e67694528925baf4f4ee2f7c.1499955058.git-series.maxime.ripard@free-electrons.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+	add/remove device
+Date: Thu, 13 Jul 2017 10:55:10 -0400
+Message-ID: <CAF6AEGvDpRChNQAzqgRFwaQcH=4JCwfKcvj2GQGgQOnO2_A1sg@mail.gmail.com>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+	<1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
+	<20170712225459.GZ22780@codeaurora.org>
+	<5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
+	<4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org>
+	<CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+	<60a56ae6-ed9d-57cd-130f-5bd9d32d4d58@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <60a56ae6-ed9d-57cd-130f-5bd9d32d4d58-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlICJDUFUiIChvciBJbnRlbCA4MDgwKSBpbnRlcmZhY2UgdXNlcyBhIGRpZmZlcmVudCBpbnRl
-cnJ1cHQgY2FsbGVkClRSSV9GSU5JU0ggKG1vc3QgbGlrZWx5IFRSSSBiZWluZyBmb3IgdHJpZ2dl
-cikgdG8gbm90aWZ5IHRoZSBlbmQgb2YgZnJhbWVzLAphbmQgaGVuY2UgdGhlIFZCTEFOSyBwZXJp
-b2QuCgpBbmQgdGhhdCBpbnRlcnJ1cHQgdG8gdGhlIHBvc3NpYmxlIFZCTEFOSyBpbnRlcnJ1cHRz
-IHNvdXJjZS4KClNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJl
-ZS1lbGVjdHJvbnMuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMg
-fCAgOSArKysrKystLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmggfCAgNCAr
-KysrCiAyIGZpbGVzIGNoYW5nZWQsIDEwIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYyBiL2RyaXZlcnMv
-Z3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKaW5kZXggYzQ0MDc5MTBkZmFmLi5hM2JiZjk5OTRj
-ZmEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29uLmMKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uYwpAQCAtOTcsNyArOTcsOCBAQCB2b2lk
-IHN1bjRpX3Rjb25fZW5hYmxlX3ZibGFuayhzdHJ1Y3Qgc3VuNGlfdGNvbiAqdGNvbiwgYm9vbCBl
-bmFibGUpCiAJRFJNX0RFQlVHX0RSSVZFUigiJXNhYmxpbmcgVkJMQU5LIGludGVycnVwdFxuIiwg
-ZW5hYmxlID8gIkVuIiA6ICJEaXMiKTsKIAogCW1hc2sgPSBTVU40SV9UQ09OX0dJTlQwX1ZCTEFO
-S19FTkFCTEUoMCkgfAotCSAgICAgICBTVU40SV9UQ09OX0dJTlQwX1ZCTEFOS19FTkFCTEUoMSk7
-CisJCVNVTjRJX1RDT05fR0lOVDBfVkJMQU5LX0VOQUJMRSgxKSB8CisJCVNVTjRJX1RDT05fR0lO
-VDBfVENPTjBfVFJJX0ZJTklTSF9FTkFCTEU7CiAKIAlpZiAoZW5hYmxlKQogCQl2YWwgPSBtYXNr
-OwpAQCAtMzM2LDcgKzMzNyw4IEBAIHN0YXRpYyBpcnFyZXR1cm5fdCBzdW40aV90Y29uX2hhbmRs
-ZXIoaW50IGlycSwgdm9pZCAqcHJpdmF0ZSkKIAlyZWdtYXBfcmVhZCh0Y29uLT5yZWdzLCBTVU40
-SV9UQ09OX0dJTlQwX1JFRywgJnN0YXR1cyk7CiAKIAlpZiAoIShzdGF0dXMgJiAoU1VONElfVENP
-Tl9HSU5UMF9WQkxBTktfSU5UKDApIHwKLQkJCVNVTjRJX1RDT05fR0lOVDBfVkJMQU5LX0lOVCgx
-KSkpKQorCQkJU1VONElfVENPTl9HSU5UMF9WQkxBTktfSU5UKDEpIHwKKwkJCVNVTjRJX1RDT05f
-R0lOVDBfVENPTjBfVFJJX0ZJTklTSF9JTlQpKSkKIAkJcmV0dXJuIElSUV9OT05FOwogCiAJZHJt
-X2NydGNfaGFuZGxlX3ZibGFuaygmc2NydGMtPmNydGMpOwpAQCAtMzQ1LDcgKzM0Nyw4IEBAIHN0
-YXRpYyBpcnFyZXR1cm5fdCBzdW40aV90Y29uX2hhbmRsZXIoaW50IGlycSwgdm9pZCAqcHJpdmF0
-ZSkKIAkvKiBBY2tub3dsZWRnZSB0aGUgaW50ZXJydXB0ICovCiAJcmVnbWFwX3VwZGF0ZV9iaXRz
-KHRjb24tPnJlZ3MsIFNVTjRJX1RDT05fR0lOVDBfUkVHLAogCQkJICAgU1VONElfVENPTl9HSU5U
-MF9WQkxBTktfSU5UKDApIHwKLQkJCSAgIFNVTjRJX1RDT05fR0lOVDBfVkJMQU5LX0lOVCgxKSwK
-KwkJCSAgIFNVTjRJX1RDT05fR0lOVDBfVkJMQU5LX0lOVCgxKSB8CisJCQkgICBTVU40SV9UQ09O
-X0dJTlQwX1RDT04wX1RSSV9GSU5JU0hfSU5ULAogCQkJICAgMCk7CiAKIAlyZXR1cm4gSVJRX0hB
-TkRMRUQ7CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5oIGIv
-ZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24uaAppbmRleCBhMzE4ZTVjY2I2MTIuLmIz
-NTgyZWU4Mjg1NSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24u
-aAorKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdGNvbi5oCkBAIC0yOCw3ICsyOCwx
-MSBAQAogCiAjZGVmaW5lIFNVTjRJX1RDT05fR0lOVDBfUkVHCQkJMHg0CiAjZGVmaW5lIFNVTjRJ
-X1RDT05fR0lOVDBfVkJMQU5LX0VOQUJMRShwaXBlKQkJQklUKDMxIC0gKHBpcGUpKQorI2RlZmlu
-ZSBTVU40SV9UQ09OX0dJTlQwX1RDT04wX1RSSV9GSU5JU0hfRU5BQkxFCUJJVCgyNykKKyNkZWZp
-bmUgU1VONElfVENPTl9HSU5UMF9UQ09OMF9UUklfQ09VTlRFUl9FTkFCTEUJQklUKDI2KQogI2Rl
-ZmluZSBTVU40SV9UQ09OX0dJTlQwX1ZCTEFOS19JTlQocGlwZSkJCUJJVCgxNSAtIChwaXBlKSkK
-KyNkZWZpbmUgU1VONElfVENPTl9HSU5UMF9UQ09OMF9UUklfRklOSVNIX0lOVAkJQklUKDExKQor
-I2RlZmluZSBTVU40SV9UQ09OX0dJTlQwX1RDT04wX1RSSV9DT1VOVEVSX0lOVAkJQklUKDEwKQog
-CiAjZGVmaW5lIFNVTjRJX1RDT05fR0lOVDFfUkVHCQkJMHg4CiAjZGVmaW5lIFNVTjRJX1RDT05f
-RlJNX0NUTF9SRUcJCQkweDEwCi0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Thu, Jul 13, 2017 at 9:53 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> Hi,
+>
+> On 7/13/2017 5:20 PM, Rob Clark wrote:
+>> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>> Hi Vivek,
+>>>
+>>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
+>>>> Hi Stephen,
+>>>>
+>>>>
+>>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+>>>>> On 07/06, Vivek Gautam wrote:
+>>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>>>>>>                    size_t size)
+>>>>>>   {
+>>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+>>>>>> +    size_t ret;
+>>>>>>         if (!ops)
+>>>>>>           return 0;
+>>>>>>   -    return ops->unmap(ops, iova, size);
+>>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
+>>>>> Can these map/unmap ops be called from an atomic context? I seem
+>>>>> to recall that being a problem before.
+>>>>
+>>>> That's something which was dropped in the following patch merged in master:
+>>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+>>>>
+>>>> Looks like we don't  need locks here anymore?
+>>>
+>>>  Apart from the locking, wonder why a explicit pm_runtime is needed
+>>>  from unmap. Somehow looks like some path in the master using that
+>>>  should have enabled the pm ?
+>>>
+>>
+>> Yes, there are a bunch of scenarios where unmap can happen with
+>> disabled master (but not in atomic context).  On the gpu side we
+>> opportunistically keep a buffer mapping until the buffer is freed
+>> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
+>> an exported dmabuf while some other driver holds a reference to it
+>> (which can be dropped when the v4l2 device is suspended).
+>>
+>> Since unmap triggers tbl flush which touches iommu regs, the iommu
+>> driver *definitely* needs a pm_runtime_get_sync().
+>
+>  Ok, with that being the case, there are two things here,
+>
+>  1) If the device links are still intact at these places where unmap is called,
+>     then pm_runtime from the master would setup the all the clocks. That would
+>     avoid reintroducing the locking indirectly here.
+>
+>  2) If not, then doing it here is the only way. But for both cases, since
+>     the unmap can be called from atomic context, resume handler here should
+>     avoid doing clk_prepare_enable , instead move the clk_prepare to the init.
+>
+
+I do kinda like the approach Marek suggested.. of deferring the tlb
+flush until resume.  I'm wondering if we could combine that with
+putting the mmu in a stalled state when we suspend (and not resume the
+mmu until after the pending tlb flush)?
+
+BR,
+-R
