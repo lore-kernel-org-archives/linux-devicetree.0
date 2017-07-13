@@ -1,20 +1,23 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] ARM: dts: rockchip: enable eMMC for rk3229-evb
-Date: Thu, 13 Jul 2017 02:03:58 +0200
-Message-ID: <2642990.uc5j0qY4g2@phil>
-References: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com> <1499243421-21460-5-git-send-email-frank.wang@rock-chips.com>
+Subject: Re: [PATCH v2 5/6] ARM: dts: rockchip: enable tsadc for rk3229-evb
+Date: Thu, 13 Jul 2017 02:04:21 +0200
+Message-ID: <3724160.ss7Gl1arAF@phil>
+References: <1499243421-21460-1-git-send-email-frank.wang@rock-chips.com> <1499243544-21726-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499243421-21460-5-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1499243544-21726-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 5. Juli 2017, 16:30:19 CEST schrieb Frank Wang:
-> This patch enables eMMC support for rk3229-evb board.
+Am Mittwoch, 5. Juli 2017, 16:32:24 CEST schrieb Frank Wang:
+> This patch enables the tsadc for rk3229-evb board.
+> 
+> The rk3229 evb board uses the CRU to reset the chip since it has not
+> the PMIC to connect it, and TSHUT is low active on evb board.
 > 
 > Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
