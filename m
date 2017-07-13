@@ -1,102 +1,84 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 18/18] [DO NOT MERGE] arm: dts: sun8i: bpi-m2m: Add DSI display
-Date: Thu, 13 Jul 2017 16:13:13 +0200
-Message-ID: <995f3218ecf2884a3918d8381cc504f5474eb146.1499955058.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH 04/18] drm/sun4i: Remove useless atomic_check
+Date: Thu, 13 Jul 2017 16:12:59 +0200
+Message-ID: <effdc5f1e0fe485b141c057bb66f9dadf7433a88.1499955058.git-series.maxime.ripard@free-electrons.com>
 References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
 In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
 References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The BananaPi M2M has an optional 1280x720 DSI panel. Since that panel is
-optional, we can only show a DT patch that would show how to enable it.
-
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 39 +++++++++++++++++++++-
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-index eaf09666720d..11a4dfde2679 100644
---- a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-+++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-@@ -44,6 +44,7 @@
- #include "sun8i-a33.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "BananaPi M2 Magic";
-@@ -81,6 +82,14 @@
- 		};
- 	};
- 
-+	pwm_bl: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 255>;
-+		default-brightness-level = <8>;
-+		enable-gpios = <&r_pio 0 4 GPIO_ACTIVE_HIGH>; /* PG10 */
-+	};
-+
- 	reg_vcc5v0: vcc5v0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc5v0";
-@@ -120,6 +129,26 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy0 {
-+	status = "okay";
-+};
-+
-+&dsi0 {
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "huarui,lhr050h41";
-+		reg = <0>;
-+		power-gpios = <&pio 1 7 GPIO_ACTIVE_HIGH>; /* PB07 */
-+		reset-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL05 */
-+		backlight = <&pwm_bl>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -179,6 +208,12 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm0_pins>;
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
-@@ -291,6 +326,10 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_b>;
--- 
-git-series 0.9.1
+VGhlIGF0b21pY19jaGVjayBjYWxsYmFjayBpcyBvcHRpb25hbCwgYW5kIHdlIGRvbid0IGltcGxl
+bWVudCBhbnl0aGluZyBpbgpzb21lIHBhcnRzIG9mIG91ciBkcml2ZXJzLiBMZXQncyByZW1vdmUg
+aXQuCgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxl
+Y3Ryb25zLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfbGF5ZXIuYyB8IDcg
+LS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3JnYi5jICAgfCA4IC0tLS0tLS0t
+CiBkcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdHYuYyAgICB8IDggLS0tLS0tLS0KIDMgZmls
+ZXMgY2hhbmdlZCwgMjMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L3N1bjRpL3N1bjRpX2xheWVyLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfbGF5ZXIu
+YwppbmRleCBlYWQ0ZjlkNGMxZWUuLjYyYjA4Y2I0N2NjZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL3N1bjRpL3N1bjRpX2xheWVyLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
+bjRpX2xheWVyLmMKQEAgLTI1LDEyICsyNSw2IEBAIHN0cnVjdCBzdW40aV9wbGFuZV9kZXNjIHsK
+IAkgICAgICAgdWludDMyX3QgICAgICAgICAgICAgICAgbmZvcm1hdHM7CiB9OwogCi1zdGF0aWMg
+aW50IHN1bjRpX2JhY2tlbmRfbGF5ZXJfYXRvbWljX2NoZWNrKHN0cnVjdCBkcm1fcGxhbmUgKnBs
+YW5lLAotCQkJCQkgICAgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc3RhdGUpCi17Ci0JcmV0dXJu
+IDA7Ci19Ci0KIHN0YXRpYyB2b2lkIHN1bjRpX2JhY2tlbmRfbGF5ZXJfYXRvbWljX2Rpc2FibGUo
+c3RydWN0IGRybV9wbGFuZSAqcGxhbmUsCiAJCQkJCSAgICAgICBzdHJ1Y3QgZHJtX3BsYW5lX3N0
+YXRlICpvbGRfc3RhdGUpCiB7CkBAIC01Myw3ICs0Nyw2IEBAIHN0YXRpYyB2b2lkIHN1bjRpX2Jh
+Y2tlbmRfbGF5ZXJfYXRvbWljX3VwZGF0ZShzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwKIH0KIAog
+c3RhdGljIHN0cnVjdCBkcm1fcGxhbmVfaGVscGVyX2Z1bmNzIHN1bjRpX2JhY2tlbmRfbGF5ZXJf
+aGVscGVyX2Z1bmNzID0gewotCS5hdG9taWNfY2hlY2sJPSBzdW40aV9iYWNrZW5kX2xheWVyX2F0
+b21pY19jaGVjaywKIAkuYXRvbWljX2Rpc2FibGUJPSBzdW40aV9iYWNrZW5kX2xheWVyX2F0b21p
+Y19kaXNhYmxlLAogCS5hdG9taWNfdXBkYXRlCT0gc3VuNGlfYmFja2VuZF9sYXllcl9hdG9taWNf
+dXBkYXRlLAogfTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9yZ2Iu
+YyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9yZ2IuYwppbmRleCA0MjJiMTkxZmFhNzcu
+Ljc2MzYyYzA5YzYwOCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Jn
+Yi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9yZ2IuYwpAQCAtMTI4LDEzICsx
+MjgsNiBAQCBzdGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfZnVuY3Mgc3VuNGlfcmdiX2Nvbl9m
+dW5jcyA9IHsKIAkuYXRvbWljX2Rlc3Ryb3lfc3RhdGUJPSBkcm1fYXRvbWljX2hlbHBlcl9jb25u
+ZWN0b3JfZGVzdHJveV9zdGF0ZSwKIH07CiAKLXN0YXRpYyBpbnQgc3VuNGlfcmdiX2F0b21pY19j
+aGVjayhzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsCi0JCQkJICBzdHJ1Y3QgZHJtX2NydGNf
+c3RhdGUgKmNydGNfc3RhdGUsCi0JCQkJICBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9zdGF0ZSAqY29u
+bl9zdGF0ZSkKLXsKLQlyZXR1cm4gMDsKLX0KLQogc3RhdGljIHZvaWQgc3VuNGlfcmdiX2VuY29k
+ZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIHsKIAlzdHJ1Y3Qgc3VuNGlf
+cmdiICpyZ2IgPSBkcm1fZW5jb2Rlcl90b19zdW40aV9yZ2IoZW5jb2Rlcik7CkBAIC0xODIsNyAr
+MTc1LDYgQEAgc3RhdGljIHZvaWQgc3VuNGlfcmdiX2VuY29kZXJfbW9kZV9zZXQoc3RydWN0IGRy
+bV9lbmNvZGVyICplbmNvZGVyLAogfQogCiBzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyX2hlbHBl
+cl9mdW5jcyBzdW40aV9yZ2JfZW5jX2hlbHBlcl9mdW5jcyA9IHsKLQkuYXRvbWljX2NoZWNrCT0g
+c3VuNGlfcmdiX2F0b21pY19jaGVjaywKIAkubW9kZV9zZXQJPSBzdW40aV9yZ2JfZW5jb2Rlcl9t
+b2RlX3NldCwKIAkuZGlzYWJsZQk9IHN1bjRpX3JnYl9lbmNvZGVyX2Rpc2FibGUsCiAJLmVuYWJs
+ZQkJPSBzdW40aV9yZ2JfZW5jb2Rlcl9lbmFibGUsCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vc3VuNGkvc3VuNGlfdHYuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90di5jCmlu
+ZGV4IDMzOGI5ZTViYjJhMy4uNzNiZmU3YjFjZDc4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vc3VuNGkvc3VuNGlfdHYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNGlfdHYu
+YwpAQCAtMzQxLDEzICszNDEsNiBAQCBzdGF0aWMgdm9pZCBzdW40aV90dl9tb2RlX3RvX2RybV9t
+b2RlKGNvbnN0IHN0cnVjdCB0dl9tb2RlICp0dl9tb2RlLAogCW1vZGUtPnZ0b3RhbCA9IG1vZGUt
+PnZzeW5jX2VuZCAgKyB0dl9tb2RlLT52YmFja19wb3JjaDsKIH0KIAotc3RhdGljIGludCBzdW40
+aV90dl9hdG9taWNfY2hlY2soc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyLAotCQkJCSBzdHJ1
+Y3QgZHJtX2NydGNfc3RhdGUgKmNydGNfc3RhdGUsCi0JCQkJIHN0cnVjdCBkcm1fY29ubmVjdG9y
+X3N0YXRlICpjb25uX3N0YXRlKQotewotCXJldHVybiAwOwotfQotCiBzdGF0aWMgdm9pZCBzdW40
+aV90dl9kaXNhYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIHsKIAlzdHJ1Y3Qgc3Vu
+NGlfdHYgKnR2ID0gZHJtX2VuY29kZXJfdG9fc3VuNGlfdHYoZW5jb2Rlcik7CkBAIC00ODksNyAr
+NDgyLDYgQEAgc3RhdGljIHZvaWQgc3VuNGlfdHZfbW9kZV9zZXQoc3RydWN0IGRybV9lbmNvZGVy
+ICplbmNvZGVyLAogfQogCiBzdGF0aWMgc3RydWN0IGRybV9lbmNvZGVyX2hlbHBlcl9mdW5jcyBz
+dW40aV90dl9oZWxwZXJfZnVuY3MgPSB7Ci0JLmF0b21pY19jaGVjawk9IHN1bjRpX3R2X2F0b21p
+Y19jaGVjaywKIAkuZGlzYWJsZQk9IHN1bjRpX3R2X2Rpc2FibGUsCiAJLmVuYWJsZQkJPSBzdW40
+aV90dl9lbmFibGUsCiAJLm1vZGVfc2V0CT0gc3VuNGlfdHZfbW9kZV9zZXQsCi0tIApnaXQtc2Vy
+aWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
