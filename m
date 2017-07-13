@@ -1,67 +1,48 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dts: ls2088a: add pcie support
-Date: Thu, 13 Jul 2017 16:31:22 +0800
-Message-ID: <20170713083121.GR3172@dragon>
-References: <1499331330-38362-1-git-send-email-Zhiqiang.Hou@nxp.com>
- <20170713081728.GQ3172@dragon>
- <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: r8a7796: Add missing second pair of DMA
+ names to MSIOF nodes
+Date: Thu, 13 Jul 2017 10:33:19 +0200
+Message-ID: <20170713083319.GP5580@verge.net.au>
+References: <1499855753-21630-1-git-send-email-geert+renesas@glider.be>
+ <20170713081811.GN5580@verge.net.au>
+ <CAMuHMdU58TtEpHAdmf-wKCrOvziZTTs3xBc7hv4E15n1UdCOOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0-9IDQY6o3qQhW5Nc2rBmepo3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <CAMuHMdU58TtEpHAdmf-wKCrOvziZTTs3xBc7hv4E15n1UdCOOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 08:27:47AM +0000, Z.q. Hou wrote:
-> Hi Shawn,
+On Thu, Jul 13, 2017 at 10:23:43AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
-> Thanks for your comments!
+> On Thu, Jul 13, 2017 at 10:18 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
+> > On Wed, Jul 12, 2017 at 12:35:53PM +0200, Geert Uytterhoeven wrote:
+> >> MSIOF0 and MSIOF1 are tied to two DMA controllers through two pairs of
+> >> DMA specifiers.  However, the second pair of corresponding DMA names was
+> >> missing.
+> >>
+> >> Fixes: 80fab06e258da762 ("arm64: dts: r8a7796: Add all MSIOF nodes")
+> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> >> ---
+> >>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 4 ++--
+> >>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > Thanks, applied for v4.14.
+> >
+> > Let me know if you would prefer it handled as a fix for v4.13.
+> > I see the commit it fixes was part of v4.11.
 > 
-> > -----Original Message-----
-> > From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
-> > Sent: 2017年7月13日 16:18
-> > To: Z.q. Hou <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
-> > Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org; catalin.marinas-5wv7dgnIgG8@public.gmane.org;
-> > will.deacon-5wv7dgnIgG8@public.gmane.org; Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-> > Subject: Re: [PATCH 1/3] dts: ls2088a: add pcie support
-> > 
-> > On Thu, Jul 06, 2017 at 04:55:28PM +0800, Zhiqiang Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-> > >
-> > > The physical memory map address and CCSR registers map address are
-> > > different between LS2088A and other LS2080A series SoCs.
-> > >
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
-> > > ---
-> > >  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > > b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > > index 5c695c6..7d26531 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > > @@ -134,6 +134,7 @@
-> > >  };
-> > >
-> > >  &pcie1 {
-> > > +	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
-> > 
-> > I do not see "fsl,ls2088a-pcie" in either bindings doc or kernel driver.
-> > 
+> Thanks!
 > 
-> I submitted the DT node patch and driver code patch separately, see the driver patch:
-> https://patchwork.kernel.org/patch/9827915/
+> V4.14 is fine.  It's not enabled in any board DTS, and DMA will stll work as
+> long as there are free channels on DMAC1.
 
-Send me the dts changes after bindings and driver patch land on
-mainline.
-
-Shawn
+Thanks, for clarifying. The second point above was the main part of my
+reasoning that it is v4.14 material.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
