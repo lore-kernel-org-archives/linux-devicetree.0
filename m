@@ -1,38 +1,66 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v11 3/4] i2c: aspeed: added driver for Aspeed I2C
-Date: Thu, 13 Jul 2017 15:44:40 -0700
-Message-ID: <CAFd5g45V0Ya0UdBZMCoazvE0Sh33F3_oMb84-kLXn1qH0h=b3A@mail.gmail.com>
-References: <20170620211516.13095-1-brendanhiggins@google.com>
- <20170620211516.13095-4-brendanhiggins@google.com> <20170623184305.xqqhjgrbdmgk6lsr@ninjato>
- <CAFd5g45=O2_MgfZEkmbY-=ZZY+izxeWSuhZT+B2e08P=O+WEog@mail.gmail.com>
- <20170627090042.GA2408@katana> <CAFd5g449iu6DGvMuP8-n8C6GBbr62G6_ZYS6Lh9038EB0XO9YA@mail.gmail.com>
- <20170628074515.GA1550@katana>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] arm64: dts: rockchip: Add rk3399 vop and display-subsystem
+Date: Fri, 14 Jul 2017 01:34:53 +0200
+Message-ID: <4655605.dLm3uFpe8F@phil>
+References: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com> <1499875435-23944-2-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628074515.GA1550@katana>
+In-Reply-To: <1499875435-23944-2-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, went on vacation and then forgot about our conversion.
+Hi Jacob,
 
->> the struct i2c_bus_recovery_info. Is i2c_generic_scl_recovery supposed
->> to be part of the user interface, or is it just intended to help put the
->> main recovery function together?
->
-> Sorry, I don't understand the question. What do you mean?
->
+Am Donnerstag, 13. Juli 2017, 00:03:51 CEST schrieb Jacob Chen:
+> Add devicetree nodes for rk3399 VOP (Video Output Processors), and the
+> top level display-subsystem root node.
+> 
+> Later patches add endpoints (eDP, HDMI, MIPI, etc) that attach to the
+> VOPs' output ports.
+> 
+> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 65 ++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index e795135..300e500 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1455,6 +1455,71 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	vopl: vop@ff8f0000 {
+> +		compatible = "rockchip,rk3399-vop-lit";
+> +		reg = <0x0 0xff8f0000 0x0 0x1ffc>, <0x0 0xff8f2000 0x0 0x400>;
 
-What I meant is that it looks like the only use of it is putting
-together a default
-recovery function, but I was wondering if it is fair to use it on its own.
-Basically what I was asking is whether I could use i2c_generic_scl_recovery
-in the case where SCL is hung.
+What is this second memory region doing? It looks like this is the meant
+to cover VOP_GAMMA_LUT_ADDR, but can't you just map the whole area?
+ChromeOS seems to be doing fine using the whole area as
+	<0x0 0xff8f0000 0x0 0x3efc>
+and I've also not seen any code changes actually mapping/using this
+second area.
 
-I think I have a pretty good idea of what to do, I should probably just put
-together an RFC patch.
+
+> +		interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		clocks = <&cru ACLK_VOP1>, <&cru DCLK_VOP1>, <&cru HCLK_VOP1>, <&cru DCLK_VOP1_DIV>;
+> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop", "dclk_source";
+
+While I know that this is based on my idea on handling the hdmi pll-rate
+requirements, I haven't found the matching code- and dt-binding-changes
+posted to a list yet. 
+
+
+Heiko
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
