@@ -1,70 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 01/18] regmap: mmio: Add function to attach a clock
-Date: Thu, 13 Jul 2017 17:01:42 +0100
-Message-ID: <20170713160142.2buaie6ebqbxunin@sirena.org.uk>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
- <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] ARM: dts: iwg20m: Add MMCIF0 support
+Date: Thu, 13 Jul 2017 18:31:33 +0200
+Message-ID: <CAMuHMdV2f1oyi9dNGdGmqx7x7RNk10jomKQ4jHJ9wXNSEBKtNA@mail.gmail.com>
+References: <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com> <1499960340-25310-1-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0286936309=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499960340-25310-1-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <chris.paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 13, 2017 at 5:39 PM, Chris Paterson
+<chris.paterson2@renesas.com> wrote:
+> Define the iwg20m board dependent part of the MMCIF0 device node.
+>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
 
---===============0286936309==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="pegq6bobp7nhd4zb"
-Content-Disposition: inline
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
+> v1->v2:
+>  - Corrected data pin group to mmc_data8_b - Thanks Geert.
 
---pegq6bobp7nhd4zb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Gr{oetje,eeting}s,
 
-On Thu, Jul 13, 2017 at 04:12:56PM +0200, Maxime Ripard wrote:
+                        Geert
 
-> This might be problematic if the clock to enable is stored in another node.
-> Let's add a function that allows to attach a clock that has already been
-> retrieved to a regmap in order to fix this.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-What is the use case for this?
-
---pegq6bobp7nhd4zb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllnmWYACgkQJNaLcl1U
-h9C29gf9ExWbNqhDFlppfUkfVkzoUeE+eU+mRJdCOwJZTptV7nNFaQocXHRtzTQy
-Cl8cs5frVvJxaB618l8tqyJJKs5n61MTtANBHmxSwZDEchFqF3oJRQDSkUMfPPPn
-GxzNfq7z0AK/nZP40lc6u+gOqGue389YdzfOb6l2TLY5mYShO+qUA5wVcs2nlEZN
-DAs9mPgFqw5CKsRzGbUxys4x4nK90i+v+52iwdxwE74YLGm6IBhHpufSwAOxkhEE
-fAQzIRlGfXpadT5rjpBDz4FF7Zj/Zxid1/lr1yKyQEPOe6wn33hd2IEo2lgyVgfa
-QlKS7vvJ+7qGXWIJ02FCAyy6Y6ZNzw==
-=jPdr
------END PGP SIGNATURE-----
-
---pegq6bobp7nhd4zb--
-
---===============0286936309==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0286936309==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
