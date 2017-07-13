@@ -1,71 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 01/18] mfd: madera: Add register definitions for
- Cirrus Logic Madera codecs
-Date: Thu, 13 Jul 2017 14:03:05 +0100
-Message-ID: <20170713130305.ytrk322lqe6dusla@sirena.org.uk>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-2-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170713080210.lbsjnmlciovoxe4g@dell>
- <20170713100539.mqvyxgvwqowjim6i@sirena.org.uk>
- <1499949850.4826.88.camel@rf-debian.wolfsonmicro.main>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] ARM: meson: Add SMP bringup code for Meson8 and
+ Meson8b
+Date: Thu, 13 Jul 2017 14:16:26 +0100
+Message-ID: <20170713131625.GC31807@n2100.armlinux.org.uk>
+References: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
+ <20170713103113.21560-5-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dnu4nyp3x6jvsw2v"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499949850.4826.88.camel-WeElTRBN8n0bEPBeyYQi64iQ8/zYDDdY1BehtkLrGTY@public.gmane.org>
+In-Reply-To: <20170713103113.21560-5-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jul 13, 2017 at 12:31:11PM +0200, Martin Blumenstingl wrote:
+> +static DEFINE_SPINLOCK(boot_lock);
+> +
+> +/*
+> + * Write pen_release in a way that is guaranteed to be visible to all
+> + * observers, irrespective of whether they're taking part in coherency
+> + * or not.  This is necessary for the hotplug code to work reliably.
+> + */
+> +static void write_pen_release(int val)
+> +{
+> +	pen_release = val;
+> +	smp_wmb();
+> +	sync_cache_w(&pen_release);
+> +}
 
---dnu4nyp3x6jvsw2v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Martin,
 
-On Thu, Jul 13, 2017 at 01:44:10PM +0100, Richard Fitzgerald wrote:
-> On Thu, 2017-07-13 at 11:05 +0100, Mark Brown wrote:
-> > On Thu, Jul 13, 2017 at 09:02:10AM +0100, Lee Jones wrote:
+This looks like a classic case of cargo-cult copying of the early ARM
+Ltd Realview SMP code, and people really need to understand that is
+not a good implementation to copy.  The Realview platforms are very
+limited in what they can do: there's no power control of the CPU cores,
+and there's no individual reset.  These platforms are evaluation
+platforms for the CPUs, where the CPUs themselves are often "test chips".
+They are not production systems.
 
-> > > This patch has been rejected by Linus.
+The only way to control the cores on these platforms is via software
+loops such as the holding pen and loops in the hotplug code, since the
+CPUs always have to be executing some code somewhere.  There are other
+issues too which required the boot_lock (to ensure local timer
+calibration worked.)
 
-> > > https://lkml.org/lkml/2017/7/7/579
+None of these issues apply to production SMP platforms, so you likely do
+not need any of this - and I see from your code that you do have power
+and reset controls for the CPUs.  What I'm basically saying here is:
+please rip out the holding pen and boot_lock code from your SMP
+implementation.
 
-> > Hrm, when I used to push the register definition patches I did elide all
-> > the obviously repeated register banks like the write sequencer one that
-> > Linus is calling out there.  I'm surprised by the "every single line"
-> > bit though...
+If you do need it, please include a detailed explanation why it's
+required - requiring it suggests that the hardware is broken, and
+probably doesn't support hotplug and therefore does not support suspend/
+resume.
 
-> Linux doesn't say what he wants us to do about it. I could manually
-> strip out a few more definitions but seriously, it makes the code a lot
-> harder to maintain if we can't grep it for use of registers and register
-> fields. They are big chips, they have a lot of stuff in the registers.
-
-I'd take it up with him, if you can explain why it looks very
-repetitive but isn't actually that'd help...
-
-Building up copies of the repeated IPs with macros would help too (the
-AIF and especially frame control registers stick out like a sore thumb
-here), as would removing the individual registers for the write
-sequencer block.
-
---dnu4nyp3x6jvsw2v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllnb4gACgkQJNaLcl1U
-h9Ajzwf/UT3dCb8Miwi/swDRP0ZvxT512f4vbdv9H1+mx+lXkUUQ3xQOYHvfy2Fp
-7qnitYjeGzzPk5Qm5sfkEHDgmm95Ju3OKAPQqsib0qYHRIWQ1Tbfk9/USplc6oqb
-TyKqII498Tt1t5Uq4ZmjVynwGweem1Hy2TqnjqOgsc9jtRB9mcvup/BFGDwY2Tq6
-T/9Wudte3/BkK2Pd9tUUAT+lSHnukOi6lmCdfM+bYJhF8aveEm4ZAzvrhHTETu/E
-tcn7GcbK5hjMwBaQGtOdJioYdvYJd4CbWSmG8Qb1y+CiTkXcvKZaG/KtNe7TJRhV
-RuvJHVmYXTilhvtTxIKvkBnbmvB8Uw==
-=pWIf
------END PGP SIGNATURE-----
-
---dnu4nyp3x6jvsw2v--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
