@@ -1,77 +1,64 @@
-From: Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] gpio-exar: Use correct property prefix and document bindings
-Date: Thu, 13 Jul 2017 08:44:26 +0200
-Message-ID: <491bf615-f1d2-13ff-fa6e-fe5350a0b3b0@siemens.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+	add/remove device
+Date: Wed, 12 Jul 2017 23:48:43 -0700
+Message-ID: <20170713064843.GX22780@codeaurora.org>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+	<1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
+	<20170712225459.GZ22780@codeaurora.org>
+	<5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-gpio <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5ee0bacd-e557-a6c4-a897-844fb12ea6ae-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The device-specific property should be prefixed with the vendor name
-Change this and document the bindings of this platform device.
+On 07/13, Vivek Gautam wrote:
+> Hi Stephen,
+> 
+> 
+> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+> >On 07/06, Vivek Gautam wrote:
+> >>@@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+> >>  static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+> >>  			     size_t size)
+> >>  {
+> >>-	struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+> >>+	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> >>+	struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+> >>+	size_t ret;
+> >>  	if (!ops)
+> >>  		return 0;
+> >>-	return ops->unmap(ops, iova, size);
+> >>+	pm_runtime_get_sync(smmu_domain->smmu->dev);
+> >Can these map/unmap ops be called from an atomic context? I seem
+> >to recall that being a problem before.
+> 
+> That's something which was dropped in the following patch merged in master:
+> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+> 
+> Looks like we don't  need locks here anymore?
+> 
 
-Signed-off-by: Jan Kiszka <jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/gpio/gpio-exar.txt | 5 +++++
- drivers/gpio/gpio-exar.c                             | 2 +-
- drivers/tty/serial/8250/8250_exar.c                  | 4 ++--
- 3 files changed, 8 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-exar.txt
+While removing the spinlock around the map/unmap path may be one
+thing, I'm not sure that's all of them. Is there a path from an
+atomic DMA allocation (GFP_ATOMIC sort of thing) mapped into an
+IOMMU for a device that can eventually get down to here and
+attempt to turn a clk on?
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-exar.txt b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
-new file mode 100644
-index 000000000000..452180229b36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
-@@ -0,0 +1,5 @@
-+Exportable MPIO interface of Exar UART chips
-+
-+Required properties of platform device:
-+ - exar,first-pin: first exportable pins (0..15)
-+ - ngpios: number of exportable pins (1..16)
-diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-index fb8d304cfa17..0ecd2369c2ca 100644
---- a/drivers/gpio/gpio-exar.c
-+++ b/drivers/gpio/gpio-exar.c
-@@ -132,7 +132,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
- 	if (!p)
- 		return -ENOMEM;
- 
--	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
-+	ret = device_property_read_u32(&pdev->dev, "exar,first-pin",
- 				       &first_pin);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-index b5c98e5bf524..c6360fbdf808 100644
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -261,7 +261,7 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
- }
- 
- static const struct property_entry exar_gpio_properties[] = {
--	PROPERTY_ENTRY_U32("linux,first-pin", 0),
-+	PROPERTY_ENTRY_U32("exar,first-pin", 0),
- 	PROPERTY_ENTRY_U32("ngpios", 16),
- 	{ }
- };
-@@ -326,7 +326,7 @@ static int iot2040_rs485_config(struct uart_port *port,
- }
- 
- static const struct property_entry iot2040_gpio_properties[] = {
--	PROPERTY_ENTRY_U32("linux,first-pin", 10),
-+	PROPERTY_ENTRY_U32("exar,first-pin", 10),
- 	PROPERTY_ENTRY_U32("ngpios", 1),
- 	{ }
- };
 -- 
-2.12.3
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
