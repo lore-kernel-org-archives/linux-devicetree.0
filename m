@@ -1,38 +1,65 @@
-From: Abhishek Shah <abhishek.shah@broadcom.com>
-Subject: [PATCH 3/3] Documentation: devicetree: net: optional idm regs for bgmac
-Date: Fri, 14 Jul 2017 00:34:09 +0530
-Message-ID: <1499972649-6200-4-git-send-email-abhishek.shah@broadcom.com>
-References: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Jon Mason <jon.mason@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Abhishek Shah <abhishek.shah@broadcom.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] clk: sunxi-ng: Add sun4i/sun7i CCU driver
+Date: Thu, 13 Jul 2017 19:12:21 +0000
+Message-ID: <20170713191221.GA22375@plaes.org>
+References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
+ <65066c74b8dedfeb8de27d90b5fecfea3a700178.1499197129.git-series.plaes@plaes.org>
+ <CANwerB0d+2rU9gnCSKP4wwXZpzEsHXP6LtBYvxD+GnQAj6QHVQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANwerB0d+2rU9gnCSKP4wwXZpzEsHXP6LtBYvxD+GnQAj6QHVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Specifying IDM register space in DT is not mendatory for SoCs
-where firmware takes care of IDM operations. This patch updates
-BGMAC driver's DT binding documentation indicating the same.
+On Sun, Jul 09, 2017 at 10:25:23PM +1000, Jonathan Liu wrote:
+> Hi Priit,
+> 
+> On 5 July 2017 at 06:04, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
+> > Introduce a clock controller driver for sun4i A10 and sun7i A20
+> > series SoCs.
+> >
+> > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> > ---
+> >  drivers/clk/sunxi-ng/Kconfig              |   14 +-
+> >  drivers/clk/sunxi-ng/Makefile             |    1 +-
+> >  drivers/clk/sunxi-ng/ccu-sun4i-a10.c      | 1448 ++++++++++++++++++++++-
+> >  drivers/clk/sunxi-ng/ccu-sun4i-a10.h      |   61 +-
+> >  include/dt-bindings/clock/sun4i-a10-ccu.h |  200 +++-
+> >  include/dt-bindings/clock/sun7i-a20-ccu.h |   53 +-
+> >  include/dt-bindings/reset/sun4i-a10-ccu.h |   67 +-
+> >  7 files changed, 1844 insertions(+)
+> >  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> >  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.h
+> >  create mode 100644 include/dt-bindings/clock/sun4i-a10-ccu.h
+> >  create mode 100644 include/dt-bindings/clock/sun7i-a20-ccu.h
+> >  create mode 100644 include/dt-bindings/reset/sun4i-a10-ccu.h
+> >
+> [snip]
+> > diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> > new file mode 100644
+> > index 0000000..49052b7
+> > --- /dev/null
+> > +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> [snip]
+> 
+> > +static const char *const hdmi_parents[] = { "pll-video0", "pll-video0-2x",
+> > +                                           "pll-video1", "pll-video1-2x" };
+> > +static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hdmi_parents,
+> > +                                0x150, 0, 4, 24, 2, BIT(31), 0);
+> 
+> hdmi_parents is in the wrong order. The correct order is "pll-video0",
+> "pll-video1", "pll-video0-2x", "pll-video1-2x".
 
-Signed-off-by: Abhishek Shah <abhishek.shah@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Oza Oza <oza.oza@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- Documentation/devicetree/bindings/net/brcm,amac.txt | 1 +
- 1 file changed, 1 insertion(+)
+Ugh.. I'm really sorry.
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,amac.txt b/Documentation/devicetree/bindings/net/brcm,amac.txt
-index 2fefa1a..ad16c1f 100644
---- a/Documentation/devicetree/bindings/net/brcm,amac.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,amac.txt
-@@ -11,6 +11,7 @@ Required properties:
-  - reg-names:	Names of the registers.
- 		"amac_base":	Address and length of the GMAC registers
- 		"idm_base":	Address and length of the GMAC IDM registers
-+				(required for NSP and Northstar2)
- 		"nicpm_base":	Address and length of the NIC Port Manager
- 				registers (required for Northstar2)
-  - interrupts:	Interrupt number
--- 
-2.7.4
+Päikest,
+Priit
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
