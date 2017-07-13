@@ -1,70 +1,85 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Thu, 13 Jul 2017 12:35:37 -0700
-Message-ID: <5967CB89.7020907@gmail.com>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20170703090648.GV13989@umbus.fritz.box> <1499085674.4225.17.camel@hp800z>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v3 4/6] ARM: meson: Add SMP bringup code for Meson8 and Meson8b
+Date: Thu, 13 Jul 2017 21:39:12 +0200
+Message-ID: <CAFBinCBnQgnZQ3ogPBCxCxhTWzjSi1A4uSpdKO97NpBhQPryPw@mail.gmail.com>
+References: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
+ <20170713103113.21560-5-martin.blumenstingl@googlemail.com> <20170713131625.GC31807@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499085674.4225.17.camel@hp800z>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170713131625.GC31807-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/03/17 05:41, Pantelis Antoniou wrote:
-> Hi David,
-> 
-> On Mon, 2017-07-03 at 19:06 +1000, David Gibson wrote:
->> On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
->>> This patch enables an overlay to refer to a previous overlay's
->>> labels by performing a merge of symbol information at application
->>> time.
->>
->> This seems to be doing things the hard way.
->>
-> 
-> It is the minimal implementation to get things to work, with the current
-> overlay implementation. I do have plans for a version 2 with fixes to
-> a number of areas.
->  
->> You're essentially extending the semantics of overlay application to
->> add the symbol merging.  You've implemented these extended semantics
->> in libfdt, which is all very well, but that's not the only overlay
->> application implementation.
->>
->>
-> 
-> This is a port of the same patch that's against the linux kernel.
-> As far as I know there's no other implementations, or at least none
-> that are open source.
+Hi Russel,
 
-That patch never made it into the kernel.  I submitted a different
-patch last week (now at v2, probably soon to be v3, then probably
-v4 when 4.13-rc1 comes out), so hopefully we will get the overlay
-symbol loading support into the kernel soon.
-
-
->> It seems to me a better approach would be to change dtc's -@
->> implementation, so that in /plugin/ mode instead of making a global
->> __symbols__ node, it puts it into the individual fragments.  That way
->> the existing overlay application semantics will update the __symbols__
->> node.
->>
-> 
-> A lot of things can be made better, on the next version. These are
-> minimally intrusive patches to address user requests for the current
+On Thu, Jul 13, 2017 at 3:16 PM, Russell King - ARM Linux
+<linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> On Thu, Jul 13, 2017 at 12:31:11PM +0200, Martin Blumenstingl wrote:
+>> +static DEFINE_SPINLOCK(boot_lock);
+>> +
+>> +/*
+>> + * Write pen_release in a way that is guaranteed to be visible to all
+>> + * observers, irrespective of whether they're taking part in coherency
+>> + * or not.  This is necessary for the hotplug code to work reliably.
+>> + */
+>> +static void write_pen_release(int val)
+>> +{
+>> +     pen_release = val;
+>> +     smp_wmb();
+>> +     sync_cache_w(&pen_release);
+>> +}
+>
+> Hi Martin,
+>
+> This looks like a classic case of cargo-cult copying of the early ARM
+> Ltd Realview SMP code, and people really need to understand that is
+> not a good implementation to copy.  The Realview platforms are very
+> limited in what they can do: there's no power control of the CPU cores,
+> and there's no individual reset.  These platforms are evaluation
+> platforms for the CPUs, where the CPUs themselves are often "test chips".
+> They are not production systems.
+>
+> The only way to control the cores on these platforms is via software
+> loops such as the holding pen and loops in the hotplug code, since the
+> CPUs always have to be executing some code somewhere.  There are other
+> issues too which required the boot_lock (to ensure local timer
+> calibration worked.)
+>
+> None of these issues apply to production SMP platforms, so you likely do
+> not need any of this - and I see from your code that you do have power
+> and reset controls for the CPUs.  What I'm basically saying here is:
+> please rip out the holding pen and boot_lock code from your SMP
 > implementation.
-> 
-> Why don't we start by making a list, and work towards that goal?
-> 
-> Care to start about what you want addressed and how?
-> 
-> Regards
-> 
-> -- Pantelis
-> 
-> 
+>
+> If you do need it, please include a detailed explanation why it's
+> required - requiring it suggests that the hardware is broken, and
+> probably doesn't support hotplug and therefore does not support suspend/
+> resume.
+uh, I see - thank you for the explanation!
+you are probably right when you say that it's not needed - I added it
+when implementing Meson8 support (Carlo's series only handled
+Meson8b). I couldn't get it working on Meson8 at first, but that was
+before I found out that we have to enable power through SCU first.
+
+I will remove and re-test this later - many thanks for looking into
+this (and for the detailed explanation).
+this will probably make the code much easier to read :)
+
+one more question:
+the code uses some memory barrier macros (smp_wmb(), smp_rmb(), mb()
+and dsb_sev()).
+unfortunately I'm not very familiar with these - could you please have
+a look at this and let me know which ones you would keep or remove?
+secondary_start_kernel() is already flushing some caches, so maybe
+those barriers can also be removed
+
+
+Regards,
+Martin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
