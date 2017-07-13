@@ -1,48 +1,62 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: r8a7796: Add missing second pair of DMA
- names to MSIOF nodes
-Date: Thu, 13 Jul 2017 10:33:19 +0200
-Message-ID: <20170713083319.GP5580@verge.net.au>
-References: <1499855753-21630-1-git-send-email-geert+renesas@glider.be>
- <20170713081811.GN5580@verge.net.au>
- <CAMuHMdU58TtEpHAdmf-wKCrOvziZTTs3xBc7hv4E15n1UdCOOQ@mail.gmail.com>
+From: "Z.q. Hou" <zhiqiang.hou-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 1/3] dts: ls2088a: add pcie support
+Date: Thu, 13 Jul 2017 08:34:23 +0000
+Message-ID: <VI1PR0402MB2782D24973612C1C0BCD24B184AC0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
+References: <1499331330-38362-1-git-send-email-Zhiqiang.Hou@nxp.com>
+ <20170713081728.GQ3172@dragon>
+ <VI1PR0402MB2782E2EB4B0E36EFF55CD5E684AC0@VI1PR0402MB2782.eurprd04.prod.outlook.com>
+ <20170713083121.GR3172@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdU58TtEpHAdmf-wKCrOvziZTTs3xBc7hv4E15n1UdCOOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170713083121.GR3172@dragon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "catalin.marinas-5wv7dgnIgG8@public.gmane.org" <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 10:23:43AM +0200, Geert Uytterhoeven wrote:
-> Hi Simon,
-> 
-> On Thu, Jul 13, 2017 at 10:18 AM, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org> wrote:
-> > On Wed, Jul 12, 2017 at 12:35:53PM +0200, Geert Uytterhoeven wrote:
-> >> MSIOF0 and MSIOF1 are tied to two DMA controllers through two pairs of
-> >> DMA specifiers.  However, the second pair of corresponding DMA names was
-> >> missing.
-> >>
-> >> Fixes: 80fab06e258da762 ("arm64: dts: r8a7796: Add all MSIOF nodes")
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >> ---
-> >>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > Thanks, applied for v4.14.
-> >
-> > Let me know if you would prefer it handled as a fix for v4.13.
-> > I see the commit it fixes was part of v4.11.
-> 
-> Thanks!
-> 
-> V4.14 is fine.  It's not enabled in any board DTS, and DMA will stll work as
-> long as there are free channels on DMAC1.
-
-Thanks, for clarifying. The second point above was the main part of my
-reasoning that it is v4.14 material.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIFttYWls
+dG86c2hhd25ndW9Aa2VybmVsLm9yZ10NCj4gU2VudDogMjAxN+W5tDfmnIgxM+aXpSAxNjozMQ0K
+PiBUbzogWi5xLiBIb3UgPHpoaXFpYW5nLmhvdUBueHAuY29tPg0KPiBDYzogbWFyay5ydXRsYW5k
+QGFybS5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiBjYXRhbGluLm1hcmluYXNA
+YXJtLmNvbTsgUHJhYmhha2FyIEt1c2h3YWhhDQo+IDxwcmFiaGFrYXIua3VzaHdhaGFAbnhwLmNv
+bT47IHdpbGwuZGVhY29uQGFybS5jb207DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMS8zXSBk
+dHM6IGxzMjA4OGE6IGFkZCBwY2llIHN1cHBvcnQNCj4gDQo+IE9uIFRodSwgSnVsIDEzLCAyMDE3
+IGF0IDA4OjI3OjQ3QU0gKzAwMDAsIFoucS4gSG91IHdyb3RlOg0KPiA+IEhpIFNoYXduLA0KPiA+
+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGNvbW1lbnRzIQ0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogU2hhd24gR3VvIFttYWlsdG86c2hhd25ndW9Aa2Vy
+bmVsLm9yZ10NCj4gPiA+IFNlbnQ6IDIwMTflubQ35pyIMTPml6UgMTY6MTgNCj4gPiA+IFRvOiBa
+LnEuIEhvdSA8emhpcWlhbmcuaG91QG54cC5jb20+DQo+ID4gPiBDYzogbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
+DQo+ID4gPiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBjYXRhbGlu
+Lm1hcmluYXNAYXJtLmNvbTsNCj4gPiA+IHdpbGwuZGVhY29uQGFybS5jb207IFByYWJoYWthciBL
+dXNod2FoYQ0KPiA8cHJhYmhha2FyLmt1c2h3YWhhQG54cC5jb20+DQo+ID4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIIDEvM10gZHRzOiBsczIwODhhOiBhZGQgcGNpZSBzdXBwb3J0DQo+ID4gPg0KPiA+
+ID4gT24gVGh1LCBKdWwgMDYsIDIwMTcgYXQgMDQ6NTU6MjhQTSArMDgwMCwgWmhpcWlhbmcgSG91
+IHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29t
+Pg0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgcGh5c2ljYWwgbWVtb3J5IG1hcCBhZGRyZXNzIGFuZCBD
+Q1NSIHJlZ2lzdGVycyBtYXAgYWRkcmVzcyBhcmUNCj4gPiA+ID4gZGlmZmVyZW50IGJldHdlZW4g
+TFMyMDg4QSBhbmQgb3RoZXIgTFMyMDgwQSBzZXJpZXMgU29Dcy4NCj4gPiA+ID4NCj4gPiA+ID4g
+U2lnbmVkLW9mZi1ieTogSG91IFpoaXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPiA+
+ID4gLS0tDQo+ID4gPiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMyMDg4
+YS5kdHNpIHwgNCArKysrDQo+ID4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
+DQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMyMDg4YS5kdHNpDQo+ID4gPiA+IGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMjA4OGEuZHRzaQ0KPiA+ID4gPiBpbmRleCA1YzY5NWM2Li43ZDI2NTMxIDEw
+MDY0NA0KPiA+ID4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMy
+MDg4YS5kdHNpDQo+ID4gPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2Zz
+bC1sczIwODhhLmR0c2kNCj4gPiA+ID4gQEAgLTEzNCw2ICsxMzQsNyBAQA0KPiA+ID4gPiAgfTsN
+Cj4gPiA+ID4NCj4gPiA+ID4gICZwY2llMSB7DQo+ID4gPiA+ICsJY29tcGF0aWJsZSA9ICJmc2ws
+bHMyMDg4YS1wY2llIiwgInNucHMsZHctcGNpZSI7DQo+ID4gPg0KPiA+ID4gSSBkbyBub3Qgc2Vl
+ICJmc2wsbHMyMDg4YS1wY2llIiBpbiBlaXRoZXIgYmluZGluZ3MgZG9jIG9yIGtlcm5lbCBkcml2
+ZXIuDQo+ID4gPg0KPiA+DQo+ID4gSSBzdWJtaXR0ZWQgdGhlIERUIG5vZGUgcGF0Y2ggYW5kIGRy
+aXZlciBjb2RlIHBhdGNoIHNlcGFyYXRlbHksIHNlZSB0aGUNCj4gZHJpdmVyIHBhdGNoOg0KPiA+
+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTgyNzkxNS8NCj4gDQo+IFNlbmQg
+bWUgdGhlIGR0cyBjaGFuZ2VzIGFmdGVyIGJpbmRpbmdzIGFuZCBkcml2ZXIgcGF0Y2ggbGFuZCBv
+biBtYWlubGluZS4NCg0KU3VyZSwgdGhhbmtzIGEgbG90IQ0KDQotIFpoaXFpYW5nDQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
