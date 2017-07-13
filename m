@@ -1,86 +1,80 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] extcon: cros-ec: Add extcon-cros-ec driver to
- support display out.
-Date: Thu, 13 Jul 2017 19:26:04 +0900
-Message-ID: <59674ABC.1000102@samsung.com>
-References: <20170301111943.12170-1-enric.balletbo@collabora.com>
-        <CGME20170301112844epcas4p34012f1564f1145f8d8a8967f4fe9a821@epcas4p3.samsung.com>
-        <20170301111943.12170-2-enric.balletbo@collabora.com>
-        <58B7C9BF.1040708@samsung.com> <58E44698.5020605@samsung.com>
-        <b0a76ac2-b524-23b3-ef58-22114e8bf209@collabora.com>
-        <59240507.1040005@samsung.com>
-        <3f4c4b85-e9db-0531-e3da-2e671a8fa750@collabora.com>
-        <592407B4.5040108@samsung.com>
-        <CANLzEktUM4sitQFRTTbDZm6WsTSA8bAohAr-x_y0szkF9GmRVw@mail.gmail.com>
-        <CAFqH_50v+7aAUro8QFsLX82gHwuM58Q8bpRTw7j1vXcexGLYQA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 0/6] SMP and CPU hotplug support for Meson8/Meson8b
+Date: Thu, 13 Jul 2017 12:31:07 +0200
+Message-ID: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAFqH_50v+7aAUro8QFsLX82gHwuM58Q8bpRTw7j1vXcexGLYQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Enric,
+This patchset adds support for booting the secondary CPU cores (and
+taking them offline again) on Amlogic Meson8 and Meson8b SoCs.
+It is based on an earlier version from Carlo Caione - this helped me
+a lot to get a better understanding of how SMP/CPU hotplug works
+(compared to the code found in Amlogic's GPL kernel sources from
+year 2015).
 
-On 2017년 07월 12일 19:28, Enric Balletbo Serra wrote:
-> Hi Chanwoo,
-> 
-> 2017-05-24 0:24 GMT+02:00 Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
->> Hi Chanwoo,
->>
->>
->> On Tue, May 23, 2017 at 2:58 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>
->>> OK. This patch must need the immutable branch.
->>>
->>> I expect that some maintainer will make the immutable branch
->>> and then send pull request to other maintainer related to them.
->>>
->>
->> I'll create an immutable branch with this this week. Thank you!
->>
-> 
-> The patch that was required for this series [1] is currently merged in
-> mainline, so I think this can go for the next merge window. Want you I
-> rebase these patches on top and resend or you want just pick-up these?
 
-I didn't receive the any mail/info about immutable branch.
+The .dts changes from series depend on:
+- "add the reset controller to the Meson8b clkc", see [1]
+- "ARM: dts: meson: add a node which describes the SRAM", see [2]
 
-It is late to merge this patch to v4.13-rc1. The merge window already opened.
-because I sent the extcon's pull request to GregKH for v4.13-rc1.
 
-After releasing the v4.13-rc1, please resend these patches.
-I'll apply them on v4.14 queue.
+Changes since v2 from [0]
+- added support for Meson8 (which requires a slightly different
+  enable-method)
+- implemented CPU hotplug support which allows taking a CPU core
+  offline for both, Meson8 and Meson8b
+- add a function to smp_scu.c which allows enabling a CPU core from
+  a different CPU (previously only the power mode for the current CPU
+  could be changed). Without this the CPU cores on Meson8 won't come
+  up (Amlogic's vendor GPL kernel sources also enable power through
+  SCU as very first step for Meson8b as well)
+- add a function to smp_scu.c to get the power status of a CPU core
+  (which is needed because the code in .cpu_kill needs to wait until
+  the core is actually powered off)
+- dropped patch "ARM: DTS: meson8b: Extend L2 cache controller node"
+  as it is already applied (for both, Meson8 and Meson8b)
+- dropped the patches which implement the reset controller which is
+  built into the clock-controller, these are a separate series: [1]
+- moved the enable-method property to each CPU node
 
-> 
-> Best regards,
->  Enric
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/platform/chrome?id=68c35ea25bdd4ad10445c4c02f7d48b3dccab8cc
-> 
-> 
->> Benson
->>
->> --
->> Benson Leung
->> Staff Software Engineer
->> Chrome OS Kernel
->> Google Inc.
->> bleung-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org
->> Chromium OS Project
->> bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
-> 
-> 
-> 
 
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390355.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004283.html
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004282.html
+
+
+Carlo Caione (2):
+  dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentation
+  ARM: dts: meson8b: add support for booting the secondary CPU cores
+
+Martin Blumenstingl (4):
+  ARM: smp_scu: add a helper for powering on a specific CPU
+  ARM: smp_scu: allow the platform code to read the SCU CPU status
+  ARM: meson: Add SMP bringup code for Meson8 and Meson8b
+  ARM: dts: meson8: add support for booting the secondary CPU cores
+
+ .../devicetree/bindings/arm/amlogic/pmu.txt        |  18 +
+ .../devicetree/bindings/arm/amlogic/smp-sram.txt   |  32 ++
+ Documentation/devicetree/bindings/arm/cpus.txt     |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/meson8.dtsi                      |  20 +
+ arch/arm/boot/dts/meson8b.dtsi                     |  20 +
+ arch/arm/include/asm/smp_scu.h                     |  12 +
+ arch/arm/kernel/smp_scu.c                          |  47 +-
+ arch/arm/mach-meson/Kconfig                        |   1 +
+ arch/arm/mach-meson/Makefile                       |   1 +
+ arch/arm/mach-meson/platsmp.c                      | 502 +++++++++++++++++++++
+ 11 files changed, 650 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
+ create mode 100644 arch/arm/mach-meson/platsmp.c
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+2.13.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
