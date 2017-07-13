@@ -1,46 +1,45 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mmc: sh_mmcif: Document r8a7743 DT bindings
-Date: Thu, 13 Jul 2017 12:06:03 +0200
-Message-ID: <CAPDyKFq1m6WEk-Hr9cm8L5EM3k1bXx-+bUXyosfh9SMDW39vhg@mail.gmail.com>
-References: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com> <1499853805-5915-2-git-send-email-chris.paterson2@renesas.com>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: Re: [PATCH v3 01/18] clk: ingenic: Use const pointer to clk_ops in  struct
+Date: Thu, 13 Jul 2017 12:07:25 +0200
+Message-ID: <ca4da3fa3067a7301f8fc1539e9e4362@crapouillou.net>
+References: <20170607200439.24450-2-paul@crapouillou.net>
+ <20170702163016.6714-1-paul@crapouillou.net>
+ <20170702163016.6714-2-paul@crapouillou.net>
+ <20170712232037.GR22780@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499853805-5915-2-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Paterson <chris.paterson2@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
+In-Reply-To: <20170712232037.GR22780-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 July 2017 at 12:03, Chris Paterson <chris.paterson2@renesas.com> wrote:
-> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
->
-> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> index c32dc5a..703e18c 100644
-> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
-> @@ -11,6 +11,7 @@ Required properties:
->         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
->         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
->         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
-> +       - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
->         - "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
->         - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
->         - "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
-> @@ -21,7 +22,7 @@ Required properties:
->  - interrupts: Some SoCs have only 1 shared interrupt, while others have either
->    2 or 3 individual interrupts (error, int, card detect). Below is the number
->    of interrupts for each SoC:
-> -    1: r8a73a4, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
-> +    1: r8a73a4, r8a7743, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
->      2: r8a7740, sh73a0
->      3: r7s72100
->
-> --
-> 1.9.1
->
+Le 2017-07-13 01:20, Stephen Boyd a écrit :
+> On 07/02, Paul Cercueil wrote:
+>> The CGU common code does not modify the pointed clk_ops structure, so 
+>> it
+>> should be marked as const.
+>> 
+>> Signed-off-by: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+>> ---
+> 
+> Sorry I forgot, did you want an ack for these clk patches or for
+> me to take them through clk tree. If it's the ack case,
+> 
+> Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> for patches 1 through 6.
 
-Thanks, applied for next!
+I think ACK; then Ralf can take them in 4.13 :)
 
-Kind regards
-Uffe
+Thanks,
+
+-Paul
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
