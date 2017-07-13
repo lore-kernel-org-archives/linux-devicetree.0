@@ -1,54 +1,84 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v4 1/3] dt-bindings: Add support for samsung s6e63j0x03
- panel binding
-Date: Thu, 13 Jul 2017 11:20:41 +0900
-Message-ID: <1499912443-3671-2-git-send-email-hoegeun.kwon@samsung.com>
-References: <1499912443-3671-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170713022056epcas5p2d495013bef646e080d6c9c9a4e36bcf4@epcas5p2.samsung.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [RFC v2 5/6] drivers: boot_constraint: Add initial DT bindings
+Date: Thu, 13 Jul 2017 10:52:37 +0800
+Message-ID: <CAGb2v67XtUcqdjMt-Ln6zn3ShH4JFmjkK4bPSpUNZpJqnmwivw@mail.gmail.com>
+References: <cover.1499770771.git.viresh.kumar@linaro.org> <0610277aef9830cff53b7b53cf41cc54886fdc7f.1499770771.git.viresh.kumar@linaro.org>
+ <CAL_Jsq+oAB3gejRMXuY0q9+Et4GrtvF3RwGzPNJ08TPooVyXJg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1499912443-3671-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+oAB3gejRMXuY0q9+Et4GrtvF3RwGzPNJ08TPooVyXJg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Shiraz Hashim <shashim-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNhbXN1bmcgczZlNjNqMHgwMyBpcyBhIDEuNjMiIDMyMHgzMjAgQU1PTEVEIHBhbmVsIGNv
-bm5lY3RlZCB1c2luZwpNSVBJLURTSSBpbnRlcmZhY2VzLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1
-biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+ClJldmlld2VkLWJ5OiBBbmRyemVqIEhh
-amRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4
-MDMudHh0ICB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNCBp
-bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M2oweDAzLnR4dAoKZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1
-bmcsczZlNjNqMHgwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
-ZGV4IDAwMDAwMDAuLjNmMWE4MzkKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0CkBA
-IC0wLDAgKzEsMjQgQEAKK1NhbXN1bmcgUzZFNjNKMFgwMyAxLjYzIiAzMjB4MzIwIEFNT0xFRCBw
-YW5lbCAoaW50ZXJmYWNlOiBNSVBJLURTSSBjb21tYW5kIG1vZGUpCisKK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6CisgIC0gY29tcGF0aWJsZTogInNhbXN1bmcsczZlNjNqMHgwMyIKKyAgLSByZWc6IHRo
-ZSB2aXJ0dWFsIGNoYW5uZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKKyAgLSB2ZGQzLXN1
-cHBseTogSS9PIHZvbHRhZ2Ugc3VwcGx5CisgIC0gdmNpLXN1cHBseTogdm9sdGFnZSBzdXBwbHkg
-Zm9yIGFuYWxvZyBjaXJjdWl0cworICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBmb3IgdGhl
-IHJlc2V0IHBpbiAoYWN0aXZlIGxvdykKKyAgLSB0ZS1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRo
-ZSB0ZWFyaW5nIGVmZmVjdCBzeW5jaHJvbml6YXRpb24gc2lnbmFsCisgICAgZ3BpbyBwaW4gKGFj
-dGl2ZSBoaWdoKQorCitFeGFtcGxlOgorJmRzaSB7CisJLi4uCisKKwlwYW5lbEAwIHsKKwkJY29t
-cGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTYzajB4MDMiOworCQlyZWcgPSA8MD47CisJCXZkZDMtc3Vw
-cGx5ID0gPCZsZG8xNl9yZWc+OworCQl2Y2ktc3VwcGx5ID0gPCZsZG8yMF9yZWc+OworCQlyZXNl
-dC1ncGlvcyA9IDwmZ3BlMCAxIEdQSU9fQUNUSVZFX0xPVz47CisJCXRlLWdwaW9zID0gPCZncHgw
-IDYgR1BJT19BQ1RJVkVfSElHSD47CisJfTsKK307Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Thu, Jul 13, 2017 at 5:28 AM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jul 12, 2017 at 1:34 AM, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> This adds device tree bindings for boot constraints. Only power supply
+>> constraint types are supported currently.
+>>
+>> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/boot-constraints.txt       | 68 ++++++++++++++++++++++
+>>  1 file changed, 68 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/boot-constraints.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/boot-constraints.txt b/Documentation/devicetree/bindings/boot-constraints.txt
+>> new file mode 100644
+>> index 000000000000..9a01ea1e6e72
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/boot-constraints.txt
+>> @@ -0,0 +1,68 @@
+>> +BOOT CONSTRAINTS
+>> +================
+>> +
+>> +Some devices are powered ON by the bootloader before the bootloader handovers
+>> +control to the Operating System (OS). It maybe important for those devices to
+>> +keep working until the time the OS takes over and starts configuring the devices
+>> +again.
+>> +
+>> +A typical example of that can be the LCD controller, which is used by the
+>> +bootloaders to show image(s) while the platform is booting into the Operating
+>> +System. The LCD controller can be using some resources, like clk, supplies, etc,
+>> +that are shared between several devices. These shared resources should be
+>> +configured to satisfy need of all the users. If another device's (X) driver gets
+>> +probed before the LCD controller driver in this case, then it may end up
+>> +reconfiguring these resources to ranges satisfying the current users (only
+>> +device X) and that can make the LCD screen unstable.
+>
+> Display is a pretty well known use case here. Do you have other
+> examples in mind? Other cases I've seen are automotive with keeping
+> the backup camera going and CAN bus handling. Though my new car has a
+> flicker shortly after coming on, so I guess the handoff doesn't have
+> to be completely seemless. :)
+>
+> [...]
+>
+>> +       mmc: mmc@0x0 {
+>> +               ...
+>> +               ...
+>> +               vmmc-supply = <&twl_reg1>;
+>> +               vmmcaux-supply = <&twl_reg2>;
+>> +               boot-constraint-supplies = "vmmc", "vmmcaux";
+>> +               boot-constraint-uV = <1800000 2000000>, /* vmmc */
+>> +                                    <2000000 2000000>; /* vmmcaux */
+>
+> No. I don't like how this is going to extend to all the other bindings
+> people are going to want constraints for. We don't need a parallel set
+> of properties for each type of binding.
+>
+> I'm not convinced that we need a general solution for what's probably
+> a handful of things that need a handoff versus just re-initialize.
+
+I'm afraid the regulator case still doesn't make sense. The voltage
+constraints should be set within each supplies device node. This was
+explained in the discussion in v1 [1].
+
+ChenYu
+
+[1] https://www.spinics.net/lists/arm-kernel/msg591692.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
