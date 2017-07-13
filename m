@@ -1,93 +1,47 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v3 5/9] clk: at91: clk-generated: create function to find best_diff
-Date: Thu, 13 Jul 2017 09:49:23 +0200
-Message-ID: <20170713074927.10882-6-quentin.schulz@free-electrons.com>
-References: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: iwg20m: Add MMCIF0 support
+Date: Thu, 13 Jul 2017 09:54:14 +0200
+Message-ID: <20170713075414.GF5580@verge.net.au>
+References: <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com>
+ <201707130850.0py1QazG%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201707130850.0py1QazG%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The way to find the best_diff and do the appropriate process afterwards
-can be re-used.
+On Thu, Jul 13, 2017 at 08:25:56AM +0800, kbuild test robot wrote:
+> Hi Chris,
+> 
+> [auto build test ERROR on renesas/next]
+> [also build test ERROR on next-20170712]
+> [cannot apply to v4.12]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Chris-Paterson/Add-MMCIF0-support-for-r8a7743-iwg20m/20170713-042814
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/horms/renesas.git next
+> config: arm-at91_dt_defconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> Error: arch/arm/boot/dts/r8a7743-iwg20m.dtsi:40.1-5 Label or path pfc not found
+>    FATAL ERROR: Syntax error parsing input tree
 
-This patch prepares the driver for an upcoming patch that will allow
-clk_generated to determine the rate of the audio_pll.
+This seems to be a false positive. The node in question is present in
+the devel branch which is the base of these changes.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
----
- drivers/clk/at91/clk-generated.c | 41 ++++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index ef4b4e03de04..7260e498e059 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -99,15 +99,36 @@ clk_generated_recalc_rate(struct clk_hw *hw,
- 	return DIV_ROUND_CLOSEST(parent_rate, gck->gckdiv + 1);
- }
- 
-+static void clk_generated_best_diff(struct clk_rate_request *req,
-+				    struct clk_hw *parent,
-+				    unsigned long parent_rate, u32 div,
-+				    int *best_diff, long *best_rate)
-+{
-+	unsigned long tmp_rate;
-+	int tmp_diff;
-+
-+	if (!div)
-+		tmp_rate = parent_rate;
-+	else
-+		tmp_rate = parent_rate / div;
-+	tmp_diff = abs(req->rate - tmp_rate);
-+
-+	if (*best_diff < 0 || *best_diff > tmp_diff) {
-+		*best_rate = tmp_rate;
-+		*best_diff = tmp_diff;
-+		req->best_parent_rate = parent_rate;
-+		req->best_parent_hw = parent;
-+	}
-+}
-+
- static int clk_generated_determine_rate(struct clk_hw *hw,
- 					struct clk_rate_request *req)
- {
- 	struct clk_generated *gck = to_clk_generated(hw);
- 	struct clk_hw *parent = NULL;
- 	long best_rate = -EINVAL;
--	unsigned long tmp_rate, min_rate;
-+	unsigned long min_rate;
- 	int best_diff = -1;
--	int tmp_diff;
- 	int i;
- 
- 	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-@@ -125,18 +146,10 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 			continue;
- 
- 		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
--		if (!div)
--			tmp_rate = parent_rate;
--		else
--			tmp_rate = parent_rate / div;
--		tmp_diff = abs(req->rate - tmp_rate);
--
--		if (best_diff < 0 || best_diff > tmp_diff) {
--			best_rate = tmp_rate;
--			best_diff = tmp_diff;
--			req->best_parent_rate = parent_rate;
--			req->best_parent_hw = parent;
--		}
-+
-+		clk_generated_best_diff(req, parent, parent_rate, div,
-+					&best_diff, &best_rate);
-+
- 
- 		if (!best_diff)
- 			break;
--- 
-2.11.0
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
