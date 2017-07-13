@@ -1,69 +1,70 @@
-From: Chris Paterson <chris.paterson2@renesas.com>
-Subject: [PATCH v2] ARM: dts: iwg20m: Add MMCIF0 support
-Date: Thu, 13 Jul 2017 16:39:00 +0100
-Message-ID: <1499960340-25310-1-git-send-email-chris.paterson2@renesas.com>
-References: <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Paterson <chris.paterson2@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 01/18] regmap: mmio: Add function to attach a clock
+Date: Thu, 13 Jul 2017 17:01:42 +0100
+Message-ID: <20170713160142.2buaie6ebqbxunin@sirena.org.uk>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============0286936309=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Define the iwg20m board dependent part of the MMCIF0 device node.
 
-Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
----
-This patch is based on:
-   renesas-devel-20170713-v4.12
- + pinctrl: sh-pfc: r8a7791: Add R8A7743 support
- + pinctrl: sh-pfc: r8a7791: Add missing mmc_data8_b pin group
-
-v1->v2:
- - Corrected data pin group to mmc_data8_b - Thanks Geert.
+--===============0286936309==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="pegq6bobp7nhd4zb"
+Content-Disposition: inline
 
 
- arch/arm/boot/dts/r8a7743-iwg20m.dtsi | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+--pegq6bobp7nhd4zb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-index 001ca91..f78dbc5 100644
---- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-+++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-@@ -22,8 +22,34 @@
- 		device_type = "memory";
- 		reg = <2 0x00000000 0 0x20000000>;
- 	};
-+
-+	reg_3p3v: 3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
- };
- 
- &extal_clk {
- 	clock-frequency = <20000000>;
- };
-+
-+&pfc {
-+	mmcif0_pins: mmc {
-+		groups = "mmc_data8_b", "mmc_ctrl";
-+		function = "mmc";
-+	};
-+};
-+
-+&mmcif0 {
-+		pinctrl-0 = <&mmcif0_pins>;
-+		pinctrl-names = "default";
-+
-+		vmmc-supply = <&reg_3p3v>;
-+		bus-width = <8>;
-+		non-removable;
-+		status = "okay";
-+};
--- 
-1.9.1
+On Thu, Jul 13, 2017 at 04:12:56PM +0200, Maxime Ripard wrote:
+
+> This might be problematic if the clock to enable is stored in another node.
+> Let's add a function that allows to attach a clock that has already been
+> retrieved to a regmap in order to fix this.
+
+What is the use case for this?
+
+--pegq6bobp7nhd4zb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllnmWYACgkQJNaLcl1U
+h9C29gf9ExWbNqhDFlppfUkfVkzoUeE+eU+mRJdCOwJZTptV7nNFaQocXHRtzTQy
+Cl8cs5frVvJxaB618l8tqyJJKs5n61MTtANBHmxSwZDEchFqF3oJRQDSkUMfPPPn
+GxzNfq7z0AK/nZP40lc6u+gOqGue389YdzfOb6l2TLY5mYShO+qUA5wVcs2nlEZN
+DAs9mPgFqw5CKsRzGbUxys4x4nK90i+v+52iwdxwE74YLGm6IBhHpufSwAOxkhEE
+fAQzIRlGfXpadT5rjpBDz4FF7Zj/Zxid1/lr1yKyQEPOe6wn33hd2IEo2lgyVgfa
+QlKS7vvJ+7qGXWIJ02FCAyy6Y6ZNzw==
+=jPdr
+-----END PGP SIGNATURE-----
+
+--pegq6bobp7nhd4zb--
+
+--===============0286936309==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0286936309==--
