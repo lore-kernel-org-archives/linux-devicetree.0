@@ -1,109 +1,63 @@
-From: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Thu, 13 Jul 2017 22:22:58 +0100
-Message-ID: <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20170703090648.GV13989@umbus.fritz.box> <5967CAA6.6010801@gmail.com>
- <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
- <5967D2F7.60303@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5967D2F7.60303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: net: Add bindings for National Instruments XGE netdev
+Date: Thu, 13 Jul 2017 14:21:48 -0700
+Message-ID: <1499980909-11702-1-git-send-email-mdf@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13/07/2017 21:07, Frank Rowand wrote:
-> On 07/13/17 12:38, Phil Elwell wrote:
->
-> (I moved Phil's reply to after the email he replied to.)
+This adds bindings for the NI XGE 1G/10G network device.
 
-Thanks.
+Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/nixge.c | 32 +++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/nixge.c
 
->> On 13 Jul 2017 8:32 pm, "Frank Rowand" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> On 07/03/17 02:06, David Gibson wrote:
->>>> On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
->>>>> This patch enables an overlay to refer to a previous overlay's
->>>>> labels by performing a merge of symbol information at application
->>>>> time.
->>>>
->>>> This seems to be doing things the hard way.
->>>>
->>>> You're essentially extending the semantics of overlay application to
->>>> add the symbol merging.  You've implemented these extended semantics
->>>> in libfdt, which is all very well, but that's not the only overlay
->>>> application implementation.
->>>>
->>>>
->>>> It seems to me a better approach would be to change dtc's -@
->>>> implementation, so that in /plugin/ mode instead of making a global
->>>> __symbols__ node, it puts it into the individual fragments.  That way
->>>> the existing overlay application semantics will update the __symbols__
->>>> node.
->>>
->>> If the __symbols__ node was inside a fragment, then the existing
->>> code would add (or update) a __symbols__ node located at the location
->>> pointed to by the fragment's target path, instead of updating the
->>> node /__symbols__.
->>>
->>> It makes sense to me to have only one global __symbols__ node instead
->>> of several.
->>>
->>> If there is a global __symbols__ node then we have a single name
->>> space for symbols.
->>>
->>> If there are multiple __symbols__ nodes spread throughout the tree,
->>> then to me that would imply different name spaces spread throughout
->>> the tree, where namespaces are determined by fragments.  This sounds
->>> confusing to me.  Or if the intent is to have a single name space
->>> then the __symbols__ information would be scattered throughout the
->>> tree instead of located in a single node.
->>>
->>> My current patch (under review), targeted for Linux 4.13-rc1, puts
->>> an overlay's __symbols__ node properties into the overlay's
->>> changeset, so they get added when the overlay is loaded and
->>> removed when the overlay is unloaded.
->
->> Can we also consider a mechanism for overlay-local symbols, i.e. symbols
->> that are used purely to create links within an overlay - perhaps using a
->> particular naming convention? This would make it easier to instantiate an
->> overlay multiple times without having to uniquify all symbols, and it would
->> avoid polluting the global namespace without reason.
->>
->> Phil
->
-> That is essentially the result you get if you compile the overlay dts
-> without '-@'.  There will be no __symbols__ node created even if there
-> are symbols within the overlay.
+diff --git a/Documentation/devicetree/bindings/net/nixge.c b/Documentation/devicetree/bindings/net/nixge.c
+new file mode 100644
+index 0000000..9fff5a7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/nixge.c
+@@ -0,0 +1,32 @@
++* NI XGE Ethernet controller
++
++Required properties:
++- compatible: Should be "ni,xge-enet-2.00"
++- reg: Address and length of the register set for the device
++- interrupts: Should contain tx and rx interrupt
++- interrupt-names: Should be "rx-irq" and "tx-irq"
++- phy-mode: See ethernet.txt file in the same directory.
++- nvmem-cells: Phandle of nvmem cell containing the mac address
++- nvmem-cell-names: Should be "address"
++
++Examples (10G generic PHY):
++	nixge0: ethernet@40000000 {
++		compatible = "ni,xge-enet-2.00";
++		reg = <0x40000000 0x6000>;
++
++		nvmem-cells = <&eth1_addr>;
++		nvmem-cell-names = "address";
++
++		interrupts = <0 29 4>, <0 30 4>;
++		interrupt-names = "rx-irq", "tx-irq";
++		interrupt-parent = <&intc>;
++
++		phy-mode = "xgmii";
++		phy-handle = <&ethernet_phy1>;
++
++		ethernet_phy1: ethernet-phy@4 {
++			compatible = "ethernet-phy-ieee802.3-c45";
++			reg = <4>;
++			devices = <0xa>;
++		};
++	};
+-- 
+2.7.4
 
-But (unless something has changed recently) the '-@' switch controls both
-symbol and fixup generation, i.e. export and import of symbols. Unless one
-religiously uses 'target-path' to place fragments (thus removing the
-level of abstraction provided by symbols) overlays are useless without
-the ability to reference external symbols, but in my experience very few
-overlays need to add symbols to the global symbol table.
-
-> This is important if the overlay is for an add-on board which might
-> have several instances plugged into different sockets on the base
-> system.
->
-> But Phil does bring up an interesting use case.  If the add-on board
-> ("level one add-on") in turn has a socket that an additional board
-> ("level two add-on") can be plugged into, then the level two add-on
-> overlay might have a need to reference a symbol from the overlay
-> for the level one add-on.  And since there may be multiple level one
-> add-on cards in the system, the overlay for each of the level one
-> add-ons would need to export its symbols in a name space only
-> visible to the level two add-on plugged into that specific level
-> on add-on.
-
-That use case adds a further level of complexity. Should it come to it, I
-hope an inability to solve the problem posed by this advanced usage won't
-prevent a solution to a simpler problem from being accepted.
-
-Phil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
