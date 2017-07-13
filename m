@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 6/6] ARM: dts: meson8b: add support for booting the secondary CPU cores
-Date: Thu, 13 Jul 2017 12:31:13 +0200
-Message-ID: <20170713103113.21560-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 5/6] ARM: dts: meson8: add support for booting the secondary CPU cores
+Date: Thu, 13 Jul 2017 12:31:12 +0200
+Message-ID: <20170713103113.21560-6-martin.blumenstingl@googlemail.com>
 References: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170713103113.21560-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -9,8 +9,6 @@ Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 Cc: arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
 Booting the secondary CPU cores involves the following nodes/devices:
 - SCU (Snoop-Control-Unit, for which we already have a DT node)
@@ -25,71 +23,71 @@ Booting the secondary CPU cores involves the following nodes/devices:
 This adds all required nodes and properties to boot the secondary CPU
 cores.
 
-Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Suggested-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/meson8.dtsi | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index bc278da7df0d..8826722c6619 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -59,6 +59,8 @@
- 			compatible = "arm,cortex-a5";
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index b98d44fde6b6..9373d54aae21 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -60,6 +60,8 @@
+ 			compatible = "arm,cortex-a9";
  			next-level-cache = <&L2>;
  			reg = <0x200>;
-+			enable-method = "amlogic,meson8b-smp";
++			enable-method = "amlogic,meson8-smp";
 +			resets = <&clkc 0>;
  		};
  
  		cpu@201 {
-@@ -66,6 +68,8 @@
- 			compatible = "arm,cortex-a5";
+@@ -67,6 +69,8 @@
+ 			compatible = "arm,cortex-a9";
  			next-level-cache = <&L2>;
  			reg = <0x201>;
-+			enable-method = "amlogic,meson8b-smp";
++			enable-method = "amlogic,meson8-smp";
 +			resets = <&clkc 1>;
  		};
  
  		cpu@202 {
-@@ -73,6 +77,8 @@
- 			compatible = "arm,cortex-a5";
+@@ -74,6 +78,8 @@
+ 			compatible = "arm,cortex-a9";
  			next-level-cache = <&L2>;
  			reg = <0x202>;
-+			enable-method = "amlogic,meson8b-smp";
++			enable-method = "amlogic,meson8-smp";
 +			resets = <&clkc 2>;
  		};
  
  		cpu@203 {
-@@ -80,6 +86,8 @@
- 			compatible = "arm,cortex-a5";
+@@ -81,6 +87,8 @@
+ 			compatible = "arm,cortex-a9";
  			next-level-cache = <&L2>;
  			reg = <0x203>;
-+			enable-method = "amlogic,meson8b-smp";
++			enable-method = "amlogic,meson8-smp";
 +			resets = <&clkc 3>;
  		};
  	};
  
-@@ -90,6 +98,11 @@
+@@ -118,6 +126,11 @@
  }; /* end of / */
  
  &aobus {
 +	pmu: pmu@e0 {
-+		compatible = "amlogic,meson8b-pmu", "syscon";
-+		reg = <0xe0 0x18>;
++		compatible = "amlogic,meson8-pmu", "syscon";
++		reg = <0xe0 0x8>;
 +	};
 +
  	pinctrl_aobus: pinctrl@84 {
- 		compatible = "amlogic,meson8b-aobus-pinctrl";
+ 		compatible = "amlogic,meson8-aobus-pinctrl";
  		reg = <0x84 0xc>;
-@@ -157,6 +170,13 @@
+@@ -249,6 +262,13 @@
  	};
  };
  
 +&ahb_sram {
 +	smp-sram@1ff80 {
-+		compatible = "amlogic,meson8b-smp-sram";
++		compatible = "amlogic,meson8-smp-sram";
 +		reg = <0x1ff80 0x8>;
 +	};
 +};
