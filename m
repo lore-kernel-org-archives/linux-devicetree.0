@@ -1,99 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 16/18] arm: dts: sun8i: a33: Add the DSI-related nodes
-Date: Thu, 13 Jul 2017 16:13:11 +0200
-Message-ID: <79e7043a909e0fe56207c42c51695fb14e27bae0.1499955058.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 01/18] regmap: mmio: Add function to attach a clock
+Date: Thu, 13 Jul 2017 16:12:56 +0200
+Message-ID: <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
 References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The A33 has a MIPI-DSI block, along with its D-PHY. Let's add it in order
-to use it in the relevant boards.
-
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a33.dtsi | 50 ++++++++++++++++++++++++++++++++-
- 1 file changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 22660919bd08..18d1bf9f8e84 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -236,10 +236,14 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <1>;
-+
-+					tcon0_out_dsi0: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&dsi0_in_tcon0>;
-+					};
- 				};
- 			};
- 		};
--
- 		crypto: crypto-engine@01c15000 {
- 			compatible = "allwinner,sun4i-a10-crypto";
- 			reg = <0x01c15000 0x1000>;
-@@ -280,6 +284,50 @@
- 			#io-channel-cells = <0>;
- 		};
- 
-+		dsi0: dsi@01ca0000 {
-+			compatible = "allwinner,sun6i-a31-mipi-dsi";
-+			reg = <0x01ca0000 0x1000>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_SCLK>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			phys = <&dphy0>;
-+			phy-names = "dphy";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				dsi0_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					dsi0_in_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_out_dsi0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		dphy0: d-phy@01ca1000 {
-+			compatible = "allwinner,sun6i-a31-mipi-dphy";
-+			reg = <0x01ca1000 0x1000>;
-+			clocks = <&ccu CLK_BUS_MIPI_DSI>,
-+				 <&ccu CLK_DSI_DPHY>;
-+			clock-names = "bus", "mod";
-+			resets = <&ccu RST_BUS_MIPI_DSI>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#phy-cells = <0>;
-+		};
-+
- 		fe0: display-frontend@01e00000 {
- 			compatible = "allwinner,sun8i-a33-display-frontend";
- 			reg = <0x01e00000 0x20000>;
--- 
-git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cmVnbWFwX2luaXRfbW1pb19jbGsgYWxsb3dzIHRvIHNwZWNpZnkgYSBjbG9jayB0aGF0IG5lZWRz
+IHRvIGJlIGVuYWJsZWQKd2hpbGUgYWNjZXNzaW5nIHRoZSByZWdpc3RlcnMuCgpIb3dldmVyLCB0
+aGF0IGNsb2NrIGlzIHJldHJpZXZlZCB0aHJvdWdoIGl0cyBjbG9jayBJRCwgd2hpY2ggbWVhbnMg
+aXQgd2lsbApsb29rdXAgdGhhdCBjbG9jayBiYXNlZCBvbiB0aGUgY3VycmVudCBkZXZpY2UgdGhh
+dCByZWdpc3RlcnMgdGhlIHJlZ21hcCwKYW5kLCBpbiB0aGUgRFQgY2FzZSwgd2lsbCBvbmx5IGxv
+b2sgaW4gdGhhdCBkZXZpY2UgT0Ygbm9kZS4KClRoaXMgbWlnaHQgYmUgcHJvYmxlbWF0aWMgaWYg
+dGhlIGNsb2NrIHRvIGVuYWJsZSBpcyBzdG9yZWQgaW4gYW5vdGhlciBub2RlLgpMZXQncyBhZGQg
+YSBmdW5jdGlvbiB0aGF0IGFsbG93cyB0byBhdHRhY2ggYSBjbG9jayB0aGF0IGhhcyBhbHJlYWR5
+IGJlZW4KcmV0cmlldmVkIHRvIGEgcmVnbWFwIGluIG9yZGVyIHRvIGZpeCB0aGlzLgoKU2lnbmVk
+LW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+
+Ci0tLQogZHJpdmVycy9iYXNlL3JlZ21hcC9yZWdtYXAtbW1pby5jIHwgMjQgKysrKysrKysrKysr
+KysrKysrKysrKysrCiBpbmNsdWRlL2xpbnV4L3JlZ21hcC5oICAgICAgICAgICAgfCAgNCArKysr
+CiAyIGZpbGVzIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L2Jhc2UvcmVnbWFwL3JlZ21hcC1tbWlvLmMgYi9kcml2ZXJzL2Jhc2UvcmVnbWFwL3JlZ21hcC1t
+bWlvLmMKaW5kZXggNTE4OWZkNjE4MmY2Li41Y2FkZmQzMzk0ZDggMTAwNjQ0Ci0tLSBhL2RyaXZl
+cnMvYmFzZS9yZWdtYXAvcmVnbWFwLW1taW8uYworKysgYi9kcml2ZXJzL2Jhc2UvcmVnbWFwL3Jl
+Z21hcC1tbWlvLmMKQEAgLTI4LDYgKzI4LDggQEAKIHN0cnVjdCByZWdtYXBfbW1pb19jb250ZXh0
+IHsKIAl2b2lkIF9faW9tZW0gKnJlZ3M7CiAJdW5zaWduZWQgdmFsX2J5dGVzOworCisJYm9vbCBh
+dHRhY2hlZF9jbGs7CiAJc3RydWN0IGNsayAqY2xrOwogCiAJdm9pZCAoKnJlZ193cml0ZSkoc3Ry
+dWN0IHJlZ21hcF9tbWlvX2NvbnRleHQgKmN0eCwKQEAgLTM2Myw0ICszNjUsMjYgQEAgc3RydWN0
+IHJlZ21hcCAqX19kZXZtX3JlZ21hcF9pbml0X21taW9fY2xrKHN0cnVjdCBkZXZpY2UgKmRldiwK
+IH0KIEVYUE9SVF9TWU1CT0xfR1BMKF9fZGV2bV9yZWdtYXBfaW5pdF9tbWlvX2Nsayk7CiAKK2lu
+dCByZWdtYXBfbW1pb19hdHRhY2hfY2xrKHN0cnVjdCByZWdtYXAgKm1hcCwgc3RydWN0IGNsayAq
+Y2xrKQoreworCXN0cnVjdCByZWdtYXBfbW1pb19jb250ZXh0ICpjdHggPSBtYXAtPmJ1c19jb250
+ZXh0OworCisJY3R4LT5jbGsgPSBjbGs7CisJY3R4LT5hdHRhY2hlZF9jbGsgPSB0cnVlOworCisJ
+cmV0dXJuIGNsa19wcmVwYXJlKGN0eC0+Y2xrKTsKK30KK0VYUE9SVF9TWU1CT0xfR1BMKHJlZ21h
+cF9tbWlvX2F0dGFjaF9jbGspOworCit2b2lkIHJlZ21hcF9tbWlvX2RldGFjaF9jbGsoc3RydWN0
+IHJlZ21hcCAqbWFwKQoreworCXN0cnVjdCByZWdtYXBfbW1pb19jb250ZXh0ICpjdHggPSBtYXAt
+PmJ1c19jb250ZXh0OworCisJY2xrX3VucHJlcGFyZShjdHgtPmNsayk7CisKKwljdHgtPmF0dGFj
+aGVkX2NsayA9IGZhbHNlOworCWN0eC0+Y2xrID0gTlVMTDsKK30KK0VYUE9SVF9TWU1CT0xfR1BM
+KHJlZ21hcF9tbWlvX2RldGFjaF9jbGspOworCiBNT0RVTEVfTElDRU5TRSgiR1BMIHYyIik7CmRp
+ZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oIGIvaW5jbHVkZS9saW51eC9yZWdtYXAu
+aAppbmRleCA5NzhhYmZiYWM2MTcuLjExYTI5MmE3NjU4NiAxMDA2NDQKLS0tIGEvaW5jbHVkZS9s
+aW51eC9yZWdtYXAuaAorKysgYi9pbmNsdWRlL2xpbnV4L3JlZ21hcC5oCkBAIC0yMSw2ICsyMSw3
+IEBACiAjaW5jbHVkZSA8bGludXgvbG9ja2RlcC5oPgogCiBzdHJ1Y3QgbW9kdWxlOworc3RydWN0
+IGNsazsKIHN0cnVjdCBkZXZpY2U7CiBzdHJ1Y3QgaTJjX2NsaWVudDsKIHN0cnVjdCBpcnFfZG9t
+YWluOwpAQCAtNzg5LDYgKzc5MCw5IEBAIGJvb2wgcmVnbWFwX2FjOTdfZGVmYXVsdF92b2xhdGls
+ZShzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCByZWcpOwogCV9fcmVnbWFwX2xvY2tk
+ZXBfd3JhcHBlcihfX2Rldm1fcmVnbWFwX2luaXRfYWM5NywgI2NvbmZpZywJXAogCQkJCWFjOTcs
+IGNvbmZpZykKIAoraW50IHJlZ21hcF9tbWlvX2F0dGFjaF9jbGsoc3RydWN0IHJlZ21hcCAqbWFw
+LCBzdHJ1Y3QgY2xrICpjbGspOwordm9pZCByZWdtYXBfbW1pb19kZXRhY2hfY2xrKHN0cnVjdCBy
+ZWdtYXAgKm1hcCk7CisKIHZvaWQgcmVnbWFwX2V4aXQoc3RydWN0IHJlZ21hcCAqbWFwKTsKIGlu
+dCByZWdtYXBfcmVpbml0X2NhY2hlKHN0cnVjdCByZWdtYXAgKm1hcCwKIAkJCWNvbnN0IHN0cnVj
+dCByZWdtYXBfY29uZmlnICpjb25maWcpOwotLSAKZ2l0LXNlcmllcyAwLjkuMQpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
