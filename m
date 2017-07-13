@@ -1,56 +1,72 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: iwg20m: Add MMCIF0 support
-Date: Thu, 13 Jul 2017 10:12:14 +0200
-Message-ID: <20170713081213.GL5580@verge.net.au>
-References: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com>
- <1499853805-5915-4-git-send-email-chris.paterson2@renesas.com>
- <CAMuHMdXMFkXopGiLOVf0jDDQTKig-wFrgMOKrf14341h85kPNw@mail.gmail.com>
- <20170713080228.GI5580@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3] arm64: dts: r8a7795: Add all MSIOF nodes
+Date: Thu, 13 Jul 2017 10:16:36 +0200
+Message-ID: <20170713081635.GM5580@verge.net.au>
+References: <1499855661-21386-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170713080228.GI5580-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1499855661-21386-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 10:02:29AM +0200, Simon Horman wrote:
-> On Wed, Jul 12, 2017 at 01:52:49PM +0200, Geert Uytterhoeven wrote:
-> > Hi Chris,
-> > 
-> > On Wed, Jul 12, 2017 at 12:03 PM, Chris Paterson
-> > <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > Define the iwg20m board dependent part of the MMCIF0 device node.
-> > >
-> > > Signed-off-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> > >
-> > > diff --git a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-> > > index 001ca91..ffce1b6 100644
-> > > --- a/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7743-iwg20m.dtsi
-> > 
-> > > +&pfc {
-> > > +       mmcif0_pins: mmc {
-> > > +               groups = "mmc_data8", "mmc_ctrl";
-> > 
-> > "mmc_data8" is not correct, as D6/D7 of the eMMC are not connected to GP6_28
-> > resp. GP6_29, but to GP6_6 resp. GP6_7.
-> > So it should be "mmc_data8_b".
-> > 
-> > Unfortunately the latter pin group isn't supported by the PFC driver yet.
-> > Cooking a patch...
+On Wed, Jul 12, 2017 at 12:34:21PM +0200, Geert Uytterhoeven wrote:
+> Add the device nodes for all MSIOF SPI controllers, incl. clocks, power
+> domain, dma, and reset properties.
 > 
-> The above notwithstanding I have applied this patch for v4.14.
+> Due to a hardware erratum on R-Car H3 ES1.x, using MSIOF for SPI is only
+> supported on ES2.0 and later.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Tested on r8a7795/salvator-xs with MSIOF3(A) connected to a HD44780
+> character LCD through a pair of 74HCT595 shift registers.
+
+Thanks, applied for v4.14.
+
+> 
+> v3:
+>   - Add resets properties,
+>   - Add family-specific compatible values,
+>   - Add link to second DMA controller for MSIOF[01],
+> 
+> v2:
+>   - Rebased,
+>   - Switch to final CPG/MSSR bindings,
+>   - Change one-line summary prefix to match current arm-soc practices.
+> ---
+>  arch/arm64/boot/dts/renesas/r8a7795.dtsi | 62 ++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> index 6f5130766a212d6d..507d8ad07aaf9007 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+> @@ -899,6 +899,68 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		msiof0: spi@e6e90000 {
+> +			compatible = "renesas,msiof-r8a7795",
+
+I take it there is also a patch to add the above compat string
+to the bindings documentation.
+
+> +				     "renesas,rcar-gen3-msiof";
+> +			reg = <0 0xe6e90000 0 0x0064>;
+> +			interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 211>;
+> +			dmas = <&dmac1 0x41>, <&dmac1 0x40>,
+> +			       <&dmac2 0x41>, <&dmac2 0x40>;
+> +			dma-names = "tx", "rx", "tx", "rx";
+> +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+> +			resets = <&cpg 211>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
 
 ...
-
-Sorry, I think I need more coffee.
-
-I misread Geert's comment above. I have dropped this patch.
-Please post a corrected v2 of this patch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
