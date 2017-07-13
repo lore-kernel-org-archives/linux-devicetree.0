@@ -1,370 +1,55 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 17/18] arm: dts: sun8i: Add BananaPI M2-Magic DTS
-Date: Thu, 13 Jul 2017 16:13:12 +0200
-Message-ID: <fd6f80ac08ce9cbe4ccba884750dae128c538a2f.1499955058.git-series.maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 09/18] drm/sun4i: tcon: Adjust dotclock dividers range
+Date: Thu, 13 Jul 2017 16:13:04 +0200
+Message-ID: <74db696da66cffafe1e729fe2df73b437c8fd483.1499955058.git-series.maxime.ripard@free-electrons.com>
 References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Bananapi M2-Magic is a board with an A33, a USB host and USB OTG
-connectors, and 8GB eMMC, an AP6212 WiFi/Bluetooth chip and connectors for
-DSI, CSI and GPIOs.
-
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                   |   1 +-
- arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts | 321 ++++++++++++++++++++-
- 2 files changed, 322 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35dc9a7..e0d77ab79f5f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -918,6 +918,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-orangepi-pc-plus.dtb \
- 	sun8i-h3-orangepi-plus.dtb \
- 	sun8i-h3-orangepi-plus2e.dtb \
-+	sun8i-r16-bananapi-m2m.dtb \
- 	sun8i-r16-parrot.dtb \
- 	sun8i-v3s-licheepi-zero.dtb \
- 	sun8i-v3s-licheepi-zero-dock.dtb
-diff --git a/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-new file mode 100644
-index 000000000000..eaf09666720d
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts
-@@ -0,0 +1,321 @@
-+/*
-+ * Copyright (c) 2017 Free Electrons <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a33.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "BananaPi M2 Magic";
-+	compatible = "sinovoip,bananapi-m2m", "allwinner,sun8i-a33";
-+
-+	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		blue {
-+			label = "bpi-m2m:blue:usr";
-+			gpios = <&pio 2 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		green {
-+			label = "bpi-m2m:green:usr";
-+			gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		red {
-+			label = "bpi-m2m:red:power";
-+			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-+			default-state = "on";
-+		};
-+	};
-+
-+	reg_vcc5v0: vcc5v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 6 GPIO_ACTIVE_LOW>; /* PL06 */
-+	};
-+};
-+
-+&codec {
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_dcdc3>;
-+};
-+
-+&cpu0_opp_table {
-+	opp@1104000000 {
-+		opp-hz = /bits/ 64 <1104000000>;
-+		opp-microvolt = <1320000>;
-+		clock-latency-ns = <244144>; /* 8 32k periods */
-+	};
-+
-+	opp@1200000000 {
-+		opp-hz = /bits/ 64 <1200000000>;
-+		opp-microvolt = <1320000>;
-+		clock-latency-ns = <244144>; /* 8 32k periods */
-+	};
-+};
-+
-+&dai {
-+	status = "okay";
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+/* This is the i2c bus exposed on the DSI connector for the touch panel */
-+&i2c0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c0_pins_a>;
-+	status = "disabled";
-+};
-+
-+/* This is the i2c bus exposed on the GPIO header */
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins_a>;
-+	status = "disabled";
-+};
-+
-+/* This is the i2c bus exposed on the CSI connector to control the sensor */
-+&i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins_a>;
-+	status = "disabled";
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 1 4 GPIO_ACTIVE_HIGH>; /* PB4 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_aldo1>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp22x: pmic@3a3 {
-+		compatible = "x-powers,axp223";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&nmi_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		eldoin-supply = <&reg_dcdc1>;
-+		x-powers,drive-vbus-en;
-+	};
-+};
-+
-+#include "axp223.dtsi"
-+
-+&ac_power_supply {
-+	status = "okay";
-+};
-+
-+&reg_aldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-io";
-+};
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <2500000>;
-+	regulator-max-microvolt = <2500000>;
-+	regulator-name = "vdd-dll";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "avcc";
-+};
-+
-+&reg_dc1sw {
-+	regulator-name = "vcc-lcd";
-+};
-+
-+&reg_dc5ldo {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-3v0";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_dcdc3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <900000>;
-+	regulator-max-microvolt = <1400000>;
-+	regulator-name = "vdd-cpu";
-+};
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+/*
-+ * Our WiFi chip needs both DLDO1 and DLDO2 to be powered at the same
-+ * time, with the two being in sync. Since this is not really
-+ * supported right now, just use the two as always on, and we will fix
-+ * it later.
-+ */
-+&reg_dldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi0";
-+};
-+
-+&reg_dldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi1";
-+};
-+
-+&reg_drivevbus {
-+	regulator-name = "usb0-vbus";
-+	status = "okay";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
-+
-+&sound {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_b>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins_a>, <&uart1_pins_cts_rts_a>;
-+	status = "okay";
-+};
-+
-+&usb_otg {
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb_power_supply {
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_id_det-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>; /* PH8 */
-+	usb0_vbus_power-supply = <&usb_power_supply>;
-+	usb0_vbus-supply = <&reg_drivevbus>;
-+	usb1_vbus-supply = <&reg_vcc5v0>;
-+	status = "okay";
-+};
--- 
-git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SXQgc2VlbXMgbGlrZSB0aGUgZG90Y2xvY2sgZGl2aWRlcnMgYXJlIGEgYml0IGxlc3Mgc3RyaWN0
+IHJhbmdlLCBhbmQgY2FuCm9wZXJhdGUgZXZlbiB3aXRoIGEgc21hbGxlciB0aGFuIDYgZGl2aWRl
+ci4gTG9vc2UgdGhlIGJvdW5kYXJpZXMgYSBiaXQuCgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlw
+YXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9k
+cm0vc3VuNGkvc3VuNGlfZG90Y2xvY2suYyB8IDIwICsrKysrKysrKysrKysrKysrKystCiAxIGZp
+bGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jIGIvZHJpdmVycy9ncHUvZHJt
+L3N1bjRpL3N1bjRpX2RvdGNsb2NrLmMKaW5kZXggZDQwMTE1NjQ5MGYzLi4wYjg0NGMwZGQxMDIg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jCisrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kb3RjbG9jay5jCkBAIC03Nyw3ICs3NywyNSBA
+QCBzdGF0aWMgbG9uZyBzdW40aV9kY2xrX3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVu
+c2lnbmVkIGxvbmcgcmF0ZSwKIAl1OCBiZXN0X2RpdiA9IDE7CiAJaW50IGk7CiAKLQlmb3IgKGkg
+PSA2OyBpIDw9IDEyNzsgaSsrKSB7CisJLyoKKwkgKiBUaGVyZSdzIHNvbWV0aGluZyBvZGQgaGVy
+ZS4KKwkgKgorCSAqIEluIHRoZSBBMTMgdXNlciBtYW51YWwsIHRoaXMgaXMgc3RhdGVkIHRvIGJl
+ID49IDYgd2hlbgorCSAqIGRjbGsxIGFuZCBkY2xrMiBhcmUgdXNlZCAod2l0aG91dCBhbnkgaGlu
+dCBvbiBob3cgdG8gdXNlCisJICogdGhlbSksIGFuZCA+PSA0IHdoZW4gb25seSBkY2xrIGlzIHVz
+ZWQuCisJICoKKwkgKiBJbiB0aGUgQTMzIHVzZXIgbWFudWFsLCB3aGVuIG9ubHkgZGNsayBpcyB1
+c2VkLCBpdCBpcyBzZXQKKwkgKiB0byBiZSA+PSA2IGluIHRoZSBmb3JtZXIgY2FzZSwgYW5kID49
+IDEgaW4gdGhlCisJICogbGF0dGVyLiBUaGVyZSdzIGFsc28gc29tZSAob2JzY3VyZSkgZXhwbGFu
+YXRpb25zIGFib3V0IHRoZQorCSAqIGRjbGsxIGFuZCBkY2xrMiB2cyBkY2xrIHRoYXQgc2VlbXMg
+dG8gYmUgaW4gdGhlIHVwcGVyIDQKKwkgKiBiaXRzLiBXaGF0IHRob3NlIGNsb2NrcyBhcmUgYW5k
+IHdoYXQgYml0IGRvZXMgd2hhdCBpcyBub3QKKwkgKiByZWFsbHkgY2xlYXIuCisJICoKKwkgKiBP
+biB0aGUgQTMzIGhvd2V2ZXIsIHdoaWxlIHNvbWV0aGluZyBsb3dlciB0aGFuIDQgd29ya3MsIGl0
+CisJICogZG9lcyBoYXZlIGEgZmV3IGFydGlmYWN0cy4gTGV0J3Mgbm90IHVzZSB0aG9zZSB2YWx1
+ZXMsIGFuZAorCSAqIHNlZSBob3cgaXQgZ29lcy4KKwkgKi8KKwlmb3IgKGkgPSA0OyBpIDw9IDEy
+NzsgaSsrKSB7CiAJCXVuc2lnbmVkIGxvbmcgaWRlYWwgPSByYXRlICogaTsKIAkJdW5zaWduZWQg
+bG9uZyByb3VuZGVkOwogCi0tIApnaXQtc2VyaWVzIDAuOS4xCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
