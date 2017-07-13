@@ -1,253 +1,39 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH v2 5/7] ACPI: Constify internal fwnode arguments
-Date: Thu, 13 Jul 2017 16:27:05 +0300
-Message-ID: <1499952427-16130-6-git-send-email-sakari.ailus@linux.intel.com>
-References: <1499952427-16130-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 0/2] STM32 HASH crypto driver
+Date: Thu, 13 Jul 2017 15:32:25 +0200
+Message-ID: <1499952747-16423-1-git-send-email-lionel.debieve@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499952427-16130-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Lionel Debieve <lionel.debieve-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Constify internal ACPI fwnode arguments in preparation for the same in
-fwnode API.
+This set of patches adds a new crypto driver for STMicroelectronics stm32 HW.
+This drivers uses the crypto API and provides with HW-enabled md5, sha1,
+sha224, sha256 hash based algorithms.
+It makes use of the crypto engine to support ahash requests.
 
-Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/acpi/property.c | 34 ++++++++++++++++++----------------
- include/linux/acpi.h    | 40 ++++++++++++++++++++++------------------
- 2 files changed, 40 insertions(+), 34 deletions(-)
+This driver was successfully tested with tcrypt / testmgr.
 
-diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-index 04c60a2..043bfca 100644
---- a/drivers/acpi/property.c
-+++ b/drivers/acpi/property.c
-@@ -19,7 +19,7 @@
- 
- #include "internal.h"
- 
--static int acpi_data_get_property_array(struct acpi_device_data *data,
-+static int acpi_data_get_property_array(const struct acpi_device_data *data,
- 					const char *name,
- 					acpi_object_type type,
- 					const union acpi_object **obj);
-@@ -417,7 +417,7 @@ void acpi_free_properties(struct acpi_device *adev)
-  *         %-EINVAL if the property doesn't exist,
-  *         %-EPROTO if the property value type doesn't match @type.
-  */
--static int acpi_data_get_property(struct acpi_device_data *data,
-+static int acpi_data_get_property(const struct acpi_device_data *data,
- 				  const char *name, acpi_object_type type,
- 				  const union acpi_object **obj)
- {
-@@ -459,20 +459,21 @@ static int acpi_data_get_property(struct acpi_device_data *data,
-  * @type: Expected property type.
-  * @obj: Location to store the property value (if not %NULL).
-  */
--int acpi_dev_get_property(struct acpi_device *adev, const char *name,
-+int acpi_dev_get_property(const struct acpi_device *adev, const char *name,
- 			  acpi_object_type type, const union acpi_object **obj)
- {
- 	return adev ? acpi_data_get_property(&adev->data, name, type, obj) : -EINVAL;
- }
- EXPORT_SYMBOL_GPL(acpi_dev_get_property);
- 
--static struct acpi_device_data *acpi_device_data_of_node(struct fwnode_handle *fwnode)
-+static const struct acpi_device_data *
-+acpi_device_data_of_node(const struct fwnode_handle *fwnode)
- {
- 	if (is_acpi_device_node(fwnode)) {
--		struct acpi_device *adev = to_acpi_device_node(fwnode);
-+		const struct acpi_device *adev = to_acpi_device_node(fwnode);
- 		return &adev->data;
- 	} else if (is_acpi_data_node(fwnode)) {
--		struct acpi_data_node *dn = to_acpi_data_node(fwnode);
-+		const struct acpi_data_node *dn = to_acpi_data_node(fwnode);
- 		return &dn->data;
- 	}
- 	return NULL;
-@@ -484,8 +485,8 @@ static struct acpi_device_data *acpi_device_data_of_node(struct fwnode_handle *f
-  * @propname: Name of the property.
-  * @valptr: Location to store a pointer to the property value (if not %NULL).
-  */
--int acpi_node_prop_get(struct fwnode_handle *fwnode, const char *propname,
--		       void **valptr)
-+int acpi_node_prop_get(const struct fwnode_handle *fwnode,
-+		       const char *propname, void **valptr)
- {
- 	return acpi_data_get_property(acpi_device_data_of_node(fwnode),
- 				      propname, ACPI_TYPE_ANY,
-@@ -511,7 +512,7 @@ int acpi_node_prop_get(struct fwnode_handle *fwnode, const char *propname,
-  *         %-EPROTO if the property is not a package or the type of its elements
-  *           doesn't match @type.
-  */
--static int acpi_data_get_property_array(struct acpi_device_data *data,
-+static int acpi_data_get_property_array(const struct acpi_device_data *data,
- 					const char *name,
- 					acpi_object_type type,
- 					const union acpi_object **obj)
-@@ -571,13 +572,13 @@ static int acpi_data_get_property_array(struct acpi_device_data *data,
-  *
-  * Return: %0 on success, negative error code on failure.
-  */
--int __acpi_node_get_property_reference(struct fwnode_handle *fwnode,
-+int __acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
- 	const char *propname, size_t index, size_t num_args,
- 	struct acpi_reference_args *args)
- {
- 	const union acpi_object *element, *end;
- 	const union acpi_object *obj;
--	struct acpi_device_data *data;
-+	const struct acpi_device_data *data;
- 	struct acpi_device *device;
- 	int ret, idx = 0;
- 
-@@ -673,7 +674,7 @@ int __acpi_node_get_property_reference(struct fwnode_handle *fwnode,
- }
- EXPORT_SYMBOL_GPL(__acpi_node_get_property_reference);
- 
--static int acpi_data_prop_read_single(struct acpi_device_data *data,
-+static int acpi_data_prop_read_single(const struct acpi_device_data *data,
- 				      const char *propname,
- 				      enum dev_prop_type proptype, void *val)
- {
-@@ -812,7 +813,7 @@ static int acpi_copy_property_array_string(const union acpi_object *items,
- 	return nval;
- }
- 
--static int acpi_data_prop_read(struct acpi_device_data *data,
-+static int acpi_data_prop_read(const struct acpi_device_data *data,
- 			       const char *propname,
- 			       enum dev_prop_type proptype,
- 			       void *val, size_t nval)
-@@ -866,7 +867,7 @@ static int acpi_data_prop_read(struct acpi_device_data *data,
- 	return ret;
- }
- 
--int acpi_dev_prop_read(struct acpi_device *adev, const char *propname,
-+int acpi_dev_prop_read(const struct acpi_device *adev, const char *propname,
- 		       enum dev_prop_type proptype, void *val, size_t nval)
- {
- 	return adev ? acpi_data_prop_read(&adev->data, propname, proptype, val, nval) : -EINVAL;
-@@ -884,8 +885,9 @@ int acpi_dev_prop_read(struct acpi_device *adev, const char *propname,
-  * of the property.  Otherwise, read at most @nval values to the array at the
-  * location pointed to by @val.
-  */
--int acpi_node_prop_read(struct fwnode_handle *fwnode,  const char *propname,
--		        enum dev_prop_type proptype, void *val, size_t nval)
-+int acpi_node_prop_read(const struct fwnode_handle *fwnode,
-+			const char *propname, enum dev_prop_type proptype,
-+			void *val, size_t nval)
- {
- 	return acpi_data_prop_read(acpi_device_data_of_node(fwnode),
- 				   propname, proptype, val, nval);
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 71b763f..4d9fb61 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1003,13 +1003,14 @@ struct acpi_reference_args {
- };
- 
- #ifdef CONFIG_ACPI
--int acpi_dev_get_property(struct acpi_device *adev, const char *name,
-+int acpi_dev_get_property(const struct acpi_device *adev, const char *name,
- 			  acpi_object_type type, const union acpi_object **obj);
--int __acpi_node_get_property_reference(struct fwnode_handle *fwnode,
-+int __acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
- 				const char *name, size_t index, size_t num_args,
- 				struct acpi_reference_args *args);
- 
--static inline int acpi_node_get_property_reference(struct fwnode_handle *fwnode,
-+static inline int acpi_node_get_property_reference(
-+				const struct fwnode_handle *fwnode,
- 				const char *name, size_t index,
- 				struct acpi_reference_args *args)
- {
-@@ -1017,13 +1018,15 @@ static inline int acpi_node_get_property_reference(struct fwnode_handle *fwnode,
- 		MAX_ACPI_REFERENCE_ARGS, args);
- }
- 
--int acpi_node_prop_get(struct fwnode_handle *fwnode, const char *propname,
-+int acpi_node_prop_get(const struct fwnode_handle *fwnode, const char *propname,
- 		       void **valptr);
--int acpi_dev_prop_read_single(struct acpi_device *adev, const char *propname,
--			      enum dev_prop_type proptype, void *val);
--int acpi_node_prop_read(struct fwnode_handle *fwnode, const char *propname,
--		        enum dev_prop_type proptype, void *val, size_t nval);
--int acpi_dev_prop_read(struct acpi_device *adev, const char *propname,
-+int acpi_dev_prop_read_single(struct acpi_device *adev,
-+			      const char *propname, enum dev_prop_type proptype,
-+			      void *val);
-+int acpi_node_prop_read(const struct fwnode_handle *fwnode,
-+			const char *propname, enum dev_prop_type proptype,
-+			void *val, size_t nval);
-+int acpi_dev_prop_read(const struct acpi_device *adev, const char *propname,
- 		       enum dev_prop_type proptype, void *val, size_t nval);
- 
- struct fwnode_handle *acpi_get_next_subnode(struct fwnode_handle *fwnode,
-@@ -1100,35 +1103,36 @@ static inline int acpi_dev_get_property(struct acpi_device *adev,
- }
- 
- static inline int
--__acpi_node_get_property_reference(struct fwnode_handle *fwnode,
-+__acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
- 				const char *name, size_t index, size_t num_args,
- 				struct acpi_reference_args *args)
- {
- 	return -ENXIO;
- }
- 
--static inline int acpi_node_get_property_reference(struct fwnode_handle *fwnode,
--				const char *name, size_t index,
--				struct acpi_reference_args *args)
-+static inline int
-+acpi_node_get_property_reference(const struct fwnode_handle *fwnode,
-+				 const char *name, size_t index,
-+				 struct acpi_reference_args *args)
- {
- 	return -ENXIO;
- }
- 
--static inline int acpi_node_prop_get(struct fwnode_handle *fwnode,
-+static inline int acpi_node_prop_get(const struct fwnode_handle *fwnode,
- 				     const char *propname,
- 				     void **valptr)
- {
- 	return -ENXIO;
- }
- 
--static inline int acpi_dev_prop_get(struct acpi_device *adev,
-+static inline int acpi_dev_prop_get(const struct acpi_device *adev,
- 				    const char *propname,
- 				    void **valptr)
- {
- 	return -ENXIO;
- }
- 
--static inline int acpi_dev_prop_read_single(struct acpi_device *adev,
-+static inline int acpi_dev_prop_read_single(const struct acpi_device *adev,
- 					    const char *propname,
- 					    enum dev_prop_type proptype,
- 					    void *val)
-@@ -1136,7 +1140,7 @@ static inline int acpi_dev_prop_read_single(struct acpi_device *adev,
- 	return -ENXIO;
- }
- 
--static inline int acpi_node_prop_read(struct fwnode_handle *fwnode,
-+static inline int acpi_node_prop_read(const struct fwnode_handle *fwnode,
- 				      const char *propname,
- 				      enum dev_prop_type proptype,
- 				      void *val, size_t nval)
-@@ -1144,7 +1148,7 @@ static inline int acpi_node_prop_read(struct fwnode_handle *fwnode,
- 	return -ENXIO;
- }
- 
--static inline int acpi_dev_prop_read(struct acpi_device *adev,
-+static inline int acpi_dev_prop_read(const struct acpi_device *adev,
- 				     const char *propname,
- 				     enum dev_prop_type proptype,
- 				     void *val, size_t nval)
+Note:
+Since two other set of patches (update of STM32 CRC32 and addition of STM32
+CRYP) are being proposed, it may happen that there are some minor conflicts in
+'Kconfig' and 'Makefile'. In that case, I will fix the issue in due course.
+
+Lionel Debieve (2):
+  dt-bindings: Document STM32 HASH bindings
+  crypto: stm32 - Support for STM32 HASH module
+
+ .../devicetree/bindings/crypto/st,stm32-hash.txt   |   30 +
+ drivers/crypto/stm32/Kconfig                       |   13 +
+ drivers/crypto/stm32/Makefile                      |    1 +
+ drivers/crypto/stm32/stm32-hash.c                  | 1576 ++++++++++++++++++++
+ 4 files changed, 1620 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-hash.txt
+ create mode 100644 drivers/crypto/stm32/stm32-hash.c
+
 -- 
 2.7.4
 
