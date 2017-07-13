@@ -1,51 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 01/18] mfd: madera: Add register definitions for
- Cirrus Logic Madera codecs
-Date: Thu, 13 Jul 2017 11:05:39 +0100
-Message-ID: <20170713100539.mqvyxgvwqowjim6i@sirena.org.uk>
-References: <1493050124-5970-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1493050124-5970-2-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170713080210.lbsjnmlciovoxe4g@dell>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: mmc: sh_mmcif: Document r8a7743 DT bindings
+Date: Thu, 13 Jul 2017 12:06:03 +0200
+Message-ID: <CAPDyKFq1m6WEk-Hr9cm8L5EM3k1bXx-+bUXyosfh9SMDW39vhg@mail.gmail.com>
+References: <1499853805-5915-1-git-send-email-chris.paterson2@renesas.com> <1499853805-5915-2-git-send-email-chris.paterson2@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="4re4f3dxoztsibxi"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170713080210.lbsjnmlciovoxe4g@dell>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1499853805-5915-2-git-send-email-chris.paterson2@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Paterson <chris.paterson2@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 12 July 2017 at 12:03, Chris Paterson <chris.paterson2@renesas.com> wrote:
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> index c32dc5a..703e18c 100644
+> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>         - "renesas,mmcif-r7s72100" for the MMCIF found in r7s72100 SoCs
+>         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+>         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+> +       - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+>         - "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
+>         - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+>         - "renesas,mmcif-r8a7791" for the MMCIF found in r8a7791 SoCs
+> @@ -21,7 +22,7 @@ Required properties:
+>  - interrupts: Some SoCs have only 1 shared interrupt, while others have either
+>    2 or 3 individual interrupts (error, int, card detect). Below is the number
+>    of interrupts for each SoC:
+> -    1: r8a73a4, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
+> +    1: r8a73a4, r8a7743, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
+>      2: r8a7740, sh73a0
+>      3: r7s72100
+>
+> --
+> 1.9.1
+>
 
---4re4f3dxoztsibxi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, applied for next!
 
-On Thu, Jul 13, 2017 at 09:02:10AM +0100, Lee Jones wrote:
-
-> This patch has been rejected by Linus.
-
-> https://lkml.org/lkml/2017/7/7/579
-
-Hrm, when I used to push the register definition patches I did elide all
-the obviously repeated register banks like the write sequencer one that
-Linus is calling out there.  I'm surprised by the "every single line"
-bit though...
-
---4re4f3dxoztsibxi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllnRe8ACgkQJNaLcl1U
-h9DIeQf9E+JONV3frlWhgbGngNm2kgZX9WGIfuj4KV+U6UpfOzUllIVWwLUWCLel
-UlX8A3CRoW52Juhs2nAgk4exuPu46MZpdxIaTci6I94G7yk1NHks0reqiKGF9Xaa
-7cplSBAH6ur/24ohrmTvvwl71N/soBCkfMYwuLx8wPqNnAzKWHI7vyfvWYmeho7Y
-c+1KlfyqIrVfpcK+zlHXCiMbbrFdG1u3Asdhdu+ofm5zO1vXSbQAdYdCU6rnBV54
-sLzzGWJcHkqX2BA7/rLHclw3mhFUPJjOHno9MB+6UE9L6OqMe6pwxhGN4wB2AVNT
-e91W4PmGlYRpHRud/b3cEZXv3nCH+Q==
-=ev8l
------END PGP SIGNATURE-----
-
---4re4f3dxoztsibxi--
+Kind regards
+Uffe
