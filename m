@@ -1,249 +1,431 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFCv2 usb-next 2/3] usb: host: add a generic platform USB roothub driver
-Date: Thu, 13 Jul 2017 12:59:38 +0200
-Message-ID: <20170713105939.31566-3-martin.blumenstingl@googlemail.com>
-References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170713105939.31566-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+From: <linux-kernel-dev@beckhoff.com>
+Subject: [PATCH v2 1/2] ARM: dts: imx: add CX9020 Embedded PC device tree
+Date: Thu, 13 Jul 2017 13:04:12 +0200
+Message-ID: <20170713110413.12721-2-linux-kernel-dev@beckhoff.com>
+References: <20170712090408.12212-1-linux-kernel-dev@beckhoff.com>
+ <20170713110413.12721-1-linux-kernel-dev@beckhoff.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170713110413.12721-1-linux-kernel-dev@beckhoff.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Patrick Bruenn <p.bruenn@beckhoff.com>
 List-Id: devicetree@vger.kernel.org
 
-Many SoC platforms have separate devices for the USB PHY which are
-registered through the generic PHY framework. These PHYs have to be
-enabled to make the USB controller actually work. They also have to be
-disabled again on shutdown/suspend.
+From: Patrick Bruenn <p.bruenn@beckhoff.com>
 
-Currently (at least) the following HCI platform drivers are using custom
-code to obtain all PHYs via devicetree for the roothub/controller and
-disable/enable them when required:
-- ehci-platform.c has ehci_platform_power_{on,off}
-- xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
-- ohci-platform.c has ohci_platform_power_{on,off}
+The CX9020 differs from i.MX53 Quick Start Board by:
+- use uart2 instead of uart1
+- DVI-D connector instead of VGA
+- no audio
+- CCAT FPGA connected to emi
+- enable rtc
 
-These drivers are not using the generic devicetree USB device bindings
-yet which were only introduced recently (documentation is available in
-devicetree/bindings/usb/usb-device.txt).
-With this new driver the usb2-phy and usb3-phy can be specified directly
-in the child-node of the corresponding port of the roothub via
-devicetree. This can be extended by not just parsing PHYs (some of the
-other drivers listed above are for example also parsing a list of clocks
-as well) when required.
-
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: Patrick Bruenn <p.bruenn@beckhoff.com>
 ---
- drivers/usb/host/Kconfig            |   3 +
- drivers/usb/host/Makefile           |   2 +
- drivers/usb/host/platform-roothub.c | 146 ++++++++++++++++++++++++++++++++++++
- drivers/usb/host/platform-roothub.h |  14 ++++
- 4 files changed, 165 insertions(+)
- create mode 100644 drivers/usb/host/platform-roothub.c
- create mode 100644 drivers/usb/host/platform-roothub.h
+ arch/arm/boot/dts/Makefile         |   1 +
+ arch/arm/boot/dts/imx53-cx9020.dts | 370 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 371 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-cx9020.dts
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index fa5692dec832..b8b05c786b2a 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -805,6 +805,9 @@ config USB_HCD_SSB
- 
- 	  If unsure, say N.
- 
-+config USB_PLATFORM_ROOTHUB
-+	bool
-+
- config USB_HCD_TEST_MODE
- 	bool "HCD test mode support"
- 	---help---
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index cf2691fffcc0..dc817f82d632 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
- 
- obj-$(CONFIG_USB_PCI)	+= pci-quirks.o
- 
-+obj-$(CONFIG_USB_PLATFORM_ROOTHUB)	+= platform-roothub.o
-+
- obj-$(CONFIG_USB_EHCI_HCD)	+= ehci-hcd.o
- obj-$(CONFIG_USB_EHCI_PCI)	+= ehci-pci.o
- obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)	+= ehci-platform.o
-diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9c5e1d944d1c..590cdb77d972 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -338,6 +338,7 @@ dtb-$(CONFIG_SOC_IMX51) += \
+ 	imx51-ts4800.dtb
+ dtb-$(CONFIG_SOC_IMX53) += \
+ 	imx53-ard.dtb \
++	imx53-cx9020.dtb \
+ 	imx53-m53evk.dtb \
+ 	imx53-mba53.dtb \
+ 	imx53-qsb.dtb \
+diff --git a/arch/arm/boot/dts/imx53-cx9020.dts b/arch/arm/boot/dts/imx53-cx9020.dts
 new file mode 100644
-index 000000000000..84837e42b006
+index 000000000000..0c3de61a5f4f
 --- /dev/null
-+++ b/drivers/usb/host/platform-roothub.c
-@@ -0,0 +1,146 @@
++++ b/arch/arm/boot/dts/imx53-cx9020.dts
+@@ -0,0 +1,370 @@
 +/*
-+ * platform roothub driver - a virtual PHY device which passes all phy_*
-+ * function calls to multiple (actual) PHY devices. This is comes handy when
-+ * initializing all PHYs on a root-hub (to keep them all in the same state).
++ * Copyright 2011 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
 + *
-+ * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
 + */
 +
-+#include <linux/device.h>
-+#include <linux/list.h>
-+#include <linux/phy/phy.h>
-+#include <linux/of.h>
-+#include <linux/usb/of.h>
++/dts-v1/;
++#include "imx53.dtsi"
 +
-+#include "platform-roothub.h"
++#define MX53_PAD_EIM_D26__UART2_RXD_MUX    0x144 0x48c 0x880 0x2 0x0
++#define MX53_PAD_EIM_D27__UART2_TXD_MUX    0x148 0x490 0x000 0x2 0x0
++#define MX53_PAD_EIM_D28__UART2_RTS        0x14c 0x494 0x87c 0x2 0x0
++#define MX53_PAD_EIM_D29__UART2_CTS        0x150 0x498 0x000 0x2 0x0
 +
-+#define ROOTHUB_PORTNUM		0
++/ {
++	model = "Freescale i.MX53 based Beckhoff CX9020";
++	compatible = "fsl,imx53-qsb", "fsl,imx53";
 +
-+struct platform_roothub {
-+	struct phy		*phy;
-+	struct list_head	list;
++	chosen {
++		stdout-path = &uart2;
++	};
++
++	memory {
++		reg = <0x70000000 0x20000000>,
++		      <0xb0000000 0x20000000>;
++	};
++
++	ccat {
++		compatible = "bhf,emi-ccat";
++	};
++
++	display-0 {
++		#address-cells =<1>;
++		#size-cells = <0>;
++		compatible = "fsl,imx-parallel-display";
++		interface-pix-fmt = "rgb24";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu_disp0>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++			display0_in: endpoint {
++				remote-endpoint = <&ipu_di0_disp0>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++			display0_out: endpoint {
++				remote-endpoint = <&panel_in>;
++			};
++		};
++	};
++
++	panel-0 {
++		#address-cells =<1>;
++		#size-cells = <0>;
++		compatible = "simple,ddc-only";
++		ddc-i2c-bus = <&i2c2>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&display0_out>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pwr_r {
++			gpios = <&gpio3 22 0>;
++			default-state = "off";
++		};
++		pwr_g {
++			gpios = <&gpio3 24 0>;
++			default-state = "on";
++		};
++		pwr_b {
++			gpios = <&gpio3 23 0>;
++			default-state = "off";
++		};
++	};
++
++	rtc: rtc@53fa4000 {
++		compatible = "fsl,imx53-rtc", "fsl,imx25-rtc";
++		reg = <0x53fa4000 0x4000>;
++		interrupts = <24>;
++		interrupt-parent = <&tzic>;
++		clocks = <&clks IMX5_CLK_SRTC_GATE>;
++		clock-names = "ipg";
++	};
++
++	reg_3p2v: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "3P2V";
++		regulator-min-microvolt = <3200000>;
++		regulator-max-microvolt = <3200000>;
++		regulator-always-on;
++	};
++
++	reg_usb_vbus: regulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpio7 8 0>;
++		enable-active-high;
++	};
 +};
 +
-+static struct platform_roothub *platform_roothub_alloc(struct device *dev)
-+{
-+	struct platform_roothub *roothub_entry;
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1>;
++	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	status = "okay";
++};
 +
-+	roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
-+	if (!roothub_entry)
-+		return ERR_PTR(-ENOMEM);
++&esdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc2>;
++	cd-gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	status = "okay";
++};
 +
-+	INIT_LIST_HEAD(&roothub_entry->list);
++&ipu_di0_disp0 {
++	remote-endpoint = <&display0_in>;
++};
 +
-+	return roothub_entry;
-+}
++&ssi2 {
++	status = "okay";
++};
 +
-+static int platform_roothub_add_phy(struct device *dev,
-+				    struct device_node *port_np,
-+				    const char *con_id, struct list_head *list)
-+{
-+	struct platform_roothub *roothub_entry;
-+	struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
 +
-+	if (IS_ERR_OR_NULL(phy)) {
-+		if (!phy || PTR_ERR(phy) == -ENODEV)
-+			return 0;
-+		else
-+			return PTR_ERR(phy);
-+	}
++	imx53-qsb {
++		pinctrl_hog: hoggrp {
++			fsl,pins = <
++				MX53_PAD_GPIO_0__CCM_SSI_EXT1_CLK 0x80000000
++				MX53_PAD_GPIO_8__GPIO1_8          0x80000000
++				MX53_PAD_PATA_DATA14__GPIO2_14    0x80000000
++				MX53_PAD_PATA_DATA15__GPIO2_15    0x80000000
++				MX53_PAD_GPIO_1__GPIO1_1          0x80000000
++				MX53_PAD_GPIO_4__GPIO1_4          0x80000000
++				MX53_PAD_PATA_DA_0__GPIO7_6       0x80000000
++				MX53_PAD_PATA_DA_2__GPIO7_8	  0x80000000
++				MX53_PAD_GPIO_16__GPIO7_11        0x80000000
 +
-+	roothub_entry = platform_roothub_alloc(dev);
-+	if (IS_ERR(roothub_entry))
-+		return PTR_ERR(roothub_entry);
++				MX53_PAD_EIM_OE__EMI_WEIM_OE            0x80000000
++				MX53_PAD_EIM_WAIT__EMI_WEIM_WAIT        0x80000000
++				MX53_PAD_EIM_LBA__EMI_WEIM_LBA          0x80000000
++				MX53_PAD_EIM_RW__EMI_WEIM_RW            0x80000000
++				MX53_PAD_EIM_EB0__EMI_WEIM_EB_0         0x80000000
++				MX53_PAD_EIM_EB1__EMI_WEIM_EB_1         0x80000000
++				MX53_PAD_EIM_EB2__EMI_WEIM_EB_2         0x80000000
++				MX53_PAD_EIM_EB3__EMI_WEIM_EB_3         0x80000000
++				MX53_PAD_EIM_CS0__EMI_WEIM_CS_0         0x80000000
++				MX53_PAD_EIM_CS1__EMI_WEIM_CS_1         0x80000000
++				MX53_PAD_EIM_A16__EMI_WEIM_A_16         0x80000000
++				MX53_PAD_EIM_A17__EMI_WEIM_A_17         0x80000000
++				MX53_PAD_EIM_A18__EMI_WEIM_A_18         0x80000000
++				MX53_PAD_EIM_A19__EMI_WEIM_A_19         0x80000000
++				MX53_PAD_EIM_A20__EMI_WEIM_A_20         0x80000000
++				MX53_PAD_EIM_A21__EMI_WEIM_A_21         0x80000000
++				MX53_PAD_EIM_A22__EMI_WEIM_A_22         0x80000000
++				MX53_PAD_EIM_DA0__EMI_NAND_WEIM_DA_0    0xa4
++				MX53_PAD_EIM_DA1__EMI_NAND_WEIM_DA_1    0xa4
++				MX53_PAD_EIM_DA2__EMI_NAND_WEIM_DA_2    0xa4
++				MX53_PAD_EIM_DA3__EMI_NAND_WEIM_DA_3    0xa4
++				MX53_PAD_EIM_DA4__EMI_NAND_WEIM_DA_4    0xa4
++				MX53_PAD_EIM_DA5__EMI_NAND_WEIM_DA_5    0xa4
++				MX53_PAD_EIM_DA6__EMI_NAND_WEIM_DA_6    0xa4
++				MX53_PAD_EIM_DA7__EMI_NAND_WEIM_DA_7    0xa4
++				MX53_PAD_EIM_DA8__EMI_NAND_WEIM_DA_8    0xa4
++				MX53_PAD_EIM_DA9__EMI_NAND_WEIM_DA_9    0xa4
++				MX53_PAD_EIM_DA10__EMI_NAND_WEIM_DA_10	0xa4
++				MX53_PAD_EIM_DA11__EMI_NAND_WEIM_DA_11  0xa4
++				MX53_PAD_EIM_DA12__EMI_NAND_WEIM_DA_12  0xa4
++				MX53_PAD_EIM_DA13__EMI_NAND_WEIM_DA_13  0xa4
++				MX53_PAD_EIM_DA14__EMI_NAND_WEIM_DA_14  0xa4
++				MX53_PAD_EIM_DA15__EMI_NAND_WEIM_DA_15  0xa4
++				MX53_PAD_PATA_DATA0__EMI_NANDF_D_0      0xa4
++				MX53_PAD_PATA_DATA1__EMI_NANDF_D_1      0xa4
++				MX53_PAD_PATA_DATA2__EMI_NANDF_D_2      0xa4
++				MX53_PAD_PATA_DATA3__EMI_NANDF_D_3      0xa4
++				MX53_PAD_PATA_DATA4__EMI_NANDF_D_4      0xa4
++				MX53_PAD_PATA_DATA5__EMI_NANDF_D_5      0xa4
++				MX53_PAD_PATA_DATA6__EMI_NANDF_D_6      0xa4
++				MX53_PAD_PATA_DATA7__EMI_NANDF_D_7      0xa4
++				MX53_PAD_PATA_DATA8__EMI_NANDF_D_8      0xa4
++				MX53_PAD_PATA_DATA9__EMI_NANDF_D_9      0xa4
++				MX53_PAD_PATA_DATA10__EMI_NANDF_D_10    0xa4
++				MX53_PAD_PATA_DATA11__EMI_NANDF_D_11    0xa4
++				MX53_PAD_PATA_DATA12__EMI_NANDF_D_12    0xa4
++				MX53_PAD_PATA_DATA13__EMI_NANDF_D_13    0xa4
++				MX53_PAD_PATA_DATA14__EMI_NANDF_D_14    0xa4
++				MX53_PAD_PATA_DATA15__EMI_NANDF_D_15    0xa4
++				MX53_PAD_NANDF_CLE__GPIO6_7             0x00000001
++				MX53_PAD_NANDF_WP_B__GPIO6_9            0x00000001
++				MX53_PAD_NANDF_ALE__GPIO6_8             0x00000001
++			>;
++		};
 +
-+	roothub_entry->phy = phy;
++		led_pin_gpio3_23: led_gpio3_23@0 {
++			fsl,pins = <
++				MX53_PAD_EIM_D23__GPIO3_23 0x80000000
++			>;
++		};
 +
-+	list_add_tail(&roothub_entry->list, list);
++		pinctrl_audmux: audmuxgrp {
++			fsl,pins = <
++				MX53_PAD_KEY_COL0__AUDMUX_AUD5_TXC	0x80000000
++				MX53_PAD_KEY_ROW0__AUDMUX_AUD5_TXD	0x80000000
++				MX53_PAD_KEY_COL1__AUDMUX_AUD5_TXFS	0x80000000
++				MX53_PAD_KEY_ROW1__AUDMUX_AUD5_RXD	0x80000000
++			>;
++		};
 +
-+	return 0;
-+}
++		pinctrl_esdhc1: esdhc1grp {
++			fsl,pins = <
++				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
++				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
++				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
++				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
++				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
++				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
++			>;
++		};
 +
-+struct platform_roothub *platform_roothub_init(struct device *dev)
-+{
-+	struct device_node *roothub_np, *port_np;
-+	struct platform_roothub *plat_roothub;
-+	int err;
++		pinctrl_esdhc2: esdhc2grp {
++			fsl,pins = <
++				MX53_PAD_SD2_DATA0__ESDHC2_DAT0		0x1d5
++				MX53_PAD_SD2_DATA1__ESDHC2_DAT1		0x1d5
++				MX53_PAD_SD2_DATA2__ESDHC2_DAT2		0x1d5
++				MX53_PAD_SD2_DATA3__ESDHC2_DAT3		0x1d5
++				MX53_PAD_SD2_CMD__ESDHC2_CMD		0x1d5
++				MX53_PAD_SD2_CLK__ESDHC2_CLK		0x1d5
++			>;
++		};
 +
-+	roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
-+	if (!of_device_is_available(roothub_np))
-+		return NULL;
++		pinctrl_fec: fecgrp {
++			fsl,pins = <
++				MX53_PAD_FEC_MDC__FEC_MDC		0x80000000
++				MX53_PAD_FEC_MDIO__FEC_MDIO		0x80000000
++				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x80000000
++				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x80000000
++				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x80000000
++				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x80000000
++				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x80000000
++				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x80000000
++				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x80000000
++				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x80000000
++			>;
++		};
 +
-+	plat_roothub = platform_roothub_alloc(dev);
-+	if (IS_ERR(plat_roothub))
-+		return plat_roothub;
++		/* open drain */
++		pinctrl_i2c1: i2c1grp {
++			fsl,pins = <
++				MX53_PAD_CSI0_DAT8__I2C1_SDA		0x400001ec
++				MX53_PAD_CSI0_DAT9__I2C1_SCL		0x400001ec
++			>;
++		};
 +
-+	for_each_available_child_of_node(roothub_np, port_np) {
-+		err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
-+					       &plat_roothub->list);
-+		if (err)
-+			return ERR_PTR(err);
++		pinctrl_i2c2: i2c2grp {
++			fsl,pins = <
++				MX53_PAD_KEY_ROW3__I2C2_SDA             0xc0000000
++				MX53_PAD_KEY_COL3__I2C2_SCL             0xc0000000
++			>;
++		};
 +
-+		err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
-+					       &plat_roothub->list);
-+		if (err)
-+			return ERR_PTR(err);
-+	}
++		pinctrl_ipu_disp0: ipudisp0grp {
++			fsl,pins = <
++				MX53_PAD_DI0_DISP_CLK__IPU_DI0_DISP_CLK	0x5
++				MX53_PAD_DI0_PIN15__IPU_DI0_PIN15	0x5
++				MX53_PAD_DI0_PIN2__IPU_DI0_PIN2		0x5
++				MX53_PAD_DI0_PIN3__IPU_DI0_PIN3		0x5
++				MX53_PAD_DI0_PIN4__IPU_DI0_PIN4		0x5
++				MX53_PAD_DISP0_DAT0__IPU_DISP0_DAT_0	0x5
++				MX53_PAD_DISP0_DAT1__IPU_DISP0_DAT_1	0x5
++				MX53_PAD_DISP0_DAT2__IPU_DISP0_DAT_2	0x5
++				MX53_PAD_DISP0_DAT3__IPU_DISP0_DAT_3	0x5
++				MX53_PAD_DISP0_DAT4__IPU_DISP0_DAT_4	0x5
++				MX53_PAD_DISP0_DAT5__IPU_DISP0_DAT_5	0x5
++				MX53_PAD_DISP0_DAT6__IPU_DISP0_DAT_6	0x5
++				MX53_PAD_DISP0_DAT7__IPU_DISP0_DAT_7	0x5
++				MX53_PAD_DISP0_DAT8__IPU_DISP0_DAT_8	0x5
++				MX53_PAD_DISP0_DAT9__IPU_DISP0_DAT_9	0x5
++				MX53_PAD_DISP0_DAT10__IPU_DISP0_DAT_10	0x5
++				MX53_PAD_DISP0_DAT11__IPU_DISP0_DAT_11	0x5
++				MX53_PAD_DISP0_DAT12__IPU_DISP0_DAT_12	0x5
++				MX53_PAD_DISP0_DAT13__IPU_DISP0_DAT_13	0x5
++				MX53_PAD_DISP0_DAT14__IPU_DISP0_DAT_14	0x5
++				MX53_PAD_DISP0_DAT15__IPU_DISP0_DAT_15	0x5
++				MX53_PAD_DISP0_DAT16__IPU_DISP0_DAT_16	0x5
++				MX53_PAD_DISP0_DAT17__IPU_DISP0_DAT_17	0x5
++				MX53_PAD_DISP0_DAT18__IPU_DISP0_DAT_18	0x5
++				MX53_PAD_DISP0_DAT19__IPU_DISP0_DAT_19	0x5
++				MX53_PAD_DISP0_DAT20__IPU_DISP0_DAT_20	0x5
++				MX53_PAD_DISP0_DAT21__IPU_DISP0_DAT_21	0x5
++				MX53_PAD_DISP0_DAT22__IPU_DISP0_DAT_22	0x5
++				MX53_PAD_DISP0_DAT23__IPU_DISP0_DAT_23	0x5
++			>;
++		};
 +
-+	return plat_roothub;
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_init);
++		pinctrl_uart2: uart2grp {
++			fsl,pins = <
++				MX53_PAD_EIM_D26__UART2_RXD_MUX	0x1e4
++				MX53_PAD_EIM_D27__UART2_TXD_MUX 0x1e4
++				MX53_PAD_EIM_D28__UART2_RTS 0x1e4
++				MX53_PAD_EIM_D29__UART2_CTS 0x1e4
++			>;
++		};
++	};
++};
 +
-+int platform_roothub_power_on(struct platform_roothub *plat_roothub)
-+{
-+	struct platform_roothub *roothub_entry;
-+	struct list_head *head;
-+	int err;
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	fsl,dte-mode;
++	status = "okay";
++};
 +
-+	if (!plat_roothub)
-+		return 0;
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++};
 +
-+	head = &plat_roothub->list;
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++};
 +
-+	list_for_each_entry(roothub_entry, head, list) {
-+		err = phy_init(roothub_entry->phy);
-+		if (err)
-+			goto err_out;
++&fec {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec>;
++	phy-mode = "rmii";
++	phy-reset-gpios = <&gpio7 6 0>;
++	status = "okay";
++};
 +
-+		err = phy_power_on(roothub_entry->phy);
-+		if (err) {
-+			phy_exit(roothub_entry->phy);
-+			goto err_out;
-+		}
-+	}
++&sata {
++	status = "okay";
++};
 +
-+	return 0;
++&vpu {
++	status = "okay";
++};
 +
-+err_out:
-+	list_for_each_entry_continue_reverse(roothub_entry, head, list) {
-+		phy_power_off(roothub_entry->phy);
-+		phy_exit(roothub_entry->phy);
-+	}
++&usbh1 {
++	vbus-supply = <&reg_usb_vbus>;
++	phy_type = "utmi";
++	status = "okay";
++};
 +
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_power_on);
-+
-+void platform_roothub_power_off(struct platform_roothub *plat_roothub)
-+{
-+	struct platform_roothub *roothub_entry;
-+
-+	if (!plat_roothub)
-+		return;
-+
-+	list_for_each_entry_reverse(roothub_entry, &plat_roothub->list, list) {
-+		phy_power_off(roothub_entry->phy);
-+		phy_exit(roothub_entry->phy);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(platform_roothub_power_off);
-diff --git a/drivers/usb/host/platform-roothub.h b/drivers/usb/host/platform-roothub.h
-new file mode 100644
-index 000000000000..bde0bf299e3b
---- /dev/null
-+++ b/drivers/usb/host/platform-roothub.h
-@@ -0,0 +1,14 @@
-+#ifndef USB_HOST_PLATFORM_ROOTHUB_H
-+#define USB_HOST_PLATFORM_ROOTHUB_H
-+
-+struct phy;
-+struct device_node;
-+
-+struct platform_roothub;
-+
-+struct platform_roothub *platform_roothub_init(struct device *dev);
-+
-+int platform_roothub_power_on(struct platform_roothub *plat_roothub);
-+void platform_roothub_power_off(struct platform_roothub *plat_roothub);
-+
-+#endif /* USB_HOST_PLATFORM_ROOTHUB_H */
++&usbotg {
++	dr_mode = "peripheral";
++	status = "okay";
++};
 -- 
-2.13.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
