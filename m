@@ -1,45 +1,108 @@
-From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v5 8/8] ARM: dts: TS-4600: add watchdog support
-Date: Fri, 14 Jul 2017 16:32:18 -0400
-Message-ID: <20170714203218.14409-9-sebastien.bourdelin@savoirfairelinux.com>
+From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Subject: [PATCH v5 5/8] ARM: dts: TS-4600: add NBUS support
+Date: Fri, 14 Jul 2017 16:32:15 -0400
+Message-ID: <20170714203218.14409-6-sebastien.bourdelin@savoirfairelinux.com>
 References: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170714203218.14409-1-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com, robh@kernel.org, linux@roeck-us.net, linus.walleij@linaro.org, shawnguo@kernel.org
+Cc: fabio.estevam@nxp.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, kris@embeddedarm.com, mark@embeddedarm.com
 List-Id: devicetree@vger.kernel.org
 
-This enables support for the watchdog located in the FPGA.
+This commit enables the NBUS on the TS-4600, using the ts-nbus driver.
 
-Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
 ---
 Changes v4 -> v5:
   - fix missing signed off
+
+Changes v3 -> v4:
+  - rebase on master
+  - fix vendor prefixes for dts properties (suggested by Rob Herring)
+  - v3 was acked by Linus Walleij
+
+Changes v2 -> v3:
+  - rebase on master
+
+Changes v1 -> v2:
+  - rebase on master
+  - remove the simple-bus compatibility as the root node will now
+  populate the child nodes (suggested by Rob Herring)
+  - add the vendor prefix to all gpio (suggested by Rob Herring)
 ---
- arch/arm/boot/dts/imx28-ts4600-common.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/imx28-ts4600-common.dtsi | 43 ++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
 diff --git a/arch/arm/boot/dts/imx28-ts4600-common.dtsi b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-index a90bd934e4a3..9e177d33ba9c 100644
+index 04bd5a5c0cb4..a90bd934e4a3 100644
 --- a/arch/arm/boot/dts/imx28-ts4600-common.dtsi
 +++ b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-@@ -116,6 +116,11 @@
- 		ts,strobe-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
- 		ts,ale-gpios    = <&gpio0 26 GPIO_ACTIVE_HIGH>;
- 		ts,rdy-gpios    = <&gpio0 21 GPIO_ACTIVE_HIGH>;
+@@ -44,6 +44,28 @@
+ 					fsl,pull-up = <MXS_PULL_DISABLE>;
+ 				};
+ 
++				nbus_pins: nbus_pins {
++					fsl,pinmux-ids = <
++						MX28_PAD_GPMI_D00__GPIO_0_0
++						MX28_PAD_GPMI_D01__GPIO_0_1
++						MX28_PAD_GPMI_D02__GPIO_0_2
++						MX28_PAD_GPMI_D03__GPIO_0_3
++						MX28_PAD_GPMI_D04__GPIO_0_4
++						MX28_PAD_GPMI_D05__GPIO_0_5
++						MX28_PAD_GPMI_D06__GPIO_0_6
++						MX28_PAD_GPMI_D07__GPIO_0_7
++						MX28_PAD_GPMI_CE0N__GPIO_0_16
++						MX28_PAD_GPMI_RDY1__GPIO_0_21
++						MX28_PAD_GPMI_RDN__GPIO_0_24
++						MX28_PAD_GPMI_WRN__GPIO_0_25
++						MX28_PAD_GPMI_ALE__GPIO_0_26
++					>;
++					fsl,drive-strength = <MXS_DRIVE_4mA>;
++					fsl,voltage = <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up = <MXS_PULL_DISABLE>;
 +
-+		watchdog@2a {
-+			compatible = "technologic,ts4600-wdt";
-+			reg = <0x2a>;
-+		};
++				};
++
+ 			};
+ 		};
+ 
+@@ -75,4 +97,25 @@
+ 		};
  	};
  
++	nbus {
++		compatible = "technologic,ts-nbus";
++		pinctrl-0 = <&nbus_pins>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pwms = <&pwm 2 83>;
++		ts,data-gpios   = <&gpio0 0 GPIO_ACTIVE_HIGH
++				   &gpio0 1 GPIO_ACTIVE_HIGH
++				   &gpio0 2 GPIO_ACTIVE_HIGH
++				   &gpio0 3 GPIO_ACTIVE_HIGH
++				   &gpio0 4 GPIO_ACTIVE_HIGH
++				   &gpio0 5 GPIO_ACTIVE_HIGH
++				   &gpio0 6 GPIO_ACTIVE_HIGH
++				   &gpio0 7 GPIO_ACTIVE_HIGH>;
++		ts,csn-gpios    = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++		ts,txrx-gpios   = <&gpio0 24 GPIO_ACTIVE_HIGH>;
++		ts,strobe-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
++		ts,ale-gpios    = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++		ts,rdy-gpios    = <&gpio0 21 GPIO_ACTIVE_HIGH>;
++	};
++
  };
 -- 
 2.13.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
