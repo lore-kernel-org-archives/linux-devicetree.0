@@ -1,91 +1,127 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V1 2/3] pinctrl: qcom: spmi-gpio: Add dtest route for
- digital input
-Date: Fri, 14 Jul 2017 11:19:51 -0700
-Message-ID: <20170714181951.GQ20973@minitux>
-References: <20170613061707.13892-1-fenglinw@codeaurora.org>
- <20170613061707.13892-3-fenglinw@codeaurora.org>
- <20170712212454.GK1618@tuxbook>
- <7a958ced-910f-3304-8128-911412df6dfd@codeaurora.org>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Fri, 14 Jul 2017 14:25:45 -0400
+Message-ID: <CAF6AEGubgNiq5fJ9LaBULvW3450iY4-u0ecpp_a6xyMvRx9kug@mail.gmail.com>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
+ <20170712225459.GZ22780@codeaurora.org> <5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
+ <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org> <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+ <60a56ae6-ed9d-57cd-130f-5bd9d32d4d58@codeaurora.org> <CAF6AEGvDpRChNQAzqgRFwaQcH=4JCwfKcvj2GQGgQOnO2_A1sg@mail.gmail.com>
+ <20170714170743.GA26488@arm.com> <CAF6AEGtMiVJvSrPXmQppM2NwS3fsXM8Vep3g0PwQK7SH4N=3xQ@mail.gmail.com>
+ <20170714180615.GC26488@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7a958ced-910f-3304-8128-911412df6dfd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fenglin Wu <fenglinw@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170714180615.GC26488@arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Sricharan R <sricharan@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Archit Taneja <architt@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 12 Jul 22:27 PDT 2017, Fenglin Wu wrote:
+On Fri, Jul 14, 2017 at 2:06 PM, Will Deacon <will.deacon@arm.com> wrote:
+> On Fri, Jul 14, 2017 at 01:42:13PM -0400, Rob Clark wrote:
+>> On Fri, Jul 14, 2017 at 1:07 PM, Will Deacon <will.deacon@arm.com> wrote:
+>> > On Thu, Jul 13, 2017 at 10:55:10AM -0400, Rob Clark wrote:
+>> >> On Thu, Jul 13, 2017 at 9:53 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>> >> > Hi,
+>> >> >
+>> >> > On 7/13/2017 5:20 PM, Rob Clark wrote:
+>> >> >> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>> >> >>> Hi Vivek,
+>> >> >>>
+>> >> >>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
+>> >> >>>> Hi Stephen,
+>> >> >>>>
+>> >> >>>>
+>> >> >>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+>> >> >>>>> On 07/06, Vivek Gautam wrote:
+>> >> >>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>> >> >>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>> >> >>>>>>                    size_t size)
+>> >> >>>>>>   {
+>> >> >>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>> >> >>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>> >> >>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+>> >> >>>>>> +    size_t ret;
+>> >> >>>>>>         if (!ops)
+>> >> >>>>>>           return 0;
+>> >> >>>>>>   -    return ops->unmap(ops, iova, size);
+>> >> >>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
+>> >> >>>>> Can these map/unmap ops be called from an atomic context? I seem
+>> >> >>>>> to recall that being a problem before.
+>> >> >>>>
+>> >> >>>> That's something which was dropped in the following patch merged in master:
+>> >> >>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+>> >> >>>>
+>> >> >>>> Looks like we don't  need locks here anymore?
+>> >> >>>
+>> >> >>>  Apart from the locking, wonder why a explicit pm_runtime is needed
+>> >> >>>  from unmap. Somehow looks like some path in the master using that
+>> >> >>>  should have enabled the pm ?
+>> >> >>>
+>> >> >>
+>> >> >> Yes, there are a bunch of scenarios where unmap can happen with
+>> >> >> disabled master (but not in atomic context).  On the gpu side we
+>> >> >> opportunistically keep a buffer mapping until the buffer is freed
+>> >> >> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
+>> >> >> an exported dmabuf while some other driver holds a reference to it
+>> >> >> (which can be dropped when the v4l2 device is suspended).
+>> >> >>
+>> >> >> Since unmap triggers tbl flush which touches iommu regs, the iommu
+>> >> >> driver *definitely* needs a pm_runtime_get_sync().
+>> >> >
+>> >> >  Ok, with that being the case, there are two things here,
+>> >> >
+>> >> >  1) If the device links are still intact at these places where unmap is called,
+>> >> >     then pm_runtime from the master would setup the all the clocks. That would
+>> >> >     avoid reintroducing the locking indirectly here.
+>> >> >
+>> >> >  2) If not, then doing it here is the only way. But for both cases, since
+>> >> >     the unmap can be called from atomic context, resume handler here should
+>> >> >     avoid doing clk_prepare_enable , instead move the clk_prepare to the init.
+>> >> >
+>> >>
+>> >> I do kinda like the approach Marek suggested.. of deferring the tlb
+>> >> flush until resume.  I'm wondering if we could combine that with
+>> >> putting the mmu in a stalled state when we suspend (and not resume the
+>> >> mmu until after the pending tlb flush)?
+>> >
+>> > I'm not sure that a stalled state is what we're after here, because we need
+>> > to take care to prevent any table walks if we've freed the underlying pages.
+>> > What we could try to do is disable the SMMU (put into global bypass) and
+>> > invalidate the TLB when performing a suspend operation, then we just ignore
+>> > invalidation whilst the clocks are stopped and, on resume, enable the SMMU
+>> > again.
+>>
+>> wouldn't stalled just block any memory transactions by device(s) using
+>> the context bank?  Putting it in bypass isn't really a good thing if
+>> there is any chance the device can sneak in a memory access before
+>> we've taking it back out of bypass (ie. makes gpu a giant userspace
+>> controlled root hole).
+>
+> If it doesn't deadlock, then yes, it will stall transactions. However, that
+> doesn't mean it necessarily prevents page table walks.
 
-> On 7/13/2017 5:24 AM, Bjorn Andersson wrote:
-> > On Mon 12 Jun 23:16 PDT 2017, fenglinw@codeaurora.org wrote:
-> > 
-> > > From: Fenglin Wu <fenglinw@codeaurora.org>
-> > > 
-> > > Add property "qcom,dtest-buffer" to specify which dtest rail to feed
-> > > when the pin is configured as a digital input.
-> > > 
-> > > Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> > > ---
-> > >   .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 15 ++++++++
-> > >   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 45 ++++++++++++++++++++++
-> > >   include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |  6 +++
-> > >   3 files changed, 66 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> > > index 1493c0a..521c783 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> > > @@ -195,6 +195,21 @@ to specify in a pin configuration subnode:
-> > >   		    Valid values are 0-3 corresponding to PMIC_GPIO_AOUT_ATESTx
-> > >   		    defined in <dt-bindings/pinctrl/qcom,pmic-gpio.h>.
-> > > +- qcom,dtest-buffer:
-> > > +	Usage: optional
-> > > +	Value type: <u32>
-> > > +	Definition: Selects DTEST rail to route to GPIO when it's configured
-> > > +		    as a digital input.
-> > > +		    For LV/MV GPIO subtypes, the valid values are 0-3
-> > > +		    corresponding to PMIC_GPIO_DIN_DTESTx defined in
-> > > +		    <dt-bindings/pinctrl/qcom,pmic-gpio.h>. Only one
-> > > +		    DTEST rail can be selected at a time.
-> > 
-> > As with the analog lines, this is a natural number and I think we should
-> > encode it as such in the DeviceTree.
-> > 
-> > > +		    For 4CH/8CH GPIO subtypes, supported values are 1-15.
-> > > +		    4 DTEST rails are supported in total and more than 1 DTEST
-> > > +		    rail can be selected simultaneously. Each bit of the
-> > > +		    4 LSBs represent one DTEST rail, such as [3:0] = 0101
-> > > +		    means both DTEST1 and DTEST3 are selected.
-> > 
-> > I'm not too keen on encoding this as a bitmask. I would much rather
-> > encode it as multiple values - although that complicates the
-> > implementation.
-> > 
-> > Or can we just ignore it? (Is the lack of support in the newer chips a
-> > result of no-one using this?)
-> 
-> I am not quite sure if any real cases would route multiple DTEST line to
-> single GPIO, but the register mapping uses the bit mask for 4CH/8CH
-> subtypes and I think we should support it accordingly. Even if I drop
-> the support, we still have the difference of the register mapping on the
-> dtest selection between MV/LV subtypes and legacy 4CH/8CH subtypes,
-> which means we need a place to unify the dtest definition. I put the
-> complication here in dtsi which the end user would choose the right
-> value according to the hardware. I am also fine with putting the
-> complication in C code, but that would drop the supporting of multiple
-> DTEST lines selection for 4CH/8CH subtype.
-> 
+btw, I guess the concern about pagetable walk is that the unmap could
+have removed some sub-level of the pt that the tlb walk would hit?
+Would deferring freeing those pages help?
 
-I do like when the format of DT properties is obvious, so I think the
-appropriate format for multiple dtest lines would be: "qcom,dtest-buffer
-= <1, 2>;"
+> Instead of bypass, we
+> could configure all the streams to terminate, but this race still worries me
+> somewhat. I thought that the SMMU would only be suspended if all of its
+> masters were suspended, so if the GPU wants to come out of suspend then the
+> SMMU should be resumed first.
 
-So let's punt on the multiple dtest lines for now and just support one.
-If we in the future add support for arrays of lines that would still be
-backwards compatible with the single case.
+I believe this should be true.. on the gpu side, I'm mostly trying to
+avoid having to power the gpu back on to free buffers.  (On the v4l2
+side, somewhere in the core videobuf code would also need to be made
+to wrap it's dma_unmap_sg() with pm_runtime_get/put()..)
 
-Regards,
-Bjorn
+BR,
+-R
+
+> It would be helpful if somebody could figure out exactly what can race with
+> the suspend/resume calls here.
+>
+> Will
