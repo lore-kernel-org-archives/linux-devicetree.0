@@ -1,85 +1,78 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v1 3/3] soc: rockchip: power-domain: add power domain support for rk3366
-Date: Fri, 14 Jul 2017 15:02:43 +0800
-Message-ID: <1500015763-4940-4-git-send-email-zhangqing@rock-chips.com>
-References: <1500015763-4940-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500015763-4940-1-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, dianders@chromium.org, tomeu.vizoso@collabora.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, wxt@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, wdc@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
+From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [RFC PATCH 3/6] phy: rockcip-pcie: reconstruct driver to support
+ per-lane PHYs
+Date: Fri, 14 Jul 2017 15:03:38 +0800
+Message-ID: <59686CCA.60804@rock-chips.com>
+References: <1500004101-240296-1-git-send-email-shawn.lin@rock-chips.com> <1500004366-241633-1-git-send-email-shawn.lin@rock-chips.com> <1500004366-241633-2-git-send-email-shawn.lin@rock-chips.com> <20170714051030.GA59140@google.com> <a0b188ea-71e2-8c8a-999d-754a35891ab9@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a0b188ea-71e2-8c8a-999d-754a35891ab9-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver is modified to support RK3366 SoC.
+Hi Shawn,
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/soc/rockchip/pm_domains.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+On 07/14/2017 02:33 PM, Shawn Lin wrote:
+>>
+>>> +        return rk_phy->phys[0];
+>>> +    }
+>>> +}
+>>> +
+>>>   static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
+>>>                     u32 addr, u32 data)
+>>>   {
+>>> @@ -114,20 +139,55 @@ static inline u32 phy_rd_cfg(struct
+>>> rockchip_pcie_phy *rk_phy,
+>>>       return val;
+>>>   }
+>>> -static int rockchip_pcie_phy_power_off(struct phy *phy)
+>>> +static int rockchip_pcie_phy_common_power_off(struct phy *phy)
+>>>   {
+>>>       struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
+>>>       int err = 0;
+>>> +    if (WARN_ON(!rk_phy->pwr_cnt))
+>>> +        return -EINVAL;
+>>> +
+>>> +    if (rk_phy->pwr_cnt > 0)
+>>
+>> This should be:
+>>
+>>     if (--rk_phy->pwr_cnt)
+>>
+>> Also, you technically might need locking, now that multiple phys (which
+>> each only have their own independent mutex) are accessing the same
+>> refcount. Or maybe just make this an atomic variable.
+>
+> Good catch!
+Sounds like we need something similar to phy-core.c's power_count and 
+init_count.
 
-diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
-index 796c46a6cbe7..40b75748835f 100644
---- a/drivers/soc/rockchip/pm_domains.c
-+++ b/drivers/soc/rockchip/pm_domains.c
-@@ -20,6 +20,7 @@
- #include <linux/mfd/syscon.h>
- #include <dt-bindings/power/rk3288-power.h>
- #include <dt-bindings/power/rk3328-power.h>
-+#include <dt-bindings/power/rk3366-power.h>
- #include <dt-bindings/power/rk3368-power.h>
- #include <dt-bindings/power/rk3399-power.h>
- 
-@@ -730,6 +731,16 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	[RK3328_PD_VPU]		= DOMAIN_RK3328(-1, 9, 9, false),
- };
- 
-+static const struct rockchip_domain_info rk3366_pm_domains[] = {
-+	[RK3366_PD_PERI]	= DOMAIN_RK3368(10, 10, 6, true),
-+	[RK3366_PD_VIO]		= DOMAIN_RK3368(14, 14, 8, false),
-+	[RK3366_PD_VIDEO]	= DOMAIN_RK3368(13, 13, 7, false),
-+	[RK3366_PD_RKVDEC]	= DOMAIN_RK3368(11, 11, 7, false),
-+	[RK3366_PD_WIFIBT]	= DOMAIN_RK3368(8, 8, 9, false),
-+	[RK3366_PD_VPU]		= DOMAIN_RK3368(12, 12, 7, false),
-+	[RK3366_PD_GPU]		= DOMAIN_RK3368(15, 15, 2, false),
-+};
-+
- static const struct rockchip_domain_info rk3368_pm_domains[] = {
- 	[RK3368_PD_PERI]	= DOMAIN_RK3368(13, 12, 6, true),
- 	[RK3368_PD_VIO]		= DOMAIN_RK3368(15, 14, 8, false),
-@@ -794,6 +805,23 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 	.domain_info = rk3328_pm_domains,
- };
- 
-+static const struct rockchip_pmu_info rk3366_pmu = {
-+	.pwr_offset = 0x0c,
-+	.status_offset = 0x10,
-+	.req_offset = 0x3c,
-+	.idle_offset = 0x40,
-+	.ack_offset = 0x40,
-+
-+	.core_pwrcnt_offset = 0x48,
-+	.gpu_pwrcnt_offset = 0x50,
-+
-+	.core_power_transition_time = 24,
-+	.gpu_power_transition_time = 24,
-+
-+	.num_domains = ARRAY_SIZE(rk3366_pm_domains),
-+	.domain_info = rk3366_pm_domains,
-+};
-+
- static const struct rockchip_pmu_info rk3368_pmu = {
- 	.pwr_offset = 0x0c,
- 	.status_offset = 0x10,
-@@ -834,6 +862,10 @@ static int rockchip_pm_domain_probe(struct platform_device *pdev)
- 		.data = (void *)&rk3328_pmu,
- 	},
- 	{
-+		.compatible = "rockchip,rk3366-power-controller",
-+		.data = (void *)&rk3366_pmu,
-+	},
-+	{
- 		.compatible = "rockchip,rk3368-power-controller",
- 		.data = (void *)&rk3368_pmu,
- 	},
--- 
-1.9.1
+>>> +
+>>>       return 0;
+>>>   }
+>>> +#define DECLARE_PHY_POWER_OFF_PER_LANE(id) \
+>>> +static int rockchip_pcie_lane##id##_phy_power_off(struct phy *phy) \
+>>
+>> What? All this macro magic (and duplicate generated functions) should
+>> not be necessary. You just need some per-phy data that keeps the index.
+>
+> I can't quite follow yours here. The only argument passing on to
+> the PHY APIs is 'struct phy *phy', and how could you trace the index
+> from it? The caller should save phy instead of 'rockchip_pcie_phy', in
+> which the per-phy data should be.
+>
+> Or could you kindly show me some example here:)
+>
+Maybe add a struct rockchip_pcie_phy_data for each phy, contains their 
+index and a pointer to the common struct rockchip_pcie_phy?
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
