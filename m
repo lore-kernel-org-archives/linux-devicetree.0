@@ -1,204 +1,54 @@
-From: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Subject: [PATCH v4 2/8] ARM: dts: TS-4600: add basic device tree
-Date: Fri, 14 Jul 2017 16:08:47 -0400
-Message-ID: <20170714200853.10362-3-sebastien.bourdelin@savoirfairelinux.com>
+From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v4 6/8] dt-bindings: watchdog: add documentation for TS4600 watchdog controller
+Date: Fri, 14 Jul 2017 16:08:51 -0400
+Message-ID: <20170714200853.10362-7-sebastien.bourdelin@savoirfairelinux.com>
 References: <20170714200853.10362-1-sebastien.bourdelin@savoirfairelinux.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170714200853.10362-1-sebastien.bourdelin@savoirfairelinux.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@savoirfairelinux.com, robh@kernel.org, linux@roeck-us.net, linus.walleij@linaro.org, shawnguo@kernel.org
-Cc: fabio.estevam@nxp.com, Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>, kris@embeddedarm.com, mark@embeddedarm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170714200853.10362-1-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-These device trees add support for the TS-4600 by Technologic Systems.
+This patch adds dt-binding documentation for TS4600 watchdog controller.
 
-More details here:
-  http://wiki.embeddedarm.com/wiki/TS-4600
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-Changes v3 -> v4:
-  - rebase on master
-
-Changes v2 -> v3:
-  - rebase on master
-
-Changes v1 -> v2:
-  - rebase on master
-
-Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+v4:
+  - this documentation was previously merged with the watchdog driver
+  and had been acked by Rob Herring, no changes have been done since.
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                 |  2 +
- arch/arm/boot/dts/imx28-ts4600-common.dtsi | 78 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx28-ts4600-rev-a.dts   | 22 +++++++++
- arch/arm/boot/dts/imx28-ts4600-rev-b.dts   | 22 +++++++++
- 4 files changed, 124 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-common.dtsi
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-a.dts
- create mode 100644 arch/arm/boot/dts/imx28-ts4600-rev-b.dts
+ .../devicetree/bindings/watchdog/ts4600-wdt.txt          | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35dc9a7..a3c8b7af192b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -525,6 +525,8 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-m28cu3.dtb \
- 	imx28-m28evk.dtb \
- 	imx28-sps1.dtb \
-+	imx28-ts4600-rev-a.dtb \
-+	imx28-ts4600-rev-b.dtb \
- 	imx28-tx28.dtb
- dtb-$(CONFIG_ARCH_NOMADIK) += \
- 	ste-nomadik-s8815.dtb \
-diff --git a/arch/arm/boot/dts/imx28-ts4600-common.dtsi b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
+diff --git a/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt b/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
 new file mode 100644
-index 000000000000..04bd5a5c0cb4
+index 000000000000..7de00ceae341
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx28-ts4600-common.dtsi
-@@ -0,0 +1,78 @@
-+/*
-+ * Copyright (C) 2016 Savoir-Faire Linux
-+ * Author: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++++ b/Documentation/devicetree/bindings/watchdog/ts4600-wdt.txt
+@@ -0,0 +1,16 @@
++TS-4600 Technologic Systems Watchdog
 +
-+/dts-v1/;
-+#include "imx28.dtsi"
-+#include "dt-bindings/gpio/gpio.h"
++Required properties:
++- compatible: must be "technologic,ts4600-wdt"
++- reg: offset to the FPGA's watchdog register
 +
-+/ {
++Optional property:
++- timeout-sec: contains the watchdog timeout in seconds.
 +
-+	compatible = "technologic,imx28-ts4600", "fsl,imx28";
++Example:
 +
-+	apb@80000000 {
-+		apbh@80000000 {
-+			ssp0: ssp@80010000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc0_4bit_pins_a
-+					     &mmc0_sck_cfg
-+					     &en_sd_pwr>;
-+				broken-cd = <1>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_vddio_sd0>;
-+				status = "okay";
-+			};
-+
-+			pinctrl@80018000 {
-+				pinctrl-names = "default";
-+
-+				en_sd_pwr: en_sd_pwr {
-+					fsl,pinmux-ids = <
-+						MX28_PAD_PWM3__GPIO_3_28
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+			};
-+		};
-+
-+		apbx@80040000 {
-+			pwm: pwm@80064000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pwm2_pins_a>;
-+				status = "okay";
-+			};
-+
-+			duart: serial@80074000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&duart_pins_a>;
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+
-+		reg_vddio_sd0: vddio-sd0 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vddio-sd0";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			gpio = <&gpio3 28 0>;
-+		};
-+	};
-+
-+};
-diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-a.dts b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
-new file mode 100644
-index 000000000000..e8cb72988fcf
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-ts4600-rev-a.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (C) 2016 Savoir-Faire Linux
-+ * Author: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include "imx28-ts4600-common.dtsi"
-+
-+/ {
-+	model = "Technologic Systems i.MX28 TS-4600 Rev A";
-+
-+	memory {
-+		reg = <0x40000000 0x08000000>;   /* 128MB */
-+	};
-+
-+};
-diff --git a/arch/arm/boot/dts/imx28-ts4600-rev-b.dts b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
-new file mode 100644
-index 000000000000..a115f831fe2b
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-ts4600-rev-b.dts
-@@ -0,0 +1,22 @@
-+/*
-+ * Copyright (C) 2016 Savoir-Faire Linux
-+ * Author: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+#include "imx28-ts4600-common.dtsi"
-+
-+/ {
-+	model = "Technologic Systems i.MX28 TS-4600 Rev B";
-+
-+	memory {
-+		reg = <0x40000000 0x10000000>;   /* 256MB */
-+	};
-+
++watchdog {
++	compatible = "technologic,ts4600-wdt";
++	reg = <0x2a>;
++	timeout-sec = <10>;
 +};
 -- 
 2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
