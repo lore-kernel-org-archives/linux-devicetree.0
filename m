@@ -1,81 +1,101 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: [PATCH v6 1/6] clk: sunxi-ng: div: Add support for fixed post-divider
-Date: Fri, 14 Jul 2017 17:49:23 +0300
-Message-ID: <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
-References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
-In-Reply-To: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
-References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>, Priit Laes <plaes@plaes.org>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: [PATCH v6 0/6] ARM: sunxi: Convert sun4i/sun7i series
+ SoCs to sunxi-ng CCU
+Date: Fri, 14 Jul 2017 17:49:22 +0300
+Message-ID: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBT5UUPFQKGQE4R6SEUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
-6 is fixed post-divider.
+Hi,
 
-Signed-off-by: Priit Laes <plaes@plaes.org>
----
- drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
- drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
- 2 files changed, 15 insertions(+), 3 deletions(-)
+This serie brings A10 (sun4i) and A20 (sun7i) SoCs into the
+sunxi-ng world. With this patchset we now support all the clocks
+in sun4i/sun7i SoCs.
 
-diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
-index c0e5c10..744502a 100644
---- a/drivers/clk/sunxi-ng/ccu_div.c
-+++ b/drivers/clk/sunxi-ng/ccu_div.c
-@@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
- {
- 	struct ccu_div *cd = data;
- 
-+	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate *= cd->fixed_post_div;
-+
- 	return divider_round_rate_parent(&cd->common.hw, parent,
- 					 rate, parent_rate,
- 					 cd->div.table, cd->div.width,
-@@ -62,8 +65,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
- 	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
- 						  parent_rate);
- 
--	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
--				   cd->div.flags);
-+	val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
-+				  cd->div.flags);
-+
-+	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		val /= cd->fixed_post_div;
-+
-+	return val;
- }
- 
- static int ccu_div_determine_rate(struct clk_hw *hw,
-@@ -86,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
- 	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
- 						  parent_rate);
- 
-+	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-+		rate *= cd->fixed_post_div;
-+
- 	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
- 			      cd->div.flags);
- 
-diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
-index 08d0744..f3a5028 100644
---- a/drivers/clk/sunxi-ng/ccu_div.h
-+++ b/drivers/clk/sunxi-ng/ccu_div.h
-@@ -86,9 +86,10 @@ struct ccu_div_internal {
- struct ccu_div {
- 	u32			enable;
- 
--	struct ccu_div_internal		div;
-+	struct ccu_div_internal	div;
- 	struct ccu_mux_internal	mux;
- 	struct ccu_common	common;
-+	unsigned int		fixed_post_div;
- };
- 
- #define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,	\
+As mentioned in sun5i conversion, this is pretty much standard
+stuff as most of the required clocks were already implemented in
+the sunxi-ng framework.
+
+In order to make cross-tree merges bisectable, device trees are
+currently using plain numbers instead of defines.
+
+Changes from v5:
+ - Added reviewed-by tags for Wens (A10/A20 dts bindings)
+ - Fix hdmi clock parents (Jonathan Liu)
+ - Add missing TVE0/1 reset bits (Olliver Schinagl)
+ - Fix divider clock's fixed postdivider logic again (Maxime Ripard)
+ - Set CLK_SET_RATE_PARENT for main hdmi and gpu clocks (Jonathan Liu)
+
+Changes from v4:
+ - Add CLK_SET_RATE_PARENT to "sata" clock.
+ - Add proper postdivider support for divider clock.
+
+Changes from v3:
+ - Add support for fixed post-divider support for DIV clocks.
+ - Fix wrong clk_ops for SATA. Spotted by Jonathan Liu.
+ - Use numeric values for clock indices to make merging somewhat easier
+ - Create separate sun7i/a20 specific header.
+
+Changes from v2:
+ - Rename driver and relevant files to sun4i-a10-ccu.
+ - Drop mmc output and sample clocks for sun4i-a10.
+ - Rename CSI ISP clock to SCLK as it is called on other variants.
+ - Add comment on why PLL6 is used as AHB parent.
+ - Fix parents for out_a/out_b clocks.
+ - Stop exporting PLL_PERIPH_SATA gate. Driver takes care of gate.
+ - Rework SATA clock handling.
+ - Fix ahb gate parents.
+ - Simplefb clock fixes (add dependencies for HDMI/LVDS clocks).
+ - Fixes for pll-ve and pll-video1 clocks pointed out by Jonathan Liu.
+ - Adapt to latest upstream changes from sunxi-next.
+
+Changes from v1:
+ - Drop useless comments
+ - Add support for A10 / sun4i.
+ - Rename driver to sunxi-a10-a20.
+ - Add previously unimplemented clocks.
+ - Document the audio pll hardcoded post-divider
+ - Add Acked-by: Rob Herring <robh at kernel.org> on patch 4
+
+Priit Laes (6):
+  clk: sunxi-ng: div: Add support for fixed post-divider
+  clk: sunxi-ng: Add sun4i/sun7i CCU driver
+  dt-bindings: List devicetree binding for the CCU of Allwinner A20
+  dt-bindings: List devicetree binding for the CCU of Allwinner A10
+  ARM: sun7i: Convert to CCU
+  ARM: sun4i: Convert to CCU
+
+ Documentation/devicetree/bindings/clock/sunxi-ccu.txt |    2 +-
+ arch/arm/boot/dts/sun4i-a10.dtsi                      |  646 +----
+ arch/arm/boot/dts/sun7i-a20.dtsi                      |  719 +-----
+ drivers/clk/sunxi-ng/Kconfig                          |   13 +-
+ drivers/clk/sunxi-ng/Makefile                         |    1 +-
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.c                  | 1454 ++++++++++-
+ drivers/clk/sunxi-ng/ccu-sun4i-a10.h                  |   61 +-
+ drivers/clk/sunxi-ng/ccu_div.c                        |   15 +-
+ drivers/clk/sunxi-ng/ccu_div.h                        |    3 +-
+ include/dt-bindings/clock/sun4i-a10-ccu.h             |  200 +-
+ include/dt-bindings/clock/sun7i-a20-ccu.h             |   53 +-
+ include/dt-bindings/reset/sun4i-a10-ccu.h             |   69 +-
+ 12 files changed, 2025 insertions(+), 1211 deletions(-)
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.h
+ create mode 100644 include/dt-bindings/clock/sun4i-a10-ccu.h
+ create mode 100644 include/dt-bindings/clock/sun7i-a20-ccu.h
+ create mode 100644 include/dt-bindings/reset/sun4i-a10-ccu.h
+
+base-commit: 4ca6df134847a6349620b485a3e63f00fb3bfad8
 -- 
 git-series 0.9.1
