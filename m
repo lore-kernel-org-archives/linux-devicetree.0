@@ -1,107 +1,53 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: Re: [linux-sunxi] [PATCH v5 2/6] clk: sunxi-ng: Add sun4i/sun7i CCU
- driver
-Date: Fri, 14 Jul 2017 13:48:54 +0000
-Message-ID: <20170714134854.GA7579@plaes.org>
-References: <cover.23e9103a2becf2261d7e145bb1516221a5cfb8a4.1499197129.git-series.plaes@plaes.org>
- <65066c74b8dedfeb8de27d90b5fecfea3a700178.1499197129.git-series.plaes@plaes.org>
- <5099cd90-e019-8a65-38e5-02b3c939a7a8@schinagl.nl>
- <20170713192358.GB22375@plaes.org>
- <d178101c-bcc7-3914-481e-1edc4f5d7b60@schinagl.nl>
+From: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2 0/5] thermal: imx: Add nvmem-cells binding on imx6sx
+Date: Fri, 14 Jul 2017 17:11:05 +0300
+Message-ID: <cover.1500041281.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d178101c-bcc7-3914-481e-1edc4f5d7b60@schinagl.nl>
-Sender: linux-clk-owner@vger.kernel.org
-To: Olliver Schinagl <oliver@schinagl.nl>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Cc: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 09:46:57PM +0200, Olliver Schinagl wrote:
-> Hey Priit,
-> 
-> On 07/13/17 21:23, Priit Laes wrote:
-> > On Mon, Jul 10, 2017 at 11:45:32AM +0200, Olliver Schinagl wrote:
-> >> Hi Pleas,
-> >>
-> >> again, but this time with content :)
-> >>
-> >> On 04-07-17 22:04, Priit Laes wrote:
-> >>> Introduce a clock controller driver for sun4i A10 and sun7i A20
-> >>> series SoCs.
-> > [ ... ]
-> >
-> >>> +++ b/drivers/clk/sunxi-ng/Kconfig
-> >>> @@ -11,6 +11,19 @@ config SUN50I_A64_CCU
-> >>> 	default ARM64 && ARCH_SUNXI
-> >>> 	depends on (ARM64 && ARCH_SUNXI) || COMPILE_TEST
-> >>>
-> >>> +config SUNXI_A10_CCU
-> >> I understand why you say sunXi here (it's support for both sun4i and sun7i)
-> >> but then why A10, as it also supports the A20.
-> >>
-> >> I guess the CCU is identical on the A20 and the A10, right? Thus would it
-> >> not be sensible to just call it sun4i_ccu (like we do for sun5i_ccu below?
-> > No, it's not identical.
-> But then saying SUNXI_A10_CCU is not correct? Since it is not identical
-> on the A20? So what does the A10 stand for?
+On imx6sx accessing OCOTP directly is wrong because the ocotp clock needs to be
+enabled first. Fix this by adding a nvmem-cells binding and using it on imx6sx,
+imx6ul and imx6ull.
 
-There's no easy way it supports both SUN4I_A10 and SUN7I_A20, therefore
-I used SUNXI_A10 where SUNXI may indicate it's not only for SUN4I and
-I'm currently keeping it as is...
+The existing binding is kept around because it works fine on imx6qdl.
 
-[ ... ]
-> >>> +/* Not present on A20 */
-> >>> +static SUNXI_CCU_GATE(axi_dram_clk,	"axi-dram",	"ahb",
-> >>> +		      0x05c, BIT(31), 0);
-> >> Same here I guess, two defines make this a bit more readable.
-> > You mean SUN4I_CCU_GATE? and SUN7I_CCU_GATE defines?
-> > I don't think it makes things more readable...
-> you think 0x05c and BIT(31) are easier to read? I'll do a pop quiz in 6
-> months from now and see if you remember :p
+This was initially reported by Lothar Wa√ümann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org> in reply
+to a patch adding imx6ul/ull support:
 
-Can you give an example on how it should be written?
+Link: https://lkml.org/lkml/2017/6/9/578
 
-> >
-> >>> +
-> >>> +static SUNXI_CCU_GATE(ahb_otg_clk,	"ahb-otg",	"ahb",
-> > ...
-> >>> +		      0x060, BIT(14), CLK_IS_CRITICAL);
-> >> <snip>
-> >>
-> >>> +static struct ccu_reset_map sun7i_a20_ccu_resets[] = {
-> >>> +	[RST_USB_PHY0]		= { 0x0cc, BIT(0) },
-> >>> +	[RST_USB_PHY1]		= { 0x0cc, BIT(1) },
-> >>> +	[RST_USB_PHY2]		= { 0x0cc, BIT(2) },
-> >>> +	[RST_GPS]		= { 0x0d0, BIT(0) },
-> >>> +	[RST_DE_BE0]		= { 0x104, BIT(30) },
-> >>> +	[RST_DE_BE1]		= { 0x108, BIT(30) },
-> >>> +	[RST_DE_FE0]		= { 0x10c, BIT(30) },
-> >>> +	[RST_DE_FE1]		= { 0x110, BIT(30) },
-> >>> +	[RST_DE_MP]		= { 0x114, BIT(30) },
-> >>> +	[RST_TCON0]		= { 0x118, BIT(30) },
-> >>> +	[RST_TCON1]		= { 0x11c, BIT(30) },
-> >> You are missing the TV encoder reset:
-> >> +      [RST_TVE0]              = { 0x118, BIT(29) },
-> >> +      [RST_TVE1]              = { 0x11c, BIT(29) },
-> >>
-> >> (to match your table i did not use defines :p)
-> > Where did you get this information?
-> > This is not present in any datasheets I have:
-> >   * A10 - 1.50
-> >   * A20 - 1.4
-> It is actually from the A13. In the A13 all the other bits match up. We
-> know from both that TCON0 is at 0x118 with its reset at BIT(30) and
-> TCON1 has its reset 0x11c. From the A13 datasheet we gather that TCON(0)
-> and TV(0) are at 0x118 with RST_TV on BIT(31) and thus it is only
-> logical that that for the TVE1 we have the rest at 0x11c.
-> 
-> But this is writing from the top of my head, I think we can also find it
-> in the 3.4 sources if I recall correctly.
+---
+Changes since v1:
+ * Move nvmem_cell_read_u32 to nvmem core (Shawn Guo, Srinivas Kandagatla)
+ * Adjust binding description (Rob Herring)
+ * Adjust formatting of thermal info cells (Shawn Guo)
+ * Link: https://lkml.org/lkml/2017/7/6/426
 
-Thanks, added the reset bits for TVE0/1.
+Leonard Crestez (5):
+  thermal: imx: Add nvmem-cells alternate binding for OCOTP access
+  nvmem: core: Add nvmem_cell_read_u32
+  thermal: imx: Add support for reading OCOTP through nvmem
+  ARM: dts: imx6sx: Use nvmem-cells for tempmon
+  ARM: dts: imx6ul: Add imx6ul-tempmon
 
-P‰ikest,
-Priit :)
+ .../devicetree/bindings/thermal/imx-thermal.txt    |   7 ++
+ arch/arm/boot/dts/imx6sx.dtsi                      |  13 ++-
+ arch/arm/boot/dts/imx6ul.dtsi                      |  19 ++++
+ drivers/nvmem/core.c                               |  37 ++++++++
+ drivers/thermal/imx_thermal.c                      | 103 +++++++++++++++------
+ include/linux/nvmem-consumer.h                     |   8 ++
+ 6 files changed, 156 insertions(+), 31 deletions(-)
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
