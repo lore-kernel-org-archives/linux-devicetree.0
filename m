@@ -1,286 +1,107 @@
-From: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-Subject: [RESEND][PATCH v5] MIPS: NI 169445 board support
-Date: Fri, 14 Jul 2017 12:33:27 -0500
-Message-ID: <1500053607-32645-1-git-send-email-nathan.sullivan@ni.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Fri, 14 Jul 2017 13:42:13 -0400
+Message-ID: <CAF6AEGtMiVJvSrPXmQppM2NwS3fsXM8Vep3g0PwQK7SH4N=3xQ@mail.gmail.com>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
+ <20170712225459.GZ22780@codeaurora.org> <5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
+ <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org> <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+ <60a56ae6-ed9d-57cd-130f-5bd9d32d4d58@codeaurora.org> <CAF6AEGvDpRChNQAzqgRFwaQcH=4JCwfKcvj2GQGgQOnO2_A1sg@mail.gmail.com>
+ <20170714170743.GA26488@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170714170743.GA26488@arm.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Sricharan R <sricharan@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Archit Taneja <architt@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Support the National Instruments 169445 board.
+On Fri, Jul 14, 2017 at 1:07 PM, Will Deacon <will.deacon@arm.com> wrote:
+> On Thu, Jul 13, 2017 at 10:55:10AM -0400, Rob Clark wrote:
+>> On Thu, Jul 13, 2017 at 9:53 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>> > Hi,
+>> >
+>> > On 7/13/2017 5:20 PM, Rob Clark wrote:
+>> >> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>> >>> Hi Vivek,
+>> >>>
+>> >>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
+>> >>>> Hi Stephen,
+>> >>>>
+>> >>>>
+>> >>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+>> >>>>> On 07/06, Vivek Gautam wrote:
+>> >>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>> >>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>> >>>>>>                    size_t size)
+>> >>>>>>   {
+>> >>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>> >>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>> >>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+>> >>>>>> +    size_t ret;
+>> >>>>>>         if (!ops)
+>> >>>>>>           return 0;
+>> >>>>>>   -    return ops->unmap(ops, iova, size);
+>> >>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
+>> >>>>> Can these map/unmap ops be called from an atomic context? I seem
+>> >>>>> to recall that being a problem before.
+>> >>>>
+>> >>>> That's something which was dropped in the following patch merged in master:
+>> >>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+>> >>>>
+>> >>>> Looks like we don't  need locks here anymore?
+>> >>>
+>> >>>  Apart from the locking, wonder why a explicit pm_runtime is needed
+>> >>>  from unmap. Somehow looks like some path in the master using that
+>> >>>  should have enabled the pm ?
+>> >>>
+>> >>
+>> >> Yes, there are a bunch of scenarios where unmap can happen with
+>> >> disabled master (but not in atomic context).  On the gpu side we
+>> >> opportunistically keep a buffer mapping until the buffer is freed
+>> >> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
+>> >> an exported dmabuf while some other driver holds a reference to it
+>> >> (which can be dropped when the v4l2 device is suspended).
+>> >>
+>> >> Since unmap triggers tbl flush which touches iommu regs, the iommu
+>> >> driver *definitely* needs a pm_runtime_get_sync().
+>> >
+>> >  Ok, with that being the case, there are two things here,
+>> >
+>> >  1) If the device links are still intact at these places where unmap is called,
+>> >     then pm_runtime from the master would setup the all the clocks. That would
+>> >     avoid reintroducing the locking indirectly here.
+>> >
+>> >  2) If not, then doing it here is the only way. But for both cases, since
+>> >     the unmap can be called from atomic context, resume handler here should
+>> >     avoid doing clk_prepare_enable , instead move the clk_prepare to the init.
+>> >
+>>
+>> I do kinda like the approach Marek suggested.. of deferring the tlb
+>> flush until resume.  I'm wondering if we could combine that with
+>> putting the mmu in a stalled state when we suspend (and not resume the
+>> mmu until after the pending tlb flush)?
+>
+> I'm not sure that a stalled state is what we're after here, because we need
+> to take care to prevent any table walks if we've freed the underlying pages.
+> What we could try to do is disable the SMMU (put into global bypass) and
+> invalidate the TLB when performing a suspend operation, then we just ignore
+> invalidation whilst the clocks are stopped and, on resume, enable the SMMU
+> again.
 
-Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
----
+wouldn't stalled just block any memory transactions by device(s) using
+the context bank?  Putting it in bypass isn't really a good thing if
+there is any chance the device can sneak in a memory access before
+we've taking it back out of bypass (ie. makes gpu a giant userspace
+controlled root hole).
 
-Changes from v4:
- 
-- Address Rob Herring's device tree feedback
+BR,
+-R
 
- Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
- MAINTAINERS                                     |   8 ++
- arch/mips/boot/dts/Makefile                     |   1 +
- arch/mips/boot/dts/ni/169445.dts                | 100 ++++++++++++++++++++++++
- arch/mips/boot/dts/ni/Makefile                  |   7 ++
- arch/mips/configs/generic/board-ni169445.config |  27 +++++++
- arch/mips/generic/Kconfig                       |   6 ++
- arch/mips/generic/vmlinux.its.S                 |  25 ++++++
- 8 files changed, 181 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mips/ni.txt
- create mode 100644 arch/mips/boot/dts/ni/169445.dts
- create mode 100644 arch/mips/boot/dts/ni/Makefile
- create mode 100644 arch/mips/configs/generic/board-ni169445.config
-
-diff --git a/Documentation/devicetree/bindings/mips/ni.txt b/Documentation/devicetree/bindings/mips/ni.txt
-new file mode 100644
-index 0000000..722bf2d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mips/ni.txt
-@@ -0,0 +1,7 @@
-+National Instruments MIPS platforms
-+
-+required root node properties:
-+	- compatible: must be "ni,169445"
-+
-+CPU Nodes
-+	- compatible: must be "mti,mips14KEc"
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d9bd4a..73fa2e0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9294,6 +9294,14 @@ F:	include/linux/sunrpc/
- F:	include/uapi/linux/nfs*
- F:	include/uapi/linux/sunrpc/
- 
-+NI169445 MIPS ARCHITECTURE
-+M:	Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
-+L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-+S:	Maintained
-+F:	arch/mips/boot/dts/ni/
-+F:	arch/mips/configs/generic/board-ni169445.config
-+F:	Documentation/devicetree/bindings/mips/ni.txt
-+
- NILFS2 FILESYSTEM
- M:	Ryusuke Konishi <konishi.ryusuke-Zyj7fXuS5i5L9jVzuh4AOg@public.gmane.org>
- L:	linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
-index b9db492..27b0f37 100644
---- a/arch/mips/boot/dts/Makefile
-+++ b/arch/mips/boot/dts/Makefile
-@@ -4,6 +4,7 @@ dts-dirs	+= img
- dts-dirs	+= ingenic
- dts-dirs	+= lantiq
- dts-dirs	+= mti
-+dts-dirs	+= ni
- dts-dirs	+= netlogic
- dts-dirs	+= pic32
- dts-dirs	+= qca
-diff --git a/arch/mips/boot/dts/ni/169445.dts b/arch/mips/boot/dts/ni/169445.dts
-new file mode 100644
-index 0000000..6a20036
---- /dev/null
-+++ b/arch/mips/boot/dts/ni/169445.dts
-@@ -0,0 +1,100 @@
-+/dts-v1/;
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ni,169445";
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "mti,mips14KEc";
-+			clocks = <&baseclk>;
-+			reg = <0>;
-+		};
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x10000000>;
-+	};
-+
-+	baseclk: baseclock {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <50000000>;
-+	};
-+
-+	cpu_intc: interrupt-controller {
-+		#address-cells = <0>;
-+		compatible = "mti,cpu-interrupt-controller";
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+	};
-+
-+	ahb@1f300000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x1f300000 0x80FFF>;
-+
-+		gpio1: gpio@1f300010 {
-+			compatible = "ni,169445-nand-gpio";
-+			reg = <0x10 0x4>;
-+			reg-names = "dat";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
-+
-+		gpio2: gpio@1f300014 {
-+			compatible = "ni,169445-nand-gpio";
-+			reg = <0x14 0x4>;
-+			reg-names = "dat";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			no-output;
-+		};
-+
-+		nand@1f300000 {
-+			compatible = "gpio-control-nand";
-+			nand-on-flash-bbt;
-+			nand-ecc-mode = "soft_bch";
-+			nand-ecc-step-size = <512>;
-+			nand-ecc-strength = <4>;
-+			reg = <0x0 4>;
-+			gpios = <&gpio2 0 0>, /* rdy */
-+				<&gpio1 1 0>, /* nce */
-+				<&gpio1 2 0>, /* ale */
-+				<&gpio1 3 0>, /* cle */
-+				<&gpio1 4 0>; /* nwp */
-+		};
-+
-+		serial@1f380000 {
-+			compatible = "ns16550a";
-+			reg = <0x80000 0x1000>;
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <6>;
-+			clocks = <&baseclk>;
-+			reg-shift = <0>;
-+		};
-+
-+		ethernet@1f340000 {
-+			compatible = "snps,dwmac-4.10a";
-+			interrupt-parent = <&cpu_intc>;
-+			interrupts = <5>;
-+			interrupt-names = "macirq";
-+			reg = <0x40000 0x2000>;
-+			clock-names = "stmmaceth", "pclk";
-+			clocks = <&baseclk>, <&baseclk>;
-+
-+			phy-mode = "rgmii";
-+
-+			fixed-link {
-+				speed = <1000>;
-+				full-duplex;
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
-new file mode 100644
-index 0000000..66cfdff
---- /dev/null
-+++ b/arch/mips/boot/dts/ni/Makefile
-@@ -0,0 +1,7 @@
-+dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
-+
-+# Force kbuild to make empty built-in.o if necessary
-+obj-					+= dummy.o
-+
-+always					:= $(dtb-y)
-+clean-files				:= *.dtb *.dtb.S
-diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
-new file mode 100644
-index 0000000..0bae1f8
---- /dev/null
-+++ b/arch/mips/configs/generic/board-ni169445.config
-@@ -0,0 +1,27 @@
-+CONFIG_FIT_IMAGE_FDT_NI169445=y
-+
-+CONFIG_SERIAL_8250=y
-+CONFIG_SERIAL_8250_CONSOLE=y
-+CONFIG_SERIAL_OF_PLATFORM=y
-+
-+CONFIG_GPIOLIB=y
-+CONFIG_GPIO_SYSFS=y
-+CONFIG_GPIO_GENERIC_PLATFORM=y
-+
-+CONFIG_MTD=y
-+CONFIG_MTD_BLOCK=y
-+CONFIG_MTD_CMDLINE_PARTS=y
-+
-+CONFIG_MTD_NAND_ECC=y
-+CONFIG_MTD_NAND_ECC_BCH=y
-+CONFIG_MTD_NAND=y
-+CONFIG_MTD_NAND_GPIO=y
-+CONFIG_MTD_NAND_IDS=y
-+
-+CONFIG_MTD_UBI=y
-+CONFIG_MTD_UBI_BLOCK=y
-+
-+CONFIG_NETDEVICES=y
-+CONFIG_STMMAC_ETH=y
-+CONFIG_STMMAC_PLATFORM=y
-+CONFIG_DWMAC_GENERIC=y
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index a606b3f..fbf0813 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -16,4 +16,10 @@ config LEGACY_BOARD_SEAD3
- 	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
- 	  development boards, which boot using a legacy boot protocol.
- 
-+config FIT_IMAGE_FDT_NI169445
-+	bool "Include FDT for NI 169445"
-+	help
-+	  Enable this to include the FDT for the 169445 platform from
-+	  National Instruments in the FIT kernel image.
-+
- endif
-diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
-index f67fbf1..de851f7 100644
---- a/arch/mips/generic/vmlinux.its.S
-+++ b/arch/mips/generic/vmlinux.its.S
-@@ -29,3 +29,28 @@
- 		};
- 	};
- };
-+
-+#ifdef CONFIG_FIT_IMAGE_FDT_NI169445
-+/ {
-+	images {
-+		fdt@ni169445 {
-+			description = "NI 169445 device tree";
-+			data = /incbin/("boot/dts/ni/169445.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
-+	};
-+
-+	configurations {
-+		conf@ni169445 {
-+			description = "NI 169445 Linux Kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ni169445";
-+		};
-+	};
-+};
-+#endif
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> That said, I don't think we can tolerate suspend/resume racing with
+> map/unmap, and it's not clear to me how we avoid that without penalising
+> the fastpath.
+>
+> Will
