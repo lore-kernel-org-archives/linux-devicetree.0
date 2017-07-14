@@ -1,7 +1,7 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RFC PATCH 3/6] phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
-Date: Fri, 14 Jul 2017 11:52:43 +0800
-Message-ID: <1500004366-241633-2-git-send-email-shawn.lin@rock-chips.com>
+Subject: [RFC PATCH 4/6] PCI: rockchip: idle the inactive PHY(s)
+Date: Fri, 14 Jul 2017 11:52:44 +0800
+Message-ID: <1500004366-241633-3-git-send-email-shawn.lin@rock-chips.com>
 References: <1500004101-240296-1-git-send-email-shawn.lin@rock-chips.com>
  <1500004366-241633-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,226 +11,84 @@ To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herrin
 Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch reconstructs the whole driver to support per-lane
-PHYs. Note that we could also support the legacy PHY if you
-don't provide argument to our of_xlate.
+Check the status of all lanes and idle the inactive one(s).
 
 Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- drivers/phy/rockchip/phy-rockchip-pcie.c | 116 +++++++++++++++++++++++++++----
- 1 file changed, 101 insertions(+), 15 deletions(-)
+ drivers/pci/host/pcie-rockchip.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index 6904633..da74b47 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -73,10 +73,35 @@ struct rockchip_pcie_data {
- struct rockchip_pcie_phy {
- 	struct rockchip_pcie_data *phy_data;
- 	struct regmap *reg_base;
-+	struct phy **phys;
- 	struct reset_control *phy_rst;
- 	struct clk *clk_pciephy_ref;
-+	u32 pwr_cnt;
-+	bool initialized;
- };
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index a3dc7bd..d678a93 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -15,6 +15,7 @@
+  * (at your option) any later version.
+  */
  
-+static struct phy *rockchip_pcie_phy_of_xlate(struct device *dev,
-+					      struct of_phandle_args *args)
++#include <linux/bitrev.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+@@ -112,6 +113,9 @@
+ #define   PCIE_CORE_TXCREDIT_CFG1_MUI_SHIFT	16
+ #define   PCIE_CORE_TXCREDIT_CFG1_MUI_ENCODE(x) \
+ 		(((x) >> 3) << PCIE_CORE_TXCREDIT_CFG1_MUI_SHIFT)
++#define PCIE_CORE_LANE_MAP             (PCIE_CORE_CTRL_MGMT_BASE + 0x200)
++#define   PCIE_CORE_LANE_MAP_MASK              0x0000000f
++#define   PCIE_CORE_LANE_MAP_REVERSE           BIT(16)
+ #define PCIE_CORE_INT_STATUS		(PCIE_CORE_CTRL_MGMT_BASE + 0x20c)
+ #define   PCIE_CORE_INT_PRFPE			BIT(0)
+ #define   PCIE_CORE_INT_CRFPE			BIT(1)
+@@ -311,6 +315,18 @@ static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
+ 	return 1;
+ }
+ 
++static u8 rockchip_pcie_lane_map(struct rockchip_pcie *rockchip)
 +{
-+	struct rockchip_pcie_phy *rk_phy = dev_get_drvdata(dev);
++	u32 val = rockchip_pcie_read(rockchip, PCIE_CORE_LANE_MAP);
++	u8 map = val & PCIE_CORE_LANE_MAP_MASK;
 +
-+	if (!rk_phy)
-+		return ERR_PTR(-ENODEV);
++	/* The link may be using a reverse-indexed mapping. */
++	if (val & PCIE_CORE_LANE_MAP_REVERSE)
++		map = bitrev8(map) >> 4;
 +
-+	switch (args->args[0]) {
-+	case 1:
-+		return rk_phy->phys[1];
-+	case 2:
-+		return rk_phy->phys[2];
-+	case 3:
-+		return rk_phy->phys[3];
-+	case 0:
-+		/* keep backward compatibility to legacy phy */
-+	default:
-+		return rk_phy->phys[0];
-+	}
++	return map;
 +}
 +
- static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
- 			      u32 addr, u32 data)
+ static int rockchip_pcie_rd_own_conf(struct rockchip_pcie *rockchip,
+ 				     int where, int size, u32 *val)
  {
-@@ -114,20 +139,55 @@ static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
- 	return val;
- }
- 
--static int rockchip_pcie_phy_power_off(struct phy *phy)
-+static int rockchip_pcie_phy_common_power_off(struct phy *phy)
+@@ -618,7 +634,8 @@ static int rockchip_pcie_manipulate_phys(struct rockchip_pcie *rockchip,
+ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
  {
- 	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
- 	int err = 0;
- 
-+	if (WARN_ON(!rk_phy->pwr_cnt))
-+		return -EINVAL;
-+
-+	if (rk_phy->pwr_cnt > 0)
-+		return 0;
-+
- 	err = reset_control_assert(rk_phy->phy_rst);
- 	if (err) {
- 		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
- 		return err;
- 	}
- 
-+	rk_phy->pwr_cnt--;
-+
- 	return 0;
- }
- 
-+#define DECLARE_PHY_POWER_OFF_PER_LANE(id) \
-+static int rockchip_pcie_lane##id##_phy_power_off(struct phy *phy) \
-+{ \
-+	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy); \
-+\
-+	regmap_write(rk_phy->reg_base, \
-+		     rk_phy->phy_data->pcie_laneoff, \
-+		     HIWORD_UPDATE(PHY_LANE_IDLE_OFF, \
-+				   PHY_LANE_IDLE_MASK, \
-+				   PHY_LANE_IDLE_A_SHIFT + id)); \
-+	return rockchip_pcie_phy_common_power_off(phy); \
-+}
-+
-+DECLARE_PHY_POWER_OFF_PER_LANE(0);
-+DECLARE_PHY_POWER_OFF_PER_LANE(1);
-+DECLARE_PHY_POWER_OFF_PER_LANE(2);
-+DECLARE_PHY_POWER_OFF_PER_LANE(3);
-+
-+#define PROVIDE_PHY_OPS(id) \
-+	{ \
-+		.init = rockchip_pcie_phy_init, \
-+		.exit = rockchip_pcie_phy_exit, \
-+		.power_on = rockchip_pcie_phy_power_on, \
-+		.power_off = rockchip_pcie_lane##id##_phy_power_off, \
-+		.owner  = THIS_MODULE, \
-+}
-+
- static int rockchip_pcie_phy_power_on(struct phy *phy)
- {
- 	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-@@ -135,6 +195,12 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 	struct device *dev = rockchip->dev;
+-	int err;
++	int err, i;
++	u8 lane_map;
  	u32 status;
- 	unsigned long timeout;
  
-+	if (WARN_ON(rk_phy->pwr_cnt > PHY_MAX_LANE_NUM))
-+		return -EINVAL;
+ 	gpiod_set_value(rockchip->ep_gpio, 0);
+@@ -791,6 +808,18 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
+ 			  PCIE_CORE_PL_CONF_LANE_SHIFT);
+ 	dev_dbg(dev, "current link width is x%d\n", status);
+ 
++	if (!rockchip->legacy_phy) {
++		/*  power off unused lane(s) */
++		lane_map = rockchip_pcie_lane_map(rockchip);
++		for (i = 0; i < MAX_LANE_NUM; i++) {
++			if (lane_map & BIT(i))
++				continue;
 +
-+	if (rk_phy->pwr_cnt)
-+		return 0;
-+
- 	err = reset_control_deassert(rk_phy->phy_rst);
- 	if (err) {
- 		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-@@ -214,6 +280,7 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
- 		goto err_pll_lock;
- 	}
- 
-+	rk_phy->pwr_cnt++;
- 	return 0;
- 
- err_pll_lock:
-@@ -226,6 +293,9 @@ static int rockchip_pcie_phy_init(struct phy *phy)
- 	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
- 	int err = 0;
- 
-+	if (rk_phy->initialized)
-+		return 0;
-+
- 	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
- 	if (err) {
- 		dev_err(&phy->dev, "Fail to enable pcie ref clock.\n");
-@@ -238,7 +308,9 @@ static int rockchip_pcie_phy_init(struct phy *phy)
- 		goto err_reset;
- 	}
- 
--	return err;
-+	rk_phy->initialized = true;
-+
-+	return 0;
- 
- err_reset:
- 	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
-@@ -250,17 +322,21 @@ static int rockchip_pcie_phy_exit(struct phy *phy)
- {
- 	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
- 
-+	if (!rk_phy->initialized)
-+		return 0;
-+
- 	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
- 
-+	rk_phy->initialized = false;
-+
- 	return 0;
- }
- 
--static const struct phy_ops ops = {
--	.init		= rockchip_pcie_phy_init,
--	.exit		= rockchip_pcie_phy_exit,
--	.power_on	= rockchip_pcie_phy_power_on,
--	.power_off	= rockchip_pcie_phy_power_off,
--	.owner		= THIS_MODULE,
-+static const struct phy_ops ops[PHY_MAX_LANE_NUM] = {
-+	PROVIDE_PHY_OPS(0),
-+	PROVIDE_PHY_OPS(1),
-+	PROVIDE_PHY_OPS(2),
-+	PROVIDE_PHY_OPS(3),
- };
- 
- static const struct rockchip_pcie_data rk3399_pcie_data = {
-@@ -283,10 +359,10 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct rockchip_pcie_phy *rk_phy;
--	struct phy *generic_phy;
- 	struct phy_provider *phy_provider;
- 	struct regmap *grf;
- 	const struct of_device_id *of_id;
-+	int i;
- 
- 	grf = syscon_node_to_regmap(dev->parent->of_node);
- 	if (IS_ERR(grf)) {
-@@ -319,14 +395,24 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
- 		return PTR_ERR(rk_phy->clk_pciephy_ref);
- 	}
- 
--	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
--	if (IS_ERR(generic_phy)) {
--		dev_err(dev, "failed to create PHY\n");
--		return PTR_ERR(generic_phy);
-+	rk_phy->phys = devm_kcalloc(dev, sizeof(struct phy),
-+				    PHY_MAX_LANE_NUM, GFP_KERNEL);
-+	if (!rk_phy->phys)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < PHY_MAX_LANE_NUM; i++) {
-+		rk_phy->phys[i] = devm_phy_create(dev, dev->of_node, &ops[i]);
-+		if (IS_ERR(rk_phy->phys[i])) {
-+			dev_err(dev, "failed to create PHY%d\n", i);
-+			return PTR_ERR(rk_phy->phys[i]);
++			dev_err(dev, "idling lane %d\n", i);
++			phy_power_off(rockchip->phys[i]);
 +		}
++	}
 +
-+		phy_set_drvdata(rk_phy->phys[i], rk_phy);
- 	}
- 
--	phy_set_drvdata(generic_phy, rk_phy);
--	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	platform_set_drvdata(pdev, rk_phy);
-+	phy_provider = devm_of_phy_provider_register(dev,
-+					rockchip_pcie_phy_of_xlate);
- 
- 	return PTR_ERR_OR_ZERO(phy_provider);
- }
+ 	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
+ 			    PCIE_CORE_CONFIG_VENDOR);
+ 	rockchip_pcie_write(rockchip,
 -- 
 1.9.1
 
