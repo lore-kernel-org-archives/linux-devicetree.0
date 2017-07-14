@@ -1,58 +1,64 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [RESEND PATCH] nvmem: rockchip-efuse: amend compatible rk322x-efuse to rk3228-efuse
-Date: Fri, 14 Jul 2017 16:38:43 +0800
-Message-ID: <1500021523-1300-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 2/4] thermal: imx: Add support for reading OCOTP through
+ nvmem
+Date: Fri, 14 Jul 2017 09:48:49 +0100
+Message-ID: <3dd43cba-02f2-204c-c3a2-582827018ef8@linaro.org>
+References: <cover.1499347157.git.leonard.crestez@nxp.com>
+ <68b476b35b0c0cbce21da0e87338323bb77e9bc4.1499347157.git.leonard.crestez@nxp.com>
+ <20170712063629.GD3172@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170712063629.GD3172@dragon>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW@KARO-electronics.de>, Fabio Estevam <fabio.estevam@nxp.com>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As the comments from Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> that compatible
-should not contain any placeholders, this patch fix it for rk3228 SoC.
-
-Note that this is a fix for v4.13, due to fixing the current non-standard
-binding name that should not become part of an official kernel release.
-
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt | 2 +-
- drivers/nvmem/rockchip-efuse.c                             | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-index 194926f..1ff02afd 100644
---- a/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-+++ b/Documentation/devicetree/bindings/nvmem/rockchip-efuse.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible: Should be one of the following.
-   - "rockchip,rk3066a-efuse" - for RK3066a SoCs.
-   - "rockchip,rk3188-efuse" - for RK3188 SoCs.
--  - "rockchip,rk322x-efuse" - for RK322x SoCs.
-+  - "rockchip,rk3228-efuse" - for RK3228 SoCs.
-   - "rockchip,rk3288-efuse" - for RK3288 SoCs.
-   - "rockchip,rk3399-efuse" - for RK3399 SoCs.
- - reg: Should contain the registers location and exact eFuse size
-diff --git a/drivers/nvmem/rockchip-efuse.c b/drivers/nvmem/rockchip-efuse.c
-index a0d4ede..63e3eb5 100644
---- a/drivers/nvmem/rockchip-efuse.c
-+++ b/drivers/nvmem/rockchip-efuse.c
-@@ -170,7 +170,7 @@ static const struct of_device_id rockchip_efuse_match[] = {
- 		.data = (void *)&rockchip_rk3288_efuse_read,
- 	},
- 	{
--		.compatible = "rockchip,rk322x-efuse",
-+		.compatible = "rockchip,rk3228-efuse",
- 		.data = (void *)&rockchip_rk3288_efuse_read,
- 	},
- 	{
--- 
-2.0.0
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 12/07/17 07:36, Shawn Guo wrote:
+>>   
+>> +static int nvmem_cell_read_u32(struct device* dev, const char *cell_id, u32 *val)
+>> +{
+>> +	struct nvmem_cell *cell;
+>> +	void *buf;
+>> +	size_t len;
+>> +
+>> +	cell = nvmem_cell_get(dev, cell_id);
+>> +	if (IS_ERR(cell))
+>> +		return PTR_ERR(cell);
+>> +
+>> +	buf = nvmem_cell_read(cell, &len);
+>> +	if (IS_ERR(buf)) {
+>> +		nvmem_cell_put(cell);
+>> +		return PTR_ERR(buf);
+>> +	}
+>> +	if (len != sizeof(*val)) {
+>> +		kfree(buf);
+>> +		nvmem_cell_put(cell);
+>> +		return -EINVAL;
+>> +	}
+>> +	memcpy(val, buf, sizeof(*val));
+
+This can overflow the memory allocated to val, we should be careful here 
+not to do so.
+limit this to sizeof(u32) should be good. Also add some sanity checks to 
+make sure that len is atleast 4 bytes.
+
+
+>> +
+>> +	kfree(buf);
+>> +	nvmem_cell_put(cell);
+>> +	return 0;
+>> +}
+> The function looks nothing IMX specific, and could be a nvmem core
+> function?
+> 
+> @Srinivas, thoughts?
+Yep, this function looks generic, can be moved to nvmem layer.
+
+Thanks,
+srini
