@@ -1,21 +1,24 @@
-From: Nathan Sullivan <nathan.sullivan@ni.com>
-Subject: [PATCH] MIPS: NI 169445 board support
-Date: Fri, 14 Jul 2017 12:16:51 -0500
-Message-ID: <1500052611-32445-2-git-send-email-nathan.sullivan@ni.com>
-References: <1500052611-32445-1-git-send-email-nathan.sullivan@ni.com>
+From: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Subject: [RESEND][PATCH v5] MIPS: NI 169445 board support
+Date: Fri, 14 Jul 2017 12:33:27 -0500
+Message-ID: <1500053607-32645-1-git-send-email-nathan.sullivan@ni.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500052611-32445-1-git-send-email-nathan.sullivan@ni.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ralf@linux-mips.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Nathan Sullivan <nathan.sullivan@ni.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Support the National Instruments 169445 board.
 
-Signed-off-by: Nathan Sullivan <nathan.sullivan@ni.com>
+Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
 ---
+
+Changes from v4:
+ 
+- Address Rob Herring's device tree feedback
+
  Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
  MAINTAINERS                                     |   8 ++
  arch/mips/boot/dts/Makefile                     |   1 +
@@ -52,16 +55,16 @@ index 7d9bd4a..73fa2e0 100644
  F:	include/uapi/linux/sunrpc/
  
 +NI169445 MIPS ARCHITECTURE
-+M:	Nathan Sullivan <nathan.sullivan@ni.com>
-+L:	linux-mips@linux-mips.org
++M:	Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
++L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 +S:	Maintained
 +F:	arch/mips/boot/dts/ni/
 +F:	arch/mips/configs/generic/board-ni169445.config
 +F:	Documentation/devicetree/bindings/mips/ni.txt
 +
  NILFS2 FILESYSTEM
- M:	Ryusuke Konishi <konishi.ryusuke@lab.ntt.co.jp>
- L:	linux-nilfs@vger.kernel.org
+ M:	Ryusuke Konishi <konishi.ryusuke-Zyj7fXuS5i5L9jVzuh4AOg@public.gmane.org>
+ L:	linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
 index b9db492..27b0f37 100644
 --- a/arch/mips/boot/dts/Makefile
@@ -276,3 +279,8 @@ index f67fbf1..de851f7 100644
 +#endif
 -- 
 2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
