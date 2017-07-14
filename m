@@ -1,49 +1,154 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [PATCH v3 1/3] dt-bindings: pinctrl: add most other IPQ4019 pin functions and groups
-Date: Fri, 14 Jul 2017 16:14:09 +0200
-Message-ID: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Varadarajan Narayanan <varada@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Ram Chandra Jangir <rjangir@codeaurora.org>, John Crispin <john@phrozen.org>
+From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 3/3] pinctrl: msm: add support to configure ipq40xx GPIO_PULL bits
+Date: Fri, 14 Jul 2017 16:14:11 +0200
+Message-ID: <895bbe5061fe2a6825503f57263a4eff9bb78a3c.1500038134.git.chunkeey@googlemail.com>
+References: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <941e3869bdeddb2bebcc52ebfd57efe014887bc6.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+References: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> <941e3869bdeddb2bebcc52ebfd57efe014887bc6.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the remaining pin functions and mux groups.
-All unknown and debug functions are omitted. Existing functions
-for qpic, sdio, rgmii, rmii, wifi/d are squashed together as
-much as possible. And only in case of a clash, the individually
-named functions have been kept. The exceptions are:
-	led0-11
-	i2s_rx, i2s_tx, i2s_td, i2s_spdif_in, i2s_spdif_out,
-	smart0-3
+From: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Ram Chandra Jangir <rjangir@codeaurora.org>
-Cc: John Crispin <john@phrozen.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+GPIO_PULL bits configurations in TLMM_GPIO_CFG register
+differs for IPQ40xx from rest of the other qcom SoCs.
+As it does not support the keeper state and therefore can't
+support bias-bus-hold property.
+
+This patch adds a pull_no_keeper setting which configures the
+msm_gpio_pull bits for ipq40xx. This is required to fix the
+proper configurations of gpio-pull bits for nand pins mux.
+
+IPQ40xx SoC:
+2'b10: Internal pull up enable.
+2'b11: Unsupport
+
+For other SoC's:
+2'b10: Keeper
+2'b11: Pull-Up
+
+Note: Due to pull_no_keeper length, all kerneldoc entries
+in the msm_pinctrl_soc_data struct had to be realigned.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c |  1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c     | 25 +++++++++++++++++++------
+ drivers/pinctrl/qcom/pinctrl-msm.h     | 16 +++++++++-------
+ 3 files changed, 29 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-index cfb8500dd56b..93374f478b9e 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,ipq4019-pinctrl.txt
-@@ -50,7 +50,11 @@ Valid values for qcom,pins are:
-     Supports mux, bias and drive-strength
+diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+index 9e7f23d29cda..1979b14b6fc3 100644
+--- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
++++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
+@@ -706,6 +706,7 @@ static const struct msm_pinctrl_soc_data ipq4019_pinctrl = {
+ 	.groups = ipq4019_groups,
+ 	.ngroups = ARRAY_SIZE(ipq4019_groups),
+ 	.ngpios = 100,
++	.pull_no_keeper = true,
+ };
  
- Valid values for qcom,function are:
--gpio, blsp_uart1, blsp_i2c0, blsp_i2c1, blsp_uart0, blsp_spi1, blsp_spi0
-+aud_pin, audio_pwm, blsp_i2c0, blsp_i2c1, blsp_spi0, blsp_spi1, blsp_uart0,
-+blsp_uart1, chip_rst, gpio, i2s_rx, i2s_spdif_in, i2s_spdif_out, i2s_td, i2s_tx,
-+jtag, led0, led1, led2, led3, led4, led5, led6, led7, led8, led9, led10, led11,
-+mdc, mdio, pcie, pmu, prng_rosc, qpic, rgmii, rmii, sdio, smart0, smart1,
-+smart2, smart3, tm, wifi0, wifi1
+ static int ipq4019_pinctrl_probe(struct platform_device *pdev)
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 273badd92561..e5e27d79f5ef 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -202,10 +202,11 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
+ 	return 0;
+ }
  
- Example:
+-#define MSM_NO_PULL	0
+-#define MSM_PULL_DOWN	1
+-#define MSM_KEEPER	2
+-#define MSM_PULL_UP	3
++#define MSM_NO_PULL		0
++#define MSM_PULL_DOWN		1
++#define MSM_KEEPER		2
++#define MSM_PULL_UP_NO_KEEPER	2
++#define MSM_PULL_UP		3
  
+ static unsigned msm_regval_to_drive(u32 val)
+ {
+@@ -243,10 +244,16 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
+ 		arg = arg == MSM_PULL_DOWN;
+ 		break;
+ 	case PIN_CONFIG_BIAS_BUS_HOLD:
++		if (pctrl->soc->pull_no_keeper)
++			return -ENOTSUPP;
++
+ 		arg = arg == MSM_KEEPER;
+ 		break;
+ 	case PIN_CONFIG_BIAS_PULL_UP:
+-		arg = arg == MSM_PULL_UP;
++		if (pctrl->soc->pull_no_keeper)
++			arg = arg == MSM_PULL_UP_NO_KEEPER;
++		else
++			arg = arg == MSM_PULL_UP;
+ 		break;
+ 	case PIN_CONFIG_DRIVE_STRENGTH:
+ 		arg = msm_regval_to_drive(arg);
+@@ -309,10 +316,16 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
+ 			arg = MSM_PULL_DOWN;
+ 			break;
+ 		case PIN_CONFIG_BIAS_BUS_HOLD:
++			if (pctrl->soc->pull_no_keeper)
++				return -ENOTSUPP;
++
+ 			arg = MSM_KEEPER;
+ 			break;
+ 		case PIN_CONFIG_BIAS_PULL_UP:
+-			arg = MSM_PULL_UP;
++			if (pctrl->soc->pull_no_keeper)
++				arg = MSM_PULL_UP_NO_KEEPER;
++			else
++				arg = MSM_PULL_UP;
+ 			break;
+ 		case PIN_CONFIG_DRIVE_STRENGTH:
+ 			/* Check for invalid values */
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 54fdd04ce9d5..9b9feea540ff 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -99,13 +99,14 @@ struct msm_pingroup {
+ 
+ /**
+  * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
+- * @pins:       An array describing all pins the pin controller affects.
+- * @npins:      The number of entries in @pins.
+- * @functions:  An array describing all mux functions the SoC supports.
+- * @nfunctions: The number of entries in @functions.
+- * @groups:     An array describing all pin groups the pin SoC supports.
+- * @ngroups:    The numbmer of entries in @groups.
+- * @ngpio:      The number of pingroups the driver should expose as GPIOs.
++ * @pins:	    An array describing all pins the pin controller affects.
++ * @npins:	    The number of entries in @pins.
++ * @functions:	    An array describing all mux functions the SoC supports.
++ * @nfunctions:	    The number of entries in @functions.
++ * @groups:	    An array describing all pin groups the pin SoC supports.
++ * @ngroups:	    The numbmer of entries in @groups.
++ * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
++ * @pull_no_keeper: The SoC does not support keeper bias.
+  */
+ struct msm_pinctrl_soc_data {
+ 	const struct pinctrl_pin_desc *pins;
+@@ -115,6 +116,7 @@ struct msm_pinctrl_soc_data {
+ 	const struct msm_pingroup *groups;
+ 	unsigned ngroups;
+ 	unsigned ngpios;
++	bool pull_no_keeper;
+ };
+ 
+ int msm_pinctrl_probe(struct platform_device *pdev,
 -- 
 2.13.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
