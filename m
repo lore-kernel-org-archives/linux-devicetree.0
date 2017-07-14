@@ -1,154 +1,518 @@
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 3/3] pinctrl: msm: add support to configure ipq40xx GPIO_PULL bits
-Date: Fri, 14 Jul 2017 16:14:11 +0200
-Message-ID: <895bbe5061fe2a6825503f57263a4eff9bb78a3c.1500038134.git.chunkeey@googlemail.com>
+From: Christian Lamparter <chunkeey@googlemail.com>
+Subject: [PATCH v3 2/3] pinctrl: qcom: ipq4019: add most remaining pin definitions
+Date: Fri, 14 Jul 2017 16:14:10 +0200
+Message-ID: <941e3869bdeddb2bebcc52ebfd57efe014887bc6.1500038134.git.chunkeey@googlemail.com>
 References: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-In-Reply-To: <941e3869bdeddb2bebcc52ebfd57efe014887bc6.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-References: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> <941e3869bdeddb2bebcc52ebfd57efe014887bc6.1500038134.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
+In-Reply-To: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
+References: <d45ae31e888ad858d9f4396cabb4dc32a3f0365e.1500038134.git.chunkeey@googlemail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Ram Chandra Jangir <rjangir@codeaurora.org>
 
-GPIO_PULL bits configurations in TLMM_GPIO_CFG register
-differs for IPQ40xx from rest of the other qcom SoCs.
-As it does not support the keeper state and therefore can't
-support bias-bus-hold property.
+This patch adds multiple pinctrl functions and mappings
+for SDIO, NAND, I2S, WIFI, PCIE, LEDs, etc... that have
+been missing from the current minimal version.
 
-This patch adds a pull_no_keeper setting which configures the
-msm_gpio_pull bits for ipq40xx. This is required to fix the
-proper configurations of gpio-pull bits for nand pins mux.
+This patch has been updated from the original version
+that was posted by Ram Chandra Jangir on the LEDE-DEV ML:
+<https://patchwork.ozlabs.org/patch/752962/>. A short
+summary of the changes are documented in the device-tree
+patch of this series:
+"dt-bindings: pinctrl: add most other IPQ4019 pin functions and groups"
 
-IPQ40xx SoC:
-2'b10: Internal pull up enable.
-2'b11: Unsupport
-
-For other SoC's:
-2'b10: Keeper
-2'b11: Pull-Up
-
-Note: Due to pull_no_keeper length, all kerneldoc entries
-in the msm_pinctrl_soc_data struct had to be realigned.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Ram Chandra Jangir <rjangir-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: John Crispin <john@phrozen.org>
+Signed-off-by: Ram Chandra Jangir <rjangir@codeaurora.org>
+Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
 ---
- drivers/pinctrl/qcom/pinctrl-ipq4019.c |  1 +
- drivers/pinctrl/qcom/pinctrl-msm.c     | 25 +++++++++++++++++++------
- drivers/pinctrl/qcom/pinctrl-msm.h     | 16 +++++++++-------
- 3 files changed, 29 insertions(+), 13 deletions(-)
+ drivers/pinctrl/qcom/pinctrl-ipq4019.c | 431 ++++++++++++++++++++++++++-------
+ 1 file changed, 346 insertions(+), 85 deletions(-)
 
 diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-index 9e7f23d29cda..1979b14b6fc3 100644
+index 743d1f458205..9e7f23d29cda 100644
 --- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
 +++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-@@ -706,6 +706,7 @@ static const struct msm_pinctrl_soc_data ipq4019_pinctrl = {
- 	.groups = ipq4019_groups,
- 	.ngroups = ARRAY_SIZE(ipq4019_groups),
- 	.ngpios = 100,
-+	.pull_no_keeper = true,
+@@ -277,12 +277,49 @@ DECLARE_QCA_GPIO_PINS(99);
+ 
+ enum ipq4019_functions {
+ 	qca_mux_gpio,
+-	qca_mux_blsp_uart1,
++	qca_mux_aud_pin,
++	qca_mux_audio_pwm,
+ 	qca_mux_blsp_i2c0,
+ 	qca_mux_blsp_i2c1,
+-	qca_mux_blsp_uart0,
+-	qca_mux_blsp_spi1,
+ 	qca_mux_blsp_spi0,
++	qca_mux_blsp_spi1,
++	qca_mux_blsp_uart0,
++	qca_mux_blsp_uart1,
++	qca_mux_chip_rst,
++	qca_mux_i2s_rx,
++	qca_mux_i2s_spdif_in,
++	qca_mux_i2s_spdif_out,
++	qca_mux_i2s_td,
++	qca_mux_i2s_tx,
++	qca_mux_jtag,
++	qca_mux_led0,
++	qca_mux_led1,
++	qca_mux_led2,
++	qca_mux_led3,
++	qca_mux_led4,
++	qca_mux_led5,
++	qca_mux_led6,
++	qca_mux_led7,
++	qca_mux_led8,
++	qca_mux_led9,
++	qca_mux_led10,
++	qca_mux_led11,
++	qca_mux_mdc,
++	qca_mux_mdio,
++	qca_mux_pcie,
++	qca_mux_pmu,
++	qca_mux_prng_rosc,
++	qca_mux_qpic,
++	qca_mux_rgmii,
++	qca_mux_rmii,
++	qca_mux_sdio,
++	qca_mux_smart0,
++	qca_mux_smart1,
++	qca_mux_smart2,
++	qca_mux_smart3,
++	qca_mux_tm,
++	qca_mux_wifi0,
++	qca_mux_wifi1,
+ 	qca_mux_NA,
  };
  
- static int ipq4019_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 273badd92561..e5e27d79f5ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -202,10 +202,11 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
- 	return 0;
- }
+@@ -303,108 +340,331 @@ static const char * const gpio_groups[] = {
+ 	"gpio92", "gpio93", "gpio94", "gpio95", "gpio96", "gpio97", "gpio98",
+ 	"gpio99",
+ };
+-
+-static const char * const blsp_uart1_groups[] = {
+-	"gpio8", "gpio9", "gpio10", "gpio11",
++static const char * const aud_pin_groups[] = {
++	"gpio48", "gpio49", "gpio50", "gpio51",
++};
++static const char * const audio_pwm_groups[] = {
++	"gpio30", "gpio31", "gpio32", "gpio33", "gpio64", "gpio65", "gpio66",
++	"gpio67",
+ };
+ static const char * const blsp_i2c0_groups[] = {
+ 	"gpio10", "gpio11", "gpio20", "gpio21", "gpio58", "gpio59",
+ };
+-static const char * const blsp_spi0_groups[] = {
+-	"gpio12", "gpio13", "gpio14", "gpio15", "gpio45",
+-	"gpio54", "gpio55", "gpio56", "gpio57",
+-};
+ static const char * const blsp_i2c1_groups[] = {
+ 	"gpio12", "gpio13", "gpio34", "gpio35",
+ };
+-static const char * const blsp_uart0_groups[] = {
+-	"gpio16", "gpio17", "gpio60", "gpio61",
++static const char * const blsp_spi0_groups[] = {
++	"gpio12", "gpio13", "gpio14", "gpio15", "gpio45", "gpio54", "gpio55",
++	"gpio56", "gpio57",
+ };
+ static const char * const blsp_spi1_groups[] = {
+ 	"gpio44", "gpio45", "gpio46", "gpio47",
+ };
++static const char * const blsp_uart0_groups[] = {
++	"gpio16", "gpio17", "gpio60", "gpio61",
++};
++static const char * const blsp_uart1_groups[] = {
++	"gpio8", "gpio9", "gpio10", "gpio11",
++};
++static const char * const chip_rst_groups[] = {
++	"gpio62",
++};
++static const char * const i2s_rx_groups[] = {
++	"gpio0", "gpio1", "gpio2", "gpio20", "gpio21", "gpio22", "gpio23",
++	"gpio58", "gpio60", "gpio61", "gpio63",
++};
++static const char * const i2s_spdif_in_groups[] = {
++	"gpio34", "gpio59", "gpio63",
++};
++static const char * const i2s_spdif_out_groups[] = {
++	"gpio35", "gpio62", "gpio63",
++};
++static const char * const i2s_td_groups[] = {
++	"gpio27", "gpio28", "gpio29", "gpio54", "gpio55", "gpio56", "gpio63",
++};
++static const char * const i2s_tx_groups[] = {
++	"gpio24", "gpio25", "gpio26", "gpio52", "gpio53", "gpio57", "gpio60",
++	"gpio61",
++};
++static const char * const jtag_groups[] = {
++	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5",
++};
++static const char * const led0_groups[] = {
++	"gpio16", "gpio36", "gpio60",
++};
++static const char * const led1_groups[] = {
++	"gpio17", "gpio37", "gpio61",
++};
++static const char * const led2_groups[] = {
++	"gpio36", "gpio38", "gpio58",
++};
++static const char * const led3_groups[] = {
++	"gpio39",
++};
++static const char * const led4_groups[] = {
++	"gpio40",
++};
++static const char * const led5_groups[] = {
++	"gpio44",
++};
++static const char * const led6_groups[] = {
++	"gpio45",
++};
++static const char * const led7_groups[] = {
++	"gpio46",
++};
++static const char * const led8_groups[] = {
++	"gpio47",
++};
++static const char * const led9_groups[] = {
++	"gpio48",
++};
++static const char * const led10_groups[] = {
++	"gpio49",
++};
++static const char * const led11_groups[] = {
++	"gpio50",
++};
++static const char * const mdc_groups[] = {
++	"gpio7", "gpio52",
++};
++static const char * const mdio_groups[] = {
++	"gpio6", "gpio53",
++};
++static const char * const pcie_groups[] = {
++	"gpio39", "gpio52",
++};
++static const char * const pmu_groups[] = {
++	"gpio54", "gpio55",
++};
++static const char * const prng_rosc_groups[] = {
++	"gpio53",
++};
++static const char * const qpic_groups[] = {
++	"gpio52", "gpio53", "gpio54", "gpio55", "gpio56", "gpio57", "gpio58",
++	"gpio59", "gpio60", "gpio61", "gpio62", "gpio63", "gpio64", "gpio65",
++	"gpio66", "gpio67", "gpio68", "gpio69",
++};
++static const char * const rgmii_groups[] = {
++	"gpio22", "gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28",
++	"gpio29", "gpio30", "gpio31", "gpio32", "gpio33",
++};
++static const char * const rmii_groups[] = {
++	"gpio36", "gpio37", "gpio38", "gpio39", "gpio40", "gpio41", "gpio42",
++	"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", "gpio48", "gpio49",
++	"gpio50", "gpio51",
++};
++static const char * const sdio_groups[] = {
++	"gpio23", "gpio24", "gpio25", "gpio26", "gpio27", "gpio28", "gpio29",
++	"gpio30", "gpio31", "gpio32",
++};
++static const char * const smart0_groups[] = {
++	"gpio0", "gpio1", "gpio2", "gpio5", "gpio44", "gpio45", "gpio46",
++	"gpio47",
++};
++static const char * const smart1_groups[] = {
++	"gpio8", "gpio9", "gpio16", "gpio17", "gpio58", "gpio59", "gpio60",
++	"gpio61",
++};
++static const char * const smart2_groups[] = {
++	"gpio40", "gpio41", "gpio48", "gpio49",
++};
++static const char * const smart3_groups[] = {
++	"gpio58", "gpio59", "gpio60", "gpio61",
++};
++static const char * const tm_groups[] = {
++	"gpio52", "gpio53", "gpio54", "gpio55", "gpio56", "gpio57", "gpio58",
++	"gpio59", "gpio60", "gpio61", "gpio62", "gpio63",
++};
++static const char * const wifi0_groups[] = {
++	"gpio37", "gpio40", "gpio41", "gpio42", "gpio50", "gpio51", "gpio52",
++	"gpio53", "gpio56", "gpio57", "gpio58", "gpio98",
++};
++static const char * const wifi1_groups[] = {
++	"gpio37", "gpio40", "gpio41", "gpio43", "gpio50", "gpio51", "gpio52",
++	"gpio53", "gpio56", "gpio57", "gpio58", "gpio98",
++};
  
--#define MSM_NO_PULL	0
--#define MSM_PULL_DOWN	1
--#define MSM_KEEPER	2
--#define MSM_PULL_UP	3
-+#define MSM_NO_PULL		0
-+#define MSM_PULL_DOWN		1
-+#define MSM_KEEPER		2
-+#define MSM_PULL_UP_NO_KEEPER	2
-+#define MSM_PULL_UP		3
- 
- static unsigned msm_regval_to_drive(u32 val)
- {
-@@ -243,10 +244,16 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 		arg = arg == MSM_PULL_DOWN;
- 		break;
- 	case PIN_CONFIG_BIAS_BUS_HOLD:
-+		if (pctrl->soc->pull_no_keeper)
-+			return -ENOTSUPP;
-+
- 		arg = arg == MSM_KEEPER;
- 		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
--		arg = arg == MSM_PULL_UP;
-+		if (pctrl->soc->pull_no_keeper)
-+			arg = arg == MSM_PULL_UP_NO_KEEPER;
-+		else
-+			arg = arg == MSM_PULL_UP;
- 		break;
- 	case PIN_CONFIG_DRIVE_STRENGTH:
- 		arg = msm_regval_to_drive(arg);
-@@ -309,10 +316,16 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 			arg = MSM_PULL_DOWN;
- 			break;
- 		case PIN_CONFIG_BIAS_BUS_HOLD:
-+			if (pctrl->soc->pull_no_keeper)
-+				return -ENOTSUPP;
-+
- 			arg = MSM_KEEPER;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			arg = MSM_PULL_UP;
-+			if (pctrl->soc->pull_no_keeper)
-+				arg = MSM_PULL_UP_NO_KEEPER;
-+			else
-+				arg = MSM_PULL_UP;
- 			break;
- 		case PIN_CONFIG_DRIVE_STRENGTH:
- 			/* Check for invalid values */
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 54fdd04ce9d5..9b9feea540ff 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -99,13 +99,14 @@ struct msm_pingroup {
- 
- /**
-  * struct msm_pinctrl_soc_data - Qualcomm pin controller driver configuration
-- * @pins:       An array describing all pins the pin controller affects.
-- * @npins:      The number of entries in @pins.
-- * @functions:  An array describing all mux functions the SoC supports.
-- * @nfunctions: The number of entries in @functions.
-- * @groups:     An array describing all pin groups the pin SoC supports.
-- * @ngroups:    The numbmer of entries in @groups.
-- * @ngpio:      The number of pingroups the driver should expose as GPIOs.
-+ * @pins:	    An array describing all pins the pin controller affects.
-+ * @npins:	    The number of entries in @pins.
-+ * @functions:	    An array describing all mux functions the SoC supports.
-+ * @nfunctions:	    The number of entries in @functions.
-+ * @groups:	    An array describing all pin groups the pin SoC supports.
-+ * @ngroups:	    The numbmer of entries in @groups.
-+ * @ngpio:	    The number of pingroups the driver should expose as GPIOs.
-+ * @pull_no_keeper: The SoC does not support keeper bias.
-  */
- struct msm_pinctrl_soc_data {
- 	const struct pinctrl_pin_desc *pins;
-@@ -115,6 +116,7 @@ struct msm_pinctrl_soc_data {
- 	const struct msm_pingroup *groups;
- 	unsigned ngroups;
- 	unsigned ngpios;
-+	bool pull_no_keeper;
+ static const struct msm_function ipq4019_functions[] = {
+-	FUNCTION(gpio),
+-	FUNCTION(blsp_uart1),
++	FUNCTION(aud_pin),
++	FUNCTION(audio_pwm),
+ 	FUNCTION(blsp_i2c0),
+ 	FUNCTION(blsp_i2c1),
+-	FUNCTION(blsp_uart0),
+-	FUNCTION(blsp_spi1),
+ 	FUNCTION(blsp_spi0),
++	FUNCTION(blsp_spi1),
++	FUNCTION(blsp_uart0),
++	FUNCTION(blsp_uart1),
++	FUNCTION(chip_rst),
++	FUNCTION(gpio),
++	FUNCTION(i2s_rx),
++	FUNCTION(i2s_spdif_in),
++	FUNCTION(i2s_spdif_out),
++	FUNCTION(i2s_td),
++	FUNCTION(i2s_tx),
++	FUNCTION(jtag),
++	FUNCTION(led0),
++	FUNCTION(led1),
++	FUNCTION(led2),
++	FUNCTION(led3),
++	FUNCTION(led4),
++	FUNCTION(led5),
++	FUNCTION(led6),
++	FUNCTION(led7),
++	FUNCTION(led8),
++	FUNCTION(led9),
++	FUNCTION(led10),
++	FUNCTION(led11),
++	FUNCTION(mdc),
++	FUNCTION(mdio),
++	FUNCTION(pcie),
++	FUNCTION(pmu),
++	FUNCTION(prng_rosc),
++	FUNCTION(qpic),
++	FUNCTION(rgmii),
++	FUNCTION(rmii),
++	FUNCTION(sdio),
++	FUNCTION(smart0),
++	FUNCTION(smart1),
++	FUNCTION(smart2),
++	FUNCTION(smart3),
++	FUNCTION(tm),
++	FUNCTION(wifi0),
++	FUNCTION(wifi1),
  };
  
- int msm_pinctrl_probe(struct platform_device *pdev,
+ static const struct msm_pingroup ipq4019_groups[] = {
+-	PINGROUP(0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(2, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(4, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(5, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(6, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(7, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(8, blsp_uart1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(9, blsp_uart1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(10, blsp_uart1, NA, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(11, blsp_uart1, NA, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(12, blsp_spi0, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(13, blsp_spi0, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(14, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(15, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(16, blsp_uart0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(17, blsp_uart0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(0, jtag, smart0, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(1, jtag, smart0, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(2, jtag, smart0, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(3, jtag, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(4, jtag, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(5, jtag, smart0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(6, mdio, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(7, mdc, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(8, blsp_uart1, NA, NA, smart1, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(9, blsp_uart1, NA, NA, smart1, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(10, blsp_uart1, NA, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(11, blsp_uart1, NA, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(12, blsp_spi0, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(13, blsp_spi0, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(14, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(15, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(16, blsp_uart0, led0, smart1, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(17, blsp_uart0, led1, smart1, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
+ 	PINGROUP(18, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(19, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(20, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(21, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(22, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(23, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(24, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(25, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(26, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(27, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(28, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(29, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(30, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(31, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(32, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(33, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(34, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(35, blsp_i2c1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(36, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(37, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(38, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(39, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(40, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(41, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(42, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(43, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(44, NA, blsp_spi1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(45, NA, blsp_spi1, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(46, NA, blsp_spi1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(47, NA, blsp_spi1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(48, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(49, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(50, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(51, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(52, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(53, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(54, NA, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(55, NA, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(56, NA, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(57, NA, blsp_spi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(58, NA, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(59, NA, blsp_i2c0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(60, NA, blsp_uart0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(61, NA, blsp_uart0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(62, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(63, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(64, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(65, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(66, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(67, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(68, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(69, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(20, blsp_i2c0, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(21, blsp_i2c0, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(22, rgmii, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(23, sdio, rgmii, i2s_rx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(24, sdio, rgmii, i2s_tx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(25, sdio, rgmii, i2s_tx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(26, sdio, rgmii, i2s_tx, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(27, sdio, rgmii, i2s_td, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(28, sdio, rgmii, i2s_td, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(29, sdio, rgmii, i2s_td, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(30, sdio, rgmii, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(31, sdio, rgmii, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(32, sdio, rgmii, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(33, rgmii, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(34, blsp_i2c1, i2s_spdif_in, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA, NA),
++	PINGROUP(35, blsp_i2c1, i2s_spdif_out, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA, NA),
++	PINGROUP(36, rmii, led2, led0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(37, rmii, wifi0, wifi1, led1, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(38, rmii, led2, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(39, rmii, pcie, led3, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(40, rmii, wifi0, wifi1, smart2, led4, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(41, rmii, wifi0, wifi1, smart2, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(42, rmii, wifi0, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(43, rmii, wifi1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
++	PINGROUP(44, rmii, blsp_spi1, smart0, led5, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(45, rmii, blsp_spi1, blsp_spi0, smart0, led6, NA, NA, NA, NA,
++		 NA, NA, NA, NA, NA),
++	PINGROUP(46, rmii, blsp_spi1, smart0, led7, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(47, rmii, blsp_spi1, smart0, led8, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(48, rmii, aud_pin, smart2, led9, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(49, rmii, aud_pin, smart2, led10, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(50, rmii, aud_pin, wifi0, wifi1, led11, NA, NA, NA, NA, NA,
++		 NA, NA, NA, NA),
++	PINGROUP(51, rmii, aud_pin, wifi0, wifi1, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(52, qpic, mdc, pcie, i2s_tx, NA, NA, NA, tm, wifi0, wifi1, NA,
++		 NA, NA, NA),
++	PINGROUP(53, qpic, mdio, i2s_tx, prng_rosc, NA, tm, wifi0, wifi1, NA,
++		 NA, NA, NA, NA, NA),
++	PINGROUP(54, qpic, blsp_spi0, i2s_td, NA, pmu, NA, NA, NA, tm, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(55, qpic, blsp_spi0, i2s_td, NA, pmu, NA, NA, NA, tm, NA, NA,
++		 NA, NA, NA),
++	PINGROUP(56, qpic, blsp_spi0, i2s_td, NA, NA, tm, wifi0, wifi1, NA, NA,
++		 NA, NA, NA, NA),
++	PINGROUP(57, qpic, blsp_spi0, i2s_tx, NA, NA, tm, wifi0, wifi1, NA, NA,
++		 NA, NA, NA, NA),
++	PINGROUP(58, qpic, led2, blsp_i2c0, smart3, smart1, i2s_rx, NA, NA, tm,
++		 wifi0, wifi1, NA, NA, NA),
++	PINGROUP(59, qpic, blsp_i2c0, smart3, smart1, i2s_spdif_in, NA, NA, NA,
++		 NA, NA, tm, NA, NA, NA),
++	PINGROUP(60, qpic, blsp_uart0, smart1, smart3, led0, i2s_tx, i2s_rx,
++		 NA, NA, NA, NA, NA, tm, NA),
++	PINGROUP(61, qpic, blsp_uart0, smart1, smart3, led1, i2s_tx, i2s_rx,
++		 NA, NA, NA, NA, NA, tm, NA),
++	PINGROUP(62, qpic, chip_rst, NA, NA, i2s_spdif_out, NA, NA, NA, NA, NA,
++		 tm, NA, NA, NA),
++	PINGROUP(63, qpic, NA, NA, NA, i2s_td, i2s_rx, i2s_spdif_out,
++		 i2s_spdif_in, NA, NA, NA, NA, tm, NA),
++	PINGROUP(64, qpic, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(65, qpic, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(66, qpic, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(67, qpic, audio_pwm, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA, NA),
++	PINGROUP(68, qpic, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(69, qpic, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(70, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(71, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(72, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+@@ -433,7 +693,8 @@ static const struct msm_pingroup ipq4019_groups[] = {
+ 	PINGROUP(95, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(96, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ 	PINGROUP(97, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+-	PINGROUP(98, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
++	PINGROUP(98, wifi0, wifi1, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,
++		 NA),
+ 	PINGROUP(99, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA),
+ };
+ 
 -- 
 2.13.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
