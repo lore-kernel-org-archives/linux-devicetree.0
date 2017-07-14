@@ -1,32 +1,29 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] input: keyboard: Add lm8333 devicetree bindings
-Date: Fri, 14 Jul 2017 09:38:20 -0500
-Message-ID: <20170714143820.znhe4ezjb7fkdda2@rob-hp-laptop>
-References: <20170707134212.gwx55wjqcvpjvzix@rob-hp-laptop>
- <20170713121300.29530-4-gordan.markus@gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: iio: stm32-dac: add support for STM32F4
+Date: Fri, 14 Jul 2017 09:41:39 -0500
+Message-ID: <20170714144139.n7qqqmtvjyfysrwj@rob-hp-laptop>
+References: <1499693040-12994-1-git-send-email-fabrice.gasnier@st.com>
+ <1499693040-12994-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170713121300.29530-4-gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1499693040-12994-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gordan =?utf-8?Q?Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 02:13:00PM +0200, Gordan Markuš wrote:
-> This adds LM8333 devicetree bindings documentation.
+On Mon, Jul 10, 2017 at 03:23:57PM +0200, Fabrice Gasnier wrote:
+> Introduce new compatible to support STM32F4 DAC (Digital-To-Analog
+> converter) variant.
 > 
-> Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 > ---
->  .../devicetree/bindings/input/ti,lm8333.txt        | 45 ++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/ti,lm8333.txt
+>  Documentation/devicetree/bindings/iio/dac/st,stm32-dac.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-This is the 2nd v3 you posted and I acked v4...
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
