@@ -1,29 +1,43 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 02/10] dt-bindings: Add Spreadtrum clock binding
- documentation
-Date: Fri, 14 Jul 2017 11:10:18 -0500
-Message-ID: <20170714161018.tkzr6xuvqfaii22o@rob-hp-laptop>
-References: <20170711105627.20526-1-chunyan.zhang@spreadtrum.com>
- <20170711105627.20526-3-chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH] ata: sata_rcar: add gen[23] fallback compatibility
+ strings
+Date: Fri, 14 Jul 2017 11:11:52 -0500
+Message-ID: <20170714161152.665tg2xj2wmjycrl@rob-hp-laptop>
+References: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170711105627.20526-3-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+In-Reply-To: <1499773460-8930-1-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaolong Zhang <xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Ben Li <ben.li-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 06:56:19PM +0800, Chunyan Zhang wrote:
-> Introduce a new binding with its documentation for Spreadtrum clock
-> sub-framework.
+On Tue, Jul 11, 2017 at 01:44:20PM +0200, Simon Horman wrote:
+> Add fallback compatibility string for R-Car Gen 2 and 3.
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> In the case of Renesas R-Car hardware we know that there are generations of
+> SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
+> between IP blocks might be. For example, I believe that r8a7790 is older
+> than r8a7791 but that doesn't imply that the latter is a descendant of the
+> former or vice versa.
+> 
+> We can, however, by examining the documentation and behaviour of the
+> hardware at run-time observe that the current driver implementation appears
+> to be compatible with the IP blocks on SoCs within a given generation.
+> 
+> For the above reasons and convenience when enabling new SoCs a
+> per-generation fallback compatibility string scheme being adopted for
+> drivers for Renesas SoCs.
+> 
+> Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/clock/sprd.txt | 36 ++++++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sprd.txt
+> Based on libata/for-next
+> ---
+>  Documentation/devicetree/bindings/ata/sata_rcar.txt | 14 +++++++++++---
+>  drivers/ata/sata_rcar.c                             |  8 ++++++++
+>  2 files changed, 19 insertions(+), 3 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
