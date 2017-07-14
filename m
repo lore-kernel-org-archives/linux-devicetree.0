@@ -1,57 +1,87 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/9] regulator: mt6380: Add support for MT6380
-Date: Fri, 14 Jul 2017 16:14:39 +0100
-Message-ID: <20170714151439.qospwvlxaoo3yauc@sirena.org.uk>
-References: <cover.1496425268.git.sean.wang@mediatek.com>
- <4276ab23ae0bbb6a54b1add98c4dc668f1a69c50.1496425268.git.sean.wang@mediatek.com>
- <20170606182224.sifkfod7hehadjvm@sirena.org.uk>
- <1498233365.20651.25.camel@mtkswgap22>
- <20170623161420.tbhn6sjuz7jjhaiu@sirena.org.uk>
- <1498236198.20651.32.camel@mtkswgap22>
- <1500044768.16278.37.camel@mtkswgap22>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
+Date: Fri, 14 Jul 2017 10:51:53 -0500
+Message-ID: <20170714155153.ytt2iblkfz626oza@rob-hp-laptop>
+References: <20170710170449.4544-1-andrew.smirnov@gmail.com>
+ <20170710170449.4544-3-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hp2a3qguigil3cxm"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500044768.16278.37.camel@mtkswgap22>
+In-Reply-To: <20170710170449.4544-3-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 10, 2017 at 10:04:49AM -0700, Andrey Smirnov wrote:
+> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> new file mode 100644
+> index 0000000..53192f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> @@ -0,0 +1,40 @@
+> +Zodiac Inflight Innovations RAVE Supervisory Processor
+> +
+> +RAVE Supervisory Processor communicates with SoC over UART and is
+> +presented to the kernel as a "serdev". It is expected that its
 
---hp2a3qguigil3cxm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Drop the "and is ..." part. That's a kernel detail and not part of the 
+binding. With that,
 
-On Fri, Jul 14, 2017 at 11:06:08PM +0800, Sean Wang wrote:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> We usually want to use /sys/class/regulator/regulator.*/status to get
-> actual status from hardware, but if we remove the get_status(), the
-> status entry under sysfs would be gone. So could I keep the get_status
-> callback in this driver ?
-
-If the device doesn't support physical status readback it shouldn't have
-a get_status() callback. =20
-
---hp2a3qguigil3cxm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllo398ACgkQJNaLcl1U
-h9Cergf/eMKkWqaydtM212fyr2PcAvhOq989RGyuQ00UtwejpIYDwvxsT7nO3ksH
-EeTd2xDBJEcWYQlBTMQcDlu7xsb49PoYYKSddY5aadBWRLf5eClEj5LJVhH0Arcq
-cOMjj5w/rmgoByD0QfSAVW1gzESLK1n9ubJDYwgehqApt50W3xbcPuGlVTSNV7Y2
-YUYCSxDn+KpwcTG6tcvV4vyvEahtc2Cttg8ZFEycFxKusC4XQN+XpTn612XDW7SF
-Lvs76KGgBQUoUTr6n60z5jE860URTmY/75h1dl/oqgAJ3O9dRvaCN3h6usFF99OJ
-jXaMz2I+PaZj2FTADb1tmZJIw5ouXw==
-=FWnv
------END PGP SIGNATURE-----
-
---hp2a3qguigil3cxm--
+> +device-tree node is specified as a child of a node corresponding to
+> +UART controller used for communication.
+> +
+> +Required parent device properties:
+> +
+> + - compatible: Should be one of:
+> +	- "zii,rave-sp-niu"
+> +	- "zii,rave-sp-mezz"
+> +	- "zii,rave-sp-esb"
+> +	- "zii,rave-sp-rdu1"
+> +	- "zii,rave-sp-rdu2"
+> +
+> + - current-speed: Should be set to baud rate SP device is using
+> +
+> +RAVE SP consists of the following sub-devices:
+> +
+> +Device				 Description
+> +------				 -----------
+> +rave-sp-wdt			: Watchdog
+> +rave-sp-nvmem			: Interface to onborad EEPROM
+> +rave-sp-backlight		: Display backlight
+> +rave-sp-hwmon			: Interface to onboard hardware sensors
+> +rave-sp-leds			: Interface to onboard LEDs
+> +rave-sp-input			: Interface to onboard power button
+> +
+> +Example of usage:
+> +
+> +	rdu {
+> +		compatible = "zii,rave-sp-rdu2";
+> +		current-speed = <1000000>;
+> +
+> +		watchdog {
+> +			compatible = "zii,rave-sp-watchdog";
+> +		};
+> +	};
+> +
+> -- 
+> 2.9.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
