@@ -1,54 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 2/5] dt-bindings: media: Document Synopsys Designware
- HDMI RX
-Date: Fri, 14 Jul 2017 09:48:43 -0500
-Message-ID: <20170714144843.ckwyvpo3h54t7acl@rob-hp-laptop>
-References: <cover.1499701281.git.joabreu@synopsys.com>
- <36ad6ab0cf3051efeb02508141e08efd56761018.1499701282.git.joabreu@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <36ad6ab0cf3051efeb02508141e08efd56761018.1499701282.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Priit Laes <plaes@plaes.org>
+Subject: [PATCH v6 1/6] clk: sunxi-ng: div: Add support for fixed post-divider
+Date: Fri, 14 Jul 2017 17:49:23 +0300
+Message-ID: <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
+References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+In-Reply-To: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>, Priit Laes <plaes@plaes.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 10, 2017 at 04:46:52PM +0100, Jose Abreu wrote:
-> Document the bindings for the Synopsys Designware HDMI RX.
-> 
-> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> Cc: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> Changes from v7:
-> 	- Remove SoC specific bindings (Rob)
-> Changes from v6:
-> 	- Document which properties are required/optional (Sylwester)
-> 	- Drop compatible string for SoC (Sylwester)
-> 	- Reword edid-phandle property (Sylwester)
-> 	- Typo fixes (Sylwester)
-> Changes from v4:
-> 	- Use "cfg" instead of "cfg-clk" (Rob)
-> 	- Change node names (Rob)
-> Changes from v3:
-> 	- Document the new DT bindings suggested by Sylwester
-> Changes from v2:
-> 	- Document edid-phandle property
-> ---
->  .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+6 is fixed post-divider.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Priit Laes <plaes@plaes.org>
+---
+ drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
+ drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+ 2 files changed, 15 insertions(+), 3 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+index c0e5c10..744502a 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.c
++++ b/drivers/clk/sunxi-ng/ccu_div.c
+@@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+ {
+ 	struct ccu_div *cd = data;
+ 
++	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
++		rate *= cd->fixed_post_div;
++
+ 	return divider_round_rate_parent(&cd->common.hw, parent,
+ 					 rate, parent_rate,
+ 					 cd->div.table, cd->div.width,
+@@ -62,8 +65,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
+ 	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
+ 						  parent_rate);
+ 
+-	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+-				   cd->div.flags);
++	val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
++				  cd->div.flags);
++
++	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
++		val /= cd->fixed_post_div;
++
++	return val;
+ }
+ 
+ static int ccu_div_determine_rate(struct clk_hw *hw,
+@@ -86,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
+ 						  parent_rate);
+ 
++	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
++		rate *= cd->fixed_post_div;
++
+ 	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
+ 			      cd->div.flags);
+ 
+diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+index 08d0744..f3a5028 100644
+--- a/drivers/clk/sunxi-ng/ccu_div.h
++++ b/drivers/clk/sunxi-ng/ccu_div.h
+@@ -86,9 +86,10 @@ struct ccu_div_internal {
+ struct ccu_div {
+ 	u32			enable;
+ 
+-	struct ccu_div_internal		div;
++	struct ccu_div_internal	div;
+ 	struct ccu_mux_internal	mux;
+ 	struct ccu_common	common;
++	unsigned int		fixed_post_div;
+ };
+ 
+ #define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,	\
+-- 
+git-series 0.9.1
