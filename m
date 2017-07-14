@@ -1,76 +1,63 @@
-From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH 3/6] phy: rockcip-pcie: reconstruct driver to support
- per-lane PHYs
-Date: Fri, 14 Jul 2017 15:03:38 +0800
-Message-ID: <59686CCA.60804@rock-chips.com>
-References: <1500004101-240296-1-git-send-email-shawn.lin@rock-chips.com> <1500004366-241633-1-git-send-email-shawn.lin@rock-chips.com> <1500004366-241633-2-git-send-email-shawn.lin@rock-chips.com> <20170714051030.GA59140@google.com> <a0b188ea-71e2-8c8a-999d-754a35891ab9@rock-chips.com>
+From: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v2] arm64: dts: ls1012a: add USB host controller nodes
+Date: Fri, 14 Jul 2017 14:49:09 +0800
+Message-ID: <1500014949-15108-1-git-send-email-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a0b188ea-71e2-8c8a-999d-754a35891ab9-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Tang Yuantian <Yuantian.Tang-3arQi8VN3Tc@public.gmane.org>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mihai Bantea <mihai.bantea-3arQi8VN3Tc@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>, York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+LS1012A has one USB 3.0(DWC3) controller and
+one USB 2.0 controller.
 
-On 07/14/2017 02:33 PM, Shawn Lin wrote:
->>
->>> +        return rk_phy->phys[0];
->>> +    }
->>> +}
->>> +
->>>   static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
->>>                     u32 addr, u32 data)
->>>   {
->>> @@ -114,20 +139,55 @@ static inline u32 phy_rd_cfg(struct
->>> rockchip_pcie_phy *rk_phy,
->>>       return val;
->>>   }
->>> -static int rockchip_pcie_phy_power_off(struct phy *phy)
->>> +static int rockchip_pcie_phy_common_power_off(struct phy *phy)
->>>   {
->>>       struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
->>>       int err = 0;
->>> +    if (WARN_ON(!rk_phy->pwr_cnt))
->>> +        return -EINVAL;
->>> +
->>> +    if (rk_phy->pwr_cnt > 0)
->>
->> This should be:
->>
->>     if (--rk_phy->pwr_cnt)
->>
->> Also, you technically might need locking, now that multiple phys (which
->> each only have their own independent mutex) are accessing the same
->> refcount. Or maybe just make this an atomic variable.
->
-> Good catch!
-Sounds like we need something similar to phy-core.c's power_count and 
-init_count.
+Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+---
+Change in v2:
+		Move node usb2@8600000 to the back of sata@3200000 to keep nodes
+		sorted in unit-address.
 
->>> +
->>>       return 0;
->>>   }
->>> +#define DECLARE_PHY_POWER_OFF_PER_LANE(id) \
->>> +static int rockchip_pcie_lane##id##_phy_power_off(struct phy *phy) \
->>
->> What? All this macro magic (and duplicate generated functions) should
->> not be necessary. You just need some per-phy data that keeps the index.
->
-> I can't quite follow yours here. The only argument passing on to
-> the PHY APIs is 'struct phy *phy', and how could you trace the index
-> from it? The caller should save phy instead of 'rockchip_pcie_phy', in
-> which the per-phy data should be.
->
-> Or could you kindly show me some example here:)
->
-Maybe add a struct rockchip_pcie_phy_data for each phy, contains their 
-index and a pointer to the common struct rockchip_pcie_phy?
+ arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+index b1554cb..df83915 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
+@@ -444,6 +444,15 @@
+ 				 <&clockgen 4 3>;
+ 		};
+ 
++		usb0: usb3@2f00000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x2f00000 0x0 0x10000>;
++			interrupts = <0 60 0x4>;
++			dr_mode = "host";
++			snps,quirk-frame-length-adjustment = <0x20>;
++			snps,dis_rxdet_inp3_quirk;
++		};
++
+ 		sata: sata@3200000 {
+ 			compatible = "fsl,ls1012a-ahci", "fsl,ls1043a-ahci";
+ 			reg = <0x0 0x3200000 0x0 0x10000>,
+@@ -454,5 +463,13 @@
+ 			dma-coherent;
+ 			status = "disabled";
+ 		};
++
++		usb1: usb2@8600000 {
++			compatible = "fsl-usb2-dr-v2.5", "fsl-usb2-dr";
++			reg = <0x0 0x8600000 0x0 0x1000>;
++			interrupts = <0 139 0x4>;
++			dr_mode = "host";
++			phy_type = "ulpi";
++		};
+ 	};
+ };
+-- 
+2.1.0.27.g96db324
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
