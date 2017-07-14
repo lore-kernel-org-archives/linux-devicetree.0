@@ -1,108 +1,57 @@
-From: Guillaume Tucker <guillaume.tucker-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] dt-bindings: gpu: add bindings for the ARM Mali
- Midgard GPU
-Date: Fri, 14 Jul 2017 07:41:24 +0100
-Message-ID: <3339c7d9-c420-777c-e8eb-e9b82a38aa97@collabora.com>
-References: <cover.1493804968.git.guillaume.tucker@collabora.com>
- <bebe578ba130de5fa320ca7c6427b2fae83d61d7.1493804968.git.guillaume.tucker@collabora.com>
- <20170712172636.GA90759@google.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 04/11] mmc: sunxi: Keep default timing phase
+ settings for new timing mode
+Date: Fri, 14 Jul 2017 14:42:55 +0800
+Message-ID: <20170714064302.20383-5-wens@csie.org>
+References: <20170714064302.20383-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170712172636.GA90759-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Wookey <wookey-Xpnwy/r4z8dg9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Reitan <john.reitan-5wv7dgnIgG8@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB76PUHFQKGQEUJ6XEXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170714064302.20383-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+The register for the "new timing mode" also has bit fields for setting
+output and sample timing phases. According to comments in Allwinner's
+BSP kernel, the default values are good enough.
 
-On 12/07/17 18:26, Brian Norris wrote:
-> Hi Guillaume,
->
-> I know this has already been merged, but I figured here was an OK place
-> to note (inline):
->
-> On Wed, May 03, 2017 at 10:56:25AM +0100, Guillaume Tucker wrote:
+Keep the default values already in the hardware when setting new timing
+mode, instead of overwriting the whole register.
 
-[...]
+Fixes: 9a37e53e451e ("mmc: sunxi: Enable the new timings for the A64 MMC
+		      controllers")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/mmc/host/sunxi-mmc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->> new file mode 100644
->> index 000000000000..d3b6e1a4713a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
->
-> ^^ This file name implies we're talking about a base "arm,mali-midgard"
-> compatible property.
->
->> @@ -0,0 +1,86 @@
->> +ARM Mali Midgard GPU
->> +====================
->> +
->> +Required properties:
->> +
->> +- compatible :
->> +  * Must contain one of the following:
->> +    + "arm,mali-t604"
->> +    + "arm,mali-t624"
->> +    + "arm,mali-t628"
->> +    + "arm,mali-t720"
->> +    + "arm,mali-t760"
->> +    + "arm,mali-t820"
->> +    + "arm,mali-t830"
->> +    + "arm,mali-t860"
->> +    + "arm,mali-t880"
->> +  * which must be preceded by one of the following vendor specifics:
->> +    + "amlogic,meson-gxm-mali"
->> +    + "rockchip,rk3288-mali"
->
-> But it's not listed here.
->
->> +
->> +- reg : Physical base address of the device and length of the register area.
->> +
->> +- interrupts : Contains the three IRQ lines required by Mali Midgard devices.
->> +
->> +- interrupt-names : Contains the names of IRQ resources in the order they were
->> +  provided in the interrupts property. Must contain: "job", "mmu", "gpu".
->> +
->> +
->> +Optional properties:
->> +
->> +- clocks : Phandle to clock for the Mali Midgard device.
->> +
->> +- mali-supply : Phandle to regulator for the Mali device. Refer to
->> +  Documentation/devicetree/bindings/regulator/regulator.txt for details.
->> +
->> +- operating-points-v2 : Refer to Documentation/devicetree/bindings/power/opp.txt
->> +  for details.
->> +
->> +
->> +Example for a Mali-T760:
->> +
->> +gpu@ffa30000 {
->> +	compatible = "rockchip,rk3288-mali", "arm,mali-t760", "arm,mali-midgard";
->
-> And it *is* used here in this example.
->
-> So, should it be used/documented or not?
-
-The important part is that having only arm,mali-midgard in the
-gpu node is not enough to accurately describe the hardware, which
-is why it is not listed in the required compatible strings.  On
-the other hand, it does help with describing the hardware, so
-it's fine to use it.  If people find this confusing then I guess
-we could add something to say that arm,mali-midgard can be used
-optionally in addition to the specific ones.
-
-Also, if you look at the 64-bit ARM CPUs for example, they
-typically have armv8 in their node although armv8 is not
-mentioned anywhere in the bindings documentation...
-
-Guillaume
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+index d6fa2214aaae..0fb4e4c119e1 100644
+--- a/drivers/mmc/host/sunxi-mmc.c
++++ b/drivers/mmc/host/sunxi-mmc.c
+@@ -793,8 +793,12 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+ 	}
+ 	mmc_writel(host, REG_CLKCR, rval);
+ 
+-	if (host->cfg->needs_new_timings)
+-		mmc_writel(host, REG_SD_NTSR, SDXC_2X_TIMING_MODE);
++	if (host->cfg->needs_new_timings) {
++		/* Don't touch the delay bits */
++		rval = mmc_readl(host, REG_SD_NTSR);
++		rval |= SDXC_2X_TIMING_MODE;
++		mmc_writel(host, REG_SD_NTSR, rval);
++	}
+ 
+ 	ret = sunxi_mmc_clk_set_phase(host, ios, rate);
+ 	if (ret)
+-- 
+2.13.2
