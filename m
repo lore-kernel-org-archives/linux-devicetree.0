@@ -1,257 +1,54 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 06/18] drm/sun4i: tcon: Don't rely on encoders to enable
- the TCON
-Date: Fri, 14 Jul 2017 11:40:07 +0800
-Message-ID: <CAGb2v67LNwLWWJEkw=FKE-kPkVHPK7XZC-OY02A1a94w6E5e1g@mail.gmail.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
- <e8e204b4b366f609db5b7d848f8cfb88345cd2d7.1499955058.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RFC PATCH 0/6] Reconstruct rockchip's PCIe and PCIe-PHY driver for per-lane PHY model
+Date: Fri, 14 Jul 2017 11:48:15 +0800
+Message-ID: <1500004101-240296-1-git-send-email-shawn.lin@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e8e204b4b366f609db5b7d848f8cfb88345cd2d7.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 10:13 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> So far, we've required all the TCON-connected encoders to call the TCON
-> enable and disable functions.
->
-> This was made this way because in the RGB/LVDS case, the TCON is the CRTC
-> and the encoder. However, in all the other cases (HDMI, TV, DSI, etc.), we
-> have another encoder down the road that needs to be programmed.
->
-> We also needed to know which channel the encoder is connected to, which is
-> encoder-specific.
->
-> The CRTC's enable and disable callbacks can work just fine for our use
-> case, and we can get the channel to use just by looking at the type of
-> encoder, since that is fixed. Implement those callbacks, which will
-> remove some of the encoder boilerplate.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Overall this looks good. A few minor comments below.
+This patchset is trying to reconstruct PCIe and PCIe-PHY driver
+for rockchip platform in order to support per-lane PHY mode. And
+we could idle the inactive lane(s) finally.
 
-> ---
->  drivers/gpu/drm/sun4i/sun4i_crtc.c     | 22 ++++++-
->  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c |  8 +--
->  drivers/gpu/drm/sun4i/sun4i_rgb.c      | 14 +---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c     | 91 +++++++++++++--------------
->  drivers/gpu/drm/sun4i/sun4i_tcon.h     | 10 +---
->  drivers/gpu/drm/sun4i/sun4i_tv.c       |  6 +--
->  6 files changed, 70 insertions(+), 81 deletions(-)
->
+We deprecate the legacy PHY mode but the code could still support
+it in order not to break backware compatibility of DTB. And I organize
+the patches carefully so that we don't introduce git-bisect issue.
 
-[...]
+Hi Brian & Jeffy,
 
->  static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index d9791292553e..dc70bc2a42a5 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -14,6 +14,7 @@
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_crtc.h>
->  #include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_encoder.h>
->  #include <drm/drm_modes.h>
->  #include <drm/drm_of.h>
->
-> @@ -32,66 +33,62 @@
->  #include "sun4i_tcon.h"
->  #include "sunxi_engine.h"
->
-> -void sun4i_tcon_disable(struct sun4i_tcon *tcon)
-> +static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
-> +                                         bool enabled)
->  {
-> -       DRM_DEBUG_DRIVER("Disabling TCON\n");
-> +       struct clk *clk;
->
-> -       /* Disable the TCON */
-> -       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> -                          SUN4I_TCON_GCTL_TCON_ENABLE, 0);
-> -}
-> -EXPORT_SYMBOL(sun4i_tcon_disable);
-> -
-> -void sun4i_tcon_enable(struct sun4i_tcon *tcon)
-> -{
-> -       DRM_DEBUG_DRIVER("Enabling TCON\n");
-> -
-> -       /* Enable the TCON */
-> -       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> -                          SUN4I_TCON_GCTL_TCON_ENABLE,
-> -                          SUN4I_TCON_GCTL_TCON_ENABLE);
-> -}
-> -EXPORT_SYMBOL(sun4i_tcon_enable);
-> -
-> -void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
-> -{
-> -       DRM_DEBUG_DRIVER("Disabling TCON channel %d\n", channel);
-> -
-> -       /* Disable the TCON's channel */
-> -       if (channel == 0) {
-> +       switch (channel) {
-> +       case 0:
->                 regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
-> -                                  SUN4I_TCON0_CTL_TCON_ENABLE, 0);
-> -               clk_disable_unprepare(tcon->dclk);
-> +                                  SUN4I_TCON0_CTL_TCON_ENABLE,
-> +                                  enabled ? SUN4I_TCON0_CTL_TCON_ENABLE : 0);
-> +               clk = tcon->dclk;
-> +               break;
-> +       case 1:
-> +               WARN_ON(!tcon->quirks->has_channel_1);
-> +               regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
-> +                                  SUN4I_TCON1_CTL_TCON_ENABLE,
-> +                                  enabled ? SUN4I_TCON1_CTL_TCON_ENABLE : 0);
-> +               clk = tcon->sclk1;
-> +               break;
-> +       default:
-> +               DRM_DEBUG_DRIVER("Unknown channel... doing nothing\n");
->                 return;
->         }
->
-> -       WARN_ON(!tcon->quirks->has_channel_1);
-> -       regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
-> -                          SUN4I_TCON1_CTL_TCON_ENABLE, 0);
-> -       clk_disable_unprepare(tcon->sclk1);
-> +       if (enabled)
-> +               clk_prepare_enable(clk);
+I tested it by backporting all things into my kernel 4.4 tree, and it
+works fine for both legacy PHY mode and per-lane PHY model. However I
+couldn't run 4.12 for my rk3399-evb now, so could you please help test
+it on your Chromebook devices which can run 4.12?
 
-I wonder if it's better to enable the clk before the TCON?
+Hi Rob,
 
-> +       else
-> +               clk_disable_unprepare(clk);
->  }
-> -EXPORT_SYMBOL(sun4i_tcon_channel_disable);
->
-> -void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
-> +void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
-> +                          struct drm_encoder *encoder,
-> +                          bool enabled)
->  {
-> -       DRM_DEBUG_DRIVER("Enabling TCON channel %d\n", channel);
-> -
-> -       /* Enable the TCON's channel */
-> -       if (channel == 0) {
-> -               regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
-> -                                  SUN4I_TCON0_CTL_TCON_ENABLE,
-> -                                  SUN4I_TCON0_CTL_TCON_ENABLE);
-> -               clk_prepare_enable(tcon->dclk);
-> +       int channel;
-> +
-> +       switch (encoder->encoder_type) {
-> +       case DRM_MODE_ENCODER_NONE:
-> +               channel = 0;
-> +               break;
-> +       case DRM_MODE_ENCODER_TMDS:
-> +       case DRM_MODE_ENCODER_TVDAC:
-> +               channel = 1;
-> +               break;
-> +       default:
-> +               DRM_DEBUG_DRIVER("Unknown encoder type, doing nothing...\n");
+Does the changes for rockchip-pcie.txt in patch 6 look good to you
+from the perspective of DT?
 
-We could simply add all the possible types, and print a big warning
-if someone does something unexpected. IMHO this is better than having
-the user enable some hidden debug flag to figure why the display isn't
-working properly.
 
->                 return;
->         }
->
-> -       WARN_ON(!tcon->quirks->has_channel_1);
-> -       regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
-> -                          SUN4I_TCON1_CTL_TCON_ENABLE,
-> -                          SUN4I_TCON1_CTL_TCON_ENABLE);
-> -       clk_prepare_enable(tcon->sclk1);
-> +       sun4i_tcon_channel_set_status(tcon, channel, enabled);
-> +
-> +       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
-> +                          SUN4I_TCON_GCTL_TCON_ENABLE,
-> +                          enabled ? SUN4I_TCON_GCTL_TCON_ENABLE : 0);
 
-The global enable bit should be set first.
+Shawn Lin (6):
+  PCI: rockchip: split out rockchip_pcie_get_phys
+  PCI: rockchip: introduce per-lanes PHYs support
+  phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
+  PCI: rockchip: idle the inactive PHY(s)
+  arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339-evb
+  dt-bindings: PCI: rockchip: convert to use per-lane PHY model
 
-Also the manual says "When it’s disabled, the module will be reset to
-idle state."
-so you might get away with just disabling the global enable bit and returning
-directly after disabling the clock?
+ .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 +++-
+ arch/arm64/boot/dts/rockchip/rk3399-evb.dts        |   2 +
+ drivers/pci/host/pcie-rockchip.c                   | 162 ++++++++++++++++++---
+ drivers/phy/rockchip/phy-rockchip-pcie.c           | 116 +++++++++++++--
+ 4 files changed, 269 insertions(+), 36 deletions(-)
 
->  }
-> -EXPORT_SYMBOL(sun4i_tcon_channel_enable);
-> +EXPORT_SYMBOL(sun4i_tcon_set_status);
+-- 
+1.9.1
 
-The TCON and CRTC code are part of the same module.
-There is no need to export this function.
 
-ChenYu
-
->
->  void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
->  {
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> index 552c88ec16be..824732c90a2a 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-> @@ -183,15 +183,9 @@ struct sun4i_tcon {
->  struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
->  struct drm_panel *sun4i_tcon_find_panel(struct device_node *node);
->
-> -/* Global Control */
-> -void sun4i_tcon_disable(struct sun4i_tcon *tcon);
-> -void sun4i_tcon_enable(struct sun4i_tcon *tcon);
-> -
-> -/* Channel Control */
-> -void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel);
-> -void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel);
-> -
->  void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable);
-> +void sun4i_tcon_set_status(struct sun4i_tcon *crtc, struct drm_encoder *encoder,
-> +                          bool enable);
->
->  /* Mode Related Controls */
->  void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> index 73bfe7b1cd78..78d6cf77fdd3 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> @@ -345,12 +345,9 @@ static void sun4i_tv_disable(struct drm_encoder *encoder)
->  {
->         struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
->         struct sun4i_crtc *crtc = drm_crtc_to_sun4i_crtc(encoder->crtc);
-> -       struct sun4i_tcon *tcon = crtc->tcon;
->
->         DRM_DEBUG_DRIVER("Disabling the TV Output\n");
->
-> -       sun4i_tcon_channel_disable(tcon, 1);
-> -
->         regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
->                            SUN4I_TVE_EN_ENABLE,
->                            0);
-> @@ -362,7 +359,6 @@ static void sun4i_tv_enable(struct drm_encoder *encoder)
->  {
->         struct sun4i_tv *tv = drm_encoder_to_sun4i_tv(encoder);
->         struct sun4i_crtc *crtc = drm_crtc_to_sun4i_crtc(encoder->crtc);
-> -       struct sun4i_tcon *tcon = crtc->tcon;
->
->         DRM_DEBUG_DRIVER("Enabling the TV Output\n");
->
-> @@ -371,8 +367,6 @@ static void sun4i_tv_enable(struct drm_encoder *encoder)
->         regmap_update_bits(tv->regs, SUN4I_TVE_EN_REG,
->                            SUN4I_TVE_EN_ENABLE,
->                            SUN4I_TVE_EN_ENABLE);
-> -
-> -       sun4i_tcon_channel_enable(tcon, 1);
->  }
->
->  static void sun4i_tv_mode_set(struct drm_encoder *encoder,
-> --
-> git-series 0.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
