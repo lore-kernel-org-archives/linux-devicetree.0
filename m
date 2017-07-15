@@ -1,87 +1,75 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/5] pinctrl: Add DT bindings for Cortina Gemini
-Date: Sat, 15 Jul 2017 19:50:52 +0200
-Message-ID: <20170715175056.13040-1-linus.walleij@linaro.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: Add bindings for National
+ Instruments XGE netdev
+Date: Sat, 15 Jul 2017 20:37:45 +0200
+Message-ID: <20170715183745.GA28217@lunn.ch>
+References: <1500065326-26182-1-git-send-email-mdf@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1500065326-26182-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Cortina Gemini pin controller uses the standard pin control
-bindings for muxing functions with groups so these bindings
-should be entirely uncontroversial.
+On Fri, Jul 14, 2017 at 01:48:45PM -0700, Moritz Fischer wrote:
+> This adds bindings for the NI XGE 1G/10G network device.
+> 
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+> new file mode 100644
+> index 0000000..9fff5a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nixge.txt
+> @@ -0,0 +1,32 @@
+> +* NI XGE Ethernet controller
+> +
+> +Required properties:
+> +- compatible: Should be "ni,xge-enet-2.00"
+> +- reg: Address and length of the register set for the device
+> +- interrupts: Should contain tx and rx interrupt
+> +- interrupt-names: Should be "rx-irq" and "tx-irq"
+> +- phy-mode: See ethernet.txt file in the same directory.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../bindings/pinctrl/cortina,gemini-pinctrl.txt    | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+Hi Moritz
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-new file mode 100644
-index 000000000000..2ef3e8a65559
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-@@ -0,0 +1,54 @@
-+Cortina Systems Gemini pin controller
-+
-+This pin controller is found in the Cortina Systems Gemini SoC family,
-+see further arm/gemini.txt. It is a purely group-based multiplexing pin
-+controller.
-+
-+Required properties:
-+- compatible: "cortina,gemini-pinctrl"
-+- regmap: phandle to the system controller node
-+
-+Subnodes of the pin controller contain pin control multiplexing set-up.
-+Please refer to pinctrl-bindings.txt for generic pin multiplexing nodes.
-+
-+Example:
-+
-+pinctrl {
-+	compatible = "cortina,gemini-pinctrl";
-+	regmap = <&syscon>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dram_default_pins>, <&system_default_pins>,
-+		    <&vcontrol_default_pins>;
-+
-+	dram_default_pins: pinctrl-dram {
-+		mux {
-+			function = "dram";
-+			groups = "dramgrp";
-+		};
-+	};
-+	rtc_default_pins: pinctrl-rtc {
-+		mux {
-+			function = "rtc";
-+			groups = "rtcgrp";
-+		};
-+	};
-+	power_default_pins: pinctrl-power {
-+		mux {
-+			function = "power";
-+			groups = "powergrp";
-+		};
-+	};
-+	system_default_pins: pinctrl-system {
-+		mux {
-+			function = "system";
-+			groups = "systemgrp";
-+		};
-+	};
-+	(...)
-+	uart_default_pins: pinctrl-uart {
-+		mux {
-+			function = "uart";
-+			groups = "uartrxtxgrp";
-+		};
-+	};
-+};
--- 
-2.9.4
+phy-handle is now required.
 
+> +Examples (10G generic PHY):
+> +	nixge0: ethernet@40000000 {
+> +		compatible = "ni,xge-enet-2.00";
+> +		reg = <0x40000000 0x6000>;
+> +
+> +		nvmem-cells = <&eth1_addr>;
+> +		nvmem-cell-names = "address";
+> +
+> +		interrupts = <0 29 4>, <0 30 4>;
+
+IRQ_TYPE_LEVEL_HIGH
+
+> +		interrupt-names = "rx-irq", "tx-irq";
+> +		interrupt-parent = <&intc>;
+> +
+> +		phy-mode = "xgmii";
+> +		phy-handle = <&ethernet_phy1>;
+> +
+> +		ethernet_phy1: ethernet-phy@4 {
+> +			compatible = "ethernet-phy-ieee802.3-c45";
+> +			reg = <4>;
+> +			devices = <0xa>;
+> +		};
+
+Since you don't fully implement c45, does this example actually work?
+And devices is not a standard phy property.
+
+    Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
