@@ -1,35 +1,39 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] power: supply: ltc2941-battery-gauge: Add support
- for LTC2942
-Date: Fri, 14 Jul 2017 20:30:38 -0500
-Message-ID: <20170715013038.gdnon3fm6lxfuvol@rob-hp-laptop>
-References: <20170711125821.nt5opxjvbjcppiaw@lenoch>
- <20170711130020.kfimnv6em3besr3j@lenoch>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [patch v1] Documentation: dt-bindings: aspeed-pwm-tacho cooling
+ device.
+Date: Fri, 14 Jul 2017 20:33:46 -0500
+Message-ID: <20170715013346.fgqysvlu2prts7zn@rob-hp-laptop>
+References: <20170711131827.64045-1-c_mykolak@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170711130020.kfimnv6em3besr3j@lenoch>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ladislav Michl <ladis@linux-mips.org>
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>, Javier Martinez Canillas <javier@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>
+In-Reply-To: <20170711131827.64045-1-c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 03:00:20PM +0200, Ladislav Michl wrote:
-> LTC2942 is pin compatible with LTC2941 providing additional
-> informations about battery voltage and temperature. It can
-> be runtime detected using bit A7 in the Status register.
+On Tue, Jul 11, 2017 at 04:18:27PM +0300, Mykola Kostenok wrote:
+> This binding adds description for interface supporting
+> aspeed-pwm-tacho driver cooling device creation.
+> This cooling device could be bound to a thermal zone
+> for the thermal control.
+
+Bindings are for devices, not drivers.
+
+ 
+> It adds extra level of hierarchy -  for tachometer channel
+> with fan subnodes and pwm channels with pwm subnodes.
+
+Why this binding was just added and now it is changing?
+
 > 
-> Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
+> Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 > ---
->  Changes:
->  - v2: reworked voltage computing to not overflow and keep presision
->  - v3: update devicetree binding documentation
->  - v4: add ltc2942 devicetree compatible
-> 
->  .../devicetree/bindings/power/supply/ltc2941.txt   | 15 ++--
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/power/supply/ltc2941-battery-gauge.c       | 85 +++++++++++++++++-----
->  2 files changed, 74 insertions(+), 26 deletions(-)
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56 ++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 9 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
