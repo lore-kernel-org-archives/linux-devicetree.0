@@ -1,136 +1,107 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] ARM: dts: rockchip: enable RGA for rk3288 devices
-Date: Sat, 15 Jul 2017 12:16:55 +0300
-Message-ID: <2238838.k7NpPUxaC0@avalon>
-References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com> <1500101920-24039-6-git-send-email-jacob-chen@iotwrt.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 6/6] dt-bindings: Document the Rockchip RGA bindings
+Date: Sat, 15 Jul 2017 12:23:12 +0300
+Message-ID: <1918615.rEp9U5BAbC@avalon>
+References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com> <1500101920-24039-7-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500101920-24039-6-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500101920-24039-7-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Chen <jacob-chen@iotwrt.com>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi Jacob,
 
 Thank you for the patch.
 
-On Saturday 15 Jul 2017 14:58:39 Jacob Chen wrote:
-> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+On Saturday 15 Jul 2017 14:58:40 Jacob Chen wrote:
+> Add DT bindings documentation for Rockchip RGA
+> 
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
 > ---
->  arch/arm/boot/dts/rk3288-evb.dtsi                 | 4 ++++
->  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 4 ++++
->  arch/arm/boot/dts/rk3288-firefly.dtsi             | 4 ++++
->  arch/arm/boot/dts/rk3288-miqi.dts                 | 4 ++++
->  arch/arm/boot/dts/rk3288-popmetal.dts             | 4 ++++
->  arch/arm/boot/dts/rk3288-tinker.dts               | 4 ++++
-
-Some boards are missing from this list (Fennec, Phycore, ...) What criteria 
-have you used to decide on which ones to enable the RGA ? That should be 
-explained in the commit message.
-
->  6 files changed, 24 insertions(+)
+>  .../devicetree/bindings/media/rockchip-rga.txt     | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
 > 
-> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
-> b/arch/arm/boot/dts/rk3288-evb.dtsi index 4905760..ec12162 100644
-> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-> @@ -379,6 +379,10 @@
->  	};
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
-> +
->  &usbphy {
->  	status = "okay";
->  };
-> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi index 8134966..fffa92e2
+> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt
+> b/Documentation/devicetree/bindings/media/rockchip-rga.txt new file mode
 > 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
-> @@ -283,6 +283,10 @@
->  	};
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
+> index 0000000..966eba0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+> @@ -0,0 +1,35 @@
+> +device-tree bindings for rockchip 2D raster graphic acceleration controller
+> (RGA)
 > +
->  &tsadc {
->  	rockchip,hw-tshut-mode = <0>;
->  	rockchip,hw-tshut-polarity = <0>;
-> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi
-> b/arch/arm/boot/dts/rk3288-firefly.dtsi index f520589..74a6ce5 100644
-> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-> @@ -500,6 +500,10 @@
->  	};
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
+> +RGA is a separate 2D raster graphic acceleration unit. It accelerates 2D
+
+"Separate" from what ? Do you mean "standalone" ?
+
+> +graphics operations, such as point/line drawing, image scaling, rotation,
+> +BitBLT, alpha blending and image blur/sharpness.
 > +
->  &saradc {
->  	vref-supply = <&vcc_18>;
->  	status = "okay";
-> diff --git a/arch/arm/boot/dts/rk3288-miqi.dts
-> b/arch/arm/boot/dts/rk3288-miqi.dts index 21326f3..dc5e6bd 100644
-> --- a/arch/arm/boot/dts/rk3288-miqi.dts
-> +++ b/arch/arm/boot/dts/rk3288-miqi.dts
-> @@ -401,6 +401,10 @@
->  	};
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
+> +Required properties:
+> +- compatible: value should be one of the following
+> +		"rockchip,rk3228-rga";
+> +		"rockchip,rk3288-rga";
+> +		"rockchip,rk3399-rga";
+
+The driver in patch 2/6 has match entry for rk3328, which is missing from this 
+list.
+
+As the implementation of the driver doesn't seem to discriminate between the 
+four SoCs, wouldn't it make sense to create a generic compatible string on 
+which the driver would match ? You can have both the generic and SoC-specific 
+compatible strings in DT if there are differences between the IP core in those 
+SoCs that might need to be handled later by the driver.
+
+> +- interrupts: RGA interrupt number.
+
+This is an "interrupt specifier", not just an "interrupt number" (as you can 
+see in the example below there are three numbers)
+
 > +
->  &saradc {
->  	vref-supply = <&vcc_18>;
->  	status = "okay";
-> diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts
-> b/arch/arm/boot/dts/rk3288-popmetal.dts index aa1f9ec..362e5aa 100644
-> --- a/arch/arm/boot/dts/rk3288-popmetal.dts
-> +++ b/arch/arm/boot/dts/rk3288-popmetal.dts
-> @@ -490,6 +490,10 @@
->  	};
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
+> +- clocks: phandle to RGA sclk/hclk/aclk clocks
 > +
->  &tsadc {
->  	rockchip,hw-tshut-mode = <0>;
->  	rockchip,hw-tshut-polarity = <0>;
-> diff --git a/arch/arm/boot/dts/rk3288-tinker.dts
-> b/arch/arm/boot/dts/rk3288-tinker.dts index 525b0e5..1a8c149 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker.dts
-> +++ b/arch/arm/boot/dts/rk3288-tinker.dts
-> @@ -460,6 +460,10 @@
->  	status = "okay";
->  };
-> 
-> +&rga {
-> +	status = "okay";
-> +};
+> +- clock-names: should be "aclk" "hclk" and "sclk"
+
+Nitpicking, there should be a comma after "aclk".
+
 > +
->  &saradc {
->  	vref-supply = <&vcc18_ldo1>;
->  	status ="okay";
+> +- resets: Must contain an entry for each entry in reset-names.
+> +  See ../reset/reset.txt for details.
+> +- reset-names: should be "core" "axi" and "ahb"
+
+And a comma after "core".
+
+> +
+> +Example:
+> +SoC specific DT entry:
+
+s/SoC specific/SoC-specific/
+
+> +	rga: rga@ff680000 {
+> +		compatible = "rockchip,rk3399-rga";
+> +		reg = <0xff680000 0x10000>;
+> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-names = "rga";
+
+The interrupt-names property is not described above. Do you really need it ?
+
+> +		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru 
+SCLK_RGA_CORE>;
+> +		clock-names = "aclk", "hclk", "sclk";
+> +
+> +		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru 
+SRST_H_RGA>;
+> +		reset-names = "core, "axi", "ahb";
+> +	};
 
 -- 
 Regards,
 
 Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
