@@ -1,60 +1,33 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt-bindings: net: Remove duplicate NSP Ethernet MAC binding document
-Date: Sat, 15 Jul 2017 10:24:47 -0700
-Message-ID: <20170715172450.22162-1-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 2/6] [media] rockchip/rga: v4l2 m2m support
+Date: Sun, 16 Jul 2017 01:42:15 +0800
+Message-ID: <201707160133.EJTpOgmB%fengguang.wu@intel.com>
+References: <1500101920-24039-3-git-send-email-jacob-chen@iotwrt.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1500101920-24039-3-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: kbuild-all@01.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 07d4510f5251 ("dt-bindings: net: bgmac: add bindings documentation for
-bgmac") added both brcm,amac-nsp.txt and brcm,bgmac-nsp.txt. The former is
-actually the one that got updated and is in use by the bgmac driver while the
-latter is duplicating the former and is not used nor updated.
+Hi Jacob,
 
-Fixes: 07d4510f5251 ("dt-bindings: net: bgmac: add bindings documentation for bgmac")
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+[auto build test WARNING on rockchip/for-next]
+[also build test WARNING on v4.12 next-20170714]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Jacob-Chen/v4l-add-blend-modes-controls/20170715-214326
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
+
+
+coccinelle warnings: (new ones prefixed by >>)
+
+>> drivers/media/platform/rockchip-rga/rga-hw.c:124:2-3: Unneeded semicolon
+
+Please review and possibly fold the followup patch.
+
 ---
- .../devicetree/bindings/net/brcm,bgmac-nsp.txt     | 24 ----------------------
- 1 file changed, 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
-
-diff --git a/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt b/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
-deleted file mode 100644
-index 022946caa7e2..000000000000
---- a/Documentation/devicetree/bindings/net/brcm,bgmac-nsp.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Broadcom GMAC Ethernet Controller Device Tree Bindings
---------------------------------------------------------------
--
--Required properties:
-- - compatible:	"brcm,bgmac-nsp"
-- - reg:		Address and length of the GMAC registers,
--		Address and length of the GMAC IDM registers
-- - reg-names:	Names of the registers.  Must have both "gmac_base" and
--		"idm_base"
-- - interrupts:	Interrupt number
--
--Optional properties:
--- mac-address:	See ethernet.txt file in the same directory
--
--Examples:
--
--gmac0: ethernet@18022000 {
--	compatible = "brcm,bgmac-nsp";
--	reg = <0x18022000 0x1000>,
--	      <0x18110000 0x1000>;
--	reg-names = "gmac_base", "idm_base";
--	interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
--	status = "disabled";
--};
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
