@@ -1,82 +1,72 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCH 4/4] drm/tegra: add cec-notifier support
-Date: Sat, 15 Jul 2017 14:47:53 +0200
-Message-ID: <20170715124753.43714-5-hverkuil@xs4all.nl>
-References: <20170715124753.43714-1-hverkuil@xs4all.nl>
+From: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
+Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
+Date: Sat, 15 Jul 2017 14:59:25 +0200 (CEST)
+Message-ID: <89433969.66090.1500123565835@ox.hosteurope.de>
+References: <281067739.16216.1499788929736@ox.hosteurope.de>
+ <20170712074305.GA20198@kroah.com>
+ <197075499.65628.1500117344413@ox.hosteurope.de>
+ <20170715112454.GB1753@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170715124753.43714-1-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170715112454.GB1753-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKSW4gb3JkZXIgdG8g
-c3VwcG9ydCBDRUMgdGhlIEhETUkgZHJpdmVyIGhhcyB0byBpbmZvcm0gdGhlIENFQyBkcml2ZXIK
-d2hlbmV2ZXIgdGhlIHBoeXNpY2FsIGFkZHJlc3MgY2hhbmdlcy4gU28gd2hlbiB0aGUgRURJRCBp
-cyByZWFkIHRoZQpDRUMgZHJpdmVyIGhhcyB0byBiZSBpbmZvcm1lZCBhbmQgd2hlbmV2ZXIgdGhl
-IGhvdHBsdWcgZGV0ZWN0IGdvZXMKYXdheS4KClRoaXMgaXMgZG9uZSB0aHJvdWdoIHRoZSBjZWMt
-bm90aWZpZXIgZnJhbWV3b3JrLgoKVGhlIGxpbmsgYmV0d2VlbiB0aGUgSERNSSBkcml2ZXIgYW5k
-IHRoZSBDRUMgZHJpdmVyIGlzIGRvbmUgdGhyb3VnaAp0aGUgaGRtaV9waGFuZGxlIGluIHRoZSB0
-ZWdyYS1jZWMgbm9kZSBpbiB0aGUgZGV2aWNlIHRyZWUuCgpTaWduZWQtb2ZmLWJ5OiBIYW5zIFZl
-cmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3RlZ3Jh
-L2RybS5oICAgIHwgMyArKysKIGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9oZG1pLmMgICB8IDkgKysr
-KysrKysrCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvb3V0cHV0LmMgfCA2ICsrKysrKwogMyBmaWxl
-cyBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L3RlZ3JhL2RybS5oIGIvZHJpdmVycy9ncHUvZHJtL3RlZ3JhL2RybS5oCmluZGV4IDZkNmRhMDEy
-ODJmMy4uYzBhMThiNjBjYWYxIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvZHJt
-LmgKKysrIGIvZHJpdmVycy9ncHUvZHJtL3RlZ3JhL2RybS5oCkBAIC0yMTIsNiArMjEyLDggQEAg
-aW50IHRlZ3JhX2RjX3N0YXRlX3NldHVwX2Nsb2NrKHN0cnVjdCB0ZWdyYV9kYyAqZGMsCiAJCQkg
-ICAgICAgc3RydWN0IGNsayAqY2xrLCB1bnNpZ25lZCBsb25nIHBjbGssCiAJCQkgICAgICAgdW5z
-aWduZWQgaW50IGRpdik7CiAKK3N0cnVjdCBjZWNfbm90aWZpZXI7CisKIHN0cnVjdCB0ZWdyYV9v
-dXRwdXQgewogCXN0cnVjdCBkZXZpY2Vfbm9kZSAqb2Zfbm9kZTsKIAlzdHJ1Y3QgZGV2aWNlICpk
-ZXY7CkBAIC0yMTksNiArMjIxLDcgQEAgc3RydWN0IHRlZ3JhX291dHB1dCB7CiAJc3RydWN0IGRy
-bV9wYW5lbCAqcGFuZWw7CiAJc3RydWN0IGkyY19hZGFwdGVyICpkZGM7CiAJY29uc3Qgc3RydWN0
-IGVkaWQgKmVkaWQ7CisJc3RydWN0IGNlY19ub3RpZmllciAqbm90aWZpZXI7CiAJdW5zaWduZWQg
-aW50IGhwZF9pcnE7CiAJaW50IGhwZF9ncGlvOwogCWVudW0gb2ZfZ3Bpb19mbGFncyBocGRfZ3Bp
-b19mbGFnczsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9oZG1pLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jCmluZGV4IGNkYTA0OTFlZDZiZi4uZmJmMTRlMWVmZDBl
-IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jCisrKyBiL2RyaXZlcnMv
-Z3B1L2RybS90ZWdyYS9oZG1pLmMKQEAgLTIxLDYgKzIxLDggQEAKIAogI2luY2x1ZGUgPHNvdW5k
-L2hkYV92ZXJicy5oPgogCisjaW5jbHVkZSA8bWVkaWEvY2VjLW5vdGlmaWVyLmg+CisKICNpbmNs
-dWRlICJoZG1pLmgiCiAjaW5jbHVkZSAiZHJtLmgiCiAjaW5jbHVkZSAiZGMuaCIKQEAgLTE3MjAs
-NiArMTcyMiwxMCBAQCBzdGF0aWMgaW50IHRlZ3JhX2hkbWlfcHJvYmUoc3RydWN0IHBsYXRmb3Jt
-X2RldmljZSAqcGRldikKIAkJcmV0dXJuIFBUUl9FUlIoaGRtaS0+dmRkKTsKIAl9CiAKKwloZG1p
-LT5vdXRwdXQubm90aWZpZXIgPSBjZWNfbm90aWZpZXJfZ2V0KCZwZGV2LT5kZXYpOworCWlmICho
-ZG1pLT5vdXRwdXQubm90aWZpZXIgPT0gTlVMTCkKKwkJcmV0dXJuIC1FTk9NRU07CisKIAloZG1p
-LT5vdXRwdXQuZGV2ID0gJnBkZXYtPmRldjsKIAogCWVyciA9IHRlZ3JhX291dHB1dF9wcm9iZSgm
-aGRtaS0+b3V0cHV0KTsKQEAgLTE3NzgsNiArMTc4NCw5IEBAIHN0YXRpYyBpbnQgdGVncmFfaGRt
-aV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKIAogCXRlZ3JhX291dHB1dF9y
-ZW1vdmUoJmhkbWktPm91dHB1dCk7CiAKKwlpZiAoaGRtaS0+b3V0cHV0Lm5vdGlmaWVyKQorCQlj
-ZWNfbm90aWZpZXJfcHV0KGhkbWktPm91dHB1dC5ub3RpZmllcik7CisKIAlyZXR1cm4gMDsKIH0K
-IApkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3RlZ3JhL291dHB1dC5jIGIvZHJpdmVycy9n
-cHUvZHJtL3RlZ3JhL291dHB1dC5jCmluZGV4IDU5NWQxZWMzZTAyZS4uNTdjMDUyNTIxYTQ0IDEw
-MDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGVncmEvb3V0cHV0LmMKKysrIGIvZHJpdmVycy9n
-cHUvZHJtL3RlZ3JhL291dHB1dC5jCkBAIC0xMSw2ICsxMSw4IEBACiAjaW5jbHVkZSA8ZHJtL2Ry
-bV9wYW5lbC5oPgogI2luY2x1ZGUgImRybS5oIgogCisjaW5jbHVkZSA8bWVkaWEvY2VjLW5vdGlm
-aWVyLmg+CisKIGludCB0ZWdyYV9vdXRwdXRfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJt
-X2Nvbm5lY3RvciAqY29ubmVjdG9yKQogewogCXN0cnVjdCB0ZWdyYV9vdXRwdXQgKm91dHB1dCA9
-IGNvbm5lY3Rvcl90b19vdXRwdXQoY29ubmVjdG9yKTsKQEAgLTMzLDYgKzM1LDcgQEAgaW50IHRl
-Z3JhX291dHB1dF9jb25uZWN0b3JfZ2V0X21vZGVzKHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25u
-ZWN0b3IpCiAJCWVkaWQgPSBkcm1fZ2V0X2VkaWQoY29ubmVjdG9yLCBvdXRwdXQtPmRkYyk7CiAK
-IAlkcm1fbW9kZV9jb25uZWN0b3JfdXBkYXRlX2VkaWRfcHJvcGVydHkoY29ubmVjdG9yLCBlZGlk
-KTsKKwljZWNfbm90aWZpZXJfc2V0X3BoeXNfYWRkcl9mcm9tX2VkaWQob3V0cHV0LT5ub3RpZmll
-ciwgZWRpZCk7CiAKIAlpZiAoZWRpZCkgewogCQllcnIgPSBkcm1fYWRkX2VkaWRfbW9kZXMoY29u
-bmVjdG9yLCBlZGlkKTsKQEAgLTY4LDYgKzcxLDkgQEAgdGVncmFfb3V0cHV0X2Nvbm5lY3Rvcl9k
-ZXRlY3Qoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwgYm9vbCBmb3JjZSkKIAkJCXN0
-YXR1cyA9IGNvbm5lY3Rvcl9zdGF0dXNfY29ubmVjdGVkOwogCX0KIAorCWlmIChzdGF0dXMgIT0g
-Y29ubmVjdG9yX3N0YXR1c19jb25uZWN0ZWQpCisJCWNlY19ub3RpZmllcl9waHlzX2FkZHJfaW52
-YWxpZGF0ZShvdXRwdXQtPm5vdGlmaWVyKTsKKwogCXJldHVybiBzdGF0dXM7CiB9CiAKLS0gCjIu
-MTEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi!
+ 
+It's me again. Seems like I also need help on sending the email :-/
+ 
+I checked the whitespace/line wrap problem, but couldn't find any suspicious
+lines.
+ 
+What I did:
+* Looked into my outbox - the copy of my mail to you seems to be okay...
+* I sent the patch once again (just to me) - result: Seems to be fine, too.
+ 
+Maybe you can bounce back my mail? Maybe I'll get an idea what went wrong, if I
+see the smashed code...
+ 
+Cheers,
+ 
+Marcus
+ 
+
+> Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> hat am 15. Juli 2017 um 13:24
+> geschrieben:
+>
+>
+> On Sat, Jul 15, 2017 at 01:15:43PM +0200, Marcus Wolf wrote:
+> > Hi Greg,
+> >
+> > thanks for your reply :-)
+> >
+> > Today I moved the documentation and header files to drivers/staging/pi433
+> > and
+> > fromated it as a single patch.
+> >
+> > Cheers,
+> >
+> > Marcus
+>
+> I still need it in a format I can apply it in (i.e. proper subject,
+> changelog text, signed-off-by, etc.) Can you do that?
+>
+> Also, for staging drivers, I need a TODO file, much like the existing
+> drivers/staging/*/TODO files saying what needs to be done with the code
+> in order to get it out of staging.
+>
+> And finally, your patch seemed to have the whitespace corrupted and was
+> line-wrapped, making it impossible to apply even if I could have :(
+>
+> thanks,
+>
+> greg k-h
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
