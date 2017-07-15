@@ -1,101 +1,136 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 3/3] DT: leds: Add Qualcomm Light Pulse Generator
- binding
-Date: Sat, 15 Jul 2017 11:14:39 +0200
-Message-ID: <20170715091439.GC26602@amd>
-References: <20170714224520.467-1-bjorn.andersson@linaro.org>
- <20170714224520.467-4-bjorn.andersson@linaro.org>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] ARM: dts: rockchip: enable RGA for rk3288 devices
+Date: Sat, 15 Jul 2017 12:16:55 +0300
+Message-ID: <2238838.k7NpPUxaC0@avalon>
+References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com> <1500101920-24039-6-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170714224520.467-4-bjorn.andersson@linaro.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500101920-24039-6-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Jacob,
 
---R+My9LyyhiUvIEro
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch.
 
-Hi!
-
-> This adds the binding document describing the three hardware blocks
-> related to the Light Pulse Generator found in a wide range of Qualcomm
-> PMICs.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Saturday 15 Jul 2017 14:58:39 Jacob Chen wrote:
+> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 > ---
->=20
-> Changes since v1:
-> - Dropped custom pattern properties
-> - Renamed cell-index to qcom,lpg-channel to clarify its purpose
->=20
->  .../devicetree/bindings/leds/leds-qcom-lpg.txt     | 145 +++++++++++++++=
-++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-qcom-lpg.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt b/D=
-ocumentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> new file mode 100644
-> index 000000000000..cc9ffee6586b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> @@ -0,0 +1,145 @@
-> +Binding for Qualcomm Light Pulse Generator
+>  arch/arm/boot/dts/rk3288-evb.dtsi                 | 4 ++++
+>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 4 ++++
+>  arch/arm/boot/dts/rk3288-firefly.dtsi             | 4 ++++
+>  arch/arm/boot/dts/rk3288-miqi.dts                 | 4 ++++
+>  arch/arm/boot/dts/rk3288-popmetal.dts             | 4 ++++
+>  arch/arm/boot/dts/rk3288-tinker.dts               | 4 ++++
+
+Some boards are missing from this list (Fennec, Phycore, ...) What criteria 
+have you used to decide on which ones to enable the RGA ? That should be 
+explained in the commit message.
+
+>  6 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi
+> b/arch/arm/boot/dts/rk3288-evb.dtsi index 4905760..ec12162 100644
+> --- a/arch/arm/boot/dts/rk3288-evb.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+> @@ -379,6 +379,10 @@
+>  	};
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
 > +
-
-Can we use similar format to other files in the directory?
-
-> +The Qualcomm Light Pulse Generator consists of three different hardware =
-blocks;
-> +a ramp generator with lookup table, the light pulse generator and a three
-> +channel current sink. These blocks are found in a wide range of Qualcomm=
- PMICs.
-> +Each of these are described individually below.
+>  &usbphy {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi index 8134966..fffa92e2
+> 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+> @@ -283,6 +283,10 @@
+>  	};
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
 > +
-> +=3D Lookup Table (LUT)
+>  &tsadc {
+>  	rockchip,hw-tshut-mode = <0>;
+>  	rockchip,hw-tshut-polarity = <0>;
+> diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi
+> b/arch/arm/boot/dts/rk3288-firefly.dtsi index f520589..74a6ce5 100644
+> --- a/arch/arm/boot/dts/rk3288-firefly.dtsi
+> +++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+> @@ -500,6 +500,10 @@
+>  	};
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
 > +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,spmi-lpg-lut"
+>  &saradc {
+>  	vref-supply = <&vcc_18>;
+>  	status = "okay";
+> diff --git a/arch/arm/boot/dts/rk3288-miqi.dts
+> b/arch/arm/boot/dts/rk3288-miqi.dts index 21326f3..dc5e6bd 100644
+> --- a/arch/arm/boot/dts/rk3288-miqi.dts
+> +++ b/arch/arm/boot/dts/rk3288-miqi.dts
+> @@ -401,6 +401,10 @@
+>  	};
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
+> +
+>  &saradc {
+>  	vref-supply = <&vcc_18>;
+>  	status = "okay";
+> diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts
+> b/arch/arm/boot/dts/rk3288-popmetal.dts index aa1f9ec..362e5aa 100644
+> --- a/arch/arm/boot/dts/rk3288-popmetal.dts
+> +++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+> @@ -490,6 +490,10 @@
+>  	};
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
+> +
+>  &tsadc {
+>  	rockchip,hw-tshut-mode = <0>;
+>  	rockchip,hw-tshut-polarity = <0>;
+> diff --git a/arch/arm/boot/dts/rk3288-tinker.dts
+> b/arch/arm/boot/dts/rk3288-tinker.dts index 525b0e5..1a8c149 100644
+> --- a/arch/arm/boot/dts/rk3288-tinker.dts
+> +++ b/arch/arm/boot/dts/rk3288-tinker.dts
+> @@ -460,6 +460,10 @@
+>  	status = "okay";
+>  };
+> 
+> +&rga {
+> +	status = "okay";
+> +};
+> +
+>  &saradc {
+>  	vref-supply = <&vcc18_ldo1>;
+>  	status ="okay";
 
-I guess we don't need to know type of the compatible atribute, other
-files say
+-- 
+Regards,
 
-Required properties:
+Laurent Pinchart
 
-- compatible : Must be "skyworks,aat1290".
-- flen-gpios : Must be device tree identifier of the flash device
-=2E..
-
-which is easier to understand.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---R+My9LyyhiUvIEro
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAllp3P8ACgkQMOfwapXb+vJpSACfSMx8nE/jnmftXvprgP2Ee+Yd
-NU8AoLah4Bkvdmqruqfed+zK4O0twF1L
-=rclI
------END PGP SIGNATURE-----
-
---R+My9LyyhiUvIEro--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
