@@ -1,36 +1,80 @@
+Return-Path: <SRS0=c8EM=6S=wolf-entwicklungen.de=marcus.wolf@kernel.org>
+Date: Sat, 15 Jul 2017 15:40:30 +0200 (CEST)
+From: Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>
+Message-ID: <1152815224.66246.1500126030682@ox.hosteurope.de>
+In-Reply-To: <20170715131628.GA29222@kroah.com>
+References: <281067739.16216.1499788929736@ox.hosteurope.de>
+ <20170712074305.GA20198@kroah.com>
+ <197075499.65628.1500117344413@ox.hosteurope.de>
+ <20170715112454.GB1753@kroah.com>
+ <89433969.66090.1500123565835@ox.hosteurope.de>
+ <20170715130220.GA22977@kroah.com>
+ <826180465.66159.1500124248340@ox.hosteurope.de>
+ <20170715131628.GA29222@kroah.com>
+Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
 MIME-Version: 1.0
-In-Reply-To: <1499693547.6394.17.camel@synopsys.com>
-References: <20170703165109.31535-1-Eugeniy.Paltsev@synopsys.com>
-	<20170703165109.31535-4-Eugeniy.Paltsev@synopsys.com>
-	<20170710004121.m5sp3wlovh7e6wzq@rob-hp-laptop>
-	<1499693547.6394.17.camel@synopsys.com>
-Date: Tue, 11 Jul 2017 14:07:02 -0500
-Message-ID: <CAL_JsqJkCjs-f6m-47--yX5XY9VawBFfSn0JMkJSJ7q2wa1kKQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v7] ARC: hsdk: initial port for HSDK board
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/alternative;
+	boundary="----=_Part_66245_1676953431.1500126030672"
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, grant.likely@linaro.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jul 10, 2017 at 8:32 AM, Alexey Brodkin <Alexey.Brodkin@synopsys.com> wrote:
-> Hi Rob,
->
-> On Sun, 2017-07-09 at 19:41 -0500, Rob Herring wrote:
->> On Mon, Jul 03, 2017 at 07:51:09PM +0300, Eugeniy Paltsev wrote:
->> >
->> > From: Alexey Brodkin <abrodkin@synopsys.com>
->
-> [snip]
->
->> > +           ohci@60000 {
->> > +                   compatible = "generic-ohci";
->>
->> Still, these need to be more specific.
->
-> But I guess for that we first need to add your compatible values to
-> drivers/usb/host/{o|e}hci-platform.c, right?
+------=_Part_66245_1676953431.1500126030672
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Not necessarily. You can leave this one for the driver to match on, but the dts needs a more specific one to ensure any quirks can be handled in the future.
+Hi Greg,
+ 
+I absolutly agree. My patch should meet the needs of an official patch.
+ 
+But I don't know about the exact needs. Can you please help me? What is needed /
+missing in my patch and how do I produce it?
+Maybe you can pass me a link, where I can read, what to do?
+ 
+Thanks a lot,
+ 
+Marcus
 
-Rob
+> Greg KH <gregkh@linuxfoundation.org> hat am 15. Juli 2017 um 15:16
+> geschrieben:
+>
+>
+> On Sat, Jul 15, 2017 at 03:10:48PM +0200, Marcus Wolf wrote:
+> > Hi!
+> >
+> > Ok. Thanks for the info. Didn't observe that.
+> > I'll give the old patch another try.
+> >
+> > I will send a new patch as soon, as I know. how to produce the
+> > poper format (with subjects, signing and so on).
+>
+> Documentation/SubmittingPatches should have all of the information you
+> need for this type of thing.
+>
+> thanks,
+>
+> greg k-h
+>
+------=_Part_66245_1676953431.1500126030672
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html>
+<html><head>
+    <meta charset="UTF-8">
+</head><body style=""><div>
+<div>Hi Greg,</div>
+<div>&#160;</div>
+<div>I absolutly agree. My patch should meet the needs of an official patch.</div>
+<div>&#160;</div>
+<div>But I don&#39;t know about the exact needs. Can you please help me? What is needed / missing in my patch and how do I produce it?</div>
+<div>Maybe you can pass me a link, where I can read, what to do?</div>
+<div>&#160;</div>
+<div>Thanks a lot,</div>
+<div>&#160;</div>
+<div>Marcus</div>
+<br>&#62; Greg KH &#60;gregkh@linuxfoundation.org&#62; hat am 15. Juli 2017 um 15:16 geschrieben:<br>&#62; <br>&#62; <br>&#62; On Sat, Jul 15, 2017 at 03:10:48PM +0200, Marcus Wolf wrote:<br>&#62; &#62; Hi!<br>&#62; &#62; <br>&#62; &#62; Ok. Thanks for the info. Didn&#39;t observe that.<br>&#62; &#62; I&#39;ll give the old patch another try.<br>&#62; &#62; <br>&#62; &#62; I will send a new patch as soon, as I know. how to produce the <br>&#62; &#62; poper format (with subjects, signing and so on).<br>&#62; <br>&#62; Documentation/SubmittingPatches should have all of the information you<br>&#62; need for this type of thing.<br>&#62; <br>&#62; thanks,<br>&#62; <br>&#62; greg k-h<br>&#62; </div></body></html>
+ 
+------=_Part_66245_1676953431.1500126030672--
