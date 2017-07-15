@@ -1,41 +1,46 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH] ata: sata_rcar: add gen[23] fallback compatibility
- strings
-Date: Sat, 15 Jul 2017 07:09:10 -0400
-Message-ID: <20170715110909.GF2969123@devbig577.frc2.facebook.com>
-References: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
+Date: Sat, 15 Jul 2017 13:24:54 +0200
+Message-ID: <20170715112454.GB1753@kroah.com>
+References: <281067739.16216.1499788929736@ox.hosteurope.de>
+ <20170712074305.GA20198@kroah.com>
+ <197075499.65628.1500117344413@ox.hosteurope.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499773460-8930-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: linux-ide@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+In-Reply-To: <197075499.65628.1500117344413-mPx3TeDXVI9fnkZfMEZNjw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 11, 2017 at 01:44:20PM +0200, Simon Horman wrote:
-> Add fallback compatibility string for R-Car Gen 2 and 3.
-> 
-> In the case of Renesas R-Car hardware we know that there are generations of
-> SoCs, e.g. Gen 1 and 2. But beyond that its not clear what the relationship
-> between IP blocks might be. For example, I believe that r8a7790 is older
-> than r8a7791 but that doesn't imply that the latter is a descendant of the
-> former or vice versa.
-> 
-> We can, however, by examining the documentation and behaviour of the
-> hardware at run-time observe that the current driver implementation appears
-> to be compatible with the IP blocks on SoCs within a given generation.
-> 
-> For the above reasons and convenience when enabling new SoCs a
-> per-generation fallback compatibility string scheme being adopted for
-> drivers for Renesas SoCs.
-> 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+On Sat, Jul 15, 2017 at 01:15:43PM +0200, Marcus Wolf wrote:
+> Hi Greg,
+>  
+> thanks for your reply :-)
+>  
+> Today I moved the documentation and header files to drivers/staging/pi433 and
+> fromated it as a single patch.
+>  
+> Cheers,
+>  
+> Marcus
 
-Applied to libata/for-4.13-fixes.
+I still need it in a format I can apply it in (i.e. proper subject,
+changelog text, signed-off-by, etc.)  Can you do that?
 
-Thanks.
+Also, for staging drivers, I need a TODO file, much like the existing
+drivers/staging/*/TODO files saying what needs to be done with the code
+in order to get it out of staging.
 
--- 
-tejun
+And finally, your patch seemed to have the whitespace corrupted and was
+line-wrapped, making it impossible to apply even if I could have :(
+
+thanks,
+
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
