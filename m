@@ -1,46 +1,114 @@
 From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v2 3/6] ARM: dts: rockchip: add RGA device node for RK3288
-Date: Sat, 15 Jul 2017 14:58:37 +0800
-Message-ID: <1500101920-24039-4-git-send-email-jacob-chen@iotwrt.com>
+Subject: [PATCH v2 5/6] ARM: dts: rockchip: enable RGA for rk3288 devices
+Date: Sat, 15 Jul 2017 14:58:39 +0800
+Message-ID: <1500101920-24039-6-git-send-email-jacob-chen@iotwrt.com>
 References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the RGA dt config of rk3288 SoC.
-
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
 ---
- arch/arm/boot/dts/rk3288.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/rk3288-evb.dtsi                 | 4 ++++
+ arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 4 ++++
+ arch/arm/boot/dts/rk3288-firefly.dtsi             | 4 ++++
+ arch/arm/boot/dts/rk3288-miqi.dts                 | 4 ++++
+ arch/arm/boot/dts/rk3288-popmetal.dts             | 4 ++++
+ arch/arm/boot/dts/rk3288-tinker.dts               | 4 ++++
+ 6 files changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 1efc2f2..83d025d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -945,6 +945,19 @@
- 		status = "okay";
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index 4905760..ec12162 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -379,6 +379,10 @@
  	};
+ };
  
-+	rga: rga@ff920000 {
-+		compatible = "rockchip,rk3288-rga";
-+		reg = <0xff920000 0x180>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "rga";
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
-+		clock-names = "aclk", "hclk", "sclk";
-+		power-domains = <&power RK3288_PD_VIO>;
-+		resets = <&cru SRST_RGA_CORE>, <&cru SRST_RGA_AXI>, <&cru SRST_RGA_AHB>;
-+		reset-names = "core", "axi", "ahb";
-+		status = "disabled";
-+	};
++&rga {
++	status = "okay";
++};
 +
- 	vopb: vop@ff930000 {
- 		compatible = "rockchip,rk3288-vop";
- 		reg = <0xff930000 0x19c>;
+ &usbphy {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+index 8134966..fffa92e2 100644
+--- a/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi
+@@ -283,6 +283,10 @@
+ 	};
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &tsadc {
+ 	rockchip,hw-tshut-mode = <0>;
+ 	rockchip,hw-tshut-polarity = <0>;
+diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
+index f520589..74a6ce5 100644
+--- a/arch/arm/boot/dts/rk3288-firefly.dtsi
++++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
+@@ -500,6 +500,10 @@
+ 	};
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &saradc {
+ 	vref-supply = <&vcc_18>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/rk3288-miqi.dts b/arch/arm/boot/dts/rk3288-miqi.dts
+index 21326f3..dc5e6bd 100644
+--- a/arch/arm/boot/dts/rk3288-miqi.dts
++++ b/arch/arm/boot/dts/rk3288-miqi.dts
+@@ -401,6 +401,10 @@
+ 	};
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &saradc {
+ 	vref-supply = <&vcc_18>;
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/rk3288-popmetal.dts b/arch/arm/boot/dts/rk3288-popmetal.dts
+index aa1f9ec..362e5aa 100644
+--- a/arch/arm/boot/dts/rk3288-popmetal.dts
++++ b/arch/arm/boot/dts/rk3288-popmetal.dts
+@@ -490,6 +490,10 @@
+ 	};
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &tsadc {
+ 	rockchip,hw-tshut-mode = <0>;
+ 	rockchip,hw-tshut-polarity = <0>;
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dts b/arch/arm/boot/dts/rk3288-tinker.dts
+index 525b0e5..1a8c149 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dts
++++ b/arch/arm/boot/dts/rk3288-tinker.dts
+@@ -460,6 +460,10 @@
+ 	status = "okay";
+ };
+ 
++&rga {
++	status = "okay";
++};
++
+ &saradc {
+ 	vref-supply = <&vcc18_ldo1>;
+ 	status ="okay";
 -- 
 2.7.4
