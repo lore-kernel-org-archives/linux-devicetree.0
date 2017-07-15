@@ -1,91 +1,61 @@
-From: Jacob Chen <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] dt-bindings: Document the Rockchip RGA bindings
-Date: Sat, 15 Jul 2017 12:38:11 +0800
-Message-ID: <CAFLEztRaatd3Amx7o7WbYoL=FoN=HZFN94ufqpcjHC0wWcE5eg@mail.gmail.com>
-References: <1498488802-1439-1-git-send-email-jacob-chen@iotwrt.com> <20170628222937.jscrixi5uo2vasnk@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/6] Add Rockchip RGA V4l2 support
+Date: Sat, 15 Jul 2017 14:58:34 +0800
+Message-ID: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628222937.jscrixi5uo2vasnk@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi rob,
+This patch series add a v4l2 m2m drvier for rockchip RGA direct rendering based 2d graphics acceleration module.
 
-2017-06-29 6:29 GMT+08:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> On Mon, Jun 26, 2017 at 10:53:22PM +0800, Jacob Chen wrote:
->> Add DT bindings documentation for Rockchip RGA
->>
->> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/rockchip-rga.txt     | 36 ++++++++++++++++++++++
->
-> Should be under bindings/gpu/
->
->>  1 file changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
->> new file mode 100644
->> index 0000000..48a260e5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
->> @@ -0,0 +1,36 @@
->> +device-tree bindings for rockchip 2D raster graphic acceleration controller (RGA)
->> +
->> +RGA is a separate 2D raster graphic acceleration unit. It accelerates 2D
->> +graphics operations, such as point/line drawing, image scaling, rotation,
->> +BitBLT, alpha blending and image blur/sharpness.
->> +
->> +Required properties:
->> +- compatible: value should be one of the following
->> +             "rockchip,rk3228-rga";
->> +             "rockchip,rk3288-rga";
->> +             "rockchip,rk3399-rga";
->> +
->> +- interrupts: RGA interrupt number.
->> +
->> +- clocks: phandle to RGA sclk/hclk/aclk clocks
->> +
->> +- clock-names: should be "aclk" "hclk" and "sclk"
->> +
->> +- resets: Must contain an entry for each entry in reset-names.
->> +  See ../reset/reset.txt for details.
->> +- reset-names: should be "core" "axi" and "ahb"
->> +
->> +Example:
->> +SoC specific DT entry:
->> +     rga: rga@ff680000 {
->
-> gpu@...
->
+change in V2:
+- generalize the controls.
+- map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
+actively used systems.
+- remove status in dt-bindings examples.
 
-It's used for v4l2 drvier, should i move it bindings/gpu/?
 
->> +             compatible = "rockchip,rk3399-rga";
->> +             reg = <0xff680000 0x10000>;
->> +             interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-names = "rga";
->> +             clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
->> +             clock-names = "aclk", "hclk", "sclk";
->> +
->> +             resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
->> +             reset-names = "core, "axi", "ahb";
->> +             status = "disabled";
->
-> Don't show status in examples.
->
->> +     };
->> --
->> 2.7.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jacob Chen (6):
+  [media] v4l: add blend modes controls
+  [media] rockchip/rga: v4l2 m2m support
+  ARM: dts: rockchip: add RGA device node for RK3288
+  ARM: dts: rockchip: add RGA device node for RK3399
+  ARM: dts: rockchip: enable RGA for rk3288 devices
+  dt-bindings: Document the Rockchip RGA bindings
+
+ .../devicetree/bindings/media/rockchip-rga.txt     |  35 +
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |   4 +
+ arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi  |   4 +
+ arch/arm/boot/dts/rk3288-firefly.dtsi              |   4 +
+ arch/arm/boot/dts/rk3288-miqi.dts                  |   4 +
+ arch/arm/boot/dts/rk3288-popmetal.dts              |   4 +
+ arch/arm/boot/dts/rk3288-tinker.dts                |   4 +
+ arch/arm/boot/dts/rk3288.dtsi                      |  13 +
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  13 +
+ drivers/media/platform/Kconfig                     |  11 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/rockchip-rga/Makefile       |   3 +
+ drivers/media/platform/rockchip-rga/rga-buf.c      | 176 ++++
+ drivers/media/platform/rockchip-rga/rga-hw.c       | 456 ++++++++++
+ drivers/media/platform/rockchip-rga/rga-hw.h       | 434 +++++++++
+ drivers/media/platform/rockchip-rga/rga.c          | 979 +++++++++++++++++++++
+ drivers/media/platform/rockchip-rga/rga.h          | 133 +++
+ drivers/media/v4l2-core/v4l2-ctrls.c               |  19 +
+ include/uapi/linux/v4l2-controls.h                 |  18 +-
+ 19 files changed, 2315 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ create mode 100644 drivers/media/platform/rockchip-rga/Makefile
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
+ create mode 100644 drivers/media/platform/rockchip-rga/rga.c
+ create mode 100644 drivers/media/platform/rockchip-rga/rga.h
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
