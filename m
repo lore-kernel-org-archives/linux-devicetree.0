@@ -1,62 +1,113 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 0/6] Add Rockchip RGA V4l2 support
-Date: Sat, 15 Jul 2017 14:58:34 +0800
-Message-ID: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v2 1/6] [media] v4l: add blend modes controls
+Date: Sat, 15 Jul 2017 14:58:35 +0800
+Message-ID: <1500101920-24039-2-git-send-email-jacob-chen@iotwrt.com>
+References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series add a v4l2 m2m drvier for rockchip RGA direct rendering based 2d graphics acceleration module.
+At peresent, we don't have a control for Compositing and Blend.
+All drivers are just doing copies while actually many hardwares
+supports more functions.
 
-change in V2:
-- generalize the controls.
-- map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
-actively used systems.
-- remove status in dt-bindings examples.
+So Adding V4L2 controls for Compositing and Blend, used for for
+composting streams.
 
+The values are based on porter duff operations.
+Defined in below links.
+https://developer.xamarin.com/api/type/Android.Graphics.PorterDuff+Mode/
 
-Jacob Chen (6):
-  [media] v4l: add blend modes controls
-  [media] rockchip/rga: v4l2 m2m support
-  ARM: dts: rockchip: add RGA device node for RK3288
-  ARM: dts: rockchip: add RGA device node for RK3399
-  ARM: dts: rockchip: enable RGA for rk3288 devices
-  dt-bindings: Document the Rockchip RGA bindings
+Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+Suggested-by: Nicolas Dufresne <nicolas@ndufresne.ca>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 19 +++++++++++++++++++
+ include/uapi/linux/v4l2-controls.h   | 18 +++++++++++++++++-
+ 2 files changed, 36 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/media/rockchip-rga.txt     |  35 +
- arch/arm/boot/dts/rk3288-evb.dtsi                  |   4 +
- arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi  |   4 +
- arch/arm/boot/dts/rk3288-firefly.dtsi              |   4 +
- arch/arm/boot/dts/rk3288-miqi.dts                  |   4 +
- arch/arm/boot/dts/rk3288-popmetal.dts              |   4 +
- arch/arm/boot/dts/rk3288-tinker.dts                |   4 +
- arch/arm/boot/dts/rk3288.dtsi                      |  13 +
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  13 +
- drivers/media/platform/Kconfig                     |  11 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/rockchip-rga/Makefile       |   3 +
- drivers/media/platform/rockchip-rga/rga-buf.c      | 176 ++++
- drivers/media/platform/rockchip-rga/rga-hw.c       | 456 ++++++++++
- drivers/media/platform/rockchip-rga/rga-hw.h       | 434 +++++++++
- drivers/media/platform/rockchip-rga/rga.c          | 979 +++++++++++++++++++++
- drivers/media/platform/rockchip-rga/rga.h          | 133 +++
- drivers/media/v4l2-core/v4l2-ctrls.c               |  19 +
- include/uapi/linux/v4l2-controls.h                 |  18 +-
- 19 files changed, 2315 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
- create mode 100644 drivers/media/platform/rockchip-rga/Makefile
- create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
- create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
- create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
- create mode 100644 drivers/media/platform/rockchip-rga/rga.c
- create mode 100644 drivers/media/platform/rockchip-rga/rga.h
-
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b9e08e3..8a235fd 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -216,6 +216,21 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		"Private Packet, IVTV Format",
+ 		NULL
+ 	};
++	static const char * const blend_modes[] = {
++		"Source",
++		"Source Top",
++		"Source In",
++		"Source Out",
++		"Source Over",
++		"Destination",
++		"Destination Top",
++		"Destination In",
++		"Destination Out",
++		"Destination Over",
++		"Add",
++		"Clear",
++		NULL
++	};
+ 	static const char * const camera_power_line_frequency[] = {
+ 		"Disabled",
+ 		"50 Hz",
+@@ -522,6 +537,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+ 		return camera_exposure_metering;
+ 	case V4L2_CID_AUTO_FOCUS_RANGE:
+ 		return camera_auto_focus_range;
++	case V4L2_CID_BLEND:
++		return blend_modes;
+ 	case V4L2_CID_COLORFX:
+ 		return colorfx;
+ 	case V4L2_CID_AUTO_N_PRESET_WHITE_BALANCE:
+@@ -655,6 +672,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+ 	case V4L2_CID_MIN_BUFFERS_FOR_OUTPUT:	return "Min Number of Output Buffers";
+ 	case V4L2_CID_ALPHA_COMPONENT:		return "Alpha Component";
+ 	case V4L2_CID_COLORFX_CBCR:		return "Color Effects, CbCr";
++	case V4L2_CID_BLEND:			return "Compositing and Blend Modes";
+ 
+ 	/* Codec controls */
+ 	/* The MPEG controls are applicable to all codec controls
+@@ -1033,6 +1051,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+ 	case V4L2_CID_MPEG_STREAM_VBI_FMT:
+ 	case V4L2_CID_EXPOSURE_AUTO:
+ 	case V4L2_CID_AUTO_FOCUS_RANGE:
++	case V4L2_CID_BLEND:
+ 	case V4L2_CID_COLORFX:
+ 	case V4L2_CID_AUTO_N_PRESET_WHITE_BALANCE:
+ 	case V4L2_CID_TUNE_PREEMPHASIS:
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 0d2e1e0..019fdca 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -140,8 +140,24 @@ enum v4l2_colorfx {
+ #define V4L2_CID_ALPHA_COMPONENT		(V4L2_CID_BASE+41)
+ #define V4L2_CID_COLORFX_CBCR			(V4L2_CID_BASE+42)
+ 
++#define V4L2_CID_BLEND				(V4L2_CID_BASE+43)
++enum v4l2_blend_mode {
++	V4L2_BLEND_SRC				= 0,
++	V4L2_BLEND_SRCATOP			= 1,
++	V4L2_BLEND_SRCIN			= 2,
++	V4L2_BLEND_SRCOUT			= 3,
++	V4L2_BLEND_SRCOVER			= 4,
++	V4L2_BLEND_DST				= 5,
++	V4L2_BLEND_DSTATOP			= 6,
++	V4L2_BLEND_DSTIN			= 7,
++	V4L2_BLEND_DSTOUT			= 8,
++	V4L2_BLEND_DSTOVER			= 9,
++	V4L2_BLEND_ADD				= 10,
++	V4L2_BLEND_CLEAR			= 11,
++};
++
+ /* last CID + 1 */
+-#define V4L2_CID_LASTP1                         (V4L2_CID_BASE+43)
++#define V4L2_CID_LASTP1                         (V4L2_CID_BASE+44)
+ 
+ /* USER-class private control IDs */
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
