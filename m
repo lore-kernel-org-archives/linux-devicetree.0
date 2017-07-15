@@ -1,70 +1,67 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 0/3] USB Mux support for Chipidea
-Date: Sat, 15 Jul 2017 10:33:47 +0200
-Message-ID: <2d2b411a-8a2c-85b9-5dc9-870c11801756@axentia.se>
-References: <20170712010255.26855-1-stephen.boyd@linaro.org>
- <fc1f2836-cd9b-0905-21fc-d2d3029d1f52@axentia.se>
- <149998530228.4532.1798948469358915658@sboyd-linaro>
- <150006762899.13439.5431012472808314482@sboyd-linaro>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Qualcomm Light Pulse Generator
+Date: Sat, 15 Jul 2017 11:10:32 +0200
+Message-ID: <20170715091032.GA26602@amd>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <150006762899.13439.5431012472808314482@sboyd-linaro>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>, Andy Gross <andy.gross@linaro.org>, Peter Chen <Peter.Chen@nxp.com>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170714224520.467-1-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-14 23:27, Stephen Boyd wrote:
-> Quoting Stephen Boyd (2017-07-13 15:35:02)
->> Quoting Peter Rosin (2017-07-11 22:04:46)
->>>
->>> Maybe no need for a compatible update either, if it works to do something
->>> like this in the DT?
->>>
->>>         usb_switch: usb-switch {
->>>                 compatible = "gpio-mux";
->>>                 mux-gpios = <&pm8916_gpios 4 GPIO_ACTIVE_HIGH>,
->>>                             <&pm8916_gpios XXX GPIO_ACTIVE_XXX>;
->>>                 idle-state = <2>;
->>>                 #mux-control-cells = <0>;
->>>                 pinctrl-names = "default";
->>>                 pinctrl-0 = <&usb_sw_sel_pm>;
->>>         };
->>>
->>> But I obviously know little about how things are wired and really works,
->>> so that might be totally off...
->>>
->>> Otherwise, maybe a generic mux-pinctrl driver would do the trick?
->>> (compare with drivers/i2c/muxes/i2c-mux-pinctrl.c)
->>>
->>
->> Agreed.
-> 
-> Testing looks good when I use the gpio-mux binding. The only thing I
 
-Glad to hear it, I didn't really want a new driver so similar to the
-mux-gpio driver...
+--EeQfGwPcQSOJBaQU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> noticed is that gpio-mux driver is requesting the gpio with
-> GPIOD_OUT_LOW. Is that intentional?
+Hi!
 
-Not really intentional, it was just easy.
+> This series introduces a generic pattern interface in the LED class and a
+> driver for the Qualcomm Light Pulse Generator.
+>=20
+> Bjorn Andersson (3):
+>   leds: core: Introduce generic pattern interface
 
->                                     I worry that may randomly mux the
-> D+/D- lines during probe if the gpio is asserted at probe time. It isn't
-> a problem for me right now, because the mux is power on defaulted to
-> have the gpio deasserted, but it may be a problem if the default
-> changes.
+This one should be last. Let me review that, it is important to get
+this one right.
 
-It will not change, the only change I will accept is if the code in
-mux-gpio can be arranged to request the gpios with the idle-state from
-the start. But even then, the default idle-state (0) will not change.
-So, you should be safe.
+>   leds: Add driver for Qualcomm LPG
 
-I will look at the new patches later.
+>   DT: leds: Add Qualcomm Light Pulse Generator binding
 
-Cheers,
-Peter
+This one should be first.
+
+And I guess I'd prefer the driver to go in first, before the generic
+pattern interface.
+
+Thanks,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--EeQfGwPcQSOJBaQU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAllp3AgACgkQMOfwapXb+vLhHgCeN/KtvfbPoo8MzxUTI7SkL+f9
++DMAoKo8NHDSy3w7JaGJjEWr8kZj/YI6
+=xmas
+-----END PGP SIGNATURE-----
+
+--EeQfGwPcQSOJBaQU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
