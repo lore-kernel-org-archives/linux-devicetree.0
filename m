@@ -1,50 +1,80 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: Submit of a driver for Pi433 - a radio module for Raspberry Pi
-Date: Sat, 15 Jul 2017 15:47:39 +0200
-Message-ID: <20170715134739.GA20360@kroah.com>
-References: <281067739.16216.1499788929736@ox.hosteurope.de>
- <20170712074305.GA20198@kroah.com>
- <197075499.65628.1500117344413@ox.hosteurope.de>
- <20170715112454.GB1753@kroah.com>
- <89433969.66090.1500123565835@ox.hosteurope.de>
- <20170715130220.GA22977@kroah.com>
- <826180465.66159.1500124248340@ox.hosteurope.de>
- <20170715131628.GA29222@kroah.com>
- <1152815224.66246.1500126030682@ox.hosteurope.de>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open
+ drain mode
+Date: Sat, 15 Jul 2017 16:32:35 +0200
+Message-ID: <CAA2SeN+2T2-G1khRNpNzccesX=cip0ConT11RJRV-HB8Ojk0pA@mail.gmail.com>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+ <20170709165704.26311-9-lorenzo.bianconi@st.com> <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop>
+ <20170711192656.7fd08a1c@kernel.org> <CAL_JsqJa7JeofpG=66AnVrTP4XtVrp9B4-QoLTyK08GzF4L5uQ@mail.gmail.com>
+ <0462CB71-6762-48F2-99B3-EA62FF81C280@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1152815224.66246.1500126030682-mPx3TeDXVI9fnkZfMEZNjw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0462CB71-6762-48F2-99B3-EA62FF81C280-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 15, 2017 at 03:40:30PM +0200, Marcus Wolf wrote:
-> Hi Greg,
->  
-> I absolutly agree. My patch should meet the needs of an official patch.
+>
+>
+> On 11 July 2017 19:42:54 BST, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>On Tue, Jul 11, 2017 at 1:26 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>wrote:
+>>> On Mon, 10 Jul 2017 21:51:58 -0500
+>>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>>
+>>>> On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:
+>>>> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>>>> > ---
+>>>> >  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8
+>>++++++++
+>>>> >  1 file changed, 8 insertions(+)
+>>>> >
+>>>> > diff --git
+>>a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+>>b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+>>>> > index fca263e13400..732b83c06c08 100644
+>>>> > --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+>>>> > +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+>>>> > @@ -5,6 +5,14 @@ Required properties:
+>>>> >  - reg: i2c address of the sensor / spi cs line
+>>>> >
+>>>> >  Optional properties:
+>>>> > +- drive-open-drain: the interrupt/data ready line will be
+>>configured
+>>>>
+>>>> Needs a vendor prefix and "drdy-open-drain" would be more specific.
+>>> This is straight out of the pinctrl bindings and has been used in a
+>>few
+>>> other places as well.  I can see it should really be more obviously
+>>> associated with the drdy pin though.  A few IIO drivers already
+>>> use this binding (st sensors and the lsm6dsx).  If we are going
+>>> to decide it's a bad idea we should deprecate those bindings and
+>>> add whatever we do here as well.
+>>
+>>Ah, okay. Then the description should have a  "see pinctrl.txt" for
+>>the description.
+> Agreed.
 
-Again, don't use html email :)
+This property has been defined in pinctrl/pinctrl-bindings.txt. Is it
+fine to refer to that file?
+Regards,
+Lorenzo
 
-> But I don't know about the exact needs. Can you please help me? What is needed
-> / missing in my patch and how do I produce it?
-> Maybe you can pass me a link, where I can read, what to do?
+>>
+>>Rob
+>>--
+>>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> --
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
 
-The link I sent you, Documentation/SubmittingPatches in the kernel
-source tree, should contain everything you need to know.  As a minimum
-you need a good subject, a good changelog body text, and a
-signed-off-by: line.  The file should tell you all about how to create
-this.
 
-If you have specific questions after reading that about these things,
-please let us know.
 
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
