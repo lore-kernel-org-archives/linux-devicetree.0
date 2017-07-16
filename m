@@ -1,43 +1,86 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: rockchip: Add rk3399 vop and display-subsystem
-Date: Sun, 16 Jul 2017 19:31:09 +0200
-Message-ID: <71446982.CYE3jZejiS@phil>
-References: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com> <1499875435-23944-2-git-send-email-jacob-chen@iotwrt.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 1/3] leds: core: Introduce generic pattern interface
+Date: Sun, 16 Jul 2017 20:49:26 +0200
+Message-ID: <beb9b4c3-4922-1ebb-5017-a4b791cdb4d7@gmail.com>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170714224520.467-2-bjorn.andersson@linaro.org>
+ <20170706031801.GB12954@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499875435-23944-2-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170706031801.GB12954@xo-6d-61-c0.localdomain>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Richard Purdie <rpurdie@rpsys.net>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacob,
+Hi,
 
-Am Donnerstag, 13. Juli 2017, 00:03:51 CEST schrieb Jacob Chen:
-> Add devicetree nodes for rk3399 VOP (Video Output Processors), and the
-> top level display-subsystem root node.
+On 07/06/2017 05:18 AM, Pavel Machek wrote:
+> Hi!
 > 
-> Later patches add endpoints (eDP, HDMI, MIPI, etc) that attach to the
-> VOPs' output ports.
+>> Some LED controllers have support for autonomously controlling
+>> brightness over time, according to some preprogrammed pattern or
+>> function.
+>>
+>> This adds a new optional operator that LED class drivers can implement
+>> if they support such functionality as well as a new device attribute to
+>> configure the pattern for a given LED.
 > 
-> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+>> @@ -61,3 +61,23 @@ Description:
+>>  		gpio and backlight triggers. In case of the backlight trigger,
+>>  		it is useful when driving a LED which is intended to indicate
+>>  		a device in a standby like state.
+>> +
+>> +What:		/sys/class/leds/<led>/pattern
+>> +Date:		July 2017
+>> +KernelVersion:	4.14
+>> +Description:
+>> +		Specify a pattern for the LED, for LED hardware that support
+>> +		altering the brightness as a function of time.
+>> +
+>> +		The pattern is given by a series of tuples, of brightness and
+>> +		duration (ms). The LED is expected to traverse the series and
+>> +		each brightness value for the specified duration.
+>> +
+>> +		Additionally a repeat marker ":|" can be appended to the
+>> +		series, which should cause the pattern to be repeated
+>> +		endlessly.
+>> +
+>> +		As LED hardware might have different capabilities and precision
+>> +		the requested pattern might be slighly adjusted by the driver
+>> +		and the resulting pattern of such operation should be returned
+>> +		when this file is read.
+> 
+> Well. I believe this is mostly useful for RGB LEDs. Unfortunately, having patterns
+> per-LED will present opportunity for different channels becoming de-synchronized
+> from each other, which will not look nice.
 
-you might want to reduce the number of Signed-offs a bit :-)
+Hmm, they are only [brightness duration] tuples, and no definition of
+R, G and B LED device is covered here, so how it can be useful for RGB
+LEDs?
 
-Also authorship needs to be fixed. I.e. first Signed-off for this patch
-is from Mark, so in that case Mark probably also was the original author
-and the patch should reflect that. General rule, topmost Signed-off is
-of course from the original author.
+I've been working on addition of RGB LED support to the LED core for
+some time now, in the way as we agreed upon at [0], but it turns out to
+be less trivial if we want to do it in an elegant way.
 
+Less elegant way would be duplicating led-core functions and changing
+single enum led_brightness argument with the three ones (or a struct
+containing three brightness components)
 
-Heiko
+I chose to go the elegant way and tried to introduce led_classdev_base
+type that would be customizable with the set of ops, that would allow
+for making the number of brightness components to be set at once
+customizable. This of course entails significant amount of changes in
+the LED core and some changes in LED Trigger core.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unfortunately I can't predict how much time it will take
+to submit an RFC due to limited amount of time I can spend working
+on it.
+
+[0] https://www.spinics.net/lists/linux-leds/msg07959.html
+
+-- 
+Best regards,
+Jacek Anaszewski
