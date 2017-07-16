@@ -1,159 +1,146 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: [PATCH v6 3/3] power: supply: ltc2941-battery-gauge: Add LTC2944
- support
-Date: Sun, 16 Jul 2017 11:35:32 +0200
-Message-ID: <20170716093532.w6sqqtadwnbroj3i@lenoch>
-References: <20170716093202.vfea4yylbzfec72v@lenoch>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 9/9] iio: humidity: hts221: move drdy enable logic in hts221_trig_set_state()
+Date: Sun, 16 Jul 2017 11:45:15 +0200
+Message-ID: <CAA2SeNK6dd=myMk59j1To9GtvBaj1T8XXwcaqrtO8V5s-bM5WQ@mail.gmail.com>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+ <20170709165704.26311-10-lorenzo.bianconi@st.com> <20170709194123.39fd6914@kernel.org>
+ <CAA2SeNLhBbTbMGDHyXGN02V4n0RHrwK-Bg0D_q9phpcEa3e7Rw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Received: (from localhost user: 'ladis' uid#1021 fake: STDIN
-        (ladis@eddie.linux-mips.org)) by eddie.linux-mips.org
-        id S23993095AbdGPJfjyeq-J (ORCPT <rfc822;devicetree@vger.kernel.org>
-        + 1 other); Sun, 16 Jul 2017 11:35:39 +0200
-Content-Disposition: inline
-In-Reply-To: <20170716093202.vfea4yylbzfec72v@lenoch>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mike Looijmans <mike.looijmans@topic.nl>, Dragos Bogdan <dragos.bogdan@analog.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNLhBbTbMGDHyXGN02V4n0RHrwK-Bg0D_q9phpcEa3e7Rw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dragos Bogdan <dragos.bogdan@analog.com>
+>> On Sun,  9 Jul 2017 18:57:04 +0200
+>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>> Move data-ready configuration in hts221_buffer.c since it is only related
+>>> to trigger logic
+>>>
+>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>> The rest of the series looks good to me.  We are early in the cycle
+>> so should have plenty of time to pin down the question on how to handle
+>> irq line inversion visibility to the kernel.
+>
+> Fine, pretty interesting stuff :)
+> Regards,
+> Lorenzo
 
-LTC2944 is compatible with LTC2943, but uses different
-voltage and current computing constants.
+Hi Jonathan,
 
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
----
- Changes:
- - v2: fixed voltage and current conversion
- - v3: skipped
- - v4: skipped
- - v5: fixed voltage conversion overflow, rebased on LTC2942 patchset
- - v6: fix missing break in the switch statement
+I added all suggested changes in v2. What is the best way to support
+that possibility (irq line inversion visibility)?
+Is it up to hts221?
 
- .../devicetree/bindings/power/supply/ltc2941.txt   | 12 +++++-----
- drivers/power/supply/ltc2941-battery-gauge.c       | 27 ++++++++++++++++++----
- 2 files changed, 28 insertions(+), 11 deletions(-)
+Regards,
+Lorenzo
 
-diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-index 8ec10366295d..3b9ba147b041 100644
---- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-+++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt
-@@ -1,14 +1,14 @@
--binding for LTC2941, LTC2942 and LTC2943 battery gauges
-+binding for LTC2941, LTC2942, LTC2943 and LTC2944 battery gauges
- 
- All chips measure battery capacity.
- The LTC2942 is pin compatible with the LTC2941, it adds voltage and
--temperature monitoring, and is runtime detected. LTC2943 is software
--compatible, uses a slightly different conversion formula for the
--charge counter and adds voltage, current and temperature monitoring.
-+temperature monitoring, and is runtime detected. LTC2943 and LTC2944
-+is software compatible, uses a slightly different conversion formula
-+for the charge counter and adds voltage, current and temperature monitoring.
- 
- Required properties:
--- compatible: Should contain "lltc,ltc2941", "lltc,ltc2942" or "lltc,ltc2943"
--    which also indicates the type of I2C chip attached.
-+- compatible: Should contain "lltc,ltc2941", "lltc,ltc2942", "lltc,ltc2943"
-+    or "lltc,ltc2944" which also indicates the type of I2C chip attached.
- - reg: The 7-bit I2C address.
- - lltc,resistor-sense: The sense resistor value in milli-ohms. Can be a 32-bit
-     negative value when the battery has been connected to the wrong end of the
-diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power/supply/ltc2941-battery-gauge.c
-index 42ff4e3daf35..08e4fd9ee607 100644
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -1,6 +1,6 @@
- /*
-- * I2C client/driver for the Linear Technology LTC2941, LTC2942 and LTC2943
-- * Battery Gas Gauge IC
-+ * I2C client/driver for the Linear Technology LTC2941, LTC2942, LTC2943
-+ * and LTC2944 Battery Gas Gauge IC
-  *
-  * Copyright (C) 2014 Topic Embedded Systems
-  *
-@@ -48,6 +48,7 @@ enum ltc294x_id {
- 	LTC2941_ID,
- 	LTC2942_ID,
- 	LTC2943_ID,
-+	LTC2944_ID,
- };
- 
- #define LTC2941_REG_STATUS_CHIP_ID	BIT(7)
-@@ -153,7 +154,8 @@ static int ltc294x_reset(const struct ltc294x_info *info, int prescaler_exp)
- 	case LTC2942_ID:	/* 2942 measures every 2 sec */
- 		control |= LTC2942_REG_CONTROL_MODE_SCAN;
- 		break;
--	case LTC2943_ID:	/* 2943 measures every 10 sec */
-+	case LTC2943_ID:
-+	case LTC2944_ID:	/* 2943 and 2944 measure every 10 sec */
- 		control |= LTC2943_REG_CONTROL_MODE_SCAN;
- 		break;
- 	default:
-@@ -269,6 +271,11 @@ static int ltc294x_get_voltage(const struct ltc294x_info *info, int *val)
- 		value /= 0xFFFF;
- 		value *= 1000 / 2;
- 		break;
-+	case LTC2944_ID:
-+		value *= 70800 / 5*4;
-+		value /= 0xFFFF;
-+		value *= 1000 * 5/4;
-+		break;
- 	default:
- 		value *= 6000 * 10;
- 		value /= 0xFFFF;
-@@ -289,10 +296,14 @@ static int ltc294x_get_current(const struct ltc294x_info *info, int *val)
- 		LTC2943_REG_CURRENT_MSB, &datar[0], 2);
- 	value = (datar[0] << 8) | datar[1];
- 	value -= 0x7FFF;
-+	if (info->id == LTC2944_ID)
-+		value *= 64000;
-+	else
-+		value *= 60000;
- 	/* Value is in range -32k..+32k, r_sense is usually 10..50 mOhm,
- 	 * the formula below keeps everything in s32 range while preserving
- 	 * enough digits */
--	*val = 1000 * ((60000 * value) / (info->r_sense * 0x7FFF)); /* in uA */
-+	*val = 1000 * (value / (info->r_sense * 0x7FFF)); /* in uA */
- 	return ret;
- }
- 
-@@ -470,6 +481,7 @@ static int ltc294x_i2c_probe(struct i2c_client *client,
- 	info->supply_desc.type = POWER_SUPPLY_TYPE_BATTERY;
- 	info->supply_desc.properties = ltc294x_properties;
- 	switch (info->id) {
-+	case LTC2944_ID:
- 	case LTC2943_ID:
- 		info->supply_desc.num_properties =
- 			ARRAY_SIZE(ltc294x_properties);
-@@ -543,6 +555,7 @@ static const struct i2c_device_id ltc294x_i2c_id[] = {
- 	{ "ltc2941", LTC2941_ID, },
- 	{ "ltc2942", LTC2942_ID, },
- 	{ "ltc2943", LTC2943_ID, },
-+	{ "ltc2944", LTC2944_ID, },
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);
-@@ -560,6 +573,10 @@ static const struct of_device_id ltc294x_i2c_of_match[] = {
- 		.compatible = "lltc,ltc2943",
- 		.data = (void *)LTC2943_ID,
- 	},
-+	{
-+		.compatible = "lltc,ltc2944",
-+		.data = (void *)LTC2944_ID,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, ltc294x_i2c_of_match);
-@@ -578,5 +595,5 @@ module_i2c_driver(ltc294x_driver);
- 
- MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");
- MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");
--MODULE_DESCRIPTION("LTC2941/LTC2942/LTC2943 Battery Gas Gauge IC driver");
-+MODULE_DESCRIPTION("LTC2941/LTC2942/LTC2943/LTC2944 Battery Gas Gauge IC driver");
- MODULE_LICENSE("GPL");
+>
+>>
+>> Jonathan
+>>> ---
+>>>  drivers/iio/humidity/hts221.h        |  1 -
+>>>  drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
+>>>  drivers/iio/humidity/hts221_core.c   | 14 --------------
+>>>  3 files changed, 7 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
+>>> index 0fbc89fe213d..2b4e5246447a 100644
+>>> --- a/drivers/iio/humidity/hts221.h
+>>> +++ b/drivers/iio/humidity/hts221.h
+>>> @@ -66,7 +66,6 @@ struct hts221_hw {
+>>>
+>>>  extern const struct dev_pm_ops hts221_pm_ops;
+>>>
+>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable);
+>>>  int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
+>>>  int hts221_probe(struct iio_dev *iio_dev);
+>>>  int hts221_set_enable(struct hts221_hw *hw, bool enable);
+>>> diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
+>>> index f29f01a22375..9690dfe9a844 100644
+>>> --- a/drivers/iio/humidity/hts221_buffer.c
+>>> +++ b/drivers/iio/humidity/hts221_buffer.c
+>>> @@ -28,6 +28,8 @@
+>>>  #define HTS221_REG_DRDY_HL_MASK              BIT(7)
+>>>  #define HTS221_REG_DRDY_PP_OD_ADDR   0x22
+>>>  #define HTS221_REG_DRDY_PP_OD_MASK   BIT(6)
+>>> +#define HTS221_REG_DRDY_EN_ADDR              0x22
+>>> +#define HTS221_REG_DRDY_EN_MASK              BIT(2)
+>>>  #define HTS221_REG_STATUS_ADDR               0x27
+>>>  #define HTS221_RH_DRDY_MASK          BIT(1)
+>>>  #define HTS221_TEMP_DRDY_MASK                BIT(0)
+>>> @@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct iio_trigger *trig, bool state)
+>>>  {
+>>>       struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
+>>>       struct hts221_hw *hw = iio_priv(iio_dev);
+>>> +     int err;
+>>> +
+>>> +     err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
+>>> +                                  HTS221_REG_DRDY_EN_MASK, state);
+>>>
+>>> -     return hts221_config_drdy(hw, state);
+>>> +     return err < 0 ? err : 0;
+>>>  }
+>>>
+>>>  static const struct iio_trigger_ops hts221_trigger_ops = {
+>>> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+>>> index dfacf64a6f2e..12c2bc5954e4 100644
+>>> --- a/drivers/iio/humidity/hts221_core.c
+>>> +++ b/drivers/iio/humidity/hts221_core.c
+>>> @@ -23,7 +23,6 @@
+>>>
+>>>  #define HTS221_REG_CNTRL1_ADDR               0x20
+>>>  #define HTS221_REG_CNTRL2_ADDR               0x21
+>>> -#define HTS221_REG_CNTRL3_ADDR               0x22
+>>>
+>>>  #define HTS221_REG_AVG_ADDR          0x10
+>>>  #define HTS221_REG_H_OUT_L           0x28
+>>> @@ -36,9 +35,6 @@
+>>>  #define HTS221_BDU_MASK                      BIT(2)
+>>>  #define HTS221_ENABLE_MASK           BIT(7)
+>>>
+>>> -#define HTS221_DRDY_MASK             BIT(2)
+>>> -
+>>> -
+>>>  /* calibration registers */
+>>>  #define HTS221_REG_0RH_CAL_X_H               0x36
+>>>  #define HTS221_REG_1RH_CAL_X_H               0x3a
+>>> @@ -180,16 +176,6 @@ static int hts221_check_whoami(struct hts221_hw *hw)
+>>>       return 0;
+>>>  }
+>>>
+>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>>> -{
+>>> -     int err;
+>>> -
+>>> -     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+>>> -                                  HTS221_DRDY_MASK, enable);
+>>> -
+>>> -     return err < 0 ? err : 0;
+>>> -}
+>>> -
+>>>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>>>  {
+>>>       int i, err;
+>>
+>
+>
+>
+> --
+> UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+> unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+> umount; make clean; sleep
+
+
+
 -- 
-2.11.0
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
