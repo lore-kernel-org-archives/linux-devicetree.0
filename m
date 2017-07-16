@@ -1,32 +1,53 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: net: Remove duplicate NSP Ethernet MAC
- binding document
-Date: Sat, 15 Jul 2017 21:28:08 -0700 (PDT)
-Message-ID: <20170715.212808.2082208237781034810.davem@davemloft.net>
-References: <20170715172450.22162-1-f.fainelli@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 0/3] Qualcomm Light Pulse Generator
+Date: Sat, 15 Jul 2017 22:34:29 -0700
+Message-ID: <20170716053429.GR1618@tuxbook>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170715091032.GA26602@amd>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170715172450.22162-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170715091032.GA26602@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Sat, 15 Jul 2017 10:24:47 -0700
+On Sat 15 Jul 02:10 PDT 2017, Pavel Machek wrote:
 
-> Commit 07d4510f5251 ("dt-bindings: net: bgmac: add bindings documentation for
-> bgmac") added both brcm,amac-nsp.txt and brcm,bgmac-nsp.txt. The former is
-> actually the one that got updated and is in use by the bgmac driver while the
-> latter is duplicating the former and is not used nor updated.
+> Hi!
 > 
-> Fixes: 07d4510f5251 ("dt-bindings: net: bgmac: add bindings documentation for bgmac")
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > This series introduces a generic pattern interface in the LED class and a
+> > driver for the Qualcomm Light Pulse Generator.
+> > 
+> > Bjorn Andersson (3):
+> >   leds: core: Introduce generic pattern interface
+> 
+> This one should be last. Let me review that, it is important to get
+> this one right.
+> 
+> >   leds: Add driver for Qualcomm LPG
+> 
+> >   DT: leds: Add Qualcomm Light Pulse Generator binding
+> 
+> This one should be first.
+> 
 
-Applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay, no problems.
+
+> And I guess I'd prefer the driver to go in first, before the generic
+> pattern interface.
+> 
+
+The driver won't compile without the additions to the header file. Would
+you like the rest of the driver to go in first, then the generic
+interface and finally the pattern part of the driver?
+
+Large portions of the driver doesn't make sense without the pattern
+part, so I think I would prefer it to go in as one patch.
+
+Please let me know and I'll update the series.
+
+Regards,
+Bjorn
