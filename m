@@ -1,85 +1,68 @@
-From: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v4 RESEND 1/2] Documentation: tpm: add
- powered-while-suspended binding documentation
-Date: Sun, 16 Jul 2017 14:23:58 +0300
-Message-ID: <1500204238.8397.3.camel@linux.intel.com>
-References: <20170627102724.23861-1-enric.balletbo@collabora.com>
-         <20170703125735.dsrl6bs7ttj27zrt@linux.intel.com>
-         <CAPz6YkWN8jQcJdah8wqM+O-5ST+eZ1qpzQvGerXX_u1Tm6soFg@mail.gmail.com>
+From: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
+Subject: Re: [PATCH 1/1] drivers/staging/pi433: New driver
+Date: Sun, 16 Jul 2017 15:53:57 +0200 (CEST)
+Message-ID: <998958447.68928.1500213238028@ox.hosteurope.de>
+References: <20170715112454.GB1753@kroah.com>
+ <89433969.66090.1500123565835@ox.hosteurope.de>
+ <20170715130220.GA22977@kroah.com>
+ <826180465.66159.1500124248340@ox.hosteurope.de>
+ <20170715131628.GA29222@kroah.com>
+ <1152815224.66246.1500126030682@ox.hosteurope.de>
+ <20170715134739.GA20360@kroah.com>
+ <8d152de9387d8ebae5b3cd11277e8ada-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheXH4CVVE=-webmailer1@server05.webmailer.hosteurope.de>
+ <20170716064546.GA11484@kroah.com>
+ <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
+ <20170716101531.GA19773@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPz6YkWN8jQcJdah8wqM+O-5ST+eZ1qpzQvGerXX_u1Tm6soFg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170716101531.GA19773-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Huewe <peterhuewe-Mmb7MZpHnFY@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Guenter Roeck <groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-07-05 at 10:19 -0700, Sonny Rao wrote:
-> On Mon, Jul 3, 2017 at 5:57 AM, Jarkko Sakkinen
-> <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > On Tue, Jun 27, 2017 at 12:27:23PM +0200, Enric Balletbo i Serra
-> > wrote:
-> > > Add a new powered-while-suspended property to control the
-> > > behavior of the
-> > > TPM suspend/resume.
-> > > 
-> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.c
-> > > om>
-> > > Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-> > > Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > ---
-> > > Changes since v3.
-> > >   - Rebased on top of linux-next
-> > >  Rob Herring
-> > >   - Split DT binding from code patch as is preferred.
-> > > 
-> > > Did not exist on previous versions.
-> > > 
-> > >  Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt | 6
-> > > ++++++
-> > >  1 file changed, 6 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/security/tpm/tpm-
-> > > i2c.txt b/Documentation/devicetree/bindings/security/tpm/tpm-
-> > > i2c.txt
-> > > index 8cb638b..85c8216 100644
-> > > --- a/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> > > +++ b/Documentation/devicetree/bindings/security/tpm/tpm-i2c.txt
-> > > @@ -8,6 +8,12 @@ Required properties:
-> > >                     the firmware event log
-> > >  - linux,sml-size : size of the memory allocated for the firmware
-> > > event log
-> > > 
-> > > +Optional properties:
-> > > +
-> > > +- powered-while-suspended: present when the TPM is left powered
-> > > on between
-> > > +                           suspend and resume (makes the
-> > > suspend/resume
-> > > +                           callbacks do nothing).
-> > > +
-> > >  Example (for OpenPower Systems with Nuvoton TPM 2.0 on I2C)
-> > >  ----------------------------------------------------------
-> > > 
-> > > --
-> > > 2.9.3
-> > > 
-> > 
-> > So... should I apply this?
-> 
-> Hi, since you applied the code part, it would make sense to apply the
-> documentation too.
-> 
-> > 
-> > /Jarkko
+Hi Greg,
+ 
+like I wrote before - unfortunally I couldn't find a git command, squashing
+all my commits into one single patch. Therfore I copy and pasted the patch
+manually.
+ 
+Never the less, the first three rows were copied from a patch, originally
+generated by git.
+ 
+I used
+git format-patch master --stdout -p > pi433_patch
+for the first rows
+and
+git diff master > pi433_patch
+fot the dif/patch itself.
 
-Applied. Sorry for the delay.
+If someone could help me with better git commands, I would be happy :-)
+ 
+Thanks a lot,
+ 
+Marcus
 
-/Jarkko
+> Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> hat am 16. Juli 2017 um 12:15
+> geschrieben:
+>
+>
+> On Sun, Jul 16, 2017 at 11:52:32AM +0200, Wolf Entwicklungen wrote:
+> > From: Marcus Wolf <linux-79IPTMiko8heq5RAq1AYSxS11BummzK+@public.gmane.org>
+> > Date: Tue,16 Jul 2017 11:52:06 +0100
+> > Subject: [PATCH 1/1] drivers/staging/pi433: New driver
+>
+> Why is this all here in the patch body? Usually git will strip this
+> out, but in the future, please don't put it here.
+>
+> I'll try to queue this up in a few days and let's see what breaks :)
+>
+> thanks,
+>
+> greg k-h
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
