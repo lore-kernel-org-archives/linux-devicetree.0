@@ -1,27 +1,46 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 0/3] Extend BGMAC driver for Stingray SoC
-Date: Sat, 15 Jul 2017 14:30:08 -0700 (PDT)
-Message-ID: <20170715.143008.178631815886670550.davem@davemloft.net>
-References: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
+Date: Sat, 15 Jul 2017 19:13:22 -0700
+Message-ID: <CAGXu5j+fX-E9ngW3MBhRFgpKBLzpyhR0TCx=ovosXOAqogzMMA@mail.gmail.com>
+References: <20170715003836.GA113132@beast> <CAKv+Gu9n0cpznPxiQPYj0_+DALXTdevbvoYgM87A7ej2kdcizA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499972649-6200-1-git-send-email-abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-Cc: rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKv+Gu9n0cpznPxiQPYj0_+DALXTdevbvoYgM87A7ej2kdcizA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Matt Redfearn <matt.redfearn@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Abhishek Shah <abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Date: Fri, 14 Jul 2017 00:34:06 +0530
+On Sat, Jul 15, 2017 at 5:42 AM, Ard Biesheuvel
+<ard.biesheuvel@linaro.org> wrote:
+> (+ Mark, Will, Catalin)
+>
+> On 15 July 2017 at 01:38, Kees Cook <keescook@chromium.org> wrote:
+>> Document then /chosen/kaslr-seed property (and its interaction with the
+>> EFI_RNG_PROTOCOL API).
+>>
+>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>> ---
+>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
+>>  1 file changed, 20 insertions(+), 2 deletions(-)
+>>
+>
+> For the textual changes:
+>
+> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>
+> *However*, documenting the /chosen/kaslr-seed property promotes it
+> from a stub<->kernel private interface to an external ABI between the
+> kernel and the bootloader, and we need to reach agreement on whether
+> doing so is desirable first IMHO.
+>
 
-> The patchset extends Broadcom BGMAC driver for Broadcom Stingray SoC.
-> 
-> This patchset is based on Linux-4.12 and tested on NS2 and Stingray.
+Oh! I thought that was the point (having a bootloader provide kaslr
+entropy). And that in the EFI case, it was the stub doing it.
 
-Series applied.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Kees
+
+-- 
+Kees Cook
+Pixel Security
