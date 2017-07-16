@@ -1,77 +1,61 @@
-From: =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?=
- <vesa.jaaskelainen@vaisala.com>
-Subject: [RFC PATCH 0/2] device tree support for board revision
-Date: Sun, 16 Jul 2017 23:00:54 +0300
-Message-ID: <1500235256-48937-1-git-send-email-vesa.jaaskelainen@vaisala.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Qualcomm Light Pulse Generator
+Date: Sun, 16 Jul 2017 13:53:04 -0700
+Message-ID: <20170716205304.GU1618@tuxbook>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170715091032.GA26602@amd>
+ <20170716053429.GR1618@tuxbook>
+ <20170706031813.GC12954@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: =?UTF-8?q?Vesa=20J=C3=A4=C3=A4skel=C3=A4inen?= <vesa.jaaskelainen@vaisala.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170706031813.GC12954-5NIqAleC692hcjWhqY66xCZi+YwRKgec@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-UHJpdm91c2x5IHdpdGhvdXQgdXNpbmcgZGV2aWNlIHRyZWVzIHN5c3RlbSByZXZpc2lvbiB3YXMg
-Y2FycmllZCBvdmVyIEFUQUdzLgpOb3cgd2l0aCBkZXZpY2UgdHJlZSBzeXN0ZW0gcmV2aXNpb24g
-aW5mb3JtYXRpb24gaXMgbm90IGNhcnJpZWQgYXQgYWxsLiBUaGlzClJGQyBwcm9wb3NlcyBhIG1l
-dGhvZCBmb3IgdGhpcy4KCldpdGggQVJNIGFyY2ggc3lzdGVtIHJldmlzaW9uIGluZm9ybWF0aW9u
-IChhcyA0IGRpZ2l0IGhleCBzdHJpbmcpIGhhcyBiZWVuCmF2YWlsYWJsZSBpbiAvcHJvYy9jcHVp
-bmZvLgoKUmVzcGVjdGl2ZSBjaGFuZ2UgaXMgbmVlZGVkIHRvIGJvb3QgbG9hZGVyIHRvIHByb3Zp
-ZGUgYm9hcmQgcmV2aXNpb24uIFUtYm9vdApwcm92aWRlcyBib2FyZF9yZXYgZW52aXJvbm1lbnQg
-dmFyaWFibGUgdGhhdCBob2xkcyBzdHJpbmcgdmVyc2lvbiBvZiBib2FyZApyZXZpc2lvbiBpbmZv
-cm1hdGlvbi4KCldpdGggQmVhZ2xlQm9uZSBCbGFjayBJIHdhcyBhYmxlIHRvIGdldCBmb2xsb3dp
-bmcgL3Byb2MvY3B1aW5mbyBvdXRwdXQ6Cgpwcm9jZXNzb3IgICAgICAgOiAwCm1vZGVsIG5hbWUg
-ICAgICA6IEFSTXY3IFByb2Nlc3NvciByZXYgMiAodjdsKQpCb2dvTUlQUyAgICAgICAgOiA5OTYu
-MTQKRmVhdHVyZXMgICAgICAgIDogaGFsZiB0aHVtYiBmYXN0bXVsdCB2ZnAgZWRzcCB0aHVtYmVl
-IG5lb24gdmZwdjMgdGxzIHZmcGQzMiAKQ1BVIGltcGxlbWVudGVyIDogMHg0MQpDUFUgYXJjaGl0
-ZWN0dXJlOiA3CkNQVSB2YXJpYW50ICAgICA6IDB4MwpDUFUgcGFydCAgICAgICAgOiAweGMwOApD
-UFUgcmV2aXNpb24gICAgOiAyCgpIYXJkd2FyZSAgICAgICAgOiBHZW5lcmljIEFNMzNYWCAoRmxh
-dHRlbmVkIERldmljZSBUcmVlKQpSZXZpc2lvbiAgICAgICAgOiAwMDBCClNlcmlhbCAgICAgICAg
-ICA6IDE2MTRCQkJLMTIxMQoKTm90ZTogSSBzZXQgYm9hcmRfc2VyaWFsIHRvIHNlcmlhbCMgaW4g
-dS1ib290IHRvIGdldCBzZXJpYWwgbnVtYmVyLgoKUmVhc29uIHdoeSBJIGRldmljZWQgdG8gZ28g
-UkZDIGFwcHJvYWNoIHdhcyB0aGF0IHRoZXJlIGlzIGtpbmRhIGRlZmluaXRpb24KcHJvYmxlbSBo
-ZXJlIGFuZCBwb3NzaWJpbHR5IHRoYXQgaXQgbWlnaHQgYmUgYSBnb29kIGlkZWEgdG8gZGVmaW5l
-IG1vcmUKdGhhbiBvbmUgZmllbGQgdG8gZGV2aWNlIHRyZWUuIEFsc28gdGhlcmUgc2VlbXMgdG8g
-YmUgbXVsdGlwbGUgd2F5cyB0aGF0CnBlb3BsZSB0cnkgdG8gd29ya2Fyb3VuZCB0aGUgaXNzdWVz
-IHNvIGl0IHdvdWxkIGJlIGEgZ29vZCBpZGVhIHRvCnN0YW5kYXJkaXplIHRoZSBpbnRlcmZhY2Vz
-IGEgYml0LgoKT25lIHByb2JsZW0gaGVyZSBpcyB0aGF0IHdoYXQgZG9lcyBhY3R1YWxseSB0aG9z
-ZSBmaWVsZHMgbWVhbiBpbgovcHJvYy9jcHVpbmZvPwoKV2hhdCBkb2VzICJSZXZpc2lvbiIgbWVh
-bj8gRG9lcyBpdCBtZWFuIGJvYXJkIHJldmlzaW9uLCBkZXZpY2UgcmV2aXNpb24gb3IKc3lzdGVt
-IHJldmlzaW9uPwoKU2FtZSBnb2VzIGZvciAiU2VyaWFsIi4gRG9lcyBpdCBtZWFuIGJvYXJkIHNl
-cmlhbCwgZGV2aWNlIHNlcmlhbCBvciBzeXN0ZW0Kc2VyaWFsPwoKSSBzZWUgdGhhdCAiYm9hcmQi
-IGhlcmUgd291bGQgbWVhbiBQQ0Igb3IgU29NIG1vZHVsZSB3aG9zZSBtYW51ZmFjdHVyZXIKZGVm
-aW5lcyBtb2RlbCBuYW1lLCBzZXJpYWwgbnVtYmVyIGFuZCByZXZpc2lvbi4KClRoZW4gd2UgaGF2
-ZSAiZGV2aWNlIiBzY29wZSB3aGljaCBJIHdvdWxkIHNlZSB0aGF0IGl0IG1lYW5zIFBDQiBhbmQg
-Y2hhc2lzCm9mIHRoZSBkZXZpY2UsIGFuZCBpbiBjaGFzaXMgeW91IG1pZ2h0IGhhdmUgbGFiZWwg
-d2l0aCBpbmZvcm1hdGlvbiBsaWtlCmRldmljZSBtb2RlbCwgc2VyaWFsIG51bWJlciBhbmQgcmV2
-aXNpb24uIE9uZSBkZXZpY2UgY2FuIGNvbnNpc3Qgb2Ygb25lIG9yCm1vcmUgYm9hcmRzLgoKVGhl
-biB3ZSBoYXZlICJzeXN0ZW0iIHNjb3BlIHdoaWNoIEkgd291bGQgc2VlIHRoYXQgaXQgbWVhbnMg
-Y29sbGVjdGlvbiBvZgpkZXZpY2VzLiBTeXN0ZW0gbWlnaHQgaGF2ZSBtb2RlbCBhbmQgc2VyaWFs
-IG51bWJlciAoaGF2ZW4ndCBzZWVuIG9uZSB3aXRoCnJldmlzaW9uIHRob3UpLiBJdCBtaWdodCBi
-ZSB0aGF0ICJzeXN0ZW0iIGxldmVsIGlzIG91dC1vZi1zY29wZSBmb3IgZGV2aWNlCnRyZWUgaW50
-ZXJmYWNlIGxldmVsLgoKSXQgbWF5IGJlIHRoYXQgL3Byb2MvY3B1aW5mbyBpcyB3cm9uZyBwbGFj
-ZSB0byBkaXNwbGF5IHRoaXMgaW5mb3JtYXRpb24gYnV0CmFzIGEgcmVzdWx0IG9mIHRoaXMgZGlz
-Y3Vzc2lvbiBJIHdvdWxkIGxpa2UgdG8gc2VlIHRoZSBzdGFuZGFyZCB3YXkgdG8gcGFzcwp0aGlz
-IGluZm9ybWF0aW9uIGFzIGl0IG1pZ2h0IGJlIHRoYXQgYm9vdGxvYWRlciBjYW4gb25seSBhY2Nl
-c3MgdGhlCmluZm9ybWF0aW9uIChpbiBjYXNlIG9mIG11bHRpcHVycG9zZSBwaW4gaW4gY2hpcCku
-IEFuZCB0aGUgc3RhbmRhcmQgd2F5IGZvcgp1c2VyIHNwYWNlIHRvIGFjY2VzcyB0aGlzIGluZm9y
-bWF0aW9uLgoKVGhhbmtzLApWZXNhIErDpMOkc2tlbMOkaW5lbgoKVmVzYSBKw6TDpHNrZWzDpGlu
-ZW4gKDIpOgogIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IHJvb3Qgbm9kZSBib2FyZC1yZXZp
-c2lvbiBwcm9wZXJ0eQogICAgZG9jdW1lbnRhdGlvbgogIGFybTogc2V0dXA6IFNob3cgdGhlIGJv
-YXJkIHJldmlzaW9uIGZyb20gZGV2aWNldHJlZSBpbiBjcHVpbmZvCgogRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2Jvb3Rpbmctd2l0aG91dC1vZi50eHQgfCAgMSArCiBhcmNoL2FybS9rZXJuZWwv
-c2V0dXAuYyAgICAgICAgICAgICAgICAgICAgICAgICB8IDEyICsrKysrKysrKysrLQogMiBmaWxl
-cyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgotLSAKMi4xLjQKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+On Wed 05 Jul 20:18 PDT 2017, Pavel Machek wrote:
+
+> Hi!
+> 
+> > > >   DT: leds: Add Qualcomm Light Pulse Generator binding
+> > > 
+> > > This one should be first.
+> > > 
+> > 
+> > Okay, no problems.
+> > 
+> > > And I guess I'd prefer the driver to go in first, before the generic
+> > > pattern interface.
+> > > 
+> > 
+> > The driver won't compile without the additions to the header file. Would
+> > you like the rest of the driver to go in first, then the generic
+> > interface and finally the pattern part of the driver?
+> > 
+> > Large portions of the driver doesn't make sense without the pattern
+> > part, so I think I would prefer it to go in as one patch.
+> 
+> Can we get minimum driver without the pattern parts?
+> 
+
+It's possible to do, but I must admit I find it slightly contrived.
+
+The overall design of different parts of the driver does relate to how I
+decided to structure and implement the pattern support, so this would
+mean that the driver we merge has a conceptual dependency on a
+out-of-tree part.
+
+
+May I ask about the reasoning for your request? Is it just to not leave
+the driver hanging while we conclude the discussion on the pattern
+interface?
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
