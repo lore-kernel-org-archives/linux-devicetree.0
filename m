@@ -1,160 +1,93 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 9/9] iio: humidity: hts221: move drdy enable logic in hts221_trig_set_state()
-Date: Sun, 16 Jul 2017 20:50:13 +0100
-Message-ID: <38CAFE44-96E7-4C5C-8225-3BD31FB269D0@jic23.retrosnub.co.uk>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com> <20170709165704.26311-10-lorenzo.bianconi@st.com> <20170709194123.39fd6914@kernel.org> <CAA2SeNLhBbTbMGDHyXGN02V4n0RHrwK-Bg0D_q9phpcEa3e7Rw@mail.gmail.com> <CAA2SeNK6dd=myMk59j1To9GtvBaj1T8XXwcaqrtO8V5s-bM5WQ@mail.gmail.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] leds: core: Introduce generic pattern interface
+Date: Sun, 16 Jul 2017 12:57:30 -0700
+Message-ID: <20170716195730.GT1618@tuxbook>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170714224520.467-2-bjorn.andersson@linaro.org>
+ <20170706031801.GB12954@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA2SeNK6dd=myMk59j1To9GtvBaj1T8XXwcaqrtO8V5s-bM5WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170706031801.GB12954-5NIqAleC692hcjWhqY66xCZi+YwRKgec@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed 05 Jul 20:18 PDT 2017, Pavel Machek wrote:
+
+> Hi!
+> 
+> > Some LED controllers have support for autonomously controlling
+> > brightness over time, according to some preprogrammed pattern or
+> > function.
+> > 
+> > This adds a new optional operator that LED class drivers can implement
+> > if they support such functionality as well as a new device attribute to
+> > configure the pattern for a given LED.
+> 
+> > @@ -61,3 +61,23 @@ Description:
+> >  		gpio and backlight triggers. In case of the backlight trigger,
+> >  		it is useful when driving a LED which is intended to indicate
+> >  		a device in a standby like state.
+> > +
+> > +What:		/sys/class/leds/<led>/pattern
+> > +Date:		July 2017
+> > +KernelVersion:	4.14
+> > +Description:
+> > +		Specify a pattern for the LED, for LED hardware that support
+> > +		altering the brightness as a function of time.
+> > +
+> > +		The pattern is given by a series of tuples, of brightness and
+> > +		duration (ms). The LED is expected to traverse the series and
+> > +		each brightness value for the specified duration.
+> > +
+> > +		Additionally a repeat marker ":|" can be appended to the
+> > +		series, which should cause the pattern to be repeated
+> > +		endlessly.
+> > +
+> > +		As LED hardware might have different capabilities and precision
+> > +		the requested pattern might be slighly adjusted by the driver
+> > +		and the resulting pattern of such operation should be returned
+> > +		when this file is read.
+> 
+> Well. I believe this is mostly useful for RGB LEDs. Unfortunately, having patterns
+> per-LED will present opportunity for different channels becoming de-synchronized
+> from each other, which will not look nice.
+> 
+
+The two laptops on my desk indicates suspend state by pulsing a white
+and a green LED respectively, so there's definitely people out there who
+found it useful to do single channel patterns.
 
 
-On 16 July 2017 10:45:15 BST, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sun,  9 Jul 2017 18:57:04 +0200
->>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> Move data-ready configuration in hts221_buffer.c since it is only
->related
->>>> to trigger logic
->>>>
->>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->>> The rest of the series looks good to me.  We are early in the cycle
->>> so should have plenty of time to pin down the question on how to
->handle
->>> irq line inversion visibility to the kernel.
->>
->> Fine, pretty interesting stuff :)
->> Regards,
->> Lorenzo
->
->Hi Jonathan,
->
->I added all suggested changes in v2. What is the best way to support
->that possibility (irq line inversion visibility)?
->Is it up to hts221?
-I think the only real conclusion so far is that there are irqchip drivers dealing with this
-already. Hence on basis of precedence alone, not an issue for the ultimate client driver.
+In the case of the Qualcomm LPG each channel (4-8 in a typical Qualcomm
+PMIC) is implemented as a standalone hardware block. The pattern
+generator is in a separate hardware block that is shared between the
+LPGs and to synchronize pattern between channels the "start signal" to
+the pattern generator can cover multiple channels.
 
-Which I thought would be the case but wanted to get more info. Hence ignore whole issue in
-this driver.
+But any combination of the LPG channels can be routed to any of the RGB
+channels and there are use cases where you want to use a single LPG
+channel to drive a single LED (or some other sink).
 
-J
->
->Regards,
->Lorenzo
->
->>
->>>
->>> Jonathan
->>>> ---
->>>>  drivers/iio/humidity/hts221.h        |  1 -
->>>>  drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
->>>>  drivers/iio/humidity/hts221_core.c   | 14 --------------
->>>>  3 files changed, 7 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/drivers/iio/humidity/hts221.h
->b/drivers/iio/humidity/hts221.h
->>>> index 0fbc89fe213d..2b4e5246447a 100644
->>>> --- a/drivers/iio/humidity/hts221.h
->>>> +++ b/drivers/iio/humidity/hts221.h
->>>> @@ -66,7 +66,6 @@ struct hts221_hw {
->>>>
->>>>  extern const struct dev_pm_ops hts221_pm_ops;
->>>>
->>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable);
->>>>  int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
->u8 val);
->>>>  int hts221_probe(struct iio_dev *iio_dev);
->>>>  int hts221_set_enable(struct hts221_hw *hw, bool enable);
->>>> diff --git a/drivers/iio/humidity/hts221_buffer.c
->b/drivers/iio/humidity/hts221_buffer.c
->>>> index f29f01a22375..9690dfe9a844 100644
->>>> --- a/drivers/iio/humidity/hts221_buffer.c
->>>> +++ b/drivers/iio/humidity/hts221_buffer.c
->>>> @@ -28,6 +28,8 @@
->>>>  #define HTS221_REG_DRDY_HL_MASK              BIT(7)
->>>>  #define HTS221_REG_DRDY_PP_OD_ADDR   0x22
->>>>  #define HTS221_REG_DRDY_PP_OD_MASK   BIT(6)
->>>> +#define HTS221_REG_DRDY_EN_ADDR              0x22
->>>> +#define HTS221_REG_DRDY_EN_MASK              BIT(2)
->>>>  #define HTS221_REG_STATUS_ADDR               0x27
->>>>  #define HTS221_RH_DRDY_MASK          BIT(1)
->>>>  #define HTS221_TEMP_DRDY_MASK                BIT(0)
->>>> @@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct
->iio_trigger *trig, bool state)
->>>>  {
->>>>       struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
->>>>       struct hts221_hw *hw = iio_priv(iio_dev);
->>>> +     int err;
->>>> +
->>>> +     err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
->>>> +                                  HTS221_REG_DRDY_EN_MASK, state);
->>>>
->>>> -     return hts221_config_drdy(hw, state);
->>>> +     return err < 0 ? err : 0;
->>>>  }
->>>>
->>>>  static const struct iio_trigger_ops hts221_trigger_ops = {
->>>> diff --git a/drivers/iio/humidity/hts221_core.c
->b/drivers/iio/humidity/hts221_core.c
->>>> index dfacf64a6f2e..12c2bc5954e4 100644
->>>> --- a/drivers/iio/humidity/hts221_core.c
->>>> +++ b/drivers/iio/humidity/hts221_core.c
->>>> @@ -23,7 +23,6 @@
->>>>
->>>>  #define HTS221_REG_CNTRL1_ADDR               0x20
->>>>  #define HTS221_REG_CNTRL2_ADDR               0x21
->>>> -#define HTS221_REG_CNTRL3_ADDR               0x22
->>>>
->>>>  #define HTS221_REG_AVG_ADDR          0x10
->>>>  #define HTS221_REG_H_OUT_L           0x28
->>>> @@ -36,9 +35,6 @@
->>>>  #define HTS221_BDU_MASK                      BIT(2)
->>>>  #define HTS221_ENABLE_MASK           BIT(7)
->>>>
->>>> -#define HTS221_DRDY_MASK             BIT(2)
->>>> -
->>>> -
->>>>  /* calibration registers */
->>>>  #define HTS221_REG_0RH_CAL_X_H               0x36
->>>>  #define HTS221_REG_1RH_CAL_X_H               0x3a
->>>> @@ -180,16 +176,6 @@ static int hts221_check_whoami(struct
->hts221_hw *hw)
->>>>       return 0;
->>>>  }
->>>>
->>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable)
->>>> -{
->>>> -     int err;
->>>> -
->>>> -     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
->>>> -                                  HTS221_DRDY_MASK, enable);
->>>> -
->>>> -     return err < 0 ? err : 0;
->>>> -}
->>>> -
->>>>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
->>>>  {
->>>>       int i, err;
->>>
->>
->>
->>
->> --
->> UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
->> unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes;
->gasp;
->> umount; make clean; sleep
+It therefor doesn't make sense to enforce any such groupings in the
+driver itself - at least not for the LPG.
 
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+
+Similarly it's conceivable to design a board where one uses 3 PWM
+channels to drive a RBG LED, in which case we would like to use the
+leds-pwm driver, rather than creating a 3-channel-pwm LED driver.
+
+So, based on our previous discussions on this topic, I think it makes
+sense to have a virtual multi-channel LED driver, that through triggers
+can have any LED instances associated with its channels. It would then
+"broadcast" the brightness and pattern requests to the individual LED
+instances.
+
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
