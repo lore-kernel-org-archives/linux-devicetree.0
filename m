@@ -1,206 +1,161 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 3/3] DT: leds: Add Qualcomm Light Pulse Generator
- binding
-Date: Sun, 16 Jul 2017 20:49:34 +0200
-Message-ID: <aefc36fc-9c16-e8da-b684-6e77ec96c662@gmail.com>
-References: <20170714224520.467-1-bjorn.andersson@linaro.org>
- <20170714224520.467-4-bjorn.andersson@linaro.org>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH 9/9] iio: humidity: hts221: move drdy enable logic in hts221_trig_set_state()
+Date: Sun, 16 Jul 2017 20:50:13 +0100
+Message-ID: <38CAFE44-96E7-4C5C-8225-3BD31FB269D0@jic23.retrosnub.co.uk>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com> <20170709165704.26311-10-lorenzo.bianconi@st.com> <20170709194123.39fd6914@kernel.org> <CAA2SeNLhBbTbMGDHyXGN02V4n0RHrwK-Bg0D_q9phpcEa3e7Rw@mail.gmail.com> <CAA2SeNK6dd=myMk59j1To9GtvBaj1T8XXwcaqrtO8V5s-bM5WQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170714224520.467-4-bjorn.andersson@linaro.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNK6dd=myMk59j1To9GtvBaj1T8XXwcaqrtO8V5s-bM5WQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
 
-On 07/15/2017 12:45 AM, Bjorn Andersson wrote:
-> This adds the binding document describing the three hardware blocks
-> related to the Light Pulse Generator found in a wide range of Qualcomm
-> PMICs.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - Dropped custom pattern properties
-> - Renamed cell-index to qcom,lpg-channel to clarify its purpose
-> 
->  .../devicetree/bindings/leds/leds-qcom-lpg.txt     | 145 +++++++++++++++++++++
->  1 file changed, 145 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> new file mode 100644
-> index 000000000000..cc9ffee6586b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
-> @@ -0,0 +1,145 @@
-> +Binding for Qualcomm Light Pulse Generator
-> +
-> +The Qualcomm Light Pulse Generator consists of three different hardware blocks;
 
-Is there a freely available documentation thereof?
+On 16 July 2017 10:45:15 BST, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Sun,  9 Jul 2017 18:57:04 +0200
+>>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>> Move data-ready configuration in hts221_buffer.c since it is only
+>related
+>>>> to trigger logic
+>>>>
+>>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>>> The rest of the series looks good to me.  We are early in the cycle
+>>> so should have plenty of time to pin down the question on how to
+>handle
+>>> irq line inversion visibility to the kernel.
+>>
+>> Fine, pretty interesting stuff :)
+>> Regards,
+>> Lorenzo
+>
+>Hi Jonathan,
+>
+>I added all suggested changes in v2. What is the best way to support
+>that possibility (irq line inversion visibility)?
+>Is it up to hts221?
+I think the only real conclusion so far is that there are irqchip drivers dealing with this
+already. Hence on basis of precedence alone, not an issue for the ultimate client driver.
 
-> +a ramp generator with lookup table, the light pulse generator and a three
-> +channel current sink. These blocks are found in a wide range of Qualcomm PMICs.
-> +Each of these are described individually below.
-> +
-> += Lookup Table (LUT)
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,spmi-lpg-lut"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of the LUT block
-> +
-> +- qcom,lut-size:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: number of elements available in the lookup table
-> +
-> += Light Pulse Generator (LPG)
-> +The Light Pulse Generator can operate either as a standard PWM controller or in
-> +a more advanced lookup-table based mode. These are described separately below.
+Which I thought would be the case but wanted to get more info. Hence ignore whole issue in
+this driver.
 
-Why a user would prefer one option over the other? I assume that both
-controllers offer at least slightly different capabilities.
-If so, then it could be the driver which would decide which one fits
-better for the requested LED class device configuration.
-
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,spmi-lpg"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of the LPG block
-> +
-> +== PWM mode
-> +
-> +- #pwm-cells:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: must be 1
-> +
-> +== Lookup-table mode
-> +
-> +- qcom,lpg-channel:
-> +	Usage: required, when referencing a LUT
-> +	Value type: <u32>
-> +	Definition: identifier of the LPG channel, used to associate the LPG
-> +		    with a particular ramp generator in the LUT block
-> +
-> +- default-state:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: default state, as defined in common.txt
-> +
-> +- label:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: label of the LED, as defined in common.txt
-> +
-> +- linux,default-trigger:
-> +	Usage: optional
-> +	Value type: <string>
-> +	Definition: default trigger, as defined in common.txt
-> +
-> +- qcom,tri-led:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: a phandle of a TRILED node and a single u32 denoting which
-> +		    output channel to control
-> +
-> +- qcom,lut:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: phandle of a LUT node
-> +
-> +- qcom,dtest:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: configures the output into an internal test line of the
-> +		    pmic. A first u32 defines which test line to use and the
-> +		    second cell configures how the value should be outputed
-> +		    (available lines and configuration differs between PMICs)
-> +
-> += LED Current Sink (TRILED)
-> +
-> +- compatible:
-> +	Usage: required
-> +	Value type: <stringlist>
-> +	Definition: must be "qcom,spmi-tri-led"
-> +
-> +- reg:
-> +	Usage: required
-> +	Value type: <prop-encoded-array>
-> +	Definition: base address of the TRILED block
-> +
-> +- qcom,power-source:
-> +	Usage: required
-> +	Value type: <u32>
-> +	Definition: power-source used to drive the output, as defined in the
-> +		    datasheet
-> +
-> += EXAMPLE:
-> +The following example defines a single output of the PMI8994, sinking current
-> +into a LED.
-> +
-> +&spmi_bus {
-> +	pmic@3 {
-> +		compatible = "qcom,pmi8994", "qcom,spmi-pmic";
-> +		reg = <0x3 SPMI_USID>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pmi8994_lpg_lut: lpg-lut@b000 {
-> +			compatible = "qcom,spmi-lpg-lut";
-> +			reg = <0xb000>;
-> +
-> +			qcom,lut-size = <24>;
-> +		};
-> +
-> +		lpg@b200 {
-> +			compatible = "qcom,spmi-lpg";
-> +			reg = <0xb200>;
-> +
-> +			cell-index = <2>;
-> +
-> +			label = "lpg:green:user0";
-> +
-> +			qcom,tri-led = <&pmi8994_tri_led 1>;
-> +			qcom,lut = <&pmi8994_lpg_lut>;
-> +
-> +			default-state = "on";
-> +		};
-> +
-> +		pmi8994_tri_led: tri-led@d000 {
-> +			compatible = "qcom,spmi-tri-led";
-> +			reg = <0xd000>;
-> +
-> +			qcom,power-source = <1>;
-> +		};
-
-Such a design is uncommon for LED class DT bindings. It should
-suffice to have a single DT LED node per LED. I have an impression
-that you're exposing too many hardware details here.
-You can use led-sources property (see Documentation/devicetree/bindings
-/leds/common.txt and drivers/leds/leds-max77693.c where it is used).
-
-It is also not clear to me why single green color LED presented here
-would have to use tri-led sink? I suppose that the sink is predestined
-for three-color LEDs.
+J
+>
+>Regards,
+>Lorenzo
+>
+>>
+>>>
+>>> Jonathan
+>>>> ---
+>>>>  drivers/iio/humidity/hts221.h        |  1 -
+>>>>  drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
+>>>>  drivers/iio/humidity/hts221_core.c   | 14 --------------
+>>>>  3 files changed, 7 insertions(+), 16 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iio/humidity/hts221.h
+>b/drivers/iio/humidity/hts221.h
+>>>> index 0fbc89fe213d..2b4e5246447a 100644
+>>>> --- a/drivers/iio/humidity/hts221.h
+>>>> +++ b/drivers/iio/humidity/hts221.h
+>>>> @@ -66,7 +66,6 @@ struct hts221_hw {
+>>>>
+>>>>  extern const struct dev_pm_ops hts221_pm_ops;
+>>>>
+>>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable);
+>>>>  int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
+>u8 val);
+>>>>  int hts221_probe(struct iio_dev *iio_dev);
+>>>>  int hts221_set_enable(struct hts221_hw *hw, bool enable);
+>>>> diff --git a/drivers/iio/humidity/hts221_buffer.c
+>b/drivers/iio/humidity/hts221_buffer.c
+>>>> index f29f01a22375..9690dfe9a844 100644
+>>>> --- a/drivers/iio/humidity/hts221_buffer.c
+>>>> +++ b/drivers/iio/humidity/hts221_buffer.c
+>>>> @@ -28,6 +28,8 @@
+>>>>  #define HTS221_REG_DRDY_HL_MASK              BIT(7)
+>>>>  #define HTS221_REG_DRDY_PP_OD_ADDR   0x22
+>>>>  #define HTS221_REG_DRDY_PP_OD_MASK   BIT(6)
+>>>> +#define HTS221_REG_DRDY_EN_ADDR              0x22
+>>>> +#define HTS221_REG_DRDY_EN_MASK              BIT(2)
+>>>>  #define HTS221_REG_STATUS_ADDR               0x27
+>>>>  #define HTS221_RH_DRDY_MASK          BIT(1)
+>>>>  #define HTS221_TEMP_DRDY_MASK                BIT(0)
+>>>> @@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct
+>iio_trigger *trig, bool state)
+>>>>  {
+>>>>       struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
+>>>>       struct hts221_hw *hw = iio_priv(iio_dev);
+>>>> +     int err;
+>>>> +
+>>>> +     err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
+>>>> +                                  HTS221_REG_DRDY_EN_MASK, state);
+>>>>
+>>>> -     return hts221_config_drdy(hw, state);
+>>>> +     return err < 0 ? err : 0;
+>>>>  }
+>>>>
+>>>>  static const struct iio_trigger_ops hts221_trigger_ops = {
+>>>> diff --git a/drivers/iio/humidity/hts221_core.c
+>b/drivers/iio/humidity/hts221_core.c
+>>>> index dfacf64a6f2e..12c2bc5954e4 100644
+>>>> --- a/drivers/iio/humidity/hts221_core.c
+>>>> +++ b/drivers/iio/humidity/hts221_core.c
+>>>> @@ -23,7 +23,6 @@
+>>>>
+>>>>  #define HTS221_REG_CNTRL1_ADDR               0x20
+>>>>  #define HTS221_REG_CNTRL2_ADDR               0x21
+>>>> -#define HTS221_REG_CNTRL3_ADDR               0x22
+>>>>
+>>>>  #define HTS221_REG_AVG_ADDR          0x10
+>>>>  #define HTS221_REG_H_OUT_L           0x28
+>>>> @@ -36,9 +35,6 @@
+>>>>  #define HTS221_BDU_MASK                      BIT(2)
+>>>>  #define HTS221_ENABLE_MASK           BIT(7)
+>>>>
+>>>> -#define HTS221_DRDY_MASK             BIT(2)
+>>>> -
+>>>> -
+>>>>  /* calibration registers */
+>>>>  #define HTS221_REG_0RH_CAL_X_H               0x36
+>>>>  #define HTS221_REG_1RH_CAL_X_H               0x3a
+>>>> @@ -180,16 +176,6 @@ static int hts221_check_whoami(struct
+>hts221_hw *hw)
+>>>>       return 0;
+>>>>  }
+>>>>
+>>>> -int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>>>> -{
+>>>> -     int err;
+>>>> -
+>>>> -     err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+>>>> -                                  HTS221_DRDY_MASK, enable);
+>>>> -
+>>>> -     return err < 0 ? err : 0;
+>>>> -}
+>>>> -
+>>>>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>>>>  {
+>>>>       int i, err;
+>>>
+>>
+>>
+>>
+>> --
+>> UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+>> unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes;
+>gasp;
+>> umount; make clean; sleep
 
 -- 
-Best regards,
-Jacek Anaszewski
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
