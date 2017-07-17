@@ -1,65 +1,93 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH 2/7] dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-Date: Mon, 17 Jul 2017 17:33:58 +0530
-Message-ID: <1500293043-1887-3-git-send-email-varada@codeaurora.org>
+Subject: [PATCH 3/7] phy: qcom-qmp: Fix phy pipe clock name
+Date: Mon, 17 Jul 2017 17:33:59 +0530
+Message-ID: <1500293043-1887-4-git-send-email-varada@codeaurora.org>
 References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
-Sender: linux-pci-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-IPQ8074 uses QMP phy controller that provides support to PCIe and
-USB. Adding dt binding information for the same.
+Presently, the phy pipe clock's name is assumed to be either
+usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
+phy lane's number). However, this will not work if an SoC has
+more than one instance of the phy. Hence, instead of assuming
+the name of the clock, fetch it from the DT.
 
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 28 ++++++++++++++++------------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d7a51f..80d766b 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -6,6 +6,7 @@ controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 78ca628..97020ec 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -925,20 +925,13 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
+  *    clk  |   +-------+   |                   +-----+
+  *         +---------------+
+  */
+-static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
++static int phy_pipe_clk_register(struct qcom_qmp *qmp, const char *clk_name)
+ {
+-	char name[24];
+ 	struct clk_fixed_rate *fixed;
+ 	struct clk_init_data init = { };
  
- Required properties:
-  - compatible: compatible list, contains:
-+	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
+-	switch (qmp->cfg->type) {
+-	case PHY_TYPE_USB3:
+-		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
+-		break;
+-	case PHY_TYPE_PCIE:
+-		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
+-		break;
+-	default:
++	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
++	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
+ 		/* not all phys register pipe clocks, so return success */
+ 		return 0;
+ 	}
+@@ -947,7 +940,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
+ 	if (!fixed)
+ 		return -ENOMEM;
  
-@@ -107,3 +108,30 @@ Example:
- 		...
- 		...
- 	};
+-	init.name = name;
++	init.name = clk_name;
+ 	init.ops = &clk_fixed_rate_ops;
+ 
+ 	/* controllers using QMP phys use 125MHz pipe clock interface */
+@@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 
+ 	id = 0;
+ 	for_each_available_child_of_node(dev->of_node, child) {
++		const char *clk_name;
 +
-+	phy@86000 {
-+		compatible = "qcom,ipq8074-qmp-pcie-phy";
-+		reg = <0x86000 0x1000>;
+ 		/* Create per-lane phy */
+ 		ret = qcom_qmp_phy_create(dev, child, id);
+ 		if (ret) {
+@@ -1118,11 +1113,20 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 			return ret;
+ 		}
+ 
++		ret = of_property_read_string(child, "clock-output-names",
++							&clk_name);
++		if (ret) {
++			dev_err(dev,
++				"failed to get clock-output-names for lane%d phy, %d\n",
++				id, ret);
++			return ret;
++		}
 +
-+		#clock-cells = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		resets = <&gcc GCC_PCIE0_PHY_BCR>,
-+			 <&gcc GCC_PCIE0PHY_PHY_BCR>;
-+		reset-names = "phy",
-+			      "phy_phy";
-+
-+		status = "ok";
-+
-+		pciephy_0: lane@86000 {
-+			reg = <0x86200 0x130>,
-+				<0x86400 0x200>,
-+				<0x86800 0x1f8>;
-+			#phy-cells = <0>;
-+			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
-+			clock-names = "pipe0";
-+			clock-output-names = "pcie20_phy0_pipe_clk";
-+		};
-+	};
+ 		/*
+ 		 * Register the pipe clock provided by phy.
+ 		 * See function description to see details of this pipe clock.
+ 		 */
+-		ret = phy_pipe_clk_register(qmp, id);
++		ret = phy_pipe_clk_register(qmp, clk_name);
+ 		if (ret) {
+ 			dev_err(qmp->dev,
+ 				"failed to register pipe clock source\n");
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
