@@ -1,52 +1,209 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv4 3/4] dt-bindings: mfd: da9052: support TSI as ADC
-Date: Mon, 17 Jul 2017 11:49:45 +0100
-Message-ID: <20170717104945.6qn6to7s3mlepxgj@dell>
-References: <20170630143506.10541-1-sebastian.reichel@collabora.co.uk>
- <20170630143506.10541-4-sebastian.reichel@collabora.co.uk>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] fdt: Allow stacked overlays phandle references
+Date: Mon, 17 Jul 2017 21:00:37 +1000
+Message-ID: <20170717110037.GC4535@umbus>
+References: <1499894659-25775-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1499894659-25775-2-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170630143506.10541-4-sebastian.reichel@collabora.co.uk>
-Sender: linux-input-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1499894659-25775-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Jun 2017, Sebastian Reichel wrote:
 
-> DA9052 allows using the touchscreen input pins as general purpose
-> analogue input pin by wiring analogue inputs to X+, X-, Y+ and Y-
-> and providing a reference voltage at TSIREF pin.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->  Documentation/devicetree/bindings/mfd/da9052-i2c.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> index 9554292dc6cb..57fa74e65664 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> @@ -4,6 +4,14 @@ Required properties:
->  - compatible : Should be "dlg,da9052", "dlg,da9053-aa",
->  			 "dlg,da9053-ab", or "dlg,da9053-bb"
->  
-> +Optional properties:
-> +- dlg,tsi-as-adc : Boolean, if set the X+, X-, Y+, Y- touchscreen
-> +                    input lines are used as general purpose analogue
-> +					input.
-> +- tsiref-supply: Phandle to the regulator, which provides the reference
-> +                 voltage for the TSIREF pin. Must be provided when the
-> +			     touchscreen pins are used for ADC purposes.
+--ALfTUftag+2gvp1h
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 13, 2017 at 12:24:18AM +0300, Pantelis Antoniou wrote:
+> This patch enables an overlay to refer to a previous overlay's
+> labels by performing a merge of symbol information at application
+> time.
+>=20
+> In a nutshell it allows an overlay to refer to a symbol that a previous
+> overlay has defined. It requires both the base and all the overlays
+> to be compiled with the -@ command line switch so that symbol
+> information is included.
+
+[snip]
+> +/**
+> + * overlay_symbol_update - Update the symbols of base tree after a merge
+> + * @fdt: Base Device Tree blob
+> + * @fdto: Device tree overlay blob
+> + *
+> + * overlay_symbol_update() updates the symbols of the base tree with the
+> + * symbols of the applied overlay
+> + *
+> + * This is the last step in the device tree overlay application
+> + * process, allowing the reference of overlay symbols by subsequent
+> + * overlay operations.
+> + *
+> + * returns:
+> + *      0 on success
+> + *      Negative error code on failure
+> + */
+> +static int overlay_symbol_update(void *fdt, void *fdto)
+> +{
+> +	int root_sym, ov_sym, prop, path_len, fragment, target;
+> +	int len, frag_name_len, ret, rel_path_len;
+> +	const char *s;
+> +	const char *path;
+> +	const char *name;
+> +	const char *frag_name;
+> +	const char *rel_path;
+> +	char *buf;
+> +	void *p;
 > +
+> +	root_sym =3D fdt_subnode_offset(fdt, 0, "__symbols__");
+> +	ov_sym =3D fdt_subnode_offset(fdto, 0, "__symbols__");
+> +
+> +	/* if neither exist we can't update symbols, but that's OK */
+> +	if (root_sym < 0 || ov_sym < 0)
+> +		return 0;
+> +
+> +
+> +	/* iterate over each overlay symbol */
+> +	fdt_for_each_property_offset(prop, fdto, ov_sym) {
+> +
+> +		path =3D fdt_getprop_by_offset(fdto, prop, &name, &path_len);
+> +		if (!path)
+> +			return path_len;
+> +
+> +		/* skip autogenerated properties */
+> +		if (!strcmp(name, "name"))
+> +			continue;
+> +
+> +		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
+> +
+> +		if (*path !=3D '/')
+> +			return -FDT_ERR_BADVALUE;
+> +
+> +		/* get fragment name first */
+> +		s =3D strchr(path + 1, '/');
+> +		if (!s)
+> +			return -FDT_ERR_BADVALUE;
+> +
+> +		frag_name =3D path + 1;
+> +		frag_name_len =3D s - path - 1;
+> +
+> +		/* verify format */
+> +		len =3D strlen("/__overlay__/");
+> +		if (strncmp(s, "/__overlay__/", len))
+> +			return -FDT_ERR_NOTFOUND;
+> +
+> +		rel_path =3D s + len;
+> +		rel_path_len =3D strlen(rel_path);
+> +
+> +		/* find the fragment index in which the symbol lies */
+> +		fdt_for_each_subnode(fragment, fdto, 0) {
+> +
+> +			s =3D fdt_get_name(fdto, fragment, &len);
+> +			if (!s)
+> +				continue;
+> +
+> +			/* name must match */
+> +			if (len =3D=3D frag_name_len && !memcmp(s, frag_name, len))
+> +				break;
+> +		}
+> +
+> +		/* not found? */
+> +		if (fragment < 0)
+> +			return -FDT_ERR_NOTFOUND;
+> +
+> +		/* an __overlay__ subnode must exist */
+> +		ret =3D fdt_subnode_offset(fdto, fragment, "__overlay__");
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* get the target of the fragment */
+> +		ret =3D overlay_get_target(fdt, fdto, fragment);
+> +		if (ret < 0)
+> +			return ret;
+> +		target =3D ret;
+> +
+> +		len =3D fdt_get_path_len(fdt, target);
+> +
+> +		ret =3D fdt_setprop_alloc(fdt, root_sym, name,
+> +				len + (len > 1) + rel_path_len + 1, &p);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* again in case setprop_alloc changed it */
+> +		ret =3D overlay_get_target(fdt, fdto, fragment);
+> +		if (ret < 0)
+> +			return ret;
+> +		target =3D ret;
+> +
+> +		buf =3D p;
+> +		if (len > 1) { /* target is not root */
+> +			ret =3D fdt_get_path(fdt, target, buf, len + 1);
+> +			if (ret < 0)
+> +				return ret;
+> +
+> +		} else
+> +			len--;
+> +
+> +		buf[len] =3D '/';
+> +		memcpy(buf + len + 1, rel_path, rel_path_len);
+> +		buf[len + 1 + rel_path_len] =3D '\0';
+> +	}
+> +
+> +	return 0;
+> +}
 
-DT Ack please.
+So, as noted in the other thread, even by the standards of the slow
+functions in libfdt, fdt_get_path_len() is really slow as proposed.
+So the question is can we avoid using fdt_get_path() here.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+When the target is designated with target-path, then yes we can:
+rather than going via the actual target node, we can just take the
+path directly from the property.
+
+For targets designated by phandle it's.. fiddly.  AFAICT the path will
+already be found in the existing blobs: specifically it will be in the
+__symbols__ of the base tree for the label which the target is being
+applied to.  Getting there is kind of awkward though: we'd have to
+search __fixups__ in the overlay for the entry applying to the
+relevant target property, then follow that to find the right
+__symbols__ entry.
+
+I'm not sure at this point whether that's preferable to the slow
+fdt_get_path_len().
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--ALfTUftag+2gvp1h
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAllsmNMACgkQbDjKyiDZ
+s5LHeBAArKenuJbJ0j0PLVjOscmB4aKTSAAKQEcb93xN+VPOhcYYn8F6JYdRckwQ
+pkinOkcfTk+S7KkNZ8oOcZG8NEp2MKSMO8JzAe03v1RbcvzqrLiBlVE3oTBkNO7R
+pQp1My4YhNJIgXStAkVOgKxaIDZqAa8jpz38aZ+2kWgD/yyY8WmGmkghhRHRRFtm
+WCNg5pOtTUUgi1YjDObGhf6ufePV/GdVTHQBv9ZMcRiEh+SznN61vLeAo4yvDQ0i
+eBr2Dke8Nbvw2483lupJJVIanKZI1fTbPsMGzEcOxRfT7on94b9Nk59Wiju65cqW
+0t5GK7S1cexDKlf2hchL/iKGymKex2w2bCC9lC5C5BjPojKFYj8RZSExV8QAn1dL
+r/M07WhCHJE4Wx92U7ChAzuQeyreJZqmiZOfK63GjmZekN+2zEFV1G4T25AygnLf
+pCZ6e9FPtMLdJK1JuJCZruUNCE3FSwoBnVVlZllpWTJi6QgDg4508tFL3aQBskfX
+kx+/nYI66hmE16WwblCGUQXdS8fVh5rJMUgR5IlqqRdBd5SOs6ddC5EmPfmMKPPc
+iIAxf4E3yO54HXKxKrlOw1D9FrapVQrGnjaPVafpuRP+UFg2YtEc0s7f+eKqhQPB
+Q1QoWKQxuOVFGV9Jfj7u+gEmTyFn40MEzUnm21ad3WsZhpQFz4I=
+=YWwH
+-----END PGP SIGNATURE-----
+
+--ALfTUftag+2gvp1h--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
