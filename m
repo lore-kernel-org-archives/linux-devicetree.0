@@ -1,49 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 6/7] dt-bindings: pci: qcom: Add support for IPQ8074
-Date: Mon, 17 Jul 2017 15:17:31 -0500
-Message-ID: <20170717201731.fbltmwsxo5lqesnf@rob-hp-laptop>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-7-git-send-email-varada@codeaurora.org>
+Subject: Re: [PATCH] dt-bindings: regulator: pwm-regulator: fix example syntax
+Date: Mon, 17 Jul 2017 15:18:47 -0500
+Message-ID: <20170717201846.gzoeuxvlwjoroonh@rob-hp-laptop>
+References: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1500293043-1887-7-git-send-email-varada@codeaurora.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: bhelgaas@google.com, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 05:34:02PM +0530, Varadarajan Narayanan wrote:
-> Add support for the IPQ8074 PCIe controller.  IPQ8074 supports Gen 1/2, one
-> lane, two PCIe root complex with support for MSI and legacy interrupts, and
-> it conforms to PCI Express Base 2.1 specification.
+On Mon, Jul 17, 2017 at 03:18:23PM +0200, Martin Blumenstingl wrote:
+> The "Continuous Voltage" example specifies a pwm-dutycycle-range.
+> However, an equal sign is missing between the property name and value.
+> Fix this to allow copy and paste from the documentation when writing an
+> own .dts file with a pwm-regulator.
 > 
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.txt          | 67 ++++++++++++++++++++++
->  1 file changed, 67 insertions(+)
+>  Documentation/devicetree/bindings/regulator/pwm-regulator.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> index 9d418b7..643bcc2 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
-> @@ -9,6 +9,7 @@
->  			- "qcom,pcie-apq8084" for apq8084
->  			- "qcom,pcie-msm8996" for msm8996 or apq8096
->  			- "qcom,pcie-ipq4019" for ipq4019
-> +			- "qcom,pcie-ipq8074" for ipq8074
->  
->  - reg:
->  	Usage: required
-> @@ -261,3 +262,69 @@
->  		pinctrl-0 = <&pcie0_pins_default>;
->  		pinctrl-names = "default";
->  	};
-> +
-> +* Example for ipq8074
-> +	pcie0: pci@20000000 {
+> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> index bf85aa9ad6a7..3d78d507e29f 100644
+> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
+> @@ -71,7 +71,7 @@ Continuous Voltage With Enable GPIO Example:
+>  		 * Inverted PWM logic, and the duty cycle range is limited
+>  		 * to 30%-70%.
+>  		 */
+> -		pwm-dutycycle-range <700 300>; /* */
+> +		pwm-dutycycle-range = <700 300>; /* */
 
-Same here. Just a new compatible doesn't need an example.
+What's the point of "/* */" while you're here?
 
-Rob
+In any case,
+
+Acked-by: Rob Herring <robh@kernel.org>
