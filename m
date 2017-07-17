@@ -1,90 +1,57 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio-exar: Use correct property prefix and document
- bindings
-Date: Mon, 17 Jul 2017 12:48:25 -0500
-Message-ID: <20170717174825.p2oflpvbd5ns6xx3@rob-hp-laptop>
-References: <491bf615-f1d2-13ff-fa6e-fe5350a0b3b0@siemens.com>
+Subject: Re: [PATCH 2/3] dt-bindings: Document STM32 CRYP bindings
+Date: Mon, 17 Jul 2017 12:49:31 -0500
+Message-ID: <20170717174931.b6uvhwz5yn52qvyi@rob-hp-laptop>
+References: <1499939979-8623-1-git-send-email-fabien.dessenne@st.com>
+ <1499939979-8623-3-git-send-email-fabien.dessenne@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <491bf615-f1d2-13ff-fa6e-fe5350a0b3b0@siemens.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In-Reply-To: <1499939979-8623-3-git-send-email-fabien.dessenne@st.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Fabien Dessenne <fabien.dessenne@st.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Lionel Debieve <lionel.debieve@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 08:44:26AM +0200, Jan Kiszka wrote:
-> The device-specific property should be prefixed with the vendor name
-> Change this and document the bindings of this platform device.
-
-You are breaking backwards compatibility. You minimally need to state 
-that and why that is okay in this case.
-
+On Thu, Jul 13, 2017 at 11:59:38AM +0200, Fabien Dessenne wrote:
+> Document device tree bindings for the STM32 CRYP.
 > 
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-exar.txt | 5 +++++
->  drivers/gpio/gpio-exar.c                             | 2 +-
->  drivers/tty/serial/8250/8250_exar.c                  | 4 ++--
->  3 files changed, 8 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-exar.txt
+>  .../devicetree/bindings/crypto/st,stm32-cryp.txt     | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-exar.txt b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
+> diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
 > new file mode 100644
-> index 000000000000..452180229b36
+> index 0000000..f631c37
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-exar.txt
-> @@ -0,0 +1,5 @@
-> +Exportable MPIO interface of Exar UART chips
+> +++ b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
+> @@ -0,0 +1,20 @@
+> +* STMicroelectronics STM32 CRYP
 > +
-> +Required properties of platform device:
+> +Required properties:
+> +- compatible: Should be "st,stm32f756-cryp".
+> +- reg: The address and length of the peripheral registers space
+> +- clocks: The input clock of the CRYP instance
+> +- interrupts: The CRYP interrupts
 
-platform device is a Linuxism.
+More than 1? How many?
 
-> + - exar,first-pin: first exportable pins (0..15)
-> + - ngpios: number of exportable pins (1..16)
-
-Required, but you don't use it?
-
-> diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
-> index fb8d304cfa17..0ecd2369c2ca 100644
-> --- a/drivers/gpio/gpio-exar.c
-> +++ b/drivers/gpio/gpio-exar.c
-> @@ -132,7 +132,7 @@ static int gpio_exar_probe(struct platform_device *pdev)
->  	if (!p)
->  		return -ENOMEM;
->  
-> -	ret = device_property_read_u32(&pdev->dev, "linux,first-pin",
-> +	ret = device_property_read_u32(&pdev->dev, "exar,first-pin",
->  				       &first_pin);
->  	if (ret)
->  		return ret;
-> diff --git a/drivers/tty/serial/8250/8250_exar.c b/drivers/tty/serial/8250/8250_exar.c
-> index b5c98e5bf524..c6360fbdf808 100644
-> --- a/drivers/tty/serial/8250/8250_exar.c
-> +++ b/drivers/tty/serial/8250/8250_exar.c
-> @@ -261,7 +261,7 @@ __xr17v35x_register_gpio(struct pci_dev *pcidev,
->  }
->  
->  static const struct property_entry exar_gpio_properties[] = {
-> -	PROPERTY_ENTRY_U32("linux,first-pin", 0),
-> +	PROPERTY_ENTRY_U32("exar,first-pin", 0),
->  	PROPERTY_ENTRY_U32("ngpios", 16),
->  	{ }
->  };
-> @@ -326,7 +326,7 @@ static int iot2040_rs485_config(struct uart_port *port,
->  }
->  
->  static const struct property_entry iot2040_gpio_properties[] = {
-> -	PROPERTY_ENTRY_U32("linux,first-pin", 10),
-> +	PROPERTY_ENTRY_U32("exar,first-pin", 10),
->  	PROPERTY_ENTRY_U32("ngpios", 1),
->  	{ }
->  };
+> +
+> +Optional properties:
+> +- resets: The input reset of the CRYP instance
+> +
+> +Example:
+> +cryp1: cryp@50060000 {
+> +	compatible = "st,stm32f756-cryp";
+> +	reg = <0x50060000 0x400>;
+> +	interrupts = <79>;
+> +	clocks = <&rcc 0 STM32F7_AHB2_CLOCK(CRYP)>;
+> +	resets = <&rcc STM32F7_AHB2_RESET(CRYP)>;
+> +	status = "disabled";
+> +};
 > -- 
-> 2.12.3
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.7.4
+> 
