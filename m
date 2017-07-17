@@ -1,82 +1,51 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: mfd: axp20x: Introduce
- bindings for AXP813
-Date: Mon, 17 Jul 2017 11:43:58 +0100
-Message-ID: <20170717104358.ndplsnhzmcdx4sxo@dell>
-References: <20170622040833.15329-1-wens@csie.org>
- <20170622040833.15329-3-wens@csie.org>
-Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv4 1/4] mfd: da9052: fix manual ADC read after timed out
+ read
+Date: Mon, 17 Jul 2017 11:49:16 +0100
+Message-ID: <20170717104916.exhaspyska4okclc@dell>
+References: <20170630143506.10541-1-sebastian.reichel@collabora.co.uk>
+ <20170630143506.10541-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB4NJWLFQKGQELERLQ5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170622040833.15329-3-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170630143506.10541-2-sebastian.reichel@collabora.co.uk>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Jun 2017, Chen-Yu Tsai wrote:
+On Fri, 30 Jun 2017, Sebastian Reichel wrote:
 
-> The X-Powers AXP813 is a PMIC designed to be paired with Allwinner's
-> A83T SoC. There is also an AXP818, which is paired with the H8 SoC.
->=20
-> The two models seem to be identical, apart from the external markings.
->=20
-> This patch introduces the basic mfd and regulator bindings for the
-> AXP813.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> It is possible that under heavy system load, the counter in the completion
+> struct, used for waiting for end of AD conversion, gets incremented twice.
+> To make sure the driver recovers from this situation, the completion struct
+> should be reinitialized.
+> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 > ---
->  Documentation/devicetree/bindings/mfd/axp20x.txt | 49 ++++++++++++++++++=
-+++---
->  1 file changed, 44 insertions(+), 5 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documenta=
-tion/devicetree/bindings/mfd/axp20x.txt
-> index 211a100c6b20..1dff7e2ec375 100644
-> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-> @@ -9,6 +9,12 @@ axp223 (X-Powers)
->  axp803 (X-Powers)
->  axp806 (X-Powers)
->  axp809 (X-Powers)
-> +axp813 (X-Powers)
+>  drivers/mfd/da9052-core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+
+Applied, thanks.
+
+> diff --git a/drivers/mfd/da9052-core.c b/drivers/mfd/da9052-core.c
+> index a88c2065d8ab..977418ca9117 100644
+> --- a/drivers/mfd/da9052-core.c
+> +++ b/drivers/mfd/da9052-core.c
+> @@ -386,6 +386,8 @@ int da9052_adc_manual_read(struct da9052 *da9052, unsigned char channel)
+>  
+>  	mutex_lock(&da9052->auxadc_lock);
+>  
+> +	reinit_completion(&da9052->done);
 > +
-> +The AXP813 is 2 chips packaged into 1. The 2 chips do not share anything
-> +other than the packaging. Pins are routed separately. As such they shoul=
-d
-> +be treated as separate entities. The other half is an AC100 RTC/codec
-> +combo chip. Please see ac100.txt for its bindings.
+>  	/* Channel gets activated on enabling the Conversion bit */
+>  	mux_sel = chan_mux[channel] | DA9052_ADC_MAN_MAN_CONV;
+>  
 
-Please indicate where this lives using standard Linux syntax.
-
-./ac100.txt
-../<subsystem>/ac100.txt
-
-etc.
-
-Once that's been fixed, you may apply my:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
- =20
---=20
+-- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
+Linaro.org │ Open source software for ARM SoCs
 Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
