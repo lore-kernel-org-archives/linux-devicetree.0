@@ -1,42 +1,124 @@
-From: Zhi Mao <zhi.mao@mediatek.com>
-Subject: Re: [PATCH v3 0/6] mediatek: pwm driver add MT2712/MT7622 support
-Date: Mon, 17 Jul 2017 11:16:04 +0800
-Message-ID: <1500261364.22478.32.camel@mhfsdcap03>
-References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH 6/6] dt-bindings: PCI: rockchip: convert to use
+ per-lane PHY model
+Date: Mon, 17 Jul 2017 11:25:38 +0800
+Message-ID: <0a68e036-3f5b-3195-ffc3-4edf4466dfd7@rock-chips.com>
+References: <1500004101-240296-1-git-send-email-shawn.lin@rock-chips.com>
+ <1500004366-241633-1-git-send-email-shawn.lin@rock-chips.com>
+ <1500004366-241633-5-git-send-email-shawn.lin@rock-chips.com>
+ <20170714204711.GA13174@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "john@phrozen.org" <john@phrozen.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= <Yingjoe.Chen@mediatek.com>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, Sean Wang =?UTF-8?Q?=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?=
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170714204711.GA13174@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: shawn.lin@rock-chips.com, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Jeffy Chen <jeffy.chen@rock-chips.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-rockchip@lists.infradead.org, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi John, Matthais & PWM Maintainers
+Hi Brian,
 
-Just a Gentle ping on this issue :)
-Is there anything should be modified?
-
-Regards,
-Zhi
-
-
-On Fri, 2017-06-30 at 14:05 +0800, Zhi Mao wrote:
-> change in v3:
-> 1. add pwm clk disable in function:mtk_pwm_config()
->    for error parameter checking case
+On 2017/7/15 4:47, Brian Norris wrote:
+> Hi Shawn,
 > 
-> Zhi Mao (6):
->   pwm: kconfig: modify mediatek information
->   pwm: mediatek: fix pwm source clock selection
->   pwm: mediatek: fix clock control issue
->   pwm: bindings: add MT2712/MT7622 information
->   pwm: mediatek: add PWM_CLK_DIV_MAX
->   pwm: mediatek: add MT2712/MT7622 support
+> On Fri, Jul 14, 2017 at 11:52:46AM +0800, Shawn Lin wrote:
+>> Deprecate legacy PHY model and encourage to use per-lane PHY
+>> model.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> ---
+>>
+>>   .../devicetree/bindings/pci/rockchip-pcie.txt      | 25 ++++++++++++++++++++--
+>>   1 file changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> index 1453a73..78d4469 100644
+>> --- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+>> @@ -19,8 +19,6 @@ Required properties:
+>>   	- "pm"
+>>   - msi-map: Maps a Requester ID to an MSI controller and associated
+>>   	msi-specifier data. See ./pci-msi.txt
+>> -- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
+>> -- phy-names:  MUST be "pcie-phy".
+>>   - interrupts: Three interrupt entries must be specified.
+>>   - interrupt-names: Must include the following names
+>>   	- "sys"
+>> @@ -42,6 +40,18 @@ Required properties:
+>>   	interrupt source. The value must be 1.
+>>   - interrupt-map-mask and interrupt-map: standard PCI properties
+>>   
+>> +Required properties for legacy PHY model (deprecated):
+>> +- phys: From PHY bindings: Phandle for the Generic PHY for PCIe.
+>> +- phy-names:  MUST be "pcie-phy".
+>> +
+>> +Required properties for per-lane PHY model:
+>> +- phys: Must contain an phandle to a PHY for each entry in phy-names.
+>> +- phy-names: Must include an entry for each active lane. Note that the number
+>> +  of entries does not have to (though usually will) be equal to the specified
+>> +  number of lanes in the num-lanes property. Entries are of the form
+>> +  "pcie-phy-N": where N ranges from 0 to the value specified of (num-lanes - 1).
+>> +  (see example below)
 > 
->  .../devicetree/bindings/pwm/pwm-mediatek.txt       |    6 +-
->  drivers/pwm/Kconfig                                |    2 +-
->  drivers/pwm/pwm-mediatek.c                         |  133 ++++++++++++++------
->  3 files changed, 104 insertions(+), 37 deletions(-)
+> So (for the non-legacy case) are you requiring listing all 4 PHY lanes,
+> or not? 
+
+I intended to do that however that makes the code more complex and I
+didn't see any gains here. So I would say "list 4 of them here is
+mandatory".
+
+Will update this Doc to reflect the fact.
+
+Thanks.
+
+If you aren't, then you need to make the PHY driver handle the
+> case were lanes {X..3} were never "powered on", but we want them idled.
+> IIUC, your current (broken) implementation is trying (incorrectly) to
+> only idle a lane once it has been powered on and then back off. But that
+> won't ever happen if we only request (for example) PHY lane 0.
+> 
+> It's also misleading that it's possible to specify only some subset of
+> the PHY lanes, but the driver might still try to use them al
+> 
+> Brian
+> 
+>> +
+>>   Optional Property:
+>>   - aspm-no-l0s: RC won't support ASPM L0s. This property is needed if
+>>   	using 24MHz OSC for RC's PHY.
+>> @@ -95,6 +105,7 @@ pcie0: pcie@f8000000 {
+>>   		 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
+>>   	reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
+>>   		      "pm", "pclk", "aclk";
+>> +	/* deprecated legacy PHY model */
+>>   	phys = <&pcie_phy>;
+>>   	phy-names = "pcie-phy";
+>>   	pinctrl-names = "default";
+>> @@ -111,3 +122,13 @@ pcie0: pcie@f8000000 {
+>>   		#interrupt-cells = <1>;
+>>   	};
+>>   };
+>> +
+>> +pcie0: pcie@f8000000 {
+>> +	...
+>> +
+>> +	/* preferred per-lane PHY model */
+>> +	phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
+>> +	phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
+>> +
+>> +	...
+>> +};
+>> -- 
+>> 1.9.1
+>>
+>>
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
 > 
