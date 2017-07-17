@@ -1,208 +1,52 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] fdt: Allow stacked overlays phandle references
-Date: Mon, 17 Jul 2017 21:00:37 +1000
-Message-ID: <20170717110037.GC4535@umbus>
-References: <1499894659-25775-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1499894659-25775-2-git-send-email-pantelis.antoniou@konsulko.com>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [RFC PATCH] ARM: dts: stm32: change pinctrl bindings definition
+Date: Mon, 17 Jul 2017 13:00:57 +0200
+Message-ID: <1500289258-3700-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ALfTUftag+2gvp1h"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1499894659-25775-2-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Initially each pin was declared in "include/dt-bindings/stm32f429-pinfunc.h"
+and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
+Since this approach was approved, the number of supported MCU has
+increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
+file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
+a new approach which consist to use a macro to define pin muxing in device
+tree. All STM32 DT will use the common macro to define pinmux. Furthermore, it
+will make easy maintenance and integration of new SOC.
 
---ALfTUftag+2gvp1h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To check that patch generate same dtb than befrore I used dtc binary to (re)generate dts files
+(before and after apply the series).
+Example on stm32f469-disco:
 
-On Thu, Jul 13, 2017 at 12:24:18AM +0300, Pantelis Antoniou wrote:
-> This patch enables an overlay to refer to a previous overlay's
-> labels by performing a merge of symbol information at application
-> time.
->=20
-> In a nutshell it allows an overlay to refer to a symbol that a previous
-> overlay has defined. It requires both the base and all the overlays
-> to be compiled with the -@ command line switch so that symbol
-> information is included.
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-after.dts
+stm32f469-disco-after.dtb
 
-[snip]
-> +/**
-> + * overlay_symbol_update - Update the symbols of base tree after a merge
-> + * @fdt: Base Device Tree blob
-> + * @fdto: Device tree overlay blob
-> + *
-> + * overlay_symbol_update() updates the symbols of the base tree with the
-> + * symbols of the applied overlay
-> + *
-> + * This is the last step in the device tree overlay application
-> + * process, allowing the reference of overlay symbols by subsequent
-> + * overlay operations.
-> + *
-> + * returns:
-> + *      0 on success
-> + *      Negative error code on failure
-> + */
-> +static int overlay_symbol_update(void *fdt, void *fdto)
-> +{
-> +	int root_sym, ov_sym, prop, path_len, fragment, target;
-> +	int len, frag_name_len, ret, rel_path_len;
-> +	const char *s;
-> +	const char *path;
-> +	const char *name;
-> +	const char *frag_name;
-> +	const char *rel_path;
-> +	char *buf;
-> +	void *p;
-> +
-> +	root_sym =3D fdt_subnode_offset(fdt, 0, "__symbols__");
-> +	ov_sym =3D fdt_subnode_offset(fdto, 0, "__symbols__");
-> +
-> +	/* if neither exist we can't update symbols, but that's OK */
-> +	if (root_sym < 0 || ov_sym < 0)
-> +		return 0;
-> +
-> +
-> +	/* iterate over each overlay symbol */
-> +	fdt_for_each_property_offset(prop, fdto, ov_sym) {
-> +
-> +		path =3D fdt_getprop_by_offset(fdto, prop, &name, &path_len);
-> +		if (!path)
-> +			return path_len;
-> +
-> +		/* skip autogenerated properties */
-> +		if (!strcmp(name, "name"))
-> +			continue;
-> +
-> +		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
-> +
-> +		if (*path !=3D '/')
-> +			return -FDT_ERR_BADVALUE;
-> +
-> +		/* get fragment name first */
-> +		s =3D strchr(path + 1, '/');
-> +		if (!s)
-> +			return -FDT_ERR_BADVALUE;
-> +
-> +		frag_name =3D path + 1;
-> +		frag_name_len =3D s - path - 1;
-> +
-> +		/* verify format */
-> +		len =3D strlen("/__overlay__/");
-> +		if (strncmp(s, "/__overlay__/", len))
-> +			return -FDT_ERR_NOTFOUND;
-> +
-> +		rel_path =3D s + len;
-> +		rel_path_len =3D strlen(rel_path);
-> +
-> +		/* find the fragment index in which the symbol lies */
-> +		fdt_for_each_subnode(fragment, fdto, 0) {
-> +
-> +			s =3D fdt_get_name(fdto, fragment, &len);
-> +			if (!s)
-> +				continue;
-> +
-> +			/* name must match */
-> +			if (len =3D=3D frag_name_len && !memcmp(s, frag_name, len))
-> +				break;
-> +		}
-> +
-> +		/* not found? */
-> +		if (fragment < 0)
-> +			return -FDT_ERR_NOTFOUND;
-> +
-> +		/* an __overlay__ subnode must exist */
-> +		ret =3D fdt_subnode_offset(fdto, fragment, "__overlay__");
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* get the target of the fragment */
-> +		ret =3D overlay_get_target(fdt, fdto, fragment);
-> +		if (ret < 0)
-> +			return ret;
-> +		target =3D ret;
-> +
-> +		len =3D fdt_get_path_len(fdt, target);
-> +
-> +		ret =3D fdt_setprop_alloc(fdt, root_sym, name,
-> +				len + (len > 1) + rel_path_len + 1, &p);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/* again in case setprop_alloc changed it */
-> +		ret =3D overlay_get_target(fdt, fdto, fragment);
-> +		if (ret < 0)
-> +			return ret;
-> +		target =3D ret;
-> +
-> +		buf =3D p;
-> +		if (len > 1) { /* target is not root */
-> +			ret =3D fdt_get_path(fdt, target, buf, len + 1);
-> +			if (ret < 0)
-> +				return ret;
-> +
-> +		} else
-> +			len--;
-> +
-> +		buf[len] =3D '/';
-> +		memcpy(buf + len + 1, rel_path, rel_path_len);
-> +		buf[len + 1 + rel_path_len] =3D '\0';
-> +	}
-> +
-> +	return 0;
-> +}
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-before.dts
+stm32f469-disco-before.dtb
 
-So, as noted in the other thread, even by the standards of the slow
-functions in libfdt, fdt_get_path_len() is really slow as proposed.
-So the question is can we avoid using fdt_get_path() here.
+Then diff -u stm32f469-disco-before.dts stm32f469-disco-after.dts
 
-When the target is designated with target-path, then yes we can:
-rather than going via the actual target node, we can just take the
-path directly from the property.
+Regards
+Alex
 
-For targets designated by phandle it's.. fiddly.  AFAICT the path will
-already be found in the existing blobs: specifically it will be in the
-__symbols__ of the base tree for the label which the target is being
-applied to.  Getting there is kind of awkward though: we'd have to
-search __fixups__ in the overlay for the entry applying to the
-relevant target property, then follow that to find the right
-__symbols__ entry.
+Alexandre TORGUE (1):
+  ARM: dts: stm32: change pinctrl bindings definition
 
-I'm not sure at this point whether that's preferable to the slow
-fdt_get_path_len().
+ arch/arm/boot/dts/stm32f429.dtsi                |  176 ++--
+ include/dt-bindings/pinctrl/stm32-pinfunc.h     |   61 ++
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1239 -----------------------
+ 3 files changed, 149 insertions(+), 1327 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/stm32-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+-- 
+1.9.1
 
---ALfTUftag+2gvp1h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAllsmNMACgkQbDjKyiDZ
-s5LHeBAArKenuJbJ0j0PLVjOscmB4aKTSAAKQEcb93xN+VPOhcYYn8F6JYdRckwQ
-pkinOkcfTk+S7KkNZ8oOcZG8NEp2MKSMO8JzAe03v1RbcvzqrLiBlVE3oTBkNO7R
-pQp1My4YhNJIgXStAkVOgKxaIDZqAa8jpz38aZ+2kWgD/yyY8WmGmkghhRHRRFtm
-WCNg5pOtTUUgi1YjDObGhf6ufePV/GdVTHQBv9ZMcRiEh+SznN61vLeAo4yvDQ0i
-eBr2Dke8Nbvw2483lupJJVIanKZI1fTbPsMGzEcOxRfT7on94b9Nk59Wiju65cqW
-0t5GK7S1cexDKlf2hchL/iKGymKex2w2bCC9lC5C5BjPojKFYj8RZSExV8QAn1dL
-r/M07WhCHJE4Wx92U7ChAzuQeyreJZqmiZOfK63GjmZekN+2zEFV1G4T25AygnLf
-pCZ6e9FPtMLdJK1JuJCZruUNCE3FSwoBnVVlZllpWTJi6QgDg4508tFL3aQBskfX
-kx+/nYI66hmE16WwblCGUQXdS8fVh5rJMUgR5IlqqRdBd5SOs6ddC5EmPfmMKPPc
-iIAxf4E3yO54HXKxKrlOw1D9FrapVQrGnjaPVafpuRP+UFg2YtEc0s7f+eKqhQPB
-Q1QoWKQxuOVFGV9Jfj7u+gEmTyFn40MEzUnm21ad3WsZhpQFz4I=
-=YWwH
------END PGP SIGNATURE-----
-
---ALfTUftag+2gvp1h--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
