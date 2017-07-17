@@ -1,142 +1,63 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/2] clk: meson: meson8b: register the built-in reset controller
-Date: Tue, 18 Jul 2017 00:22:57 +0200
-Message-ID: <CAFBinCC5+5wwOckWsrTdNeio+t31TrfRAsaMbrOEP-qZgtEOmg@mail.gmail.com>
-References: <20170711224939.26267-1-martin.blumenstingl@googlemail.com>
- <20170711224939.26267-2-martin.blumenstingl@googlemail.com> <20170717171329.nddlcslge6u33noc@rob-hp-laptop>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] phy: qcom-qmp: Fix phy pipe clock name
+Date: Mon, 17 Jul 2017 15:30:47 -0700
+Message-ID: <20170717223047.GA20973@minitux>
+References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+ <1500293043-1887-4-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170717171329.nddlcslge6u33noc@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, arnd@arndb.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1500293043-1887-4-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon 17 Jul 05:03 PDT 2017, Varadarajan Narayanan wrote:
 
-On Mon, Jul 17, 2017 at 7:13 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jul 12, 2017 at 12:49:38AM +0200, Martin Blumenstingl wrote:
->> The clock controller has a reset controller embedded. A large part of
->> the HHI_SYS_CPU_CLK_CNTL0 register contains reset bits. However, most of
->> them are only used by u-boot (as these are probably dangerous to use
->> when Linux is running).
->
-> u-boot reads DT's. The DT should be defined for the h/w, not what you
-> want for Linux today.
-OK, that matches with your comment regarding splitting the patch below
+> Presently, the phy pipe clock's name is assumed to be either
+> usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
+> phy lane's number). However, this will not work if an SoC has
+> more than one instance of the phy. Hence, instead of assuming
+> the name of the clock, fetch it from the DT.
+> 
 
->> Bits 27:24 are interesting though: these are the CPUx core soft reset
->> bits (bit 24 = CPU0 soft reset, bit 25 = CPU1 ...).
->>
->> This patch implements a reset controller for these bits. The reset
->> controller itself is registered early (through CLK_OF_DECLARE_DRIVER)
->> because it is neede very early in the boot process (to start the
->> secondary CPU cores).
->>
->> Other reset bits in the HHI_SYS_CPU_CLK_CNTL0 register, which are not
->> implemented by this patch (as these may never be used from within the
->> Linux kernel - and I don't want to add dead code):
->> - bit 30: L2 cache soft reset
->> - bit 29: AXI64to128 bridge (A5-to-MMC) soft reset (A5 interface)
->> - bit 28: SCU soft reset
->> - bit 18: A5 Global Reset
->> - bit 17: A5 AXI Soft Reset
->> - bit 16: A5 APB Soft Reset
->> - bit 15: GEN_DIV_SOFT_RESET
->> - bit 14: SOFT_RESET
->>
->> All information was taken from the public S805 Datasheet and Amlogic's
->> vendor GPL kernel sources. This patch is based on an earlier version
->> submitted by Carlo Caione.
->>
->> Suggested-by: Carlo Caione <carlo@endlessm.com>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->>  .../bindings/clock/amlogic,meson8b-clkc.txt        |   7 +-
->
-> It's preferred to split bindings to a separate patch. Given all the
-> commentary about Linux, I'd suggest you do that here (so the Linux
-> details are gone from the binding patch).
-you are right - I'll split this into a dt-bindings and a clk driver
-patch and keep the commit messages appropriate for each patch
+Adding the support to fetch this from DT looks reasonable, but you
+should make sure to fall back to the old logic in case you don't find a
+"clock-output-names" property.
 
->>  drivers/clk/meson/Kconfig                          |   1 +
->>  drivers/clk/meson/meson8b.c                        | 109 ++++++++++++++++++---
->>  drivers/clk/meson/meson8b.h                        |   1 +
->>  4 files changed, 105 insertions(+), 13 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
->> index 606da38c0959..6f444e3867a0 100644
->> --- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
->> +++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
->> @@ -16,18 +16,23 @@ Required Properties:
->>          mapped region.
->>
->>  - #clock-cells: should be 1.
->> +- #reset-cells: should be 1.
->>
->>  Each clock is assigned an identifier and client nodes can use this identifier
->>  to specify the clock which they consume. All available clocks are defined as
->>  preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
->>  used in device tree sources.
->>
->> +The clock controller provides a (soft) reset line for each CPU core. Valid
->> +reset lines are 0, 1, 2 and 3 (one for each CPU core).
->
-> I suspect you would have different numbering if you enumerate all the
-> possible resets. Is it just this one register that has reset bits? If
-> so, I'd suggest using the bit position as the cell values. If not, well,
-> just enumerate them all.
-there are more resets in this register area:
-- "AXI64to128 bridge (A5-to-MMC) soft reset (MMC interface)": bit 30
-in HHI_SYS_CPU_CLK_CNTL1
-- SOFT_RESET: bit 15 in HHI_VID_CLK_CNTL
-- some more bits with "reset" in their name (CLK_DIV_RESET = bit 17 in
-HHI_VID_CLK_DIV, and four more in HHI_VID_DIVIDER_CNTL:
-SOFT_RESET_POST, SOFT_RESET_PRE, RESET_N_POST, RESET_N_PRE)
+[..]
+> @@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>  
+>  	id = 0;
+>  	for_each_available_child_of_node(dev->of_node, child) {
+> +		const char *clk_name;
+> +
+>  		/* Create per-lane phy */
+>  		ret = qcom_qmp_phy_create(dev, child, id);
+>  		if (ret) {
+> @@ -1118,11 +1113,20 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>  			return ret;
+>  		}
+>  
+> +		ret = of_property_read_string(child, "clock-output-names",
+> +							&clk_name);
+> +		if (ret) {
 
-Carlo's original patch added #defines (RST_CORE0...RST_CORE3) for each
-CPU reset bit.
-Arnd (I CC'ed him in this mail) suggested to skip the defines, see [0]
-- which is what I did with this patch.
+This would be the case for any existing dts files, so you're not allowed
+to treat this as an error.
 
-by looking at Amlogic's u-boot sources I can see that the following
-reset bits are used:
-- bits 30:28 and 18:16 from HHI_SYS_CPU_CLK_CNTL0 and bit 30 from
-HHI_SYS_CPU_CLK_CNTL1 are used during Meson8b system suspend/wakeup
-from suspend
-- the four resets from HHI_VID_DIVIDER_CNTL are used to setup the "vid PLL div"
-
-that leaves the following reset bits unused (hidden somewhere deep in the code):
-- HHI_VID_CLK_CNTL bit 15 is used in Meson6's u-boot code - but only
-in some #if 0'ed blocks
-- SOFT_RESET: bit 15 in HHI_VID_CLK_CNTL
-- bit 15:14 in HHI_SYS_CPU_CLK_CNTL0
-
-so if you want I can add more reset bits I found to the driver and
-introduce a #define for each reset.
-I guess this would be find for Arnd as well (please speak up if it isn't).
-however, I would only do this for the reset bits for which I could
-find a consumer in Amlogic's vendor GPL kernel/u-boot code (as there's
-not a lot documentation available, and I don't like guessing register
-bit purposes based on a 12-character description from a stripped down
-version of the SoC datasheet).
-
->> +
->>  Example: Clock controller node:
->>
->>       clkc: clock-controller@c1104000 {
->> -             #clock-cells = <1>;
->>               compatible = "amlogic,meson8b-clkc";
->>               reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
->> +             #clock-cells = <1>;
->> +             #reset-cells = <1>;
->>       };
->>
->>
+> +			dev_err(dev,
+> +				"failed to get clock-output-names for lane%d phy, %d\n",
+> +				id, ret);
+> +			return ret;
+> +		}
+> +
 
 Regards,
-Martin
-
-[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390397.html
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
