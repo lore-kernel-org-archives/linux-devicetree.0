@@ -1,38 +1,32 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 09/10] dt-bindings: iio: humidity: hts221: support open drain mode
-Date: Mon, 17 Jul 2017 19:39:04 +0200
-Message-ID: <20170717173905.8209-10-lorenzo.bianconi@st.com>
-References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173905.8209-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: input: ti,drv260x: fix typo in property name
+Date: Mon, 17 Jul 2017 12:41:35 -0500
+Message-ID: <20170717174135.bj5o4t2vwwsjy47e@rob-hp-laptop>
+References: <1499865202-19337-1-git-send-email-andrea.merello@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1499865202-19337-1-git-send-email-andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Francesco Diotalevi <francesco.diotalevi-3ZtyIFJ0STI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On Wed, Jul 12, 2017 at 03:13:22PM +0200, Andrea Merello wrote:
+> The driver looks for "vib-overdrive-mv" property, while in
+> documentation we have "vib-overdriver-mv". Fix the doc.
+> 
+> Cc: Francesco Diotalevi <francesco.diotalevi-3ZtyIFJ0STI@public.gmane.org>
+> Signed-off-by: Andrea Merello <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/input/ti,drv260x.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-index fca263e13400..10adeb0d703d 100644
---- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-+++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-@@ -5,6 +5,14 @@ Required properties:
- - reg: i2c address of the sensor / spi cs line
- 
- Optional properties:
-+- drive-open-drain: the interrupt/data ready line will be configured
-+  as open drain, which is useful if several sensors share the same
-+  interrupt line. This is a boolean property.
-+  If the requested interrupt is configured as IRQ_TYPE_LEVEL_HIGH or
-+  IRQ_TYPE_EDGE_RISING a pull-down resistor is needed to drive the line
-+  when it is not active, whereas a pull-up one is needed when interrupt
-+  line is configured as IRQ_TYPE_LEVEL_LOW or IRQ_TYPE_EDGE_FALLING.
-+  Refer to pinctrl/pinctrl-bindings.txt for the property description.
- - interrupt-parent: should be the phandle for the interrupt controller
- - interrupts: interrupt mapping for IRQ. It should be configured with
-   flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
--- 
-2.13.2
+Applied, thanks.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
