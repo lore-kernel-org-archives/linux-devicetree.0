@@ -1,602 +1,250 @@
-From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v3 1/2] extcon: cros-ec: Add extcon-cros-ec driver to support display out.
-Date: Mon, 17 Jul 2017 09:37:19 +0200
-Message-ID: <20170717073720.788-1-enric.balletbo@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, groeck-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 3/7] phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
+Date: Mon, 17 Jul 2017 15:36:18 +0800
+Message-ID: <1500276982-208439-4-git-send-email-shawn.lin@rock-chips.com>
+References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+This patch reconstructs the whole driver to support per-lane
+PHYs. Note that we could also support the legacy PHY if you
+don't provide argument to our of_xlate.
 
-This is the driver for the USB Type C cable detection mechanism
-built into the ChromeOS Embedded Controller on systems that
-have USB Type-C ports.
-
-At present, this allows for the presence of display out, but in
-future, it may also be used to notify host and device type cables
-and the presence of power.
-
-Signed-off-by: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Acked-by: Chanwoo Choi <cw00.chio-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
-Changes since v2:
- - Rebase on top of v4.13-rc1
-Changes since v1:
- Requested by Chanwoo Choi
- - Rename files changing _ for -
- - Remove the unneeded blank line on bottom of header.
- - Remove kobject.h and cros_ec_commands.h includes.
- - Remove the debug message as is not necessary.
- - Use the tab for indentation instead of space for if sentence.
- - Define each variable on different lines when the variables should be
-   initialized.
- - Remove EXTCON_USB and EXTCON_USB_HOST as are not really used for now.
- - Add one blank line to split out between state and property setting.
- - Add the author information (header and module)
 
- Enric Balletbo
- - As Rob suggested to rename the compatible name to something indicating that
-   is USB Type C related I also renamed the file names, extcon-cros-ec ->
-   extcon-usbc-cros-ec, I think it's more clear.
+ drivers/phy/rockchip/phy-rockchip-pcie.c | 126 +++++++++++++++++++++++++++----
+ 1 file changed, 112 insertions(+), 14 deletions(-)
 
- drivers/extcon/Kconfig               |   7 +
- drivers/extcon/Makefile              |   1 +
- drivers/extcon/extcon-usbc-cros-ec.c | 415 +++++++++++++++++++++++++++++++++++
- include/linux/mfd/cros_ec_commands.h |  75 +++++++
- 4 files changed, 498 insertions(+)
- create mode 100644 drivers/extcon/extcon-usbc-cros-ec.c
-
-diff --git a/drivers/extcon/Kconfig b/drivers/extcon/Kconfig
-index 6d50071..a7bca42 100644
---- a/drivers/extcon/Kconfig
-+++ b/drivers/extcon/Kconfig
-@@ -150,4 +150,11 @@ config EXTCON_USB_GPIO
- 	  Say Y here to enable GPIO based USB cable detection extcon support.
- 	  Used typically if GPIO is used for USB ID pin detection.
+diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+index 6904633..f48b188 100644
+--- a/drivers/phy/rockchip/phy-rockchip-pcie.c
++++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+@@ -70,13 +70,46 @@ struct rockchip_pcie_data {
+ 	unsigned int pcie_laneoff;
+ };
  
-+config EXTCON_USBC_CROS_EC
-+	tristate "ChromeOS Embedded Controller EXTCON support"
-+	depends on MFD_CROS_EC
-+	help
-+	  Say Y here to enable USB Type C cable detection extcon support when
-+	  using Chrome OS EC based USB Type-C ports.
++struct phy_pcie_instance;
 +
- endif
-diff --git a/drivers/extcon/Makefile b/drivers/extcon/Makefile
-index ecfa958..a73624e 100644
---- a/drivers/extcon/Makefile
-+++ b/drivers/extcon/Makefile
-@@ -20,3 +20,4 @@ obj-$(CONFIG_EXTCON_QCOM_SPMI_MISC) += extcon-qcom-spmi-misc.o
- obj-$(CONFIG_EXTCON_RT8973A)	+= extcon-rt8973a.o
- obj-$(CONFIG_EXTCON_SM5502)	+= extcon-sm5502.o
- obj-$(CONFIG_EXTCON_USB_GPIO)	+= extcon-usb-gpio.o
-+obj-$(CONFIG_EXTCON_USBC_CROS_EC) += extcon-usbc-cros-ec.o
-diff --git a/drivers/extcon/extcon-usbc-cros-ec.c b/drivers/extcon/extcon-usbc-cros-ec.c
-new file mode 100644
-index 0000000..e759ed4
---- /dev/null
-+++ b/drivers/extcon/extcon-usbc-cros-ec.c
-@@ -0,0 +1,415 @@
-+/**
-+ * drivers/extcon/extcon-usbc-cros-ec - ChromeOS Embedded Controller extcon
-+ *
-+ * Copyright (C) 2017 Google, Inc
-+ * Author: Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++/* internal lock for multiple phys */
++DEFINE_MUTEX(pcie_mutex);
 +
-+#include <linux/extcon.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/module.h>
-+#include <linux/notifier.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+
-+struct cros_ec_extcon_info {
-+	struct device *dev;
-+	struct extcon_dev *edev;
-+
-+	int port_id;
-+
-+	struct cros_ec_device *ec;
-+
-+	struct notifier_block notifier;
-+
-+	bool dp; /* DisplayPort enabled */
-+	bool mux; /* SuperSpeed (usb3) enabled */
-+	unsigned int power_type;
-+};
-+
-+static const unsigned int usb_type_c_cable[] = {
-+	EXTCON_DISP_DP,
-+	EXTCON_NONE,
-+};
-+
-+/**
-+ * cros_ec_pd_command() - Send a command to the EC.
-+ * @info: pointer to struct cros_ec_extcon_info
-+ * @command: EC command
-+ * @version: EC command version
-+ * @outdata: EC command output data
-+ * @outsize: Size of outdata
-+ * @indata: EC command input data
-+ * @insize: Size of indata
-+ *
-+ * Return: 0 on success, <0 on failure.
-+ */
-+static int cros_ec_pd_command(struct cros_ec_extcon_info *info,
-+			      unsigned int command,
-+			      unsigned int version,
-+			      void *outdata,
-+			      unsigned int outsize,
-+			      void *indata,
-+			      unsigned int insize)
+ struct rockchip_pcie_phy {
+ 	struct rockchip_pcie_data *phy_data;
+ 	struct regmap *reg_base;
++	struct phy_pcie_instance {
++		struct phy *phy;
++		u32 index;
++	} phys[PHY_MAX_LANE_NUM];
+ 	struct reset_control *phy_rst;
+ 	struct clk *clk_pciephy_ref;
++	int pwr_cnt;
++	int init_cnt;
+ };
+ 
++static inline
++struct rockchip_pcie_phy *to_pcie_phy(struct phy_pcie_instance *inst)
 +{
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
-+
-+	msg->version = version;
-+	msg->command = command;
-+	msg->outsize = outsize;
-+	msg->insize = insize;
-+
-+	if (outsize)
-+		memcpy(msg->data, outdata, outsize);
-+
-+	ret = cros_ec_cmd_xfer_status(info->ec, msg);
-+	if (ret >= 0 && insize)
-+		memcpy(indata, msg->data, insize);
-+
-+	kfree(msg);
-+	return ret;
++	return container_of(inst, struct rockchip_pcie_phy,
++					phys[inst->index]);
 +}
 +
-+/**
-+ * cros_ec_usb_get_power_type() - Get power type info about PD device attached
-+ * to given port.
-+ * @info: pointer to struct cros_ec_extcon_info
-+ *
-+ * Return: power type on success, <0 on failure.
-+ */
-+static int cros_ec_usb_get_power_type(struct cros_ec_extcon_info *info)
++static struct phy *rockchip_pcie_phy_of_xlate(struct device *dev,
++					      struct of_phandle_args *args)
 +{
-+	struct ec_params_usb_pd_power_info req;
-+	struct ec_response_usb_pd_power_info resp;
-+	int ret;
++	struct rockchip_pcie_phy *rk_phy = dev_get_drvdata(dev);
 +
-+	req.port = info->port_id;
-+	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_POWER_INFO, 0,
-+				 &req, sizeof(req), &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
++	if (args->args_count == 0)
++		return rk_phy->phys[0].phy;
 +
-+	return resp.type;
++	if (WARN_ON(args->args[0] > PHY_MAX_LANE_NUM))
++		return ERR_PTR(-ENODEV);
++
++	return rk_phy->phys[args->args[0]].phy;
 +}
 +
-+/**
-+ * cros_ec_usb_get_pd_mux_state() - Get PD mux state for given port.
-+ * @info: pointer to struct cros_ec_extcon_info
-+ *
-+ * Return: PD mux state on success, <0 on failure.
-+ */
-+static int cros_ec_usb_get_pd_mux_state(struct cros_ec_extcon_info *info)
-+{
-+	struct ec_params_usb_pd_mux_info req;
-+	struct ec_response_usb_pd_mux_info resp;
-+	int ret;
 +
-+	req.port = info->port_id;
-+	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_MUX_INFO, 0,
-+				 &req, sizeof(req),
-+				 &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
+ static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
+ 			      u32 addr, u32 data)
+ {
+@@ -116,29 +149,65 @@ static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
+ 
+ static int rockchip_pcie_phy_power_off(struct phy *phy)
+ {
+-	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
++	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
++	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
+ 	int err = 0;
+ 
++	mutex_lock(&pcie_mutex);
 +
-+	return resp.flags;
-+}
++	regmap_write(rk_phy->reg_base,
++		     rk_phy->phy_data->pcie_laneoff,
++		     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
++				   PHY_LANE_IDLE_MASK,
++				   PHY_LANE_IDLE_A_SHIFT + inst->index));
 +
-+/**
-+ * cros_ec_usb_get_role() - Get role info about possible PD device attached to a
-+ * given port.
-+ * @info: pointer to struct cros_ec_extcon_info
-+ * @polarity: pointer to cable polarity (return value)
-+ *
-+ * Return: role info on success, -ENOTCONN if no cable is connected, <0 on
-+ * failure.
-+ */
-+static int cros_ec_usb_get_role(struct cros_ec_extcon_info *info,
-+				bool *polarity)
-+{
-+	struct ec_params_usb_pd_control pd_control;
-+	struct ec_response_usb_pd_control_v1 resp;
-+	int ret;
++	if (--rk_phy->pwr_cnt)
++		goto err_out;
 +
-+	pd_control.port = info->port_id;
-+	pd_control.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-+	pd_control.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-+	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_CONTROL, 1,
-+				 &pd_control, sizeof(pd_control),
-+				 &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
+ 	err = reset_control_assert(rk_phy->phy_rst);
+ 	if (err) {
+ 		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
+-		return err;
++		goto err_restore;
+ 	}
+ 
++err_out:
++	mutex_unlock(&pcie_mutex);
+ 	return 0;
 +
-+	if (!(resp.enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-+		return -ENOTCONN;
++err_restore:
++	++rk_phy->pwr_cnt;
++	regmap_write(rk_phy->reg_base,
++		     rk_phy->phy_data->pcie_laneoff,
++		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
++				   PHY_LANE_IDLE_MASK,
++				   PHY_LANE_IDLE_A_SHIFT + inst->index));
++	mutex_unlock(&pcie_mutex);
++	return err;
+ }
+ 
+ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ {
+-	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
++	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
++	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
+ 	int err = 0;
+ 	u32 status;
+ 	unsigned long timeout;
+ 
++	mutex_lock(&pcie_mutex);
 +
-+	*polarity = resp.polarity;
++	regmap_write(rk_phy->reg_base,
++		     rk_phy->phy_data->pcie_laneoff,
++		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
++				   PHY_LANE_IDLE_MASK,
++				   PHY_LANE_IDLE_A_SHIFT + inst->index));
 +
-+	return resp.role;
-+}
++	if (rk_phy->pwr_cnt++)
++		goto err_out;
 +
-+/**
-+ * cros_ec_pd_get_num_ports() - Get number of EC charge ports.
-+ * @info: pointer to struct cros_ec_extcon_info
-+ *
-+ * Return: number of ports on success, <0 on failure.
-+ */
-+static int cros_ec_pd_get_num_ports(struct cros_ec_extcon_info *info)
-+{
-+	struct ec_response_usb_pd_ports resp;
-+	int ret;
+ 	err = reset_control_deassert(rk_phy->phy_rst);
+ 	if (err) {
+ 		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
+-		return err;
++		goto err_pwr_cnt;
+ 	}
+ 
+ 	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
+@@ -214,18 +283,29 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
+ 		goto err_pll_lock;
+ 	}
+ 
++err_out:
++	mutex_unlock(&pcie_mutex);
+ 	return 0;
+ 
+ err_pll_lock:
+ 	reset_control_assert(rk_phy->phy_rst);
++err_pwr_cnt:
++	--rk_phy->pwr_cnt;
++	mutex_unlock(&pcie_mutex);
+ 	return err;
+ }
+ 
+ static int rockchip_pcie_phy_init(struct phy *phy)
+ {
+-	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
++	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
++	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
+ 	int err = 0;
+ 
++	mutex_lock(&pcie_mutex);
 +
-+	ret = cros_ec_pd_command(info, EC_CMD_USB_PD_PORTS,
-+				 0, NULL, 0, &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
++	if (rk_phy->init_cnt++)
++		goto err_out;
 +
-+	return resp.num_ports;
-+}
+ 	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
+ 	if (err) {
+ 		dev_err(&phy->dev, "Fail to enable pcie ref clock.\n");
+@@ -238,20 +318,33 @@ static int rockchip_pcie_phy_init(struct phy *phy)
+ 		goto err_reset;
+ 	}
+ 
+-	return err;
++err_out:
++	mutex_unlock(&pcie_mutex);
++	return 0;
+ 
+ err_reset:
 +
-+static int extcon_cros_ec_detect_cable(struct cros_ec_extcon_info *info,
-+				       bool force)
-+{
-+	struct device *dev = info->dev;
-+	int role, power_type;
-+	bool polarity = false;
-+	bool dp = false;
-+	bool mux = false;
-+	bool hpd = false;
+ 	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
+ err_refclk:
++	--rk_phy->init_cnt;
++	mutex_unlock(&pcie_mutex);
+ 	return err;
+ }
+ 
+ static int rockchip_pcie_phy_exit(struct phy *phy)
+ {
+-	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
++	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
++	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
 +
-+	power_type = cros_ec_usb_get_power_type(info);
-+	if (power_type < 0) {
-+		dev_err(dev, "failed getting power type err = %d\n",
-+			power_type);
-+		return power_type;
-+	}
++	mutex_lock(&pcie_mutex);
 +
-+	role = cros_ec_usb_get_role(info, &polarity);
-+	if (role < 0) {
-+		if (role != -ENOTCONN) {
-+			dev_err(dev, "failed getting role err = %d\n", role);
-+			return role;
++	if (--rk_phy->init_cnt)
++		goto err_init_cnt;
+ 
+ 	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
+ 
++err_init_cnt:
++	mutex_unlock(&pcie_mutex);
+ 	return 0;
+ }
+ 
+@@ -283,10 +376,10 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct rockchip_pcie_phy *rk_phy;
+-	struct phy *generic_phy;
+ 	struct phy_provider *phy_provider;
+ 	struct regmap *grf;
+ 	const struct of_device_id *of_id;
++	int i;
+ 
+ 	grf = syscon_node_to_regmap(dev->parent->of_node);
+ 	if (IS_ERR(grf)) {
+@@ -319,14 +412,19 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(rk_phy->clk_pciephy_ref);
+ 	}
+ 
+-	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
+-	if (IS_ERR(generic_phy)) {
+-		dev_err(dev, "failed to create PHY\n");
+-		return PTR_ERR(generic_phy);
++	for (i = 0; i < PHY_MAX_LANE_NUM; i++) {
++		rk_phy->phys[i].phy = devm_phy_create(dev, dev->of_node, &ops);
++		if (IS_ERR(rk_phy->phys[i].phy)) {
++			dev_err(dev, "failed to create PHY%d\n", i);
++			return PTR_ERR(rk_phy->phys[i].phy);
 +		}
-+	} else {
-+		int pd_mux_state;
-+
-+		pd_mux_state = cros_ec_usb_get_pd_mux_state(info);
-+		if (pd_mux_state < 0)
-+			pd_mux_state = USB_PD_MUX_USB_ENABLED;
-+
-+		dp = pd_mux_state & USB_PD_MUX_DP_ENABLED;
-+		mux = pd_mux_state & USB_PD_MUX_USB_ENABLED;
-+		hpd = pd_mux_state & USB_PD_MUX_HPD_IRQ;
-+	}
-+
-+	if (force || info->dp != dp || info->mux != mux ||
-+		info->power_type != power_type) {
-+
-+		info->dp = dp;
-+		info->mux = mux;
-+		info->power_type = power_type;
-+
-+		extcon_set_state(info->edev, EXTCON_DISP_DP, dp);
-+
-+		extcon_set_property(info->edev, EXTCON_DISP_DP,
-+				    EXTCON_PROP_USB_TYPEC_POLARITY,
-+				    (union extcon_property_value)(int)polarity);
-+		extcon_set_property(info->edev, EXTCON_DISP_DP,
-+				    EXTCON_PROP_USB_SS,
-+				    (union extcon_property_value)(int)mux);
-+		extcon_set_property(info->edev, EXTCON_DISP_DP,
-+				    EXTCON_PROP_DISP_HPD,
-+				    (union extcon_property_value)(int)hpd);
-+
-+		extcon_sync(info->edev, EXTCON_DISP_DP);
-+
-+	} else if (hpd) {
-+		extcon_set_property(info->edev, EXTCON_DISP_DP,
-+				    EXTCON_PROP_DISP_HPD,
-+				    (union extcon_property_value)(int)hpd);
-+		extcon_sync(info->edev, EXTCON_DISP_DP);
-+	}
-+
-+	return 0;
-+}
-+
-+static int extcon_cros_ec_event(struct notifier_block *nb,
-+				unsigned long queued_during_suspend,
-+				void *_notify)
-+{
-+	struct cros_ec_extcon_info *info;
-+	struct cros_ec_device *ec;
-+	u32 host_event;
-+
-+	info = container_of(nb, struct cros_ec_extcon_info, notifier);
-+	ec = info->ec;
-+
-+	host_event = cros_ec_get_host_event(ec);
-+	if (host_event & (EC_HOST_EVENT_MASK(EC_HOST_EVENT_PD_MCU) |
-+			  EC_HOST_EVENT_MASK(EC_HOST_EVENT_USB_MUX))) {
-+		extcon_cros_ec_detect_cable(info, false);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int extcon_cros_ec_probe(struct platform_device *pdev)
-+{
-+	struct cros_ec_extcon_info *info;
-+	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	int numports, ret;
-+
-+	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	info->dev = dev;
-+	info->ec = ec;
-+
-+	if (np) {
-+		u32 port;
-+
-+		ret = of_property_read_u32(np, "google,usb-port-id", &port);
-+		if (ret < 0) {
-+			dev_err(dev, "Missing google,usb-port-id property\n");
-+			return ret;
-+		}
-+		info->port_id = port;
-+	} else {
-+		info->port_id = pdev->id;
-+	}
-+
-+	numports = cros_ec_pd_get_num_ports(info);
-+	if (numports < 0) {
-+		dev_err(dev, "failed getting number of ports! ret = %d\n",
-+			numports);
-+		return numports;
-+	}
-+
-+	if (info->port_id >= numports) {
-+		dev_err(dev, "This system only supports %d ports\n", numports);
-+		return -ENODEV;
-+	}
-+
-+	info->edev = devm_extcon_dev_allocate(dev, usb_type_c_cable);
-+	if (IS_ERR(info->edev)) {
-+		dev_err(dev, "failed to allocate extcon device\n");
-+		return -ENOMEM;
-+	}
-+
-+	ret = devm_extcon_dev_register(dev, info->edev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to register extcon device\n");
-+		return ret;
-+	}
-+
-+	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-+				       EXTCON_PROP_USB_TYPEC_POLARITY);
-+	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-+				       EXTCON_PROP_USB_SS);
-+	extcon_set_property_capability(info->edev, EXTCON_DISP_DP,
-+				       EXTCON_PROP_DISP_HPD);
-+
-+	platform_set_drvdata(pdev, info);
-+
-+	/* Get PD events from the EC */
-+	info->notifier.notifier_call = extcon_cros_ec_event;
-+	ret = blocking_notifier_chain_register(&info->ec->event_notifier,
-+					       &info->notifier);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to register notifier\n");
-+		return ret;
-+	}
-+
-+	/* Perform initial detection */
-+	ret = extcon_cros_ec_detect_cable(info, true);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to detect initial cable state\n");
-+		goto unregister_notifier;
-+	}
-+
-+	return 0;
-+
-+unregister_notifier:
-+	blocking_notifier_chain_unregister(&info->ec->event_notifier,
-+					   &info->notifier);
-+	return ret;
-+}
-+
-+static int extcon_cros_ec_remove(struct platform_device *pdev)
-+{
-+	struct cros_ec_extcon_info *info = platform_get_drvdata(pdev);
-+
-+	blocking_notifier_chain_unregister(&info->ec->event_notifier,
-+					   &info->notifier);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int extcon_cros_ec_suspend(struct device *dev)
-+{
-+	return 0;
-+}
-+
-+static int extcon_cros_ec_resume(struct device *dev)
-+{
-+	int ret;
-+	struct cros_ec_extcon_info *info = dev_get_drvdata(dev);
-+
-+	ret = extcon_cros_ec_detect_cable(info, true);
-+	if (ret < 0)
-+		dev_err(dev, "failed to detect cable state on resume\n");
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops extcon_cros_ec_dev_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(extcon_cros_ec_suspend, extcon_cros_ec_resume)
-+};
-+
-+#define DEV_PM_OPS	(&extcon_cros_ec_dev_pm_ops)
-+#else
-+#define DEV_PM_OPS	NULL
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id extcon_cros_ec_of_match[] = {
-+	{ .compatible = "google,extcon-usbc-cros-ec" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, extcon_cros_ec_of_match);
-+#endif /* CONFIG_OF */
-+
-+static struct platform_driver extcon_cros_ec_driver = {
-+	.driver = {
-+		.name  = "extcon-usbc-cros-ec",
-+		.of_match_table = of_match_ptr(extcon_cros_ec_of_match),
-+		.pm = DEV_PM_OPS,
-+	},
-+	.remove  = extcon_cros_ec_remove,
-+	.probe   = extcon_cros_ec_probe,
-+};
-+
-+module_platform_driver(extcon_cros_ec_driver);
-+
-+MODULE_DESCRIPTION("ChromeOS Embedded Controller extcon driver");
-+MODULE_AUTHOR("Benson Leung <bleung-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/cros_ec_commands.h b/include/linux/mfd/cros_ec_commands.h
-index 26ef492..fdea68c 100644
---- a/include/linux/mfd/cros_ec_commands.h
-+++ b/include/linux/mfd/cros_ec_commands.h
-@@ -285,10 +285,15 @@ enum host_event_code {
- 	EC_HOST_EVENT_HANG_DETECT = 20,
- 	/* Hang detect logic detected a hang and warm rebooted the AP */
- 	EC_HOST_EVENT_HANG_REBOOT = 21,
-+	/* PD MCU triggering host event */
-+	EC_HOST_EVENT_PD_MCU = 22,
++		rk_phy->phys[i].index = i;
++		phy_set_drvdata(rk_phy->phys[i].phy, &rk_phy->phys[i]);
+ 	}
  
- 	/* EC RTC event occurred */
- 	EC_HOST_EVENT_RTC = 26,
+-	phy_set_drvdata(generic_phy, rk_phy);
+-	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	platform_set_drvdata(pdev, rk_phy);
++	phy_provider = devm_of_phy_provider_register(dev,
++					rockchip_pcie_phy_of_xlate);
  
-+	/* EC desires to change state of host-controlled USB mux */
-+	EC_HOST_EVENT_USB_MUX = 28,
-+
- 	/*
- 	 * The high bit of the event mask is not used as a host event code.  If
- 	 * it reads back as set, then the entire event mask should be
-@@ -2913,6 +2918,76 @@ struct ec_params_usb_pd_control {
- 	uint8_t mux;
- } __packed;
- 
-+#define PD_CTRL_RESP_ENABLED_COMMS      (1 << 0) /* Communication enabled */
-+#define PD_CTRL_RESP_ENABLED_CONNECTED  (1 << 1) /* Device connected */
-+#define PD_CTRL_RESP_ENABLED_PD_CAPABLE (1 << 2) /* Partner is PD capable */
-+
-+struct ec_response_usb_pd_control_v1 {
-+	uint8_t enabled;
-+	uint8_t role;
-+	uint8_t polarity;
-+	char state[32];
-+} __packed;
-+
-+#define EC_CMD_USB_PD_PORTS 0x102
-+
-+struct ec_response_usb_pd_ports {
-+	uint8_t num_ports;
-+} __packed;
-+
-+#define EC_CMD_USB_PD_POWER_INFO 0x103
-+
-+#define PD_POWER_CHARGING_PORT 0xff
-+struct ec_params_usb_pd_power_info {
-+	uint8_t port;
-+} __packed;
-+
-+enum usb_chg_type {
-+	USB_CHG_TYPE_NONE,
-+	USB_CHG_TYPE_PD,
-+	USB_CHG_TYPE_C,
-+	USB_CHG_TYPE_PROPRIETARY,
-+	USB_CHG_TYPE_BC12_DCP,
-+	USB_CHG_TYPE_BC12_CDP,
-+	USB_CHG_TYPE_BC12_SDP,
-+	USB_CHG_TYPE_OTHER,
-+	USB_CHG_TYPE_VBUS,
-+	USB_CHG_TYPE_UNKNOWN,
-+};
-+
-+struct usb_chg_measures {
-+	uint16_t voltage_max;
-+	uint16_t voltage_now;
-+	uint16_t current_max;
-+	uint16_t current_lim;
-+} __packed;
-+
-+struct ec_response_usb_pd_power_info {
-+	uint8_t role;
-+	uint8_t type;
-+	uint8_t dualrole;
-+	uint8_t reserved1;
-+	struct usb_chg_measures meas;
-+	uint32_t max_power;
-+} __packed;
-+
-+/* Get info about USB-C SS muxes */
-+#define EC_CMD_USB_PD_MUX_INFO 0x11a
-+
-+struct ec_params_usb_pd_mux_info {
-+	uint8_t port; /* USB-C port number */
-+} __packed;
-+
-+/* Flags representing mux state */
-+#define USB_PD_MUX_USB_ENABLED       (1 << 0)
-+#define USB_PD_MUX_DP_ENABLED        (1 << 1)
-+#define USB_PD_MUX_POLARITY_INVERTED (1 << 2)
-+#define USB_PD_MUX_HPD_IRQ           (1 << 3)
-+
-+struct ec_response_usb_pd_mux_info {
-+	uint8_t flags; /* USB_PD_MUX_*-encoded USB mux state */
-+} __packed;
-+
- /*****************************************************************************/
- /*
-  * Passthru commands
+ 	return PTR_ERR_OR_ZERO(phy_provider);
+ }
 -- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
