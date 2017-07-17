@@ -1,43 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 1/9] dt-bindings: mfd: Add STM32 LPTimer binding
-Date: Mon, 17 Jul 2017 19:34:08 +0100
-Message-ID: <20170717183408.rk2lutdcvwl4gn4v@dell>
-References: <1499445068-7037-1-git-send-email-fabrice.gasnier@st.com>
- <1499445068-7037-2-git-send-email-fabrice.gasnier@st.com>
+From: Abhishek Shah <abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] net: ethernet: bgmac: Make IDM register space optional
+Date: Tue, 18 Jul 2017 00:07:35 +0530
+Message-ID: <CAKUFe6ad027MAg-A3XO7i1=c-Q623JqMPCKV_+Hi+ZpUojBn-Q@mail.gmail.com>
+References: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
+ <1499972649-6200-3-git-send-email-abhishek.shah@broadcom.com> <CAC3K-4o=WRqBv_vTf7QGDYjWzMmVog=63ZbiHbHAuW7zJcsHFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1499445068-7037-2-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAC3K-4o=WRqBv_vTf7QGDYjWzMmVog=63ZbiHbHAuW7zJcsHFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 07 Jul 2017, Fabrice Gasnier wrote:
+Hi Jon,
 
-> Add documentation for STMicroelectronics STM32 Low-Power Timer binding.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Acked-by: Jonathan Cameron <jic23@kernel.org>
-> ---
-> Changes in v3:
-> - Rob's comment on node name: timer@...
-> 
-> Changes in v2:
-> - Lee's comments: s/Low Power/Low-Power/, remove 0x in example, improve
->   properties descriptions
-> ---
->  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 48 ++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> This also will need to be added to
+> drivers/net/ethernet/broadcom/bgmac-bcma.c.  Otherwise, the driver
+> will no longer work for those platforms.  Since this was already
+> accepted, please push out a fix ASAP.
+>
+I do not see how the bcma driver [bgmac-bcma.c] will no longer work.
+The whole idea behind introducing this  BGMAC_FEAT_IDM_MASK bit
+was to keep bcma driver's functionality intact.
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+The BGMAC_FEAT_IDM_MASK bit is explicitly set by the bgmac-platform driver
+and is unset inside the same if the idm register base is provided.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+For BCMA driver case, I do not touch BGMAC_FEAT_IDM_MASK bit, i.e. it
+is *not* set.
+And if it is not set, each idm operation done in bgmac.c will take place.
+Please explain if I am missing something here.
+
+
+Regards,
+Abhishek
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
