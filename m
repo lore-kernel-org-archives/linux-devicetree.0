@@ -1,33 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 07/11] mmc: sunxi: Add support for A83T eMMC (MMC2)
-Date: Mon, 17 Jul 2017 13:51:26 -0500
-Message-ID: <20170717185126.rrhriqckjextpaxj@rob-hp-laptop>
-References: <20170714064302.20383-1-wens@csie.org>
- <20170714064302.20383-8-wens@csie.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 2/3] dt-bindings: add binding for rk3366 power domains
+Date: Mon, 17 Jul 2017 13:51:55 -0500
+Message-ID: <20170717185155.silbgsacswtpaujw@rob-hp-laptop>
+References: <1500015763-4940-1-git-send-email-zhangqing@rock-chips.com>
+ <1500015763-4940-3-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170714064302.20383-8-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+In-Reply-To: <1500015763-4940-3-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 02:42:58PM +0800, Chen-Yu Tsai wrote:
-> The third MMC controller (MMC2) on the Allwinner A83T SoC is slightly
-> different. It supports a wider 8-bit bus, has a dedicated controllable
-> reset pin for eMMC, and a "new timing mode" which is supposed to deliver
-> better signals and thus better performance.
+On Fri, Jul 14, 2017 at 03:02:42PM +0800, Elaine Zhang wrote:
+> Add binding documentation for the power domains
+> found on Rockchip RK3366 SoCs.
 > 
-> Add a compatible for this one to use the new timing mode not found in the
-> other controllers.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
+>  Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/mmc/host/sunxi-mmc.c                        | 8 ++++++++
->  2 files changed, 9 insertions(+)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
