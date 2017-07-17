@@ -1,280 +1,143 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH 3/7] phy: rockcip-pcie: reconstruct driver to support
- per-lane PHYs
-Date: Mon, 17 Jul 2017 11:39:22 -0700
-Message-ID: <20170717183920.GA6856@google.com>
-References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
- <1500276982-208439-4-git-send-email-shawn.lin@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 11/18] dt-bindings: display: Add Allwinner MIPI-DSI
+ bindings
+Date: Mon, 17 Jul 2017 13:41:49 -0500
+Message-ID: <20170717184149.sv4xdspjwnhmctog@rob-hp-laptop>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <41dca303c02faf350e765b81c36ddcddbba6f950.1499955058.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500276982-208439-4-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Shawn Lin <shawn.lin@rock-chips.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org
+In-Reply-To: <41dca303c02faf350e765b81c36ddcddbba6f950.1499955058.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
-
-On Mon, Jul 17, 2017 at 03:36:18PM +0800, Shawn Lin wrote:
-> This patch reconstructs the whole driver to support per-lane
-> PHYs. Note that we could also support the legacy PHY if you
-> don't provide argument to our of_xlate.
+On Thu, Jul 13, 2017 at 04:13:06PM +0200, Maxime Ripard wrote:
+> The Allwinner SoCs usually come with a DSI encoder. Add a binding for it.
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 85 +++++++-
+>  1 file changed, 85 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 > 
->  drivers/phy/rockchip/phy-rockchip-pcie.c | 126 +++++++++++++++++++++++++++----
->  1 file changed, 112 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> index 6904633..f48b188 100644
-> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-> @@ -70,13 +70,46 @@ struct rockchip_pcie_data {
->  	unsigned int pcie_laneoff;
->  };
->  
-> +struct phy_pcie_instance;
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+> new file mode 100644
+> index 000000000000..2e7c5aa7020f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+> @@ -0,0 +1,85 @@
+> +Allwinner A31 DSI Encoder
+> +=========================
+> +
+> +The DSI pipeline consists of two separate blocks: the DSI controller
+> +itself, and its associated D-PHY.
+> +
+> +DSI Encoder
+> +-----------
+> +
+> +The DSI Encoder generates the DSI signal from the TCON's.
+> +
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun6i-a31-mipi-dsi
+> +  - reg: base address and size of memory-mapped region
+> +  - interrupts: interrupt associated to this IP
+> +  - clocks: phandles to the clocks feeding the DSI encoder
+> +    * bus: the DSI interface clock
+> +    * mod: the DSI module clock
+> +  - clock-names: the clock names mentioned above
+> +  - phys: phandle to the D-PHY
+> +  - phy-names: must be "dphy"
+> +  - resets: phandle to the reset controller driving the encoder
+> +
+> +  - ports: A ports node with endpoint definitions as defined in
+> +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> +    port should be the input endpoint, usually coming from the
+> +    associated TCON.
 
-Is this forward declaration actually needed? You have it defined just a
-few lines below.
-
-> +
-> +/* internal lock for multiple phys */
-> +DEFINE_MUTEX(pcie_mutex);
-
-Put this inside struct rockchip_pcie_phy. It shouldn't be a global lock;
-it's just for coordinating the 4 lanes within a single
-"rockchip_pcie_phy".
-
-> +
->  struct rockchip_pcie_phy {
->  	struct rockchip_pcie_data *phy_data;
->  	struct regmap *reg_base;
-> +	struct phy_pcie_instance {
-> +		struct phy *phy;
-> +		u32 index;
-> +	} phys[PHY_MAX_LANE_NUM];
->  	struct reset_control *phy_rst;
->  	struct clk *clk_pciephy_ref;
-> +	int pwr_cnt;
-> +	int init_cnt;
->  };
->  
-> +static inline
-> +struct rockchip_pcie_phy *to_pcie_phy(struct phy_pcie_instance *inst)
-> +{
-> +	return container_of(inst, struct rockchip_pcie_phy,
-> +					phys[inst->index]);
-> +}
-> +
-> +static struct phy *rockchip_pcie_phy_of_xlate(struct device *dev,
-> +					      struct of_phandle_args *args)
-> +{
-> +	struct rockchip_pcie_phy *rk_phy = dev_get_drvdata(dev);
-> +
-> +	if (args->args_count == 0)
-> +		return rk_phy->phys[0].phy;
-> +
-> +	if (WARN_ON(args->args[0] > PHY_MAX_LANE_NUM))
-
-This should be ">=", not ">" (an index of PHY_MAX_LANE_NUM would be out
-of bounds).
-
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	return rk_phy->phys[args->args[0]].phy;
-> +}
-> +
-> +
->  static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
->  			      u32 addr, u32 data)
->  {
-> @@ -116,29 +149,65 @@ static inline u32 phy_rd_cfg(struct rockchip_pcie_phy *rk_phy,
->  
->  static int rockchip_pcie_phy_power_off(struct phy *phy)
->  {
-> -	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
-> +	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
->  	int err = 0;
->  
-> +	mutex_lock(&pcie_mutex);
-> +
-> +	regmap_write(rk_phy->reg_base,
-> +		     rk_phy->phy_data->pcie_laneoff,
-> +		     HIWORD_UPDATE(PHY_LANE_IDLE_OFF,
-> +				   PHY_LANE_IDLE_MASK,
-> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> +
-> +	if (--rk_phy->pwr_cnt)
-> +		goto err_out;
-> +
->  	err = reset_control_assert(rk_phy->phy_rst);
->  	if (err) {
->  		dev_err(&phy->dev, "assert phy_rst err %d\n", err);
-> -		return err;
-> +		goto err_restore;
->  	}
->  
-> +err_out:
-> +	mutex_unlock(&pcie_mutex);
->  	return 0;
-> +
-> +err_restore:
-> +	++rk_phy->pwr_cnt;
-> +	regmap_write(rk_phy->reg_base,
-> +		     rk_phy->phy_data->pcie_laneoff,
-> +		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> +				   PHY_LANE_IDLE_MASK,
-> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-> +	mutex_unlock(&pcie_mutex);
-> +	return err;
->  }
->  
->  static int rockchip_pcie_phy_power_on(struct phy *phy)
->  {
-> -	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
-> +	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
->  	int err = 0;
->  	u32 status;
->  	unsigned long timeout;
->  
-> +	mutex_lock(&pcie_mutex);
-> +
-> +	regmap_write(rk_phy->reg_base,
-> +		     rk_phy->phy_data->pcie_laneoff,
-> +		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
-> +				   PHY_LANE_IDLE_MASK,
-> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
-
-It seems a little weird to do this before deasserting the reset, but
-only on the first lane to powered on. Should this actually be the last
-step in this function? Or does it really not matter?
-
-Brian
+Output port for bridge/panel?
 
 > +
-> +	if (rk_phy->pwr_cnt++)
-> +		goto err_out;
+> +D-PHY
+> +-----
 > +
->  	err = reset_control_deassert(rk_phy->phy_rst);
->  	if (err) {
->  		dev_err(&phy->dev, "deassert phy_rst err %d\n", err);
-> -		return err;
-> +		goto err_pwr_cnt;
->  	}
->  
->  	regmap_write(rk_phy->reg_base, rk_phy->phy_data->pcie_conf,
-> @@ -214,18 +283,29 @@ static int rockchip_pcie_phy_power_on(struct phy *phy)
->  		goto err_pll_lock;
->  	}
->  
-> +err_out:
-> +	mutex_unlock(&pcie_mutex);
->  	return 0;
->  
->  err_pll_lock:
->  	reset_control_assert(rk_phy->phy_rst);
-> +err_pwr_cnt:
-> +	--rk_phy->pwr_cnt;
-> +	mutex_unlock(&pcie_mutex);
->  	return err;
->  }
->  
->  static int rockchip_pcie_phy_init(struct phy *phy)
->  {
-> -	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
-> +	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
->  	int err = 0;
->  
-> +	mutex_lock(&pcie_mutex);
+> +Required properties:
+> +  - compatible: value must be one of:
+> +    * allwinner,sun6i-a31-mipi-dphy
+> +  - reg: base address and size of memory-mapped region
+> +  - clocks: phandles to the clocks feeding the DSI encoder
+> +    * bus: the DSI interface clock
+> +    * mod: the DSI module clock
+> +  - clock-names: the clock names mentioned above
+> +  - resets: phandle to the reset controller driving the encoder
 > +
-> +	if (rk_phy->init_cnt++)
-> +		goto err_out;
+> +Example:
 > +
->  	err = clk_prepare_enable(rk_phy->clk_pciephy_ref);
->  	if (err) {
->  		dev_err(&phy->dev, "Fail to enable pcie ref clock.\n");
-> @@ -238,20 +318,33 @@ static int rockchip_pcie_phy_init(struct phy *phy)
->  		goto err_reset;
->  	}
->  
-> -	return err;
-> +err_out:
-> +	mutex_unlock(&pcie_mutex);
-> +	return 0;
->  
->  err_reset:
+> +dsi0: dsi@01ca0000 {
+
+Drop the leading 0.
+
+> +	compatible = "allwinner,sun6i-a31-mipi-dsi";
+> +	reg = <0x01ca0000 0x1000>;
+> +	interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&ccu CLK_BUS_MIPI_DSI>,
+> +		 <&ccu CLK_DSI_SCLK>;
+> +	clock-names = "bus", "mod";
+> +	resets = <&ccu RST_BUS_MIPI_DSI>;
+> +	phys = <&dphy0>;
+> +	phy-names = "dphy";
+
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+Not needed.
+
 > +
->  	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
->  err_refclk:
-> +	--rk_phy->init_cnt;
-> +	mutex_unlock(&pcie_mutex);
->  	return err;
->  }
->  
->  static int rockchip_pcie_phy_exit(struct phy *phy)
->  {
-> -	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
-> +	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
-> +	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
+> +	ports {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +	mutex_lock(&pcie_mutex);
+> +		dsi0_in: port@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
 > +
-> +	if (--rk_phy->init_cnt)
-> +		goto err_init_cnt;
->  
->  	clk_disable_unprepare(rk_phy->clk_pciephy_ref);
->  
-> +err_init_cnt:
-> +	mutex_unlock(&pcie_mutex);
->  	return 0;
->  }
->  
-> @@ -283,10 +376,10 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct rockchip_pcie_phy *rk_phy;
-> -	struct phy *generic_phy;
->  	struct phy_provider *phy_provider;
->  	struct regmap *grf;
->  	const struct of_device_id *of_id;
-> +	int i;
->  
->  	grf = syscon_node_to_regmap(dev->parent->of_node);
->  	if (IS_ERR(grf)) {
-> @@ -319,14 +412,19 @@ static int rockchip_pcie_phy_probe(struct platform_device *pdev)
->  		return PTR_ERR(rk_phy->clk_pciephy_ref);
->  	}
->  
-> -	generic_phy = devm_phy_create(dev, dev->of_node, &ops);
-> -	if (IS_ERR(generic_phy)) {
-> -		dev_err(dev, "failed to create PHY\n");
-> -		return PTR_ERR(generic_phy);
-> +	for (i = 0; i < PHY_MAX_LANE_NUM; i++) {
-> +		rk_phy->phys[i].phy = devm_phy_create(dev, dev->of_node, &ops);
-> +		if (IS_ERR(rk_phy->phys[i].phy)) {
-> +			dev_err(dev, "failed to create PHY%d\n", i);
-> +			return PTR_ERR(rk_phy->phys[i].phy);
-> +		}
-> +		rk_phy->phys[i].index = i;
-> +		phy_set_drvdata(rk_phy->phys[i].phy, &rk_phy->phys[i]);
->  	}
->  
-> -	phy_set_drvdata(generic_phy, rk_phy);
-> -	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	platform_set_drvdata(pdev, rk_phy);
-> +	phy_provider = devm_of_phy_provider_register(dev,
-> +					rockchip_pcie_phy_of_xlate);
->  
->  	return PTR_ERR_OR_ZERO(phy_provider);
->  }
+> +			dsi0_in_tcon0: endpoint@0 {
+> +				reg = <0>;
+
+Don't need reg when there's only 1 endpoint.
+
+> +				remote-endpoint = <&tcon0_out_dsi0>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +dphy0: d-phy@01ca1000 {
+
+Drop leading 0.
+
+> +	compatible = "allwinner,sun6i-a31-mipi-dphy";
+> +	reg = <0x01ca1000 0x1000>;
+> +	clocks = <&ccu CLK_BUS_MIPI_DSI>,
+> +		 <&ccu CLK_DSI_DPHY>;
+> +	clock-names = "bus", "mod";
+> +	resets = <&ccu RST_BUS_MIPI_DSI>;
+
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+
+For what?
+
+> +	#phy-cells = <0>;
+> +};
 > -- 
-> 1.9.1
-> 
-> 
+> git-series 0.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
