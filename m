@@ -1,42 +1,44 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: da850-lcdk: drop unused VPIF endpoints
-Date: Mon, 17 Jul 2017 10:47:18 -0700
-Message-ID: <20170717174718.28343-1-khilman@baylibre.com>
+Subject: Re: [PATCH v3] ARM: dts: da850-evm: drop VPIF endpoints
+Date: Mon, 17 Jul 2017 10:47:38 -0700
+Message-ID: <7hzic3t0p1.fsf@baylibre.com>
+References: <20170615215730.28585-1-khilman@baylibre.com>
+        <55429c4a-987d-a157-9565-eef04daeefea@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <55429c4a-987d-a157-9565-eef04daeefea-l0cyMroinI0@public.gmane.org> (Sekhar Nori's
+        message of "Mon, 17 Jul 2017 16:30:33 +0530")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Drop the unused endpoints.  They should only be used when there is an
-actual remote-endpoint connected.
+Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> writes:
 
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/da850-lcdk.dts | 7 -------
- 1 file changed, 7 deletions(-)
+> Hi Kevin,
+>
+> On Friday 16 June 2017 03:27 AM, Kevin Hilman wrote:
+>> Drop the unused endpoints.  They should only be used when there is
+>> an actual remote-endpoint connected.
+>> 
+>> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>
+> A similar patch is needed for da850-lcdk too. In fact with v4.13-rc1, 
+> without it, we get a warning splat that starts with:
+>
+> WARNING: CPU: 0 PID: 129 at fs/sysfs/dir.c:31 sysfs_warn_dup+0x5c/0x7c
+> sysfs: cannot create duplicate filename '/bus/platform/devices/vpif_capture'
+>
+> I am adding this patch to fixes and would like to send this along with 
+> a similar LCDK patch (hopefully both for -rc2). While committing this I 
+> will add "unused" to subject line too.
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index b837fec70eec..a0f0916156e6 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -318,11 +318,4 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&vpif_capture_pins>;
- 	status = "okay";
--
--	/* VPIF capture port */
--	port {
--		vpif_ch0: endpoint {
--			  bus-width = <8>;
--		};
--	};
- };
--- 
-2.9.3
+Patch for LCDK sent, with "unused" added to the subject line.
+
+Kevin
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
