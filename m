@@ -1,56 +1,32 @@
-From: Michael Stecklein <m-stecklein@ti.com>
-Subject: [PATCH v2 0/2] Add support for TI TAS6424 digital
-	amplifier
-Date: Mon, 17 Jul 2017 11:25:45 -0500
-Message-ID: <1500308747-27973-1-git-send-email-m-stecklein@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: Michael Stecklein <m-stecklein@ti.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv5 0/3] Add Altera I2C Controller Driver
+Date: Mon, 17 Jul 2017 11:35:11 -0500
+Message-ID: <1500309314-18464-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, thor.thayer@linux.intel.com
+Cc: davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello all,
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-This two-patch series adds the dt bindings, driver, and other related
-changes for the TAS6424 digital amplifier. I am upstreaming this driver
-on behalf of Andreas.
+This patch series adds the Altera I2C Controller driver for use in FPGAs.
+This version includes cleanup and a bug fix noticed by the Linux
+community.
 
-Regards,
-Michael Stecklein <m-stecklein@ti.com>
+Thor Thayer (3):
+  MAINTAINERS: Add Altera I2C Controller Driver
+  dt-bindings: i2c: Add Altera I2C Controller
+  i2c: altera: Add Altera I2C Controller driver
 
-Changes since v1:
- - rebased on 4.13-rc1
-
-Original v1 patches:
- - https://patchwork.kernel.org/patch/9795235/
- - https://patchwork.kernel.org/patch/9795237/
-
-Andreas Dannenberg (1):
-  ASoC: add support for TAS6424 digital amplifier
-
-Michael Stecklein (1):
-  dt-bindings: sound: add bindings for TAS6424
-
- .../devicetree/bindings/sound/ti,tas6424.txt       |  31 +
- sound/soc/codecs/Kconfig                           |   8 +
- sound/soc/codecs/Makefile                          |   2 +
- sound/soc/codecs/tas6424.c                         | 755 +++++++++++++++++++++
- sound/soc/codecs/tas6424.h                         | 127 ++++
- 5 files changed, 923 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
- create mode 100644 sound/soc/codecs/tas6424.c
- create mode 100644 sound/soc/codecs/tas6424.h
+ .../devicetree/bindings/i2c/i2c-altera.txt         |  39 ++
+ MAINTAINERS                                        |   5 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-altera.c                    | 510 +++++++++++++++++++++
+ 5 files changed, 565 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+ create mode 100644 drivers/i2c/busses/i2c-altera.c
 
 -- 
 2.7.4
