@@ -1,355 +1,142 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Mon, 17 Jul 2017 15:07:18 -0700
-Message-ID: <20170717220718.GZ20973@minitux>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 1/2] clk: meson: meson8b: register the built-in reset controller
+Date: Tue, 18 Jul 2017 00:22:57 +0200
+Message-ID: <CAFBinCC5+5wwOckWsrTdNeio+t31TrfRAsaMbrOEP-qZgtEOmg@mail.gmail.com>
+References: <20170711224939.26267-1-martin.blumenstingl@googlemail.com>
+ <20170711224939.26267-2-martin.blumenstingl@googlemail.com> <20170717171329.nddlcslge6u33noc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1500293043-1887-8-git-send-email-varada@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170717171329.nddlcslge6u33noc@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, arnd@arndb.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
+Hi Rob,
 
-> Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-> Gen 1/2, one lane, two PCIe root complex with support for MSI and
-> legacy interrupts, and it conforms to PCI Express Base 2.1
-> specification.
-> 
-> The core init is the similar to the existing SoC, however the
-> clocks and reset lines differ.
-> 
-> Signed-off-by: smuthayy <smuthayy@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
-> ---
->  drivers/pci/dwc/pcie-qcom.c | 259 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 259 insertions(+)
-> 
-> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-> index d15657d..c1fa356 100644
-> --- a/drivers/pci/dwc/pcie-qcom.c
-> +++ b/drivers/pci/dwc/pcie-qcom.c
-> @@ -37,6 +37,20 @@
->  #include "pcie-designware.h"
->  
->  #define PCIE20_PARF_SYS_CTRL			0x00
-> +#define MST_WAKEUP_EN				BIT(13)
-> +#define SLV_WAKEUP_EN				BIT(12)
-> +#define MSTR_ACLK_CGC_DIS			BIT(10)
-> +#define SLV_ACLK_CGC_DIS			BIT(9)
-> +#define CORE_CLK_CGC_DIS			BIT(6)
-> +#define AUX_PWR_DET				BIT(4)
-> +#define L23_CLK_RMV_DIS				BIT(2)
-> +#define L1_CLK_RMV_DIS				BIT(1)
-> +
-> +#define PCIE20_COMMAND_STATUS			0x04
-> +#define CMD_BME_VAL				0x4
-> +#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
-> +#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> +
->  #define PCIE20_PARF_PHY_CTRL			0x40
->  #define PCIE20_PARF_PHY_REFCLK			0x4C
->  #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-> @@ -58,9 +72,22 @@
->  #define CFG_BRIDGE_SB_INIT			BIT(0)
->  
->  #define PCIE20_CAP				0x70
-> +#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
-> +#define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
-> +#define PCIE_CAP_LINK1_VAL			0x2fd7f
-> +
-> +#define PCIE20_PARF_Q2A_FLUSH			0x1AC
-> +
-> +#define PCIE20_MISC_CONTROL_1_REG		0x8BC
-> +#define DBI_RO_WR_EN				1
->  
->  #define PERST_DELAY_US				1000
->  
-> +#define AXI_CLK_RATE				200000000
-> +
-> +#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> +#define SLV_ADDR_SPACE_SZ                       0x10000000
-> +
->  struct qcom_pcie_resources_v0 {
->  	struct clk *iface_clk;
->  	struct clk *core_clk;
-> @@ -110,11 +137,26 @@ struct qcom_pcie_resources_v3 {
->  	struct reset_control *phy_ahb_reset;
->  };
->  
-> +struct qphy_reset {
-> +	struct reset_control	*rst;
-> +	char			*name;
-> +};
-> +
-> +struct qcom_pcie_resources_v4 {
-> +	struct clk *sys_noc_clk;
-> +	struct clk *axi_m_clk;
-> +	struct clk *axi_s_clk;
-> +	struct clk *ahb_clk;
-> +	struct clk *aux_clk;
-> +	struct qphy_reset rst[7];
+On Mon, Jul 17, 2017 at 7:13 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jul 12, 2017 at 12:49:38AM +0200, Martin Blumenstingl wrote:
+>> The clock controller has a reset controller embedded. A large part of
+>> the HHI_SYS_CPU_CLK_CNTL0 register contains reset bits. However, most of
+>> them are only used by u-boot (as these are probably dangerous to use
+>> when Linux is running).
+>
+> u-boot reads DT's. The DT should be defined for the h/w, not what you
+> want for Linux today.
+OK, that matches with your comment regarding splitting the patch below
 
-Just store the struct reset_control here directly, carrying the name
-doesn't serve much of a purpose - and it clutters the code.
+>> Bits 27:24 are interesting though: these are the CPUx core soft reset
+>> bits (bit 24 = CPU0 soft reset, bit 25 = CPU1 ...).
+>>
+>> This patch implements a reset controller for these bits. The reset
+>> controller itself is registered early (through CLK_OF_DECLARE_DRIVER)
+>> because it is neede very early in the boot process (to start the
+>> secondary CPU cores).
+>>
+>> Other reset bits in the HHI_SYS_CPU_CLK_CNTL0 register, which are not
+>> implemented by this patch (as these may never be used from within the
+>> Linux kernel - and I don't want to add dead code):
+>> - bit 30: L2 cache soft reset
+>> - bit 29: AXI64to128 bridge (A5-to-MMC) soft reset (A5 interface)
+>> - bit 28: SCU soft reset
+>> - bit 18: A5 Global Reset
+>> - bit 17: A5 AXI Soft Reset
+>> - bit 16: A5 APB Soft Reset
+>> - bit 15: GEN_DIV_SOFT_RESET
+>> - bit 14: SOFT_RESET
+>>
+>> All information was taken from the public S805 Datasheet and Amlogic's
+>> vendor GPL kernel sources. This patch is based on an earlier version
+>> submitted by Carlo Caione.
+>>
+>> Suggested-by: Carlo Caione <carlo@endlessm.com>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  .../bindings/clock/amlogic,meson8b-clkc.txt        |   7 +-
+>
+> It's preferred to split bindings to a separate patch. Given all the
+> commentary about Linux, I'd suggest you do that here (so the Linux
+> details are gone from the binding patch).
+you are right - I'll split this into a dt-bindings and a clk driver
+patch and keep the commit messages appropriate for each patch
 
-> +};
+>>  drivers/clk/meson/Kconfig                          |   1 +
+>>  drivers/clk/meson/meson8b.c                        | 109 ++++++++++++++++++---
+>>  drivers/clk/meson/meson8b.h                        |   1 +
+>>  4 files changed, 105 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+>> index 606da38c0959..6f444e3867a0 100644
+>> --- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+>> @@ -16,18 +16,23 @@ Required Properties:
+>>          mapped region.
+>>
+>>  - #clock-cells: should be 1.
+>> +- #reset-cells: should be 1.
+>>
+>>  Each clock is assigned an identifier and client nodes can use this identifier
+>>  to specify the clock which they consume. All available clocks are defined as
+>>  preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
+>>  used in device tree sources.
+>>
+>> +The clock controller provides a (soft) reset line for each CPU core. Valid
+>> +reset lines are 0, 1, 2 and 3 (one for each CPU core).
+>
+> I suspect you would have different numbering if you enumerate all the
+> possible resets. Is it just this one register that has reset bits? If
+> so, I'd suggest using the bit position as the cell values. If not, well,
+> just enumerate them all.
+there are more resets in this register area:
+- "AXI64to128 bridge (A5-to-MMC) soft reset (MMC interface)": bit 30
+in HHI_SYS_CPU_CLK_CNTL1
+- SOFT_RESET: bit 15 in HHI_VID_CLK_CNTL
+- some more bits with "reset" in their name (CLK_DIV_RESET = bit 17 in
+HHI_VID_CLK_DIV, and four more in HHI_VID_DIVIDER_CNTL:
+SOFT_RESET_POST, SOFT_RESET_PRE, RESET_N_POST, RESET_N_PRE)
 
-Can you confirm that this is actually version 4 of this block? Or are we
-just incrementing an arbitrary number here?
+Carlo's original patch added #defines (RST_CORE0...RST_CORE3) for each
+CPU reset bit.
+Arnd (I CC'ed him in this mail) suggested to skip the defines, see [0]
+- which is what I did with this patch.
 
-> +
->  union qcom_pcie_resources {
->  	struct qcom_pcie_resources_v0 v0;
->  	struct qcom_pcie_resources_v1 v1;
->  	struct qcom_pcie_resources_v2 v2;
->  	struct qcom_pcie_resources_v3 v3;
-> +	struct qcom_pcie_resources_v4 v4;
->  };
->  
->  struct qcom_pcie;
-> @@ -139,6 +181,16 @@ struct qcom_pcie {
->  
->  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
->  
-> +static inline void
-> +writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
+by looking at Amlogic's u-boot sources I can see that the following
+reset bits are used:
+- bits 30:28 and 18:16 from HHI_SYS_CPU_CLK_CNTL0 and bit 30 from
+HHI_SYS_CPU_CLK_CNTL1 are used during Meson8b system suspend/wakeup
+from suspend
+- the four resets from HHI_VID_DIVIDER_CNTL are used to setup the "vid PLL div"
 
-This function name is very generic and in the two places you call it
-set_mask is 0. So please just inline this.
+that leaves the following reset bits unused (hidden somewhere deep in the code):
+- HHI_VID_CLK_CNTL bit 15 is used in Meson6's u-boot code - but only
+in some #if 0'ed blocks
+- SOFT_RESET: bit 15 in HHI_VID_CLK_CNTL
+- bit 15:14 in HHI_SYS_CPU_CLK_CNTL0
 
-> +{
-> +	u32 val = readl(addr);
-> +
-> +	val &= ~clear_mask;
-> +	val |= set_mask;
-> +	writel(val, addr);
-> +}
-> +
->  static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
->  {
->  	gpiod_set_value(pcie->reset, 1);
-> @@ -884,6 +936,205 @@ static int qcom_pcie_init_v3(struct qcom_pcie *pcie)
->  	return ret;
->  }
->  
-> +static int qcom_pcie_get_resources_v4(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int i;
-> +
-> +	res->sys_noc_clk = devm_clk_get(dev, "sys_noc");
-> +	if (IS_ERR(res->sys_noc_clk))
-> +		return PTR_ERR(res->sys_noc_clk);
-> +
-> +	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-> +	if (IS_ERR(res->axi_m_clk))
-> +		return PTR_ERR(res->axi_m_clk);
-> +
-> +	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-> +	if (IS_ERR(res->axi_s_clk))
-> +		return PTR_ERR(res->axi_s_clk);
-> +
-> +	res->ahb_clk = devm_clk_get(dev, "ahb");
-> +	if (IS_ERR(res->ahb_clk))
-> +		return PTR_ERR(res->ahb_clk);
-> +
-> +	res->aux_clk = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(res->aux_clk))
-> +		return PTR_ERR(res->aux_clk);
-> +
-> +	res->rst[0].name = "axi_m";
-> +	res->rst[1].name = "axi_s";
-> +	res->rst[2].name = "pipe";
-> +	res->rst[3].name = "axi_m_sticky";
-> +	res->rst[4].name = "sticky";
-> +	res->rst[5].name = "ahb";
-> +	res->rst[6].name = "sleep";
-> +
-> +	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-> +		res->rst[i].rst = devm_reset_control_get(dev, res->rst[i].name);
-> +		if (IS_ERR(res->rst[i].rst))
-> +			return PTR_ERR(res->rst[i].rst);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_pcie_deinit_v4(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-> +
-> +	clk_disable_unprepare(res->sys_noc_clk);
-> +	clk_disable_unprepare(res->axi_m_clk);
-> +	clk_disable_unprepare(res->axi_s_clk);
-> +	clk_disable_unprepare(res->ahb_clk);
-> +	clk_disable_unprepare(res->aux_clk);
-> +}
-> +
-> +static int qcom_pcie_enable_resources_v4(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(res->sys_noc_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable core clock\n");
-> +		return ret;
-> +	}
+so if you want I can add more reset bits I found to the driver and
+introduce a #define for each reset.
+I guess this would be find for Arnd as well (please speak up if it isn't).
+however, I would only do this for the reset bits for which I could
+find a consumer in Amlogic's vendor GPL kernel/u-boot code (as there's
+not a lot documentation available, and I don't like guessing register
+bit purposes based on a 12-character description from a stripped down
+version of the SoC datasheet).
 
-Should these clocks really be handled explicitly in the driver? Are
-these not the bus clocks, to be handled by "msm_bus"?
-
-> +
-> +	ret = clk_prepare_enable(res->axi_m_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable core clock\n");
-> +		goto err_clk_axi_m;
-> +	}
-> +
-> +	ret = clk_set_rate(res->axi_m_clk, AXI_CLK_RATE);
-> +	if (ret) {
-> +		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-> +		goto err_clk_axi_m;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->axi_s_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-> +		goto err_clk_axi_s;
-> +	}
-> +
-> +	ret = clk_set_rate(res->axi_s_clk, AXI_CLK_RATE);
-> +	if (ret) {
-> +		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-> +		goto err_clk_axi_s;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->ahb_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable ahb clock\n");
-> +		goto err_clk_ahb;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->aux_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable aux clock\n");
-> +		goto err_clk_aux;
-> +	}
-> +
-> +	udelay(1);
-> +
-> +	return 0;
-> +
-> +err_clk_aux:
-> +	clk_disable_unprepare(res->ahb_clk);
-> +err_clk_ahb:
-> +	clk_disable_unprepare(res->axi_s_clk);
-> +err_clk_axi_s:
-> +	clk_disable_unprepare(res->axi_m_clk);
-> +err_clk_axi_m:
-> +	clk_disable_unprepare(res->sys_noc_clk);
-> +
-> +	return ret;
-> +}
-> +
-> +static inline int qphy_reset_control(struct qcom_pcie *pcie,
-> +				     struct qphy_reset *r,
-> +				     bool assert)
-> +{
-> +	int ret;
-> +
-> +	if (assert)
-> +		ret = reset_control_assert(r->rst);
-> +	else
-> +		ret = reset_control_deassert(r->rst);
-> +
-> +	if (ret)
-> +		dev_err(pcie->pci->dev, "%s: reset %s failed for %s\n",
-> +			__func__, assert ? "assert" : "deassert", r->name);
-> +
-> +	return ret;
-> +}
-> +
-> +static void qcom_pcie_v4_reset(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-> +	struct qphy_reset *qphy_rst = &res->rst[0];
-
-&res->rst[0] is supposed to be written as res->rst, but that's exactly
-the same number of characters to type as your local variable. So just
-skip the variable.
-
-> +	int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-> +		if (qphy_reset_control(pcie, &qphy_rst[i], true))
-
-This is a complicated way of saying:
-	if (reset_control_assert(qphy_rst[i].rst))
-
-> +			return;
-
-You should most definitely propagate this error.
-
-> +
-> +	usleep_range(10000, 12000); /* wait 12ms */
-
-This is not 12ms, this is 10-12ms. This is a _long_ time to usleep, how
-about just msleep(20) instead?
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-> +		if (qphy_reset_control(pcie, &qphy_rst[i], false))
-
-Same as above, this just write:
-if (reset_control_deassert(qphy_rst[i].rst))
-
-> +			return;
-> +
-> +	usleep_range(10000, 12000); /* wait 12ms */
-> +	wmb(); /* ensure data is written to hw register */
-
-wmb() ensures ordering of writes, it does not wait for data to reach the
-hardware registers.
-
-> +}
-> +
-> +static int qcom_pcie_init_v4(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +	int ret;
-> +
-> +	qcom_pcie_v4_reset(pcie);
-> +	qcom_ep_reset_assert(pcie);
-> +
-> +	ret = qcom_pcie_enable_resources_v4(pcie);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-> +					PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-> +
-> +	ret = phy_power_on(pcie->phy);
-> +	if (ret)
-
-This will leave all the resources enabled, you should issue a deinit
-here..
-
-> +		return ret;
-> +
-> +	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
-> +
+>> +
+>>  Example: Clock controller node:
+>>
+>>       clkc: clock-controller@c1104000 {
+>> -             #clock-cells = <1>;
+>>               compatible = "amlogic,meson8b-clkc";
+>>               reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
+>> +             #clock-cells = <1>;
+>> +             #reset-cells = <1>;
+>>       };
+>>
+>>
 
 Regards,
-Bjorn
+Martin
+
+[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390397.html
