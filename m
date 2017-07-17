@@ -1,84 +1,70 @@
-From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open
- drain mode
-Date: Mon, 17 Jul 2017 19:49:54 +0800
-Message-ID: <20170717194954.00004b62@huawei.com>
-References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
-        <20170709165704.26311-9-lorenzo.bianconi@st.com>
-        <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop>
-        <20170711192656.7fd08a1c@kernel.org>
-        <CAL_JsqJa7JeofpG=66AnVrTP4XtVrp9B4-QoLTyK08GzF4L5uQ@mail.gmail.com>
-        <0462CB71-6762-48F2-99B3-EA62FF81C280@jic23.retrosnub.co.uk>
-        <CAA2SeN+2T2-G1khRNpNzccesX=cip0ConT11RJRV-HB8Ojk0pA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
+Date: Mon, 17 Jul 2017 12:56:10 +0100
+Message-ID: <20170717115557.GA29650@remoulade>
+References: <20170715003836.GA113132@beast>
+ <CAKv+Gu9n0cpznPxiQPYj0_+DALXTdevbvoYgM87A7ej2kdcizA@mail.gmail.com>
+ <CAGXu5j+fX-E9ngW3MBhRFgpKBLzpyhR0TCx=ovosXOAqogzMMA@mail.gmail.com>
+ <CAKv+Gu82xiv0Yy79Hb=JCqmJNYoxxSt5HRu5j4TeSeznCvg_+w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAA2SeN+2T2-G1khRNpNzccesX=cip0ConT11RJRV-HB8Ojk0pA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu82xiv0Yy79Hb=JCqmJNYoxxSt5HRu5j4TeSeznCvg_+w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Kees Cook <keescook@chromium.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Matt Redfearn <matt.redfearn@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 15 Jul 2017 16:32:35 +0200
-Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Sun, Jul 16, 2017 at 05:42:25PM +0100, Ard Biesheuvel wrote:
+> On 16 July 2017 at 03:13, Kees Cook <keescook@chromium.org> wrote:
+> > On Sat, Jul 15, 2017 at 5:42 AM, Ard Biesheuvel
+> > <ard.biesheuvel@linaro.org> wrote:
+> >> (+ Mark, Will, Catalin)
+> >>
+> >> On 15 July 2017 at 01:38, Kees Cook <keescook@chromium.org> wrote:
+> >>> Document then /chosen/kaslr-seed property (and its interaction with the
+> >>> EFI_RNG_PROTOCOL API).
+> >>>
+> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
+> >>>  1 file changed, 20 insertions(+), 2 deletions(-)
+> >>
+> >> For the textual changes:
+> >>
+> >> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> >>
+> >> *However*, documenting the /chosen/kaslr-seed property promotes it
+> >> from a stub<->kernel private interface to an external ABI between the
+> >> kernel and the bootloader, and we need to reach agreement on whether
+> >> doing so is desirable first IMHO.
+> >
+> > Oh! I thought that was the point (having a bootloader provide kaslr
+> > entropy). And that in the EFI case, it was the stub doing it.
+> 
+> It was the opposite, actually,  The /chosen node is the most
+> appropriate way for the EFI stub to communicate a seed value to the
+> kernel proper, given how it is needed extremely early in the boot.
+> (Using UEFI config tables like we do for the /dev/random seed is not
+> possible for this)
+> 
+> So as a side effect, other bootloaders can use the same mechanism. I'm
+> fine with that, but it needs to be an explicit decision by the
+> maintainers imo.
 
-> >
-> >
-> > On 11 July 2017 19:42:54 BST, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:  
-> >>On Tue, Jul 11, 2017 at 1:26 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>wrote:  
-> >>> On Mon, 10 Jul 2017 21:51:58 -0500
-> >>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> >>>  
-> >>>> On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:  
-> >>>> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> >>>> > ---
-> >>>> >  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8  
-> >>++++++++  
-> >>>> >  1 file changed, 8 insertions(+)
-> >>>> >
-> >>>> > diff --git  
-> >>a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> >>b/Documentation/devicetree/bindings/iio/humidity/hts221.txt  
-> >>>> > index fca263e13400..732b83c06c08 100644
-> >>>> > --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> >>>> > +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
-> >>>> > @@ -5,6 +5,14 @@ Required properties:
-> >>>> >  - reg: i2c address of the sensor / spi cs line
-> >>>> >
-> >>>> >  Optional properties:
-> >>>> > +- drive-open-drain: the interrupt/data ready line will be  
-> >>configured  
-> >>>>
-> >>>> Needs a vendor prefix and "drdy-open-drain" would be more specific.  
-> >>> This is straight out of the pinctrl bindings and has been used in a  
-> >>few  
-> >>> other places as well.  I can see it should really be more obviously
-> >>> associated with the drdy pin though.  A few IIO drivers already
-> >>> use this binding (st sensors and the lsm6dsx).  If we are going
-> >>> to decide it's a bad idea we should deprecate those bindings and
-> >>> add whatever we do here as well.  
-> >>
-> >>Ah, okay. Then the description should have a  "see pinctrl.txt" for
-> >>the description.  
-> > Agreed.  
-> 
-> This property has been defined in pinctrl/pinctrl-bindings.txt. Is it
-> fine to refer to that file?
-> Regards,
-> Lorenzo
-Yes, that's what Rob was effectively suggesting.
-> 
-> >>
-> >>Rob
-> >>--
-> >>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> >>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >>More majordomo info at  http://vger.kernel.org/majordomo-info.html  
-> >
-> > --
-> > Sent from my Android device with K-9 Mail. Please excuse my brevity.  
-> 
-> 
-> 
+I was under the impression that we'd already assumed other bootloaders could
+set this, so I don't have a problem promoting this to a defined public
+interface.
+
+I guess we just need Will and Catalin to agree.
+
+FWIW:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+As an aside, we might want to make a split between /chosen properties which are
+Linux-specific (e.g. this), and those which are somewhat generic (e.g.
+stdout-path), since other OSs may/should respect those generic ones.
+
+Mark.
