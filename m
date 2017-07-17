@@ -1,68 +1,59 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/7] PCI: rockchip: split out rockchip_pcie_get_phys
-Date: Mon, 17 Jul 2017 15:36:16 +0800
-Message-ID: <1500276982-208439-2-git-send-email-shawn.lin@rock-chips.com>
-References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500276982-208439-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [RFC PATCH v2 0/7] Reconstruct rockchip's PCIe and PCIe-PHY driver for per-lane PHY model
+Date: Mon, 17 Jul 2017 15:36:15 +0800
+Message-ID: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-We plan to introduce per-lanes PHY, so split out new
-function to make it easy in the future. No functional
-change intended.
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+This patchset is trying to reconstruct PCIe and PCIe-PHY driver
+for rockchip platform in order to support per-lane PHY mode. And
+we could idle the inactive lane(s) finally.
 
- drivers/pci/host/pcie-rockchip.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+We deprecate the legacy PHY mode but the code could still support
+it in order not to break backware compatibility of DTB. And I organize
+the patches carefully so that we don't introduce git-bisect issue.
 
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index 5acf869..6632a51 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -853,6 +853,19 @@ static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
-+static int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
-+{
-+	struct device *dev = rockchip->dev;
-+
-+	rockchip->phy = devm_phy_get(dev, "pcie-phy");
-+	if (IS_ERR(rockchip->phy)) {
-+		if (PTR_ERR(rockchip->phy) != -EPROBE_DEFER)
-+			dev_err(dev, "missing phy\n");
-+		return PTR_ERR(rockchip->phy);
-+	}
-+
-+	return 0;
-+}
- 
- /**
-  * rockchip_pcie_parse_dt - Parse Device Tree
-@@ -883,12 +896,8 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- 	if (IS_ERR(rockchip->apb_base))
- 		return PTR_ERR(rockchip->apb_base);
- 
--	rockchip->phy = devm_phy_get(dev, "pcie-phy");
--	if (IS_ERR(rockchip->phy)) {
--		if (PTR_ERR(rockchip->phy) != -EPROBE_DEFER)
--			dev_err(dev, "missing phy\n");
-+	if (rockchip_pcie_get_phys(rockchip))
- 		return PTR_ERR(rockchip->phy);
--	}
- 
- 	rockchip->lanes = 1;
- 	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
+Hi Brian & Jeffy,
+
+I tested it by backporting all things into my kernel 4.4 tree, and it
+works fine for both legacy PHY mode and per-lane PHY model. However I
+couldn't run 4.12 for my rk3399-evb now, so it would be nice if you
+can test it with your chrome devices running v4.12.
+
+Hi Rob,
+
+Does the changes for rockchip-pcie.txt in patch 6 & 7 look good to you
+from the perspective of DT?
+
+
+Changes in v2:
+- deprecate legacy PHY model
+- improve rockchip_pcie_phy_of_xlate
+- fix wrong calculation of pwr_cnt and add new init_cnt
+- add internal locking
+- introduce per-lane data to simply the code
+- convert that for all rk3399 platforms
+- make listing all 4 lanes as mandatory
+
+Shawn Lin (7):
+  PCI: rockchip: split out rockchip_pcie_get_phys
+  PCI: rockchip: introduce per-lanes PHYs support
+  phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
+  PCI: rockchip: idle the inactive PHY(s)
+  arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
+  dt-bindings: PCI: rockchip: convert to use per-lane PHY model
+  Documentation: bindings: convert to use per-lane Rockchip PCIe PHY
+
+ .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 ++-
+ .../devicetree/bindings/phy/rockchip-pcie-phy.txt  |   7 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 +-
+ drivers/pci/host/pcie-rockchip.c                   | 168 ++++++++++++++++++---
+ drivers/phy/rockchip/phy-rockchip-pcie.c           | 128 ++++++++++++++--
+ 5 files changed, 297 insertions(+), 39 deletions(-)
+
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
