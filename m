@@ -1,177 +1,61 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [RFCv2 usb-next 0/3] initialize (multiple) PHYs in xhci-plat
-Date: Mon, 17 Jul 2017 11:27:22 +0200
-Message-ID: <CAFBinCA8o0DzExJOKdh_7zmfJhLwu_hsAHp_POyNO7-ifdPUqQ@mail.gmail.com>
-References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
- <1500111231.25536.18.camel@mhfsdcap03> <CAFBinCAw9yaaEO6Z9AdkBaPg9azGH4nqgdgoTir9U0eWZVu1DQ@mail.gmail.com>
- <1500276067.25536.58.camel@mhfsdcap03>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 0/6] Motorola Droid 4 Audio Support
+Date: Mon, 17 Jul 2017 02:29:04 -0700
+Message-ID: <20170717092904.GG10026@atomide.com>
+References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500276067.25536.58.camel@mhfsdcap03>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170712 08:19]:
+>  * Switch from simple-audio-card to audio-graph-card
 
-On Mon, Jul 17, 2017 at 9:21 AM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi,
-> On Sat, 2017-07-15 at 14:11 +0200, Martin Blumenstingl wrote:
->> Hi,
->>
->> On Sat, Jul 15, 2017 at 11:33 AM, Chunfeng Yun
->> <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> > Hi Martin,
->> >
->> > On Thu, 2017-07-13 at 12:59 +0200, Martin Blumenstingl wrote:
->> >> This series is the outcome of a discussion with Felipe Balbi,
->> >> see [0] and [1].
->> >> The quick-summary of this is:
->> >> - dwc3 already takes one USB2 and one USB3 PHY and initializes these
->> >>   correct
->> >> - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
->> >>   ohci-platform.c) do not have a limitation on the number of PHYs - they
->> >>   support one PHY per actual host port
->> >> - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
->> >>   or three USB2 ports enabled on the internal root-hub. The SoCs also
->> >>   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
->> >>   internally "connected" to the dwc3 roothub) need to be powered on,
->> >>   otherwise USB devices cannot be enumerated (even if just one PHY is
->> >>   disabled and if the device is plugged into another, enabled port)
->> >>
->> >> In my first attempt to get USB supported on the GXL and GXM SoCs I tried
->> >> to work-around the problem that I could not pass multiple PHYs to the
->> >> dwc3 controller.
->> >> This was rejected by Rob Herring (which was definitely the thing to do in
->> >> my opinion), see [2]
->> >>
->> >> This series adds a new "platform-roothub". This can be configured through
->> >> devicetree by passing a child-node with "reg = <0>" to the USB
->> >> controller. Additionally there has to be a child-node for each port on
->> >> the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
->> >> property. This allows modeling the root-hub in devicetree similar to the
->> >> USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
->> >> This avoids and backwards-compatibility problems (which was a concern
->> >> regardless of the solution, see [3]) since the binding for the root-hub
->> >> was previously not specified (and we're not using the "phys" property of
->> >> the controller, which might have served different purposes before,
->> >> depending on the drivers).
->> >>
->> >> Additionally this integrates the new platform-roothub into xhci-plat.c
->> >> which automatically enables it for the dwc3 driver (in host-mode).
->> >>
->> > How to handle the phy0(one u2phy and one u3phy) when port1 support
->> > dual-role mode? leave them to peripheral side as felipe suggested
->> > before? If so, no port1 node for roothub, is there any problem when
->> > change the port1 to host-only mode?
->> on Amlogic Meson GXL we have the following IP blocks:
->> - 2x USB2 PHYs, some external component has to tell them which mode
->> (host/device) they should operate in
->> - there is an additional (1x) USB3 PHY with built-in OTG detection logic
->>
->> on Amlogic Meson GXL it could work like this:
->> USB2 and USB3 phy0 can be passed to the root-hub. Additionally the
->> USB2 phy0 could be passed to the USB3 PHY. The USB3 PHY would then
->> tell the USB2 PHY in which mode it should operate.
->>
->> please note that device mode and OTG support on Amlogic Meson GXL is
->> more complicated, as it uses dwc2 and dwc3 controllers in combination:
->> - dwc3 is reponsible for host-only mode
->> - dwc2 is responsible for device-only mode
->> - OTG detection is done by the USB3 PHY
->>
->> would you mind sharing a short overview of host/device/OTG support
->> works on Mediatek SoCs? I assume that the Amlogic Meson GXL
->> implementation is quite special, so comparing this with another
->> implementation (for example the Mediatek one) may help spotting
->> potential issues.
->>
-> MTK's mtu3 IP supports at most 5x USB2 phys and 4x USB3 phys. They work
-> as following:
-thank you for sharing this!
-
-> 1. device mode works as HS only:
->
-> u2phy0 --- dual-role/OTG
->
-> u2phy1 ---|
->           +  U3 host-only
-> u3phy0 ---|
->
-> ...
-> u2phy4 ---|
->           +  U3 host-only
-> u3phy3 ---|
-> (e.g. MT8173 supports 2x u2phys and 1x u3phy, u2phy0 can work as
-> dual-role mode, u2phy1 & u3phy0 are host-only)
->
-> 2. device mode works as HS & SS, or host only:
->
-> u2phy0 ---|
->           + dual-role or host-only
-> u3phy0 ---|
->
-> ...
-> u2phy3 ---|
->           + U3 host-only
-> u3phy3 ---|
->
-> u2phy4 --- U2 host-only
-> (e.g. on MT2701, u2phy0 and u3phy0 work as host-only mode)
-OK, so in both cases only one port (with one u2phy and one u3phy) is
-dual-role capable
-
-> mtu3 driver supports host-only, device-only and dual-role mode(use IDDIG
-> pin), and will take all phys it needed, include host-only phys;
-> But if just host-only mode is supported, we can skip mtu3 driver and
-> make use of xhci-mtk driver directly, then xhci-mtk will take all phys.
-I see, in your example it's the mtu3
-(Documentation/devicetree/bindings/usb/mt8173-mtu3.txt) which does the
-mode switching. I assume that you're doing the host/device mode
-switching through the extcon phandle (for example together with the
-extcon-usb-gpio driver).
-
-in you example: can't we *always* describe the roothub via devicetree
-(just like in my example: [0])?
-this means that (as you already mentioned) USB host-only support is now covered.
-to handle dual-role (host/device switching) we now need to pass the
-dual-role capable PHYs to whatever IP can detect the mode it should
-operate in (in your case: mtu3, in Amlogic's case: the u3phy with
-built-in mode detection logic -> the driver for this IP block should
-call phy_set_mode(phy, PHY_MODE_USB_{HOST,DEVICE,OTG} accordingly).
-here's a skeleton (stripped-down) of how the .dts could look like:
-mtu3: usb@11271000 {
-    compatible = "mediatek,mt8173-mtu3";
-...
-    /* MT2701 = 2nd example, for MT8173 = 1st example we would skip
-the u3phy0 */
-    /* only list the dual role capable PHYs here */
-    phys = <&u3phy0>, <&u2phy0>;
-    phy-names = "usb3-phy", "usb2-phy";
-
-    usb_host: xhci@11270000 {
-        compatible = "mediatek,mt8173-xhci";
-        ...
-        roothub@0 {
-            /* includes all PHYs, including the dual role capable ones */
-        };
-    };
-};
-
-do you think that this would work for the Mediatek SoCs?
-I've seen that the phy-mt65xx-usb3.c PHY driver does not have any
-.set_mode callback - I assume it's simply because it doesn't need it
-(as this is either managed by the hardware/IP block internally, or
-through some firmware/mailbox mechanism).
-
+Gave this a quick try against v4.13-rc1 with SND_AUDIO_GRAPH_CARD
+enabled as a loadable module. However loading it oopses for me,
+see below. Maybe some dependencies are missing?
 
 Regards,
-Mart
 
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004305.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
+
+8< --------------------
+BUG: sleeping function called from invalid context at kernel/locking/mutex.c:747
+in_atomic(): 1, irqs_disabled(): 128, pid: 1590, name: modprobe
+INFO: lockdep is turned off.
+irq event stamp: 0
+hardirqs last  enabled at (0): [<  (null)>]   (null)
+hardirqs last disabled at (0): [<c0137464>] copy_process.part.5+0x2c4/0x1ac8
+softirqs last  enabled at (0): [<c0137464>] copy_process.part.5+0x2c4/0x1ac8
+softirqs last disabled at (0): [<  (null)>]   (null)
+CPU: 0 PID: 1590 Comm: modprobe Tainted: G        W       4.13.0-rc1+ #126
+Hardware name: Generic OMAP4 (Flattened Device Tree)
+[<c0111524>] (unwind_backtrace) from [<c010d1fc>] (show_stack+0x10/0x14)
+[<c010d1fc>] (show_stack) from [<c086375c>] (dump_stack+0xac/0xe0)
+[<c086375c>] (dump_stack) from [<c0168c2c>] (___might_sleep+0x228/0x2ac)
+[<c0168c2c>] (___might_sleep) from [<c087a86c>] (__mutex_lock+0x28/0x9fc)
+[<c087a86c>] (__mutex_lock) from [<c087b25c>] (mutex_lock_nested+0x1c/0x24)
+[<c087b25c>] (mutex_lock_nested) from [<c03532fc>] (kernfs_remove+0x18/0x30)
+[<c03532fc>] (kernfs_remove) from [<c0867abc>] (kobject_del+0x14/0x44)
+[<c0867abc>] (kobject_del) from [<c0867948>] (kobject_put+0x114/0x224)
+[<c0867948>] (kobject_put) from [<c06c8e74>] (of_get_next_parent+0x2c/0x4c)
+[<c06c8e74>] (of_get_next_parent) from [<c06ccd24>] (of_graph_get_port_parent+0x10/0x70)
+[<c06ccd24>] (of_graph_get_port_parent) from [<bf4685e8>] (asoc_simple_card_parse_graph_dai+0x98/0xe0 [snd_soc_simple_card_utils])
+[<bf4685e8>] (asoc_simple_card_parse_graph_dai [snd_soc_simple_card_utils]) from [<bf8e5330>] (asoc_graph_card_probe+0x200/0x444 [snd_soc_audio_graph_card])
+[<bf8e5330>] (asoc_graph_card_probe [snd_soc_audio_graph_card]) from [<c05aa2b8>] (platform_drv_probe+0x50/0xb0)
+[<c05aa2b8>] (platform_drv_probe) from [<c05a8088>] (driver_probe_device+0x33c/0x478)
+[<c05a8088>] (driver_probe_device) from [<c05a82ac>] (__driver_attach+0xe8/0x110)
+[<c05a82ac>] (__driver_attach) from [<c05a61c8>] (bus_for_each_dev+0x6c/0xa0)
+[<c05a61c8>] (bus_for_each_dev) from [<c05a7354>] (bus_add_driver+0x198/0x270)
+[<c05a7354>] (bus_add_driver) from [<c05a92c8>] (driver_register+0x78/0xf4)
+[<c05a92c8>] (driver_register) from [<c010189c>] (do_one_initcall+0x3c/0x170)
+[<c010189c>] (do_one_initcall) from [<c01edc24>] (do_init_module+0x5c/0x1e0)
+[<c01edc24>] (do_init_module) from [<c01ec904>] (load_module+0x1270/0x14ec)
+[<c01ec904>] (load_module) from [<c01ece08>] (SyS_finit_module+0xa8/0xec)
+[<c01ece08>] (SyS_finit_module) from [<c0108440>] (ret_fast_syscall+0x0/0x1c)
+OF: ERROR: Bad of_node_put() on /ocp/spi@48098000/pmic@0/audio-codec/port@0/endpoint
