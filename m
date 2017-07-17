@@ -1,104 +1,308 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv5 4/6] mfd: da9052: make touchscreen registration optional
-Date: Mon, 17 Jul 2017 15:34:44 +0100
-Message-ID: <20170717143444.i5zlzwrbd76bhq4z@dell>
-References: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
- <20170703084003.31184-5-sebastian.reichel@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170703084003.31184-5-sebastian.reichel@collabora.co.uk>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v4 1/6] drivers/i2c: Add FSI-attached I2C master algorithm
+Date: Mon, 17 Jul 2017 09:35:52 -0500
+Message-ID: <1500302157-14670-2-git-send-email-eajames@linux.vnet.ibm.com>
+References: <1500302157-14670-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1500302157-14670-1-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, cbostic@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 03 Jul 2017, Sebastian Reichel wrote:
+From: "Edward A. James" <eajames@us.ibm.com>
 
-> If the touchscreen pins are used as general purpose analogue
-> input, the touchscreen driver should not be used. The pins
-> will be handled by the existing hwmon driver instead.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->  drivers/mfd/da9052-core.c | 28 +++++++++++++++++++++++++---
->  1 file changed, 25 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mfd/da9052-core.c b/drivers/mfd/da9052-core.c
-> index 977418ca9117..a671c18381d7 100644
-> --- a/drivers/mfd/da9052-core.c
-> +++ b/drivers/mfd/da9052-core.c
-> @@ -18,6 +18,7 @@
->  #include <linux/mfd/core.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
-> +#include <linux/property.h>
->  
->  #include <linux/mfd/da9052/da9052.h>
->  #include <linux/mfd/da9052/pdata.h>
-> @@ -521,9 +522,6 @@ static const struct mfd_cell da9052_subdev_info[] = {
->  		.name = "da9052-wled3",
->  	},
->  	{
-> -		.name = "da9052-tsi",
-> -	},
-> -	{
->  		.name = "da9052-bat",
->  	},
->  	{
-> @@ -531,6 +529,12 @@ static const struct mfd_cell da9052_subdev_info[] = {
->  	},
->  };
->  
-> +static const struct mfd_cell da9052_tsi_subdev_info[] = {
-> +	{
-> +		.name = "da9052-tsi",
-> +	},
-> +};
+Add register definitions for FSI-attached I2C master and functions to
+access those registers over FSI. Add an FSI driver so that our I2C bus
+is probed up during an FSI scan.
 
-I normally prefer these one a single line.
+Signed-off-by: Edward A. James <eajames@us.ibm.com>
+---
+ drivers/i2c/busses/Kconfig   |  11 ++
+ drivers/i2c/busses/Makefile  |   1 +
+ drivers/i2c/busses/i2c-fsi.c | 243 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 255 insertions(+)
+ create mode 100644 drivers/i2c/busses/i2c-fsi.c
 
-Once fixed:
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
->  const struct regmap_config da9052_regmap_config = {
->  	.reg_bits = 8,
->  	.val_bits = 8,
-> @@ -621,9 +625,27 @@ int da9052_device_init(struct da9052 *da9052, u8 chip_id)
->  		goto err;
->  	}
->  
-> +	/*
-> +	 * Check if touchscreen pins are used are analogue input instead
-> +	 * of having a touchscreen connected to them. The analogue input
-> +	 * functionality will be provided by hwmon driver (if enabled).
-> +	 */
-> +	if (!device_property_read_bool(da9052->dev, "dlg,tsi-as-adc")) {
-> +		ret = mfd_add_devices(da9052->dev, PLATFORM_DEVID_AUTO,
-> +				      da9052_tsi_subdev_info,
-> +				      ARRAY_SIZE(da9052_tsi_subdev_info),
-> +				      NULL, 0, NULL);
-> +		if (ret) {
-> +			dev_err(da9052->dev, "failed to add TSI subdev: %d\n",
-> +				ret);
-> +			goto err;
-> +		}
-> +	}
-> +
->  	return 0;
->  
->  err:
-> +	mfd_remove_devices(da9052->dev);
->  	da9052_irq_exit(da9052);
->  
->  	return ret;
-
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 1006b23..07503b4 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -1290,4 +1290,15 @@ config I2C_ZX2967
+ 	  This driver can also be built as a module. If so, the module will be
+ 	  called i2c-zx2967.
+ 
++config I2C_FSI
++	tristate "FSI I2C driver"
++	depends on FSI
++	help
++	  Driver for FSI bus attached I2C masters. These are I2C masters that
++	  are connected to the system over a FSI bus, instead of the more
++	  common PCI or MMIO interface.
++
++	  This driver can also be built as a module. If so, the module will be
++	  called as i2c-fsi.
++
+ endmenu
+diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+index 1b2fc81..aa5f7b5 100644
+--- a/drivers/i2c/busses/Makefile
++++ b/drivers/i2c/busses/Makefile
+@@ -131,5 +131,6 @@ obj-$(CONFIG_I2C_PCA_ISA)	+= i2c-pca-isa.o
+ obj-$(CONFIG_I2C_SIBYTE)	+= i2c-sibyte.o
+ obj-$(CONFIG_I2C_XGENE_SLIMPRO) += i2c-xgene-slimpro.o
+ obj-$(CONFIG_SCx200_ACB)	+= scx200_acb.o
++obj-$(CONFIG_I2C_FSI)		+= i2c-fsi.o
+ 
+ ccflags-$(CONFIG_I2C_DEBUG_BUS) := -DDEBUG
+diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+new file mode 100644
+index 0000000..b7f2bc6
+--- /dev/null
++++ b/drivers/i2c/busses/i2c-fsi.c
+@@ -0,0 +1,243 @@
++/*
++ * Copyright 2017 IBM Corporation
++ *
++ * Eddie James <eajames@us.ibm.com>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
++
++#include <linux/device.h>
++#include <linux/errno.h>
++#include <linux/fsi.h>
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++
++#define FSI_ENGID_I2C		0x7
++
++/* Find left shift from first set bit in m */
++#define MASK_TO_LSH(m)		(__builtin_ffsll(m) - 1ULL)
++
++/* Extract field m from v */
++#define GETFIELD(m, v)		(((v) & (m)) >> MASK_TO_LSH(m))
++
++/* Set field m of v to val */
++#define SETFIELD(m, v, val)	\
++	(((v) & ~(m)) | ((((typeof(v))(val)) << MASK_TO_LSH(m)) & (m)))
++
++#define I2C_DEFAULT_CLK_DIV	6
++
++/* i2c registers */
++#define I2C_FSI_FIFO		0x00
++#define I2C_FSI_CMD		0x04
++#define I2C_FSI_MODE		0x08
++#define I2C_FSI_WATER_MARK	0x0C
++#define I2C_FSI_INT_MASK	0x10
++#define I2C_FSI_INT_COND	0x14
++#define I2C_FSI_OR_INT_MASK	0x14
++#define I2C_FSI_INTS		0x18
++#define I2C_FSI_AND_INT_MASK	0x18
++#define I2C_FSI_STAT		0x1C
++#define I2C_FSI_RESET_I2C	0x1C
++#define I2C_FSI_ESTAT		0x20
++#define I2C_FSI_RESET_ERR	0x20
++#define I2C_FSI_RESID_LEN	0x24
++#define I2C_FSI_SET_SCL		0x24
++#define I2C_FSI_PORT_BUSY	0x28
++#define I2C_FSI_RESET_SCL	0x2C
++#define I2C_FSI_SET_SDA		0x30
++#define I2C_FSI_RESET_SDA	0x34
++
++/* cmd register */
++#define I2C_CMD_WITH_START	0x80000000
++#define I2C_CMD_WITH_ADDR	0x40000000
++#define I2C_CMD_RD_CONT		0x20000000
++#define I2C_CMD_WITH_STOP	0x10000000
++#define I2C_CMD_FORCELAUNCH	0x08000000
++#define I2C_CMD_ADDR		0x00fe0000
++#define I2C_CMD_READ		0x00010000
++#define I2C_CMD_LEN		0x0000ffff
++
++/* mode register */
++#define I2C_MODE_CLKDIV		0xffff0000
++#define I2C_MODE_PORT		0x0000fc00
++#define I2C_MODE_ENHANCED	0x00000008
++#define I2C_MODE_DIAG		0x00000004
++#define I2C_MODE_PACE_ALLOW	0x00000002
++#define I2C_MODE_WRAP		0x00000001
++
++/* watermark register */
++#define I2C_WATERMARK_HI	0x0000f000
++#define I2C_WATERMARK_LO	0x000000f0
++
++#define I2C_FIFO_HI_LVL		4
++#define I2C_FIFO_LO_LVL		4
++
++/* interrupt register */
++#define I2C_INT_INV_CMD		0x00008000
++#define I2C_INT_PARITY		0x00004000
++#define I2C_INT_BE_OVERRUN	0x00002000
++#define I2C_INT_BE_ACCESS	0x00001000
++#define I2C_INT_LOST_ARB	0x00000800
++#define I2C_INT_NACK		0x00000400
++#define I2C_INT_DAT_REQ		0x00000200
++#define I2C_INT_CMD_COMP	0x00000100
++#define I2C_INT_STOP_ERR	0x00000080
++#define I2C_INT_BUSY		0x00000040
++#define I2C_INT_IDLE		0x00000020
++
++#define I2C_INT_ENABLE		0x0000ff80
++#define I2C_INT_ERR		0x0000fcc0
++
++/* status register */
++#define I2C_STAT_INV_CMD	0x80000000
++#define I2C_STAT_PARITY		0x40000000
++#define I2C_STAT_BE_OVERRUN	0x20000000
++#define I2C_STAT_BE_ACCESS	0x10000000
++#define I2C_STAT_LOST_ARB	0x08000000
++#define I2C_STAT_NACK		0x04000000
++#define I2C_STAT_DAT_REQ	0x02000000
++#define I2C_STAT_CMD_COMP	0x01000000
++#define I2C_STAT_STOP_ERR	0x00800000
++#define I2C_STAT_MAX_PORT	0x000f0000
++#define I2C_STAT_ANY_INT	0x00008000
++#define I2C_STAT_SCL_IN		0x00000800
++#define I2C_STAT_SDA_IN		0x00000400
++#define I2C_STAT_PORT_BUSY	0x00000200
++#define I2C_STAT_SELF_BUSY	0x00000100
++#define I2C_STAT_FIFO_COUNT	0x000000ff
++
++#define I2C_STAT_ERR		0xfc800000
++#define I2C_STAT_ANY_RESP	0xff800000
++
++/* extended status register */
++#define I2C_ESTAT_FIFO_SZ	0xff000000
++#define I2C_ESTAT_SCL_IN_SY	0x00008000
++#define I2C_ESTAT_SDA_IN_SY	0x00004000
++#define I2C_ESTAT_S_SCL		0x00002000
++#define I2C_ESTAT_S_SDA		0x00001000
++#define I2C_ESTAT_M_SCL		0x00000800
++#define I2C_ESTAT_M_SDA		0x00000400
++#define I2C_ESTAT_HI_WATER	0x00000200
++#define I2C_ESTAT_LO_WATER	0x00000100
++#define I2C_ESTAT_PORT_BUSY	0x00000080
++#define I2C_ESTAT_SELF_BUSY	0x00000040
++#define I2C_ESTAT_VERSION	0x0000001f
++
++struct fsi_i2c_master {
++	struct fsi_device	*fsi;
++	u8			fifo_size;
++};
++
++static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
++			    u32 *data)
++{
++	int rc;
++	__be32 data_be;
++
++	rc = fsi_device_read(fsi, reg, &data_be, sizeof(data_be));
++	if (rc)
++		return rc;
++
++	*data = be32_to_cpu(data_be);
++
++	return 0;
++}
++
++static int fsi_i2c_write_reg(struct fsi_device *fsi, unsigned int reg,
++			     u32 *data)
++{
++	__be32 data_be = cpu_to_be32(*data);
++
++	return fsi_device_write(fsi, reg, &data_be, sizeof(data_be));
++}
++
++static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
++{
++	int rc;
++	u32 mode = I2C_MODE_ENHANCED, extended_status, watermark = 0;
++	u32 interrupt = 0;
++
++	/* since we use polling, disable interrupts */
++	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_INT_MASK, &interrupt);
++	if (rc)
++		return rc;
++
++	mode = SETFIELD(I2C_MODE_CLKDIV, mode, I2C_DEFAULT_CLK_DIV);
++	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_MODE, &mode);
++	if (rc)
++		return rc;
++
++	rc = fsi_i2c_read_reg(i2c->fsi, I2C_FSI_ESTAT, &extended_status);
++	if (rc)
++		return rc;
++
++	i2c->fifo_size = GETFIELD(I2C_ESTAT_FIFO_SZ, extended_status);
++	watermark = SETFIELD(I2C_WATERMARK_HI, watermark,
++			     i2c->fifo_size - I2C_FIFO_HI_LVL);
++	watermark = SETFIELD(I2C_WATERMARK_LO, watermark,
++			     I2C_FIFO_LO_LVL);
++
++	rc = fsi_i2c_write_reg(i2c->fsi, I2C_FSI_WATER_MARK, &watermark);
++
++	return rc;
++}
++
++static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
++			int num)
++{
++	return -EOPNOTSUPP;
++}
++
++static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
++{
++	return I2C_FUNC_I2C | I2C_FUNC_PROTOCOL_MANGLING | I2C_FUNC_10BIT_ADDR;
++}
++
++static const struct i2c_algorithm fsi_i2c_algorithm = {
++	.master_xfer = fsi_i2c_xfer,
++	.functionality = fsi_i2c_functionality,
++};
++
++static int fsi_i2c_probe(struct device *dev)
++{
++	struct fsi_i2c_master *i2c;
++	int rc;
++
++	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
++	if (!i2c)
++		return -ENOMEM;
++
++	i2c->fsi = to_fsi_dev(dev);
++
++	rc = fsi_i2c_dev_init(i2c);
++	if (rc)
++		return rc;
++
++	dev_set_drvdata(dev, i2c);
++
++	return 0;
++}
++
++static const struct fsi_device_id fsi_i2c_ids[] = {
++	{ FSI_ENGID_I2C, FSI_VERSION_ANY },
++	{ 0 }
++};
++
++static struct fsi_driver fsi_i2c_driver = {
++	.id_table = fsi_i2c_ids,
++	.drv = {
++		.name = "i2c-fsi",
++		.bus = &fsi_bus_type,
++		.probe = fsi_i2c_probe,
++	},
++};
++
++module_fsi_driver(fsi_i2c_driver);
++
++MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
++MODULE_DESCRIPTION("FSI attached I2C master");
++MODULE_LICENSE("GPL");
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.8.3.1
