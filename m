@@ -1,171 +1,84 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
- add/remove device
-Date: Mon, 17 Jul 2017 17:16:56 +0530
-Message-ID: <6cd287bb-25c0-a7bd-8d3c-a63b9da0fd25@codeaurora.org>
-References: <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org>
- <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
- <60a56ae6-ed9d-57cd-130f-5bd9d32d4d58@codeaurora.org>
- <CAF6AEGvDpRChNQAzqgRFwaQcH=4JCwfKcvj2GQGgQOnO2_A1sg@mail.gmail.com>
- <20170714170743.GA26488@arm.com>
- <CAF6AEGtMiVJvSrPXmQppM2NwS3fsXM8Vep3g0PwQK7SH4N=3xQ@mail.gmail.com>
- <20170714180615.GC26488@arm.com>
- <CAF6AEGubgNiq5fJ9LaBULvW3450iY4-u0ecpp_a6xyMvRx9kug@mail.gmail.com>
- <20170714190113.GE26488@arm.com>
- <CAF6AEGsjPQa_CviY4w-uEvH95rC6VkR+u7s7knVxTDW_8V-t_Q@mail.gmail.com>
- <20170714193637.GI26488@arm.com>
- <CAF6AEGtw-bgK6hfFOHRtO0z6o2zxpvjERTX4i=HzioE69G8kAw@mail.gmail.com>
+From: Jonathan Cameron <Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 8/9] dt-bindings: iio: humidity: hts221: support open
+ drain mode
+Date: Mon, 17 Jul 2017 19:49:54 +0800
+Message-ID: <20170717194954.00004b62@huawei.com>
+References: <20170709165704.26311-1-lorenzo.bianconi@st.com>
+        <20170709165704.26311-9-lorenzo.bianconi@st.com>
+        <20170711025158.vpt6bcznkhi3bslm@rob-hp-laptop>
+        <20170711192656.7fd08a1c@kernel.org>
+        <CAL_JsqJa7JeofpG=66AnVrTP4XtVrp9B4-QoLTyK08GzF4L5uQ@mail.gmail.com>
+        <0462CB71-6762-48F2-99B3-EA62FF81C280@jic23.retrosnub.co.uk>
+        <CAA2SeN+2T2-G1khRNpNzccesX=cip0ConT11RJRV-HB8Ojk0pA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGtw-bgK6hfFOHRtO0z6o2zxpvjERTX4i=HzioE69G8kAw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, Will Deacon <will.deacon@arm.com>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Archit Taneja <architt@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeN+2T2-G1khRNpNzccesX=cip0ConT11RJRV-HB8Ojk0pA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, 15 Jul 2017 16:32:35 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On 7/15/2017 1:09 AM, Rob Clark wrote:
-> On Fri, Jul 14, 2017 at 3:36 PM, Will Deacon <will.deacon@arm.com> wrote:
->> On Fri, Jul 14, 2017 at 03:34:42PM -0400, Rob Clark wrote:
->>> On Fri, Jul 14, 2017 at 3:01 PM, Will Deacon <will.deacon@arm.com> wrote:
->>>> On Fri, Jul 14, 2017 at 02:25:45PM -0400, Rob Clark wrote:
->>>>> On Fri, Jul 14, 2017 at 2:06 PM, Will Deacon <will.deacon@arm.com> wrote:
->>>>>> On Fri, Jul 14, 2017 at 01:42:13PM -0400, Rob Clark wrote:
->>>>>>> On Fri, Jul 14, 2017 at 1:07 PM, Will Deacon <will.deacon@arm.com> wrote:
->>>>>>>> On Thu, Jul 13, 2017 at 10:55:10AM -0400, Rob Clark wrote:
->>>>>>>>> On Thu, Jul 13, 2017 at 9:53 AM, Sricharan R <sricharan@codeaurora.org> wrote:
->>>>>>>>>> Hi,
->>>>>>>>>>
->>>>>>>>>> On 7/13/2017 5:20 PM, Rob Clark wrote:
->>>>>>>>>>> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan@codeaurora.org> wrote:
->>>>>>>>>>>> Hi Vivek,
->>>>>>>>>>>>
->>>>>>>>>>>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
->>>>>>>>>>>>> Hi Stephen,
->>>>>>>>>>>>>
->>>>>>>>>>>>>
->>>>>>>>>>>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
->>>>>>>>>>>>>> On 07/06, Vivek Gautam wrote:
->>>>>>>>>>>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
->>>>>>>>>>>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
->>>>>>>>>>>>>>>                    size_t size)
->>>>>>>>>>>>>>>   {
->>>>>>>>>>>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
->>>>>>>>>>>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>>>>>>>>>>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
->>>>>>>>>>>>>>> +    size_t ret;
->>>>>>>>>>>>>>>         if (!ops)
->>>>>>>>>>>>>>>           return 0;
->>>>>>>>>>>>>>>   -    return ops->unmap(ops, iova, size);
->>>>>>>>>>>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
->>>>>>>>>>>>>> Can these map/unmap ops be called from an atomic context? I seem
->>>>>>>>>>>>>> to recall that being a problem before.
->>>>>>>>>>>>>
->>>>>>>>>>>>> That's something which was dropped in the following patch merged in master:
->>>>>>>>>>>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
->>>>>>>>>>>>>
->>>>>>>>>>>>> Looks like we don't  need locks here anymore?
->>>>>>>>>>>>
->>>>>>>>>>>>  Apart from the locking, wonder why a explicit pm_runtime is needed
->>>>>>>>>>>>  from unmap. Somehow looks like some path in the master using that
->>>>>>>>>>>>  should have enabled the pm ?
->>>>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> Yes, there are a bunch of scenarios where unmap can happen with
->>>>>>>>>>> disabled master (but not in atomic context).  On the gpu side we
->>>>>>>>>>> opportunistically keep a buffer mapping until the buffer is freed
->>>>>>>>>>> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
->>>>>>>>>>> an exported dmabuf while some other driver holds a reference to it
->>>>>>>>>>> (which can be dropped when the v4l2 device is suspended).
->>>>>>>>>>>
->>>>>>>>>>> Since unmap triggers tbl flush which touches iommu regs, the iommu
->>>>>>>>>>> driver *definitely* needs a pm_runtime_get_sync().
->>>>>>>>>>
->>>>>>>>>>  Ok, with that being the case, there are two things here,
->>>>>>>>>>
->>>>>>>>>>  1) If the device links are still intact at these places where unmap is called,
->>>>>>>>>>     then pm_runtime from the master would setup the all the clocks. That would
->>>>>>>>>>     avoid reintroducing the locking indirectly here.
->>>>>>>>>>
->>>>>>>>>>  2) If not, then doing it here is the only way. But for both cases, since
->>>>>>>>>>     the unmap can be called from atomic context, resume handler here should
->>>>>>>>>>     avoid doing clk_prepare_enable , instead move the clk_prepare to the init.
->>>>>>>>>>
->>>>>>>>>
->>>>>>>>> I do kinda like the approach Marek suggested.. of deferring the tlb
->>>>>>>>> flush until resume.  I'm wondering if we could combine that with
->>>>>>>>> putting the mmu in a stalled state when we suspend (and not resume the
->>>>>>>>> mmu until after the pending tlb flush)?
->>>>>>>>
->>>>>>>> I'm not sure that a stalled state is what we're after here, because we need
->>>>>>>> to take care to prevent any table walks if we've freed the underlying pages.
->>>>>>>> What we could try to do is disable the SMMU (put into global bypass) and
->>>>>>>> invalidate the TLB when performing a suspend operation, then we just ignore
->>>>>>>> invalidation whilst the clocks are stopped and, on resume, enable the SMMU
->>>>>>>> again.
->>>>>>>
->>>>>>> wouldn't stalled just block any memory transactions by device(s) using
->>>>>>> the context bank?  Putting it in bypass isn't really a good thing if
->>>>>>> there is any chance the device can sneak in a memory access before
->>>>>>> we've taking it back out of bypass (ie. makes gpu a giant userspace
->>>>>>> controlled root hole).
->>>>>>
->>>>>> If it doesn't deadlock, then yes, it will stall transactions. However, that
->>>>>> doesn't mean it necessarily prevents page table walks.
->>>>>
->>>>> btw, I guess the concern about pagetable walk is that the unmap could
->>>>> have removed some sub-level of the pt that the tlb walk would hit?
->>>>> Would deferring freeing those pages help?
->>>>
->>>> Could do, but it sounds like a lot of complication that I think we can fix
->>>> by making the suspend operation put the SMMU into a "clean" state.
->>>>
->>>>>> Instead of bypass, we
->>>>>> could configure all the streams to terminate, but this race still worries me
->>>>>> somewhat. I thought that the SMMU would only be suspended if all of its
->>>>>> masters were suspended, so if the GPU wants to come out of suspend then the
->>>>>> SMMU should be resumed first.
->>>>>
->>>>> I believe this should be true.. on the gpu side, I'm mostly trying to
->>>>> avoid having to power the gpu back on to free buffers.  (On the v4l2
->>>>> side, somewhere in the core videobuf code would also need to be made
->>>>> to wrap it's dma_unmap_sg() with pm_runtime_get/put()..)
->>>>
->>>> Right, and we shouldn't have to resume it if we suspend it in a clean state,
->>>> with the TLBs invalidated.
->>>>
->>>
->>> I guess if the device_link() stuff ensured the attached device
->>> (gpu/etc) was suspended before suspending the iommu, then I guess I
->>> can't see how temporarily putting the iommu in bypass would be a
->>> problem.  I haven't looked at the device_link() stuff too closely, but
->>> iommu being resumed first and suspended last seems like the only thing
->>> that would make sense.  I'm mostly just nervous about iommu in bypass
->>> vs gpu since userspace has so much control over what address gpu
->>> writes to / reads from, so getting it wrong w/ the iommu would be a
->>> rather bad thing ;-)
->>
->> Right, but we can also configure it to terminate if you don't want bypass.
->>
+> >
+> >
+> > On 11 July 2017 19:42:54 BST, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:  
+> >>On Tue, Jul 11, 2017 at 1:26 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >>wrote:  
+> >>> On Mon, 10 Jul 2017 21:51:58 -0500
+> >>> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> >>>  
+> >>>> On Sun, Jul 09, 2017 at 06:57:03PM +0200, Lorenzo Bianconi wrote:  
+> >>>> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> >>>> > ---
+> >>>> >  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8  
+> >>++++++++  
+> >>>> >  1 file changed, 8 insertions(+)
+> >>>> >
+> >>>> > diff --git  
+> >>a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> >>b/Documentation/devicetree/bindings/iio/humidity/hts221.txt  
+> >>>> > index fca263e13400..732b83c06c08 100644
+> >>>> > --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> >>>> > +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> >>>> > @@ -5,6 +5,14 @@ Required properties:
+> >>>> >  - reg: i2c address of the sensor / spi cs line
+> >>>> >
+> >>>> >  Optional properties:
+> >>>> > +- drive-open-drain: the interrupt/data ready line will be  
+> >>configured  
+> >>>>
+> >>>> Needs a vendor prefix and "drdy-open-drain" would be more specific.  
+> >>> This is straight out of the pinctrl bindings and has been used in a  
+> >>few  
+> >>> other places as well.  I can see it should really be more obviously
+> >>> associated with the drdy pin though.  A few IIO drivers already
+> >>> use this binding (st sensors and the lsm6dsx).  If we are going
+> >>> to decide it's a bad idea we should deprecate those bindings and
+> >>> add whatever we do here as well.  
+> >>
+> >>Ah, okay. Then the description should have a  "see pinctrl.txt" for
+> >>the description.  
+> > Agreed.  
 > 
-
- But one thing here is, with devicelinks in picture, iommu suspend/resume
- is called along with the master. That means, we can end up cleaning even
- active entries on the suspend path ?, if suspend is going to
- put the smmu in to a clean state every time. So if the master's are following
- the pm_runtime sequence before a dma_map/unmap operation, that seems better.
-
-Regards,
- Sricharan
-
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
----
-This email has been checked for viruses by Avast antivirus software.
-https://www.avast.com/antivirus
+> This property has been defined in pinctrl/pinctrl-bindings.txt. Is it
+> fine to refer to that file?
+> Regards,
+> Lorenzo
+Yes, that's what Rob was effectively suggesting.
+> 
+> >>
+> >>Rob
+> >>--
+> >>To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> >>the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >>More majordomo info at  http://vger.kernel.org/majordomo-info.html  
+> >
+> > --
+> > Sent from my Android device with K-9 Mail. Please excuse my brevity.  
+> 
+> 
+> 
