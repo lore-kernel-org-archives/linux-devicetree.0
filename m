@@ -1,179 +1,74 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [RESEND PATCH v1] i2c: mediatek: send i2c master code at 400k
-Date: Mon, 17 Jul 2017 19:02:10 +0800
-Message-ID: <1500289330-31822-1-git-send-email-jun.gao@mediatek.com>
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [patch v1] Documentation: dt-bindings: aspeed-pwm-tacho cooling
+ device.
+Date: Mon, 17 Jul 2017 11:05:19 +0000
+Message-ID: <DB5PR05MB1224B743F33DFA632EC08DD9EFA00@DB5PR05MB1224.eurprd05.prod.outlook.com>
+References: <20170711131827.64045-1-c_mykolak@mellanox.com>
+ <20170715013346.fgqysvlu2prts7zn@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170715013346.fgqysvlu2prts7zn@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
+> -----Original Message-----
+> From: Rob Herring [mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> Sent: Saturday, July 15, 2017 4:34 AM
+> To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>;
+> Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>;
+> openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>; Vadim
+> Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>; Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Subject: Re: [patch v1] Documentation: dt-bindings: aspeed-pwm-tacho
+> cooling device.
+>=20
+> On Tue, Jul 11, 2017 at 04:18:27PM +0300, Mykola Kostenok wrote:
+> > This binding adds description for interface supporting
+> > aspeed-pwm-tacho driver cooling device creation.
+> > This cooling device could be bound to a thermal zone for the thermal
+> > control.
+>=20
+> Bindings are for devices, not drivers.
+>=20
+>=20
+> > It adds extra level of hierarchy -  for tachometer channel with fan
+> > subnodes and pwm channels with pwm subnodes.
+>=20
+> Why this binding was just added and now it is changing?
+>=20
 
-The speed of sending i2c master code in high-speed mode depends on
-source clock, clock-div and TIMING register. The source clock and
-clock-div of different SoC are not all the same. In order to send
-i2c master code at 400k in high-speed mode, a appropriate value
-should be set to TIMING register for a certain source clock and
-clock-div.
+Hi, Rob.
+Thanks for reply.
+=20
+This controller supports fan tacho channels and pwm channels. In the previo=
+us dts version, only tachometers channels were configurable.
+We need to set pwm channels as cooling device, since we use it for the ther=
+mal control. So, these channels are added to dts as well.
+And it added extra level hierarchy in dts.
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
----
- drivers/i2c/busses/i2c-mt65xx.c | 65 +++++++++++++++++++++++++++++------------
- 1 file changed, 46 insertions(+), 19 deletions(-)
+For now this driver is used only by 2 two platforms: our Mellanox and Quant=
+a (openbmc project).
+We sent first this patch to openbmc first the for approval from the Quanta =
+owners (Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> approved this change).
+=20
+The support of this change in dts is introduce in the patch for drivers/hwm=
+on/aspeed-pwm-tacho.c, which has been sent to hwmon maintainers.
 
-diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-index 45d6171..9bedf0b 100644
---- a/drivers/i2c/busses/i2c-mt65xx.c
-+++ b/drivers/i2c/busses/i2c-mt65xx.c
-@@ -50,7 +50,6 @@
- #define I2C_FS_START_CON		0x1800
- #define I2C_TIME_CLR_VALUE		0x0000
- #define I2C_TIME_DEFAULT_VALUE		0x0003
--#define I2C_FS_TIME_INIT_VALUE		0x1303
- #define I2C_WRRD_TRANAC_VALUE		0x0002
- #define I2C_RD_TRANAC_VALUE		0x0001
- 
-@@ -154,6 +153,7 @@ struct mtk_i2c {
- 	bool use_push_pull;		/* IO config push-pull mode */
- 
- 	u16 irq_stat;			/* interrupt status */
-+	unsigned int clk_src_div;
- 	unsigned int speed_hz;		/* The speed in transfer */
- 	enum mtk_trans_op op;
- 	u16 timing_reg;
-@@ -285,23 +285,20 @@ static void mtk_i2c_init_hw(struct mtk_i2c *i2c)
-  * less than or equal to i2c->speed_hz. The calculation try to get
-  * sample_cnt and step_cn
-  */
--static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk,
--			     unsigned int clock_div)
-+static int mtk_i2c_calculate_speed(struct mtk_i2c *i2c, unsigned int clk_src,
-+				   unsigned int target_speed,
-+				   unsigned int *timing_step_cnt,
-+				   unsigned int *timing_sample_cnt)
- {
--	unsigned int clk_src;
- 	unsigned int step_cnt;
- 	unsigned int sample_cnt;
- 	unsigned int max_step_cnt;
--	unsigned int target_speed;
- 	unsigned int base_sample_cnt = MAX_SAMPLE_CNT_DIV;
- 	unsigned int base_step_cnt;
- 	unsigned int opt_div;
- 	unsigned int best_mul;
- 	unsigned int cnt_mul;
- 
--	clk_src = parent_clk / clock_div;
--	target_speed = i2c->speed_hz;
--
- 	if (target_speed > MAX_HS_MODE_SPEED)
- 		target_speed = MAX_HS_MODE_SPEED;
- 
-@@ -347,16 +344,48 @@ static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk,
- 		return -EINVAL;
- 	}
- 
--	step_cnt--;
--	sample_cnt--;
-+	*timing_step_cnt = step_cnt - 1;
-+	*timing_sample_cnt = sample_cnt - 1;
-+
-+	return 0;
-+}
-+
-+static int mtk_i2c_set_speed(struct mtk_i2c *i2c, unsigned int parent_clk)
-+{
-+	unsigned int clk_src;
-+	unsigned int step_cnt;
-+	unsigned int sample_cnt;
-+	unsigned int target_speed;
-+	int ret;
-+
-+	clk_src = parent_clk / i2c->clk_src_div;
-+	target_speed = i2c->speed_hz;
- 
- 	if (target_speed > MAX_FS_MODE_SPEED) {
-+		/* Set master code speed register */
-+		ret = mtk_i2c_calculate_speed(i2c, clk_src, MAX_FS_MODE_SPEED,
-+					      &step_cnt, &sample_cnt);
-+		if (ret < 0)
-+			return ret;
-+
-+		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-+
- 		/* Set the high speed mode register */
--		i2c->timing_reg = I2C_FS_TIME_INIT_VALUE;
-+		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-+					      &step_cnt, &sample_cnt);
-+		if (ret < 0)
-+			return ret;
-+
- 		i2c->high_speed_reg = I2C_TIME_DEFAULT_VALUE |
- 			(sample_cnt << 12) | (step_cnt << 8);
- 	} else {
--		i2c->timing_reg = (sample_cnt << 8) | (step_cnt << 0);
-+		ret = mtk_i2c_calculate_speed(i2c, clk_src, target_speed,
-+					      &step_cnt, &sample_cnt);
-+		if (ret < 0)
-+			return ret;
-+
-+		i2c->timing_reg = (sample_cnt << 8) | step_cnt;
-+
- 		/* Disable the high speed transaction */
- 		i2c->high_speed_reg = I2C_TIME_CLR_VALUE;
- 	}
-@@ -647,8 +676,7 @@ static u32 mtk_i2c_functionality(struct i2c_adapter *adap)
- 	.functionality = mtk_i2c_functionality,
- };
- 
--static int mtk_i2c_parse_dt(struct device_node *np, struct mtk_i2c *i2c,
--			    unsigned int *clk_src_div)
-+static int mtk_i2c_parse_dt(struct device_node *np, struct mtk_i2c *i2c)
- {
- 	int ret;
- 
-@@ -656,11 +684,11 @@ static int mtk_i2c_parse_dt(struct device_node *np, struct mtk_i2c *i2c,
- 	if (ret < 0)
- 		i2c->speed_hz = I2C_DEFAULT_SPEED;
- 
--	ret = of_property_read_u32(np, "clock-div", clk_src_div);
-+	ret = of_property_read_u32(np, "clock-div", &i2c->clk_src_div);
- 	if (ret < 0)
- 		return ret;
- 
--	if (*clk_src_div == 0)
-+	if (i2c->clk_src_div == 0)
- 		return -EINVAL;
- 
- 	i2c->have_pmic = of_property_read_bool(np, "mediatek,have-pmic");
-@@ -676,7 +704,6 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 	int ret = 0;
- 	struct mtk_i2c *i2c;
- 	struct clk *clk;
--	unsigned int clk_src_div;
- 	struct resource *res;
- 	int irq;
- 
-@@ -684,7 +711,7 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 	if (!i2c)
- 		return -ENOMEM;
- 
--	ret = mtk_i2c_parse_dt(pdev->dev.of_node, i2c, &clk_src_div);
-+	ret = mtk_i2c_parse_dt(pdev->dev.of_node, i2c);
- 	if (ret)
- 		return -EINVAL;
- 
-@@ -745,7 +772,7 @@ static int mtk_i2c_probe(struct platform_device *pdev)
- 
- 	strlcpy(i2c->adap.name, I2C_DRV_NAME, sizeof(i2c->adap.name));
- 
--	ret = mtk_i2c_set_speed(i2c, clk_get_rate(clk), clk_src_div);
-+	ret = mtk_i2c_set_speed(i2c, clk_get_rate(clk));
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to set the speed.\n");
- 		return -EINVAL;
--- 
-1.8.1.1
+
+Best regards. Mykola Kostenok.
+
+> >
+> > Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56
+> > ++++++++++++++++++----
+> >  1 file changed, 47 insertions(+), 9 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
