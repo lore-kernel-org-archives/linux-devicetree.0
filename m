@@ -1,52 +1,39 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [RFC PATCH] ARM: dts: stm32: change pinctrl bindings definition
-Date: Mon, 17 Jul 2017 13:00:57 +0200
-Message-ID: <1500289258-3700-1-git-send-email-alexandre.torgue@st.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: da850-evm: drop VPIF endpoints
+Date: Mon, 17 Jul 2017 16:30:33 +0530
+Message-ID: <55429c4a-987d-a157-9565-eef04daeefea@ti.com>
+References: <20170615215730.28585-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170615215730.28585-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Initially each pin was declared in "include/dt-bindings/stm32f429-pinfunc.h"
-and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
-Since this approach was approved, the number of supported MCU has
-increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
-file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
-a new approach which consist to use a macro to define pin muxing in device
-tree. All STM32 DT will use the common macro to define pinmux. Furthermore, it
-will make easy maintenance and integration of new SOC.
+Hi Kevin,
 
-To check that patch generate same dtb than befrore I used dtc binary to (re)generate dts files
-(before and after apply the series).
-Example on stm32f469-disco:
+On Friday 16 June 2017 03:27 AM, Kevin Hilman wrote:
+> Drop the unused endpoints.  They should only be used when there is
+> an actual remote-endpoint connected.
+> 
+> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-after.dts
-stm32f469-disco-after.dtb
+A similar patch is needed for da850-lcdk too. In fact with v4.13-rc1, 
+without it, we get a warning splat that starts with:
 
-./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-before.dts
-stm32f469-disco-before.dtb
+WARNING: CPU: 0 PID: 129 at fs/sysfs/dir.c:31 sysfs_warn_dup+0x5c/0x7c
+sysfs: cannot create duplicate filename '/bus/platform/devices/vpif_capture'
 
-Then diff -u stm32f469-disco-before.dts stm32f469-disco-after.dts
+I am adding this patch to fixes and would like to send this along with 
+a similar LCDK patch (hopefully both for -rc2). While committing this I 
+will add "unused" to subject line too.
 
-Regards
-Alex
-
-Alexandre TORGUE (1):
-  ARM: dts: stm32: change pinctrl bindings definition
-
- arch/arm/boot/dts/stm32f429.dtsi                |  176 ++--
- include/dt-bindings/pinctrl/stm32-pinfunc.h     |   61 ++
- include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1239 -----------------------
- 3 files changed, 149 insertions(+), 1327 deletions(-)
- create mode 100644 include/dt-bindings/pinctrl/stm32-pinfunc.h
- delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
-
--- 
-1.9.1
-
+Thanks,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
