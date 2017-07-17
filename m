@@ -1,7 +1,7 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH 1/7] dt-bindings: phy: qmp: Add output-clock-names
-Date: Mon, 17 Jul 2017 17:33:57 +0530
-Message-ID: <1500293043-1887-2-git-send-email-varada@codeaurora.org>
+Subject: [PATCH 2/7] dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+Date: Mon, 17 Jul 2017 17:33:58 +0530
+Message-ID: <1500293043-1887-3-git-send-email-varada@codeaurora.org>
 References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
@@ -10,35 +10,56 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-
 Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The phy outputs a clock that will act as the parent for
-the phy's pipe clock. Add the name of this clock to the
-lane's DT node.
+IPQ8074 uses QMP phy controller that provides support to PCIe and
+USB. Adding dt binding information for the same.
 
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index e11c563..5d7a51f 100644
+index 5d7a51f..80d766b 100644
 --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
 +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -60,6 +60,8 @@ Required properties for child node:
- 	   one for each entry in clock-names.
-  - clock-names: Must contain following for pcie and usb qmp phys:
- 		 "pipe<lane-number>" for pipe clock specific to each lane.
-+ - clock-output-names: Name of the phy clock that will be the parent for
-+		       the above pipe clock.
+@@ -6,6 +6,7 @@ controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
  
-  - resets: a list of phandles and reset controller specifier pairs,
- 	   one for each entry in reset-names.
-@@ -96,6 +98,7 @@ Example:
+ Required properties:
+  - compatible: compatible list, contains:
++	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+ 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+ 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
  
- 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
- 			clock-names = "pipe0";
-+			clock-output-names = "pcie_0_pipe_clk_src";
- 			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
- 			reset-names = "lane0";
- 		};
+@@ -107,3 +108,30 @@ Example:
+ 		...
+ 		...
+ 	};
++
++	phy@86000 {
++		compatible = "qcom,ipq8074-qmp-pcie-phy";
++		reg = <0x86000 0x1000>;
++
++		#clock-cells = <1>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		resets = <&gcc GCC_PCIE0_PHY_BCR>,
++			 <&gcc GCC_PCIE0PHY_PHY_BCR>;
++		reset-names = "phy",
++			      "phy_phy";
++
++		status = "ok";
++
++		pciephy_0: lane@86000 {
++			reg = <0x86200 0x130>,
++				<0x86400 0x200>,
++				<0x86800 0x1f8>;
++			#phy-cells = <0>;
++			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
++			clock-names = "pipe0";
++			clock-output-names = "pcie20_phy0_pipe_clk";
++		};
++	};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
