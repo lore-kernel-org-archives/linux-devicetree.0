@@ -1,57 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: Document STM32 CRYP bindings
-Date: Mon, 17 Jul 2017 12:49:31 -0500
-Message-ID: <20170717174931.b6uvhwz5yn52qvyi@rob-hp-laptop>
-References: <1499939979-8623-1-git-send-email-fabien.dessenne@st.com>
- <1499939979-8623-3-git-send-email-fabien.dessenne@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] dt-bindings: Amlogic: Add Meson8 and Meson8b SMP
+ related documentation
+Date: Mon, 17 Jul 2017 12:53:07 -0500
+Message-ID: <20170717175307.ntxkhmynwuroak7v@rob-hp-laptop>
+References: <20170713103113.21560-1-martin.blumenstingl@googlemail.com>
+ <20170713103113.21560-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1499939979-8623-3-git-send-email-fabien.dessenne@st.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Fabien Dessenne <fabien.dessenne@st.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Lionel Debieve <lionel.debieve@st.com>, Ludovic Barre <ludovic.barre@st.com>
+In-Reply-To: <20170713103113.21560-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 11:59:38AM +0200, Fabien Dessenne wrote:
-> Document device tree bindings for the STM32 CRYP.
+On Thu, Jul 13, 2017 at 12:31:08PM +0200, Martin Blumenstingl wrote:
+> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+> With this patch we add documentation for:
+> 
+> * power-management-unit: the PMU is used to bring up the cores during
+>   SMP operations
+> * sram: among other things the sram is used to store the first code
+>   executed by the core when it is powered up
+> * cpu-enable-method: the CPU enable method used by Amlogic Meson8 and
+>   Meson8b SoCs
+> 
+> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> [also add Meson8 to the documentation]
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../devicetree/bindings/crypto/st,stm32-cryp.txt     | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
-> new file mode 100644
-> index 0000000..f631c37
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/st,stm32-cryp.txt
-> @@ -0,0 +1,20 @@
-> +* STMicroelectronics STM32 CRYP
-> +
-> +Required properties:
-> +- compatible: Should be "st,stm32f756-cryp".
-> +- reg: The address and length of the peripheral registers space
-> +- clocks: The input clock of the CRYP instance
-> +- interrupts: The CRYP interrupts
+>  .../devicetree/bindings/arm/amlogic/pmu.txt        | 18 ++++++++++++
+>  .../devicetree/bindings/arm/amlogic/smp-sram.txt   | 32 ++++++++++++++++++++++
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  2 ++
+>  3 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
 
-More than 1? How many?
-
-> +
-> +Optional properties:
-> +- resets: The input reset of the CRYP instance
-> +
-> +Example:
-> +cryp1: cryp@50060000 {
-> +	compatible = "st,stm32f756-cryp";
-> +	reg = <0x50060000 0x400>;
-> +	interrupts = <79>;
-> +	clocks = <&rcc 0 STM32F7_AHB2_CLOCK(CRYP)>;
-> +	resets = <&rcc STM32F7_AHB2_RESET(CRYP)>;
-> +	status = "disabled";
-> +};
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
