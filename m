@@ -1,175 +1,75 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH RESEND] ARM64: dts: meson-gxl-s905x-libretech-cc: fixup board definition
-Date: Mon, 17 Jul 2017 18:03:01 +0200
-Message-ID: <20170717160301.32729-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: sh-msiof: Add support for R-Car H3" to the spi tree
+Date: Mon, 17 Jul 2017 17:06:59 +0100
+Message-ID: <E1dX8Xz-0005HE-F3@debutante>
+References: <1499855047-20177-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499855047-20177-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The libretech CC derives less from the p212 than initially thought.
-Several voltage regulators are different and the capabilities of the
-sdcard and emmc also differ.
+The patch
 
-Deriving from the p212 is not convient anymore so the libretech is now
-derived from s905x definition directly.
+   spi: sh-msiof: Add support for R-Car H3
 
-Fixes: cd84aff1d981 ("ARM64: dts: meson-gxl: Add Libre Technology CC support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+has been applied to the spi tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 3d108f1e2d4c21026750cd4107e03b3e7a3e98a0 Mon Sep 17 00:00:00 2001
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Date: Wed, 12 Jul 2017 12:24:07 +0200
+Subject: [PATCH] spi: sh-msiof: Add support for R-Car H3
+
+Add support for MSIOF in r8a7795 (R-Car H3).
+Due to a hardware erratum on R-Car H3 ES1.x, this is only supported on
+ES2.0 and later.
+
+No driver update is needed.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 103 ++++++++++++++++++---
- 1 file changed, 91 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-index 890821d6e52b..266fbcf3e47f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-@@ -10,12 +10,20 @@
- 
- #include <dt-bindings/input/input.h>
- 
--#include "meson-gxl-s905x-p212.dtsi"
-+#include "meson-gxl-s905x.dtsi"
- 
- / {
- 	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
- 	model = "Libre Technology CC";
- 
-+	aliases {
-+		serial0 = &uart_AO;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
- 	cvbs-connector {
- 		compatible = "composite-video-connector";
- 
-@@ -26,6 +34,11 @@
- 		};
- 	};
- 
-+	emmc_pwrseq: emmc-pwrseq {
-+		compatible = "mmc-pwrseq-emmc";
-+		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -53,6 +66,39 @@
- 			linux,default-trigger = "heartbeat";
- 		};
- 	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	vcc_3v3: regulator-vcc_3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VCC_3V3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+
-+	vcc_card: regulator-vcc-card {
-+		compatible = "regulator-gpio";
-+
-+		regulator-name = "VCC_CARD";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+
-+		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
-+		gpios-states = <0>;
-+
-+		states = <3300000 0>,
-+			 <1800000 1>;
-+	};
-+
-+	vddio_boot: regulator-vddio_boot {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VDDIO_BOOT";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &cvbs_vdac_port {
-@@ -61,6 +107,16 @@
- 	};
- };
- 
-+&ethmac {
-+	status = "okay";
-+};
-+
-+&ir {
-+	status = "okay";
-+	pinctrl-0 = <&remote_input_ao_pins>;
-+	pinctrl-names = "default";
-+};
-+
- &hdmi_tx {
- 	status = "okay";
- 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
-@@ -73,20 +129,43 @@
- 	};
- };
- 
--/*
-- * The following devices exists but are exposed on the general
-- * purpose GPIO header. End user may well decide to use those pins
-- * for another purpose
-- */
-+/* SD card */
-+&sd_emmc_b {
-+	status = "okay";
-+	pinctrl-0 = <&sdcard_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	max-frequency = <100000000>;
-+	disable-wp;
-+
-+	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
- 
--&sd_emmc_a {
--	status = "disabled";
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vcc_card>;
- };
- 
--&uart_A {
--	status = "disabled";
-+/* eMMC */
-+&sd_emmc_c {
-+	status = "okay";
-+	pinctrl-0 = <&emmc_pins>;
-+	pinctrl-names = "default";
-+
-+	bus-width = <8>;
-+	cap-mmc-highspeed;
-+	max-frequency = <50000000>;
-+	non-removable;
-+	disable-wp;
-+
-+	mmc-pwrseq = <&emmc_pwrseq>;
-+	vmmc-supply = <&vcc_3v3>;
-+	vqmmc-supply = <&vddio_boot>;
- };
- 
--&wifi32k {
--	status = "disabled";
-+&uart_AO {
-+	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 64ee489571c4..39e5ef7c5e71 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 			 "renesas,msiof-r8a7792" (R-Car V2H)
+ 			 "renesas,msiof-r8a7793" (R-Car M2-N)
+ 			 "renesas,msiof-r8a7794" (R-Car E2)
++			 "renesas,msiof-r8a7795" (R-Car H3)
+ 			 "renesas,msiof-r8a7796" (R-Car M3-W)
+ 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+ 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
 -- 
-2.9.4
+2.13.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
