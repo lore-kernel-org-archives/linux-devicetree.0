@@ -1,70 +1,39 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
-Date: Mon, 17 Jul 2017 12:56:10 +0100
-Message-ID: <20170717115557.GA29650@remoulade>
-References: <20170715003836.GA113132@beast>
- <CAKv+Gu9n0cpznPxiQPYj0_+DALXTdevbvoYgM87A7ej2kdcizA@mail.gmail.com>
- <CAGXu5j+fX-E9ngW3MBhRFgpKBLzpyhR0TCx=ovosXOAqogzMMA@mail.gmail.com>
- <CAKv+Gu82xiv0Yy79Hb=JCqmJNYoxxSt5HRu5j4TeSeznCvg_+w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu82xiv0Yy79Hb=JCqmJNYoxxSt5HRu5j4TeSeznCvg_+w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Kees Cook <keescook@chromium.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Matt Redfearn <matt.redfearn@imgtec.com>
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/7] Add support for IPQ8074 PCIe phy and controller
+Date: Mon, 17 Jul 2017 17:33:56 +0530
+Message-ID: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 16, 2017 at 05:42:25PM +0100, Ard Biesheuvel wrote:
-> On 16 July 2017 at 03:13, Kees Cook <keescook@chromium.org> wrote:
-> > On Sat, Jul 15, 2017 at 5:42 AM, Ard Biesheuvel
-> > <ard.biesheuvel@linaro.org> wrote:
-> >> (+ Mark, Will, Catalin)
-> >>
-> >> On 15 July 2017 at 01:38, Kees Cook <keescook@chromium.org> wrote:
-> >>> Document then /chosen/kaslr-seed property (and its interaction with the
-> >>> EFI_RNG_PROTOCOL API).
-> >>>
-> >>> Signed-off-by: Kees Cook <keescook@chromium.org>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
-> >>>  1 file changed, 20 insertions(+), 2 deletions(-)
-> >>
-> >> For the textual changes:
-> >>
-> >> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> >>
-> >> *However*, documenting the /chosen/kaslr-seed property promotes it
-> >> from a stub<->kernel private interface to an external ABI between the
-> >> kernel and the bootloader, and we need to reach agreement on whether
-> >> doing so is desirable first IMHO.
-> >
-> > Oh! I thought that was the point (having a bootloader provide kaslr
-> > entropy). And that in the EFI case, it was the stub doing it.
-> 
-> It was the opposite, actually,  The /chosen node is the most
-> appropriate way for the EFI stub to communicate a seed value to the
-> kernel proper, given how it is needed extremely early in the boot.
-> (Using UEFI config tables like we do for the /dev/random seed is not
-> possible for this)
-> 
-> So as a side effect, other bootloaders can use the same mechanism. I'm
-> fine with that, but it needs to be an explicit decision by the
-> maintainers imo.
+Add definitions required to enable QMP phy support for IPQ8074.
 
-I was under the impression that we'd already assumed other bootloaders could
-set this, so I don't have a problem promoting this to a defined public
-interface.
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
+Gen 1/2, one lane, two PCIe root complex with support for MSI and
+legacy interrupts, and it conforms to PCI Express Base 2.1
+specification.
 
-I guess we just need Will and Catalin to agree.
+Varadarajan Narayanan (7):
+  dt-bindings: phy: qmp: Add output-clock-names
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+  phy: qcom-qmp: Fix phy pipe clock name
+  phy: qcom-qmp: Handle unavailable registers
+  phy: qcom-qmp: Add support for IPQ8074
+  dt-bindings: pci: qcom: Add support for IPQ8074
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
 
-FWIW:
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  67 ++++++
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  31 +++
+ drivers/pci/dwc/pcie-qcom.c                        | 259 +++++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 186 +++++++++++++--
+ 4 files changed, 522 insertions(+), 21 deletions(-)
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-As an aside, we might want to make a split between /chosen properties which are
-Linux-specific (e.g. this), and those which are somewhat generic (e.g.
-stdout-path), since other OSs may/should respect those generic ones.
-
-Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
