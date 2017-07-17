@@ -1,46 +1,31 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] net: ethernet: bgmac: Make IDM register space optional
-Date: Mon, 17 Jul 2017 15:05:44 -0400
-Message-ID: <CAC3K-4rgVYkjGq_WTHoO6=fvSH0TuHOpdDpukbvK+5LxhLm4BA@mail.gmail.com>
-References: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com>
- <1499972649-6200-3-git-send-email-abhishek.shah@broadcom.com>
- <CAC3K-4o=WRqBv_vTf7QGDYjWzMmVog=63ZbiHbHAuW7zJcsHFQ@mail.gmail.com> <CAKUFe6ad027MAg-A3XO7i1=c-Q623JqMPCKV_+Hi+ZpUojBn-Q@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 7/7] ARM: dts: rockchip: add efuse device node for rk3228
+Date: Mon, 17 Jul 2017 21:16:20 +0200
+Message-ID: <4816350.S9q04trJsa@phil>
+References: <1498127402-6705-1-git-send-email-frank.wang@rock-chips.com> <1498127560-6960-1-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKUFe6ad027MAg-A3XO7i1=c-Q623JqMPCKV_+Hi+ZpUojBn-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1498127560-6960-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Shah <abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 2:37 PM, Abhishek Shah
-<abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Jon,
->
->> This also will need to be added to
->> drivers/net/ethernet/broadcom/bgmac-bcma.c.  Otherwise, the driver
->> will no longer work for those platforms.  Since this was already
->> accepted, please push out a fix ASAP.
->>
-> I do not see how the bcma driver [bgmac-bcma.c] will no longer work.
-> The whole idea behind introducing this  BGMAC_FEAT_IDM_MASK bit
-> was to keep bcma driver's functionality intact.
->
-> The BGMAC_FEAT_IDM_MASK bit is explicitly set by the bgmac-platform driver
-> and is unset inside the same if the idm register base is provided.
->
-> For BCMA driver case, I do not touch BGMAC_FEAT_IDM_MASK bit, i.e. it
-> is *not* set.
-> And if it is not set, each idm operation done in bgmac.c will take place.
-> Please explain if I am missing something here.
+Am Donnerstag, 22. Juni 2017, 18:32:40 CEST schrieb Frank Wang:
+> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Add a efuse node in the device tree for the rk3228 SoC.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Sorry, I had it flipped in my mind.  Please disregard.
+with the compatible change applied to Greg's tree,
+I've now applied this one for 4.14.
 
->
->
-> Regards,
-> Abhishek
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
