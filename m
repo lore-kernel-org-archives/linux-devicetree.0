@@ -1,187 +1,124 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/1] drivers/staging/pi433: New driver
-Date: Mon, 17 Jul 2017 14:18:39 +0800
-Message-ID: <201707171425.Idik3VOq%fengguang.wu@intel.com>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme
+ readability
+Date: Mon, 17 Jul 2017 08:21:02 +0200
+Message-ID: <20170717062102.za55es6ejikkkcqv@flea>
+References: <20170614063016.22069-1-wens@csie.org>
+ <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
+ <CAGb2v67wZ_dg0T1+_NuzatuuuRZ2eAQo94KWtSsEJk_0HmU6qQ@mail.gmail.com>
+ <20170711193111.p6jdyesluuqdlu3j@flea>
+ <CAGb2v64aoXsoE=YL_PFLkdU7rBZdpqhg37CKuQU-1F+SV9=zcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolf Entwicklungen <Marcus.Wolf@Wolf-Entwicklungen.de>
-Cc: kbuild-all@01.org, Greg KH <gregkh@linuxfoundation.org>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org, grant.likely@linaro.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0119824210=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAGb2v64aoXsoE=YL_PFLkdU7rBZdpqhg37CKuQU-1F+SV9=zcw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marcus,
 
-[auto build test WARNING on staging/staging-testing]
-[also build test WARNING on v4.13-rc1 next-20170714]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Wolf-Entwicklungen/drivers-staging-pi433-New-driver/20170716-181617
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF=-D__CHECK_ENDIAN__
+--===============0119824210==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="x7vgo7jo3cic3ydt"
+Content-Disposition: inline
 
 
-sparse warnings: (new ones prefixed by >>)
+--x7vgo7jo3cic3ydt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   include/linux/compiler.h:260:8: sparse: attribute 'no_sanitize_address': unknown attribute
->> drivers/staging/pi433/pi433_if.c:1155:36: sparse: incompatible types for operation (<)
-   drivers/staging/pi433/pi433_if.c:1155:36:    left side has type struct task_struct *tx_task_struct
-   drivers/staging/pi433/pi433_if.c:1155:36:    right side has type int
+Hi,
 
-vim +1155 drivers/staging/pi433/pi433_if.c
+On Wed, Jul 12, 2017 at 10:38:38AM +0800, Chen-Yu Tsai wrote:
+> On Wed, Jul 12, 2017 at 3:31 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Mon, Jul 10, 2017 at 11:48:00PM +0800, Chen-Yu Tsai wrote:
+> >> On Sun, Jun 18, 2017 at 10:05 PM, Rob Herring <robh@kernel.org> wrote:
+> >> > On Wed, Jun 14, 2017 at 02:30:16PM +0800, Chen-Yu Tsai wrote:
+> >> >> The explanation for the endpoint ID numbering scheme is convoluted
+> >> >> and hard to understand.
+> >> >>
+> >> >> This patch aims to improve the readability of it by combining the
+> >> >> existing two paragraphs, while also providing a diagram example,
+> >> >> and how endpoints should be numbered based on that example.
+> >> >>
+> >> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >> >> ---
+> >> >>
+> >> >> Hope this helps. I'm not sure I can improve this even more without
+> >> >> spelling out all cases.
+> >> >>
+> >> >> ---
+> >> >>  .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++=
+++++++------
+> >> >>  1 file changed, 27 insertions(+), 9 deletions(-)
+> >> >
+> >> > Acked-by: Rob Herring <robh@kernel.org>
+> >>
+> >> Maxime, this patch seems to have fallen through the cracks.
+> >>
+> >> Could you queue it as a fix for 4.13?
+> >
+> > Sorry, I don't know why I overlooked it.
+> >
+> > Is it really 4.13 material though? It doesn't look that urgent.
+>=20
+> Unless I'm mistaken, this clarifies the numbering scheme introduced
+> in 4.13. I'd say that's enough reason to have it in the same release.
+>=20
+> But I should update the diagram first. The backend <-> TCON mux is
+> missing. And maybe a Fixes tag.
 
-  1072	
-  1073	static int pi433_probe(struct spi_device *spi)
-  1074	{
-  1075		struct pi433_device	*device;
-  1076		int			retval;
-  1077	
-  1078		/* setup spi parameters */
-  1079		spi->mode = 0x00;
-  1080		spi->bits_per_word = 8;
-  1081		/* spi->max_speed_hz = 10000000;  1MHz already set by device tree overlay */
-  1082	
-  1083		retval = spi_setup(spi);
-  1084		if (retval)
-  1085		{
-  1086			dev_dbg(&spi->dev, "configuration of SPI interface failed!\n");
-  1087			return retval;
-  1088		}
-  1089		else
-  1090		{
-  1091			dev_dbg(&spi->dev,
-  1092				"spi interface setup: mode 0x%2x, %d bits per word, %dhz max speed",
-  1093				spi->mode, spi->bits_per_word, spi->max_speed_hz);
-  1094		}
-  1095	
-  1096		/* Ping the chip by reading the version register */
-  1097		retval = spi_w8r8(spi, 0x10);
-  1098		if (retval < 0)
-  1099			return retval;
-  1100	
-  1101		switch(retval)
-  1102		{
-  1103			case 0x24:
-  1104				dev_dbg(&spi->dev, "fonud pi433 (ver. 0x%x)", retval);
-  1105				break;
-  1106			default:
-  1107				dev_dbg(&spi->dev, "unknown chip version: 0x%x", retval);
-  1108				return -ENODEV;
-  1109		}
-  1110	
-  1111		/* Allocate driver data */
-  1112		device = kzalloc(sizeof(*device), GFP_KERNEL);
-  1113		if (!device)
-  1114			return -ENOMEM;
-  1115	
-  1116		/* Initialize the driver data */
-  1117		device->spi = spi;
-  1118		device->rx_active = false;
-  1119		device->tx_active = false;
-  1120		device->interrupt_rx_allowed = false;
-  1121	
-  1122		/* init wait queues */
-  1123		init_waitqueue_head(&device->tx_wait_queue);
-  1124		init_waitqueue_head(&device->rx_wait_queue);
-  1125		init_waitqueue_head(&device->fifo_wait_queue);
-  1126	
-  1127		/* init fifo */
-  1128		INIT_KFIFO(device->tx_fifo);
-  1129	
-  1130		/* init mutexes and locks */
-  1131		mutex_init(&device->tx_fifo_lock);
-  1132		mutex_init(&device->rx_lock);
-  1133	
-  1134		/* setup GPIO (including irq_handler) for the different DIOs */
-  1135		retval = setup_GPIOs(device);
-  1136		if (retval)
-  1137		{
-  1138			dev_dbg(&spi->dev, "setup of GPIOs failed");
-  1139			goto GPIO_failed;
-  1140		}
-  1141	
-  1142		/* setup the radio module */
-  1143		SET_CHECKED(rf69_set_mode		(spi, standby));
-  1144		SET_CHECKED(rf69_set_data_mode		(spi, packet));
-  1145		SET_CHECKED(rf69_set_amplifier_0	(spi, optionOn));
-  1146		SET_CHECKED(rf69_set_amplifier_1	(spi, optionOff));
-  1147		SET_CHECKED(rf69_set_amplifier_2	(spi, optionOff));
-  1148		SET_CHECKED(rf69_set_output_power_level	(spi, 13));
-  1149		SET_CHECKED(rf69_set_antenna_impedance	(spi, fiftyOhm));
-  1150	
-  1151		/* start tx thread */
-  1152		device->tx_task_struct = kthread_run(pi433_tx_thread,
-  1153						     device,
-  1154						     "pi433_tx_task");
-> 1155		if (device->tx_task_struct < 0)
-  1156		{
-  1157			dev_dbg(device->dev, "start of send thread failed");
-  1158			goto send_thread_failed;
-  1159		}
-  1160	
-  1161		/* determ minor number */
-  1162		retval = pi433_get_minor(device);
-  1163		if (retval)
-  1164		{
-  1165			dev_dbg(device->dev, "get of minor number failed");
-  1166			goto minor_failed;
-  1167		}
-  1168	
-  1169		/* create device */
-  1170		device->devt = MKDEV(MAJOR(pi433_dev), device->minor);
-  1171		device->dev = device_create(pi433_class,
-  1172					    &spi->dev,
-  1173					    device->devt,
-  1174					    device,
-  1175					    "pi433");
-  1176		if (IS_ERR(device->dev)) {
-  1177			pr_err("pi433: device register failed\n");
-  1178			retval = PTR_ERR(device->dev);
-  1179			goto device_create_failed;
-  1180		}
-  1181		else {
-  1182			dev_dbg(device->dev,
-  1183				"created device for major %d, minor %d\n",
-  1184				MAJOR(pi433_dev),
-  1185				device->minor);
-  1186		}
-  1187	
-  1188		/* create cdev */
-  1189		device->cdev = cdev_alloc();
-  1190		device->cdev->owner = THIS_MODULE;
-  1191		cdev_init(device->cdev, &pi433_fops);
-  1192		retval = cdev_add(device->cdev, device->devt, 1);
-  1193		if (retval)
-  1194		{
-  1195			dev_dbg(device->dev, "register of cdev failed");
-  1196			goto cdev_failed;
-  1197		}
-  1198	
-  1199		/* spi setup */
-  1200		spi_set_drvdata(spi, device);
-  1201	
-  1202		return 0;
-  1203	
-  1204	cdev_failed:
-  1205		device_destroy(pi433_class, device->devt);
-  1206	device_create_failed:
-  1207		pi433_free_minor(device);
-  1208	minor_failed:
-  1209		kthread_stop(device->tx_task_struct);
-  1210	send_thread_failed:
-  1211		free_GPIOs(device);
-  1212	GPIO_failed:
-  1213		kfree(device);
-  1214	
-  1215		return retval;
-  1216	}
-  1217	
+If it's just clarification, I don't think we should push it as a fix,
+but and it can definitely wait.
 
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--x7vgo7jo3cic3ydt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZbFdOAAoJEBx+YmzsjxAgEU0QAMLsNvLri81uJDMs9cHwkIFS
+MDlw8ft0N6NInL5fhM9wxtpJ73zVf+B1lS21RP852SXR7XorZWmHSnLZYp3/FFJE
+72Jl1N3/qoVRUj5i0rrRIELsynxrh20IWfgl2NKuH3BdnuFtfk9o5vIiTnfI2W01
+ZOx+6hJdpwZehPoGKS6Ozy5fw2LK1kor1Nr6AQ+YB+iIaiwNc1PvTI/RbAI3oY/3
+DEbwTTqyXLv0dwIx/axQ8FsSadNE9UyTtdCydu3ouJn7xDsz0F7bFjy5rSfTJ/M+
+Nj6OX8k41HaNbuueFoHigJiq06+HNsCB5T34P1rktodR84eo7wwlD4n3h5rbRd5B
+nbyCzpDc291MZ4ScDCKP7AHtGTr/Bn0StKk8/V0yGbaQXiqMRWW4SKUQsNlERqM4
+t9bqNsy1QhC85u9m1c2D+sTwjab23oHSf+TmL/qPw7OlT2YmCrsFcKT8om0CfcmA
+8e51m7BJTaIL7d72ZBMW0dRiIWsgaUbGMiq63QSsWbnA9V/VsRzLlRCuk0jPdwPd
+Xh5X3kgq0QqYyhluJQmtPeAWLScb9zrjQUVtw/QGKR1OAQzALcHJvrYVkiH10S4+
+W4vhFm/jo3fwJz7bQHleLIV06J1tIfZjy3Y3Ds3vLHYkbdYsEqMvaO3S1xhWZBM9
+ojEOAjEL8Yin5oJjAd4B
+=sEfd
+-----END PGP SIGNATURE-----
+
+--x7vgo7jo3cic3ydt--
+
+--===============0119824210==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0119824210==--
