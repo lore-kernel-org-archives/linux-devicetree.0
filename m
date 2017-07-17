@@ -1,42 +1,108 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: regulator: pwm-regulator: fix example syntax
-Date: Mon, 17 Jul 2017 15:18:47 -0500
-Message-ID: <20170717201846.gzoeuxvlwjoroonh@rob-hp-laptop>
-References: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
+Date: Mon, 17 Jul 2017 21:22:18 +0100
+Message-ID: <CAKv+Gu8X8d4HqVZOcusC2L9WzJNatBkAgtKONjzad9SgdsrFRA@mail.gmail.com>
+References: <20170715003836.GA113132@beast> <20170717193258.zim7rjh2cfgb6t5e@rob-hp-laptop>
+ <CAGXu5jJk7otP6VBde7cFdMBRgQQB_rQpCSi24tRmC9bMmfo5Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
+In-Reply-To: <CAGXu5jJk7otP6VBde7cFdMBRgQQB_rQpCSi24tRmC9bMmfo5Jw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree@vger.kernel.org, lgirdwood@gmail.com, broonie@kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+To: Kees Cook <keescook@chromium.org>
+Cc: Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matt Redfearn <matt.redfearn@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 03:18:23PM +0200, Martin Blumenstingl wrote:
-> The "Continuous Voltage" example specifies a pwm-dutycycle-range.
-> However, an equal sign is missing between the property name and value.
-> Fix this to allow copy and paste from the documentation when writing an
-> own .dts file with a pwm-regulator.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  Documentation/devicetree/bindings/regulator/pwm-regulator.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> index bf85aa9ad6a7..3d78d507e29f 100644
-> --- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> +++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-> @@ -71,7 +71,7 @@ Continuous Voltage With Enable GPIO Example:
->  		 * Inverted PWM logic, and the duty cycle range is limited
->  		 * to 30%-70%.
->  		 */
-> -		pwm-dutycycle-range <700 300>; /* */
-> +		pwm-dutycycle-range = <700 300>; /* */
+On 17 July 2017 at 20:54, Kees Cook <keescook@chromium.org> wrote:
+> On Mon, Jul 17, 2017 at 12:32 PM, Rob Herring <robh@kernel.org> wrote:
+>> On Fri, Jul 14, 2017 at 05:38:36PM -0700, Kees Cook wrote:
+>>> Document then /chosen/kaslr-seed property (and its interaction with the
+>>
+>> s/then/the/
+>>
+>>> EFI_RNG_PROTOCOL API).
+>>
+>> "dt-bindings: chosen: ..." for the subject.
+>
+> I'll send a v2 with these fixed and the Acks added.
+>
+>>> Signed-off-by: Kees Cook <keescook@chromium.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
+>>>  1 file changed, 20 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>>> index dee3f5d9df26..0cdb43b268e5 100644
+>>> --- a/Documentation/devicetree/bindings/chosen.txt
+>>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>>> @@ -5,9 +5,27 @@ The chosen node does not represent a real device, but serves as a place
+>>>  for passing data between firmware and the operating system, like boot
+>>>  arguments. Data in the chosen node does not represent the hardware.
+>>>
+>>> +The following properties are recognized:
+>>>
+>>> -stdout-path property
+>>> ---------------------
+>>> +
+>>> +kaslr-seed
+>>> +-----------
+>>
+>> Is there some reason we would not feed this to other things needing
+>> entropy and therefore should have a more generic name?
+>
+> I'll let Ard answer this better than me, but IIRC, he wanted a narrow use.
+>
 
-What's the point of "/* */" while you're here?
+The reason is that the seed is not used to feed a DRBG (because it is
+way to early for that when we lay out the VA space), but different
+slices of the u64 are used for randomizing different parts of the
+address space, i.e., the top 16 bits are used to randomize the linear
+region, bits 48 - 21 for the kernel itself, and the bits below that
+for the module region. (The virtual kernel offset is randomized
+further by the physical placement modulo 2 MB, but this is done by the
+stub, which calls EFI_RNG_PROTOCOL itself so it does not use
+/chosen/kaslr-seed)
 
-In any case,
+This means any use of this seed beyond its intended purpose may leak
+information.
 
-Acked-by: Rob Herring <robh@kernel.org>
+For UEFI systems, we do pass a random seed via a UEFI configuration
+table, but this is deliberately kept separate (and uses a UEFI
+specific interface, which seemed more appropriate)
+
+>>> +
+>>> +This property is used when booting with CONFIG_RANDOMIZE_BASE to seed
+>>> +the entropy used to randomize the kernel image base address location. It
+>>> +is parsed as a u64 value, e.g.
+>>
+>> Why limit the size to 64-bit and why does it matter how the data is
+>> interpretted?
+>
+> IIRC, u64 is sufficient. (And note I'm just documenting what exists...)
+>
+
+See above. Seeding a DRBG typically requires more than that, but for
+KASLR it is sufficient.
+
+>>> +
+>>> +/ {
+>>> +     chosen {
+>>> +             kaslr-seed = <0xfeedbeef 0xc0def00d>;
+>>> +     };
+>>> +};
+>>> +
+>>> +Note that when booting through EFI when EFI_RNG_PROTOCOL is supported,
+>>> +this value will be overwritten by the EFI stub.
+>>
+>> Isn't this always true? The bootloader will overwrite. Just in the EFI
+>> case, the EFI stub is part of the bootloader from a functional (and not
+>> packaging) standpoint.
+>
+> I thought it best to call this out so that no one could get confused
+> if they wanted to understand how to use kaslr-seed with an EFI system.
+> (i.e. just implement EFI_RNG_PROTOCOL instead.)
+>
+
+Well, I guess the point being made is that setting this property from
+UEFI (or u-boot in EFI mode) is pointless is EFI_RNG_PROTOCOL is
+implemented as well.
