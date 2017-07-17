@@ -1,27 +1,27 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: add binding for rk3366 power domains
-Date: Mon, 17 Jul 2017 13:51:55 -0500
-Message-ID: <20170717185155.silbgsacswtpaujw@rob-hp-laptop>
-References: <1500015763-4940-1-git-send-email-zhangqing@rock-chips.com>
- <1500015763-4940-3-git-send-email-zhangqing@rock-chips.com>
+Subject: Re: [PATCHv4 1/3] dt-bindings: input: add pwm-vibrator
+Date: Mon, 17 Jul 2017 13:54:57 -0500
+Message-ID: <20170717185457.i3hqy3ocv6l4gadz@rob-hp-laptop>
+References: <20170714100151.31234-1-sebastian.reichel@collabora.co.uk>
+ <20170714100151.31234-2-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500015763-4940-3-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170714100151.31234-2-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 03:02:42PM +0800, Elaine Zhang wrote:
-> Add binding documentation for the power domains
-> found on Rockchip RK3366 SoCs.
+On Fri, Jul 14, 2017 at 12:01:49PM +0200, Sebastian Reichel wrote:
+> Add DT binding document for PWM controlled vibrator devices.
 > 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/soc/rockchip/power_domain.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../devicetree/bindings/input/pwm-vibrator.txt     | 66 ++++++++++++++++++++++
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/pwm-vibrator.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
