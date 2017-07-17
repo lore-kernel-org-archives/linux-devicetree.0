@@ -1,48 +1,166 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 2/5] dt-bindings: gpu: add a power_model optional properties for MALI
-Date: Mon, 17 Jul 2017 16:14:28 +0800
-Message-ID: <1500279271-15249-3-git-send-email-wxt@rock-chips.com>
+Subject: [PATCH v2 5/5] arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
+Date: Mon, 17 Jul 2017 16:14:31 +0800
+Message-ID: <1500279271-15249-6-git-send-email-wxt@rock-chips.com>
 References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, Douglas Anderson <dianders@chromium.org>, William wu <wulf@rock-chips.com>, Elaine Zhang <zhangqing@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Roger Chen <roger.chen@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the MALI's power-model to set the IPA model to be used
-for power management.
+As RK3399 had used the Power allocator thermal governor by default,
+enabled this to manage thermals by dynamically allocating and limiting
+power to devices.
+
+Also, this patch supported the dynamic-power-coefficient/sustainable_power
+and GPU's power model for needed parameters with thermal IPA.
+
+The Thermal power allocator governor works optimatly with two passive trip
+points, for the better performance we will use the trip-point0 with 70
+degree above which the governor control starts operating and trip-point1
+with 85 degree is the target temperature by controlling.
 
 Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+
 ---
 
-Changes in v2: None
+Changes in v2:
+- foo@ will produce warnings when used without reg property.
+- update the commit to explain the two passive trip points changed.
 
- Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 62 +++++++++++++++-----------------
+ 1 file changed, 29 insertions(+), 33 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-index a461e47..b616e6b 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-@@ -37,6 +37,18 @@ Optional properties:
- - operating-points-v2 : Refer to Documentation/devicetree/bindings/power/opp.txt
-   for details.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 77d67cb..6d8a5eb 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -147,7 +147,7 @@
+ 			enable-method = "psci";
+ 			#cooling-cells = <2>; /* min followed by max */
+ 			clocks = <&cru ARMCLKB>;
+-			dynamic-power-coefficient = <100>;
++			dynamic-power-coefficient = <436>;
+ 		};
  
-+- power_model : Sets power model parameters. Note that this model was designed for the Juno
-+	        platform, and may not be suitable for other platforms. A structure containing :
-+	- compatible: Should be arm,mali-simple-power-model
-+	- dynamic-coefficient: Coefficient, in pW/(Hz V^2), which is multiplied
-+	  by v^2*f to calculate the dynamic power consumption.
-+	- static-coefficient: Coefficient, in uW/V^3, which is multiplied by
-+	  v^3 to calculate the static power consumption.
-+	- ts: An array containing coefficients for the temperature scaling
-+	  factor. This is used to scale the static power by a factor of
-+	  tsf/1000000, where tsf = ts[3]*T^3 + ts[2]*T^2 + ts[1]*T + ts[0],
-+	  and T = temperature in degrees.
-+	- thermal-zone: A string identifying the thermal zone used for the GPU
+ 		cpu_b1: cpu@101 {
+@@ -156,7 +156,7 @@
+ 			reg = <0x0 0x101>;
+ 			enable-method = "psci";
+ 			clocks = <&cru ARMCLKB>;
+-			dynamic-power-coefficient = <100>;
++			dynamic-power-coefficient = <436>;
+ 		};
+ 	};
  
- Example for a Mali-T760:
+@@ -690,24 +690,25 @@
+ 	};
  
+ 	thermal_zones: thermal-zones {
+-		cpu_thermal: cpu {
++		soc_thermal: soc-thermal {
+ 			polling-delay-passive = <100>;
+ 			polling-delay = <1000>;
++			sustainable-power = <1000>;
+ 
+ 			thermal-sensors = <&tsadc 0>;
+ 
+ 			trips {
+-				cpu_alert0: cpu_alert0 {
++				threshold: trip-point0 {
+ 					temperature = <70000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+-				cpu_alert1: cpu_alert1 {
+-					temperature = <75000>;
++				target: trip-point1 {
++					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+-				cpu_crit: cpu_crit {
++				soc_crit: soc-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -716,45 +717,31 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert0>;
++					trip = <&target>;
+ 					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <4096>;
+ 				};
+ 				map1 {
+-					trip = <&cpu_alert1>;
++					trip = <&target>;
+ 					cooling-device =
+-						<&cpu_l0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <1024>;
++				};
++				map2 {
++					trip = <&target>;
++					cooling-device =
++						<&gpu THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++					contribution = <4096>;
+ 				};
+ 			};
+ 		};
+ 
+-		gpu_thermal: gpu {
++		gpu_thermal: gpu-thermal {
+ 			polling-delay-passive = <100>;
+ 			polling-delay = <1000>;
+ 
+ 			thermal-sensors = <&tsadc 1>;
+-
+-			trips {
+-				gpu_alert0: gpu_alert0 {
+-					temperature = <75000>;
+-					hysteresis = <2000>;
+-					type = "passive";
+-				};
+-				gpu_crit: gpu_crit {
+-					temperature = <95000>;
+-					hysteresis = <2000>;
+-					type = "critical";
+-				};
+-			};
+-
+-			cooling-maps {
+-				map0 {
+-					trip = <&gpu_alert0>;
+-					cooling-device =
+-						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-				};
+-			};
+ 		};
+ 	};
+ 
+@@ -1451,8 +1438,17 @@
+ 			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>;
+ 		interrupt-names = "gpu", "job", "mmu";
+ 		clocks = <&cru ACLK_GPU>;
++		#cooling-cells = <2>;
+ 		power-domains = <&power RK3399_PD_GPU>;
+ 		status = "disabled";
++
++		gpu_power_model: power_model {
++			compatible = "arm,mali-simple-power-model";
++			static-coefficient = <1079403>;
++			dynamic-coefficient = <977>;
++			ts = <32000 4700 (-80) 2>;
++			thermal-zone = "gpu-thermal";
++		};
+ 	};
+ 
+ 	pinctrl: pinctrl {
 -- 
 2.7.4
