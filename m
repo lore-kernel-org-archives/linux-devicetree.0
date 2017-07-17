@@ -1,70 +1,94 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH net-next repost v2] dt-bindings: net: ravb : Add support for r8a7743 SoC
-Date: Mon, 17 Jul 2017 09:33:52 +0100
-Message-ID: <1500280432-43162-1-git-send-email-biju.das@bp.renesas.com>
+From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 01/14] qcom: mtd: nand: Add driver data for QPIC DMA
+Date: Mon, 17 Jul 2017 14:19:47 +0530
+Message-ID: <840a0ceca8892fb343fc617322aad3ba@codeaurora.org>
+References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
+ <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
+ <bd6add74-4f42-5036-3513-2e672ef97b15@codeaurora.org>
+ <20170703214150.6a7b3f38@bbrezillon>
+ <bfb3d3c466e60fa08f969ea485870ba4@codeaurora.org>
+ <20170717092234.001fb765@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170717092234.001fb765@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new compatible string for the RZ/G1M (R8A7743) SoC.
+On 2017-07-17 12:52, Boris Brezillon wrote:
+> On Mon, 17 Jul 2017 11:41:01 +0530
+> Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> 
+>> >> > +
+>> >> > +nand@79b0000 {
+>> >
+>> > nand-controller@xxxx {
+>> >
+>> > BTW, glad to see another driver moving to the new DT representation
+>> > :-).
+>> >
+>> >> > +	compatible = "qcom,qpic-nandc-v1.4.0";
+>> >> > +	reg = <0x79b0000 0x1000>;
+>> >> > +
+>> >> > +	clocks = <&gcc GCC_QPIC_CLK>,
+>> >> > +		<&gcc GCC_QPIC_AHB_CLK>;
+>> >> > +	clock-names = "core", "aon";
+>> >> > +
+>> >> > +	#address-cells = <1>;
+>> >> > +	#size-cells = <0>;
+>> >> > +
+>> >> > +	nandcs@0 {
+>> >
+>> > 	nand@0 {
+>> >
+>> >> > +		compatible = "qcom,nandcs";
+>> >
+>> > Why do you need a compatible here?
+>> It is the part of original driver. We can connect multiple
+>> NAND devices in the same bus and qcom,nandcs is being used
+>> for each connected NAND device. Each NAND device can use
+>> different  chip select, ecc strength etc which we can specify
+>> under this sub node.
+> 
+> 
+> Still don't understand why you need a compatible? Is this a memory bus
+> where you can connect other kind of memories (parallel NORs,
+> SRAMs, ...)?
+> 
+> If that's not the case, then considering all subnodes of the
+> nand-controller node containing a reg property as NAND devices is fine,
+> you don't need this compatible = "nand,cs" (see sunxi-nand bindings
+> [1]).
+> 
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
----
-v1->v2
-* Changed the subject
-* re-formatted the required properties
+  Thanks Boris for giving detailed references.
 
- .../devicetree/bindings/net/renesas,ravb.txt       | 29 +++++++++++++---------
- 1 file changed, 17 insertions(+), 12 deletions(-)
+  We can connect other parallel devices also but we have
+  different hardware wrappers over generic EBI2/QPIC which
+  will MUX/arbitrate the device access from the hardware itself.
+  So this NAND driver will only control multiple NAND devices.
 
-diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-index b519503..4717bc2 100644
---- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-+++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-@@ -4,19 +4,24 @@ This file provides information on what the device node for the Ethernet AVB
- interface contains.
- 
- Required properties:
--- compatible: "renesas,etheravb-r8a7790" if the device is a part of R8A7790 SoC.
--	      "renesas,etheravb-r8a7791" if the device is a part of R8A7791 SoC.
--	      "renesas,etheravb-r8a7792" if the device is a part of R8A7792 SoC.
--	      "renesas,etheravb-r8a7793" if the device is a part of R8A7793 SoC.
--	      "renesas,etheravb-r8a7794" if the device is a part of R8A7794 SoC.
--	      "renesas,etheravb-r8a7795" if the device is a part of R8A7795 SoC.
--	      "renesas,etheravb-r8a7796" if the device is a part of R8A7796 SoC.
--	      "renesas,etheravb-rcar-gen2" for generic R-Car Gen 2 compatible interface.
--	      "renesas,etheravb-rcar-gen3" for generic R-Car Gen 3 compatible interface.
-+- compatible: Must contain one or more of the following:
-+      - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
-+      - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
-+      - "renesas,etheravb-r8a7791" for the R8A7791 SoC.
-+      - "renesas,etheravb-r8a7792" for the R8A7792 SoC.
-+      - "renesas,etheravb-r8a7793" for the R8A7793 SoC.
-+      - "renesas,etheravb-r8a7794" for the R8A7794 SoC.
-+      - "renesas,etheravb-rcar-gen2" as a fallback for the above
-+		R-Car Gen2 and RZ/G1 devices.
- 
--	      When compatible with the generic version, nodes must list the
--	      SoC-specific version corresponding to the platform first
--	      followed by the generic version.
-+      - "renesas,etheravb-r8a7795" for the R8A7795 SoC.
-+      - "renesas,etheravb-r8a7796" for the R8A7796 SoC.
-+      - "renesas,etheravb-rcar-gen3" as a fallback for the above
-+		R-Car Gen3 devices.
-+
-+	When compatible with the generic version, nodes must list the
-+	SoC-specific version corresponding to the platform first followed by
-+	the generic version.
- 
- - reg: offset and length of (1) the register block and (2) the stream buffer.
- - interrupts: A list of interrupt-specifiers, one for each entry in
+  We can remove this compatible and use the bindings
+  similar to sunxi-nand. I will do the required changes and
+  will post in v2 of the same patch series.
+
+> If the bus is generic and can be attached non-NAND devices, I'd
+> recommend looking at atmel's binding [2], because you're likely to
+> have one instance of the NAND controller logic for all NAND devices
+> connected on this bus.
+> And more importantly, if the bus a generic, the node should not be
+> named nand or nand-controller, and the compatible should not contain
+> 'nandc' in it.
+> 
+> [1]http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt#L34
+> [2]http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/mtd/atmel-nand.txt#L70
+
 -- 
-1.9.1
-
+Abhishek Sahu
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
