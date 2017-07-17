@@ -1,196 +1,224 @@
-From: Nicolas Dufresne <nicolas@ndufresne.ca>
-Subject: Re: [PATCH v2 2/6] [media] rockchip/rga: v4l2 m2m support
-Date: Mon, 17 Jul 2017 10:45:10 -0400
-Message-ID: <1500302710.21957.1.camel@ndufresne.ca>
-References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
-         <2363665.x6z9MR1vqI@avalon> <1500137353.2353.1.camel@ndufresne.ca>
-         <11368407.z8bSoa2YAE@avalon>
+From: "Bogdan, Dragos" <Dragos.Bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] power: supply: ltc2941-battery-gauge: Prepare
+ for LTC2942 and LTC2944
+Date: Mon, 17 Jul 2017 14:52:42 +0000
+Message-ID: <6067964B99C6A049AA5840B6F7BB2D0ABDAAD93C@NWD2MBX5.ad.analog.com>
+References: <20170716093202.vfea4yylbzfec72v@lenoch>
+ <20170716093306.vz4xw7ij7dptzkot@lenoch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-MLq+ZlnsOw6a2s5K040R"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11368407.z8bSoa2YAE@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---=-MLq+ZlnsOw6a2s5K040R
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Le lundi 17 juillet 2017 =C3=A0 05:37 +0300, Laurent Pinchart a =C3=A9crit =
-:
-> Hi Nicolas,
->=20
-> On Saturday 15 Jul 2017 12:49:13 Personnel wrote:
->=20
-> You might want to fix your mailer to use your name :-)
->=20
-> > Le samedi 15 juillet 2017 =C3=A0 12:42 +0300, Laurent Pinchart a =C3=A9=
-crit :
-> > > On Saturday 15 Jul 2017 14:58:36 Jacob Chen wrote:
-> > > > Rockchip RGA is a separate 2D raster graphic acceleration unit. It
-> > > > accelerates 2D graphics operations, such as point/line drawing, ima=
-ge
-> > > > scaling, rotation, BitBLT, alpha blending and image blur/sharpness.
-> > > >=20
-> > > > The drvier is mostly based on s5p-g2d v4l2 m2m driver.
-> > > > And supports various operations from the rendering pipeline.
-> > > >=20
-> > > >  - copy
-> > > >  - fast solid color fill
-> > > >  - rotation
-> > > >  - flip
-> > > >  - alpha blending
-> > >=20
-> > > I notice that you don't support the drawing operations. How do you pl=
-an to
-> > > support them later through the V4L2 M2M API ? I hate stating the obvi=
-ous,
-> > > but wouldn't the DRM API be better fit for a graphic accelerator ?
-> >=20
-> > It could fit, maybe, but it really lacks some framework. Also, DRM is
-> > not really meant for M2M operation, and it's also not great for multi-
-> > process.
->=20
-> GPUs on embedded devices are mem-to-mem, and they're definitely shared be=
-tween=20
-> multiple processes :-)
->=20
-> > Until recently, there was competing drivers for Exynos, both
-> > implemented in V4L2 and DRM, for similar rational, all DRM ones are
-> > being deprecated/removed.
-> >=20
-> > I think 2D blitters in V4L2 are fine, but they terribly lack something
-> > to differentiate them from converters/scalers when looking up the HW
-> > list. Could be as simple as a capability flag, if I can suggest. For
-> > the reference, the 2D blitter on IMX6 has been used to implement a live
-> > video mixer in GStreamer.
-> >=20
-> > https://bugzilla.gnome.org/show_bug.cgi?id=3D772766
->=20
-> If we decide that 2D blitters should be supported by V4L2 (and I'm open t=
-o get=20
-> convinced about that), we really need to define a proper API before mergi=
-ng a=20
-> bunch of drivers that will implement things in slightly different ways,=
-=20
-> otherwise the future will be very painful.
-
-Arguably, Jacob is not proposing anything new, as at least one other
-driver has been merged.
-
->=20
-> Among the issues that need to be solved are
->=20
-> - stateful vs. stateless operation (as mentioned by Jacob in this mail=
-=20
-> thread), a.k.a. the request API
-
-Would it be possible to extend your thought. To me, Request API could
-enable more use cases but is not strictly required.
-
->=20
-> - exposing capabilities to userspace (a single capability flag would be e=
-nough=20
-> only if all blitters expose the same API, which I'm not sure we can assum=
-e)
-
-I am just rethinking this. With this patch series, Jacob is trying to
-generalize the Blit Operation controls (still need a name, blend mode
-does not work). We can easily make a recommendation to set the default
-operation to a copy operation (drivers always support that). This way,
-the node will behave like a converter (scaler, colorspace converter,
-rotator and/or etc.) Checking the presence of that control, we can
-clearly and quickly figure-out what this node is about. The capability
-remains a nice idea, but probably optional.
-
-I totally agree we should document the behaviours and rationals for
-picking a certain default. The control should maybe become a "menu"
-too, so each driver can cherry-pick the blit operations they support
-(using int with min/max requires userspace trial and error, we already
-did that mistake for encoders profiles and level).
-
->=20
-> - single input (a.k.a. in-place blitters as you mentioned below) vs. mult=
-iple=20
-> inputs
-
-I do think the second is something you can build on top of the first by
-cascading (what we do in the refereed GStreamer element). So far this
-is applicable to Exynos, IMX6 and now Rockchip (probably more). The
-"optimal" form for the second case seems like something that will be
-implemented using much lower level kernel interface, like a GPU
-programming interface (aka proprietary Adreno C2D API), or through
-multiple nodes (multiple inputs and outputs). It's seems like the cut
-between high-end and low-end.
-
->=20
-> - API for 2D-accelerated operations other than blitting (filling, point a=
-nd=20
-> line drawing, ...)
-
-I doubt such hardware exist in a form that is not bound to the GPU. I'm
-not ignoring your point, there is a clear overlap between how we
-integrated GPUs and having this into V4L2.
-
->=20
-> > > Additionally, V4L2 M2M has one source and one destination. How do you
-> > > implement alpha blending in that case, which by definition requires a=
-t
-> > > least two sources ?
-> >=20
-> > This type of HW only do in-place blits. When using such a node, the
-> > buffer queued on the V4L2_CAPTURE contains the destination image, and
-> > the buffer queued on the V4L2_OUTPUT is the source image.
-> >=20
-> > > > The code in rga-hw.c is used to configure regs accroding to operati=
-ons.
-> > > >=20
-> > > > The code in rga-buf.c is used to create private mmu table for RGA.
-> > > > The tables is stored in a list, and be removed when buffer is clean=
-up.
-> > >=20
-> > > Looking at the implementation it seems to be a scatter-gather list, n=
-ot an
-> > > MMU. Is that right ? Does the hardware documentation refer to it as a=
-n MMU
-> > > ?
-> > >=20
-> > > > Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-> > > > ---
-> > > >=20
-> > > >  drivers/media/platform/Kconfig                |  11 +
-> > > >  drivers/media/platform/Makefile               |   2 +
-> > > >  drivers/media/platform/rockchip-rga/Makefile  |   3 +
-> > > >  drivers/media/platform/rockchip-rga/rga-buf.c | 122 ++++
-> > > >  drivers/media/platform/rockchip-rga/rga-hw.c  | 652 ++++++++++++++=
-++++
-> > > >  drivers/media/platform/rockchip-rga/rga-hw.h  | 437 ++++++++++++
-> > > >  drivers/media/platform/rockchip-rga/rga.c     | 958 ++++++++++++++=
-+++++
-> > > >  drivers/media/platform/rockchip-rga/rga.h     | 111 +++
-> > > >  8 files changed, 2296 insertions(+)
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/Makefile
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga.c
-> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga.h
->=20
->=20
---=-MLq+ZlnsOw6a2s5K040R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCWWzNdgAKCRBxUwItrAao
-HBcTAKCQZR4RihMZanSVmDgHXTrn3pqoPwCgoQzkGpxf4AaOudcCqju7PDaLWRQ=
-=yj2i
------END PGP SIGNATURE-----
-
---=-MLq+ZlnsOw6a2s5K040R--
+On 07/16/2017 12:33 PM, Ladislav Michl wrote:=0A=
+> In order to support LTC2942 which has temperature registers=0A=
+> at different offsets than LTC2943 use following register naming=0A=
+> scheme (prefixes):=0A=
+> - LTC294X_ common registers=0A=
+> - LTC2942_ chips specific registers=0A=
+> - LTC2943_ specific registers=0A=
+>=0A=
+> LTC2944 is compatible with LTC2943 but uses different constants=0A=
+> to compute voltage and current, so replace num_regs misused=0A=
+> for device indentification with real device id to discriminate=0A=
+> between those two.=0A=
+>=0A=
+> There are no functional changes.=0A=
+>=0A=
+> Signed-off-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>=0A=
+=0A=
+Acked-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>=0A=
+Tested-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>=0A=
+=0A=
+> ---=0A=
+>  Changes:=0A=
+>  - v2: None=0A=
+>  - v3: Extend commit message=0A=
+>  - v4: None=0A=
+>  - v5: Count on LTC2944 too=0A=
+>  - v6: Move LTC2942 and LTC2944 to respective patches=0A=
+>=0A=
+>  drivers/power/supply/ltc2941-battery-gauge.c | 63 ++++++++++++++--------=
+------=0A=
+>  1 file changed, 31 insertions(+), 32 deletions(-)=0A=
+>=0A=
+> diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power=
+/supply/ltc2941-battery-gauge.c=0A=
+> index 7efb908f4451..b0de448a226b 100644=0A=
+> --- a/drivers/power/supply/ltc2941-battery-gauge.c=0A=
+> +++ b/drivers/power/supply/ltc2941-battery-gauge.c=0A=
+> @@ -34,16 +34,19 @@ enum ltc294x_reg {=0A=
+>  	LTC294X_REG_CONTROL		=3D 0x01,=0A=
+>  	LTC294X_REG_ACC_CHARGE_MSB	=3D 0x02,=0A=
+>  	LTC294X_REG_ACC_CHARGE_LSB	=3D 0x03,=0A=
+> -	LTC294X_REG_THRESH_HIGH_MSB	=3D 0x04,=0A=
+> -	LTC294X_REG_THRESH_HIGH_LSB	=3D 0x05,=0A=
+> -	LTC294X_REG_THRESH_LOW_MSB	=3D 0x06,=0A=
+> -	LTC294X_REG_THRESH_LOW_LSB	=3D 0x07,=0A=
+> -	LTC294X_REG_VOLTAGE_MSB	=3D 0x08,=0A=
+> -	LTC294X_REG_VOLTAGE_LSB	=3D 0x09,=0A=
+> -	LTC294X_REG_CURRENT_MSB	=3D 0x0E,=0A=
+> -	LTC294X_REG_CURRENT_LSB	=3D 0x0F,=0A=
+> -	LTC294X_REG_TEMPERATURE_MSB	=3D 0x14,=0A=
+> -	LTC294X_REG_TEMPERATURE_LSB	=3D 0x15,=0A=
+> +	LTC294X_REG_VOLTAGE_MSB		=3D 0x08,=0A=
+> +	LTC294X_REG_VOLTAGE_LSB		=3D 0x09,=0A=
+> +	LTC2942_REG_TEMPERATURE_MSB	=3D 0x0C,=0A=
+> +	LTC2942_REG_TEMPERATURE_LSB	=3D 0x0D,=0A=
+> +	LTC2943_REG_CURRENT_MSB		=3D 0x0E,=0A=
+> +	LTC2943_REG_CURRENT_LSB		=3D 0x0F,=0A=
+> +	LTC2943_REG_TEMPERATURE_MSB	=3D 0x14,=0A=
+> +	LTC2943_REG_TEMPERATURE_LSB	=3D 0x15,=0A=
+> +};=0A=
+> +=0A=
+> +enum ltc294x_id {=0A=
+> +	LTC2941_ID,=0A=
+> +	LTC2943_ID,=0A=
+>  };=0A=
+>  =0A=
+>  #define LTC2943_REG_CONTROL_MODE_MASK (BIT(7) | BIT(6))=0A=
+> @@ -54,15 +57,12 @@ enum ltc294x_reg {=0A=
+>  	((x << 3) & LTC294X_REG_CONTROL_PRESCALER_MASK)=0A=
+>  #define LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED	0=0A=
+>  =0A=
+> -#define LTC2941_NUM_REGS	0x08=0A=
+> -#define LTC2943_NUM_REGS	0x18=0A=
+> -=0A=
+>  struct ltc294x_info {=0A=
+>  	struct i2c_client *client;	/* I2C Client pointer */=0A=
+>  	struct power_supply *supply;	/* Supply pointer */=0A=
+>  	struct power_supply_desc supply_desc;	/* Supply description */=0A=
+>  	struct delayed_work work;	/* Work scheduler */=0A=
+> -	unsigned long num_regs;	/* Number of registers (chip type) */=0A=
+> +	enum ltc294x_id id;		/* Chip type */=0A=
+>  	int charge;	/* Last charge register content */=0A=
+>  	int r_sense;	/* mOhm */=0A=
+>  	int Qlsb;	/* nAh */=0A=
+> @@ -146,7 +146,7 @@ static int ltc294x_reset(const struct ltc294x_info *i=
+nfo, int prescaler_exp)=0A=
+>  	control =3D LTC294X_REG_CONTROL_PRESCALER_SET(prescaler_exp) |=0A=
+>  				LTC294X_REG_CONTROL_ALCC_CONFIG_DISABLED;=0A=
+>  	/* Put the 2943 into "monitor" mode, so it measures every 10 sec */=0A=
+> -	if (info->num_regs =3D=3D LTC2943_NUM_REGS)=0A=
+> +	if (info->id =3D=3D LTC2941_ID)=0A=
+>  		control |=3D LTC2943_REG_CONTROL_MODE_SCAN;=0A=
+>  =0A=
+>  	if (value !=3D control) {=0A=
+> @@ -263,7 +263,7 @@ static int ltc294x_get_current(const struct ltc294x_i=
+nfo *info, int *val)=0A=
+>  	s32 value;=0A=
+>  =0A=
+>  	ret =3D ltc294x_read_regs(info->client,=0A=
+> -		LTC294X_REG_CURRENT_MSB, &datar[0], 2);=0A=
+> +		LTC2943_REG_CURRENT_MSB, &datar[0], 2);=0A=
+>  	value =3D (datar[0] << 8) | datar[1];=0A=
+>  	value -=3D 0x7FFF;=0A=
+>  	/* Value is in range -32k..+32k, r_sense is usually 10..50 mOhm,=0A=
+> @@ -280,7 +280,7 @@ static int ltc294x_get_temperature(const struct ltc29=
+4x_info *info, int *val)=0A=
+>  	u32 value;=0A=
+>  =0A=
+>  	ret =3D ltc294x_read_regs(info->client,=0A=
+> -		LTC294X_REG_TEMPERATURE_MSB, &datar[0], 2);=0A=
+> +		LTC2943_REG_TEMPERATURE_MSB, &datar[0], 2);=0A=
+>  	value =3D (datar[0] << 8) | datar[1];=0A=
+>  	/* Full-scale is 510 Kelvin, convert to centidegrees  */=0A=
+>  	*val =3D (((51000 * value) / 0xFFFF) - 27215);=0A=
+> @@ -357,8 +357,8 @@ static enum power_supply_property ltc294x_properties[=
+] =3D {=0A=
+>  	POWER_SUPPLY_PROP_CHARGE_COUNTER,=0A=
+>  	POWER_SUPPLY_PROP_CHARGE_NOW,=0A=
+>  	POWER_SUPPLY_PROP_VOLTAGE_NOW,=0A=
+> -	POWER_SUPPLY_PROP_CURRENT_NOW,=0A=
+>  	POWER_SUPPLY_PROP_TEMP,=0A=
+> +	POWER_SUPPLY_PROP_CURRENT_NOW,=0A=
+>  };=0A=
+>  =0A=
+>  static int ltc294x_i2c_remove(struct i2c_client *client)=0A=
+> @@ -388,7 +388,7 @@ static int ltc294x_i2c_probe(struct i2c_client *clien=
+t,=0A=
+>  =0A=
+>  	np =3D of_node_get(client->dev.of_node);=0A=
+>  =0A=
+> -	info->num_regs =3D (unsigned long)of_device_get_match_data(&client->dev=
+);=0A=
+> +	info->id =3D (enum ltc294x_id)of_device_get_match_data(&client->dev);=
+=0A=
+>  	info->supply_desc.name =3D np->name;=0A=
+>  =0A=
+>  	/* r_sense can be negative, when sense+ is connected to the battery=0A=
+> @@ -409,7 +409,7 @@ static int ltc294x_i2c_probe(struct i2c_client *clien=
+t,=0A=
+>  		prescaler_exp =3D LTC2941_MAX_PRESCALER_EXP;=0A=
+>  	}=0A=
+>  =0A=
+> -	if (info->num_regs =3D=3D LTC2943_NUM_REGS) {=0A=
+> +	if (info->id =3D=3D LTC2943_ID) {=0A=
+>  		if (prescaler_exp > LTC2943_MAX_PRESCALER_EXP)=0A=
+>  			prescaler_exp =3D LTC2943_MAX_PRESCALER_EXP;=0A=
+>  		info->Qlsb =3D ((340 * 50000) / r_sense) /=0A=
+> @@ -424,18 +424,17 @@ static int ltc294x_i2c_probe(struct i2c_client *cli=
+ent,=0A=
+>  	info->client =3D client;=0A=
+>  	info->supply_desc.type =3D POWER_SUPPLY_TYPE_BATTERY;=0A=
+>  	info->supply_desc.properties =3D ltc294x_properties;=0A=
+> -	if (info->num_regs >=3D LTC294X_REG_TEMPERATURE_LSB)=0A=
+> +	switch (info->id) {=0A=
+> +	case LTC2943_ID:=0A=
+>  		info->supply_desc.num_properties =3D=0A=
+>  			ARRAY_SIZE(ltc294x_properties);=0A=
+> -	else if (info->num_regs >=3D LTC294X_REG_CURRENT_LSB)=0A=
+> -		info->supply_desc.num_properties =3D=0A=
+> -			ARRAY_SIZE(ltc294x_properties) - 1;=0A=
+> -	else if (info->num_regs >=3D LTC294X_REG_VOLTAGE_LSB)=0A=
+> -		info->supply_desc.num_properties =3D=0A=
+> -			ARRAY_SIZE(ltc294x_properties) - 2;=0A=
+> -	else=0A=
+> +		break;=0A=
+> +	case LTC2941_ID:=0A=
+> +	default:=0A=
+>  		info->supply_desc.num_properties =3D=0A=
+>  			ARRAY_SIZE(ltc294x_properties) - 3;=0A=
+> +		break;=0A=
+> +	}=0A=
+>  	info->supply_desc.get_property =3D ltc294x_get_property;=0A=
+>  	info->supply_desc.set_property =3D ltc294x_set_property;=0A=
+>  	info->supply_desc.property_is_writeable =3D ltc294x_property_is_writeab=
+le;=0A=
+> @@ -492,8 +491,8 @@ static SIMPLE_DEV_PM_OPS(ltc294x_pm_ops, ltc294x_susp=
+end, ltc294x_resume);=0A=
+>  =0A=
+>  =0A=
+>  static const struct i2c_device_id ltc294x_i2c_id[] =3D {=0A=
+> -	{"ltc2941", LTC2941_NUM_REGS},=0A=
+> -	{"ltc2943", LTC2943_NUM_REGS},=0A=
+> +	{ "ltc2941", LTC2941_ID, },=0A=
+> +	{ "ltc2943", LTC2943_ID, },=0A=
+>  	{ },=0A=
+>  };=0A=
+>  MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);=0A=
+> @@ -501,11 +500,11 @@ MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);=0A=
+>  static const struct of_device_id ltc294x_i2c_of_match[] =3D {=0A=
+>  	{=0A=
+>  		.compatible =3D "lltc,ltc2941",=0A=
+> -		.data =3D (void *)LTC2941_NUM_REGS=0A=
+> +		.data =3D (void *)LTC2941_ID,=0A=
+>  	},=0A=
+>  	{=0A=
+>  		.compatible =3D "lltc,ltc2943",=0A=
+> -		.data =3D (void *)LTC2943_NUM_REGS=0A=
+> +		.data =3D (void *)LTC2943_ID,=0A=
+>  	},=0A=
+>  	{ },=0A=
+>  };=0A=
+=0A=
+=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
