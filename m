@@ -1,108 +1,81 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 02/11] clk: sunxi-ng: Add interface to query
- or configure MMC timing modes.
-Date: Mon, 17 Jul 2017 11:09:45 +0200
-Message-ID: <20170717090945.qh2uekguzgv5lo36@flea>
-References: <20170714064302.20383-1-wens@csie.org>
- <20170714064302.20383-3-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3 0/5] Add SoM1 support
+Date: Mon, 17 Jul 2017 11:13:35 +0200
+Message-ID: <20170717091335.adgoomh6yirzdzeh@piout.net>
+References: <1499330129-29319-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="okw2fn4jzuimsdrc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZH5WHFQKGQEPEDRWFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170714064302.20383-3-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1499330129-29319-1-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: nicolas.ferre@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cristian.birsan@microchip.com, ludovic.desroches@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-
---okw2fn4jzuimsdrc
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Fri, Jul 14, 2017 at 02:42:53PM +0800, Chen-Yu Tsai wrote:
-> Starting with the A83T SoC, Allwinner introduced a new timing mode for
-> its MMC clocks. The new mode changes how the MMC controller sample and
-> output clocks are delayed to match chip and board specifics. There are
-> two controls for this, one on the CCU side controlling how the clocks
-> behave, and one in the MMC controller controlling what inputs to take
-> and how to route them.
+On 06/07/2017 at 11:35:24 +0300, Claudiu Beznea wrote:
+> Hi all,
 > 
-> In the old mode, the MMC clock had 2 child clocks providing the output
-> and sample clocks, which could be delayed by a number of clock cycles
-> measured from the MMC clock's parent.
+> This series adds support for sama5d2 SoM1 devices.
 > 
-> With the new mode, the 2 delay clocks are no longer active. Instead,
-> the delays and associated controls are moved into the MMC controller.
-> The output of the MMC clock is also halved.
+> The at91-sama5d27_som1.dtsi add specific bindings for SoM1 board.
+> The at91-sama5d27_som1_ek.dts add specific bindings for SoM1 EK board.
 > 
-> The difference in how things are wired between the modes means that the
-> clock controls and the MMC controls must match. To achieve this in a
-> clear, explicit way, we introduce two functions for the MMC driver to
-> use: one queries the hardware for the current mode set, and the other
-> allows the MMC driver to request a mode.
+> Thank you,
+> Claudiu
 > 
-> With newer SoCs such as the A64, the old mode is all but removed. Hence
-> we support two variations, one where the mode can be toggled, and the
-> other where the clock is fixed in the new mode.
+> Changes in v3:
+> - remove qspi flash mapping for the moment
+> - remove at24 and i2c bindings; this will be introduced when
+> "Add at24 functionality to read form different EEPROM offsets" patch will
+> be accepted
+> - change the title of patch 5 from this series from
+> "ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK support" to
+> "ARM: dts: at91: at91-sama5d27_som1_ek: Add sama5d27 SoM1 EK support" to
+> match the desired prefix
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  drivers/clk/sunxi-ng/Makefile         |  1 +
->  drivers/clk/sunxi-ng/ccu_common.h     |  2 +
->  drivers/clk/sunxi-ng/ccu_mmc_timing.c | 73 +++++++++++++++++++++++++++++++++++
->  include/linux/clk/sunxi-ng.h          | 20 ++++++++++
->  4 files changed, 96 insertions(+)
->  create mode 100644 drivers/clk/sunxi-ng/ccu_mmc_timing.c
->  create mode 100644 include/linux/clk/sunxi-ng.h
+> Changes in v2:
+> o in at91-sama5d27_som1.dtsi:
+> - increase bootloader and kernel size in flash map (with bootloader
+> flash offset the dtb and kernel flash offsets were changed)
+> - use right pin for ethernet-phy interrupt
 > 
-> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
-> index 0c45fa50283d..45a5910379a5 100644
-> --- a/drivers/clk/sunxi-ng/Makefile
-> +++ b/drivers/clk/sunxi-ng/Makefile
-> @@ -1,5 +1,6 @@
->  # Common objects
->  lib-$(CONFIG_SUNXI_CCU)		+= ccu_common.o
-> +lib-$(CONFIG_SUNXI_CCU)		+= ccu_mmc_timing.o
->  lib-$(CONFIG_SUNXI_CCU)		+= ccu_reset.o
->  
->  # Base clock types
-> diff --git a/drivers/clk/sunxi-ng/ccu_common.h b/drivers/clk/sunxi-ng/ccu_common.h
-> index d6fdd7a789aa..88981e7fd978 100644
-> --- a/drivers/clk/sunxi-ng/ccu_common.h
-> +++ b/drivers/clk/sunxi-ng/ccu_common.h
-> @@ -23,6 +23,8 @@
->  #define CCU_FEATURE_FIXED_POSTDIV	BIT(3)
->  #define CCU_FEATURE_ALL_PREDIV		BIT(4)
->  #define CCU_FEATURE_LOCK_REG		BIT(5)
-> +#define CCU_FEATURE_MMC_TIMING_SWITCH	BIT(6)
-> +#define CCU_FEATURE_MMC_ALWAYS_NEW	BIT(7)
+> o in at91-sama5d27_som1_ek.dts:
+> - removed memory tag and rely on bootloader to fill the right value
+> - use pin macros (from arch/arm/boot/dts/sama5d2-pinfunc.h) wherever
+> posible instead of pin numbers
+> - remove pinctrl_sensor_power and pinctrl_sensor_reset pin muxing
+> since they are not of intereset for this board
+> - use "pb4" label for user button instead of "bp1"
+> 
+> Claudiu Beznea (2):
+>   ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support
+>   ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK support
+> 
+> Cristian Birsan (1):
+>   drivers: soc: atmel: Add basic support for new sama5d2 SiPs
+> 
+> Cyrille Pitchen (1):
+>   ARM: dts: at91: sama5d2: add QSPI nodes
+> 
+> Songjun Wu (1):
+>   ARM: dts: at91: sama5d2: add isc node
+> 
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi   | 178 +++++++++
+>  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 551 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/sama5d2.dtsi              |  38 ++
+>  drivers/soc/atmel/soc.c                     |   8 +
+>  drivers/soc/atmel/soc.h                     |   4 +
+>  6 files changed, 780 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> 
 
-I'm not really sure we need the ALWAYS_NEW bit here. In the case where
-the clocks cannot operate in the old mode any more, we won't even
-query the clocks, since we know that it's not needed at all.
+All applied, thanks!
 
-Pretty much just like what we're doing for old-mode-only clocks at the
-moment.
-
-I guess the only thing we should indentify is whether the clock can
-switch between the two, or not, and the MMC_TIMING_SWITCH bit is
-already perfect for that.
-
-Maxime
 
 -- 
-Maxime Ripard, Free Electrons
+Alexandre Belloni, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---okw2fn4jzuimsdrc--
