@@ -1,88 +1,41 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv4 3/4] dt-bindings: mfd: da9052: support TSI as ADC
-Date: Mon, 17 Jul 2017 13:27:11 +0200
-Message-ID: <20170717112711.eskydrt4pu32v74g@earth>
-References: <20170630143506.10541-1-sebastian.reichel@collabora.co.uk>
- <20170630143506.10541-4-sebastian.reichel@collabora.co.uk>
- <20170717104945.6qn6to7s3mlepxgj@dell>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v4 0/3] some fixups for MediaTek cpufreq driver
+Date: Mon, 17 Jul 2017 13:33:11 +0200
+Message-ID: <2164503.JjlIkNveU4@aspire.rjw.lan>
+References: <cover.1499692967.git.sean.wang@mediatek.com> <1500272192.16278.44.camel@mtkswgap22> <20170717073543.GL352@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lzbokgjmvnqsodbo"
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170717104945.6qn6to7s3mlepxgj@dell>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170717073543.GL352@vireshk-i7>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shunli.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Monday, July 17, 2017 01:05:43 PM Viresh Kumar wrote:
+> On 17-07-17, 14:16, Sean Wang wrote:
+> > Hi, Viresh
+> > 
+> > I missed to add Acks from Rob for patch 2 and 3 since we sent out almost
+> > at the same time. Do I need to resend again for this or the series is
+> > okay for you?
+> 
+> Looks like you missed including Rafael for this series (He is the one
+> who applies these patches).
+> 
+> I will let him answer for this.
+> 
+> 
 
---lzbokgjmvnqsodbo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please respin with all of the applicable tags.
 
-Hi Lee,
+I haven't been following all of the discussions on this that closely.
 
-On Mon, Jul 17, 2017 at 11:49:45AM +0100, Lee Jones wrote:
-> On Fri, 30 Jun 2017, Sebastian Reichel wrote:
->=20
-> > DA9052 allows using the touchscreen input pins as general purpose
-> > analogue input pin by wiring analogue inputs to X+, X-, Y+ and Y-
-> > and providing a reference voltage at TSIREF pin.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/da9052-i2c.txt | 8 ++++++++
-> >  1 file changed, 8 insertions(+)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Doc=
-umentation/devicetree/bindings/mfd/da9052-i2c.txt
-> > index 9554292dc6cb..57fa74e65664 100644
-> > --- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> > @@ -4,6 +4,14 @@ Required properties:
-> >  - compatible : Should be "dlg,da9052", "dlg,da9053-aa",
-> >  			 "dlg,da9053-ab", or "dlg,da9053-bb"
-> > =20
-> > +Optional properties:
-> > +- dlg,tsi-as-adc : Boolean, if set the X+, X-, Y+, Y- touchscreen
-> > +                    input lines are used as general purpose analogue
-> > +					input.
-> > +- tsiref-supply: Phandle to the regulator, which provides the reference
-> > +                 voltage for the TSIREF pin. Must be provided when the
-> > +			     touchscreen pins are used for ADC purposes.
-> > +
->=20
-> DT Ack please.
+Thanks,
+Rafael
 
-There is a v5 of this series, which has Acked-by from Rob already
-and got positive feedback from Guenter Roeck for the hwmon parts:
-
-http://lkml.iu.edu/hypermail/linux/kernel/1707.0/00518.html
-
-(if you received v4, v5 should also be in your INBOX)
-
--- Sebastian
-
---lzbokgjmvnqsodbo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllsnw8ACgkQ2O7X88g7
-+prt6g//ZcOVdwkd+lzBrH8BOinm787NRA80Z2EQA7UPUnRA/djnSld3sHxAV16U
-pqoLc77o4H/Djh4RRLGlh2SZ9Ne6DloouuXSilhc4I2M3Uzqc3I+hI5rlB3izCMv
-uQmPhfip+U1GpZkPiLztXHHJ0OK8XXA+TFgn6cD8Pmbj3W1PYToyfNbX8PgqCrES
-KG7gVKWuXOz1aD+vtSek0dXDRrX74Nz8pdJH5/3LvETG/ZkFnHt6qq7W4Koi0DQ/
-QiRRHiHejPhsvOjG/zl1pWPJeqi+++vaLkdN0kBZHBbSzu7kM3tLEoCWznC3HwKm
-DKSI2cJSaP1B4uEUJG4wZVheJHNxUcqD2U89YWKgl/ElJLy+0YG/wCOyc4mwUJG0
-CFALgpUEXlh2nFDcWyaEp1Vfogb4VwBUrgiunUqUhxznIEAItoaXZMX1vs+/6pAF
-i3WyvhVFjILfLWb9FFiS5d+OBLdPcrxSNpJNsrv/tiuE+BRPCkJuiPvuRtru6eNr
-UHlLEtRYALspDdWHXrQRubMIh4TvXb0cmM7XMiNNz8GbJav1lJ71ueXDL4t5ZA0t
-23wJ5QTSikcrEKx8uJEV/rmiHgdBsAl11RNvVFSyd9KimPyBBOVtqXDDsBaSiNTk
-71z2YCQqcKHQnykx9rilmRYIGcWlyfkrXl+N8Vc2WLANLwQIoDY=
-=lIX1
------END PGP SIGNATURE-----
-
---lzbokgjmvnqsodbo--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
