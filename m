@@ -1,163 +1,150 @@
 From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 12/14] qcom: mtd: nand: change register offset defines
- with enums
-Date: Mon, 17 Jul 2017 13:01:11 +0530
-Message-ID: <76b81dad9dc710f57245051fee72707f@codeaurora.org>
+Subject: Re: [PATCH 13/14] qcom: mtd: nand: support for QPIC version 1.5.0
+Date: Mon, 17 Jul 2017 13:02:08 +0530
+Message-ID: <820c71cdcb18b9f4bf72135b9a0d1436@codeaurora.org>
 References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-13-git-send-email-absahu@codeaurora.org>
- <a8961294-c72b-035c-0924-f0f901821ea4@codeaurora.org>
+ <1498720566-20782-14-git-send-email-absahu@codeaurora.org>
+ <d6566f4e-c55b-18ed-611b-35bc191b2f5f@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a8961294-c72b-035c-0924-f0f901821ea4-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <d6566f4e-c55b-18ed-611b-35bc191b2f5f-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-04 15:25, Archit Taneja wrote:
+On 2017-07-04 15:27, Archit Taneja wrote:
 > On 06/29/2017 12:46 PM, Abhishek Sahu wrote:
->> The current driver defines the register offset with preprocessor
->> macro which is defined crossponding to NAND controller version
->> 1.4.0. This patch changes these macro with enumeration. It also
->> adds mapping array which contains controller register offsets for
->> each register offset enumeration. This mapping array will be
->> referenced before each register read and writes, where the register
->> offset enumeration is being replaced with actual register offsets.
+>> The current QCOM NAND driver only supports version 1.4.0
+>> QCOM QPIC NAND controller. This patch adds the support for
+>> version 1.5.0 which contains some of the registers at
+>> different offsets. The driver data contains the register offset
+>> field which is being initialized with its crossponding register
+> 
+> s/crossponding/corresponding
+> 
+
+  I Will fix this in v2.
+
+>> offsets array. A new compatible string has been added for
+>> version 1.5.0 in BAM mode which uses version 1.5.0 register
+>> offsets.
+> 
+> Please split into 2 patches.
+> 
+
+  Sure. I will split it.
+
+> Thanks,
+> Archit
+> 
 >> 
 >> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 >> ---
->>   drivers/mtd/nand/qcom_nandc.c | 136 
->> +++++++++++++++++++++++++++---------------
->>   1 file changed, 89 insertions(+), 47 deletions(-)
+>>   .../devicetree/bindings/mtd/qcom_nandc.txt         | 44 
+>> ++++++++++++++++++
+>>   drivers/mtd/nand/qcom_nandc.c                      | 54 
+>> ++++++++++++++++++++--
+>>   2 files changed, 95 insertions(+), 3 deletions(-)
 >> 
+>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt 
+>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> index 87b9a56..11e2da2 100644
+>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> @@ -4,6 +4,8 @@ Required properties:
+>>   - compatible:		must be one of the following:
+>>   	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
+>>   	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA 
+>> like IPQ4019.
+>> +	* "qcom,qpic-nandc-v1.5.0" - QPIC NAND v1.5.0 which uses BAM DMA 
+>> like IPQ8074.
+>> +
+>>   - reg:			MMIO address range
+>>   - clocks:		must contain core clock and always on clock
+>>   - clock-names:		must contain "core" for the core clock and "aon" for 
+>> the
+>> @@ -130,3 +132,45 @@ nand@79b0000 {
+>>   		};
+>>   	};
+>>   };
+>> +
+>> +nand@79b0000 {
+>> +	compatible = "qcom,qpic-nandc-v1.5.0";
+>> +	reg = <0x79B0000 0x1000>;
+>> +
+>> +	clocks = <&gcc GCC_QPIC_CLK>,
+>> +		<&gcc GCC_QPIC_AHB_CLK>;
+>> +	clock-names = "core", "aon";
+>> +
+>> +	dmas = <&qpicbam 0>,
+>> +		<&qpicbam 1>,
+>> +		<&qpicbam 2>;
+>> +	dma-names = "tx", "rx", "cmd";
+>> +
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +
+>> +	nandcs@0 {
+>> +		compatible = "qcom,nandcs";
+>> +		reg = <0>;
+>> +
+>> +		nand-ecc-strength = <4>;
+>> +		nand-ecc-step-size = <512>;
+>> +		nand-bus-width = <8>;
+>> +
+>> +		partitions {
+>> +			compatible = "fixed-partitions";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +
+>> +			partition@0 {
+>> +				label = "boot-nand";
+>> +				reg = <0 0x58a0000>;
+>> +			};
+>> +
+>> +			partition@58a0000 {
+>> +				label = "fs-nand";
+>> +				reg = <0x58a0000 0x4000000>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
 >> diff --git a/drivers/mtd/nand/qcom_nandc.c 
 >> b/drivers/mtd/nand/qcom_nandc.c
->> index 6d749b6..24750e6 100644
+>> index 24750e6..641e85d 100644
 >> --- a/drivers/mtd/nand/qcom_nandc.c
 >> +++ b/drivers/mtd/nand/qcom_nandc.c
->> @@ -24,43 +24,6 @@
->>   #include <linux/delay.h>
->>   #include <linux/dma/qcom_bam_dma.h>
->> 
->> -/* NANDc reg offsets */
->> -#define	NAND_FLASH_CMD			0x00
->> -#define	NAND_ADDR0			0x04
->> -#define	NAND_ADDR1			0x08
->> -#define	NAND_FLASH_CHIP_SELECT		0x0c
->> -#define	NAND_EXEC_CMD			0x10
->> -#define	NAND_FLASH_STATUS		0x14
->> -#define	NAND_BUFFER_STATUS		0x18
->> -#define	NAND_DEV0_CFG0			0x20
->> -#define	NAND_DEV0_CFG1			0x24
->> -#define	NAND_DEV0_ECC_CFG		0x28
->> -#define	NAND_DEV1_ECC_CFG		0x2c
->> -#define	NAND_DEV1_CFG0			0x30
->> -#define	NAND_DEV1_CFG1			0x34
->> -#define	NAND_READ_ID			0x40
->> -#define	NAND_READ_STATUS		0x44
->> -#define	NAND_DEV_CMD0			0xa0
->> -#define	NAND_DEV_CMD1			0xa4
->> -#define	NAND_DEV_CMD2			0xa8
->> -#define	NAND_DEV_CMD_VLD		0xac
->> -#define	SFLASHC_BURST_CFG		0xe0
->> -#define	NAND_ERASED_CW_DETECT_CFG	0xe8
->> -#define	NAND_ERASED_CW_DETECT_STATUS	0xec
->> -#define	NAND_EBI2_ECC_BUF_CFG		0xf0
->> -#define	FLASH_BUF_ACC			0x100
->> -
->> -#define	NAND_CTRL			0xf00
->> -#define	NAND_VERSION			0xf08
->> -#define	NAND_READ_LOCATION_0		0xf20
->> -#define	NAND_READ_LOCATION_1		0xf24
->> -#define	NAND_READ_LOCATION_2		0xf28
->> -#define	NAND_READ_LOCATION_3		0xf2c
->> -
->> -/* dummy register offsets, used by write_reg_dma */
->> -#define	NAND_DEV_CMD1_RESTORE		0xdead
->> -#define	NAND_DEV_CMD_VLD_RESTORE	0xbeef
->> -
->>   /* NAND_FLASH_CMD bits */
->>   #define	PAGE_ACC			BIT(4)
->>   #define	LAST_PAGE			BIT(5)
->> @@ -204,6 +167,44 @@
->>   #define QPIC_PER_CW_MAX_CMD_SGL		(32)
->>   #define QPIC_PER_CW_MAX_DATA_SGL	(8)
->> 
->> +/* NANDc reg offsets enumeration */
->> +enum {
->> +	NAND_FLASH_CMD,
->> +	NAND_ADDR0,
->> +	NAND_ADDR1,
->> +	NAND_FLASH_CHIP_SELECT,
->> +	NAND_EXEC_CMD,
->> +	NAND_FLASH_STATUS,
->> +	NAND_BUFFER_STATUS,
->> +	NAND_DEV0_CFG0,
->> +	NAND_DEV0_CFG1,
->> +	NAND_DEV0_ECC_CFG,
->> +	NAND_DEV1_ECC_CFG,
->> +	NAND_DEV1_CFG0,
->> +	NAND_DEV1_CFG1,
->> +	NAND_READ_ID,
->> +	NAND_READ_STATUS,
->> +	NAND_DEV_CMD0,
->> +	NAND_DEV_CMD1,
->> +	NAND_DEV_CMD2,
->> +	NAND_DEV_CMD_VLD,
->> +	SFLASHC_BURST_CFG,
->> +	NAND_ERASED_CW_DETECT_CFG,
->> +	NAND_ERASED_CW_DETECT_STATUS,
->> +	NAND_EBI2_ECC_BUF_CFG,
->> +	FLASH_BUF_ACC,
->> +	NAND_CTRL,
->> +	NAND_VERSION,
->> +	NAND_READ_LOCATION_0,
->> +	NAND_READ_LOCATION_1,
->> +	NAND_READ_LOCATION_2,
->> +	NAND_READ_LOCATION_3,
->> +
->> +	/* dummy register offsets, used by write_reg_dma */
->> +	NAND_DEV_CMD1_RESTORE,
->> +	NAND_DEV_CMD_VLD_RESTORE,
->> +};
->> +
->>   /*
->>    * This data type corresponds to the BAM transaction which will be 
->> used for all
->>    * NAND transfers.
->> @@ -326,6 +327,7 @@ struct nandc_regs {
->>    *				bam dma
->>    * @max_cwperpage:		maximum qpic codeword required. calcualted
->>    *				from all nand device pagesize
->> + * @regs_offsets:		register offset mapping array
+>> @@ -430,15 +430,18 @@ struct qcom_nand_host {
+>>    * This data type corresponds to the nand driver data which will be 
+>> used at
+>>    * driver probe time
+>>    * @ecc_modes - ecc mode for nand
+>> + * @regs_offsets - contains the register offsets array pointer.
+>>    * @dma_bam_enabled - whether this driver is using bam
 >>    */
->>   struct qcom_nand_controller {
->>   	struct nand_hw_control controller;
->> @@ -371,6 +373,7 @@ struct qcom_nand_controller {
->> 
->>   	u32 cmd1, vld;
+>>   struct qcom_nand_driver_data {
 >>   	u32 ecc_modes;
 >> +	const u32 *regs_offsets;
-> 
-> minor quirk:
-> 
-> s/regs_offsets/reg_offsets
-> 
-
-  Sure. I will fix this in v2.
-
->>   };
->> 
->>   /*
->> @@ -434,6 +437,40 @@ struct qcom_nand_driver_data {
 >>   	bool dma_bam_enabled;
 >>   };
 >> 
->> +/* Mapping table which contains the actual register offsets */
->> +static const u32 regs_offsets[] = {
+>>   /* Mapping table which contains the actual register offsets */
+>> -static const u32 regs_offsets[] = {
+>> +/* NAND controller Version 1.4.0 mapping table */
+>> +static const u32 regs_offsets_v1_4_0[] = {
+>>   	[NAND_FLASH_CMD] = 0x00,
+>>   	[NAND_ADDR0] = 0x04,
+>>   	[NAND_ADDR1] = 0x08,
+>> @@ -471,6 +474,40 @@ struct qcom_nand_driver_data {
+>>   	[NAND_READ_LOCATION_3] = 0xf2c,
+>>   };
+>> 
+>> +/* NAND controller Version 1.5.0 mapping table */
+>> +static const u32 regs_offsets_v1_5_0[] = {
 >> +	[NAND_FLASH_CMD] = 0x00,
 >> +	[NAND_ADDR0] = 0x04,
 >> +	[NAND_ADDR1] = 0x08,
@@ -173,17 +160,17 @@ On 2017-07-04 15:25, Archit Taneja wrote:
 >> +	[NAND_DEV1_CFG1] = 0x34,
 >> +	[NAND_READ_ID] = 0x40,
 >> +	[NAND_READ_STATUS] = 0x44,
->> +	[NAND_DEV_CMD0] = 0xa0,
->> +	[NAND_DEV_CMD1] = 0xa4,
->> +	[NAND_DEV_CMD2] = 0xa8,
->> +	[NAND_DEV_CMD_VLD] = 0xac,
+>> +	[NAND_DEV_CMD0] = 0x70a0,
+>> +	[NAND_DEV_CMD1] = 0x70a4,
+>> +	[NAND_DEV_CMD2] = 0x70a8,
+>> +	[NAND_DEV_CMD_VLD] = 0x70ac,
 >> +	[SFLASHC_BURST_CFG] = 0xe0,
 >> +	[NAND_ERASED_CW_DETECT_CFG] = 0xe8,
 >> +	[NAND_ERASED_CW_DETECT_STATUS] = 0xec,
 >> +	[NAND_EBI2_ECC_BUF_CFG] = 0xf0,
 >> +	[FLASH_BUF_ACC] = 0x100,
 >> +	[NAND_CTRL] = 0xf00,
->> +	[NAND_VERSION] = 0xf08,
+>> +	[NAND_VERSION] = 0x4f08,
 >> +	[NAND_READ_LOCATION_0] = 0xf20,
 >> +	[NAND_READ_LOCATION_1] = 0xf24,
 >> +	[NAND_READ_LOCATION_2] = 0xf28,
@@ -193,112 +180,55 @@ On 2017-07-04 15:25, Archit Taneja wrote:
 >>   /* Frees the BAM transaction memory */
 >>   static void free_bam_transaction(struct qcom_nand_controller *nandc)
 >>   {
->> @@ -516,13 +553,13 @@ static inline struct qcom_nand_host 
->> *to_qcom_nand_host(struct nand_chip *chip)
->> 
->>   static inline u32 nandc_read(struct qcom_nand_controller *nandc, int 
->> offset)
->>   {
->> -	return ioread32(nandc->base + offset);
->> +	return ioread32(nandc->base + nandc->regs_offsets[offset]);
->>   }
->> 
->>   static inline void nandc_write(struct qcom_nand_controller *nandc, 
->> int offset,
->>   			       u32 val)
->>   {
->> -	iowrite32(val, nandc->base + offset);
->> +	iowrite32(val, nandc->base + nandc->regs_offsets[offset]);
->>   }
->> 
->>   static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int 
->> offset)
->> @@ -903,11 +940,12 @@ static int read_reg_dma(struct 
->> qcom_nand_controller *nandc, int first,
->>   	nandc->reg_read_pos += num_regs;
->> 
->>   	if (nandc->dma_bam_enabled)
->> -		return prep_dma_desc_command(nandc, true, first, vaddr,
->> +		return prep_dma_desc_command(nandc, true,
->> +					     nandc->regs_offsets[first], vaddr,
->>   					     num_regs, flags);
->> 
->> -	return prep_dma_desc(nandc, true, first, vaddr, num_regs * 
->> sizeof(u32),
->> -			     flow_control);
->> +	return prep_dma_desc(nandc, true, nandc->regs_offsets[first], vaddr,
->> +			     num_regs * sizeof(u32), flow_control);
->>   }
->> 
->>   /*
->> @@ -946,11 +984,12 @@ static int write_reg_dma(struct 
->> qcom_nand_controller *nandc, int first,
->>   		first = NAND_DEV_CMD_VLD;
->> 
->>   	if (nandc->dma_bam_enabled)
->> -		return prep_dma_desc_command(nandc, false, first, vaddr,
->> +		return prep_dma_desc_command(nandc, false,
->> +					     nandc->regs_offsets[first], vaddr,
->>   					     num_regs, flags);
->> 
->> -	return prep_dma_desc(nandc, false, first, vaddr, num_regs * 
->> sizeof(u32),
->> -			     flow_control);
->> +	return prep_dma_desc(nandc, false, nandc->regs_offsets[first], 
->> vaddr,
->> +			     num_regs * sizeof(u32), flow_control);
->>   }
->> 
->>   /*
->> @@ -968,7 +1007,8 @@ static int read_data_dma(struct 
->> qcom_nand_controller *nandc, int reg_off,
->>   		return prep_dma_desc_data_bam(nandc, true, reg_off, vaddr, size,
->>   					      flags);
->> 
->> -	return prep_dma_desc(nandc, true, reg_off, vaddr, size, false);
->> +	return prep_dma_desc(nandc, true, nandc->regs_offsets[FLASH_BUF_ACC] 
->> +
->> +			     reg_off - FLASH_BUF_ACC, vaddr, size, false);
-> 
-> This doesn't make sense. The integer corresponding to FLASH_BUF_ACC
-> enum constant shouldn't be
-> involved in any calculations.
-> 
-> It would be better to pass the correct param to reg_off in all the
-> call sites to read_data_dma()
-> and write_data_dma()
-> 
-
-  Yes. I will do the same in v2.
-
-> Looks good otherwise.
-> 
-> Archit
-> 
->>   }
->> 
->>   /*
->> @@ -986,7 +1026,8 @@ static int write_data_dma(struct 
->> qcom_nand_controller *nandc, int reg_off,
->>   		return prep_dma_desc_data_bam(nandc, false, reg_off, vaddr,
->>   					      size, flags);
->> 
->> -	return prep_dma_desc(nandc, false, reg_off, vaddr, size, false);
->> +	return prep_dma_desc(nandc, false, 
->> nandc->regs_offsets[FLASH_BUF_ACC] +
->> +			     reg_off - FLASH_BUF_ACC, vaddr, size, false);
->>   }
->> 
->>   /*
->> @@ -2791,6 +2832,7 @@ static int qcom_nandc_probe(struct 
+>> @@ -2832,7 +2869,7 @@ static int qcom_nandc_probe(struct 
 >> platform_device *pdev)
 >> 
 >>   	nandc->ecc_modes = driver_data->ecc_modes;
 >>   	nandc->dma_bam_enabled = driver_data->dma_bam_enabled;
->> +	nandc->regs_offsets = regs_offsets;
+>> -	nandc->regs_offsets = regs_offsets;
+>> +	nandc->regs_offsets = driver_data->regs_offsets;
 >> 
 >>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 >>   	nandc->base = devm_ioremap_resource(dev, res);
+>> @@ -2902,16 +2939,24 @@ static int qcom_nandc_remove(struct 
+>> platform_device *pdev)
+>>   	return 0;
+>>   }
+>> 
+>> -
+>>   static const struct qcom_nand_driver_data ebi2_nandc_data = {
+>>   	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+>>   	.dma_bam_enabled = false,
+>> +	.regs_offsets = regs_offsets_v1_4_0,
+>>   };
+>> 
+>>   static const struct qcom_nand_driver_data qpic_nandc_v1_4_0_data = {
+>>   	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
+>>   	.dma_bam_enabled = true,
+>> +	.regs_offsets = regs_offsets_v1_4_0,
+>> +};
+>> +
+>> +static const struct qcom_nand_driver_data qpic_nandc_v1_5_0_data = {
+>> +	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
+>> +	.dma_bam_enabled = true,
+>> +	.regs_offsets = regs_offsets_v1_5_0,
+>>   };
+>> +
+>>   /*
+>>    * data will hold a struct pointer containing more differences once 
+>> we support
+>>    * more controller variants
+>> @@ -2923,6 +2968,9 @@ static int qcom_nandc_remove(struct 
+>> platform_device *pdev)
+>>   	{	.compatible = "qcom,qpic-nandc-v1.4.0",
+>>   		.data = (void *)&qpic_nandc_v1_4_0_data,
+>>   	},
+>> +	{	.compatible = "qcom,qpic-nandc-v1.5.0",
+>> +		.data = (void *)&qpic_nandc_v1_5_0_data,
+>> +	},
+>>   	{}
+>>   };
+>>   MODULE_DEVICE_TABLE(of, qcom_nandc_of_match);
 >> 
 
 -- 
