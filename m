@@ -1,68 +1,42 @@
-From: Jacob Chen <jacobchen110@gmail.com>
-Subject: Re: [PATCH v2 5/6] ARM: dts: rockchip: enable RGA for rk3288 devices
-Date: Mon, 17 Jul 2017 11:09:30 +0800
-Message-ID: <CAFLEztQ1Cw2UeRGUo1eXx1q4hneHTf8amQeKcVGN90nhwx-6tA@mail.gmail.com>
-References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
- <2238838.k7NpPUxaC0@avalon> <CAFLEztRwuzkAn_QrgRNv_yrNixuicfr99PEpR2SDyRROqe=b7w@mail.gmail.com>
- <3257165.sao50mFgxX@avalon>
+From: Zhi Mao <zhi.mao@mediatek.com>
+Subject: Re: [PATCH v3 0/6] mediatek: pwm driver add MT2712/MT7622 support
+Date: Mon, 17 Jul 2017 11:16:04 +0800
+Message-ID: <1500261364.22478.32.camel@mhfsdcap03>
+References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3257165.sao50mFgxX@avalon>
+In-Reply-To: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, laurent.pinchart+renesas@ideasonboard.com, Hans Verkuil <hans.verkuil@cisco.com>, s.nawrocki@samsung.com, Tomasz Figa <tfiga@chromium.org>, Nicolas Dufresne <nicolas@ndufresne.ca>
+To: "john@phrozen.org" <john@phrozen.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= <Yingjoe.Chen@mediatek.com>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, Sean Wang =?UTF-8?Q?=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?=
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi John, Matthais & PWM Maintainers
 
-2017-07-17 10:28 GMT+08:00 Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
-> Hi Jacob,
->
-> On Sunday 16 Jul 2017 12:23:02 Jacob Chen wrote:
->> 2017-07-15 17:16 GMT+08:00 Laurent Pinchart:
->> > On Saturday 15 Jul 2017 14:58:39 Jacob Chen wrote:
->> >> Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
->> >> ---
->> >>
->> >>  arch/arm/boot/dts/rk3288-evb.dtsi                 | 4 ++++
->> >>  arch/arm/boot/dts/rk3288-firefly-reload-core.dtsi | 4 ++++
->> >>  arch/arm/boot/dts/rk3288-firefly.dtsi             | 4 ++++
->> >>  arch/arm/boot/dts/rk3288-miqi.dts                 | 4 ++++
->> >>  arch/arm/boot/dts/rk3288-popmetal.dts             | 4 ++++
->> >>  arch/arm/boot/dts/rk3288-tinker.dts               | 4 ++++
->> >
->> > Some boards are missing from this list (Fennec, Phycore, ...) What
->> > criteria have you used to decide on which ones to enable the RGA ? That
->> > should be explained in the commit message.
->>
->> Ok.
->>
->> I just enable the boards i have tested, because i can't make sure it
->> won't break the other board because of clocks or power-domains.
->
-> Given the clocks and power domains shouldn't be board-specific, would it make
-> sense to try and get the change tested on the remaining boards ? You could
+Just a Gentle ping on this issue :)
+Is there anything should be modified?
 
-Not all drivers have handle power domains and clocks appropriately, It
-may triggers bugs,
-but since it's a V4l2 driver not DRM driver, i will enable it for all
-rk3288 boards.
-(DRM device will try to probe in very eraly stage and update
-clocks/power-domains...)
+Regards,
+Zhi
 
 
-> then enable the device in the SoC .dtsi file, which would be much simpler.
->
-
-We have many different version RGA drivers in rockchip downstream kernel.
-To keep consistent, i didn't enable it in .dtsi.
-
-
->> >>  6 files changed, 24 insertions(+)
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
+On Fri, 2017-06-30 at 14:05 +0800, Zhi Mao wrote:
+> change in v3:
+> 1. add pwm clk disable in function:mtk_pwm_config()
+>    for error parameter checking case
+> 
+> Zhi Mao (6):
+>   pwm: kconfig: modify mediatek information
+>   pwm: mediatek: fix pwm source clock selection
+>   pwm: mediatek: fix clock control issue
+>   pwm: bindings: add MT2712/MT7622 information
+>   pwm: mediatek: add PWM_CLK_DIV_MAX
+>   pwm: mediatek: add MT2712/MT7622 support
+> 
+>  .../devicetree/bindings/pwm/pwm-mediatek.txt       |    6 +-
+>  drivers/pwm/Kconfig                                |    2 +-
+>  drivers/pwm/pwm-mediatek.c                         |  133 ++++++++++++++------
+>  3 files changed, 104 insertions(+), 37 deletions(-)
+> 
