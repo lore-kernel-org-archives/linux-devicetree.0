@@ -1,233 +1,545 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: [PATCH v6 7/7] drm/stm: Add STM32 DSI controller driver
-Date: Mon, 17 Jul 2017 09:40:23 +0200
-Message-ID: <1500277223-29553-8-git-send-email-philippe.cornu@st.com>
-References: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] mfd: ds1374: Add Dallas/Maxim DS1374 Multi Function
+ Device
+Date: Mon, 17 Jul 2017 08:51:17 +0100
+Message-ID: <20170717075117.btnhbmgpofwn7zdk@dell>
+References: <1499975665-14581-1-git-send-email-mdf@kernel.org>
+ <1499975665-14581-2-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark
- Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd
- Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Archit Taneja <architt@codeaurora.org>, Eric
- Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, zourongrong@gmail.com, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen
- Feng <puck.chen@hisilicon.com>, Mark Yao <mark.yao@rock-chips.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1499975665-14581-2-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBTVE0zMiBEU0kgY29udHJvbGxlciBkcml2ZXIgdGhhdCB1c2VzIHRoZSBTeW5vcHN5
-cyBEZXNpZ25XYXJlCk1JUEkgRFNJIGhvc3QgY29udHJvbGxlciBicmlkZ2UuCgpTaWduZWQtb2Zm
-LWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgpSZXZpZXdlZC1ieTog
-TmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgpSZXZpZXdlZC1ieTogQXJj
-aGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0v
-c3RtL0tjb25maWcgICAgICAgICAgIHwgICA3ICsKIGRyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZp
-bGUgICAgICAgICAgfCAgIDIgKwogZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0u
-YyB8IDM1MiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAzIGZpbGVzIGNoYW5n
-ZWQsIDM2MSBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJt
-L3N0bS9kd19taXBpX2RzaS1zdG0uYwoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0v
-S2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vS2NvbmZpZwppbmRleCA0Yjg4MjIzLi5mOTQ2
-MmJjIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3RtL0tjb25maWcKKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL3N0bS9LY29uZmlnCkBAIC0xNCwzICsxNCwxMCBAQCBjb25maWcgRFJNX1NUTQog
-CSAgU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIE1DVXMuCiAJICBUbyBjb21waWxlIHRoaXMgZHJp
-dmVyIGFzIGEgbW9kdWxlLCBjaG9vc2UgTSBoZXJlOiB0aGUgbW9kdWxlCiAJICB3aWxsIGJlIGNh
-bGxlZCBzdG0tZHJtLgorCitjb25maWcgRFJNX1NUTV9EU0kKKwl0cmlzdGF0ZSAiU1RNaWNyb2Vs
-ZWN0cm9uaWNzIHNwZWNpZmljIGV4dGVuc2lvbnMgZm9yIFN5bm9wc3lzIE1JUEkgRFNJIgorCWRl
-cGVuZHMgb24gRFJNX1NUTQorCXNlbGVjdCBEUk1fRFdfTUlQSV9EU0kKKwloZWxwCisJICBDaG9v
-c2UgdGhpcyBvcHRpb24gZm9yIE1JUEkgRFNJIHN1cHBvcnQgb24gU1RNaWNyb2VsZWN0cm9uaWNz
-IFNvQy4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUgYi9kcml2ZXJz
-L2dwdS9kcm0vc3RtL01ha2VmaWxlCmluZGV4IGEwOWVjZjQuLmQ4ODNhZGMgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUKKysrIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9N
-YWtlZmlsZQpAQCAtMiw0ICsyLDYgQEAgc3RtLWRybS15IDo9IFwKIAlkcnYubyBcCiAJbHRkYy5v
-CiAKK29iai0kKENPTkZJR19EUk1fU1RNX0RTSSkgKz0gZHdfbWlwaV9kc2ktc3RtLm8KKwogb2Jq
-LSQoQ09ORklHX0RSTV9TVE0pICs9IHN0bS1kcm0ubwpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9k
-c2ktc3RtLmMKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMC4uMTZhZTAwZQotLS0g
-L2Rldi9udWxsCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMKQEAg
-LTAsMCArMSwzNTIgQEAKKy8qCisgKiBDb3B5cmlnaHQgKEMpIFNUTWljcm9lbGVjdHJvbmljcyBT
-QSAyMDE3CisgKgorICogQXV0aG9yczogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0
-LmNvbT4KKyAqICAgICAgICAgIFlhbm5pY2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+
-CisgKgorICogTGljZW5zZSB0ZXJtczogIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIChHUEwp
-LCB2ZXJzaW9uIDIKKyAqLworCisjaW5jbHVkZSA8bGludXgvY2xrLmg+CisjaW5jbHVkZSA8bGlu
-dXgvaW9wb2xsLmg+CisjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CisjaW5jbHVkZSA8ZHJtL2Ry
-bVAuaD4KKyNpbmNsdWRlIDxkcm0vZHJtX21pcGlfZHNpLmg+CisjaW5jbHVkZSA8ZHJtL2JyaWRn
-ZS9kd19taXBpX2RzaS5oPgorI2luY2x1ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPgorCisvKiBE
-U0kgd3JhcHBlciByZWdpc3RlciAmIGJpdCBkZWZpbml0aW9ucyAqLworLyogTm90ZTogcmVnaXN0
-ZXJzIGFyZSBuYW1lZCBhcyBpbiB0aGUgUmVmZXJlbmNlIE1hbnVhbCAqLworI2RlZmluZSBEU0lf
-V0NGR1IJMHgwNDAwCQkvKiBXcmFwcGVyIENvbkZpR3VyYXRpb24gUmVnICovCisjZGVmaW5lIFdD
-RkdSX0RTSU0JQklUKDApCQkvKiBEU0kgTW9kZSAqLworI2RlZmluZSBXQ0ZHUl9DT0xNVVgJR0VO
-TUFTSygzLCAxKQkvKiBDT0xvciBNVWx0aXBsZVhpbmcgKi8KKworI2RlZmluZSBEU0lfV0NSCQkw
-eDA0MDQJCS8qIFdyYXBwZXIgQ29udHJvbCBSZWcgKi8KKyNkZWZpbmUgV0NSX0RTSUVOCUJJVCgz
-KQkJLyogRFNJIEVOYWJsZSAqLworCisjZGVmaW5lIERTSV9XSVNSCTB4MDQwQwkJLyogV3JhcHBl
-ciBJbnRlcnJ1cHQgYW5kIFN0YXR1cyBSZWcgKi8KKyNkZWZpbmUgV0lTUl9QTExMUwlCSVQoOCkJ
-CS8qIFBMTCBMb2NrIFN0YXR1cyAqLworI2RlZmluZSBXSVNSX1JSUwlCSVQoMTIpCQkvKiBSZWd1
-bGF0b3IgUmVhZHkgU3RhdHVzICovCisKKyNkZWZpbmUgRFNJX1dQQ1IwCTB4MDQxOAkJLyogV3Jh
-cHBlciBQaHkgQ29uZiBSZWcgMCAqLworI2RlZmluZSBXUENSMF9VSVg0CUdFTk1BU0soNSwgMCkJ
-LyogVW5pdCBJbnRlcnZhbCBYIDQgKi8KKyNkZWZpbmUgV1BDUjBfVERETAlCSVQoMTYpCQkvKiBU
-dXJuIERpc2FibGUgRGF0YSBMYW5lcyAqLworCisjZGVmaW5lIERTSV9XUlBDUgkweDA0MzAJCS8q
-IFdyYXBwZXIgUmVndWxhdG9yICYgUGxsIEN0cmwgUmVnICovCisjZGVmaW5lIFdSUENSX1BMTEVO
-CUJJVCgwKQkJLyogUExMIEVOYWJsZSAqLworI2RlZmluZSBXUlBDUl9ORElWCUdFTk1BU0soOCwg
-MikJLyogcGxsIGxvb3AgRElWaXNpb24gRmFjdG9yICovCisjZGVmaW5lIFdSUENSX0lERglHRU5N
-QVNLKDE0LCAxMSkJLyogcGxsIElucHV0IERpdmlzaW9uIEZhY3RvciAqLworI2RlZmluZSBXUlBD
-Ul9PREYJR0VOTUFTSygxNywgMTYpCS8qIHBsbCBPdXRwdXQgRGl2aXNpb24gRmFjdG9yICovCisj
-ZGVmaW5lIFdSUENSX1JFR0VOCUJJVCgyNCkJCS8qIFJFR3VsYXRvciBFTmFibGUgKi8KKyNkZWZp
-bmUgV1JQQ1JfQkdSRU4JQklUKDI4KQkJLyogQmFuZEdhcCBSZWZlcmVuY2UgRU5hYmxlICovCisj
-ZGVmaW5lIElERl9NSU4JCTEKKyNkZWZpbmUgSURGX01BWAkJNworI2RlZmluZSBORElWX01JTgkx
-MAorI2RlZmluZSBORElWX01BWAkxMjUKKyNkZWZpbmUgT0RGX01JTgkJMQorI2RlZmluZSBPREZf
-TUFYCQk4CisKKy8qIGRzaSBjb2xvciBmb3JtYXQgY29kaW5nIGFjY29yZGluZyB0byB0aGUgZGF0
-YXNoZWV0ICovCitlbnVtIGRzaV9jb2xvciB7CisJRFNJX1JHQjU2NV9DT05GMSwKKwlEU0lfUkdC
-NTY1X0NPTkYyLAorCURTSV9SR0I1NjVfQ09ORjMsCisJRFNJX1JHQjY2Nl9DT05GMSwKKwlEU0lf
-UkdCNjY2X0NPTkYyLAorCURTSV9SR0I4ODgsCit9OworCisjZGVmaW5lIExBTkVfTUlOX0tCUFMJ
-MzEyNTAKKyNkZWZpbmUgTEFORV9NQVhfS0JQUwk1MDAwMDAKKworLyogU2xlZXAgJiB0aW1lb3V0
-IGZvciByZWd1bGF0b3Igb24vb2ZmLCBwbGwgbG9jay91bmxvY2sgJiBmaWZvIGVtcHR5ICovCisj
-ZGVmaW5lIFNMRUVQX1VTCTEwMDAKKyNkZWZpbmUgVElNRU9VVF9VUwkyMDAwMDAKKworc3RydWN0
-IGR3X21pcGlfZHNpX3N0bSB7CisJdm9pZCBfX2lvbWVtICpiYXNlOworCXN0cnVjdCBjbGsgKnBs
-bHJlZl9jbGs7Cit9OworCitzdGF0aWMgaW5saW5lIHZvaWQgZHNpX3dyaXRlKHN0cnVjdCBkd19t
-aXBpX2RzaV9zdG0gKmRzaSwgdTMyIHJlZywgdTMyIHZhbCkKK3sKKwl3cml0ZWwodmFsLCBkc2kt
-PmJhc2UgKyByZWcpOworfQorCitzdGF0aWMgaW5saW5lIHUzMiBkc2lfcmVhZChzdHJ1Y3QgZHdf
-bWlwaV9kc2lfc3RtICpkc2ksIHUzMiByZWcpCit7CisJcmV0dXJuIHJlYWRsKGRzaS0+YmFzZSAr
-IHJlZyk7Cit9CisKK3N0YXRpYyBpbmxpbmUgdm9pZCBkc2lfc2V0KHN0cnVjdCBkd19taXBpX2Rz
-aV9zdG0gKmRzaSwgdTMyIHJlZywgdTMyIG1hc2spCit7CisJZHNpX3dyaXRlKGRzaSwgcmVnLCBk
-c2lfcmVhZChkc2ksIHJlZykgfCBtYXNrKTsKK30KKworc3RhdGljIGlubGluZSB2b2lkIGRzaV9j
-bGVhcihzdHJ1Y3QgZHdfbWlwaV9kc2lfc3RtICpkc2ksIHUzMiByZWcsIHUzMiBtYXNrKQorewor
-CWRzaV93cml0ZShkc2ksIHJlZywgZHNpX3JlYWQoZHNpLCByZWcpICYgfm1hc2spOworfQorCitz
-dGF0aWMgaW5saW5lIHZvaWQgZHNpX3VwZGF0ZV9iaXRzKHN0cnVjdCBkd19taXBpX2RzaV9zdG0g
-KmRzaSwgdTMyIHJlZywKKwkJCQkgICB1MzIgbWFzaywgdTMyIHZhbCkKK3sKKwlkc2lfd3JpdGUo
-ZHNpLCByZWcsIChkc2lfcmVhZChkc2ksIHJlZykgJiB+bWFzaykgfCB2YWwpOworfQorCitzdGF0
-aWMgZW51bSBkc2lfY29sb3IgZHNpX2NvbG9yX2Zyb21fbWlwaShlbnVtIG1pcGlfZHNpX3BpeGVs
-X2Zvcm1hdCBmbXQpCit7CisJc3dpdGNoIChmbXQpIHsKKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I4
-ODg6CisJCXJldHVybiBEU0lfUkdCODg4OworCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2NjoKKwkJ
-cmV0dXJuIERTSV9SR0I2NjZfQ09ORjI7CisJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2X1BBQ0tF
-RDoKKwkJcmV0dXJuIERTSV9SR0I2NjZfQ09ORjE7CisJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNTY1
-OgorCQlyZXR1cm4gRFNJX1JHQjU2NV9DT05GMTsKKwlkZWZhdWx0OgorCQlEUk1fREVCVUdfRFJJ
-VkVSKCJNSVBJIGNvbG9yIGludmFsaWQsIHNvIHdlIHVzZSByZ2I4ODhcbiIpOworCX0KKwlyZXR1
-cm4gRFNJX1JHQjg4ODsKK30KKworc3RhdGljIGludCBkc2lfcGxsX2dldF9jbGtvdXRfa2h6KGlu
-dCBjbGtpbl9raHosIGludCBpZGYsIGludCBuZGl2LCBpbnQgb2RmKQoreworCS8qIHByZXZlbnQg
-ZnJvbSBkaXZpc2lvbiBieSAwICovCisJaWYgKGlkZiAqIG9kZikKKwkJcmV0dXJuIERJVl9ST1VO
-RF9DTE9TRVNUKGNsa2luX2toeiAqIG5kaXYsIGlkZiAqIG9kZik7CisKKwlyZXR1cm4gMDsKK30K
-Kworc3RhdGljIGludCBkc2lfcGxsX2dldF9wYXJhbXMoaW50IGNsa2luX2toeiwgaW50IGNsa291
-dF9raHosCisJCQkgICAgICBpbnQgKmlkZiwgaW50ICpuZGl2LCBpbnQgKm9kZikKK3sKKwlpbnQg
-aSwgbywgbiwgbl9taW4sIG5fbWF4OworCWludCBmdmNvX21pbiwgZnZjb19tYXgsIGRlbHRhLCBi
-ZXN0X2RlbHRhOyAvKiBhbGwgaW4ga2h6ICovCisKKwkvKiBFYXJseSBjaGVja3MgcHJldmVudGlu
-ZyBkaXZpc2lvbiBieSAwICYgb2RkIHJlc3VsdHMgKi8KKwlpZiAoKGNsa2luX2toeiA8PSAwKSB8
-fCAoY2xrb3V0X2toeiA8PSAwKSkKKwkJcmV0dXJuIC1FSU5WQUw7CisKKwlmdmNvX21pbiA9IExB
-TkVfTUlOX0tCUFMgKiAyICogT0RGX01BWDsKKwlmdmNvX21heCA9IExBTkVfTUFYX0tCUFMgKiAy
-ICogT0RGX01JTjsKKworCWJlc3RfZGVsdGEgPSAxMDAwMDAwOyAvKiBiaWcgc3RhcnRlZCB2YWx1
-ZSAoMTAwMDAwMGtoeikgKi8KKworCWZvciAoaSA9IElERl9NSU47IGkgPD0gSURGX01BWDsgaSsr
-KSB7CisJCS8qIENvbXB1dGUgbmRpdiByYW5nZSBhY2NvcmRpbmcgdG8gRnZjbyAqLworCQluX21p
-biA9ICgoZnZjb19taW4gKiBpKSAvICgyICogY2xraW5fa2h6KSkgKyAxOworCQluX21heCA9IChm
-dmNvX21heCAqIGkpIC8gKDIgKiBjbGtpbl9raHopOworCisJCS8qIE5vIG5lZWQgdG8gY29udGlu
-dWUgaWRmIGxvb3AgaWYgd2UgcmVhY2ggbmRpdiBtYXggKi8KKwkJaWYgKG5fbWluID49IE5ESVZf
-TUFYKQorCQkJYnJlYWs7CisKKwkJLyogQ2xhbXAgbmRpdiB0byB2YWxpZCB2YWx1ZXMgKi8KKwkJ
-aWYgKG5fbWluIDwgTkRJVl9NSU4pCisJCQluX21pbiA9IE5ESVZfTUlOOworCQlpZiAobl9tYXgg
-PiBORElWX01BWCkKKwkJCW5fbWF4ID0gTkRJVl9NQVg7CisKKwkJZm9yIChvID0gT0RGX01JTjsg
-byA8PSBPREZfTUFYOyBvICo9IDIpIHsKKwkJCW4gPSBESVZfUk9VTkRfQ0xPU0VTVChpICogbyAq
-IGNsa291dF9raHosIGNsa2luX2toeik7CisJCQkvKiBDaGVjayBuZGl2IGFjY29yZGluZyB0byB2
-Y28gcmFuZ2UgKi8KKwkJCWlmICgobiA8IG5fbWluKSB8fCAobiA+IG5fbWF4KSkKKwkJCQljb250
-aW51ZTsKKwkJCS8qIENoZWNrIGlmIG5ldyBkZWx0YSBpcyBiZXR0ZXIgJiBzYXZlcyBwYXJhbWV0
-ZXJzICovCisJCQlkZWx0YSA9IGRzaV9wbGxfZ2V0X2Nsa291dF9raHooY2xraW5fa2h6LCBpLCBu
-LCBvKSAtCisJCQkJY2xrb3V0X2toejsKKwkJCWlmIChkZWx0YSA8IDApCisJCQkJZGVsdGEgPSAt
-ZGVsdGE7CisJCQlpZiAoZGVsdGEgPCBiZXN0X2RlbHRhKSB7CisJCQkJKmlkZiA9IGk7CisJCQkJ
-Km5kaXYgPSBuOworCQkJCSpvZGYgPSBvOworCQkJCWJlc3RfZGVsdGEgPSBkZWx0YTsKKwkJCX0K
-KwkJCS8qIGZhc3QgcmV0dXJuIGluIGNhc2Ugb2YgInBlcmZlY3QgcmVzdWx0IiAqLworCQkJaWYg
-KCFkZWx0YSkKKwkJCQlyZXR1cm4gMDsKKwkJfQorCX0KKworCXJldHVybiAwOworfQorCitzdGF0
-aWMgaW50IGR3X21pcGlfZHNpX3BoeV9pbml0KHZvaWQgKnByaXZfZGF0YSkKK3sKKwlzdHJ1Y3Qg
-ZHdfbWlwaV9kc2lfc3RtICpkc2kgPSBwcml2X2RhdGE7CisJdTMyIHZhbDsKKwlpbnQgcmV0Owor
-CisJLyogRW5hYmxlIHRoZSByZWd1bGF0b3IgKi8KKwlkc2lfc2V0KGRzaSwgRFNJX1dSUENSLCBX
-UlBDUl9SRUdFTiB8IFdSUENSX0JHUkVOKTsKKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoZHNp
-LT5iYXNlICsgRFNJX1dJU1IsIHZhbCwgdmFsICYgV0lTUl9SUlMsCisJCQkJIFNMRUVQX1VTLCBU
-SU1FT1VUX1VTKTsKKwlpZiAocmV0KQorCQlEUk1fREVCVUdfRFJJVkVSKCIhVElNRU9VVCEgd2Fp
-dGluZyBSRUdVLCBsZXQncyBjb250aW51ZVxuIik7CisKKwkvKiBFbmFibGUgdGhlIERTSSBQTEwg
-JiB3YWl0IGZvciBpdHMgbG9jayAqLworCWRzaV9zZXQoZHNpLCBEU0lfV1JQQ1IsIFdSUENSX1BM
-TEVOKTsKKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoZHNpLT5iYXNlICsgRFNJX1dJU1IsIHZh
-bCwgdmFsICYgV0lTUl9QTExMUywKKwkJCQkgU0xFRVBfVVMsIFRJTUVPVVRfVVMpOworCWlmIChy
-ZXQpCisJCURSTV9ERUJVR19EUklWRVIoIiFUSU1FT1VUISB3YWl0aW5nIFBMTCwgbGV0J3MgY29u
-dGludWVcbiIpOworCisJLyogRW5hYmxlIHRoZSBEU0kgd3JhcHBlciAqLworCWRzaV9zZXQoZHNp
-LCBEU0lfV0NSLCBXQ1JfRFNJRU4pOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbnQKK2R3
-X21pcGlfZHNpX2dldF9sYW5lX21icHModm9pZCAqcHJpdl9kYXRhLCBzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSAqbW9kZSwKKwkJCSAgdW5zaWduZWQgbG9uZyBtb2RlX2ZsYWdzLCB1MzIgbGFuZXMs
-IHUzMiBmb3JtYXQsCisJCQkgIHVuc2lnbmVkIGludCAqbGFuZV9tYnBzKQoreworCXN0cnVjdCBk
-d19taXBpX2RzaV9zdG0gKmRzaSA9IHByaXZfZGF0YTsKKwl1bnNpZ25lZCBpbnQgaWRmLCBuZGl2
-LCBvZGYsIHBsbF9pbl9raHosIHBsbF9vdXRfa2h6OworCWludCByZXQsIGJwcDsKKwl1MzIgdmFs
-OworCisJcGxsX2luX2toeiA9ICh1bnNpZ25lZCBpbnQpKGNsa19nZXRfcmF0ZShkc2ktPnBsbHJl
-Zl9jbGspIC8gMTAwMCk7CisKKwkvKiBDb21wdXRlIHJlcXVlc3RlZCBwbGwgb3V0ICovCisJYnBw
-ID0gbWlwaV9kc2lfcGl4ZWxfZm9ybWF0X3RvX2JwcChmb3JtYXQpOworCXBsbF9vdXRfa2h6ID0g
-bW9kZS0+Y2xvY2sgKiBicHAgLyBsYW5lczsKKwkvKiBBZGQgMjAlIHRvIHBsbCBvdXQgdG8gYmUg
-aGlnaGVyIHRoYW4gcGl4ZWwgYncgKGJ1cnN0IG1vZGUgb25seSkgKi8KKwlwbGxfb3V0X2toeiA9
-IChwbGxfb3V0X2toeiAqIDEyKSAvIDEwOworCWlmIChwbGxfb3V0X2toeiA+IExBTkVfTUFYX0tC
-UFMpIHsKKwkJcGxsX291dF9raHogPSBMQU5FX01BWF9LQlBTOworCQlEUk1fV0FSTigiV2Fybmlu
-ZyBtYXggcGh5IG1icHMgaXMgdXNlZFxuIik7CisJfQorCWlmIChwbGxfb3V0X2toeiA8IExBTkVf
-TUlOX0tCUFMpIHsKKwkJcGxsX291dF9raHogPSBMQU5FX01JTl9LQlBTOworCQlEUk1fV0FSTigi
-V2FybmluZyBtaW4gcGh5IG1icHMgaXMgdXNlZFxuIik7CisJfQorCisJLyogQ29tcHV0ZSBiZXN0
-IHBsbCBwYXJhbWV0ZXJzICovCisJaWRmID0gMDsKKwluZGl2ID0gMDsKKwlvZGYgPSAwOworCXJl
-dCA9IGRzaV9wbGxfZ2V0X3BhcmFtcyhwbGxfaW5fa2h6LCBwbGxfb3V0X2toeiwgJmlkZiwgJm5k
-aXYsICZvZGYpOworCWlmIChyZXQpCisJCURSTV9XQVJOKCJXYXJuaW5nIGRzaV9wbGxfZ2V0X3Bh
-cmFtcygpOiBiYWQgcGFyYW1zXG4iKTsKKworCS8qIEdldCB0aGUgYWRqdXN0ZWQgcGxsIG91dCB2
-YWx1ZSAqLworCXBsbF9vdXRfa2h6ID0gZHNpX3BsbF9nZXRfY2xrb3V0X2toeihwbGxfaW5fa2h6
-LCBpZGYsIG5kaXYsIG9kZik7CisKKwkvKiBTZXQgdGhlIFBMTCBkaXZpc2lvbiBmYWN0b3JzICov
-CisJZHNpX3VwZGF0ZV9iaXRzKGRzaSwgRFNJX1dSUENSLAlXUlBDUl9ORElWIHwgV1JQQ1JfSURG
-IHwgV1JQQ1JfT0RGLAorCQkJKG5kaXYgPDwgMikgfCAoaWRmIDw8IDExKSB8ICgoZmZzKG9kZikg
-LSAxKSA8PCAxNikpOworCisJLyogQ29tcHV0ZSB1aXg0ICYgc2V0IHRoZSBiaXQgcGVyaW9kIGlu
-IGhpZ2gtc3BlZWQgbW9kZSAqLworCXZhbCA9IDQwMDAwMDAgLyBwbGxfb3V0X2toejsKKwlkc2lf
-dXBkYXRlX2JpdHMoZHNpLCBEU0lfV1BDUjAsIFdQQ1IwX1VJWDQsIHZhbCk7CisKKwkvKiBTZWxl
-Y3QgdmlkZW8gbW9kZSBieSByZXNldHRpbmcgRFNJTSBiaXQgKi8KKwlkc2lfY2xlYXIoZHNpLCBE
-U0lfV0NGR1IsIFdDRkdSX0RTSU0pOworCisJLyogU2VsZWN0IHRoZSBjb2xvciBjb2RpbmcgKi8K
-Kwlkc2lfdXBkYXRlX2JpdHMoZHNpLCBEU0lfV0NGR1IsIFdDRkdSX0NPTE1VWCwKKwkJCWRzaV9j
-b2xvcl9mcm9tX21pcGkoZm9ybWF0KSA8PCAxKTsKKworCSpsYW5lX21icHMgPSBwbGxfb3V0X2to
-eiAvIDEwMDA7CisKKwlEUk1fREVCVUdfRFJJVkVSKCJwbGxfaW4gJXVrSHogcGxsX291dCAldWtI
-eiBsYW5lX21icHMgJXVNSHpcbiIsCisJCQkgcGxsX2luX2toeiwgcGxsX291dF9raHosICpsYW5l
-X21icHMpOworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGh5
-X29wcyBkd19taXBpX2RzaV9zdG1fcGh5X29wcyA9IHsKKwkuaW5pdCA9IGR3X21pcGlfZHNpX3Bo
-eV9pbml0LAorCS5nZXRfbGFuZV9tYnBzID0gZHdfbWlwaV9kc2lfZ2V0X2xhbmVfbWJwcywKK307
-CisKK3N0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIGR3X21pcGlfZHNpX3N0bV9w
-bGF0X2RhdGEgPSB7CisJLm1heF9kYXRhX2xhbmVzID0gMiwKKwkucGh5X29wcyA9ICZkd19taXBp
-X2RzaV9zdG1fcGh5X29wcywKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lk
-IGR3X21pcGlfZHNpX3N0bV9kdF9pZHNbXSA9IHsKKwl7IC5jb21wYXRpYmxlID0gInN0LHN0bTMy
-LWRzaSIsIC5kYXRhID0gJmR3X21pcGlfZHNpX3N0bV9wbGF0X2RhdGEsIH0sCisJeyB9LAorfTsK
-K01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGR3X21pcGlfZHNpX3N0bV9kdF9pZHMpOworCitzdGF0
-aWMgaW50IGR3X21pcGlfZHNpX3N0bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQoreworCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7CisJc3RydWN0IGR3X21pcGlf
-ZHNpX3N0bSAqZHNpOworCXN0cnVjdCByZXNvdXJjZSAqcmVzOworCWludCByZXQ7CisKKwlkc2kg
-PSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmRzaSksIEdGUF9LRVJORUwpOworCWlmICghZHNp
-KQorCQlyZXR1cm4gLUVOT01FTTsKKworCXJlcyA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2
-LCBJT1JFU09VUkNFX01FTSwgMCk7CisJaWYgKCFyZXMpIHsKKwkJRFJNX0VSUk9SKCJVbmFibGUg
-dG8gZ2V0IHJlc291cmNlXG4iKTsKKwkJcmV0dXJuIC1FTk9ERVY7CisJfQorCisJZHNpLT5iYXNl
-ID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKGRldiwgcmVzKTsKKwlpZiAoSVNfRVJSKGRzaS0+YmFz
-ZSkpIHsKKwkJRFJNX0VSUk9SKCJVbmFibGUgdG8gZ2V0IGRzaSByZWdpc3RlcnNcbiIpOworCQly
-ZXR1cm4gUFRSX0VSUihkc2ktPmJhc2UpOworCX0KKworCWRzaS0+cGxscmVmX2NsayA9IGRldm1f
-Y2xrX2dldChkZXYsICJyZWYiKTsKKwlpZiAoSVNfRVJSKGRzaS0+cGxscmVmX2NsaykpIHsKKwkJ
-cmV0ID0gUFRSX0VSUihkc2ktPnBsbHJlZl9jbGspOworCQlkZXZfZXJyKGRldiwgIlVuYWJsZSB0
-byBnZXQgcGxsIHJlZmVyZW5jZSBjbG9jazogJWRcbiIsIHJldCk7CisJCXJldHVybiByZXQ7CisJ
-fQorCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGxscmVmX2Nsayk7CisJaWYgKHJl
-dCkgeworCQlkZXZfZXJyKGRldiwgIiVzOiBGYWlsZWQgdG8gZW5hYmxlIHBsbHJlZl9jbGtcbiIs
-IF9fZnVuY19fKTsKKwkJcmV0dXJuIHJldDsKKwl9CisKKwlkd19taXBpX2RzaV9zdG1fcGxhdF9k
-YXRhLmJhc2UgPSBkc2ktPmJhc2U7CisJZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0YS5wcml2X2Rh
-dGEgPSBkc2k7CisKKwlyZXQgPSBkd19taXBpX2RzaV9wcm9iZShwZGV2LCAmZHdfbWlwaV9kc2lf
-c3RtX3BsYXRfZGF0YSk7CisJaWYgKHJldCkgeworCQlEUk1fRVJST1IoIkZhaWxlZCB0byBpbml0
-aWFsaXplIG1pcGkgZHNpIGhvc3RcbiIpOworCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5w
-bGxyZWZfY2xrKTsKKwl9CisKKwlyZXR1cm4gcmV0OworfQorCitzdGF0aWMgaW50IGR3X21pcGlf
-ZHNpX3N0bV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKK3sKKwlzdHJ1Y3Qg
-ZHdfbWlwaV9kc2lfc3RtICpkc2kgPSBkd19taXBpX2RzaV9zdG1fcGxhdF9kYXRhLnByaXZfZGF0
-YTsKKworCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbHJlZl9jbGspOworCWR3X21pcGlf
-ZHNpX3JlbW92ZShwZGV2KTsKKworCXJldHVybiAwOworfQorCitzdGF0aWMgc3RydWN0IHBsYXRm
-b3JtX2RyaXZlciBkd19taXBpX2RzaV9zdG1fZHJpdmVyID0geworCS5wcm9iZQkJPSBkd19taXBp
-X2RzaV9zdG1fcHJvYmUsCisJLnJlbW92ZQkJPSBkd19taXBpX2RzaV9zdG1fcmVtb3ZlLAorCS5k
-cml2ZXIJCT0geworCQkub2ZfbWF0Y2hfdGFibGUgPSBkd19taXBpX2RzaV9zdG1fZHRfaWRzLAor
-CQkubmFtZQk9ICJkd19taXBpX2RzaS1zdG0iLAorCX0sCit9OworCittb2R1bGVfcGxhdGZvcm1f
-ZHJpdmVyKGR3X21pcGlfZHNpX3N0bV9kcml2ZXIpOworCitNT0RVTEVfQVVUSE9SKCJQaGlsaXBw
-ZSBDb3JudSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPiIpOworTU9EVUxFX0FVVEhPUigiWWFubmlj
-ayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4iKTsKK01PRFVMRV9ERVNDUklQVElPTigi
-U1RNaWNyb2VsZWN0cm9uaWNzIERXIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlciBkcml2ZXIiKTsK
-K01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, 13 Jul 2017, Moritz Fischer wrote:
+
+> From: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
+> 
+> Add support for the Maxim/Dallas DS1374 RTC/WDT with trickle charger.
+> The device can either be configured as simple RTC, as simple RTC with
+> Alarm (IRQ) as well as simple RTC with watchdog timer.
+> 
+> Break up the old monolithic driver in drivers/rtc/rtc-ds1374.c into:
+> - rtc part in drivers/rtc/rtc-ds1374.c
+> - watchdog part under drivers/watchdog/ds1374-wdt.c
+> - mfd part drivers/mfd/ds1374.c
+> 
+> The MFD part takes care of trickle charging and mode selection,
+> since the usage modes of a) RTC + Alarm or b) RTC + WDT
+> are mutually exclusive.
+> 
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig              |  10 +
+>  drivers/mfd/Makefile             |   1 +
+>  drivers/mfd/ds1374.c             | 260 ++++++++++++++++
+>  drivers/rtc/rtc-ds1374.c         | 639 ++++++++++-----------------------------
+
+It looks like this should now depend on MFD_DS1374, right?
+
+>  drivers/watchdog/Kconfig         |  10 +
+>  drivers/watchdog/Makefile        |   1 +
+>  drivers/watchdog/ds1374-wdt.c    | 208 +++++++++++++
+
+The RTC and Watchdog drivers need to be split out of this patch and
+placed into their own.  Then we can take them through their respective
+subsystem trees and do not have to rely on immutable branches for
+unification.
+
+>  include/dt-bindings/mfd/ds1374.h |  17 ++
+>  include/linux/mfd/ds1374.h       |  59 ++++
+>  9 files changed, 722 insertions(+), 483 deletions(-)
+>  create mode 100644 drivers/mfd/ds1374.c
+>  create mode 100644 drivers/watchdog/ds1374-wdt.c
+>  create mode 100644 include/dt-bindings/mfd/ds1374.h
+>  create mode 100644 include/linux/mfd/ds1374.h
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3eb5c93..2dfef3c 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -203,6 +203,16 @@ config MFD_CROS_EC_SPI
+>  	  response time cannot be guaranteed, we support ignoring
+>  	  'pre-amble' bytes before the response actually starts.
+>  
+> +config MFD_DS1374
+> +	tristate "Dallas/Maxim DS1374 RTC/WDT/ALARM (I2C)"
+> +	select MFD_CORE
+> +	depends on I2C
+> +	depends on REGMAP_I2C
+> +
+> +	 ---help---
+
+This is an old style of help.  Please remove the '-'s.
+
+> +	  This driver supports the Dallas Maxim DS1374 multi function chip.
+
+"Multi-Functional"
+
+> +	  The chip combines an RTC, trickle charger, Watchdog or Alarm.
+
+Why is "trickle charger" not capitalised?
+
+> +
+>  config MFD_ASIC3
+>  	bool "Compaq ASIC3"
+>  	depends on GPIOLIB && ARM
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index c16bf1e..b5cfcf4 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -15,6 +15,7 @@ cros_ec_core-$(CONFIG_ACPI)	+= cros_ec_acpi_gpe.o
+>  obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec_core.o
+>  obj-$(CONFIG_MFD_CROS_EC_I2C)	+= cros_ec_i2c.o
+>  obj-$(CONFIG_MFD_CROS_EC_SPI)	+= cros_ec_spi.o
+> +obj-$(CONFIG_MFD_DS1374)	+= ds1374.o
+>  obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+>  
+>  rtsx_pci-objs			:= rtsx_pcr.o rts5209.o rts5229.o rtl8411.o rts5227.o rts5249.o
+> diff --git a/drivers/mfd/ds1374.c b/drivers/mfd/ds1374.c
+> new file mode 100644
+> index 0000000..a0cfa1b
+> --- /dev/null
+> +++ b/drivers/mfd/ds1374.c
+> @@ -0,0 +1,260 @@
+> +/*
+> + * Copyright (c) 2017, National Instruments Corp.
+> + *
+> + * Dallas/Maxim DS1374 Multi Function Device Driver
+
+"Functional"
+
+> + * The trickle charger code was taken more ore less 1:1 from
+
+"or"
+
+> + * drivers/rtc/rtc-1390.c
+
+Why does this need to be documented in this file?
+
+If the Trickle Charger code is in here (I haven't been down that far
+yet) you need to move it out into a more appropriate subsystem.
+
+> + * SPDX-License-Identifier: GPL-2.0
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/i2c.h>
+> +#include <linux/slab.h>
+> +#include <linux/pm.h>
+> +#include <linux/regmap.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/ds1374.h>
+
+Alphabetical.
+
+> +#define DS1374_TRICKLE_CHARGER_ENABLE	0xa0
+> +#define DS1374_TRICKLE_CHARGER_ENABLE_MASK 0xe0
+> +
+> +#define DS1374_TRICKLE_CHARGER_250_OHM	0x01
+> +#define DS1374_TRICKLE_CHARGER_2K_OHM	0x02
+> +#define DS1374_TRICKLE_CHARGER_4K_OHM	0x03
+> +#define DS1374_TRICKLE_CHARGER_ROUT_MASK 0x03
+> +
+> +#define DS1374_TRICKLE_CHARGER_NO_DIODE	0x04
+> +#define DS1374_TRICKLE_CHARGER_DIODE	0x08
+> +#define DS1374_TRICKLE_CHARGER_DIODE_MASK 0xc
+
+Are these tabs or spaces, or a mixture?
+
+Did you run checkpatch.pl?
+
+> +static const struct regmap_range volatile_ranges[] = {
+> +	regmap_reg_range(DS1374_REG_TOD0, DS1374_REG_WDALM2),
+> +	regmap_reg_range(DS1374_REG_SR, DS1374_REG_SR),
+> +};
+> +
+> +static const struct regmap_access_table ds1374_volatile_table = {
+> +	.yes_ranges = volatile_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(volatile_ranges),
+> +};
+> +
+> +static struct regmap_config ds1374_regmap_config = {
+
+Genuine question: Can this be const?
+
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = DS1374_REG_TCR,
+> +	.volatile_table	= &ds1374_volatile_table,
+> +	.cache_type	= REGCACHE_RBTREE,
+
+It might just be the patch format, but can you check if this is
+tabs/spaces?  If you're using tabs, please ensure they are all
+aligned.
+
+> +};
+> +
+> +static struct mfd_cell ds1374_wdt_cell = {
+> +	.name = "ds1374-wdt",
+> +};
+> +
+> +static struct mfd_cell ds1374_rtc_cell = {
+> +	.name = "ds1374-rtc",
+> +};
+> +
+> +static int ds1374_add_device(struct ds1374 *chip,
+> +			     struct mfd_cell *cell)
+> +{
+> +	cell->platform_data = chip;
+> +	cell->pdata_size = sizeof(*chip);
+> +
+> +	return mfd_add_devices(&chip->client->dev, PLATFORM_DEVID_AUTO,
+> +			       cell, 1, NULL, 0, NULL);
+> +}
+
+This function appears to serve no purpose.  Why don't you just use
+mfd_add_devices() instead?
+
+> +static int ds1374_trickle_of_init(struct ds1374 *ds1374)
+> +{
+> +	u32 ohms = 0;
+> +	u8 value;
+> +	struct i2c_client *client = ds1374->client;
+> +
+> +	if (of_property_read_u32(client->dev.of_node, "trickle-resistor-ohms",
+> +				 &ohms))
+> +		return 0;
+> +
+> +	/* Enable charger */
+> +	value = DS1374_TRICKLE_CHARGER_ENABLE;
+> +	if (of_property_read_bool(client->dev.of_node, "trickle-diode-disable"))
+> +		value |= DS1374_TRICKLE_CHARGER_NO_DIODE;
+> +	else
+> +		value |= DS1374_TRICKLE_CHARGER_DIODE;
+> +
+> +	/* Resistor select */
+> +	switch (ohms) {
+> +	case 250:
+> +		value |= DS1374_TRICKLE_CHARGER_250_OHM;
+> +		break;
+> +	case 2000:
+> +		value |= DS1374_TRICKLE_CHARGER_2K_OHM;
+> +		break;
+> +	case 4000:
+> +		value |= DS1374_TRICKLE_CHARGER_4K_OHM;
+> +		break;
+> +	default:
+> +		dev_warn(&client->dev,
+> +			 "Unsupported ohm value %02ux in dt\n", ohms);
+> +		return -EINVAL;
+> +	}
+> +	dev_dbg(&client->dev, "Trickle charge value is 0x%02x\n", value);
+> +
+> +	return regmap_write(ds1374->regmap, DS1374_REG_TCR, value);
+> +}
+> +
+> +int ds1374_read_bulk(struct ds1374 *ds1374, u32 *time, int reg, int nbytes)
+> +{
+> +	u8 buf[4];
+> +	int ret;
+> +	int i;
+> +
+> +	if (WARN_ON(nbytes > 4))
+> +		return -EINVAL;
+> +
+> +	ret = regmap_bulk_read(ds1374->regmap, reg, buf, nbytes);
+> +	if (ret) {
+> +		dev_err(&ds1374->client->dev,
+> +			"Failed to bulkread n = %d at R%d\n",
+> +			nbytes, reg);
+> +		return ret;
+> +	}
+> +
+> +	for (i = nbytes - 1, *time = 0; i >= 0; i--)
+> +		*time = (*time << 8) | buf[i];
+
+You need at least a comment to explain what's happening here.
+
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ds1374_read_bulk);
+> +
+> +int ds1374_write_bulk(struct ds1374 *ds1374, u32 time, int reg, int nbytes)
+> +{
+> +	u8 buf[4];
+> +	int i;
+> +
+> +	if (nbytes > 4) {
+> +		WARN_ON(1);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < nbytes; i++) {
+> +		buf[i] = time & 0xff;
+> +		time >>= 8;
+> +	}
+
+Same here.
+
+> +	return regmap_bulk_write(ds1374->regmap, reg, buf, nbytes);
+> +}
+> +EXPORT_SYMBOL_GPL(ds1374_write_bulk);
+> +
+> +static int ds1374_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct ds1374 *ds1374;
+> +	u32 mode;
+> +	int err;
+> +
+> +	ds1374 = devm_kzalloc(&client->dev, sizeof(struct ds1374), GFP_KERNEL);
+> +	if (!ds1374)
+> +		return -ENOMEM;
+> +
+> +	ds1374->regmap = devm_regmap_init_i2c(client, &ds1374_regmap_config);
+> +	if (IS_ERR(ds1374->regmap))
+> +		return PTR_ERR(ds1374->regmap);
+> +
+> +	if (IS_ENABLED(CONFIG_OF) && client->dev.of_node) {
+> +		err = of_property_read_u32(client->dev.of_node,
+> +					   "dallas,mode", &mode);
+> +		if (err < 0) {
+> +			dev_err(&client->dev, "missing dallas,mode property\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		ds1374->remapped_reset
+> +			= of_property_read_bool(client->dev.of_node,
+> +						"dallas,remap-reset");
+> +
+> +		ds1374->mode = (enum ds1374_mode)mode;
+> +	} else if (IS_ENABLED(CONFIG_RTC_DRV_DS1374_WDT)) {
+> +		ds1374->mode = DS1374_MODE_RTC_WDT;
+> +	} else {
+> +		ds1374->mode = DS1374_MODE_RTC_ALM;
+> +	}
+
+This is non-standard.  So if OF is enabled, you're taking the 'mode'
+from platform data (DT) and if it's not, you're relying on Kconfig.
+May I suggest that you pick platform data OR Kconfig, but not mix the
+two.
+
+> +	ds1374->client = client;
+> +	ds1374->irq = client->irq;
+> +	i2c_set_clientdata(client, ds1374);
+> +
+> +	/* check if we're supposed to trickle charge */
+
+"Check".
+
+> +	err = ds1374_trickle_of_init(ds1374);
+> +	if (err) {
+> +		dev_err(&client->dev, "Failed to init trickle charger!\n");
+> +		return err;
+> +	}
+> +
+> +	/* we always have a rtc */
+
+"We", "an RTC".
+
+Or
+
+"The RTC is always available."
+
+> +	err = ds1374_add_device(ds1374, &ds1374_rtc_cell);
+> +	if (err)
+> +		return err;
+> +
+> +	/* we might have a watchdog if configured that way */
+
+"We"
+
+> +	if (ds1374->mode == DS1374_MODE_RTC_WDT)
+> +		return ds1374_add_device(ds1374, &ds1374_wdt_cell);
+> +
+> +	return err;
+> +}
+> +
+> +static const struct i2c_device_id ds1374_id[] = {
+> +	{ "ds1374", 0 },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, ds1374_id);
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id ds1374_of_match[] = {
+> +	{ .compatible = "dallas,ds1374" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ds1374_of_match);
+> +#endif
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int ds1374_suspend(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int ds1374_resume(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+
+These seem pointless.
+
+I'm sure there will be a nice MACRO you can use instead.
+
+> +static SIMPLE_DEV_PM_OPS(ds1374_pm, ds1374_suspend, ds1374_resume);
+> +
+> +static struct i2c_driver ds1374_driver = {
+> +	.driver = {
+> +		.name = "ds1374",
+> +		.of_match_table = of_match_ptr(ds1374_of_match),
+> +		.pm = &ds1374_pm,
+> +	},
+> +	.probe = ds1374_probe,
+> +	.id_table = ds1374_id,
+> +};
+> +
+> +static int __init ds1374_init(void)
+> +{
+> +	return i2c_add_driver(&ds1374_driver);
+> +}
+> +subsys_initcall(ds1374_init);
+> +
+> +static void __exit ds1374_exit(void)
+> +{
+> +	i2c_del_driver(&ds1374_driver);
+> +}
+> +module_exit(ds1374_exit);
+> +
+> +MODULE_AUTHOR("Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("Maxim/Dallas DS1374 MFD Driver");
+> +MODULE_LICENSE("GPL");
+
+This conflicts with your header.
+
+[...]
+
+> diff --git a/include/dt-bindings/mfd/ds1374.h b/include/dt-bindings/mfd/ds1374.h
+> new file mode 100644
+> index 0000000..b33cd5e
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/ds1374.h
+> @@ -0,0 +1,17 @@
+> +/*
+> + * This header provides macros for Maxim/Dallas DS1374 DT bindings
+> + *
+> + * Copyright (C) 2017 National Instruments Corp
+> + *
+> + * SPDX-License-Identifier: GPL-2.0
+> + *
+
+This line is superfluous.
+
+> + */
+> +
+> +#ifndef __DT_BINDINGS_MFD_DS1374_H__
+> +#define __DT_BINDINGS_MFD_DS1374_H__
+> +
+> +#define DALLAS_MODE_RTC		0
+> +#define DALLAS_MODE_ALM		1
+> +#define DALLAS_MODE_WDT		2
+
+What's stopping these becoming out of line with the #defines in the
+other header file?  You should probably use these for comparison
+instead.
+
+> +#endif /* __DT_BINDINGS_MFD_DS1374_H__ */
+> diff --git a/include/linux/mfd/ds1374.h b/include/linux/mfd/ds1374.h
+> new file mode 100644
+> index 0000000..7b697f8
+> --- /dev/null
+> +++ b/include/linux/mfd/ds1374.h
+> @@ -0,0 +1,59 @@
+> +/*
+> + * Copyright (c) 2017, National Instruments Corp.
+> + *
+> + * Multi Function Device for Dallas/Maxim DS1374 RTC/WDT
+
+"Functional"
+
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+
+Do you have to use the long licence here?
+
+> + */
+> +
+> +#ifndef MFD_DS1374_H
+> +#define MFD_DS1374_H
+> +
+> +#include <linux/i2c.h>
+> +#include <linux/regmap.h>
+> +
+> +enum ds1374_mode {
+> +	DS1374_MODE_RTC_ONLY,
+> +	DS1374_MODE_RTC_ALM,
+> +	DS1374_MODE_RTC_WDT,
+> +};
+
+Please see above.
+
+> +/* Register definitions to for all subdrivers
+> + */
+> +#define DS1374_REG_TOD0		0x00 /* Time of Day */
+> +#define DS1374_REG_TOD1		0x01
+> +#define DS1374_REG_TOD2		0x02
+> +#define DS1374_REG_TOD3		0x03
+> +#define DS1374_REG_WDALM0	0x04 /* Watchdog/Alarm */
+> +#define DS1374_REG_WDALM1	0x05
+> +#define DS1374_REG_WDALM2	0x06
+> +#define DS1374_REG_CR		0x07 /* Control */
+> +#define DS1374_REG_CR_AIE	0x01 /* Alarm Int. Enable */
+> +#define DS1374_REG_CR_WDSTR	0x08 /* 1=Reset on INT, 0=Rreset on RST */
+> +#define DS1374_REG_CR_WDALM	0x20 /* 1=Watchdog, 0=Alarm */
+> +#define DS1374_REG_CR_WACE	0x40 /* WD/Alarm counter enable */
+> +#define DS1374_REG_SR		0x08 /* Status */
+> +#define DS1374_REG_SR_OSF	0x80 /* Oscillator Stop Flag */
+> +#define DS1374_REG_SR_AF	0x01 /* Alarm Flag */
+> +#define DS1374_REG_TCR		0x09 /* Trickle Charge */
+> +
+> +struct ds1374 {
+> +	struct i2c_client *client;
+> +	struct regmap *regmap;
+> +	int irq;
+> +	enum ds1374_mode mode;
+> +	bool remapped_reset;
+> +};
+
+This could do with a KernelDoc header.
+
+> +int ds1374_read_bulk(struct ds1374 *ds1374, u32 *time, int reg, int nbytes);
+> +
+> +int ds1374_write_bulk(struct ds1374 *ds1374, u32 time, int reg, int nbytes);
+
+Do these two just read time?
+
+If so, the nomenclature could be improved.
+
+> +#endif /* MFD_DS1374_H */
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
