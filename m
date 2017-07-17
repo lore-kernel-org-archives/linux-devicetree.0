@@ -1,236 +1,194 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH 08/14] qcom: mtd: nand: Add support for additional CSRs
-Date: Mon, 17 Jul 2017 12:40:11 +0530
-Message-ID: <96e8b3b923090357484d59a8dbd80630@codeaurora.org>
+Subject: Re: [PATCH 09/14] qcom: mtd: nand: BAM support for read page
+Date: Mon, 17 Jul 2017 12:47:07 +0530
+Message-ID: <53fd2482d3f8f6d965910fc1a711751a@codeaurora.org>
 References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-9-git-send-email-absahu@codeaurora.org>
- <a04e02b5-56c0-3fb8-813e-a2dd8a53861f@codeaurora.org>
+ <1498720566-20782-10-git-send-email-absahu@codeaurora.org>
+ <ddf2e1c0-e08e-c8b8-2b10-ef39ce1482b2@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <a04e02b5-56c0-3fb8-813e-a2dd8a53861f@codeaurora.org>
+In-Reply-To: <ddf2e1c0-e08e-c8b8-2b10-ef39ce1482b2@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
 To: Archit Taneja <architt@codeaurora.org>
 Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-04 12:24, Archit Taneja wrote:
+On 2017-07-04 15:10, Archit Taneja wrote:
 > On 06/29/2017 12:46 PM, Abhishek Sahu wrote:
->> 1. NAND_READ_LOCATION: provides the offset in page for
->>     reading in BAM DMA mode
+>> 1. The BAM mode requires few registers configuration before each
+>>     NAND page read and codeword read which is different from ADM
+>>     so add the helper functions which will be called in BAM mode
+>>     only.
 >> 
->> 2. NAND_ERASED_CW_DETECT_CFG: contains the status for erased
->>     code words
->> 
->> 3. NAND_BUFFER_STATUS: contains the status for ECC
+>> 2. The NAND page read handling of BAM is different from ADM so
+>>     call the appropriate helper functions
 >> 
 >> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 >> ---
->>   drivers/mtd/nand/qcom_nandc.c | 67 
+>>   drivers/mtd/nand/qcom_nandc.c | 63 
 >> ++++++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 66 insertions(+), 1 deletion(-)
+>>   1 file changed, 62 insertions(+), 1 deletion(-)
 >> 
 >> diff --git a/drivers/mtd/nand/qcom_nandc.c 
 >> b/drivers/mtd/nand/qcom_nandc.c
->> index 65c9059..8e7dc9e 100644
+>> index 8e7dc9e..17766af 100644
 >> --- a/drivers/mtd/nand/qcom_nandc.c
 >> +++ b/drivers/mtd/nand/qcom_nandc.c
->> @@ -54,6 +54,8 @@
->>   #define	NAND_VERSION			0xf08
->>   #define	NAND_READ_LOCATION_0		0xf20
->>   #define	NAND_READ_LOCATION_1		0xf24
->> +#define	NAND_READ_LOCATION_2		0xf28
->> +#define	NAND_READ_LOCATION_3		0xf2c
->> 
->>   /* dummy register offsets, used by write_reg_dma */
->>   #define	NAND_DEV_CMD1_RESTORE		0xdead
->> @@ -132,6 +134,11 @@
->>   #define	ERASED_PAGE			(PAGE_ALL_ERASED | PAGE_ERASED)
->>   #define	ERASED_CW			(CODEWORD_ALL_ERASED | CODEWORD_ERASED)
->> 
->> +/* NAND_READ_LOCATION_n bits */
->> +#define READ_LOCATION_OFFSET		0
->> +#define READ_LOCATION_SIZE		16
->> +#define READ_LOCATION_LAST		31
->> +
->>   /* Version Mask */
->>   #define	NAND_VERSION_MAJOR_MASK		0xf0000000
->>   #define	NAND_VERSION_MAJOR_SHIFT	28
->> @@ -177,6 +184,11 @@
->>   #define NAND_BAM_NWD			(0x0002)
->>   /* Finish writing in the current sgl and start writing in another 
->> sgl */
->>   #define NAND_BAM_NEXT_SGL		(0x0004)
->> +/*
->> + * Erased codeword status is being used two times in single transfer 
->> so this
->> + * flag will determine the current value of erased codeword status 
->> register
->> + */
->> +#define NAND_ERASED_CW_SET		(0x0008)
->> 
->>   #define QPIC_PER_CW_MAX_CMD_ELEMENTS	(32)
->>   #define QPIC_PER_CW_MAX_CMD_SGL		(32)
->> @@ -258,6 +270,13 @@ struct nandc_regs {
->>   	__le32 orig_vld;
->> 
->>   	__le32 ecc_buf_cfg;
->> +	__le32 read_location0;
->> +	__le32 read_location1;
->> +	__le32 read_location2;
->> +	__le32 read_location3;
->> +
->> +	__le32 erased_cw_detect_cfg_clr;
->> +	__le32 erased_cw_detect_cfg_set;
->>   };
->> 
->>   /*
->> @@ -504,6 +523,16 @@ static __le32 *offset_to_nandc_reg(struct 
->> nandc_regs *regs, int offset)
->>   		return &regs->orig_vld;
->>   	case NAND_EBI2_ECC_BUF_CFG:
->>   		return &regs->ecc_buf_cfg;
->> +	case NAND_BUFFER_STATUS:
->> +		return &regs->clrreadstatus;
->> +	case NAND_READ_LOCATION_0:
->> +		return &regs->read_location0;
->> +	case NAND_READ_LOCATION_1:
->> +		return &regs->read_location1;
->> +	case NAND_READ_LOCATION_2:
->> +		return &regs->read_location2;
->> +	case NAND_READ_LOCATION_3:
->> +		return &regs->read_location3;
->>   	default:
->>   		return NULL;
->>   	}
->> @@ -545,7 +574,7 @@ static void update_rw_regs(struct qcom_nand_host 
->> *host, int num_cw, bool read)
->>   {
->>   	struct nand_chip *chip = &host->chip;
->>   	struct qcom_nand_controller *nandc = 
->> get_qcom_nand_controller(chip);
->> -	u32 cmd, cfg0, cfg1, ecc_bch_cfg;
->> +	u32 cmd, cfg0, cfg1, ecc_bch_cfg, read_location0;
->> 
->>   	if (read) {
->>   		if (host->use_ecc)
->> @@ -562,12 +591,20 @@ static void update_rw_regs(struct qcom_nand_host 
->> *host, int num_cw, bool read)
->> 
->>   		cfg1 = host->cfg1;
->>   		ecc_bch_cfg = host->ecc_bch_cfg;
->> +		if (read)
->> +			read_location0 = (0 << READ_LOCATION_OFFSET) |
->> +				(host->cw_data << READ_LOCATION_SIZE) |
->> +				(1 << READ_LOCATION_LAST);
->>   	} else {
->>   		cfg0 = (host->cfg0_raw & ~(7U << CW_PER_PAGE)) |
->>   				(num_cw - 1) << CW_PER_PAGE;
->> 
->>   		cfg1 = host->cfg1_raw;
->>   		ecc_bch_cfg = 1 << ECC_CFG_ECC_DISABLE;
->> +		if (read)
->> +			read_location0 = (0 << READ_LOCATION_OFFSET) |
->> +				(host->cw_size << READ_LOCATION_SIZE) |
->> +				(1 << READ_LOCATION_LAST);
->>   	}
->> 
->>   	nandc_set_reg(nandc, NAND_FLASH_CMD, cmd);
->> @@ -578,6 +615,9 @@ static void update_rw_regs(struct qcom_nand_host 
->> *host, int num_cw, bool read)
->>   	nandc_set_reg(nandc, NAND_FLASH_STATUS, host->clrflashstatus);
->>   	nandc_set_reg(nandc, NAND_READ_STATUS, host->clrreadstatus);
->>   	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
->> +
->> +	if (read)
->> +		nandc_set_reg(nandc, NAND_READ_LOCATION_0, read_location0);
+>> @@ -870,6 +870,35 @@ static void config_cw_read(struct 
+>> qcom_nand_controller *nandc)
 >>   }
 >> 
 >>   /*
->> @@ -756,6 +796,13 @@ static int write_reg_dma(struct 
->> qcom_nand_controller *nandc, int first,
->>   	if (first == NAND_FLASH_CMD)
->>   		flow_control = true;
->> 
->> +	if (first == NAND_ERASED_CW_DETECT_CFG) {
->> +		if (flags & NAND_ERASED_CW_SET)
->> +			vaddr = &regs->erased_cw_detect_cfg_set;
->> +		else
->> +			vaddr = &regs->erased_cw_detect_cfg_clr;
->> +	}
->> +
->>   	if (first == NAND_EXEC_CMD)
->>   		flags |= NAND_BAM_NWD;
->> 
->> @@ -808,6 +855,12 @@ static void config_cw_read(struct 
->> qcom_nand_controller *nandc)
->>   	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
->>   	write_reg_dma(nandc, NAND_EBI2_ECC_BUF_CFG, 1, 0);
->> 
+>> + * Helpers to prepare DMA descriptors for configuring registers
+>> + * before reading a NAND page with BAM.
+>> + */
+>> +static void config_bam_page_read(struct qcom_nand_controller *nandc)
+>> +{
+>> +	write_reg_dma(nandc, NAND_FLASH_CMD, 3, 0);
+>> +	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
+>> +	write_reg_dma(nandc, NAND_EBI2_ECC_BUF_CFG, 1, 0);
 >> +	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, 0);
->> +	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, 
->> NAND_ERASED_CW_SET);
->> +	if (nandc->dma_bam_enabled)
->> +		write_reg_dma(nandc, NAND_READ_LOCATION_0, 1,
->> +			      NAND_BAM_NEXT_SGL);
+>> +	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1,
+>> +		      NAND_ERASED_CW_SET | NAND_BAM_NEXT_SGL);
+>> +}
 >> +
->>   	write_reg_dma(nandc, NAND_EXEC_CMD, 1,
->>   		      NAND_BAM_NWD | NAND_BAM_NEXT_SGL);
->> 
->> @@ -882,6 +935,10 @@ static int nandc_param(struct qcom_nand_host 
->> *host)
->> 
->>   	nandc_set_reg(nandc, NAND_DEV_CMD1_RESTORE, nandc->cmd1);
->>   	nandc_set_reg(nandc, NAND_DEV_CMD_VLD_RESTORE, nandc->vld);
->> +	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
->> +		      (0 << READ_LOCATION_OFFSET) |
->> +		      (512 << READ_LOCATION_SIZE) |
->> +		      (1 << READ_LOCATION_LAST));
->> 
->>   	write_reg_dma(nandc, NAND_DEV_CMD_VLD, 1, 0);
->>   	write_reg_dma(nandc, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
->> @@ -1413,6 +1470,10 @@ static int copy_last_cw(struct qcom_nand_host 
->> *host, int page)
->> 
->>   	set_address(host, host->cw_size * (ecc->steps - 1), page);
->>   	update_rw_regs(host, 1, true);
->> +	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
->> +		      (0 << READ_LOCATION_OFFSET) |
->> +		      (size << READ_LOCATION_SIZE) |
->> +		      (1 << READ_LOCATION_LAST));
->> 
->>   	config_cw_read(nandc);
->> 
->> @@ -2147,6 +2208,10 @@ static int qcom_nand_host_setup(struct 
->> qcom_nand_host *host)
->> 
->>   	host->clrflashstatus = FS_READY_BSY_N;
->>   	host->clrreadstatus = 0xc0;
->> +	nandc->regs->erased_cw_detect_cfg_clr =
->> +		cpu_to_le32(CLR_ERASED_PAGE_DET);
->> +	nandc->regs->erased_cw_detect_cfg_set =
->> +		cpu_to_le32(SET_ERASED_PAGE_DET);
->> 
+>> +/*
+>> + * Helpers to prepare DMA descriptors for configuring registers
+>> + * before reading each codeword in NAND page with BAM.
+>> + */
 > 
-> Can these 2 be put in qcom_nand_host like done for other registers?
+> If I understood right, EBI2 nand required us to load all the registers
+> configured in config_cw_read() for every codeword, and for BAM, the
+> registers configured in config_bam_page_read() just needs to be done 
+> once,
+> and the registers in config_bam_cw_read()  need to be reloaded for 
+> every
+> codeword?
+> 
+> Could you please clarify this better in the commit message and 
+> comments? Also,
+> I still see config_cw_read() being used for QPIC nand in nandc_param() 
+> and
+> copy_last_cw()?
+> 
+> Also, I think these should be called config_qpic_page_read() and
+> config_qpic_cw_read() since it seems more of a property of the NAND 
+> controller
+> rather than the underlying DMA engine. If so, config_cw_read() can be 
+> called
+> config_cw_ebi2_read(). Please correct me if I'm wrong somewhere.
 > 
 
-  For, All the other registers, the register is being used only once
-  in per codeword read/write and its values changes for different
-  operations but the erased codeword register is being used twice in
-  the same codeword which we can't differentiate in nandc_set_reg.
+  I did some code reorganization in v2 in this area and now, we don't
+  have do different things for EBI2 and QPIC for read.
 
-  Also, the values for this will be fixed and it will never change
-  so its better to assign directly in nandc->regs.
+>> +static void config_bam_cw_read(struct qcom_nand_controller *nandc)
+>> +{
+>> +	write_reg_dma(nandc, NAND_READ_LOCATION_0, 2, 0);
+>> +	write_reg_dma(nandc, NAND_FLASH_CMD, 1, NAND_BAM_NEXT_SGL);
+>> +	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
+>> +
+>> +	read_reg_dma(nandc, NAND_FLASH_STATUS, 2, 0);
+>> +	read_reg_dma(nandc, NAND_ERASED_CW_DETECT_STATUS, 1,
+>> +		     NAND_BAM_NEXT_SGL);
+>> +}
+>> +
+>> +/*
+>>    * helpers to prepare dma descriptors used to configure registers 
+>> needed for
+>>    * writing a codeword/step in a page
+>>    */
+>> @@ -1398,6 +1427,9 @@ static int read_page_ecc(struct qcom_nand_host 
+>> *host, u8 *data_buf,
+>>   	struct nand_ecc_ctrl *ecc = &chip->ecc;
+>>   	int i, ret;
+>> 
+>> +	if (nandc->dma_bam_enabled)
+>> +		config_bam_page_read(nandc);
+>> +
+>>   	/* queue cmd descs for each codeword */
+>>   	for (i = 0; i < ecc->steps; i++) {
+>>   		int data_size, oob_size;
+>> @@ -1411,7 +1443,36 @@ static int read_page_ecc(struct qcom_nand_host 
+>> *host, u8 *data_buf,
+>>   			oob_size = host->ecc_bytes_hw + host->spare_bytes;
+>>   		}
+>> 
+>> -		config_cw_read(nandc);
+>> +		if (nandc->dma_bam_enabled) {
+>> +			if (data_buf && oob_buf) {
+>> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
+>> +					      (0 << READ_LOCATION_OFFSET) |
+>> +					      (data_size <<
+>> +					      READ_LOCATION_SIZE) |
+>> +					      (0 << READ_LOCATION_LAST));
+>> +				nandc_set_reg(nandc, NAND_READ_LOCATION_1,
+>> +					      (data_size <<
+>> +					      READ_LOCATION_OFFSET) |
+>> +					      (oob_size << READ_LOCATION_SIZE) |
+>> +					      (1 << READ_LOCATION_LAST));
+>> +			} else if (data_buf) {
+>> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
+>> +					      (0 << READ_LOCATION_OFFSET) |
+>> +					      (data_size <<
+>> +					      READ_LOCATION_SIZE) |
+>> +					      (1 << READ_LOCATION_LAST));
+>> +			} else {
+>> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
+>> +					      (data_size <<
+>> +					      READ_LOCATION_OFFSET) |
+>> +					      (oob_size << READ_LOCATION_SIZE) |
+>> +					      (1 << READ_LOCATION_LAST));
+>> +			}
+> 
+> Could we put the READ_LOCATION_x register configuration into a small 
+> helper?
+> This is probably a matter of taste, but you could consider configuring
+> like this.
+> Maybe something similar for patch #11 for raw page reads.
+> 
 
+  I will use macro for assigning READ LOCATION registers in v2,
+  which makes the code cleaner. If required, I will use helpers
+  also.
+
+> 	if (data_buf && oob_buf) {
+> 		r0_off = 0;
+> 		r0_size = r1_off = data_size;
+> 		r1_size = oob_size;
+> 		r0_last = 0;
+> 		r1_last = 1;
+> 	} else if (data_buf) {
+> 		rl0_off = 0;
+> 		rl0_size = data_size;
+> 		rl0_last = 1;
+> 	} else {
+> 		rl0_off = data_size;
+> 		rl0_size = oob_size;
+> 		rl0_last = 1;
+> 	}
+> 
+> 	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
+> 		      (rl0_off << READ_LOCATION_OFFSET) |
+> 		      (rl0_size << READ_LOCATION_SIZE) |
+> 		      (rl0_last << READ_LOCATION_LAST));
+> 	if (rl1_last)
+> 		/* program LOCATION_1 register */
+> 
 > Thanks,
 > Archit
 > 
->>   	dev_dbg(nandc->dev,
->>   		"cfg0 %x cfg1 %x ecc_buf_cfg %x ecc_bch cfg %x cw_size %d cw_data 
->> %d strength %d parity_bytes %d steps %d\n",
+>> +
+>> +			config_bam_cw_read(nandc);
+>> +		} else {
+>> +			config_cw_read(nandc);
+>> +		}
+>> 
+>>   		if (data_buf)
+>>   			read_data_dma(nandc, FLASH_BUF_ACC, data_buf,
 >> 
 
 -- 
