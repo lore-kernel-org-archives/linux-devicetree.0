@@ -1,49 +1,134 @@
-From: Jacob Chen <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/5] arm64: dts: rockchip: Add rk3399 vop and display-subsystem
-Date: Mon, 17 Jul 2017 11:44:51 +0800
-Message-ID: <CAFLEztTAa8jPMNYO8iAgybGFTerCDBqwLUrjbKOfFqEE++oXhw@mail.gmail.com>
-References: <1499875435-23944-1-git-send-email-jacob-chen@iotwrt.com>
- <1499875435-23944-2-git-send-email-jacob-chen@iotwrt.com> <71446982.CYE3jZejiS@phil>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 3/3] DT: leds: Add Qualcomm Light Pulse Generator
+ binding
+Date: Sun, 16 Jul 2017 21:44:30 -0700
+Message-ID: <20170717044430.GW1618@tuxbook>
+References: <20170714224520.467-1-bjorn.andersson@linaro.org>
+ <20170714224520.467-4-bjorn.andersson@linaro.org>
+ <aefc36fc-9c16-e8da-b684-6e77ec96c662@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <71446982.CYE3jZejiS@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, long jacob <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <aefc36fc-9c16-e8da-b684-6e77ec96c662@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi heko,
+On Sun 16 Jul 11:49 PDT 2017, Jacek Anaszewski wrote:
+> On 07/15/2017 12:45 AM, Bjorn Andersson wrote:
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
+> > new file mode 100644
+> > index 000000000000..cc9ffee6586b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
+> > @@ -0,0 +1,145 @@
+> > +Binding for Qualcomm Light Pulse Generator
+> > +
+> > +The Qualcomm Light Pulse Generator consists of three different hardware blocks;
+> 
+> Is there a freely available documentation thereof?
+> 
 
-2017-07-17 1:31 GMT+08:00 Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>:
-> Hi Jacob,
->
-> Am Donnerstag, 13. Juli 2017, 00:03:51 CEST schrieb Jacob Chen:
->> Add devicetree nodes for rk3399 VOP (Video Output Processors), and the
->> top level display-subsystem root node.
->>
->> Later patches add endpoints (eDP, HDMI, MIPI, etc) that attach to the
->> VOPs' output ports.
->>
->> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
->
-> you might want to reduce the number of Signed-offs a bit :-)
->
-> Also authorship needs to be fixed. I.e. first Signed-off for this patch
-> is from Mark, so in that case Mark probably also was the original author
-> and the patch should reflect that. General rule, topmost Signed-off is
-> of course from the original author.
->
+The only publicly available Qualcomm PMIC documentation that I'm aware
+of only have the PWM hardware block, so it will be possible to use this
+driver but with limited functionality.
 
-OK, get it.
+[..]
+> > += Light Pulse Generator (LPG)
+> > +The Light Pulse Generator can operate either as a standard PWM controller or in
+> > +a more advanced lookup-table based mode. These are described separately below.
+> 
+> Why a user would prefer one option over the other? I assume that both
+> controllers offer at least slightly different capabilities.
+> If so, then it could be the driver which would decide which one fits
+> better for the requested LED class device configuration.
+> 
 
->
-> Heiko
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have never seen this hardware block been used as a PWM, but I imagine
+it to be used when someone has another driver that expects to be able to
+use the PWM API to control an output.
+
+In this case the node would need a #pwm-cells property, which it doesn't
+when it's acting as a LED and it wouldn't make much sense to expose the
+pin as a LED at the same time.
+
+Perhaps I overthought this? Maybe I should just leave the PWM mode out
+for now and it could be added in the future?
+
+[..]
+> > +&spmi_bus {
+> > +	pmic@3 {
+> > +		compatible = "qcom,pmi8994", "qcom,spmi-pmic";
+> > +		reg = <0x3 SPMI_USID>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		pmi8994_lpg_lut: lpg-lut@b000 {
+> > +			compatible = "qcom,spmi-lpg-lut";
+> > +			reg = <0xb000>;
+> > +
+> > +			qcom,lut-size = <24>;
+> > +		};
+> > +
+> > +		lpg@b200 {
+> > +			compatible = "qcom,spmi-lpg";
+> > +			reg = <0xb200>;
+> > +
+> > +			cell-index = <2>;
+> > +
+> > +			label = "lpg:green:user0";
+> > +
+> > +			qcom,tri-led = <&pmi8994_tri_led 1>;
+> > +			qcom,lut = <&pmi8994_lpg_lut>;
+> > +
+> > +			default-state = "on";
+> > +		};
+> > +
+> > +		pmi8994_tri_led: tri-led@d000 {
+> > +			compatible = "qcom,spmi-tri-led";
+> > +			reg = <0xd000>;
+> > +
+> > +			qcom,power-source = <1>;
+> > +		};
+> 
+> Such a design is uncommon for LED class DT bindings. It should
+> suffice to have a single DT LED node per LED. I have an impression
+> that you're exposing too many hardware details here.
+> You can use led-sources property (see Documentation/devicetree/bindings
+> /leds/common.txt and drivers/leds/leds-max77693.c where it is used).
+> 
+
+The LUT is shared among the (up to) 8 LPG blocks, so while I did
+consider just including the LUT in each LPG block it didn't look nice
+and I had to implement the LUT as a singleton in the driver itself.
+
+The TRILED is only one of the available current sinks in the PMIC that
+can be driven by the LPG; the other one I use so far is a special GPIO
+pin acting as a current sink.
+
+Also the power-source configuration is shared among the three channels
+of the TRILED, so it doesn't really make sense to put this configuration
+in the LPG blocks themselves.
+
+
+And note that these are different blocks within the Qualcomm PMIC, with
+my design only one of them is actually representing the LED instance.
+
+> It is also not clear to me why single green color LED presented here
+> would have to use tri-led sink? I suppose that the sink is predestined
+> for three-color LEDs.
+> 
+
+The board I'm working on (DragonBoard820c) has 4 green LEDs, the first 3
+are connected to the 3 channels of the TRILED and the fourth is
+connected to a special GPIO in current sink mode. But I choose to
+shorted the example to one channel.
+
+So I end up having one LUT node, four LPG nodes, one TRILED and one GPIO
+node and the user space is presented with a unified interface to all
+four.
+
+Regards,
+Bjorn
