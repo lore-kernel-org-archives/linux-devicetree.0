@@ -1,348 +1,185 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-Date: Mon, 17 Jul 2017 17:34:03 +0530
-Message-ID: <1500293043-1887-8-git-send-email-varada@codeaurora.org>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Mon, 17 Jul 2017 17:58:31 +0530
+Message-ID: <7984ef64-fb6d-52f6-26bf-00a685a3efc5@codeaurora.org>
+References: <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org>
+ <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+ <60a56ae6-ed9d-57cd-130f-5bd9d32d4d58@codeaurora.org>
+ <CAF6AEGvDpRChNQAzqgRFwaQcH=4JCwfKcvj2GQGgQOnO2_A1sg@mail.gmail.com>
+ <20170714170743.GA26488@arm.com>
+ <CAF6AEGtMiVJvSrPXmQppM2NwS3fsXM8Vep3g0PwQK7SH4N=3xQ@mail.gmail.com>
+ <20170714180615.GC26488@arm.com>
+ <CAF6AEGubgNiq5fJ9LaBULvW3450iY4-u0ecpp_a6xyMvRx9kug@mail.gmail.com>
+ <20170714190113.GE26488@arm.com>
+ <CAF6AEGsjPQa_CviY4w-uEvH95rC6VkR+u7s7knVxTDW_8V-t_Q@mail.gmail.com>
+ <20170714193637.GI26488@arm.com>
+ <CAF6AEGtw-bgK6hfFOHRtO0z6o2zxpvjERTX4i=HzioE69G8kAw@mail.gmail.com>
+ <6cd287bb-25c0-a7bd-8d3c-a63b9da0fd25@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6cd287bb-25c0-a7bd-8d3c-a63b9da0fd25-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-Gen 1/2, one lane, two PCIe root complex with support for MSI and
-legacy interrupts, and it conforms to PCI Express Base 2.1
-specification.
+Hi,
 
-The core init is the similar to the existing SoC, however the
-clocks and reset lines differ.
+On 7/17/2017 5:16 PM, Sricharan R wrote:
+> Hi,
+> 
+> On 7/15/2017 1:09 AM, Rob Clark wrote:
+>> On Fri, Jul 14, 2017 at 3:36 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>> On Fri, Jul 14, 2017 at 03:34:42PM -0400, Rob Clark wrote:
+>>>> On Fri, Jul 14, 2017 at 3:01 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>>> On Fri, Jul 14, 2017 at 02:25:45PM -0400, Rob Clark wrote:
+>>>>>> On Fri, Jul 14, 2017 at 2:06 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>>>>> On Fri, Jul 14, 2017 at 01:42:13PM -0400, Rob Clark wrote:
+>>>>>>>> On Fri, Jul 14, 2017 at 1:07 PM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>>>>>>>>> On Thu, Jul 13, 2017 at 10:55:10AM -0400, Rob Clark wrote:
+>>>>>>>>>> On Thu, Jul 13, 2017 at 9:53 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>>>>>>>> Hi,
+>>>>>>>>>>>
+>>>>>>>>>>> On 7/13/2017 5:20 PM, Rob Clark wrote:
+>>>>>>>>>>>> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>>>>>>>>>> Hi Vivek,
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
+>>>>>>>>>>>>>> Hi Stephen,
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+>>>>>>>>>>>>>>> On 07/06, Vivek Gautam wrote:
+>>>>>>>>>>>>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>>>>>>>>>>>>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>>>>>>>>>>>>>>>>                    size_t size)
+>>>>>>>>>>>>>>>>   {
+>>>>>>>>>>>>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>>>>>>>>>>>>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>>>>>>>>>>>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+>>>>>>>>>>>>>>>> +    size_t ret;
+>>>>>>>>>>>>>>>>         if (!ops)
+>>>>>>>>>>>>>>>>           return 0;
+>>>>>>>>>>>>>>>>   -    return ops->unmap(ops, iova, size);
+>>>>>>>>>>>>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
+>>>>>>>>>>>>>>> Can these map/unmap ops be called from an atomic context? I seem
+>>>>>>>>>>>>>>> to recall that being a problem before.
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> That's something which was dropped in the following patch merged in master:
+>>>>>>>>>>>>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+>>>>>>>>>>>>>>
+>>>>>>>>>>>>>> Looks like we don't  need locks here anymore?
+>>>>>>>>>>>>>
+>>>>>>>>>>>>>  Apart from the locking, wonder why a explicit pm_runtime is needed
+>>>>>>>>>>>>>  from unmap. Somehow looks like some path in the master using that
+>>>>>>>>>>>>>  should have enabled the pm ?
+>>>>>>>>>>>>>
+>>>>>>>>>>>>
+>>>>>>>>>>>> Yes, there are a bunch of scenarios where unmap can happen with
+>>>>>>>>>>>> disabled master (but not in atomic context).  On the gpu side we
+>>>>>>>>>>>> opportunistically keep a buffer mapping until the buffer is freed
+>>>>>>>>>>>> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
+>>>>>>>>>>>> an exported dmabuf while some other driver holds a reference to it
+>>>>>>>>>>>> (which can be dropped when the v4l2 device is suspended).
+>>>>>>>>>>>>
+>>>>>>>>>>>> Since unmap triggers tbl flush which touches iommu regs, the iommu
+>>>>>>>>>>>> driver *definitely* needs a pm_runtime_get_sync().
+>>>>>>>>>>>
+>>>>>>>>>>>  Ok, with that being the case, there are two things here,
+>>>>>>>>>>>
+>>>>>>>>>>>  1) If the device links are still intact at these places where unmap is called,
+>>>>>>>>>>>     then pm_runtime from the master would setup the all the clocks. That would
+>>>>>>>>>>>     avoid reintroducing the locking indirectly here.
+>>>>>>>>>>>
+>>>>>>>>>>>  2) If not, then doing it here is the only way. But for both cases, since
+>>>>>>>>>>>     the unmap can be called from atomic context, resume handler here should
+>>>>>>>>>>>     avoid doing clk_prepare_enable , instead move the clk_prepare to the init.
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> I do kinda like the approach Marek suggested.. of deferring the tlb
+>>>>>>>>>> flush until resume.  I'm wondering if we could combine that with
+>>>>>>>>>> putting the mmu in a stalled state when we suspend (and not resume the
+>>>>>>>>>> mmu until after the pending tlb flush)?
+>>>>>>>>>
+>>>>>>>>> I'm not sure that a stalled state is what we're after here, because we need
+>>>>>>>>> to take care to prevent any table walks if we've freed the underlying pages.
+>>>>>>>>> What we could try to do is disable the SMMU (put into global bypass) and
+>>>>>>>>> invalidate the TLB when performing a suspend operation, then we just ignore
+>>>>>>>>> invalidation whilst the clocks are stopped and, on resume, enable the SMMU
+>>>>>>>>> again.
+>>>>>>>>
+>>>>>>>> wouldn't stalled just block any memory transactions by device(s) using
+>>>>>>>> the context bank?  Putting it in bypass isn't really a good thing if
+>>>>>>>> there is any chance the device can sneak in a memory access before
+>>>>>>>> we've taking it back out of bypass (ie. makes gpu a giant userspace
+>>>>>>>> controlled root hole).
+>>>>>>>
+>>>>>>> If it doesn't deadlock, then yes, it will stall transactions. However, that
+>>>>>>> doesn't mean it necessarily prevents page table walks.
+>>>>>>
+>>>>>> btw, I guess the concern about pagetable walk is that the unmap could
+>>>>>> have removed some sub-level of the pt that the tlb walk would hit?
+>>>>>> Would deferring freeing those pages help?
+>>>>>
+>>>>> Could do, but it sounds like a lot of complication that I think we can fix
+>>>>> by making the suspend operation put the SMMU into a "clean" state.
+>>>>>
+>>>>>>> Instead of bypass, we
+>>>>>>> could configure all the streams to terminate, but this race still worries me
+>>>>>>> somewhat. I thought that the SMMU would only be suspended if all of its
+>>>>>>> masters were suspended, so if the GPU wants to come out of suspend then the
+>>>>>>> SMMU should be resumed first.
+>>>>>>
+>>>>>> I believe this should be true.. on the gpu side, I'm mostly trying to
+>>>>>> avoid having to power the gpu back on to free buffers.  (On the v4l2
+>>>>>> side, somewhere in the core videobuf code would also need to be made
+>>>>>> to wrap it's dma_unmap_sg() with pm_runtime_get/put()..)
+>>>>>
+>>>>> Right, and we shouldn't have to resume it if we suspend it in a clean state,
+>>>>> with the TLBs invalidated.
+>>>>>
+>>>>
+>>>> I guess if the device_link() stuff ensured the attached device
+>>>> (gpu/etc) was suspended before suspending the iommu, then I guess I
+>>>> can't see how temporarily putting the iommu in bypass would be a
+>>>> problem.  I haven't looked at the device_link() stuff too closely, but
+>>>> iommu being resumed first and suspended last seems like the only thing
+>>>> that would make sense.  I'm mostly just nervous about iommu in bypass
+>>>> vs gpu since userspace has so much control over what address gpu
+>>>> writes to / reads from, so getting it wrong w/ the iommu would be a
+>>>> rather bad thing ;-)
+>>>
+>>> Right, but we can also configure it to terminate if you don't want bypass.
+>>>
+>>
+> 
+>  But one thing here is, with devicelinks in picture, iommu suspend/resume
+>  is called along with the master. That means, we can end up cleaning even
+>  active entries on the suspend path ?, if suspend is going to
+>  put the smmu in to a clean state every time. So if the master's are following
+>  the pm_runtime sequence before a dma_map/unmap operation, that seems better.
+> 
 
-Signed-off-by: smuthayy <smuthayy@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/pci/dwc/pcie-qcom.c | 259 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 259 insertions(+)
+ Also, for the usecase of unmap being done from master's like GPU while it is already
+ suspended, then following the Marek's approach of checking for the smmu state while
+ in unmap and defer the TLB flush till resume seems correct way. All of the above
+ true if we want to use device_link.
 
-diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-index d15657d..c1fa356 100644
---- a/drivers/pci/dwc/pcie-qcom.c
-+++ b/drivers/pci/dwc/pcie-qcom.c
-@@ -37,6 +37,20 @@
- #include "pcie-designware.h"
- 
- #define PCIE20_PARF_SYS_CTRL			0x00
-+#define MST_WAKEUP_EN				BIT(13)
-+#define SLV_WAKEUP_EN				BIT(12)
-+#define MSTR_ACLK_CGC_DIS			BIT(10)
-+#define SLV_ACLK_CGC_DIS			BIT(9)
-+#define CORE_CLK_CGC_DIS			BIT(6)
-+#define AUX_PWR_DET				BIT(4)
-+#define L23_CLK_RMV_DIS				BIT(2)
-+#define L1_CLK_RMV_DIS				BIT(1)
-+
-+#define PCIE20_COMMAND_STATUS			0x04
-+#define CMD_BME_VAL				0x4
-+#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
-+#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-+
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-@@ -58,9 +72,22 @@
- #define CFG_BRIDGE_SB_INIT			BIT(0)
- 
- #define PCIE20_CAP				0x70
-+#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
-+#define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
-+#define PCIE_CAP_LINK1_VAL			0x2fd7f
-+
-+#define PCIE20_PARF_Q2A_FLUSH			0x1AC
-+
-+#define PCIE20_MISC_CONTROL_1_REG		0x8BC
-+#define DBI_RO_WR_EN				1
- 
- #define PERST_DELAY_US				1000
- 
-+#define AXI_CLK_RATE				200000000
-+
-+#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-+#define SLV_ADDR_SPACE_SZ                       0x10000000
-+
- struct qcom_pcie_resources_v0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
-@@ -110,11 +137,26 @@ struct qcom_pcie_resources_v3 {
- 	struct reset_control *phy_ahb_reset;
- };
- 
-+struct qphy_reset {
-+	struct reset_control	*rst;
-+	char			*name;
-+};
-+
-+struct qcom_pcie_resources_v4 {
-+	struct clk *sys_noc_clk;
-+	struct clk *axi_m_clk;
-+	struct clk *axi_s_clk;
-+	struct clk *ahb_clk;
-+	struct clk *aux_clk;
-+	struct qphy_reset rst[7];
-+};
-+
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_v0 v0;
- 	struct qcom_pcie_resources_v1 v1;
- 	struct qcom_pcie_resources_v2 v2;
- 	struct qcom_pcie_resources_v3 v3;
-+	struct qcom_pcie_resources_v4 v4;
- };
- 
- struct qcom_pcie;
-@@ -139,6 +181,16 @@ struct qcom_pcie {
- 
- #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
- 
-+static inline void
-+writel_masked(void __iomem *addr, u32 clear_mask, u32 set_mask)
-+{
-+	u32 val = readl(addr);
-+
-+	val &= ~clear_mask;
-+	val |= set_mask;
-+	writel(val, addr);
-+}
-+
- static void qcom_ep_reset_assert(struct qcom_pcie *pcie)
- {
- 	gpiod_set_value(pcie->reset, 1);
-@@ -884,6 +936,205 @@ static int qcom_pcie_init_v3(struct qcom_pcie *pcie)
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_v4(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i;
-+
-+	res->sys_noc_clk = devm_clk_get(dev, "sys_noc");
-+	if (IS_ERR(res->sys_noc_clk))
-+		return PTR_ERR(res->sys_noc_clk);
-+
-+	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-+	if (IS_ERR(res->axi_m_clk))
-+		return PTR_ERR(res->axi_m_clk);
-+
-+	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-+	if (IS_ERR(res->axi_s_clk))
-+		return PTR_ERR(res->axi_s_clk);
-+
-+	res->ahb_clk = devm_clk_get(dev, "ahb");
-+	if (IS_ERR(res->ahb_clk))
-+		return PTR_ERR(res->ahb_clk);
-+
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->rst[0].name = "axi_m";
-+	res->rst[1].name = "axi_s";
-+	res->rst[2].name = "pipe";
-+	res->rst[3].name = "axi_m_sticky";
-+	res->rst[4].name = "sticky";
-+	res->rst[5].name = "ahb";
-+	res->rst[6].name = "sleep";
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		res->rst[i].rst = devm_reset_control_get(dev, res->rst[i].name);
-+		if (IS_ERR(res->rst[i].rst))
-+			return PTR_ERR(res->rst[i].rst);
-+	}
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_deinit_v4(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-+
-+	clk_disable_unprepare(res->sys_noc_clk);
-+	clk_disable_unprepare(res->axi_m_clk);
-+	clk_disable_unprepare(res->axi_s_clk);
-+	clk_disable_unprepare(res->ahb_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+}
-+
-+static int qcom_pcie_enable_resources_v4(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	ret = clk_prepare_enable(res->sys_noc_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_m_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_set_rate(res->axi_m_clk, AXI_CLK_RATE);
-+	if (ret) {
-+		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_s_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_set_rate(res->axi_s_clk, AXI_CLK_RATE);
-+	if (ret) {
-+		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_prepare_enable(res->ahb_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ahb clock\n");
-+		goto err_clk_ahb;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	udelay(1);
-+
-+	return 0;
-+
-+err_clk_aux:
-+	clk_disable_unprepare(res->ahb_clk);
-+err_clk_ahb:
-+	clk_disable_unprepare(res->axi_s_clk);
-+err_clk_axi_s:
-+	clk_disable_unprepare(res->axi_m_clk);
-+err_clk_axi_m:
-+	clk_disable_unprepare(res->sys_noc_clk);
-+
-+	return ret;
-+}
-+
-+static inline int qphy_reset_control(struct qcom_pcie *pcie,
-+				     struct qphy_reset *r,
-+				     bool assert)
-+{
-+	int ret;
-+
-+	if (assert)
-+		ret = reset_control_assert(r->rst);
-+	else
-+		ret = reset_control_deassert(r->rst);
-+
-+	if (ret)
-+		dev_err(pcie->pci->dev, "%s: reset %s failed for %s\n",
-+			__func__, assert ? "assert" : "deassert", r->name);
-+
-+	return ret;
-+}
-+
-+static void qcom_pcie_v4_reset(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-+	struct qphy_reset *qphy_rst = &res->rst[0];
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-+		if (qphy_reset_control(pcie, &qphy_rst[i], true))
-+			return;
-+
-+	usleep_range(10000, 12000); /* wait 12ms */
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
-+		if (qphy_reset_control(pcie, &qphy_rst[i], false))
-+			return;
-+
-+	usleep_range(10000, 12000); /* wait 12ms */
-+	wmb(); /* ensure data is written to hw register */
-+}
-+
-+static int qcom_pcie_init_v4(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	int ret;
-+
-+	qcom_pcie_v4_reset(pcie);
-+	qcom_ep_reset_assert(pcie);
-+
-+	ret = qcom_pcie_enable_resources_v4(pcie);
-+	if (ret)
-+		return ret;
-+
-+	writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+					PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	ret = phy_power_on(pcie->phy);
-+	if (ret)
-+		return ret;
-+
-+	writel_masked(pcie->parf + PCIE20_PARF_PHY_CTRL, BIT(0), 0);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-+		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-+		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-+		pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-+
-+	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
-+	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
-+	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
-+
-+	writel_masked(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES,
-+		BIT(10) | BIT(11), 0);
-+	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
-+		PCIE20_DEVICE_CONTROL2_STATUS2);
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
-@@ -985,6 +1236,13 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- 	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
- };
- 
-+static const struct qcom_pcie_ops ops_v4 = {
-+	.get_resources = qcom_pcie_get_resources_v4,
-+	.init = qcom_pcie_init_v4,
-+	.deinit = qcom_pcie_deinit_v4,
-+	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
-+};
-+
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1076,6 +1334,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	{ .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &ops_v2 },
- 	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_v3 },
-+	{ .compatible = "qcom,pcie-ipq8074", .data = &ops_v4 },
- 	{ }
- };
- 
+Regards,
+ Sricharan
+
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+---
+This email has been checked for viruses by Avast antivirus software.
+https://www.avast.com/antivirus
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
