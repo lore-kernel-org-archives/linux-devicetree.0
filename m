@@ -1,103 +1,138 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 03/11] clk: sunxi-ng: a83t: Support new
- timing mode for mmc2 clock
-Date: Mon, 17 Jul 2017 18:12:35 +0800
-Message-ID: <CAGb2v67Ofdr9zL=o82F6-90meYZGaYtr_zy7y-OeBH30n1gERQ@mail.gmail.com>
-References: <20170714064302.20383-1-wens@csie.org> <20170714064302.20383-4-wens@csie.org>
- <20170717091402.3qb3fhdyhfbv6t66@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv2 0/6] Motorola Droid 4 Audio Support
+Date: Mon, 17 Jul 2017 12:12:58 +0200
+Message-ID: <20170717101258.llyly7kwfnwtoftr@earth>
+References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
+ <20170717092904.GG10026@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBK43WLFQKGQEAKAFFFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170717091402.3qb3fhdyhfbv6t66@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============7721364405840618863=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170717092904.GG10026@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 5:14 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi,
->
-> On Fri, Jul 14, 2017 at 02:42:54PM +0800, Chen-Yu Tsai wrote:
->> The MMC2 clock supports a new timing mode. When the new mode is active,
->> the output clock rate is halved.
->>
->> This patch sets the feature flag for the new timing mode, and adds
->> a pre-divider based on the mode bit.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 38 +++++++++++++++++++++++++++--------
->>  1 file changed, 30 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
->> index 947f9f6e05d2..ee6688e9b361 100644
->> --- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
->> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
->> @@ -418,14 +418,36 @@ static SUNXI_CCU_PHASE(mmc1_sample_clk, "mmc1-sample", "mmc1",
->>  static SUNXI_CCU_PHASE(mmc1_output_clk, "mmc1-output", "mmc1",
->>                      0x08c, 8, 3, 0);
->>
->> -/* TODO Support MMC2 clock's new timing mode. */
->> -static SUNXI_CCU_MP_WITH_MUX_GATE(mmc2_clk, "mmc2", mod0_default_parents,
->> -                               0x090,
->> -                               0, 4,         /* M */
->> -                               16, 2,        /* P */
->> -                               24, 2,        /* mux */
->> -                               BIT(31),      /* gate */
->> -                               0);
->> +/*
->> + * MMC2 supports both old and new timing modes. When the new timing
->> + * mode is active, the output clock rate is halved by two. Here we
->> + * treat it as a variable pre-divider. Note that the pre-divider is
->> + * _not_ included in the possible factors during a set clock rate
->> + * operation. It is only read out.
->> + */
->> +static const struct ccu_mux_var_prediv mmc2_new_timing_predivs[] = {
->> +     { .index = 0, .shift = 30, .width = 1 },
->> +     { .index = 1, .shift = 30, .width = 1 },
->> +};
->> +static struct ccu_mp mmc2_clk = {
->> +     .enable = BIT(31),
->> +     .m      = _SUNXI_CCU_DIV(0, 4),
->> +     .p      = _SUNXI_CCU_DIV(16, 2),
->> +     .mux    = {
->> +             .shift  = 24,
->> +             .width  = 2,
->> +             .var_predivs    = mmc2_new_timing_predivs,
->> +             .n_var_predivs  = ARRAY_SIZE(mmc2_new_timing_predivs),
->> +     },
->> +     .common         = {
->> +             .reg            = 0x090,
->> +             .features       = CCU_FEATURE_MMC_TIMING_SWITCH,
->> +             .hw.init        = CLK_HW_INIT_PARENTS("mmc2",
->> +                                                   mod0_default_parents,
->> +                                                   &ccu_mp_ops,
->> +                                                   CLK_GET_RATE_NOCACHE),
->> +     },
->> +};
->
-> Treating the new bit seems a bit of a hack to me. It only works
-> because we're not evaluating the various pre-dividers during a
-> determine_rate (and set_rate), but it might change in the future, and
-> we will break all our eMMC controllers then.
->
-> Since they're quite special, I was thinking about creating a new MMC
-> clock type? We're going to use it on a number of SoCs, and we'll be
-> able to model it properly, without crippling the regular and generic
-> MP clocks.
 
-Yes that should be doable. I could put them in the same file and
-reuse all the existing MP clocks stuff by wrapping them in new
-functions that check the timing mode bit.
+--===============7721364405840618863==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="mc2oyjl5s67xweu2"
+Content-Disposition: inline
 
-Would that work for you?
 
-ChenYu
+--mc2oyjl5s67xweu2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Mon, Jul 17, 2017 at 02:29:04AM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170712 08:19]:
+> >  * Switch from simple-audio-card to audio-graph-card
+>=20
+> Gave this a quick try against v4.13-rc1 with SND_AUDIO_GRAPH_CARD
+> enabled as a loadable module. However loading it oopses for me,
+> see below. Maybe some dependencies are missing?
+
+It works for me on top of v4.13-rc1 (my kernel is monolithic).
+Looking at the stacktrace it seems to be a bug in audio graph
+card and not in the codec driver.
+
+-- Sebastian
+
+> 8< --------------------
+> BUG: sleeping function called from invalid context at kernel/locking/mute=
+x.c:747
+> in_atomic(): 1, irqs_disabled(): 128, pid: 1590, name: modprobe
+> INFO: lockdep is turned off.
+> irq event stamp: 0
+> hardirqs last  enabled at (0): [<  (null)>]   (null)
+> hardirqs last disabled at (0): [<c0137464>] copy_process.part.5+0x2c4/0x1=
+ac8
+> softirqs last  enabled at (0): [<c0137464>] copy_process.part.5+0x2c4/0x1=
+ac8
+> softirqs last disabled at (0): [<  (null)>]   (null)
+> CPU: 0 PID: 1590 Comm: modprobe Tainted: G        W       4.13.0-rc1+ #126
+> Hardware name: Generic OMAP4 (Flattened Device Tree)
+> [<c0111524>] (unwind_backtrace) from [<c010d1fc>] (show_stack+0x10/0x14)
+> [<c010d1fc>] (show_stack) from [<c086375c>] (dump_stack+0xac/0xe0)
+> [<c086375c>] (dump_stack) from [<c0168c2c>] (___might_sleep+0x228/0x2ac)
+> [<c0168c2c>] (___might_sleep) from [<c087a86c>] (__mutex_lock+0x28/0x9fc)
+> [<c087a86c>] (__mutex_lock) from [<c087b25c>] (mutex_lock_nested+0x1c/0x2=
+4)
+> [<c087b25c>] (mutex_lock_nested) from [<c03532fc>] (kernfs_remove+0x18/0x=
+30)
+> [<c03532fc>] (kernfs_remove) from [<c0867abc>] (kobject_del+0x14/0x44)
+> [<c0867abc>] (kobject_del) from [<c0867948>] (kobject_put+0x114/0x224)
+> [<c0867948>] (kobject_put) from [<c06c8e74>] (of_get_next_parent+0x2c/0x4=
+c)
+> [<c06c8e74>] (of_get_next_parent) from [<c06ccd24>] (of_graph_get_port_pa=
+rent+0x10/0x70)
+> [<c06ccd24>] (of_graph_get_port_parent) from [<bf4685e8>] (asoc_simple_ca=
+rd_parse_graph_dai+0x98/0xe0 [snd_soc_simple_card_utils])
+> [<bf4685e8>] (asoc_simple_card_parse_graph_dai [snd_soc_simple_card_utils=
+]) from [<bf8e5330>] (asoc_graph_card_probe+0x200/0x444 [snd_soc_audio_grap=
+h_card])
+> [<bf8e5330>] (asoc_graph_card_probe [snd_soc_audio_graph_card]) from [<c0=
+5aa2b8>] (platform_drv_probe+0x50/0xb0)
+> [<c05aa2b8>] (platform_drv_probe) from [<c05a8088>] (driver_probe_device+=
+0x33c/0x478)
+> [<c05a8088>] (driver_probe_device) from [<c05a82ac>] (__driver_attach+0xe=
+8/0x110)
+> [<c05a82ac>] (__driver_attach) from [<c05a61c8>] (bus_for_each_dev+0x6c/0=
+xa0)
+> [<c05a61c8>] (bus_for_each_dev) from [<c05a7354>] (bus_add_driver+0x198/0=
+x270)
+> [<c05a7354>] (bus_add_driver) from [<c05a92c8>] (driver_register+0x78/0xf=
+4)
+> [<c05a92c8>] (driver_register) from [<c010189c>] (do_one_initcall+0x3c/0x=
+170)
+> [<c010189c>] (do_one_initcall) from [<c01edc24>] (do_init_module+0x5c/0x1=
+e0)
+> [<c01edc24>] (do_init_module) from [<c01ec904>] (load_module+0x1270/0x14e=
+c)
+> [<c01ec904>] (load_module) from [<c01ece08>] (SyS_finit_module+0xa8/0xec)
+> [<c01ece08>] (SyS_finit_module) from [<c0108440>] (ret_fast_syscall+0x0/0=
+x1c)
+> OF: ERROR: Bad of_node_put() on /ocp/spi@48098000/pmic@0/audio-codec/port=
+@0/endpoint
+
+--mc2oyjl5s67xweu2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllsjacACgkQ2O7X88g7
++prvCg//fZUbCSIXBJx1isxVl1jiQ6Y+VpuMwFtyCeuJTxY3iVlioRSVeJelkF3d
+TkEr6RgV9wMeH967lDgcYLSECYpWu9otWBLbogqWrdvjmDnDWJaiqnWTY5fjdwKP
+OMk0THL4m9X3hOvPTdPUkxPEC5V+IsdsQj5mdcdTyubD1WEWi6O+IJOPEA1RvGtd
+CAGiGOZ8gdwRp+02lm/JxZAdtajslpx/7zaxIUb7lxvYXsnHCtz1Vjqy7/3U1npO
+S5ukL/MmsFzbb9vrjTBbYIaK8SHeATzWMpcm6Amh8xFNjvglYqgYjVeZxHgdc4kP
+eZf72n2+9Vv9gZvpBv+3uj28Vs00eVRzf8PzSnzlmxg8udfI837YlmxirH2IPcRv
+kVfNCQs62aP148CvLIO9R21KD+QBMTBPoROPTDMaTKy1LPCFGkOFPp9l+OUWx0It
+SYsoJsvZosyPimtcgkbK6dkqZV5f1Mq80mPLo5m/sADXxhxaSeBM/86fEWMH1kkn
+sCC2ssyeLPb5C6892dTC3mPd2brvXZaMtJ+/CIFen2yRWLgMeo9Y7OjQ5Ph+J+yx
+gixlXY0HAgCasvckHcCv1TC3ltOUK0fVIZxemQGPuKDj74gnQYxFI1j0FQUlzbxX
+Zf6JWG/m0GSK2S9m0YteUqdUSGslP239N9c9LeEPJ6BY6ZBpXhM=
+=TOkW
+-----END PGP SIGNATURE-----
+
+--mc2oyjl5s67xweu2--
+
+--===============7721364405840618863==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7721364405840618863==--
