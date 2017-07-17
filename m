@@ -1,32 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 6/6] dt-bindings: i2c: Add FSI-attached I2C master dt
- binding documentation
-Date: Mon, 17 Jul 2017 11:49:37 -0500
-Message-ID: <20170717164937.e5i63h2mndx5pilr@rob-hp-laptop>
-References: <1500302157-14670-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1500302157-14670-7-git-send-email-eajames@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] watchdog: meson-wdt: add support for the watchdog on
+ Meson8 and Meson8m2
+Date: Mon, 17 Jul 2017 11:51:52 -0500
+Message-ID: <20170717165152.xv2kq2lqgi3jtobm@rob-hp-laptop>
+References: <20170711221438.8958-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500302157-14670-7-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, gregkh@linuxfoundation.org, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, cbostic@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+In-Reply-To: <20170711221438.8958-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 09:35:57AM -0500, Eddie James wrote:
-> From: "Edward A. James" <eajames@us.ibm.com>
+On Wed, Jul 12, 2017 at 12:14:38AM +0200, Martin Blumenstingl wrote:
+> The watchdog IP block on Meson8 and Meson8m2 is already supported by the
+> existing meson-wdt driver. Meson8 uses the same register bits as Meson6,
+> while the newer Meson8m2 SoC uses the same register bits as Meson8b.
 > 
-> Document the bindings.
+> Currently watchdog support on Meson8 SoC already works because
+> meson8.dtsi simply uses the "amlogic,meson6-wdt" compatible. Adding a
+> separate compatible for Meson8 makes this more explicit though.
 > 
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-fsi.txt | 40 +++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
+> Changes since v1 at [0]:
+> - updated the documentation to indicate that Meson8 should also specify
+>   the Meson6 compatible and that Meson8m2 should also specify the
+>   Meson8b compatible
+> 
+> [0] https://patchwork.kernel.org/patch/9780093/
+> 
+> 
+>  Documentation/devicetree/bindings/watchdog/meson-wdt.txt | 6 +++++-
+>  drivers/watchdog/meson_wdt.c                             | 2 ++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 
-Where's v3? I acked v2. Please add acks when posting new versions of 
-patches.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
