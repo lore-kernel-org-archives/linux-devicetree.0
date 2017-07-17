@@ -1,45 +1,95 @@
 From: Caesar Wang <wxt@rock-chips.com>
-Subject: [PATCH v2 1/5] dt-bindings: gpu: add the RK3399 mali for rockchip
- specifics
-Date: Mon, 17 Jul 2017 16:14:27 +0800
-Message-ID: <1500279271-15249-2-git-send-email-wxt@rock-chips.com>
-References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v2 0/5] arm64: dts: rockchip: support mail and IPA thermal for rk3399
+Date: Mon, 17 Jul 2017 16:14:26 +0800
+Message-ID: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com, Caesar Wang <wxt@rock-chips.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, William wu <wulf@rock-chips.com>, Matthias Kaehlcke <mka@chromium.org>, Elaine Zhang <zhangqing@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Shawn Lin <shawn.lin@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Douglas Anderson <dianders@chromium.org>, David Airlie <airlied@linux.ie>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Roger Chen <roger.chen@rock-ch>
 List-Id: devicetree@vger.kernel.org
 
-UkszMzk5J3MgR1BVIHVzZXMgdGhlIHF1YWQtY29yZSBNYWxpLVQ4NjAsIHdoaWNoIGlzIHRoZSBu
-ZXcgZ2VuZXJhdGlvbiBvZgpoaWdoLWVuZCBncmFwaGljcyBwcm9jZXNzb3JzIGZyb20gQVJNLgoK
-VGhpcyBwYXRjaCBhZGRlZCAicm9ja2NoaXAscmszMzk5LW1hbGkiIGZvciBkdC1iaW5kaW5ncywg
-aW4gb3JkZXIgdG8Kc3VwcG9ydCBJUEEgb2YgZ3B1IHRoZXJtYWwgaW4gbGF0ZXIuCgpTaWduZWQt
-b2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgotLS0KCkNoYW5nZXMgaW4g
-djI6IE5vbmUKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxp
-LW1pZGdhcmQudHh0IHwgMSArCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1p
-ZGdhcmQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFs
-aS1taWRnYXJkLnR4dAppbmRleCBkM2I2ZTFhNC4uYTQ2MWU0NyAxMDA2NDQKLS0tIGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dAorKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQu
-dHh0CkBAIC0xNyw2ICsxNyw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6CiAgICogd2hpY2ggbXVz
-dCBiZSBwcmVjZWRlZCBieSBvbmUgb2YgdGhlIGZvbGxvd2luZyB2ZW5kb3Igc3BlY2lmaWNzOgog
-ICAgICsgImFtbG9naWMsbWVzb24tZ3htLW1hbGkiCiAgICAgKyAicm9ja2NoaXAscmszMjg4LW1h
-bGkiCisgICAgKyAicm9ja2NoaXAscmszMzk5LW1hbGkiCiAKIC0gcmVnIDogUGh5c2ljYWwgYmFz
-ZSBhZGRyZXNzIG9mIHRoZSBkZXZpY2UgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgYXJlYS4K
-IAotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+This series patches supported the mail in devicetree and used the
+thermal IPA by default.
+
+Verified with kernel is based on Linus's master branch and Heiko's
+v4.14-armsoc-tmp/dts64 branch. ( The Linux version 4.12.0 for now).
+
+The most rockchip SoCs will be supported with IPA mode for thermal
+in later.
+
+---
+
+History version:
+1. The first version found on
+https://www.spinics.net/lists/arm-kernel/msg593118.html
+
+Tested on Kevin board with bringing up ChromeOS.
+OS VERSION:
+    CHROMEOS_RELEASE_DESCRIPTION=9693.1.0 (Official Build) dev-channel kevin test
+
+BIOS VERSION:
+    Google_Kevin.8785.211.2017_06_20_1043
+
+EC VERSION:
+    Build info:    kevin_v1.10.217-24514961d 2017-07-03 07:46:36 wxt@nb
+
+With the ARM's lastest mali driver TX011-SW-99002-r18p0-01rel0 on
+https://developer.arm.com/products/software/mali-drivers/midgard-kernel
+
+>From the bootup log:
+    localhost devfreq0 # dmesg |grep mali
+    [    0.933334] mali ff9a0000.gpu: GPU identified as 0x0860 r2p0 status 0
+    [    0.940830] mali ff9a0000.gpu: Protected mode not available
+    [    0.947334] mali ff9a0000.gpu: Using configured power model mali-simple-power-model, and fallback mali-simple-power-model
+    [    0.960083] mali ff9a0000.gpu: Probed as mali0
+
+    localhost devfreq0 # pwd
+    /sys/devices/platform/ff9a0000.gpu/devfreq/devfreq0
+    localhost devfreq0 # ls
+    available_frequencies  device    min_freq          subsystem    uevent
+    available_governors    governor  polling_interval  target_freq  userspace
+    cur_freq               max_freq  power             trans_stat
+
+    localhost ff9a0000.gpu # ls
+    core_availability_policy  gpuinfo               modalias       soft_job_timeout
+    core_mask                 js_scheduling_period  of_node        subsystem
+    devfreq                   js_timeouts           pm_poweroff    uevent
+    driver                    mem_pool_max_size     power
+    driver_override           mem_pool_size         power_policy
+    dvfs_period               misc                  reset_timeout
+---
+
+And for thermal with IPA.
+Try to run 'md5sum /dev/zero &' and octane/benchmark scripts to go up the temperature.
+>From the scripts to have a look at the actual control.
+"
+while true; do grep "" /sys/class/thermal/thermal_zone[0-1]/temp /sys/devices/system/cpu/cpu[0-5]/cpufreq/scaling_cur_freq /sys/devices/platform/ff9a0000.gpu/devfreq/devfreq0/cur_freq;date;sleep .5; done &
+"
+
+-Caesar
+
+
+Changes in v2:
+As Heiko comments on https://patchwork.kernel.org/patch/9835939/
+- interrupt-name use the lower case.
+- use the correct compatible "arm,mali-t860"
+- remove the clock name, since the mali only have one input clock.
+- foo@ will produce warnings when used without reg property.
+- update the commit to explain the two passive trip points changed.
+
+Caesar Wang (5):
+  dt-bindings: gpu: add the RK3399 mali for rockchip specifics
+  dt-bindings: gpu: add a power_model optional properties for MALI
+  arm64: dts: rockchip: add ARM Mali GPU node for RK3399 SoCs
+  arm64: dts: rockchip: enable the GPU for RK3399-GRU
+  arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
+
+ .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 13 ++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       |  5 ++
+ arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi   | 33 ++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi       | 33 ++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 74 ++++++++++++----------
+ 5 files changed, 125 insertions(+), 33 deletions(-)
+
+-- 
+2.7.4
