@@ -1,195 +1,169 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH 09/14] qcom: mtd: nand: BAM support for read page
-Date: Mon, 17 Jul 2017 12:47:07 +0530
-Message-ID: <53fd2482d3f8f6d965910fc1a711751a@codeaurora.org>
-References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-10-git-send-email-absahu@codeaurora.org>
- <ddf2e1c0-e08e-c8b8-2b10-ef39ce1482b2@codeaurora.org>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFCv2 usb-next 0/3] initialize (multiple) PHYs in xhci-plat
+Date: Mon, 17 Jul 2017 15:21:07 +0800
+Message-ID: <1500276067.25536.58.camel@mhfsdcap03>
+References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
+         <1500111231.25536.18.camel@mhfsdcap03>
+         <CAFBinCAw9yaaEO6Z9AdkBaPg9azGH4nqgdgoTir9U0eWZVu1DQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <ddf2e1c0-e08e-c8b8-2b10-ef39ce1482b2@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Archit Taneja <architt@codeaurora.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCAw9yaaEO6Z9AdkBaPg9azGH4nqgdgoTir9U0eWZVu1DQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-04 15:10, Archit Taneja wrote:
-> On 06/29/2017 12:46 PM, Abhishek Sahu wrote:
->> 1. The BAM mode requires few registers configuration before each
->>     NAND page read and codeword read which is different from ADM
->>     so add the helper functions which will be called in BAM mode
->>     only.
->> 
->> 2. The NAND page read handling of BAM is different from ADM so
->>     call the appropriate helper functions
->> 
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> ---
->>   drivers/mtd/nand/qcom_nandc.c | 63 
->> ++++++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 62 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mtd/nand/qcom_nandc.c 
->> b/drivers/mtd/nand/qcom_nandc.c
->> index 8e7dc9e..17766af 100644
->> --- a/drivers/mtd/nand/qcom_nandc.c
->> +++ b/drivers/mtd/nand/qcom_nandc.c
->> @@ -870,6 +870,35 @@ static void config_cw_read(struct 
->> qcom_nand_controller *nandc)
->>   }
->> 
->>   /*
->> + * Helpers to prepare DMA descriptors for configuring registers
->> + * before reading a NAND page with BAM.
->> + */
->> +static void config_bam_page_read(struct qcom_nand_controller *nandc)
->> +{
->> +	write_reg_dma(nandc, NAND_FLASH_CMD, 3, 0);
->> +	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
->> +	write_reg_dma(nandc, NAND_EBI2_ECC_BUF_CFG, 1, 0);
->> +	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, 0);
->> +	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1,
->> +		      NAND_ERASED_CW_SET | NAND_BAM_NEXT_SGL);
->> +}
->> +
->> +/*
->> + * Helpers to prepare DMA descriptors for configuring registers
->> + * before reading each codeword in NAND page with BAM.
->> + */
+Hi,
+On Sat, 2017-07-15 at 14:11 +0200, Martin Blumenstingl wrote:
+> Hi,
 > 
-> If I understood right, EBI2 nand required us to load all the registers
-> configured in config_cw_read() for every codeword, and for BAM, the
-> registers configured in config_bam_page_read() just needs to be done 
-> once,
-> and the registers in config_bam_cw_read()  need to be reloaded for 
-> every
-> codeword?
+> On Sat, Jul 15, 2017 at 11:33 AM, Chunfeng Yun
+> <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi Martin,
+> >
+> > On Thu, 2017-07-13 at 12:59 +0200, Martin Blumenstingl wrote:
+> >> This series is the outcome of a discussion with Felipe Balbi,
+> >> see [0] and [1].
+> >> The quick-summary of this is:
+> >> - dwc3 already takes one USB2 and one USB3 PHY and initializes these
+> >>   correct
+> >> - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+> >>   ohci-platform.c) do not have a limitation on the number of PHYs - they
+> >>   support one PHY per actual host port
+> >> - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+> >>   or three USB2 ports enabled on the internal root-hub. The SoCs also
+> >>   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+> >>   internally "connected" to the dwc3 roothub) need to be powered on,
+> >>   otherwise USB devices cannot be enumerated (even if just one PHY is
+> >>   disabled and if the device is plugged into another, enabled port)
+> >>
+> >> In my first attempt to get USB supported on the GXL and GXM SoCs I tried
+> >> to work-around the problem that I could not pass multiple PHYs to the
+> >> dwc3 controller.
+> >> This was rejected by Rob Herring (which was definitely the thing to do in
+> >> my opinion), see [2]
+> >>
+> >> This series adds a new "platform-roothub". This can be configured through
+> >> devicetree by passing a child-node with "reg = <0>" to the USB
+> >> controller. Additionally there has to be a child-node for each port on
+> >> the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
+> >> property. This allows modeling the root-hub in devicetree similar to the
+> >> USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
+> >> This avoids and backwards-compatibility problems (which was a concern
+> >> regardless of the solution, see [3]) since the binding for the root-hub
+> >> was previously not specified (and we're not using the "phys" property of
+> >> the controller, which might have served different purposes before,
+> >> depending on the drivers).
+> >>
+> >> Additionally this integrates the new platform-roothub into xhci-plat.c
+> >> which automatically enables it for the dwc3 driver (in host-mode).
+> >>
+> > How to handle the phy0(one u2phy and one u3phy) when port1 support
+> > dual-role mode? leave them to peripheral side as felipe suggested
+> > before? If so, no port1 node for roothub, is there any problem when
+> > change the port1 to host-only mode?
+> on Amlogic Meson GXL we have the following IP blocks:
+> - 2x USB2 PHYs, some external component has to tell them which mode
+> (host/device) they should operate in
+> - there is an additional (1x) USB3 PHY with built-in OTG detection logic
 > 
-> Could you please clarify this better in the commit message and 
-> comments? Also,
-> I still see config_cw_read() being used for QPIC nand in nandc_param() 
-> and
-> copy_last_cw()?
+> on Amlogic Meson GXL it could work like this:
+> USB2 and USB3 phy0 can be passed to the root-hub. Additionally the
+> USB2 phy0 could be passed to the USB3 PHY. The USB3 PHY would then
+> tell the USB2 PHY in which mode it should operate.
 > 
-> Also, I think these should be called config_qpic_page_read() and
-> config_qpic_cw_read() since it seems more of a property of the NAND 
-> controller
-> rather than the underlying DMA engine. If so, config_cw_read() can be 
-> called
-> config_cw_ebi2_read(). Please correct me if I'm wrong somewhere.
+> please note that device mode and OTG support on Amlogic Meson GXL is
+> more complicated, as it uses dwc2 and dwc3 controllers in combination:
+> - dwc3 is reponsible for host-only mode
+> - dwc2 is responsible for device-only mode
+> - OTG detection is done by the USB3 PHY
 > 
+> would you mind sharing a short overview of host/device/OTG support
+> works on Mediatek SoCs? I assume that the Amlogic Meson GXL
+> implementation is quite special, so comparing this with another
+> implementation (for example the Mediatek one) may help spotting
+> potential issues.
+> 
+MTK's mtu3 IP supports at most 5x USB2 phys and 4x USB3 phys. They work
+as following:
 
-  I did some code reorganization in v2 in this area and now, we don't
-  have do different things for EBI2 and QPIC for read.
+1. device mode works as HS only:
 
->> +static void config_bam_cw_read(struct qcom_nand_controller *nandc)
->> +{
->> +	write_reg_dma(nandc, NAND_READ_LOCATION_0, 2, 0);
->> +	write_reg_dma(nandc, NAND_FLASH_CMD, 1, NAND_BAM_NEXT_SGL);
->> +	write_reg_dma(nandc, NAND_EXEC_CMD, 1, NAND_BAM_NEXT_SGL);
->> +
->> +	read_reg_dma(nandc, NAND_FLASH_STATUS, 2, 0);
->> +	read_reg_dma(nandc, NAND_ERASED_CW_DETECT_STATUS, 1,
->> +		     NAND_BAM_NEXT_SGL);
->> +}
->> +
->> +/*
->>    * helpers to prepare dma descriptors used to configure registers 
->> needed for
->>    * writing a codeword/step in a page
->>    */
->> @@ -1398,6 +1427,9 @@ static int read_page_ecc(struct qcom_nand_host 
->> *host, u8 *data_buf,
->>   	struct nand_ecc_ctrl *ecc = &chip->ecc;
->>   	int i, ret;
->> 
->> +	if (nandc->dma_bam_enabled)
->> +		config_bam_page_read(nandc);
->> +
->>   	/* queue cmd descs for each codeword */
->>   	for (i = 0; i < ecc->steps; i++) {
->>   		int data_size, oob_size;
->> @@ -1411,7 +1443,36 @@ static int read_page_ecc(struct qcom_nand_host 
->> *host, u8 *data_buf,
->>   			oob_size = host->ecc_bytes_hw + host->spare_bytes;
->>   		}
->> 
->> -		config_cw_read(nandc);
->> +		if (nandc->dma_bam_enabled) {
->> +			if (data_buf && oob_buf) {
->> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
->> +					      (0 << READ_LOCATION_OFFSET) |
->> +					      (data_size <<
->> +					      READ_LOCATION_SIZE) |
->> +					      (0 << READ_LOCATION_LAST));
->> +				nandc_set_reg(nandc, NAND_READ_LOCATION_1,
->> +					      (data_size <<
->> +					      READ_LOCATION_OFFSET) |
->> +					      (oob_size << READ_LOCATION_SIZE) |
->> +					      (1 << READ_LOCATION_LAST));
->> +			} else if (data_buf) {
->> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
->> +					      (0 << READ_LOCATION_OFFSET) |
->> +					      (data_size <<
->> +					      READ_LOCATION_SIZE) |
->> +					      (1 << READ_LOCATION_LAST));
->> +			} else {
->> +				nandc_set_reg(nandc, NAND_READ_LOCATION_0,
->> +					      (data_size <<
->> +					      READ_LOCATION_OFFSET) |
->> +					      (oob_size << READ_LOCATION_SIZE) |
->> +					      (1 << READ_LOCATION_LAST));
->> +			}
-> 
-> Could we put the READ_LOCATION_x register configuration into a small 
-> helper?
-> This is probably a matter of taste, but you could consider configuring
-> like this.
-> Maybe something similar for patch #11 for raw page reads.
-> 
+u2phy0 --- dual-role/OTG
 
-  I will use macro for assigning READ LOCATION registers in v2,
-  which makes the code cleaner. If required, I will use helpers
-  also.
+u2phy1 ---|
+          +  U3 host-only
+u3phy0 ---|
 
-> 	if (data_buf && oob_buf) {
-> 		r0_off = 0;
-> 		r0_size = r1_off = data_size;
-> 		r1_size = oob_size;
-> 		r0_last = 0;
-> 		r1_last = 1;
-> 	} else if (data_buf) {
-> 		rl0_off = 0;
-> 		rl0_size = data_size;
-> 		rl0_last = 1;
-> 	} else {
-> 		rl0_off = data_size;
-> 		rl0_size = oob_size;
-> 		rl0_last = 1;
-> 	}
-> 
-> 	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
-> 		      (rl0_off << READ_LOCATION_OFFSET) |
-> 		      (rl0_size << READ_LOCATION_SIZE) |
-> 		      (rl0_last << READ_LOCATION_LAST));
-> 	if (rl1_last)
-> 		/* program LOCATION_1 register */
-> 
-> Thanks,
-> Archit
-> 
->> +
->> +			config_bam_cw_read(nandc);
->> +		} else {
->> +			config_cw_read(nandc);
->> +		}
->> 
->>   		if (data_buf)
->>   			read_data_dma(nandc, FLASH_BUF_ACC, data_buf,
->> 
+...
+u2phy4 ---|
+          +  U3 host-only
+u3phy3 ---|
+(e.g. MT8173 supports 2x u2phys and 1x u3phy, u2phy0 can work as
+dual-role mode, u2phy1 & u3phy0 are host-only)
 
--- 
-Abhishek Sahu
+2. device mode works as HS & SS, or host only:
+
+u2phy0 ---|
+          + dual-role or host-only
+u3phy0 ---|
+
+...
+u2phy3 ---|
+          + U3 host-only
+u3phy3 ---|
+
+u2phy4 --- U2 host-only
+(e.g. on MT2701, u2phy0 and u3phy0 work as host-only mode)
+
+mtu3 driver supports host-only, device-only and dual-role mode(use IDDIG
+pin), and will take all phys it needed, include host-only phys; 
+But if just host-only mode is supported, we can skip mtu3 driver and
+make use of xhci-mtk driver directly, then xhci-mtk will take all phys.
+
+> >>
+> >> Changes since RFCv1 at [4]:
+> >> - split the usb-xhci dt-binding documentation into a separate patch
+> >> - fixed a typo ("usb-phy" -> "phys" in the dt-binding example)
+> >> - rebased to apply against latest usb-next
+> >>
+> >>
+> >> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001945.html
+> >> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001947.html
+> >> [2] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/001818.html
+> >> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001948.html
+> >> [4] http://marc.info/?l=linux-usb&m=148414866303604&w=2
+> >>
+> >>
+> >> Martin Blumenstingl (3):
+> >>   dt-bindings: usb: add the documentation for USB root-hub
+> >>   usb: host: add a generic platform USB roothub driver
+> >>   usb: host: xhci: plat: integrate the platform-roothub
+> >>
+> >>  .../devicetree/bindings/usb/usb-roothub.txt        |  46 +++++++
+> >>  Documentation/devicetree/bindings/usb/usb-xhci.txt |   7 +
+> >>  drivers/usb/host/Kconfig                           |   4 +
+> >>  drivers/usb/host/Makefile                          |   2 +
+> >>  drivers/usb/host/platform-roothub.c                | 146 +++++++++++++++++++++
+> >>  drivers/usb/host/platform-roothub.h                |  14 ++
+> >>  drivers/usb/host/xhci-plat.c                       |  27 +++-
+> >>  drivers/usb/host/xhci.h                            |   2 +
+> >>  8 files changed, 247 insertions(+), 1 deletion(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/usb/usb-roothub.txt
+> >>  create mode 100644 drivers/usb/host/platform-roothub.c
+> >>  create mode 100644 drivers/usb/host/platform-roothub.h
+> >>
+> >
+> >
+> 
+> 
+> Regards,
+> Martin
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
