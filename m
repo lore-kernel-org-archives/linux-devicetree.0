@@ -1,53 +1,33 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-binding: mfd: Add Maxim/Dallas DS1374 MFD device
- binding
-Date: Mon, 17 Jul 2017 13:50:51 -0500
-Message-ID: <20170717185051.7yd5wdynyesc7lyy@rob-hp-laptop>
-References: <1499975665-14581-1-git-send-email-mdf@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 07/11] mmc: sunxi: Add support for A83T eMMC (MMC2)
+Date: Mon, 17 Jul 2017 13:51:26 -0500
+Message-ID: <20170717185126.rrhriqckjextpaxj@rob-hp-laptop>
+References: <20170714064302.20383-1-wens@csie.org>
+ <20170714064302.20383-8-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1499975665-14581-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170714064302.20383-8-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 12:54:24PM -0700, Moritz Fischer wrote:
-> This adds a binding for the Maxim/Dallas DS1374 MFD.
+On Fri, Jul 14, 2017 at 02:42:58PM +0800, Chen-Yu Tsai wrote:
+> The third MMC controller (MMC2) on the Allwinner A83T SoC is slightly
+> different. It supports a wider 8-bit bus, has a dedicated controllable
+> reset pin for eMMC, and a "new timing mode" which is supposed to deliver
+> better signals and thus better performance.
 > 
-> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Add a compatible for this one to use the new timing mode not found in the
+> other controllers.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
-> Changes from RFC:
-> - dallas,ds1374-mode -> dallas,mode
-> - Clarified examples
-> - dallas,remap-reset property
-> 
-> On second thoughts the solution for the remapping found in the
-> discussion did not seem to be a good solution, since the INT
-> pin indicating watchdog reset does not necessarily have to be
-> connected to an interrupt line on the machine, it could equally
-> well be hooked up to a PMIC reset input or similar.
-> In that case using the presence of an 'interrupt' phandle is not
-> a good choice.
-> 
-> Cheers,
-> 
-> Moritz
-> 
-> ---
->  Documentation/devicetree/bindings/mfd/ds1374.txt   | 88 ++++++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.txt        |  1 -
->  drivers/rtc/Kconfig                                |  2 +
+>  Documentation/devicetree/bindings/mmc/sunxi-mmc.txt | 1 +
 
-This belongs in patch 2. With that dropped,
+Acked-by: Rob Herring <robh@kernel.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
->  3 files changed, 90 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ds1374.txt
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/mmc/host/sunxi-mmc.c                        | 8 ++++++++
+>  2 files changed, 9 insertions(+)
