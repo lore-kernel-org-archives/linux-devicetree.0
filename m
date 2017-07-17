@@ -1,36 +1,58 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] drivers/i2c: Add FSI-attached I2C master algorithm
-Date: Mon, 17 Jul 2017 16:26:19 +0200
-Message-ID: <20170717142619.GA18850@kroah.com>
-References: <1499711882-12918-1-git-send-email-eajames@linux.vnet.ibm.com>
- <20170717141123.GA13295@kroah.com>
- <CACPK8XfeMLA5vUEkxVO_U=rN49gvGZ4zfdBJbxX44yTiUy27yw@mail.gmail.com>
- <20170717142013.ee2zzhlqx67bh7hr@ninjato>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 2/6] dt-bindings: mfd: da9052: support TSI as ADC
+Date: Mon, 17 Jul 2017 15:31:53 +0100
+Message-ID: <20170717143153.66jzgfleyffn52rj@dell>
+References: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
+ <20170703084003.31184-3-sebastian.reichel@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170717142013.ee2zzhlqx67bh7hr@ninjato>
+In-Reply-To: <20170703084003.31184-3-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 04:20:13PM +0200, Wolfram Sang wrote:
+On Mon, 03 Jul 2017, Sebastian Reichel wrote:
+
+> DA9052 allows using the touchscreen input pins as general purpose
+> analogue input pin by wiring analogue inputs to X+, X-, Y+ and Y-
+> and providing a reference voltage at TSIREF pin.
 > 
-> > This is a driver for the i2c bus master, so I would expect the patches
-> > to be reviewed and applied through Wolfram's i2c tree?
-> 
-> Yes, please.
-> 
+> Signed-off-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/da9052-i2c.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Ok, then why are people sending them to me?
+Applied, thanks.
 
-I'll gladly let others take them :)
+> diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
+> index 9554292dc6cb..57fa74e65664 100644
+> --- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
+> +++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
+> @@ -4,6 +4,14 @@ Required properties:
+>  - compatible : Should be "dlg,da9052", "dlg,da9053-aa",
+>  			 "dlg,da9053-ab", or "dlg,da9053-bb"
+>  
+> +Optional properties:
+> +- dlg,tsi-as-adc : Boolean, if set the X+, X-, Y+, Y- touchscreen
+> +                    input lines are used as general purpose analogue
+> +					input.
+> +- tsiref-supply: Phandle to the regulator, which provides the reference
+> +                 voltage for the TSIREF pin. Must be provided when the
+> +			     touchscreen pins are used for ADC purposes.
+> +
+>  Sub-nodes:
+>  - regulators : Contain the regulator nodes. The DA9052/53 regulators are
+>    bound using their names as listed below:
 
-thanks,
-
-greg k-h
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
