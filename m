@@ -1,123 +1,44 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
-Date: Mon, 17 Jul 2017 16:05:41 -0500
-Message-ID: <CAL_JsqJ0d+DLYrpfNSXKhT=FZcWwxSSLPrUyT6N+D6RCFAcqOQ@mail.gmail.com>
-References: <20170715003836.GA113132@beast> <20170717193258.zim7rjh2cfgb6t5e@rob-hp-laptop>
- <CAGXu5jJk7otP6VBde7cFdMBRgQQB_rQpCSi24tRmC9bMmfo5Jw@mail.gmail.com> <CAKv+Gu8X8d4HqVZOcusC2L9WzJNatBkAgtKONjzad9SgdsrFRA@mail.gmail.com>
+From: Martin Kaiser <martin@kaiser.cx>
+Subject: Re: [PATCH v2 2/3] ARM: i.MX25: add RNGC node to dtsi
+Date: Mon, 17 Jul 2017 23:05:23 +0200
+Message-ID: <20170717210523.GC15429@reykholt.kaiser.cx>
+References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1457705200-16951-2-git-send-email-s.trumtrar@pengutronix.de>
+ <20160401085259.GH18833@tiger>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKv+Gu8X8d4HqVZOcusC2L9WzJNatBkAgtKONjzad9SgdsrFRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Redfearn <matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20160401085259.GH18833@tiger>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Matt Mackall <mpm@selenic.com>, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 3:22 PM, Ard Biesheuvel
-<ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 17 July 2017 at 20:54, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> On Mon, Jul 17, 2017 at 12:32 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> On Fri, Jul 14, 2017 at 05:38:36PM -0700, Kees Cook wrote:
->>>> Document then /chosen/kaslr-seed property (and its interaction with the
->>>
->>> s/then/the/
->>>
->>>> EFI_RNG_PROTOCOL API).
->>>
->>> "dt-bindings: chosen: ..." for the subject.
->>
->> I'll send a v2 with these fixed and the Acks added.
->>
->>>> Signed-off-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
->>>>  1 file changed, 20 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->>>> index dee3f5d9df26..0cdb43b268e5 100644
->>>> --- a/Documentation/devicetree/bindings/chosen.txt
->>>> +++ b/Documentation/devicetree/bindings/chosen.txt
->>>> @@ -5,9 +5,27 @@ The chosen node does not represent a real device, but serves as a place
->>>>  for passing data between firmware and the operating system, like boot
->>>>  arguments. Data in the chosen node does not represent the hardware.
->>>>
->>>> +The following properties are recognized:
->>>>
->>>> -stdout-path property
->>>> ---------------------
->>>> +
->>>> +kaslr-seed
->>>> +-----------
->>>
->>> Is there some reason we would not feed this to other things needing
->>> entropy and therefore should have a more generic name?
->>
->> I'll let Ard answer this better than me, but IIRC, he wanted a narrow use.
->>
->
-> The reason is that the seed is not used to feed a DRBG (because it is
-> way to early for that when we lay out the VA space), but different
-> slices of the u64 are used for randomizing different parts of the
-> address space, i.e., the top 16 bits are used to randomize the linear
-> region, bits 48 - 21 for the kernel itself, and the bits below that
-> for the module region. (The virtual kernel offset is randomized
-> further by the physical placement modulo 2 MB, but this is done by the
-> stub, which calls EFI_RNG_PROTOCOL itself so it does not use
-> /chosen/kaslr-seed)
->
-> This means any use of this seed beyond its intended purpose may leak
-> information.
+Dear all,
 
-Is having this value in /proc/device-tree/chosen/kaslr-seed a leak?
-Should the kernel remove it?
+I'd like to pick this up and get the rgnc driver merged.
 
-> For UEFI systems, we do pass a random seed via a UEFI configuration
-> table, but this is deliberately kept separate (and uses a UEFI
-> specific interface, which seemed more appropriate)
+Thus wrote Shawn Guo (shawnguo@kernel.org):
 
-So if we wanted a seed for non-UEFI systems, we should define a
-separate property?
+> > +			rng: rng@53fb0000 {
+> > +				compatible = "fsl,imx25-rng";
+> > +				reg = <0x53fb0000 0x4000>;
+> > +				clocks = <&clks 109>;
+> > +				clock-names = "ipg";
 
->>>> +This property is used when booting with CONFIG_RANDOMIZE_BASE to seed
->>>> +the entropy used to randomize the kernel image base address location. It
->>>> +is parsed as a u64 value, e.g.
->>>
->>> Why limit the size to 64-bit and why does it matter how the data is
->>> interpretted?
->>
->> IIRC, u64 is sufficient. (And note I'm just documenting what exists...)
->>
->
-> See above. Seeding a DRBG typically requires more than that, but for
-> KASLR it is sufficient.
->
->>>> +
->>>> +/ {
->>>> +     chosen {
->>>> +             kaslr-seed = <0xfeedbeef 0xc0def00d>;
->>>> +     };
->>>> +};
->>>> +
->>>> +Note that when booting through EFI when EFI_RNG_PROTOCOL is supported,
->>>> +this value will be overwritten by the EFI stub.
->>>
->>> Isn't this always true? The bootloader will overwrite. Just in the EFI
->>> case, the EFI stub is part of the bootloader from a functional (and not
->>> packaging) standpoint.
->>
->> I thought it best to call this out so that no one could get confused
->> if they wanted to understand how to use kaslr-seed with an EFI system.
->> (i.e. just implement EFI_RNG_PROTOCOL instead.)
->>
->
-> Well, I guess the point being made is that setting this property from
-> UEFI (or u-boot in EFI mode) is pointless is EFI_RNG_PROTOCOL is
-> implemented as well.
+> I think clock-names can be dropped too.
 
-Okay.
+done. I'll upload a new version shortly.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Martin
