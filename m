@@ -1,50 +1,78 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] dt-bindings: bus: Add documentation for the
- Technologic Systems NBUS
-Date: Mon, 17 Jul 2017 14:00:00 -0500
-Message-ID: <20170717190000.n2lifnduqzgp4b6g@rob-hp-laptop>
-References: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com>
- <20170714203218.14409-4-sebastien.bourdelin@savoirfairelinux.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: net: Add bindings for National
+ Instruments XGE netdev
+Date: Mon, 17 Jul 2017 14:03:39 -0500
+Message-ID: <20170717190339.gxxik5pwdd3bivks@rob-hp-laptop>
+References: <1500065326-26182-1-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170714203218.14409-4-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1500065326-26182-1-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 04:32:13PM -0400, Sebastien Bourdelin wrote:
-> Add binding documentation for the Technologic Systems NBUS that is used
-> to interface with peripherals in the FPGA of the TS-4600 SoM.
+On Fri, Jul 14, 2017 at 01:48:45PM -0700, Moritz Fischer wrote:
+> This adds bindings for the NI XGE 1G/10G network device.
 > 
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> Changes v4 -> v5:
->   - fix missing signed off
+>  Documentation/devicetree/bindings/net/nixge.txt | 32 +++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/nixge.txt
 > 
-> Changes v3 -> v4:
->   - rebase on master
->   - fix vendor prefixes for dts properties (suggested by Rob Herring)
->   - v3 was acked by Linus Walleij
-> 
-> Changes v2 -> v3:
->   - rebase on master
->   - fix typo (suggested by Rob Herring)
-> 
-> Changes v1 -> v2:
->   - rebase on master
->   - remove the simple-bus compatibility as the root node will now
->   populate child nodes (suggested by Rob Herring)
->   - use the ts vendor prefix for gpios (suggested by Rob Herring)
-> ---
->  Documentation/devicetree/bindings/bus/ts-nbus.txt | 50 +++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
+> diff --git a/Documentation/devicetree/bindings/net/nixge.txt b/Documentation/devicetree/bindings/net/nixge.txt
+> new file mode 100644
+> index 0000000..9fff5a7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/nixge.txt
+> @@ -0,0 +1,32 @@
+> +* NI XGE Ethernet controller
+> +
+> +Required properties:
+> +- compatible: Should be "ni,xge-enet-2.00"
+> +- reg: Address and length of the register set for the device
+> +- interrupts: Should contain tx and rx interrupt
+> +- interrupt-names: Should be "rx-irq" and "tx-irq"
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The "-irq" part is redundant.
 
+> +- phy-mode: See ethernet.txt file in the same directory.
+> +- nvmem-cells: Phandle of nvmem cell containing the mac address
+
+s/mac/MAC/
+
+> +- nvmem-cell-names: Should be "address"
+> +
+> +Examples (10G generic PHY):
+> +	nixge0: ethernet@40000000 {
+> +		compatible = "ni,xge-enet-2.00";
+> +		reg = <0x40000000 0x6000>;
+> +
+> +		nvmem-cells = <&eth1_addr>;
+> +		nvmem-cell-names = "address";
+> +
+> +		interrupts = <0 29 4>, <0 30 4>;
+> +		interrupt-names = "rx-irq", "tx-irq";
+> +		interrupt-parent = <&intc>;
+> +
+> +		phy-mode = "xgmii";
+> +		phy-handle = <&ethernet_phy1>;
+> +
+> +		ethernet_phy1: ethernet-phy@4 {
+> +			compatible = "ethernet-phy-ieee802.3-c45";
+> +			reg = <4>;
+> +			devices = <0xa>;
+
+??
+
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
