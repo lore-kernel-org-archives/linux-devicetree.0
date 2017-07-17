@@ -1,108 +1,80 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] Documentation: dt: chosen property for kaslr-seed
-Date: Mon, 17 Jul 2017 21:22:18 +0100
-Message-ID: <CAKv+Gu8X8d4HqVZOcusC2L9WzJNatBkAgtKONjzad9SgdsrFRA@mail.gmail.com>
-References: <20170715003836.GA113132@beast> <20170717193258.zim7rjh2cfgb6t5e@rob-hp-laptop>
- <CAGXu5jJk7otP6VBde7cFdMBRgQQB_rQpCSi24tRmC9bMmfo5Jw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: sound: add bindings for TAS6424
+Date: Mon, 17 Jul 2017 15:24:55 -0500
+Message-ID: <20170717202455.tgewq6kldoml6g2k@rob-hp-laptop>
+References: <1500308747-27973-1-git-send-email-m-stecklein@ti.com>
+ <1500308747-27973-2-git-send-email-m-stecklein@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGXu5jJk7otP6VBde7cFdMBRgQQB_rQpCSi24tRmC9bMmfo5Jw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>
-Cc: Rob Herring <robh@kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Matt Redfearn <matt.redfearn@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1500308747-27973-2-git-send-email-m-stecklein-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17 July 2017 at 20:54, Kees Cook <keescook@chromium.org> wrote:
-> On Mon, Jul 17, 2017 at 12:32 PM, Rob Herring <robh@kernel.org> wrote:
->> On Fri, Jul 14, 2017 at 05:38:36PM -0700, Kees Cook wrote:
->>> Document then /chosen/kaslr-seed property (and its interaction with the
->>
->> s/then/the/
->>
->>> EFI_RNG_PROTOCOL API).
->>
->> "dt-bindings: chosen: ..." for the subject.
->
-> I'll send a v2 with these fixed and the Acks added.
->
->>> Signed-off-by: Kees Cook <keescook@chromium.org>
->>> ---
->>>  Documentation/devicetree/bindings/chosen.txt | 22 ++++++++++++++++++++--
->>>  1 file changed, 20 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
->>> index dee3f5d9df26..0cdb43b268e5 100644
->>> --- a/Documentation/devicetree/bindings/chosen.txt
->>> +++ b/Documentation/devicetree/bindings/chosen.txt
->>> @@ -5,9 +5,27 @@ The chosen node does not represent a real device, but serves as a place
->>>  for passing data between firmware and the operating system, like boot
->>>  arguments. Data in the chosen node does not represent the hardware.
->>>
->>> +The following properties are recognized:
->>>
->>> -stdout-path property
->>> ---------------------
->>> +
->>> +kaslr-seed
->>> +-----------
->>
->> Is there some reason we would not feed this to other things needing
->> entropy and therefore should have a more generic name?
->
-> I'll let Ard answer this better than me, but IIRC, he wanted a narrow use.
->
+On Mon, Jul 17, 2017 at 11:25:46AM -0500, Michael Stecklein wrote:
+> Add the bindings for the TAS6424 digital amplifier.
+> 
+> Signed-off-by: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/ti,tas6424.txt       | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/ti,tas6424.txt b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+> new file mode 100644
+> index 0000000..27227b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+> @@ -0,0 +1,31 @@
+> +Texas Instruments TAS6424 Quad-Channel Audio amplifier
+> +
+> +The TAS6424 serial control bus communicates through I2C protocols.
+> +
+> +Required properties:
+> +	- compatible - One of: "ti,tas6424" - TAS6424
+> +	- reg - I2C slave address
+> +	- sound-dai-cells: must be equal to 0
+> +
+> +Optional properties:
+> +	- pinctrl-names, pinctrl-0 - Please refer to pinctrl-bindings.txt
+> +	- interrupts-extended - describe the interrupt line used to inform the
+> +	  host. Please refer to interrupt-controller/interrupts.txt
 
-The reason is that the seed is not used to feed a DRBG (because it is
-way to early for that when we lay out the VA space), but different
-slices of the u64 are used for randomizing different parts of the
-address space, i.e., the top 16 bits are used to randomize the linear
-region, bits 48 - 21 for the kernel itself, and the bits below that
-for the module region. (The virtual kernel offset is randomized
-further by the physical placement modulo 2 MB, but this is done by the
-stub, which calls EFI_RNG_PROTOCOL itself so it does not use
-/chosen/kaslr-seed)
+There's no need for interrupts-extended here. Generally, we just 
+document "interrupts" though interrupts-extended can be used instead as 
+needed.
 
-This means any use of this seed beyond its intended purpose may leak
-information.
+> +
+> +Example:
+> +
+> +tas6424: tas6424@6a {
+> +	#sound-dai-cells = <0>;
+> +
+> +	status = "okay";
 
-For UEFI systems, we do pass a random seed via a UEFI configuration
-table, but this is deliberately kept separate (and uses a UEFI
-specific interface, which seemed more appropriate)
+Don't show status for examples.
 
->>> +
->>> +This property is used when booting with CONFIG_RANDOMIZE_BASE to seed
->>> +the entropy used to randomize the kernel image base address location. It
->>> +is parsed as a u64 value, e.g.
->>
->> Why limit the size to 64-bit and why does it matter how the data is
->> interpretted?
->
-> IIRC, u64 is sufficient. (And note I'm just documenting what exists...)
->
+> +
+> +	compatible = "ti,tas6424";
 
-See above. Seeding a DRBG typically requires more than that, but for
-KASLR it is sufficient.
+Generally, this comes first style-wise.
 
->>> +
->>> +/ {
->>> +     chosen {
->>> +             kaslr-seed = <0xfeedbeef 0xc0def00d>;
->>> +     };
->>> +};
->>> +
->>> +Note that when booting through EFI when EFI_RNG_PROTOCOL is supported,
->>> +this value will be overwritten by the EFI stub.
->>
->> Isn't this always true? The bootloader will overwrite. Just in the EFI
->> case, the EFI stub is part of the bootloader from a functional (and not
->> packaging) standpoint.
->
-> I thought it best to call this out so that no one could get confused
-> if they wanted to understand how to use kaslr-seed with an EFI system.
-> (i.e. just implement EFI_RNG_PROTOCOL instead.)
->
-
-Well, I guess the point being made is that setting this property from
-UEFI (or u-boot in EFI mode) is pointless is EFI_RNG_PROTOCOL is
-implemented as well.
+> +	reg = <0x6a>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&tas6424_int_pin>;
+> +	interrupts-extended = <&gpio1 28 IRQ_TYPE_EDGE_FALLING>;
+> +};
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/product/TAS6424-Q1
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
