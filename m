@@ -1,58 +1,175 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 3/6] ASoC: codec: cpcap: new codec
-Date: Mon, 17 Jul 2017 16:21:30 +0100
-Message-ID: <20170717152130.hvch7fuw655xpfq5@sirena.org.uk>
-References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
- <20170712151846.24621-4-sebastian.reichel@collabora.co.uk>
- <20170717092928.GH10026@atomide.com>
- <20170717141808.qsh2di4dzgirqiij@earth>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="hvlqovgsavkodh6q"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170717141808.qsh2di4dzgirqiij@earth>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: fixup libretech cc definition
+Date: Mon, 17 Jul 2017 17:35:37 +0200
+Message-ID: <20170717153537.18330-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The libretech CC derives less from the p212 than initially thought.
+Several voltage regulators are different and the capabilities of the
+sdcard and emmc also differ.
 
---hvlqovgsavkodh6q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Deriving from the p212 is not convient anymore so the libretech is now
+derived from s905x definition directly.
 
-On Mon, Jul 17, 2017 at 04:18:08PM +0200, Sebastian Reichel wrote:
-> On Mon, Jul 17, 2017 at 02:29:29AM -0700, Tony Lindgren wrote:
+Fixes: cd84aff1d981 ("ARM64: dts: meson-gxl: Add Libre Technology CC support")
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 103 ++++++++++++++++++---
+ 1 file changed, 91 insertions(+), 12 deletions(-)
 
-> > Should it also have depends on SND_AUDIO_GRAPH_CARD?
-
-> The codec does not depend on audio graph card. You can
-> also use it with (deprecated) simple card or a custom
-> written one. In case of a custom written one it would
-> make sense to add a dependency from the custom written
-> one to SND_SOC_CPCAP. So I think we should not add such
-> a dependency.
-
-Right, the dependencies should go in the opposite direction.
-
---hvlqovgsavkodh6q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlls1fkACgkQJNaLcl1U
-h9DN1gf/VA1Ex0YDxPOKEH39+wuT6YokjrF9UC91dOGivT7oLX6b6LL7Z971vujW
-NvD4fEH4+nPiJXalI9J1NM8Y4uKh4ChgGGY1lXu3Ev6xrGGdEZhbYVUSR7ny5bM0
-Y/FaUuBmEhwm6ZWqHFEBGCTlwJG7Xq+8zMJw9+0HDyOl+w9qAPDomDXoNsi3eWxN
-Ac9/jmKN43mb81BEUn1tj49LAwqFhln9O4lQt858JAjzucq6dk++nFHIvLaL/FfP
-LVoY4Sb1OmgroLUc5h4axYy9Ay8EsGIScsbGHDq7nzHZYUzPgLp6IdLhALNmnsxU
-rIlXFH6r7sFzYC5eV3nMYeXxblpZ1A==
-=FNYw
------END PGP SIGNATURE-----
-
---hvlqovgsavkodh6q--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index 890821d6e52b..266fbcf3e47f 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -10,12 +10,20 @@
+ 
+ #include <dt-bindings/input/input.h>
+ 
+-#include "meson-gxl-s905x-p212.dtsi"
++#include "meson-gxl-s905x.dtsi"
+ 
+ / {
+ 	compatible = "libretech,cc", "amlogic,s905x", "amlogic,meson-gxl";
+ 	model = "Libre Technology CC";
+ 
++	aliases {
++		serial0 = &uart_AO;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
+ 	cvbs-connector {
+ 		compatible = "composite-video-connector";
+ 
+@@ -26,6 +34,11 @@
+ 		};
+ 	};
+ 
++	emmc_pwrseq: emmc-pwrseq {
++		compatible = "mmc-pwrseq-emmc";
++		reset-gpios = <&gpio BOOT_9 GPIO_ACTIVE_LOW>;
++	};
++
+ 	hdmi-connector {
+ 		compatible = "hdmi-connector";
+ 		type = "a";
+@@ -53,6 +66,39 @@
+ 			linux,default-trigger = "heartbeat";
+ 		};
+ 	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	vcc_3v3: regulator-vcc_3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "VCC_3V3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
++	vcc_card: regulator-vcc-card {
++		compatible = "regulator-gpio";
++
++		regulator-name = "VCC_CARD";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <3300000>;
++
++		gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_HIGH>;
++		gpios-states = <0>;
++
++		states = <3300000 0>,
++			 <1800000 1>;
++	};
++
++	vddio_boot: regulator-vddio_boot {
++		compatible = "regulator-fixed";
++		regulator-name = "VDDIO_BOOT";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
+ };
+ 
+ &cvbs_vdac_port {
+@@ -61,6 +107,16 @@
+ 	};
+ };
+ 
++&ethmac {
++	status = "okay";
++};
++
++&ir {
++	status = "okay";
++	pinctrl-0 = <&remote_input_ao_pins>;
++	pinctrl-names = "default";
++};
++
+ &hdmi_tx {
+ 	status = "okay";
+ 	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
+@@ -73,20 +129,43 @@
+ 	};
+ };
+ 
+-/*
+- * The following devices exists but are exposed on the general
+- * purpose GPIO header. End user may well decide to use those pins
+- * for another purpose
+- */
++/* SD card */
++&sd_emmc_b {
++	status = "okay";
++	pinctrl-0 = <&sdcard_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <4>;
++	cap-sd-highspeed;
++	max-frequency = <100000000>;
++	disable-wp;
++
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
+ 
+-&sd_emmc_a {
+-	status = "disabled";
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vcc_card>;
+ };
+ 
+-&uart_A {
+-	status = "disabled";
++/* eMMC */
++&sd_emmc_c {
++	status = "okay";
++	pinctrl-0 = <&emmc_pins>;
++	pinctrl-names = "default";
++
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	max-frequency = <50000000>;
++	non-removable;
++	disable-wp;
++
++	mmc-pwrseq = <&emmc_pwrseq>;
++	vmmc-supply = <&vcc_3v3>;
++	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+-&wifi32k {
+-	status = "disabled";
++&uart_AO {
++	status = "okay";
++	pinctrl-0 = <&uart_ao_a_pins>;
++	pinctrl-names = "default";
+ };
+-- 
+2.9.4
