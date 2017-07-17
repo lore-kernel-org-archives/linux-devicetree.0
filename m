@@ -1,119 +1,250 @@
 From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 05/14] qcom: mtd: nand: allocate bam transaction
-Date: Mon, 17 Jul 2017 12:14:34 +0530
-Message-ID: <c4a814af02d1c00b15552f15e93d13b8@codeaurora.org>
+Subject: Re: [PATCH 06/14] qcom: mtd: nand: add bam dma descriptor handling
+Date: Mon, 17 Jul 2017 12:17:38 +0530
+Message-ID: <a2ac02459772f006da3ee9e0a9881918@codeaurora.org>
 References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-6-git-send-email-absahu@codeaurora.org>
- <906da0d9-2ef7-583a-4008-4f444eaa340b@codeaurora.org>
+ <1498720566-20782-7-git-send-email-absahu@codeaurora.org>
+ <021637c8-8ce5-c54e-0254-41caa475063c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
+Content-Type: text/plain; charset=UTF-8;
  format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <906da0d9-2ef7-583a-4008-4f444eaa340b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <021637c8-8ce5-c54e-0254-41caa475063c-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-03 13:52, Sricharan R wrote:
-> Hi Abhishek,
+On 2017-07-04 11:40, Archit Taneja wrote:
+> On 06/29/2017 12:45 PM, Abhishek Sahu wrote:
+>> 1. prepare_bam_async_desc is the function which will call
+>>     all the DMA API’s. It will fetch the outstanding scatter gather
+>>     list for passed channel and will do the DMA descriptor formation.
+>>     The DMA flag is dependent upon the type of channel.
+>> 
+>> 2. For ADM DMA, the descriptor is being formed for every DMA
+>>     request so its sgl count will be always 1 while in BAM DMA, the
+>>     clubbing of descriptor is being done to increase throughput.
+>> 
+>> 3. ADM uses only one channel while in BAM, data descriptors
+>>     will be submitted to tx channel (for write) or rx channel
+>>     (for read) and all the registers read/write descriptors in
+>>     command channel.
+>> 
+>> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>   drivers/mtd/nand/qcom_nandc.c | 119 
+>> ++++++++++++++++++++++++++++++++++++++++--
+>>   1 file changed, 114 insertions(+), 5 deletions(-)
+>> 
+>> diff --git a/drivers/mtd/nand/qcom_nandc.c 
+>> b/drivers/mtd/nand/qcom_nandc.c
+>> index f8d0bde..7042a65 100644
+>> --- a/drivers/mtd/nand/qcom_nandc.c
+>> +++ b/drivers/mtd/nand/qcom_nandc.c
+>> @@ -206,14 +206,22 @@ struct bam_transaction {
+>>    * This data type corresponds to the nand dma descriptor
+>>    * @list - list for desc_info
+>>    * @dir - DMA transfer direction
+>> - * @sgl - sgl which will be used for single sgl dma descriptor
+>> + * @sgl - sgl which will be used for single sgl dma descriptor. Only 
+>> used by ADM
+>> + * @bam_sgl - sgl which will be used for dma descriptor. Only used by 
+>> BAM
+>> + * @sgl_cnt - number of SGL in bam_sgl. Only used by BAM
+>>    * @dma_desc - low level dma engine descriptor
+>>    */
+>>   struct desc_info {
+>>   	struct list_head node;
+>> 
+>>   	enum dma_data_direction dir;
+>> -	struct scatterlist sgl;
+>> +	union {
+>> +			struct scatterlist sgl;
 > 
-> <..>
+> Can you make this adm_sgl instead for consistency? Also, please use 
+> only
+> two tabs instead of one here for indentation.
+
+  Sure. I will do the same in v2.
+
 > 
->> +/* Allocates and Initializes the BAM transaction */
->> +static struct bam_transaction *
->> +alloc_bam_transaction(struct qcom_nand_controller *nandc, unsigned 
->> int
->> num_cw)
+>> +			struct {
+>> +				struct scatterlist *bam_sgl;
+>> +				int sgl_cnt;
+>> +			};
+>> +	};
+>>   	struct dma_async_tx_descriptor *dma_desc;
+>>   };
+>> 
+>> @@ -564,6 +572,68 @@ static void update_rw_regs(struct qcom_nand_host 
+>> *host, int num_cw, bool read)
+>>   	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
+>>   }
+>> 
+>> +/*
+>> + * Maps the scatter gather list for DMA transfer and forms the DMA 
+>> descriptor
+>> + * for BAM. This descriptor will be added in the NAND DMA descriptor 
+>> queue
+>> + * which will be submitted to DMA engine.
+>> + */
+>> +static int prepare_bam_async_desc(struct qcom_nand_controller *nandc,
+>> +				  struct dma_chan *chan,
+>> +				  unsigned long flags)
+> 
+> From what I gathered in patch #10, this would be called by
+> prep_dma_desc_data_bam() and prep_dma_desc_command(). Can you rename 
+> these
+> two to something like prep_bam_dma_desc_data() and 
+> prep_bam_dma_desc_cmd()
+> 
+
+  Sure. I will do the same in v2.
+
+> 
 >> +{
->> +	struct bam_transaction *bam_txn;
+>> +	struct desc_info *desc;
+>> +	struct scatterlist *sgl;
+>> +	unsigned int sgl_cnt;
+>> +	struct bam_transaction *bam_txn = nandc->bam_txn;
+>> +	enum dma_transfer_direction dir_eng;
+>> +	struct dma_async_tx_descriptor *dma_desc;
 >> +
->> +	bam_txn = devm_kzalloc(nandc->dev, sizeof(*bam_txn), GFP_KERNEL);
+>> +	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
+>> +	if (!desc)
+>> +		return -ENOMEM;
 >> +
->> +	if (!bam_txn)
->> +		return NULL;
+>> +	if (chan == nandc->cmd_chan) {
+>> +		sgl = &bam_txn->cmd_sgl[bam_txn->cmd_sgl_start];
+>> +		sgl_cnt = bam_txn->cmd_sgl_pos - bam_txn->cmd_sgl_start;
+>> +		bam_txn->cmd_sgl_start = bam_txn->cmd_sgl_pos;
+>> +		dir_eng = DMA_MEM_TO_DEV;
+>> +		desc->dir = DMA_TO_DEVICE;
+>> +	} else if (chan == nandc->tx_chan) {
+>> +		sgl = &bam_txn->data_sg[bam_txn->tx_sgl_start];
+>> +		sgl_cnt = bam_txn->tx_sgl_pos - bam_txn->tx_sgl_start;
+>> +		bam_txn->tx_sgl_start = bam_txn->tx_sgl_pos;
+>> +		dir_eng = DMA_MEM_TO_DEV;
+>> +		desc->dir = DMA_TO_DEVICE;
+>> +	} else {
+>> +		sgl = &bam_txn->data_sg[bam_txn->rx_sgl_start];
+>> +		sgl_cnt = bam_txn->rx_sgl_pos - bam_txn->rx_sgl_start;
+>> +		bam_txn->rx_sgl_start = bam_txn->rx_sgl_pos;
+>> +		desc->dir = DMA_FROM_DEVICE;
+>> +		dir_eng = DMA_DEV_TO_MEM;
+>> +	}
 >> +
->> +	bam_txn->bam_ce =
->> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->bam_ce) *
->> +			     num_cw * QPIC_PER_CW_MAX_CMD_ELEMENTS, GFP_KERNEL);
->> +	if (!bam_txn->bam_ce)
->> +		return NULL;
+>> +	sg_mark_end(sgl + sgl_cnt - 1);
+>> +	dma_map_sg(nandc->dev, sgl, sgl_cnt, desc->dir);
+> 
+> Is it safe to assume here that dma_map_sg won't return an error?
+> 
+
+  We need to check for error. I will fix this in v2.
+
 >> +
->> +	bam_txn->cmd_sgl =
->> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->cmd_sgl) * num_cw *
->> +			     QPIC_PER_CW_MAX_CMD_SGL, GFP_KERNEL);
->> +	if (!bam_txn->cmd_sgl)
->> +		return NULL;
+>> +	desc->sgl_cnt = sgl_cnt;
+>> +	desc->bam_sgl = sgl;
 >> +
->> +	bam_txn->data_sg =
->> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->data_sg) *
->> +			     num_cw * QPIC_PER_CW_MAX_DATA_SGL, GFP_KERNEL);
->> +	if (!bam_txn->data_sg)
->> +		return NULL;
+>> +	dma_desc = dmaengine_prep_slave_sg(chan, sgl, sgl_cnt, dir_eng,
+>> +					   flags);
 >> +
->> +	nandc->max_cwperpage = num_cw;
+>> +	if (!dma_desc) {
+>> +		dev_err(nandc->dev, "failure in prep desc\n");
+>> +		kfree(desc);
+>> +		return -EINVAL;
+>> +	}
 >> +
->> +	return bam_txn;
+>> +	desc->dma_desc = dma_desc;
+>> +
+>> +	list_add_tail(&desc->node, &nandc->desc_list);
+>> +
+>> +	return 0;
 >> +}
 >> +
->>  static inline struct qcom_nand_host *to_qcom_nand_host(struct 
->> nand_chip
->> *chip)
->>  {
->>  	return container_of(chip, struct qcom_nand_host, chip);
->> @@ -1868,6 +1958,8 @@ static int qcom_nand_host_setup(struct
->> qcom_nand_host *host)
->>  	mtd_set_ooblayout(mtd, &qcom_nand_ooblayout_ops);
->> 
->>  	cwperpage = mtd->writesize / ecc->size;
->> +	nandc->max_cwperpage = max_t(unsigned int, nandc->max_cwperpage,
->> +					cwperpage);
->> 
->>  	/*
->>  	 * DATA_UD_BYTES varies based on whether the read/write command 
->> protects
->> @@ -2010,6 +2102,19 @@ static int qcom_nandc_alloc(struct
+> 
+> 
+>>   static int prep_dma_desc(struct qcom_nand_controller *nandc, bool 
+>> read,
+>>   			 int reg_off, const void *vaddr, int size,
+>>   			 bool flow_control)
+> 
+> Could you rename this to prep_adm_dma_desc for consistency?
+> 
+>> @@ -891,12 +961,44 @@ static int submit_descs(struct 
 >> qcom_nand_controller *nandc)
->>  			dev_err(nandc->dev, "failed to request cmd channel\n");
->>  			return -ENODEV;
->>  		}
+>>   {
+>>   	struct desc_info *desc;
+>>   	dma_cookie_t cookie = 0;
+>> +	struct bam_transaction *bam_txn = nandc->bam_txn;
+>> +	int r;
 >> +
->> +		/*
->> +		 * Initially allocate BAM transaction to read ONFI param page.
->> +		 * After detecting all the devices, this BAM transaction will
->> +		 * be freed and the next BAM tranasction will be allocated with
->> +		 * maximum codeword size
->> +		 */
->> +		nandc->bam_txn = alloc_bam_transaction(nandc, 1);
->> +		if (!nandc->bam_txn) {
->> +			dev_err(nandc->dev,
->> +				"failed to allocate bam transaction\n");
->> +			return -ENOMEM;
->> +		}
->>  	}
->> 
->>  	INIT_LIST_HEAD(&nandc->desc_list);
->> @@ -2153,6 +2258,17 @@ static int qcom_probe_nand_devices(struct
->> qcom_nand_controller *nandc)
->>  	if (list_empty(&nandc->host_list))
->>  		return -ENODEV;
->> 
 >> +	if (nandc->dma_bam_enabled) {
->> +		free_bam_transaction(nandc);
->> +		nandc->bam_txn = alloc_bam_transaction(nandc,
->> +						       nandc->max_cwperpage);
+>> +		if (bam_txn->rx_sgl_pos - bam_txn->rx_sgl_start) {
 > 
->  Somehow, looks like something is missing because, nandc->max_cwperpage
-> passed from
->  here is used in alloc_bam_transaction, but it is assigned in the same
-> function ?
+> Using '>' instead of '-' here should be more legible.
 > 
 
-  Yes. This assignment is not required. I will fix this in v2.
+  Yes. I will use the same in v2.
 
-> Regards,
->  Sricharan
+>> +			r = prepare_bam_async_desc(nandc, nandc->rx_chan, 0);
+>> +			if (r)
+>> +				return r;
+>> +		}
+>> +
+>> +		if (bam_txn->tx_sgl_pos - bam_txn->tx_sgl_start) {
+>> +			r = prepare_bam_async_desc(nandc, nandc->tx_chan,
+>> +						   DMA_PREP_INTERRUPT);
+>> +			if (r)
+>> +				return r;
+>> +		}
+>> +
+>> +		if (bam_txn->cmd_sgl_pos - bam_txn->cmd_sgl_start) {
+>> +			r = prepare_bam_async_desc(nandc, nandc->cmd_chan,
+>> +						   DMA_PREP_CMD);
+>> +			if (r)
+>> +				return r;
+>> +		}
+>> +	}
+>> 
+>>   	list_for_each_entry(desc, &nandc->desc_list, node)
+>>   		cookie = dmaengine_submit(desc->dma_desc);
+>> 
+>> -	if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
+>> -		return -ETIMEDOUT;
+>> +	if (nandc->dma_bam_enabled) {
+>> +		dma_async_issue_pending(nandc->tx_chan);
+>> +		dma_async_issue_pending(nandc->rx_chan);
+>> +
+>> +		if (dma_sync_wait(nandc->cmd_chan, cookie) != DMA_COMPLETE)
+>> +			return -ETIMEDOUT;
+>> +	} else {
+>> +		if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
+>> +			return -ETIMEDOUT;
+>> +	}
+>> 
+>>   	return 0;
+>>   }
+>> @@ -907,7 +1009,14 @@ static void free_descs(struct 
+>> qcom_nand_controller *nandc)
+>> 
+>>   	list_for_each_entry_safe(desc, n, &nandc->desc_list, node) {
+>>   		list_del(&desc->node);
+>> -		dma_unmap_sg(nandc->dev, &desc->sgl, 1, desc->dir);
+>> +
+>> +		if (nandc->dma_bam_enabled)
+>> +			dma_unmap_sg(nandc->dev, desc->bam_sgl,
+>> +				     desc->sgl_cnt, desc->dir);
+>> +		else
+>> +			dma_unmap_sg(nandc->dev, &desc->sgl, 1,
+>> +				     desc->dir);
+>> +
+>>   		kfree(desc);
+>>   	}
+>>   }
+>> 
 
 -- 
 Abhishek Sahu
