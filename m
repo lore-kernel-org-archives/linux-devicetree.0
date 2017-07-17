@@ -1,172 +1,196 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v4 2/6] drivers/i2c: Add port structure to FSI algorithm
-Date: Mon, 17 Jul 2017 09:35:53 -0500
-Message-ID: <1500302157-14670-3-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1500302157-14670-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1500302157-14670-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, cbostic@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+From: Nicolas Dufresne <nicolas@ndufresne.ca>
+Subject: Re: [PATCH v2 2/6] [media] rockchip/rga: v4l2 m2m support
+Date: Mon, 17 Jul 2017 10:45:10 -0400
+Message-ID: <1500302710.21957.1.camel@ndufresne.ca>
+References: <1500101920-24039-1-git-send-email-jacob-chen@iotwrt.com>
+         <2363665.x6z9MR1vqI@avalon> <1500137353.2353.1.camel@ndufresne.ca>
+         <11368407.z8bSoa2YAE@avalon>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+        boundary="=-MLq+ZlnsOw6a2s5K040R"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11368407.z8bSoa2YAE@avalon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
 
-Add and initialize I2C adapters for each port on the FSI-attached I2C
-master. Ports for each master are defined in the devicetree.
+--=-MLq+ZlnsOw6a2s5K040R
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
----
- drivers/i2c/busses/i2c-fsi.c | 91 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 91 insertions(+)
+Le lundi 17 juillet 2017 =C3=A0 05:37 +0300, Laurent Pinchart a =C3=A9crit =
+:
+> Hi Nicolas,
+>=20
+> On Saturday 15 Jul 2017 12:49:13 Personnel wrote:
+>=20
+> You might want to fix your mailer to use your name :-)
+>=20
+> > Le samedi 15 juillet 2017 =C3=A0 12:42 +0300, Laurent Pinchart a =C3=A9=
+crit :
+> > > On Saturday 15 Jul 2017 14:58:36 Jacob Chen wrote:
+> > > > Rockchip RGA is a separate 2D raster graphic acceleration unit. It
+> > > > accelerates 2D graphics operations, such as point/line drawing, ima=
+ge
+> > > > scaling, rotation, BitBLT, alpha blending and image blur/sharpness.
+> > > >=20
+> > > > The drvier is mostly based on s5p-g2d v4l2 m2m driver.
+> > > > And supports various operations from the rendering pipeline.
+> > > >=20
+> > > >  - copy
+> > > >  - fast solid color fill
+> > > >  - rotation
+> > > >  - flip
+> > > >  - alpha blending
+> > >=20
+> > > I notice that you don't support the drawing operations. How do you pl=
+an to
+> > > support them later through the V4L2 M2M API ? I hate stating the obvi=
+ous,
+> > > but wouldn't the DRM API be better fit for a graphic accelerator ?
+> >=20
+> > It could fit, maybe, but it really lacks some framework. Also, DRM is
+> > not really meant for M2M operation, and it's also not great for multi-
+> > process.
+>=20
+> GPUs on embedded devices are mem-to-mem, and they're definitely shared be=
+tween=20
+> multiple processes :-)
+>=20
+> > Until recently, there was competing drivers for Exynos, both
+> > implemented in V4L2 and DRM, for similar rational, all DRM ones are
+> > being deprecated/removed.
+> >=20
+> > I think 2D blitters in V4L2 are fine, but they terribly lack something
+> > to differentiate them from converters/scalers when looking up the HW
+> > list. Could be as simple as a capability flag, if I can suggest. For
+> > the reference, the 2D blitter on IMX6 has been used to implement a live
+> > video mixer in GStreamer.
+> >=20
+> > https://bugzilla.gnome.org/show_bug.cgi?id=3D772766
+>=20
+> If we decide that 2D blitters should be supported by V4L2 (and I'm open t=
+o get=20
+> convinced about that), we really need to define a proper API before mergi=
+ng a=20
+> bunch of drivers that will implement things in slightly different ways,=
+=20
+> otherwise the future will be very painful.
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index b7f2bc6..4b52147 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -14,7 +14,9 @@
- #include <linux/fsi.h>
- #include <linux/i2c.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- #define FSI_ENGID_I2C		0x7
- 
-@@ -130,6 +132,14 @@
- struct fsi_i2c_master {
- 	struct fsi_device	*fsi;
- 	u8			fifo_size;
-+	struct list_head	ports;
-+};
-+
-+struct fsi_i2c_port {
-+	struct list_head	list;
-+	struct i2c_adapter	adapter;
-+	struct fsi_i2c_master	*master;
-+	u16			port;
- };
- 
- static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
-@@ -186,9 +196,44 @@ static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- 	return rc;
- }
- 
-+static int fsi_i2c_set_port(struct fsi_i2c_port *port)
-+{
-+	int rc;
-+	struct fsi_device *fsi = port->master->fsi;
-+	u32 mode, dummy = 0;
-+	u16 old_port;
-+
-+	rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
-+	if (rc)
-+		return rc;
-+
-+	old_port = GETFIELD(I2C_MODE_PORT, mode);
-+
-+	if (old_port != port->port) {
-+		mode = SETFIELD(I2C_MODE_PORT, mode, port->port);
-+		rc = fsi_i2c_write_reg(fsi, I2C_FSI_MODE, &mode);
-+		if (rc)
-+			return rc;
-+
-+		/* reset engine when port is changed */
-+		rc = fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return rc;
-+}
-+
- static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 			int num)
- {
-+	int rc;
-+	struct fsi_i2c_port *port = adap->algo_data;
-+
-+	rc = fsi_i2c_set_port(port);
-+	if (rc)
-+		return rc;
-+
- 	return -EOPNOTSUPP;
- }
- 
-@@ -205,13 +250,46 @@ static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
- static int fsi_i2c_probe(struct device *dev)
- {
- 	struct fsi_i2c_master *i2c;
-+	struct fsi_i2c_port *port;
-+	struct device_node *np;
- 	int rc;
-+	u32 port_no;
- 
- 	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
- 		return -ENOMEM;
- 
- 	i2c->fsi = to_fsi_dev(dev);
-+	INIT_LIST_HEAD(&i2c->ports);
-+
-+	/* Add adapter for each i2c port of the master. */
-+	for_each_available_child_of_node(dev->of_node, np) {
-+		rc = of_property_read_u32(np, "reg", &port_no);
-+		if (rc || port_no > USHRT_MAX)
-+			continue;
-+
-+		port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+		if (!port)
-+			return -ENOMEM;
-+
-+		port->master = i2c;
-+		port->port = port_no;
-+
-+		port->adapter.owner = THIS_MODULE;
-+		port->adapter.dev.of_node = np;
-+		port->adapter.dev.parent = dev;
-+		port->adapter.algo = &fsi_i2c_algorithm;
-+		port->adapter.algo_data = port;
-+
-+		snprintf(port->adapter.name, sizeof(port->adapter.name),
-+			 "i2c_bus-%u", port_no);
-+
-+		rc = i2c_add_adapter(&port->adapter);
-+		if (rc < 0)
-+			return rc;
-+
-+		list_add(&port->list, &i2c->ports);
-+	}
- 
- 	rc = fsi_i2c_dev_init(i2c);
- 	if (rc)
-@@ -222,6 +300,18 @@ static int fsi_i2c_probe(struct device *dev)
- 	return 0;
- }
- 
-+static int fsi_i2c_remove(struct device *dev)
-+{
-+	struct fsi_i2c_master *i2c = dev_get_drvdata(dev);
-+	struct fsi_i2c_port *port;
-+
-+	list_for_each_entry(port, &i2c->ports, list) {
-+		i2c_del_adapter(&port->adapter);
-+	}
-+
-+	return 0;
-+}
-+
- static const struct fsi_device_id fsi_i2c_ids[] = {
- 	{ FSI_ENGID_I2C, FSI_VERSION_ANY },
- 	{ 0 }
-@@ -233,6 +323,7 @@ static int fsi_i2c_probe(struct device *dev)
- 		.name = "i2c-fsi",
- 		.bus = &fsi_bus_type,
- 		.probe = fsi_i2c_probe,
-+		.remove = fsi_i2c_remove,
- 	},
- };
- 
--- 
-1.8.3.1
+Arguably, Jacob is not proposing anything new, as at least one other
+driver has been merged.
+
+>=20
+> Among the issues that need to be solved are
+>=20
+> - stateful vs. stateless operation (as mentioned by Jacob in this mail=
+=20
+> thread), a.k.a. the request API
+
+Would it be possible to extend your thought. To me, Request API could
+enable more use cases but is not strictly required.
+
+>=20
+> - exposing capabilities to userspace (a single capability flag would be e=
+nough=20
+> only if all blitters expose the same API, which I'm not sure we can assum=
+e)
+
+I am just rethinking this. With this patch series, Jacob is trying to
+generalize the Blit Operation controls (still need a name, blend mode
+does not work). We can easily make a recommendation to set the default
+operation to a copy operation (drivers always support that). This way,
+the node will behave like a converter (scaler, colorspace converter,
+rotator and/or etc.) Checking the presence of that control, we can
+clearly and quickly figure-out what this node is about. The capability
+remains a nice idea, but probably optional.
+
+I totally agree we should document the behaviours and rationals for
+picking a certain default. The control should maybe become a "menu"
+too, so each driver can cherry-pick the blit operations they support
+(using int with min/max requires userspace trial and error, we already
+did that mistake for encoders profiles and level).
+
+>=20
+> - single input (a.k.a. in-place blitters as you mentioned below) vs. mult=
+iple=20
+> inputs
+
+I do think the second is something you can build on top of the first by
+cascading (what we do in the refereed GStreamer element). So far this
+is applicable to Exynos, IMX6 and now Rockchip (probably more). The
+"optimal" form for the second case seems like something that will be
+implemented using much lower level kernel interface, like a GPU
+programming interface (aka proprietary Adreno C2D API), or through
+multiple nodes (multiple inputs and outputs). It's seems like the cut
+between high-end and low-end.
+
+>=20
+> - API for 2D-accelerated operations other than blitting (filling, point a=
+nd=20
+> line drawing, ...)
+
+I doubt such hardware exist in a form that is not bound to the GPU. I'm
+not ignoring your point, there is a clear overlap between how we
+integrated GPUs and having this into V4L2.
+
+>=20
+> > > Additionally, V4L2 M2M has one source and one destination. How do you
+> > > implement alpha blending in that case, which by definition requires a=
+t
+> > > least two sources ?
+> >=20
+> > This type of HW only do in-place blits. When using such a node, the
+> > buffer queued on the V4L2_CAPTURE contains the destination image, and
+> > the buffer queued on the V4L2_OUTPUT is the source image.
+> >=20
+> > > > The code in rga-hw.c is used to configure regs accroding to operati=
+ons.
+> > > >=20
+> > > > The code in rga-buf.c is used to create private mmu table for RGA.
+> > > > The tables is stored in a list, and be removed when buffer is clean=
+up.
+> > >=20
+> > > Looking at the implementation it seems to be a scatter-gather list, n=
+ot an
+> > > MMU. Is that right ? Does the hardware documentation refer to it as a=
+n MMU
+> > > ?
+> > >=20
+> > > > Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+> > > > ---
+> > > >=20
+> > > >  drivers/media/platform/Kconfig                |  11 +
+> > > >  drivers/media/platform/Makefile               |   2 +
+> > > >  drivers/media/platform/rockchip-rga/Makefile  |   3 +
+> > > >  drivers/media/platform/rockchip-rga/rga-buf.c | 122 ++++
+> > > >  drivers/media/platform/rockchip-rga/rga-hw.c  | 652 ++++++++++++++=
+++++
+> > > >  drivers/media/platform/rockchip-rga/rga-hw.h  | 437 ++++++++++++
+> > > >  drivers/media/platform/rockchip-rga/rga.c     | 958 ++++++++++++++=
++++++
+> > > >  drivers/media/platform/rockchip-rga/rga.h     | 111 +++
+> > > >  8 files changed, 2296 insertions(+)
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/Makefile
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga.c
+> > > >  create mode 100644 drivers/media/platform/rockchip-rga/rga.h
+>=20
+>=20
+--=-MLq+ZlnsOw6a2s5K040R
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCWWzNdgAKCRBxUwItrAao
+HBcTAKCQZR4RihMZanSVmDgHXTrn3pqoPwCgoQzkGpxf4AaOudcCqju7PDaLWRQ=
+=yj2i
+-----END PGP SIGNATURE-----
+
+--=-MLq+ZlnsOw6a2s5K040R--
