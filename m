@@ -1,95 +1,66 @@
-From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 01/14] qcom: mtd: nand: Add driver data for QPIC DMA
-Date: Mon, 17 Jul 2017 14:19:47 +0530
-Message-ID: <840a0ceca8892fb343fc617322aad3ba@codeaurora.org>
-References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
- <bd6add74-4f42-5036-3513-2e672ef97b15@codeaurora.org>
- <20170703214150.6a7b3f38@bbrezillon>
- <bfb3d3c466e60fa08f969ea485870ba4@codeaurora.org>
- <20170717092234.001fb765@bbrezillon>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 1/6] clk: sunxi-ng: div: Add support for
+ fixed post-divider
+Date: Mon, 17 Jul 2017 10:52:35 +0200
+Message-ID: <20170717085235.i7pwwql5dgmnf6kk@flea>
+References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
+ <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes@plaes.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717092234.001fb765@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibu6dk4rnnvbnws3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXXVWHFQKGQE3KZT3FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <946794e97ae2c36cd67c272099e8236a589efc28.1500043741.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-17 12:52, Boris Brezillon wrote:
-> On Mon, 17 Jul 2017 11:41:01 +0530
-> Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> 
->> >> > +
->> >> > +nand@79b0000 {
->> >
->> > nand-controller@xxxx {
->> >
->> > BTW, glad to see another driver moving to the new DT representation
->> > :-).
->> >
->> >> > +	compatible = "qcom,qpic-nandc-v1.4.0";
->> >> > +	reg = <0x79b0000 0x1000>;
->> >> > +
->> >> > +	clocks = <&gcc GCC_QPIC_CLK>,
->> >> > +		<&gcc GCC_QPIC_AHB_CLK>;
->> >> > +	clock-names = "core", "aon";
->> >> > +
->> >> > +	#address-cells = <1>;
->> >> > +	#size-cells = <0>;
->> >> > +
->> >> > +	nandcs@0 {
->> >
->> > 	nand@0 {
->> >
->> >> > +		compatible = "qcom,nandcs";
->> >
->> > Why do you need a compatible here?
->> It is the part of original driver. We can connect multiple
->> NAND devices in the same bus and qcom,nandcs is being used
->> for each connected NAND device. Each NAND device can use
->> different  chip select, ecc strength etc which we can specify
->> under this sub node.
-> 
-> 
-> Still don't understand why you need a compatible? Is this a memory bus
-> where you can connect other kind of memories (parallel NORs,
-> SRAMs, ...)?
-> 
-> If that's not the case, then considering all subnodes of the
-> nand-controller node containing a reg property as NAND devices is fine,
-> you don't need this compatible = "nand,cs" (see sunxi-nand bindings
-> [1]).
-> 
 
-  Thanks Boris for giving detailed references.
+--ibu6dk4rnnvbnws3
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-  We can connect other parallel devices also but we have
-  different hardware wrappers over generic EBI2/QPIC which
-  will MUX/arbitrate the device access from the hardware itself.
-  So this NAND driver will only control multiple NAND devices.
-
-  We can remove this compatible and use the bindings
-  similar to sunxi-nand. I will do the required changes and
-  will post in v2 of the same patch series.
-
-> If the bus is generic and can be attached non-NAND devices, I'd
-> recommend looking at atmel's binding [2], because you're likely to
-> have one instance of the NAND controller logic for all NAND devices
-> connected on this bus.
-> And more importantly, if the bus a generic, the node should not be
-> named nand or nand-controller, and the compatible should not contain
-> 'nandc' in it.
+On Fri, Jul 14, 2017 at 05:49:23PM +0300, Priit Laes wrote:
+> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+> 6 is fixed post-divider.
 > 
-> [1]http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/mtd/sunxi-nand.txt#L34
-> [2]http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/mtd/atmel-nand.txt#L70
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> ---
+>  drivers/clk/sunxi-ng/ccu_div.c | 15 +++++++++++++--
+>  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+> index c0e5c10..744502a 100644
+> --- a/drivers/clk/sunxi-ng/ccu_div.c
+> +++ b/drivers/clk/sunxi-ng/ccu_div.c
+> @@ -21,6 +21,9 @@ static unsigned long ccu_div_round_rate(struct ccu_mux_internal *mux,
+>  {
+>  	struct ccu_div *cd = data;
+>  
+> +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> +		rate *= cd->fixed_post_div;
+> +
+>  	return divider_round_rate_parent(&cd->common.hw, parent,
+>  					 rate, parent_rate,
+>  					 cd->div.table, cd->div.width,
+
+
+You still haven't addressed the biggest issue with this patch, see:
+https://patchwork.kernel.org/patch/9825565/
+
+Maxime
 
 -- 
-Abhishek Sahu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--ibu6dk4rnnvbnws3--
