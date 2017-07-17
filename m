@@ -1,26 +1,50 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH net-next repost v2] dt-bindings: net: ravb : Add
- support for r8a7743 SoC
-Date: Mon, 17 Jul 2017 08:55:30 -0700 (PDT)
-Message-ID: <20170717.085530.956515239805639192.davem@davemloft.net>
-References: <1500280432-43162-1-git-send-email-biju.das@bp.renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 01/14] spi: qup: Enable chip select support
+Date: Mon, 17 Jul 2017 17:01:51 +0100
+Message-ID: <20170717160151.teozg2ni4mqxotbd@sirena.org.uk>
+References: <1498556731-13087-1-git-send-email-varada@codeaurora.org>
+ <1498556731-13087-2-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1500280432-43162-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: biju.das@bp.renesas.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sergei.shtylyov@cogentembedded.com, horms@verge.net.au, magnus.damm@gmail.com, chris.paterson2@renesas.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ugwpgzvyb3pxwego"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1498556731-13087-2-git-send-email-varada@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
-Date: Mon, 17 Jul 2017 09:33:52 +0100
 
-> Add a new compatible string for the RZ/G1M (R8A7743) SoC.
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+--ugwpgzvyb3pxwego
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Applied.
+On Tue, Jun 27, 2017 at 03:15:18PM +0530, Varadarajan Narayanan wrote:
+
+> the chip select support was removed earlier in commit
+> 4a8573abe965115bc5b064401fd669b74e985258. Since the chip
+
+Please include human readable descriptions of things like commits and
+issues being discussed in e-mail in your mails, this makes them much
+easier for humans to read especially when they have no internet access.
+I do frequently catch up on my mail on flights or while otherwise
+travelling so this is even more pressing for me than just being about
+making things a bit easier to read.
+
+--ugwpgzvyb3pxwego
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlls328ACgkQJNaLcl1U
+h9BEawf+JIOmPkle1gMX10QCMYV82pqKfu/RRwwXNl/qC3qB36QADLf1QJi7Pxa/
+f0SGutJU3G0FG0krfei8gu10uQJJGUCo6umwNzX15z7s4mvpEYX9u71k0Cl7RcWh
+Q5foJtI6cNwJmClLORd3hpK2J7d63lJrIj3LapHS8F9Cp/MdjmTAJpz5upLD+fOY
+0zfa6V2qTI5Egciz0tYjb8BWN6rFDOpnmFPos5VgJXAIxXNOLtAmnj3e55wThKWM
+3bzCtIlueDMzrbiiBS0Sm/Xi7i3mKbaVR4XDYWSSOG4rhQr0PbKDMBx0tSihoNU9
+mK7hBBjNeoIA+M+NI60qx48OR1sAEQ==
+=Wdxx
+-----END PGP SIGNATURE-----
+
+--ugwpgzvyb3pxwego--
