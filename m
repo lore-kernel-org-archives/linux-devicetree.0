@@ -1,46 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] pinctrl: Add DT bindings for Cortina Gemini
-Date: Mon, 17 Jul 2017 14:39:39 -0500
-Message-ID: <20170717193939.dwl2w6m47gqysvdc@rob-hp-laptop>
-References: <20170715175056.13040-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 3/3] power: supply: ltc2941-battery-gauge: Add LTC2944
+ support
+Date: Mon, 17 Jul 2017 14:42:03 -0500
+Message-ID: <20170717194203.we3rjftj7m6ojxgq@rob-hp-laptop>
+References: <20170716093202.vfea4yylbzfec72v@lenoch>
+ <20170716093532.w6sqqtadwnbroj3i@lenoch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170715175056.13040-1-linus.walleij@linaro.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20170716093532.w6sqqtadwnbroj3i@lenoch>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ladislav Michl <ladis@linux-mips.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mike Looijmans <mike.looijmans@topic.nl>, Dragos Bogdan <dragos.bogdan@analog.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 15, 2017 at 07:50:52PM +0200, Linus Walleij wrote:
-> The Cortina Gemini pin controller uses the standard pin control
-> bindings for muxing functions with groups so these bindings
-> should be entirely uncontroversial.
+On Sun, Jul 16, 2017 at 11:35:32AM +0200, Ladislav Michl wrote:
+> From: Dragos Bogdan <dragos.bogdan@analog.com>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> LTC2944 is compatible with LTC2943, but uses different
+> voltage and current computing constants.
+> 
+> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+> Signed-off-by: Ladislav Michl <ladis@linux-mips.org>
 > ---
->  .../bindings/pinctrl/cortina,gemini-pinctrl.txt    | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+>  Changes:
+>  - v2: fixed voltage and current conversion
+>  - v3: skipped
+>  - v4: skipped
+>  - v5: fixed voltage conversion overflow, rebased on LTC2942 patchset
+>  - v6: fix missing break in the switch statement
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-> new file mode 100644
-> index 000000000000..2ef3e8a65559
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-> @@ -0,0 +1,54 @@
-> +Cortina Systems Gemini pin controller
-> +
-> +This pin controller is found in the Cortina Systems Gemini SoC family,
-> +see further arm/gemini.txt. It is a purely group-based multiplexing pin
-> +controller.
-> +
-> +Required properties:
-> +- compatible: "cortina,gemini-pinctrl"
-> +- regmap: phandle to the system controller node
+>  .../devicetree/bindings/power/supply/ltc2941.txt   | 12 +++++-----
 
-Why not a child of the system controller?
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
+>  drivers/power/supply/ltc2941-battery-gauge.c       | 27 ++++++++++++++++++----
+>  2 files changed, 28 insertions(+), 11 deletions(-)
