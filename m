@@ -1,183 +1,233 @@
-From: "Bogdan, Dragos" <Dragos.Bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] power: supply: ltc2941-battery-gauge: Add
- LTC2944 support
-Date: Mon, 17 Jul 2017 14:55:20 +0000
-Message-ID: <6067964B99C6A049AA5840B6F7BB2D0ABDAAD96B@NWD2MBX5.ad.analog.com>
-References: <20170716093202.vfea4yylbzfec72v@lenoch>
- <20170716093532.w6sqqtadwnbroj3i@lenoch>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] net: ethernet: bgmac: Make IDM register space optional
+Date: Mon, 17 Jul 2017 11:04:36 -0400
+Message-ID: <CAC3K-4o=WRqBv_vTf7QGDYjWzMmVog=63ZbiHbHAuW7zJcsHFQ@mail.gmail.com>
+References: <1499972649-6200-1-git-send-email-abhishek.shah@broadcom.com> <1499972649-6200-3-git-send-email-abhishek.shah@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1499972649-6200-3-git-send-email-abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Abhishek Shah <abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2017 12:35 PM, Ladislav Michl wrote:=0A=
-> From: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>=0A=
->=0A=
-> LTC2944 is compatible with LTC2943, but uses different=0A=
-> voltage and current computing constants.=0A=
->=0A=
-> Signed-off-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>=0A=
-> Signed-off-by: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>=0A=
-=0A=
-Tested-by: Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>=0A=
-=0A=
-> ---=0A=
->  Changes:=0A=
->  - v2: fixed voltage and current conversion=0A=
->  - v3: skipped=0A=
->  - v4: skipped=0A=
->  - v5: fixed voltage conversion overflow, rebased on LTC2942 patchset=0A=
->  - v6: fix missing break in the switch statement=0A=
->=0A=
->  .../devicetree/bindings/power/supply/ltc2941.txt   | 12 +++++-----=0A=
->  drivers/power/supply/ltc2941-battery-gauge.c       | 27 ++++++++++++++++=
-++----=0A=
->  2 files changed, 28 insertions(+), 11 deletions(-)=0A=
->=0A=
-> diff --git a/Documentation/devicetree/bindings/power/supply/ltc2941.txt b=
-/Documentation/devicetree/bindings/power/supply/ltc2941.txt=0A=
-> index 8ec10366295d..3b9ba147b041 100644=0A=
-> --- a/Documentation/devicetree/bindings/power/supply/ltc2941.txt=0A=
-> +++ b/Documentation/devicetree/bindings/power/supply/ltc2941.txt=0A=
-> @@ -1,14 +1,14 @@=0A=
-> -binding for LTC2941, LTC2942 and LTC2943 battery gauges=0A=
-> +binding for LTC2941, LTC2942, LTC2943 and LTC2944 battery gauges=0A=
->  =0A=
->  All chips measure battery capacity.=0A=
->  The LTC2942 is pin compatible with the LTC2941, it adds voltage and=0A=
-> -temperature monitoring, and is runtime detected. LTC2943 is software=0A=
-> -compatible, uses a slightly different conversion formula for the=0A=
-> -charge counter and adds voltage, current and temperature monitoring.=0A=
-> +temperature monitoring, and is runtime detected. LTC2943 and LTC2944=0A=
-> +is software compatible, uses a slightly different conversion formula=0A=
-> +for the charge counter and adds voltage, current and temperature monitor=
-ing.=0A=
->  =0A=
->  Required properties:=0A=
-> -- compatible: Should contain "lltc,ltc2941", "lltc,ltc2942" or "lltc,ltc=
-2943"=0A=
-> -    which also indicates the type of I2C chip attached.=0A=
-> +- compatible: Should contain "lltc,ltc2941", "lltc,ltc2942", "lltc,ltc29=
-43"=0A=
-> +    or "lltc,ltc2944" which also indicates the type of I2C chip attached=
-.=0A=
->  - reg: The 7-bit I2C address.=0A=
->  - lltc,resistor-sense: The sense resistor value in milli-ohms. Can be a =
-32-bit=0A=
->      negative value when the battery has been connected to the wrong end =
-of the=0A=
-> diff --git a/drivers/power/supply/ltc2941-battery-gauge.c b/drivers/power=
-/supply/ltc2941-battery-gauge.c=0A=
-> index 42ff4e3daf35..08e4fd9ee607 100644=0A=
-> --- a/drivers/power/supply/ltc2941-battery-gauge.c=0A=
-> +++ b/drivers/power/supply/ltc2941-battery-gauge.c=0A=
-> @@ -1,6 +1,6 @@=0A=
->  /*=0A=
-> - * I2C client/driver for the Linear Technology LTC2941, LTC2942 and LTC2=
-943=0A=
-> - * Battery Gas Gauge IC=0A=
-> + * I2C client/driver for the Linear Technology LTC2941, LTC2942, LTC2943=
-=0A=
-> + * and LTC2944 Battery Gas Gauge IC=0A=
->   *=0A=
->   * Copyright (C) 2014 Topic Embedded Systems=0A=
->   *=0A=
-> @@ -48,6 +48,7 @@ enum ltc294x_id {=0A=
->  	LTC2941_ID,=0A=
->  	LTC2942_ID,=0A=
->  	LTC2943_ID,=0A=
-> +	LTC2944_ID,=0A=
->  };=0A=
->  =0A=
->  #define LTC2941_REG_STATUS_CHIP_ID	BIT(7)=0A=
-> @@ -153,7 +154,8 @@ static int ltc294x_reset(const struct ltc294x_info *i=
-nfo, int prescaler_exp)=0A=
->  	case LTC2942_ID:	/* 2942 measures every 2 sec */=0A=
->  		control |=3D LTC2942_REG_CONTROL_MODE_SCAN;=0A=
->  		break;=0A=
-> -	case LTC2943_ID:	/* 2943 measures every 10 sec */=0A=
-> +	case LTC2943_ID:=0A=
-> +	case LTC2944_ID:	/* 2943 and 2944 measure every 10 sec */=0A=
->  		control |=3D LTC2943_REG_CONTROL_MODE_SCAN;=0A=
->  		break;=0A=
->  	default:=0A=
-> @@ -269,6 +271,11 @@ static int ltc294x_get_voltage(const struct ltc294x_=
-info *info, int *val)=0A=
->  		value /=3D 0xFFFF;=0A=
->  		value *=3D 1000 / 2;=0A=
->  		break;=0A=
-> +	case LTC2944_ID:=0A=
-> +		value *=3D 70800 / 5*4;=0A=
-> +		value /=3D 0xFFFF;=0A=
-> +		value *=3D 1000 * 5/4;=0A=
-> +		break;=0A=
->  	default:=0A=
->  		value *=3D 6000 * 10;=0A=
->  		value /=3D 0xFFFF;=0A=
-> @@ -289,10 +296,14 @@ static int ltc294x_get_current(const struct ltc294x=
-_info *info, int *val)=0A=
->  		LTC2943_REG_CURRENT_MSB, &datar[0], 2);=0A=
->  	value =3D (datar[0] << 8) | datar[1];=0A=
->  	value -=3D 0x7FFF;=0A=
-> +	if (info->id =3D=3D LTC2944_ID)=0A=
-> +		value *=3D 64000;=0A=
-> +	else=0A=
-> +		value *=3D 60000;=0A=
->  	/* Value is in range -32k..+32k, r_sense is usually 10..50 mOhm,=0A=
->  	 * the formula below keeps everything in s32 range while preserving=0A=
->  	 * enough digits */=0A=
-> -	*val =3D 1000 * ((60000 * value) / (info->r_sense * 0x7FFF)); /* in uA =
-*/=0A=
-> +	*val =3D 1000 * (value / (info->r_sense * 0x7FFF)); /* in uA */=0A=
->  	return ret;=0A=
->  }=0A=
->  =0A=
-> @@ -470,6 +481,7 @@ static int ltc294x_i2c_probe(struct i2c_client *clien=
-t,=0A=
->  	info->supply_desc.type =3D POWER_SUPPLY_TYPE_BATTERY;=0A=
->  	info->supply_desc.properties =3D ltc294x_properties;=0A=
->  	switch (info->id) {=0A=
-> +	case LTC2944_ID:=0A=
->  	case LTC2943_ID:=0A=
->  		info->supply_desc.num_properties =3D=0A=
->  			ARRAY_SIZE(ltc294x_properties);=0A=
-> @@ -543,6 +555,7 @@ static const struct i2c_device_id ltc294x_i2c_id[] =
-=3D {=0A=
->  	{ "ltc2941", LTC2941_ID, },=0A=
->  	{ "ltc2942", LTC2942_ID, },=0A=
->  	{ "ltc2943", LTC2943_ID, },=0A=
-> +	{ "ltc2944", LTC2944_ID, },=0A=
->  	{ },=0A=
->  };=0A=
->  MODULE_DEVICE_TABLE(i2c, ltc294x_i2c_id);=0A=
-> @@ -560,6 +573,10 @@ static const struct of_device_id ltc294x_i2c_of_matc=
-h[] =3D {=0A=
->  		.compatible =3D "lltc,ltc2943",=0A=
->  		.data =3D (void *)LTC2943_ID,=0A=
->  	},=0A=
-> +	{=0A=
-> +		.compatible =3D "lltc,ltc2944",=0A=
-> +		.data =3D (void *)LTC2944_ID,=0A=
-> +	},=0A=
->  	{ },=0A=
->  };=0A=
->  MODULE_DEVICE_TABLE(of, ltc294x_i2c_of_match);=0A=
-> @@ -578,5 +595,5 @@ module_i2c_driver(ltc294x_driver);=0A=
->  =0A=
->  MODULE_AUTHOR("Auryn Verwegen, Topic Embedded Systems");=0A=
->  MODULE_AUTHOR("Mike Looijmans, Topic Embedded Products");=0A=
-> -MODULE_DESCRIPTION("LTC2941/LTC2942/LTC2943 Battery Gas Gauge IC driver"=
-);=0A=
-> +MODULE_DESCRIPTION("LTC2941/LTC2942/LTC2943/LTC2944 Battery Gas Gauge IC=
- driver");=0A=
->  MODULE_LICENSE("GPL");=0A=
-=0A=
-=0A=
+On Thu, Jul 13, 2017 at 3:04 PM, Abhishek Shah
+<abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> IDM operations are usually one time ops and should be done in
+> firmware itself. Driver is not supposed to touch IDM registers.
+>
+> However, for some SoCs', driver is performing IDM read/writes.
+> So this patch masks IDM operations in case firmware is taking
+> care of IDM operations.
+>
+> Signed-off-by: Abhishek Shah <abhishek.shah-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/net/ethernet/broadcom/bgmac-platform.c | 19 ++++---
+>  drivers/net/ethernet/broadcom/bgmac.c          | 70 +++++++++++++++-----------
+>  drivers/net/ethernet/broadcom/bgmac.h          |  1 +
+>  3 files changed, 55 insertions(+), 35 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/broadcom/bgmac-platform.c b/drivers/net/ethernet/broadcom/bgmac-platform.c
+> index 1ca75de..d937083d 100644
+> --- a/drivers/net/ethernet/broadcom/bgmac-platform.c
+> +++ b/drivers/net/ethernet/broadcom/bgmac-platform.c
+> @@ -55,6 +55,9 @@ static void platform_bgmac_idm_write(struct bgmac *bgmac, u16 offset, u32 value)
+>
+>  static bool platform_bgmac_clk_enabled(struct bgmac *bgmac)
+>  {
+> +       if (!bgmac->plat.idm_base)
+> +               return true;
+> +
+>         if ((bgmac_idm_read(bgmac, BCMA_IOCTL) & BGMAC_CLK_EN) != BGMAC_CLK_EN)
+>                 return false;
+>         if (bgmac_idm_read(bgmac, BCMA_RESET_CTL) & BCMA_RESET_CTL_RESET)
+> @@ -66,6 +69,9 @@ static void platform_bgmac_clk_enable(struct bgmac *bgmac, u32 flags)
+>  {
+>         u32 val;
+>
+> +       if (!bgmac->plat.idm_base)
+> +               return;
+> +
+>         /* The Reset Control register only contains a single bit to show if the
+>          * controller is currently in reset.  Do a sanity check here, just in
+>          * case the bootloader happened to leave the device in reset.
+> @@ -180,6 +186,7 @@ static int bgmac_probe(struct platform_device *pdev)
+>         bgmac->feature_flags |= BGMAC_FEAT_CMDCFG_SR_REV4;
+>         bgmac->feature_flags |= BGMAC_FEAT_TX_MASK_SETUP;
+>         bgmac->feature_flags |= BGMAC_FEAT_RX_MASK_SETUP;
+> +       bgmac->feature_flags |= BGMAC_FEAT_IDM_MASK;
+>
+>         bgmac->dev = &pdev->dev;
+>         bgmac->dma_dev = &pdev->dev;
+> @@ -207,15 +214,13 @@ static int bgmac_probe(struct platform_device *pdev)
+>                 return PTR_ERR(bgmac->plat.base);
+>
+>         regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "idm_base");
+> -       if (!regs) {
+> -               dev_err(&pdev->dev, "Unable to obtain idm resource\n");
+> -               return -EINVAL;
+> +       if (regs) {
+> +               bgmac->plat.idm_base = devm_ioremap_resource(&pdev->dev, regs);
+> +               if (IS_ERR(bgmac->plat.idm_base))
+> +                       return PTR_ERR(bgmac->plat.idm_base);
+> +               bgmac->feature_flags &= ~BGMAC_FEAT_IDM_MASK;
+>         }
+>
+> -       bgmac->plat.idm_base = devm_ioremap_resource(&pdev->dev, regs);
+> -       if (IS_ERR(bgmac->plat.idm_base))
+> -               return PTR_ERR(bgmac->plat.idm_base);
+> -
+>         regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "nicpm_base");
+>         if (regs) {
+>                 bgmac->plat.nicpm_base = devm_ioremap_resource(&pdev->dev,
+> diff --git a/drivers/net/ethernet/broadcom/bgmac.c b/drivers/net/ethernet/broadcom/bgmac.c
+> index ba4d2e1..48d672b 100644
+> --- a/drivers/net/ethernet/broadcom/bgmac.c
+> +++ b/drivers/net/ethernet/broadcom/bgmac.c
+> @@ -622,9 +622,11 @@ static int bgmac_dma_alloc(struct bgmac *bgmac)
+>         BUILD_BUG_ON(BGMAC_MAX_TX_RINGS > ARRAY_SIZE(ring_base));
+>         BUILD_BUG_ON(BGMAC_MAX_RX_RINGS > ARRAY_SIZE(ring_base));
+>
+> -       if (!(bgmac_idm_read(bgmac, BCMA_IOST) & BCMA_IOST_DMA64)) {
+> -               dev_err(bgmac->dev, "Core does not report 64-bit DMA\n");
+> -               return -ENOTSUPP;
+> +       if (!(bgmac->feature_flags & BGMAC_FEAT_IDM_MASK)) {
+> +               if (!(bgmac_idm_read(bgmac, BCMA_IOST) & BCMA_IOST_DMA64)) {
+> +                       dev_err(bgmac->dev, "Core does not report 64-bit DMA\n");
+> +                       return -ENOTSUPP;
+> +               }
+>         }
+>
+>         for (i = 0; i < BGMAC_MAX_TX_RINGS; i++) {
+> @@ -855,9 +857,11 @@ static void bgmac_mac_speed(struct bgmac *bgmac)
+>  static void bgmac_miiconfig(struct bgmac *bgmac)
+>  {
+>         if (bgmac->feature_flags & BGMAC_FEAT_FORCE_SPEED_2500) {
+> -               bgmac_idm_write(bgmac, BCMA_IOCTL,
+> -                               bgmac_idm_read(bgmac, BCMA_IOCTL) | 0x40 |
+> -                               BGMAC_BCMA_IOCTL_SW_CLKEN);
+> +               if (!(bgmac->feature_flags & BGMAC_FEAT_IDM_MASK)) {
+> +                       bgmac_idm_write(bgmac, BCMA_IOCTL,
+> +                                       bgmac_idm_read(bgmac, BCMA_IOCTL) |
+> +                                       0x40 | BGMAC_BCMA_IOCTL_SW_CLKEN);
+> +               }
+>                 bgmac->mac_speed = SPEED_2500;
+>                 bgmac->mac_duplex = DUPLEX_FULL;
+>                 bgmac_mac_speed(bgmac);
+> @@ -874,11 +878,36 @@ static void bgmac_miiconfig(struct bgmac *bgmac)
+>         }
+>  }
+>
+> +static void bgmac_chip_reset_idm_config(struct bgmac *bgmac)
+> +{
+> +       u32 iost;
+> +
+> +       iost = bgmac_idm_read(bgmac, BCMA_IOST);
+> +       if (bgmac->feature_flags & BGMAC_FEAT_IOST_ATTACHED)
+> +               iost &= ~BGMAC_BCMA_IOST_ATTACHED;
+> +
+> +       /* 3GMAC: for BCM4707 & BCM47094, only do core reset at bgmac_probe() */
+> +       if (!(bgmac->feature_flags & BGMAC_FEAT_NO_RESET)) {
+> +               u32 flags = 0;
+> +
+> +               if (iost & BGMAC_BCMA_IOST_ATTACHED) {
+> +                       flags = BGMAC_BCMA_IOCTL_SW_CLKEN;
+> +                       if (!bgmac->has_robosw)
+> +                               flags |= BGMAC_BCMA_IOCTL_SW_RESET;
+> +               }
+> +               bgmac_clk_enable(bgmac, flags);
+> +       }
+> +
+> +       if (iost & BGMAC_BCMA_IOST_ATTACHED && !bgmac->has_robosw)
+> +               bgmac_idm_write(bgmac, BCMA_IOCTL,
+> +                               bgmac_idm_read(bgmac, BCMA_IOCTL) &
+> +                               ~BGMAC_BCMA_IOCTL_SW_RESET);
+> +}
+> +
+>  /* http://bcm-v4.sipsolutions.net/mac-gbit/gmac/chipreset */
+>  static void bgmac_chip_reset(struct bgmac *bgmac)
+>  {
+>         u32 cmdcfg_sr;
+> -       u32 iost;
+>         int i;
+>
+>         if (bgmac_clk_enabled(bgmac)) {
+> @@ -899,20 +928,8 @@ static void bgmac_chip_reset(struct bgmac *bgmac)
+>                 /* TODO: Clear software multicast filter list */
+>         }
+>
+> -       iost = bgmac_idm_read(bgmac, BCMA_IOST);
+> -       if (bgmac->feature_flags & BGMAC_FEAT_IOST_ATTACHED)
+> -               iost &= ~BGMAC_BCMA_IOST_ATTACHED;
+> -
+> -       /* 3GMAC: for BCM4707 & BCM47094, only do core reset at bgmac_probe() */
+> -       if (!(bgmac->feature_flags & BGMAC_FEAT_NO_RESET)) {
+> -               u32 flags = 0;
+> -               if (iost & BGMAC_BCMA_IOST_ATTACHED) {
+> -                       flags = BGMAC_BCMA_IOCTL_SW_CLKEN;
+> -                       if (!bgmac->has_robosw)
+> -                               flags |= BGMAC_BCMA_IOCTL_SW_RESET;
+> -               }
+> -               bgmac_clk_enable(bgmac, flags);
+> -       }
+> +       if (!(bgmac->feature_flags & BGMAC_FEAT_IDM_MASK))
+> +               bgmac_chip_reset_idm_config(bgmac);
+>
+>         /* Request Misc PLL for corerev > 2 */
+>         if (bgmac->feature_flags & BGMAC_FEAT_MISC_PLL_REQ) {
+> @@ -970,11 +987,6 @@ static void bgmac_chip_reset(struct bgmac *bgmac)
+>                                       BGMAC_CHIPCTL_7_IF_TYPE_RGMII);
+>         }
+>
+> -       if (iost & BGMAC_BCMA_IOST_ATTACHED && !bgmac->has_robosw)
+> -               bgmac_idm_write(bgmac, BCMA_IOCTL,
+> -                               bgmac_idm_read(bgmac, BCMA_IOCTL) &
+> -                               ~BGMAC_BCMA_IOCTL_SW_RESET);
+> -
+>         /* http://bcm-v4.sipsolutions.net/mac-gbit/gmac/gmac_reset
+>          * Specs don't say about using BGMAC_CMDCFG_SR, but in this routine
+>          * BGMAC_CMDCFG is read _after_ putting chip in a reset. So it has to
+> @@ -1497,8 +1509,10 @@ int bgmac_enet_probe(struct bgmac *bgmac)
+>         bgmac_clk_enable(bgmac, 0);
+>
+>         /* This seems to be fixing IRQ by assigning OOB #6 to the core */
+> -       if (bgmac->feature_flags & BGMAC_FEAT_IRQ_ID_OOB_6)
+> -               bgmac_idm_write(bgmac, BCMA_OOB_SEL_OUT_A30, 0x86);
+> +       if (!(bgmac->feature_flags & BGMAC_FEAT_IDM_MASK)) {
+> +               if (bgmac->feature_flags & BGMAC_FEAT_IRQ_ID_OOB_6)
+> +                       bgmac_idm_write(bgmac, BCMA_OOB_SEL_OUT_A30, 0x86);
+> +       }
+>
+>         bgmac_chip_reset(bgmac);
+>
+> diff --git a/drivers/net/ethernet/broadcom/bgmac.h b/drivers/net/ethernet/broadcom/bgmac.h
+> index c181876..443d57b 100644
+> --- a/drivers/net/ethernet/broadcom/bgmac.h
+> +++ b/drivers/net/ethernet/broadcom/bgmac.h
+> @@ -425,6 +425,7 @@
+>  #define BGMAC_FEAT_CC4_IF_SW_TYPE      BIT(17)
+>  #define BGMAC_FEAT_CC4_IF_SW_TYPE_RGMII        BIT(18)
+>  #define BGMAC_FEAT_CC7_IF_TYPE_RGMII   BIT(19)
+> +#define BGMAC_FEAT_IDM_MASK            BIT(20)
+
+This also will need to be added to
+drivers/net/ethernet/broadcom/bgmac-bcma.c.  Otherwise, the driver
+will no longer work for those platforms.  Since this was already
+accepted, please push out a fix ASAP.
+
+Thanks,
+Jon
+
+>
+>  struct bgmac_slot_info {
+>         union {
+> --
+> 2.7.4
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
