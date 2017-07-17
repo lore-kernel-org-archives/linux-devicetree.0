@@ -1,98 +1,49 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 4/7] PCI: rockchip: idle the inactive PHY(s)
-Date: Mon, 17 Jul 2017 15:36:19 +0800
-Message-ID: <1500276982-208439-5-git-send-email-shawn.lin@rock-chips.com>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH 5/7] arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
+Date: Mon, 17 Jul 2017 15:38:40 +0800
+Message-ID: <1500277122-21835-1-git-send-email-shawn.lin@rock-chips.com>
 References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500276982-208439-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Check the status of all lanes and idle the inactive one(s).
+Convert all RK3399 platforms to use per-lane PHY model in
+order to save more power by idling the unused lane(s).
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
 
- drivers/pci/host/pcie-rockchip.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
-index f755df5..fa30ffb 100644
---- a/drivers/pci/host/pcie-rockchip.c
-+++ b/drivers/pci/host/pcie-rockchip.c
-@@ -15,6 +15,7 @@
-  * (at your option) any later version.
-  */
- 
-+#include <linux/bitrev.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-@@ -112,6 +113,9 @@
- #define   PCIE_CORE_TXCREDIT_CFG1_MUI_SHIFT	16
- #define   PCIE_CORE_TXCREDIT_CFG1_MUI_ENCODE(x) \
- 		(((x) >> 3) << PCIE_CORE_TXCREDIT_CFG1_MUI_SHIFT)
-+#define PCIE_CORE_LANE_MAP             (PCIE_CORE_CTRL_MGMT_BASE + 0x200)
-+#define   PCIE_CORE_LANE_MAP_MASK              0x0000000f
-+#define   PCIE_CORE_LANE_MAP_REVERSE           BIT(16)
- #define PCIE_CORE_INT_STATUS		(PCIE_CORE_CTRL_MGMT_BASE + 0x20c)
- #define   PCIE_CORE_INT_PRFPE			BIT(0)
- #define   PCIE_CORE_INT_CRFPE			BIT(1)
-@@ -311,6 +315,18 @@ static int rockchip_pcie_valid_device(struct rockchip_pcie *rockchip,
- 	return 1;
- }
- 
-+static u8 rockchip_pcie_lane_map(struct rockchip_pcie *rockchip)
-+{
-+	u32 val = rockchip_pcie_read(rockchip, PCIE_CORE_LANE_MAP);
-+	u8 map = val & PCIE_CORE_LANE_MAP_MASK;
-+
-+	/* The link may be using a reverse-indexed mapping. */
-+	if (val & PCIE_CORE_LANE_MAP_REVERSE)
-+		map = bitrev8(map) >> 4;
-+
-+	return map;
-+}
-+
- static int rockchip_pcie_rd_own_conf(struct rockchip_pcie *rockchip,
- 				     int where, int size, u32 *val)
- {
-@@ -624,7 +640,8 @@ static int rockchip_pcie_manipulate_phys(struct rockchip_pcie *rockchip,
- static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- {
- 	struct device *dev = rockchip->dev;
--	int err;
-+	int err, i;
-+	u8 lane_map;
- 	u32 status;
- 
- 	gpiod_set_value(rockchip->ep_gpio, 0);
-@@ -797,6 +814,18 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 			  PCIE_CORE_PL_CONF_LANE_SHIFT);
- 	dev_dbg(dev, "current link width is x%d\n", status);
- 
-+	if (!rockchip->legacy_phy) {
-+		/*  power off unused lane(s) */
-+		lane_map = rockchip_pcie_lane_map(rockchip);
-+		for (i = 0; i < MAX_LANE_NUM; i++) {
-+			if (lane_map & BIT(i))
-+				continue;
-+
-+			dev_dbg(dev, "idling lane %d\n", i);
-+			phy_power_off(rockchip->phys[i]);
-+		}
-+	}
-+
- 	rockchip_pcie_write(rockchip, ROCKCHIP_VENDOR_ID,
- 			    PCIE_CORE_CONFIG_VENDOR);
- 	rockchip_pcie_write(rockchip,
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 69c56f7..5b78ce1 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -238,8 +238,10 @@
+ 		linux,pci-domain = <0>;
+ 		max-link-speed = <1>;
+ 		msi-map = <0x0 &its 0x0 0x1000>;
+-		phys = <&pcie_phy>;
+-		phy-names = "pcie-phy";
++		phys = <&pcie_phy 0>, <&pcie_phy 1>,
++		       <&pcie_phy 2>, <&pcie_phy 3>;
++		phy-names = "pcie-phy-0", "pcie-phy-1",
++			    "pcie-phy-2", "pcie-phy-3";
+ 		ranges = <0x83000000 0x0 0xfa000000 0x0 0xfa000000 0x0 0x1e00000
+ 			  0x81000000 0x0 0xfbe00000 0x0 0xfbe00000 0x0 0x100000>;
+ 		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+@@ -1295,7 +1297,7 @@
+ 			compatible = "rockchip,rk3399-pcie-phy";
+ 			clocks = <&cru SCLK_PCIEPHY_REF>;
+ 			clock-names = "refclk";
+-			#phy-cells = <0>;
++			#phy-cells = <1>;
+ 			resets = <&cru SRST_PCIEPHY>;
+ 			reset-names = "phy";
+ 			status = "disabled";
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
