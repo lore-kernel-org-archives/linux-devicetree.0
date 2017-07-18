@@ -1,52 +1,39 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 4/4] ARM: dts: keystone-k2g: Add TI SCI reset-controller node
-Date: Mon, 17 Jul 2017 22:28:44 -0500
-Message-ID: <20170718032844.29490-5-s-anna@ti.com>
+Subject: [PATCH 3/4] ARM: dts: keystone-k2g: Add ti-sci clock provider node
+Date: Mon, 17 Jul 2017 22:28:43 -0500
+Message-ID: <20170718032844.29490-4-s-anna@ti.com>
 References: <20170718032844.29490-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170718032844.29490-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>, "Andrew F. Davis" <afd@ti.com>, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Andrew F. Davis" <afd@ti.com>
+From: Tero Kristo <t-kristo@ti.com>
 
-Add a reset-controller node for managing resets of various
-remote processor devices on the SoC over the Texas Instrument's
-System Control Interface (TI SCI) protocol.
+Add a ti-sci node representing the clock provider in the system.
 
-Signed-off-by: Andrew F. Davis <afd@ti.com>
-[s-anna@ti.com: rename node name, drop obsolete header]
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
 Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
  arch/arm/boot/dts/keystone-k2g.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 2cdc7c8aeb5c..bf4d1fa30840 100644
+index 7ffd7facdc47..2cdc7c8aeb5c 100644
 --- a/arch/arm/boot/dts/keystone-k2g.dtsi
 +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -162,6 +162,11 @@
- 				compatible = "ti,k2g-sci-clk";
- 				#clock-cells = <2>;
+@@ -157,6 +157,11 @@
+ 				compatible = "ti,sci-pm-domain";
+ 				#power-domain-cells = <1>;
  			};
 +
-+			k2g_reset: reset-controller {
-+				compatible = "ti,sci-reset";
-+				#reset-cells = <2>;
++			k2g_clks: clocks {
++				compatible = "ti,k2g-sci-clk";
++				#clock-cells = <2>;
 +			};
  		};
  	};
