@@ -1,242 +1,230 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: [PATCH v2 3/7] [media] ov9650: add device tree support
-Date: Tue, 18 Jul 2017 10:26:39 +0000
-Message-ID: <7c8a2f91-34c6-4386-3f58-35d31ab63991@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <1499073368-31905-4-git-send-email-hugues.fruchet@st.com>
- <20170708230606.zva4m52anvffo2vb@valkosipuli.retiisi.org.uk>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFCv2 usb-next 0/3] initialize (multiple) PHYs in xhci-plat
+Date: Tue, 18 Jul 2017 18:33:30 +0800
+Message-ID: <1500374010.25536.79.camel@mhfsdcap03>
+References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
+         <1500111231.25536.18.camel@mhfsdcap03>
+         <CAFBinCAw9yaaEO6Z9AdkBaPg9azGH4nqgdgoTir9U0eWZVu1DQ@mail.gmail.com>
+         <1500276067.25536.58.camel@mhfsdcap03>
+         <CAFBinCA8o0DzExJOKdh_7zmfJhLwu_hsAHp_POyNO7-ifdPUqQ@mail.gmail.com>
+         <1500342058.25536.74.camel@mhfsdcap03>
+         <CAFBinCAu9t2arCSE6QgujWw7OtApf0bfQ4hG=wDAtaERS2u0tg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170708230606.zva4m52anvffo2vb@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <332ECEB0A64F054BA447DEB7EB0B2862@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCAu9t2arCSE6QgujWw7OtApf0bfQ4hG=wDAtaERS2u0tg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari, thks for review.
+On Tue, 2017-07-18 at 10:19 +0200, Martin Blumenstingl wrote:
+> Hi,
+> 
+> On Tue, Jul 18, 2017 at 3:40 AM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi,
+> > On Mon, 2017-07-17 at 11:27 +0200, Martin Blumenstingl wrote:
+> >> Hi,
+> >>
+> >> On Mon, Jul 17, 2017 at 9:21 AM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> > Hi,
+> >> > On Sat, 2017-07-15 at 14:11 +0200, Martin Blumenstingl wrote:
+> >> >> Hi,
+> >> >>
+> >> >> On Sat, Jul 15, 2017 at 11:33 AM, Chunfeng Yun
+> >> >> <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >> >> > Hi Martin,
+> >> >> >
+> >> >> > On Thu, 2017-07-13 at 12:59 +0200, Martin Blumenstingl wrote:
+> >> >> >> This series is the outcome of a discussion with Felipe Balbi,
+> >> >> >> see [0] and [1].
+> >> >> >> The quick-summary of this is:
+> >> >> >> - dwc3 already takes one USB2 and one USB3 PHY and initializes these
+> >> >> >>   correct
+> >> >> >> - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
+> >> >> >>   ohci-platform.c) do not have a limitation on the number of PHYs - they
+> >> >> >>   support one PHY per actual host port
+> >> >> >> - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
+> >> >> >>   or three USB2 ports enabled on the internal root-hub. The SoCs also
+> >> >> >>   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
+> >> >> >>   internally "connected" to the dwc3 roothub) need to be powered on,
+> >> >> >>   otherwise USB devices cannot be enumerated (even if just one PHY is
+> >> >> >>   disabled and if the device is plugged into another, enabled port)
+> >> >> >>
+> >> >> >> In my first attempt to get USB supported on the GXL and GXM SoCs I tried
+> >> >> >> to work-around the problem that I could not pass multiple PHYs to the
+> >> >> >> dwc3 controller.
+> >> >> >> This was rejected by Rob Herring (which was definitely the thing to do in
+> >> >> >> my opinion), see [2]
+> >> >> >>
+> >> >> >> This series adds a new "platform-roothub". This can be configured through
+> >> >> >> devicetree by passing a child-node with "reg = <0>" to the USB
+> >> >> >> controller. Additionally there has to be a child-node for each port on
+> >> >> >> the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
+> >> >> >> property. This allows modeling the root-hub in devicetree similar to the
+> >> >> >> USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
+> >> >> >> This avoids and backwards-compatibility problems (which was a concern
+> >> >> >> regardless of the solution, see [3]) since the binding for the root-hub
+> >> >> >> was previously not specified (and we're not using the "phys" property of
+> >> >> >> the controller, which might have served different purposes before,
+> >> >> >> depending on the drivers).
+> >> >> >>
+> >> >> >> Additionally this integrates the new platform-roothub into xhci-plat.c
+> >> >> >> which automatically enables it for the dwc3 driver (in host-mode).
+> >> >> >>
+> >> >> > How to handle the phy0(one u2phy and one u3phy) when port1 support
+> >> >> > dual-role mode? leave them to peripheral side as felipe suggested
+> >> >> > before? If so, no port1 node for roothub, is there any problem when
+> >> >> > change the port1 to host-only mode?
+> >> >> on Amlogic Meson GXL we have the following IP blocks:
+> >> >> - 2x USB2 PHYs, some external component has to tell them which mode
+> >> >> (host/device) they should operate in
+> >> >> - there is an additional (1x) USB3 PHY with built-in OTG detection logic
+> >> >>
+> >> >> on Amlogic Meson GXL it could work like this:
+> >> >> USB2 and USB3 phy0 can be passed to the root-hub. Additionally the
+> >> >> USB2 phy0 could be passed to the USB3 PHY. The USB3 PHY would then
+> >> >> tell the USB2 PHY in which mode it should operate.
+> >> >>
+> >> >> please note that device mode and OTG support on Amlogic Meson GXL is
+> >> >> more complicated, as it uses dwc2 and dwc3 controllers in combination:
+> >> >> - dwc3 is reponsible for host-only mode
+> >> >> - dwc2 is responsible for device-only mode
+> >> >> - OTG detection is done by the USB3 PHY
+> >> >>
+> >> >> would you mind sharing a short overview of host/device/OTG support
+> >> >> works on Mediatek SoCs? I assume that the Amlogic Meson GXL
+> >> >> implementation is quite special, so comparing this with another
+> >> >> implementation (for example the Mediatek one) may help spotting
+> >> >> potential issues.
+> >> >>
+> >> > MTK's mtu3 IP supports at most 5x USB2 phys and 4x USB3 phys. They work
+> >> > as following:
+> >> thank you for sharing this!
+> >>
+> >> > 1. device mode works as HS only:
+> >> >
+> >> > u2phy0 --- dual-role/OTG
+> >> >
+> >> > u2phy1 ---|
+> >> >           +  U3 host-only
+> >> > u3phy0 ---|
+> >> >
+> >> > ...
+> >> > u2phy4 ---|
+> >> >           +  U3 host-only
+> >> > u3phy3 ---|
+> >> > (e.g. MT8173 supports 2x u2phys and 1x u3phy, u2phy0 can work as
+> >> > dual-role mode, u2phy1 & u3phy0 are host-only)
+> >> >
+> >> > 2. device mode works as HS & SS, or host only:
+> >> >
+> >> > u2phy0 ---|
+> >> >           + dual-role or host-only
+> >> > u3phy0 ---|
+> >> >
+> >> > ...
+> >> > u2phy3 ---|
+> >> >           + U3 host-only
+> >> > u3phy3 ---|
+> >> >
+> >> > u2phy4 --- U2 host-only
+> >> > (e.g. on MT2701, u2phy0 and u3phy0 work as host-only mode)
+> >> OK, so in both cases only one port (with one u2phy and one u3phy) is
+> >> dual-role capable
+> > Yes
+> >>
+> >> > mtu3 driver supports host-only, device-only and dual-role mode(use IDDIG
+> >> > pin), and will take all phys it needed, include host-only phys;
+> >> > But if just host-only mode is supported, we can skip mtu3 driver and
+> >> > make use of xhci-mtk driver directly, then xhci-mtk will take all phys.
+> >> I see, in your example it's the mtu3
+> >> (Documentation/devicetree/bindings/usb/mt8173-mtu3.txt) which does the
+> >> mode switching. I assume that you're doing the host/device mode
+> >> switching through the extcon phandle (for example together with the
+> >> extcon-usb-gpio driver).
+> >>
+> >> in you example: can't we *always* describe the roothub via devicetree
+> >> (just like in my example: [0])?
+> >> this means that (as you already mentioned) USB host-only support is now covered.
+> >> to handle dual-role (host/device switching) we now need to pass the
+> >> dual-role capable PHYs to whatever IP can detect the mode it should
+> >> operate in (in your case: mtu3, in Amlogic's case: the u3phy with
+> >> built-in mode detection logic -> the driver for this IP block should
+> >> call phy_set_mode(phy, PHY_MODE_USB_{HOST,DEVICE,OTG} accordingly).
+> >> here's a skeleton (stripped-down) of how the .dts could look like:
+> >> mtu3: usb@11271000 {
+> >>     compatible = "mediatek,mt8173-mtu3";
+> >> ...
+> >>     /* MT2701 = 2nd example, for MT8173 = 1st example we would skip
+> >> the u3phy0 */
+> >>     /* only list the dual role capable PHYs here */
+> >>     phys = <&u3phy0>, <&u2phy0>;
+> >>     phy-names = "usb3-phy", "usb2-phy";
+> >>
+> >>     usb_host: xhci@11270000 {
+> >>         compatible = "mediatek,mt8173-xhci";
+> >>         ...
+> >>         roothub@0 {
+> >>             /* includes all PHYs, including the dual role capable ones */
+> > If here include dual-role capable phys which are also taken by parent
+> > node(11271000), will cause phy_init/_power_on them twice.
+> the PHY framework does ref-counting for all calls [0], so
+> phy_ops.init/power_on will only be called for the first time
+> phy_{init,power_on} is called
+> also phy_ops.exit/power_off is only called when the last consumer
+> calls phy_{exit,power_off}
+Sorry, I forgot it
+> 
+> > it seems ok if here include host-only phys, but I need test it.
+> > If here include host-only phys, there will not be port1 for roothub
+> > node, maybe it's a problem.
+> on Amlogic's GXL SoC it also makes sense to pass the OTG capable USB2
+> PHY to the roothub (remember: the USB3 PHY does mode-detection for the
+> USB2 PHY)
+> this way host-only mode works even if the USB3 PHY driver is not
+> loaded (or the kernel module is unloaded). and it gets even worse: if
+> one of the USB2 PHYs is powered off then host-only mode is broken for
+> the other PHYs as well!
+It's better if all phys are independent 
+> 
+> additionally the device-tree should describe the hardware - and the if
+> the dual-role capable PHYs are controlled by two different IP blocks:
+> why not add them to both (and let the PHY framework or the IP block -
+> like the Mediatek USB PHY IP does - handle this)
+Ok, I will test these patches.
+thanks a lot
+> 
+> >>         };
+> >>     };
+> >> };
+> >>
+> >> do you think that this would work for the Mediatek SoCs?
+> >> I've seen that the phy-mt65xx-usb3.c PHY driver does not have any
+> >> .set_mode callback - I assume it's simply because it doesn't need it
+> >> (as this is either managed by the hardware/IP block internally, or
+> >> through some firmware/mailbox mechanism).
+> > Hardware can automatically switch host/device mode by IDDIG pin, but
+> > also we can manually switch them. Phy driver makes use of auto way.
+> OK, that makes it easy for the driver developers :)
+> 
+> >>
+> >>
+> >> Regards,
+> >> Mart
+> >>
+> >> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004305.html
+> >
+> >
+> 
+> Regards,
+> Martin
+> 
+> [0] http://elixir.free-electrons.com/linux/latest/source/drivers/phy/phy-core.c#L218
 
-On 07/09/2017 01:06 AM, Sakari Ailus wrote:
-> Hi Hugues,
-> 
-> On Mon, Jul 03, 2017 at 11:16:04AM +0200, Hugues Fruchet wrote:
->> Allows use of device tree configuration data.
->> If no device tree data is there, configuration is taken from platform data.
->> In order to keep GPIOs configuration compatible between both way of doing,
->> GPIOs are switched to descriptor-based interface.
->>
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
->> ---
->>   drivers/media/i2c/Kconfig  |  2 +-
->>   drivers/media/i2c/ov9650.c | 77 ++++++++++++++++++++++++++++++++++------------
->>   2 files changed, 59 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
->> index 121b3b5..168115c 100644
->> --- a/drivers/media/i2c/Kconfig
->> +++ b/drivers/media/i2c/Kconfig
->> @@ -615,7 +615,7 @@ config VIDEO_OV7670
->>   
->>   config VIDEO_OV9650
->>   	tristate "OmniVision OV9650/OV9652 sensor support"
->> -	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
->> +	depends on GPIOLIB && I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
->>   	---help---
->>   	  This is a V4L2 sensor-level driver for the Omnivision
->>   	  OV9650 and OV9652 camera sensors.
->> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
->> index 1e4e99e..7e9a902 100644
->> --- a/drivers/media/i2c/ov9650.c
->> +++ b/drivers/media/i2c/ov9650.c
->> @@ -11,12 +11,14 @@
->>    * it under the terms of the GNU General Public License version 2 as
->>    * published by the Free Software Foundation.
->>    */
->> +#include <linux/clk.h>
->>   #include <linux/delay.h>
->>   #include <linux/gpio.h>
->>   #include <linux/i2c.h>
->>   #include <linux/kernel.h>
->>   #include <linux/media.h>
->>   #include <linux/module.h>
->> +#include <linux/of_gpio.h>
->>   #include <linux/ratelimit.h>
->>   #include <linux/slab.h>
->>   #include <linux/string.h>
->> @@ -249,9 +251,10 @@ struct ov965x {
->>   	struct v4l2_subdev sd;
->>   	struct media_pad pad;
->>   	enum v4l2_mbus_type bus_type;
->> -	int gpios[NUM_GPIOS];
->> +	struct gpio_desc *gpios[NUM_GPIOS];
->>   	/* External master clock frequency */
->>   	unsigned long mclk_frequency;
->> +	struct clk *clk;
->>   
->>   	/* Protects the struct fields below */
->>   	struct mutex lock;
->> @@ -511,10 +514,10 @@ static int ov965x_set_color_matrix(struct ov965x *ov965x)
->>   	return 0;
->>   }
->>   
->> -static void ov965x_gpio_set(int gpio, int val)
->> +static void ov965x_gpio_set(struct gpio_desc *gpio, int val)
->>   {
->> -	if (gpio_is_valid(gpio))
->> -		gpio_set_value(gpio, val);
->> +	if (gpio)
->> +		gpiod_set_value_cansleep(gpio, val);
-> 
-> gpiod_set_value_cansleep() can manage with NULL gpio parameter, no need to
-> check it.
 
-done
-
-> 
->>   }
->>   
->>   static void __ov965x_set_power(struct ov965x *ov965x, int on)
->> @@ -1406,24 +1409,28 @@ static int ov965x_configure_gpios(struct ov965x *ov965x,
->>   				  const struct ov9650_platform_data *pdata)
->>   {
->>   	int ret, i;
->> +	int gpios[NUM_GPIOS];
->>   
->> -	ov965x->gpios[GPIO_PWDN] = pdata->gpio_pwdn;
->> -	ov965x->gpios[GPIO_RST]  = pdata->gpio_reset;
->> +	gpios[GPIO_PWDN] = pdata->gpio_pwdn;
->> +	gpios[GPIO_RST]  = pdata->gpio_reset;
->>   
->> -	for (i = 0; i < ARRAY_SIZE(ov965x->gpios); i++) {
->> -		int gpio = ov965x->gpios[i];
->> +	for (i = 0; i < ARRAY_SIZE(gpios); i++) {
->> +		int gpio = gpios[i];
->>   
->>   		if (!gpio_is_valid(gpio))
->>   			continue;
->>   		ret = devm_gpio_request_one(&ov965x->client->dev, gpio,
->> -					    GPIOF_OUT_INIT_HIGH, "OV965X");
->> -		if (ret < 0)
->> +					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
-> 
-> DRIVER_NAME is different from "OV965X". Is this an intended change?
-
-Yes it was to unify namings around a single DRIVER_NAME definition.
-
-> 
->> +		if (ret < 0) {
->> +			dev_err(&ov965x->client->dev,
->> +				"Failed to request gpio%d (%d)\n", gpio, ret);
->>   			return ret;
->> +		}
->>   		v4l2_dbg(1, debug, &ov965x->sd, "set gpio %d to 1\n", gpio);
->>   
->>   		gpio_set_value(gpio, 1);
->>   		gpio_export(gpio, 0);
->> -		ov965x->gpios[i] = gpio;
->> +		ov965x->gpios[i] = gpio_to_desc(gpio);
->>   	}
->>   
->>   	return 0;
->> @@ -1469,14 +1476,10 @@ static int ov965x_probe(struct i2c_client *client,
->>   	struct v4l2_subdev *sd;
->>   	struct ov965x *ov965x;
->>   	int ret;
->> +	struct device_node *np = client->dev.of_node;
-> 
-> It'd be nice to declare this next to pdata, rather than after ret and other
-> short declarations.
-
-done
-
-> 
->>   
->> -	if (pdata == NULL) {
->> -		dev_err(&client->dev, "platform data not specified\n");
->> -		return -EINVAL;
->> -	}
->> -
->> -	if (pdata->mclk_frequency == 0) {
->> -		dev_err(&client->dev, "MCLK frequency not specified\n");
->> +	if (!pdata && !np) {
->> +		dev_err(&client->dev, "Platform data or device tree data must be provided\n");
->>   		return -EINVAL;
->>   	}
->>   
->> @@ -1486,7 +1489,35 @@ static int ov965x_probe(struct i2c_client *client,
->>   
->>   	mutex_init(&ov965x->lock);
->>   	ov965x->client = client;
->> -	ov965x->mclk_frequency = pdata->mclk_frequency;
->> +	mutex_init(&ov965x->lock);
->> +
->> +	if (np) {
->> +		/* Device tree */
->> +		ov965x->gpios[GPIO_RST] =
->> +			devm_gpiod_get_optional(&client->dev, "resetb",
->> +						GPIOD_OUT_LOW);
->> +		ov965x->gpios[GPIO_PWDN] =
->> +			devm_gpiod_get_optional(&client->dev, "pwdn",
->> +						GPIOD_OUT_HIGH);
->> +
->> +		ov965x->clk = devm_clk_get(&client->dev, NULL);
->> +		if (IS_ERR(ov965x->clk)) {
->> +			dev_err(&client->dev, "Could not get clock\n");
-> 
-> mutex_destroy() should called on an initialised mutex if probe is going to
-> fail. It's certainly not a problem introduced by this patch, but it'd be
-> nice to fix that (in a separate patch) now that it's found. The same goes
-> for remove below.
-
-Will do.
-
-> 
->> +			return PTR_ERR(ov965x->clk);
->> +		}
->> +		ov965x->mclk_frequency = clk_get_rate(ov965x->clk);
->> +	} else {
->> +		/* Platform data */
->> +		ret = ov965x_configure_gpios(ov965x, pdata);
->> +		if (ret < 0)
->> +			return ret;
->> +
->> +		if (pdata->mclk_frequency == 0) {
->> +			dev_err(&client->dev, "MCLK frequency is mandatory\n");
->> +			return -EINVAL;
->> +		}
->> +		ov965x->mclk_frequency = pdata->mclk_frequency;
->> +	}
->>   
->>   	sd = &ov965x->sd;
->>   	v4l2_i2c_subdev_init(sd, client, &ov965x_subdev_ops);
->> @@ -1551,9 +1582,17 @@ static int ov965x_remove(struct i2c_client *client)
->>   };
->>   MODULE_DEVICE_TABLE(i2c, ov965x_id);
->>   
->> +static const struct of_device_id ov965x_of_match[] = {
->> +	{ .compatible = "ovti,ov9650", },
->> +	{ .compatible = "ovti,ov9652", },
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, ov965x_of_match);
->> +
->>   static struct i2c_driver ov965x_i2c_driver = {
->>   	.driver = {
->>   		.name	= DRIVER_NAME,
->> +		.of_match_table = of_match_ptr(ov965x_of_match),
->>   	},
->>   	.probe		= ov965x_probe,
->>   	.remove		= ov965x_remove,
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
