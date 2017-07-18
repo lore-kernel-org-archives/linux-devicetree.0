@@ -1,67 +1,56 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH] dt-bindings: add device tree binding for Allwinner XR819 SDIO Wi-Fi
-Date: Tue, 18 Jul 2017 15:29:40 +0800
-Message-ID: <20170718072940.17872-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-wireless@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH] dt-bindings: add compatible string of Allwinner
+ H5 Mali-450 MP4 GPU
+Date: Tue, 18 Jul 2017 15:33:29 +0800
+Message-ID: <20170718073329.18959-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBV7TW3FQKGQENIHVCHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner XR819 is a SDIO Wi-Fi chip, which has the functionality to use
-an out-of-band interrupt pin instead of SDIO in-band interrupt.
+Allwinner H5 has a Mali-450 MP4 GPU, which has a reset line like other
+Allwinner SoCs with Mali Utgard, but it's a Mali-450, so it needs a new
+compatible.
 
-Add the device tree binding of this chip, in order to make it possible
-to add this interrupt pin to device trees.
+Add the new compatible to Mali Utgard binding document.
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- .../bindings/net/wireless/allwinner,xr819.txt      | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+ Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
-new file mode 100644
-index 000000000000..64dd9c1c0584
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
-@@ -0,0 +1,37 @@
-+Allwinner XRadio wireless SDIO devices
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+index 2b6243e730f6..b4ebd56d03f3 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+@@ -10,6 +10,7 @@ Required properties:
+     * And, optionally, one of the vendor specific compatible:
+       + allwinner,sun4i-a10-mali
+       + allwinner,sun7i-a20-mali
++      + allwinner,sun50i-h5-mali
+       + amlogic,meson-gxbb-mali
+       + amlogic,meson-gxl-mali
+       + stericsson,db8500-mali
+@@ -58,6 +59,10 @@ to specify one more vendor-specific compatible, among:
+     Required properties:
+       * resets: phandle to the reset line for the GPU
+ 
++  - allwinner,sun50i-h5-mali
++    Required properties:
++      * resets: phandle to the reset line for the GPU
 +
-+This node provides properties for controlling the XRadio wireless device. The
-+node is expected to be specified as a child node to the SDIO controller that
-+connects the device to the system.
-+
-+Required properties:
-+
-+ - compatible : Should be "allwinner,xr819".
-+
-+Optional properties:
-+ - interrupt-parent : the phandle for the interrupt controller to which the
-+	device interrupts are connected.
-+ - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
-+	When not specified the device will use in-band SDIO interrupts.
-+
-+Example:
-+
-+mmc1: mmc@01c10000 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins_a>;
-+	vmmc-supply = <&reg_vcc_wifi>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+
-+	xr819: sdio_wifi@1 {
-+		reg = <1>;
-+		compatible = "allwinner,xr819";
-+		interrupt-parent = <&pio>;
-+		interrupts = <6 10 IRQ_TYPE_EDGE_RISING>;
-+	};
-+};
+   - stericsson,db8500-mali
+     Required properties:
+       * interrupt-names and interrupts:
 -- 
 2.13.0
