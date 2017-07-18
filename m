@@ -1,128 +1,89 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 4/4] pinctrl: aspeed: g5: Add USB device and host support
-Date: Tue, 18 Jul 2017 14:54:53 +0930
-Message-ID: <20170718052453.14316-5-andrew@aj.id.au>
-References: <20170718052453.14316-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170718052453.14316-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: imx6: RIoTboard provide gpio-line-names
+Date: Tue, 18 Jul 2017 07:40:22 +0200
+Message-ID: <20170718054022.2867-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Implement the AST2500 USB functions as described by the devicetree
-bindings. The AST2500 exposes five USB controllers through two USB
-ports. Similar to the AST2400, the pins exposing USB are outliers with
-respect to the rest of the pinmux as they not capable of GPIO.
+gpio-line-names may help to make work with GPIOs from user space easier.
+Following examples are provided with libgpiod
+https://github.com/brgl/libgpiod :
+|# Toggle a GPIO by name, then wait for the user to press ENTER.
+|$ gpioset --mode=wait `gpiofind "USR-LED-2"`=1
+|# Pause execution until a single event of any type occurs. Don't print
+|# anything. Find the line by name.
+|$ gpiomon --num-events=1 --silent `gpiofind "USR-IN"`
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Used names was taken from RIoTboard schematics, version 1 (2013.12.07).
+
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 58 +++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6dl-riotboard.dts | 45 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index 68aa04664a62..634b371da43a 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -25,7 +25,7 @@
- #include "../pinctrl-utils.h"
- #include "pinctrl-aspeed.h"
+diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
+index 2cb72824e800..3ecd3913280f 100644
+--- a/arch/arm/boot/dts/imx6dl-riotboard.dts
++++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
+@@ -101,6 +101,51 @@
+ 	status = "okay";
+ };
  
--#define ASPEED_G5_NR_PINS 232
-+#define ASPEED_G5_NR_PINS 236
- 
- #define COND1		{ ASPEED_IP_SCU, SCU90, BIT(6), 0, 0 }
- #define COND2		{ ASPEED_IP_SCU, SCU94, GENMASK(1, 0), 0, 0 }
-@@ -1724,6 +1724,48 @@ FUNC_GROUP_DECL(LPCRST, G22);
- 
- FUNC_GROUP_DECL(ESPI, G21, G20, D22, E22, C22, F21, F22, G22);
- 
-+#define A7 232
-+SIG_EXPR_LIST_DECL_SINGLE(USB2AHDP, USB2AH, SIG_DESC_SET(SCU90, 29));
-+SIG_EXPR_LIST_DECL_SINGLE(USB2ADDP, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
-+MS_PIN_DECL_(A7, SIG_EXPR_LIST_PTR(USB2AHDP), SIG_EXPR_LIST_PTR(USB2ADDP));
++&gpio1 {
++	gpio-line-names =
++		"", "", "SD2_WP", "", "SD2_CD", "I2C3_SCL",
++			"I2C3_SDA", "I2C4_SCL",
++		"I2C4_SDA", "", "", "", "", "", "", "",
++		"", "PWM3", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "";
++};
 +
-+#define A8 233
-+SIG_EXPR_LIST_DECL_SINGLE(USB2AHDN, USB2AH, SIG_DESC_SET(SCU90, 29));
-+SIG_EXPR_LIST_DECL_SINGLE(USB2ADDN, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
-+MS_PIN_DECL_(A8, SIG_EXPR_LIST_PTR(USB2AHDN), SIG_EXPR_LIST_PTR(USB2ADDN));
++&gpio3 {
++	gpio-line-names =
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "USB_OTG_VBUS", "",
++		"UART3_TXD", "UART3_RXD", "", "", "EIM_D28", "", "", "";
++};
 +
-+FUNC_GROUP_DECL(USB2AH, A7, A8);
-+FUNC_GROUP_DECL(USB2AD, A7, A8);
++&gpio4 {
++	gpio-line-names =
++		"", "", "", "", "", "", "UART4_TXD", "UART4_RXD",
++		"UART5_TXD", "UART5_RXD", "", "", "", "", "", "",
++		"GPIO4_16", "GPIO4_17", "GPIO4_18", "GPIO4_19", "",
++			"CSPI3_CLK", "CSPI3_MOSI", "CSPI3_MISO",
++		"CSPI3_CS0", "CSPI3_CS1", "GPIO4_26", "GPIO4_27",
++			"CSPI3_RDY", "PWM1", "PWM2", "GPIO4_31";
++};
 +
-+#define USB11BHID_DESC  { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 0, 0 }
-+#define USB2BD_DESC   { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 1, 0 }
-+#define USB2BH1_DESC { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 2, 0 }
-+#define USB2BH2_DESC { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 3, 0 }
++&gpio5 {
++	gpio-line-names =
++		"", "", "EIM_A25", "", "", "GPIO5_05", "GPIO5_06",
++			"GPIO5_07",
++		"GPIO5_08", "CSPI2_CS1", "CSPI2_MOSI", "CSPI2_MISO",
++			"CSPI2_CS0", "CSPI2_CLK", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "";
++};
 +
-+#define B6 234
-+SIG_EXPR_LIST_DECL_SINGLE(USB11BDP, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SINGLE(USB2BDDP, USB2BD, USB2BD_DESC);
-+SIG_EXPR_DECL(USB2BHDP1, USB2BH, USB2BH1_DESC);
-+SIG_EXPR_DECL(USB2BHDP2, USB2BH, USB2BH2_DESC);
-+SIG_EXPR_LIST_DECL(USB2BHDP, SIG_EXPR_PTR(USB2BHDP1, USB2BH),
-+		SIG_EXPR_PTR(USB2BHDP2, USB2BH));
-+MS_PIN_DECL_(B6, SIG_EXPR_LIST_PTR(USB11BDP), SIG_EXPR_LIST_PTR(USB2BDDP),
-+		SIG_EXPR_LIST_PTR(USB2BHDP));
++&gpio7 {
++	gpio-line-names =
++		"SD3_CD", "SD3_WP", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "",
++		"", "", "", "", "", "", "", "";
++};
 +
-+#define A6 235
-+SIG_EXPR_LIST_DECL_SINGLE(USB11BDN, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SINGLE(USB2BDN, USB2BD, USB2BD_DESC);
-+SIG_EXPR_DECL(USB2BHDN1, USB2BH, USB2BH1_DESC);
-+SIG_EXPR_DECL(USB2BHDN2, USB2BH, USB2BH2_DESC);
-+SIG_EXPR_LIST_DECL(USB2BHDN, SIG_EXPR_PTR(USB2BHDN1, USB2BH),
-+		SIG_EXPR_PTR(USB2BHDN2, USB2BH));
-+MS_PIN_DECL_(A6, SIG_EXPR_LIST_PTR(USB11BDN), SIG_EXPR_LIST_PTR(USB2BDN),
-+		SIG_EXPR_LIST_PTR(USB2BHDN));
-+
-+FUNC_GROUP_DECL(USB11BHID, B6, A6);
-+FUNC_GROUP_DECL(USB2BD, B6, A6);
-+FUNC_GROUP_DECL(USB2BH, B6, A6);
-+
- /* Pins, groups and functions are sort(1):ed alphabetically for sanity */
- 
- static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
-@@ -1743,6 +1785,9 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(A3),
- 	ASPEED_PINCTRL_PIN(A4),
- 	ASPEED_PINCTRL_PIN(A5),
-+	ASPEED_PINCTRL_PIN(A6),
-+	ASPEED_PINCTRL_PIN(A7),
-+	ASPEED_PINCTRL_PIN(A8),
- 	ASPEED_PINCTRL_PIN(A9),
- 	ASPEED_PINCTRL_PIN(AA1),
- 	ASPEED_PINCTRL_PIN(AA19),
-@@ -1777,6 +1822,7 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(B3),
- 	ASPEED_PINCTRL_PIN(B4),
- 	ASPEED_PINCTRL_PIN(B5),
-+	ASPEED_PINCTRL_PIN(B6),
- 	ASPEED_PINCTRL_PIN(B9),
- 	ASPEED_PINCTRL_PIN(C1),
- 	ASPEED_PINCTRL_PIN(C11),
-@@ -2111,6 +2157,11 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
- 	ASPEED_PINCTRL_GROUP(TXD3),
- 	ASPEED_PINCTRL_GROUP(TXD4),
- 	ASPEED_PINCTRL_GROUP(UART6),
-+	ASPEED_PINCTRL_GROUP(USB11BHID),
-+	ASPEED_PINCTRL_GROUP(USB2AD),
-+	ASPEED_PINCTRL_GROUP(USB2AH),
-+	ASPEED_PINCTRL_GROUP(USB2BD),
-+	ASPEED_PINCTRL_GROUP(USB2BH),
- 	ASPEED_PINCTRL_GROUP(USBCKI),
- 	ASPEED_PINCTRL_GROUP(VGABIOSROM),
- 	ASPEED_PINCTRL_GROUP(VGAHS),
-@@ -2275,6 +2326,11 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
- 	ASPEED_PINCTRL_FUNC(TXD3),
- 	ASPEED_PINCTRL_FUNC(TXD4),
- 	ASPEED_PINCTRL_FUNC(UART6),
-+	ASPEED_PINCTRL_FUNC(USB11BHID),
-+	ASPEED_PINCTRL_FUNC(USB2AD),
-+	ASPEED_PINCTRL_FUNC(USB2AH),
-+	ASPEED_PINCTRL_FUNC(USB2BD),
-+	ASPEED_PINCTRL_FUNC(USB2BH),
- 	ASPEED_PINCTRL_FUNC(USBCKI),
- 	ASPEED_PINCTRL_FUNC(VGABIOSROM),
- 	ASPEED_PINCTRL_FUNC(VGAHS),
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c2>;
+ 	status = "okay";
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
