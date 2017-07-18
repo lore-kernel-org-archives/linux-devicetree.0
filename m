@@ -1,42 +1,47 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible string for SMC
-Date: Tue, 18 Jul 2017 15:22:20 +0200
-Message-ID: <20170718132220.25018-4-ludovic.desroches@microchip.com>
-References: <20170718132220.25018-1-ludovic.desroches@microchip.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: [PATCH v2 0/3] Fix SMC layout register for sama5d2
+Date: Tue, 18 Jul 2017 15:22:17 +0200
+Message-ID: <20170718132220.25018-1-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718132220.25018-1-ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, romain.izard.pro-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org
+Cc: boris.brezillon@free-electrons.com, linux-kernel@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, alexandre.belloni@free-electrons.com, romain.izard.pro@gmail.com, computersforpeace@gmail.com, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-A new compatible string has been introduced for sama5d2 SMC to allow to
-manage the registers mapping change.
+Hi,
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
----
- arch/arm/boot/dts/sama5d2.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The offset of some registers of the SMC is different between sama5d3/sama5d4
+and sama5d2. An helper function has been added to retrieve the correct layout
+with the help of a new compatible string for sama5d2. The atmel-ebi device will
+store the register layout to allow the nand controller to setup correctly the
+data interface.
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index cc06da394366..3e6e2dbc2595 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -1048,7 +1048,7 @@
- 			};
- 
- 			hsmc: hsmc@f8014000 {
--				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
-+				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
- 				reg = <0xf8014000 0x1000>;
- 				interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
- 				clocks = <&hsmc_clk>;
+Changes:
+- v2: rebase patches on top of v4.13-rc1 and collect acked-by
+
+Ludovic Desroches (3):
+  mfd: syscon: update Atmel SMC binding doc
+  mfd: syscon: atmel-smc: add helper to retrieve register layout
+  ARM: dts: at91: sama5d2: use sama5d2 compatible string for SMC
+
+ .../devicetree/bindings/mfd/atmel-smc.txt          |  1 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  2 +-
+ drivers/memory/atmel-ebi.c                         | 13 +++--
+ drivers/mfd/atmel-smc.c                            | 67 +++++++++++++++++-----
+ drivers/mtd/nand/atmel/nand-controller.c           | 10 +++-
+ include/linux/mfd/syscon/atmel-smc.h               | 32 ++++++++---
+ 6 files changed, 94 insertions(+), 31 deletions(-)
+
 -- 
 2.12.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
