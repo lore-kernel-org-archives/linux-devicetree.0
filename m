@@ -1,143 +1,167 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V1] clk: qcom: Add qpnp clock divider support
-Date: Tue, 18 Jul 2017 16:08:27 -0700
-Message-ID: <20170718230827.GE18179@codeaurora.org>
-References: <1499945536-18281-1-git-send-email-tirupath@codeaurora.org>
- <1499945536-18281-2-git-send-email-tirupath@codeaurora.org>
- <20170714210837.GK22780@codeaurora.org>
- <f488d813-9dcc-4d32-c40c-fa15bfdd2cf9@codeaurora.org>
+Subject: Re: [PATCH 2/2] clk: imx: imx7d: Remove ARM_M0 clock
+Date: Tue, 18 Jul 2017 16:10:41 -0700
+Message-ID: <20170718231041.GF18179@codeaurora.org>
+References: <1500363892-1173-1-git-send-email-adriana.reus@nxp.com>
+ <1500363892-1173-3-git-send-email-adriana.reus@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f488d813-9dcc-4d32-c40c-fa15bfdd2cf9@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Tirupathi Reddy T <tirupath@codeaurora.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+In-Reply-To: <1500363892-1173-3-git-send-email-adriana.reus@nxp.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Adriana Reus <adriana.reus@nxp.com>
+Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, anson.huang@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/18, Tirupathi Reddy T wrote:
+On 07/18, Adriana Reus wrote:
+> IMX7d does not have an M0 Core and this particular
+> clock doesn't seem connected to anything else.
+> Remove this entry from the CCM driver and fix index
+> for the remaining clocks.
 > 
-> On 7/15/2017 2:38 AM, Stephen Boyd wrote:
-> >On 07/13, Tirupathi Reddy wrote:
-> >>diff --git a/Documentation/devicetree/bindings/clock/clk-qpnp-div.txt b/Documentation/devicetree/bindings/clock/clk-qpnp-div.txt
-> >>new file mode 100644
-> >>index 0000000..03b7b70
-> >>--- /dev/null
-> >>+++ b/Documentation/devicetree/bindings/clock/clk-qpnp-div.txt
-> >>@@ -0,0 +1,52 @@
-> >>+Qualcomm Technologies, Inc. QPNP clock divider (clkdiv)
-> >>+
-> >>+clkdiv configures the clock frequency of a set of outputs on the PMIC.
-> >>+These clocks are typically wired through alternate functions on
-> >>+gpio pins.
-> >>+
-> >>+=======================
-> >>+Supported Properties
-> >>+=======================
-> >>+
-> >>+- compatible
-> >>+	Usage:      required
-> >>+	Value type: <string>
-> >>+	Definition: should be "qcom,qpnp-clkdiv".
-> >>+
-> >>+- reg
-> >>+	Usage:      required
-> >>+	Value type: <prop-encoded-array>
-> >>+	Definition: Addresses and sizes for the memory of this CLKDIV
-> >>+		    peripheral.
-> >>+
-> >>+- qcom,cxo-freq
-> >>+	Usage:      required
-> >>+	Value type: <u32>
-> >>+	Definition: The frequency of the crystal oscillator (CXO) clock in Hz.
-> >CXO should be a parent clk then. This could have clocks and
-> >clock-names properties for that and then be hooked up to
-> >xo_board.
-> Sure. I will address in the next patch set.
-> >>+
-> >>+- qcom,clkdiv-id
-> >>+	Usage:      required
-> >>+	Value type: <u32>
-> >>+	Definition: Integer value specifies the hardware identifier of this
-> >>+		    CLKDIV peripheral.
-> >This is to name the clk? You could use clock-output-names as
-> >that's more standard. But this is also sort of confusing. If
-> >there are multiple clkdivs then it would be good to combine them
-> >into one device node assuming they're all next to each other.
-> >This would be similar to how we handle gpios and regulators. Then
-> >the naming is simple enough to be an incrementing number.
-> Yes, multiple clkdivs present. We add sub-nodes for each clkdiv and
-> parse them inside driver as separate clock.
+> Signed-off-by: Adriana Reus <adriana.reus@nxp.com>
+[...]
+> +#define IMX7D_GPT2_ROOT_DIV		305
+> +#define IMX7D_GPT3_ROOT_CLK		306
+> +#define IMX7D_GPT3_ROOT_SRC		307
+> +#define IMX7D_GPT3_ROOT_CG		308
+> +#define IMX7D_GPT3_ROOT_DIV		309
+> +#define IMX7D_GPT4_ROOT_CLK		310
+> +#define IMX7D_GPT4_ROOT_SRC		311
+> +#define IMX7D_GPT4_ROOT_CG		312
+> +#define IMX7D_GPT4_ROOT_DIV		313
+> +#define IMX7D_TRACE_ROOT_CLK		314
+> +#define IMX7D_TRACE_ROOT_SRC		315
+> +#define IMX7D_TRACE_ROOT_CG		316
+> +#define IMX7D_TRACE_ROOT_DIV		317
+> +#define IMX7D_WDOG1_ROOT_CLK		318
+> +#define IMX7D_WDOG_ROOT_SRC		319
+> +#define IMX7D_WDOG_ROOT_CG		320
+> +#define IMX7D_WDOG_ROOT_DIV		321
+> +#define IMX7D_CSI_MCLK_ROOT_CLK		322
+> +#define IMX7D_CSI_MCLK_ROOT_SRC		323
+> +#define IMX7D_CSI_MCLK_ROOT_CG		324
+> +#define IMX7D_CSI_MCLK_ROOT_DIV		325
+> +#define IMX7D_AUDIO_MCLK_ROOT_CLK	326
+> +#define IMX7D_AUDIO_MCLK_ROOT_SRC	327
+> +#define IMX7D_AUDIO_MCLK_ROOT_CG	328
+> +#define IMX7D_AUDIO_MCLK_ROOT_DIV	329
+> +#define IMX7D_WRCLK_ROOT_CLK		330
+> +#define IMX7D_WRCLK_ROOT_SRC		331
+> +#define IMX7D_WRCLK_ROOT_CG		332
+> +#define IMX7D_WRCLK_ROOT_DIV		333
+> +#define IMX7D_CLKO1_ROOT_SRC		334
+> +#define IMX7D_CLKO1_ROOT_CG		335
+> +#define IMX7D_CLKO1_ROOT_DIV		336
+> +#define IMX7D_CLKO2_ROOT_SRC		337
+> +#define IMX7D_CLKO2_ROOT_CG		338
+> +#define IMX7D_CLKO2_ROOT_DIV		339
+> +#define IMX7D_MAIN_AXI_ROOT_PRE_DIV	340
+> +#define IMX7D_DISP_AXI_ROOT_PRE_DIV	341
+> +#define IMX7D_ENET_AXI_ROOT_PRE_DIV	342
+> +#define IMX7D_NAND_USDHC_BUS_ROOT_PRE_DIV 343
+> +#define IMX7D_AHB_CHANNEL_ROOT_PRE_DIV	344
+> +#define IMX7D_USB_HSIC_ROOT_PRE_DIV	345
+> +#define IMX7D_PCIE_CTRL_ROOT_PRE_DIV	346
+> +#define IMX7D_PCIE_PHY_ROOT_PRE_DIV	347
+> +#define IMX7D_EPDC_PIXEL_ROOT_PRE_DIV	348
+> +#define IMX7D_LCDIF_PIXEL_ROOT_PRE_DIV	349
+> +#define IMX7D_MIPI_DSI_ROOT_PRE_DIV	350
+> +#define IMX7D_MIPI_CSI_ROOT_PRE_DIV	351
+> +#define IMX7D_MIPI_DPHY_ROOT_PRE_DIV	352
+> +#define IMX7D_SAI1_ROOT_PRE_DIV		353
+> +#define IMX7D_SAI2_ROOT_PRE_DIV		354
+> +#define IMX7D_SAI3_ROOT_PRE_DIV		355
+> +#define IMX7D_SPDIF_ROOT_PRE_DIV	356
+> +#define IMX7D_ENET1_REF_ROOT_PRE_DIV	357
+> +#define IMX7D_ENET1_TIME_ROOT_PRE_DIV	358
+> +#define IMX7D_ENET2_REF_ROOT_PRE_DIV	359
+> +#define IMX7D_ENET2_TIME_ROOT_PRE_DIV	360
+> +#define IMX7D_ENET_PHY_REF_ROOT_PRE_DIV 361
+> +#define IMX7D_EIM_ROOT_PRE_DIV		362
+> +#define IMX7D_NAND_ROOT_PRE_DIV		363
+> +#define IMX7D_QSPI_ROOT_PRE_DIV		364
+> +#define IMX7D_USDHC1_ROOT_PRE_DIV	365
+> +#define IMX7D_USDHC2_ROOT_PRE_DIV	366
+> +#define IMX7D_USDHC3_ROOT_PRE_DIV	367
+> +#define IMX7D_CAN1_ROOT_PRE_DIV		368
+> +#define IMX7D_CAN2_ROOT_PRE_DIV		369
+> +#define IMX7D_I2C1_ROOT_PRE_DIV		370
+> +#define IMX7D_I2C2_ROOT_PRE_DIV		371
+> +#define IMX7D_I2C3_ROOT_PRE_DIV		372
+> +#define IMX7D_I2C4_ROOT_PRE_DIV		373
+> +#define IMX7D_UART1_ROOT_PRE_DIV	374
+> +#define IMX7D_UART2_ROOT_PRE_DIV	375
+> +#define IMX7D_UART3_ROOT_PRE_DIV	376
+> +#define IMX7D_UART4_ROOT_PRE_DIV	377
+> +#define IMX7D_UART5_ROOT_PRE_DIV	378
+> +#define IMX7D_UART6_ROOT_PRE_DIV	379
+> +#define IMX7D_UART7_ROOT_PRE_DIV	380
+> +#define IMX7D_ECSPI1_ROOT_PRE_DIV	381
+> +#define IMX7D_ECSPI2_ROOT_PRE_DIV	382
+> +#define IMX7D_ECSPI3_ROOT_PRE_DIV	383
+> +#define IMX7D_ECSPI4_ROOT_PRE_DIV	384
+> +#define IMX7D_PWM1_ROOT_PRE_DIV		385
+> +#define IMX7D_PWM2_ROOT_PRE_DIV		386
+> +#define IMX7D_PWM3_ROOT_PRE_DIV		387
+> +#define IMX7D_PWM4_ROOT_PRE_DIV		388
+> +#define IMX7D_FLEXTIMER1_ROOT_PRE_DIV	389
+> +#define IMX7D_FLEXTIMER2_ROOT_PRE_DIV	390
+> +#define IMX7D_SIM1_ROOT_PRE_DIV		391
+> +#define IMX7D_SIM2_ROOT_PRE_DIV		392
+> +#define IMX7D_GPT1_ROOT_PRE_DIV		393
+> +#define IMX7D_GPT2_ROOT_PRE_DIV		394
+> +#define IMX7D_GPT3_ROOT_PRE_DIV		395
+> +#define IMX7D_GPT4_ROOT_PRE_DIV		396
+> +#define IMX7D_TRACE_ROOT_PRE_DIV	397
+> +#define IMX7D_WDOG_ROOT_PRE_DIV		398
+> +#define IMX7D_CSI_MCLK_ROOT_PRE_DIV	399
+> +#define IMX7D_AUDIO_MCLK_ROOT_PRE_DIV	400
+> +#define IMX7D_WRCLK_ROOT_PRE_DIV	401
+> +#define IMX7D_CLKO1_ROOT_PRE_DIV	402
+> +#define IMX7D_CLKO2_ROOT_PRE_DIV	403
+> +#define IMX7D_DRAM_PHYM_ALT_ROOT_PRE_DIV 404
+> +#define IMX7D_DRAM_ALT_ROOT_PRE_DIV	405
+> +#define IMX7D_LVDS1_IN_CLK		406
+> +#define IMX7D_LVDS1_OUT_SEL		407
+> +#define IMX7D_LVDS1_OUT_CLK		408
+> +#define IMX7D_CLK_DUMMY			409
+> +#define IMX7D_GPT_3M_CLK		410
+> +#define IMX7D_OCRAM_CLK			411
+> +#define IMX7D_OCRAM_S_CLK		412
+> +#define IMX7D_WDOG2_ROOT_CLK		413
+> +#define IMX7D_WDOG3_ROOT_CLK		414
+> +#define IMX7D_WDOG4_ROOT_CLK		415
+> +#define IMX7D_SDMA_CORE_CLK		416
+> +#define IMX7D_USB1_MAIN_480M_CLK	417
+> +#define IMX7D_USB_CTRL_CLK		418
+> +#define IMX7D_USB_PHY1_CLK		419
+> +#define IMX7D_USB_PHY2_CLK		420
+> +#define IMX7D_IPG_ROOT_CLK		421
+> +#define IMX7D_SAI1_IPG_CLK		422
+> +#define IMX7D_SAI2_IPG_CLK		423
+> +#define IMX7D_SAI3_IPG_CLK		424
+> +#define IMX7D_PLL_AUDIO_TEST_DIV	425
+> +#define IMX7D_PLL_AUDIO_POST_DIV	426
+> +#define IMX7D_PLL_VIDEO_TEST_DIV	427
+> +#define IMX7D_PLL_VIDEO_POST_DIV	428
+> +#define IMX7D_MU_ROOT_CLK		429
+> +#define IMX7D_SEMA4_HS_ROOT_CLK		430
+> +#define IMX7D_PLL_DRAM_TEST_DIV		431
+> +#define IMX7D_ADC_ROOT_CLK		432
+> +#define IMX7D_CLK_ARM			433
+> +#define IMX7D_CKIL			434
+> +#define IMX7D_OCOTP_CLK			435
+> +#define IMX7D_NAND_RAWNAND_CLK		436
+> +#define IMX7D_NAND_USDHC_BUS_RAWNAND_CLK 437
+> +#define IMX7D_CLK_END			438
+>  #endif /* __DT_BINDINGS_CLOCK_IMX7D_H */
 
-Please just roll them all into one node instead of a node per
-clk on the PMIC.
-
-> >>+#define Q_DIV_PERIOD_NS(cxo_clk, div)	(NSEC_PER_SEC / (cxo_clk / div))
-> >>+#define Q_ENABLE_DELAY_NS(cxo_clk, div)	(2 * Q_CXO_PERIOD_NS(cxo_clk) + \
-> >>+					(3 * Q_DIV_PERIOD_NS(cxo_clk, div)))
-> >>+#define Q_DISABLE_DELAY_NS(cxo_clk, div) \
-> >>+					(3 * Q_DIV_PERIOD_NS(cxo_clk, div))
-> >>+
-> >>+#define CLK_QPNP_DIV_OFFSET		1
-> >>+
-> >>+enum q_clk_div_factor {
-> >>+	Q_CLKDIV_XO_DIV_1_0 = 0,
-> >>+	Q_CLKDIV_XO_DIV_1,
-> >>+	Q_CLKDIV_XO_DIV_2,
-> >>+	Q_CLKDIV_XO_DIV_4,
-> >>+	Q_CLKDIV_XO_DIV_8,
-> >>+	Q_CLKDIV_XO_DIV_16,
-> >>+	Q_CLKDIV_XO_DIV_32,
-> >>+	Q_CLKDIV_XO_DIV_64,
-> >>+	Q_CLKDIV_MAX_ALLOWED,
-> >Please make #defines for these instead of enum.
-> We used enum primarily for easy debug at runtime. For an example,
-> The "div_factor" field
-> of "struct q_clkdiv" would always show the enumerated value which
-> would help in
-> determining the configured absolute divider value rather than
-> spending time in mapping
-> register bit values to absolute divider value.
-
-Ok. I can't find a good reference, but typically we don't do this
-in kernel drivers and just use #defines instead. Please just do
-that. It seems simple enough to know to translate the number to a
-power of 2 after reading it.
-
-> >
-> >>+};
-> >>+
-> >>+enum q_clkdiv_state {
-> >>+	DISABLE = false,
-> >>+	ENABLE = true,
-> >>+};
-> >Uh no. Just use bool.
-> Sure. I will address in the next patch set.
-> >
-> >>+
-> >>+struct q_clkdiv {
-> >>+	struct regmap		*regmap;
-> >>+	struct device		*dev;
-> >>+
-> >>+	u16			base;
-> >>+	spinlock_t		lock;
-> >>+
-> >>+	/* clock properties */
-> >>+	struct clk_hw		hw;
-> >>+	unsigned int		cxo_hz;
-> >Drop.
-> cxo_hz is required to be populated at driver initialization and
-> being used at runtime
-> for calculating the div value to be applied.
-> >
-> >>+	enum q_clk_div_factor	div_factor;
-> >>+	bool			enabled;
-> >Shouldn't be needed. Read the hardware instead.
-> This enabled field is required for the typical handling of set_rate
-> in qpnp_clkdiv_config_freq_div().
-
-You can't read the hardware in set_rate op?
+Are any of these defines being used already? Please just leave
+the numbers intact and make the ones that don't exist go to
+/dev/null in the driver. That way, we don't break some ABI where
+people were expecting raw numbers to work still.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
