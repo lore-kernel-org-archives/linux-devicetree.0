@@ -1,89 +1,59 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx6: RIoTboard provide gpio-line-names
-Date: Tue, 18 Jul 2017 07:40:22 +0200
-Message-ID: <20170718054022.2867-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv2 0/6] Motorola Droid 4 Audio Support
+Date: Mon, 17 Jul 2017 22:48:33 -0700
+Message-ID: <20170718054833.GL10026@atomide.com>
+References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
+ <20170717092904.GG10026@atomide.com>
+ <20170717101258.llyly7kwfnwtoftr@earth>
+ <20170717101709.GI10026@atomide.com>
+ <20170717141347.t2642xbkol3g36rv@earth>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170717141347.t2642xbkol3g36rv@earth>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-gpio-line-names may help to make work with GPIOs from user space easier.
-Following examples are provided with libgpiod
-https://github.com/brgl/libgpiod :
-|# Toggle a GPIO by name, then wait for the user to press ENTER.
-|$ gpioset --mode=wait `gpiofind "USR-LED-2"`=1
-|# Pause execution until a single event of any type occurs. Don't print
-|# anything. Find the line by name.
-|$ gpiomon --num-events=1 --silent `gpiofind "USR-IN"`
+* Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170717 07:14]:
+> Hi,
+> 
+> On Mon, Jul 17, 2017 at 03:17:10AM -0700, Tony Lindgren wrote:
+> > * Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170717 03:13]:
+> > > On Mon, Jul 17, 2017 at 02:29:04AM -0700, Tony Lindgren wrote:
+> > > > * Sebastian Reichel <sebastian.reichel@collabora.co.uk> [170712 08:19]:
+> > > > >  * Switch from simple-audio-card to audio-graph-card
+> > > > 
+> > > > Gave this a quick try against v4.13-rc1 with SND_AUDIO_GRAPH_CARD
+> > > > enabled as a loadable module. However loading it oopses for me,
+> > > > see below. Maybe some dependencies are missing?
+> > > 
+> > > It works for me on top of v4.13-rc1 (my kernel is monolithic).
+> > > Looking at the stacktrace it seems to be a bug in audio graph
+> > > card and not in the codec driver.
+> > 
+> > OK I do also have:
+> > 
+> > CONFIG_DEBUG_LOCKDEP=y
+> > CONFIG_DEBUG_ATOMIC_SLEEP=y
+> 
+> I added those and I do not get a stacktrace for anything sound
+> related and audio works. I noticed one issue in dapm routing,
+> that I accidently added. That will be fixed in PATCHv3, but its
+> in untestable path anyways (EXT capture, probably FM radio is
+> connected to EXT).
 
-Used names was taken from RIoTboard schematics, version 1 (2013.12.07).
+Hmm maybe that was not with DEBUG_ATOMIC_SLEEP then? I also
+verified it does not happen unless your dts patch
+"ARM: dts: omap4-droid4: add soundcard" is applied.
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-riotboard.dts | 45 ++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+I doubt that having it as loadable module makes any difference
+here as it's the might_sleep() in __mutex_lock_common() producing
+the BUG.
 
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 2cb72824e800..3ecd3913280f 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -101,6 +101,51 @@
- 	status = "okay";
- };
- 
-+&gpio1 {
-+	gpio-line-names =
-+		"", "", "SD2_WP", "", "SD2_CD", "I2C3_SCL",
-+			"I2C3_SDA", "I2C4_SCL",
-+		"I2C4_SDA", "", "", "", "", "", "", "",
-+		"", "PWM3", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "USB_OTG_VBUS", "",
-+		"UART3_TXD", "UART3_RXD", "", "", "EIM_D28", "", "", "";
-+};
-+
-+&gpio4 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "UART4_TXD", "UART4_RXD",
-+		"UART5_TXD", "UART5_RXD", "", "", "", "", "", "",
-+		"GPIO4_16", "GPIO4_17", "GPIO4_18", "GPIO4_19", "",
-+			"CSPI3_CLK", "CSPI3_MOSI", "CSPI3_MISO",
-+		"CSPI3_CS0", "CSPI3_CS1", "GPIO4_26", "GPIO4_27",
-+			"CSPI3_RDY", "PWM1", "PWM2", "GPIO4_31";
-+};
-+
-+&gpio5 {
-+	gpio-line-names =
-+		"", "", "EIM_A25", "", "", "GPIO5_05", "GPIO5_06",
-+			"GPIO5_07",
-+		"GPIO5_08", "CSPI2_CS1", "CSPI2_MOSI", "CSPI2_MISO",
-+			"CSPI2_CS0", "CSPI2_CLK", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio7 {
-+	gpio-line-names =
-+		"SD3_CD", "SD3_WP", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
- &hdmi {
- 	ddc-i2c-bus = <&i2c2>;
- 	status = "okay";
--- 
-2.11.0
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
