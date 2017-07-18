@@ -1,70 +1,67 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Tue, 18 Jul 2017 09:44:38 -0700
-Message-ID: <20170718164438.GE20973@minitux>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
- <20170717220718.GZ20973@minitux>
- <20170718095814.GE32439@codeaurora.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH 1/4] gpio: davinci: Use devm_gpiochip_add_data in place of
+ gpiochip_add_data
+Date: Tue, 18 Jul 2017 11:50:11 -0500
+Message-ID: <0aa79585-c88e-e5b7-c260-6e9ceee6d776@ti.com>
+References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
+ <1500375436-9435-2-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718095814.GE32439@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1500375436-9435-2-git-send-email-j-keerthy@ti.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org, ssantosh@kernel.org
+Cc: robh+dt@kernel.org, nsekhar@ti.com, fcooper@ti.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
+Hi Keerthy,
 
-> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
-> > On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
-[..]
-> >
-> > Can you confirm that this is actually version 4 of this block? Or are we
-> > just incrementing an arbitrary number here?
+On 07/18/2017 05:57 AM, Keerthy wrote:
+> Use the devm version of gpiochip_add_data and pass on the
+> return value. Reset the static variables to 0 before returning.
 > 
-> This is not exactly the 4th version of the block. However, it is
-> a different version than the ones that are already supported in
-> this driver. Since the existing driver didn't exactly tie it with
-> the block IP version, I too followed the same versioning
-> convention.
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  drivers/gpio/gpio-davinci.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+> index 65cb359..2c88054 100644
+> --- a/drivers/gpio/gpio-davinci.c
+> +++ b/drivers/gpio/gpio-davinci.c
+> @@ -166,7 +166,7 @@ static int davinci_gpio_get(struct gpio_chip *chip, unsigned offset)
+>  static int davinci_gpio_probe(struct platform_device *pdev)
+>  {
+>  	static int ctrl_num, bank_base;
+> -	int gpio, bank;
+> +	int gpio, bank, ret = 0;
+>  	unsigned ngpio, nbank;
+>  	struct davinci_gpio_controller *chips;
+>  	struct davinci_gpio_platform_data *pdata;
+> @@ -232,7 +232,13 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>  	for (gpio = 0, bank = 0; gpio < ngpio; gpio += 32, bank++)
+>  		chips->regs[bank] = gpio_base + offset_array[bank];
+>  
+> -	gpiochip_add_data(&chips->chip, chips);
+> +	ret = devm_gpiochip_add_data(dev, &chips->chip, chips);
+> +	if (ret) {
+> +		ctrl_num = 0;
+> +		bank_base = 0;
+
+Hmm, this doesn't look right to me. These variables are defined as
+static, and you are resetting them unconditionally. This should be an
+issue when you have multiple devices and one of them fails.
+
+regards
+Suman
+
+> +		return ret;
+> +	}
+> +
+>  	platform_set_drvdata(pdev, chips);
+>  	davinci_gpio_irq_setup(pdev);
+>  	return 0;
 > 
 
-Do you have a block IP version that you could base your numbering on, to
-break the trend? (We should go back and fix up the others as well)
-
-[..]
-> > > +static int qcom_pcie_enable_resources_v4(struct qcom_pcie *pcie)
-> > > +{
-> > > +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
-> > > +	struct dw_pcie *pci = pcie->pci;
-> > > +	struct device *dev = pci->dev;
-> > > +	int ret;
-> > > +
-> > > +	ret = clk_prepare_enable(res->sys_noc_clk);
-> > > +	if (ret) {
-> > > +		dev_err(dev, "cannot prepare/enable core clock\n");
-> > > +		return ret;
-> > > +	}
-> >
-> > Should these clocks really be handled explicitly in the driver? Are
-> > these not the bus clocks, to be handled by "msm_bus"?
-> 
-> This not the bus clock. This clock is for the Bus Interface Unit
-> between the PCIe module and the System NOC.
-> 
-
-Right, that was the piece I meant. Sorry for not using the right
-nomenclature.
-
-So then it would be handled by the msm_bus in the downstream kernel?
-
-
-Perhaps we can merge it like this and once we have the interconnect
-framework setup we can make this the fallback method.
-
-Thanks,
-Bjorn
