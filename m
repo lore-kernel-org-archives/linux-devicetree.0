@@ -1,38 +1,38 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: exynos: Add extcon property for TM2 and
- TM2E
-Date: Tue, 18 Jul 2017 07:07:10 +0200
-Message-ID: <20170718050710.GC13779@kozik-book>
-References: <1497942745-8607-1-git-send-email-dwoo08.lee@samsung.com>
- <CGME20170620071232epcas1p44dcc6475c7f826a8da52ad776759a926@epcas1p4.samsung.com>
- <1497942745-8607-3-git-send-email-dwoo08.lee@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497942745-8607-3-git-send-email-dwoo08.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dongwoo Lee <dwoo08.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/SAMSUNG EXYNOS ARM ARCHITECTURES" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 0/4] pinctrl: Add USB support for Aspeed SoCs
+Date: Tue, 18 Jul 2017 14:54:49 +0930
+Message-ID: <20170718052453.14316-1-andrew@aj.id.au>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 04:12:24PM +0900, Dongwoo Lee wrote:
-> Since commit 9840354ff429 ("usb: dwc3: Add dual-role support") dwc3
-> node requires extcon property to be initialized as otg mode, and it
-> can support dual-role mode operation.
-> 
-> Signed-off-by: Dongwoo Lee <dwoo08.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Hello,
 
-Thanks, applied.
+Here's v2 of the Aspeed pinctrl USB patches. It addresses the minor feedback on
+the original series[1], amounting to commit message changes for the bindings
+patches.
 
-Best regards,
-Krzysztof
+[1] https://lkml.org/lkml/2017/6/26/854
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please review!
+
+Cheers,
+
+Andrew
+
+Andrew Jeffery (4):
+  dt-bindings: pinctrl: aspeed: Add g4 USB functions
+  dt-bindings: pinctrl: aspeed: Add g5 USB functions
+  pinctrl: aspeed: g4: Add USB device and host support
+  pinctrl: aspeed: g5: Add USB device and host support
+
+ .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  8 ++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 66 +++++++++++++++++++---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 58 ++++++++++++++++++-
+ 3 files changed, 121 insertions(+), 11 deletions(-)
+
+-- 
+2.11.0
+
