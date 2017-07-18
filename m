@@ -1,348 +1,238 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH 2/7] PCI: rockchip: introduce per-lanes PHYs support
-Date: Tue, 18 Jul 2017 10:36:40 +0800
-Message-ID: <6eb842b5-4603-0c9b-2cee-9f8399f457df@rock-chips.com>
-References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
- <1500276982-208439-3-git-send-email-shawn.lin@rock-chips.com>
- <20170717201415.GB6856@google.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v6 8/9] arm64: allwinner: a64: enable AXP803
+ regulators for Pine64
+Date: Tue, 18 Jul 2017 10:58:52 +0800
+Message-ID: <CAGb2v65Fn4rvyLyZaFHfmUFQNq3ctN0+tG_fg24YhPpi-Vr8hA@mail.gmail.com>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-9-icenowy@aosc.io>
+ <98ae1ea8-ef08-8859-63d8-57c56a6348a6@arm.com> <4B129FD0-4AEB-4DC3-AF33-C279468BD197@aosc.io>
+ <77045320-c19a-6c18-ed68-108fa5416c2a@arm.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717201415.GB6856-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBBPTWXFQKGQEF7IQORY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <77045320-c19a-6c18-ed68-108fa5416c2a-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
-
-On 2017/7/18 4:14, Brian Norris wrote:
-> On Mon, Jul 17, 2017 at 03:36:17PM +0800, Shawn Lin wrote:
->> We distinguish the legacy PHY with the newer per-lane
->> PHYs by adding legacy_phy flag and consolidate all
->> the phy operations into a single function to simply the
->> code. Note that the legacy phy is still the first option
->> to be searched in order not to break the backward compatibility
->> of DT blob, althoug we use devm_phy_optional_get instead which
->> seams to violate the original statement of pcie-rockchip's DT
->> document.
->>
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> ---
->>
->>   drivers/pci/host/pcie-rockchip.c | 144 ++++++++++++++++++++++++++++++++-------
->>   1 file changed, 118 insertions(+), 26 deletions(-)
->>
->> diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
->> index 6632a51..f755df5 100644
->> --- a/drivers/pci/host/pcie-rockchip.c
->> +++ b/drivers/pci/host/pcie-rockchip.c
->> @@ -47,6 +47,7 @@
->>   #define HIWORD_UPDATE_BIT(val)		HIWORD_UPDATE(val, val)
->>   
->>   #define ENCODE_LANES(x)			((((x) >> 1) & 3) << 4)
->> +#define MAX_LANE_NUM			4
->>   
->>   #define PCIE_CLIENT_BASE		0x0
->>   #define PCIE_CLIENT_CONFIG		(PCIE_CLIENT_BASE + 0x00)
->> @@ -210,7 +211,9 @@
->>   struct rockchip_pcie {
->>   	void	__iomem *reg_base;		/* DT axi-base */
->>   	void	__iomem *apb_base;		/* DT apb-base */
->> +	bool	legacy_phy;
->>   	struct	phy *phy;
->> +	struct  phy **phys;
-> 
-> Would this be simpler as just an array?
-> 
-> 	struct phy *phys[MAX_LANE_NUM};
-> 
-> You can probably also combine it with the 'phy' field, and just treat it
-> differently based on the 'legacy_phy' switch.
-
-Make sense.
-
-> 
->>   	struct	reset_control *core_rst;
->>   	struct	reset_control *mgmt_rst;
->>   	struct	reset_control *mgmt_sticky_rst;
->> @@ -242,6 +245,15 @@ struct rockchip_pcie {
->>   	phys_addr_t mem_bus_addr;
->>   };
->>   
->> +enum phy_ops_type {
->> +	PHY_INIT,
->> +	PHY_PWR_ON,
->> +	PHY_PWR_OFF,
->> +	PHY_EXIT,
->> +};
->> +
->> +const char *phy_ops_name[] = {"init", "power on", "power off", "exit"};
-> 
-> This could be 'static'. But if it's only for printing error
-> messages...do you really even need this? Somebody could easily refer
-> back to the driver if they need to convert an int/enum to something
-> meaningful.
-
-ok, I will kill all these above including the following ugly
-rockchip_pcie_manipulate_phys.
-
-> 
->> +
->>   static u32 rockchip_pcie_read(struct rockchip_pcie *rockchip, u32 reg)
->>   {
->>   	return readl(rockchip->apb_base + reg);
->> @@ -507,6 +519,104 @@ static void rockchip_pcie_set_power_limit(struct rockchip_pcie *rockchip)
->>   	rockchip_pcie_write(rockchip, status, PCIE_RC_CONFIG_DCR);
->>   }
->>   
->> +static int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
->> +{
->> +	struct device *dev = rockchip->dev;
->> +	struct phy *phy;
->> +	char *name;
->> +	u32 i;
->> +
->> +	rockchip->phy = devm_phy_get(dev, "pcie-phy");
->> +	if (IS_ERR(rockchip->phy)) {
->> +		if (PTR_ERR(rockchip->phy) == -EPROBE_DEFER)
->> +			return PTR_ERR(rockchip->phy);
->> +		dev_dbg(dev, "missing legacy phy, and search for per-lane PHY\n");
->> +	} else {
->> +		rockchip->legacy_phy = true;
->> +		dev_warn(dev, "legacy phy model is deprecated!\n");
->> +		return 0;
->> +	}
->> +
->> +	/* per-lane PHYs */
->> +	rockchip->phys = devm_kcalloc(dev, sizeof(phy), MAX_LANE_NUM,
->> +				      GFP_KERNEL);
->> +	if (!rockchip->phys)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < MAX_LANE_NUM; i++) {
->> +		name = kasprintf(GFP_KERNEL, "%s-%u", "pcie-phy", i);
-> 
-> Since the string is constant, this could just be:
-> 
-> 		kasprintf(..., "pcie-phy-%u", i);
-> 
-
-Looks good, and will improve it.
-
->> +		if (!name)
->> +			return -ENOMEM;
->> +
->> +		phy = devm_of_phy_get(rockchip->dev,
->> +				      rockchip->dev->of_node, name);
->> +		kfree(name);
->> +
->> +		if (IS_ERR(phy)) {
->> +			if (PTR_ERR(phy) != -EPROBE_DEFER)
->> +				dev_err(dev, "missing phy for lane %d: %ld\n",
->> +					i, PTR_ERR(phy));
->> +			return PTR_ERR(phy);
->> +		}
->> +
->> +		rockchip->phys[i] = phy;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int rockchip_pcie_manipulate_phys(struct rockchip_pcie *rockchip,
->> +					 enum phy_ops_type type)
->> +{
->> +	int i, phy_num, err;
->> +	struct device *dev = rockchip->dev;
->> +	struct phy *phy;
->> +
->> +	phy_num = rockchip->legacy_phy ? 1 : MAX_LANE_NUM;
->> +
->> +	for (i = 0; i < phy_num; i++) {
->> +		phy = rockchip->legacy_phy ? rockchip->phy :
->> +					     rockchip->phys[i];
->> +		switch (type) {
->> +		case PHY_INIT:
->> +			if (phy->init_count > phy_num)
-> 
-> This looks illegal and badly designed. Illegal, because this looks to be
-> a count that should only be touched by the PHY core (and protected by
-> its mutex). Badly designed, because this is *not* the right way to
-> handle overflow/underflow. You should make sure that this driver does
-> init/exit and power on/off in a properly-balanced fashion. And that
-> doesn't mean just "skip" it when the count is too high; it means this
-> driver should know on its own when is the right time to power on/off the
-> phy/lane.
-
-right,  init_cout/power_count should be kept inside the phy core but
-we didn't want to duplicate it for consumer. I will try to kill all
-of these.
-
-> 
-> And this logic doesn't even make sense. Why should I be allowed to init
-> lane 0 only once, but I can init lane 3 up to 4 time >
->> +				continue;
->> +			err = phy_init(phy);
->> +			break;
->> +		case PHY_PWR_ON:
->> +			if (phy->power_count > phy_num)
-> 
-> Same goes here.
-> 
->> +				continue;
->> +			err = phy_power_on(phy);
->> +			break;
->> +		case PHY_PWR_OFF:
->> +			if (!phy->power_count)
-> 
-> And here.
-> 
->> +				continue;
->> +			err = phy_power_off(phy);
->> +			break;
->> +		case PHY_EXIT:
->> +			if (!phy->init_count)
-> 
-> And here.
-> 
->> +				continue;
->> +			err = phy_exit(phy);
->> +			break;
->> +		default:
->> +			dev_err(dev, "unsupported phy_ops_type\n");
->> +			return -EOPNOTSUPP;
->> +		}
->> +
->> +		if (err < 0) {
->> +			if (rockchip->legacy_phy)
->> +				dev_err(dev, "fail to %s legacy PHY, err %d\n",
->> +					phy_ops_name[type], err);
->> +			else
->> +				dev_err(dev, "fail to %s per-lane PHY#%u, err %d\n",
->> +					phy_ops_name[type], i, err);
->> +			return err;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
-> 
-> Really, I think you should kill this whole function, and code the loop
-> elsewhere.
-> 
->> +
->>   /**
->>    * rockchip_pcie_init_port - Initialize hardware
->>    * @rockchip: PCIe port information
->> @@ -537,11 +647,9 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->>   		return err;
->>   	}
->>   
->> -	err = phy_init(rockchip->phy);
->> -	if (err < 0) {
->> -		dev_err(dev, "fail to init phy, err %d\n", err);
->> +	err = rockchip_pcie_manipulate_phys(rockchip, PHY_INIT);
->> +	if (err < 0)
->>   		return err;
->> -	}
->>   
->>   	err = reset_control_assert(rockchip->core_rst);
->>   	if (err) {
->> @@ -602,11 +710,9 @@ static int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
->>   			    PCIE_CLIENT_MODE_RC,
->>   			    PCIE_CLIENT_CONFIG);
->>   
->> -	err = phy_power_on(rockchip->phy);
->> -	if (err) {
->> -		dev_err(dev, "fail to power on phy, err %d\n", err);
->> +	err = rockchip_pcie_manipulate_phys(rockchip, PHY_PWR_ON);
->> +	if (err)
->>   		return err;
->> -	}
->>   
->>   	/*
->>   	 * Please don't reorder the deassert sequence of the following
->> @@ -853,20 +959,6 @@ static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
->>   	chained_irq_exit(chip, desc);
->>   }
->>   
->> -static int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
->> -{
->> -	struct device *dev = rockchip->dev;
->> -
->> -	rockchip->phy = devm_phy_get(dev, "pcie-phy");
->> -	if (IS_ERR(rockchip->phy)) {
->> -		if (PTR_ERR(rockchip->phy) != -EPROBE_DEFER)
->> -			dev_err(dev, "missing phy\n");
->> -		return PTR_ERR(rockchip->phy);
->> -	}
->> -
->> -	return 0;
->> -}
->> -
->>   /**
->>    * rockchip_pcie_parse_dt - Parse Device Tree
->>    * @rockchip: PCIe port information
->> @@ -1295,8 +1387,8 @@ static int __maybe_unused rockchip_pcie_suspend_noirq(struct device *dev)
->>   		return ret;
->>   	}
->>   
->> -	phy_power_off(rockchip->phy);
->> -	phy_exit(rockchip->phy);
->> +	rockchip_pcie_manipulate_phys(rockchip, PHY_PWR_OFF);
->> +	rockchip_pcie_manipulate_phys(rockchip, PHY_EXIT);
-> 
-> What's wrong with this (once you unify the 'phys' array)?
-> 
-> 	for (i = 0; i < MAX_LANE_NUM; i++) {
-> 		if (rockchip->phys[i]) { // Not necessarily required;
-> 					 // phy APIs handle NULL
-> 			phy_power_off(rockchip->phys[i]);
-> 			phy_exit(rockchip->phys[i]);
-> 		}
-> 	}
-> 
-> Similar for all other uses, AFAICT.
-> 
-> Once you actually need to prevent multiple power-offs (when you power
-> down some lanes, but not others), you can avoid the illegal access to
-> PHY-internal counters by just keeping your own mask of on/off PHYs.
-
-I would like to see if I could reconstruct the phy consumer/provider
-to avoid all these counters and fix all corner cases . :)
-
-
-> 
->>   
->>   	clk_disable_unprepare(rockchip->clk_pcie_pm);
->>   	clk_disable_unprepare(rockchip->hclk_pcie);
->> @@ -1538,8 +1630,8 @@ static int rockchip_pcie_remove(struct platform_device *pdev)
->>   	pci_unmap_iospace(rockchip->io);
->>   	irq_domain_remove(rockchip->irq_domain);
->>   
->> -	phy_power_off(rockchip->phy);
->> -	phy_exit(rockchip->phy);
->> +	rockchip_pcie_manipulate_phys(rockchip, PHY_PWR_OFF);
->> +	rockchip_pcie_manipulate_phys(rockchip, PHY_EXIT);
-> 
-> Same here.
-> 
-> Brian
-> 
->>   
->>   	clk_disable_unprepare(rockchip->clk_pcie_pm);
->>   	clk_disable_unprepare(rockchip->hclk_pcie);
->> -- 
->> 1.9.1
+On Fri, May 19, 2017 at 4:55 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wr=
+ote:
+> Hi,
+>
+> On 19/05/17 09:29, Icenowy Zheng wrote:
 >>
 >>
-> 
-> 
-> 
+>> =E4=BA=8E 2017=E5=B9=B45=E6=9C=8819=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=884:27:21, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
+>>> Hi,
+>>>
+>>> On 18/05/17 08:16, Icenowy Zheng wrote:
+>>>> Add support of AXP803 regulators in the Pine64 device tree, in order
+>>> to
+>>>> enable many future functionalities, e.g. Wi-Fi.
+>>>>
+>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>>>> ---
+>>>> Changes in v6:
+>>>> - Rebased on next-20170517.
+>>>>
+>>>>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109
+>>> +++++++++++++++++++++
+>>>>  1 file changed, 109 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>>> index 36001884ed33..40921bacb39c 100644
+>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+>>>> @@ -118,6 +118,115 @@
+>>>>     };
+>>>>  };
+>>>>
+>>>> +#include "axp803.dtsi"
+>>>> +
+>>>> +&reg_aldo1 {
+>>>> +   regulator-min-microvolt =3D <2800000>;
+>>>> +   regulator-max-microvolt =3D <2800000>;
+>>>> +   regulator-name =3D "vcc-csi";
+>>>> +};
+>>>> +
+>>>> +&reg_aldo2 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <1800000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-pl";
+>>>> +};
+>>>> +
+>>>> +&reg_aldo3 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <2700000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-pll-avcc";
+>>>> +};
+>
+> The schematic puts this at a fixed 3.0V, so why the range here? Are we
+> expected to tune the voltage of the PLLs?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Normally these would describe the operating limits. We did this
+in the past for most boards. I'm fine with fixing it to 3.0V
+though.
+
+>
+>>>> +
+>>>> +&reg_dc1sw {
+>>>> +   regulator-name =3D "vcc-phy";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc1 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <3300000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-3v3";
+>>>> +};
+>>>> +
+>>>> +&reg_dcdc2 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <1000000>;
+>>>> +   regulator-max-microvolt =3D <1300000>;
+>>>> +   regulator-name =3D "vdd-cpux";
+>>>> +};
+>>>> +
+>>>> +/* DCDC3 is polyphased with DCDC2 */
+>>>> +
+>>>> +&reg_dcdc5 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <1500000>;
+>>>> +   regulator-max-microvolt =3D <1500000>;
+>>>> +   regulator-name =3D "vcc-dram";
+>>>> +};
+>>>
+>>> I think I mentioned this before, but the Pine64 has DDR3L DRAM, which
+>>> is
+>>> specified to run at 1.35V (1.36V with the 20mV granularity of the AXP).
+>>> The reset value is even (wrongly?) configured to 1.24V.
+>>>
+>>> So is there any reason you set the voltage to 1.5V? Is that what the
+>>> BSP
+>>> does? Or did you see any problems with 1.36V?
+>>
+>> I just set it based on the schematics.
+>
+> I wouldn't trust the schematics too much. They are rather generic, see
+> the Ethernet page, for instance, showing *different* PHYs, not just the
+> ones used.
+> For the DRAM the Pine64 schematic does not even tell the DRAM chip used,
+> the name under the chip is just describing the package.
+>
+>> And 1.35v cannot be accurately achieved by dcdc5 and it's a problem whet=
+her to use 1.34v or 1.36v ;-)
+>
+> Well, as I wrote above, 1.36V is the voltage to go with. I think 10mV
+> more is well within the tolerance ;-)
+>
+>>>> +&reg_dcdc6 {
+>>>> +   regulator-always-on;
+>>>> +   regulator-min-microvolt =3D <1100000>;
+>>>> +   regulator-max-microvolt =3D <1100000>;
+>>>> +   regulator-name =3D "vdd-sys";
+>>>> +};
+>>>> +
+>>>> +&reg_dldo1 {
+>>>> +   regulator-min-microvolt =3D <3300000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-hdmi";
+>>>> +};
+>>>> +
+>>>> +&reg_dldo2 {
+>>>> +   regulator-min-microvolt =3D <3300000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-mipi";
+>>>> +};
+>>>> +
+>>>> +&reg_dldo3 {
+>>>> +   regulator-min-microvolt =3D <3300000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "avdd-csi";
+>>>> +};
+>
+> If you stick to the schematic, this should be 2.8V.
+
+Agreed. But...
+
+>>>> +
+>>>> +&reg_dldo4 {
+>>>> +   regulator-min-microvolt =3D <3300000>;
+>>>> +   regulator-max-microvolt =3D <3300000>;
+>>>> +   regulator-name =3D "vcc-wifi";
+>>>> +};
+>>>> +
+>>>> +&reg_eldo1 {
+>>>> +   regulator-min-microvolt =3D <1800000>;
+>>>> +   regulator-max-microvolt =3D <1800000>;
+>>>> +   regulator-name =3D "cpvdd";
+>>>> +};
+>>>> +
+>>>> +&reg_eldo3 {
+>>>> +   regulator-min-microvolt =3D <1800000>;
+>>>> +   regulator-max-microvolt =3D <1800000>;
+>>>> +   regulator-name =3D "vdd-1v8-csi";
+>>>> +};
+>
+> The schematic lists 1.2V/1.5V/1.8V here, so should we have a range?
+
+This and avdd-csi really depends on the camera module used.
+Maybe this should be left to an overlay.
+
+>
+>>>> +
+>>>> +&reg_fldo1 {
+>>>> +   regulator-min-microvolt =3D <1200000>;
+>>>> +   regulator-max-microvolt =3D <1200000>;
+>>>> +   regulator-name =3D "vcc-1v2-hsic";
+>>>> +};
+>>>> +
+>>>> +&reg_fldo2 {
+>>>> +   regulator-always-on;
+>
+> Why do we need to turn this on? Upstream firmware does not use the
+> arisc, so it can stay off.
+> Also in general I think Linux should not tinker with the management
+> processor at all.
+
+I'm not sure, but I think at least one SoC had failed to work without
+this powered on. If that is the case with the A64, then please leave
+a comment saying so. Otherwise let it stay off.
+
+ChenYu
+
+> Cheers,
+> Andre.
+>
+>>>> +   regulator-min-microvolt =3D <1100000>;
+>>>> +   regulator-max-microvolt =3D <1100000>;
+>>>> +   regulator-name =3D "vdd-cpus";
+>>>> +};
+>>>> +
+>>>> +&reg_rtc_ldo {
+>>>> +   regulator-name =3D "vcc-rtc";
+>>>> +};
+>>>> +
+>>>>  /* On Exp and Euler connectors */
+>>>>  &uart0 {
+>>>>     pinctrl-names =3D "default";
+>>>>
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
