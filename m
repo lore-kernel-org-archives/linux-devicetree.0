@@ -1,95 +1,143 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] mmc: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:16 -0500
-Message-ID: <20170718214339.7774-36-robh@kernel.org>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ludovic Desroches <ludovic.desroches@microchip.com>, Jan Glauber <jglauber@cavium.com>, David Daney <david.daney@cavium.com>, "Steven J. Hill" <Steven.Hill@cavium.com>, linux-mmc@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] macintosh: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:12 -0500
+Message-ID: <20170718214339.7774-32-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
 full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: Jan Glauber <jglauber@cavium.com>
-Cc: David Daney <david.daney@cavium.com>
-Cc: "Steven J. Hill" <Steven.Hill@cavium.com>
-Cc: linux-mmc@vger.kernel.org
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 ---
- drivers/mmc/core/core.c      | 8 ++++----
- drivers/mmc/host/atmel-mci.c | 4 ++--
- drivers/mmc/host/cavium.c    | 6 ++----
- 3 files changed, 8 insertions(+), 10 deletions(-)
+ drivers/macintosh/macio_sysfs.c           | 2 +-
+ drivers/macintosh/rack-meter.c            | 4 ++--
+ drivers/macintosh/smu.c                   | 8 ++++----
+ drivers/macintosh/via-cuda.c              | 4 ++--
+ drivers/macintosh/windfarm_fcu_controls.c | 4 ++--
+ drivers/macintosh/windfarm_lm87_sensor.c  | 4 ++--
+ drivers/macintosh/windfarm_smu_sat.c      | 2 +-
+ 7 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-index 26431267a3e2..6b4117615ad6 100644
---- a/drivers/mmc/core/core.c
-+++ b/drivers/mmc/core/core.c
-@@ -1137,11 +1137,11 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
- 	voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
- 	num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
- 	if (!voltage_ranges) {
--		pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
-+		pr_debug("%pOF: voltage-ranges unspecified\n", np);
- 		return 0;
+diff --git a/drivers/macintosh/macio_sysfs.c b/drivers/macintosh/macio_sysfs.c
+index 2445274f7e4b..281f5345661e 100644
+--- a/drivers/macintosh/macio_sysfs.c
++++ b/drivers/macintosh/macio_sysfs.c
+@@ -52,7 +52,7 @@ static ssize_t devspec_show(struct device *dev,
+ 	struct platform_device *ofdev;
+
+ 	ofdev = to_platform_device(dev);
+-	return sprintf(buf, "%s\n", ofdev->dev.of_node->full_name);
++	return sprintf(buf, "%pOF\n", ofdev->dev.of_node);
+ }
+ static DEVICE_ATTR_RO(modalias);
+ static DEVICE_ATTR_RO(devspec);
+diff --git a/drivers/macintosh/rack-meter.c b/drivers/macintosh/rack-meter.c
+index e199fd6c71ce..e9da80ceb7c8 100644
+--- a/drivers/macintosh/rack-meter.c
++++ b/drivers/macintosh/rack-meter.c
+@@ -431,8 +431,8 @@ static int rackmeter_probe(struct macio_dev* mdev,
+ 	    of_address_to_resource(i2s, 0, &ri2s) ||
+ 	    of_address_to_resource(i2s, 1, &rdma)) {
+ 		printk(KERN_ERR
+-		       "rackmeter: found match but lacks resources: %s",
+-		       mdev->ofdev.dev.of_node->full_name);
++		       "rackmeter: found match but lacks resources: %pOF",
++		       mdev->ofdev.dev.of_node);
+ 		rc = -ENXIO;
+ 		goto bail_free;
  	}
- 	if (!num_ranges) {
--		pr_err("%s: voltage-ranges empty\n", np->full_name);
-+		pr_err("%pOF: voltage-ranges empty\n", np);
- 		return -EINVAL;
+diff --git a/drivers/macintosh/smu.c b/drivers/macintosh/smu.c
+index 1ac66421877a..ea9bdc85a21d 100644
+--- a/drivers/macintosh/smu.c
++++ b/drivers/macintosh/smu.c
+@@ -589,14 +589,14 @@ static int smu_late_init(void)
+ 	if (smu->db_node) {
+ 		smu->db_irq = irq_of_parse_and_map(smu->db_node, 0);
+ 		if (!smu->db_irq)
+-			printk(KERN_ERR "smu: failed to map irq for node %s\n",
+-			       smu->db_node->full_name);
++			printk(KERN_ERR "smu: failed to map irq for node %pOF\n",
++			       smu->db_node);
+ 	}
+ 	if (smu->msg_node) {
+ 		smu->msg_irq = irq_of_parse_and_map(smu->msg_node, 0);
+ 		if (!smu->msg_irq)
+-			printk(KERN_ERR "smu: failed to map irq for node %s\n",
+-			       smu->msg_node->full_name);
++			printk(KERN_ERR "smu: failed to map irq for node %pOF\n",
++			       smu->msg_node);
  	}
 
-@@ -1153,8 +1153,8 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
- 				be32_to_cpu(voltage_ranges[j]),
- 				be32_to_cpu(voltage_ranges[j + 1]));
- 		if (!ocr_mask) {
--			pr_err("%s: voltage-range #%d is invalid\n",
--				np->full_name, i);
-+			pr_err("%pOF: voltage-range #%d is invalid\n",
-+				np, i);
- 			return -EINVAL;
+ 	/*
+diff --git a/drivers/macintosh/via-cuda.c b/drivers/macintosh/via-cuda.c
+index c60415958dfe..147da4edd021 100644
+--- a/drivers/macintosh/via-cuda.c
++++ b/drivers/macintosh/via-cuda.c
+@@ -297,8 +297,8 @@ static int __init via_cuda_start(void)
+ #else
+     cuda_irq = irq_of_parse_and_map(vias, 0);
+     if (!cuda_irq) {
+-	printk(KERN_ERR "via-cuda: can't map interrupts for %s\n",
+-	       vias->full_name);
++	printk(KERN_ERR "via-cuda: can't map interrupts for %pOF\n",
++	       vias);
+ 	return -ENODEV;
+     }
+ #endif
+diff --git a/drivers/macintosh/windfarm_fcu_controls.c b/drivers/macintosh/windfarm_fcu_controls.c
+index 0226b796a21c..fab7a21e9577 100644
+--- a/drivers/macintosh/windfarm_fcu_controls.c
++++ b/drivers/macintosh/windfarm_fcu_controls.c
+@@ -470,8 +470,8 @@ static void wf_fcu_lookup_fans(struct wf_fcu_priv *pv)
+ 				id = ((*reg) - 0x30) / 2;
+ 			if (id > 7) {
+ 				pr_warning("wf_fcu: Can't parse "
+-				       "fan ID in device-tree for %s\n",
+-					   np->full_name);
++				       "fan ID in device-tree for %pOF\n",
++					   np);
+ 				break;
+ 			}
+ 			wf_fcu_add_fan(pv, name, type, id);
+diff --git a/drivers/macintosh/windfarm_lm87_sensor.c b/drivers/macintosh/windfarm_lm87_sensor.c
+index c071aab79dd1..913c4bfeef94 100644
+--- a/drivers/macintosh/windfarm_lm87_sensor.c
++++ b/drivers/macintosh/windfarm_lm87_sensor.c
+@@ -126,8 +126,8 @@ static int wf_lm87_probe(struct i2c_client *client,
  		}
- 		*mask |= ocr_mask;
-diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-index 97de2d32ba84..b7c1cd384306 100644
---- a/drivers/mmc/host/atmel-mci.c
-+++ b/drivers/mmc/host/atmel-mci.c
-@@ -665,8 +665,8 @@ atmci_of_init(struct platform_device *pdev)
+ 	}
+ 	if (!name) {
+-		pr_warning("wf_lm87: Unsupported sensor %s\n",
+-			   client->dev.of_node->full_name);
++		pr_warning("wf_lm87: Unsupported sensor %pOF\n",
++			   client->dev.of_node);
+ 		return -ENODEV;
+ 	}
 
- 	for_each_child_of_node(np, cnp) {
- 		if (of_property_read_u32(cnp, "reg", &slot_id)) {
--			dev_warn(&pdev->dev, "reg property is missing for %s\n",
--				 cnp->full_name);
-+			dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
-+				 cnp);
+diff --git a/drivers/macintosh/windfarm_smu_sat.c b/drivers/macintosh/windfarm_smu_sat.c
+index ad6223e88340..e9c828bf171b 100644
+--- a/drivers/macintosh/windfarm_smu_sat.c
++++ b/drivers/macintosh/windfarm_smu_sat.c
+@@ -248,7 +248,7 @@ static int wf_sat_probe(struct i2c_client *client,
+ 		core = loc[5] - '0';
+ 		if (chip > 1 || core > 1) {
+ 			printk(KERN_ERR "wf_sat_create: don't understand "
+-			       "location %s for %s\n", loc, child->full_name);
++			       "location %s for %pOF\n", loc, child);
  			continue;
  		}
-
-diff --git a/drivers/mmc/host/cavium.c b/drivers/mmc/host/cavium.c
-index 3686d77c717b..27fb625cbcf3 100644
---- a/drivers/mmc/host/cavium.c
-+++ b/drivers/mmc/host/cavium.c
-@@ -957,14 +957,12 @@ static int cvm_mmc_of_parse(struct device *dev, struct cvm_mmc_slot *slot)
-
- 	ret = of_property_read_u32(node, "reg", &id);
- 	if (ret) {
--		dev_err(dev, "Missing or invalid reg property on %s\n",
--			of_node_full_name(node));
-+		dev_err(dev, "Missing or invalid reg property on %pOF\n", node);
- 		return ret;
- 	}
-
- 	if (id >= CAVIUM_MAX_MMC || slot->host->slot[id]) {
--		dev_err(dev, "Invalid reg property on %s\n",
--			of_node_full_name(node));
-+		dev_err(dev, "Invalid reg property on %pOF\n", node);
- 		return -EINVAL;
- 	}
-
+ 		cpu = 2 * chip + core;
 --
 2.11.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
