@@ -1,38 +1,59 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 0/4] pinctrl: Add USB support for Aspeed SoCs
-Date: Tue, 18 Jul 2017 14:54:49 +0930
-Message-ID: <20170718052453.14316-1-andrew@aj.id.au>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCH v2 2/4] dt-bindings: pinctrl: aspeed: Add g5 USB functions
+Date: Tue, 18 Jul 2017 14:54:51 +0930
+Message-ID: <20170718052453.14316-3-andrew@aj.id.au>
+References: <20170718052453.14316-1-andrew@aj.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718052453.14316-1-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org
 Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The Aspeed AST2500 SoC contains a number of USB controllers:
 
-Here's v2 of the Aspeed pinctrl USB patches. It addresses the minor feedback on
-the original series[1], amounting to commit message changes for the bindings
-patches.
+* USB 1.1 Host Controller
+* USB 2.0 Host Controller (x2)
+* USB 2.0 Virtual Hub
+* USB 2.0 Device Controller
+* USB 1.1 HID Controller
 
-[1] https://lkml.org/lkml/2017/6/26/854
+The controllers are exposed via two USB ports with functionality muxed
+as required. The following table illustrates the relationships between
+the ports and the controllers via the mux function names:
 
-Please review!
+Port  | USB Version  | USB Mode     | Mux Function
+------|--------------|--------------|-------------
+A     | 2.0          | Virtual Hub  | USB2AD
+A     | 2.0          | Host         | USB2AH
+B     | 1.1          | HID          | USB11BHID
+B     | 2.0          | Device       | USB2BD
+B     | 2.0          | Host         | USB2BH
 
-Cheers,
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+v1 -> v2:
 
-Andrew
+* Update commit message to separate Virtual Hub, 2.0 Device and 1.1 HID
+  controllers
 
-Andrew Jeffery (4):
-  dt-bindings: pinctrl: aspeed: Add g4 USB functions
-  dt-bindings: pinctrl: aspeed: Add g5 USB functions
-  pinctrl: aspeed: g4: Add USB device and host support
-  pinctrl: aspeed: g5: Add USB device and host support
+ Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  8 ++-
- drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 66 +++++++++++++++++++---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 58 ++++++++++++++++++-
- 3 files changed, 121 insertions(+), 11 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+index 09142dab47db..3b7266c7c438 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+@@ -87,7 +87,8 @@ SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
+ SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
+ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
+ SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
+-TXD3 TXD4 UART6 USBCKI VGABIOSROM VGAHS VGAVS VPI24 VPO WDTRST1 WDTRST2
++TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
++VGAVS VPI24 VPO WDTRST1 WDTRST2
+ 
+ Examples
+ ========
 -- 
 2.11.0
-
