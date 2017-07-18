@@ -1,189 +1,64 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [RFCv2 usb-next 0/3] initialize (multiple) PHYs in xhci-plat
-Date: Tue, 18 Jul 2017 09:40:58 +0800
-Message-ID: <1500342058.25536.74.camel@mhfsdcap03>
-References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
-         <1500111231.25536.18.camel@mhfsdcap03>
-         <CAFBinCAw9yaaEO6Z9AdkBaPg9azGH4nqgdgoTir9U0eWZVu1DQ@mail.gmail.com>
-         <1500276067.25536.58.camel@mhfsdcap03>
-         <CAFBinCA8o0DzExJOKdh_7zmfJhLwu_hsAHp_POyNO7-ifdPUqQ@mail.gmail.com>
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 0/7] drm/rockchip: add all full framework vop support
+Date: Tue, 18 Jul 2017 10:28:07 +0800
+Message-ID: <1500344888-28165-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCA8o0DzExJOKdh_7zmfJhLwu_hsAHp_POyNO7-ifdPUqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Mon, 2017-07-17 at 11:27 +0200, Martin Blumenstingl wrote:
-> Hi,
-> 
-> On Mon, Jul 17, 2017 at 9:21 AM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> > Hi,
-> > On Sat, 2017-07-15 at 14:11 +0200, Martin Blumenstingl wrote:
-> >> Hi,
-> >>
-> >> On Sat, Jul 15, 2017 at 11:33 AM, Chunfeng Yun
-> >> <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> >> > Hi Martin,
-> >> >
-> >> > On Thu, 2017-07-13 at 12:59 +0200, Martin Blumenstingl wrote:
-> >> >> This series is the outcome of a discussion with Felipe Balbi,
-> >> >> see [0] and [1].
-> >> >> The quick-summary of this is:
-> >> >> - dwc3 already takes one USB2 and one USB3 PHY and initializes these
-> >> >>   correct
-> >> >> - some other HCI platform drivers (like ehci-platform.c, xhci-mtk.c and
-> >> >>   ohci-platform.c) do not have a limitation on the number of PHYs - they
-> >> >>   support one PHY per actual host port
-> >> >> - Amlogic Meson GXL and GXM SoCs come with a dwc3 IP block which has two
-> >> >>   or three USB2 ports enabled on the internal root-hub. The SoCs also
-> >> >>   provide separate USB2 PHYs, one per port. All USB2 PHYs (which are
-> >> >>   internally "connected" to the dwc3 roothub) need to be powered on,
-> >> >>   otherwise USB devices cannot be enumerated (even if just one PHY is
-> >> >>   disabled and if the device is plugged into another, enabled port)
-> >> >>
-> >> >> In my first attempt to get USB supported on the GXL and GXM SoCs I tried
-> >> >> to work-around the problem that I could not pass multiple PHYs to the
-> >> >> dwc3 controller.
-> >> >> This was rejected by Rob Herring (which was definitely the thing to do in
-> >> >> my opinion), see [2]
-> >> >>
-> >> >> This series adds a new "platform-roothub". This can be configured through
-> >> >> devicetree by passing a child-node with "reg = <0>" to the USB
-> >> >> controller. Additionally there has to be a child-node for each port on
-> >> >> the root-hub. Each of the child-nodes takes a "phys" and "phy-names"
-> >> >> property. This allows modeling the root-hub in devicetree similar to the
-> >> >> USB device binding (documented in devicetree/bindings/usb/usb-device.txt)
-> >> >> This avoids and backwards-compatibility problems (which was a concern
-> >> >> regardless of the solution, see [3]) since the binding for the root-hub
-> >> >> was previously not specified (and we're not using the "phys" property of
-> >> >> the controller, which might have served different purposes before,
-> >> >> depending on the drivers).
-> >> >>
-> >> >> Additionally this integrates the new platform-roothub into xhci-plat.c
-> >> >> which automatically enables it for the dwc3 driver (in host-mode).
-> >> >>
-> >> > How to handle the phy0(one u2phy and one u3phy) when port1 support
-> >> > dual-role mode? leave them to peripheral side as felipe suggested
-> >> > before? If so, no port1 node for roothub, is there any problem when
-> >> > change the port1 to host-only mode?
-> >> on Amlogic Meson GXL we have the following IP blocks:
-> >> - 2x USB2 PHYs, some external component has to tell them which mode
-> >> (host/device) they should operate in
-> >> - there is an additional (1x) USB3 PHY with built-in OTG detection logic
-> >>
-> >> on Amlogic Meson GXL it could work like this:
-> >> USB2 and USB3 phy0 can be passed to the root-hub. Additionally the
-> >> USB2 phy0 could be passed to the USB3 PHY. The USB3 PHY would then
-> >> tell the USB2 PHY in which mode it should operate.
-> >>
-> >> please note that device mode and OTG support on Amlogic Meson GXL is
-> >> more complicated, as it uses dwc2 and dwc3 controllers in combination:
-> >> - dwc3 is reponsible for host-only mode
-> >> - dwc2 is responsible for device-only mode
-> >> - OTG detection is done by the USB3 PHY
-> >>
-> >> would you mind sharing a short overview of host/device/OTG support
-> >> works on Mediatek SoCs? I assume that the Amlogic Meson GXL
-> >> implementation is quite special, so comparing this with another
-> >> implementation (for example the Mediatek one) may help spotting
-> >> potential issues.
-> >>
-> > MTK's mtu3 IP supports at most 5x USB2 phys and 4x USB3 phys. They work
-> > as following:
-> thank you for sharing this!
-> 
-> > 1. device mode works as HS only:
-> >
-> > u2phy0 --- dual-role/OTG
-> >
-> > u2phy1 ---|
-> >           +  U3 host-only
-> > u3phy0 ---|
-> >
-> > ...
-> > u2phy4 ---|
-> >           +  U3 host-only
-> > u3phy3 ---|
-> > (e.g. MT8173 supports 2x u2phys and 1x u3phy, u2phy0 can work as
-> > dual-role mode, u2phy1 & u3phy0 are host-only)
-> >
-> > 2. device mode works as HS & SS, or host only:
-> >
-> > u2phy0 ---|
-> >           + dual-role or host-only
-> > u3phy0 ---|
-> >
-> > ...
-> > u2phy3 ---|
-> >           + U3 host-only
-> > u3phy3 ---|
-> >
-> > u2phy4 --- U2 host-only
-> > (e.g. on MT2701, u2phy0 and u3phy0 work as host-only mode)
-> OK, so in both cases only one port (with one u2phy and one u3phy) is
-> dual-role capable
-Yes
-> 
-> > mtu3 driver supports host-only, device-only and dual-role mode(use IDDIG
-> > pin), and will take all phys it needed, include host-only phys;
-> > But if just host-only mode is supported, we can skip mtu3 driver and
-> > make use of xhci-mtk driver directly, then xhci-mtk will take all phys.
-> I see, in your example it's the mtu3
-> (Documentation/devicetree/bindings/usb/mt8173-mtu3.txt) which does the
-> mode switching. I assume that you're doing the host/device mode
-> switching through the extcon phandle (for example together with the
-> extcon-usb-gpio driver).
-> 
-> in you example: can't we *always* describe the roothub via devicetree
-> (just like in my example: [0])?
-> this means that (as you already mentioned) USB host-only support is now covered.
-> to handle dual-role (host/device switching) we now need to pass the
-> dual-role capable PHYs to whatever IP can detect the mode it should
-> operate in (in your case: mtu3, in Amlogic's case: the u3phy with
-> built-in mode detection logic -> the driver for this IP block should
-> call phy_set_mode(phy, PHY_MODE_USB_{HOST,DEVICE,OTG} accordingly).
-> here's a skeleton (stripped-down) of how the .dts could look like:
-> mtu3: usb@11271000 {
->     compatible = "mediatek,mt8173-mtu3";
-> ...
->     /* MT2701 = 2nd example, for MT8173 = 1st example we would skip
-> the u3phy0 */
->     /* only list the dual role capable PHYs here */
->     phys = <&u3phy0>, <&u2phy0>;
->     phy-names = "usb3-phy", "usb2-phy";
-> 
->     usb_host: xhci@11270000 {
->         compatible = "mediatek,mt8173-xhci";
->         ...
->         roothub@0 {
->             /* includes all PHYs, including the dual role capable ones */
-If here include dual-role capable phys which are also taken by parent
-node(11271000), will cause phy_init/_power_on them twice.
-it seems ok if here include host-only phys, but I need test it.
-If here include host-only phys, there will not be port1 for roothub
-node, maybe it's a problem.
->         };
->     };
-> };
-> 
-> do you think that this would work for the Mediatek SoCs?
-> I've seen that the phy-mt65xx-usb3.c PHY driver does not have any
-> .set_mode callback - I assume it's simply because it doesn't need it
-> (as this is either managed by the hardware/IP block internally, or
-> through some firmware/mailbox mechanism).
-Hardware can automatically switch host/device mode by IDDIG pin, but
-also we can manually switch them. Phy driver makes use of auto way.
-> 
-> 
-> Regards,
-> Mart
-> 
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004305.html
+These patches try to make all current rockchip full framework vop works
+on drm, fill missing vop on full framework.
+Vop Full framework now has following vops:
+IP version    chipname
+      3.1           rk3288
+      3.2           rk3368
+      3.4           rk3366
+      3.5           rk3399 big
+      3.6           rk3399 lit
+      3.7           rk3228
+      3.8           rk3328
+
+Group the vop register, it would make register  definition clearer and
+more easily to reuse same group register define for difference vops.
+
+Tested on rk3399 excavator board with kernel 4.12-rc1.
+
+And other chips works find on rockchip kernel 4.4:
+   https://github.com/rockchip-linux/kernel/tree/release-4.4/drivers/gpu/drm/rockchip
+
+Changes in v3:
+- group vop register instead using VOP_REG_VER mechanism
+- move write_relaxed flags to vop registers
+- Explain more on patch commit message
+- fix rk3328 overlay abnormal
+
+Changes in v2:
+- rename rk322x to rk3228(Heiko Stübner)
+- correct some vop registers define
+
+Mark Yao (7):
+  drm/rockchip: vop: initialize registers directly
+  drm/rockchip: vop: move write_relaxed flags to vop register
+  drm/rockchip: vop: move line_flag_num to interrupt registers
+  drm/rockchip: vop: group vop registers
+  drm/rockchip: vop: add a series of vop support
+  dt-bindings: display: fill Documents for series of vop
+  drm/rockchip: vop: rk3328: fix overlay abnormal
+
+ .../bindings/display/rockchip/rockchip-vop.txt     |   4 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 109 ++-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  81 +-
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        | 374 ++++++---
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.h        | 905 ++++++++++++++++-----
+ 5 files changed, 1074 insertions(+), 399 deletions(-)
+
+-- 
+1.9.1
 
 
 --
