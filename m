@@ -1,56 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] regulator: mt6380: Add support for MT6380
-Date: Tue, 18 Jul 2017 14:31:36 +0100
-Message-ID: <20170718133136.xodadxf2crkcuhze@sirena.org.uk>
-References: <cover.1500368529.git.sean.wang@mediatek.com>
- <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang@mediatek.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v2 1/3] mfd: syscon: update Atmel SMC binding doc
+Date: Tue, 18 Jul 2017 15:39:27 +0200
+Message-ID: <3bf69ada-0bd3-c1db-8a4d-f21c3eb411bf@microchip.com>
+References: <20170718132220.25018-1-ludovic.desroches@microchip.com>
+ <20170718132220.25018-2-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dfdkqc3sggxhs2dy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718132220.25018-2-ludovic.desroches@microchip.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, lee.jones@linaro.org, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, romain.izard.pro@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 18/07/2017 at 15:22, Ludovic Desroches wrote:
+> A new compatible string is introduced for SMC on sama5d2 to manage a
+> different layout of the registers.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
 
---dfdkqc3sggxhs2dy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-On Tue, Jul 18, 2017 at 05:49:23PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> ---
+>  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-smc.txt b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> index 26eeed373934..1103ce2030fb 100644
+> --- a/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - compatible:		Should be one of the following
+>  			"atmel,at91sam9260-smc", "syscon"
+>  			"atmel,sama5d3-smc", "syscon"
+> +			"atmel,sama5d2-smc", "syscon"
+>  - reg:			Contains offset/length value of the SMC memory
+>  			region.
+>  
+> 
 
-> +	if (!info->modeset_mask) {
-> +		dev_err(&rdev->dev, "regulator %s doesn't support set_mode\n",
-> +			info->desc.name);
-> +		return -EINVAL;
-> +	}
 
-This is mostly fine but the mode operations all have this code - if the
-regulator doesn't have modesetting facilities it just shouldn't have
-the ops so the core can handle things in a standard fashion.  It'd mean
-defining a separate set of operations for those regulators but that's
-fine.
-
---dfdkqc3sggxhs2dy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlluDbcACgkQJNaLcl1U
-h9B+Cwf9HSujIRg/u1J82rOg1ebZJhsoc12tnqLLt/yosdU7daQNJYsaA+GO6CaY
-i8YKS9YAEU7fD9zJABlwE/lHnurMS5b4qcMROMQLgnEMiBSY1q96Z6AE/Fcz8Occ
-JSK+bobhjz9m0qffEoagRid0z6uEr42uy1EuNxr5/Jhqx2rprghg2zIzKGdlibZC
-7M263AYCl7nu+9ZRynAPab95ifF7UKgtLxyQpzLjfRi8QJirTVNBJLuie2MZO4og
-1Esbl5dktqtCXvJA/bsYrhYYz0G3yGbzPGNkAPlqIYMy0Qo8T9bhWa9D7nr0lYPz
-kk6VUE76SjFinEt9d0KogTWWXQdTMQ==
-=Zjob
------END PGP SIGNATURE-----
-
---dfdkqc3sggxhs2dy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Nicolas Ferre
