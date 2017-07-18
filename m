@@ -1,61 +1,72 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v3 0/7] Reconstruct rockchip's PCIe and PCIe-PHY driver for per-lane PHY model
-Date: Tue, 18 Jul 2017 15:56:56 +0800
-Message-ID: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [RFC PATCH v3 1/7] PCI: rockchip: split out rockchip_pcie_get_phys
+Date: Tue, 18 Jul 2017 15:56:57 +0800
+Message-ID: <1500364623-97041-2-git-send-email-shawn.lin@rock-chips.com>
+References: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500364623-97041-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+We plan to introduce per-lanes PHY, so split out new
+function to make it easy in the future. No functional
+change intended.
 
-This patchset is trying to reconstruct PCIe and PCIe-PHY driver
-for rockchip platform in order to support per-lane PHY mode. And
-we could idle the inactive lane(s) finally.
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Tested-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
-We deprecate the legacy PHY mode but the code could still
-support it in order not to break backware compatibility of DTB. And I
-organize the patches carefully so that we don't introduce git-bisect
-issue.
+Changes in v3: None
+Changes in v2: None
 
-Note that I carry on Jeffy's test tag from v2 as he has locally tested
-my v3 patchset.
+ drivers/pci/host/pcie-rockchip.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-
-Changes in v3:
-- kill rockchip_pcie_manipulate_phys and related stuff
-- use phys array
-- improve the commit msg
-- remove unnecessary forward declaration
-- keep mutex inside struct rockchip_pcie_phy
-- fix wrong check of args number
-- move de-idle lanes after deasserting the reset
-- use cached lanes_map to avoid powering off inactive
-  lanes twice
-- rename the commit tile
-
-Changes in v2:
-- deprecate legacy PHY model
-- improve rockchip_pcie_phy_of_xlate
-- fix wrong calculation of pwr_cnt and add new init_cnt
-- add internal locking
-- introduce per-lane data to simply the code
-
-Shawn Lin (7):
-  PCI: rockchip: split out rockchip_pcie_get_phys
-  PCI: rockchip: introduce per-lanes PHYs support
-  phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
-  PCI: rockchip: idle the inactive PHY(s)
-  arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
-  dt-bindings: PCI: rockchip: convert to use per-lane PHY model
-  dt-bindings: phy: convert to use per-lane Rockchip PCIe PHY
-
- .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 ++++-
- .../devicetree/bindings/phy/rockchip-pcie-phy.txt  |   7 +-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 +-
- drivers/pci/host/pcie-rockchip.c                   | 123 ++++++++++++++++----
- drivers/phy/rockchip/phy-rockchip-pcie.c           | 124 ++++++++++++++++++---
- 5 files changed, 245 insertions(+), 42 deletions(-)
-
+diff --git a/drivers/pci/host/pcie-rockchip.c b/drivers/pci/host/pcie-rockchip.c
+index 5acf869..6632a51 100644
+--- a/drivers/pci/host/pcie-rockchip.c
++++ b/drivers/pci/host/pcie-rockchip.c
+@@ -853,6 +853,19 @@ static void rockchip_pcie_legacy_int_handler(struct irq_desc *desc)
+ 	chained_irq_exit(chip, desc);
+ }
+ 
++static int rockchip_pcie_get_phys(struct rockchip_pcie *rockchip)
++{
++	struct device *dev = rockchip->dev;
++
++	rockchip->phy = devm_phy_get(dev, "pcie-phy");
++	if (IS_ERR(rockchip->phy)) {
++		if (PTR_ERR(rockchip->phy) != -EPROBE_DEFER)
++			dev_err(dev, "missing phy\n");
++		return PTR_ERR(rockchip->phy);
++	}
++
++	return 0;
++}
+ 
+ /**
+  * rockchip_pcie_parse_dt - Parse Device Tree
+@@ -883,12 +896,8 @@ static int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+ 	if (IS_ERR(rockchip->apb_base))
+ 		return PTR_ERR(rockchip->apb_base);
+ 
+-	rockchip->phy = devm_phy_get(dev, "pcie-phy");
+-	if (IS_ERR(rockchip->phy)) {
+-		if (PTR_ERR(rockchip->phy) != -EPROBE_DEFER)
+-			dev_err(dev, "missing phy\n");
++	if (rockchip_pcie_get_phys(rockchip))
+ 		return PTR_ERR(rockchip->phy);
+-	}
+ 
+ 	rockchip->lanes = 1;
+ 	err = of_property_read_u32(node, "num-lanes", &rockchip->lanes);
 -- 
 1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
