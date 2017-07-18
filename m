@@ -1,120 +1,38 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle
- usb switch
-Date: Tue, 18 Jul 2017 12:41:11 +0800
-Message-ID: <20170718044111.GA13320@b29397-desktop>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-3-stephen.boyd@linaro.org>
+From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/4] Add various TI-SCI DT nodes on 66AK2G SoCs
+Date: Mon, 17 Jul 2017 21:47:33 -0700
+Message-ID: <33691a29-4a50-36e0-ad87-b5698d26bf77@oracle.com>
+References: <20170718032844.29490-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170714214005.14967-3-stephen.boyd@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: Peter Chen <Peter.Chen@nxp.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.infradead.org, Andy Gross <andy.gross@linaro.org>, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718032844.29490-1-s-anna-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 02:40:04PM -0700, Stephen Boyd wrote:
->  
-> @@ -175,6 +176,10 @@ static int host_start(struct ci_hdrc *ci)
->  		if (ci_otg_is_fsm_mode(ci)) {
->  			otg->host = &hcd->self;
->  			hcd->self.otg_port = 1;
-> +		} else {
-> +			ret = mux_control_select(ci->platdata->usb_switch, 1);
-
-It is better to use MACRO for 1 and 0.
-
-> +			if (ret)
-> +				goto disable_reg;
->  		}
->  	}
->  
-> @@ -195,6 +200,8 @@ static void host_stop(struct ci_hdrc *ci)
->  	struct usb_hcd *hcd = ci->hcd;
->  
->  	if (hcd) {
-> +		if (!ci_otg_is_fsm_mode(ci))
-> +			mux_control_deselect(ci->platdata->usb_switch);
->  		if (ci->platdata->notify_event)
->  			ci->platdata->notify_event(ci,
->  				CI_HDRC_CONTROLLER_STOPPED_EVENT);
-> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
-> index d68b125796f9..deb18099e168 100644
-> --- a/drivers/usb/chipidea/udc.c
-> +++ b/drivers/usb/chipidea/udc.c
-> @@ -22,6 +22,7 @@
->  #include <linux/usb/gadget.h>
->  #include <linux/usb/otg-fsm.h>
->  #include <linux/usb/chipidea.h>
-> +#include <linux/mux/consumer.h>
->  
->  #include "ci.h"
->  #include "udc.h"
-> @@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
->  
->  static int udc_id_switch_for_device(struct ci_hdrc *ci)
->  {
-> +	int ret = 0;
-> +
->  	if (ci->is_otg)
->  		/* Clear and enable BSV irq */
->  		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
->  					OTGSC_BSVIS | OTGSC_BSVIE);
->  
-> -	return 0;
-> +	if (!ci_otg_is_fsm_mode(ci))
-> +		ret = mux_control_select(ci->platdata->usb_switch, 0);
-> +
-> +	if (ci->is_otg && ret)
-> +		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
-
-Should use !ret?
-
-Peter
-
-> +
-> +	return ret;
->  }
->  
->  static void udc_id_switch_for_host(struct ci_hdrc *ci)
->  {
-> +	mux_control_deselect(ci->platdata->usb_switch);
-> +
->  	/*
->  	 * host doesn't care B_SESSION_VALID event
->  	 * so clear and disbale BSV irq
-> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-> index c5fdfcf99828..3b27e333de1d 100644
-> --- a/include/linux/usb/chipidea.h
-> +++ b/include/linux/usb/chipidea.h
-> @@ -9,6 +9,7 @@
->  #include <linux/usb/otg.h>
->  
->  struct ci_hdrc;
-> +struct mux_control;
->  
->  /**
->   * struct ci_hdrc_cable - structure for external connector cable state tracking
-> @@ -74,6 +75,7 @@ struct ci_hdrc_platform_data {
->  	/* VBUS and ID signal state tracking, using extcon framework */
->  	struct ci_hdrc_cable		vbus_extcon;
->  	struct ci_hdrc_cable		id_extcon;
-> +	struct mux_control		*usb_switch;
->  	u32			phy_clkgate_delay_us;
->  };
->  
-> -- 
-> 2.10.0.297.gf6727b0
+On 7/17/17 8:28 PM, Suman Anna wrote:
+> Hi Santosh,
 > 
+> The following patch series adds various TI-SCI related DTS nodes that
+> probe the corresponding TI-SCI genpd, clock and reset drivers for the
+> 66AK2G platforms.
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> This is the second of two series, and these nodes along with the defconfig
+> patches finally allows adding other peripherals to the 66AK2G platforms.
+> All the new peripherals should/will be added without using the device id
+> macros [1]. Patches are baselined on 4.13-rc1 and are intended for the 4.14
+> merge window.
+> 
+And this one looks good as well. Please ping me if you don't see this 
+show up in next, by next week.
 
--- 
-
-Best Regards,
-Peter Chen
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
