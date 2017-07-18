@@ -1,62 +1,151 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 1/2] clk: gate: expose clk_gate_ops::is_enabled
-Date: Mon, 17 Jul 2017 18:17:13 -0700
-Message-ID: <20170718011713.GN22780@codeaurora.org>
-References: <201707150222.ogIMUhKu%fengguang.wu@intel.com>
- <cca4fdb9-7150-0259-4a78-b705b76f2986@st.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 3/7] phy: rockcip-pcie: reconstruct driver to support
+ per-lane PHYs
+Date: Tue, 18 Jul 2017 09:30:07 +0800
+Message-ID: <dd3a4491-9b4b-2610-5e64-217851c0a8c9@rock-chips.com>
+References: <1500276982-208439-1-git-send-email-shawn.lin@rock-chips.com>
+ <1500276982-208439-4-git-send-email-shawn.lin@rock-chips.com>
+ <20170717183920.GA6856@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cca4fdb9-7150-0259-4a78-b705b76f2986@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170717183920.GA6856-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/17, Gabriel FERNANDEZ wrote:
-> Hi Stephen,
-> 
-> 
-> On 07/14/2017 08:52 PM, kbuild test robot wrote:
-> > Hi Gabriel,
-> >
-> > [auto build test ERROR on clk/clk-next]
-> > [also build test ERROR on v4.12 next-20170714]
-> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> >
-> > url:    https://github.com/0day-ci/linux/commits/gabriel-fernandez-st-com/clk-stm32h7-Add-stm32h743-clock-driver/20170714-170518
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git clk-next
-> > config: arm-lpc32xx_defconfig (attached as .config)
-> > compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> > reproduce:
-> >          wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-> >          chmod +x ~/bin/make.cross
-> >          # save the attached .config to linux build tree
-> >          make.cross ARCH=arm
-> >
-> > All errors (new ones prefixed by >>):
-> >
-> >>> drivers/clk/nxp/clk-lpc32xx.c:906:12: error: static declaration of 'clk_gate_is_enabled' follows non-static declaration
-> >      static int clk_gate_is_enabled(struct clk_hw *hw)
-> >                 ^~~~~~~~~~~~~~~~~~~
-> >     In file included from drivers/clk/nxp/clk-lpc32xx.c:13:0:
-> >     include/linux/clk-provider.h:346:5: note: previous declaration of 'clk_gate_is_enabled' was here
-> >      int clk_gate_is_enabled(struct clk_hw *hw);
-> >          ^~~~~~~~~~~~~~~~~~~
-> >
-> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
-> 
-> Rename 'clk_gate_is_enabled' into'__clk_gate_is_enabled' from clk-gate.c 
-> file, is it a good solution for you ?
-> 
-> i could add also EXPORT_SYMBOL_GPL(__clk_gate_is_enabled) if you are ok.
+Hi Brian,
 
-No. We should rename the lpc32xx one to be less generic as it's
-in a specific driver. Double underscore usually means internal or
-unlocked (and we poorly did it this way for
-__clk_mux_determine_rate function already).
+On 2017/7/18 2:39, Brian Norris wrote:
+> Hi Shawn,
+> 
+> On Mon, Jul 17, 2017 at 03:36:18PM +0800, Shawn Lin wrote:
+>> This patch reconstructs the whole driver to support per-lane
+>> PHYs. Note that we could also support the legacy PHY if you
+>> don't provide argument to our of_xlate.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>
+>>   drivers/phy/rockchip/phy-rockchip-pcie.c | 126 +++++++++++++++++++++++++++----
+>>   1 file changed, 112 insertions(+), 14 deletions(-)
+>>
+>> diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
+>> index 6904633..f48b188 100644
+>> --- a/drivers/phy/rockchip/phy-rockchip-pcie.c
+>> +++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
+>> @@ -70,13 +70,46 @@ struct rockchip_pcie_data {
+>>   	unsigned int pcie_laneoff;
+>>   };
+>>   
+>> +struct phy_pcie_instance;
+> 
+> Is this forward declaration actually needed? You have it defined just a
+> few lines below.
+> 
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+I will remove this one.
+
+>> +
+>> +/* internal lock for multiple phys */
+>> +DEFINE_MUTEX(pcie_mutex);
+> 
+> Put this inside struct rockchip_pcie_phy. It shouldn't be a global lock;
+> it's just for coordinating the 4 lanes within a single
+> "rockchip_pcie_phy".
+> 
+
+okay.
+
+>> +
+>>   struct rockchip_pcie_phy {
+>>   	struct rockchip_pcie_data *phy_data;
+>>   	struct regmap *reg_base;
+>> +	struct phy_pcie_instance {
+>> +		struct phy *phy;
+>> +		u32 index;
+>> +	} phys[PHY_MAX_LANE_NUM];
+>>   	struct reset_control *phy_rst;
+>>   	struct clk *clk_pciephy_ref;
+>> +	int pwr_cnt;
+>> +	int init_cnt;
+>>   };
+>>   
+>> +static inline
+>> +struct rockchip_pcie_phy *to_pcie_phy(struct phy_pcie_instance *inst)
+>> +{
+>> +	return container_of(inst, struct rockchip_pcie_phy,
+>> +					phys[inst->index]);
+>> +}
+>> +
+>> +static struct phy *rockchip_pcie_phy_of_xlate(struct device *dev,
+>> +					      struct of_phandle_args *args)
+>> +{
+>> +	struct rockchip_pcie_phy *rk_phy = dev_get_drvdata(dev);
+>> +
+>> +	if (args->args_count == 0)
+>> +		return rk_phy->phys[0].phy;
+>> +
+>> +	if (WARN_ON(args->args[0] > PHY_MAX_LANE_NUM))
+> 
+> This should be ">=", not ">" (an index of PHY_MAX_LANE_NUM would be out
+> of bounds).
+
+will fix.
+
+> 
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	return rk_phy->phys[args->args[0]].phy;
+>> +}
+>> +
+>> +
+>>   static inline void phy_wr_cfg(struct rockchip_pcie_phy *rk_phy,
+>>   			      u32 addr, u32 data)
+
+[...]
+
+>>   }
+>>   
+>>   static int rockchip_pcie_phy_power_on(struct phy *phy)
+>>   {
+>> -	struct rockchip_pcie_phy *rk_phy = phy_get_drvdata(phy);
+>> +	struct phy_pcie_instance *inst = phy_get_drvdata(phy);
+>> +	struct rockchip_pcie_phy *rk_phy = to_pcie_phy(inst);
+>>   	int err = 0;
+>>   	u32 status;
+>>   	unsigned long timeout;
+>>   
+>> +	mutex_lock(&pcie_mutex);
+>> +
+>> +	regmap_write(rk_phy->reg_base,
+>> +		     rk_phy->phy_data->pcie_laneoff,
+>> +		     HIWORD_UPDATE(!PHY_LANE_IDLE_OFF,
+>> +				   PHY_LANE_IDLE_MASK,
+>> +				   PHY_LANE_IDLE_A_SHIFT + inst->index));
+> 
+> It seems a little weird to do this before deasserting the reset, but
+> only on the first lane to powered on. Should this actually be the last
+> step in this function? Or does it really not matter?
+
+It doesn't matter that we do this before deasserting the reset. I could
+move this after the deasserting. However it shouldn't be the last setp.
+If you only use lane 0 for your devcice, and it will be idle when doing
+unbind since we call phy_power_off. Then bind will be failed as you
+leave 4 lanes inactive finally which makes the phy fail to lock the PLL
+internally. In other words, we should at least keep one active lane
+when re-init the phy.
+
+
+> 
+> Brian
+> 
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
