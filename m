@@ -1,75 +1,89 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v6 2/3] clk: gate: expose clk_gate_ops::is_enabled
-Date: Tue, 18 Jul 2017 22:53:31 +0300
-Message-ID: <55bc0f3f-67ed-a15f-5b71-d87044fd5237@mleia.com>
-References: <1500364414-10021-1-git-send-email-gabriel.fernandez@st.com>
- <1500364414-10021-3-git-send-email-gabriel.fernandez@st.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/8] ARM: dra76: Add support for device identification
+Date: Wed, 19 Jul 2017 01:24:57 +0530
+Message-ID: <20170718195503.1700-3-lokeshvutla@ti.com>
+References: <20170718195503.1700-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1500364414-10021-3-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: gabriel.fernandez@st.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718195503.1700-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Praneeth Bajjuri <praneeth-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 10:53 AM, gabriel.fernandez@st.com wrote:
-> From: Gabriel Fernandez <gabriel.fernandez@st.com>
-> 
-> This patch exposes clk_gate_ops::is_enabled as functions
-> that can be directly called and assigned in places like this so
-> we don't need wrapper functions that do nothing besides forward
-> the call.
-> 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-> Sugested by Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  drivers/clk/clk-gate.c       | 3 ++-
->  include/linux/clk-provider.h | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/clk-gate.c b/drivers/clk/clk-gate.c
-> index 4e0c054a..dd82485 100644
-> --- a/drivers/clk/clk-gate.c
-> +++ b/drivers/clk/clk-gate.c
-> @@ -86,7 +86,7 @@ static void clk_gate_disable(struct clk_hw *hw)
->  	clk_gate_endisable(hw, 0);
->  }
->  
-> -static int clk_gate_is_enabled(struct clk_hw *hw)
-> +int clk_gate_is_enabled(struct clk_hw *hw)
->  {
->  	u32 reg;
->  	struct clk_gate *gate = to_clk_gate(hw);
-> @@ -101,6 +101,7 @@ static int clk_gate_is_enabled(struct clk_hw *hw)
->  
->  	return reg ? 1 : 0;
->  }
-> +EXPORT_SYMBOL_GPL(clk_gate_is_enabled);
->  
->  const struct clk_ops clk_gate_ops = {
->  	.enable = clk_gate_enable,
-> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-> index c59c625..e9587ab 100644
-> --- a/include/linux/clk-provider.h
-> +++ b/include/linux/clk-provider.h
-> @@ -343,6 +343,7 @@ struct clk_hw *clk_hw_register_gate(struct device *dev, const char *name,
->  		u8 clk_gate_flags, spinlock_t *lock);
->  void clk_unregister_gate(struct clk *clk);
->  void clk_hw_unregister_gate(struct clk_hw *hw);
-> +int clk_gate_is_enabled(struct clk_hw *hw);
+Add ID code detection for dra76 SoC.
 
-Here the prefix does not reflect the type of its argument, it might be
-acceptable for a veiled function, but it is not wanted for the exported
-function. Something like clk_hw_gate_is_enabled() is expected here, but
-again, let's firstly come to an agreement, that the export is needed.
+Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/mach-omap2/id.c  | 9 +++++++++
+ arch/arm/mach-omap2/soc.h | 5 +++++
+ 2 files changed, 14 insertions(+)
 
->  
->  struct clk_div_table {
->  	unsigned int	val;
-> 
+diff --git a/arch/arm/mach-omap2/id.c b/arch/arm/mach-omap2/id.c
+index e2274a162b74..16cb1c195fd8 100644
+--- a/arch/arm/mach-omap2/id.c
++++ b/arch/arm/mach-omap2/id.c
+@@ -663,6 +663,15 @@ void __init dra7xxx_check_revision(void)
+ 	hawkeye = (idcode >> 12) & 0xffff;
+ 	rev = (idcode >> 28) & 0xff;
+ 	switch (hawkeye) {
++	case 0xbb50:
++		switch (rev) {
++		case 0:
++		default:
++			omap_revision = DRA762_REV_ES1_0;
++			break;
++		}
++		break;
++
+ 	case 0xb990:
+ 		switch (rev) {
+ 		case 0:
+diff --git a/arch/arm/mach-omap2/soc.h b/arch/arm/mach-omap2/soc.h
+index 2aa01c270898..754cd0fc0e7b 100644
+--- a/arch/arm/mach-omap2/soc.h
++++ b/arch/arm/mach-omap2/soc.h
+@@ -167,6 +167,7 @@ IS_TI_SUBCLASS(816x, 0x816)
+ IS_TI_SUBCLASS(814x, 0x814)
+ IS_AM_SUBCLASS(335x, 0x335)
+ IS_AM_SUBCLASS(437x, 0x437)
++IS_DRA_SUBCLASS(76x, 0x76)
+ IS_DRA_SUBCLASS(75x, 0x75)
+ IS_DRA_SUBCLASS(72x, 0x72)
+ 
+@@ -185,6 +186,7 @@ IS_DRA_SUBCLASS(72x, 0x72)
+ #define soc_is_omap54xx()		0
+ #define soc_is_omap543x()		0
+ #define soc_is_dra7xx()			0
++#define soc_is_dra76x()			0
+ #define soc_is_dra74x()			0
+ #define soc_is_dra72x()			0
+ 
+@@ -314,9 +316,11 @@ IS_OMAP_TYPE(3430, 0x3430)
+ 
+ #if defined(CONFIG_SOC_DRA7XX)
+ #undef soc_is_dra7xx
++#undef soc_is_dra76x
+ #undef soc_is_dra74x
+ #undef soc_is_dra72x
+ #define soc_is_dra7xx()	is_dra7xx()
++#define soc_is_dra76x()	is_dra76x()
+ #define soc_is_dra74x()	is_dra75x()
+ #define soc_is_dra72x()	is_dra72x()
+ #endif
+@@ -386,6 +390,7 @@ IS_OMAP_TYPE(3430, 0x3430)
+ #define OMAP5432_REV_ES2_0	(OMAP54XX_CLASS | (0x32 << 16) | (0x20 << 8))
+ 
+ #define DRA7XX_CLASS		0x07000000
++#define DRA762_REV_ES1_0	(DRA7XX_CLASS | (0x62 << 16) | (0x10 << 8))
+ #define DRA752_REV_ES1_0	(DRA7XX_CLASS | (0x52 << 16) | (0x10 << 8))
+ #define DRA752_REV_ES1_1	(DRA7XX_CLASS | (0x52 << 16) | (0x11 << 8))
+ #define DRA752_REV_ES2_0	(DRA7XX_CLASS | (0x52 << 16) | (0x20 << 8))
+-- 
+2.13.0
 
 --
-With best wishes,
-Vladimir
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
