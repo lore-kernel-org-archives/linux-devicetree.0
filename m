@@ -1,212 +1,80 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] clk: stm32h7: Add stm32h743 clock driver
-Date: Tue, 18 Jul 2017 23:19:34 +0300
-Message-ID: <f8d47ea1-446a-f714-94ce-a819ed9256a3@mleia.com>
-References: <1500364414-10021-1-git-send-email-gabriel.fernandez@st.com>
- <1500364414-10021-4-git-send-email-gabriel.fernandez@st.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH v3 0/7] Reconstruct rockchip's PCIe and PCIe-PHY
+ driver for per-lane PHY model
+Date: Tue, 18 Jul 2017 13:29:52 -0700
+Message-ID: <20170718202951.GA116895@google.com>
+References: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500364414-10021-4-git-send-email-gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1500364623-97041-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gabriel.fernandez-qxv4g6HH51o@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Gabriel,
-
-On 07/18/2017 10:53 AM, gabriel.fernandez-qxv4g6HH51o@public.gmane.org wrote:
-> From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+On Tue, Jul 18, 2017 at 03:56:56PM +0800, Shawn Lin wrote:
 > 
-> This patch enables clocks for STM32H743 boards.
+> This patchset is trying to reconstruct PCIe and PCIe-PHY driver
+> for rockchip platform in order to support per-lane PHY mode. And
+> we could idle the inactive lane(s) finally.
 > 
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+> We deprecate the legacy PHY mode but the code could still
+> support it in order not to break backware compatibility of DTB. And I
+> organize the patches carefully so that we don't introduce git-bisect
+> issue.
 > 
-> for MFD changes:
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Note that I carry on Jeffy's test tag from v2 as he has locally tested
+> my v3 patchset.
+
+I have a few nits for the patchset (will reply shortly), but otherwise
+(if we're *really* going to go with this approach; I still would
+appreciate a reply from Kishon on the original patchset, where I
+suggested alternatives) at least the code is much better this time
+around. So for the whole thing:
+
+Reviewed-by: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+> Changes in v3:
+> - kill rockchip_pcie_manipulate_phys and related stuff
+> - use phys array
+> - improve the commit msg
+> - remove unnecessary forward declaration
+> - keep mutex inside struct rockchip_pcie_phy
+> - fix wrong check of args number
+> - move de-idle lanes after deasserting the reset
+> - use cached lanes_map to avoid powering off inactive
+>   lanes twice
+> - rename the commit tile
 > 
-> for DT-Bindings
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   81 ++
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/clk-stm32h7.c                          | 1522 ++++++++++++++++++++
->  include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
->  include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
->  5 files changed, 1905 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->  create mode 100644 drivers/clk/clk-stm32h7.c
->  create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
->  create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+> Changes in v2:
+> - deprecate legacy PHY model
+> - improve rockchip_pcie_phy_of_xlate
+> - fix wrong calculation of pwr_cnt and add new init_cnt
+> - add internal locking
+> - introduce per-lane data to simply the code
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-> new file mode 100644
-> index 0000000..e41e4ac
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
-> @@ -0,0 +1,81 @@
-> +STMicroelectronics STM32H7 Reset and Clock Controller
-> +=====================================================
-> +
-> +The RCC IP is both a reset and a clock controller.
-> +
-> +Please refer to clock-bindings.txt for common clock controller binding usage.
-> +Please also refer to reset.txt for common reset controller binding usage.
-> +
-> +Required properties:
-> +- compatible: Should be:
-> +  "st,stm32h743-rcc"
-> +
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +
-> +- #reset-cells: 1, see below
-> +
-> +- #clock-cells : from common clock binding; shall be set to 1
-> +
-> +- clocks: External oscillator clock phandle
-> +  - high speed external clock signal (HSE)
-> +  - low speed external clock signal (LSE)
-> +  - external I2S clock (I2S_CKIN)
-> +
-> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
-> +  write protection (RTC clock).
-> +
-
-please make a clear decision if "st,syscfg" property is mandatory or not.
->From the driver code this property is optional, and the clock driver
-is expected to work properly, if the property is omitted. Do I miss
-anything?
-
-> diff --git a/drivers/clk/clk-stm32h7.c b/drivers/clk/clk-stm32h7.c
-> new file mode 100644
-> index 0000000..2608c40
-> --- /dev/null
-> +++ b/drivers/clk/clk-stm32h7.c
-
-[snip]
-
-> +static const char * const ltdc_src[] = {"pll3_r"};
-> +
-> +/* Power domain helper */
-> +static inline void disable_power_domain_write_protection(void)
-> +{
-> +	if (pdrm)
-> +		regmap_update_bits(pdrm, 0x00, (1 << 8), (1 << 8));
-> +}
-> +
-> +static inline void enable_power_domain_write_protection(void)
-> +{
-> +	if (pdrm)
-> +		regmap_update_bits(pdrm, 0x00, (1 << 8), (0 << 8));
-
-(0 << 8) is zero.
-
-> +}
-
-IMHO a version below is better:
-
-static inline void enable_power_domain_write_protection(bool enable)
-{
-	if (pdrm)
-		regmap_update_bits(pdrm, 0x00, BIT(8), enable ? 0x0: BIT(8));
-}
-
-> +
-> +static inline bool is_enable_power_domain_write_protection(void)
-
-is_enabled_...
-
-> +{
-> +	if (pdrm) {
-> +		u32 val;
-> +
-> +		regmap_read(pdrm, 0x00, &val);
-> +
-> +		return !(val & 0x100);
-> +	}
-> +	return 0;
-> +}
-
-Please replace (1 << 8) and 0x100 all above with a macro or at least
-BIT(8).
-
-> +
-> +/* Gate clock with ready bit and backup domain management */
-> +struct stm32_ready_gate {
-> +	struct	clk_gate gate;
-> +	u8	bit_rdy;
-> +	u8	backup_domain;
-> +};
-> +
-> +#define to_ready_gate_clk(_rgate) container_of(_rgate, struct stm32_ready_gate,\
-> +		gate)
-> +
-> +#define RGATE_TIMEOUT 10000
-> +
-> +static int ready_gate_clk_enable(struct clk_hw *hw)
-> +{
-> +	struct clk_gate *gate = to_clk_gate(hw);
-> +	struct stm32_ready_gate *rgate = to_ready_gate_clk(gate);
-> +	int dbp_status;
-> +	int bit_status;
-> +	unsigned int timeout = RGATE_TIMEOUT;
-> +
-> +	if (clk_gate_ops.is_enabled(hw))
-> +		return 0;
-> +
-> +	dbp_status = is_enable_power_domain_write_protection();
-> +
-> +	if (rgate->backup_domain && dbp_status)
-> +		disable_power_domain_write_protection();
-> +
-> +	clk_gate_ops.enable(hw);
-> +
-> +	/* We can't use readl_poll_timeout() because we can blocked if
-> +	 * someone enables this clock before clocksource changes.
-> +	 * Only jiffies counter is available. Jiffies are incremented by
-> +	 * interruptions and enable op does not allow to be interrupted.
-> +	 */
-> +	do {
-> +		bit_status = !(readl(gate->reg) & BIT(rgate->bit_rdy));
-> +
-> +		if (bit_status)
-> +			udelay(100);
-> +
-> +	} while (bit_status && --timeout);
-> +
-> +	if (rgate->backup_domain && dbp_status)
-> +		enable_power_domain_write_protection();
-> +
-> +	return bit_status;
-> +}
-
-I'm not convinced that the repetitive lockless pattern
-
-	dbp_status = is_enable_power_domain_write_protection();
-	if (dbp_status)
-		disable_power_domain_write_protection();
-
-	do_something();
-
-	if (dbp_status)
-		enable_power_domain_write_protection();
-
-is correct in a concurrent environment.
-
-You still have a risk of running do_something() *after* a call of
-enable_power_domain_write_protection().
-
-The best option for you is either to switch to ordinary power domains
-and use their API or to move the driver to use regmaps, and at least
-in the latter case you don't need to wrap your code by CCF code (!),
-and as a result you don't need to export truly internal to CCF function
-clk_gate_is_enabled().
-
---
-With best wishes,
-Vladimir
+> Shawn Lin (7):
+>   PCI: rockchip: split out rockchip_pcie_get_phys
+>   PCI: rockchip: introduce per-lanes PHYs support
+>   phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
+>   PCI: rockchip: idle the inactive PHY(s)
+>   arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
+>   dt-bindings: PCI: rockchip: convert to use per-lane PHY model
+>   dt-bindings: phy: convert to use per-lane Rockchip PCIe PHY
+> 
+>  .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 ++++-
+>  .../devicetree/bindings/phy/rockchip-pcie-phy.txt  |   7 +-
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 +-
+>  drivers/pci/host/pcie-rockchip.c                   | 123 ++++++++++++++++----
+>  drivers/phy/rockchip/phy-rockchip-pcie.c           | 124 ++++++++++++++++++---
+>  5 files changed, 245 insertions(+), 42 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
