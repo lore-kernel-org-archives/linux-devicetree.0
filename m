@@ -1,64 +1,39 @@
-From: Oleksij Rempel <ore@pengutronix.de>
-Subject: Re: [PATCH v6 0/6] provide power off support for iMX6 with external
- PMIC
-Date: Tue, 18 Jul 2017 06:53:54 +0200
-Message-ID: <c64ce8db-eea6-3709-9c97-fda16e93481a@pengutronix.de>
-References: <20170620140910.7568-1-o.rempel@pengutronix.de>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/5] arm64: dts: exynos: Remove the OF graph from DSI
+ node
+Date: Tue, 18 Jul 2017 07:03:02 +0200
+Message-ID: <20170718050302.GA13779@kozik-book>
+References: <1488948852-5380-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170308045502epcas1p21a483d429e2169b322e40fd833c47f27@epcas1p2.samsung.com>
+ <1488948852-5380-5-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170620140910.7568-1-o.rempel@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Leonard Crestez <leonard.crestez@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1488948852-5380-5-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hallo all,
+On Wed, Mar 08, 2017 at 01:54:11PM +0900, Hoegeun Kwon wrote:
+> The OF graph is not needed because the panel is a child of dsi. Remove
+> the ports node in DSI node.
+> 
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 14 --------------
+>  1 file changed, 14 deletions(-)
+> 
 
-Here Gentle Ping to the Old King
+Thanks, applied this and 5/5.
 
-DT is already ACKed.
+Best regards,
+Krzysztof
 
-On 20.06.2017 16:09, Oleksij Rempel wrote:
-> This patch series is providing power off support for Freescale/NXP iMX6 based
-> boards with external power management integrated circuit (PMIC).
->
-> changes:
-> v6:
->  - rename imx6_pm_poweroff to imx6_pm_stby_poweroff
->  - fix "MPIC_STBY_REQ" typo in the comment.
->
-> v5:
->  - remove useless includes from pm-imx6.c patch
->  - add Acked-by to "regulator: pfuze100: add fsl,pmic-stby-poweroff property"
->    patch
->
-> v4:
->  - update comment in "regulator: pfuze100: add fsl,pmic-stby-poweroff ..."
->    patch
->  - add Acked-by to "ARM: imx6q: provide documentation for new ..."
->    patch
->
-> v3:
->  - set pm_power_off_prepare = NULL on .remove.
->  - documentation and spelling fixes.
->  - use %pf instead of lookup_symbol_name.
->
-> Oleksij Rempel (6):
->   ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff
->     property
->   ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff"
->     is set
->   kernel/reboot.c: export pm_power_off_prepare
->   regulator: pfuze100: add fsl,pmic-stby-poweroff property
->   regulator: pfuze100-regulator: provide pm_power_off_prepare handler
->   ARM: dts: imx6: RIoTboard provide standby on power off option
->
->  .../devicetree/bindings/clock/imx6q-clock.txt      |  8 ++
->  .../devicetree/bindings/regulator/pfuze100.txt     |  7 ++
->  arch/arm/boot/dts/imx6dl-riotboard.dts             |  5 ++
->  arch/arm/mach-imx/pm-imx6.c                        | 25 ++++++
->  drivers/regulator/pfuze100-regulator.c             | 92 ++++++++++++++++++++++
->  kernel/reboot.c                                    |  1 +
->  6 files changed, 138 insertions(+)
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
