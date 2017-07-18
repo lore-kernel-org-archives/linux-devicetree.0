@@ -1,164 +1,145 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] arm64: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:42:42 -0500
-Message-ID: <20170718214339.7774-2-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] c6x: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:43 -0500
+Message-ID: <20170718214339.7774-3-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <a-jacquiot@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-c6x-dev@linux-c6x.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
 full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <a-jacquiot@ti.com>
+Cc: linux-c6x-dev@linux-c6x.org
 ---
- arch/arm64/kernel/cpu_ops.c  |  4 ++--
- arch/arm64/kernel/smp.c      | 12 ++++++------
- arch/arm64/kernel/topology.c | 22 +++++++++++-----------
- 3 files changed, 19 insertions(+), 19 deletions(-)
+ arch/c6x/platforms/megamod-pic.c | 22 +++++++++++-----------
+ arch/c6x/platforms/plldata.c     |  4 ++--
+ arch/c6x/platforms/timer64.c     |  8 ++++----
+ 3 files changed, 17 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpu_ops.c b/arch/arm64/kernel/cpu_ops.c
-index e137ceaf5016..d16978213c5b 100644
---- a/arch/arm64/kernel/cpu_ops.c
-+++ b/arch/arm64/kernel/cpu_ops.c
-@@ -82,8 +82,8 @@ static const char *__init cpu_read_enable_method(int cpu)
- 			 * Don't warn spuriously.
- 			 */
- 			if (cpu != 0)
--				pr_err("%s: missing enable-method property\n",
--					dn->full_name);
-+				pr_err("%pOF: missing enable-method property\n",
-+					dn);
- 		}
- 	} else {
- 		enable_method = acpi_get_enable_method(cpu);
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 321119881abf..dc66e6ec3a99 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -469,7 +469,7 @@ static u64 __init of_get_cpu_mpidr(struct device_node *dn)
- 	 */
- 	cell = of_get_property(dn, "reg", NULL);
- 	if (!cell) {
--		pr_err("%s: missing reg property\n", dn->full_name);
-+		pr_err("%pOF: missing reg property\n", dn);
- 		return INVALID_HWID;
+diff --git a/arch/c6x/platforms/megamod-pic.c b/arch/c6x/platforms/megamod-pic.c
+index 43afc03e4125..9519fa5f97d0 100644
+--- a/arch/c6x/platforms/megamod-pic.c
++++ b/arch/c6x/platforms/megamod-pic.c
+@@ -208,14 +208,14 @@ static struct megamod_pic * __init init_megamod_pic(struct device_node *np)
+
+ 	pic = kzalloc(sizeof(struct megamod_pic), GFP_KERNEL);
+ 	if (!pic) {
+-		pr_err("%s: Could not alloc PIC structure.\n", np->full_name);
++		pr_err("%pOF: Could not alloc PIC structure.\n", np);
+ 		return NULL;
  	}
 
-@@ -478,7 +478,7 @@ static u64 __init of_get_cpu_mpidr(struct device_node *dn)
- 	 * Non affinity bits must be set to 0 in the DT
- 	 */
- 	if (hwid & ~MPIDR_HWID_BITMASK) {
--		pr_err("%s: invalid reg property\n", dn->full_name);
-+		pr_err("%pOF: invalid reg property\n", dn);
- 		return INVALID_HWID;
+ 	pic->irqhost = irq_domain_add_linear(np, NR_COMBINERS * 32,
+ 					     &megamod_domain_ops, pic);
+ 	if (!pic->irqhost) {
+-		pr_err("%s: Could not alloc host.\n", np->full_name);
++		pr_err("%pOF: Could not alloc host.\n", np);
+ 		goto error_free;
  	}
- 	return hwid;
-@@ -627,8 +627,8 @@ static void __init of_parse_and_init_cpus(void)
- 			goto next;
 
- 		if (is_mpidr_duplicate(cpu_count, hwid)) {
--			pr_err("%s: duplicate cpu reg properties in the DT\n",
--				dn->full_name);
-+			pr_err("%pOF: duplicate cpu reg properties in the DT\n",
-+				dn);
- 			goto next;
+@@ -225,7 +225,7 @@ static struct megamod_pic * __init init_megamod_pic(struct device_node *np)
+
+ 	pic->regs = of_iomap(np, 0);
+ 	if (!pic->regs) {
+-		pr_err("%s: Could not map registers.\n", np->full_name);
++		pr_err("%pOF: Could not map registers.\n", np);
+ 		goto error_free;
+ 	}
+
+@@ -253,8 +253,8 @@ static struct megamod_pic * __init init_megamod_pic(struct device_node *np)
+
+ 		irq_data = irq_get_irq_data(irq);
+ 		if (!irq_data) {
+-			pr_err("%s: combiner-%d no irq_data for virq %d!\n",
+-			       np->full_name, i, irq);
++			pr_err("%pOF: combiner-%d no irq_data for virq %d!\n",
++			       np, i, irq);
+ 			continue;
  		}
 
-@@ -640,8 +640,8 @@ static void __init of_parse_and_init_cpus(void)
+@@ -265,16 +265,16 @@ static struct megamod_pic * __init init_megamod_pic(struct device_node *np)
+ 		 * of the core priority interrupts (4 - 15).
  		 */
- 		if (hwid == cpu_logical_map(0)) {
- 			if (bootcpu_valid) {
--				pr_err("%s: duplicate boot cpu reg property in DT\n",
--					dn->full_name);
-+				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
-+					dn);
- 				goto next;
- 			}
-
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 79244c75eaec..8d48b233e6ce 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -45,7 +45,7 @@ static int __init get_cpu_for_node(struct device_node *node)
- 		}
- 	}
-
--	pr_crit("Unable to find CPU node for %s\n", cpu_node->full_name);
-+	pr_crit("Unable to find CPU node for %pOF\n", cpu_node);
-
- 	of_node_put(cpu_node);
- 	return -1;
-@@ -71,8 +71,8 @@ static int __init parse_core(struct device_node *core, int cluster_id,
- 				cpu_topology[cpu].core_id = core_id;
- 				cpu_topology[cpu].thread_id = i;
- 			} else {
--				pr_err("%s: Can't get CPU for thread\n",
--				       t->full_name);
-+				pr_err("%pOF: Can't get CPU for thread\n",
-+				       t);
- 				of_node_put(t);
- 				return -EINVAL;
- 			}
-@@ -84,15 +84,15 @@ static int __init parse_core(struct device_node *core, int cluster_id,
- 	cpu = get_cpu_for_node(core);
- 	if (cpu >= 0) {
- 		if (!leaf) {
--			pr_err("%s: Core has both threads and CPU\n",
--			       core->full_name);
-+			pr_err("%pOF: Core has both threads and CPU\n",
-+			       core);
- 			return -EINVAL;
+ 		if (hwirq < 4 || hwirq >= NR_PRIORITY_IRQS) {
+-			pr_err("%s: combiner-%d core irq %ld out of range!\n",
+-			       np->full_name, i, hwirq);
++			pr_err("%pOF: combiner-%d core irq %ld out of range!\n",
++			       np, i, hwirq);
+ 			continue;
  		}
 
- 		cpu_topology[cpu].cluster_id = cluster_id;
- 		cpu_topology[cpu].core_id = core_id;
- 	} else if (leaf) {
--		pr_err("%s: Can't get CPU for leaf core\n", core->full_name);
-+		pr_err("%pOF: Can't get CPU for leaf core\n", core);
- 		return -EINVAL;
+ 		/* record the mapping */
+ 		mapping[hwirq - 4] = i;
+
+-		pr_debug("%s: combiner-%d cascading to hwirq %ld\n",
+-			 np->full_name, i, hwirq);
++		pr_debug("%pOF: combiner-%d cascading to hwirq %ld\n",
++			 np, i, hwirq);
+
+ 		cascade_data[i].pic = pic;
+ 		cascade_data[i].index = i;
+@@ -290,8 +290,8 @@ static struct megamod_pic * __init init_megamod_pic(struct device_node *np)
+ 	/* Finally, set up the MUX registers */
+ 	for (i = 0; i < NR_MUX_OUTPUTS; i++) {
+ 		if (mapping[i] != IRQ_UNMAPPED) {
+-			pr_debug("%s: setting mux %d to priority %d\n",
+-				 np->full_name, mapping[i], i + 4);
++			pr_debug("%pOF: setting mux %d to priority %d\n",
++				 np, mapping[i], i + 4);
+ 			set_megamod_mux(pic, mapping[i], i);
+ 		}
+ 	}
+diff --git a/arch/c6x/platforms/plldata.c b/arch/c6x/platforms/plldata.c
+index 755359eb6286..e8b6cc6a7b5a 100644
+--- a/arch/c6x/platforms/plldata.c
++++ b/arch/c6x/platforms/plldata.c
+@@ -436,8 +436,8 @@ void __init c64x_setup_clocks(void)
+
+ 	err = of_property_read_u32(node, "clock-frequency", &val);
+ 	if (err || val == 0) {
+-		pr_err("%s: no clock-frequency found! Using %dMHz\n",
+-		       node->full_name, (int)val / 1000000);
++		pr_err("%pOF: no clock-frequency found! Using %dMHz\n",
++		       node, (int)val / 1000000);
+ 		val = 25000000;
+ 	}
+ 	clkin1.rate = val;
+diff --git a/arch/c6x/platforms/timer64.c b/arch/c6x/platforms/timer64.c
+index 0bd0452ded80..241a9a607193 100644
+--- a/arch/c6x/platforms/timer64.c
++++ b/arch/c6x/platforms/timer64.c
+@@ -204,14 +204,14 @@ void __init timer64_init(void)
+
+ 	timer = of_iomap(np, 0);
+ 	if (!timer) {
+-		pr_debug("%s: Cannot map timer registers.\n", np->full_name);
++		pr_debug("%pOF: Cannot map timer registers.\n", np);
+ 		goto out;
+ 	}
+-	pr_debug("%s: Timer registers=%p.\n", np->full_name, timer);
++	pr_debug("%pOF: Timer registers=%p.\n", np, timer);
+
+ 	cd->irq	= irq_of_parse_and_map(np, 0);
+ 	if (cd->irq == NO_IRQ) {
+-		pr_debug("%s: Cannot find interrupt.\n", np->full_name);
++		pr_debug("%pOF: Cannot find interrupt.\n", np);
+ 		iounmap(timer);
+ 		goto out;
+ 	}
+@@ -229,7 +229,7 @@ void __init timer64_init(void)
+ 		dscr_set_devstate(timer64_devstate_id, DSCR_DEVSTATE_ENABLED);
  	}
 
-@@ -137,8 +137,8 @@ static int __init parse_cluster(struct device_node *cluster, int depth)
- 			has_cores = true;
+-	pr_debug("%s: Timer irq=%d.\n", np->full_name, cd->irq);
++	pr_debug("%pOF: Timer irq=%d.\n", np, cd->irq);
 
- 			if (depth == 0) {
--				pr_err("%s: cpu-map children should be clusters\n",
--				       c->full_name);
-+				pr_err("%pOF: cpu-map children should be clusters\n",
-+				       c);
- 				of_node_put(c);
- 				return -EINVAL;
- 			}
-@@ -146,8 +146,8 @@ static int __init parse_cluster(struct device_node *cluster, int depth)
- 			if (leaf) {
- 				ret = parse_core(c, cluster_id, core_id++);
- 			} else {
--				pr_err("%s: Non-leaf cluster with core %s\n",
--				       cluster->full_name, name);
-+				pr_err("%pOF: Non-leaf cluster with core %s\n",
-+				       cluster, name);
- 				ret = -EINVAL;
- 			}
+ 	clockevents_calc_mult_shift(cd, c6x_core_freq / TIMER_DIVISOR, 5);
 
-@@ -159,7 +159,7 @@ static int __init parse_cluster(struct device_node *cluster, int depth)
- 	} while (c);
-
- 	if (leaf && !has_cores)
--		pr_warn("%s: empty cluster\n", cluster->full_name);
-+		pr_warn("%pOF: empty cluster\n", cluster);
-
- 	if (leaf)
- 		cluster_id++;
 --
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
