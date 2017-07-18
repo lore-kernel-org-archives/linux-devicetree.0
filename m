@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] scsi: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:28 -0500
-Message-ID: <20170718214339.7774-48-robh@kernel.org>
+Subject: [PATCH] sbus: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:27 -0500
+Message-ID: <20170718214339.7774-47-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-scsi@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,55 +13,58 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: sparclinux@vger.kernel.org
 ---
- drivers/scsi/mac53c94.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/sbus/char/display7seg.c | 4 ++--
+ drivers/sbus/char/flash.c       | 4 ++--
+ drivers/sbus/char/uctrl.c       | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/scsi/mac53c94.c b/drivers/scsi/mac53c94.c
-index a6682c508c4c..8c4d3003b68b 100644
---- a/drivers/scsi/mac53c94.c
-+++ b/drivers/scsi/mac53c94.c
-@@ -448,15 +448,14 @@ static int mac53c94_probe(struct macio_dev *mdev, const struct of_device_id *mat
- 		ioremap(macio_resource_start(mdev, 1), 0x1000);
- 	state->dmaintr = macio_irq(mdev, 1);
- 	if (state->regs == NULL || state->dma == NULL) {
--		printk(KERN_ERR "mac53c94: ioremap failed for %s\n",
--		       node->full_name);
-+		printk(KERN_ERR "mac53c94: ioremap failed for %pOF\n", node);
- 		goto out_free;
+diff --git a/drivers/sbus/char/display7seg.c b/drivers/sbus/char/display7seg.c
+index 04efed171c88..f32765d3cbd8 100644
+--- a/drivers/sbus/char/display7seg.c
++++ b/drivers/sbus/char/display7seg.c
+@@ -212,8 +212,8 @@ static int d7s_probe(struct platform_device *op)
+
+ 	writeb(regs,  p->regs);
+
+-	printk(KERN_INFO PFX "7-Segment Display%s at [%s:0x%llx] %s\n",
+-	       op->dev.of_node->full_name,
++	printk(KERN_INFO PFX "7-Segment Display%pOF at [%s:0x%llx] %s\n",
++	       op->dev.of_node,
+ 	       (regs & D7S_FLIP) ? " (FLIPPED)" : "",
+ 	       op->resource[0].start,
+ 	       sol_compat ? "in sol_compat mode" : "");
+diff --git a/drivers/sbus/char/flash.c b/drivers/sbus/char/flash.c
+index 216f923161d1..a610b8d3d11f 100644
+--- a/drivers/sbus/char/flash.c
++++ b/drivers/sbus/char/flash.c
+@@ -181,8 +181,8 @@ static int flash_probe(struct platform_device *op)
+ 	}
+ 	flash.busy = 0;
+
+-	printk(KERN_INFO "%s: OBP Flash, RD %lx[%lx] WR %lx[%lx]\n",
+-	       op->dev.of_node->full_name,
++	printk(KERN_INFO "%pOF: OBP Flash, RD %lx[%lx] WR %lx[%lx]\n",
++	       op->dev.of_node,
+ 	       flash.read_base, flash.read_size,
+ 	       flash.write_base, flash.write_size);
+
+diff --git a/drivers/sbus/char/uctrl.c b/drivers/sbus/char/uctrl.c
+index 57696fc0b482..0a5013350acd 100644
+--- a/drivers/sbus/char/uctrl.c
++++ b/drivers/sbus/char/uctrl.c
+@@ -379,8 +379,8 @@ static int uctrl_probe(struct platform_device *op)
  	}
 
- 	clkprop = of_get_property(node, "clock-frequency", &proplen);
-        	if (clkprop == NULL || proplen != sizeof(int)) {
--       		printk(KERN_ERR "%s: can't get clock frequency, "
--       		       "assuming 25MHz\n", node->full_name);
-+       		printk(KERN_ERR "%pOF: can't get clock frequency, "
-+       		       "assuming 25MHz\n", node);
-        		state->clk_freq = 25000000;
-        	} else
-        		state->clk_freq = *(int *)clkprop;
-@@ -469,7 +468,7 @@ static int mac53c94_probe(struct macio_dev *mdev, const struct of_device_id *mat
-        				sizeof(struct dbdma_cmd), GFP_KERNEL);
-        	if (dma_cmd_space == 0) {
-        		printk(KERN_ERR "mac53c94: couldn't allocate dma "
--       		       "command space for %s\n", node->full_name);
-+       		       "command space for %pOF\n", node);
- 		rc = -ENOMEM;
-        		goto out_free;
-        	}
-@@ -481,8 +480,8 @@ static int mac53c94_probe(struct macio_dev *mdev, const struct of_device_id *mat
- 	mac53c94_init(state);
-
- 	if (request_irq(state->intr, do_mac53c94_interrupt, 0, "53C94",state)) {
--		printk(KERN_ERR "mac53C94: can't get irq %d for %s\n",
--		       state->intr, node->full_name);
-+		printk(KERN_ERR "mac53C94: can't get irq %d for %pOF\n",
-+		       state->intr, node);
- 		goto out_free_dma;
- 	}
+ 	sbus_writel(UCTRL_INTR_RXNE_REQ|UCTRL_INTR_RXNE_MSK, &p->regs->uctrl_intr);
+-	printk(KERN_INFO "%s: uctrl regs[0x%p] (irq %d)\n",
+-	       op->dev.of_node->full_name, p->regs, p->irq);
++	printk(KERN_INFO "%pOF: uctrl regs[0x%p] (irq %d)\n",
++	       op->dev.of_node, p->regs, p->irq);
+ 	uctrl_get_event_status(p);
+ 	uctrl_get_external_status(p);
 
 --
 2.11.0
