@@ -1,22 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] clocksource: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:42:53 -0500
-Message-ID: <20170718214339.7774-13-robh@kernel.org>
+Subject: [PATCH] staging: fsl-mc: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:33 -0500
+Message-ID: <20170718214339.7774-53-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -24,137 +24,77 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Stuart Yoder <stuyoder@gmail.com>
+Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devel@driverdev.osuosl.org
 ---
- drivers/clocksource/tango_xtal.c  |  6 +++---
- drivers/clocksource/timer-of.c    | 11 +++++------
- drivers/clocksource/timer-probe.c |  3 +--
- drivers/clocksource/timer-stm32.c |  8 ++++----
- 4 files changed, 13 insertions(+), 15 deletions(-)
+ drivers/staging/fsl-mc/bus/fsl-mc-bus.c                | 4 ++--
+ drivers/staging/fsl-mc/bus/fsl-mc-msi.c                | 4 ++--
+ drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c | 8 +++-----
+ 3 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/clocksource/tango_xtal.c b/drivers/clocksource/tango_xtal.c
-index c4e1c2e6046f..6a8d9838ce33 100644
---- a/drivers/clocksource/tango_xtal.c
-+++ b/drivers/clocksource/tango_xtal.c
-@@ -26,13 +26,13 @@ static int __init tango_clocksource_init(struct device_node *np)
-
- 	xtal_in_cnt = of_iomap(np, 0);
- 	if (xtal_in_cnt == NULL) {
--		pr_err("%s: invalid address\n", np->full_name);
-+		pr_err("%pOF: invalid address\n", np);
- 		return -ENXIO;
+diff --git a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
+index 19606e8d25dd..409f2b9e70ff 100644
+--- a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
++++ b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
+@@ -757,8 +757,8 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
+ 	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
+ 	if (error < 0) {
+ 		dev_err(&pdev->dev,
+-			"of_address_to_resource() failed for %s\n",
+-			pdev->dev.of_node->full_name);
++			"of_address_to_resource() failed for %pOF\n",
++			pdev->dev.of_node);
+ 		return error;
  	}
 
- 	clk = of_clk_get(np, 0);
- 	if (IS_ERR(clk)) {
--		pr_err("%s: invalid clock\n", np->full_name);
-+		pr_err("%pOF: invalid clock\n", np);
- 		return PTR_ERR(clk);
+diff --git a/drivers/staging/fsl-mc/bus/fsl-mc-msi.c b/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
+index c04a2f2b3409..49f95123b5c7 100644
+--- a/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
++++ b/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
+@@ -183,8 +183,8 @@ int fsl_mc_find_msi_domain(struct device *mc_platform_dev,
+ 	msi_domain = of_msi_get_domain(mc_platform_dev, mc_of_node,
+ 				       DOMAIN_BUS_FSL_MC_MSI);
+ 	if (!msi_domain) {
+-		pr_err("Unable to find fsl-mc MSI domain for %s\n",
+-		       mc_of_node->full_name);
++		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
++		       mc_of_node);
+
+ 		return -ENOENT;
  	}
+diff --git a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
+index 865d38517508..e49dcde480fc 100644
+--- a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
++++ b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
+@@ -79,8 +79,7 @@ int __init its_fsl_mc_msi_init(void)
 
-@@ -43,7 +43,7 @@ static int __init tango_clocksource_init(struct device_node *np)
- 	ret = clocksource_mmio_init(xtal_in_cnt, "tango-xtal", xtal_freq, 350,
- 				    32, clocksource_mmio_readl_up);
- 	if (ret) {
--		pr_err("%s: registration failed\n", np->full_name);
-+		pr_err("%pOF: registration failed\n", np);
- 		return ret;
- 	}
-
-diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
-index f6e7491c873c..a07b923d3d6e 100644
---- a/drivers/clocksource/timer-of.c
-+++ b/drivers/clocksource/timer-of.c
-@@ -44,7 +44,7 @@ static __init int timer_irq_init(struct device_node *np,
- 	of_irq->irq = of_irq->name ? of_irq_get_byname(np, of_irq->name):
- 		irq_of_parse_and_map(np, of_irq->index);
- 	if (!of_irq->irq) {
--		pr_err("Failed to map interrupt for %s\n", np->full_name);
-+		pr_err("Failed to map interrupt for %pOF\n", np);
- 		return -EINVAL;
- 	}
-
-@@ -55,8 +55,7 @@ static __init int timer_irq_init(struct device_node *np,
- 			    of_irq->flags ? of_irq->flags : IRQF_TIMER,
- 			    np->full_name, clkevt);
- 	if (ret) {
--		pr_err("Failed to request irq %d for %s\n", of_irq->irq,
--		       np->full_name);
-+		pr_err("Failed to request irq %d for %pOF\n", of_irq->irq, np);
- 		return ret;
- 	}
-
-@@ -80,20 +79,20 @@ static __init int timer_clk_init(struct device_node *np,
- 	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
- 		of_clk_get(np, of_clk->index);
- 	if (IS_ERR(of_clk->clk)) {
--		pr_err("Failed to get clock for %s\n", np->full_name);
-+		pr_err("Failed to get clock for %pOF\n", np);
- 		return PTR_ERR(of_clk->clk);
- 	}
-
- 	ret = clk_prepare_enable(of_clk->clk);
- 	if (ret) {
--		pr_err("Failed for enable clock for %s\n", np->full_name);
-+		pr_err("Failed for enable clock for %pOF\n", np);
- 		goto out_clk_put;
- 	}
-
- 	of_clk->rate = clk_get_rate(of_clk->clk);
- 	if (!of_clk->rate) {
- 		ret = -EINVAL;
--		pr_err("Failed to get clock rate for %s\n", np->full_name);
-+		pr_err("Failed to get clock rate for %pOF\n", np);
- 		goto out_clk_disable;
- 	}
-
-diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-index da81e5de74fe..028075720334 100644
---- a/drivers/clocksource/timer-probe.c
-+++ b/drivers/clocksource/timer-probe.c
-@@ -40,8 +40,7 @@ void __init timer_probe(void)
-
- 		ret = init_func_ret(np);
- 		if (ret) {
--			pr_err("Failed to initialize '%s': %d\n",
--			       of_node_full_name(np), ret);
-+			pr_err("Failed to initialize '%pOF': %d\n", np, ret);
+ 		parent = irq_find_matching_host(np, DOMAIN_BUS_NEXUS);
+ 		if (!parent || !msi_get_domain_info(parent)) {
+-			pr_err("%s: unable to locate ITS domain\n",
+-			       np->full_name);
++			pr_err("%pOF: unable to locate ITS domain\n", np);
  			continue;
  		}
 
-diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
-index 174d1243ea93..8f2423789ba9 100644
---- a/drivers/clocksource/timer-stm32.c
-+++ b/drivers/clocksource/timer-stm32.c
-@@ -138,7 +138,7 @@ static int __init stm32_clockevent_init(struct device_node *np)
- 	irq = irq_of_parse_and_map(np, 0);
- 	if (!irq) {
- 		ret = -EINVAL;
--		pr_err("%s: failed to get irq.\n", np->full_name);
-+		pr_err("%pOF: failed to get irq.\n", np);
- 		goto err_get_irq;
+@@ -89,15 +88,14 @@ int __init its_fsl_mc_msi_init(void)
+ 						 &its_fsl_mc_msi_domain_info,
+ 						 parent);
+ 		if (!mc_msi_domain) {
+-			pr_err("%s: unable to create fsl-mc domain\n",
+-			       np->full_name);
++			pr_err("%pOF: unable to create fsl-mc domain\n", np);
+ 			continue;
+ 		}
+
+ 		WARN_ON(mc_msi_domain->host_data !=
+ 			&its_fsl_mc_msi_domain_info);
+
+-		pr_info("fsl-mc MSI: %s domain created\n", np->full_name);
++		pr_info("fsl-mc MSI: %pOF domain created\n", np);
  	}
 
-@@ -168,12 +168,12 @@ static int __init stm32_clockevent_init(struct device_node *np)
- 	ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
- 			"stm32 clockevent", data);
- 	if (ret) {
--		pr_err("%s: failed to request irq.\n", np->full_name);
-+		pr_err("%pOF: failed to request irq.\n", np);
- 		goto err_get_irq;
- 	}
-
--	pr_info("%s: STM32 clockevent driver initialized (%d bits)\n",
--			np->full_name, bits);
-+	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
-+			np, bits);
-
- 	return ret;
-
+ 	return 0;
 --
 2.11.0
