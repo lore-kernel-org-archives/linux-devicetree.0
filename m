@@ -1,243 +1,55 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v6 8/9] arm64: allwinner: a64: enable AXP803 regulators for Pine64
-Date: Tue, 18 Jul 2017 11:07:29 +0800
-Message-ID: <BC9EA416-B10E-4CA5-A79B-F43AA46DA86C@aosc.io>
-References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-9-icenowy@aosc.io> <98ae1ea8-ef08-8859-63d8-57c56a6348a6@arm.com> <4B129FD0-4AEB-4DC3-AF33-C279468BD197@aosc.io> <77045320-c19a-6c18-ed68-108fa5416c2a@arm.com> <CAGb2v65Fn4rvyLyZaFHfmUFQNq3ctN0+tG_fg24YhPpi-Vr8hA@mail.gmail.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/4] Add various TI-SCI DT nodes on 66AK2G SoCs
+Date: Mon, 17 Jul 2017 22:28:40 -0500
+Message-ID: <20170718032844.29490-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v65Fn4rvyLyZaFHfmUFQNq3ctN0+tG_fg24YhPpi-Vr8hA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wens-jdAy2FN1RRM@public.gmane.orgChen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Santosh,
 
+The following patch series adds various TI-SCI related DTS nodes that
+probe the corresponding TI-SCI genpd, clock and reset drivers for the
+66AK2G platforms.
 
-于 2017年7月18日 GMT+08:00 上午10:58:52, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> 写到:
->On Fri, May 19, 2017 at 4:55 PM, Andre Przywara
-><andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->> Hi,
->>
->> On 19/05/17 09:29, Icenowy Zheng wrote:
->>>
->>>
->>> 于 2017年5月19日 GMT+08:00 下午4:27:21, Andre Przywara
-><andre.przywara-5wv7dgnIgG8@public.gmane.org> 写到:
->>>> Hi,
->>>>
->>>> On 18/05/17 08:16, Icenowy Zheng wrote:
->>>>> Add support of AXP803 regulators in the Pine64 device tree, in
->order
->>>> to
->>>>> enable many future functionalities, e.g. Wi-Fi.
->>>>>
->>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>>> ---
->>>>> Changes in v6:
->>>>> - Rebased on next-20170517.
->>>>>
->>>>>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 109
->>>> +++++++++++++++++++++
->>>>>  1 file changed, 109 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->>>> b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->>>>> index 36001884ed33..40921bacb39c 100644
->>>>> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->>>>> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
->>>>> @@ -118,6 +118,115 @@
->>>>>     };
->>>>>  };
->>>>>
->>>>> +#include "axp803.dtsi"
->>>>> +
->>>>> +&reg_aldo1 {
->>>>> +   regulator-min-microvolt = <2800000>;
->>>>> +   regulator-max-microvolt = <2800000>;
->>>>> +   regulator-name = "vcc-csi";
->>>>> +};
->>>>> +
->>>>> +&reg_aldo2 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <1800000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-pl";
->>>>> +};
->>>>> +
->>>>> +&reg_aldo3 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <2700000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-pll-avcc";
->>>>> +};
->>
->> The schematic puts this at a fixed 3.0V, so why the range here? Are
->we
->> expected to tune the voltage of the PLLs?
->
->Normally these would describe the operating limits. We did this
->in the past for most boards. I'm fine with fixing it to 3.0V
->though.
->
->>
->>>>> +
->>>>> +&reg_dc1sw {
->>>>> +   regulator-name = "vcc-phy";
->>>>> +};
->>>>> +
->>>>> +&reg_dcdc1 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <3300000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-3v3";
->>>>> +};
->>>>> +
->>>>> +&reg_dcdc2 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <1000000>;
->>>>> +   regulator-max-microvolt = <1300000>;
->>>>> +   regulator-name = "vdd-cpux";
->>>>> +};
->>>>> +
->>>>> +/* DCDC3 is polyphased with DCDC2 */
->>>>> +
->>>>> +&reg_dcdc5 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <1500000>;
->>>>> +   regulator-max-microvolt = <1500000>;
->>>>> +   regulator-name = "vcc-dram";
->>>>> +};
->>>>
->>>> I think I mentioned this before, but the Pine64 has DDR3L DRAM,
->which
->>>> is
->>>> specified to run at 1.35V (1.36V with the 20mV granularity of the
->AXP).
->>>> The reset value is even (wrongly?) configured to 1.24V.
->>>>
->>>> So is there any reason you set the voltage to 1.5V? Is that what
->the
->>>> BSP
->>>> does? Or did you see any problems with 1.36V?
->>>
->>> I just set it based on the schematics.
->>
->> I wouldn't trust the schematics too much. They are rather generic,
->see
->> the Ethernet page, for instance, showing *different* PHYs, not just
->the
->> ones used.
->> For the DRAM the Pine64 schematic does not even tell the DRAM chip
->used,
->> the name under the chip is just describing the package.
->>
->>> And 1.35v cannot be accurately achieved by dcdc5 and it's a problem
->whether to use 1.34v or 1.36v ;-)
->>
->> Well, as I wrote above, 1.36V is the voltage to go with. I think 10mV
->> more is well within the tolerance ;-)
->>
->>>>> +&reg_dcdc6 {
->>>>> +   regulator-always-on;
->>>>> +   regulator-min-microvolt = <1100000>;
->>>>> +   regulator-max-microvolt = <1100000>;
->>>>> +   regulator-name = "vdd-sys";
->>>>> +};
->>>>> +
->>>>> +&reg_dldo1 {
->>>>> +   regulator-min-microvolt = <3300000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-hdmi";
->>>>> +};
->>>>> +
->>>>> +&reg_dldo2 {
->>>>> +   regulator-min-microvolt = <3300000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-mipi";
->>>>> +};
->>>>> +
->>>>> +&reg_dldo3 {
->>>>> +   regulator-min-microvolt = <3300000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "avdd-csi";
->>>>> +};
->>
->> If you stick to the schematic, this should be 2.8V.
->
->Agreed. But...
->
->>>>> +
->>>>> +&reg_dldo4 {
->>>>> +   regulator-min-microvolt = <3300000>;
->>>>> +   regulator-max-microvolt = <3300000>;
->>>>> +   regulator-name = "vcc-wifi";
->>>>> +};
->>>>> +
->>>>> +&reg_eldo1 {
->>>>> +   regulator-min-microvolt = <1800000>;
->>>>> +   regulator-max-microvolt = <1800000>;
->>>>> +   regulator-name = "cpvdd";
->>>>> +};
->>>>> +
->>>>> +&reg_eldo3 {
->>>>> +   regulator-min-microvolt = <1800000>;
->>>>> +   regulator-max-microvolt = <1800000>;
->>>>> +   regulator-name = "vdd-1v8-csi";
->>>>> +};
->>
->> The schematic lists 1.2V/1.5V/1.8V here, so should we have a range?
->
->This and avdd-csi really depends on the camera module used.
->Maybe this should be left to an overlay.
+This is the second of two series, and these nodes along with the defconfig
+patches finally allows adding other peripherals to the 66AK2G platforms.
+All the new peripherals should/will be added without using the device id
+macros [1]. Patches are baselined on 4.13-rc1 and are intended for the 4.14
+merge window.
 
-Agree.
+I have boot-tested both the series individually and combined on all
+the Keystone2 platforms. K2G platforms are boot-tested using ramdisk,
+the MMC boot and NFS boot can be enabled once the corresponding DTS nodes
+are added. The addition of the PMMC node also enables the system reboot.
 
->
->>
->>>>> +
->>>>> +&reg_fldo1 {
->>>>> +   regulator-min-microvolt = <1200000>;
->>>>> +   regulator-max-microvolt = <1200000>;
->>>>> +   regulator-name = "vcc-1v2-hsic";
->>>>> +};
->>>>> +
->>>>> +&reg_fldo2 {
->>>>> +   regulator-always-on;
->>
->> Why do we need to turn this on? Upstream firmware does not use the
->> arisc, so it can stay off.
->> Also in general I think Linux should not tinker with the management
->> processor at all.
->
->I'm not sure, but I think at least one SoC had failed to work without
->this powered on. If that is the case with the A64, then please leave
->a comment saying so. Otherwise let it stay off.
+regards
+Suman
 
-Yes it failed to work, and this seems to be common among SoCs
-with CPUs power domain.
+[1] https://patchwork.kernel.org/patch/9741279/
 
->
->ChenYu
->
->> Cheers,
->> Andre.
->>
->>>>> +   regulator-min-microvolt = <1100000>;
->>>>> +   regulator-max-microvolt = <1100000>;
->>>>> +   regulator-name = "vdd-cpus";
->>>>> +};
->>>>> +
->>>>> +&reg_rtc_ldo {
->>>>> +   regulator-name = "vcc-rtc";
->>>>> +};
->>>>> +
->>>>>  /* On Exp and Euler connectors */
->>>>>  &uart0 {
->>>>>     pinctrl-names = "default";
->>>>>
+Andrew F. Davis (1):
+  ARM: dts: keystone-k2g: Add TI SCI reset-controller node
+
+Dave Gerlach (1):
+  ARM: dts: keystone-k2g: Add ti-sci power domain node
+
+Nishanth Menon (1):
+  ARM: dts: keystone-k2g: Add PMMC node to support TI-SCI protocol
+
+Tero Kristo (1):
+  ARM: dts: keystone-k2g: Add ti-sci clock provider node
+
+ arch/arm/boot/dts/keystone-k2g.dtsi | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+
+-- 
+2.13.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
