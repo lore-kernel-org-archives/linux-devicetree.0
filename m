@@ -1,72 +1,61 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 3/4] gpio: davinci: Add a separate compatible for
- keystone-k2g soc
-Date: Tue, 18 Jul 2017 23:18:41 +0530
-Message-ID: <8551db79-611e-e8f3-3756-ef4930760924@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-4-git-send-email-j-keerthy@ti.com>
- <902db353-2db1-fa86-5f96-541082348a35@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <902db353-2db1-fa86-5f96-541082348a35@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, linus.walleij@linaro.org, ssantosh@kernel.org
-Cc: robh+dt@kernel.org, s-anna@ti.com, fcooper@ti.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v2 0/2] ZII RAVE platform driver
+Date: Tue, 18 Jul 2017 10:56:02 -0700
+Message-ID: <20170718175604.11735-1-andrew.smirnov@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi everyone,
+
+This patch series is v2 of the driver for supervisory processor found
+on RAVE series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
+
+Changes since [v1]:
+
+    - Updated wording in DT-bindings as per Rob's request.
+
+    - Collected Rob's Acked-by for patch 2/2
+
+NOTE:
+
+ * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+   submitted it yet, becuase I wanted to make sure that API exposed by
+   this MFD is acceptable and doesn't need drastic changes.
+
+ * This driver is dependent on crc_ccitt_false() introduced in
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+
+Feedback is greatly appreciated!
+
+Thanks,
+Andrey Smirnov
+
+[v1] lkml.kernel.org/r/r/20170710170449.4544-1-andrew.smirnov@gmail.com
 
 
-On Tuesday 18 July 2017 05:01 PM, Sekhar Nori wrote:
-> Hi Keerthy,
-> 
-> On Tuesday 18 July 2017 04:27 PM, Keerthy wrote:
->> Add a separate compatible for keystone-k2g soc
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>  Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 3 ++-
->>  drivers/gpio/gpio-davinci.c                             | 1 +
->>  2 files changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> index 5079ba7..1a5c1a2 100644
->> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
->> @@ -1,7 +1,8 @@
->>  Davinci/Keystone GPIO controller bindings
->>  
->>  Required Properties:
->> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
->> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio",
->> +	      "ti,keystone-k2g-gpio"
->>  
->>  - reg: Physical base address of the controller and the size of memory mapped
->>         registers.
->> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 932f270..a8d8dd9 100644
->> --- a/drivers/gpio/gpio-davinci.c
->> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -610,6 +610,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->>  static const struct of_device_id davinci_gpio_ids[] = {
->>  	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
->>  	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
->> +	{ .compatible = "ti,keystone-k2g-gpio", keystone_gpio_get_irq_chip},
-> 
-> You don't have to add compatible matching to the driver if you don't
-> need any special handling for K2G ATM. Your dts should have:
-> 
-> compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
-> 
-> this way, the driver continues to probe using "ti,keystone-gpio", and
-> when you really discover a need to do some special handling for K2G, a
-> kernel update will do without the need for a DT update.
+Andrey Smirnov (2):
+  platform: Add driver for RAVE Supervisory Processor
+  dt-bindings: mfd: Add bindings for ZII RAVE devices
 
-Sure that is better to do as currently i do not see any differences
-between k2g and other k2 devices.
+ .../devicetree/bindings/mfd/zii,rave-sp.txt        |   39 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/platform/Kconfig                           |    2 +
+ drivers/platform/Makefile                          |    1 +
+ drivers/platform/rave/Kconfig                      |   26 +
+ drivers/platform/rave/Makefile                     |    1 +
+ drivers/platform/rave/rave-sp.c                    | 1083 ++++++++++++++++++++
+ include/linux/rave-sp.h                            |   54 +
+ 8 files changed, 1207 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+ create mode 100644 drivers/platform/rave/Kconfig
+ create mode 100644 drivers/platform/rave/Makefile
+ create mode 100644 drivers/platform/rave/rave-sp.c
+ create mode 100644 include/linux/rave-sp.h
 
-> 
-> Thanks,
-> Sekhar
-> 
+-- 
+2.13.3
