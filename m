@@ -1,35 +1,132 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH 2/2] arm: dts: stm32: enable cec for stm32f769 discovery
-Date: Tue, 18 Jul 2017 10:22:21 +0200
-Message-ID: <1500366141-30706-2-git-send-email-benjamin.gaignard@linaro.org>
-References: <1500366141-30706-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500366141-30706-1-git-send-email-benjamin.gaignard@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: [PATCH] Documentation: dw-mshc: deprecate num-slots
+Date: Tue, 18 Jul 2017 16:31:38 +0800
+Message-ID: <1500366698-117167-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-enable cec for stm32f769 discovery board
+dwmmc host driver already deprecate it in the driver
+but didn't modify the documentation to reflect the fact.
+This patch deprecates it and clean up num-slots from the
+examples of all variant host drivers.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
 ---
- arch/arm/boot/dts/stm32f769-disco.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f769-disco.dts b/arch/arm/boot/dts/stm32f769-disco.dts
-index 166728a..14e54da 100644
---- a/arch/arm/boot/dts/stm32f769-disco.dts
-+++ b/arch/arm/boot/dts/stm32f769-disco.dts
-@@ -72,3 +72,9 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
-+
-+&cec {
-+	pinctrl-0 = <&cec_pins_a>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
+ Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt |  1 -
+ Documentation/devicetree/bindings/mmc/img-dw-mshc.txt    |  1 -
+ Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt     |  2 --
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++---------
+ Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt     |  1 -
+ 5 files changed, 7 insertions(+), 14 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+index aad9844..a58c173 100644
+--- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+@@ -78,7 +78,6 @@ Example:
+ 	};
+ 
+ 	dwmmc0@12200000 {
+-		num-slots = <1>;
+ 		cap-mmc-highspeed;
+ 		cap-sd-highspeed;
+ 		broken-cd;
+diff --git a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
+index 85de99f..c54e577 100644
+--- a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
+@@ -24,6 +24,5 @@ Example:
+ 
+ 		fifo-depth = <0x20>;
+ 		bus-width = <4>;
+-		num-slots = <1>;
+ 		disable-wp;
+ 	};
+diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+index 8af1afc..07242d1 100644
+--- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+@@ -36,7 +36,6 @@ Example:
+ 
+ 	/* Board portion */
+ 	dwmmc0@fcd03000 {
+-		num-slots = <1>;
+ 		vmmc-supply = <&ldo12>;
+ 		fifo-depth = <0x100>;
+ 		pinctrl-names = "default";
+@@ -52,7 +51,6 @@ Example:
+ 
+ 	dwmmc_1: dwmmc1@f723e000 {
+ 		compatible = "hisilicon,hi6220-dw-mshc";
+-		num-slots = <0x1>;
+ 		bus-width = <0x4>;
+ 		disable-wp;
+ 		cap-sd-highspeed;
+diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+index 9cb55ca..ef3e5f1 100644
+--- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+@@ -12,12 +12,12 @@ Required Properties:
+ * #address-cells: should be 1.
+ * #size-cells: should be 0.
+ 
+-# Slots: The slot specific information are contained within child-nodes with
+-  each child-node representing a supported slot. There should be atleast one
+-  child node representing a card slot. The name of the child node representing
+-  the slot is recommended to be slot@n where n is the unique number of the slot
+-  connected to the controller. The following are optional properties which
+-  can be included in the slot child node.
++# Slots (DEPRECATED): The slot specific information are contained within
++  child-nodes with each child-node representing a supported slot. There should
++  be atleast one child node representing a card slot. The name of the child node
++  representing the slot is recommended to be slot@n where n is the unique number
++  of the slot connected to the controller. The following are optional properties
++  which can be included in the slot child node.
+ 
+ 	* reg: specifies the physical slot number. The valid values of this
+ 	  property is 0 to (num-slots -1), where num-slots is the value
+@@ -63,7 +63,7 @@ Optional properties:
+   clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
+ 	  (Use the "max-frequency" instead of "clock-freq-min-max".)
+ 
+-* num-slots: specifies the number of slots supported by the controller.
++* num-slots (DEPRECATED): specifies the number of slots supported by the controller.
+   The number of physical slots actually used could be equal or less than the
+   value specified by num-slots. If this property is not specified, the value
+   of num-slot property is assumed to be 1.
+@@ -124,7 +124,6 @@ board specific portions as listed below.
+ 	dwmmc0@12200000 {
+ 		clock-frequency = <400000000>;
+ 		clock-freq-min-max = <400000 200000000>;
+-		num-slots = <1>;
+ 		broken-cd;
+ 		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+@@ -139,7 +138,6 @@ board specific portions as listed below.
+ 	dwmmc0@12200000 {
+ 		clock-frequency = <400000000>;
+ 		clock-freq-min-max = <400000 200000000>;
+-		num-slots = <1>;
+ 		broken-cd;
+ 		fifo-depth = <0x80>;
+ 		card-detect-delay = <200>;
+diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+index eaade0e..906819a 100644
+--- a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+@@ -25,7 +25,6 @@ Example:
+ 		clock-frequency = <50000000>;
+ 		clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
+ 		clock-names = "biu", "ciu";
+-		num-slots = <1>;
+ 		max-frequency = <50000000>;
+ 		cap-sdio-irq;
+ 		cap-sd-highspeed;
 -- 
 1.9.1
+
+
