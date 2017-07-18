@@ -1,84 +1,34 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/3] iio: adc: stm32: fix common clock rate
-Date: Tue, 18 Jul 2017 14:35:30 +0200
-Message-ID: <1500381332-17086-2-git-send-email-fabrice.gasnier@st.com>
-References: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 0/3] Allow to tune sampling time on STM32 ADC
+Date: Tue, 18 Jul 2017 14:35:29 +0200
+Message-ID: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fixes commit 95e339b6e85d ("iio: adc: stm32: add support for STM32H7")
+STM32 ADC allows each channel to be sampled with a different sampling
+time. This series fixes common clock rate and adds optional device
+tree property, so minimum sampling time can be tuned. This is done via
+device tree as it's tightly coupled with hardware (analog source).
 
-Fix common clock rate used then by stm32-adc sub-devices: take common
-prescaler into account.
-Fix ADC max clock rate on STM32H7 (fADC from datasheet)
+Fabrice Gasnier (3):
+  iio: adc: stm32: fix common clock rate
+  dt-bindings: iio: adc: stm32: add optional min-sample-time
+  iio: adc: stm32: add optional min-sample-time
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/adc/stm32-adc-core.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   5 +
+ drivers/iio/adc/stm32-adc-core.c                   |  10 +-
+ drivers/iio/adc/stm32-adc.c                        | 134 ++++++++++++++++++++-
+ 3 files changed, 140 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index e09233b..6096763 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -64,7 +64,7 @@
- #define STM32H7_CKMODE_MASK		GENMASK(17, 16)
- 
- /* STM32 H7 maximum analog clock rate (from datasheet) */
--#define STM32H7_ADC_MAX_CLK_RATE	72000000
-+#define STM32H7_ADC_MAX_CLK_RATE	36000000
- 
- /**
-  * stm32_adc_common_regs - stm32 common registers, compatible dependent data
-@@ -148,14 +148,14 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
--	priv->common.rate = rate;
-+	priv->common.rate = rate / stm32f4_pclk_div[i];
- 	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
- 	val &= ~STM32F4_ADC_ADCPRE_MASK;
- 	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
- 	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
- 
- 	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
--		rate / (stm32f4_pclk_div[i] * 1000));
-+		priv->common.rate / 1000);
- 
- 	return 0;
- }
-@@ -250,7 +250,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
- 
- out:
- 	/* rate used later by each ADC instance to control BOOST mode */
--	priv->common.rate = rate;
-+	priv->common.rate = rate / div;
- 
- 	/* Set common clock mode and prescaler */
- 	val = readl_relaxed(priv->common.base + STM32H7_ADC_CCR);
-@@ -260,7 +260,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
- 	writel_relaxed(val, priv->common.base + STM32H7_ADC_CCR);
- 
- 	dev_dbg(&pdev->dev, "Using %s clock/%d source at %ld kHz\n",
--		ckmode ? "bus" : "adc", div, rate / (div * 1000));
-+		ckmode ? "bus" : "adc", div, priv->common.rate / 1000);
- 
- 	return 0;
- }
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
