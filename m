@@ -1,132 +1,129 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [PATCH] Documentation: dw-mshc: deprecate num-slots
-Date: Tue, 18 Jul 2017 16:31:38 +0800
-Message-ID: <1500366698-117167-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Oleksij Rempel <ore@pengutronix.de>
+Subject: Re: [PATCH v1 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
+ Remote Processor Controller driver
+Date: Tue, 18 Jul 2017 10:45:19 +0200
+Message-ID: <91bfe236-0410-b26e-7ef6-73d14ebf120d@pengutronix.de>
+References: <20170710144220.31594-1-o.rempel@pengutronix.de>
+ <20170710144220.31594-2-o.rempel@pengutronix.de>
+ <20170710221408.GD1618@tuxbook>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170710221408.GD1618@tuxbook>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux@rempel-privat.de, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-dwmmc host driver already deprecate it in the driver
-but didn't modify the documentation to reflect the fact.
-This patch deprecates it and clean up num-slots from the
-examples of all variant host drivers.
+Hallo Bjorn,
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
----
+On 11.07.2017 00:14, Bjorn Andersson wrote:
+> On Mon 10 Jul 07:42 PDT 2017, Oleksij Rempel wrote:
+>
+>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>> ---
+>>  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 44 ++++++++++++++++++++++
+>>  1 file changed, 44 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>> new file mode 100644
+>> index 000000000000..e7c61993e1b8
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+>> @@ -0,0 +1,44 @@
+>> +NXP iMX6SX/iMX7D Co-Processor Bindings
+>> +----------------------------------------
+>> +
+>> +This binding provides support for ARM Cortex M4 Co-processor found on some
+>> +NXP iMX SoCs.
+>> +
+>> +Required properties:
+>> +- compatible		Should be one of:
+>> +				"fsl,imx7d-rproc"
+>> +				"fsl,imx6sx-rproc"
+>> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
+>> +- syscfg		Phandle to syscon block which provide access to
+>
+> This is called "syscon" in the code and the example.
 
- Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt |  1 -
- Documentation/devicetree/bindings/mmc/img-dw-mshc.txt    |  1 -
- Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt     |  2 --
- .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++---------
- Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt     |  1 -
- 5 files changed, 7 insertions(+), 14 deletions(-)
+done.
 
-diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-index aad9844..a58c173 100644
---- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-@@ -78,7 +78,6 @@ Example:
- 	};
- 
- 	dwmmc0@12200000 {
--		num-slots = <1>;
- 		cap-mmc-highspeed;
- 		cap-sd-highspeed;
- 		broken-cd;
-diff --git a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-index 85de99f..c54e577 100644
---- a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-@@ -24,6 +24,5 @@ Example:
- 
- 		fifo-depth = <0x20>;
- 		bus-width = <4>;
--		num-slots = <1>;
- 		disable-wp;
- 	};
-diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-index 8af1afc..07242d1 100644
---- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-@@ -36,7 +36,6 @@ Example:
- 
- 	/* Board portion */
- 	dwmmc0@fcd03000 {
--		num-slots = <1>;
- 		vmmc-supply = <&ldo12>;
- 		fifo-depth = <0x100>;
- 		pinctrl-names = "default";
-@@ -52,7 +51,6 @@ Example:
- 
- 	dwmmc_1: dwmmc1@f723e000 {
- 		compatible = "hisilicon,hi6220-dw-mshc";
--		num-slots = <0x1>;
- 		bus-width = <0x4>;
- 		disable-wp;
- 		cap-sd-highspeed;
-diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-index 9cb55ca..ef3e5f1 100644
---- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-@@ -12,12 +12,12 @@ Required Properties:
- * #address-cells: should be 1.
- * #size-cells: should be 0.
- 
--# Slots: The slot specific information are contained within child-nodes with
--  each child-node representing a supported slot. There should be atleast one
--  child node representing a card slot. The name of the child node representing
--  the slot is recommended to be slot@n where n is the unique number of the slot
--  connected to the controller. The following are optional properties which
--  can be included in the slot child node.
-+# Slots (DEPRECATED): The slot specific information are contained within
-+  child-nodes with each child-node representing a supported slot. There should
-+  be atleast one child node representing a card slot. The name of the child node
-+  representing the slot is recommended to be slot@n where n is the unique number
-+  of the slot connected to the controller. The following are optional properties
-+  which can be included in the slot child node.
- 
- 	* reg: specifies the physical slot number. The valid values of this
- 	  property is 0 to (num-slots -1), where num-slots is the value
-@@ -63,7 +63,7 @@ Optional properties:
-   clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
- 	  (Use the "max-frequency" instead of "clock-freq-min-max".)
- 
--* num-slots: specifies the number of slots supported by the controller.
-+* num-slots (DEPRECATED): specifies the number of slots supported by the controller.
-   The number of physical slots actually used could be equal or less than the
-   value specified by num-slots. If this property is not specified, the value
-   of num-slot property is assumed to be 1.
-@@ -124,7 +124,6 @@ board specific portions as listed below.
- 	dwmmc0@12200000 {
- 		clock-frequency = <400000000>;
- 		clock-freq-min-max = <400000 200000000>;
--		num-slots = <1>;
- 		broken-cd;
- 		fifo-depth = <0x80>;
- 		card-detect-delay = <200>;
-@@ -139,7 +138,6 @@ board specific portions as listed below.
- 	dwmmc0@12200000 {
- 		clock-frequency = <400000000>;
- 		clock-freq-min-max = <400000 200000000>;
--		num-slots = <1>;
- 		broken-cd;
- 		fifo-depth = <0x80>;
- 		card-detect-delay = <200>;
-diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-index eaade0e..906819a 100644
---- a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-@@ -25,7 +25,6 @@ Example:
- 		clock-frequency = <50000000>;
- 		clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
- 		clock-names = "biu", "ciu";
--		num-slots = <1>;
- 		max-frequency = <50000000>;
- 		cap-sdio-irq;
- 		cap-sd-highspeed;
--- 
-1.9.1
+>> +			System Reset Controller
+>> +
+>> +Optional properties:
+>> +- reg:			Should contain the address ranges for some of internal
+>> +			memory regions.
+>
+> Something less hand-wavy, like: "Should list the memory regions for the
+> remoteproc"
+>
+>> +- reg-names:		Contains the corresponding names for the memory
+>> +			regions. These should be named "ddr", "ocram", "ocram-s",
+>> +			"ocram-epdc" or "ocram-pxp".
+>
+> Make this comment define which memory regions are required for each of
+> the systems.
 
+done.
 
+>> +Fallowing memory ranges are expected:
+>> +- For "fsl,imx7d-rproc"
+>> +	<0x00900000 0x00020000> - "ocram"
+>> +	<0x00920000 0x00020000> - "ocram-epdc"
+>> +	<0x00940000 0x00008000> - "ocram-pxp"
+>> +	<0x80000000 0x0FFF0000> - "ddr" (code area)
+>> +	<0x80000000 0x60000000> - "ddr" (data area)
+>
+> There's no reason to list the actual regions in the binding
+> document. Just list the requires regions for each system.
+>
+>> +- For "fsl,imx6sx-rproc"
+>> +	<0x008F8000 0x00004000> - "ocram-s"
+>> +	<0x80000000 0x0FFF8000> - "ddr" (code area)
+>> +	<0x80000000 0x60000000> - "ddr" (data area)
+>> +
+>> +Note: the "ddr" code and data ranges are overlapping. Code area is smaller
+>> +than data area.  So this range should be carefully chosen according to your
+>> +system and application requirements.
+>> +
+>
+> This is a source of future issues as this indicates that I should have
+> reg-names list "ddr" twice.
+
+Then I will name it:
+"ddri" (incstruction/code area),
+"ddrd" (data area)
+
+unless there are other suggestions.
+
+> Also, as you warn about the user needing to pick the values for "ddr",
+> does that mean that it's a carveout of System RAM?
+
+Yes, it is a part of System RAM.
+
+>> +Example:
+>> +	imx_rproc: imx7d-rp0@0 {
+>
+> imx7d-rproc@80000000 {
+>
+> And there's currently no reason to label this node.
+>
+>> +		compatible	= "fsl,imx7d-rproc";
+>> +		reg		= <0x80000000 0x80000>, <0x00900000 0x2000>;
+>> +		reg-names	= "ddr", "ocram";
+>> +		syscon		= <&src>;
+>> +		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
+>> +	};
+
+Regards,
+Oleksij
