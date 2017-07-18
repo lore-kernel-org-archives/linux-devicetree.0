@@ -1,135 +1,180 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 01/18] coresight replicator: Cleanup programmable
- replicator naming
-Date: Tue, 18 Jul 2017 10:47:58 +0100
-Message-ID: <1500371295-30472-2-git-send-email-suzuki.poulose@arm.com>
-References: <1500371295-30472-1-git-send-email-suzuki.poulose@arm.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v2 6/9] soc: mediatek: pwrap: update pwrap_init without slave programming
+Date: Tue, 18 Jul 2017 17:49:26 +0800
+Message-ID: <bc717df23dc0f7efc697fabc9dda3450b50e7927.1500368529.git.sean.wang@mediatek.com>
+References: <cover.1500368529.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1500371295-30472-1-git-send-email-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mathieu.poirier@linaro.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pratik Patel <pratikp@codeaurora.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1500368529.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-The Linux coresight drivers define the programmable ATB replicator as
-Qualcomm replicator, while this is designed by ARM. This can cause
-confusion to a user selecting the driver. Cleanup all references to
-make it explicitly clear. This patch :
+From: Sean Wang <sean.wang@mediatek.com>
 
- 1) Replace the compatible string for the replicator :
-      qcom,coresight-replicator1x => arm,coresight-dynamic-replicator
- 2) Changes the Kconfig symbol (since this is not part of any defconfigs)
-     CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
- 3) Improves the help message in the Kconfig.
- 4) Changes the name of the driver and the file :
-      coresight-replicator-qcom => coresight-dynamic-replicator
+pwrap initialization is highly associated with the base SoC, so
+update here for allowing pwrap_init without slave program which would be
+used to those PMICs without extra encryption on bus such as MT6380.
 
-Cc: Pratik Patel <pratikp@codeaurora.org>
-Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
+Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- Documentation/devicetree/bindings/arm/coresight.txt            |  4 ++--
- drivers/hwtracing/coresight/Kconfig                            | 10 +++++-----
- drivers/hwtracing/coresight/Makefile                           |  2 +-
- ...esight-replicator-qcom.c => coresight-dynamic-replicator.c} |  4 +---
- 4 files changed, 9 insertions(+), 11 deletions(-)
- rename drivers/hwtracing/coresight/{coresight-replicator-qcom.c => coresight-dynamic-replicator.c} (97%)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 91 +++++++++++++++++++++---------------
+ 1 file changed, 54 insertions(+), 37 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index fcbae6a..15ac8e8 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -34,8 +34,8 @@ its hardware characteristcs.
- 		- Embedded Trace Macrocell (version 4.x):
- 			"arm,coresight-etm4x", "arm,primecell";
- 
--		- Qualcomm Configurable Replicator (version 1.x):
--			"qcom,coresight-replicator1x", "arm,primecell";
-+		- Coresight programmable Replicator :
-+			"arm,coresight-dynamic-replicator", "arm,primecell";
- 
- 		- System Trace Macrocell:
- 			"arm,coresight-stm", "arm,primecell"; [1]
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 8d55d6d..ef9cb3c 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -70,13 +70,13 @@ config CORESIGHT_SOURCE_ETM4X
- 	  for instruction level tracing. Depending on the implemented version
- 	  data tracing may also be available.
- 
--config CORESIGHT_QCOM_REPLICATOR
--	bool "Qualcomm CoreSight Replicator driver"
-+config CORESIGHT_DYNAMIC_REPLICATOR
-+	bool "CoreSight Programmable Replicator driver"
- 	depends on CORESIGHT_LINKS_AND_SINKS
- 	help
--	  This enables support for Qualcomm CoreSight link driver. The
--	  programmable ATB replicator sends the ATB trace stream from the
--	  ETB/ETF to the TPIUi and ETR.
-+	  This enables support for dynamic CoreSight replicator link driver.
-+	  The programmable ATB replicator allows independent filtering of the
-+	  trace data based on the traceid.
- 
- config CORESIGHT_STM
- 	bool "CoreSight System Trace Macrocell driver"
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 433d590..5bae90ce 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -14,6 +14,6 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o \
- 					coresight-etm3x-sysfs.o
- obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
- 					coresight-etm4x-sysfs.o
--obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
-+obj-$(CONFIG_CORESIGHT_DYNAMIC_REPLICATOR) += coresight-dynamic-replicator.o
- obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
- obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
-diff --git a/drivers/hwtracing/coresight/coresight-replicator-qcom.c b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
-similarity index 97%
-rename from drivers/hwtracing/coresight/coresight-replicator-qcom.c
-rename to drivers/hwtracing/coresight/coresight-dynamic-replicator.c
-index 0a3d15f..c6900f2 100644
---- a/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-+++ b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
-@@ -143,7 +143,6 @@ static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
- 	if (IS_ERR(drvdata->csdev))
- 		return PTR_ERR(drvdata->csdev);
- 
--	dev_info(dev, "%s initialized\n", (char *)id->data);
- 	return 0;
- }
- 
-@@ -179,14 +178,13 @@ static struct amba_id replicator_ids[] = {
- 	{
- 		.id     = 0x0003b909,
- 		.mask   = 0x0003ffff,
--		.data	= "REPLICATOR 1.0",
- 	},
- 	{ 0, 0 },
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index 03c0520..1a62848 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -531,6 +531,7 @@ struct pmic_wrapper_type {
+ 	u32 spi_w;
+ 	u32 wdt_src;
+ 	int has_bridge:1;
++	int slv_program:1;
+ 	int (*init_reg_clock)(struct pmic_wrapper *wrp);
+ 	int (*init_soc_specific)(struct pmic_wrapper *wrp);
  };
+@@ -999,9 +1000,12 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+ 	}
  
- static struct amba_driver replicator_driver = {
- 	.drv = {
--		.name	= "coresight-replicator-qcom",
-+		.name	= "coresight-dynamic-replicator",
- 		.pm	= &replicator_dev_pm_ops,
- 		.suppress_bind_attrs = true,
- 	},
+ 	/* Reset SPI slave */
+-	ret = pwrap_reset_spislave(wrp);
+-	if (ret)
+-		return ret;
++
++	if (wrp->master->slv_program) {
++		ret = pwrap_reset_spislave(wrp);
++		if (ret)
++			return ret;
++	}
+ 
+ 	pwrap_writel(wrp, 1, PWRAP_WRAP_EN);
+ 
+@@ -1013,45 +1017,52 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+ 	if (ret)
+ 		return ret;
+ 
+-	/* Setup serial input delay */
+-	ret = pwrap_init_sidly(wrp);
+-	if (ret)
+-		return ret;
++	if (wrp->master->slv_program) {
++		/* Setup serial input delay */
++		ret = pwrap_init_sidly(wrp);
++		if (ret)
++			return ret;
+ 
+-	/* Enable dual IO mode */
+-	pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
++		/* Enable dual IO mode */
++		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_DIO_EN], 1);
+ 
+-	/* Check IDLE & INIT_DONE in advance */
+-	ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle_and_sync_idle);
+-	if (ret) {
+-		dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
+-		return ret;
+-	}
++		/* Check IDLE & INIT_DONE in advance */
++		ret = pwrap_wait_for_state(wrp,
++					   pwrap_is_fsm_idle_and_sync_idle);
++		if (ret) {
++			dev_err(wrp->dev, "%s fail, ret=%d\n", __func__, ret);
++			return ret;
++		}
+ 
+-	pwrap_writel(wrp, 1, PWRAP_DIO_EN);
++		pwrap_writel(wrp, 1, PWRAP_DIO_EN);
+ 
+-	/* Read Test */
+-	pwrap_read(wrp, wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
+-	if (rdata != PWRAP_DEW_READ_TEST_VAL) {
+-		dev_err(wrp->dev, "Read test failed after switch to DIO mode: 0x%04x != 0x%04x\n",
++		/* Read Test */
++		pwrap_read(wrp,
++			   wrp->slave->dew_regs[PWRAP_DEW_READ_TEST], &rdata);
++		if (rdata != PWRAP_DEW_READ_TEST_VAL) {
++			dev_err(wrp->dev,
++				"Read failed on DIO mode: 0x%04x!=0x%04x\n",
+ 				PWRAP_DEW_READ_TEST_VAL, rdata);
+-		return -EFAULT;
+-	}
+-
+-	/* Enable encryption */
+-	ret = pwrap_init_cipher(wrp);
+-	if (ret)
+-		return ret;
++			return -EFAULT;
++		}
+ 
+-	/* Signature checking - using CRC */
+-	if (pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
+-		return -EFAULT;
++		/* Enable encryption */
++		ret = pwrap_init_cipher(wrp);
++		if (ret)
++			return ret;
+ 
+-	pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
+-	pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
+-	pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
+-		     PWRAP_SIG_ADR);
+-	pwrap_writel(wrp, wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
++		/* Signature checking - using CRC */
++		if (pwrap_write(wrp,
++				wrp->slave->dew_regs[PWRAP_DEW_CRC_EN], 0x1))
++			return -EFAULT;
++
++		pwrap_writel(wrp, 0x1, PWRAP_CRC_EN);
++		pwrap_writel(wrp, 0x0, PWRAP_SIG_MODE);
++		pwrap_writel(wrp, wrp->slave->dew_regs[PWRAP_DEW_CRC_VAL],
++			     PWRAP_SIG_ADR);
++		pwrap_writel(wrp,
++			     wrp->master->arb_en_all, PWRAP_HIPRIO_ARB_EN);
++	}
+ 
+ 	if (wrp->master->type == PWRAP_MT8135)
+ 		pwrap_writel(wrp, 0x7, PWRAP_RRARB_EN);
+@@ -1059,8 +1070,11 @@ static int pwrap_init(struct pmic_wrapper *wrp)
+ 	pwrap_writel(wrp, 0x1, PWRAP_WACS0_EN);
+ 	pwrap_writel(wrp, 0x1, PWRAP_WACS1_EN);
+ 	pwrap_writel(wrp, 0x1, PWRAP_WACS2_EN);
+-	pwrap_writel(wrp, 0x5, PWRAP_STAUPD_PRD);
+-	pwrap_writel(wrp, 0xff, PWRAP_STAUPD_GRPEN);
++
++	if (wrp->master->slv_program) {
++		pwrap_writel(wrp, 0x5, PWRAP_STAUPD_PRD);
++		pwrap_writel(wrp, 0xff, PWRAP_STAUPD_GRPEN);
++	}
+ 
+ 	if (wrp->master->init_soc_specific) {
+ 		ret = wrp->master->init_soc_specific(wrp);
+@@ -1146,6 +1160,7 @@ static const struct pmic_wrapper_type pwrap_mt2701 = {
+ 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE_NEW,
+ 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
+ 	.has_bridge = 0,
++	.slv_program = 1,
+ 	.init_reg_clock = pwrap_mt2701_init_reg_clock,
+ 	.init_soc_specific = pwrap_mt2701_init_soc_specific,
+ };
+@@ -1158,6 +1173,7 @@ static struct pmic_wrapper_type pwrap_mt8135 = {
+ 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
+ 	.wdt_src = PWRAP_WDT_SRC_MASK_ALL,
+ 	.has_bridge = 1,
++	.slv_program = 1,
+ 	.init_reg_clock = pwrap_mt8135_init_reg_clock,
+ 	.init_soc_specific = pwrap_mt8135_init_soc_specific,
+ };
+@@ -1170,6 +1186,7 @@ static struct pmic_wrapper_type pwrap_mt8173 = {
+ 	.spi_w = PWRAP_MAN_CMD_SPI_WRITE,
+ 	.wdt_src = PWRAP_WDT_SRC_MASK_NO_STAUPD,
+ 	.has_bridge = 0,
++	.slv_program = 1,
+ 	.init_reg_clock = pwrap_mt8173_init_reg_clock,
+ 	.init_soc_specific = pwrap_mt8173_init_soc_specific,
+ };
 -- 
-2.7.5
+2.7.4
