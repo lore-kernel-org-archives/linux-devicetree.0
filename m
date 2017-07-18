@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] spi: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:31 -0500
-Message-ID: <20170718214339.7774-51-robh@kernel.org>
+Subject: [PATCH] virt: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:37 -0500
+Message-ID: <20170718214339.7774-57-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,114 +13,46 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org
 ---
- drivers/spi/spi-orion.c |  4 ++--
- drivers/spi/spi.c       | 27 +++++++++++----------------
- 2 files changed, 13 insertions(+), 18 deletions(-)
+ drivers/virt/fsl_hypervisor.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/spi/spi-orion.c b/drivers/spi/spi-orion.c
-index 28fc9f161b9d..4b6dd73b80da 100644
---- a/drivers/spi/spi-orion.c
-+++ b/drivers/spi/spi-orion.c
-@@ -669,8 +669,8 @@ static int orion_spi_probe(struct platform_device *pdev)
- 		status = of_property_read_u32(np, "reg", &cs);
- 		if (status) {
- 			dev_err(&pdev->dev,
--				"%s has no valid 'reg' property (%d)\n",
--				np->full_name, status);
-+				"%pOF has no valid 'reg' property (%d)\n",
-+				np, status);
- 			status = 0;
+diff --git a/drivers/virt/fsl_hypervisor.c b/drivers/virt/fsl_hypervisor.c
+index d3eca879a0a8..d993df5586c0 100644
+--- a/drivers/virt/fsl_hypervisor.c
++++ b/drivers/virt/fsl_hypervisor.c
+@@ -841,8 +841,8 @@ static int __init fsl_hypervisor_init(void)
+ 		handle = of_get_property(np, "interrupts", NULL);
+ 		irq = irq_of_parse_and_map(np, 0);
+ 		if (!handle || (irq == NO_IRQ)) {
+-			pr_err("fsl-hv: no 'interrupts' property in %s node\n",
+-				np->full_name);
++			pr_err("fsl-hv: no 'interrupts' property in %pOF node\n",
++				np);
  			continue;
  		}
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 4fcbb0aa71d3..0725c78b0de6 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1583,8 +1583,8 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
 
- 	if (spi_controller_is_slave(ctlr)) {
- 		if (strcmp(nc->name, "slave")) {
--			dev_err(&ctlr->dev, "%s is not called 'slave'\n",
--				nc->full_name);
-+			dev_err(&ctlr->dev, "%pOF is not called 'slave'\n",
-+				nc);
- 			return -EINVAL;
- 		}
- 		return 0;
-@@ -1593,8 +1593,8 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 	/* Device address */
- 	rc = of_property_read_u32(nc, "reg", &value);
- 	if (rc) {
--		dev_err(&ctlr->dev, "%s has no valid 'reg' property (%d)\n",
--			nc->full_name, rc);
-+		dev_err(&ctlr->dev, "%pOF has no valid 'reg' property (%d)\n",
-+			nc, rc);
- 		return rc;
- 	}
- 	spi->chip_select = value;
-@@ -1603,8 +1603,7 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
- 	if (rc) {
- 		dev_err(&ctlr->dev,
--			"%s has no valid 'spi-max-frequency' property (%d)\n",
--			nc->full_name, rc);
-+			"%pOF has no valid 'spi-max-frequency' property (%d)\n", nc, rc);
- 		return rc;
- 	}
- 	spi->max_speed_hz = value;
-@@ -1621,8 +1620,7 @@ of_register_spi_device(struct spi_controller *ctlr, struct device_node *nc)
- 	/* Alloc an spi_device */
- 	spi = spi_alloc_device(ctlr);
- 	if (!spi) {
--		dev_err(&ctlr->dev, "spi_device alloc error for %s\n",
--			nc->full_name);
-+		dev_err(&ctlr->dev, "spi_device alloc error for %pOF\n", nc);
- 		rc = -ENOMEM;
- 		goto err_out;
- 	}
-@@ -1631,8 +1629,7 @@ of_register_spi_device(struct spi_controller *ctlr, struct device_node *nc)
- 	rc = of_modalias_node(nc, spi->modalias,
- 				sizeof(spi->modalias));
- 	if (rc < 0) {
--		dev_err(&ctlr->dev, "cannot find modalias for %s\n",
--			nc->full_name);
-+		dev_err(&ctlr->dev, "cannot find modalias for %pOF\n", nc);
- 		goto err_out;
- 	}
+@@ -869,8 +869,8 @@ static int __init fsl_hypervisor_init(void)
+ 			 */
+ 			dbisr->partition = ret = get_parent_handle(np);
+ 			if (ret < 0) {
+-				pr_err("fsl-hv: node %s has missing or "
+-				       "malformed parent\n", np->full_name);
++				pr_err("fsl-hv: node %pOF has missing or "
++				       "malformed parent\n", np);
+ 				kfree(dbisr);
+ 				continue;
+ 			}
+@@ -881,8 +881,8 @@ static int __init fsl_hypervisor_init(void)
+ 			ret = request_irq(irq, fsl_hv_isr, 0, np->name, dbisr);
 
-@@ -1647,8 +1644,7 @@ of_register_spi_device(struct spi_controller *ctlr, struct device_node *nc)
- 	/* Register the new device */
- 	rc = spi_add_device(spi);
- 	if (rc) {
--		dev_err(&ctlr->dev, "spi_device register error %s\n",
--			nc->full_name);
-+		dev_err(&ctlr->dev, "spi_device register error %pOF\n", nc);
- 		goto err_of_node_put;
- 	}
-
-@@ -1682,8 +1678,7 @@ static void of_register_spi_devices(struct spi_controller *ctlr)
- 		spi = of_register_spi_device(ctlr, nc);
- 		if (IS_ERR(spi)) {
- 			dev_warn(&ctlr->dev,
--				 "Failed to create SPI device for %s\n",
--				 nc->full_name);
-+				 "Failed to create SPI device for %pOF\n", nc);
- 			of_node_clear_flag(nc, OF_POPULATED);
- 		}
- 	}
-@@ -3311,8 +3306,8 @@ static int of_spi_notify(struct notifier_block *nb, unsigned long action,
- 		put_device(&ctlr->dev);
-
- 		if (IS_ERR(spi)) {
--			pr_err("%s: failed to create for '%s'\n",
--					__func__, rd->dn->full_name);
-+			pr_err("%s: failed to create for '%pOF'\n",
-+					__func__, rd->dn);
- 			of_node_clear_flag(rd->dn, OF_POPULATED);
- 			return notifier_from_errno(PTR_ERR(spi));
+ 		if (ret < 0) {
+-			pr_err("fsl-hv: could not request irq %u for node %s\n",
+-			       irq, np->full_name);
++			pr_err("fsl-hv: could not request irq %u for node %pOF\n",
++			       irq, np);
+ 			kfree(dbisr);
+ 			continue;
  		}
 --
 2.11.0
