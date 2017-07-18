@@ -1,243 +1,255 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] DT: leds: Add Qualcomm Light Pulse Generator
- binding
-Date: Tue, 18 Jul 2017 23:38:38 +0200
-Message-ID: <450665a7-637a-e90c-aef4-3421f1f45788@gmail.com>
-References: <20170714224520.467-1-bjorn.andersson@linaro.org>
- <20170714224520.467-4-bjorn.andersson@linaro.org>
- <aefc36fc-9c16-e8da-b684-6e77ec96c662@gmail.com>
- <20170717044430.GW1618@tuxbook>
- <8c5d2d85-24ac-2ff9-8512-f669063edf4c@gmail.com>
- <20170718000314.GC20973@minitux>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] ARM: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:41 -0500
+Message-ID: <20170718214339.7774-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718000314.GC20973@minitux>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: arm@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Heiko Stuebner <heiko@sntech.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 02:03 AM, Bjorn Andersson wrote:
-> On Mon 17 Jul 14:08 PDT 2017, Jacek Anaszewski wrote:
-> 
->> On 07/17/2017 06:44 AM, Bjorn Andersson wrote:
->>> On Sun 16 Jul 11:49 PDT 2017, Jacek Anaszewski wrote:
->>>> On 07/15/2017 12:45 AM, Bjorn Andersson wrote:
->>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
->>>>> new file mode 100644
->>>>> index 000000000000..cc9ffee6586b
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/leds/leds-qcom-lpg.txt
->>>>> @@ -0,0 +1,145 @@
->>>>> +Binding for Qualcomm Light Pulse Generator
->>>>> +
->>>>> +The Qualcomm Light Pulse Generator consists of three different hardware blocks;
->>>>
->>>> Is there a freely available documentation thereof?
->>>>
->>>
->>> The only publicly available Qualcomm PMIC documentation that I'm aware
->>> of only have the PWM hardware block, so it will be possible to use this
->>> driver but with limited functionality.
->>
->> I asked because having an access to the doc would speed up the
->> contribution process a lot I think. Of course we will manage to make it
->> also basing on the details you're providing us with, but it will take
->> a bit longer, taking into account the device complexity.
->>
-> 
-> I agree that it would be convenient. Please do let me know if there are
-> any parts that are unclear and I'll try to explain things further.
+Now that we have a custom printf format specifier, convert users of
+full_name to use %pOF instead. This is preparation to remove storing
+of the full path string for each node.
 
-I'd be especially interested in possible topologies of routing between
-pattern generator units and TRILEDs.
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sascha Hauer <kernel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory Clement <gregory.clement@free-electrons.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: "Benoît Cousson" <bcousson@baylibre.com>
+Cc: Paul Walmsley <paul@pwsan.com>
+Cc: Heiko Stuebner <heiko@sntech.de>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org
+Cc: linux-omap@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-renesas-soc@vger.kernel.org
+---
+ arch/arm/kernel/cpuidle.c            | 4 ++--
+ arch/arm/kernel/devtree.c            | 6 +++---
+ arch/arm/kernel/topology.c           | 4 ++--
+ arch/arm/mach-exynos/suspend.c       | 8 ++++----
+ arch/arm/mach-imx/gpc.c              | 4 ++--
+ arch/arm/mach-mvebu/kirkwood.c       | 4 ++--
+ arch/arm/mach-omap2/omap-wakeupgen.c | 4 ++--
+ arch/arm/mach-omap2/omap_hwmod.c     | 4 ++--
+ arch/arm/mach-rockchip/platsmp.c     | 4 ++--
+ arch/arm/mach-shmobile/pm-rmobile.c  | 8 ++++----
+ 10 files changed, 25 insertions(+), 25 deletions(-)
 
->>> [..]
->>>>> += Light Pulse Generator (LPG)
->>>>> +The Light Pulse Generator can operate either as a standard PWM controller or in
->>>>> +a more advanced lookup-table based mode. These are described separately below.
->>>>
->>>> Why a user would prefer one option over the other? I assume that both
->>>> controllers offer at least slightly different capabilities.
->>>> If so, then it could be the driver which would decide which one fits
->>>> better for the requested LED class device configuration.
->>>>
->>>
->>> I have never seen this hardware block been used as a PWM, but I imagine
->>> it to be used when someone has another driver that expects to be able to
->>> use the PWM API to control an output.
->>
->> We have already leds-pwm driver and related DT bindings. We could think
->> of making some part of leds-pwm code reusable. I'd skip it for now
->> though.
->>
-> 
-> I know of a few different attempts where people have tried to start off
-> with a PWM driver and leds-pwm and then extend that to support patterns.
-> 
->>From this I concluded that any LED use cases better be implemented in
-> this way, but still offer the system designer to use the hardware block
-> as a PWM source - if any other device drivers/use cases expects a PWM
-> source.
+diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
+index a3308ad1a024..fda5579123a8 100644
+--- a/arch/arm/kernel/cpuidle.c
++++ b/arch/arm/kernel/cpuidle.c
+@@ -101,8 +101,8 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
 
-Frankly speaking leds-pwm driver provides quite generic interface for
-driving pwm devices. This use case is even advertised in the first place
-in Documentation/pwm.txt. LED subsystem is already used for non-LED
-specific purposes like vibrate hardware control
-(see Documentation/leds/ledtrig-transient.txt). In effect I don't
-see any specific gain in exposing generic pwm device instead
-of the LED class one.
+ 	ops = arm_cpuidle_get_ops(enable_method);
+ 	if (!ops) {
+-		pr_warn("%s: unsupported enable-method property: %s\n",
+-			dn->full_name, enable_method);
++		pr_warn("%pOF: unsupported enable-method property: %s\n",
++			dn, enable_method);
+ 		return -EOPNOTSUPP;
+ 	}
 
->>> In this case the node would need a #pwm-cells property, which it doesn't
->>> when it's acting as a LED and it wouldn't make much sense to expose the
->>> pin as a LED at the same time.
->>>
->>> Perhaps I overthought this? Maybe I should just leave the PWM mode out
->>> for now and it could be added in the future?
->>
->> Sounds reasonable.
->>
->>> [..]
->>>>> +&spmi_bus {
->>>>> +	pmic@3 {
->>>>> +		compatible = "qcom,pmi8994", "qcom,spmi-pmic";
->>>>> +		reg = <0x3 SPMI_USID>;
->>>>> +		#address-cells = <1>;
->>>>> +		#size-cells = <0>;
->>>>> +
->>>>> +		pmi8994_lpg_lut: lpg-lut@b000 {
->>>>> +			compatible = "qcom,spmi-lpg-lut";
->>>>> +			reg = <0xb000>;
->>>>> +
->>>>> +			qcom,lut-size = <24>;
->>>>> +		};
->>>>> +
->>>>> +		lpg@b200 {
->>>>> +			compatible = "qcom,spmi-lpg";
->>>>> +			reg = <0xb200>;
->>>>> +
->>>>> +			cell-index = <2>;
->>>>> +
->>>>> +			label = "lpg:green:user0";
->>>>> +
->>>>> +			qcom,tri-led = <&pmi8994_tri_led 1>;
->>>>> +			qcom,lut = <&pmi8994_lpg_lut>;
->>>>> +
->>>>> +			default-state = "on";
->>>>> +		};
->>>>> +
->>>>> +		pmi8994_tri_led: tri-led@d000 {
->>>>> +			compatible = "qcom,spmi-tri-led";
->>>>> +			reg = <0xd000>;
->>>>> +
->>>>> +			qcom,power-source = <1>;
->>>>> +		};
->>>>
->>>> Such a design is uncommon for LED class DT bindings. It should
->>>> suffice to have a single DT LED node per LED. I have an impression
->>>> that you're exposing too many hardware details here.
->>>> You can use led-sources property (see Documentation/devicetree/bindings
->>>> /leds/common.txt and drivers/leds/leds-max77693.c where it is used).
->>>>
->>>
->>> The LUT is shared among the (up to) 8 LPG blocks, so while I did
->>> consider just including the LUT in each LPG block it didn't look nice
->>> and I had to implement the LUT as a singleton in the driver itself.
->>>
->>> The TRILED is only one of the available current sinks in the PMIC that
->>> can be driven by the LPG; the other one I use so far is a special GPIO
->>> pin acting as a current sink.
->>>
->>> Also the power-source configuration is shared among the three channels
->>> of the TRILED, so it doesn't really make sense to put this configuration
->>> in the LPG blocks themselves.
->>
->> I'll mention led-sources once again. Probably it could be of help here.
->>
-> 
-> I wasn't aware of the led-sources, thanks for highlighting it (once more).
-> 
-> Perhaps if we go with your suggested redesign of having a single node
-> for all LPG related parts the led-sources would be used for some of
-> those channels to tie them to the TRILED...
-> 
->>>
->>> And note that these are different blocks within the Qualcomm PMIC, with
->>> my design only one of them is actually representing the LED instance.
->>
->> Maybe the core of the driver should be placed in MFD subsystem then?
->>
-> 
-> If we're to move things around I would say the current sink (TRILED)
-> should go elsewhere, and we should hide the LUT somewhere (although it's
-> very much tied to the LPG block) and then keep the LPG as "the LED
-> driver".
-> 
-> The overarching PMIC driver is already a MFD, so I don't think it makes
-> sense to group some of the MFD children into a new MFD.
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index f676febbb270..28174c9a94ac 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -95,7 +95,7 @@ void __init arm_dt_init_cpu_maps(void)
+ 		if (of_node_cmp(cpu->type, "cpu"))
+ 			continue;
 
-Now I'm starting to wonder if it wouldn't make sense to create
-a pattern trigger that would handle this type of patterns. Something
-similar to ledtrig-timer but it would expose pattern sysfs file similar
-to delay_on/delay_off. In case given LED class device isn't
-routed to the suitable pattern generator the software fallback would
-be applied.
+-		pr_debug(" * %s...\n", cpu->full_name);
++		pr_debug(" * %pOF...\n", cpu);
+ 		/*
+ 		 * A device tree containing CPU nodes with missing "reg"
+ 		 * properties is considered invalid to build the
+@@ -103,8 +103,8 @@ void __init arm_dt_init_cpu_maps(void)
+ 		 */
+ 		cell = of_get_property(cpu, "reg", &prop_bytes);
+ 		if (!cell || prop_bytes < sizeof(*cell)) {
+-			pr_debug(" * %s missing reg property\n",
+-				     cpu->full_name);
++			pr_debug(" * %pOF missing reg property\n",
++				     cpu);
+ 			of_node_put(cpu);
+ 			return;
+ 		}
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index bf949a763dbe..e596c5b8f931 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -127,8 +127,8 @@ static void __init parse_dt_topology(void)
 
->>>> It is also not clear to me why single green color LED presented here
->>>> would have to use tri-led sink? I suppose that the sink is predestined
->>>> for three-color LEDs.
->>>>
->>>
->>> The board I'm working on (DragonBoard820c) has 4 green LEDs, the first 3
->>> are connected to the 3 channels of the TRILED and the fourth is
->>> connected to a special GPIO in current sink mode. But I choose to
->>> shorted the example to one channel.
->>>
->>> So I end up having one LUT node, four LPG nodes, one TRILED and one GPIO
->>> node and the user space is presented with a unified interface to all
->>> four.
->>
->> Generally I'd prefer to have a single LED class driver for this device,
->> or alternatively a LED class driver for a LED cell of MFD device.
->> DT bindings would define which hw blocks are LED related.
->> All routing related issues should be solvable with use of led-sources
->> property.
->>
-> 
-> Based on the fact that I'm writing a driver for a MFD child block and
-> there can be 1-8 instances of the hardware block, we got a pretty nice
-> representation of the hardware in DT.  But for e.g. GPIOs we do have a
-> single driver instance for multiple blocks, so it wouldn't be the only
-> case.
+ 		rate = of_get_property(cn, "clock-frequency", &len);
+ 		if (!rate || len != 4) {
+-			pr_err("%s missing clock-frequency property\n",
+-				cn->full_name);
++			pr_err("%pOF missing clock-frequency property\n",
++				cn);
+ 			continue;
+ 		}
 
-Please keep in mind that for registering gpio LED class device you have
-gpio_led_register_device() API (drivers/leds/leds-gpio-register.c) for
-your disposal.
+diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+index 748cfb8d5212..3c7b66c22697 100644
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -187,21 +187,21 @@ static int __init exynos_pmu_irq_init(struct device_node *node,
+ 	struct irq_domain *parent_domain, *domain;
 
-> The DeviceTree would in this case be a single node covering the N LPG
-> blocks, the TRILED and the LUT and would have to have N child nodes to
-> express the properties of each channel. The driver would register a
-> led_cdev for each of the channels.
-> 
-> 
-> My initial concern with this approach is that we have a variable number
-> of LPG blocks and the LUT and TRILED blocks are not found in all PMICs.
-> But if we are allowed to rely on "reg-names" we would be fine and it
-> would reduce the complexity of tying the multiple devices together a
-> bit.
+ 	if (!parent) {
+-		pr_err("%s: no parent, giving up\n", node->full_name);
++		pr_err("%pOF: no parent, giving up\n", node);
+ 		return -ENODEV;
+ 	}
 
-I propose to have a main DT node for the whole device, which would
-contain all required hardware resources and the child DT nodes
-describing LED class devices to create. The child nodes could contain
-led-sources property if necessary. In the main node you could have an
-array of LPG and LUT base addresses.
+ 	parent_domain = irq_find_host(parent);
+ 	if (!parent_domain) {
+-		pr_err("%s: unable to obtain parent domain\n", node->full_name);
++		pr_err("%pOF: unable to obtain parent domain\n", node);
+ 		return -ENXIO;
+ 	}
 
--- 
-Best regards,
-Jacek Anaszewski
+ 	pmu_base_addr = of_iomap(node, 0);
+
+ 	if (!pmu_base_addr) {
+-		pr_err("%s: failed to find exynos pmu register\n",
+-		       node->full_name);
++		pr_err("%pOF: failed to find exynos pmu register\n",
++		       node);
+ 		return -ENOMEM;
+ 	}
+
+diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+index 93f584ba0130..de535cb679b3 100644
+--- a/arch/arm/mach-imx/gpc.c
++++ b/arch/arm/mach-imx/gpc.c
+@@ -224,13 +224,13 @@ static int __init imx_gpc_init(struct device_node *node,
+ 	int i;
+
+ 	if (!parent) {
+-		pr_err("%s: no parent, giving up\n", node->full_name);
++		pr_err("%pOF: no parent, giving up\n", node);
+ 		return -ENODEV;
+ 	}
+
+ 	parent_domain = irq_find_host(parent);
+ 	if (!parent_domain) {
+-		pr_err("%s: unable to obtain parent domain\n", node->full_name);
++		pr_err("%pOF: unable to obtain parent domain\n", node);
+ 		return -ENXIO;
+ 	}
+
+diff --git a/arch/arm/mach-mvebu/kirkwood.c b/arch/arm/mach-mvebu/kirkwood.c
+index 7d9f2fd9e450..419da435bc94 100644
+--- a/arch/arm/mach-mvebu/kirkwood.c
++++ b/arch/arm/mach-mvebu/kirkwood.c
+@@ -107,8 +107,8 @@ static void __init kirkwood_dt_eth_fixup(void)
+ 		clk_prepare_enable(clk);
+
+ 		/* store MAC address register contents in local-mac-address */
+-		pr_err(FW_INFO "%s: local-mac-address is not set\n",
+-		       np->full_name);
++		pr_err(FW_INFO "%pOF: local-mac-address is not set\n",
++		       np);
+
+ 		pmac = kzalloc(sizeof(*pmac) + 6, GFP_KERNEL);
+ 		if (!pmac)
+diff --git a/arch/arm/mach-omap2/omap-wakeupgen.c b/arch/arm/mach-omap2/omap-wakeupgen.c
+index 33ed5d53fa45..4bb6751864a5 100644
+--- a/arch/arm/mach-omap2/omap-wakeupgen.c
++++ b/arch/arm/mach-omap2/omap-wakeupgen.c
+@@ -522,13 +522,13 @@ static int __init wakeupgen_init(struct device_node *node,
+ 	u32 val;
+
+ 	if (!parent) {
+-		pr_err("%s: no parent, giving up\n", node->full_name);
++		pr_err("%pOF: no parent, giving up\n", node);
+ 		return -ENODEV;
+ 	}
+
+ 	parent_domain = irq_find_host(parent);
+ 	if (!parent_domain) {
+-		pr_err("%s: unable to obtain parent domain\n", node->full_name);
++		pr_err("%pOF: unable to obtain parent domain\n", node);
+ 		return -ENXIO;
+ 	}
+ 	/* Not supported on OMAP4 ES1.0 silicon */
+diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+index 3b47ded5fa0c..2dbd63239c54 100644
+--- a/arch/arm/mach-omap2/omap_hwmod.c
++++ b/arch/arm/mach-omap2/omap_hwmod.c
+@@ -2417,8 +2417,8 @@ static int __init _init_mpu_rt_base(struct omap_hwmod *oh, void *data,
+ 		if (mem)
+ 			pr_err("omap_hwmod: %s: Could not ioremap\n", oh->name);
+ 		else
+-			pr_err("omap_hwmod: %s: Missing dt reg%i for %s\n",
+-			       oh->name, index, np->full_name);
++			pr_err("omap_hwmod: %s: Missing dt reg%i for %pOF\n",
++			       oh->name, index, np);
+ 		return -ENXIO;
+ 	}
+
+diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
+index 3abafdbdd7f4..2b5b0e43d657 100644
+--- a/arch/arm/mach-rockchip/platsmp.c
++++ b/arch/arm/mach-rockchip/platsmp.c
+@@ -182,8 +182,8 @@ static int __init rockchip_smp_prepare_sram(struct device_node *node)
+
+ 	ret = of_address_to_resource(node, 0, &res);
+ 	if (ret < 0) {
+-		pr_err("%s: could not get address for node %s\n",
+-		       __func__, node->full_name);
++		pr_err("%s: could not get address for node %pOF\n",
++		       __func__, node);
+ 		return ret;
+ 	}
+
+diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
+index 699429f28b73..4c395f9fd178 100644
+--- a/arch/arm/mach-shmobile/pm-rmobile.c
++++ b/arch/arm/mach-shmobile/pm-rmobile.c
+@@ -195,8 +195,8 @@ static void __init add_special_pd(struct device_node *np, enum pd_types type)
+ 		return;
+ 	}
+
+-	pr_debug("Special PM domain %s type %d for %s\n", pd->name, type,
+-		 np->full_name);
++	pr_debug("Special PM domain %s type %d for %pOF\n", pd->name, type,
++		 np);
+
+ 	special_pds[num_special_pds].pd = pd;
+ 	special_pds[num_special_pds].type = type;
+@@ -331,13 +331,13 @@ static int __init rmobile_init_pm_domains(void)
+ 	for_each_compatible_node(np, NULL, "renesas,sysc-rmobile") {
+ 		base = of_iomap(np, 0);
+ 		if (!base) {
+-			pr_warn("%s cannot map reg 0\n", np->full_name);
++			pr_warn("%pOF cannot map reg 0\n", np);
+ 			continue;
+ 		}
+
+ 		pmd = of_get_child_by_name(np, "pm-domains");
+ 		if (!pmd) {
+-			pr_warn("%s lacks pm-domains node\n", np->full_name);
++			pr_warn("%pOF lacks pm-domains node\n", np);
+ 			continue;
+ 		}
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
