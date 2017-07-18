@@ -1,56 +1,62 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: [RFC PATCH v3 7/7] dt-bindings: phy: convert to use per-lane Rockchip PCIe PHY
-Date: Tue, 18 Jul 2017 15:59:22 +0800
-Message-ID: <1500364762-98146-3-git-send-email-shawn.lin@rock-chips.com>
-References: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
- <1500364762-98146-1-git-send-email-shawn.lin@rock-chips.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1500364762-98146-1-git-send-email-shawn.lin@rock-chips.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Brian Norris <briannorris@chromium.org>, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, ARM and I2C due for the
+ v4.14 merge window
+Date: Tue, 18 Jul 2017 09:04:41 +0100
+Message-ID: <20170718080441.g3kmastovt32y33y@dell>
+References: <20170615184928.12007-1-javier@dowhile0.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170615184928.12007-1-javier@dowhile0.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch deprecate the legacy PCIe PHY and encourage user
-to use per-lane PHY mode by setting #phy-cells to 1.
+Enjoy!
 
-Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
 
-Acked-by: Rob Herring <robh@kernel.org>
----
+  Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
 
-Changes in v3:
-- rename the commit tile
+are available in the git repository at:
 
-Changes in v2: None
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-i2c-v4.14
 
- Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+for you to fetch changes up to ea5ae803192eb2b03e0bd23db63d2f355fd23eda:
 
-diff --git a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-index 0f6222a..b496042 100644
---- a/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/rockchip-pcie-phy.txt
-@@ -3,7 +3,6 @@ Rockchip PCIE PHY
- 
- Required properties:
-  - compatible: rockchip,rk3399-pcie-phy
-- - #phy-cells: must be 0
-  - clocks: Must contain an entry in clock-names.
- 	See ../clocks/clock-bindings.txt for details.
-  - clock-names: Must be "refclk"
-@@ -11,6 +10,12 @@ Required properties:
- 	See ../reset/reset.txt for details.
-  - reset-names: Must be "phy"
- 
-+Required properties for legacy PHY mode (deprecated):
-+ - #phy-cells: must be 0
-+
-+Required properties for per-lane PHY mode (preferred):
-+ - #phy-cells: must be 1
-+
- Example:
- 
- grf: syscon@ff770000 {
+  ARM: ux500: Add vendor prefix to tps61052 node (2017-07-18 08:27:46 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD, ARM and I2C due for the v4.14 merge window
+
+----------------------------------------------------------------
+Javier Martinez Canillas (8):
+      dt-bindings: mfd: Add retu/tahvo ASIC chips bindings
+      mfd: retu: Drop -mfd suffix from I2C device ID name
+      ARM: dts: n8x0: Add vendor prefix to retu node
+      mfd: retu: Add OF device ID table
+      i2c: i2c-cbus-gpio: Add vendor prefix to retu node in example
+      dt-bindings: mfd: Add TI tps6105x chip bindings
+      mfd: tps6105x: Add OF device ID table
+      ARM: ux500: Add vendor prefix to tps61052 node
+
+ .../devicetree/bindings/i2c/i2c-cbus-gpio.txt      |  4 ++--
+ Documentation/devicetree/bindings/mfd/retu.txt     | 25 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/mfd/tps6105x.txt | 17 +++++++++++++++
+ arch/arm/boot/dts/omap2420-n8x0-common.dtsi        |  4 ++--
+ arch/arm/boot/dts/ste-hrefprev60.dtsi              |  2 +-
+ arch/arm/mach-omap1/board-nokia770.c               |  4 ++--
+ drivers/mfd/retu-mfd.c                             | 12 +++++++++--
+ drivers/mfd/tps6105x.c                             |  8 +++++++
+ 8 files changed, 67 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/retu.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps6105x.txt
+
 -- 
-1.9.1
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
