@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] EDAC: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:42:59 -0500
-Message-ID: <20170718214339.7774-19-robh@kernel.org>
+Subject: [PATCH] crypto: n2_core: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:56 -0500
+Message-ID: <20170718214339.7774-16-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,53 +13,172 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac@vger.kernel.org
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: linux-crypto@vger.kernel.org
 ---
- drivers/edac/cpc925_edac.c | 2 +-
- drivers/edac/ppc4xx_edac.c | 8 ++++----
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ drivers/crypto/n2_core.c | 60 ++++++++++++++++++++++--------------------------
+ 1 file changed, 28 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/edac/cpc925_edac.c b/drivers/edac/cpc925_edac.c
-index 837b62c4993d..afd29a5a51c3 100644
---- a/drivers/edac/cpc925_edac.c
-+++ b/drivers/edac/cpc925_edac.c
-@@ -618,7 +618,7 @@ static u32 cpc925_cpu_mask_disabled(void)
- 		}
-
- 		if (reg == NULL || *reg > 2) {
--			cpc925_printk(KERN_ERR, "Bad reg value at %s\n", cpunode->full_name);
-+			cpc925_printk(KERN_ERR, "Bad reg value at %pOF\n", cpunode);
+diff --git a/drivers/crypto/n2_core.c b/drivers/crypto/n2_core.c
+index 269451375b63..a9fd8b9e86cd 100644
+--- a/drivers/crypto/n2_core.c
++++ b/drivers/crypto/n2_core.c
+@@ -1730,8 +1730,8 @@ static int spu_mdesc_walk_arcs(struct mdesc_handle *mdesc,
  			continue;
+ 		id = mdesc_get_property(mdesc, tgt, "id", NULL);
+ 		if (table[*id] != NULL) {
+-			dev_err(&dev->dev, "%s: SPU cpu slot already set.\n",
+-				dev->dev.of_node->full_name);
++			dev_err(&dev->dev, "%pOF: SPU cpu slot already set.\n",
++				dev->dev.of_node);
+ 			return -EINVAL;
  		}
+ 		cpumask_set_cpu(*id, &p->sharing);
+@@ -1751,8 +1751,8 @@ static int handle_exec_unit(struct spu_mdesc_info *ip, struct list_head *list,
 
-diff --git a/drivers/edac/ppc4xx_edac.c b/drivers/edac/ppc4xx_edac.c
-index e55e92590106..8807f427dd69 100644
---- a/drivers/edac/ppc4xx_edac.c
-+++ b/drivers/edac/ppc4xx_edac.c
-@@ -1267,8 +1267,8 @@ static int ppc4xx_edac_probe(struct platform_device *op)
- 	memcheck = (mcopt1 & SDRAM_MCOPT1_MCHK_MASK);
+ 	p = kzalloc(sizeof(struct spu_queue), GFP_KERNEL);
+ 	if (!p) {
+-		dev_err(&dev->dev, "%s: Could not allocate SPU queue.\n",
+-			dev->dev.of_node->full_name);
++		dev_err(&dev->dev, "%pOF: Could not allocate SPU queue.\n",
++			dev->dev.of_node);
+ 		return -ENOMEM;
+ 	}
 
- 	if (memcheck == SDRAM_MCOPT1_MCHK_NON) {
--		ppc4xx_edac_printk(KERN_INFO, "%s: No ECC memory detected or "
--				   "ECC is disabled.\n", np->full_name);
-+		ppc4xx_edac_printk(KERN_INFO, "%pOF: No ECC memory detected or "
-+				   "ECC is disabled.\n", np);
- 		status = -ENODEV;
- 		goto done;
+@@ -1981,41 +1981,39 @@ static void n2_spu_driver_version(void)
+ static int n2_crypto_probe(struct platform_device *dev)
+ {
+ 	struct mdesc_handle *mdesc;
+-	const char *full_name;
+ 	struct n2_crypto *np;
+ 	int err;
+
+ 	n2_spu_driver_version();
+
+-	full_name = dev->dev.of_node->full_name;
+-	pr_info("Found N2CP at %s\n", full_name);
++	pr_info("Found N2CP at %pOF\n", dev->dev.of_node);
+
+ 	np = alloc_n2cp();
+ 	if (!np) {
+-		dev_err(&dev->dev, "%s: Unable to allocate n2cp.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to allocate n2cp.\n",
++			dev->dev.of_node);
+ 		return -ENOMEM;
  	}
-@@ -1287,9 +1287,9 @@ static int ppc4xx_edac_probe(struct platform_device *op)
- 	mci = edac_mc_alloc(ppc4xx_edac_instance, ARRAY_SIZE(layers), layers,
- 			    sizeof(struct ppc4xx_edac_pdata));
- 	if (mci == NULL) {
--		ppc4xx_edac_printk(KERN_ERR, "%s: "
-+		ppc4xx_edac_printk(KERN_ERR, "%pOF: "
- 				   "Failed to allocate EDAC MC instance!\n",
--				   np->full_name);
-+				   np);
- 		status = -ENOMEM;
- 		goto done;
+
+ 	err = grab_global_resources();
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: Unable to grab "
+-			"global resources.\n", full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab global resources.\n",
++			dev->dev.of_node);
+ 		goto out_free_n2cp;
  	}
+
+ 	mdesc = mdesc_grab();
+
+ 	if (!mdesc) {
+-		dev_err(&dev->dev, "%s: Unable to grab MDESC.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab MDESC.\n",
++			dev->dev.of_node);
+ 		err = -ENODEV;
+ 		goto out_free_global;
+ 	}
+ 	err = grab_mdesc_irq_props(mdesc, dev, &np->cwq_info, "n2cp");
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: Unable to grab IRQ props.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab IRQ props.\n",
++			dev->dev.of_node);
+ 		mdesc_release(mdesc);
+ 		goto out_free_global;
+ 	}
+@@ -2026,15 +2024,15 @@ static int n2_crypto_probe(struct platform_device *dev)
+ 	mdesc_release(mdesc);
+
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: CWQ MDESC scan failed.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: CWQ MDESC scan failed.\n",
++			dev->dev.of_node);
+ 		goto out_free_global;
+ 	}
+
+ 	err = n2_register_algs();
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: Unable to register algorithms.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to register algorithms.\n",
++			dev->dev.of_node);
+ 		goto out_free_spu_list;
+ 	}
+
+@@ -2092,42 +2090,40 @@ static void free_ncp(struct n2_mau *mp)
+ static int n2_mau_probe(struct platform_device *dev)
+ {
+ 	struct mdesc_handle *mdesc;
+-	const char *full_name;
+ 	struct n2_mau *mp;
+ 	int err;
+
+ 	n2_spu_driver_version();
+
+-	full_name = dev->dev.of_node->full_name;
+-	pr_info("Found NCP at %s\n", full_name);
++	pr_info("Found NCP at %pOF\n", dev->dev.of_node);
+
+ 	mp = alloc_ncp();
+ 	if (!mp) {
+-		dev_err(&dev->dev, "%s: Unable to allocate ncp.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to allocate ncp.\n",
++			dev->dev.of_node);
+ 		return -ENOMEM;
+ 	}
+
+ 	err = grab_global_resources();
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: Unable to grab "
+-			"global resources.\n", full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab global resources.\n",
++			dev->dev.of_node);
+ 		goto out_free_ncp;
+ 	}
+
+ 	mdesc = mdesc_grab();
+
+ 	if (!mdesc) {
+-		dev_err(&dev->dev, "%s: Unable to grab MDESC.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab MDESC.\n",
++			dev->dev.of_node);
+ 		err = -ENODEV;
+ 		goto out_free_global;
+ 	}
+
+ 	err = grab_mdesc_irq_props(mdesc, dev, &mp->mau_info, "ncp");
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: Unable to grab IRQ props.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: Unable to grab IRQ props.\n",
++			dev->dev.of_node);
+ 		mdesc_release(mdesc);
+ 		goto out_free_global;
+ 	}
+@@ -2138,8 +2134,8 @@ static int n2_mau_probe(struct platform_device *dev)
+ 	mdesc_release(mdesc);
+
+ 	if (err) {
+-		dev_err(&dev->dev, "%s: MAU MDESC scan failed.\n",
+-			full_name);
++		dev_err(&dev->dev, "%pOF: MAU MDESC scan failed.\n",
++			dev->dev.of_node);
+ 		goto out_free_global;
+ 	}
+
 --
 2.11.0
