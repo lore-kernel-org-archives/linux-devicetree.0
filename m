@@ -1,91 +1,89 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v1.1 1/1] v4l2-flash: Flash ops aren't mandatory
-Date: Tue, 18 Jul 2017 20:36:23 +0300
-Message-ID: <20170718173623.7821-1-sakari.ailus@linux.intel.com>
-References: <1497433639-13101-6-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1497433639-13101-6-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-leds@vger.kernel.org
-Cc: devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, robh@kernel.org, pavel@ucw.cz, jacek.anaszewski@gmail.com
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] gpio: davinci: Use devm_gpiochip_add_data in place of
+ gpiochip_add_data
+Date: Tue, 18 Jul 2017 23:15:18 +0530
+Message-ID: <bd21705e-cf64-572e-ef21-42b9c7f41f1b@ti.com>
+References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
+ <1500375436-9435-2-git-send-email-j-keerthy@ti.com>
+ <0aa79585-c88e-e5b7-c260-6e9ceee6d776@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0aa79585-c88e-e5b7-c260-6e9ceee6d776-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-None of the flash operations are mandatory and therefore there should be
-no need for the flash ops structure either. Accept NULL.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Reviewed-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
----
-Hi folks,
 
-I'm planning to get this one plus "v4l2-flash: Use led_classdev instead of
-led_classdev_flash for indicator" to linux-media in the near future. The
-rest still needs work.
+On Tuesday 18 July 2017 10:20 PM, Suman Anna wrote:
+> Hi Keerthy,
+> 
+> On 07/18/2017 05:57 AM, Keerthy wrote:
+>> Use the devm version of gpiochip_add_data and pass on the
+>> return value. Reset the static variables to 0 before returning.
+>>
+>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/gpio/gpio-davinci.c | 10 ++++++++--
+>>  1 file changed, 8 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+>> index 65cb359..2c88054 100644
+>> --- a/drivers/gpio/gpio-davinci.c
+>> +++ b/drivers/gpio/gpio-davinci.c
+>> @@ -166,7 +166,7 @@ static int davinci_gpio_get(struct gpio_chip *chip, unsigned offset)
+>>  static int davinci_gpio_probe(struct platform_device *pdev)
+>>  {
+>>  	static int ctrl_num, bank_base;
+>> -	int gpio, bank;
+>> +	int gpio, bank, ret = 0;
+>>  	unsigned ngpio, nbank;
+>>  	struct davinci_gpio_controller *chips;
+>>  	struct davinci_gpio_platform_data *pdata;
+>> @@ -232,7 +232,13 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>  	for (gpio = 0, bank = 0; gpio < ngpio; gpio += 32, bank++)
+>>  		chips->regs[bank] = gpio_base + offset_array[bank];
+>>  
+>> -	gpiochip_add_data(&chips->chip, chips);
+>> +	ret = devm_gpiochip_add_data(dev, &chips->chip, chips);
+>> +	if (ret) {
+>> +		ctrl_num = 0;
+>> +		bank_base = 0;
+> 
+> Hmm, this doesn't look right to me. These variables are defined as
+> static, and you are resetting them unconditionally. This should be an
+> issue when you have multiple devices and one of them fails.
 
-since v1:
+Agreed. With multiple instances this can reset the successful count also.
 
-- Use has_flash_op() in __fill_ctrl_init_data() to check an op exists.
+Upon failure in any iteration, the following should take care of those
+static variables:
 
- drivers/media/v4l2-core/v4l2-flash-led-class.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+/* Revert the static variable increments */
+        ctrl_num--;
+        bank_base -= ngpio;
 
-diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-index 6d69119ff097..aabc85dbb8b5 100644
---- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-+++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-@@ -18,7 +18,7 @@
- #include <media/v4l2-flash-led-class.h>
- 
- #define has_flash_op(v4l2_flash, op)				\
--	(v4l2_flash && v4l2_flash->ops->op)
-+	(v4l2_flash && v4l2_flash->ops && v4l2_flash->ops->op)
- 
- #define call_flash_op(v4l2_flash, op, arg)			\
- 		(has_flash_op(v4l2_flash, op) ?			\
-@@ -299,7 +299,6 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
- 			  struct v4l2_flash_ctrl_data *ctrl_init_data)
- {
- 	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
--	const struct led_flash_ops *fled_cdev_ops = fled_cdev->ops;
- 	struct led_classdev *led_cdev = &fled_cdev->led_cdev;
- 	struct v4l2_ctrl_config *ctrl_cfg;
- 	u32 mask;
-@@ -376,7 +375,7 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
- 	}
- 
- 	/* Init STROBE_STATUS ctrl data */
--	if (fled_cdev_ops->strobe_get) {
-+	if (has_flash_op(fled_cdev, strobe_get)) {
- 		ctrl_init_data[STROBE_STATUS].cid =
- 					V4L2_CID_FLASH_STROBE_STATUS;
- 		ctrl_cfg = &ctrl_init_data[STROBE_STATUS].config;
-@@ -386,7 +385,7 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
- 	}
- 
- 	/* Init FLASH_TIMEOUT ctrl data */
--	if (fled_cdev_ops->timeout_set) {
-+	if (has_flash_op(fled_cdev, timeout_set)) {
- 		ctrl_init_data[FLASH_TIMEOUT].cid = V4L2_CID_FLASH_TIMEOUT;
- 		ctrl_cfg = &ctrl_init_data[FLASH_TIMEOUT].config;
- 		__lfs_to_v4l2_ctrl_config(&fled_cdev->timeout, ctrl_cfg);
-@@ -394,7 +393,7 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
- 	}
- 
- 	/* Init FLASH_INTENSITY ctrl data */
--	if (fled_cdev_ops->flash_brightness_set) {
-+	if (has_flash_op(fled_cdev, flash_brightness_set)) {
- 		ctrl_init_data[FLASH_INTENSITY].cid = V4L2_CID_FLASH_INTENSITY;
- 		ctrl_cfg = &ctrl_init_data[FLASH_INTENSITY].config;
- 		__lfs_to_v4l2_ctrl_config(&fled_cdev->brightness, ctrl_cfg);
-@@ -618,7 +617,7 @@ struct v4l2_flash *v4l2_flash_init(
- 	struct v4l2_subdev *sd;
- 	int ret;
- 
--	if (!fled_cdev || !ops || !config)
-+	if (!fled_cdev || !config)
- 		return ERR_PTR(-EINVAL);
- 
- 	led_cdev = &fled_cdev->led_cdev;
--- 
-2.11.0
+Thanks for the quick review!
+
+Reagrds,
+Keerthy
+
+> 
+> regards
+> Suman
+> 
+>> +		return ret;
+>> +	}
+>> +
+>>  	platform_set_drvdata(pdev, chips);
+>>  	davinci_gpio_irq_setup(pdev);
+>>  	return 0;
+>>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
