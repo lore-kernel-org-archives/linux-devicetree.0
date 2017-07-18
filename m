@@ -1,49 +1,75 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv5 3/6] mfd: da9052: add register details for TSI
-Date: Tue, 18 Jul 2017 08:08:50 +0100
-Message-ID: <20170718070850.rvu2iq4nsdwtnrb2@dell>
-References: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
- <20170703084003.31184-4-sebastian.reichel@collabora.co.uk>
- <20170717143245.qvcshsnodtk7pi2h@dell>
- <20170717152017.gtqa6g657k232z5k@earth>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: [PATCH 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
+Date: Tue, 18 Jul 2017 15:06:11 +0800
+Message-ID: <63f2b93b3e484862f736e37d6d422b5566637163.1500361078.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170717152017.gtqa6g657k232z5k@earth>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Cc: Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jul 2017, Sebastian Reichel wrote:
+This patch adds the binding documentation for Spreadtrum SC9860 DMA
+controller device.
 
-> Hi,
-> 
-> On Mon, Jul 17, 2017 at 03:32:45PM +0100, Lee Jones wrote:
-> > On Mon, 03 Jul 2017, Sebastian Reichel wrote:
-> > 
-> > > Add register details an channels definition for using the TSI
-> > > registers in the hwmon driver.
-> > > 
-> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > > ---
-> > >  include/linux/mfd/da9052/da9052.h |  6 ++++++
-> > >  include/linux/mfd/da9052/reg.h    | 11 ++++++++++-
-> > >  2 files changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > Do other patches in this set depend on this change?
-> 
-> Patch 6 has a compile-time dependency on 3 (this one) + 5
-> and a runtime-dependency on patch 4. My proposed merge
-> solution would be an immutable branch for the mfd changes,
-> that can be pulled by hwmon.
+Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/dma/sprd-dma.txt |   41 ++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/sprd-dma.txt
 
-I'm happy to do that.  Please fix patch 4 and I'll take them in.
-
+diff --git a/Documentation/devicetree/bindings/dma/sprd-dma.txt b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+new file mode 100644
+index 0000000..3ccf776
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+@@ -0,0 +1,41 @@
++* Spreadtrum DMA controller
++
++This driver follows the generic DMA bindings defined in dma.txt.
++
++Required properties:
++- compatible: Should be "sprd,sc9860-dma".
++- reg: Should contain DMA registers location and length.
++- interrupts: Should contain one interrupt shared by all channel.
++- #dma-cells: must be <1>. Used to represent the number of integer
++	cells in the dmas property of client device.
++- #dma-channels : Number of DMA channels supported. Should be 32.
++- clock-names: Should contain the clock of the DMA controller.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++
++Example:
++
++Controller:
++apdma: dma-controller@20100000 {
++	compatible = "sprd,sc9860-dma";
++	reg = <0x20100000 0x4000>;
++	interrupts = <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
++	#dma-cells = <1>;
++	#dma-channels = <32>;
++	clock-names = "enable";
++	clocks = <&clk_ap_ahb_gates 5>;
++};
++
++
++Client:
++DMA clients connected to the Spreadtrum DMA controller must use the format
++described in the dma.txt file, using a two-cell specifier for each channel.
++The two cells in order are:
++1. A phandle pointing to the DMA controller.
++2. The channel id.
++
++spi0: spi@70a00000{
++	...
++	dma-names = "rx_chn", "tx_chn";
++	dmas = <&apdma 11>, <&apdma 12>;
++	...
++};
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
