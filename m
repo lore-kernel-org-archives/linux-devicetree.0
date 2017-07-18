@@ -1,50 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/3] mfd: syscon: atmel-smc: add helper to retrieve
- register layout
-Date: Tue, 18 Jul 2017 10:12:38 +0100
-Message-ID: <20170718091238.wweaobzccdlgv5dh@dell>
-References: <20170711074015.30440-1-ludovic.desroches@microchip.com>
- <20170711074015.30440-3-ludovic.desroches@microchip.com>
- <20170718081508.yo6uld5ip5hr6ipk@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718081508.yo6uld5ip5hr6ipk@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: [PATCHv6 0/4] DA9052 hardware monitoring improvements
+Date: Tue, 18 Jul 2017 11:20:20 +0200
+Message-ID: <20170718092024.22552-1-sebastian.reichel@collabora.co.uk>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>
+Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Jul 2017, Lee Jones wrote:
+Hi,
 
-> On Tue, 11 Jul 2017, Ludovic Desroches wrote:
-> 
-> > For HSMC controller, the register layout depends on the device i.e. the
-> > offset of setup, pulse, cycle, mode and timings registers is not the
-> > same. An helper is added to provide the correct register layout.
-> > 
-> > Fixes: fe9d7cb22ef3 ("mfd: syscon: atmel-smc: Add new helpers to ease
-> > SMC regs manipulation")
-> > Suggested-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> > Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> > ---
-> >  drivers/memory/atmel-ebi.c               | 13 +++++--
-> >  drivers/mfd/atmel-smc.c                  | 67 +++++++++++++++++++++++++-------
-> >  drivers/mtd/nand/atmel/nand-controller.c | 10 +++--
-> >  include/linux/mfd/syscon/atmel-smc.h     | 32 ++++++++++-----
-> >  4 files changed, 92 insertions(+), 30 deletions(-)
-> 
-> Applied, thanks.
+GE Healthcare's PPD [0] uses DA9053's touchscreen pins
+for hardware monitoring purposes. This adds support for
+the feature.
 
-Apologies, it looks like this needs 2 more Acks before I can even
-consider taking it.
+The proposed merge solution is, that mfd queues the
+mfd patches and provides an immutable branch for hwmon,
+since the last patch depends on the other ones.
 
-Unapplied.
+[0] https://patchwork.kernel.org/patch/9809681/
+
+Changes since PATCHv5
+ - drop patch 1 & 2 (applied to mfd)
+ - use one line for da9052_tsi_subdev_info[]
+
+Changes since PATCHv4:
+ - split mfd changes from main hwmon patch
+
+Changes since PATCHv3:
+ - use correct index in da9052_channel_is_visible()
+ - disable touchscreen in mfd instead of in ts driver
+
+Changes since PATCHv2:
+ - switch from "diag," to "dlg," prefix
+ - add/use defines for accessing bits in registers
+ - provide more details in the comment above early exit
+   in touchscreen driver
+ - switch to da9052_group_read() to ensure MSB and LSB
+   are in sync
+ - move binding update into its own patch
+ - rename patch
+
+Changes since PATCHv1:
+ - convert tsiref-microvolt property into proper regulator
+ - drop error message for timeout
+ - simplify da9052_channel_is_visible()
+ - fix checkpatch warnings
+
+-- Sebastian
+
+Sebastian Reichel (4):
+  mfd: da9052: add register details for TSI
+  mfd: da9052: make touchscreen registration optional
+  hwmon: da9052: replace S_IRUGO with 0444
+  hwmon: da9052: add support for TSI channel
+
+ drivers/hwmon/da9052-hwmon.c      | 285 +++++++++++++++++++++++++++++++++++---
+ drivers/mfd/da9052-core.c         |  26 +++-
+ include/linux/mfd/da9052/da9052.h |   6 +
+ include/linux/mfd/da9052/reg.h    |  11 +-
+ 4 files changed, 302 insertions(+), 26 deletions(-)
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.13.2
+
