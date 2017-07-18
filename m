@@ -1,123 +1,70 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D
- Remote Processor Controller driver
-Date: Tue, 18 Jul 2017 09:38:15 -0700
-Message-ID: <20170718163814.GD20973@minitux>
-References: <20170710144220.31594-1-o.rempel@pengutronix.de>
- <20170710144220.31594-2-o.rempel@pengutronix.de>
- <20170710221408.GD1618@tuxbook>
- <91bfe236-0410-b26e-7ef6-73d14ebf120d@pengutronix.de>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
+ controller
+Date: Tue, 18 Jul 2017 09:44:38 -0700
+Message-ID: <20170718164438.GE20973@minitux>
+References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+ <1500293043-1887-8-git-send-email-varada@codeaurora.org>
+ <20170717220718.GZ20973@minitux>
+ <20170718095814.GE32439@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <91bfe236-0410-b26e-7ef6-73d14ebf120d-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
+In-Reply-To: <20170718095814.GE32439@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 18 Jul 01:45 PDT 2017, Oleksij Rempel wrote:
+On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
 
-> Hallo Bjorn,
+> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
+> > On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
+[..]
+> >
+> > Can you confirm that this is actually version 4 of this block? Or are we
+> > just incrementing an arbitrary number here?
 > 
-> On 11.07.2017 00:14, Bjorn Andersson wrote:
-> > On Mon 10 Jul 07:42 PDT 2017, Oleksij Rempel wrote:
-> > 
-> > > Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/remoteproc/imx-rproc.txt   | 44 ++++++++++++++++++++++
-> > >  1 file changed, 44 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> > > new file mode 100644
-> > > index 000000000000..e7c61993e1b8
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
-> > > @@ -0,0 +1,44 @@
-> > > +NXP iMX6SX/iMX7D Co-Processor Bindings
-> > > +----------------------------------------
-> > > +
-> > > +This binding provides support for ARM Cortex M4 Co-processor found on some
-> > > +NXP iMX SoCs.
-> > > +
-> > > +Required properties:
-> > > +- compatible		Should be one of:
-> > > +				"fsl,imx7d-rproc"
-> > > +				"fsl,imx6sx-rproc"
-> > > +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-> > > +- syscfg		Phandle to syscon block which provide access to
-> > 
-> > This is called "syscon" in the code and the example.
-> 
-> done.
-> 
-> > > +			System Reset Controller
-> > > +
-> > > +Optional properties:
-> > > +- reg:			Should contain the address ranges for some of internal
-> > > +			memory regions.
-> > 
-> > Something less hand-wavy, like: "Should list the memory regions for the
-> > remoteproc"
-> > 
-> > > +- reg-names:		Contains the corresponding names for the memory
-> > > +			regions. These should be named "ddr", "ocram", "ocram-s",
-> > > +			"ocram-epdc" or "ocram-pxp".
-> > 
-> > Make this comment define which memory regions are required for each of
-> > the systems.
-> 
-> done.
-> 
-> > > +Fallowing memory ranges are expected:
-> > > +- For "fsl,imx7d-rproc"
-> > > +	<0x00900000 0x00020000> - "ocram"
-> > > +	<0x00920000 0x00020000> - "ocram-epdc"
-> > > +	<0x00940000 0x00008000> - "ocram-pxp"
-> > > +	<0x80000000 0x0FFF0000> - "ddr" (code area)
-> > > +	<0x80000000 0x60000000> - "ddr" (data area)
-> > 
-> > There's no reason to list the actual regions in the binding
-> > document. Just list the requires regions for each system.
-> > 
-> > > +- For "fsl,imx6sx-rproc"
-> > > +	<0x008F8000 0x00004000> - "ocram-s"
-> > > +	<0x80000000 0x0FFF8000> - "ddr" (code area)
-> > > +	<0x80000000 0x60000000> - "ddr" (data area)
-> > > +
-> > > +Note: the "ddr" code and data ranges are overlapping. Code area is smaller
-> > > +than data area.  So this range should be carefully chosen according to your
-> > > +system and application requirements.
-> > > +
-> > 
-> > This is a source of future issues as this indicates that I should have
-> > reg-names list "ddr" twice.
-> 
-> Then I will name it:
-> "ddri" (incstruction/code area),
-> "ddrd" (data area)
-> 
-> unless there are other suggestions.
+> This is not exactly the 4th version of the block. However, it is
+> a different version than the ones that are already supported in
+> this driver. Since the existing driver didn't exactly tie it with
+> the block IP version, I too followed the same versioning
+> convention.
 > 
 
-But are you saying that it's correct that these two memory regions
-should overlap?
+Do you have a block IP version that you could base your numbering on, to
+break the trend? (We should go back and fix up the others as well)
 
-> > Also, as you warn about the user needing to pick the values for "ddr",
-> > does that mean that it's a carveout of System RAM?
+[..]
+> > > +static int qcom_pcie_enable_resources_v4(struct qcom_pcie *pcie)
+> > > +{
+> > > +	struct qcom_pcie_resources_v4 *res = &pcie->res.v4;
+> > > +	struct dw_pcie *pci = pcie->pci;
+> > > +	struct device *dev = pci->dev;
+> > > +	int ret;
+> > > +
+> > > +	ret = clk_prepare_enable(res->sys_noc_clk);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "cannot prepare/enable core clock\n");
+> > > +		return ret;
+> > > +	}
+> >
+> > Should these clocks really be handled explicitly in the driver? Are
+> > these not the bus clocks, to be handled by "msm_bus"?
 > 
-> Yes, it is a part of System RAM.
+> This not the bus clock. This clock is for the Bus Interface Unit
+> between the PCIe module and the System NOC.
 > 
 
-Then there will be an associated reserved-memory region for the
-region(s), you should add a label to this and use "memory-region" to get
-hold of the addresses instead.
+Right, that was the piece I meant. Sorry for not using the right
+nomenclature.
 
-Regards,
+So then it would be handled by the msm_bus in the downstream kernel?
+
+
+Perhaps we can merge it like this and once we have the interconnect
+framework setup we can make this the fallback method.
+
+Thanks,
 Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
