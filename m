@@ -1,15 +1,13 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
-Date: Tue, 18 Jul 2017 14:17:36 +0200
-Message-ID: <BCD1BD18-96E3-4638-8935-B5C832D8EE52@goldelico.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
- <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 1/3] iio: adc: stm32: fix common clock rate
+Date: Tue, 18 Jul 2017 14:35:30 +0200
+Message-ID: <1500381332-17086-2-git-send-email-fabrice.gasnier@st.com>
+References: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
+In-Reply-To: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,56 +17,68 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hugues Fruchet <hugues.fruchet@st.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Yannick Fertre <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Fixes commit 95e339b6e85d ("iio: adc: stm32: add support for STM32H7")
 
-> Am 18.07.2017 um 13:59 schrieb Hans Verkuil <hverkuil@xs4all.nl>:
-> 
-> On 12/07/17 22:01, Sylwester Nawrocki wrote:
->> Hi Hugues,
->> 
->> On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
->>> This patchset enables OV9655 camera support.
->>> 
->>> OV9655 support has been tested using STM32F4DIS-CAM extension board
->>> plugged on connector P1 of STM32F746G-DISCO board.
->>> Due to lack of OV9650/52 hardware support, the modified related code
->>> could not have been checked for non-regression.
->>> 
->>> First patches upgrade current support of OV9650/52 to prepare then
->>> introduction of OV9655 variant patch.
->>> Because of OV9655 register set slightly different from OV9650/9652,
->>> not all of the driver features are supported (controls). Supported
->>> resolutions are limited to VGA, QVGA, QQVGA.
->>> Supported format is limited to RGB565.
->>> Controls are limited to color bar test pattern for test purpose.
->> 
->> I appreciate your efforts towards making a common driver but IMO it would be 
->> better to create a separate driver for the OV9655 sensor.  The original driver 
->> is 1576 lines of code, your patch set adds half of that (816).  There are
->> significant differences in the feature set of both sensors, there are 
->> differences in the register layout.  I would go for a separate driver, we  
->> would then have code easier to follow and wouldn't need to worry about possible
->> regressions.  I'm afraid I have lost the camera module and won't be able 
->> to test the patch set against regressions.
->> 
->> IMHO from maintenance POV it's better to make a separate driver. In the end 
->> of the day we wouldn't be adding much more code than it is being done now.
-> 
-> I agree. We do not have great experiences in the past with trying to support
-> multiple variants in a single driver (unless the diffs are truly small).
+Fix common clock rate used then by stm32-adc sub-devices: take common
+prescaler into account.
+Fix ADC max clock rate on STM32H7 (fADC from datasheet)
 
-Well,
-IMHO the diffs in ov965x are smaller (but untestable because nobody seems
-to have an ov9650/52 board) than within the bq27xxx chips, but I can dig out
-an old pdata based separate ov9655 driver and extend that to become DT compatible.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/adc/stm32-adc-core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-I had abandoned that separate approach in favour of extending the ov965x driver.
-
-Have to discuss with Hugues how to proceed.
-
-BR and thanks,
-Nikolaus
+diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+index e09233b..6096763 100644
+--- a/drivers/iio/adc/stm32-adc-core.c
++++ b/drivers/iio/adc/stm32-adc-core.c
+@@ -64,7 +64,7 @@
+ #define STM32H7_CKMODE_MASK		GENMASK(17, 16)
+ 
+ /* STM32 H7 maximum analog clock rate (from datasheet) */
+-#define STM32H7_ADC_MAX_CLK_RATE	72000000
++#define STM32H7_ADC_MAX_CLK_RATE	36000000
+ 
+ /**
+  * stm32_adc_common_regs - stm32 common registers, compatible dependent data
+@@ -148,14 +148,14 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+ 		return -EINVAL;
+ 	}
+ 
+-	priv->common.rate = rate;
++	priv->common.rate = rate / stm32f4_pclk_div[i];
+ 	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
+ 	val &= ~STM32F4_ADC_ADCPRE_MASK;
+ 	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
+ 	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
+ 
+ 	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
+-		rate / (stm32f4_pclk_div[i] * 1000));
++		priv->common.rate / 1000);
+ 
+ 	return 0;
+ }
+@@ -250,7 +250,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 
+ out:
+ 	/* rate used later by each ADC instance to control BOOST mode */
+-	priv->common.rate = rate;
++	priv->common.rate = rate / div;
+ 
+ 	/* Set common clock mode and prescaler */
+ 	val = readl_relaxed(priv->common.base + STM32H7_ADC_CCR);
+@@ -260,7 +260,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+ 	writel_relaxed(val, priv->common.base + STM32H7_ADC_CCR);
+ 
+ 	dev_dbg(&pdev->dev, "Using %s clock/%d source at %ld kHz\n",
+-		ckmode ? "bus" : "adc", div, rate / (div * 1000));
++		ckmode ? "bus" : "adc", div, priv->common.rate / 1000);
+ 
+ 	return 0;
+ }
+-- 
+1.9.1
