@@ -1,46 +1,58 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mediatek: add MT7622 string to
- the PMIC wrapper doc
-Date: Wed, 19 Jul 2017 00:01:12 +0800
-Message-ID: <1500393672.8739.1.camel@mtksdaap41>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 9/9] soc: mediatek: pwrap: fixup warnings from coding
+ style
+Date: Wed, 19 Jul 2017 00:26:34 +0800
+Message-ID: <1500395194.17774.6.camel@mtksdaap41>
 References: <cover.1500368529.git.sean.wang@mediatek.com>
-         <fff9908edae7da7958ac43dfe9fa98b26c03a4e3.1500368529.git.sean.wang@mediatek.com>
+         <568c3b518b70a0af17cbef1223721b68448a8ac6.1500368529.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fff9908edae7da7958ac43dfe9fa98b26c03a4e3.1500368529.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chenglin.xu@mediatek.com, chen.zhong@mediatek.com, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <568c3b518b70a0af17cbef1223721b68448a8ac6.1500368529.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-07-18 at 17:49 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+[Resend due to bad mail format, sorry about the noise if you got two]
+
+
+On Tue, 2017-07-18 at 17:49 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> fixup those warnings such as lines over 80 words and parenthesis
+> alignment which would be complained by checkpatch.pl.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 20 +++++++++++++-------
+>  1 file changed, 13 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> index 107700d..2d6d4a9 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> @@ -35,6 +35,10 @@ Required properties in pwrap device node.
->    "wrap": Main module clock
->  - clocks: Must contain an entry for each entry in clock-names.
->  
-> +Required properties in pwrap device node
-> +- compatible:
-> +	"mediatek,mt7622-pwrap" for MT7622 SoCs
-> +
+> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> index 142f40a..5f1036f 100644
+> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
+> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+> @@ -1057,7 +1057,8 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+>  	/* wait for cipher data ready@PMIC */
+>  	ret = pwrap_wait_for_state(wrp, pwrap_is_pmic_cipher_ready);
+>  	if (ret) {
+> -		dev_err(wrp->dev, "timeout waiting for cipher data ready@PMIC\n");
+> +		dev_err(wrp->dev,
+> +			"timeout waiting for cipher data ready@PMIC\n");
 
 Sean,
 
-Why mt7622 need to be separated from others?
+I think the old code is easier to read. When the line is only slightly
+over the 80 chars limit, some maintainers will even ask to keep it in
+one line to make it easier to read.
 
+So if it is OK with Matthias, I think we should just keep it as is.
 
 Joe.C
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
