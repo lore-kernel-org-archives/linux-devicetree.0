@@ -1,83 +1,72 @@
 From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 2/4] gpio: davinci: Handle the return value of
- davinci_gpio_irq_setup function
-Date: Tue, 18 Jul 2017 23:16:07 +0530
-Message-ID: <f8f33c82-6f08-bd8c-ecbb-df1f1c719624@ti.com>
+Subject: Re: [PATCH 3/4] gpio: davinci: Add a separate compatible for
+ keystone-k2g soc
+Date: Tue, 18 Jul 2017 23:18:41 +0530
+Message-ID: <8551db79-611e-e8f3-3756-ef4930760924@ti.com>
 References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-3-git-send-email-j-keerthy@ti.com>
- <fcf0b39c-2683-e88d-b619-8ff66707b099@ti.com>
+ <1500375436-9435-4-git-send-email-j-keerthy@ti.com>
+ <902db353-2db1-fa86-5f96-541082348a35@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <fcf0b39c-2683-e88d-b619-8ff66707b099@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suman Anna <s-anna@ti.com>, linus.walleij@linaro.org, ssantosh@kernel.org
-Cc: devicetree@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, fcooper@ti.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <902db353-2db1-fa86-5f96-541082348a35@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, linus.walleij@linaro.org, ssantosh@kernel.org
+Cc: robh+dt@kernel.org, s-anna@ti.com, fcooper@ti.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On Tuesday 18 July 2017 10:24 PM, Suman Anna wrote:
+On Tuesday 18 July 2017 05:01 PM, Sekhar Nori wrote:
 > Hi Keerthy,
 > 
-> On 07/18/2017 05:57 AM, Keerthy wrote:
->> Currently davinci_gpio_irq_setup return value is ignored. Handle the
->> return value appropriately.
+> On Tuesday 18 July 2017 04:27 PM, Keerthy wrote:
+>> Add a separate compatible for keystone-k2g soc
 >>
 >> Signed-off-by: Keerthy <j-keerthy@ti.com>
 >> ---
->>  drivers/gpio/gpio-davinci.c | 18 +++++++++++++-----
->>  1 file changed, 13 insertions(+), 5 deletions(-)
+>>  Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 3 ++-
+>>  drivers/gpio/gpio-davinci.c                             | 1 +
+>>  2 files changed, 3 insertions(+), 1 deletion(-)
 >>
+>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> index 5079ba7..1a5c1a2 100644
+>> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>> @@ -1,7 +1,8 @@
+>>  Davinci/Keystone GPIO controller bindings
+>>  
+>>  Required Properties:
+>> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio",
+>> +	      "ti,keystone-k2g-gpio"
+>>  
+>>  - reg: Physical base address of the controller and the size of memory mapped
+>>         registers.
 >> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
->> index 2c88054..932f270 100644
+>> index 932f270..a8d8dd9 100644
 >> --- a/drivers/gpio/gpio-davinci.c
 >> +++ b/drivers/gpio/gpio-davinci.c
->> @@ -233,15 +233,23 @@ static int davinci_gpio_probe(struct platform_device *pdev)
->>  		chips->regs[bank] = gpio_base + offset_array[bank];
->>  
->>  	ret = devm_gpiochip_add_data(dev, &chips->chip, chips);
->> +	if (ret)
->> +		goto err;
->> +
->> +	platform_set_drvdata(pdev, chips);
->> +	ret = davinci_gpio_irq_setup(pdev);
->>  	if (ret) {
->> -		ctrl_num = 0;
->> -		bank_base = 0;
->> -		return ret;
->> +		platform_set_drvdata(pdev, NULL);
+>> @@ -610,6 +610,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
+>>  static const struct of_device_id davinci_gpio_ids[] = {
+>>  	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
+>>  	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
+>> +	{ .compatible = "ti,keystone-k2g-gpio", keystone_gpio_get_irq_chip},
 > 
-> This is not needed, driver core will set this automatically if probe fails.
-
-okay. I will remove this.
-
+> You don't have to add compatible matching to the driver if you don't
+> need any special handling for K2G ATM. Your dts should have:
 > 
->> +		goto err;
->>  	}
->>  
->> -	platform_set_drvdata(pdev, chips);
->> -	davinci_gpio_irq_setup(pdev);
->>  	return 0;
->> +
->> +err:
->> +	ctrl_num = 0;
->> +	bank_base = 0;
+> compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
 > 
-> Same comments as on Patch 1.
+> this way, the driver continues to probe using "ti,keystone-gpio", and
+> when you really discover a need to do some special handling for K2G, a
+> kernel update will do without the need for a DT update.
 
-Yup will fix this as i have done with Patch 1.
+Sure that is better to do as currently i do not see any differences
+between k2g and other k2 devices.
 
 > 
-> regards
-> Suman
+> Thanks,
+> Sekhar
 > 
