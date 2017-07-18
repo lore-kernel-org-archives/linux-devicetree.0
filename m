@@ -1,90 +1,84 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 10/18] drm/sun4i: tcon: Move out the tcon0 common setup
-Date: Tue, 18 Jul 2017 11:41:36 +0800
-Message-ID: <CAGb2v65TfUKyWg=vxWP-YhM3Be1i=N1OmNTO16aFk2VTCg4VXg@mail.gmail.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
- <45529eeddc5d5eab9bcfa74982343eeb36fe11f6.1499955058.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <45529eeddc5d5eab9bcfa74982343eeb36fe11f6.1499955058.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Chen-Yu Tsai <wens@csie.org>, dri-devel <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2] dt-bindings: display: sunxi: Improve endpoint ID scheme readability
+Date: Tue, 18 Jul 2017 12:02:01 +0800
+Message-ID: <20170718040201.21099-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 10:13 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Some channel0 setup has to be done, no matter what the output interface is
-> (RGB, CPU, LVDS). Move that code into a common function in order to avoid
-> duplication.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/gpu/drm/sun4i/sun4i_tcon.c | 26 ++++++++++++++++----------
->  1 file changed, 16 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> index a3bbf9994cfa..f051862d635e 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-> @@ -125,15 +125,26 @@ static int sun4i_tcon_get_clk_delay(struct drm_display_mode *mode,
->         return delay;
->  }
->
-> -static void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
-> -                                struct drm_display_mode *mode)
-> +static void sun4i_tcon0_mode_set_common(struct sun4i_tcon *tcon,
-> +                                       struct drm_display_mode *mode)
-> +{
-> +       /* Configure the dot clock */
-> +       clk_set_rate_protect(tcon->dclk, mode->crtc_clock * 1000);
+The explanation for the endpoint ID numbering scheme is convoluted
+and hard to understand.
 
-I'd prefer not changing APIs in a code move. It also means we could
-apply this sooner than later. Otherwise,
+This patch aims to improve the readability of it by combining the
+existing two paragraphs, while also providing a diagram example,
+and how endpoints should be numbered based on that example.
 
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+Changes since v1:
 
-> +
-> +       /* Set the resolution */
-> +       regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> +                    SUN4I_TCON0_BASIC0_X(mode->crtc_hdisplay) |
-> +                    SUN4I_TCON0_BASIC0_Y(mode->crtc_vdisplay));
-> +}
-> +
-> +static void sun4i_tcon0_mode_set_rgb(struct sun4i_tcon *tcon,
-> +                                    struct drm_display_mode *mode)
->  {
->         unsigned int bp, hsync, vsync;
->         u8 clk_delay;
->         u32 val = 0;
->
-> -       /* Configure the dot clock */
-> -       clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
-> +       sun4i_tcon0_mode_set_common(tcon, mode);
->
->         /* Adjust clock delay */
->         clk_delay = sun4i_tcon_get_clk_delay(mode, 0);
-> @@ -141,11 +152,6 @@ static void sun4i_tcon0_mode_set(struct sun4i_tcon *tcon,
->                            SUN4I_TCON0_CTL_CLK_DELAY_MASK,
->                            SUN4I_TCON0_CTL_CLK_DELAY(clk_delay));
->
-> -       /* Set the resolution */
-> -       regmap_write(tcon->regs, SUN4I_TCON0_BASIC0_REG,
-> -                    SUN4I_TCON0_BASIC0_X(mode->crtc_hdisplay) |
-> -                    SUN4I_TCON0_BASIC0_Y(mode->crtc_vdisplay));
-> -
->         /*
->          * This is called a backporch in the register documentation,
->          * but it really is the back porch + hsync
-> @@ -295,7 +301,7 @@ void sun4i_tcon_mode_set(struct sun4i_tcon *tcon, struct drm_encoder *encoder,
->  {
->         switch (encoder->encoder_type) {
->         case DRM_MODE_ENCODER_NONE:
-> -               sun4i_tcon0_mode_set(tcon, mode);
-> +               sun4i_tcon0_mode_set_rgb(tcon, mode);
->                 break;
->         case DRM_MODE_ENCODER_TVDAC:
->                 /*
-> --
-> git-series 0.9.1
+  - Added recently discovered mux between backends and TCONs to the
+    diagram. This also fixes the numbering on the endpoints between
+    backend 1 and TCON 1. Rob's ack is not added because of this
+    change.
+
+---
+ .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++++++++------
+ 1 file changed, 27 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index b83e6018041d..2ee6ff0ef98e 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -4,15 +4,33 @@ Allwinner A10 Display Pipeline
+ The Allwinner A10 Display pipeline is composed of several components
+ that are going to be documented below:
+ 
+-For the input port of all components up to the TCON in the display
+-pipeline, if there are multiple components, the local endpoint IDs
+-must correspond to the index of the upstream block. For example, if
+-the remote endpoint is Frontend 1, then the local endpoint ID must
+-be 1.
+-
+-Conversely, for the output ports of the same group, the remote endpoint
+-ID must be the index of the local hardware block. If the local backend
+-is backend 1, then the remote endpoint ID must be 1.
++For all connections between components up to the TCONs in the display
++pipeline, when there are multiple components of the same type at the
++same depth, the local endpoint ID must be the same as the remote
++component's index. For example, if the remote endpoint is Frontend 1,
++then the local endpoint ID must be 1.
++
++    Frontend 0  [0] ------- [0]  Backend 0  [0] ------- [0]  TCON 0
++		[1] --   -- [1]             [1] --   -- [1]
++		      \ /                         \ /
++		       X                           X
++		      / \                         / \
++		[0] --   -- [0]             [0] --   -- [0]
++    Frontend 1  [1] ------- [1]  Backend 1  [1] ------- [1]  TCON 1
++
++For a two pipeline system such as the one depicted above, the lines
++represent the connections between the components, while the numbers
++within the square brackets corresponds to the ID of the local endpoint.
++
++The same rule also applies to DE 2.0 mixer-TCON connections:
++
++    Mixer 0  [0] ----------- [0]  TCON 0
++	     [1] ----   ---- [1]
++		     \ /
++		      X
++		     / \
++	     [0] ----   ---- [0]
++    Mixer 1  [1] ----------- [1]  TCON 1
+ 
+ HDMI Encoder
+ ------------
+-- 
+2.13.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
