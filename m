@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] perf: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:22 -0500
-Message-ID: <20170718214339.7774-42-robh@kernel.org>
+Subject: [PATCH] mux: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:18 -0500
+Message-ID: <20170718214339.7774-38-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,46 +13,47 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Peter Rosin <peda@axentia.se>
 ---
- drivers/perf/arm_pmu_platform.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/mux/mux-core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu_platform.c b/drivers/perf/arm_pmu_platform.c
-index 69255f53057a..4eafa7a42e52 100644
---- a/drivers/perf/arm_pmu_platform.c
-+++ b/drivers/perf/arm_pmu_platform.c
-@@ -131,8 +131,8 @@ static int pmu_parse_irqs(struct arm_pmu *pmu)
- 	}
-
- 	if (!pmu_has_irq_affinity(pdev->dev.of_node)) {
--		pr_warn("no interrupt-affinity property for %s, guessing.\n",
--			of_node_full_name(pdev->dev.of_node));
-+		pr_warn("no interrupt-affinity property for %pOF, guessing.\n",
-+			pdev->dev.of_node);
- 	}
-
- 	/*
-@@ -211,7 +211,7 @@ int arm_pmu_device_probe(struct platform_device *pdev,
- 	}
-
+diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+index 90b8995f07cb..bef3fe1df670 100644
+--- a/drivers/mux/mux-core.c
++++ b/drivers/mux/mux-core.c
+@@ -452,8 +452,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+ 					 "mux-controls", "#mux-control-cells",
+ 					 index, &args);
  	if (ret) {
--		pr_info("%s: failed to probe PMU!\n", of_node_full_name(node));
-+		pr_info("%pOF: failed to probe PMU!\n", node);
- 		goto out_free;
+-		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+-			np->full_name, mux_name ?: "", index);
++		dev_err(dev, "%pOF: failed to get mux-control %s(%i)\n",
++			np, mux_name ?: "", index);
+ 		return ERR_PTR(ret);
  	}
 
-@@ -228,8 +228,7 @@ int arm_pmu_device_probe(struct platform_device *pdev,
- out_free_irqs:
- 	armpmu_free_irqs(pmu);
- out_free:
--	pr_info("%s: failed to register PMU devices!\n",
--		of_node_full_name(node));
-+	pr_info("%pOF: failed to register PMU devices!\n", node);
- 	armpmu_free(pmu);
- 	return ret;
- }
+@@ -464,8 +464,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+
+ 	if (args.args_count > 1 ||
+ 	    (!args.args_count && (mux_chip->controllers > 1))) {
+-		dev_err(dev, "%s: wrong #mux-control-cells for %s\n",
+-			np->full_name, args.np->full_name);
++		dev_err(dev, "%pOF: wrong #mux-control-cells for %pOF\n",
++			np, args.np);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+
+@@ -474,8 +474,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+ 		controller = args.args[0];
+
+ 	if (controller >= mux_chip->controllers) {
+-		dev_err(dev, "%s: bad mux controller %u specified in %s\n",
+-			np->full_name, controller, args.np->full_name);
++		dev_err(dev, "%pOF: bad mux controller %u specified in %pOF\n",
++			np, controller, args.np);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+
 --
 2.11.0
