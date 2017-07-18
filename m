@@ -1,103 +1,68 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: keystone-k2g-evm: Add gpio nodes
-Date: Tue, 18 Jul 2017 14:13:42 -0500
-Message-ID: <1cd6ef99-a98e-7cdb-5c2a-f5cd057eef41@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-5-git-send-email-j-keerthy@ti.com>
+From: Michael Stecklein <m-stecklein@ti.com>
+Subject: [PATCH v3 1/2] dt-bindings: sound: add bindings for
+	TAS6424
+Date: Tue, 18 Jul 2017 14:20:03 -0500
+Message-ID: <1500405604-23511-2-git-send-email-m-stecklein@ti.com>
+References: <1500405604-23511-1-git-send-email-m-stecklein@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1500375436-9435-5-git-send-email-j-keerthy@ti.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org, ssantosh@kernel.org
-Cc: robh+dt@kernel.org, nsekhar@ti.com, fcooper@ti.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1500405604-23511-1-git-send-email-m-stecklein@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>
+Cc: Michael Stecklein <m-stecklein@ti.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Keerthy,
+Add the bindings for the TAS6424 digital amplifier.
 
-On 07/18/2017 05:57 AM, Keerthy wrote:
-> keystone-k2g has 2 instances of gpio. The first one has all the 144 GPIOs
+Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
+---
+ .../devicetree/bindings/sound/ti,tas6424.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
 
-Please use 66AK2G for keystone-k2g.
-
-> functional( 9 banks with 16 gpios = 144). The second instance has
-> only the GPIO0:GPIO67 functional and rest are marked reserved.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  arch/arm/boot/dts/keystone-k2g.dtsi | 42 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-> index bf4d1fa..58ac3db 100644
-> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
-> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-> @@ -15,6 +15,7 @@
->  
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/pinctrl/keystone.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	compatible = "ti,k2g","ti,keystone";
-> @@ -168,5 +169,46 @@
->  				#reset-cells = <2>;
->  			};
->  		};
-> +
-> +		gpio0: gpio@2603000 {
-> +			compatible = "ti,keystone-k2g-gpio";
-> +			reg = <0x02603000 0x100>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +
-> +			interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			ti,ngpio = <144>;
-> +			ti,davinci-gpio-unbanked = <0>;
-> +			clocks = <&k2g_clks 0x001b 0x0>;
-> +			clock-names = "gpio";
-
-I don't see the clocks and clock-names documented in the binding.
-Looking at davinci_gpio_irq_setup(), these are required, and a specific
-clock name is what the driver is looking for. And you have different
-semantics for this on K2G and non-K2G SoCs. Davinci platforms are using
-non-DT clocks, so their DT nodes didn't have them.
-
-regards
-Suman
-
-> +		};
-> +
-> +		gpio1: gpio@260a000 {
-> +			compatible = "ti,keystone-k2g-gpio";
-> +			reg = <0x0260a000 0x100>;
-> +			gpio-controller;
-> +			#gpio-cells = <2>;
-> +			interrupts = <GIC_SPI 442 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 443 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 444 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 445 IRQ_TYPE_EDGE_RISING>,
-> +					<GIC_SPI 446 IRQ_TYPE_EDGE_RISING>;
-> +			interrupt-controller;
-> +			#interrupt-cells = <2>;
-> +			ti,ngpio = <68>;
-> +			ti,davinci-gpio-unbanked = <0>;
-> +			clocks = <&k2g_clks 0x001c 0x0>;
-> +			clock-names = "gpio";
-> +		};
->  	};
->  };
-> 
-
+diff --git a/Documentation/devicetree/bindings/sound/ti,tas6424.txt b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+new file mode 100644
+index 0000000..a8f4df8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/ti,tas6424.txt
+@@ -0,0 +1,28 @@
++Texas Instruments TAS6424 Quad-Channel Audio amplifier
++
++The TAS6424 serial control bus communicates through I2C protocols.
++
++Required properties:
++	- compatible - One of: "ti,tas6424" - TAS6424
++	- reg - I2C slave address
++	- sound-dai-cells: must be equal to 0
++
++Optional properties:
++	- pinctrl-names, pinctrl-0 - Please refer to pinctrl-bindings.txt
++
++Example:
++
++tas6424: tas6424@6a {
++
++	compatible = "ti,tas6424";
++	reg = <0x6a>;
++
++	#sound-dai-cells = <0>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&tas6424_int_pin>;
++	interrupts-extended = <&gpio1 28 IRQ_TYPE_EDGE_FALLING>;
++};
++
++For more product information please see the link below:
++http://www.ti.com/product/TAS6424-Q1
+-- 
+2.7.4
