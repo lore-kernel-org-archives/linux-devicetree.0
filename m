@@ -1,138 +1,525 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v6 0/7] STM32 DSI HOST
-Date: Tue, 18 Jul 2017 09:04:53 +0000
-Message-ID: <e82450ae-7c84-7fc4-2866-676d6ba4ea11@st.com>
-References: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
- <f33755c3-f138-3b53-ade0-f149bb3e9a68@codeaurora.org>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH v3 01/18] coresight replicator: Cleanup programmable
+ replicator naming
+Date: Tue, 18 Jul 2017 10:11:57 +0100
+Message-ID: <eb13271f-00ce-a615-f039-ca8ca5439d6f@arm.com>
+References: <1500037463-19951-1-git-send-email-suzuki.poulose@arm.com>
+ <1500037463-19951-2-git-send-email-suzuki.poulose@arm.com>
+ <20170717174535.GB21523@xps15>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f33755c3-f138-3b53-ade0-f149bb3e9a68@codeaurora.org>
-Content-Language: en-US
-Content-ID: <867C330DDD0EAA41A595990C5033A3D2@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
- Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Eric
- Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puck.chen@hisilicon.com>, Mark
- Yao <mark.yao@rock-chips.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170717174535.GB21523@xps15>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, mike.leach@linaro.org, Pratik Patel <pratikp@codeaurora.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzE4LzIwMTcgMDk6NTcgQU0sIEFyY2hpdCBUYW5lamEgd3JvdGU6DQo+IA0KPiBI
-aSwNCj4gDQo+IE9uIDA3LzE3LzIwMTcgMDE6MTAgUE0sIFBoaWxpcHBlIENPUk5VIHdyb3RlOg0K
-Pj4gVmVyc2lvbiA2Og0KPj4gLSBicmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYzogZHJtX2Jy
-aWRnZV9hZGQgdXBkYXRlIChBcmNoaXQgVGFuZWphKQ0KPiANCj4gcXVldWVkIHBhdGNoZXMgIzEg
-dG8gIzQgdG8gZHJtLW1pc2MtbmV4dC4gUGxlYXNlIGxldCBtZSBrbm93IHdoZW4geW91IGFwcGx5
-DQo+IHRoZSByZW1haW5kZXIgb2YgdGhlIFNUIHBhdGNoZXMuIE9uY2UgdGhhdCdzIGRvbmUsIHdl
-IGNhbiBhZGQgDQo+IENPTkZJR19EUk1fU1RNX0RTST15DQo+IGluIHRoZSBkcm0tbWlzYyBkZWZj
-b25maWdzIGZvciBhcm0vYXJtNjQuDQo+IA0KPiBUaGFua3MsDQo+IEFyY2hpdA0KPiANCg0KSGkg
-QXJjaGl0ICYgTWFueSB0aGFua3MuDQoNCkJlbmphbWluIGludGVncmF0ZWQgdGhlIGxhc3QgMyBw
-YXRjaGVzICsgaXRzIGxhc3QgZml4ICJkcm06IHN0bTogcmVtb3ZlIA0KImRlZmF1bHQgeSIgaW4g
-S2NvbmZpZyIuIFNvIHlvdSBzaG91bGQgYWRkIENPTkZJR19EUk1fU1RNPXkgdG9vLg0KDQpJIHRh
-a2UgdGhlIG9wcG9ydHVuaXR5IHRvIHRoYW5rIHlvdSBmb3IgeW91ciBncmVhdCBzdXBwb3J0LCBJ
-IGxlYXJuZWQgc28gDQptdWNoIGZyb20geW91IGFuZCBmcm9tIGRybSAmIGtlcm5lbCBjb21tdW5p
-dGllcyA6ICkNCg0KKkJJRyBUSEFOSyBZT1UqIHRvIGFsbCBvZiB5b3UsDQoNClBoaWxpcHBlDQoN
-Cj4+DQo+PiBWZXJzaW9uIDU6DQo+PiAtIGJyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jOiBJ
-bXByb3ZlIHRoZSBkaXJlY3QgY2FsbCB0byBwYW5lbA0KPj4gICAgYnJpZGdlIHBvc3RfZGlzYWJs
-ZSgpICYgcmVsYXRlZCBjb21tZW50cyAoQXJjaGl0IFRhbmVqYSkNCj4+IC0gc3RtL2x0ZGMuYzog
-Zml4IGxlYWsgb2YgcGl4ZWwgY2xvY2sgZW5hYmxlIGluIHNvbWUgZXJyb3INCj4+ICAgIHBhdGhz
-IChFcmljIEFuaG9sdCkNCj4+IC0gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2ku
-dHh0OiBhZGQgcGl4ZWwgY2xvY2sgJiByZW1vdmUNCj4+ICAgICJkcml2ZXIiIChSb2IgSGVycmlu
-ZywgQXJjaGl0IFRhbmVqYSkNCj4+IC0gYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4
-dDogcmVtb3ZlICJkcml2ZXIiIChSb2IgSGVycmluZywNCj4+ICAgIEFyY2hpdCBUYW5lamEpDQo+
-Pg0KPj4gVmVyc2lvbiA0Og0KPj4gLSBicmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYzogQWRk
-IHBhbmVsLWJyaWRnZSBzdXBwb3J0ICgtNDUgbGluZXMsDQo+PiAgICBidXQgbm8gc28gZWFzeSB0
-byBkbykgYW5kIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBiZXR0ZXIgY2xlYW4gdXAsIGFkZA0KPj4g
-ICAgc3RtIGNvcHlyaWdodC9yZW1vdmUgZHBtc19tb2RlL3JlbW92ZSBkcm1fb2YuaC9pbXByb3Zl
-IGNsaw0KPj4gICAgbWFuYWdlbWVudC9hZGQgbW9kZV92YWxpZCAodGhhbmtzIHRvIGNvbW1lbnRz
-IG9mIEFyY2hpdCBUYW5lamEpLCB1c2UNCj4+ICAgICJEZXNpZ25XYXJlIiBpbnN0ZWFkIG9mICJE
-ZXNpZ253YXJlICh0aGFua3MgdG8gY29tbWVudHMgb2YgTmVpbA0KPj4gICAgQXJtc3Ryb25nKQ0K
-Pj4gLSBicmlkZ2Uvc3lub3BzeXMvS2NvbmZpZzogUmVtb3ZlIGhlbHAgc2VjdGlvbiB0byBoaWRl
-IGl0IGluIG1lbnVjb25maWcNCj4+ICAgICh0aGFua3MgdG8gY29tbWVudHMgb2YgQXJjaGl0IFRh
-bmVqYSkNCj4+IC0gaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmg6IFJlbW92ZSBkcm1Q
-LmggKHRoYW5rcyB0byBjb21tZW50cw0KPj4gICAgb2YgQXJjaGl0IFRhbmVqYSkNCj4+IC0gYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0OiBJbXByb3ZlIG9wdGlvbmFsIHBy
-b3BlcnR5DQo+PiAgICBleHBsYW5hdGlvbnMgKHRoYW5rcyB0byBjb21tZW50cyBvZiBOZWlsIEFy
-bXN0cm9uZykNCj4+IC0gc3RtL2x0ZGMuYzogQWRkIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBiZXR0
-ZXIgY2xlYW4gdXAvcmVtb3ZlDQo+PiAgICBkcm1fZW5jb2Rlcl9oZWxwZXJfYWRkKCkgKHRoYW5r
-cyB0byBjb21tZW50cyBvZiBFcmljIEFuaG9sdCkNCj4+IC0gc3RtL2R3X21pcGlfZHNpLXN0bS5j
-OiByZW1vdmUgbWF0aDY0LmgvdXNlIERSTV9XQVJOL3JlbW92ZSB3YXJuaW5ncw0KPj4gICAgKHRo
-YW5rcyB0byBjb21tZW50cyBvZiBBcmNoaXQgVGFuZWphKSwgbWlub3IgYWxpZ25tZW50IGZpeCAo
-dGhhbmtzIHRvDQo+PiAgICBjb21tZW50cyBvZiBOZWlsIEFybXN0cm9uZykNCj4+IC0gYmluZGlu
-Z3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dDogdXNlIGdyYXBoIGJpbmRpbmcgaW4gdGhlDQo+
-PiAgICBleGFtcGxlL2ltcHJvdmUgcG9ydHMgdXNhZ2UgZG9jICh0aGFua3MgdG8gY29tbWVudHMg
-b2YgUm9iIEhlcnJpbmcpLA0KPj4gICAgdXNlICJEU0kiIGluc3RlYWQgb2YgImRzaSIgd2hlcmUg
-cmVsZXZhbnQgKHRoYW5rcyB0byBjb21tZW50cyBvZiBOZWlsDQo+PiAgICBBcm1zdHJvbmcpDQo+
-Pg0KPj4gVmVyc2lvbiAzOg0KPj4gLSBzdG0vbHRkYzogVXNlIHBhbmVsLWJyaWRnZSAoLTE3MCBs
-aW5lcyksIHRoYW5rcyB0byBjb21tZW50cyBvZiBFcmljIA0KPj4gQW5ob2x0LA0KPj4gICAgQm9y
-aXMgQnJlemlsbG9uLCBBcmNoaXQgVGFuZWphICYgQW5kcnplaiBIYWpkYS4NCj4+IC0gU3lub3Bz
-eXMgZHNpOiBBZGQgZHdfbWlwaV9kc2kuaCAoZm9yZ290dGVuIGluIHYyKSwgdGhhbmtzIHRvIA0K
-Pj4gY29tbWVudHMgb2YNCj4+ICAgIE5laWwgQXJtc3Ryb25nLg0KPj4gLSBTeW5vcHN5cyBkc2kv
-ZHctbWlwaS1kc2kuYzogYWRkIGR3X21pcGlfZHNpX2RwaHlfaW5pdCgpICYNCj4+ICAgIGR3X21p
-cGlfZHNpX2RwaHlfZW5hYmxlKCkgdG8gYmV0dGVyIG1hbmFnZSBEVyBwaHktZGVkaWNhdGVkIHJl
-Z3MsIA0KPj4gcmVtb3ZlDQo+PiAgICBkd19taXBpX2RzaV9tb2RlIGVudW0sIHJlbW92ZSBzdG0z
-MiBwYXRjaCBmb3IgbHBtLCByZW1vdmUgcGxscmVmIA0KPj4gKG1hbmFnZSBpbg0KPj4gICAgdGhl
-IHZlbmRvciBwaHkpIHRoYW5rcyB0byBjb21tZW50cyBvZiBBcmNoaXQgVGFuZWphLiBBZGQgbW9k
-ZV9mbGFncyANCj4+IHRvIHBoeQ0KPj4gICAgcGFyYW1ldGVycyB0byBiZXR0ZXIgYWRqdXN0IGxh
-bmUgbWJwcyBhY2NvcmRpbmcgdG8gZHNpIGJ1cnN0IGFuZCANCj4+IG5vbiBidXJzdA0KPj4gICAg
-bW9kZXMgdG9kb3MgaW4gY2Fwcy4NCj4+IC0gc3RtL2R3X21pcGlfZHNpLXN0bS5jOiBBZGQgcGxs
-cmVmIG1hbmFnZW1lbnQuDQo+PiAtIGR0LWJpbmRpbmdzL2Rpc3BsYXkvc3RtOiBTcGxpdCBkdC1i
-aW5kaW5ncyBwYXRjaCBpbiB0d28gKHBhcmVudCBub2RlDQo+PiAgICByZW1vdmFsLyBkc2kpLCBh
-ZGQgcmVxdWlyZWQgbm9kZXMgKHBvcnQgJiBwYW5lbC9icmlkZ2UpLCB1cGRhdGVzIA0KPj4gdGhh
-bmtzIHRvDQo+PiAgICBjb21tZW50cyBvZiBSb2IgSGVycmluZy4NCj4+IC0gZHQtYmluZGluZ3Mv
-ZGlzcGxheS9TeW5vcHN5cyBkc2k6IHJlbW92ZSBwb3J0IGFzIHBhcnQgb2YgdGhlIHZlbmRvcg0K
-Pj4gICAgZG9jdW1lbnRhdGlvbiwgYWRkIHBhbmVsL2JyaWRnZSBub2RlLCB1cGRhdGUgZHQtYmlu
-ZGluZ3MgdGhhbmtzIHRvIA0KPj4gY29tbWVudHMNCj4+ICAgIG9mIFJvYiBIZXJyaW5nLg0KPj4g
-LSBBZGQgbW9yZSBwZW9wbGUgZnJvbSBIaXNpbGljb24gJiBSb2NrY2hpcC4NCj4+DQo+PiBWZXJz
-aW9uIDI6DQo+PiAtIEFkZCBhIGdlbmVyaWMgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIERTSSBi
-cmlkZ2UgZHJpdmVyIGZvbGxvd2luZw0KPj4gICAgY29tbWVudHMgZnJvbSBOZWlsIEFybXN0cm9u
-ZyAmIEFyY2hpdCBUYW5lamEuDQo+PiAtIFVzZSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2Uo
-KSB0aGFua3MgdG8gRXJpYyBBbmhvbHQgY29tbWVudHMNCj4+IC0gVXBkYXRlIGR0LWJpbmRpbmdz
-IHRoYW5rcyB0byBSb2IgSGVycmluZyBjb21tZW50cw0KPj4NCj4+IFZlcnNpb24gMToNCj4+IC0g
-SW5pdGlhbCBjb21taXQNCj4+DQo+PiBUaGUgcHVycG9zZSBvZiB0aGlzIHNldCBvZiBwYXRjaGVz
-IGlzIHRvIGFkZCB0aGUgbWlwaSBkc2kgaG9zdCBkcml2ZXINCj4+IHRvIHRoZSBzdG0zMiBmYW1p
-bHkuDQo+Pg0KPj4gVGhpcyBtaXBpIGRzaSBob3N0IGRyaXZlciBpcyBiYXNlZCBvbiB0aGUgUm9j
-a2NoaXAgdmVyc2lvbiBvZiB0aGUNCj4+IFN5bm9wc3lzIERlc2lnbndhcmUgbWlwaSBkc2kgZHJp
-dmVyIChyb2NrY2hpcC9kdy1taXBpLWRzaS5jKQ0KPj4gbW9kaWZpZWQgZm9yIHRoZSBzdG0zMiBm
-YW1pbHk6DQo+PiAgICAgIC0gcmVwbGFjZSBSb2NrY2hpcCBkaWdpdGFsICYgcGh5IHNwZWNpZmlj
-IGV4dGVuc2lvbnMgd2l0aCBzdG0zMidzIA0KPj4gb25lcy4NCj4+ICAgICAgLSBhZGQgYSBicmlk
-Z2UNCj4+DQo+PiBQaGlsaXBwZSBDT1JOVSAoNyk6DQo+PiAgICBkcm0vc3RtOiBsdGRjOiBGaXgg
-bGVhayBvZiBweCBjbGsgZW5hYmxlIGluIHNvbWUgZXJyb3IgcGF0aHMNCj4+ICAgIGRybS9zdG06
-IGx0ZGM6IEFkZCBwYW5lbC1icmlkZ2Ugc3VwcG9ydA0KPj4gICAgZHQtYmluZGluZ3M6IGRpc3Bs
-YXk6IEFkZCBTeW5vcHN5cyBEVyBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXINCj4+ICAgIGRybS9i
-cmlkZ2Uvc3lub3BzeXM6IEFkZCBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIgYnJpZGdlDQo+PiAg
-ICBkdC1iaW5kaW5nczogZGlzcGxheTogc3RtMzI6IHJlbW92ZSBzdC1kaXNwbGF5LXN1YnN5c3Rl
-bSBwYXJlbnQgbm9kZQ0KPj4gICAgICByZXF1aXJlbWVudA0KPj4gICAgZHQtYmluZGluZ3M6IGRp
-c3BsYXk6IHN0bTMyOiBBZGQgRFNJIGNvbnRyb2xsZXINCj4+ICAgIGRybS9zdG06IEFkZCBTVE0z
-MiBEU0kgY29udHJvbGxlciBkcml2ZXINCj4+DQo+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2Jy
-aWRnZS9kd19taXBpX2RzaS50eHQgICAgICAgIHwgIDMyICsNCj4+ICAgLi4uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dCAgfCAxMDUgKystDQo+PiAgIGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvS2NvbmZpZyAgICAgICAgICAgIHwgICA2ICsNCj4+
-ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9NYWtlZmlsZSAgICAgICAgICAgfCAg
-IDIgKw0KPj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMg
-ICAgICB8IDk4MSANCj4+ICsrKysrKysrKysrKysrKysrKysrKw0KPj4gICBkcml2ZXJzL2dwdS9k
-cm0vc3RtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArLQ0KPj4gICBkcml2
-ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArDQo+
-PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMgICAgICAgICAgICAgIHwg
-MzUyICsrKysrKysrDQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jICAgICAgICAgICAg
-ICAgICAgICAgICAgIHwgMjIwICstLS0tDQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5o
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstDQo+PiAgIGluY2x1ZGUvZHJtL2JyaWRn
-ZS9kd19taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgIHwgIDM5ICsNCj4+ICAgMTEgZmlsZXMg
-Y2hhbmdlZCwgMTU2OCBpbnNlcnRpb25zKCspLCAxODMgZGVsZXRpb25zKC0pDQo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCANCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
-cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPj4gICBjcmVh
-dGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgNCj4+DQo+IApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 17/07/17 18:45, Mathieu Poirier wrote:
+> On Fri, Jul 14, 2017 at 02:04:06PM +0100, Suzuki K Poulose wrote:
+>> The Linux coresight drivers define the programmable ATB replicator as
+>> Qualcomm replicator, while this is designed by ARM. This can cause confusion
+>> to a user selecting the driver. Cleanup all references to make it
+>>  explicitly clear. This patch :
+>>
+>>  1) Replace the compatible string for the replicator :
+>> 	qcom,coresight-replicator1x => arm,coresight-dynamic-replicator
+>>  2) Changes the Kconfig symbol (since this is not part of any defconfigs)
+>> 	 CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
+>>  3) Improves the help message in the Kconfig.
+>>  4) Changes the name of the driver and the file :
+>> 	coresight-replicator-qcom => coresight-dynamic-replicator
+>>
+>> Cc: Pratik Patel <pratikp@codeaurora.org>
+>> Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Acked-by: Rob Herring <robh+dt@kernel.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>> Changes since V1:
+>>  - Since the driver doesn't use the compatible string, change the
+>>    recommended compatible string.
+>>  - Rename the driver file to coresight-dynamic-replicator.c
+>> ---
+>>  .../devicetree/bindings/arm/coresight.txt          |   4 +-
+>>  drivers/hwtracing/coresight/Kconfig                |  10 +-
+>>  drivers/hwtracing/coresight/Makefile               |   2 +-
+>>  .../coresight/coresight-dynamic-replicator.c       | 195 ++++++++++++++++++++
+>>  .../coresight/coresight-replicator-qcom.c          | 196 ---------------------
+>>  5 files changed, 203 insertions(+), 204 deletions(-)
+>>  create mode 100644 drivers/hwtracing/coresight/coresight-dynamic-replicator.c
+>>  delete mode 100644 drivers/hwtracing/coresight/coresight-replicator-qcom.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>> index fcbae6a..15ac8e8 100644
+>> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>> @@ -34,8 +34,8 @@ its hardware characteristcs.
+>>  		- Embedded Trace Macrocell (version 4.x):
+>>  			"arm,coresight-etm4x", "arm,primecell";
+>>
+>> -		- Qualcomm Configurable Replicator (version 1.x):
+>> -			"qcom,coresight-replicator1x", "arm,primecell";
+>> +		- Coresight programmable Replicator :
+>> +			"arm,coresight-dynamic-replicator", "arm,primecell";
+>>
+>>  		- System Trace Macrocell:
+>>  			"arm,coresight-stm", "arm,primecell"; [1]
+>> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
+>> index 8d55d6d..ef9cb3c 100644
+>> --- a/drivers/hwtracing/coresight/Kconfig
+>> +++ b/drivers/hwtracing/coresight/Kconfig
+>> @@ -70,13 +70,13 @@ config CORESIGHT_SOURCE_ETM4X
+>>  	  for instruction level tracing. Depending on the implemented version
+>>  	  data tracing may also be available.
+>>
+>> -config CORESIGHT_QCOM_REPLICATOR
+>> -	bool "Qualcomm CoreSight Replicator driver"
+>> +config CORESIGHT_DYNAMIC_REPLICATOR
+>> +	bool "CoreSight Programmable Replicator driver"
+>>  	depends on CORESIGHT_LINKS_AND_SINKS
+>>  	help
+>> -	  This enables support for Qualcomm CoreSight link driver. The
+>> -	  programmable ATB replicator sends the ATB trace stream from the
+>> -	  ETB/ETF to the TPIUi and ETR.
+>> +	  This enables support for dynamic CoreSight replicator link driver.
+>> +	  The programmable ATB replicator allows independent filtering of the
+>> +	  trace data based on the traceid.
+>>
+>>  config CORESIGHT_STM
+>>  	bool "CoreSight System Trace Macrocell driver"
+>> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+>> index 433d590..5bae90ce 100644
+>> --- a/drivers/hwtracing/coresight/Makefile
+>> +++ b/drivers/hwtracing/coresight/Makefile
+>> @@ -14,6 +14,6 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o \
+>>  					coresight-etm3x-sysfs.o
+>>  obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
+>>  					coresight-etm4x-sysfs.o
+>> -obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
+>> +obj-$(CONFIG_CORESIGHT_DYNAMIC_REPLICATOR) += coresight-dynamic-replicator.o
+>>  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
+>>  obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
+>> diff --git a/drivers/hwtracing/coresight/coresight-dynamic-replicator.c b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
+>> new file mode 100644
+>> index 0000000..1675031
+>> --- /dev/null
+>> +++ b/drivers/hwtracing/coresight/coresight-dynamic-replicator.c
+>> @@ -0,0 +1,195 @@
+>> +/*
+>> + * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/amba/bus.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/coresight.h>
+>> +#include <linux/device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/of.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#include "coresight-priv.h"
+>> +
+>> +#define REPLICATOR_IDFILTER0		0x000
+>> +#define REPLICATOR_IDFILTER1		0x004
+>> +
+>> +/**
+>> + * struct replicator_state - specifics associated to a replicator component
+>> + * @base:	memory mapped base address for this component.
+>> + * @dev:	the device entity associated with this component
+>> + * @atclk:	optional clock for the core parts of the replicator.
+>> + * @csdev:	component vitals needed by the framework
+>> + */
+>> +struct replicator_state {
+>> +	void __iomem		*base;
+>> +	struct device		*dev;
+>> +	struct clk		*atclk;
+>> +	struct coresight_device	*csdev;
+>> +};
+>> +
+>> +static int replicator_enable(struct coresight_device *csdev, int inport,
+>> +			      int outport)
+>> +{
+>> +	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>> +
+>> +	CS_UNLOCK(drvdata->base);
+>> +
+>> +	/*
+>> +	 * Ensure that the other port is disabled
+>> +	 * 0x00 - passing through the replicator unimpeded
+>> +	 * 0xff - disable (or impede) the flow of ATB data
+>> +	 */
+>> +	if (outport == 0) {
+>> +		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER0);
+>> +		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+>> +	} else {
+>> +		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER1);
+>> +		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+>> +	}
+>> +
+>> +	CS_LOCK(drvdata->base);
+>> +
+>> +	dev_info(drvdata->dev, "REPLICATOR enabled\n");
+>> +	return 0;
+>> +}
+>> +
+>> +static void replicator_disable(struct coresight_device *csdev, int inport,
+>> +				int outport)
+>> +{
+>> +	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>> +
+>> +	CS_UNLOCK(drvdata->base);
+>> +
+>> +	/* disable the flow of ATB data through port */
+>> +	if (outport == 0)
+>> +		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+>> +	else
+>> +		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+>> +
+>> +	CS_LOCK(drvdata->base);
+>> +
+>> +	dev_info(drvdata->dev, "REPLICATOR disabled\n");
+>> +}
+>> +
+>> +static const struct coresight_ops_link replicator_link_ops = {
+>> +	.enable		= replicator_enable,
+>> +	.disable	= replicator_disable,
+>> +};
+>> +
+>> +static const struct coresight_ops replicator_cs_ops = {
+>> +	.link_ops	= &replicator_link_ops,
+>> +};
+>> +
+>> +static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
+>> +{
+>> +	int ret;
+>> +	struct device *dev = &adev->dev;
+>> +	struct resource *res = &adev->res;
+>> +	struct coresight_platform_data *pdata = NULL;
+>> +	struct replicator_state *drvdata;
+>> +	struct coresight_desc desc = { 0 };
+>> +	struct device_node *np = adev->dev.of_node;
+>> +	void __iomem *base;
+>> +
+>> +	if (np) {
+>> +		pdata = of_get_coresight_platform_data(dev, np);
+>> +		if (IS_ERR(pdata))
+>> +			return PTR_ERR(pdata);
+>> +		adev->dev.platform_data = pdata;
+>> +	}
+>> +
+>> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+>> +	if (!drvdata)
+>> +		return -ENOMEM;
+>> +
+>> +	drvdata->dev = &adev->dev;
+>> +	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
+>> +	if (!IS_ERR(drvdata->atclk)) {
+>> +		ret = clk_prepare_enable(drvdata->atclk);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	/* Validity for the resource is already checked by the AMBA core */
+>> +	base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(base))
+>> +		return PTR_ERR(base);
+>> +
+>> +	drvdata->base = base;
+>> +	dev_set_drvdata(dev, drvdata);
+>> +	pm_runtime_put(&adev->dev);
+>> +
+>> +	desc.type = CORESIGHT_DEV_TYPE_LINK;
+>> +	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
+>> +	desc.ops = &replicator_cs_ops;
+>> +	desc.pdata = adev->dev.platform_data;
+>> +	desc.dev = &adev->dev;
+>> +	drvdata->csdev = coresight_register(&desc);
+>> +	if (IS_ERR(drvdata->csdev))
+>> +		return PTR_ERR(drvdata->csdev);
+>> +
+>> +	dev_info(dev, "initialized\n");
+>
+> Was it intentional to remove the original string?  If so please remove the
+
+Yes, it doesn't make sense to display REPLICATOR 1.0, which isn't really any
+formal name of the product of family.
+
+> entire output as it doesn't give any information about the HW itself.
+
+Sure, I can remove it.
+
+Cheers
+Suzuki
+
+>
+>> +	return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM
+>> +static int replicator_runtime_suspend(struct device *dev)
+>> +{
+>> +	struct replicator_state *drvdata = dev_get_drvdata(dev);
+>> +
+>> +	if (drvdata && !IS_ERR(drvdata->atclk))
+>> +		clk_disable_unprepare(drvdata->atclk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int replicator_runtime_resume(struct device *dev)
+>> +{
+>> +	struct replicator_state *drvdata = dev_get_drvdata(dev);
+>> +
+>> +	if (drvdata && !IS_ERR(drvdata->atclk))
+>> +		clk_prepare_enable(drvdata->atclk);
+>> +
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> +static const struct dev_pm_ops replicator_dev_pm_ops = {
+>> +	SET_RUNTIME_PM_OPS(replicator_runtime_suspend,
+>> +			   replicator_runtime_resume,
+>> +			   NULL)
+>> +};
+>> +
+>> +static struct amba_id replicator_ids[] = {
+>> +	{
+>> +		.id     = 0x0003b909,
+>> +		.mask   = 0x0003ffff,
+>> +	},
+>> +	{ 0, 0 },
+>> +};
+>> +
+>> +static struct amba_driver replicator_driver = {
+>> +	.drv = {
+>> +		.name	= "coresight-dynamic-replicator",
+>> +		.pm	= &replicator_dev_pm_ops,
+>> +		.suppress_bind_attrs = true,
+>> +	},
+>> +	.probe		= replicator_probe,
+>> +	.id_table	= replicator_ids,
+>> +};
+>> +builtin_amba_driver(replicator_driver);
+>> diff --git a/drivers/hwtracing/coresight/coresight-replicator-qcom.c b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
+>> deleted file mode 100644
+>> index 0a3d15f..0000000
+>> --- a/drivers/hwtracing/coresight/coresight-replicator-qcom.c
+>> +++ /dev/null
+>> @@ -1,196 +0,0 @@
+>> -/*
+>> - * Copyright (c) 2011-2015, The Linux Foundation. All rights reserved.
+>> - *
+>> - * This program is free software; you can redistribute it and/or modify
+>> - * it under the terms of the GNU General Public License version 2 and
+>> - * only version 2 as published by the Free Software Foundation.
+>> - *
+>> - * This program is distributed in the hope that it will be useful,
+>> - * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> - * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> - * GNU General Public License for more details.
+>> - */
+>> -
+>> -#include <linux/amba/bus.h>
+>> -#include <linux/clk.h>
+>> -#include <linux/coresight.h>
+>> -#include <linux/device.h>
+>> -#include <linux/err.h>
+>> -#include <linux/init.h>
+>> -#include <linux/io.h>
+>> -#include <linux/kernel.h>
+>> -#include <linux/of.h>
+>> -#include <linux/pm_runtime.h>
+>> -#include <linux/slab.h>
+>> -
+>> -#include "coresight-priv.h"
+>> -
+>> -#define REPLICATOR_IDFILTER0		0x000
+>> -#define REPLICATOR_IDFILTER1		0x004
+>> -
+>> -/**
+>> - * struct replicator_state - specifics associated to a replicator component
+>> - * @base:	memory mapped base address for this component.
+>> - * @dev:	the device entity associated with this component
+>> - * @atclk:	optional clock for the core parts of the replicator.
+>> - * @csdev:	component vitals needed by the framework
+>> - */
+>> -struct replicator_state {
+>> -	void __iomem		*base;
+>> -	struct device		*dev;
+>> -	struct clk		*atclk;
+>> -	struct coresight_device	*csdev;
+>> -};
+>> -
+>> -static int replicator_enable(struct coresight_device *csdev, int inport,
+>> -			      int outport)
+>> -{
+>> -	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>> -
+>> -	CS_UNLOCK(drvdata->base);
+>> -
+>> -	/*
+>> -	 * Ensure that the other port is disabled
+>> -	 * 0x00 - passing through the replicator unimpeded
+>> -	 * 0xff - disable (or impede) the flow of ATB data
+>> -	 */
+>> -	if (outport == 0) {
+>> -		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER0);
+>> -		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+>> -	} else {
+>> -		writel_relaxed(0x00, drvdata->base + REPLICATOR_IDFILTER1);
+>> -		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+>> -	}
+>> -
+>> -	CS_LOCK(drvdata->base);
+>> -
+>> -	dev_info(drvdata->dev, "REPLICATOR enabled\n");
+>> -	return 0;
+>> -}
+>> -
+>> -static void replicator_disable(struct coresight_device *csdev, int inport,
+>> -				int outport)
+>> -{
+>> -	struct replicator_state *drvdata = dev_get_drvdata(csdev->dev.parent);
+>> -
+>> -	CS_UNLOCK(drvdata->base);
+>> -
+>> -	/* disable the flow of ATB data through port */
+>> -	if (outport == 0)
+>> -		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER0);
+>> -	else
+>> -		writel_relaxed(0xff, drvdata->base + REPLICATOR_IDFILTER1);
+>> -
+>> -	CS_LOCK(drvdata->base);
+>> -
+>> -	dev_info(drvdata->dev, "REPLICATOR disabled\n");
+>> -}
+>> -
+>> -static const struct coresight_ops_link replicator_link_ops = {
+>> -	.enable		= replicator_enable,
+>> -	.disable	= replicator_disable,
+>> -};
+>> -
+>> -static const struct coresight_ops replicator_cs_ops = {
+>> -	.link_ops	= &replicator_link_ops,
+>> -};
+>> -
+>> -static int replicator_probe(struct amba_device *adev, const struct amba_id *id)
+>> -{
+>> -	int ret;
+>> -	struct device *dev = &adev->dev;
+>> -	struct resource *res = &adev->res;
+>> -	struct coresight_platform_data *pdata = NULL;
+>> -	struct replicator_state *drvdata;
+>> -	struct coresight_desc desc = { 0 };
+>> -	struct device_node *np = adev->dev.of_node;
+>> -	void __iomem *base;
+>> -
+>> -	if (np) {
+>> -		pdata = of_get_coresight_platform_data(dev, np);
+>> -		if (IS_ERR(pdata))
+>> -			return PTR_ERR(pdata);
+>> -		adev->dev.platform_data = pdata;
+>> -	}
+>> -
+>> -	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+>> -	if (!drvdata)
+>> -		return -ENOMEM;
+>> -
+>> -	drvdata->dev = &adev->dev;
+>> -	drvdata->atclk = devm_clk_get(&adev->dev, "atclk"); /* optional */
+>> -	if (!IS_ERR(drvdata->atclk)) {
+>> -		ret = clk_prepare_enable(drvdata->atclk);
+>> -		if (ret)
+>> -			return ret;
+>> -	}
+>> -
+>> -	/* Validity for the resource is already checked by the AMBA core */
+>> -	base = devm_ioremap_resource(dev, res);
+>> -	if (IS_ERR(base))
+>> -		return PTR_ERR(base);
+>> -
+>> -	drvdata->base = base;
+>> -	dev_set_drvdata(dev, drvdata);
+>> -	pm_runtime_put(&adev->dev);
+>> -
+>> -	desc.type = CORESIGHT_DEV_TYPE_LINK;
+>> -	desc.subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
+>> -	desc.ops = &replicator_cs_ops;
+>> -	desc.pdata = adev->dev.platform_data;
+>> -	desc.dev = &adev->dev;
+>> -	drvdata->csdev = coresight_register(&desc);
+>> -	if (IS_ERR(drvdata->csdev))
+>> -		return PTR_ERR(drvdata->csdev);
+>> -
+>> -	dev_info(dev, "%s initialized\n", (char *)id->data);
+>> -	return 0;
+>> -}
+>> -
+>> -#ifdef CONFIG_PM
+>> -static int replicator_runtime_suspend(struct device *dev)
+>> -{
+>> -	struct replicator_state *drvdata = dev_get_drvdata(dev);
+>> -
+>> -	if (drvdata && !IS_ERR(drvdata->atclk))
+>> -		clk_disable_unprepare(drvdata->atclk);
+>> -
+>> -	return 0;
+>> -}
+>> -
+>> -static int replicator_runtime_resume(struct device *dev)
+>> -{
+>> -	struct replicator_state *drvdata = dev_get_drvdata(dev);
+>> -
+>> -	if (drvdata && !IS_ERR(drvdata->atclk))
+>> -		clk_prepare_enable(drvdata->atclk);
+>> -
+>> -	return 0;
+>> -}
+>> -#endif
+>> -
+>> -static const struct dev_pm_ops replicator_dev_pm_ops = {
+>> -	SET_RUNTIME_PM_OPS(replicator_runtime_suspend,
+>> -			   replicator_runtime_resume,
+>> -			   NULL)
+>> -};
+>> -
+>> -static struct amba_id replicator_ids[] = {
+>> -	{
+>> -		.id     = 0x0003b909,
+>> -		.mask   = 0x0003ffff,
+>> -		.data	= "REPLICATOR 1.0",
+>> -	},
+>> -	{ 0, 0 },
+>> -};
+>> -
+>> -static struct amba_driver replicator_driver = {
+>> -	.drv = {
+>> -		.name	= "coresight-replicator-qcom",
+>> -		.pm	= &replicator_dev_pm_ops,
+>> -		.suppress_bind_attrs = true,
+>> -	},
+>> -	.probe		= replicator_probe,
+>> -	.id_table	= replicator_ids,
+>> -};
+>> -builtin_amba_driver(replicator_driver);
+>> --
+>> 2.7.5
+>>
