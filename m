@@ -1,99 +1,138 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH 3/7] phy: qcom-qmp: Fix phy pipe clock name
-Date: Tue, 18 Jul 2017 14:24:47 +0530
-Message-ID: <20170718085440.GD32439@codeaurora.org>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-4-git-send-email-varada@codeaurora.org>
- <20170717223047.GA20973@minitux>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v6 0/7] STM32 DSI HOST
+Date: Tue, 18 Jul 2017 09:04:53 +0000
+Message-ID: <e82450ae-7c84-7fc4-2866-676d6ba4ea11@st.com>
+References: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
+ <f33755c3-f138-3b53-ade0-f149bb3e9a68@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170717223047.GA20973@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <f33755c3-f138-3b53-ade0-f149bb3e9a68@codeaurora.org>
+Content-Language: en-US
+Content-ID: <867C330DDD0EAA41A595990C5033A3D2@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
+ Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Eric
+ Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puck.chen@hisilicon.com>, Mark
+ Yao <mark.yao@rock-chips.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn,
-
-On Mon, Jul 17, 2017 at 03:30:47PM -0700, Bjorn Andersson wrote:
-> On Mon 17 Jul 05:03 PDT 2017, Varadarajan Narayanan wrote:
->
-> > Presently, the phy pipe clock's name is assumed to be either
-> > usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
-> > phy lane's number). However, this will not work if an SoC has
-> > more than one instance of the phy. Hence, instead of assuming
-> > the name of the clock, fetch it from the DT.
-> >
->
-> Adding the support to fetch this from DT looks reasonable, but you
-> should make sure to fall back to the old logic in case you don't find a
-> "clock-output-names" property.
-
-If more than one instance of the IP block is instantiated in the
-SoC, it will try to register the same clock (i.e.
-pcie_0_pipe_clk_src or usb3_phy_pipe_clk_src) more than once and
-devm_clk_hw_register() will fail for the second and subsequent
-instances of the IP, resulting in the pipe_clk not being able to
-find its parent.
-
-Additionally, the clock name itself differs between SoCs. For
-example, in MSM8996 it is usb3_phy_pipe_clk_src for USB and
-pcie_X_pipe_clk_src (where X is lane number 0, 1 or 2). In
-IPQ8074 it is usb3phy_X_cc_pipe_clk or pcie20_phyX_pipe_clk
-(where X is IP instance number 0 or 1).
-
-MSM8996, has one instance of the IP with 3 different lanes,
-whereas IPQ8074 has two instances with one lane in each instance.
-A future SoC might have multiple instances with each instance
-having different number of lanes and the clock's name might have
-X & Y to indicate instance number and lane numbers.
-
-Hence, if the "clock-output-names" property is not available
-there is no logic that can correctly "guess" the clock's name.
-The old logic incorrectly assumes the format of the clock name,
-resulting in devm_clk_hw_register() failures and pipe_clk not
-being linked to its proper parent.
-
-> [..]
-> > @@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
-> >
-> >  	id = 0;
-> >  	for_each_available_child_of_node(dev->of_node, child) {
-> > +		const char *clk_name;
-> > +
-> >  		/* Create per-lane phy */
-> >  		ret = qcom_qmp_phy_create(dev, child, id);
-> >  		if (ret) {
-> > @@ -1118,11 +1113,20 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
-> >  			return ret;
-> >  		}
-> >
-> > +		ret = of_property_read_string(child, "clock-output-names",
-> > +							&clk_name);
-> > +		if (ret) {
->
-> This would be the case for any existing dts files, so you're not allowed
-> to treat this as an error.
-
-Since, there are no dts files that presently enable this driver,
-wouldn't it be better to flag this as an error now itself instead
-of having to fall back to old handling (which as mentioned above
-is incomplete). Please let me know.
-
-Thanks
-Varada
-
-> > +			dev_err(dev,
-> > +				"failed to get clock-output-names for lane%d phy, %d\n",
-> > +				id, ret);
-> > +			return ret;
-> > +		}
-> > +
->
-> Regards,
-> Bjorn
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+DQoNCk9uIDA3LzE4LzIwMTcgMDk6NTcgQU0sIEFyY2hpdCBUYW5lamEgd3JvdGU6DQo+IA0KPiBI
+aSwNCj4gDQo+IE9uIDA3LzE3LzIwMTcgMDE6MTAgUE0sIFBoaWxpcHBlIENPUk5VIHdyb3RlOg0K
+Pj4gVmVyc2lvbiA2Og0KPj4gLSBicmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYzogZHJtX2Jy
+aWRnZV9hZGQgdXBkYXRlIChBcmNoaXQgVGFuZWphKQ0KPiANCj4gcXVldWVkIHBhdGNoZXMgIzEg
+dG8gIzQgdG8gZHJtLW1pc2MtbmV4dC4gUGxlYXNlIGxldCBtZSBrbm93IHdoZW4geW91IGFwcGx5
+DQo+IHRoZSByZW1haW5kZXIgb2YgdGhlIFNUIHBhdGNoZXMuIE9uY2UgdGhhdCdzIGRvbmUsIHdl
+IGNhbiBhZGQgDQo+IENPTkZJR19EUk1fU1RNX0RTST15DQo+IGluIHRoZSBkcm0tbWlzYyBkZWZj
+b25maWdzIGZvciBhcm0vYXJtNjQuDQo+IA0KPiBUaGFua3MsDQo+IEFyY2hpdA0KPiANCg0KSGkg
+QXJjaGl0ICYgTWFueSB0aGFua3MuDQoNCkJlbmphbWluIGludGVncmF0ZWQgdGhlIGxhc3QgMyBw
+YXRjaGVzICsgaXRzIGxhc3QgZml4ICJkcm06IHN0bTogcmVtb3ZlIA0KImRlZmF1bHQgeSIgaW4g
+S2NvbmZpZyIuIFNvIHlvdSBzaG91bGQgYWRkIENPTkZJR19EUk1fU1RNPXkgdG9vLg0KDQpJIHRh
+a2UgdGhlIG9wcG9ydHVuaXR5IHRvIHRoYW5rIHlvdSBmb3IgeW91ciBncmVhdCBzdXBwb3J0LCBJ
+IGxlYXJuZWQgc28gDQptdWNoIGZyb20geW91IGFuZCBmcm9tIGRybSAmIGtlcm5lbCBjb21tdW5p
+dGllcyA6ICkNCg0KKkJJRyBUSEFOSyBZT1UqIHRvIGFsbCBvZiB5b3UsDQoNClBoaWxpcHBlDQoN
+Cj4+DQo+PiBWZXJzaW9uIDU6DQo+PiAtIGJyaWRnZS9zeW5vcHN5cy9kdy1taXBpLWRzaS5jOiBJ
+bXByb3ZlIHRoZSBkaXJlY3QgY2FsbCB0byBwYW5lbA0KPj4gICAgYnJpZGdlIHBvc3RfZGlzYWJs
+ZSgpICYgcmVsYXRlZCBjb21tZW50cyAoQXJjaGl0IFRhbmVqYSkNCj4+IC0gc3RtL2x0ZGMuYzog
+Zml4IGxlYWsgb2YgcGl4ZWwgY2xvY2sgZW5hYmxlIGluIHNvbWUgZXJyb3INCj4+ICAgIHBhdGhz
+IChFcmljIEFuaG9sdCkNCj4+IC0gYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2ku
+dHh0OiBhZGQgcGl4ZWwgY2xvY2sgJiByZW1vdmUNCj4+ICAgICJkcml2ZXIiIChSb2IgSGVycmlu
+ZywgQXJjaGl0IFRhbmVqYSkNCj4+IC0gYmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4
+dDogcmVtb3ZlICJkcml2ZXIiIChSb2IgSGVycmluZywNCj4+ICAgIEFyY2hpdCBUYW5lamEpDQo+
+Pg0KPj4gVmVyc2lvbiA0Og0KPj4gLSBicmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYzogQWRk
+IHBhbmVsLWJyaWRnZSBzdXBwb3J0ICgtNDUgbGluZXMsDQo+PiAgICBidXQgbm8gc28gZWFzeSB0
+byBkbykgYW5kIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBiZXR0ZXIgY2xlYW4gdXAsIGFkZA0KPj4g
+ICAgc3RtIGNvcHlyaWdodC9yZW1vdmUgZHBtc19tb2RlL3JlbW92ZSBkcm1fb2YuaC9pbXByb3Zl
+IGNsaw0KPj4gICAgbWFuYWdlbWVudC9hZGQgbW9kZV92YWxpZCAodGhhbmtzIHRvIGNvbW1lbnRz
+IG9mIEFyY2hpdCBUYW5lamEpLCB1c2UNCj4+ICAgICJEZXNpZ25XYXJlIiBpbnN0ZWFkIG9mICJE
+ZXNpZ253YXJlICh0aGFua3MgdG8gY29tbWVudHMgb2YgTmVpbA0KPj4gICAgQXJtc3Ryb25nKQ0K
+Pj4gLSBicmlkZ2Uvc3lub3BzeXMvS2NvbmZpZzogUmVtb3ZlIGhlbHAgc2VjdGlvbiB0byBoaWRl
+IGl0IGluIG1lbnVjb25maWcNCj4+ICAgICh0aGFua3MgdG8gY29tbWVudHMgb2YgQXJjaGl0IFRh
+bmVqYSkNCj4+IC0gaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmg6IFJlbW92ZSBkcm1Q
+LmggKHRoYW5rcyB0byBjb21tZW50cw0KPj4gICAgb2YgQXJjaGl0IFRhbmVqYSkNCj4+IC0gYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0OiBJbXByb3ZlIG9wdGlvbmFsIHBy
+b3BlcnR5DQo+PiAgICBleHBsYW5hdGlvbnMgKHRoYW5rcyB0byBjb21tZW50cyBvZiBOZWlsIEFy
+bXN0cm9uZykNCj4+IC0gc3RtL2x0ZGMuYzogQWRkIGlzX3BhbmVsX2JyaWRnZSBmb3IgYSBiZXR0
+ZXIgY2xlYW4gdXAvcmVtb3ZlDQo+PiAgICBkcm1fZW5jb2Rlcl9oZWxwZXJfYWRkKCkgKHRoYW5r
+cyB0byBjb21tZW50cyBvZiBFcmljIEFuaG9sdCkNCj4+IC0gc3RtL2R3X21pcGlfZHNpLXN0bS5j
+OiByZW1vdmUgbWF0aDY0LmgvdXNlIERSTV9XQVJOL3JlbW92ZSB3YXJuaW5ncw0KPj4gICAgKHRo
+YW5rcyB0byBjb21tZW50cyBvZiBBcmNoaXQgVGFuZWphKSwgbWlub3IgYWxpZ25tZW50IGZpeCAo
+dGhhbmtzIHRvDQo+PiAgICBjb21tZW50cyBvZiBOZWlsIEFybXN0cm9uZykNCj4+IC0gYmluZGlu
+Z3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dDogdXNlIGdyYXBoIGJpbmRpbmcgaW4gdGhlDQo+
+PiAgICBleGFtcGxlL2ltcHJvdmUgcG9ydHMgdXNhZ2UgZG9jICh0aGFua3MgdG8gY29tbWVudHMg
+b2YgUm9iIEhlcnJpbmcpLA0KPj4gICAgdXNlICJEU0kiIGluc3RlYWQgb2YgImRzaSIgd2hlcmUg
+cmVsZXZhbnQgKHRoYW5rcyB0byBjb21tZW50cyBvZiBOZWlsDQo+PiAgICBBcm1zdHJvbmcpDQo+
+Pg0KPj4gVmVyc2lvbiAzOg0KPj4gLSBzdG0vbHRkYzogVXNlIHBhbmVsLWJyaWRnZSAoLTE3MCBs
+aW5lcyksIHRoYW5rcyB0byBjb21tZW50cyBvZiBFcmljIA0KPj4gQW5ob2x0LA0KPj4gICAgQm9y
+aXMgQnJlemlsbG9uLCBBcmNoaXQgVGFuZWphICYgQW5kcnplaiBIYWpkYS4NCj4+IC0gU3lub3Bz
+eXMgZHNpOiBBZGQgZHdfbWlwaV9kc2kuaCAoZm9yZ290dGVuIGluIHYyKSwgdGhhbmtzIHRvIA0K
+Pj4gY29tbWVudHMgb2YNCj4+ICAgIE5laWwgQXJtc3Ryb25nLg0KPj4gLSBTeW5vcHN5cyBkc2kv
+ZHctbWlwaS1kc2kuYzogYWRkIGR3X21pcGlfZHNpX2RwaHlfaW5pdCgpICYNCj4+ICAgIGR3X21p
+cGlfZHNpX2RwaHlfZW5hYmxlKCkgdG8gYmV0dGVyIG1hbmFnZSBEVyBwaHktZGVkaWNhdGVkIHJl
+Z3MsIA0KPj4gcmVtb3ZlDQo+PiAgICBkd19taXBpX2RzaV9tb2RlIGVudW0sIHJlbW92ZSBzdG0z
+MiBwYXRjaCBmb3IgbHBtLCByZW1vdmUgcGxscmVmIA0KPj4gKG1hbmFnZSBpbg0KPj4gICAgdGhl
+IHZlbmRvciBwaHkpIHRoYW5rcyB0byBjb21tZW50cyBvZiBBcmNoaXQgVGFuZWphLiBBZGQgbW9k
+ZV9mbGFncyANCj4+IHRvIHBoeQ0KPj4gICAgcGFyYW1ldGVycyB0byBiZXR0ZXIgYWRqdXN0IGxh
+bmUgbWJwcyBhY2NvcmRpbmcgdG8gZHNpIGJ1cnN0IGFuZCANCj4+IG5vbiBidXJzdA0KPj4gICAg
+bW9kZXMgdG9kb3MgaW4gY2Fwcy4NCj4+IC0gc3RtL2R3X21pcGlfZHNpLXN0bS5jOiBBZGQgcGxs
+cmVmIG1hbmFnZW1lbnQuDQo+PiAtIGR0LWJpbmRpbmdzL2Rpc3BsYXkvc3RtOiBTcGxpdCBkdC1i
+aW5kaW5ncyBwYXRjaCBpbiB0d28gKHBhcmVudCBub2RlDQo+PiAgICByZW1vdmFsLyBkc2kpLCBh
+ZGQgcmVxdWlyZWQgbm9kZXMgKHBvcnQgJiBwYW5lbC9icmlkZ2UpLCB1cGRhdGVzIA0KPj4gdGhh
+bmtzIHRvDQo+PiAgICBjb21tZW50cyBvZiBSb2IgSGVycmluZy4NCj4+IC0gZHQtYmluZGluZ3Mv
+ZGlzcGxheS9TeW5vcHN5cyBkc2k6IHJlbW92ZSBwb3J0IGFzIHBhcnQgb2YgdGhlIHZlbmRvcg0K
+Pj4gICAgZG9jdW1lbnRhdGlvbiwgYWRkIHBhbmVsL2JyaWRnZSBub2RlLCB1cGRhdGUgZHQtYmlu
+ZGluZ3MgdGhhbmtzIHRvIA0KPj4gY29tbWVudHMNCj4+ICAgIG9mIFJvYiBIZXJyaW5nLg0KPj4g
+LSBBZGQgbW9yZSBwZW9wbGUgZnJvbSBIaXNpbGljb24gJiBSb2NrY2hpcC4NCj4+DQo+PiBWZXJz
+aW9uIDI6DQo+PiAtIEFkZCBhIGdlbmVyaWMgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIERTSSBi
+cmlkZ2UgZHJpdmVyIGZvbGxvd2luZw0KPj4gICAgY29tbWVudHMgZnJvbSBOZWlsIEFybXN0cm9u
+ZyAmIEFyY2hpdCBUYW5lamEuDQo+PiAtIFVzZSBkcm1fb2ZfZmluZF9wYW5lbF9vcl9icmlkZ2Uo
+KSB0aGFua3MgdG8gRXJpYyBBbmhvbHQgY29tbWVudHMNCj4+IC0gVXBkYXRlIGR0LWJpbmRpbmdz
+IHRoYW5rcyB0byBSb2IgSGVycmluZyBjb21tZW50cw0KPj4NCj4+IFZlcnNpb24gMToNCj4+IC0g
+SW5pdGlhbCBjb21taXQNCj4+DQo+PiBUaGUgcHVycG9zZSBvZiB0aGlzIHNldCBvZiBwYXRjaGVz
+IGlzIHRvIGFkZCB0aGUgbWlwaSBkc2kgaG9zdCBkcml2ZXINCj4+IHRvIHRoZSBzdG0zMiBmYW1p
+bHkuDQo+Pg0KPj4gVGhpcyBtaXBpIGRzaSBob3N0IGRyaXZlciBpcyBiYXNlZCBvbiB0aGUgUm9j
+a2NoaXAgdmVyc2lvbiBvZiB0aGUNCj4+IFN5bm9wc3lzIERlc2lnbndhcmUgbWlwaSBkc2kgZHJp
+dmVyIChyb2NrY2hpcC9kdy1taXBpLWRzaS5jKQ0KPj4gbW9kaWZpZWQgZm9yIHRoZSBzdG0zMiBm
+YW1pbHk6DQo+PiAgICAgIC0gcmVwbGFjZSBSb2NrY2hpcCBkaWdpdGFsICYgcGh5IHNwZWNpZmlj
+IGV4dGVuc2lvbnMgd2l0aCBzdG0zMidzIA0KPj4gb25lcy4NCj4+ICAgICAgLSBhZGQgYSBicmlk
+Z2UNCj4+DQo+PiBQaGlsaXBwZSBDT1JOVSAoNyk6DQo+PiAgICBkcm0vc3RtOiBsdGRjOiBGaXgg
+bGVhayBvZiBweCBjbGsgZW5hYmxlIGluIHNvbWUgZXJyb3IgcGF0aHMNCj4+ICAgIGRybS9zdG06
+IGx0ZGM6IEFkZCBwYW5lbC1icmlkZ2Ugc3VwcG9ydA0KPj4gICAgZHQtYmluZGluZ3M6IGRpc3Bs
+YXk6IEFkZCBTeW5vcHN5cyBEVyBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXINCj4+ICAgIGRybS9i
+cmlkZ2Uvc3lub3BzeXM6IEFkZCBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIgYnJpZGdlDQo+PiAg
+ICBkdC1iaW5kaW5nczogZGlzcGxheTogc3RtMzI6IHJlbW92ZSBzdC1kaXNwbGF5LXN1YnN5c3Rl
+bSBwYXJlbnQgbm9kZQ0KPj4gICAgICByZXF1aXJlbWVudA0KPj4gICAgZHQtYmluZGluZ3M6IGRp
+c3BsYXk6IHN0bTMyOiBBZGQgRFNJIGNvbnRyb2xsZXINCj4+ICAgIGRybS9zdG06IEFkZCBTVE0z
+MiBEU0kgY29udHJvbGxlciBkcml2ZXINCj4+DQo+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2Jy
+aWRnZS9kd19taXBpX2RzaS50eHQgICAgICAgIHwgIDMyICsNCj4+ICAgLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dCAgfCAxMDUgKystDQo+PiAgIGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvS2NvbmZpZyAgICAgICAgICAgIHwgICA2ICsNCj4+
+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9zeW5vcHN5cy9NYWtlZmlsZSAgICAgICAgICAgfCAg
+IDIgKw0KPj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3N5bm9wc3lzL2R3LW1pcGktZHNpLmMg
+ICAgICB8IDk4MSANCj4+ICsrKysrKysrKysrKysrKysrKysrKw0KPj4gICBkcml2ZXJzL2dwdS9k
+cm0vc3RtL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArLQ0KPj4gICBkcml2
+ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArDQo+
+PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMgICAgICAgICAgICAgIHwg
+MzUyICsrKysrKysrDQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgMjIwICstLS0tDQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5o
+ICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAzICstDQo+PiAgIGluY2x1ZGUvZHJtL2JyaWRn
+ZS9kd19taXBpX2RzaS5oICAgICAgICAgICAgICAgICAgIHwgIDM5ICsNCj4+ICAgMTEgZmlsZXMg
+Y2hhbmdlZCwgMTU2OCBpbnNlcnRpb25zKCspLCAxODMgZGVsZXRpb25zKC0pDQo+PiAgIGNyZWF0
+ZSBtb2RlIDEwMDY0NCANCj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctbWlwaS1kc2kuYw0KPj4gICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYw0KPj4gICBjcmVh
+dGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kcm0vYnJpZGdlL2R3X21pcGlfZHNpLmgNCj4+DQo+IApf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
