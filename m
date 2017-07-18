@@ -1,7 +1,7 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 7/9] soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
-Date: Tue, 18 Jul 2017 17:49:27 +0800
-Message-ID: <e738f6e6165aab383d810ed2822edab30a06107f.1500368529.git.sean.wang@mediatek.com>
+Subject: [PATCH v2 2/9] dt-bindings: regulator: Add document for MediaTek MT6380 regulator
+Date: Tue, 18 Jul 2017 17:49:22 +0800
+Message-ID: <fef9412087f3961e03b77c067e227a31860a1417.1500368529.git.sean.wang@mediatek.com>
 References: <cover.1500368529.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,96 +14,110 @@ List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-Add MediaTek MT6380 regulator becoming one of PMIC wrapper slave
-and also add extra new regmap_config of 32-bit mode for MT6380
-since old regmap_config of 16-bit mode can't be fit into the need.
+add dt-binding document for MediaTek MT6380 PMIC
 
 Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-pmic-wrap.c | 24 ++++++++++++++++++++++--
- 1 file changed, 22 insertions(+), 2 deletions(-)
+ .../bindings/regulator/mt6380-regulator.txt        | 90 ++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
 
-diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-index 1a62848..2439337 100644
---- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-+++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-@@ -501,6 +501,7 @@ struct pmic_wrapper;
- struct pwrap_slv_type {
- 	const u32 *dew_regs;
- 	enum pmic_type type;
-+	const struct regmap_config *regmap;
- 	/* pwrap operations are highly associated with the PMIC types,
- 	 * so the pointers added increases flexibility allowing determination
- 	 * which type is used by the detection through device tree.
-@@ -1109,7 +1110,7 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static const struct regmap_config pwrap_regmap_config = {
-+static const struct regmap_config pwrap_regmap_config16 = {
- 	.reg_bits = 16,
- 	.val_bits = 16,
- 	.reg_stride = 2,
-@@ -1118,9 +1119,19 @@ static const struct regmap_config pwrap_regmap_config = {
- 	.max_register = 0xffff,
- };
- 
-+static const struct regmap_config pwrap_regmap_config32 = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.reg_read = pwrap_regmap_read,
-+	.reg_write = pwrap_regmap_write,
-+	.max_register = 0xffff,
-+};
+diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+new file mode 100644
+index 0000000..2a559f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+@@ -0,0 +1,90 @@
++MediaTek MT6380 Regulator Driver
 +
- static const struct pwrap_slv_type pmic_mt6323 = {
- 	.dew_regs = mt6323_regs,
- 	.type = PMIC_MT6323,
-+	.regmap = &pwrap_regmap_config16,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
-@@ -1128,6 +1139,7 @@ static const struct pwrap_slv_type pmic_mt6323 = {
- static const struct pwrap_slv_type pmic_mt6380 = {
- 	.dew_regs = NULL,
- 	.type = PMIC_MT6380,
-+	.regmap = &pwrap_regmap_config32,
- 	.pwrap_read = pwrap_read32,
- 	.pwrap_write = pwrap_write32,
- };
-@@ -1135,6 +1147,7 @@ static const struct pwrap_slv_type pmic_mt6380 = {
- static const struct pwrap_slv_type pmic_mt6397 = {
- 	.dew_regs = mt6397_regs,
- 	.type = PMIC_MT6397,
-+	.regmap = &pwrap_regmap_config16,
- 	.pwrap_read = pwrap_read16,
- 	.pwrap_write = pwrap_write16,
- };
-@@ -1147,6 +1160,13 @@ static const struct of_device_id of_slave_match_tbl[] = {
- 		.compatible = "mediatek,mt6397",
- 		.data = &pmic_mt6397,
- 	}, {
-+		/* The MT6380 slave device is directly pointed to regulator
-+		 * device which is different from the cases MT6323 and MT6397
-+		 * since they're one kind of MFDs.
-+		 */
-+		.compatible = "mediatek,mt6380-regulator",
-+		.data = &pmic_mt6380,
-+	}, {
- 		/* sentinel */
- 	}
- };
-@@ -1319,7 +1339,7 @@ static int pwrap_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_out2;
- 
--	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, &pwrap_regmap_config);
-+	wrp->regmap = devm_regmap_init(wrp->dev, NULL, wrp, wrp->slave->regmap);
- 	if (IS_ERR(wrp->regmap))
- 		return PTR_ERR(wrp->regmap);
- 
++All voltage regulators are defined as subnodes of the regulators node. A list
++of regulators provided by this controller are defined as subnodes of the
++PMIC's node. Each regulator is named according to its regulator type,
++buck-<name> and ldo-<name>. The definition for each of these nodes is defined
++using the standard binding for regulators at
++Documentation/devicetree/bindings/regulator/regulator.txt.
++
++The valid names for regulators are:
++BUCK:
++  buck-core1, buck-vcore, buck-vrf
++LDO:
++  ldo-vm ,ldo-va , ldo-vphy, ldo-vddr, ldo-vt
++
++Example:
++
++	regulators {
++		compatible = "mediatek,mt6380-regulator";
++
++		mt6380_vcpu_reg: buck-vcore1 {
++			regulator-name = "vcore1";
++			regulator-min-microvolt = < 600000>;
++			regulator-max-microvolt = <1393750>;
++			regulator-ramp-delay = <6250>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_vcore_reg: buck-vcore {
++			regulator-name = "vcore";
++			regulator-min-microvolt = <600000>;
++			regulator-max-microvolt = <1393750>;
++			regulator-ramp-delay = <6250>;
++		};
++
++		mt6380_vrf_reg: buck-vrf {
++			regulator-name = "vrf";
++			regulator-min-microvolt = <1200000>;
++			regulator-max-microvolt = <1575000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_vm_reg: ldo-vm {
++			regulator-name = "vm";
++			regulator-min-microvolt = <1050000>;
++			regulator-max-microvolt = <1400000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_va_reg: ldo-va {
++			regulator-name = "va";
++			regulator-min-microvolt = <2200000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_vphy_reg: ldo-vphy {
++			regulator-name = "vphy";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_vddr_reg: ldo-vddr {
++			regulator-name = "vddr";
++			regulator-min-microvolt = <1240000>;
++			regulator-max-microvolt = <1840000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++
++		mt6380_vt_reg: ldo-vt {
++			regulator-name = "vt";
++			regulator-min-microvolt = <2200000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-ramp-delay = <0>;
++			regulator-always-on;
++			regulator-boot-on;
++		};
++	};
 -- 
 2.7.4
