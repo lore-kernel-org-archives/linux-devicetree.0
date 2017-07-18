@@ -1,60 +1,50 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 3/4] gpio: davinci: Add a separate compatible for keystone-k2g
- soc
-Date: Tue, 18 Jul 2017 16:27:15 +0530
-Message-ID: <1500375436-9435-4-git-send-email-j-keerthy@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 7/9] serial: imx: default to half duplex rs485
+Date: Tue, 18 Jul 2017 12:59:46 +0200
+Message-ID: <20170718105948.21986-8-u.kleine-koenig@pengutronix.de>
+References: <20170718105948.21986-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linus.walleij@linaro.org, ssantosh@kernel.org
-Cc: devicetree@vger.kernel.org, j-keerthy@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, fcooper@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718105948.21986-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a separate compatible for keystone-k2g soc
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
+The i.MX driver defaulted to full duplex rs485 which is rather
+unusual and doesn't match the default implemented in other drivers.
+
+So change the default to half duplex.
+
+Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 3 ++-
- drivers/gpio/gpio-davinci.c                             | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/tty/serial/imx.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-index 5079ba7..1a5c1a2 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-@@ -1,7 +1,8 @@
- Davinci/Keystone GPIO controller bindings
- 
- Required Properties:
--- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
-+- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio",
-+	      "ti,keystone-k2g-gpio"
- 
- - reg: Physical base address of the controller and the size of memory mapped
-        registers.
-diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-index 932f270..a8d8dd9 100644
---- a/drivers/gpio/gpio-davinci.c
-+++ b/drivers/gpio/gpio-davinci.c
-@@ -610,6 +610,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
- static const struct of_device_id davinci_gpio_ids[] = {
- 	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
- 	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
-+	{ .compatible = "ti,keystone-k2g-gpio", keystone_gpio_get_irq_chip},
- 	{ /* sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
+diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
+index 80934e7bd67f..bb5cd8ff7d86 100644
+--- a/drivers/tty/serial/imx.c
++++ b/drivers/tty/serial/imx.c
+@@ -2120,8 +2120,7 @@ static int serial_imx_probe(struct platform_device *pdev)
+ 	sport->port.fifosize = 32;
+ 	sport->port.ops = &imx_pops;
+ 	sport->port.rs485_config = imx_rs485_config;
+-	sport->port.rs485.flags =
+-		SER_RS485_RTS_ON_SEND | SER_RS485_RX_DURING_TX;
++	sport->port.rs485.flags = SER_RS485_RTS_ON_SEND;
+ 	sport->port.flags = UPF_BOOT_AUTOCONF;
+ 	init_timer(&sport->timer);
+ 	sport->timer.function = imx_timeout;
 -- 
-1.9.1
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
