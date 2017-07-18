@@ -1,84 +1,86 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2] dt-bindings: display: sunxi: Improve endpoint ID scheme readability
-Date: Tue, 18 Jul 2017 12:02:01 +0800
-Message-ID: <20170718040201.21099-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v16 2/7] power: add power sequence library
+Date: Tue, 18 Jul 2017 12:29:55 +0800
+Message-ID: <20170718042955.GA12080@b29397-desktop>
+References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com>
+ <10723509.cz5GGA4OTz@aspire.rjw.lan>
+ <20170710022815.GA8720@b29397-desktop>
+ <2659617.dvNVihq86F@aspire.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2659617.dvNVihq86F@aspire.rjw.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Peter Chen <peter.chen@nxp.com>, mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, sre@kernel.org, broonie@kernel.org, p.zabel@pe
 List-Id: devicetree@vger.kernel.org
 
-The explanation for the endpoint ID numbering scheme is convoluted
-and hard to understand.
+On Mon, Jul 17, 2017 at 03:39:07PM +0200, Rafael J. Wysocki wrote:
+> > Sorry, I should describe more.
+> > 
+> > Let's take USB bus as an example, when the new USB device is at the
+> > host port, the device structure at device model is not created until
+> > it is discoverable by the USB bus. If this new USB device needs to be
+> > powered on before can be discoverable by the bus, the device structure
+> > will be not created without powering on operation. The code usb_alloc_dev
+> > (drivers/usb/core/usb.c) is only called for discoverable device.
+> > 
+> > Unlike the other bus, eg, platform bus, it creates device structure
+> > according to DT node. The USB bus was designed for hot plug model, the
+> > device structure is for discoverable device. In recent years, we begin
+> > to have some hard-wired USB device, Eg, onboard USB-hub, onboard USB 4G
+> > Modem, etc at the market. It needs some board level power operation before
+> > it can be found by the USB bus. This patch set is designed primarily for
+> > fix this kind of problem. You will see at at pwrseq_generic.c, we use DT
+> > version clock API of_clk_get and DT version gpio API of_get_named_gpio_flags
+> > instead of device structure version, like devm_clk_get and
+> > devm_gpiod_get_optional.
+> > 
+> > MMC system has similar use case, it creates power sequence platform
+> > device for this issue, but all those power stuffs (clock, gpio, etc)
+> > may not be suitable as a dedicated virtual device at DT, they are belonged
+> > to one physical device, so this patch set is created to see if this issue
+> > can be fixed better.
+> 
+> OK, thanks for the explanation.
+> 
+> The above needs to be part of your problem statement.
 
-This patch aims to improve the readability of it by combining the
-existing two paragraphs, while also providing a diagram example,
-and how endpoints should be numbered based on that example.
+Ok, I will add it to cover letter.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
-Changes since v1:
+> > 
+> > The bus will power up all device nodes in this bus according to DT
+> > information, the device structure has not created at this time.
+> 
+> OK
+> 
+> I still think that the information on power resources depended on by devices
+> should be used for power management as well as for the initial power-up.
+> 
+> The most straightforward way to arrange for that would be to make it possible
+> to find the DT node matching the device after the device has been discovered
+> and struct device created for it, say by USB.  That would require adding some
+> more information on the device to the DT node, probably.
 
-  - Added recently discovered mux between backends and TCONs to the
-    diagram. This also fixes the numbering on the endpoints between
-    backend 1 and TCON 1. Rob's ack is not added because of this
-    change.
+After the device is created, the device node structure is under struct
+device, say dev->of_node. The most difficulty for this issue is the
+device creation is dynamic and is after the physical device is
+discovered by the bus, the initial power-up is needed before the device
+can be discovered by the bus.
 
----
- .../bindings/display/sunxi/sun4i-drm.txt           | 36 ++++++++++++++++------
- 1 file changed, 27 insertions(+), 9 deletions(-)
+> 
+> Then, the DT device nodes would be used for the initial power-up and next, after
+> discovering a device, you'd do a lookup in the DT, find the node matching it
+> and read the power resuources information from there to populate the device's
+> power state structure.  From that point on you can simply use the interface I
+> suggested.
+> 
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-index b83e6018041d..2ee6ff0ef98e 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-@@ -4,15 +4,33 @@ Allwinner A10 Display Pipeline
- The Allwinner A10 Display pipeline is composed of several components
- that are going to be documented below:
- 
--For the input port of all components up to the TCON in the display
--pipeline, if there are multiple components, the local endpoint IDs
--must correspond to the index of the upstream block. For example, if
--the remote endpoint is Frontend 1, then the local endpoint ID must
--be 1.
--
--Conversely, for the output ports of the same group, the remote endpoint
--ID must be the index of the local hardware block. If the local backend
--is backend 1, then the remote endpoint ID must be 1.
-+For all connections between components up to the TCONs in the display
-+pipeline, when there are multiple components of the same type at the
-+same depth, the local endpoint ID must be the same as the remote
-+component's index. For example, if the remote endpoint is Frontend 1,
-+then the local endpoint ID must be 1.
-+
-+    Frontend 0  [0] ------- [0]  Backend 0  [0] ------- [0]  TCON 0
-+		[1] --   -- [1]             [1] --   -- [1]
-+		      \ /                         \ /
-+		       X                           X
-+		      / \                         / \
-+		[0] --   -- [0]             [0] --   -- [0]
-+    Frontend 1  [1] ------- [1]  Backend 1  [1] ------- [1]  TCON 1
-+
-+For a two pipeline system such as the one depicted above, the lines
-+represent the connections between the components, while the numbers
-+within the square brackets corresponds to the ID of the local endpoint.
-+
-+The same rule also applies to DE 2.0 mixer-TCON connections:
-+
-+    Mixer 0  [0] ----------- [0]  TCON 0
-+	     [1] ----   ---- [1]
-+		     \ /
-+		      X
-+		     / \
-+	     [0] ----   ---- [0]
-+    Mixer 1  [1] ----------- [1]  TCON 1
- 
- HDMI Encoder
- ------------
+Just like I said above, without initial power-up, the device can't be
+discovered by the bus.
+
 -- 
-2.13.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Peter Chen
