@@ -1,11 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] regulator: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:26 -0500
-Message-ID: <20170718214339.7774-46-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Sangbeom Kim <sbkim73@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Philipp Zabel <p.zabel@pengutronix.de>, linux-samsung-soc@vger.kernel.org
+Subject: [PATCH] clocksource: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:53 -0500
+Message-ID: <20170718214339.7774-13-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,77 +24,137 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Sangbeom Kim <sbkim73@samsung.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-samsung-soc@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/regulator/core.c      | 4 ++--
- drivers/regulator/max1586.c   | 2 +-
- drivers/regulator/s5m8767.c   | 4 ++--
- drivers/reset/reset-socfpga.c | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/clocksource/tango_xtal.c  |  6 +++---
+ drivers/clocksource/timer-of.c    | 11 +++++------
+ drivers/clocksource/timer-probe.c |  3 +--
+ drivers/clocksource/timer-stm32.c |  8 ++++----
+ 4 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index e567fa54980b..d79ba9af9352 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -204,8 +204,8 @@ static struct device_node *of_get_regulator(struct device *dev, const char *supp
- 	regnode = of_parse_phandle(dev->of_node, prop_name, 0);
+diff --git a/drivers/clocksource/tango_xtal.c b/drivers/clocksource/tango_xtal.c
+index c4e1c2e6046f..6a8d9838ce33 100644
+--- a/drivers/clocksource/tango_xtal.c
++++ b/drivers/clocksource/tango_xtal.c
+@@ -26,13 +26,13 @@ static int __init tango_clocksource_init(struct device_node *np)
 
- 	if (!regnode) {
--		dev_dbg(dev, "Looking up %s property in node %s failed\n",
--				prop_name, dev->of_node->full_name);
-+		dev_dbg(dev, "Looking up %s property in node %pOF failed\n",
-+				prop_name, dev->of_node);
- 		return NULL;
+ 	xtal_in_cnt = of_iomap(np, 0);
+ 	if (xtal_in_cnt == NULL) {
+-		pr_err("%s: invalid address\n", np->full_name);
++		pr_err("%pOF: invalid address\n", np);
+ 		return -ENXIO;
  	}
- 	return regnode;
-diff --git a/drivers/regulator/max1586.c b/drivers/regulator/max1586.c
-index 6779c2b53674..66bbaa999433 100644
---- a/drivers/regulator/max1586.c
-+++ b/drivers/regulator/max1586.c
-@@ -169,7 +169,7 @@ static int of_get_max1586_platform_data(struct device *dev,
 
- 	if (of_property_read_u32(np, "v3-gain",
- 				 &pdata->v3_gain) < 0) {
--		dev_err(dev, "%s has no 'v3-gain' property\n", np->full_name);
-+		dev_err(dev, "%pOF has no 'v3-gain' property\n", np);
+ 	clk = of_clk_get(np, 0);
+ 	if (IS_ERR(clk)) {
+-		pr_err("%s: invalid clock\n", np->full_name);
++		pr_err("%pOF: invalid clock\n", np);
+ 		return PTR_ERR(clk);
+ 	}
+
+@@ -43,7 +43,7 @@ static int __init tango_clocksource_init(struct device_node *np)
+ 	ret = clocksource_mmio_init(xtal_in_cnt, "tango-xtal", xtal_freq, 350,
+ 				    32, clocksource_mmio_readl_up);
+ 	if (ret) {
+-		pr_err("%s: registration failed\n", np->full_name);
++		pr_err("%pOF: registration failed\n", np);
+ 		return ret;
+ 	}
+
+diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+index f6e7491c873c..a07b923d3d6e 100644
+--- a/drivers/clocksource/timer-of.c
++++ b/drivers/clocksource/timer-of.c
+@@ -44,7 +44,7 @@ static __init int timer_irq_init(struct device_node *np,
+ 	of_irq->irq = of_irq->name ? of_irq_get_byname(np, of_irq->name):
+ 		irq_of_parse_and_map(np, of_irq->index);
+ 	if (!of_irq->irq) {
+-		pr_err("Failed to map interrupt for %s\n", np->full_name);
++		pr_err("Failed to map interrupt for %pOF\n", np);
  		return -EINVAL;
  	}
 
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index 383cd7533721..4836947e1521 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -590,8 +590,8 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 		if (of_property_read_u32(reg_np, "op_mode",
- 				&rmode->mode)) {
- 			dev_warn(iodev->dev,
--				"no op_mode property property at %s\n",
--				reg_np->full_name);
-+				"no op_mode property property at %pOF\n",
-+				reg_np);
+@@ -55,8 +55,7 @@ static __init int timer_irq_init(struct device_node *np,
+ 			    of_irq->flags ? of_irq->flags : IRQF_TIMER,
+ 			    np->full_name, clkevt);
+ 	if (ret) {
+-		pr_err("Failed to request irq %d for %s\n", of_irq->irq,
+-		       np->full_name);
++		pr_err("Failed to request irq %d for %pOF\n", of_irq->irq, np);
+ 		return ret;
+ 	}
 
- 			rmode->mode = S5M8767_OPMODE_NORMAL_MODE;
+@@ -80,20 +79,20 @@ static __init int timer_clk_init(struct device_node *np,
+ 	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
+ 		of_clk_get(np, of_clk->index);
+ 	if (IS_ERR(of_clk->clk)) {
+-		pr_err("Failed to get clock for %s\n", np->full_name);
++		pr_err("Failed to get clock for %pOF\n", np);
+ 		return PTR_ERR(of_clk->clk);
+ 	}
+
+ 	ret = clk_prepare_enable(of_clk->clk);
+ 	if (ret) {
+-		pr_err("Failed for enable clock for %s\n", np->full_name);
++		pr_err("Failed for enable clock for %pOF\n", np);
+ 		goto out_clk_put;
+ 	}
+
+ 	of_clk->rate = clk_get_rate(of_clk->clk);
+ 	if (!of_clk->rate) {
+ 		ret = -EINVAL;
+-		pr_err("Failed to get clock rate for %s\n", np->full_name);
++		pr_err("Failed to get clock rate for %pOF\n", np);
+ 		goto out_clk_disable;
+ 	}
+
+diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+index da81e5de74fe..028075720334 100644
+--- a/drivers/clocksource/timer-probe.c
++++ b/drivers/clocksource/timer-probe.c
+@@ -40,8 +40,7 @@ void __init timer_probe(void)
+
+ 		ret = init_func_ret(np);
+ 		if (ret) {
+-			pr_err("Failed to initialize '%s': %d\n",
+-			       of_node_full_name(np), ret);
++			pr_err("Failed to initialize '%pOF': %d\n", np, ret);
+ 			continue;
  		}
-diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-index 07224c019892..c60904ff40b8 100644
---- a/drivers/reset/reset-socfpga.c
-+++ b/drivers/reset/reset-socfpga.c
-@@ -109,8 +109,8 @@ static int socfpga_reset_probe(struct platform_device *pdev)
- 	 * Do not continue, when we encounter an old DT.
- 	 */
- 	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
--		dev_err(&pdev->dev, "%s missing #reset-cells property\n",
--			pdev->dev.of_node->full_name);
-+		dev_err(&pdev->dev, "%pOF missing #reset-cells property\n",
-+			pdev->dev.of_node);
- 		return -EINVAL;
+
+diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+index 174d1243ea93..8f2423789ba9 100644
+--- a/drivers/clocksource/timer-stm32.c
++++ b/drivers/clocksource/timer-stm32.c
+@@ -138,7 +138,7 @@ static int __init stm32_clockevent_init(struct device_node *np)
+ 	irq = irq_of_parse_and_map(np, 0);
+ 	if (!irq) {
+ 		ret = -EINVAL;
+-		pr_err("%s: failed to get irq.\n", np->full_name);
++		pr_err("%pOF: failed to get irq.\n", np);
+ 		goto err_get_irq;
  	}
+
+@@ -168,12 +168,12 @@ static int __init stm32_clockevent_init(struct device_node *np)
+ 	ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
+ 			"stm32 clockevent", data);
+ 	if (ret) {
+-		pr_err("%s: failed to request irq.\n", np->full_name);
++		pr_err("%pOF: failed to request irq.\n", np);
+ 		goto err_get_irq;
+ 	}
+
+-	pr_info("%s: STM32 clockevent driver initialized (%d bits)\n",
+-			np->full_name, bits);
++	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
++			np, bits);
+
+ 	return ret;
 
 --
 2.11.0
