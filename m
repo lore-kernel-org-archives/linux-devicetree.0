@@ -1,11 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] sbus: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:27 -0500
-Message-ID: <20170718214339.7774-47-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sparclinux@vger.kernel.org
+Subject: [PATCH] firmware: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:01 -0500
+Message-ID: <20170718214339.7774-21-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,58 +24,42 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: sparclinux@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
- drivers/sbus/char/display7seg.c | 4 ++--
- drivers/sbus/char/flash.c       | 4 ++--
- drivers/sbus/char/uctrl.c       | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/firmware/arm_scpi.c | 2 +-
+ drivers/firmware/psci.c     | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/sbus/char/display7seg.c b/drivers/sbus/char/display7seg.c
-index 04efed171c88..f32765d3cbd8 100644
---- a/drivers/sbus/char/display7seg.c
-+++ b/drivers/sbus/char/display7seg.c
-@@ -212,8 +212,8 @@ static int d7s_probe(struct platform_device *op)
+diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
+index 8043e51de897..59190c374696 100644
+--- a/drivers/firmware/arm_scpi.c
++++ b/drivers/firmware/arm_scpi.c
+@@ -965,7 +965,7 @@ static int scpi_probe(struct platform_device *pdev)
 
- 	writeb(regs,  p->regs);
-
--	printk(KERN_INFO PFX "7-Segment Display%s at [%s:0x%llx] %s\n",
--	       op->dev.of_node->full_name,
-+	printk(KERN_INFO PFX "7-Segment Display%pOF at [%s:0x%llx] %s\n",
-+	       op->dev.of_node,
- 	       (regs & D7S_FLIP) ? " (FLIPPED)" : "",
- 	       op->resource[0].start,
- 	       sol_compat ? "in sol_compat mode" : "");
-diff --git a/drivers/sbus/char/flash.c b/drivers/sbus/char/flash.c
-index 216f923161d1..a610b8d3d11f 100644
---- a/drivers/sbus/char/flash.c
-+++ b/drivers/sbus/char/flash.c
-@@ -181,8 +181,8 @@ static int flash_probe(struct platform_device *op)
- 	}
- 	flash.busy = 0;
-
--	printk(KERN_INFO "%s: OBP Flash, RD %lx[%lx] WR %lx[%lx]\n",
--	       op->dev.of_node->full_name,
-+	printk(KERN_INFO "%pOF: OBP Flash, RD %lx[%lx] WR %lx[%lx]\n",
-+	       op->dev.of_node,
- 	       flash.read_base, flash.read_size,
- 	       flash.write_base, flash.write_size);
-
-diff --git a/drivers/sbus/char/uctrl.c b/drivers/sbus/char/uctrl.c
-index 57696fc0b482..0a5013350acd 100644
---- a/drivers/sbus/char/uctrl.c
-+++ b/drivers/sbus/char/uctrl.c
-@@ -379,8 +379,8 @@ static int uctrl_probe(struct platform_device *op)
+ 	count = of_count_phandle_with_args(np, "mboxes", "#mbox-cells");
+ 	if (count < 0) {
+-		dev_err(dev, "no mboxes property in '%s'\n", np->full_name);
++		dev_err(dev, "no mboxes property in '%pOF'\n", np);
+ 		return -ENODEV;
  	}
 
- 	sbus_writel(UCTRL_INTR_RXNE_REQ|UCTRL_INTR_RXNE_MSK, &p->regs->uctrl_intr);
--	printk(KERN_INFO "%s: uctrl regs[0x%p] (irq %d)\n",
--	       op->dev.of_node->full_name, p->regs, p->irq);
-+	printk(KERN_INFO "%pOF: uctrl regs[0x%p] (irq %d)\n",
-+	       op->dev.of_node, p->regs, p->irq);
- 	uctrl_get_event_status(p);
- 	uctrl_get_external_status(p);
-
+diff --git a/drivers/firmware/psci.c b/drivers/firmware/psci.c
+index 493a56a4cfc4..d687ca3d5049 100644
+--- a/drivers/firmware/psci.c
++++ b/drivers/firmware/psci.c
+@@ -280,8 +280,8 @@ static int psci_dt_cpu_init_idle(struct device_node *cpu_node, int cpu)
+ 					   "arm,psci-suspend-param",
+ 					   &state);
+ 		if (ret) {
+-			pr_warn(" * %s missing arm,psci-suspend-param property\n",
+-				state_node->full_name);
++			pr_warn(" * %pOF missing arm,psci-suspend-param property\n",
++				state_node);
+ 			of_node_put(state_node);
+ 			goto free_mem;
+ 		}
 --
 2.11.0
