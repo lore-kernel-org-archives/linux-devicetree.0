@@ -1,152 +1,242 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 11/18] dt-bindings: display: Add Allwinner MIPI-DSI bindings
-Date: Tue, 18 Jul 2017 13:18:42 +0300
-Message-ID: <4634787.BNPAe4WyE2@avalon>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com> <41dca303c02faf350e765b81c36ddcddbba6f950.1499955058.git-series.maxime.ripard@free-electrons.com> <20170717184149.sv4xdspjwnhmctog@rob-hp-laptop>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: [PATCH v2 3/7] [media] ov9650: add device tree support
+Date: Tue, 18 Jul 2017 10:26:39 +0000
+Message-ID: <7c8a2f91-34c6-4386-3f58-35d31ab63991@st.com>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+ <1499073368-31905-4-git-send-email-hugues.fruchet@st.com>
+ <20170708230606.zva4m52anvffo2vb@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170717184149.sv4xdspjwnhmctog@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170708230606.zva4m52anvffo2vb@valkosipuli.retiisi.org.uk>
+Content-Language: en-US
+Content-ID: <332ECEB0A64F054BA447DEB7EB0B2862@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 17 Jul 2017 13:41:49 Rob Herring wrote:
-> On Thu, Jul 13, 2017 at 04:13:06PM +0200, Maxime Ripard wrote:
-> > The Allwinner SoCs usually come with a DSI encoder. Add a binding for it.
-> > 
-> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 85
-> >  +++++++-
-> >  1 file changed, 85 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt> 
-> > diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> > b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt new file
-> > mode 100644
-> > index 000000000000..2e7c5aa7020f
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> > @@ -0,0 +1,85 @@
-> > +Allwinner A31 DSI Encoder
-> > +=========================
-> > +
-> > +The DSI pipeline consists of two separate blocks: the DSI controller
-> > +itself, and its associated D-PHY.
-> > +
-> > +DSI Encoder
-> > +-----------
-> > +
-> > +The DSI Encoder generates the DSI signal from the TCON's.
-> > +
-> > +Required properties:
-> > +  - compatible: value must be one of:
-> > +    * allwinner,sun6i-a31-mipi-dsi
-> > +  - reg: base address and size of memory-mapped region
-> > +  - interrupts: interrupt associated to this IP
-> > +  - clocks: phandles to the clocks feeding the DSI encoder
-> > +    * bus: the DSI interface clock
-> > +    * mod: the DSI module clock
-> > +  - clock-names: the clock names mentioned above
-> > +  - phys: phandle to the D-PHY
-> > +  - phy-names: must be "dphy"
-> > +  - resets: phandle to the reset controller driving the encoder
-> > +
-> > +  - ports: A ports node with endpoint definitions as defined in
-> > +    Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> > +    port should be the input endpoint, usually coming from the
-> > +    associated TCON.
+Hi Sakari, thks for review.
+
+On 07/09/2017 01:06 AM, Sakari Ailus wrote:
+> Hi Hugues,
 > 
-> Output port for bridge/panel?
+> On Mon, Jul 03, 2017 at 11:16:04AM +0200, Hugues Fruchet wrote:
+>> Allows use of device tree configuration data.
+>> If no device tree data is there, configuration is taken from platform data.
+>> In order to keep GPIOs configuration compatible between both way of doing,
+>> GPIOs are switched to descriptor-based interface.
+>>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+>> ---
+>>   drivers/media/i2c/Kconfig  |  2 +-
+>>   drivers/media/i2c/ov9650.c | 77 ++++++++++++++++++++++++++++++++++------------
+>>   2 files changed, 59 insertions(+), 20 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+>> index 121b3b5..168115c 100644
+>> --- a/drivers/media/i2c/Kconfig
+>> +++ b/drivers/media/i2c/Kconfig
+>> @@ -615,7 +615,7 @@ config VIDEO_OV7670
+>>   
+>>   config VIDEO_OV9650
+>>   	tristate "OmniVision OV9650/OV9652 sensor support"
+>> -	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+>> +	depends on GPIOLIB && I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
+>>   	---help---
+>>   	  This is a V4L2 sensor-level driver for the Omnivision
+>>   	  OV9650 and OV9652 camera sensors.
+>> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
+>> index 1e4e99e..7e9a902 100644
+>> --- a/drivers/media/i2c/ov9650.c
+>> +++ b/drivers/media/i2c/ov9650.c
+>> @@ -11,12 +11,14 @@
+>>    * it under the terms of the GNU General Public License version 2 as
+>>    * published by the Free Software Foundation.
+>>    */
+>> +#include <linux/clk.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/gpio.h>
+>>   #include <linux/i2c.h>
+>>   #include <linux/kernel.h>
+>>   #include <linux/media.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of_gpio.h>
+>>   #include <linux/ratelimit.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/string.h>
+>> @@ -249,9 +251,10 @@ struct ov965x {
+>>   	struct v4l2_subdev sd;
+>>   	struct media_pad pad;
+>>   	enum v4l2_mbus_type bus_type;
+>> -	int gpios[NUM_GPIOS];
+>> +	struct gpio_desc *gpios[NUM_GPIOS];
+>>   	/* External master clock frequency */
+>>   	unsigned long mclk_frequency;
+>> +	struct clk *clk;
+>>   
+>>   	/* Protects the struct fields below */
+>>   	struct mutex lock;
+>> @@ -511,10 +514,10 @@ static int ov965x_set_color_matrix(struct ov965x *ov965x)
+>>   	return 0;
+>>   }
+>>   
+>> -static void ov965x_gpio_set(int gpio, int val)
+>> +static void ov965x_gpio_set(struct gpio_desc *gpio, int val)
+>>   {
+>> -	if (gpio_is_valid(gpio))
+>> -		gpio_set_value(gpio, val);
+>> +	if (gpio)
+>> +		gpiod_set_value_cansleep(gpio, val);
 > 
-> > +
-> > +D-PHY
-> > +-----
-> > +
-> > +Required properties:
-> > +  - compatible: value must be one of:
-> > +    * allwinner,sun6i-a31-mipi-dphy
-> > +  - reg: base address and size of memory-mapped region
-> > +  - clocks: phandles to the clocks feeding the DSI encoder
-> > +    * bus: the DSI interface clock
-> > +    * mod: the DSI module clock
-> > +  - clock-names: the clock names mentioned above
-> > +  - resets: phandle to the reset controller driving the encoder
-> > +
-> > +Example:
-> > +
-> > +dsi0: dsi@01ca0000 {
+> gpiod_set_value_cansleep() can manage with NULL gpio parameter, no need to
+> check it.
+
+done
+
 > 
-> Drop the leading 0.
+>>   }
+>>   
+>>   static void __ov965x_set_power(struct ov965x *ov965x, int on)
+>> @@ -1406,24 +1409,28 @@ static int ov965x_configure_gpios(struct ov965x *ov965x,
+>>   				  const struct ov9650_platform_data *pdata)
+>>   {
+>>   	int ret, i;
+>> +	int gpios[NUM_GPIOS];
+>>   
+>> -	ov965x->gpios[GPIO_PWDN] = pdata->gpio_pwdn;
+>> -	ov965x->gpios[GPIO_RST]  = pdata->gpio_reset;
+>> +	gpios[GPIO_PWDN] = pdata->gpio_pwdn;
+>> +	gpios[GPIO_RST]  = pdata->gpio_reset;
+>>   
+>> -	for (i = 0; i < ARRAY_SIZE(ov965x->gpios); i++) {
+>> -		int gpio = ov965x->gpios[i];
+>> +	for (i = 0; i < ARRAY_SIZE(gpios); i++) {
+>> +		int gpio = gpios[i];
+>>   
+>>   		if (!gpio_is_valid(gpio))
+>>   			continue;
+>>   		ret = devm_gpio_request_one(&ov965x->client->dev, gpio,
+>> -					    GPIOF_OUT_INIT_HIGH, "OV965X");
+>> -		if (ret < 0)
+>> +					    GPIOF_OUT_INIT_HIGH, DRIVER_NAME);
 > 
-> > +	compatible = "allwinner,sun6i-a31-mipi-dsi";
-> > +	reg = <0x01ca0000 0x1000>;
-> > +	interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clocks = <&ccu CLK_BUS_MIPI_DSI>,
-> > +		 <&ccu CLK_DSI_SCLK>;
-> > +	clock-names = "bus", "mod";
-> > +	resets = <&ccu RST_BUS_MIPI_DSI>;
-> > +	phys = <&dphy0>;
-> > +	phy-names = "dphy";
-> > 
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
+> DRIVER_NAME is different from "OV965X". Is this an intended change?
+
+Yes it was to unify namings around a single DRIVER_NAME definition.
+
 > 
-> Not needed.
+>> +		if (ret < 0) {
+>> +			dev_err(&ov965x->client->dev,
+>> +				"Failed to request gpio%d (%d)\n", gpio, ret);
+>>   			return ret;
+>> +		}
+>>   		v4l2_dbg(1, debug, &ov965x->sd, "set gpio %d to 1\n", gpio);
+>>   
+>>   		gpio_set_value(gpio, 1);
+>>   		gpio_export(gpio, 0);
+>> -		ov965x->gpios[i] = gpio;
+>> +		ov965x->gpios[i] = gpio_to_desc(gpio);
+>>   	}
+>>   
+>>   	return 0;
+>> @@ -1469,14 +1476,10 @@ static int ov965x_probe(struct i2c_client *client,
+>>   	struct v4l2_subdev *sd;
+>>   	struct ov965x *ov965x;
+>>   	int ret;
+>> +	struct device_node *np = client->dev.of_node;
 > 
-> > +
-> > +	ports {
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +
-> > +		dsi0_in: port@0 {
+> It'd be nice to declare this next to pdata, rather than after ret and other
+> short declarations.
 
-I don't think the label for the port is needed, you should only reference the 
-endpoint.
+done
 
-> > +			#address-cells = <1>;
-> > +			#size-cells = <0>;
-> > +			reg = <0>;
-> > +
-> > +			dsi0_in_tcon0: endpoint@0 {
-> > +				reg = <0>;
 > 
-> Don't need reg when there's only 1 endpoint.
+>>   
+>> -	if (pdata == NULL) {
+>> -		dev_err(&client->dev, "platform data not specified\n");
+>> -		return -EINVAL;
+>> -	}
+>> -
+>> -	if (pdata->mclk_frequency == 0) {
+>> -		dev_err(&client->dev, "MCLK frequency not specified\n");
+>> +	if (!pdata && !np) {
+>> +		dev_err(&client->dev, "Platform data or device tree data must be provided\n");
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> @@ -1486,7 +1489,35 @@ static int ov965x_probe(struct i2c_client *client,
+>>   
+>>   	mutex_init(&ov965x->lock);
+>>   	ov965x->client = client;
+>> -	ov965x->mclk_frequency = pdata->mclk_frequency;
+>> +	mutex_init(&ov965x->lock);
+>> +
+>> +	if (np) {
+>> +		/* Device tree */
+>> +		ov965x->gpios[GPIO_RST] =
+>> +			devm_gpiod_get_optional(&client->dev, "resetb",
+>> +						GPIOD_OUT_LOW);
+>> +		ov965x->gpios[GPIO_PWDN] =
+>> +			devm_gpiod_get_optional(&client->dev, "pwdn",
+>> +						GPIOD_OUT_HIGH);
+>> +
+>> +		ov965x->clk = devm_clk_get(&client->dev, NULL);
+>> +		if (IS_ERR(ov965x->clk)) {
+>> +			dev_err(&client->dev, "Could not get clock\n");
+> 
+> mutex_destroy() should called on an initialised mutex if probe is going to
+> fail. It's certainly not a problem introduced by this patch, but it'd be
+> nice to fix that (in a separate patch) now that it's found. The same goes
+> for remove below.
 
-And no reg for the port name either when there's a single port. This can all 
-be simplified to
+Will do.
 
-dsi0: dsi@1ca0000 {
-	compatible = "allwinner,sun6i-a31-mipi-dsi";
-	reg = <0x01ca0000 0x1000>;
-	interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-	clocks = <&ccu CLK_BUS_MIPI_DSI>,
-		 <&ccu CLK_DSI_SCLK>;
-	clock-names = "bus", "mod";
-	resets = <&ccu RST_BUS_MIPI_DSI>;
-	phys = <&dphy0>;
-	phy-names = "dphy";
-
-	port {
-		dsi0_in_tcon0: endpoint {
-			remote-endpoint = <&tcon0_out_dsi0>;
-		};
-	};
-};
-
-> > +				remote-endpoint = <&tcon0_out_dsi0>;
-> > +			};
-> > +		};
-> > +	};
-> > +};
-
-[snip]
-
--- 
-Regards,
-
-Laurent Pinchart
+> 
+>> +			return PTR_ERR(ov965x->clk);
+>> +		}
+>> +		ov965x->mclk_frequency = clk_get_rate(ov965x->clk);
+>> +	} else {
+>> +		/* Platform data */
+>> +		ret = ov965x_configure_gpios(ov965x, pdata);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		if (pdata->mclk_frequency == 0) {
+>> +			dev_err(&client->dev, "MCLK frequency is mandatory\n");
+>> +			return -EINVAL;
+>> +		}
+>> +		ov965x->mclk_frequency = pdata->mclk_frequency;
+>> +	}
+>>   
+>>   	sd = &ov965x->sd;
+>>   	v4l2_i2c_subdev_init(sd, client, &ov965x_subdev_ops);
+>> @@ -1551,9 +1582,17 @@ static int ov965x_remove(struct i2c_client *client)
+>>   };
+>>   MODULE_DEVICE_TABLE(i2c, ov965x_id);
+>>   
+>> +static const struct of_device_id ov965x_of_match[] = {
+>> +	{ .compatible = "ovti,ov9650", },
+>> +	{ .compatible = "ovti,ov9652", },
+>> +	{ /* sentinel */ }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ov965x_of_match);
+>> +
+>>   static struct i2c_driver ov965x_i2c_driver = {
+>>   	.driver = {
+>>   		.name	= DRIVER_NAME,
+>> +		.of_match_table = of_match_ptr(ov965x_of_match),
+>>   	},
+>>   	.probe		= ov965x_probe,
+>>   	.remove		= ov965x_remove,
+> 
