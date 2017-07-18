@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] bus: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:42:51 -0500
-Message-ID: <20170718214339.7774-11-robh@kernel.org>
+Subject: [PATCH] cpuidle: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:55 -0500
+Message-ID: <20170718214339.7774-15-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,135 +13,70 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: linux-pm@vger.kernel.org
 ---
- drivers/bus/arm-cci.c   | 12 ++++++------
- drivers/bus/imx-weim.c  |  8 ++++----
- drivers/bus/sunxi-rsb.c | 22 +++++++++++-----------
- 3 files changed, 21 insertions(+), 21 deletions(-)
+ drivers/cpuidle/dt_idle_states.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/bus/arm-cci.c b/drivers/bus/arm-cci.c
-index c49da15d9790..3c29d36702a8 100644
---- a/drivers/bus/arm-cci.c
-+++ b/drivers/bus/arm-cci.c
-@@ -2124,8 +2124,8 @@ int notrace __cci_control_port_by_device(struct device_node *dn, bool enable)
- 		return -ENODEV;
-
- 	port = __cci_ace_get_port(dn, ACE_LITE_PORT);
--	if (WARN_ONCE(port < 0, "node %s ACE lite port look-up failure\n",
--				dn->full_name))
-+	if (WARN_ONCE(port < 0, "node %pOF ACE lite port look-up failure\n",
-+				dn))
- 		return -ENODEV;
- 	cci_port_control(port, enable);
- 	return 0;
-@@ -2200,14 +2200,14 @@ static int cci_probe_ports(struct device_node *np)
-
- 		if (of_property_read_string(cp, "interface-type",
- 					&match_str)) {
--			WARN(1, "node %s missing interface-type property\n",
--				  cp->full_name);
-+			WARN(1, "node %pOF missing interface-type property\n",
-+				  cp);
- 			continue;
- 		}
- 		is_ace = strcmp(match_str, "ace") == 0;
- 		if (!is_ace && strcmp(match_str, "ace-lite")) {
--			WARN(1, "node %s containing invalid interface-type property, skipping it\n",
--					cp->full_name);
-+			WARN(1, "node %pOF containing invalid interface-type property, skipping it\n",
-+					cp);
- 			continue;
+diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+index ae8eb0359889..bafd4dbf55d4 100644
+--- a/drivers/cpuidle/dt_idle_states.c
++++ b/drivers/cpuidle/dt_idle_states.c
+@@ -53,16 +53,16 @@ static int init_state_node(struct cpuidle_state *idle_state,
+ 		err = of_property_read_u32(state_node, "entry-latency-us",
+ 					   &entry_latency);
+ 		if (err) {
+-			pr_debug(" * %s missing entry-latency-us property\n",
+-				 state_node->full_name);
++			pr_debug(" * %pOF missing entry-latency-us property\n",
++				 state_node);
+ 			return -EINVAL;
  		}
 
-diff --git a/drivers/bus/imx-weim.c b/drivers/bus/imx-weim.c
-index 4bd361d64270..3d56ebcda720 100644
---- a/drivers/bus/imx-weim.c
-+++ b/drivers/bus/imx-weim.c
-@@ -156,8 +156,8 @@ static int __init weim_parse_dt(struct platform_device *pdev,
-
- 		ret = weim_timing_setup(child, base, devtype);
- 		if (ret)
--			dev_warn(&pdev->dev, "%s set timing failed.\n",
--				child->full_name);
-+			dev_warn(&pdev->dev, "%pOF set timing failed.\n",
-+				child);
- 		else
- 			have_child = 1;
- 	}
-@@ -166,8 +166,8 @@ static int __init weim_parse_dt(struct platform_device *pdev,
- 		ret = of_platform_default_populate(pdev->dev.of_node,
- 						   NULL, &pdev->dev);
- 	if (ret)
--		dev_err(&pdev->dev, "%s fail to create devices.\n",
--			pdev->dev.of_node->full_name);
-+		dev_err(&pdev->dev, "%pOF fail to create devices.\n",
-+			pdev->dev.of_node);
- 	return ret;
- }
-
-diff --git a/drivers/bus/sunxi-rsb.c b/drivers/bus/sunxi-rsb.c
-index 795c9d9c96a6..328ca93781cf 100644
---- a/drivers/bus/sunxi-rsb.c
-+++ b/drivers/bus/sunxi-rsb.c
-@@ -556,20 +556,20 @@ static int of_rsb_register_devices(struct sunxi_rsb *rsb)
-
- 	/* Runtime addresses for all slaves should be set first */
- 	for_each_available_child_of_node(np, child) {
--		dev_dbg(dev, "setting child %s runtime address\n",
--			child->full_name);
-+		dev_dbg(dev, "setting child %pOF runtime address\n",
-+			child);
-
- 		ret = of_property_read_u32(child, "reg", &hwaddr);
- 		if (ret) {
--			dev_err(dev, "%s: invalid 'reg' property: %d\n",
--				child->full_name, ret);
-+			dev_err(dev, "%pOF: invalid 'reg' property: %d\n",
-+				child, ret);
- 			continue;
+ 		err = of_property_read_u32(state_node, "exit-latency-us",
+ 					   &exit_latency);
+ 		if (err) {
+-			pr_debug(" * %s missing exit-latency-us property\n",
+-				 state_node->full_name);
++			pr_debug(" * %pOF missing exit-latency-us property\n",
++				 state_node);
+ 			return -EINVAL;
  		}
-
- 		rtaddr = sunxi_rsb_get_rtaddr(hwaddr);
- 		if (!rtaddr) {
--			dev_err(dev, "%s: unknown hardware device address\n",
--				child->full_name);
-+			dev_err(dev, "%pOF: unknown hardware device address\n",
-+				child);
- 			continue;
- 		}
-
-@@ -586,15 +586,15 @@ static int of_rsb_register_devices(struct sunxi_rsb *rsb)
- 		/* send command */
- 		ret = _sunxi_rsb_run_xfer(rsb);
- 		if (ret)
--			dev_warn(dev, "%s: set runtime address failed: %d\n",
--				 child->full_name, ret);
-+			dev_warn(dev, "%pOF: set runtime address failed: %d\n",
-+				 child, ret);
+ 		/*
+@@ -75,8 +75,8 @@ static int init_state_node(struct cpuidle_state *idle_state,
+ 	err = of_property_read_u32(state_node, "min-residency-us",
+ 				   &idle_state->target_residency);
+ 	if (err) {
+-		pr_debug(" * %s missing min-residency-us property\n",
+-			     state_node->full_name);
++		pr_debug(" * %pOF missing min-residency-us property\n",
++			     state_node);
+ 		return -EINVAL;
  	}
 
- 	/* Then we start adding devices and probing them */
- 	for_each_available_child_of_node(np, child) {
- 		struct sunxi_rsb_device *rdev;
+@@ -186,8 +186,8 @@ int dt_init_idle_driver(struct cpuidle_driver *drv,
+ 		}
 
--		dev_dbg(dev, "adding child %s\n", child->full_name);
-+		dev_dbg(dev, "adding child %pOF\n", child);
-
- 		ret = of_property_read_u32(child, "reg", &hwaddr);
- 		if (ret)
-@@ -606,8 +606,8 @@ static int of_rsb_register_devices(struct sunxi_rsb *rsb)
-
- 		rdev = sunxi_rsb_device_create(rsb, child, hwaddr, rtaddr);
- 		if (IS_ERR(rdev))
--			dev_err(dev, "failed to add child device %s: %ld\n",
--				child->full_name, PTR_ERR(rdev));
-+			dev_err(dev, "failed to add child device %pOF: %ld\n",
-+				child, PTR_ERR(rdev));
- 	}
-
- 	return 0;
+ 		if (!idle_state_valid(state_node, i, cpumask)) {
+-			pr_warn("%s idle state not valid, bailing out\n",
+-				state_node->full_name);
++			pr_warn("%pOF idle state not valid, bailing out\n",
++				state_node);
+ 			err = -EINVAL;
+ 			break;
+ 		}
+@@ -200,8 +200,8 @@ int dt_init_idle_driver(struct cpuidle_driver *drv,
+ 		idle_state = &drv->states[state_idx++];
+ 		err = init_state_node(idle_state, matches, state_node);
+ 		if (err) {
+-			pr_err("Parsing idle state node %s failed with err %d\n",
+-			       state_node->full_name, err);
++			pr_err("Parsing idle state node %pOF failed with err %d\n",
++			       state_node, err);
+ 			err = -EINVAL;
+ 			break;
+ 		}
 --
 2.11.0
