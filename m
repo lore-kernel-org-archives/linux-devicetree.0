@@ -1,31 +1,35 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH v6 4/9] arm64: allwinner: a64: add AXP803
- node to Pine64 device tree
-Date: Tue, 18 Jul 2017 11:02:24 +0800
-Message-ID: <CAGb2v65qryntOAjN4cQaumtca8=X00CWM9AYNWQTZpoN5MFwkA@mail.gmail.com>
-References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-5-icenowy@aosc.io>
- <CAGb2v67w=miCHB-3f39vrx_+iZuEJEo9UyrFLw6aPPYWPweJXQ@mail.gmail.com>
+Subject: Re: [PATCH v6 7/9] arm64: allwinner: a64: add DTSI file
+ for AXP803 PMIC
+Date: Tue, 18 Jul 2017 11:02:55 +0800
+Message-ID: <CAGb2v64vr8e8Qwj8FTTr5DuSKG8HvPSXrea_8U_E4=h33Oy-+Q@mail.gmail.com>
+References: <20170518071653.36561-1-icenowy@aosc.io> <20170518071653.36561-8-icenowy@aosc.io>
+ <CAGb2v65xZC_iAf4HS6MWX5XbU-J0uUAN0FtAj6TxwD-peEt2mg@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v67w=miCHB-3f39vrx_+iZuEJEo9UyrFLw6aPPYWPweJXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB57UWXFQKGQEUBFPGFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65xZC_iAf4HS6MWX5XbU-J0uUAN0FtAj6TxwD-peEt2mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 19, 2017 at 10:28 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+On Fri, May 19, 2017 at 10:29 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 > On Thu, May 18, 2017 at 3:16 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> The Pine64 (including Pine64+) boards have an AXP803 as its main PMIC.
->>
->> Add its device node.
+>> As nearly all A64 boards are using AXP803 PMIC, add a DTSI file for it,
+>> like the old DTSI files for AXP20x/22x, for the common parts of the
+>> PMIC.
 >>
 >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
 > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
 Applied for 4.14.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
