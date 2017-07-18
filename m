@@ -1,74 +1,71 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [RFC v2 5/6] drivers: boot_constraint: Add initial DT bindings
-Date: Tue, 18 Jul 2017 11:28:04 +0530
-Message-ID: <20170718055804.GV352@vireshk-i7>
-References: <cover.1499770771.git.viresh.kumar@linaro.org>
- <0610277aef9830cff53b7b53cf41cc54886fdc7f.1499770771.git.viresh.kumar@linaro.org>
- <CAL_Jsq+oAB3gejRMXuY0q9+Et4GrtvF3RwGzPNJ08TPooVyXJg@mail.gmail.com>
- <20170713093608.GF352@vireshk-i7>
- <20170717173407.x5qjnrxqkjvn5vdm@rob-hp-laptop>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 0/3] some fixups for MediaTek cpufreq driver
+Date: Tue, 18 Jul 2017 14:01:42 +0800
+Message-ID: <cover.1500355954.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170717173407.x5qjnrxqkjvn5vdm@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, Shiraz Hashim <shashim@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17-07-17, 12:34, Rob Herring wrote:
-> On Thu, Jul 13, 2017 at 03:06:08PM +0530, Viresh Kumar wrote:
-> > On 12-07-17, 16:28, Rob Herring wrote:
-> > > Display is a pretty well known use case here. Do you have other
-> > > examples in mind?
-> > 
-> > No, I don't.
-> > 
-> > @Stephen: Do you have more cases like this for your Qcom products ?
-> > 
-> > > Other cases I've seen are automotive with keeping
-> > > the backup camera going and CAN bus handling. Though my new car has a
-> > > flicker shortly after coming on, so I guess the handoff doesn't have
-> > > to be completely seemless. :)
-> > 
-> > :)
-> > 
-> > > [...]
-> > > 
-> > > > +       mmc: mmc@0x0 {
-> > > > +               ...
-> > > > +               ...
-> > > > +               vmmc-supply = <&twl_reg1>;
-> > > > +               vmmcaux-supply = <&twl_reg2>;
-> > > > +               boot-constraint-supplies = "vmmc", "vmmcaux";
-> > > > +               boot-constraint-uV = <1800000 2000000>, /* vmmc */
-> > > > +                                    <2000000 2000000>; /* vmmcaux */
-> > > 
-> > > No. I don't like how this is going to extend to all the other bindings
-> > > people are going to want constraints for. We don't need a parallel set
-> > > of properties for each type of binding.
-> > 
-> > Fair enough.
-> > 
-> > > I'm not convinced that we need a general solution for what's probably
-> > > a handful of things that need a handoff versus just re-initialize.
-> > 
-> > What about keeping the first four patches (mostly) as it is and adding
-> > these constraints from a platform specific constraints driver ?
-> > 
-> > Will that be acceptable ?
-> 
-> Meaning no DT binding? Then I don't care (from a DT perspective).
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Yeah, kind of the way we decided to do the first step in the
-power domain performance state series [1].
+Changes since v4:
+- add back the missing Acked-by from v3
 
-And then later on we can see how to get such information from DT, as
-the kernel needs this information irrespective of the way we solve
-this problem in the kernel.
+Changes since v3:
+- remove the redundant line depends on ARM || ARM64 || COMPILE_TEST
+since the whole Kconfig.arm file depends on ARM || ARM64.
+- renaming from mtk-cpufreq.c to mediatek-cpufreq.c avoiding
+collide and cause confusion at some point in time.
+
+Changes since v2:
+- correct the typo in the binding document
+
+Changes since v1:
+- drop those patches already accepted
+- refine the commit messages and Kconfig dependency
+- Kconfig menu entry and file name itself are updated with more
+generic name to drop "MT8173" since this driver actually supports
+all MediaTek SoCs.
+- generate patchset again with git format-patch -C -M --thread=shallow
+- fix binding examples by replacing '@' with '-' as the OPP nodes will
+never have a "reg" property.
+
+Hi,
+
+The purpose of the series is
+- (patch 1 to 3) to fix up current Mediatek cpufreq driver
+can't work with the latest tree since one required CPU clock muxer missing
+would cause the driver getting the resource fails when driver probe gets
+called.
+- (patch 4) to enable cpufreq feature on MT2701/MT7623 platform.
+- (patch 5 to 6) to update the binding document to reflect
+latest driver logic and add more examples guiding people how to apply for
+Mediatek cpufreq driver.
+
+Sean Wang (3):
+  cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
+  dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to
+    proper place
+  dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
+
+ .../devicetree/bindings/clock/mt8173-cpu-dvfs.txt  |  83 -------
+ .../bindings/cpufreq/cpufreq-mediatek.txt          | 247 +++++++++++++++++++++
+ drivers/cpufreq/Kconfig.arm                        |   7 +-
+ drivers/cpufreq/Makefile                           |   2 +-
+ .../{mt8173-cpufreq.c => mediatek-cpufreq.c}       |   2 +
+ 5 files changed, 253 insertions(+), 88 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/clock/mt8173-cpu-dvfs.txt
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-mediatek.txt
+ rename drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} (99%)
 
 -- 
-viresh
+2.7.4
 
-[1] https://marc.info/?l=linux-kernel&m=149802907711074&w=2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
