@@ -1,11 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] video: fbdev: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:36 -0500
-Message-ID: <20170718214339.7774-56-robh@kernel.org>
+Subject: [PATCH] soc: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:29 -0500
+Message-ID: <20170718214339.7774-49-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org
+To: arm@kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Wood <oss@buserror.net>, Qiang Zhao <qiang.zhao@nxp.com>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,378 +13,270 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: linux-fbdev@vger.kernel.org
+Cc: Scott Wood <oss@buserror.net>
+Cc: Qiang Zhao <qiang.zhao@nxp.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Kukjin Kim <kgene@kernel.org>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-renesas-soc@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org
 ---
- drivers/video/fbdev/bw2.c         |  4 ++--
- drivers/video/fbdev/cg14.c        |  4 ++--
- drivers/video/fbdev/cg3.c         |  4 ++--
- drivers/video/fbdev/cg6.c         |  4 ++--
- drivers/video/fbdev/core/fbmon.c  |  4 ++--
- drivers/video/fbdev/ffb.c         |  4 ++--
- drivers/video/fbdev/leo.c         |  4 ++--
- drivers/video/fbdev/offb.c        | 10 ++++------
- drivers/video/fbdev/p9100.c       |  4 ++--
- drivers/video/fbdev/sunxvr1000.c  | 10 +++++-----
- drivers/video/fbdev/tcx.c         |  4 ++--
- drivers/video/of_display_timing.c | 41 +++++++++++++++------------------------
- drivers/video/of_videomode.c      |  2 +-
- 13 files changed, 44 insertions(+), 55 deletions(-)
+ drivers/soc/fsl/qbman/bman_ccsr.c    | 10 +++++-----
+ drivers/soc/fsl/qbman/bman_portal.c  |  8 +++-----
+ drivers/soc/fsl/qbman/qman_ccsr.c    | 12 ++++++------
+ drivers/soc/fsl/qbman/qman_portal.c  | 11 ++++-------
+ drivers/soc/fsl/qe/gpio.c            |  4 ++--
+ drivers/soc/mediatek/mtk-pmic-wrap.c |  4 ++--
+ drivers/soc/renesas/rcar-rst.c       |  4 ++--
+ drivers/soc/renesas/rcar-sysc.c      |  6 +++---
+ drivers/soc/samsung/pm_domains.c     |  8 ++++----
+ 9 files changed, 31 insertions(+), 36 deletions(-)
 
-diff --git a/drivers/video/fbdev/bw2.c b/drivers/video/fbdev/bw2.c
-index 8c5b281f0b29..7aa972072357 100644
---- a/drivers/video/fbdev/bw2.c
-+++ b/drivers/video/fbdev/bw2.c
-@@ -333,8 +333,8 @@ static int bw2_probe(struct platform_device *op)
+diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
+index a8e8389a6894..eaa9585c7347 100644
+--- a/drivers/soc/fsl/qbman/bman_ccsr.c
++++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+@@ -177,8 +177,8 @@ static int fsl_bman_probe(struct platform_device *pdev)
 
- 	dev_set_drvdata(&op->dev, info);
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+-		dev_err(dev, "Can't get %s property 'IORESOURCE_MEM'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'IORESOURCE_MEM'\n",
++			node);
+ 		return -ENXIO;
+ 	}
+ 	bm_ccsr_start = devm_ioremap(dev, res->start, resource_size(res));
+@@ -205,14 +205,14 @@ static int fsl_bman_probe(struct platform_device *pdev)
 
--	printk(KERN_INFO "%s: bwtwo at %lx:%lx\n",
--	       dp->full_name, par->which_io, info->fix.smem_start);
-+	printk(KERN_INFO "%pOF: bwtwo at %lx:%lx\n",
-+	       dp, par->which_io, info->fix.smem_start);
-
- 	return 0;
-
-diff --git a/drivers/video/fbdev/cg14.c b/drivers/video/fbdev/cg14.c
-index 43e915eaf606..8de88b129b62 100644
---- a/drivers/video/fbdev/cg14.c
-+++ b/drivers/video/fbdev/cg14.c
-@@ -553,8 +553,8 @@ static int cg14_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: cgfourteen at %lx:%lx, %dMB\n",
--	       dp->full_name,
-+	printk(KERN_INFO "%pOF: cgfourteen at %lx:%lx, %dMB\n",
-+	       dp,
- 	       par->iospace, info->fix.smem_start,
- 	       par->ramsize >> 20);
-
-diff --git a/drivers/video/fbdev/cg3.c b/drivers/video/fbdev/cg3.c
-index 716391f22e75..6c334260cf53 100644
---- a/drivers/video/fbdev/cg3.c
-+++ b/drivers/video/fbdev/cg3.c
-@@ -412,8 +412,8 @@ static int cg3_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: cg3 at %lx:%lx\n",
--	       dp->full_name, par->which_io, info->fix.smem_start);
-+	printk(KERN_INFO "%pOF: cg3 at %lx:%lx\n",
-+	       dp, par->which_io, info->fix.smem_start);
-
- 	return 0;
-
-diff --git a/drivers/video/fbdev/cg6.c b/drivers/video/fbdev/cg6.c
-index bdf901ed5291..0296c21acc78 100644
---- a/drivers/video/fbdev/cg6.c
-+++ b/drivers/video/fbdev/cg6.c
-@@ -810,8 +810,8 @@ static int cg6_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: CGsix [%s] at %lx:%lx\n",
--	       dp->full_name, info->fix.id,
-+	printk(KERN_INFO "%pOF: CGsix [%s] at %lx:%lx\n",
-+	       dp, info->fix.id,
- 	       par->which_io, info->fix.smem_start);
-
- 	return 0;
-diff --git a/drivers/video/fbdev/core/fbmon.c b/drivers/video/fbdev/core/fbmon.c
-index 41d7979d81c5..2b2d67328514 100644
---- a/drivers/video/fbdev/core/fbmon.c
-+++ b/drivers/video/fbdev/core/fbmon.c
-@@ -1479,8 +1479,8 @@ int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
- 	if (ret)
+ 	err_irq = platform_get_irq(pdev, 0);
+ 	if (err_irq <= 0) {
+-		dev_info(dev, "Can't get %s IRQ\n", node->full_name);
++		dev_info(dev, "Can't get %pOF IRQ\n", node);
+ 		return -ENODEV;
+ 	}
+ 	ret = devm_request_irq(dev, err_irq, bman_isr, IRQF_SHARED, "bman-err",
+ 			       dev);
+ 	if (ret)  {
+-		dev_err(dev, "devm_request_irq() failed %d for '%s'\n",
+-			ret, node->full_name);
++		dev_err(dev, "devm_request_irq() failed %d for '%pOF'\n",
++			ret, node);
  		return ret;
-
--	pr_debug("%s: got %dx%d display mode from %s\n",
--		of_node_full_name(np), vm.hactive, vm.vactive, np->name);
-+	pr_debug("%pOF: got %dx%d display mode from %s\n",
-+		np, vm.hactive, vm.vactive, np->name);
- 	dump_fb_videomode(fb);
-
- 	return 0;
-diff --git a/drivers/video/fbdev/ffb.c b/drivers/video/fbdev/ffb.c
-index dda31e0a45af..6b1915872af1 100644
---- a/drivers/video/fbdev/ffb.c
-+++ b/drivers/video/fbdev/ffb.c
-@@ -997,9 +997,9 @@ static int ffb_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: %s at %016lx, type %d, "
-+	printk(KERN_INFO "%pOF: %s at %016lx, type %d, "
- 	       "DAC pnum[%x] rev[%d] manuf_rev[%d]\n",
--	       dp->full_name,
-+	       dp,
- 	       ((par->flags & FFB_FLAG_AFB) ? "AFB" : "FFB"),
- 	       par->physbase, par->board_type,
- 	       dac_pnum, dac_rev, dac_mrev);
-diff --git a/drivers/video/fbdev/leo.c b/drivers/video/fbdev/leo.c
-index 62e59dc90ee6..71862188f528 100644
---- a/drivers/video/fbdev/leo.c
-+++ b/drivers/video/fbdev/leo.c
-@@ -619,8 +619,8 @@ static int leo_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: leo at %lx:%lx\n",
--	       dp->full_name,
-+	printk(KERN_INFO "%pOF: leo at %lx:%lx\n",
-+	       dp,
- 	       par->which_io, info->fix.smem_start);
-
- 	return 0;
-diff --git a/drivers/video/fbdev/offb.c b/drivers/video/fbdev/offb.c
-index 9be884b0c778..90d38de34479 100644
---- a/drivers/video/fbdev/offb.c
-+++ b/drivers/video/fbdev/offb.c
-@@ -383,7 +383,7 @@ static void offb_init_palette_hacks(struct fb_info *info, struct device_node *dp
- 		FB_VISUAL_PSEUDOCOLOR : FB_VISUAL_STATIC_PSEUDOCOLOR;
- }
-
--static void __init offb_init_fb(const char *name, const char *full_name,
-+static void __init offb_init_fb(const char *name,
- 				int width, int height, int depth,
- 				int pitch, unsigned long address,
- 				int foreign_endian, struct device_node *dp)
-@@ -402,14 +402,13 @@ static void __init offb_init_fb(const char *name, const char *full_name,
- 	       "Using unsupported %dx%d %s at %lx, depth=%d, pitch=%d\n",
- 	       width, height, name, address, depth, pitch);
- 	if (depth != 8 && depth != 15 && depth != 16 && depth != 32) {
--		printk(KERN_ERR "%s: can't use depth = %d\n", full_name,
--		       depth);
-+		printk(KERN_ERR "%pOF: can't use depth = %d\n", dp, depth);
- 		release_mem_region(res_start, res_size);
- 		return;
+ 	}
+ 	/* Disable Buffer Pool State Change */
+diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+index 8354d4dabdad..39b39c8f1399 100644
+--- a/drivers/soc/fsl/qbman/bman_portal.c
++++ b/drivers/soc/fsl/qbman/bman_portal.c
+@@ -103,16 +103,14 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 	addr_phys[0] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CE);
+ 	if (!addr_phys[0]) {
+-		dev_err(dev, "Can't get %s property 'reg::CE'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
+ 		return -ENXIO;
  	}
 
- 	info = framebuffer_alloc(sizeof(u32) * 16, NULL);
--
-+
- 	if (info == 0) {
- 		release_mem_region(res_start, res_size);
- 		return;
-@@ -515,7 +514,7 @@ static void __init offb_init_fb(const char *name, const char *full_name,
- 	if (register_framebuffer(info) < 0)
- 		goto out_err;
-
--	fb_info(info, "Open Firmware frame buffer device on %s\n", full_name);
-+	fb_info(info, "Open Firmware frame buffer device on %pOF\n", dp);
- 	return;
-
- out_err:
-@@ -644,7 +643,6 @@ static void __init offb_init_nodriver(struct device_node *dp, int no_real_node)
- 		if (strcmp(dp->name, "valkyrie") == 0)
- 			address += 0x1000;
- 		offb_init_fb(no_real_node ? "bootx" : dp->name,
--			     no_real_node ? "display" : dp->full_name,
- 			     width, height, depth, pitch, address,
- 			     foreign_endian, no_real_node ? NULL : dp);
- 	}
-diff --git a/drivers/video/fbdev/p9100.c b/drivers/video/fbdev/p9100.c
-index 1f6ee76af878..64de5cda541d 100644
---- a/drivers/video/fbdev/p9100.c
-+++ b/drivers/video/fbdev/p9100.c
-@@ -304,8 +304,8 @@ static int p9100_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: p9100 at %lx:%lx\n",
--	       dp->full_name,
-+	printk(KERN_INFO "%pOF: p9100 at %lx:%lx\n",
-+	       dp,
- 	       par->which_io, info->fix.smem_start);
-
- 	return 0;
-diff --git a/drivers/video/fbdev/sunxvr1000.c b/drivers/video/fbdev/sunxvr1000.c
-index fb37f6e05391..8fe37c0ef2f5 100644
---- a/drivers/video/fbdev/sunxvr1000.c
-+++ b/drivers/video/fbdev/sunxvr1000.c
-@@ -33,8 +33,8 @@ static int gfb_get_props(struct gfb_info *gp)
- 	gp->depth = of_getintprop_default(gp->of_node, "depth", 32);
-
- 	if (!gp->width || !gp->height) {
--		printk(KERN_ERR "gfb: Critical properties missing for %s\n",
--		       gp->of_node->full_name);
-+		printk(KERN_ERR "gfb: Critical properties missing for %pOF\n",
-+		       gp->of_node);
- 		return -EINVAL;
+ 	addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CI);
+ 	if (!addr_phys[1]) {
+-		dev_err(dev, "Can't get %s property 'reg::CI'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
+ 		return -ENXIO;
  	}
 
-@@ -151,12 +151,12 @@ static int gfb_probe(struct platform_device *op)
- 	if (err)
- 		goto err_unmap_fb;
+@@ -120,7 +118,7 @@ static int bman_portal_probe(struct platform_device *pdev)
 
--	printk("gfb: Found device at %s\n", dp->full_name);
-+	printk("gfb: Found device at %pOF\n", dp);
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+-		dev_err(dev, "Can't get %s IRQ'\n", node->full_name);
++		dev_err(dev, "Can't get %pOF IRQ'\n", node);
+ 		return -ENXIO;
+ 	}
+ 	pcfg->irq = irq;
+diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
+index 90bc40c48675..835ce947ffca 100644
+--- a/drivers/soc/fsl/qbman/qman_ccsr.c
++++ b/drivers/soc/fsl/qbman/qman_ccsr.c
+@@ -695,8 +695,8 @@ static int fsl_qman_probe(struct platform_device *pdev)
 
- 	err = register_framebuffer(info);
- 	if (err < 0) {
--		printk(KERN_ERR "gfb: Could not register framebuffer %s\n",
--		       dp->full_name);
-+		printk(KERN_ERR "gfb: Could not register framebuffer %pOF\n",
-+		       dp);
- 		goto err_unmap_fb;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (!res) {
+-		dev_err(dev, "Can't get %s property 'IORESOURCE_MEM'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'IORESOURCE_MEM'\n",
++			node);
+ 		return -ENXIO;
+ 	}
+ 	qm_ccsr_start = devm_ioremap(dev, res->start, resource_size(res));
+@@ -740,15 +740,15 @@ static int fsl_qman_probe(struct platform_device *pdev)
+
+ 	err_irq = platform_get_irq(pdev, 0);
+ 	if (err_irq <= 0) {
+-		dev_info(dev, "Can't get %s property 'interrupts'\n",
+-			 node->full_name);
++		dev_info(dev, "Can't get %pOF property 'interrupts'\n",
++			 node);
+ 		return -ENODEV;
+ 	}
+ 	ret = devm_request_irq(dev, err_irq, qman_isr, IRQF_SHARED, "qman-err",
+ 			       dev);
+ 	if (ret)  {
+-		dev_err(dev, "devm_request_irq() failed %d for '%s'\n",
+-			ret, node->full_name);
++		dev_err(dev, "devm_request_irq() failed %d for '%pOF'\n",
++			ret, node);
+ 		return ret;
  	}
 
-diff --git a/drivers/video/fbdev/tcx.c b/drivers/video/fbdev/tcx.c
-index 54ad08854c94..c98d8a569ccd 100644
---- a/drivers/video/fbdev/tcx.c
-+++ b/drivers/video/fbdev/tcx.c
-@@ -467,8 +467,8 @@ static int tcx_probe(struct platform_device *op)
-
- 	dev_set_drvdata(&op->dev, info);
-
--	printk(KERN_INFO "%s: TCX at %lx:%lx, %s\n",
--	       dp->full_name,
-+	printk(KERN_INFO "%pOF: TCX at %lx:%lx, %s\n",
-+	       dp,
- 	       par->which_io,
- 	       info->fix.smem_start,
- 	       par->lowdepth ? "8-bit only" : "24-bit depth");
-diff --git a/drivers/video/of_display_timing.c b/drivers/video/of_display_timing.c
-index 32b0a7543433..8ce0a99bf17c 100644
---- a/drivers/video/of_display_timing.c
-+++ b/drivers/video/of_display_timing.c
-@@ -31,8 +31,7 @@ static int parse_timing_property(const struct device_node *np, const char *name,
-
- 	prop = of_find_property(np, name, &length);
- 	if (!prop) {
--		pr_err("%s: could not find property %s\n",
--			of_node_full_name(np), name);
-+		pr_err("%pOF: could not find property %s\n", np, name);
- 		return -EINVAL;
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index adbaa30d3c5a..cbacdf4f98ed 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
+@@ -237,30 +237,27 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 	addr_phys[0] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CE);
+ 	if (!addr_phys[0]) {
+-		dev_err(dev, "Can't get %s property 'reg::CE'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'reg::CE'\n", node);
+ 		return -ENXIO;
  	}
 
-@@ -44,8 +43,7 @@ static int parse_timing_property(const struct device_node *np, const char *name,
- 	} else if (cells == 3) {
- 		ret = of_property_read_u32_array(np, name, &result->min, cells);
- 	} else {
--		pr_err("%s: illegal timing specification in %s\n",
--			of_node_full_name(np), name);
-+		pr_err("%pOF: illegal timing specification in %s\n", np, name);
- 		return -EINVAL;
+ 	addr_phys[1] = platform_get_resource(pdev, IORESOURCE_MEM,
+ 					     DPAA_PORTAL_CI);
+ 	if (!addr_phys[1]) {
+-		dev_err(dev, "Can't get %s property 'reg::CI'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'reg::CI'\n", node);
+ 		return -ENXIO;
  	}
 
-@@ -105,8 +103,7 @@ static int of_parse_display_timing(const struct device_node *np,
- 		dt->flags |= DISPLAY_FLAGS_DOUBLECLK;
+ 	err = of_property_read_u32(node, "cell-index", &val);
+ 	if (err) {
+-		dev_err(dev, "Can't get %s property 'cell-index'\n",
+-			node->full_name);
++		dev_err(dev, "Can't get %pOF property 'cell-index'\n", node);
+ 		return err;
+ 	}
+ 	pcfg->channel = val;
+ 	pcfg->cpu = -1;
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+-		dev_err(dev, "Can't get %s IRQ\n", node->full_name);
++		dev_err(dev, "Can't get %pOF IRQ\n", node);
+ 		return -ENXIO;
+ 	}
+ 	pcfg->irq = irq;
+diff --git a/drivers/soc/fsl/qe/gpio.c b/drivers/soc/fsl/qe/gpio.c
+index 0aaf429f31d5..3b27075c21a7 100644
+--- a/drivers/soc/fsl/qe/gpio.c
++++ b/drivers/soc/fsl/qe/gpio.c
+@@ -304,8 +304,8 @@ static int __init qe_add_gpiochips(void)
+ 			goto err;
+ 		continue;
+ err:
+-		pr_err("%s: registration failed with status %d\n",
+-		       np->full_name, ret);
++		pr_err("%pOF: registration failed with status %d\n",
++		       np, ret);
+ 		kfree(qe_gc);
+ 		/* try others anyway */
+ 	}
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index c80a04e1b2b1..af9768db42b4 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -1233,8 +1233,8 @@ static int pwrap_probe(struct platform_device *pdev)
 
+ 	ret = of_platform_populate(np, NULL, NULL, wrp->dev);
  	if (ret) {
--		pr_err("%s: error reading timing properties\n",
--			of_node_full_name(np));
-+		pr_err("%pOF: error reading timing properties\n", np);
- 		return -EINVAL;
- 	}
-
-@@ -129,8 +126,7 @@ int of_get_display_timing(const struct device_node *np, const char *name,
-
- 	timing_np = of_get_child_by_name(np, name);
- 	if (!timing_np) {
--		pr_err("%s: could not find node '%s'\n",
--			of_node_full_name(np), name);
-+		pr_err("%pOF: could not find node '%s'\n", np, name);
- 		return -ENOENT;
- 	}
-
-@@ -154,15 +150,13 @@ struct display_timings *of_get_display_timings(const struct device_node *np)
-
- 	timings_np = of_get_child_by_name(np, "display-timings");
- 	if (!timings_np) {
--		pr_err("%s: could not find display-timings node\n",
--			of_node_full_name(np));
-+		pr_err("%pOF: could not find display-timings node\n", np);
- 		return NULL;
- 	}
-
- 	disp = kzalloc(sizeof(*disp), GFP_KERNEL);
- 	if (!disp) {
--		pr_err("%s: could not allocate struct disp'\n",
--			of_node_full_name(np));
-+		pr_err("%pOF: could not allocate struct disp'\n", np);
- 		goto dispfail;
- 	}
-
-@@ -172,28 +166,25 @@ struct display_timings *of_get_display_timings(const struct device_node *np)
- 		entry = of_get_next_child(timings_np, NULL);
- 	/* if there is no child, it is useless to go on */
- 	if (!entry) {
--		pr_err("%s: no timing specifications given\n",
--			of_node_full_name(np));
-+		pr_err("%pOF: no timing specifications given\n", np);
- 		goto entryfail;
- 	}
-
--	pr_debug("%s: using %s as default timing\n",
--		of_node_full_name(np), entry->name);
-+	pr_debug("%pOF: using %s as default timing\n", np, entry->name);
-
- 	native_mode = entry;
-
- 	disp->num_timings = of_get_child_count(timings_np);
- 	if (disp->num_timings == 0) {
- 		/* should never happen, as entry was already found above */
--		pr_err("%s: no timings specified\n", of_node_full_name(np));
-+		pr_err("%pOF: no timings specified\n", np);
- 		goto entryfail;
- 	}
-
- 	disp->timings = kzalloc(sizeof(struct display_timing *) *
- 				disp->num_timings, GFP_KERNEL);
- 	if (!disp->timings) {
--		pr_err("%s: could not allocate timings array\n",
--			of_node_full_name(np));
-+		pr_err("%pOF: could not allocate timings array\n", np);
- 		goto entryfail;
- 	}
-
-@@ -206,8 +197,8 @@ struct display_timings *of_get_display_timings(const struct device_node *np)
-
- 		dt = kzalloc(sizeof(*dt), GFP_KERNEL);
- 		if (!dt) {
--			pr_err("%s: could not allocate display_timing struct\n",
--					of_node_full_name(np));
-+			pr_err("%pOF: could not allocate display_timing struct\n",
+-		dev_dbg(wrp->dev, "failed to create child devices at %s\n",
+-				np->full_name);
++		dev_dbg(wrp->dev, "failed to create child devices at %pOF\n",
 +				np);
- 			goto timingfail;
- 		}
-
-@@ -217,8 +208,8 @@ struct display_timings *of_get_display_timings(const struct device_node *np)
- 			 * to not encourage wrong devicetrees, fail in case of
- 			 * an error
- 			 */
--			pr_err("%s: error in timing %d\n",
--				of_node_full_name(np), disp->num_timings + 1);
-+			pr_err("%pOF: error in timing %d\n",
-+				np, disp->num_timings + 1);
- 			kfree(dt);
- 			goto timingfail;
- 		}
-@@ -236,8 +227,8 @@ struct display_timings *of_get_display_timings(const struct device_node *np)
- 	 */
- 	of_node_put(native_mode);
-
--	pr_debug("%s: got %d timings. Using timing #%d as default\n",
--		of_node_full_name(np), disp->num_timings,
-+	pr_debug("%pOF: got %d timings. Using timing #%d as default\n",
-+		np, disp->num_timings,
- 		disp->native_mode + 1);
-
- 	return disp;
-diff --git a/drivers/video/of_videomode.c b/drivers/video/of_videomode.c
-index b5102aa6090d..9b5f9de88fec 100644
---- a/drivers/video/of_videomode.c
-+++ b/drivers/video/of_videomode.c
-@@ -36,7 +36,7 @@ int of_get_videomode(struct device_node *np, struct videomode *vm,
-
- 	disp = of_get_display_timings(np);
- 	if (!disp) {
--		pr_err("%s: no timings specified\n", of_node_full_name(np));
-+		pr_err("%pOF: no timings specified\n", np);
- 		return -EINVAL;
+ 		goto err_out2;
  	}
 
+diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
+index a6d1c26d3167..78c40d5dd62b 100644
+--- a/drivers/soc/renesas/rcar-rst.c
++++ b/drivers/soc/renesas/rcar-rst.c
+@@ -61,7 +61,7 @@ static int __init rcar_rst_init(void)
+
+ 	base = of_iomap(np, 0);
+ 	if (!base) {
+-		pr_warn("%s: Cannot map regs\n", np->full_name);
++		pr_warn("%pOF: Cannot map regs\n", np);
+ 		error = -ENOMEM;
+ 		goto out_put;
+ 	}
+@@ -70,7 +70,7 @@ static int __init rcar_rst_init(void)
+ 	cfg = match->data;
+ 	saved_mode = ioread32(base + cfg->modemr);
+
+-	pr_debug("%s: MODE = 0x%08x\n", np->full_name, saved_mode);
++	pr_debug("%pOF: MODE = 0x%08x\n", np, saved_mode);
+
+ out_put:
+ 	of_node_put(np);
+diff --git a/drivers/soc/renesas/rcar-sysc.c b/drivers/soc/renesas/rcar-sysc.c
+index 7c8da3c90011..cd387347fa94 100644
+--- a/drivers/soc/renesas/rcar-sysc.c
++++ b/drivers/soc/renesas/rcar-sysc.c
+@@ -323,7 +323,7 @@ static int __init rcar_sysc_pd_init(void)
+
+ 	base = of_iomap(np, 0);
+ 	if (!base) {
+-		pr_warn("%s: Cannot map regs\n", np->full_name);
++		pr_warn("%pOF: Cannot map regs\n", np);
+ 		error = -ENOMEM;
+ 		goto out_put;
+ 	}
+@@ -348,13 +348,13 @@ static int __init rcar_sysc_pd_init(void)
+ 	 */
+ 	syscimr = ioread32(base + SYSCIMR);
+ 	syscimr |= syscier;
+-	pr_debug("%s: syscimr = 0x%08x\n", np->full_name, syscimr);
++	pr_debug("%pOF: syscimr = 0x%08x\n", np, syscimr);
+ 	iowrite32(syscimr, base + SYSCIMR);
+
+ 	/*
+ 	 * SYSC needs all interrupt sources enabled to control power.
+ 	 */
+-	pr_debug("%s: syscier = 0x%08x\n", np->full_name, syscier);
++	pr_debug("%pOF: syscier = 0x%08x\n", np, syscier);
+ 	iowrite32(syscier, base + SYSCIER);
+
+ 	for (i = 0; i < info->num_areas; i++) {
+diff --git a/drivers/soc/samsung/pm_domains.c b/drivers/soc/samsung/pm_domains.c
+index a6a5d807cc2b..c630eba32066 100644
+--- a/drivers/soc/samsung/pm_domains.c
++++ b/drivers/soc/samsung/pm_domains.c
+@@ -237,11 +237,11 @@ static __init int exynos4_pm_init_power_domain(void)
+ 			continue;
+
+ 		if (of_genpd_add_subdomain(&parent, &child))
+-			pr_warn("%s failed to add subdomain: %s\n",
+-				parent.np->full_name, child.np->full_name);
++			pr_warn("%pOF failed to add subdomain: %pOF\n",
++				parent.np, child.np);
+ 		else
+-			pr_info("%s has as child subdomain: %s.\n",
+-				parent.np->full_name, child.np->full_name);
++			pr_info("%pOF has as child subdomain: %pOF.\n",
++				parent.np, child.np);
+ 	}
+
+ 	return 0;
 --
 2.11.0
