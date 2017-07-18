@@ -1,65 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] dt-bindings: display: sunxi: Improve endpoint ID
- scheme readability
-Date: Tue, 18 Jul 2017 16:53:33 +0200
-Message-ID: <20170718145333.7reiorbruhncq2wv@flea>
-References: <20170718040201.21099-1-wens@csie.org>
+From: "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: keystone-k2g: Add PMMC node to support
+ TI-SCI protocol
+Date: Tue, 18 Jul 2017 10:00:35 -0500
+Message-ID: <8b8c4eff-4f18-f0d2-e075-389921e5a990@ti.com>
+References: <20170718032844.29490-1-s-anna@ti.com>
+ <20170718032844.29490-2-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rv4fh76xr2lacdjt"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170718040201.21099-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170718032844.29490-2-s-anna-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/17/2017 10:28 PM, Suman Anna wrote:
+> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> 
+> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
+> is implemented in Keystone 2 generation 66AK2G SoC with the PMMC entity.
+> 
+> Add the ti-sci node representing this 66AK2G PMMC module.
+> 
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> [s-anna-l0cyMroinI0@public.gmane.org: add unit address to DT node]
+> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/keystone-k2g.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+> index a789f75a1ed5..7f0f4180b373 100644
+> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
+> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+> @@ -139,5 +139,19 @@
+>  			interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> +
+> +		pmmc: pmmc@02921c00 {
+> +			compatible = "ti,k2g-sci";
+> +			/*
+> +			 * In case of rare platforms that does not use k2g as
+> +			 * system master, use /delete-property/
+> +			 */
 
---rv4fh76xr2lacdjt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This comment seems mis-worded, I believe this was meant to say "for
+platforms that do not use the *PMMC* as the system master".
 
-On Tue, Jul 18, 2017 at 12:02:01PM +0800, Chen-Yu Tsai wrote:
-> The explanation for the endpoint ID numbering scheme is convoluted
-> and hard to understand.
->=20
-> This patch aims to improve the readability of it by combining the
-> existing two paragraphs, while also providing a diagram example,
-> and how endpoints should be numbered based on that example.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Andrew
 
-Dropped the previous iteration, and applied this one. Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---rv4fh76xr2lacdjt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZbiDtAAoJEBx+YmzsjxAg3gIP/0+5h1v1sAEqDJ/i1ynvvnLu
-r3wNZouwvZiF4CLDmO0z2bTRQdl3T4Q81g6Xgz7Tg/C4x7ENhE8ADpbSGILtLEs6
-8ZEraY2hcVOW07UM23FwFesPHXFhH++RBgVYH6l7hilGHWRdQm2xajIzNz9BoIYV
-Rs1OdXOOht19kAFyXR7GOSyo/vz4UaB8y2mkAfw1heW14bRrsueoHS4+2eiYVzB1
-66vInW3R9rQQjc91mXzLgZThu86WgVLfJzpfnj9yrFETbJYFYUOylPjdbcMfXQIo
-mZ1dyA9xbvT7u+JNZLPd0iwVjYijBsrlJvSz5BlXnbn5dyW8uBtWTmzSspJtwQm1
-hcu4guu12KHbUuc2LwiXJseoLS60Vac6TzhV18YhKaDx/l+BAdY0gBYUmL6ajXxw
-/qhSDRCUA3dfDbtrChZLOYUoml8u9Er5zSY8PlDqm/BL8FsV/99UUK69jJxHJ2xv
-NlzNViQQeXlFToyoBIptEpwYkwgO8oscMVSBjTwc+1HKDIEXu7hkBzYUYKhrgX4j
-gQaz46/9YVKaDV5F+yXOuHrYkauiBD+ye52BIm9/x2wZP7J3dALyjoufQGfD4Bqc
-/vAWROw67ZkYWZrHcKXANoFfjenRLcl7oJC5SkLamZ5Y8xa3F8IMa1TjOlibmagh
-dgSjmGBFs/KW6HBsaFMp
-=UOlM
------END PGP SIGNATURE-----
-
---rv4fh76xr2lacdjt--
+> +			ti,system-reboot-controller;
+> +			mbox-names = "rx", "tx";
+> +			mboxes= <&msgmgr 5 2>,
+> +				<&msgmgr 0 0>;
+> +			reg-names = "debug_messages";
+> +			reg = <0x02921c00 0x400>;
+> +		};
+>  	};
+>  };
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
