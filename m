@@ -1,22 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] staging: fsl-mc: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:33 -0500
-Message-ID: <20170718214339.7774-53-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Subject: [PATCH] usb: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:35 -0500
+Message-ID: <20170718214339.7774-55-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stuart Yoder <stuyoder@gmail.com>, Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -24,77 +13,105 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Stuart Yoder <stuyoder@gmail.com>
-Cc: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devel@driverdev.osuosl.org
+Cc: Felipe Balbi <balbi@kernel.org>
+Cc: linux-usb@vger.kernel.org
 ---
- drivers/staging/fsl-mc/bus/fsl-mc-bus.c                | 4 ++--
- drivers/staging/fsl-mc/bus/fsl-mc-msi.c                | 4 ++--
- drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c | 8 +++-----
- 3 files changed, 7 insertions(+), 9 deletions(-)
+ drivers/usb/common/common.c        | 4 ++--
+ drivers/usb/core/ledtrig-usbport.c | 4 ++--
+ drivers/usb/core/sysfs.c           | 2 +-
+ drivers/usb/host/fsl-mph-dr-of.c   | 4 ++--
+ drivers/usb/mtu3/mtu3_host.c       | 4 ++--
+ drivers/usb/phy/phy.c              | 4 ++--
+ 6 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-index 19606e8d25dd..409f2b9e70ff 100644
---- a/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-+++ b/drivers/staging/fsl-mc/bus/fsl-mc-bus.c
-@@ -757,8 +757,8 @@ static int fsl_mc_bus_probe(struct platform_device *pdev)
- 	error = of_address_to_resource(pdev->dev.of_node, 0, &res);
- 	if (error < 0) {
- 		dev_err(&pdev->dev,
--			"of_address_to_resource() failed for %s\n",
--			pdev->dev.of_node->full_name);
-+			"of_address_to_resource() failed for %pOF\n",
-+			pdev->dev.of_node);
- 		return error;
- 	}
-
-diff --git a/drivers/staging/fsl-mc/bus/fsl-mc-msi.c b/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
-index c04a2f2b3409..49f95123b5c7 100644
---- a/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
-+++ b/drivers/staging/fsl-mc/bus/fsl-mc-msi.c
-@@ -183,8 +183,8 @@ int fsl_mc_find_msi_domain(struct device *mc_platform_dev,
- 	msi_domain = of_msi_get_domain(mc_platform_dev, mc_of_node,
- 				       DOMAIN_BUS_FSL_MC_MSI);
- 	if (!msi_domain) {
--		pr_err("Unable to find fsl-mc MSI domain for %s\n",
--		       mc_of_node->full_name);
-+		pr_err("Unable to find fsl-mc MSI domain for %pOF\n",
-+		       mc_of_node);
-
- 		return -ENOENT;
- 	}
-diff --git a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
-index 865d38517508..e49dcde480fc 100644
---- a/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
-+++ b/drivers/staging/fsl-mc/bus/irq-gic-v3-its-fsl-mc-msi.c
-@@ -79,8 +79,7 @@ int __init its_fsl_mc_msi_init(void)
-
- 		parent = irq_find_matching_host(np, DOMAIN_BUS_NEXUS);
- 		if (!parent || !msi_get_domain_info(parent)) {
--			pr_err("%s: unable to locate ITS domain\n",
--			       np->full_name);
-+			pr_err("%pOF: unable to locate ITS domain\n", np);
- 			continue;
+diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+index 5ef8da6e67c3..b91ba3332d8f 100644
+--- a/drivers/usb/common/common.c
++++ b/drivers/usb/common/common.c
+@@ -227,8 +227,8 @@ int of_usb_update_otg_caps(struct device_node *np,
+ 				otg_caps->otg_rev = otg_rev;
+ 			break;
+ 		default:
+-			pr_err("%s: unsupported otg-rev: 0x%x\n",
+-						np->full_name, otg_rev);
++			pr_err("%pOF: unsupported otg-rev: 0x%x\n",
++						np, otg_rev);
+ 			return -EINVAL;
  		}
-
-@@ -89,15 +88,14 @@ int __init its_fsl_mc_msi_init(void)
- 						 &its_fsl_mc_msi_domain_info,
- 						 parent);
- 		if (!mc_msi_domain) {
--			pr_err("%s: unable to create fsl-mc domain\n",
--			       np->full_name);
-+			pr_err("%pOF: unable to create fsl-mc domain\n", np);
- 			continue;
- 		}
-
- 		WARN_ON(mc_msi_domain->host_data !=
- 			&its_fsl_mc_msi_domain_info);
-
--		pr_info("fsl-mc MSI: %s domain created\n", np->full_name);
-+		pr_info("fsl-mc MSI: %pOF domain created\n", np);
+ 	} else {
+diff --git a/drivers/usb/core/ledtrig-usbport.c b/drivers/usb/core/ledtrig-usbport.c
+index 16c19a31dad1..5e265882ad2a 100644
+--- a/drivers/usb/core/ledtrig-usbport.c
++++ b/drivers/usb/core/ledtrig-usbport.c
+@@ -149,8 +149,8 @@ static bool usbport_trig_port_observed(struct usbport_trig_data *usbport_data,
+ 	count = of_count_phandle_with_args(led_np, "trigger-sources",
+ 					   "#trigger-source-cells");
+ 	if (count < 0) {
+-		dev_warn(dev, "Failed to get trigger sources for %s\n",
+-			 led_np->full_name);
++		dev_warn(dev, "Failed to get trigger sources for %pOF\n",
++			 led_np);
+ 		return false;
  	}
 
- 	return 0;
+diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
+index dfc68ed24db1..d930bfda4010 100644
+--- a/drivers/usb/core/sysfs.c
++++ b/drivers/usb/core/sysfs.c
+@@ -113,7 +113,7 @@ static ssize_t devspec_show(struct device *dev, struct device_attribute *attr,
+ {
+ 	struct device_node *of_node = dev->of_node;
+
+-	return sprintf(buf, "%s\n", of_node_full_name(of_node));
++	return sprintf(buf, "%pOF\n", of_node);
+ }
+ static DEVICE_ATTR_RO(devspec);
+ #endif
+diff --git a/drivers/usb/host/fsl-mph-dr-of.c b/drivers/usb/host/fsl-mph-dr-of.c
+index e90ddb530765..ba557cdba8ef 100644
+--- a/drivers/usb/host/fsl-mph-dr-of.c
++++ b/drivers/usb/host/fsl-mph-dr-of.c
+@@ -55,8 +55,8 @@ static struct fsl_usb2_dev_data *get_dr_mode_data(struct device_node *np)
+ 				return &dr_mode_data[i];
+ 		}
+ 	}
+-	pr_warn("%s: Invalid 'dr_mode' property, fallback to host mode\n",
+-		np->full_name);
++	pr_warn("%pOF: Invalid 'dr_mode' property, fallback to host mode\n",
++		np);
+ 	return &dr_mode_data[0]; /* mode not specified, use host */
+ }
+
+diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
+index cd4d01087855..e42d308b8dc2 100644
+--- a/drivers/usb/mtu3/mtu3_host.c
++++ b/drivers/usb/mtu3/mtu3_host.c
+@@ -258,8 +258,8 @@ int ssusb_host_init(struct ssusb_mtk *ssusb, struct device_node *parent_dn)
+
+ 	ret = of_platform_populate(parent_dn, NULL, NULL, parent_dev);
+ 	if (ret) {
+-		dev_dbg(parent_dev, "failed to create child devices at %s\n",
+-				parent_dn->full_name);
++		dev_dbg(parent_dev, "failed to create child devices at %pOF\n",
++				parent_dn);
+ 		return ret;
+ 	}
+
+diff --git a/drivers/usb/phy/phy.c b/drivers/usb/phy/phy.c
+index 032f5afaad4b..75f3127407af 100644
+--- a/drivers/usb/phy/phy.c
++++ b/drivers/usb/phy/phy.c
+@@ -302,8 +302,8 @@ struct usb_phy *devm_usb_get_phy_by_phandle(struct device *dev,
+
+ 	node = of_parse_phandle(dev->of_node, phandle, index);
+ 	if (!node) {
+-		dev_dbg(dev, "failed to get %s phandle in %s node\n", phandle,
+-			dev->of_node->full_name);
++		dev_dbg(dev, "failed to get %s phandle in %pOF node\n", phandle,
++			dev->of_node);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 	phy = devm_usb_get_phy_by_node(dev, node, NULL);
 --
 2.11.0
