@@ -1,11 +1,22 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] usb: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:43:35 -0500
-Message-ID: <20170718214339.7774-55-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH] cpufreq: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:42:54 -0500
+Message-ID: <20170718214339.7774-14-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, linux-kernel@vger.kernel.org, Patrice Chotard <patrice.chotard@st.com>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -13,105 +24,59 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: linux-usb@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Patrice Chotard <patrice.chotard@st.com>
+Cc: linux-pm@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: kernel@stlinux.com
 ---
- drivers/usb/common/common.c        | 4 ++--
- drivers/usb/core/ledtrig-usbport.c | 4 ++--
- drivers/usb/core/sysfs.c           | 2 +-
- drivers/usb/host/fsl-mph-dr-of.c   | 4 ++--
- drivers/usb/mtu3/mtu3_host.c       | 4 ++--
- drivers/usb/phy/phy.c              | 4 ++--
- 6 files changed, 11 insertions(+), 11 deletions(-)
+ drivers/cpufreq/pmac64-cpufreq.c | 2 +-
+ drivers/cpufreq/sti-cpufreq.c    | 8 ++++----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
-index 5ef8da6e67c3..b91ba3332d8f 100644
---- a/drivers/usb/common/common.c
-+++ b/drivers/usb/common/common.c
-@@ -227,8 +227,8 @@ int of_usb_update_otg_caps(struct device_node *np,
- 				otg_caps->otg_rev = otg_rev;
- 			break;
- 		default:
--			pr_err("%s: unsupported otg-rev: 0x%x\n",
--						np->full_name, otg_rev);
-+			pr_err("%pOF: unsupported otg-rev: 0x%x\n",
-+						np, otg_rev);
- 			return -EINVAL;
- 		}
- 	} else {
-diff --git a/drivers/usb/core/ledtrig-usbport.c b/drivers/usb/core/ledtrig-usbport.c
-index 16c19a31dad1..5e265882ad2a 100644
---- a/drivers/usb/core/ledtrig-usbport.c
-+++ b/drivers/usb/core/ledtrig-usbport.c
-@@ -149,8 +149,8 @@ static bool usbport_trig_port_observed(struct usbport_trig_data *usbport_data,
- 	count = of_count_phandle_with_args(led_np, "trigger-sources",
- 					   "#trigger-source-cells");
- 	if (count < 0) {
--		dev_warn(dev, "Failed to get trigger sources for %s\n",
--			 led_np->full_name);
-+		dev_warn(dev, "Failed to get trigger sources for %pOF\n",
-+			 led_np);
- 		return false;
+diff --git a/drivers/cpufreq/pmac64-cpufreq.c b/drivers/cpufreq/pmac64-cpufreq.c
+index 267e0894c62d..be623dd7b9f2 100644
+--- a/drivers/cpufreq/pmac64-cpufreq.c
++++ b/drivers/cpufreq/pmac64-cpufreq.c
+@@ -516,7 +516,7 @@ static int __init g5_pm72_cpufreq_init(struct device_node *cpunode)
+ 		goto bail;
  	}
 
-diff --git a/drivers/usb/core/sysfs.c b/drivers/usb/core/sysfs.c
-index dfc68ed24db1..d930bfda4010 100644
---- a/drivers/usb/core/sysfs.c
-+++ b/drivers/usb/core/sysfs.c
-@@ -113,7 +113,7 @@ static ssize_t devspec_show(struct device *dev, struct device_attribute *attr,
- {
- 	struct device_node *of_node = dev->of_node;
+-	DBG("cpufreq: i2c clock chip found: %s\n", hwclock->full_name);
++	DBG("cpufreq: i2c clock chip found: %pOF\n", hwclock);
 
--	return sprintf(buf, "%s\n", of_node_full_name(of_node));
-+	return sprintf(buf, "%pOF\n", of_node);
- }
- static DEVICE_ATTR_RO(devspec);
- #endif
-diff --git a/drivers/usb/host/fsl-mph-dr-of.c b/drivers/usb/host/fsl-mph-dr-of.c
-index e90ddb530765..ba557cdba8ef 100644
---- a/drivers/usb/host/fsl-mph-dr-of.c
-+++ b/drivers/usb/host/fsl-mph-dr-of.c
-@@ -55,8 +55,8 @@ static struct fsl_usb2_dev_data *get_dr_mode_data(struct device_node *np)
- 				return &dr_mode_data[i];
- 		}
- 	}
--	pr_warn("%s: Invalid 'dr_mode' property, fallback to host mode\n",
--		np->full_name);
-+	pr_warn("%pOF: Invalid 'dr_mode' property, fallback to host mode\n",
-+		np);
- 	return &dr_mode_data[0]; /* mode not specified, use host */
- }
-
-diff --git a/drivers/usb/mtu3/mtu3_host.c b/drivers/usb/mtu3/mtu3_host.c
-index cd4d01087855..e42d308b8dc2 100644
---- a/drivers/usb/mtu3/mtu3_host.c
-+++ b/drivers/usb/mtu3/mtu3_host.c
-@@ -258,8 +258,8 @@ int ssusb_host_init(struct ssusb_mtk *ssusb, struct device_node *parent_dn)
-
- 	ret = of_platform_populate(parent_dn, NULL, NULL, parent_dev);
+ 	/* Now get all the platform functions */
+ 	pfunc_cpu_getfreq =
+diff --git a/drivers/cpufreq/sti-cpufreq.c b/drivers/cpufreq/sti-cpufreq.c
+index d2d0430d09d4..47105735df12 100644
+--- a/drivers/cpufreq/sti-cpufreq.c
++++ b/drivers/cpufreq/sti-cpufreq.c
+@@ -65,8 +65,8 @@ static int sti_cpufreq_fetch_major(void) {
+ 	ret = of_property_read_u32_index(np, "st,syscfg",
+ 					 MAJOR_ID_INDEX, &major_offset);
  	if (ret) {
--		dev_dbg(parent_dev, "failed to create child devices at %s\n",
--				parent_dn->full_name);
-+		dev_dbg(parent_dev, "failed to create child devices at %pOF\n",
-+				parent_dn);
+-		dev_err(dev, "No major number offset provided in %s [%d]\n",
+-			np->full_name, ret);
++		dev_err(dev, "No major number offset provided in %pOF [%d]\n",
++			np, ret);
  		return ret;
  	}
 
-diff --git a/drivers/usb/phy/phy.c b/drivers/usb/phy/phy.c
-index 032f5afaad4b..75f3127407af 100644
---- a/drivers/usb/phy/phy.c
-+++ b/drivers/usb/phy/phy.c
-@@ -302,8 +302,8 @@ struct usb_phy *devm_usb_get_phy_by_phandle(struct device *dev,
-
- 	node = of_parse_phandle(dev->of_node, phandle, index);
- 	if (!node) {
--		dev_dbg(dev, "failed to get %s phandle in %s node\n", phandle,
--			dev->of_node->full_name);
-+		dev_dbg(dev, "failed to get %s phandle in %pOF node\n", phandle,
-+			dev->of_node);
- 		return ERR_PTR(-ENODEV);
+@@ -92,8 +92,8 @@ static int sti_cpufreq_fetch_minor(void)
+ 					 MINOR_ID_INDEX, &minor_offset);
+ 	if (ret) {
+ 		dev_err(dev,
+-			"No minor number offset provided %s [%d]\n",
+-			np->full_name, ret);
++			"No minor number offset provided %pOF [%d]\n",
++			np, ret);
+ 		return ret;
  	}
- 	phy = devm_usb_get_phy_by_node(dev, node, NULL);
+
 --
 2.11.0
