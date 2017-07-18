@@ -1,86 +1,49 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 1/3] cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
-Date: Tue, 18 Jul 2017 14:01:43 +0800
-Message-ID: <feabcfd53899954198c6620e9d9b68f4a3c55201.1500355954.git.sean.wang@mediatek.com>
-References: <cover.1500355954.git.sean.wang@mediatek.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCHv5 3/6] mfd: da9052: add register details for TSI
+Date: Tue, 18 Jul 2017 08:08:50 +0100
+Message-ID: <20170718070850.rvu2iq4nsdwtnrb2@dell>
+References: <20170703084003.31184-1-sebastian.reichel@collabora.co.uk>
+ <20170703084003.31184-4-sebastian.reichel@collabora.co.uk>
+ <20170717143245.qvcshsnodtk7pi2h@dell>
+ <20170717152017.gtqa6g657k232z5k@earth>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1500355954.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170717152017.gtqa6g657k232z5k@earth>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Support Opensource <support.opensource@diasemi.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+On Mon, 17 Jul 2017, Sebastian Reichel wrote:
 
-MT2701/MT7623 is a 32-bit ARMv7 based quad-core (4 * Cortex-A7) with
-single cluster and this hardware is also compatible with the existing
-driver through enabling CPU frequency feature with operating-points-v2
-bindings. Also, this driver actually supports all MediaTek SoCs, the
-Kconfig menu entry and file name itself should be updated with more
-generic name to drop "MT8173"
+> Hi,
+> 
+> On Mon, Jul 17, 2017 at 03:32:45PM +0100, Lee Jones wrote:
+> > On Mon, 03 Jul 2017, Sebastian Reichel wrote:
+> > 
+> > > Add register details an channels definition for using the TSI
+> > > registers in the hwmon driver.
+> > > 
+> > > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> > > ---
+> > >  include/linux/mfd/da9052/da9052.h |  6 ++++++
+> > >  include/linux/mfd/da9052/reg.h    | 11 ++++++++++-
+> > >  2 files changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > Do other patches in this set depend on this change?
+> 
+> Patch 6 has a compile-time dependency on 3 (this one) + 5
+> and a runtime-dependency on patch 4. My proposed merge
+> solution would be an immutable branch for the mfd changes,
+> that can be pulled by hwmon.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
----
- drivers/cpufreq/Kconfig.arm                              | 7 +++----
- drivers/cpufreq/Makefile                                 | 2 +-
- drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} | 2 ++
- 3 files changed, 6 insertions(+), 5 deletions(-)
- rename drivers/cpufreq/{mt8173-cpufreq.c => mediatek-cpufreq.c} (99%)
+I'm happy to do that.  Please fix patch 4 and I'll take them in.
 
-diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
-index 74ed7e9..24ef446 100644
---- a/drivers/cpufreq/Kconfig.arm
-+++ b/drivers/cpufreq/Kconfig.arm
-@@ -87,14 +87,13 @@ config ARM_KIRKWOOD_CPUFREQ
- 	  This adds the CPUFreq driver for Marvell Kirkwood
- 	  SoCs.
- 
--config ARM_MT8173_CPUFREQ
--	tristate "Mediatek MT8173 CPUFreq support"
-+config ARM_MEDIATEK_CPUFREQ
-+	tristate "CPU Frequency scaling support for MediaTek SoCs"
- 	depends on ARCH_MEDIATEK && REGULATOR
--	depends on ARM64 || (ARM_CPU_TOPOLOGY && COMPILE_TEST)
- 	depends on !CPU_THERMAL || THERMAL
- 	select PM_OPP
- 	help
--	  This adds the CPUFreq driver support for Mediatek MT8173 SoC.
-+	  This adds the CPUFreq driver support for MediaTek SoCs.
- 
- config ARM_OMAP2PLUS_CPUFREQ
- 	bool "TI OMAP2+"
-diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
-index b7e78f0..ea043aa 100644
---- a/drivers/cpufreq/Makefile
-+++ b/drivers/cpufreq/Makefile
-@@ -58,7 +58,7 @@ obj-$(CONFIG_ARM_EXYNOS5440_CPUFREQ)	+= exynos5440-cpufreq.o
- obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+= highbank-cpufreq.o
- obj-$(CONFIG_ARM_IMX6Q_CPUFREQ)		+= imx6q-cpufreq.o
- obj-$(CONFIG_ARM_KIRKWOOD_CPUFREQ)	+= kirkwood-cpufreq.o
--obj-$(CONFIG_ARM_MT8173_CPUFREQ)	+= mt8173-cpufreq.o
-+obj-$(CONFIG_ARM_MEDIATEK_CPUFREQ)	+= mediatek-cpufreq.o
- obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)	+= omap-cpufreq.o
- obj-$(CONFIG_ARM_PXA2xx_CPUFREQ)	+= pxa2xx-cpufreq.o
- obj-$(CONFIG_PXA3xx)			+= pxa3xx-cpufreq.o
-diff --git a/drivers/cpufreq/mt8173-cpufreq.c b/drivers/cpufreq/mediatek-cpufreq.c
-similarity index 99%
-rename from drivers/cpufreq/mt8173-cpufreq.c
-rename to drivers/cpufreq/mediatek-cpufreq.c
-index fd1886f..481ec77 100644
---- a/drivers/cpufreq/mt8173-cpufreq.c
-+++ b/drivers/cpufreq/mediatek-cpufreq.c
-@@ -575,6 +575,8 @@ static struct platform_driver mt8173_cpufreq_platdrv = {
- 
- /* List of machines supported by this driver */
- static const struct of_device_id mt8173_cpufreq_machines[] __initconst = {
-+	{ .compatible = "mediatek,mt2701", },
-+	{ .compatible = "mediatek,mt7623", },
- 	{ .compatible = "mediatek,mt817x", },
- 	{ .compatible = "mediatek,mt8173", },
- 	{ .compatible = "mediatek,mt8176", },
 -- 
-2.7.4
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
