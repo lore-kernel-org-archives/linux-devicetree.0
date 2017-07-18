@@ -1,72 +1,286 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v2 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
-Date: Tue, 18 Jul 2017 10:56:04 -0700
-Message-ID: <20170718175604.11735-3-andrew.smirnov@gmail.com>
-References: <20170718175604.11735-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170718175604.11735-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+Subject: [PATCH v6] MIPS: NI 169445 board support
+Date: Tue, 18 Jul 2017 13:29:09 -0500
+Message-ID: <1500402549-12090-1-git-send-email-nathan.sullivan@ni.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: cphealy@gmail.com
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+Support the National Instruments 169445 board.
 
-diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+Signed-off-by: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
+---
+Changes since v5:
+
+- make device tree addresses on the internal bus relative, and compile with
+  W=2 to be sure they are in the right format.
+
+ Documentation/devicetree/bindings/mips/ni.txt   |   7 ++
+ MAINTAINERS                                     |   8 ++
+ arch/mips/boot/dts/Makefile                     |   1 +
+ arch/mips/boot/dts/ni/169445.dts                | 100 ++++++++++++++++++++++++
+ arch/mips/boot/dts/ni/Makefile                  |   7 ++
+ arch/mips/configs/generic/board-ni169445.config |  27 +++++++
+ arch/mips/generic/Kconfig                       |   6 ++
+ arch/mips/generic/vmlinux.its.S                 |  25 ++++++
+ 8 files changed, 181 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mips/ni.txt
+ create mode 100644 arch/mips/boot/dts/ni/169445.dts
+ create mode 100644 arch/mips/boot/dts/ni/Makefile
+ create mode 100644 arch/mips/configs/generic/board-ni169445.config
+
+diff --git a/Documentation/devicetree/bindings/mips/ni.txt b/Documentation/devicetree/bindings/mips/ni.txt
 new file mode 100644
-index 000000000000..61d9105ded07
+index 0000000..722bf2d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-@@ -0,0 +1,39 @@
-+Zodiac Inflight Innovations RAVE Supervisory Processor
++++ b/Documentation/devicetree/bindings/mips/ni.txt
+@@ -0,0 +1,7 @@
++National Instruments MIPS platforms
 +
-+RAVE Supervisory Processor communicates with SoC over UART. It is
-+expected that its device-tree node is specified as a child of a node
-+corresponding to UART controller used for communication.
++required root node properties:
++	- compatible: must be "ni,169445"
 +
-+Required parent device properties:
++CPU Nodes
++	- compatible: must be "mti,mips14KEc"
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7d9bd4a..73fa2e0 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9294,6 +9294,14 @@ F:	include/linux/sunrpc/
+ F:	include/uapi/linux/nfs*
+ F:	include/uapi/linux/sunrpc/
+ 
++NI169445 MIPS ARCHITECTURE
++M:	Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>
++L:	linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
++S:	Maintained
++F:	arch/mips/boot/dts/ni/
++F:	arch/mips/configs/generic/board-ni169445.config
++F:	Documentation/devicetree/bindings/mips/ni.txt
 +
-+ - compatible: Should be one of:
-+	- "zii,rave-sp-niu"
-+	- "zii,rave-sp-mezz"
-+	- "zii,rave-sp-esb"
-+	- "zii,rave-sp-rdu1"
-+	- "zii,rave-sp-rdu2"
+ NILFS2 FILESYSTEM
+ M:	Ryusuke Konishi <konishi.ryusuke-Zyj7fXuS5i5L9jVzuh4AOg@public.gmane.org>
+ L:	linux-nilfs-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+diff --git a/arch/mips/boot/dts/Makefile b/arch/mips/boot/dts/Makefile
+index b9db492..27b0f37 100644
+--- a/arch/mips/boot/dts/Makefile
++++ b/arch/mips/boot/dts/Makefile
+@@ -4,6 +4,7 @@ dts-dirs	+= img
+ dts-dirs	+= ingenic
+ dts-dirs	+= lantiq
+ dts-dirs	+= mti
++dts-dirs	+= ni
+ dts-dirs	+= netlogic
+ dts-dirs	+= pic32
+ dts-dirs	+= qca
+diff --git a/arch/mips/boot/dts/ni/169445.dts b/arch/mips/boot/dts/ni/169445.dts
+new file mode 100644
+index 0000000..5389ef4
+--- /dev/null
++++ b/arch/mips/boot/dts/ni/169445.dts
+@@ -0,0 +1,100 @@
++/dts-v1/;
 +
-+ - current-speed: Should be set to baud rate SP device is using
++/ {
++	#address-cells = <1>;
++	#size-cells = <1>;
++	compatible = "ni,169445";
 +
-+RAVE SP consists of the following sub-devices:
-+
-+Device				 Description
-+------				 -----------
-+rave-sp-wdt			: Watchdog
-+rave-sp-nvmem			: Interface to onborad EEPROM
-+rave-sp-backlight		: Display backlight
-+rave-sp-hwmon			: Interface to onboard hardware sensors
-+rave-sp-leds			: Interface to onboard LEDs
-+rave-sp-input			: Interface to onboard power button
-+
-+Example of usage:
-+
-+	rdu {
-+		compatible = "zii,rave-sp-rdu2";
-+		current-speed = <1000000>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "mti,mips14KEc";
++			clocks = <&baseclk>;
++			reg = <0>;
 +		};
 +	};
 +
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x10000000>;
++	};
++
++	baseclk: baseclock {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <50000000>;
++	};
++
++	cpu_intc: interrupt-controller {
++		#address-cells = <0>;
++		compatible = "mti,cpu-interrupt-controller";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
++
++	ahb@1f300000 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x1f300000 0x80FFF>;
++
++		gpio1: gpio@10 {
++			compatible = "ni,169445-nand-gpio";
++			reg = <0x10 0x4>;
++			reg-names = "dat";
++			gpio-controller;
++			#gpio-cells = <2>;
++		};
++
++		gpio2: gpio@14 {
++			compatible = "ni,169445-nand-gpio";
++			reg = <0x14 0x4>;
++			reg-names = "dat";
++			gpio-controller;
++			#gpio-cells = <2>;
++			no-output;
++		};
++
++		nand@0 {
++			compatible = "gpio-control-nand";
++			nand-on-flash-bbt;
++			nand-ecc-mode = "soft_bch";
++			nand-ecc-step-size = <512>;
++			nand-ecc-strength = <4>;
++			reg = <0x0 4>;
++			gpios = <&gpio2 0 0>, /* rdy */
++				<&gpio1 1 0>, /* nce */
++				<&gpio1 2 0>, /* ale */
++				<&gpio1 3 0>, /* cle */
++				<&gpio1 4 0>; /* nwp */
++		};
++
++		serial@80000 {
++			compatible = "ns16550a";
++			reg = <0x80000 0x1000>;
++			interrupt-parent = <&cpu_intc>;
++			interrupts = <6>;
++			clocks = <&baseclk>;
++			reg-shift = <0>;
++		};
++
++		ethernet@40000 {
++			compatible = "snps,dwmac-4.10a";
++			interrupt-parent = <&cpu_intc>;
++			interrupts = <5>;
++			interrupt-names = "macirq";
++			reg = <0x40000 0x2000>;
++			clock-names = "stmmaceth", "pclk";
++			clocks = <&baseclk>, <&baseclk>;
++
++			phy-mode = "rgmii";
++
++			fixed-link {
++				speed = <1000>;
++				full-duplex;
++			};
++		};
++	};
++};
+diff --git a/arch/mips/boot/dts/ni/Makefile b/arch/mips/boot/dts/ni/Makefile
+new file mode 100644
+index 0000000..66cfdff
+--- /dev/null
++++ b/arch/mips/boot/dts/ni/Makefile
+@@ -0,0 +1,7 @@
++dtb-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= 169445.dtb
++
++# Force kbuild to make empty built-in.o if necessary
++obj-					+= dummy.o
++
++always					:= $(dtb-y)
++clean-files				:= *.dtb *.dtb.S
+diff --git a/arch/mips/configs/generic/board-ni169445.config b/arch/mips/configs/generic/board-ni169445.config
+new file mode 100644
+index 0000000..0bae1f8
+--- /dev/null
++++ b/arch/mips/configs/generic/board-ni169445.config
+@@ -0,0 +1,27 @@
++CONFIG_FIT_IMAGE_FDT_NI169445=y
++
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++
++CONFIG_GPIOLIB=y
++CONFIG_GPIO_SYSFS=y
++CONFIG_GPIO_GENERIC_PLATFORM=y
++
++CONFIG_MTD=y
++CONFIG_MTD_BLOCK=y
++CONFIG_MTD_CMDLINE_PARTS=y
++
++CONFIG_MTD_NAND_ECC=y
++CONFIG_MTD_NAND_ECC_BCH=y
++CONFIG_MTD_NAND=y
++CONFIG_MTD_NAND_GPIO=y
++CONFIG_MTD_NAND_IDS=y
++
++CONFIG_MTD_UBI=y
++CONFIG_MTD_UBI_BLOCK=y
++
++CONFIG_NETDEVICES=y
++CONFIG_STMMAC_ETH=y
++CONFIG_STMMAC_PLATFORM=y
++CONFIG_DWMAC_GENERIC=y
+diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
+index a606b3f..fbf0813 100644
+--- a/arch/mips/generic/Kconfig
++++ b/arch/mips/generic/Kconfig
+@@ -16,4 +16,10 @@ config LEGACY_BOARD_SEAD3
+ 	  Enable this to include support for booting on MIPS SEAD-3 FPGA-based
+ 	  development boards, which boot using a legacy boot protocol.
+ 
++config FIT_IMAGE_FDT_NI169445
++	bool "Include FDT for NI 169445"
++	help
++	  Enable this to include the FDT for the 169445 platform from
++	  National Instruments in the FIT kernel image.
++
+ endif
+diff --git a/arch/mips/generic/vmlinux.its.S b/arch/mips/generic/vmlinux.its.S
+index f67fbf1..de851f7 100644
+--- a/arch/mips/generic/vmlinux.its.S
++++ b/arch/mips/generic/vmlinux.its.S
+@@ -29,3 +29,28 @@
+ 		};
+ 	};
+ };
++
++#ifdef CONFIG_FIT_IMAGE_FDT_NI169445
++/ {
++	images {
++		fdt@ni169445 {
++			description = "NI 169445 device tree";
++			data = /incbin/("boot/dts/ni/169445.dtb");
++			type = "flat_dt";
++			arch = "mips";
++			compression = "none";
++			hash@0 {
++				algo = "sha1";
++			};
++		};
++	};
++
++	configurations {
++		conf@ni169445 {
++			description = "NI 169445 Linux Kernel";
++			kernel = "kernel@0";
++			fdt = "fdt@ni169445";
++		};
++	};
++};
++#endif
 -- 
-2.13.3
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
