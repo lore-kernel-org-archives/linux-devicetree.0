@@ -1,108 +1,31 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH] media: i2c: mt9p031: Add 8-bit support
-Date: Tue, 18 Jul 2017 17:34:14 +0300
-Message-ID: <2087878.QkLAPtKvOj@avalon>
-References: <1500386454-27583-1-git-send-email-aford173@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio-exar: Use correct property prefix and document bindings
+Date: Tue, 18 Jul 2017 09:37:03 -0500
+Message-ID: <CAL_Jsq+vP-8a1x7Q1zB_mM_a14o=gyBd-MD8SMCEkpmpk2O_5Q@mail.gmail.com>
+References: <491bf615-f1d2-13ff-fa6e-fe5350a0b3b0@siemens.com>
+ <20170717174825.p2oflpvbd5ns6xx3@rob-hp-laptop> <e4190c03-5894-a9d2-a1e6-44135a3acb6a@siemens.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1500386454-27583-1-git-send-email-aford173@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Adam Ford <adam.ford@logicpd.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e4190c03-5894-a9d2-a1e6-44135a3acb6a@siemens.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jan Kiszka <jan.kiszka@siemens.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adam,
+On Mon, Jul 17, 2017 at 1:20 PM, Jan Kiszka <jan.kiszka@siemens.com> wrote:
+> On 2017-07-17 19:48, Rob Herring wrote:
+>> On Thu, Jul 13, 2017 at 08:44:26AM +0200, Jan Kiszka wrote:
+>>> The device-specific property should be prefixed with the vendor name
+>>> Change this and document the bindings of this platform device.
+>>
+>> You are breaking backwards compatibility. You minimally need to state
+>> that and why that is okay in this case.
+>
+> There is no previous version yet: The patch that introduced this just
+> entered for 4.13. Linus remarked that "linux," is the wrong prefix and
+> wanted this to be changed before this version becomes final.
 
-Thank you for the patch.
+Please describe this in the commit message and add a Fixes tag.
 
-On Tuesday 18 Jul 2017 09:00:54 Adam Ford wrote:
-> From: Adam Ford <adam.ford@logicpd.com>
-> 
-> By default the camera driver only supports monochrome or color at 12-bit.
-> This patch will allow the camera to choose between 12-bit or 8-bit
-> resolution. Tested on Logic PD DM3730 Torpedo Development Kit.
-
-I don't think that's right. The MT9P031 can't output 8-bit data. What can be 
-done, of course, is connect only the topmost 8 bits of the 12-bit output to an 
-8-bit input on a receiver. That supported through the data-shift property that 
-should be set on the receiver DT endpoint node.
-
-> Signed-off-by: Adam Ford <adam.ford@logicpd.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt index
-> cb60443..77b0dc1 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9p031.txt
-> @@ -15,6 +15,7 @@ Required Properties:
-> 
->  Optional Properties:
->  - reset-gpios: Chip reset GPIO
-> +- resolution: Empty (12-bit) or 8 bit resolution
-> 
->  For further reading on port node refer to
->  Documentation/devicetree/bindings/media/video-interfaces.txt.
-> diff --git a/drivers/media/i2c/mt9p031.c b/drivers/media/i2c/mt9p031.c
-> index 91d822f..355791d 100644
-> --- a/drivers/media/i2c/mt9p031.c
-> +++ b/drivers/media/i2c/mt9p031.c
-> @@ -1024,6 +1024,7 @@ mt9p031_get_pdata(struct i2c_client *client)
-> 
->  	of_property_read_u32(np, "input-clock-frequency", &pdata->ext_freq);
->  	of_property_read_u32(np, "pixel-clock-frequency", &pdata-
->target_freq);
-> +	of_property_read_u32(np, "resolution", &pdata->resolution);
-> 
->  done:
->  	of_node_put(np);
-> @@ -1058,6 +1059,7 @@ static int mt9p031_probe(struct i2c_client *client,
->  	mt9p031->output_control	= MT9P031_OUTPUT_CONTROL_DEF;
->  	mt9p031->mode2 = MT9P031_READ_MODE_2_ROW_BLC;
->  	mt9p031->model = did->driver_data;
-> +	mt9p031->resolution = pdata->resolution;
-> 
->  	mt9p031->regulators[0].supply = "vdd";
->  	mt9p031->regulators[1].supply = "vdd_io";
-> @@ -1123,11 +1125,18 @@ static int mt9p031_probe(struct i2c_client *client,
->  	mt9p031->crop.left = MT9P031_COLUMN_START_DEF;
->  	mt9p031->crop.top = MT9P031_ROW_START_DEF;
-> 
-> -	if (mt9p031->model == MT9P031_MODEL_MONOCHROME)
-> -		mt9p031->format.code = MEDIA_BUS_FMT_Y12_1X12;
-> -	else
-> -		mt9p031->format.code = MEDIA_BUS_FMT_SGRBG12_1X12;
-> -
-> +	if (mt9p031->model == MT9P031_MODEL_MONOCHROME) {
-> +		if (mt9p031->resolution == 8)
-> +			mt9p031->format.code = MEDIA_BUS_FMT_Y8_1X8;
-> +		else
-> +			mt9p031->format.code = MEDIA_BUS_FMT_Y12_1X12;
-> +	}
-> +	else {
-> +		if (mt9p031->resolution == 8)
-> +			mt9p031->format.code = MEDIA_BUS_FMT_SGRBG8_1X8;
-> +		else
-> +			mt9p031->format.code = MEDIA_BUS_FMT_SGRBG12_1X12;
-> +	}
->  	mt9p031->format.width = MT9P031_WINDOW_WIDTH_DEF;
->  	mt9p031->format.height = MT9P031_WINDOW_HEIGHT_DEF;
->  	mt9p031->format.field = V4L2_FIELD_NONE;
-> diff --git a/include/media/i2c/mt9p031.h b/include/media/i2c/mt9p031.h
-> index 1ba3612..84335cb 100644
-> --- a/include/media/i2c/mt9p031.h
-> +++ b/include/media/i2c/mt9p031.h
-> @@ -11,6 +11,7 @@ struct v4l2_subdev;
->  struct mt9p031_platform_data {
->  	int ext_freq;
->  	int target_freq;
-> +	int resolution;
->  };
-> 
->  #endif
-
--- 
-Regards,
-
-Laurent Pinchart
+Rob
