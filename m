@@ -1,19 +1,11 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] MIPS: Convert to using %pOF instead of full_name
-Date: Tue, 18 Jul 2017 16:42:45 -0500
-Message-ID: <20170718214339.7774-5-robh@kernel.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org
+Subject: [PATCH] extcon: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 16:43:00 -0500
+Message-ID: <20170718214339.7774-20-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Now that we have a custom printf format specifier, convert users of
@@ -21,101 +13,26 @@ full_name to use %pOF instead. This is preparation to remove storing
 of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- arch/mips/ath79/clock.c    |  9 ++++-----
- arch/mips/pci/pci-legacy.c |  2 +-
- arch/mips/pci/pci-rt3883.c | 11 +++++------
- 3 files changed, 10 insertions(+), 12 deletions(-)
+ drivers/extcon/extcon.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
-index fa845953f736..6b1000b6a6a6 100644
---- a/arch/mips/ath79/clock.c
-+++ b/arch/mips/ath79/clock.c
-@@ -487,17 +487,16 @@ static void __init ath79_clocks_init_dt_ng(struct device_node *np)
- {
- 	struct clk *ref_clk;
- 	void __iomem *pll_base;
--	const char *dnfn = of_node_full_name(np);
+diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
+index 8eccf7b14937..229364a9d868 100644
+--- a/drivers/extcon/extcon.c
++++ b/drivers/extcon/extcon.c
+@@ -1363,8 +1363,8 @@ struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
 
- 	ref_clk = of_clk_get(np, 0);
- 	if (IS_ERR(ref_clk)) {
--		pr_err("%s: of_clk_get failed\n", dnfn);
-+		pr_err("%pOF: of_clk_get failed\n", np);
- 		goto err;
+ 	node = of_parse_phandle(dev->of_node, "extcon", index);
+ 	if (!node) {
+-		dev_dbg(dev, "failed to get phandle in %s node\n",
+-			dev->of_node->full_name);
++		dev_dbg(dev, "failed to get phandle in %pOF node\n",
++			dev->of_node);
+ 		return ERR_PTR(-ENODEV);
  	}
 
- 	pll_base = of_iomap(np, 0);
- 	if (!pll_base) {
--		pr_err("%s: can't map pll registers\n", dnfn);
-+		pr_err("%pOF: can't map pll registers\n", np);
- 		goto err_clk;
- 	}
-
-@@ -506,12 +505,12 @@ static void __init ath79_clocks_init_dt_ng(struct device_node *np)
- 	else if (of_device_is_compatible(np, "qca,ar9330-pll"))
- 		ar9330_clk_init(ref_clk, pll_base);
- 	else {
--		pr_err("%s: could not find any appropriate clk_init()\n", dnfn);
-+		pr_err("%pOF: could not find any appropriate clk_init()\n", np);
- 		goto err_iounmap;
- 	}
-
- 	if (of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data)) {
--		pr_err("%s: could not register clk provider\n", dnfn);
-+		pr_err("%pOF: could not register clk provider\n", np);
- 		goto err_iounmap;
- 	}
-
-diff --git a/arch/mips/pci/pci-legacy.c b/arch/mips/pci/pci-legacy.c
-index 174575a9a112..958f47c1f558 100644
---- a/arch/mips/pci/pci-legacy.c
-+++ b/arch/mips/pci/pci-legacy.c
-@@ -127,7 +127,7 @@ void pci_load_of_ranges(struct pci_controller *hose, struct device_node *node)
- 	struct of_pci_range range;
- 	struct of_pci_range_parser parser;
-
--	pr_info("PCI host bridge %s ranges:\n", node->full_name);
-+	pr_info("PCI host bridge %pOF ranges:\n", node);
- 	hose->of_node = node;
-
- 	if (of_pci_range_parser_init(&parser, node))
-diff --git a/arch/mips/pci/pci-rt3883.c b/arch/mips/pci/pci-rt3883.c
-index 3520e9b414e7..04f8ea953297 100644
---- a/arch/mips/pci/pci-rt3883.c
-+++ b/arch/mips/pci/pci-rt3883.c
-@@ -207,8 +207,7 @@ static int rt3883_pci_irq_init(struct device *dev,
-
- 	irq = irq_of_parse_and_map(rpc->intc_of_node, 0);
- 	if (irq == 0) {
--		dev_err(dev, "%s has no IRQ",
--			of_node_full_name(rpc->intc_of_node));
-+		dev_err(dev, "%pOF has no IRQ", rpc->intc_of_node);
- 		return -EINVAL;
- 	}
-
-@@ -438,8 +437,8 @@ static int rt3883_pci_probe(struct platform_device *pdev)
- 	}
-
- 	if (!rpc->intc_of_node) {
--		dev_err(dev, "%s has no %s child node",
--			of_node_full_name(rpc->intc_of_node),
-+		dev_err(dev, "%pOF has no %s child node",
-+			rpc->intc_of_node,
- 			"interrupt controller");
- 		return -EINVAL;
- 	}
-@@ -454,8 +453,8 @@ static int rt3883_pci_probe(struct platform_device *pdev)
- 	}
-
- 	if (!rpc->pci_controller.of_node) {
--		dev_err(dev, "%s has no %s child node",
--			of_node_full_name(rpc->intc_of_node),
-+		dev_err(dev, "%pOF has no %s child node",
-+			rpc->intc_of_node,
- 			"PCI host bridge");
- 		err = -EINVAL;
- 		goto err_put_intc_node;
 --
 2.11.0
