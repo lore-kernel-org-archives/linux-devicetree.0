@@ -1,73 +1,84 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] [PATCH v2 0/7] Add support of OV9655 camera
-Date: Tue, 18 Jul 2017 12:53:12 +0000
-Message-ID: <2dd3402e-55b0-231d-878f-5ba95ee8cb36@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
- <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
- <BCD1BD18-96E3-4638-8935-B5C832D8EE52@goldelico.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 01/18] regmap: mmio: Add function to attach a clock
+Date: Tue, 18 Jul 2017 14:21:47 +0100
+Message-ID: <20170718132147.uzexelksygjeasmw@sirena.org.uk>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <02f409ad80afed68e02660f161fc26d588a86fa7.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <20170713160142.2buaie6ebqbxunin@sirena.org.uk>
+ <20170717090107.cpjxoxfqcc3qwabh@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <BCD1BD18-96E3-4638-8935-B5C832D8EE52-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <0606AD7205958C4DB8FD3950C939896E-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0089936345=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170717090107.cpjxoxfqcc3qwabh@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzE4LzIwMTcgMDI6MTcgUE0sIEguIE5pa29sYXVzIFNjaGFsbGVyIHdyb3RlOg0K
-PiBIaSwNCj4gDQo+PiBBbSAxOC4wNy4yMDE3IHVtIDEzOjU5IHNjaHJpZWIgSGFucyBWZXJrdWls
-IDxodmVya3VpbEB4czRhbGwubmw+Og0KPj4NCj4+IE9uIDEyLzA3LzE3IDIyOjAxLCBTeWx3ZXN0
-ZXIgTmF3cm9ja2kgd3JvdGU6DQo+Pj4gSGkgSHVndWVzLA0KPj4+DQo+Pj4gT24gMDcvMDMvMjAx
-NyAxMToxNiBBTSwgSHVndWVzIEZydWNoZXQgd3JvdGU6DQo+Pj4+IFRoaXMgcGF0Y2hzZXQgZW5h
-YmxlcyBPVjk2NTUgY2FtZXJhIHN1cHBvcnQuDQo+Pj4+DQo+Pj4+IE9WOTY1NSBzdXBwb3J0IGhh
-cyBiZWVuIHRlc3RlZCB1c2luZyBTVE0zMkY0RElTLUNBTSBleHRlbnNpb24gYm9hcmQNCj4+Pj4g
-cGx1Z2dlZCBvbiBjb25uZWN0b3IgUDEgb2YgU1RNMzJGNzQ2Ry1ESVNDTyBib2FyZC4NCj4+Pj4g
-RHVlIHRvIGxhY2sgb2YgT1Y5NjUwLzUyIGhhcmR3YXJlIHN1cHBvcnQsIHRoZSBtb2RpZmllZCBy
-ZWxhdGVkIGNvZGUNCj4+Pj4gY291bGQgbm90IGhhdmUgYmVlbiBjaGVja2VkIGZvciBub24tcmVn
-cmVzc2lvbi4NCj4+Pj4NCj4+Pj4gRmlyc3QgcGF0Y2hlcyB1cGdyYWRlIGN1cnJlbnQgc3VwcG9y
-dCBvZiBPVjk2NTAvNTIgdG8gcHJlcGFyZSB0aGVuDQo+Pj4+IGludHJvZHVjdGlvbiBvZiBPVjk2
-NTUgdmFyaWFudCBwYXRjaC4NCj4+Pj4gQmVjYXVzZSBvZiBPVjk2NTUgcmVnaXN0ZXIgc2V0IHNs
-aWdodGx5IGRpZmZlcmVudCBmcm9tIE9WOTY1MC85NjUyLA0KPj4+PiBub3QgYWxsIG9mIHRoZSBk
-cml2ZXIgZmVhdHVyZXMgYXJlIHN1cHBvcnRlZCAoY29udHJvbHMpLiBTdXBwb3J0ZWQNCj4+Pj4g
-cmVzb2x1dGlvbnMgYXJlIGxpbWl0ZWQgdG8gVkdBLCBRVkdBLCBRUVZHQS4NCj4+Pj4gU3VwcG9y
-dGVkIGZvcm1hdCBpcyBsaW1pdGVkIHRvIFJHQjU2NS4NCj4+Pj4gQ29udHJvbHMgYXJlIGxpbWl0
-ZWQgdG8gY29sb3IgYmFyIHRlc3QgcGF0dGVybiBmb3IgdGVzdCBwdXJwb3NlLg0KPj4+DQo+Pj4g
-SSBhcHByZWNpYXRlIHlvdXIgZWZmb3J0cyB0b3dhcmRzIG1ha2luZyBhIGNvbW1vbiBkcml2ZXIg
-YnV0IElNTyBpdCB3b3VsZCBiZQ0KPj4+IGJldHRlciB0byBjcmVhdGUgYSBzZXBhcmF0ZSBkcml2
-ZXIgZm9yIHRoZSBPVjk2NTUgc2Vuc29yLiAgVGhlIG9yaWdpbmFsIGRyaXZlcg0KPj4+IGlzIDE1
-NzYgbGluZXMgb2YgY29kZSwgeW91ciBwYXRjaCBzZXQgYWRkcyBoYWxmIG9mIHRoYXQgKDgxNiku
-ICBUaGVyZSBhcmUNCj4+PiBzaWduaWZpY2FudCBkaWZmZXJlbmNlcyBpbiB0aGUgZmVhdHVyZSBz
-ZXQgb2YgYm90aCBzZW5zb3JzLCB0aGVyZSBhcmUNCj4+PiBkaWZmZXJlbmNlcyBpbiB0aGUgcmVn
-aXN0ZXIgbGF5b3V0LiAgSSB3b3VsZCBnbyBmb3IgYSBzZXBhcmF0ZSBkcml2ZXIsIHdlDQo+Pj4g
-d291bGQgdGhlbiBoYXZlIGNvZGUgZWFzaWVyIHRvIGZvbGxvdyBhbmQgd291bGRuJ3QgbmVlZCB0
-byB3b3JyeSBhYm91dCBwb3NzaWJsZQ0KPj4+IHJlZ3Jlc3Npb25zLiAgSSdtIGFmcmFpZCBJIGhh
-dmUgbG9zdCB0aGUgY2FtZXJhIG1vZHVsZSBhbmQgd29uJ3QgYmUgYWJsZQ0KPj4+IHRvIHRlc3Qg
-dGhlIHBhdGNoIHNldCBhZ2FpbnN0IHJlZ3Jlc3Npb25zLg0KPj4+DQo+Pj4gSU1ITyBmcm9tIG1h
-aW50ZW5hbmNlIFBPViBpdCdzIGJldHRlciB0byBtYWtlIGEgc2VwYXJhdGUgZHJpdmVyLiBJbiB0
-aGUgZW5kDQo+Pj4gb2YgdGhlIGRheSB3ZSB3b3VsZG4ndCBiZSBhZGRpbmcgbXVjaCBtb3JlIGNv
-ZGUgdGhhbiBpdCBpcyBiZWluZyBkb25lIG5vdy4NCj4+DQo+PiBJIGFncmVlLiBXZSBkbyBub3Qg
-aGF2ZSBncmVhdCBleHBlcmllbmNlcyBpbiB0aGUgcGFzdCB3aXRoIHRyeWluZyB0byBzdXBwb3J0
-DQo+PiBtdWx0aXBsZSB2YXJpYW50cyBpbiBhIHNpbmdsZSBkcml2ZXIgKHVubGVzcyB0aGUgZGlm
-ZnMgYXJlIHRydWx5IHNtYWxsKS4NCj4gDQo+IFdlbGwsDQo+IElNSE8gdGhlIGRpZmZzIGluIG92
-OTY1eCBhcmUgc21hbGxlciAoYnV0IHVudGVzdGFibGUgYmVjYXVzZSBub2JvZHkgc2VlbXMNCj4g
-dG8gaGF2ZSBhbiBvdjk2NTAvNTIgYm9hcmQpIHRoYW4gd2l0aGluIHRoZSBicTI3eHh4IGNoaXBz
-LCBidXQgSSBjYW4gZGlnIG91dA0KPiBhbiBvbGQgcGRhdGEgYmFzZWQgc2VwYXJhdGUgb3Y5NjU1
-IGRyaXZlciBhbmQgZXh0ZW5kIHRoYXQgdG8gYmVjb21lIERUIGNvbXBhdGlibGUuDQo+IA0KPiBJ
-IGhhZCBhYmFuZG9uZWQgdGhhdCBzZXBhcmF0ZSBhcHByb2FjaCBpbiBmYXZvdXIgb2YgZXh0ZW5k
-aW5nIHRoZSBvdjk2NXggZHJpdmVyLg0KPiANCj4gSGF2ZSB0byBkaXNjdXNzIHdpdGggSHVndWVz
-IGhvdyB0byBwcm9jZWVkLg0KPiANCj4gQlIgYW5kIHRoYW5rcywNCj4gTmlrb2xhdXMNCj4gDQoN
-CkFzIFN5bHdlc3RlciBhbmQgSGFucywgSSdtIGFsc28gaW4gZmxhdm91ciBvZiBhIHNlcGFyYXRl
-IGRyaXZlciwgdGhlIA0KZmFjdCB0aGF0IHJlZ2lzdGVyIHNldCBzZWVtcyBzaW1pbGFyIGJ1dCBp
-biBmYWN0IGlzIG5vdCBhbmQgdGhhdCB3ZSANCmNhbm5vdCB0ZXN0IGZvciBub24tcmVncmVzc2lv
-biBvZiA5NjUwLzUyIGFyZSBraWxsZXIgZm9yIG1lIHRvIGNvbnRpbnVlIA0Kb24gYSBzaW5nbGUg
-ZHJpdmVyLg0KV2UgY2FuIG5vdyByZXN0YXJ0IGZyb20gYSBuZXcgZnJlc2ggc3RhdGUgb2YgdGhl
-IGFydCBzZW5zb3IgZHJpdmVyIA0KZ2V0dGluZyByaWQgb2YgbGVnYWN5IChwZGF0YSwgb2xkIGdw
-aW8sIGV0Yy4uLikuDQoNCkJSLA0KSHVndWVzLg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--===============0089936345==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dorp7qp2jdppfcih"
+Content-Disposition: inline
+
+
+--dorp7qp2jdppfcih
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jul 17, 2017 at 11:01:07AM +0200, Maxime Ripard wrote:
+> On Thu, Jul 13, 2017 at 05:01:42PM +0100, Mark Brown wrote:
+
+> > > This might be problematic if the clock to enable is stored in another node.
+> > > Let's add a function that allows to attach a clock that has already been
+> > > retrieved to a regmap in order to fix this.
+
+> > What is the use case for this?
+
+> This is useful when the clock you want to be handled by the regmap is
+> not described in the device node that probed the driver, but one of
+> its subnode, or an another node entirely.
+
+> We're in the latter case, where we have two controllers in the DT, but
+> are driven by the same driver. We'll create two regmaps, but one will
+> not have the proper of_node used to retrieve the clock.
+
+I'm sorry but I'm still not seeing why you're doing this.  Can you be
+more concrete please?
+
+--dorp7qp2jdppfcih
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlluC2oACgkQJNaLcl1U
+h9AgGwf/U7/VjZReTRqFVAih0pK/0nqz3xriFh8b/MlZQZxYThBJgFDOXcXWafKn
+aPfGa2GAU0QJaFIM9f0X+WjKF1du+v7Qkmbdc6FnyZD/VcWSkoOmtzS7yXSllS+B
++mn/TCI002pdWBsnf9HztudcqIGlPKhctc1IGCf6Uk4qJNl9aWrtIXIbl0lhz17R
+iel7q6m7T25e2zv9efMejrTrtWS1lWk07hCMCGARZ0uug/SL4kcvPPq4v0eWq33d
+HQIpNSpZCj/ibhEshqBMVI5DdNqITyXswHE2/IcHIkc5l/zmJONIwngdiqAvB+Ry
+MxGaSZCmDnAD8TN8JFlh5+T1faAR9A==
+=C3bf
+-----END PGP SIGNATURE-----
+
+--dorp7qp2jdppfcih--
+
+--===============0089936345==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0089936345==--
