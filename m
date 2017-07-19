@@ -1,57 +1,62 @@
 From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] irqchip: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 03:28:36 +0300
-Message-ID: <123f1ec8-e1e1-1bf4-c47b-b97bdd8fd8db@mleia.com>
-References: <20170718214339.7774-30-robh@kernel.org>
+Subject: Re: [PATCHv3 2/2] spi: imx: document use of native chip-selects in
+ devicetree
+Date: Wed, 19 Jul 2017 03:32:41 +0300
+Message-ID: <c985824e-0a84-33ec-4960-6b84b3de8653@mleia.com>
+References: <1499746932-14850-1-git-send-email-gerg@linux-m68k.org>
+ <1499746932-14850-3-git-send-email-gerg@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718214339.7774-30-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1499746932-14850-3-git-send-email-gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Greg Ungerer <gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/19/2017 12:43 AM, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
+Hello Greg,
+
+On 07/11/2017 07:22 AM, Greg Ungerer wrote:
+> Document the "<0>" notation for specifying use of a native chip-select
+> in the "cs-gpios" tag of an SPI device in devicetree. This isn't unique
+> to the spi-imx driver, but this clearly spells out that you can use it
+> with this driver.
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-> Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> Cc: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: "Sören Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Greg Ungerer <gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> index 31b5b21..cf616ea 100644
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>  - reg : Offset and length of the register set for the device
+>  - interrupts : Should contain CSPI/eCSPI interrupt
+>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
+> +	Specify use of native chipselects with "<0>" in place of a gpio.
+>  - clocks : Clock specifiers for both ipg and per clocks.
+>  - clock-names : Clock names should include both "ipg" and "per"
+>  See the clock consumer binding,
+> @@ -38,7 +39,8 @@ ecspi@70010000 {
+>  	reg = <0x70010000 0x4000>;
+>  	interrupts = <36>;
+>  	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
+> -		   <&gpio3 25 0>; /* GPIO3_25 */
+> +		   <&gpio3 25 0>, /* GPIO3_25 */
+> +		   <0>;           /* Native chip select */
+>  	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
+>  	dma-names = "rx", "tx";
+>  	fsl,spi-rdy-drctl = <1>;
+> 
 
-For 
+Adding Rob to Cc.
 
->  drivers/irqchip/irq-lpc32xx.c            |  2 +-
+Reviewed-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+Rob, if you find the change acceptable, can you ack it?
 
 --
 With best wishes,
