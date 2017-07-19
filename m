@@ -1,60 +1,84 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v6 1/3] clk: nxp: clk-lpc32xx: rename
- clk_gate_is_enabled()
-Date: Wed, 19 Jul 2017 12:50:01 +0000
-Message-ID: <63be565e-4f3c-725c-c31b-a333b9bde89d@st.com>
-References: <1500364414-10021-1-git-send-email-gabriel.fernandez@st.com>
- <1500364414-10021-2-git-send-email-gabriel.fernandez@st.com>
- <20f6a994-26b4-578c-d641-395639ebac0f@mleia.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
+ active low/high
+Date: Wed, 19 Jul 2017 15:25:33 +0200
+Message-ID: <20170719131640.GA2533@localhost>
+References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
+ <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20f6a994-26b4-578c-d641-395639ebac0f-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <9405753940680D409C51CF05C0AB097A-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ludovic BARRE <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVmxhZGltaXIsDQoNCk1hbnkgdGhhbmtzIGZvciB0aGUgY29kZSByZXZpZXcuDQoNCg0KT24g
-MDcvMTgvMjAxNyAwOTo0OCBQTSwgVmxhZGltaXIgWmFwb2xza2l5IHdyb3RlOg0KPiBIZWxsbyBH
-YWJyaWVsLA0KPg0KPiBPbiAwNy8xOC8yMDE3IDEwOjUzIEFNLCBnYWJyaWVsLmZlcm5hbmRlekBz
-dC5jb20gd3JvdGU6DQo+PiBGcm9tOiBHYWJyaWVsIEZlcm5hbmRleiA8Z2FicmllbC5mZXJuYW5k
-ZXpAc3QuY29tPg0KPj4NCj4+IFdlIG5lZWQgdG8gZXhwb3J0IGNsa19nYXRlX2lzX2VuYWJsZWQo
-KSBmcm9tIGNsayBmcmFtZXdvcmssIHRoZW4NCj4gZmlyc3Qgb2YgYWxsIGxldCdzIGNsYXJpZnkg
-aWYgeW91IHJlYWxseSBuZWVkIHRvIGV4cG9ydCBjbGtfZ2F0ZV9pc19lbmFibGVkKCkNCj4gZnJv
-bSB0aGUgQ0NGLg0KWWVzIGkgcmVhbGx5IG5lZWQgdG8gZXhwb3J0IGNsa19nYXRlX2lzX2VuYWJs
-ZWQoKQ0KDQo+PiB0byBhdm9pZCBjb21waWxhdGlvbiBpc3N1ZSB3ZSBoYXZlIHRvIHJlbmFtZSBj
-bGtfZ2F0ZV9pc19lbmFibGVkKCkNCj4+IGluIE5YUCBMUEMzMnh4IGNsb2NrIGRyaXZlci4NCj4+
-DQo+PiBTaWduZWQtb2ZmLWJ5OiBHYWJyaWVsIEZlcm5hbmRleiA8Z2FicmllbC5mZXJuYW5kZXpA
-c3QuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvY2xrL254cC9jbGstbHBjMzJ4eC5jIHwgNCAr
-Ky0tDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-DQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL254cC9jbGstbHBjMzJ4eC5jIGIvZHJp
-dmVycy9jbGsvbnhwL2Nsay1scGMzMnh4LmMNCj4+IGluZGV4IDViOThmZjkuLjFjYzcxYWQgMTAw
-NjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2Nsay9ueHAvY2xrLWxwYzMyeHguYw0KPj4gKysrIGIvZHJp
-dmVycy9jbGsvbnhwL2Nsay1scGMzMnh4LmMNCj4+IEBAIC05MDMsNyArOTAzLDcgQEAgc3RhdGlj
-IHZvaWQgY2xrX2dhdGVfZGlzYWJsZShzdHJ1Y3QgY2xrX2h3ICpodykNCj4+ICAgCXJlZ21hcF91
-cGRhdGVfYml0cyhjbGtfcmVnbWFwLCBjbGstPnJlZywgbWFzaywgdmFsKTsNCj4+ICAgfQ0KPj4g
-ICANCj4+IC1zdGF0aWMgaW50IGNsa19nYXRlX2lzX2VuYWJsZWQoc3RydWN0IGNsa19odyAqaHcp
-DQo+PiArc3RhdGljIGludCBfX2Nsa19nYXRlX2lzX2VuYWJsZWQoc3RydWN0IGNsa19odyAqaHcp
-DQo+PiAgIHsNCj4+ICAgCXN0cnVjdCBscGMzMnh4X2Nsa19nYXRlICpjbGsgPSB0b19scGMzMnh4
-X2dhdGUoaHcpOw0KPj4gICAJdTMyIHZhbDsNCj4+IEBAIC05MTgsNyArOTE4LDcgQEAgc3RhdGlj
-IGludCBjbGtfZ2F0ZV9pc19lbmFibGVkKHN0cnVjdCBjbGtfaHcgKmh3KQ0KPj4gICBzdGF0aWMg
-Y29uc3Qgc3RydWN0IGNsa19vcHMgbHBjMzJ4eF9jbGtfZ2F0ZV9vcHMgPSB7DQo+PiAgIAkuZW5h
-YmxlID0gY2xrX2dhdGVfZW5hYmxlLA0KPj4gICAJLmRpc2FibGUgPSBjbGtfZ2F0ZV9kaXNhYmxl
-LA0KPj4gLQkuaXNfZW5hYmxlZCA9IGNsa19nYXRlX2lzX2VuYWJsZWQsDQo+PiArCS5pc19lbmFi
-bGVkID0gX19jbGtfZ2F0ZV9pc19lbmFibGVkLA0KPiBJbiBjYXNlIGlmIHRoaXMgY2hhbmdlIGdl
-dHMgY29udGludWF0aW9uLCBoZXJlIEkgd2FudCB0byBzZWUgdGhlIHNhbWUNCj4gcHJlZml4ZXMg
-Zm9yIGFsbCBmdW5jdGlvbnMgYW5kIG5vIHVuZGVyc2NvcmVzLCBuYW1lbHkgaXQgc2hhbGwgYmUN
-Cj4gKiBscGMzMnh4X2Nsa19nYXRlX2VuYWJsZSgpLA0KPiAqIGxwYzMyeHhfY2xrX2dhdGVfZGlz
-YWJsZSgpLA0KPiAqIGxwYzMyeHhfY2xrX2dhdGVfaXNfZW5hYmxlZCgpLg0Kb2sgaWwgd2lsbCB1
-c2Ugc2FtZSBwcmVmaXhlcyBmb3IgYWxsIGZ1bmN0aW9ucw0KDQpCZXN0IHJlZ2FyZHMNCg0KR2Fi
-cmllbC4NCg0KPj4gICB9Ow0KPj4gICANCj4+ICAgI2RlZmluZSBkaXZfbWFzayh3aWR0aCkJKCgx
-IDw8ICh3aWR0aCkpIC0gMSkNCj4+DQo+IC0tDQo+IFdpdGggYmVzdCB3aXNoZXMsDQo+IFZsYWRp
-bWlyDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Apr 07, 2017 at 12:25:49PM +0200, Linus Walleij wrote:
+> On Thu, Apr 6, 2017 at 3:35 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> 
+> > Currently, the GPIO interface is said to Open Drain if it is Single
+> > Ended and active LOW. Similarly, it is said as Open Source if it is
+> > Single Ended and active HIGH.
+> >
+> > The active HIGH/LOW is used in the interface for setting the pin
+> > state to HIGH or LOW when enabling/disabling the interface.
+> >
+> > In Open Drain interface, pin is set to HIGH by putting pin in
+> > high impedance and LOW by driving to the LOW.
+> >
+> > In Open Source interface, pin is set to HIGH by driving pin to
+> > HIGH and set to LOW by putting pin in high impedance.
+> >
+> > With above, the Open Drain/Source is unrelated to the active LOW/HIGH
+> > in interface. There is interface where the enable/disable of interface
+> > is ether active LOW or HIGH but it is Open Drain type.
+> >
+> > Hence decouple the Open Drain with Single Ended + Active LOW and
+> > Open Source with Single Ended + Active HIGH.
+> >
+> > Adding different flag for the Open Drain/Open Source which is valid
+> > only when Single ended flag is enabled.
+> >
+> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> 
+> Patch applied.
+> 
+> Good that you found this and fixed it before someone git hurt.
+
+Well, while decoupling single-endedness from polarity was the right
+thing to do, this change did actually break the DT binary interface.
+
+If you have an old compiled dtb whose source used GPIO_OPEN_DRAIN, you
+now instead get *open-source* behaviour on 4.12:
+
+	GPIO_OPEN_DRAIN = GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW
+	
+		=> active-low, but *open source*
+
+while if you recompile that source against 4.12 you do get the expected
+open-drain behaviour, but now with inverted polarity:
+
+	GPIO_OPEN_DRAIN = GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN
+	
+		=> open drain, but *active high*
+
+requiring the device tree to be updated by specifying
+
+	(GPIO_OPEN_DRAIN | GPIO_ACTIVE_LOW)
+
+I guess the latter is fine, even if it is likely to amount to a fair bit
+of debugging world wide.
+
+Perhaps all this can still be avoided by adding further flags and
+deprecating others before people start migrating to 4.12 (after all,
+GPIO_OPEN_DRAIN has been around since 4.4 even if there are no in-kernel
+users).
+
+Or we accept the binary interface breakage -- it probably is pretty rare
+that people update the kernel without updating the dtb. I can just
+update the dts on the system that broke for me, and hopefully anyone
+debugging this issue while updating to 4.12 will find this mail quickly.
+
+Johan
