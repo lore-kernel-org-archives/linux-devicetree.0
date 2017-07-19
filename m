@@ -1,57 +1,23 @@
-From: m18063 <Claudiu.Beznea@microchip.com>
-Subject: Re: [PATCH 3/3] dt-bindings: i2c: eeprom: document "mac-offset"
- binding
-Date: Wed, 19 Jul 2017 12:08:39 +0300
-Message-ID: <96d6eeed-9272-1460-8c5d-64f06918b09a@microchip.com>
-References: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
- <1499336217-16913-4-git-send-email-claudiu.beznea@microchip.com>
- <20170710034613.fc4vj6h22kagce24@rob-hp-laptop>
+From: Gregory Fong <gregory.0xf0@gmail.com>
+Subject: Re: [PATCH] gpio: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 02:11:06 -0700
+Message-ID: <CADtm3G42P3CG7rwmDu7QLJQY8+k0PmpJe3jE2BbcTOLxO3Bsig@mail.gmail.com>
+References: <20170718214339.7774-23-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170710034613.fc4vj6h22kagce24@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <20170718214339.7774-23-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com
+Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tien Hock Loh <thloh@altera.com>, Alexandre Courbot <gnurou@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-gpio@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 18, 2017 at 2:43 PM, Rob Herring <robh@kernel.org> wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-
-On 10.07.2017 06:46, Rob Herring wrote:
-> On Thu, Jul 06, 2017 at 01:16:57PM +0300, Claudiu Beznea wrote:
->> Document "mac-offset" binding that will be used by at24 EEPROM driver.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
->> ---
->>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> index a50dc01..3dd267c 100644
->> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
->> @@ -35,10 +35,13 @@ Optional properties:
->>  
->>    - read-only: this parameterless property disables writes to the eeprom
->>  
->> +  - mac-offset: offset in EEPROM where MAC address starts
->> +
-> 
-> This doesn't scale if you have multiple things you need the offset to, 
-> and we already have a binding for this. Use the nvmem binding.
-Are you talking about nvmem-cells, nvmem-cell-names bindings? Since
-at24 is i2c driver, I can only think at it as a nvmem provider. Using these
-bindings it will imply, as per my understanding about nvmem subsystem, that
-this should also become a nvmem consumer. It looks a little strange to
-me but I don't have deep knowledge about subsystem, correct me if I'm wrong.
-Please let me know if you are talking about using these bindings and reading
-them (just to get the offset passed in "reg" binding) by not passing the nvmem
-APIs defined in nvmem core.
-
-Thank you,
-Claudiu
-> 
-> Rob
-> 
+For the brcmstb part,
+Acked-by: Gregory Fong <gregory.0xf0@gmail.com>
