@@ -1,56 +1,56 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Wed, 19 Jul 2017 18:41:21 +0300
-Message-ID: <bc243fc5-faa8-e64c-7a1e-6d1140a2e3ba@mm-sol.com>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
- <20170717220718.GZ20973@minitux> <20170718095814.GE32439@codeaurora.org>
- <20170718164438.GE20973@minitux> <20170719064943.GA29996@codeaurora.org>
- <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
- <20170719092905.GA13546@codeaurora.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ARC: reset: introduce HSDKv1 reset driver
+Date: Wed, 19 Jul 2017 17:47:12 +0200
+Message-ID: <1500479232.2364.64.camel@pengutronix.de>
+References: <20170718172520.25546-1-Eugeniy.Paltsev@synopsys.com>
+         <1500476858.2364.45.camel@pengutronix.de>
+         <1500478342.9320.28.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170719092905.GA13546@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <1500478342.9320.28.camel@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Eugeniy,
 
-On 07/19/2017 12:29 PM, Varadarajan Narayanan wrote:
-> Stan,
+On Wed, 2017-07-19 at 15:32 +0000, Eugeniy Paltsev wrote:
+> Hi Philipp,
 > 
+> On Wed, 2017-07-19 at 17:07 +0200, Philipp Zabel wrote:
+> > On Tue, 2017-07-18 at 20:25 +0300, Eugeniy Paltsev wrote:
+> > > The HSDK v1 periphery IPs can be reset by accessing some registers
+> > > from the CGU block.
+> > > 
+> > > The list of available reset lines is documented in the DT bindings.
+> > > 
+> > > [snip]
+> > > --- a/drivers/reset/Kconfig
+> > > +++ b/drivers/reset/Kconfig
+> > > @@ -34,6 +34,12 @@ config RESET_BERLIN
+> > >  	help
+> > >  	  This enables the reset controller driver for Marvell
+> > > Berlin SoCs.
+> > >  
+> > > +config RESET_HSDK_V1
+> > > +	bool "HSDK v1 Reset Driver"
+> > > +	default n
+> > 
+> > I suppose there will be a SOC_HSDK_V1 or similar in the future so
+> > that
+> > we can hide this option and enable it by default like the other reset
+> > drivers?
+> Actually we don't have (and don't planning to add) such SOC/board-
+> specific kconfig option, so I am wondering if it is OK to just left
+> this option not hidden?
 
-<cut>
+Not a problem, I just prefer to enable reset controllers by default when
+building kernels for SoCs that may need them. Sometimes they are even
+necessary to boot the system. In those cases, allowing to disable the
+reset controller driver at all is not very helpful.
 
->> That's nice, but I think we need the Synopsys IP versions too, can you
->> provide such an information and after that we can decide how the names
->> should look like.
-> 
-> Sorry, I posted v2 before I saw this e-mail. Will post v3 based
-> on what naming style is decided.
-> 
-> The SoCs, qcom_pcie_ops version, the block IP version and
-> Synopsys IP versions are as follows.
-> 
-> 	ipq8064 - v0 - 2.1.0 - 4.01a
-> 	apq8064 - v0 - 2.1.0 - 4.01a
-> 	apq8084 - v1 - 1.0.0 - 4.11a
-> 	msm8996 - v2 - 2.3.2 - 4.21a
-> 	ipq4019 - v3 - 2.4.0 - 4.20a
-> 	ipq8074 - v4 - 2.3.3 - 4.30a
-
-I'm not sure, with Synopsys versions the mess becomes bigger.
-
-So I tend to agree with qcom versions (because this driver taking care
-of qcom wrappers over Synopsys IP) plus comments about Synopsys version
-used for this particular SoC, just for completeness.
-
-
-regards,
-Stan
+regards
+Philipp
