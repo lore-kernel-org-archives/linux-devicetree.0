@@ -1,67 +1,169 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Wed, 19 Jul 2017 10:12:45 +0300
-Message-ID: <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
- <20170717220718.GZ20973@minitux> <20170718095814.GE32439@codeaurora.org>
- <20170718164438.GE20973@minitux> <20170719064943.GA29996@codeaurora.org>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mux: Add mux_control_get_optional() API
+Date: Wed, 19 Jul 2017 09:15:38 +0200
+Message-ID: <1c20e9bf-9b87-a021-bb4b-8add6c468c87@axentia.se>
+References: <20170714214005.14967-1-stephen.boyd@linaro.org>
+ <20170714214005.14967-2-stephen.boyd@linaro.org>
+ <aac61f46-f963-2631-00e0-2d62baac6bf4@axentia.se>
+ <150043011983.23422.10872793103087420242@sboyd-linaro>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170719064943.GA29996@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <150043011983.23422.10872793103087420242@sboyd-linaro>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
-> On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
->> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
+On 2017-07-19 04:08, Stephen Boyd wrote:
+> Quoting Peter Rosin (2017-07-17 01:20:14)
+>> On 2017-07-14 23:40, Stephen Boyd wrote:
+>>> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+>>> index 90b8995f07cb..a0e5bf16f02f 100644
+>>> --- a/drivers/mux/mux-core.c
+>>> +++ b/drivers/mux/mux-core.c
+>>> @@ -289,6 +289,9 @@ EXPORT_SYMBOL_GPL(devm_mux_chip_register);
+>>>   */
+>>>  unsigned int mux_control_states(struct mux_control *mux)
+>>>  {
+>>> +     if (!mux)
+>>> +             return 0;
+>>> +
 >>
->>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
->>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
->> [..]
->>>>
->>>> Can you confirm that this is actually version 4 of this block? Or are we
->>>> just incrementing an arbitrary number here?
->>>
->>> This is not exactly the 4th version of the block. However, it is
->>> a different version than the ones that are already supported in
->>> this driver. Since the existing driver didn't exactly tie it with
->>> the block IP version, I too followed the same versioning
->>> convention.
->>>
+>> I don't think this is appropriate. For this function, it might be ok,
+>> but...
 >>
->> Do you have a block IP version that you could base your numbering on, to
->> break the trend? (We should go back and fix up the others as well)
+>>>       return mux->states;
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(mux_control_states);
+>>> @@ -338,6 +341,9 @@ int mux_control_select(struct mux_control *mux, unsigned int state)
+>>>  {
+>>>       int ret;
+>>>  
+>>> +     if (!mux)
+>>> +             return 0;
+>>> +
+>>
+>> ...here and for other cases below it's very odd to return "ok", when
+>> -EINVAL or something seems much more appropriate. And if -EINVAL is
+>> returned here, the benefit of returning fake values for anything
+>> pretty much falls apart.
+>>
+>> I simply don't like it, and prefer if the consumer code is arranged
+>> to not call the mux functions when the optional get() does not find
+>> the mux.
 > 
-> Presently, the driver supports the ipq8064, apq8064, apq8084,
-> msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
-> the block IP versions are as follows.
+> Do you want the callers of the mux APIs to know that an optional mux
+> isn't there, and then have checks at all callsites on optional muxes to
+> make sure consumers don't call the mux functions? Won't that duplicate
+> lots of checks in drivers for something the core could treat as a don't
+> care case? Sorry, I don't understand why the consumer cares that it was
+> there or not when it is optional.
+
+Ok, I had a look around to figure out how others handle this, and e.g.
+gpio has (ugly) macros (VALIDATE_DESC) to handle this. I guess you are
+right and I'm wrong. So, please keep all the if (!mux) checks.
+
+Thanks for insisting!
+
+>>
+>>>       ret = down_killable(&mux->lock);
+>>>       if (ret < 0)
+>>>               return ret;
+>>> @@ -370,6 +376,9 @@ int mux_control_try_select(struct mux_control *mux, unsigned int state)
+>>>  {
+>>>       int ret;
+>>>  
+>>> +     if (!mux)
+>>> +             return 0;
+>>> +
+>>>       if (down_trylock(&mux->lock))
+>>>               return -EBUSY;
+>>>  
+>>> @@ -398,6 +407,9 @@ int mux_control_deselect(struct mux_control *mux)
+>>>  {
+>>>       int ret = 0;
+>>>  
+>>> +     if (!mux)
+>>> +             return 0;
+>>> +
+>>>       if (mux->idle_state != MUX_IDLE_AS_IS &&
+>>>           mux->idle_state != mux->cached_state)
+>>>               ret = mux_control_set(mux, mux->idle_state);
+>>> @@ -422,14 +434,8 @@ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
+>>>       return dev ? to_mux_chip(dev) : NULL;
+>>>  }
+>>>  
+>>> -/**
+>>> - * mux_control_get() - Get the mux-control for a device.
+>>> - * @dev: The device that needs a mux-control.
+>>> - * @mux_name: The name identifying the mux-control.
+>>> - *
+>>> - * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
+>>> - */
+>>> -struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>>> +struct mux_control *
+>>> +__mux_control_get(struct device *dev, const char *mux_name, bool optional)
+>>>  {
+>>>       struct device_node *np = dev->of_node;
+>>>       struct of_phandle_args args;
+>>> @@ -441,6 +447,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>>>       if (mux_name) {
+>>>               index = of_property_match_string(np, "mux-control-names",
+>>>                                                mux_name);
+>>> +             if (index == -EINVAL && optional)
+>>> +                     return NULL;
+>>
+>> What about -ENODATA?
 > 
-> 	ipq8064 - v0 - 2.1.0
-> 	apq8064 - v0 - 2.1.0
-> 	apq8084 - v1 - 1.0.0
-> 	msm8996 - v2 - 2.3.2
-> 	ipq4019 - v3 - 2.4.0
-> 	ipq8074 - v4 - 2.3.3
+> At this point in the code we're finding the index of a mux-control-names
+> property so I was trying to handle the case where there isn't a
+> mux-control-names property at all
 
-That's nice, but I think we need the Synopsys IP versions too, can you
-provide such an information and after that we can decide how the names
-should look like.
+Yes, you indeed need to check for -EINVAL to catch that. No argument
+about that.
 
+>                                   but we're looking for something
+> optional anyway. If there is a property, then we would see some other
+> error if something went wrong and then pass the error up. There is a
+> hole where there isn't a mux-control-names property and we're looking
+> for something that's optional, but there is a mux-control property. Do
+> we care though? The DT seems broken then.
+
+I was thinking about the case where mux-control-names names *other* muxes
+but not the one asked for in this call. That's not broken and should be
+handled. The way I read it, you get -ENODATA in that case?
+
+>> And if an optional mux is found here, but lookup
+>> fails later in e.g. the of_parse_phandle_with_args call, then I think
+>> an error should be returned. Because that seems like an indication that
+>> DT specifies that there *should* be a mux, but then there isn't one.
 > 
-> I will rename the qcom_pcie_ops structure and related functions
-> with the block IP version instead of vX numbering and post the
-> patch.
+> of_parse_phandle_with_args() would return ENOENT when there isn't a
+> mux-control property in DT. So I've trapped that case and returned an
+> "optional mux" pointer of NULL. I think we handle the case you mention,
+> where some index is found but it returns an error, because that would
+> return some error besides -ENOENT.
+> 
+> Sorry, I'm not really following what you're suggesting. Maybe it got
+> mixed up with the NULL vs. non-NULL return value from mux_control_get().
 
+What I mean is that if you have passed a mux_name and the index of that
+name was indeed found in the of_property_match_string call, then any
+failure from of_parse_phandle_with_args indicates a bad DT and should
+IMO result in an error. I.e., when evaluating the result from
+of_parse_phandle_with_args, you should account for the optional param
+if and only if mux_name is NULL.
 
+You can do that by e.g. setting optional to false after looking up the
+mux_name index (because at that point the mux is no longer considered
+optional). E.g. as the last statement in the if (!mux_name) block.
 
-regards,
-Stan
+Cheers,
+peda
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
