@@ -1,77 +1,101 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] soc: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 08:01:53 +0200
-Message-ID: <20170719060153.GD6246@kozik-book>
-References: <20170718214339.7774-49-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] irqchip: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 08:20:06 +0200
+Message-ID: <20170719062006.hivodv3zppq6swdo@flea>
+References: <20170718214339.7774-30-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="7dqvm2bvmpvcpfsx"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-49-robh@kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: arm@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Scott Wood <oss@buserror.net>, Qiang Zhao <qiang.zhao@nxp.com>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+In-Reply-To: <20170718214339.7774-30-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Jonathan Hunter <j>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 04:43:29PM -0500, Rob Herring wrote:
+
+--7dqvm2bvmpvcpfsx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jul 18, 2017 at 04:43:10PM -0500, Rob Herring wrote:
 > Now that we have a custom printf format specifier, convert users of
 > full_name to use %pOF instead. This is preparation to remove storing
 > of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: Qiang Zhao <qiang.zhao@nxp.com>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Kukjin Kim <kgene@kernel.org>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-mediatek@lists.infradead.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: linux-samsung-soc@vger.kernel.org
+>=20
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
+> Cc: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: "S=F6ren Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > ---
->  drivers/soc/fsl/qbman/bman_ccsr.c    | 10 +++++-----
->  drivers/soc/fsl/qbman/bman_portal.c  |  8 +++-----
->  drivers/soc/fsl/qbman/qman_ccsr.c    | 12 ++++++------
->  drivers/soc/fsl/qbman/qman_portal.c  | 11 ++++-------
->  drivers/soc/fsl/qe/gpio.c            |  4 ++--
->  drivers/soc/mediatek/mtk-pmic-wrap.c |  4 ++--
->  drivers/soc/renesas/rcar-rst.c       |  4 ++--
->  drivers/soc/renesas/rcar-sysc.c      |  6 +++---
->  drivers/soc/samsung/pm_domains.c     |  8 ++++----
->  9 files changed, 31 insertions(+), 36 deletions(-)
-> 
+>  drivers/irqchip/irq-bcm2835.c            |  9 ++++-----
+>  drivers/irqchip/irq-bcm2836.c            |  5 ++---
+>  drivers/irqchip/irq-crossbar.c           |  6 +++---
+>  drivers/irqchip/irq-digicolor.c          |  8 ++++----
+>  drivers/irqchip/irq-dw-apb-ictl.c        | 12 ++++++------
+>  drivers/irqchip/irq-gic-v3-its-pci-msi.c |  2 +-
+>  drivers/irqchip/irq-gic-v3-its.c         |  6 +++---
+>  drivers/irqchip/irq-gic-v3.c             | 11 ++++-------
+>  drivers/irqchip/irq-imx-gpcv2.c          |  4 ++--
+>  drivers/irqchip/irq-lpc32xx.c            |  2 +-
+>  drivers/irqchip/irq-mtk-sysirq.c         |  3 +--
+>  drivers/irqchip/irq-mxs.c                |  4 ++--
+>  drivers/irqchip/irq-stm32-exti.c         |  8 ++++----
+>  drivers/irqchip/irq-sun4i.c              |  6 +++---
 
-(...)
+for sun4i:
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> diff --git a/drivers/soc/samsung/pm_domains.c b/drivers/soc/samsung/pm_domains.c
-> index a6a5d807cc2b..c630eba32066 100644
-> --- a/drivers/soc/samsung/pm_domains.c
-> +++ b/drivers/soc/samsung/pm_domains.c
-> @@ -237,11 +237,11 @@ static __init int exynos4_pm_init_power_domain(void)
->  			continue;
-> 
->  		if (of_genpd_add_subdomain(&parent, &child))
-> -			pr_warn("%s failed to add subdomain: %s\n",
-> -				parent.np->full_name, child.np->full_name);
-> +			pr_warn("%pOF failed to add subdomain: %pOF\n",
-> +				parent.np, child.np);
->  		else
-> -			pr_info("%s has as child subdomain: %s.\n",
-> -				parent.np->full_name, child.np->full_name);
-> +			pr_info("%pOF has as child subdomain: %pOF.\n",
-> +				parent.np, child.np);
->  	}
-> 
->  	return 0;
+Maxime
 
-I guess this will go through arm-soc?
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-For Samsung, looks good:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+--7dqvm2bvmpvcpfsx
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Best regards,
-Krzysztof
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZbvoWAAoJEBx+YmzsjxAgxdoP/1CvqdT8vk9gLRWahyZUNHBc
+gz5fWqgLHRgFeOxLumxBHGl6p5ZwZhul2rK0PD/ZOwwxp53mMkguMzHuwgToZciv
+KDl+bU9rPRiX4mrnlQOBlNrawGr5IOr/Vtm9su94/7R8bmOVHq8CNazMuNNLqr7Q
+O9F+RiMg0JdwFrQ6bbGBsM7cdtN8JFr4qeutrYUrT+pOQLXRTMWJFEhAJRvuk1yP
+dUUu4dVEFqUEe+edSZYuJdrQPuQGTkTnKN6vjDFvKZryCQqmkQgpEtlDdGOWrXTc
+/ooj6mRT8vnd0RzeLouttpScC0No75URXls5o7xF+oOJcygpw80FUZEPo3gFGIx9
+lrSugAfRTlGTxLPN9Mj3ebmoFquU1VTQTibIEYxDmnmK8QY6IQDRRV5Jmfm6aler
+1OSvKI1ImuWd4i4iRrywuI2x8N89vzbdmlBIqkKf3D3NWwCbFsuX1yHjQRfAQkZz
+Y1SLJZ4IPvWm/SHr2b9h946keM6UxFiedAF4UvakgwQY5sj2F/yUrmkaemOMikEY
+hn014a26CIqjbq6w+JrbwkajUEkdcdeokzwZFyPqCkwaU92+i7OD+nJkmbYTuMkx
+fgrQv2hwP330166J2cbi72UQcbBmJE3SyAaHj5OWVN9Os4pZrcm1osyFvgw0cGc6
+UMV7s6/fCetapd//4i9Z
+=LXvg
+-----END PGP SIGNATURE-----
+
+--7dqvm2bvmpvcpfsx--
