@@ -1,1136 +1,296 @@
-From: Martyn Welch <martyn.welch@collabora.co.uk>
-Subject: [PATCH v5] ARM: dts: imx53: Add GE Healthcare PPD
-Date: Wed, 19 Jul 2017 16:02:45 +0100
-Message-ID: <1500476565-3714-1-git-send-email-martyn.welch@collabora.co.uk>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ARC: reset: introduce HSDKv1 reset driver
+Date: Wed, 19 Jul 2017 17:07:38 +0200
+Message-ID: <1500476858.2364.45.camel@pengutronix.de>
+References: <20170718172520.25546-1-Eugeniy.Paltsev@synopsys.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718172520.25546-1-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Martyn Welch <martyn.welch@collabora.co.uk>
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
+On Tue, 2017-07-18 at 20:25 +0300, Eugeniy Paltsev wrote:
+> The HSDK v1 periphery IPs can be reset by accessing some registers
+> from the CGU block.
+> 
+> The list of available reset lines is documented in the DT bindings.
+> 
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> ---
+>  .../bindings/reset/snps,hsdk-v1-reset.txt          |  28 ++++
+>  MAINTAINERS                                        |   7 +
+>  drivers/reset/Kconfig                              |   6 +
+>  drivers/reset/Makefile                             |   1 +
+>  drivers/reset/reset-hsdk-v1.c                      | 141 +++++++++++++++++++++
+>  include/dt-bindings/reset/snps,hsdk-v1-reset.h     |  17 +++
+>  6 files changed, 200 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/snps,hsdk-v1-reset.txt
+>  create mode 100644 drivers/reset/reset-hsdk-v1.c
+>  create mode 100644 include/dt-bindings/reset/snps,hsdk-v1-reset.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/snps,hsdk-v1-reset.txt b/Documentation/devicetree/bindings/reset/snps,hsdk-v1-reset.txt
+> new file mode 100644
+> index 0000000..4fdea89
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/snps,hsdk-v1-reset.txt
+> @@ -0,0 +1,28 @@
+> +Binding for the HSDK v1 reset controller
+> +
+> +This binding uses the common reset binding[1].
+> +
+> +[1] Documentation/devicetree/bindings/reset/reset.txt
+> +
+> +Required properties:
+> +- compatible: should be "snps,hsdk-v1.0-reset".
+> +- reg: should always contain 2 pairs address - length: first for reset
+> +  configuration registers and second for corresponding SW reset and status bits
+> +  register.
+> +- #reset-cells: from common reset binding; Should always be set to 1.
+> +
+> +Example:
+> +	reset: reset@880 {
+> +		compatible = "snps,hsdk-v1.0-reset";
+> +		#reset-cells = <1>;
+> +		reg = <0x880 0x80>, <0xFF0 0x4>;
+> +	};
+> +
+> +Specifying reset lines connected to IP modules:
+> +	ethernet@.... {
+> +		....
+> +		resets = <&reset HSDK_V1_ETH_RESET>;
+> +		....
+> +	};
+> +
+> +The index could be found in <dt-bindings/reset/snps,hsdk-v1-reset.h>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 09b5ab6..99deabb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -11307,6 +11307,13 @@ L:	linux-mmc@vger.kernel.org
+>  S:	Maintained
+>  F:	drivers/mmc/host/dw_mmc*
+>  
+> +SYNOPSYS HSDK RESET CONTROLLER DRIVER
+> +M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> +S:	Supported
+> +F:	drivers/reset/reset-hsdk-v1.c
+> +F:	include/dt-bindings/reset/snps,hsdk-v1-reset.h
+> +F:	Documentation/devicetree/bindings/reset/snps,hsdk-v1-reset.txt
+> +
+>  SYSTEM TRACE MODULE CLASS
+>  M:	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+>  S:	Maintained
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d21c07c..cb13f0d 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -34,6 +34,12 @@ config RESET_BERLIN
+>  	help
+>  	  This enables the reset controller driver for Marvell Berlin SoCs.
+>  
+> +config RESET_HSDK_V1
+> +	bool "HSDK v1 Reset Driver"
+> +	default n
 
-PPD is a product from GE Healthcare to monitor vital biometric signals.
+I suppose there will be a SOC_HSDK_V1 or similar in the future so that
+we can hide this option and enable it by default like the other reset
+drivers?
 
-Signed-off-by: Fabien Lahoudere <fabien.lahoudere@collabora.co.uk>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Signed-off-by: Martyn Welch <martyn.welch@collabora.co.uk>
----
+> +	help
+> +	  This enables the reset controller driver for HSDK v1.
+> +
+>  config RESET_IMX7
+>  	bool "i.MX7 Reset Driver" if COMPILE_TEST
+>  	default SOC_IMX7D
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 02a74db..772e5f2 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -5,6 +5,7 @@ obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>  obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> +obj-$(CONFIG_RESET_HSDK_V1) += reset-hsdk-v1.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> diff --git a/drivers/reset/reset-hsdk-v1.c b/drivers/reset/reset-hsdk-v1.c
+> new file mode 100644
+> index 0000000..64d2a6e
+> --- /dev/null
+> +++ b/drivers/reset/reset-hsdk-v1.c
+> @@ -0,0 +1,141 @@
+> +/*
+> + * Copyright (C) 2017 Synopsys.
+> + *
+> + * Synopsys HSDKv1 SDP reset driver.
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +
+> +#define to_hsdkv1_rst(p)	container_of((p), struct hsdkv1_rst, rcdev)
+> +
+> +struct hsdkv1_rst {
+> +	void __iomem			*regs_ctl;
+> +	void __iomem			*regs_rst;
+> +	spinlock_t			lock;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static const u32 rst_map[] = {
+> +	BIT(16), /* APB_RST  */
+> +	BIT(17), /* AXI_RST  */
+> +	BIT(18), /* ETH_RST  */
+> +	BIT(19), /* USB_RST  */
+> +	BIT(20), /* SDIO_RST */
+> +	BIT(21), /* HDMI_RST */
+> +	BIT(22), /* GFX_RST  */
+> +	BIT(25), /* DMAC_RST */
+> +	BIT(31), /* EBI_RST  */
+> +};
+> +
+> +#define HSDK_MAX_RESETS			ARRAY_SIZE(rst_map)
+> +
+> +#define CGU_ARC_RST_CTRL		0x0
+> +#define CGU_SYS_RST_CTRL		0x20
+> +#define CGU_DDR_RST_CTRL		0x40
+> +#define CGU_TUN_RST_CTRL		0x60
 
-Changes since PATCHv4: https://patchwork.kernel.org/patch/9834733/
- - actually remove fsl,mode node
- - more IOMUX configuration corrections
- - limit CPU frequency to chip max frequency
-Changes since PATCHv3: https://patchwork.kernel.org/patch/9819017/
- - licensing modified
- - manufacturer changed to GE
- - regulator nodes corrected
- - backlight node corrected
- - flags rather than magic numbers used
- - registers for usbphys added
- - set up IOMUX configuration correctly
- - various whitespace corrections
- - removed unused fsl,mode node
- - missing unit addresses added
- - reordered nodes and properties as requested
-Changes since PATCHv2: https://patchwork.kernel.org/patch/9809681/
- - drop dma-info property from serial nodes. That property is not
-   available in mainline.
-Changes since PATCHv1: https://patchwork.kernel.org/patch/9265391/
- - fixed issues raised by Mark
- - added some missing vendor prefixes
- - dropped anx9804 nodes (no upstream support/binding)
- - use proper chip-select for ecspi1.cs0
+The ARC, DDR, and TUN reset control registers are never used.
 
- arch/arm/boot/dts/Makefile      |    1 +
- arch/arm/boot/dts/imx53-ppd.dts | 1067 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 1068 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx53-ppd.dts
+> +
+> +#define CGU_IP_SW_RESET			0x0
+> +#define CGU_IP_SW_RESET_DELAY_SHIFT	16
+> +#define CGU_IP_SW_RESET_DELAY_MASK	GENMASK(31, CGU_IP_SW_RESET_DELAY_SHIFT)
+> +#define CGU_IP_SW_RESET_DELAY		0
+> +#define CGU_IP_SW_RESET_RESET		BIT(0)
+> +#define SW_RESET_TIMEOUT		10000
+> +
+> +static void hsdkv1_reset_config(struct hsdkv1_rst *rst, unsigned long id)
+> +{
+> +	writel(rst_map[id], rst->regs_ctl + CGU_SYS_RST_CTRL);
+> +}
+> +
+> +static int hsdkv1_reset_do(struct hsdkv1_rst *rst)
+> +{
+> +	u32 reg;
+> +
+> +	reg = readl(rst->regs_rst + CGU_IP_SW_RESET);
+> +	reg &= ~CGU_IP_SW_RESET_DELAY_MASK;
+> +	reg |= CGU_IP_SW_RESET_DELAY << CGU_IP_SW_RESET_DELAY_SHIFT;
+> +	reg |= CGU_IP_SW_RESET_RESET;
+> +	writel(reg, rst->regs_rst + CGU_IP_SW_RESET);
+> +
+> +	/* wait till reset bit is back to 0 */
+> +	return readl_poll_timeout_atomic(rst->regs_rst + CGU_IP_SW_RESET, reg,
+> +		!(reg & CGU_IP_SW_RESET_RESET), 5, SW_RESET_TIMEOUT);
+> +}
+> +
+> +static int hsdkv1_reset_reset(struct reset_controller_dev *rcdev,
+> +			      unsigned long id)
+> +{
+> +	struct hsdkv1_rst *rst = to_hsdkv1_rst(rcdev);
+> +	unsigned long flags;
+> +	int ret;
+> +
+> +	spin_lock_irqsave(&rst->lock, flags);
+> +	hsdkv1_reset_config(rst, id);
+> +	ret = hsdkv1_reset_do(rst);
+> +	spin_unlock_irqrestore(&rst->lock, flags);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct reset_control_ops hsdkv1_reset_ops = {
+> +	.reset	= hsdkv1_reset_reset,
+> +};
+> +
+> +static int hsdkv1_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct hsdkv1_rst *rst;
+> +	struct resource *mem;
+> +
+> +	rst = devm_kzalloc(&pdev->dev, sizeof(*rst), GFP_KERNEL);
+> +	if (!rst)
+> +		return -ENOMEM;
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	rst->regs_ctl = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(rst->regs_ctl))
+> +		return PTR_ERR(rst->regs_ctl);
+> +
+> +	mem = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	rst->regs_rst = devm_ioremap_resource(&pdev->dev, mem);
+> +	if (IS_ERR(rst->regs_rst))
+> +		return PTR_ERR(rst->regs_rst);
+> +
+> +	spin_lock_init(&rst->lock);
+> +
+> +	rst->rcdev.owner = THIS_MODULE;
+> +	rst->rcdev.ops = &hsdkv1_reset_ops;
+> +	rst->rcdev.of_node = pdev->dev.of_node;
+> +	rst->rcdev.nr_resets = HSDK_MAX_RESETS;
+> +	rst->rcdev.of_reset_n_cells = 1;
+> +
+> +	return reset_controller_register(&rst->rcdev);
+> +}
+> +
+> +static const struct of_device_id hsdkv1_reset_dt_match[] = {
+> +	{ .compatible = "snps,hsdk-v1.0-reset" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver hsdkv1_reset_driver = {
+> +	.probe	= hsdkv1_reset_probe,
+> +	.driver	= {
+> +		.name = "hsdk-v1.0-reset",
+> +		.of_match_table = hsdkv1_reset_dt_match,
+> +	},
+> +};
+> +builtin_platform_driver(hsdkv1_reset_driver);
+> +
+> +MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
+> +MODULE_DESCRIPTION("Synopsys HSDKv1 SDP reset driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/dt-bindings/reset/snps,hsdk-v1-reset.h b/include/dt-bindings/reset/snps,hsdk-v1-reset.h
+> new file mode 100644
+> index 0000000..d898c89
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/snps,hsdk-v1-reset.h
+> @@ -0,0 +1,17 @@
+> +/**
+> + * This header provides index for the HSDK v1 reset controller.
+> + */
+> +#ifndef _DT_BINDINGS_RESET_CONTROLLER_HSDK_V1
+> +#define _DT_BINDINGS_RESET_CONTROLLER_HSDK_V1
+> +
+> +#define HSDK_V1_APB_RESET	0
+> +#define HSDK_V1_AXI_RESET	1
+> +#define HSDK_V1_ETH_RESET	2
+> +#define HSDK_V1_USB_RESET	3
+> +#define HSDK_V1_SDIO_RESET	4
+> +#define HSDK_V1_HDMI_RESET	5
+> +#define HSDK_V1_GFX_RESET	6
+> +#define HSDK_V1_DMAC_RESET	7
+> +#define HSDK_V1_EBI_RESET	8
+> +
+> +#endif /*_DT_BINDINGS_RESET_CONTROLLER_HSDK_V1*/
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35..7f3dcab 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -342,6 +342,7 @@ dtb-$(CONFIG_SOC_IMX53) += \
- 	imx53-ard.dtb \
- 	imx53-m53evk.dtb \
- 	imx53-mba53.dtb \
-+	imx53-ppd.dtb \
- 	imx53-qsb.dtb \
- 	imx53-qsrb.dtb \
- 	imx53-smd.dtb \
-diff --git a/arch/arm/boot/dts/imx53-ppd.dts b/arch/arm/boot/dts/imx53-ppd.dts
-new file mode 100644
-index 0000000..320026a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-ppd.dts
-@@ -0,0 +1,1067 @@
-+/*
-+ * Copyright 2014 General Electric Company
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx53.dtsi"
-+
-+/ {
-+	model = "Freescale i.MX53 CPUV0 PPD rev6";
-+	compatible = "ge,imx53-cpuvo", "fsl,imx53";
-+
-+	aliases {
-+		spi0 = &cspi;
-+		spi1 = &ecspi1;
-+		spi2 = &ecspi2;
-+	};
-+
-+	chosen {
-+		stdout-path = "&uart1:115200n8";
-+	};
-+
-+	memory@70000000 {
-+		device_type = "memory";
-+		reg = <0x70000000 0x20000000>,
-+		      <0xb0000000 0x20000000>;
-+	};
-+
-+	cko2_11M: sgtl_clock_cko2 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <11289600>;
-+	};
-+
-+	sgtlsound: sound {
-+		compatible = "fsl,imx53-cpuvo-sgtl5000",
-+			     "fsl,imx-audio-sgtl5000";
-+		model = "imx53-cpuvo-sgtl5000";
-+		ssi-controller = <&ssi2>;
-+		audio-codec = <&sgtl5000>;
-+		audio-routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+		mux-int-port = <2>;
-+		mux-ext-port = <6>;
-+		status = "okay";
-+	};
-+
-+	reg_sgtl5k: regulator-sgtl5k {
-+		compatible = "regulator-fixed";
-+		regulator-name = "regulator-sgtl5k";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usb_otg_vbus: regulator-usb-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usbotg_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		pinctrl-0 = <&pinctrl_usb_otg_vbus>;
-+		gpio = <&gpio4 15 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usb_vbus: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usbh1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	reg_usbh2_vbus: regulator-usbh2-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usbh2_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbh2_vbus>;
-+		gpio = <&gpio3 31 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	reg_usbh3_vbus: regulator-usbh3-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usbh3_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_usbh3_vbus>;
-+		gpio = <&gpio5 27 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
-+
-+	backlight: pwm-bl {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm2 0 50000>;
-+		brightness-levels = <0 2 5 7 10 12 15 17 20 22 25 28 30 33 35 \
-+				     38 40 43 45 48 51 53 56 58 61 63 66 68 71 \
-+				     73 76 79 81 84 86 89 91 94 96 99 102 104 \
-+				     107 109 112 114 117 119 122 124 127 130 \
-+				     132 135 137 140 142 145 147 150 153 155 \
-+				     158 160 163 165 168 170 173 175 178 181 \
-+				     183 186 188 191 193 196 198 201 204 206 \
-+				     209 211 214 216 219 221 224 226 229 232 \
-+				     234 237 239 242 244 247 249 252 255>;
-+		default-brightness-level = <0>;
-+		enable-gpios = <&gpio5 29 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	leds {
-+		compatible = "pwm-leds";
-+
-+		alarm-brightness {
-+			pwms = <&pwm1 0 100000>;
-+			max-brightness = <255>;
-+		};
-+	};
-+
-+	gpio-poweroff {
-+		compatible = "gpio-poweroff";
-+		gpios = <&gpio3 9 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	gpio-restart {
-+		compatible = "gpio-restart";
-+		gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
-+		active-delay = <100>;
-+		inactive-delay = <10>;
-+		wait-delay = <100>;
-+	};
-+
-+	power-gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		power-button {
-+			label = "Power button";
-+			gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-+			linux,code = <116>;
-+		};
-+	};
-+
-+	touch-lock-key {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		touch-lock-button {
-+			label = "Touch lock button";
-+			gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-+			linux,code = <88>;
-+		};
-+	};
-+
-+	usbphy2: usbphy@2 {
-+		reg = <2>;
-+		compatible = "usb-nop-xceiv";
-+		reset-gpios = <&gpio4 4 GPIO_ACTIVE_LOW>;
-+		clock-names = "main_clk";
-+
-+		clock-frequency = <24000000>;
-+		clocks = <&clks IMX5_CLK_CKO2>;
-+		assigned-clocks = <&clks IMX5_CLK_CKO2_SEL>, <&clks IMX5_CLK_OSC>;
-+		assigned-clock-parents = <&clks IMX5_CLK_OSC>;
-+		status = "okay";
-+	};
-+
-+	usbphy3: usbphy@3 {
-+		reg = <3>;
-+		compatible = "usb-nop-xceiv";
-+		reset-gpios = <&gpio2 19 GPIO_ACTIVE_LOW>;
-+		clock-names = "main_clk";
-+
-+		clock-frequency = <24000000>;
-+		clocks = <&clks IMX5_CLK_CKO2>;
-+		assigned-clocks = <&clks IMX5_CLK_CKO2_SEL>, <&clks IMX5_CLK_OSC>;
-+		assigned-clock-parents = <&clks IMX5_CLK_OSC>;
-+		status = "okay";
-+	};
-+
-+	panel-lvds0 {
-+		compatible = "nvd,9128";
-+
-+		port {
-+			panel_in_lvds0: endpoint {
-+				remote-endpoint = <&lvds0_out>;
-+			};
-+		};
-+	};
-+};
-+
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+};
-+
-+&cpu0 {
-+	operating-points = <
-+		/* kHz   uV */
-+		166666  850000
-+		400000  900000
-+		800000  1050000
-+		1000000 1200000
-+	>;
-+};
-+
-+&ecspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	fsl,spi-num-chipselects = <4>;
-+	cs-gpios = <&gpio5 17 GPIO_ACTIVE_LOW
-+		    &gpio4 10 GPIO_ACTIVE_LOW
-+		    &gpio4 11 GPIO_ACTIVE_LOW
-+		    &gpio4 12 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+
-+	spidev0: spi@0 {
-+		compatible = "ge,achc";
-+		reg = <0>;
-+		spi-max-frequency = <1000000>;
-+		status = "okay";
-+	};
-+
-+	spidev1: spi@1 {
-+		compatible = "ge,achc";
-+		reg = <1>;
-+		spi-max-frequency = <1000000>;
-+		status = "okay";
-+	};
-+
-+	gpioxra0: gpio@2 {
-+		compatible = "exar,xra1403";
-+		reg = <2>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		spi-max-frequency = <1000000>;
-+		status = "okay";
-+	};
-+
-+	gpioxra1: gpio@3 {
-+		compatible = "exar,xra1403";
-+		reg = <3>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		spi-max-frequency = <1000000>;
-+		status = "okay";
-+	};
-+};
-+
-+&ecspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi2>;
-+	fsl,spi-num-chipselects = <1>;
-+	num-chipselects = <1>;
-+	cs-gpios = <&gpio2 26 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+
-+	da9053@0 {
-+		compatible = "dlg,da9053-aa";
-+		reg = <0>;
-+		interrupt-parent = <&gpio3>;
-+		interrupts = <12 0x8>;
-+		spi-max-frequency = <1000000>;
-+		status = "okay";
-+
-+		regulators {
-+			buck1_reg: buck1 {
-+				regulator-name = "BUCKCORE";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2075000>;
-+				regulator-always-on;
-+			};
-+
-+			buck2_reg: buck2 {
-+				regulator-name = "BUCKPRO";
-+				regulator-min-microvolt = <500000>;
-+				regulator-max-microvolt = <2075000>;
-+				regulator-always-on;
-+			};
-+
-+			buck3_reg: buck3 {
-+				regulator-name = "BUCKMEM";
-+				regulator-min-microvolt = <925000>;
-+				regulator-max-microvolt = <2500000>;
-+				regulator-always-on;
-+			};
-+
-+			buck4_reg: buck4 {
-+				regulator-name = "BUCKPERI";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo1_reg: ldo1 {
-+				regulator-name = "ldo1_1v3";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo2_reg: ldo2 {
-+				regulator-name = "ldo2_1v3";
-+				regulator-min-microvolt = <600000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo3_reg: ldo3 {
-+				regulator-name = "ldo3_3v3";
-+				regulator-min-microvolt = <1725000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo4_reg: ldo4 {
-+				regulator-name = "ldo4_2v775";
-+				regulator-min-microvolt = <1725000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo5_reg: ldo5 {
-+				regulator-name = "ldo5_3v3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo6_reg: ldo6 {
-+				regulator-name = "ldo6_1v3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo7_reg: ldo7 {
-+				regulator-name = "ldo7_2v75";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo8_reg: ldo8 {
-+				regulator-name = "ldo8_1v8";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo9_reg: ldo9 {
-+				regulator-name = "ldo9_1v5";
-+				regulator-min-microvolt = <1250000>;
-+				regulator-max-microvolt = <3650000>;
-+				regulator-always-on;
-+			};
-+
-+			ldo10_reg: ldo10 {
-+				regulator-name = "ldo10_1v3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+};
-+
-+&esdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc1>;
-+	status = "disabled";
-+};
-+
-+&esdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_esdhc3>;
-+	bus-width = <8>;
-+	status = "okay";
-+};
-+
-+&fec {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec>;
-+	phy-mode = "rmii";
-+	phy-reset-gpios = <&gpio2 16 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+	sda-gpios = <&gpio3 28 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	i2xmux_pca: i2c-mux_pca954x@70 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x70>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reset-gpios = <&gpio2 18 GPIO_ACTIVE_LOW>;
-+
-+		i2c4: i2cmux-ppd@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			sgtl5000: codec@0a {
-+				compatible = "fsl,sgtl5000";
-+				reg = <0x0a>;
-+				VDDA-supply = <&reg_sgtl5k>;
-+				VDDIO-supply = <&reg_sgtl5k>;
-+				clocks = <&cko2_11M>;
-+				status = "okay";
-+			};
-+		};
-+
-+		i2c5: i2cmux-ppd@1 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <1>;
-+
-+			rtc@30 {
-+			       compatible = "sii,s35390a";
-+			       reg = <0x30>;
-+			};
-+
-+			tmp112@48 {
-+				compatible = "ti,tmp112";
-+				reg = <0x48>;
-+			};
-+
-+			mma8453q@1c {
-+				compatible = "fsl,mma8453";
-+				reg = <0x1c>;
-+				interrupt-parent = <&gpio1>;
-+				interrupts = <6 0>;
-+				interrupt-names = "INT1";
-+			};
-+
-+			mpl3115: mpl3115@60 {
-+				compatible = "fsl,mpl3115";
-+				reg = <0x60>;
-+			};
-+
-+			eeprom: eeprom@50 {
-+				compatible = "atmel,24c08";
-+				reg = <0x50>;
-+			};
-+		};
-+
-+		i2c6: i2cmux-ppd@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <2>;
-+		};
-+
-+		i2c7: i2cmux-ppd@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <3>;
-+		};
-+
-+		i2c8: i2cmux-ppd@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <4>;
-+		};
-+
-+		i2c9: i2cmux-ppd@5 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <5>;
-+		};
-+
-+		i2c10: i2cmux-ppd@6 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <6>;
-+		};
-+
-+		i2c11: i2cmux-ppd@7 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <7>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+	sda-gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio2 30 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	touchscreen@4b {
-+		compatible = "atmel,maxtouch";
-+		reg = <0x4b>;
-+		interrupt-parent = <&gpio5>;
-+		interrupts = <4 0x8>;
-+	};
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-0 = <&pinctrl_i2c3>;
-+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
-+	sda-gpios = <&gpio3 18 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&ldb {
-+	status = "okay";
-+
-+	lvds0: lvds-channel@0 {
-+		status = "okay";
-+
-+		port@2 {
-+			reg = <2>;
-+
-+			lvds0_out: endpoint {
-+				remote-endpoint = <&panel_in_lvds0>;
-+			};
-+		};
-+	};
-+};
-+
-+&pwm1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1>;
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm2>;
-+	status = "okay";
-+};
-+
-+&ssi2 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart3>;
-+	fsl,uart-has-rtscts;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart5>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	dr_mode = "otg";
-+	phy_type = "utmi";
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	pinctrl-0 = <&pinctrl_usb_otg>;
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_vbus>;
-+	phy_type = "utmi";
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbh2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbh2>;
-+	phy_type = "ulpi";
-+	disable-int60ck;
-+	dr_mode = "host";
-+	fsl,usbphy = <&usbphy2>;
-+	vbus-supply = <&reg_usbh2_vbus>;
-+	status = "okay";
-+};
-+
-+&usbh3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usbh3>;
-+	phy_type = "ulpi";
-+	disable-int60ck;
-+	dr_mode = "host";
-+	vbus-supply = <&reg_usbh3_vbus>;
-+	fsl,usbphy = <&usbphy3>;
-+	status = "okay";
-+};
-+
-+/* Pin configuration variables */
-+#define NO_PAD_CTL 0x00010000
-+#define PAD_CTL_DEFAULT  0x00e4
-+#define PAD_CTL_5  0x0005
-+#define PAD_CTL_7  0x0180
-+&iomuxc {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hog_rev6>;
-+	imx53-cpuvo {
-+		pinctrl_audmux: audmuxgrp {
-+			fsl,pins = <
-+				MX53_PAD_DISP0_DAT19__AUDMUX_AUD5_RXD	NO_PAD_CTL
-+				MX53_PAD_DISP0_DAT17__AUDMUX_AUD5_TXD	NO_PAD_CTL
-+				MX53_PAD_DISP0_DAT16__AUDMUX_AUD5_TXC	NO_PAD_CTL
-+				MX53_PAD_DISP0_DAT18__AUDMUX_AUD5_TXFS	NO_PAD_CTL
-+				MX53_PAD_DI0_PIN15__AUDMUX_AUD6_TXC	NO_PAD_CTL
-+				MX53_PAD_DI0_PIN3__AUDMUX_AUD6_TXFS	NO_PAD_CTL
-+				MX53_PAD_DI0_PIN4__AUDMUX_AUD6_RXD	NO_PAD_CTL
-+				MX53_PAD_DI0_PIN2__AUDMUX_AUD6_TXD	NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_ecspi1: ecspi1grp {
-+			fsl,pins = <
-+				MX53_PAD_DISP0_DAT21__ECSPI1_MOSI	NO_PAD_CTL
-+				MX53_PAD_DISP0_DAT22__ECSPI1_MISO	NO_PAD_CTL
-+				MX53_PAD_DISP0_DAT20__ECSPI1_SCLK	NO_PAD_CTL
-+				/* ECSPI1_SS0, must treat as GPIO for EzPort */
-+				MX53_PAD_DISP0_DAT23__GPIO5_17		NO_PAD_CTL
-+				MX53_PAD_KEY_COL2__GPIO4_10		NO_PAD_CTL
-+				MX53_PAD_KEY_ROW2__GPIO4_11		NO_PAD_CTL
-+				MX53_PAD_KEY_COL3__GPIO4_12		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_ecspi2: ecspi2grp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_CS1__ECSPI2_MOSI		NO_PAD_CTL
-+				MX53_PAD_EIM_OE__ECSPI2_MISO		NO_PAD_CTL
-+				MX53_PAD_EIM_CS0__ECSPI2_SCLK		NO_PAD_CTL
-+				MX53_PAD_EIM_RW__GPIO2_26		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_esdhc1: esdhc1grp {
-+			fsl,pins = <
-+				MX53_PAD_SD1_DATA0__ESDHC1_DAT0		0x1d5
-+				MX53_PAD_SD1_DATA1__ESDHC1_DAT1		0x1d5
-+				MX53_PAD_SD1_DATA2__ESDHC1_DAT2		0x1d5
-+				MX53_PAD_SD1_DATA3__ESDHC1_DAT3		0x1d5
-+				MX53_PAD_SD1_CMD__ESDHC1_CMD		0x1d5
-+				MX53_PAD_SD1_CLK__ESDHC1_CLK		0x1d5
-+			>;
-+		};
-+
-+		pinctrl_esdhc3: esdhc3grp {
-+			fsl,pins = <
-+				MX53_PAD_PATA_DATA8__ESDHC3_DAT0	0x1d5
-+				MX53_PAD_PATA_DATA9__ESDHC3_DAT1	0x1d5
-+				MX53_PAD_PATA_DATA10__ESDHC3_DAT2	0x1d5
-+				MX53_PAD_PATA_DATA11__ESDHC3_DAT3	0x1d5
-+				MX53_PAD_PATA_DATA0__ESDHC3_DAT4	0x1d5
-+				MX53_PAD_PATA_DATA1__ESDHC3_DAT5	0x1d5
-+				MX53_PAD_PATA_DATA2__ESDHC3_DAT6	0x1d5
-+				MX53_PAD_PATA_DATA3__ESDHC3_DAT7	0x1d5
-+				MX53_PAD_PATA_RESET_B__ESDHC3_CMD	0x1d5
-+				MX53_PAD_PATA_IORDY__ESDHC3_CLK		0x1d5
-+			>;
-+		};
-+
-+		pinctrl_fec: fecgrp {
-+			fsl,pins = <
-+				MX53_PAD_FEC_MDC__FEC_MDC		NO_PAD_CTL
-+				MX53_PAD_FEC_MDIO__FEC_MDIO		NO_PAD_CTL
-+				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	NO_PAD_CTL
-+				MX53_PAD_FEC_RX_ER__FEC_RX_ER		NO_PAD_CTL
-+				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		NO_PAD_CTL
-+				MX53_PAD_FEC_RXD1__FEC_RDATA_1		NO_PAD_CTL
-+				MX53_PAD_FEC_RXD0__FEC_RDATA_0		NO_PAD_CTL
-+				MX53_PAD_FEC_TX_EN__FEC_TX_EN		NO_PAD_CTL
-+				MX53_PAD_FEC_TXD1__FEC_TDATA_1		NO_PAD_CTL
-+				MX53_PAD_FEC_TXD0__FEC_TDATA_0		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_hog_rev6: hoggrp_rev6 {
-+			fsl,pins = <
-+				/* CKO2 */
-+				MX53_PAD_GPIO_3__CCM_CLKO2		0x0004
-+				/* DEFIB_SYNC_MARKER_IN_IRQ */
-+				MX53_PAD_GPIO_5__GPIO1_5		NO_PAD_CTL
-+				/* ACCELEROMETER_DATA_RDY_N */
-+				MX53_PAD_GPIO_6__GPIO1_6		NO_PAD_CTL
-+				/* TEMPERATURE_ALERT_N */
-+				MX53_PAD_GPIO_7__GPIO1_7		NO_PAD_CTL
-+				/* BAROMETRIC_PRESSURE_DATA_RDY_N */
-+				MX53_PAD_GPIO_8__GPIO1_8		NO_PAD_CTL
-+				/* DOCKING_I2C_INTERFACE_IRQ_N */
-+				MX53_PAD_PATA_DATA4__GPIO2_4		NO_PAD_CTL
-+				/* PWR_OUT_TO_DOCK_FAULT_N */
-+				MX53_PAD_PATA_DATA5__GPIO2_5		NO_PAD_CTL
-+				/* ENABLE_PWR_TO_DOCK_N */
-+				MX53_PAD_PATA_DATA6__GPIO2_6		NO_PAD_CTL
-+				/* HOST_CONTROLLED_RESET_TO_DOCKING_CONNECTOR_N */
-+				MX53_PAD_PATA_DATA7__GPIO2_7		NO_PAD_CTL
-+				/* REMOTE_ON_REQUEST_FROM_DOCKING_CONNECTOR_IS_ACTIVE_N */
-+				MX53_PAD_PATA_DATA12__GPIO2_12		NO_PAD_CTL
-+				/* DOCK_PRESENT_N */
-+				MX53_PAD_PATA_DATA13__GPIO2_13		NO_PAD_CTL
-+				/* ECG_MARKER_IN_FROM_DOCKING_CONNECTOR_IRQ */
-+				MX53_PAD_PATA_DATA14__GPIO2_14		NO_PAD_CTL
-+				/* ENABLE_ECG_MARKER_INTERFACE_TO_DOCKING_CONNECTOR */
-+				MX53_PAD_PATA_DATA15__GPIO2_15		NO_PAD_CTL
-+				/* RESET_IMX535_ETHERNET_PHY_N */
-+				MX53_PAD_EIM_A22__GPIO2_16		NO_PAD_CTL
-+				/* ENABLE_PWR_TO_LCD_AND_UI_INTERFACE */
-+				MX53_PAD_EIM_A21__GPIO2_17		NO_PAD_CTL
-+				/* RESET_I2C1_BUS_SEGMENT_MUX_N */
-+				MX53_PAD_EIM_A20__GPIO2_18		NO_PAD_CTL
-+				/* RESET_IMX535_USB_HOST3_PHY_N */
-+				MX53_PAD_EIM_A19__GPIO2_19		NO_PAD_CTL
-+				/* ESDHC3_EMMC_NAND_RST_N */
-+				MX53_PAD_EIM_A18__GPIO2_20		NO_PAD_CTL
-+				/* LCD_AND_UI_INTERFACE_PWR_FAULT_N */
-+				MX53_PAD_EIM_A17__GPIO2_21		NO_PAD_CTL
-+				/* POWER_DOWN_LVDS0_DESERIALIZER_N */
-+				MX53_PAD_EIM_A16__GPIO2_22		NO_PAD_CTL
-+				/* POWER_DOWN_LVDS1_DESERIALIZER_N */
-+				MX53_PAD_EIM_LBA__GPIO2_27		NO_PAD_CTL
-+				/* RESET_DP0_TRANSMITTER_N */
-+				MX53_PAD_EIM_EB0__GPIO2_28		NO_PAD_CTL
-+				/* RESET_DP1_TRANSMITTER_N */
-+				MX53_PAD_EIM_EB1__GPIO2_29		NO_PAD_CTL
-+				/* ENABLE_SPDIF_AUDIO_TO_DP0 */
-+				MX53_PAD_EIM_DA0__GPIO3_0		NO_PAD_CTL
-+				/* ENABLE_SPDIF_AUDIO_TO_DP1 */
-+				MX53_PAD_EIM_DA1__GPIO3_1		NO_PAD_CTL
-+				/* LVDS1_MUX_CTRL */
-+				MX53_PAD_EIM_DA2__GPIO3_2		NO_PAD_CTL
-+				/* LVDS0_MUX_CTRL */
-+				MX53_PAD_EIM_DA3__GPIO3_3		NO_PAD_CTL
-+				/* DP1_TRANSMITTER_IRQ */
-+				MX53_PAD_EIM_DA4__GPIO3_4		NO_PAD_CTL
-+				/* DP0_TRANSMITTER_IRQ */
-+				MX53_PAD_EIM_DA5__GPIO3_5		NO_PAD_CTL
-+				/* USB_RESET_N */
-+				MX53_PAD_EIM_DA6__GPIO3_6		NO_PAD_CTL
-+				/* ENABLE_BATTERY_CHARGER */
-+				MX53_PAD_EIM_DA7__GPIO3_7		NO_PAD_CTL
-+				/* SOFTWARE_CONTROLLED_PWR_CYCLE */
-+				MX53_PAD_EIM_DA8__GPIO3_8		NO_PAD_CTL
-+				/* SOFTWARE_CONTROLLED_POWERDOWN */
-+				MX53_PAD_EIM_DA9__GPIO3_9		NO_PAD_CTL
-+				/* DC_PWR_IN_OK */
-+				MX53_PAD_EIM_DA10__GPIO3_10		NO_PAD_CTL
-+				/* BATT_PRESENT_N */
-+				MX53_PAD_EIM_DA11__GPIO3_11		PAD_CTL_DEFAULT
-+				/* PMIC_IRQ_N */
-+				MX53_PAD_EIM_DA12__GPIO3_12		NO_PAD_CTL
-+				/* PMIC_VDD_FAULT_STATUS_N */
-+				MX53_PAD_EIM_DA13__GPIO3_13		NO_PAD_CTL
-+				/* IMX535_ETHERNET_PHY_STATUS_IRQ_N */
-+				MX53_PAD_EIM_DA14__GPIO3_14		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 3.3V GPIO */
-+				MX53_PAD_EIM_DA15__GPIO3_15		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 3.3V GPIO */
-+				MX53_PAD_EIM_D22__GPIO3_22		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 3.3V GPIO */
-+				MX53_PAD_EIM_D24__GPIO3_24		NO_PAD_CTL
-+				/* NBP_PUMP_VALVE_PWR_ENABLE */
-+				MX53_PAD_EIM_D25__GPIO3_25		NO_PAD_CTL
-+				/* NIBP_RESET_N */
-+				MX53_PAD_EIM_D26__GPIO3_26		NO_PAD_CTL
-+				/* LATCHED_OVERPRESSURE_N */
-+				MX53_PAD_EIM_D27__GPIO3_27		NO_PAD_CTL
-+				/* NBP_SBWTCLK */
-+				MX53_PAD_EIM_D29__GPIO3_29		NO_PAD_CTL
-+				/* ENABLE_WIFI_MODULE */
-+				MX53_PAD_GPIO_11__GPIO4_1		NO_PAD_CTL
-+				/* WIFI_MODULE_IRQ_N */
-+				MX53_PAD_GPIO_12__GPIO4_2		NO_PAD_CTL
-+				/* ENABLE_BLUETOOTH_MODULE */
-+				MX53_PAD_GPIO_13__GPIO4_3		NO_PAD_CTL
-+				/* RESET_IMX535_USB_HOST2_PHY_N */
-+				MX53_PAD_GPIO_14__GPIO4_4		NO_PAD_CTL
-+				/* ONKEY_IS_DEPRESSED */
-+				MX53_PAD_KEY_ROW3__GPIO4_13		NO_PAD_CTL
-+				/* UNUSED_GPIO_TO_ALARM_LIGHT_BOARD */
-+				MX53_PAD_EIM_WAIT__GPIO5_0		NO_PAD_CTL
-+				/* DISPLAY_LOCK_BUTTON_IS_DEPRESSED_N */
-+				MX53_PAD_EIM_A25__GPIO5_2		NO_PAD_CTL
-+				/* I2C_PCAP_TOUCHSCREEN_IRQ_N */
-+				MX53_PAD_EIM_A24__GPIO5_4		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 1.8V GPIO */
-+				MX53_PAD_DISP0_DAT13__GPIO5_7		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 1.8V GPIO */
-+				MX53_PAD_DISP0_DAT14__GPIO5_8		NO_PAD_CTL
-+				/* NOT USED - AVAILABLE 1.8V GPIO */
-+				MX53_PAD_DISP0_DAT15__GPIO5_9		NO_PAD_CTL
-+				/* HOST_CONTROLLED_RESET_TO_LCD_N */
-+				MX53_PAD_CSI0_PIXCLK__GPIO5_18		NO_PAD_CTL
-+				/* HOST_CONTROLLED_RESET_TO_PCAP_N */
-+				MX53_PAD_CSI0_MCLK__GPIO5_19		NO_PAD_CTL
-+				/* LR_SCAN_CTRL */
-+				MX53_PAD_CSI0_DATA_EN__GPIO5_20		NO_PAD_CTL
-+				/* UD_SCAN_CTRL */
-+				MX53_PAD_CSI0_VSYNC__GPIO5_21		NO_PAD_CTL
-+				/* DATA_WIDTH_CTRL */
-+				MX53_PAD_CSI0_DAT10__GPIO5_28		NO_PAD_CTL
-+				/* BACKLIGHT_ENABLE */
-+				MX53_PAD_CSI0_DAT11__GPIO5_29		NO_PAD_CTL
-+				/* MED_USB_PORT_1_HOST_SELECT */
-+				MX53_PAD_EIM_A23__GPIO6_6		NO_PAD_CTL
-+				/* MED_USB_PORT_2_HOST_SELECT */
-+				MX53_PAD_NANDF_CLE__GPIO6_7		NO_PAD_CTL
-+				/* MED_USB_PORT_3_HOST_SELECT */
-+				MX53_PAD_NANDF_ALE__GPIO6_8		NO_PAD_CTL
-+				/* MED_USB_PORT_4_HOST_SELECT */
-+				MX53_PAD_NANDF_WP_B__GPIO6_9		NO_PAD_CTL
-+				/* MED_USB_PORT_5_HOST_SELECT */
-+				MX53_PAD_NANDF_RB0__GPIO6_10		NO_PAD_CTL
-+				/* MED_USB_PORT_6_HOST_SELECT */
-+				MX53_PAD_NANDF_CS0__GPIO6_11		NO_PAD_CTL
-+				/* MED_USB_PORT_7_HOST_SELECT */
-+				MX53_PAD_NANDF_WE_B__GPIO6_12		NO_PAD_CTL
-+				/* MED_USB_PORT_8_HOST_SELECT */
-+				MX53_PAD_NANDF_RE_B__GPIO6_13		NO_PAD_CTL
-+				/* MED_USB_PORT_TO_IMX_SELECT_0 */
-+				MX53_PAD_NANDF_CS1__GPIO6_14		NO_PAD_CTL
-+				/* MED_USB_PORT_TO_IMX_SELECT_1 */
-+				MX53_PAD_NANDF_CS2__GPIO6_15		NO_PAD_CTL
-+				/* MED_USB_PORT_TO_IMX_SELECT_2 */
-+				MX53_PAD_NANDF_CS3__GPIO6_16		NO_PAD_CTL
-+				/* POWER_AND_BOOT_STATUS_INDICATOR */
-+				MX53_PAD_PATA_INTRQ__GPIO7_2		NO_PAD_CTL
-+				/* ACTIVATE_ALARM_LIGHT_RED */
-+				MX53_PAD_PATA_DIOR__GPIO7_3		NO_PAD_CTL
-+				/* ACTIVATE_ALARM_LIGHT_YELLOW */
-+				MX53_PAD_PATA_DA_1__GPIO7_7		NO_PAD_CTL
-+				/* ACTIVATE_ALARM_LIGHT_CYAN */
-+				MX53_PAD_PATA_DA_2__GPIO7_8		NO_PAD_CTL
-+				/* RUNNING_ON_BATTERY_INDICATOR_GREEN */
-+				MX53_PAD_GPIO_16__GPIO7_11		NO_PAD_CTL
-+				/* BATTERY_STATUS_INDICATOR_AMBER */
-+				MX53_PAD_GPIO_17__GPIO7_12		NO_PAD_CTL
-+				/* AUDIO_ALARMS_SILENCED_INDICATOR */
-+				MX53_PAD_GPIO_18__GPIO7_13		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D21__I2C1_SCL		0x400001e4
-+				MX53_PAD_EIM_D28__I2C1_SDA		0x400001e4
-+			>;
-+		};
-+
-+		pinctrl_i2c1_gpio: i2c1gpiogrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D28__GPIO3_28		0x1e4
-+				MX53_PAD_EIM_D21__GPIO3_21		0x1e4
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_EB2__I2C2_SCL		0x400001e4
-+				MX53_PAD_EIM_D16__I2C2_SDA		0x400001e4
-+			>;
-+		};
-+
-+		pinctrl_i2c2_gpio: i2c2gpiogrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D16__GPIO3_16		0x1e4
-+				MX53_PAD_EIM_EB2__GPIO2_30		0x1e4
-+			>;
-+		};
-+
-+		pinctrl_i2c3: i2c3grp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D17__I2C3_SCL		0x400001e4
-+				MX53_PAD_EIM_D18__I2C3_SDA		0x400001e4
-+			>;
-+		};
-+
-+		pinctrl_i2c3_gpio: i2c3gpiogrp {
-+			fsl,pins = <
-+				MX53_PAD_EIM_D18__GPIO3_18		0x1e4
-+				MX53_PAD_EIM_D17__GPIO3_17		0x1e4
-+			>;
-+		};
-+
-+		pinctrl_pwm1: pwm1grp {
-+			fsl,pins = <
-+				MX53_PAD_GPIO_9__PWM1_PWMO		0x5
-+			>;
-+		};
-+
-+		pinctrl_pwm2: pwm2grp {
-+			fsl,pins = <
-+				MX53_PAD_DISP0_DAT9__PWM2_PWMO		0x5
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX53_PAD_PATA_DIOW__UART1_TXD_MUX	0x1e4
-+				MX53_PAD_PATA_DMACK__UART1_RXD_MUX	0x1e4
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				MX53_PAD_PATA_DMARQ__UART2_TXD_MUX	0x1e4
-+				MX53_PAD_PATA_BUFFER_EN__UART2_RXD_MUX	0x1e4
-+			>;
-+		};
-+
-+		pinctrl_uart3: uart3grp {
-+			fsl,pins = <
-+				MX53_PAD_PATA_CS_0__UART3_TXD_MUX	0x1e4
-+				MX53_PAD_PATA_CS_1__UART3_RXD_MUX	0x1e4
-+				MX53_PAD_EIM_D23__UART3_CTS		0x1e4
-+				MX53_PAD_EIM_EB3__UART3_RTS		0x1e4
-+			>;
-+		};
-+
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX53_PAD_KEY_COL0__UART4_TXD_MUX	0x1e4
-+				MX53_PAD_KEY_ROW0__UART4_RXD_MUX	0x1e4
-+			>;
-+		};
-+
-+		pinctrl_uart5: uart5grp {
-+			fsl,pins = <
-+				MX53_PAD_KEY_COL1__UART5_TXD_MUX	0x1e4
-+				MX53_PAD_KEY_ROW1__UART5_RXD_MUX	0x1e4
-+			>;
-+		};
-+
-+		pinctrl_usb_otg_vbus: usb-otg-vbusgrp {
-+			fsl,pins = <
-+				/* USB_HS_OTG_VBUS_ENABLE */
-+				MX53_PAD_KEY_ROW4__GPIO4_15		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_usbh2: usbh2grp {
-+			fsl,pins = <
-+				/* USB H2 */
-+				MX53_PAD_DISP0_DAT0__USBOH3_USBH2_DATA_0 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT1__USBOH3_USBH2_DATA_1 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT2__USBOH3_USBH2_DATA_2 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT3__USBOH3_USBH2_DATA_3 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT4__USBOH3_USBH2_DATA_4 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT5__USBOH3_USBH2_DATA_5 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT6__USBOH3_USBH2_DATA_6 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT7__USBOH3_USBH2_DATA_7 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT10__USBOH3_USBH2_STP	 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT11__USBOH3_USBH2_NXT	 PAD_CTL_7
-+				MX53_PAD_DISP0_DAT12__USBOH3_USBH2_CLK	 PAD_CTL_7
-+				MX53_PAD_DI0_DISP_CLK__USBOH3_USBH2_DIR	 PAD_CTL_5
-+				MX53_PAD_EIM_D30__USBOH3_USBH2_OC	 PAD_CTL_7
-+			>;
-+		};
-+
-+		pinctrl_usbh2_vbus: usbh2-vbusgrp {
-+			fsl,pins = <
-+				/* USB_HS_HOST2_VBUS_ENABLE */
-+				MX53_PAD_EIM_D31__GPIO3_31		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_usbh3_vbus: usbh3-vbusgrp {
-+			fsl,pins = <
-+				/* USB_HS_HOST3_VBUS_ENABLE */
-+				MX53_PAD_CSI0_DAT9__GPIO5_27		NO_PAD_CTL
-+			>;
-+		};
-+
-+		pinctrl_usbh3: usbh3grp {
-+			fsl,pins = <
-+				/* USB H3 */
-+				MX53_PAD_CSI0_DAT12__USBOH3_USBH3_DATA_0 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT13__USBOH3_USBH3_DATA_1 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT14__USBOH3_USBH3_DATA_2 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT15__USBOH3_USBH3_DATA_3 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT16__USBOH3_USBH3_DATA_4 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT17__USBOH3_USBH3_DATA_5 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT18__USBOH3_USBH3_DATA_6 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT19__USBOH3_USBH3_DATA_7 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT7__USBOH3_USBH3_DIR	 PAD_CTL_5
-+				MX53_PAD_CSI0_DAT6__USBOH3_USBH3_CLK	 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT5__USBOH3_USBH3_NXT	 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT4__USBOH3_USBH3_STP	 PAD_CTL_7
-+				MX53_PAD_CSI0_DAT8__USBOH3_USBH3_OC	 PAD_CTL_7
-+			>;
-+		};
-+
-+		pinctrl_usb_otg: usbotggrp {
-+			fsl,pins = <
-+				/* USB_OTG_FAULT_N */
-+				MX53_PAD_KEY_COL4__USBOH3_USBOTG_OC	PAD_CTL_7
-+			>;
-+		};
-+	};
-+};
--- 
-1.8.3.1
+regards
+Philipp
