@@ -1,105 +1,63 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Wed, 19 Jul 2017 15:36:35 +0530
-Message-ID: <6b9988c7-1581-05fc-ef87-4d5486381cea@codeaurora.org>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
- <20170717220718.GZ20973@minitux> <20170718095814.GE32439@codeaurora.org>
- <20170718164438.GE20973@minitux> <20170719064943.GA29996@codeaurora.org>
- <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
- <20170719092905.GA13546@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 0/9] add support for Sama5d2 audio PLLs and enable
+ ClassD
+Date: Wed, 19 Jul 2017 11:19:46 +0100
+Message-ID: <20170719101946.keezbqmlrgt3waq6@sirena.org.uk>
+References: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
+ <b3b59278-8c7f-b3d1-e143-7f013ac0b873@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gqzpn77cdxumuk2p"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170719092905.GA13546@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <b3b59278-8c7f-b3d1-e143-7f013ac0b873@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+To: Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
+--gqzpn77cdxumuk2p
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 07/19/2017 02:59 PM, Varadarajan Narayanan wrote:
-> Stan,
->
-> On Wed, Jul 19, 2017 at 10:12:45AM +0300, Stanimir Varbanov wrote:
->> Hi,
->>
->> On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
->>> On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
->>>> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
->>>>
->>>>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
->>>>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
->>>> [..]
->>>>>> Can you confirm that this is actually version 4 of this block? Or are we
->>>>>> just incrementing an arbitrary number here?
->>>>> This is not exactly the 4th version of the block. However, it is
->>>>> a different version than the ones that are already supported in
->>>>> this driver. Since the existing driver didn't exactly tie it with
->>>>> the block IP version, I too followed the same versioning
->>>>> convention.
->>>>>
->>>> Do you have a block IP version that you could base your numbering on, to
->>>> break the trend? (We should go back and fix up the others as well)
->>> Presently, the driver supports the ipq8064, apq8064, apq8084,
->>> msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
->>> the block IP versions are as follows.
->>>
->>> 	ipq8064 - v0 - 2.1.0
->>> 	apq8064 - v0 - 2.1.0
->>> 	apq8084 - v1 - 1.0.0
->>> 	msm8996 - v2 - 2.3.2
->>> 	ipq4019 - v3 - 2.4.0
->>> 	ipq8074 - v4 - 2.3.3
->> That's nice, but I think we need the Synopsys IP versions too, can you
->> provide such an information and after that we can decide how the names
->> should look like.
-> Sorry, I posted v2 before I saw this e-mail. Will post v3 based
-> on what naming style is decided.
->
-> The SoCs, qcom_pcie_ops version, the block IP version and
-> Synopsys IP versions are as follows.
->
-> 	ipq8064 - v0 - 2.1.0 - 4.01a
-> 	apq8064 - v0 - 2.1.0 - 4.01a
-> 	apq8084 - v1 - 1.0.0 - 4.11a
-> 	msm8996 - v2 - 2.3.2 - 4.21a
-> 	ipq4019 - v3 - 2.4.0 - 4.20a
-> 	ipq8074 - v4 - 2.3.3 - 4.30a
+On Wed, Jul 19, 2017 at 08:28:17AM +0200, Quentin Schulz wrote:
+> Hi all,
+>=20
+> It's been almost a week with no comments on this patch set, so kindly
+> pinging.
 
-I would have loved to say the dwc IP versions sounds better, but
-this is the qcom wrapper over dwc. So, for me it makes more sense
-to have qcom specific IP version names.
-Can we have couple or more versions of qcom pcie IPs based on
-same dwc IP version? I have not looked closely, but in that case
-too using qcom nomenclature would again make more sense.
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
 
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
 
-Thanks
-Vivek
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, though there are some other maintainers who like them - if in
+doubt look at how patches for the subsystem are normally handled.
 
->
-> Thanks
-> Varada
->
->>> I will rename the qcom_pcie_ops structure and related functions
->>> with the block IP version instead of vX numbering and post the
->>> patch.
->>
->>
->> regards,
->> Stan
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--gqzpn77cdxumuk2p
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllvMj4ACgkQJNaLcl1U
+h9CtMQf/TXKy0m4fKgwWz6+mZZpEKf/S41ay2VDZ2dunxlQqp3fV4bTUNrGPBS0X
+8XpSP2s2AO2ma6/cV5WYfPSEIrhFUq0EHRs5KyuqEYc4vySDIQS+cTVOiBO+Qygv
+EXZFzrT55rTqjrQXAVXwRkKZVnYzk8rNSi6LUYlPaDGNv2gnL2HOPAzkPcm0DmUr
+YcmYDe7tBm7SKjFYscs2WNB7u/JneXhEYZd+3Mv8D8JOMFUmn9hB8+vjFlrAAapA
+KJsvFS4UE3vr9A7r4fFUcw5CfdzToe2aCPPZiLnxdi4Z473ET6uf6esQdn6793Bh
+FZltcca0lRhwV6AM5sbCH1r13RMWWw==
+=PivX
+-----END PGP SIGNATURE-----
+
+--gqzpn77cdxumuk2p--
