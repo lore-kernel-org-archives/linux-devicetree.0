@@ -1,84 +1,59 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
- active low/high
-Date: Wed, 19 Jul 2017 15:25:33 +0200
-Message-ID: <20170719131640.GA2533@localhost>
-References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
- <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] of: overlay: add overlay unittest data for node
+ names and symbols
+Date: Wed, 19 Jul 2017 08:39:07 -0500
+Message-ID: <CAL_Jsq+2VDvgK-N93rOYAJ=TSGDJeJfP_ba0jM2=suLZ6OBrtQ@mail.gmail.com>
+References: <1500436340-7748-1-git-send-email-frowand.list@gmail.com> <1500436340-7748-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
+In-Reply-To: <1500436340-7748-2-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 07, 2017 at 12:25:49PM +0200, Linus Walleij wrote:
-> On Thu, Apr 6, 2017 at 3:35 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> 
-> > Currently, the GPIO interface is said to Open Drain if it is Single
-> > Ended and active LOW. Similarly, it is said as Open Source if it is
-> > Single Ended and active HIGH.
-> >
-> > The active HIGH/LOW is used in the interface for setting the pin
-> > state to HIGH or LOW when enabling/disabling the interface.
-> >
-> > In Open Drain interface, pin is set to HIGH by putting pin in
-> > high impedance and LOW by driving to the LOW.
-> >
-> > In Open Source interface, pin is set to HIGH by driving pin to
-> > HIGH and set to LOW by putting pin in high impedance.
-> >
-> > With above, the Open Drain/Source is unrelated to the active LOW/HIGH
-> > in interface. There is interface where the enable/disable of interface
-> > is ether active LOW or HIGH but it is Open Drain type.
-> >
-> > Hence decouple the Open Drain with Single Ended + Active LOW and
-> > Open Source with Single Ended + Active HIGH.
-> >
-> > Adding different flag for the Open Drain/Open Source which is valid
-> > only when Single ended flag is enabled.
-> >
-> > Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> 
-> Patch applied.
-> 
-> Good that you found this and fixed it before someone git hurt.
+On Tue, Jul 18, 2017 at 10:52 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Add nodes and properties to overlay_base and overlay dts files to
+> test for
+>    - incorrect existing node name detection when overlay node name
+>      has a unit-address
+>    - adding overlay __symbols__ properties to live tree when an
+>      overlay is added to the live tree
+>
+> The following console messages will appear near the end of unittest
+> until the code errors are corrected:
+>
+>    OF: Duplicate name in fairway-1, renamed to "ride@100#1"
+>
+>    ### dt-test ### FAIL of_unittest_overlay_high_level():2296 Adding overlay 'overlay_bad_symbol' failed
+>
+>    ### dt-test ### end of unittest - 190 passed, 1 failed
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
 
-Well, while decoupling single-endedness from polarity was the right
-thing to do, this change did actually break the DT binary interface.
+> diff --git a/drivers/of/unittest-data/overlay.dts b/drivers/of/unittest-data/overlay.dts
+> index 6cd7e6a0c13e..81140adbe770 100644
+> --- a/drivers/of/unittest-data/overlay.dts
+> +++ b/drivers/of/unittest-data/overlay.dts
+> @@ -25,7 +25,18 @@
+>                         #size-cells = <1>;
+>                         status = "ok";
+>
+> -                       ride@200 {
+> +                       ride@100 {
+> +
+> +                               track@3 {
 
-If you have an old compiled dtb whose source used GPIO_OPEN_DRAIN, you
-now instead get *open-source* behaviour on 4.12:
+These need a reg property.
 
-	GPIO_OPEN_DRAIN = GPIO_SINGLE_ENDED | GPIO_ACTIVE_LOW
-	
-		=> active-low, but *open source*
+> +                                       incline_up = < 48 32 16 >;
 
-while if you recompile that source against 4.12 you do get the expected
-open-drain behaviour, but now with inverted polarity:
+Don't use '_'.
 
-	GPIO_OPEN_DRAIN = GPIO_SINGLE_ENDED | GPIO_LINE_OPEN_DRAIN
-	
-		=> open drain, but *active high*
+Build with W=2 to check dtc warnings.
 
-requiring the device tree to be updated by specifying
-
-	(GPIO_OPEN_DRAIN | GPIO_ACTIVE_LOW)
-
-I guess the latter is fine, even if it is likely to amount to a fair bit
-of debugging world wide.
-
-Perhaps all this can still be avoided by adding further flags and
-deprecating others before people start migrating to 4.12 (after all,
-GPIO_OPEN_DRAIN has been around since 4.4 even if there are no in-kernel
-users).
-
-Or we accept the binary interface breakage -- it probably is pretty rare
-that people update the kernel without updating the dtb. I can just
-update the dts on the system that broke for me, and hopefully anyone
-debugging this issue while updating to 4.12 will find this mail quickly.
-
-Johan
+Rob
