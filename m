@@ -1,65 +1,94 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/9] dt-bindings: arm: mediatek: add MT7622 string to
- the PMIC wrapper doc
-Date: Wed, 19 Jul 2017 10:54:45 +0800
-Message-ID: <1500432885.19736.11.camel@mtkswgap22>
-References: <cover.1500368529.git.sean.wang@mediatek.com>
-         <fff9908edae7da7958ac43dfe9fa98b26c03a4e3.1500368529.git.sean.wang@mediatek.com>
-         <1500393672.8739.1.camel@mtksdaap41>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v16 2/7] power: add power sequence library
+Date: Wed, 19 Jul 2017 10:56:00 +0800
+Message-ID: <20170719025559.GC26218@b29397-desktop>
+References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com>
+ <10723509.cz5GGA4OTz@aspire.rjw.lan>
+ <20170710022815.GA8720@b29397-desktop>
+ <2659617.dvNVihq86F@aspire.rjw.lan>
+ <20170718042955.GA12080@b29397-desktop>
+ <CAJZ5v0hGbJuqqY6Pq5cYPrawSGW-zdhYHj0ovhJ9zXRAkBPCRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500393672.8739.1.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hGbJuqqY6Pq5cYPrawSGW-zdhYHj0ovhJ9zXRAkBPCRQ@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Chen <peter.chen@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, frank.li@nxp.com, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mail@maciej.szmigiero.name, Pawel Moll <pawel.moll@arm>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-07-19 at 00:01 +0800, Yingjoe Chen wrote:
-> On Tue, 2017-07-18 at 17:49 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> > index 107700d..2d6d4a9 100644
-> > --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> > @@ -35,6 +35,10 @@ Required properties in pwrap device node.
-> >    "wrap": Main module clock
-> >  - clocks: Must contain an entry for each entry in clock-names.
-> >  
-> > +Required properties in pwrap device node
-> > +- compatible:
-> > +	"mediatek,mt7622-pwrap" for MT7622 SoCs
-> > +
+On Tue, Jul 18, 2017 at 07:06:05PM +0200, Rafael J. Wysocki wrote:
+> On Tue, Jul 18, 2017 at 6:29 AM, Peter Chen <hzpeterchen@gmail.com> wrote:
+> > On Mon, Jul 17, 2017 at 03:39:07PM +0200, Rafael J. Wysocki wrote:
+> >> > Sorry, I should describe more.
+> >> >
+> >> > Let's take USB bus as an example, when the new USB device is at the
+> >> > host port, the device structure at device model is not created until
+> >> > it is discoverable by the USB bus. If this new USB device needs to be
+> >> > powered on before can be discoverable by the bus, the device structure
+> >> > will be not created without powering on operation. The code usb_alloc_dev
+> >> > (drivers/usb/core/usb.c) is only called for discoverable device.
+> >> >
+> >> > Unlike the other bus, eg, platform bus, it creates device structure
+> >> > according to DT node. The USB bus was designed for hot plug model, the
+> >> > device structure is for discoverable device. In recent years, we begin
+> >> > to have some hard-wired USB device, Eg, onboard USB-hub, onboard USB 4G
+> >> > Modem, etc at the market. It needs some board level power operation before
+> >> > it can be found by the USB bus. This patch set is designed primarily for
+> >> > fix this kind of problem. You will see at at pwrseq_generic.c, we use DT
+> >> > version clock API of_clk_get and DT version gpio API of_get_named_gpio_flags
+> >> > instead of device structure version, like devm_clk_get and
+> >> > devm_gpiod_get_optional.
+> >> >
+> >> > MMC system has similar use case, it creates power sequence platform
+> >> > device for this issue, but all those power stuffs (clock, gpio, etc)
+> >> > may not be suitable as a dedicated virtual device at DT, they are belonged
+> >> > to one physical device, so this patch set is created to see if this issue
+> >> > can be fixed better.
+> >>
+> >> OK, thanks for the explanation.
+> >>
+> >> The above needs to be part of your problem statement.
+> >
+> > Ok, I will add it to cover letter.
+> >
+> >> >
+> >> > The bus will power up all device nodes in this bus according to DT
+> >> > information, the device structure has not created at this time.
+> >>
+> >> OK
+> >>
+> >> I still think that the information on power resources depended on by devices
+> >> should be used for power management as well as for the initial power-up.
+> >>
+> >> The most straightforward way to arrange for that would be to make it possible
+> >> to find the DT node matching the device after the device has been discovered
+> >> and struct device created for it, say by USB.  That would require adding some
+> >> more information on the device to the DT node, probably.
+> >
+> > After the device is created, the device node structure is under struct
+> > device, say dev->of_node. The most difficulty for this issue is the
+> > device creation is dynamic and is after the physical device is
+> > discovered by the bus, the initial power-up is needed before the device
+> > can be discovered by the bus.
 > 
-> Sean,
-> 
-> Why mt7622 need to be separated from others?
-> 
-> 
-> Joe.C
-> 
-Hi, Joe.C
-
-many thanks
-
-It should be one of copy-n-past error, it will be fixed up with moving 
-up to the existing group of compatible string.
-
-
-	Sean
+> So you power up all devices on the bus using the information from
+> of_nodes upfront.
 > 
 
+I think your mean call pm_device_power_up(struct device *dev) for bus
+level device (eg, USB HUB for USB), yeah, I can do that. But we still
+have below problem:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Where we can put the kinds of power sequence implementation
+(eg, pwrseq_generic.c) and the match mechanism between device
+node and kinds of power sequence(eg, of_pwrseq_on at core.c)? These
+stuffs can be shared among subsystems, and is better to use
+one framework for it. MMC subsystem adds such things at its core
+folder (drivers/mmc/core/pwrseq*) currently.
+
+-- 
+
+Best Regards,
+Peter Chen
