@@ -1,72 +1,50 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v7 0/3] clk: stm32h7: Add stm32h743 clock driver
-Date: Wed, 19 Jul 2017 16:25:41 +0200
-Message-ID: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH] fpga: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 09:32:17 -0500
+Message-ID: <CANk1AXSZxj3bb5oXZAyonJ=QgDV3FKuPgSNFDo3m9hzfEtjbbg@mail.gmail.com>
+References: <20170718214339.7774-22-robh@kernel.org> <20170719044221.GA1581@tyrael.ni.corp.natinst.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170719044221.GA1581@tyrael.ni.corp.natinst.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+On Tue, Jul 18, 2017 at 11:42 PM, Moritz Fischer <mdf@kernel.org> wrote:
+> On Tue, Jul 18, 2017 at 04:43:02PM -0500, Rob Herring wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> Cc: Alan Tull <atull@kernel.org>
+>> Cc: Moritz Fischer <moritz.fischer@ettus.com>
+>> Cc: linux-fpga@vger.kernel.org
+> Acked-by: Moritz Fischer <mdf@kernel.org>
 
-v6:
-  - rename clk_gate_is_enabled() in nxp lpc32xx driver.
-  - add EXPORT_SYMBOL_GPL(clk_gate_is_enabled)
+Acked-by: Alan Tull <atull@kernel.org>
 
-v5:
-  - return bool instead int for enable_power_domain_write_protection()
-  - add comment to explain use of CLK_OF_DECLARE_DRIVER()
-  - add comment to explain why we can't use read_poll_timeout()
-  - expose clk_gate_ops::is_enabled
-  - use of __clk_mux_determine_rate & clk_gate_is_enabled to avoid wrapper
-	function.
-
-v4:
-  - rename lock into stm32rcc_lock
-  - don't use clk_readl() 
-  - remove useless parentheses with GENMASK
-  - fix parents of timer_x clocks
-  - suppress pll configuration from DT
-  - fix kbuild warning
-
-v3:
-  - fix compatible string "stm32h7-pll" into "st,stm32h7-pll"
-  - fix bad parent name for mco2 clock
-  - set CLK_SET_RATE_PARENT for ltdc clock
-  - set CLK_IGNORE_UNUSED for pll1
-  - disable power domain write protection on disable ops if needed
-
-
-v2:
-  - rename compatible string "stm32,pll" into "stm32h7-pll"
-  - suppress "st,pllrge" property
-  - suppress "st, frac-status" property
-  - change management of "st,frac"  property
-	0 : enable 0 pll integer mode 
-	other values : enable pll in fractional mode (value is
-	the fractional factor)
-
-Gabriel Fernandez (3):
-  clk: nxp: clk-lpc32xx: rename clk_gate_is_enabled()
-  clk: gate: expose clk_gate_ops::is_enabled
-  clk: stm32h7: Add stm32h743 clock driver
-
- .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   82 ++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/clk-gate.c                             |    3 +-
- drivers/clk/clk-stm32h7.c                          | 1409 ++++++++++++++++++++
- drivers/clk/nxp/clk-lpc32xx.c                      |   12 +-
- include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
- include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
- include/linux/clk-provider.h                       |    1 +
- 8 files changed, 1802 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
- create mode 100644 drivers/clk/clk-stm32h7.c
- create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
- create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
-
--- 
-1.9.1
+>> ---
+>>  drivers/fpga/fpga-region.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
+>> index 3b6b2f4182a1..d9ab7c75b14f 100644
+>> --- a/drivers/fpga/fpga-region.c
+>> +++ b/drivers/fpga/fpga-region.c
+>> @@ -319,8 +319,8 @@ static int child_regions_with_firmware(struct device_node *overlay)
+>>       of_node_put(child_region);
+>>
+>>       if (ret)
+>> -             pr_err("firmware-name not allowed in child FPGA region: %s",
+>> -                    child_region->full_name);
+>> +             pr_err("firmware-name not allowed in child FPGA region: %pOF",
+>> +                    child_region);
+>>
+>>       return ret;
+>>  }
+>> --
+>> 2.11.0
+>>
