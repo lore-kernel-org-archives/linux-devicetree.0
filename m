@@ -1,85 +1,80 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 5/5] arm: allwinner: a64: drop vcc3v3 and vcc1v8 dummy regulators for SoPine
-Date: Thu, 20 Jul 2017 00:10:19 +0800
-Message-ID: <20170719161019.62133-6-icenowy@aosc.io>
-References: <20170719161019.62133-1-icenowy@aosc.io>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170719161019.62133-1-icenowy-h8G6r0blFSE@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3 1/3] of: overlay: add overlay unittest data for node
+ names and symbols
+Date: Wed, 19 Jul 2017 09:16:14 -0700
+Message-ID: <596F85CE.7000301@gmail.com>
+References: <1500436340-7748-1-git-send-email-frowand.list@gmail.com>
+ <1500436340-7748-2-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+2VDvgK-N93rOYAJ=TSGDJeJfP_ba0jM2=suLZ6OBrtQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+2VDvgK-N93rOYAJ=TSGDJeJfP_ba0jM2=suLZ6OBrtQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The device tree of SoPine SoM and its baseboard used to contain two
-dummy regulators: vcc3v3 and vcc1v8.
+On 07/19/17 06:39, Rob Herring wrote:
+> On Tue, Jul 18, 2017 at 10:52 PM,  <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Add nodes and properties to overlay_base and overlay dts files to
+>> test for
+>>    - incorrect existing node name detection when overlay node name
+>>      has a unit-address
+>>    - adding overlay __symbols__ properties to live tree when an
+>>      overlay is added to the live tree
+>>
+>> The following console messages will appear near the end of unittest
+>> until the code errors are corrected:
+>>
+>>    OF: Duplicate name in fairway-1, renamed to "ride@100#1"
+>>
+>>    ### dt-test ### FAIL of_unittest_overlay_high_level():2296 Adding overlay 'overlay_bad_symbol' failed
+>>
+>>    ### dt-test ### end of unittest - 190 passed, 1 failed
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+> 
+>> diff --git a/drivers/of/unittest-data/overlay.dts b/drivers/of/unittest-data/overlay.dts
+>> index 6cd7e6a0c13e..81140adbe770 100644
+>> --- a/drivers/of/unittest-data/overlay.dts
+>> +++ b/drivers/of/unittest-data/overlay.dts
+>> @@ -25,7 +25,18 @@
+>>                         #size-cells = <1>;
+>>                         status = "ok";
+>>
+>> -                       ride@200 {
+>> +                       ride@100 {
+>> +
+>> +                               track@3 {
+> 
+> These need a reg property.
 
-As proper AXP803 regulator support is added, drop the dummy regulators,
-and use the correct ones.
+OK.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 11 ++---------
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi          | 11 +----------
- 2 files changed, 3 insertions(+), 19 deletions(-)
+I changed track@3 to track@30, and track@4 to track@40.
+Then I added the reg property to .../ride@100/track@30/ and
+.../ride@100/track@40/ in the base dts since those nodes
+exist in the base dts.  As a result, W=2 will still warn
+about a missing reg property for these two nodes in
+the overlay.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 834a5d249bb2..58346381e486 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -59,13 +59,6 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
--
--	reg_vcc1v8: vcc1v8 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc1v8";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--	};
- };
- 
- &ehci0 {
-@@ -95,8 +88,8 @@
- &mmc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
--	vmmc-supply = <&reg_vcc3v3>;
--	vqmmc-supply = <&reg_vcc1v8>;
-+	vmmc-supply = <&reg_dcdc1>;
-+	vqmmc-supply = <&reg_eldo1>;
- 	bus-width = <8>;
- 	non-removable;
- 	cap-mmc-hw-reset;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 7adfd013fd60..a7eb9c197023 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -45,19 +45,10 @@
- 
- #include "sun50i-a64.dtsi"
- 
--/ {
--	reg_vcc3v3: vcc3v3 {
--		compatible = "regulator-fixed";
--		regulator-name = "vcc3v3";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--	};
--};
--
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins>;
--	vmmc-supply = <&reg_vcc3v3>;
-+	vmmc-supply = <&reg_dcdc1>;
- 	non-removable;
- 	disable-wp;
- 	bus-width = <4>;
--- 
-2.13.0
+> 
+>> +                                       incline_up = < 48 32 16 >;
+> 
+> Don't use '_'.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK.
+
+> 
+> Build with W=2 to check dtc warnings.
+
+OK.
+
+> 
+> Rob
+> 
