@@ -1,91 +1,84 @@
-From: Shawn Lin <shawn.lin@rock-chips.com>
-Subject: Re: [RFC PATCH v3 0/7] Reconstruct rockchip's PCIe and PCIe-PHY
- driver for per-lane PHY model
-Date: Wed, 19 Jul 2017 08:51:02 +0800
-Message-ID: <6b886181-9d6d-e003-730a-f966fce48278@rock-chips.com>
-References: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
- <20170718202951.GA116895@google.com>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] dt-bindings: add binding
+ documentation for Allwinner CSI
+Date: Wed, 19 Jul 2017 09:22:49 +0800
+Message-ID: <20170719092249.2fb6ec720ba1b194cea320c8@magewell.com>
+References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
+	<1498561654-14658-3-git-send-email-yong.deng@magewell.com>
+	<20170718115530.ssy7g5vv4siqnfpo@tarshish>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170718202951.GA116895@google.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBB5HIXLFQKGQEKO4MA2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170718115530.ssy7g5vv4siqnfpo@tarshish>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+On Tue, 18 Jul 2017 14:55:30 +0300
+Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-On 2017/7/19 4:29, Brian Norris wrote:
-> On Tue, Jul 18, 2017 at 03:56:56PM +0800, Shawn Lin wrote:
->>
->> This patchset is trying to reconstruct PCIe and PCIe-PHY driver
->> for rockchip platform in order to support per-lane PHY mode. And
->> we could idle the inactive lane(s) finally.
->>
->> We deprecate the legacy PHY mode but the code could still
->> support it in order not to break backware compatibility of DTB. And I
->> organize the patches carefully so that we don't introduce git-bisect
->> issue.
->>
->> Note that I carry on Jeffy's test tag from v2 as he has locally tested
->> my v3 patchset.
+> Hi Yong,
 > 
-> I have a few nits for the patchset (will reply shortly), but otherwise
-> (if we're *really* going to go with this approach; I still would
-> appreciate a reply from Kishon on the original patchset, where I
-> suggested alternatives) at least the code is much better this time
-> around. So for the whole thing:
+> I am trying to get this driver working on the Olimex A33 OLinuXino. I didn't 
+> get it working yet, but I had some progress. See the comment below on one 
+> issue I encountered.
 > 
-> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> On Tue, Jun 27, 2017 at 07:07:34PM +0800, Yong Deng wrote:
+> > Add binding documentation for Allwinner CSI.
+> > 
+> > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/media/sunxi-csi.txt        | 51 ++++++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/sunxi-csi.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/sunxi-csi.txt b/Documentation/devicetree/bindings/media/sunxi-csi.txt
+> > new file mode 100644
+> > index 0000000..770be0e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/sunxi-csi.txt
+> > @@ -0,0 +1,51 @@
+> > +Allwinner V3s Camera Sensor Interface
+> > +------------------------------
+> > +
+> > +Required properties:
+> > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+> > +  - reg: base address and size of the memory-mapped region.
+> > +  - interrupts: interrupt associated to this IP
+> > +  - clocks: phandles to the clocks feeding the CSI
+> > +    * ahb: the CSI interface clock
+> > +    * mod: the CSI module clock
+> > +    * ram: the CSI DRAM clock
+> > +  - clock-names: the clock names mentioned above
+> > +  - resets: phandles to the reset line driving the CSI
+> > +
+> > +- ports: A ports node with endpoint definitions as defined in
+> > +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > +  first port should be the input endpoints, the second one the outputs
+> > +
+> > +Example:
+> > +
+> > +	csi1: csi@01cb4000 {
+> > +		compatible = "allwinner,sun8i-v3s-csi";
+> > +		reg = <0x01cb4000 0x1000>;
+> 
+> You use platform_get_resource_byname() to get this IO resource. This requires 
+> adding mandatory
+> 
+>   reg-names = "csi";
+> 
+> But is it actually needed? Wouldn't a simple platform_get_resource() be 
+> enough?
 
-Thanks for your review and Jeffy's test!
-
-I probably will respin my v4 soon and wait for Kishon's final decision.
-If Kishon prefer to ack your alternative solution, I'm fine to commit
-some other bits as your alternatives seem a much simpler way.
-
-> 
->> Changes in v3:
->> - kill rockchip_pcie_manipulate_phys and related stuff
->> - use phys array
->> - improve the commit msg
->> - remove unnecessary forward declaration
->> - keep mutex inside struct rockchip_pcie_phy
->> - fix wrong check of args number
->> - move de-idle lanes after deasserting the reset
->> - use cached lanes_map to avoid powering off inactive
->>    lanes twice
->> - rename the commit tile
->>
->> Changes in v2:
->> - deprecate legacy PHY model
->> - improve rockchip_pcie_phy_of_xlate
->> - fix wrong calculation of pwr_cnt and add new init_cnt
->> - add internal locking
->> - introduce per-lane data to simply the code
->>
->> Shawn Lin (7):
->>    PCI: rockchip: split out rockchip_pcie_get_phys
->>    PCI: rockchip: introduce per-lanes PHYs support
->>    phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
->>    PCI: rockchip: idle the inactive PHY(s)
->>    arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
->>    dt-bindings: PCI: rockchip: convert to use per-lane PHY model
->>    dt-bindings: phy: convert to use per-lane Rockchip PCIe PHY
->>
->>   .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 ++++-
->>   .../devicetree/bindings/phy/rockchip-pcie-phy.txt  |   7 +-
->>   arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 +-
->>   drivers/pci/host/pcie-rockchip.c                   | 123 ++++++++++++++++----
->>   drivers/phy/rockchip/phy-rockchip-pcie.c           | 124 ++++++++++++++++++---
->>   5 files changed, 245 insertions(+), 42 deletions(-)
->>
->> -- 
->> 1.9.1
->>
->>
-> 
-> 
-> 
+You are right.
+This will be fixed in the next version.
+I am waiting for more comments for the sunxi-csi.h. It's pleasure if
+you have any suggestions about it.
