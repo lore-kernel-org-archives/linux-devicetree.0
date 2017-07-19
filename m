@@ -1,90 +1,175 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Wed, 19 Jul 2017 14:59:13 +0530
-Message-ID: <20170719092905.GA13546@codeaurora.org>
-References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
- <1500293043-1887-8-git-send-email-varada@codeaurora.org>
- <20170717220718.GZ20973@minitux>
- <20170718095814.GE32439@codeaurora.org>
- <20170718164438.GE20973@minitux>
- <20170719064943.GA29996@codeaurora.org>
- <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] clocksource: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 11:29:44 +0200
+Message-ID: <02732221-9a0c-079d-1e03-57427c7520fd@st.com>
+References: <20170718214339.7774-13-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170718214339.7774-13-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
 List-Id: devicetree@vger.kernel.org
 
-Stan,
+Hi Rob,
 
-On Wed, Jul 19, 2017 at 10:12:45AM +0300, Stanimir Varbanov wrote:
-> Hi,
->
-> On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
-> > On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
-> >> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
-> >>
-> >>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
-> >>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
-> >> [..]
-> >>>>
-> >>>> Can you confirm that this is actually version 4 of this block? Or are we
-> >>>> just incrementing an arbitrary number here?
-> >>>
-> >>> This is not exactly the 4th version of the block. However, it is
-> >>> a different version than the ones that are already supported in
-> >>> this driver. Since the existing driver didn't exactly tie it with
-> >>> the block IP version, I too followed the same versioning
-> >>> convention.
-> >>>
-> >>
-> >> Do you have a block IP version that you could base your numbering on, to
-> >> break the trend? (We should go back and fix up the others as well)
-> >
-> > Presently, the driver supports the ipq8064, apq8064, apq8084,
-> > msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
-> > the block IP versions are as follows.
-> >
-> > 	ipq8064 - v0 - 2.1.0
-> > 	apq8064 - v0 - 2.1.0
-> > 	apq8084 - v1 - 1.0.0
-> > 	msm8996 - v2 - 2.3.2
-> > 	ipq4019 - v3 - 2.4.0
-> > 	ipq8074 - v4 - 2.3.3
->
-> That's nice, but I think we need the Synopsys IP versions too, can you
-> provide such an information and after that we can decide how the names
-> should look like.
+On 07/18/2017 11:42 PM, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> ---
+>   drivers/clocksource/tango_xtal.c  |  6 +++---
+>   drivers/clocksource/timer-of.c    | 11 +++++------
+>   drivers/clocksource/timer-probe.c |  3 +--
+>   drivers/clocksource/timer-stm32.c |  8 ++++----
+>   4 files changed, 13 insertions(+), 15 deletions(-)
 
-Sorry, I posted v2 before I saw this e-mail. Will post v3 based
-on what naming style is decided.
+For timer-stm32:
 
-The SoCs, qcom_pcie_ops version, the block IP version and
-Synopsys IP versions are as follows.
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-	ipq8064 - v0 - 2.1.0 - 4.01a
-	apq8064 - v0 - 2.1.0 - 4.01a
-	apq8084 - v1 - 1.0.0 - 4.11a
-	msm8996 - v2 - 2.3.2 - 4.21a
-	ipq4019 - v3 - 2.4.0 - 4.20a
-	ipq8074 - v4 - 2.3.3 - 4.30a
+regards
+Alex
 
-Thanks
-Varada
-
-> > I will rename the qcom_pcie_ops structure and related functions
-> > with the block IP version instead of vX numbering and post the
-> > patch.
->
->
->
-> regards,
-> Stan
-
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> diff --git a/drivers/clocksource/tango_xtal.c b/drivers/clocksource/tango_xtal.c
+> index c4e1c2e6046f..6a8d9838ce33 100644
+> --- a/drivers/clocksource/tango_xtal.c
+> +++ b/drivers/clocksource/tango_xtal.c
+> @@ -26,13 +26,13 @@ static int __init tango_clocksource_init(struct device_node *np)
+> 
+>   	xtal_in_cnt = of_iomap(np, 0);
+>   	if (xtal_in_cnt == NULL) {
+> -		pr_err("%s: invalid address\n", np->full_name);
+> +		pr_err("%pOF: invalid address\n", np);
+>   		return -ENXIO;
+>   	}
+> 
+>   	clk = of_clk_get(np, 0);
+>   	if (IS_ERR(clk)) {
+> -		pr_err("%s: invalid clock\n", np->full_name);
+> +		pr_err("%pOF: invalid clock\n", np);
+>   		return PTR_ERR(clk);
+>   	}
+> 
+> @@ -43,7 +43,7 @@ static int __init tango_clocksource_init(struct device_node *np)
+>   	ret = clocksource_mmio_init(xtal_in_cnt, "tango-xtal", xtal_freq, 350,
+>   				    32, clocksource_mmio_readl_up);
+>   	if (ret) {
+> -		pr_err("%s: registration failed\n", np->full_name);
+> +		pr_err("%pOF: registration failed\n", np);
+>   		return ret;
+>   	}
+> 
+> diff --git a/drivers/clocksource/timer-of.c b/drivers/clocksource/timer-of.c
+> index f6e7491c873c..a07b923d3d6e 100644
+> --- a/drivers/clocksource/timer-of.c
+> +++ b/drivers/clocksource/timer-of.c
+> @@ -44,7 +44,7 @@ static __init int timer_irq_init(struct device_node *np,
+>   	of_irq->irq = of_irq->name ? of_irq_get_byname(np, of_irq->name):
+>   		irq_of_parse_and_map(np, of_irq->index);
+>   	if (!of_irq->irq) {
+> -		pr_err("Failed to map interrupt for %s\n", np->full_name);
+> +		pr_err("Failed to map interrupt for %pOF\n", np);
+>   		return -EINVAL;
+>   	}
+> 
+> @@ -55,8 +55,7 @@ static __init int timer_irq_init(struct device_node *np,
+>   			    of_irq->flags ? of_irq->flags : IRQF_TIMER,
+>   			    np->full_name, clkevt);
+>   	if (ret) {
+> -		pr_err("Failed to request irq %d for %s\n", of_irq->irq,
+> -		       np->full_name);
+> +		pr_err("Failed to request irq %d for %pOF\n", of_irq->irq, np);
+>   		return ret;
+>   	}
+> 
+> @@ -80,20 +79,20 @@ static __init int timer_clk_init(struct device_node *np,
+>   	of_clk->clk = of_clk->name ? of_clk_get_by_name(np, of_clk->name) :
+>   		of_clk_get(np, of_clk->index);
+>   	if (IS_ERR(of_clk->clk)) {
+> -		pr_err("Failed to get clock for %s\n", np->full_name);
+> +		pr_err("Failed to get clock for %pOF\n", np);
+>   		return PTR_ERR(of_clk->clk);
+>   	}
+> 
+>   	ret = clk_prepare_enable(of_clk->clk);
+>   	if (ret) {
+> -		pr_err("Failed for enable clock for %s\n", np->full_name);
+> +		pr_err("Failed for enable clock for %pOF\n", np);
+>   		goto out_clk_put;
+>   	}
+> 
+>   	of_clk->rate = clk_get_rate(of_clk->clk);
+>   	if (!of_clk->rate) {
+>   		ret = -EINVAL;
+> -		pr_err("Failed to get clock rate for %s\n", np->full_name);
+> +		pr_err("Failed to get clock rate for %pOF\n", np);
+>   		goto out_clk_disable;
+>   	}
+> 
+> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+> index da81e5de74fe..028075720334 100644
+> --- a/drivers/clocksource/timer-probe.c
+> +++ b/drivers/clocksource/timer-probe.c
+> @@ -40,8 +40,7 @@ void __init timer_probe(void)
+> 
+>   		ret = init_func_ret(np);
+>   		if (ret) {
+> -			pr_err("Failed to initialize '%s': %d\n",
+> -			       of_node_full_name(np), ret);
+> +			pr_err("Failed to initialize '%pOF': %d\n", np, ret);
+>   			continue;
+>   		}
+> 
+> diff --git a/drivers/clocksource/timer-stm32.c b/drivers/clocksource/timer-stm32.c
+> index 174d1243ea93..8f2423789ba9 100644
+> --- a/drivers/clocksource/timer-stm32.c
+> +++ b/drivers/clocksource/timer-stm32.c
+> @@ -138,7 +138,7 @@ static int __init stm32_clockevent_init(struct device_node *np)
+>   	irq = irq_of_parse_and_map(np, 0);
+>   	if (!irq) {
+>   		ret = -EINVAL;
+> -		pr_err("%s: failed to get irq.\n", np->full_name);
+> +		pr_err("%pOF: failed to get irq.\n", np);
+>   		goto err_get_irq;
+>   	}
+> 
+> @@ -168,12 +168,12 @@ static int __init stm32_clockevent_init(struct device_node *np)
+>   	ret = request_irq(irq, stm32_clock_event_handler, IRQF_TIMER,
+>   			"stm32 clockevent", data);
+>   	if (ret) {
+> -		pr_err("%s: failed to request irq.\n", np->full_name);
+> +		pr_err("%pOF: failed to request irq.\n", np);
+>   		goto err_get_irq;
+>   	}
+> 
+> -	pr_info("%s: STM32 clockevent driver initialized (%d bits)\n",
+> -			np->full_name, bits);
+> +	pr_info("%pOF: STM32 clockevent driver initialized (%d bits)\n",
+> +			np, bits);
+> 
+>   	return ret;
+> 
+> --
+> 2.11.0
+> 
