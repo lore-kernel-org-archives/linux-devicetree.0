@@ -1,152 +1,119 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v2 1/3] mux: Add mux_control_get_optional() API
-Date: Tue, 18 Jul 2017 19:08:39 -0700
-Message-ID: <150043011983.23422.10872793103087420242@sboyd-linaro>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-2-stephen.boyd@linaro.org>
- <aac61f46-f963-2631-00e0-2d62baac6bf4@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <aac61f46-f963-2631-00e0-2d62baac6bf4@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Peter Chen <Peter.Chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: [PATCH v9 2/9] i2c: i2c-smbus: add of_i2c_setup_smbus_alert
+Date: Wed, 19 Jul 2017 10:14:04 +0800
+Message-ID: <1500430451-43858-3-git-send-email-preid@electromag.com.au>
+References: <1500430451-43858-1-git-send-email-preid@electromag.com.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500430451-43858-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Rosin (2017-07-17 01:20:14)
-> On 2017-07-14 23:40, Stephen Boyd wrote:
-> > diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
-> > index 90b8995f07cb..a0e5bf16f02f 100644
-> > --- a/drivers/mux/mux-core.c
-> > +++ b/drivers/mux/mux-core.c
-> > @@ -289,6 +289,9 @@ EXPORT_SYMBOL_GPL(devm_mux_chip_register);
-> >   */
-> >  unsigned int mux_control_states(struct mux_control *mux)
-> >  {
-> > +     if (!mux)
-> > +             return 0;
-> > +
-> =
+This commit adds of_i2c_setup_smbus_alert which allows the smbalert
+driver to be attached to an i2c adapter via the device tree.
 
-> I don't think this is appropriate. For this function, it might be ok,
-> but...
-> =
+Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/i2c/i2c.txt |  4 ++--
+ drivers/i2c/i2c-smbus.c                       | 32 ++++++++++++++++++++++++++-
+ include/linux/i2c-smbus.h                     |  9 ++++++++
+ 3 files changed, 42 insertions(+), 3 deletions(-)
 
-> >       return mux->states;
-> >  }
-> >  EXPORT_SYMBOL_GPL(mux_control_states);
-> > @@ -338,6 +341,9 @@ int mux_control_select(struct mux_control *mux, uns=
-igned int state)
-> >  {
-> >       int ret;
-> >  =
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+index cee9d50..1126398 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+@@ -59,8 +59,8 @@ wants to support one of the below features, it should adapt the bindings below.
+ 	interrupts used by the device.
+ 
+ - interrupt-names
+-	"irq" and "wakeup" names are recognized by I2C core, other names are
+-	left to individual drivers.
++	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
++	other names are	left to individual drivers.
+ 
+ - host-notify
+ 	device uses SMBus host notify protocol instead of interrupt line.
+diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
+index d4af270..a34f41d 100644
+--- a/drivers/i2c/i2c-smbus.c
++++ b/drivers/i2c/i2c-smbus.c
+@@ -21,6 +21,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_irq.h>
+ #include <linux/slab.h>
+ #include <linux/workqueue.h>
+ 
+@@ -139,7 +140,14 @@ static int smbalert_probe(struct i2c_client *ara,
+ 	if (!alert)
+ 		return -ENOMEM;
+ 
+-	irq = setup->irq;
++	if (setup) {
++		irq = setup->irq;
++	} else {
++		irq = of_irq_get_byname(adapter->dev.of_node, "smbus_alert");
++		if (irq <= 0)
++			return irq;
++	}
++
+ 	INIT_WORK(&alert->alert, smbalert_work);
+ 	alert->ara = ara;
+ 
+@@ -214,6 +222,28 @@ struct i2c_client *i2c_setup_smbus_alert(struct i2c_adapter *adapter,
+ }
+ EXPORT_SYMBOL_GPL(i2c_setup_smbus_alert);
+ 
++#if IS_ENABLED(CONFIG_OF)
++int of_i2c_setup_smbus_alert(struct i2c_adapter *adapter)
++{
++	struct i2c_client *client;
++	int irq;
++
++	irq = of_property_match_string(adapter->dev.of_node, "interrupt-names",
++				       "smbus_alert");
++	if (irq == -EINVAL || irq == -ENODATA)
++		return 0;
++	else if (irq < 0)
++		return irq;
++
++	client = i2c_setup_smbus_alert(adapter, NULL);
++	if (!client)
++		return -ENODEV;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_i2c_setup_smbus_alert);
++#endif
++
+ /**
+  * i2c_handle_smbus_alert - Handle an SMBus alert
+  * @ara: the ARA client on the relevant adapter
+diff --git a/include/linux/i2c-smbus.h b/include/linux/i2c-smbus.h
+index 19efbd1..fb0e040 100644
+--- a/include/linux/i2c-smbus.h
++++ b/include/linux/i2c-smbus.h
+@@ -49,4 +49,13 @@ struct i2c_client *i2c_setup_smbus_alert(struct i2c_adapter *adapter,
+ 					 struct i2c_smbus_alert_setup *setup);
+ int i2c_handle_smbus_alert(struct i2c_client *ara);
+ 
++#if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(CONFIG_OF)
++int of_i2c_setup_smbus_alert(struct i2c_adapter *adap);
++#else
++static inline int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
++{
++	return 0;
++}
++#endif
++
+ #endif /* _LINUX_I2C_SMBUS_H */
+-- 
+1.8.3.1
 
-> > +     if (!mux)
-> > +             return 0;
-> > +
-> =
-
-> ...here and for other cases below it's very odd to return "ok", when
-> -EINVAL or something seems much more appropriate. And if -EINVAL is
-> returned here, the benefit of returning fake values for anything
-> pretty much falls apart.
-> =
-
-> I simply don't like it, and prefer if the consumer code is arranged
-> to not call the mux functions when the optional get() does not find
-> the mux.
-
-Do you want the callers of the mux APIs to know that an optional mux
-isn't there, and then have checks at all callsites on optional muxes to
-make sure consumers don't call the mux functions? Won't that duplicate
-lots of checks in drivers for something the core could treat as a don't
-care case? Sorry, I don't understand why the consumer cares that it was
-there or not when it is optional.
-
-> =
-
-> >       ret =3D down_killable(&mux->lock);
-> >       if (ret < 0)
-> >               return ret;
-> > @@ -370,6 +376,9 @@ int mux_control_try_select(struct mux_control *mux,=
- unsigned int state)
-> >  {
-> >       int ret;
-> >  =
-
-> > +     if (!mux)
-> > +             return 0;
-> > +
-> >       if (down_trylock(&mux->lock))
-> >               return -EBUSY;
-> >  =
-
-> > @@ -398,6 +407,9 @@ int mux_control_deselect(struct mux_control *mux)
-> >  {
-> >       int ret =3D 0;
-> >  =
-
-> > +     if (!mux)
-> > +             return 0;
-> > +
-> >       if (mux->idle_state !=3D MUX_IDLE_AS_IS &&
-> >           mux->idle_state !=3D mux->cached_state)
-> >               ret =3D mux_control_set(mux, mux->idle_state);
-> > @@ -422,14 +434,8 @@ static struct mux_chip *of_find_mux_chip_by_node(s=
-truct device_node *np)
-> >       return dev ? to_mux_chip(dev) : NULL;
-> >  }
-> >  =
-
-> > -/**
-> > - * mux_control_get() - Get the mux-control for a device.
-> > - * @dev: The device that needs a mux-control.
-> > - * @mux_name: The name identifying the mux-control.
-> > - *
-> > - * Return: A pointer to the mux-control, or an ERR_PTR with a negative=
- errno.
-> > - */
-> > -struct mux_control *mux_control_get(struct device *dev, const char *mu=
-x_name)
-> > +struct mux_control *
-> > +__mux_control_get(struct device *dev, const char *mux_name, bool optio=
-nal)
-> >  {
-> >       struct device_node *np =3D dev->of_node;
-> >       struct of_phandle_args args;
-> > @@ -441,6 +447,8 @@ struct mux_control *mux_control_get(struct device *=
-dev, const char *mux_name)
-> >       if (mux_name) {
-> >               index =3D of_property_match_string(np, "mux-control-names=
-",
-> >                                                mux_name);
-> > +             if (index =3D=3D -EINVAL && optional)
-> > +                     return NULL;
-> =
-
-> What about -ENODATA?
-
-At this point in the code we're finding the index of a mux-control-names
-property so I was trying to handle the case where there isn't a
-mux-control-names property at all but we're looking for something
-optional anyway. If there is a property, then we would see some other
-error if something went wrong and then pass the error up. There is a
-hole where there isn't a mux-control-names property and we're looking
-for something that's optional, but there is a mux-control property. Do
-we care though? The DT seems broken then.
-
-> And if an optional mux is found here, but lookup
-> fails later in e.g. the of_parse_phandle_with_args call, then I think
-> an error should be returned. Because that seems like an indication that
-> DT specifies that there *should* be a mux, but then there isn't one.
-
-of_parse_phandle_with_args() would return ENOENT when there isn't a
-mux-control property in DT. So I've trapped that case and returned an
-"optional mux" pointer of NULL. I think we handle the case you mention,
-where some index is found but it returns an error, because that would
-return some error besides -ENOENT.
-
-Sorry, I'm not really following what you're suggesting. Maybe it got
-mixed up with the NULL vs. non-NULL return value from mux_control_get().
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
