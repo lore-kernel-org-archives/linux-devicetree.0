@@ -1,41 +1,63 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v1 1/1] dt-binding: ptp: Add SoC compatibility strings
- for dte ptp clock
-Date: Wed, 19 Jul 2017 16:26:44 -0700 (PDT)
-Message-ID: <20170719.162644.1667083105877113459.davem@davemloft.net>
-References: <1499362677-28579-1-git-send-email-arun.parameswaran@broadcom.com>
-        <20170710134437.ribkgkpwf2hlvelv@rob-hp-laptop>
-        <30d0208e-aa15-63bd-c781-8846054f0dfe@broadcom.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH 2/4] can: fixed-transceiver: Add documentation for CAN fixed transceiver bindings
+Date: Wed, 19 Jul 2017 18:36:52 -0500
+Message-ID: <20170719233654.25908-3-fcooper@ti.com>
+References: <20170719233654.25908-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <30d0208e-aa15-63bd-c781-8846054f0dfe@broadcom.com>
+In-Reply-To: <20170719233654.25908-1-fcooper@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: arun.parameswaran@broadcom.com
-Cc: robh@kernel.org, richardcochran@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Date: Tue, 18 Jul 2017 10:14:16 -0700
+Add documentation to describe usage of the new fixed transceiver binding.
+This new binding is applicable for any CAN device therefore it exist as
+its own document.
 
-> Hi David,
-> 
-> On 17-07-10 06:44 AM, Rob Herring wrote:
->> On Thu, Jul 06, 2017 at 10:37:57AM -0700, Arun Parameswaran wrote:
->>> Add SoC specific compatibility strings to the Broadcom DTE
->>> based PTP clock binding document.
->>>
->>> Fixed the document heading and node name.
->>>
->>> Fixes: 80d6076140b2 ("dt-binding: ptp: add bindings document for dte based ptp clock")
->>> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
->>> ---
->>>  Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 15 +++++++++++----
->>>  1 file changed, 11 insertions(+), 4 deletions(-)
->> 
->> Acked-by: Rob Herring <robh@kernel.org>
->>
-> Will you be picking up this change ?
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+---
+ .../bindings/net/can/fixed-transceiver.txt         | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
 
-Sure, done.
+diff --git a/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+new file mode 100644
+index 0000000..7c093c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+@@ -0,0 +1,31 @@
++Fixed transceiver Device Tree binding
++------------------------------
++
++CAN transceiver typically limits the max speed in standard CAN and CAN FD
++modes. Typically these limitations are static and the transceivers themselves
++provide no way to detect this limitation at runtime. For this situation,
++the "fixed-transceiver" node can be used.
++
++Properties:
++
++Optional:
++ max-arbitration-speed: a positive value non 0 value that determines the max
++			 speed CAN can run in non CAN-FD mode or during the
++			 arbitration phase in CAN-FD mode.
++
++ max-data-speed:	 a positive value that determines the max data rate
++			 that can be used in CAN-FD mode. A value of 0
++			 implies CAN-FD is not supported by the transceiver.
++
++Examples:
++
++Based on Texas Instrument's TCAN1042HGV CAN Transceiver
++
++m_can0 {
++	....
++	fixed-transceiver@0 {
++		max-arbitration-speed = <1000000>;
++		max-data-speed = <5000000>;
++	};
++	...
++};
+-- 
+2.10.0
