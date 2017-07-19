@@ -1,42 +1,81 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] bus: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 08:22:00 +0200
-Message-ID: <20170719062200.aixn34tcmxy3h6dl@flea>
-References: <20170718214339.7774-11-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH] clk: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 08:23:01 +0200
+Message-ID: <20170719062301.bextqsjufe7gjozt@flea>
+References: <20170718214339.7774-12-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="npxhuceqcjearxql"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="l25m4zfpvpydcgma"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-11-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170718214339.7774-12-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chen-Yu Tsai <wens@csie.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-renesas-soc
 List-Id: devicetree@vger.kernel.org
 
 
---npxhuceqcjearxql
-Content-Type: text/plain; charset=us-ascii
+--l25m4zfpvpydcgma
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 18, 2017 at 04:42:51PM -0500, Rob Herring wrote:
+On Tue, Jul 18, 2017 at 04:42:52PM -0500, Rob Herring wrote:
 > Now that we have a custom printf format specifier, convert users of
 > full_name to use %pOF instead. This is preparation to remove storing
 > of the full path string for each node.
 >=20
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: "Emilio L=F3pez" <emilio@elopez.com.ar>
+> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Prashant Gaikwad <pgaikwad@nvidia.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-tegra@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
 > ---
->  drivers/bus/arm-cci.c   | 12 ++++++------
->  drivers/bus/imx-weim.c  |  8 ++++----
->  drivers/bus/sunxi-rsb.c | 22 +++++++++++-----------
+>  drivers/clk/berlin/bg2.c             |  3 +--
+>  drivers/clk/berlin/bg2q.c            |  7 +++----
+>  drivers/clk/clk-asm9260.c            |  4 ++--
+>  drivers/clk/clk-conf.c               | 16 ++++++++--------
+>  drivers/clk/clk-moxart.c             | 12 ++++++------
+>  drivers/clk/clk-qoriq.c              |  7 +++----
+>  drivers/clk/clk-stm32f4.c            |  4 ++--
+>  drivers/clk/clk-xgene.c              | 15 ++++++---------
+>  drivers/clk/clk.c                    |  4 ++--
+>  drivers/clk/clkdev.c                 |  4 ++--
+>  drivers/clk/mediatek/clk-cpumux.c    |  2 +-
+>  drivers/clk/mediatek/clk-mtk.c       |  2 +-
+>  drivers/clk/mediatek/reset.c         |  2 +-
+>  drivers/clk/renesas/clk-mstp.c       |  2 +-
+>  drivers/clk/renesas/clk-rcar-gen2.c  |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun5i.c     |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun6i-a31.c |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun8i-a23.c |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun8i-a33.c |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c  |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun8i-r.c   |  3 +--
+>  drivers/clk/sunxi-ng/ccu-sun8i-v3s.c |  3 +--
+>  drivers/clk/sunxi/clk-sunxi.c        | 17 +++++++----------
 
-for sunxi-rsb:
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+For the sunxi and sunxi-ng clocks:
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
+Thanks!
 Maxime
 
 --=20
@@ -44,28 +83,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---npxhuceqcjearxql
+--l25m4zfpvpydcgma
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZbvqIAAoJEBx+YmzsjxAgK8IP+wfN8RMSp5hHH2oERRpMy5Eu
-BfvpxezZq3D5F/Wgnv2EsY0tZpjqDDNHuNUinjeXLyeht9ALU+zzb7vzeHuDbqQh
-lEf/PoJf8yvAPSwaNuz32lQeYVPnzYAKamlrH258wFbtI8uAtpKG72aSqsKV5GtJ
-1adhMPGYeUdSrWNVg8sK5EdZxLnORzuhfkKAmdNunv8Xeco8dmxf1daA5omRc9EP
-aFoe2F9XAe4DWN2bcR6pGP6zB3mf9YsfOkbgC9V9yVKG0n4ibzkEHW3t7gQnsk60
-K6IJgewSFGHdkXhvNMN9jSoXBh7jtUG+jo6glsxVi+N0WJI+i5MDw91ezSnhHV67
-BeGMa2cCBJ2m8p9NwRAUwsPSLz5VSMBQMVSrv4dDi4OMgzY6jjPTQxkgDfx2vLjz
-0E895jkT+EGVPSf+jy7OjkWEPFPrqboqbvsR+fc+lVM6kgd7rcwharsb0W+0CnTb
-l9hcSvR8d9mxTPVMYrOki9KeIIF+zASpZvyysbatoWGU/8RsP1scF0wljNq4qakH
-OGZrZGJFNDKOFD324wFKHyTDcforQNw55iScZKuf/bxYJug5RdnIoF9CGZMdSJ6y
-wSNtNNG3SKa6V2Cb+MrHNmOrcKhabzVjdNxx3HYmiSzLK76QyhlBsZKRtKjzA47R
-gogoAWPO+UlDSFnV4qTl
-=UqVh
+iQIcBAEBAgAGBQJZbvrFAAoJEBx+YmzsjxAgYCIQAIG0Ck1n/kBpT7SJHMICc1Pk
+JvosVmqrSK8FMljtVqFNa7wTxpbhiwtkWPBfFrvvv4lNN/9eyCFsJjlkjFYmPj9z
+EtIQNMK6gZVRWSD+apOrPbOz8PPpnW5g7IyZhKrzc2XTw5ypsGO+Uz0pbYfG1oui
+b+YODRsG/GFA9M4JG3pM0WCBFzoC3Je1PMo27jOjxWO7E0VeJWQVVkqXShw1rZaV
+QEz3EhYZ79x+Wn7kV6L3jxRG6oljmJRKuqVqOiHoMgfM6oSOcuDTrhse/JfBqkoT
+p1FummTm0I+1LcztAiqGQWePjS2dIYluueX3OdCsANfd8/OHwGdKPzcyQ0cOIR3o
+o3s2udAKdQI8CWl2SEbUp9qyTwF+CjkAzICcY5RF05iHdL2WrAbbZ3G6MHjNQC39
+/Y2mfVZ5iRv+Crtuue+uytZ6xbKb7sp5j0+SQwYaPi+vmnONQK+tiPPgTxi0deaD
+Wt+8+2YovasnYHSMBfN4DtIEbESRN3vnEYUiTbg5NYqTrVNw6SeqIbwhIMYFEM7f
+kn1SvLfqcDdMq4qQd3cguiKKEJnCAlh4JtO3wWPocJNA73J7SgaM8tmPoQNQ+6V/
+2y7hSSjLNh1Is6o888H58cjQ0DNnTHDWOhezIk9Y7jVtVyEj/dPoZ1MJL9j5miQt
+si9tNGjJSr2RAVVdbnYk
+=PpBl
 -----END PGP SIGNATURE-----
 
---npxhuceqcjearxql--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--l25m4zfpvpydcgma--
