@@ -1,136 +1,53 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
-Date: Wed, 19 Jul 2017 13:19:16 -0700
-Message-ID: <20170719201916.22369-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: move rpi into rpi directory
+Date: Wed, 19 Jul 2017 13:21:07 -0700
+Message-ID: <87mv80dvpo.fsf@eliezer.anholt.net>
+References: <1500483950-9217-1-git-send-email-scott.branden@broadcom.com> <1500483950-9217-3-git-send-email-scott.branden@broadcom.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500483950-9217-3-git-send-email-scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-BCM2837 is somewhat unusual in that we build its DT on both arm32 and
-arm64.  Most devices are being run in arm32 mode.
+--=-=-=
+Content-Type: text/plain
 
-Having the body of the DT for 2837 separate from 2835/6 has been a
-source of pain, as we often need to make changes that span both
-directories simultaneously (for example, the thermal changes for 4.13,
-and pinmuxing changes earlier).  Other changes are made more
-complicated than they need to be, such as the SDHOST enabling, because
-we end up splitting a single change into a 283[56] half and a 2837
-half.
+Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+> Place rpi into its own subdirectory.  This helps as the number
+> of Broadcom boards grow and we can separate them per SoC.
 
-I had asked about what we could do about our DT merging troubles back
-in https://lkml.org/lkml/2017/5/16/707 with no response.  I'm hoping
-we can take this patch as a resolution to that, and submit (almost
-all) future RPi DT changes through the arm32 dt tree.
+It seems like pretty unnecessary churn to me, though I wouldn't
+necessarily block it.  However, it conflicts with the patch I was
+preparing yesterday to try to resolve our DT merging troubles
+(https://lkml.org/lkml/2017/5/16/707), so I'd like to hold off on it for
+now.
 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 +++++++++++++++++++++-
- .../dts/broadcom => arm/boot/dts}/bcm2837.dtsi     |  0
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +---------------------
- 3 files changed, 42 insertions(+), 42 deletions(-)
- rename arch/{arm64/boot/dts/broadcom => arm/boot/dts}/bcm2837.dtsi (100%)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index c72a27d908b6..972f14db28ac 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -1 +1,41 @@
--#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
-+/dts-v1/;
-+#include "bcm2837.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-+	model = "Raspberry Pi 3 Model B";
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 0>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+/* SDHCI is used to control the SDIO for wireless */
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio34>;
-+	status = "okay";
-+	bus-width = <4>;
-+	non-removable;
-+};
-+
-+/* SDHOST is used to drive the SD card */
-+&sdhost {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhost_gpio48>;
-+	status = "okay";
-+	bus-width = <4>;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-similarity index 100%
-rename from arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-rename to arch/arm/boot/dts/bcm2837.dtsi
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-index 972f14db28ac..699d340a3437 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-@@ -1,41 +1 @@
--/dts-v1/;
--#include "bcm2837.dtsi"
--#include "bcm2835-rpi.dtsi"
--#include "bcm283x-rpi-smsc9514.dtsi"
--#include "bcm283x-rpi-usb-host.dtsi"
--
--/ {
--	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
--	model = "Raspberry Pi 3 Model B";
--
--	memory {
--		reg = <0 0x40000000>;
--	};
--
--	leds {
--		act {
--			gpios = <&gpio 47 0>;
--		};
--	};
--};
--
--&uart1 {
--	status = "okay";
--};
--
--/* SDHCI is used to control the SDIO for wireless */
--&sdhci {
--	pinctrl-names = "default";
--	pinctrl-0 = <&emmc_gpio34>;
--	status = "okay";
--	bus-width = <4>;
--	non-removable;
--};
--
--/* SDHOST is used to drive the SD card */
--&sdhost {
--	pinctrl-names = "default";
--	pinctrl-0 = <&sdhost_gpio48>;
--	status = "okay";
--	bus-width = <4>;
--};
-+#include "arm/bcm2837-rpi-3-b.dts"
--- 
-2.11.0
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAllvvzMACgkQtdYpNtH8
+nujAWA/8D9U8lvrWsi0i2eLaeR07EDBh+bRv8twOgQyocc8vxOCAyqlisslO+pFX
+Spzvpnwi6jvXUE9MxEvk4e/nY5q3EWqXqpttwn3k1jxi3NNv/666E36BYT4I9Kg5
+ImdwZy9GHmgPOwEal6o87Xhh9rAihpM0F3bZqeZOf1CH2Dj0U0aINgiUVdjJNXY1
+734mV+DNWLecL9srhI/kGYpYJRwbZDKQaNyabRjto57ttAif1Fm+dmW76ySne77h
+q9YhChhGAEF17MKxsdDNhaUVgscsD46ajHvIjJIlGB70p8FWnh89ISYlo7Xp6BW9
+mW0Saxh5rzstNoIiJitfMqeLDFmTyj16yYK1MzWJhLaKt1YpSQERaMO9oj7UVfV0
+ccQUlcP0sitpPNDtLMWq6GJ3xt6pL+huX2TFVlvOlwx4URSAS8Fs1QOFd+2gYbVk
+g8A9HMQ8mJICZ23ThGJE3Pl5biQ4j5rCnwwMpccbgoUvvG8RHHeQvOy1WPlPYUr1
+/v8QtonEh0bRR+lcayzQT4Z9BT0lwd8GwogjAIkDPCx/uaX3ovNpN4UeI/pi48y6
+F78ZDZAEKthuENvifklTdZ4cjPzywAsN4PBXqw+PQu4XlbY/iHAZAOJdOJzehKDg
+IIiEgg2kdZH5wLMX76rbcEnGmnfLMozPVtt4e4hEpX8524Dez14=
+=rP30
+-----END PGP SIGNATURE-----
+--=-=-=--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
