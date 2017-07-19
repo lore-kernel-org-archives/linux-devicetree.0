@@ -1,75 +1,62 @@
-From: Mark yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] drm/rockchip: add all full framework vop support
-Date: Wed, 19 Jul 2017 11:21:36 +0800
-Message-ID: <596ED040.8000307@rock-chips.com>
-References: <1500433036-13730-1-git-send-email-mark.yao@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v3 0/3] of: overlay: load overlay symbols into live device tree
+Date: Tue, 18 Jul 2017 20:52:17 -0700
+Message-ID: <1500436340-7748-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500433036-13730-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry for sending this mail without thread, my send-patches scripts has a bug:-( , Already fix the script bug.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-On 2017年07月19日 10:57, Mark Yao wrote:
-> These patches try to make all current rockchip full framework vop works
-> on drm, fill missing vop on full framework.
-> Vop Full framework now has following vops:
-> IP version    chipname
->        3.1           rk3288
->        3.2           rk3368
->        3.4           rk3366
->        3.5           rk3399 big
->        3.6           rk3399 lit
->        3.7           rk3228
->        3.8           rk3328
->
-> Group the vop register, it would make register  definition clearer and
-> more easily to reuse same group register define for difference vops.
->
-> Tested on rk3399 excavator board with kernel 4.13-rc1.
->
-> And other chips tested on rockchip kernel 4.4:
->     https://github.com/rockchip-linux/kernel/tree/release-4.4/drivers/gpu/drm/rockchip
->
-> Changes in v4:
-> - rebase to newest torvalds kernel, fix merge conflict
->
-> Changes in v3:
-> - group vop register instead using VOP_REG_VER mechanism
-> - move write_relaxed flags to vop registers
-> - Explain more on patch commit message
-> - fix rk3328 overlay abnormal
->
-> Changes in v2:
-> - rename rk322x to rk3228(Heiko Stübner)
-> - correct some vop registers define
->
-> Mark Yao (7):
->    drm/rockchip: vop: initialize registers directly
->    drm/rockchip: vop: move write_relaxed flags to vop register
->    drm/rockchip: vop: move line_flag_num to interrupt registers
->    drm/rockchip: vop: group vop registers
->    drm/rockchip: vop: add a series of vop support
->    dt-bindings: display: fill Documents for series of vop
->    drm/rockchip: vop: rk3328: fix overlay abnormal
->
->   .../bindings/display/rockchip/rockchip-vop.txt     |   4 +
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 109 ++-
->   drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  81 +-
->   drivers/gpu/drm/rockchip/rockchip_vop_reg.c        | 374 ++++++---
->   drivers/gpu/drm/rockchip/rockchip_vop_reg.h        | 905 ++++++++++++++++-----
->   5 files changed, 1074 insertions(+), 399 deletions(-)
->
+Symbols in a loaded overlay are not currently available to subsequently
+loaded overlays because the properties in the overlay's __symbols__
+node are not loaded into the live device tree.
 
+Patch 1 is unittests to test patches 2 and 3.
+
+Patch 2 fixes a problem discovered while developing patch 3.  If
+a node name in an overlay has a unit-address then the overlay
+code does not correctly match the node name against an existing
+node in the live tree.
+
+Patch 3 adds the properties in an overlay's __symbol__ node to
+the overlay changeset.
+
+This patch set was created on top of v4.12, with Rob's pull request
+for 4.13 added (https://lkml.org/lkml/2017/7/6/691).  Thus this
+series should apply on 4.13-rc1 when that becomes available.  I will
+re-test on 4.13-rc1.
+
+changes since v2:
+  - test on 4.13-rc1
+  - remove redundant comments from patch headers of patch 0 and patch 1
+  - guard make of overlay .dtb files with CONFIG_OF_OVERLAY
+  - guard unittest.c references to overlay .dtb files with
+    CONFIG_OF_OVERLAY
+
+changes since v1:
+  - patch 2: Use for_each_child_of_node() instead of open coding,
+    which allowed removing the new function child_by_full_name().
+
+
+Frank Rowand (3):
+  of: overlay: add overlay unittest data for node names and symbols
+  of: overlay: correctly apply overlay node with unit-address
+  of: overlay: add overlay symbols to live device tree
+
+ drivers/of/overlay.c                            | 121 ++++++++++++++++++++++--
+ drivers/of/unittest-data/Makefile               |  19 +++-
+ drivers/of/unittest-data/overlay.dts            |  19 +++-
+ drivers/of/unittest-data/overlay_bad_symbol.dts |  22 +++++
+ drivers/of/unittest-data/overlay_base.dts       |   7 ++
+ drivers/of/unittest.c                           |  10 +-
+ 6 files changed, 180 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_symbol.dts
 
 -- 
-Ｍark Yao
-
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
