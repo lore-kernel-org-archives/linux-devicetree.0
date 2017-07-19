@@ -1,116 +1,47 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: keystone-k2g-evm: Add gpio nodes
-Date: Wed, 19 Jul 2017 09:36:59 +0530
-Message-ID: <87734375-8841-ce74-38eb-7ee5af1ad4f6@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-5-git-send-email-j-keerthy@ti.com>
- <1cd6ef99-a98e-7cdb-5c2a-f5cd057eef41@ti.com>
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH] fpga: Convert to using %pOF instead of full_name
+Date: Tue, 18 Jul 2017 21:42:21 -0700
+Message-ID: <20170719044221.GA1581@tyrael.ni.corp.natinst.com>
+References: <20170718214339.7774-22-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1cd6ef99-a98e-7cdb-5c2a-f5cd057eef41-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170718214339.7774-22-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Alan Tull <atull@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Moritz Fischer <moritz.fischer@ettus.com>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Wednesday 19 July 2017 12:43 AM, Suman Anna wrote:
-> Hi Keerthy,
+On Tue, Jul 18, 2017 at 04:43:02PM -0500, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
 > 
-> On 07/18/2017 05:57 AM, Keerthy wrote:
->> keystone-k2g has 2 instances of gpio. The first one has all the 144 GPIOs
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Alan Tull <atull@kernel.org>
+> Cc: Moritz Fischer <moritz.fischer@ettus.com>
+> Cc: linux-fpga@vger.kernel.org
+Acked-by: Moritz Fischer <mdf@kernel.org>
+> ---
+>  drivers/fpga/fpga-region.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Please use 66AK2G for keystone-k2g.
-
-Okay
-
+> diff --git a/drivers/fpga/fpga-region.c b/drivers/fpga/fpga-region.c
+> index 3b6b2f4182a1..d9ab7c75b14f 100644
+> --- a/drivers/fpga/fpga-region.c
+> +++ b/drivers/fpga/fpga-region.c
+> @@ -319,8 +319,8 @@ static int child_regions_with_firmware(struct device_node *overlay)
+>  	of_node_put(child_region);
 > 
->> functional( 9 banks with 16 gpios = 144). The second instance has
->> only the GPIO0:GPIO67 functional and rest are marked reserved.
->>
->> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/keystone-k2g.dtsi | 42 +++++++++++++++++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
->> index bf4d1fa..58ac3db 100644
->> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
->> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
->> @@ -15,6 +15,7 @@
->>  
->>  #include <dt-bindings/interrupt-controller/arm-gic.h>
->>  #include <dt-bindings/pinctrl/keystone.h>
->> +#include <dt-bindings/gpio/gpio.h>
->>  
->>  / {
->>  	compatible = "ti,k2g","ti,keystone";
->> @@ -168,5 +169,46 @@
->>  				#reset-cells = <2>;
->>  			};
->>  		};
->> +
->> +		gpio0: gpio@2603000 {
->> +			compatible = "ti,keystone-k2g-gpio";
->> +			reg = <0x02603000 0x100>;
->> +			gpio-controller;
->> +			#gpio-cells = <2>;
->> +
->> +			interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +			ti,ngpio = <144>;
->> +			ti,davinci-gpio-unbanked = <0>;
->> +			clocks = <&k2g_clks 0x001b 0x0>;
->> +			clock-names = "gpio";
+>  	if (ret)
+> -		pr_err("firmware-name not allowed in child FPGA region: %s",
+> -		       child_region->full_name);
+> +		pr_err("firmware-name not allowed in child FPGA region: %pOF",
+> +		       child_region);
 > 
-> I don't see the clocks and clock-names documented in the binding.
-> Looking at davinci_gpio_irq_setup(), these are required, and a specific
-> clock name is what the driver is looking for. And you have different
-> semantics for this on K2G and non-K2G SoCs. Davinci platforms are using
-> non-DT clocks, so their DT nodes didn't have them.
-
-I will document the same.
-
+>  	return ret;
+>  }
+> --
+> 2.11.0
 > 
-> regards
-> Suman
-> 
->> +		};
->> +
->> +		gpio1: gpio@260a000 {
->> +			compatible = "ti,keystone-k2g-gpio";
->> +			reg = <0x0260a000 0x100>;
->> +			gpio-controller;
->> +			#gpio-cells = <2>;
->> +			interrupts = <GIC_SPI 442 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 443 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 444 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 445 IRQ_TYPE_EDGE_RISING>,
->> +					<GIC_SPI 446 IRQ_TYPE_EDGE_RISING>;
->> +			interrupt-controller;
->> +			#interrupt-cells = <2>;
->> +			ti,ngpio = <68>;
->> +			ti,davinci-gpio-unbanked = <0>;
->> +			clocks = <&k2g_clks 0x001c 0x0>;
->> +			clock-names = "gpio";
->> +		};
->>  	};
->>  };
->>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
