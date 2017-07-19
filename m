@@ -1,99 +1,57 @@
-From: Caesar Wang <wxt@rock-chips.com>
-Subject: Re: [PATCH v2 0/5] arm64: dts: rockchip: support mail and IPA thermal
- for rk3399
-Date: Wed, 19 Jul 2017 17:06:59 +0800
-Message-ID: <65759378-509b-3287-fd78-02361e89429b@rock-chips.com>
-References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
+From: m18063 <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 3/3] dt-bindings: i2c: eeprom: document "mac-offset"
+ binding
+Date: Wed, 19 Jul 2017 12:08:39 +0300
+Message-ID: <96d6eeed-9272-1460-8c5d-64f06918b09a@microchip.com>
+References: <1499336217-16913-1-git-send-email-claudiu.beznea@microchip.com>
+ <1499336217-16913-4-git-send-email-claudiu.beznea@microchip.com>
+ <20170710034613.fc4vj6h22kagce24@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170710034613.fc4vj6h22kagce24@rob-hp-laptop>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Caesar Wang <wxt@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, rocky.hao@rock-chips.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Elaine Zhang <zhangqing@rock-chips.com>, Catalin Marinas <catalin.marinas@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Brian Norris <briannorris@chromium.org>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, dri-devel@lists.freedesktop.org, Kever Yang <kever.yang@rock-chips.com>, linux-rockchip@lists.infradead.org, Matthias Kaehlcke <mka@chromium.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-arm-kernel@lists.infradead.org, Roger Chen <roger.chen@rock-chips.com>, William wu <wulf@rock-chips.com>, linux-kernel@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com, ludovic.desroches@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iICYgSGVpa28sCgpEbyB3ZSBoYXZlIHRoZSBjaGFuY2UgdG8gbWVyZ2UgdGhlc2UgcGF0
-Y2hlcz8KCkknbSB0cnkgdG8gYnJpbmcgdXAgdGhlIGRpc3BsYXkgYW5kIHJ1biB3ZWJnbCBmb3Ig
-dGVzdGluZyB3aXRoIG15IGdpdGh1YiBvbgpodHRwczovL2dpdGh1Yi5jb20vQ2Flc2FyLWdpdGh1
-Yi9yb2NrY2hpcC9jb21taXRzL2dydS9uZXh0LXN0YWJsZS1jaHJvbWVvcwoKSSBiZWxpZXZlIHRo
-ZSBSb2NreUBSSyB3aWxsIHBvc3QgcGF0Y2hlcyB0byBzdXBwb3J0IHRoZSBvdGhlciBTb0NzIGFm
-dGVyLgoKLUNhZXNhcgoK5ZyoIDIwMTflubQwN+aciDE35pelIDE2OjE0LCBDYWVzYXIgV2FuZyDl
-hpnpgZM6Cj4gVGhpcyBzZXJpZXMgcGF0Y2hlcyBzdXBwb3J0ZWQgdGhlIG1haWwgaW4gZGV2aWNl
-dHJlZSBhbmQgdXNlZCB0aGUKPiB0aGVybWFsIElQQSBieSBkZWZhdWx0Lgo+Cj4gVmVyaWZpZWQg
-d2l0aCBrZXJuZWwgaXMgYmFzZWQgb24gTGludXMncyBtYXN0ZXIgYnJhbmNoIGFuZCBIZWlrbydz
-Cj4gdjQuMTQtYXJtc29jLXRtcC9kdHM2NCBicmFuY2guICggVGhlIExpbnV4IHZlcnNpb24gNC4x
-Mi4wIGZvciBub3cpLgo+Cj4gVGhlIG1vc3Qgcm9ja2NoaXAgU29DcyB3aWxsIGJlIHN1cHBvcnRl
-ZCB3aXRoIElQQSBtb2RlIGZvciB0aGVybWFsCj4gaW4gbGF0ZXIuCj4KPiAtLS0KPgo+IEhpc3Rv
-cnkgdmVyc2lvbjoKPiAxLiBUaGUgZmlyc3QgdmVyc2lvbiBmb3VuZCBvbgo+IGh0dHBzOi8vd3d3
-LnNwaW5pY3MubmV0L2xpc3RzL2FybS1rZXJuZWwvbXNnNTkzMTE4Lmh0bWwKPgo+IFRlc3RlZCBv
-biBLZXZpbiBib2FyZCB3aXRoIGJyaW5naW5nIHVwIENocm9tZU9TLgo+IE9TIFZFUlNJT046Cj4g
-ICAgICBDSFJPTUVPU19SRUxFQVNFX0RFU0NSSVBUSU9OPTk2OTMuMS4wIChPZmZpY2lhbCBCdWls
-ZCkgZGV2LWNoYW5uZWwga2V2aW4gdGVzdAo+Cj4gQklPUyBWRVJTSU9OOgo+ICAgICAgR29vZ2xl
-X0tldmluLjg3ODUuMjExLjIwMTdfMDZfMjBfMTA0Mwo+Cj4gRUMgVkVSU0lPTjoKPiAgICAgIEJ1
-aWxkIGluZm86ICAgIGtldmluX3YxLjEwLjIxNy0yNDUxNDk2MWQgMjAxNy0wNy0wMyAwNzo0Njoz
-NiB3eHRAbmIKPgo+IFdpdGggdGhlIEFSTSdzIGxhc3Rlc3QgbWFsaSBkcml2ZXIgVFgwMTEtU1ct
-OTkwMDItcjE4cDAtMDFyZWwwIG9uCj4gaHR0cHM6Ly9kZXZlbG9wZXIuYXJtLmNvbS9wcm9kdWN0
-cy9zb2Z0d2FyZS9tYWxpLWRyaXZlcnMvbWlkZ2FyZC1rZXJuZWwKPgo+ICBGcm9tIHRoZSBib290
-dXAgbG9nOgo+ICAgICAgbG9jYWxob3N0IGRldmZyZXEwICMgZG1lc2cgfGdyZXAgbWFsaQo+ICAg
-ICAgWyAgICAwLjkzMzMzNF0gbWFsaSBmZjlhMDAwMC5ncHU6IEdQVSBpZGVudGlmaWVkIGFzIDB4
-MDg2MCByMnAwIHN0YXR1cyAwCj4gICAgICBbICAgIDAuOTQwODMwXSBtYWxpIGZmOWEwMDAwLmdw
-dTogUHJvdGVjdGVkIG1vZGUgbm90IGF2YWlsYWJsZQo+ICAgICAgWyAgICAwLjk0NzMzNF0gbWFs
-aSBmZjlhMDAwMC5ncHU6IFVzaW5nIGNvbmZpZ3VyZWQgcG93ZXIgbW9kZWwgbWFsaS1zaW1wbGUt
-cG93ZXItbW9kZWwsIGFuZCBmYWxsYmFjayBtYWxpLXNpbXBsZS1wb3dlci1tb2RlbAo+ICAgICAg
-WyAgICAwLjk2MDA4M10gbWFsaSBmZjlhMDAwMC5ncHU6IFByb2JlZCBhcyBtYWxpMAo+Cj4gICAg
-ICBsb2NhbGhvc3QgZGV2ZnJlcTAgIyBwd2QKPiAgICAgIC9zeXMvZGV2aWNlcy9wbGF0Zm9ybS9m
-ZjlhMDAwMC5ncHUvZGV2ZnJlcS9kZXZmcmVxMAo+ICAgICAgbG9jYWxob3N0IGRldmZyZXEwICMg
-bHMKPiAgICAgIGF2YWlsYWJsZV9mcmVxdWVuY2llcyAgZGV2aWNlICAgIG1pbl9mcmVxICAgICAg
-ICAgIHN1YnN5c3RlbSAgICB1ZXZlbnQKPiAgICAgIGF2YWlsYWJsZV9nb3Zlcm5vcnMgICAgZ292
-ZXJub3IgIHBvbGxpbmdfaW50ZXJ2YWwgIHRhcmdldF9mcmVxICB1c2Vyc3BhY2UKPiAgICAgIGN1
-cl9mcmVxICAgICAgICAgICAgICAgbWF4X2ZyZXEgIHBvd2VyICAgICAgICAgICAgIHRyYW5zX3N0
-YXQKPgo+ICAgICAgbG9jYWxob3N0IGZmOWEwMDAwLmdwdSAjIGxzCj4gICAgICBjb3JlX2F2YWls
-YWJpbGl0eV9wb2xpY3kgIGdwdWluZm8gICAgICAgICAgICAgICBtb2RhbGlhcyAgICAgICBzb2Z0
-X2pvYl90aW1lb3V0Cj4gICAgICBjb3JlX21hc2sgICAgICAgICAgICAgICAgIGpzX3NjaGVkdWxp
-bmdfcGVyaW9kICBvZl9ub2RlICAgICAgICBzdWJzeXN0ZW0KPiAgICAgIGRldmZyZXEgICAgICAg
-ICAgICAgICAgICAganNfdGltZW91dHMgICAgICAgICAgIHBtX3Bvd2Vyb2ZmICAgIHVldmVudAo+
-ICAgICAgZHJpdmVyICAgICAgICAgICAgICAgICAgICBtZW1fcG9vbF9tYXhfc2l6ZSAgICAgcG93
-ZXIKPiAgICAgIGRyaXZlcl9vdmVycmlkZSAgICAgICAgICAgbWVtX3Bvb2xfc2l6ZSAgICAgICAg
-IHBvd2VyX3BvbGljeQo+ICAgICAgZHZmc19wZXJpb2QgICAgICAgICAgICAgICBtaXNjICAgICAg
-ICAgICAgICAgICAgcmVzZXRfdGltZW91dAo+IC0tLQo+Cj4gQW5kIGZvciB0aGVybWFsIHdpdGgg
-SVBBLgo+IFRyeSB0byBydW4gJ21kNXN1bSAvZGV2L3plcm8gJicgYW5kIG9jdGFuZS9iZW5jaG1h
-cmsgc2NyaXB0cyB0byBnbyB1cCB0aGUgdGVtcGVyYXR1cmUuCj4gIEZyb20gdGhlIHNjcmlwdHMg
-dG8gaGF2ZSBhIGxvb2sgYXQgdGhlIGFjdHVhbCBjb250cm9sLgo+ICIKPiB3aGlsZSB0cnVlOyBk
-byBncmVwICIiIC9zeXMvY2xhc3MvdGhlcm1hbC90aGVybWFsX3pvbmVbMC0xXS90ZW1wIC9zeXMv
-ZGV2aWNlcy9zeXN0ZW0vY3B1L2NwdVswLTVdL2NwdWZyZXEvc2NhbGluZ19jdXJfZnJlcSAvc3lz
-L2RldmljZXMvcGxhdGZvcm0vZmY5YTAwMDAuZ3B1L2RldmZyZXEvZGV2ZnJlcTAvY3VyX2ZyZXE7
-ZGF0ZTtzbGVlcCAuNTsgZG9uZSAmCj4gIgo+Cj4gLUNhZXNhcgo+Cj4KPiBDaGFuZ2VzIGluIHYy
-Ogo+IEFzIEhlaWtvIGNvbW1lbnRzIG9uIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvOTgzNTkzOS8KPiAtIGludGVycnVwdC1uYW1lIHVzZSB0aGUgbG93ZXIgY2FzZS4KPiAtIHVz
-ZSB0aGUgY29ycmVjdCBjb21wYXRpYmxlICJhcm0sbWFsaS10ODYwIgo+IC0gcmVtb3ZlIHRoZSBj
-bG9jayBuYW1lLCBzaW5jZSB0aGUgbWFsaSBvbmx5IGhhdmUgb25lIGlucHV0IGNsb2NrLgo+IC0g
-Zm9vQCB3aWxsIHByb2R1Y2Ugd2FybmluZ3Mgd2hlbiB1c2VkIHdpdGhvdXQgcmVnIHByb3BlcnR5
-Lgo+IC0gdXBkYXRlIHRoZSBjb21taXQgdG8gZXhwbGFpbiB0aGUgdHdvIHBhc3NpdmUgdHJpcCBw
-b2ludHMgY2hhbmdlZC4KPgo+IENhZXNhciBXYW5nICg1KToKPiAgICBkdC1iaW5kaW5nczogZ3B1
-OiBhZGQgdGhlIFJLMzM5OSBtYWxpIGZvciByb2NrY2hpcCBzcGVjaWZpY3MKPiAgICBkdC1iaW5k
-aW5nczogZ3B1OiBhZGQgYSBwb3dlcl9tb2RlbCBvcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBNQUxJ
-Cj4gICAgYXJtNjQ6IGR0czogcm9ja2NoaXA6IGFkZCBBUk0gTWFsaSBHUFUgbm9kZSBmb3IgUksz
-Mzk5IFNvQ3MKPiAgICBhcm02NDogZHRzOiByb2NrY2hpcDogZW5hYmxlIHRoZSBHUFUgZm9yIFJL
-MzM5OS1HUlUKPiAgICBhcm02NDogZHRzOiByb2NrY2hpcDogdXBkYXRlIHRoZSB0aGVybWFsIHpv
-bmVzIGZvciBSSzMzOTkgU29Dcwo+Cj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvYXJt
-LG1hbGktbWlkZ2FyZC50eHQgICB8IDEzICsrKysKPiAgIGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9j
-a2NoaXAvcmszMzk5LWdydS5kdHNpICAgICAgIHwgIDUgKysKPiAgIGFyY2gvYXJtNjQvYm9vdC9k
-dHMvcm9ja2NoaXAvcmszMzk5LW9wMS1vcHAuZHRzaSAgIHwgMzMgKysrKysrKysrKwo+ICAgYXJj
-aC9hcm02NC9ib290L2R0cy9yb2NrY2hpcC9yazMzOTktb3BwLmR0c2kgICAgICAgfCAzMyArKysr
-KysrKysrCj4gICBhcmNoL2FybTY0L2Jvb3QvZHRzL3JvY2tjaGlwL3JrMzM5OS5kdHNpICAgICAg
-ICAgICB8IDc0ICsrKysrKysrKysrKy0tLS0tLS0tLS0KPiAgIDUgZmlsZXMgY2hhbmdlZCwgMTI1
-IGluc2VydGlvbnMoKyksIDMzIGRlbGV0aW9ucygtKQo+CgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 10.07.2017 06:46, Rob Herring wrote:
+> On Thu, Jul 06, 2017 at 01:16:57PM +0300, Claudiu Beznea wrote:
+>> Document "mac-offset" binding that will be used by at24 EEPROM driver.
+>>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>> ---
+>>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> index a50dc01..3dd267c 100644
+>> --- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> +++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
+>> @@ -35,10 +35,13 @@ Optional properties:
+>>  
+>>    - read-only: this parameterless property disables writes to the eeprom
+>>  
+>> +  - mac-offset: offset in EEPROM where MAC address starts
+>> +
+> 
+> This doesn't scale if you have multiple things you need the offset to, 
+> and we already have a binding for this. Use the nvmem binding.
+Are you talking about nvmem-cells, nvmem-cell-names bindings? Since
+at24 is i2c driver, I can only think at it as a nvmem provider. Using these
+bindings it will imply, as per my understanding about nvmem subsystem, that
+this should also become a nvmem consumer. It looks a little strange to
+me but I don't have deep knowledge about subsystem, correct me if I'm wrong.
+Please let me know if you are talking about using these bindings and reading
+them (just to get the offset passed in "reg" binding) by not passing the nvmem
+APIs defined in nvmem core.
+
+Thank you,
+Claudiu
+> 
+> Rob
+> 
