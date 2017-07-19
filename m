@@ -1,133 +1,202 @@
-From: Martin Kaiser <martin@kaiser.cx>
-Subject: Re: [PATCH 3/3] hwrng: mxc-fsl - add support for Freescale RNGC
-Date: Wed, 19 Jul 2017 23:22:53 +0200
-Message-ID: <20170719212253.GA13879@botnar.kaiser.cx>
-References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
- <1500326163-4556-1-git-send-email-martin@kaiser.cx>
- <1500326163-4556-3-git-send-email-martin@kaiser.cx>
- <CANc+2y7icNR3hJS0wCFd_-90X6bXkJYMEO6m53HDG8SBM0FZ2g@mail.gmail.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v4 4/5] ARM: sunxi: h3/h5: switch
+ apb0-related clocks to r_ccu
+Date: Thu, 20 Jul 2017 00:59:33 +0200
+Message-ID: <1500505173.23770.1.camel@xff.cz>
+References: <20170404095100.18649-1-icenowy@aosc.io>
+	 <20170404095100.18649-5-icenowy@aosc.io>
+Reply-To: megi-DlDF6nMZSto@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANc+2y7icNR3hJS0wCFd_-90X6bXkJYMEO6m53HDG8SBM0FZ2g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-FF0VDUHj64FDp6coUJLd"
+Return-path: <linux-sunxi+bncBC55PRMWZULRBVWIX7FQKGQEJ5E7RVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20170404095100.18649-5-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi PrasannaKumar,
 
-thanks for taking the time to review my submission.
+--=-FF0VDUHj64FDp6coUJLd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thus wrote PrasannaKumar Muralidharan (prasannatsmkumar@gmail.com):
+Hi,
 
-> Please combine above 2 comments.
+Icenowy Zheng p=C3=AD=C5=A1e v =C3=9At 04. 04. 2017 v 17:50 +0800:
+> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>=20
+> Now we have driver for the PRCM CCU, switch to use it instead of
+> old-style clock nodes for apb0-related clocks in sunxi-h3-h5.dtsi .
+>=20
+> The mux 3 of R_CCU is still the internal oscillator, which is said to be
+> 16MHz plus minus 30%, and get a measured value of 15MHz~16MHz on my two
+> H3 boards and one H5 board.
 
-ok, I'll do this.
+There's issue with the new r_ccu that breaks r_i2c. (no devices can be
+found on the bus). Reverting this patch fixes the issue with the I2C
+controller. (everything else being the same)=20
 
-> > +
-> > +/*
-> > + * Hardware driver for the Intel/AMD/VIA Random Number Generators (RNG)
-> > [...]
+Here's the code I'm using: https://github.com/megous/linux/commits/oran
+ge-pi-4.12
 
-> I feel this comment is because of copy paste. If that's the case please remove.
+The last commit is the revert.
 
-A couple of files in drivers/char/hw_random have the same copyright
-statement. So it looks like copy&paste. I'll remove it.
+The issue manifests itself by non-working DVFS, because kernel lacks
+access to SY8106A regulator, because r_i2c doesn't work with sunxi-ng
+clock driver (sun8i-r).
 
-> > +
-> > +       while (max > sizeof(u32)) {
+Relevant difference in registers between working/non-working state is
+just this (diff -u):
 
-> Should the condition be max >= sizeof(u32)?
+ 0x01f02400 =3D 0x00000000=20
+ 0x01f02404 =3D 0x00000000=20
+-0x01f02408 =3D 0x00000091=20
++0x01f02408 =3D 0x00000095 DATA register inisde the I2C controller
+ 0x01f0240c =3D 0x00000044=20
+ 0x01f02410 =3D 0x000000f8=20
+-0x01f02414 =3D 0x00000059=20
++0x01f02414 =3D 0x00000000 CLOCK setup register inside the I2C controller
+ 0x01f02418 =3D 0x00000000=20
+ 0x01f0241c =3D 0x00000000=20
+ 0x01f02420 =3D 0x0000003a=20
 
-You're right. I'll fix this.
+It looks like the new sunxi-ng clock driver causes the I2C driver to
+not correctly configure the CLOCK register. I don't know why and I'm
+not sure how to deal with this. Any ideas what can I do next?
 
-> > +               status = __raw_readl(rngc->base + RNGC_STATUS);
+thank you and regards,
+  o.
 
-> Is there any specific reason for using __raw_readl? Why not just readl?
-> If there is no specific reason for using __raw_readl please use readl
-> in all the places.
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+> Changes in v4:
+> - Temporarily dropped the CCU headers.
+> Changes in v3:
+> - Change osc32000 to iosc.
+>=20
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi | 45 ++++++++++++--------------------=
+------
+>  1 file changed, 14 insertions(+), 31 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi=
+-h3-h5.dtsi
+> index 6640ebfa6419..1aeeacb3a884 100644
+> --- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> +++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+> @@ -68,31 +68,12 @@
+>  			clock-output-names =3D "osc32k";
+>  		};
+> =20
+> -		apb0: apb0_clk {
+> -			compatible =3D "fixed-factor-clock";
+> +		iosc: internal-osc-clk {
+>  			#clock-cells =3D <0>;
+> -			clock-div =3D <1>;
+> -			clock-mult =3D <1>;
+> -			clocks =3D <&osc24M>;
+> -			clock-output-names =3D "apb0";
+> -		};
+> -
+> -		apb0_gates: clk@01f01428 {
+> -			compatible =3D "allwinner,sun8i-h3-apb0-gates-clk",
+> -				     "allwinner,sun4i-a10-gates-clk";
+> -			reg =3D <0x01f01428 0x4>;
+> -			#clock-cells =3D <1>;
+> -			clocks =3D <&apb0>;
+> -			clock-indices =3D <0>, <1>;
+> -			clock-output-names =3D "apb0_pio", "apb0_ir";
+> -		};
+> -
+> -		ir_clk: ir_clk@01f01454 {
+> -			compatible =3D "allwinner,sun4i-a10-mod0-clk";
+> -			reg =3D <0x01f01454 0x4>;
+> -			#clock-cells =3D <0>;
+> -			clocks =3D <&osc32k>, <&osc24M>;
+> -			clock-output-names =3D "ir";
+> +			compatible =3D "fixed-clock";
+> +			clock-frequency =3D <16000000>;
+> +			clock-accuracy =3D <300000000>;
+> +			clock-output-names =3D "iosc";
+>  		};
+>  	};
+> =20
+> @@ -576,9 +557,12 @@
+>  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> =20
+> -		apb0_reset: reset@01f014b0 {
+> -			reg =3D <0x01f014b0 0x4>;
+> -			compatible =3D "allwinner,sun6i-a31-clock-reset";
+> +		r_ccu: clock@1f01400 {
+> +			compatible =3D "allwinner,sun50i-a64-r-ccu";
+> +			reg =3D <0x01f01400 0x100>;
+> +			clocks =3D <&osc24M>, <&osc32k>, <&iosc>;
+> +			clock-names =3D "hosc", "losc", "iosc";
+> +			#clock-cells =3D <1>;
+>  			#reset-cells =3D <1>;
+>  		};
+> =20
+> @@ -589,9 +573,9 @@
+> =20
+>  		ir: ir@01f02000 {
+>  			compatible =3D "allwinner,sun5i-a13-ir";
+> -			clocks =3D <&apb0_gates 1>, <&ir_clk>;
+> +			clocks =3D <&r_ccu 4>, <&r_ccu 11>;
+>  			clock-names =3D "apb", "ir";
+> -			resets =3D <&apb0_reset 1>;
+> +			resets =3D <&r_ccu 0>;
+>  			interrupts =3D <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg =3D <0x01f02000 0x40>;
+>  			status =3D "disabled";
+> @@ -601,9 +585,8 @@
+>  			compatible =3D "allwinner,sun8i-h3-r-pinctrl";
+>  			reg =3D <0x01f02c00 0x400>;
+>  			interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
+> -			clocks =3D <&apb0_gates 0>, <&osc24M>, <&osc32k>;
+> +			clocks =3D <&r_ccu 3>, <&osc24M>, <&osc32k>;
+>  			clock-names =3D "apb", "hosc", "losc";
+> -			resets =3D <&apb0_reset 0>;
+>  			gpio-controller;
+>  			#gpio-cells =3D <3>;
+>  			interrupt-controller;
+> --=20
+> 2.12.2
+>=20
 
-That looks like mxc-rnga.c was taken as a starting point. I'll change
-__raw_read() to readl and __raw_writel to writel.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-> > +               /* how many random numbers are in FIFO? [0-16] */
-> > +               level = (status & RNGC_STATUS_FIFO_LEVEL_MASK) >>
-> > +                       RNGC_STATUS_FIFO_LEVEL_SHIFT;
-> > +
-> > +               /* is there some error while reading this random number? */
-> > +               if (status & RNGC_STATUS_ERROR)
-> > +                       break;
+--=-FF0VDUHj64FDp6coUJLd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-> Before calculating level error check can be done.
+-----BEGIN PGP SIGNATURE-----
 
-Ok, I'll move the check right after reading the status register.
+iQJABAABCAAqFiEEmrE4sgaRYhzUz5ICbmQmxnfP7/EFAllv5FUMHG1lZ2lAeGZm
+LmN6AAoJEG5kJsZ3z+/xTGYQAJZa/eTjtPQJ2kT2nkrviyEI9EGZ0l04L8BAXGZK
+kbPEY5Hrk2aSSoL3siTvuWWfwJZS09asGUSLkkQ1fdEnsnrp8stymkLIYJiil1jv
+M3ksi32wrBt8qP3s+Qv2+ytVObaxXr/eiVRDPDo9600ieS28sLG7otwnjj82U7Px
+QbKCLdSf45PmyTJRs2QltBLfvVVW7GJaKSDn/wGSFiYxKVq36lURibxJH9NpN9mE
+qM+mIUzPKU3RxXBoonP9Tee1KL0WWg46Rr3eBlRUi1HMIkmenO9YLqPWc9Z8vfMf
+q/wWcFlCi+6X2SdyRWw9V5uoeKN4U5mpGmawdlGdH+B5c5oISzv/XNZ+ZLe+0RYt
+EWjkula3SCxWuKKjBu5HnRbcH/JW9JzOr9kklL8cQeTPwsR3qBKJD6EF9DTke8w9
+WnxM5nlCV9PWAKiOCPvvJEefNFVyOebhGsvj8ACcjm33FhHJcIsKHClqo0yTNRO4
+uQosY8oRurlD7NIvsndQaYXqRbHGfFAQmJikt/OiLwy+7O2b5A1BZx52iKzbcjfd
+e2gByuRbuNQA3JpxJnWuHFAx4qfKCtmwHttzLwAaMg8k9PLSvewomJqsnVkGGmXK
+AWfiI+vOeomZEcBGrCst35Sl4E+iltFKetujmzlyfT6WQrA/3ceElgAQYs21JjRo
+3owq
+=yyRu
+-----END PGP SIGNATURE-----
 
-> > +               if (__raw_readl(rngc->base + RNGC_ERROR) &
-> > +                   RNGC_ERROR_STATUS_BAD_KEY) {
-> > +                       dev_err(rngc->dev, "Can't start, Bad Keys.\n");
-> > +                       return -EIO;
-> > +               }
-> > +       }
-
-> What keys? What is the purpose of this check? At this point only clk
-> is enabled for RNGC so I am wondering why this check is required?
-
-The "key" is probably the internal state of the PRNG, which uses the
-mechanism described in FIPS 186-2.
-
-No idea why Freescale added this check before the self test. I guess
-that we can safely run the self test and check for errors afterwards.
-I'll remove the check.
-
-Interestingly, this "bad key" error status is one of the few differences
-between RNGB and RNGC, both of which should work with this driver...
-
-> > +
-> > +       /* mask all interrupts, will be unmasked soon */
-> > +       ctrl = __raw_readl(rngc->base + RNGC_CONTROL);
-> > +       __raw_writel(ctrl | RNGC_CTRL_MASK_DONE | RNGC_CTRL_MASK_ERROR,
-> > +                    rngc->base + RNGC_CONTROL);
-> > +
-> > +       /* verify if oscillator is working */
-> > +       osc = __raw_readl(rngc->base + RNGC_ERROR);
-> > +       if (osc & RNGC_ERROR_STATUS_OSC_ERR) {
-> > +               dev_err(rngc->dev, "RNGC Oscillator is dead!\n");
-> > +               return -EIO;
-> > +       }
-
-> Is this check useful? If clock is initialised properly I do not think
-> this case will happen. May be I am missing something. Please add a
-> comment if this check is valid.
-
-Agreed. Switching the clock on should be sufficient to get the
-oscillator to run. And if not, we should see an error after the self
-test.
-
-> RNG core can call init every time this rng device is selected as
-> current random number provider. Is self test required on every RNG
-> init?
-
-I'd say the self test should be run once when the driver is loaded. I'll
-try to move the self test to the probe function.
-
-> By default self test need not be run, a module parameter can be added
-> for enabling self test.
-
-Ok.
-
-> > +       rngc->rng.name = pdev->name;
-> > +       rngc->rng.init = mxc_rngc_init;
-> > +       rngc->rng.read = mxc_rngc_read;
-
-> Assiging a quality would be great. That will help in deciding which
-> rng device to use if there are mulitple rng devices.
-
-I doubt that I have enough info to set the quality. I'll see what I can
-dig up.
-
-I'll try to upload v4 as soon as possible.
-
-Thanks,
-Martin
+--=-FF0VDUHj64FDp6coUJLd--
