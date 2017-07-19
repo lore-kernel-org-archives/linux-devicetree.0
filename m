@@ -1,62 +1,74 @@
-From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/2] arm64: dts: cleanup Broadcom boards per SoC
-Date: Wed, 19 Jul 2017 10:05:48 -0700
-Message-ID: <1500483950-9217-1-git-send-email-scott.branden@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: [PATCH 1/2] arm64: dts: move ns2 into northstar2 directory
+Date: Wed, 19 Jul 2017 10:05:49 -0700
+Message-ID: <1500483950-9217-2-git-send-email-scott.branden@broadcom.com>
+References: <1500483950-9217-1-git-send-email-scott.branden@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500483950-9217-1-git-send-email-scott.branden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Separate Broadcom boards per SoC to assist in cleaner management of boards.
-This has already been done for Stingray and is done here for RPI and NS2.
+Place northstar2 into its own subdirectory.  This helps as the number
+of Broadcom boards grow and we can separate them per SoC.
 
-If this is problematic for RPI please let me know and RPI patch can be
-dropped from patch series.
-
-Scott Branden (2):
-  arm64: dts: move ns2 into northstar2 directory
-  arm64: dts: move rpi into rpi directory
-
- arch/arm64/boot/dts/broadcom/Makefile                        | 7 +++----
- arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi                | 1 -
- arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi       | 1 -
- arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi       | 1 -
- arch/arm64/boot/dts/broadcom/bcm283x.dtsi                    | 1 -
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+---
+ arch/arm64/boot/dts/broadcom/Makefile                        | 4 ++--
  arch/arm64/boot/dts/broadcom/northstar2/Makefile             | 6 ++++++
  arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-clock.dtsi | 0
  arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-svk.dts    | 0
  arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-xmc.dts    | 0
  arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2.dtsi       | 0
- arch/arm64/boot/dts/broadcom/rpi/Makefile                    | 5 +++++
- arch/arm64/boot/dts/broadcom/rpi/bcm2835-rpi.dtsi            | 1 +
- arch/arm64/boot/dts/broadcom/{ => rpi}/bcm2837-rpi-3-b.dts   | 0
- arch/arm64/boot/dts/broadcom/{ => rpi}/bcm2837.dtsi          | 0
- arch/arm64/boot/dts/broadcom/rpi/bcm283x-rpi-smsc9514.dtsi   | 1 +
- arch/arm64/boot/dts/broadcom/rpi/bcm283x-rpi-usb-host.dtsi   | 1 +
- arch/arm64/boot/dts/broadcom/rpi/bcm283x.dtsi                | 1 +
- 17 files changed, 18 insertions(+), 8 deletions(-)
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+ 6 files changed, 8 insertions(+), 2 deletions(-)
  create mode 100644 arch/arm64/boot/dts/broadcom/northstar2/Makefile
  rename arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-clock.dtsi (100%)
  rename arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-svk.dts (100%)
  rename arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2-xmc.dts (100%)
  rename arch/arm64/boot/dts/broadcom/{ => northstar2}/ns2.dtsi (100%)
- create mode 100644 arch/arm64/boot/dts/broadcom/rpi/Makefile
- create mode 120000 arch/arm64/boot/dts/broadcom/rpi/bcm2835-rpi.dtsi
- rename arch/arm64/boot/dts/broadcom/{ => rpi}/bcm2837-rpi-3-b.dts (100%)
- rename arch/arm64/boot/dts/broadcom/{ => rpi}/bcm2837.dtsi (100%)
- create mode 120000 arch/arm64/boot/dts/broadcom/rpi/bcm283x-rpi-smsc9514.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/rpi/bcm283x-rpi-usb-host.dtsi
- create mode 120000 arch/arm64/boot/dts/broadcom/rpi/bcm283x.dtsi
 
+diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+index f11bdd6..3eaef38 100644
+--- a/arch/arm64/boot/dts/broadcom/Makefile
++++ b/arch/arm64/boot/dts/broadcom/Makefile
+@@ -1,7 +1,7 @@
+ dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb
+-dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb ns2-xmc.dtb
+ 
+-dts-dirs	:= stingray
++dts-dirs	+= northstar2
++dts-dirs	+= stingray
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/broadcom/northstar2/Makefile b/arch/arm64/boot/dts/broadcom/northstar2/Makefile
+new file mode 100644
+index 0000000..e01a148
+--- /dev/null
++++ b/arch/arm64/boot/dts/broadcom/northstar2/Makefile
+@@ -0,0 +1,6 @@
++dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-svk.dtb
++dtb-$(CONFIG_ARCH_BCM_IPROC) += ns2-xmc.dtb
++
++always		:= $(dtb-y)
++subdir-y	:= $(dts-dirs)
++clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-clock.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2-clock.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/ns2-clock.dtsi
+rename to arch/arm64/boot/dts/broadcom/northstar2/ns2-clock.dtsi
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-svk.dts b/arch/arm64/boot/dts/broadcom/northstar2/ns2-svk.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/ns2-svk.dts
+rename to arch/arm64/boot/dts/broadcom/northstar2/ns2-svk.dts
+diff --git a/arch/arm64/boot/dts/broadcom/ns2-xmc.dts b/arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/ns2-xmc.dts
+rename to arch/arm64/boot/dts/broadcom/northstar2/ns2-xmc.dts
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/ns2.dtsi
+rename to arch/arm64/boot/dts/broadcom/northstar2/ns2.dtsi
 -- 
 2.5.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
