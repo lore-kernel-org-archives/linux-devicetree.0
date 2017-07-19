@@ -1,168 +1,370 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] mux: Add mux_control_get_optional() API
-Date: Wed, 19 Jul 2017 09:15:38 +0200
-Message-ID: <1c20e9bf-9b87-a021-bb4b-8add6c468c87@axentia.se>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-2-stephen.boyd@linaro.org>
- <aac61f46-f963-2631-00e0-2d62baac6bf4@axentia.se>
- <150043011983.23422.10872793103087420242@sboyd-linaro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: [PATCH V1] pinctrl: qcom: spmi-gpio: Add support for qcom,gpios-disallowed property
+Date: Wed, 19 Jul 2017 15:17:07 +0800
+Message-ID: <20170719071804.3816-1-fenglinw@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <150043011983.23422.10872793103087420242@sboyd-linaro>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aghayal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wruan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-19 04:08, Stephen Boyd wrote:
-> Quoting Peter Rosin (2017-07-17 01:20:14)
->> On 2017-07-14 23:40, Stephen Boyd wrote:
->>> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
->>> index 90b8995f07cb..a0e5bf16f02f 100644
->>> --- a/drivers/mux/mux-core.c
->>> +++ b/drivers/mux/mux-core.c
->>> @@ -289,6 +289,9 @@ EXPORT_SYMBOL_GPL(devm_mux_chip_register);
->>>   */
->>>  unsigned int mux_control_states(struct mux_control *mux)
->>>  {
->>> +     if (!mux)
->>> +             return 0;
->>> +
->>
->> I don't think this is appropriate. For this function, it might be ok,
->> but...
->>
->>>       return mux->states;
->>>  }
->>>  EXPORT_SYMBOL_GPL(mux_control_states);
->>> @@ -338,6 +341,9 @@ int mux_control_select(struct mux_control *mux, unsigned int state)
->>>  {
->>>       int ret;
->>>  
->>> +     if (!mux)
->>> +             return 0;
->>> +
->>
->> ...here and for other cases below it's very odd to return "ok", when
->> -EINVAL or something seems much more appropriate. And if -EINVAL is
->> returned here, the benefit of returning fake values for anything
->> pretty much falls apart.
->>
->> I simply don't like it, and prefer if the consumer code is arranged
->> to not call the mux functions when the optional get() does not find
->> the mux.
-> 
-> Do you want the callers of the mux APIs to know that an optional mux
-> isn't there, and then have checks at all callsites on optional muxes to
-> make sure consumers don't call the mux functions? Won't that duplicate
-> lots of checks in drivers for something the core could treat as a don't
-> care case? Sorry, I don't understand why the consumer cares that it was
-> there or not when it is optional.
+From: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Ok, I had a look around to figure out how others handle this, and e.g.
-gpio has (ugly) macros (VALIDATE_DESC) to handle this. I guess you are
-right and I'm wrong. So, please keep all the if (!mux) checks.
+Add support for qcom,gpios-disallowed property which is used to exclude
+PMIC GPIOs not owned by the APSS processor from the pinctrl device.
 
-Thanks for insisting!
+Signed-off-by: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  12 ++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 202 +++++++++++++++++----
+ 2 files changed, 176 insertions(+), 38 deletions(-)
 
->>
->>>       ret = down_killable(&mux->lock);
->>>       if (ret < 0)
->>>               return ret;
->>> @@ -370,6 +376,9 @@ int mux_control_try_select(struct mux_control *mux, unsigned int state)
->>>  {
->>>       int ret;
->>>  
->>> +     if (!mux)
->>> +             return 0;
->>> +
->>>       if (down_trylock(&mux->lock))
->>>               return -EBUSY;
->>>  
->>> @@ -398,6 +407,9 @@ int mux_control_deselect(struct mux_control *mux)
->>>  {
->>>       int ret = 0;
->>>  
->>> +     if (!mux)
->>> +             return 0;
->>> +
->>>       if (mux->idle_state != MUX_IDLE_AS_IS &&
->>>           mux->idle_state != mux->cached_state)
->>>               ret = mux_control_set(mux, mux->idle_state);
->>> @@ -422,14 +434,8 @@ static struct mux_chip *of_find_mux_chip_by_node(struct device_node *np)
->>>       return dev ? to_mux_chip(dev) : NULL;
->>>  }
->>>  
->>> -/**
->>> - * mux_control_get() - Get the mux-control for a device.
->>> - * @dev: The device that needs a mux-control.
->>> - * @mux_name: The name identifying the mux-control.
->>> - *
->>> - * Return: A pointer to the mux-control, or an ERR_PTR with a negative errno.
->>> - */
->>> -struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
->>> +struct mux_control *
->>> +__mux_control_get(struct device *dev, const char *mux_name, bool optional)
->>>  {
->>>       struct device_node *np = dev->of_node;
->>>       struct of_phandle_args args;
->>> @@ -441,6 +447,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
->>>       if (mux_name) {
->>>               index = of_property_match_string(np, "mux-control-names",
->>>                                                mux_name);
->>> +             if (index == -EINVAL && optional)
->>> +                     return NULL;
->>
->> What about -ENODATA?
-> 
-> At this point in the code we're finding the index of a mux-control-names
-> property so I was trying to handle the case where there isn't a
-> mux-control-names property at all
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index 8d893a8..435efe8 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -43,6 +43,17 @@ PMIC's from Qualcomm.
+ 		    the first cell will be used to define gpio number and the
+ 		    second denotes the flags for this gpio
+ 
++- qcom,gpios-disallowed:
++	Usage: optional
++	Value type: <prop-encoded-array>
++	Definition: Array of the GPIO hardware numbers corresponding to GPIOs
++		    which the APSS processor is not allowed to configure.
++		    The hardware numbers are indexed from 1.
++		    The interrupt resources for these GPIOs must not be defined
++		    in "interrupts" and "interrupt-names" properties.
++		    GPIOs defined in this array won't be registered as pins
++		    in the pinctrl device or gpios in the gpio chip.
++
+ Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
+ a general description of GPIO and interrupt bindings.
+ 
+@@ -206,6 +217,7 @@ Example:
+ 
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
++		qcom,gpios-disallowed = <1 20>;
+ 
+ 		pm8921_gpio_keys: gpio-keys {
+ 			volume-keys {
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 664b641..74821af 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -96,6 +96,7 @@
+  * struct pmic_gpio_pad - keep current GPIO settings
+  * @base: Address base in SPMI device.
+  * @irq: IRQ number which this GPIO generate.
++ * @gpio_idx: The index in GPIO's hardware number space (1-based)
+  * @is_enabled: Set to false when GPIO should be put in high Z state.
+  * @out_value: Cached pin output value
+  * @have_buffer: Set to true if GPIO output could be configured in push-pull,
+@@ -112,6 +113,7 @@
+ struct pmic_gpio_pad {
+ 	u16		base;
+ 	int		irq;
++	int		gpio_idx;
+ 	bool		is_enabled;
+ 	bool		out_value;
+ 	bool		have_buffer;
+@@ -130,6 +132,7 @@ struct pmic_gpio_state {
+ 	struct regmap	*map;
+ 	struct pinctrl_dev *ctrl;
+ 	struct gpio_chip chip;
++	const char **gpio_groups;
+ };
+ 
+ static const struct pinconf_generic_params pmic_gpio_bindings[] = {
+@@ -231,7 +234,9 @@ static int pmic_gpio_get_function_groups(struct pinctrl_dev *pctldev,
+ 					 const char *const **groups,
+ 					 unsigned *const num_qgroups)
+ {
+-	*groups = pmic_gpio_groups;
++	struct pmic_gpio_state *state = pinctrl_dev_get_drvdata(pctldev);
++
++	*groups = state->gpio_groups;
+ 	*num_qgroups = pctldev->desc->npins;
+ 	return 0;
+ }
+@@ -455,7 +460,7 @@ static void pmic_gpio_config_dbg_show(struct pinctrl_dev *pctldev,
+ 
+ 	pad = pctldev->desc->pins[pin].drv_data;
+ 
+-	seq_printf(s, " gpio%-2d:", pin + PMIC_GPIO_PHYSICAL_OFFSET);
++	seq_printf(s, " gpio%-2d:", pad->gpio_idx);
+ 
+ 	val = pmic_gpio_read(state, pad, PMIC_GPIO_REG_EN_CTL);
+ 
+@@ -546,13 +551,29 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
+ 			      const struct of_phandle_args *gpio_desc,
+ 			      u32 *flags)
+ {
++	int i;
++	struct pmic_gpio_state *state = gpiochip_get_data(chip);
++	struct pinctrl_desc *desc = state->ctrl->desc;
++	struct pmic_gpio_pad *pad;
++
+ 	if (chip->of_gpio_n_cells < 2)
+ 		return -EINVAL;
+ 
+ 	if (flags)
+ 		*flags = gpio_desc->args[1];
+ 
+-	return gpio_desc->args[0] - PMIC_GPIO_PHYSICAL_OFFSET;
++	for (i = 0; i < chip->ngpio; i++) {
++		pad = desc->pins[i].drv_data;
++		if (pad->gpio_idx == gpio_desc->args[0]) {
++			dev_dbg(state->dev, "gpio%-2d xlate to pin%-2d\n",
++						gpio_desc->args[0], i);
++			return i;
++		}
++	}
++
++	dev_err(state->dev, "Couldn't find pin for gpio %d\n",
++				gpio_desc->args[0]);
++	return -ENODEV;
+ }
+ 
+ static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
+@@ -688,43 +709,124 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	struct pinctrl_desc *pctrldesc;
+ 	struct pmic_gpio_pad *pad, *pads;
+ 	struct pmic_gpio_state *state;
+-	int ret, npins, i;
+-	u32 reg;
++	int ret, npins, ngpios, i, j, pin_idx;
++	int disallowed_count = 0;
++	u32 reg[2], start, size;
++	u32 *disallowed = NULL;
+ 
+-	ret = of_property_read_u32(dev->of_node, "reg", &reg);
++	ret = of_property_read_u32_array(dev->of_node, "reg", reg, 2);
+ 	if (ret < 0) {
+-		dev_err(dev, "missing base address");
++		dev_err(dev, "reg property reading failed\n");
+ 		return ret;
+ 	}
++	start = reg[0];
++	size = reg[1];
++
++	ngpios = size / PMIC_GPIO_ADDRESS_RANGE;
++	if (ngpios == 0) {
++		dev_err(dev, "no gpios assigned\n");
++		return -ENODEV;
++	}
+ 
+-	npins = platform_irq_count(pdev);
+-	if (!npins)
++	if (ngpios > ARRAY_SIZE(pmic_gpio_groups)) {
++		dev_err(dev, "reg property defines %d gpios, but only %d are allowed\n",
++				ngpios, (int)ARRAY_SIZE(pmic_gpio_groups));
+ 		return -EINVAL;
+-	if (npins < 0)
+-		return npins;
++	}
++
++	if (of_find_property(dev->of_node, "qcom,gpios-disallowed",
++					&disallowed_count)) {
++		disallowed_count /= sizeof(u32);
++		if (disallowed_count == 0) {
++			dev_err(dev, "No data in gpios-disallowed\n");
++			return -EINVAL;
++		}
+ 
+-	BUG_ON(npins > ARRAY_SIZE(pmic_gpio_groups));
++		disallowed = kcalloc(disallowed_count, sizeof(u32), GFP_KERNEL);
++		if (disallowed == NULL)
++			return -ENOMEM;
++
++		ret = of_property_read_u32_array(dev->of_node,
++				"qcom,gpios-disallowed",
++				disallowed, disallowed_count);
++		if (ret < 0) {
++			dev_err(dev, "qcom,gpios-disallowed property reading failed, ret=%d\n",
++								ret);
++			goto err_free;
++		}
++
++		for (i = 0; i < disallowed_count; i++) {
++			if (disallowed[i] >= ngpios + PMIC_GPIO_PHYSICAL_OFFSET
++				|| disallowed[i] < PMIC_GPIO_PHYSICAL_OFFSET) {
++				dev_err(dev, "invalid gpio = %d specified in qcom,gpios-disallowed, supported values: %d to %d\n",
++					disallowed[i],
++					PMIC_GPIO_PHYSICAL_OFFSET,
++					ngpios - 1 + PMIC_GPIO_PHYSICAL_OFFSET);
++				ret = -EINVAL;
++				goto err_free;
++			}
++			for (j = 0; j < i; j++) {
++				if (disallowed[i] == disallowed[j]) {
++					dev_err(dev, "duplicate gpio = %d listed in qcom,gpios-disallowed\n",
++							disallowed[i]);
++					ret = -EINVAL;
++					goto err_free;
++				}
++			}
++			dev_dbg(dev, "gpio %d NOT supported\n", disallowed[i]);
++		}
++	} else {
++		disallowed_count = 0;
++	}
++
++	npins = ngpios - disallowed_count;
++	if (npins <= 0) {
++		dev_err(dev, "No pins assigned\n");
++		ret = -ENODEV;
++		goto err_free;
++	}
++	if (platform_irq_count(pdev) != npins) {
++		dev_err(dev, "%d IRQs defined but %d expected\n",
++				platform_irq_count(pdev), npins);
++		ret = -EINVAL;
++		goto err_free;
++	}
+ 
+ 	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+-	if (!state)
+-		return -ENOMEM;
++	if (!state) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	platform_set_drvdata(pdev, state);
+ 
+ 	state->dev = &pdev->dev;
+ 	state->map = dev_get_regmap(dev->parent, NULL);
+ 
++	state->gpio_groups = devm_kcalloc(dev, sizeof(*state->gpio_groups),
++						npins, GFP_KERNEL);
++	if (!state->gpio_groups) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
++
+ 	pindesc = devm_kcalloc(dev, npins, sizeof(*pindesc), GFP_KERNEL);
+-	if (!pindesc)
+-		return -ENOMEM;
++	if (!pindesc) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	pads = devm_kcalloc(dev, npins, sizeof(*pads), GFP_KERNEL);
+-	if (!pads)
+-		return -ENOMEM;
++	if (!pads) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	pctrldesc = devm_kzalloc(dev, sizeof(*pctrldesc), GFP_KERNEL);
+-	if (!pctrldesc)
+-		return -ENOMEM;
++	if (!pctrldesc) {
++		ret = -ENOMEM;
++		goto err_free;
++	}
+ 
+ 	pctrldesc->pctlops = &pmic_gpio_pinctrl_ops;
+ 	pctrldesc->pmxops = &pmic_gpio_pinmux_ops;
+@@ -738,22 +840,42 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ #ifdef CONFIG_DEBUG_FS
+ 	pctrldesc->custom_conf_items = pmic_conf_items;
+ #endif
++	for (pin_idx = 0, i = 0; i < ngpios; i++) {
++		for (j = 0; j < disallowed_count; j++) {
++			if (i + PMIC_GPIO_PHYSICAL_OFFSET == disallowed[j])
++				break;
++		}
++		if (j != disallowed_count)
++			continue;
+ 
+-	for (i = 0; i < npins; i++, pindesc++) {
+-		pad = &pads[i];
++		pad = &pads[pin_idx];
+ 		pindesc->drv_data = pad;
+-		pindesc->number = i;
++		pindesc->number = pin_idx;
+ 		pindesc->name = pmic_gpio_groups[i];
+ 
+-		pad->irq = platform_get_irq(pdev, i);
+-		if (pad->irq < 0)
+-			return pad->irq;
++		pad->gpio_idx = i + PMIC_GPIO_PHYSICAL_OFFSET;
++		pad->irq = platform_get_irq(pdev, pin_idx);
++		if (pad->irq < 0) {
++			dev_err(state->dev,
++				"failed to get irq for gpio %d (pin %d), ret=%d\n",
++					pad->gpio_idx, pin_idx, pad->irq);
++			ret = pad->irq;
++			goto err_free;
++		}
++		/* Every pin is a group */
++		state->gpio_groups[pin_idx] = pmic_gpio_groups[i];
+ 
+-		pad->base = reg + i * PMIC_GPIO_ADDRESS_RANGE;
++		pad->base = start + i * PMIC_GPIO_ADDRESS_RANGE;
+ 
+ 		ret = pmic_gpio_populate(state, pad);
+-		if (ret < 0)
+-			return ret;
++		if (ret < 0) {
++			dev_err(state->dev,
++				"failed to populate gpio %d, ret=%d\n",
++							i, ret);
++			goto err_free;
++		}
++		pindesc++;
++		pin_idx++;
+ 	}
+ 
+ 	state->chip = pmic_gpio_gpio_template;
+@@ -765,25 +887,29 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+ 	state->chip.can_sleep = false;
+ 
+ 	state->ctrl = devm_pinctrl_register(dev, pctrldesc, state);
+-	if (IS_ERR(state->ctrl))
+-		return PTR_ERR(state->ctrl);
++	if (IS_ERR(state->ctrl)) {
++		ret = PTR_ERR(state->ctrl);
++		dev_err(state->dev, "failed to register pinctrl device, ret=%d\n",
++							ret);
++		goto err_free;
++	}
+ 
+ 	ret = gpiochip_add_data(&state->chip, state);
+ 	if (ret) {
+-		dev_err(state->dev, "can't add gpio chip\n");
+-		return ret;
++		dev_err(state->dev, "can't add gpio chip, ret=%d\n", ret);
++		goto err_free;
+ 	}
+ 
+ 	ret = gpiochip_add_pin_range(&state->chip, dev_name(dev), 0, 0, npins);
+ 	if (ret) {
+-		dev_err(dev, "failed to add pin range\n");
+-		goto err_range;
++		dev_err(dev, "failed to add pin range\n, ret=%d\n", ret);
++		gpiochip_remove(&state->chip);
++		goto err_free;
+ 	}
+ 
+-	return 0;
++err_free:
++	kfree(disallowed);
+ 
+-err_range:
+-	gpiochip_remove(&state->chip);
+ 	return ret;
+ }
+ 
+-- 
+Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
 
-Yes, you indeed need to check for -EINVAL to catch that. No argument
-about that.
-
->                                   but we're looking for something
-> optional anyway. If there is a property, then we would see some other
-> error if something went wrong and then pass the error up. There is a
-> hole where there isn't a mux-control-names property and we're looking
-> for something that's optional, but there is a mux-control property. Do
-> we care though? The DT seems broken then.
-
-I was thinking about the case where mux-control-names names *other* muxes
-but not the one asked for in this call. That's not broken and should be
-handled. The way I read it, you get -ENODATA in that case?
-
->> And if an optional mux is found here, but lookup
->> fails later in e.g. the of_parse_phandle_with_args call, then I think
->> an error should be returned. Because that seems like an indication that
->> DT specifies that there *should* be a mux, but then there isn't one.
-> 
-> of_parse_phandle_with_args() would return ENOENT when there isn't a
-> mux-control property in DT. So I've trapped that case and returned an
-> "optional mux" pointer of NULL. I think we handle the case you mention,
-> where some index is found but it returns an error, because that would
-> return some error besides -ENOENT.
-> 
-> Sorry, I'm not really following what you're suggesting. Maybe it got
-> mixed up with the NULL vs. non-NULL return value from mux_control_get().
-
-What I mean is that if you have passed a mux_name and the index of that
-name was indeed found in the of_property_match_string call, then any
-failure from of_parse_phandle_with_args indicates a bad DT and should
-IMO result in an error. I.e., when evaluating the result from
-of_parse_phandle_with_args, you should account for the optional param
-if and only if mux_name is NULL.
-
-You can do that by e.g. setting optional to false after looking up the
-mux_name index (because at that point the mux is no longer considered
-optional). E.g. as the last statement in the if (!mux_name) block.
-
-Cheers,
-peda
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
