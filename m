@@ -1,41 +1,47 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: Re: [PATCH] ARC: reset: introduce HSDKv1 reset driver
-Date: Wed, 19 Jul 2017 15:32:22 +0000
-Message-ID: <1500478342.9320.28.camel@synopsys.com>
-References: <20170718172520.25546-1-Eugeniy.Paltsev@synopsys.com>
-         <1500476858.2364.45.camel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] ARM: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 10:35:20 -0500
+Message-ID: <CAL_JsqK1Y3xhZwNxme934UF_t=6ZdSyqBtrMmceUC798ftL+mQ@mail.gmail.com>
+References: <20170718214339.7774-1-robh@kernel.org> <20170719062220.wefnkqhd7javbcee@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500476858.2364.45.camel@pengutronix.de>
-Content-Language: en-US
-Content-ID: <63031B30951FEB488F834D15D0A77D33@internal.synopsys.com>
+In-Reply-To: <20170719062220.wefnkqhd7javbcee@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: "arm@kernel.org" <arm@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Heiko Stuebner <heiko@sntech.de>, Tony Lindgren <tony@atomide.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Gregory Clement <gregory.clement@free-electrons.com>, linux-omap <linux-omap@vger.kernel.org>, Sasc
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcCwNCg0KT24gV2VkLCAyMDE3LTA3LTE5IGF0IDE3OjA3ICswMjAwLCBQaGlsaXBw
-IFphYmVsIHdyb3RlOg0KPiBPbiBUdWUsIDIwMTctMDctMTggYXQgMjA6MjUgKzAzMDAsIEV1Z2Vu
-aXkgUGFsdHNldiB3cm90ZToNCj4gPiBUaGUgSFNESyB2MSBwZXJpcGhlcnkgSVBzIGNhbiBiZSBy
-ZXNldCBieSBhY2Nlc3Npbmcgc29tZSByZWdpc3RlcnMNCj4gPiBmcm9tIHRoZSBDR1UgYmxvY2su
-DQo+ID4gDQo+ID4gVGhlIGxpc3Qgb2YgYXZhaWxhYmxlIHJlc2V0IGxpbmVzIGlzIGRvY3VtZW50
-ZWQgaW4gdGhlIERUIGJpbmRpbmdzLg0KPiA+IA0KPiA+IFtzbmlwXQ0KPiA+IC0tLSBhL2RyaXZl
-cnMvcmVzZXQvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvcmVzZXQvS2NvbmZpZw0KPiA+IEBA
-IC0zNCw2ICszNCwxMiBAQCBjb25maWcgUkVTRVRfQkVSTElODQo+ID4gwqAJaGVscA0KPiA+IMKg
-CcKgwqBUaGlzIGVuYWJsZXMgdGhlIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmVyIGZvciBNYXJ2ZWxs
-DQo+ID4gQmVybGluIFNvQ3MuDQo+ID4gwqANCj4gPiArY29uZmlnIFJFU0VUX0hTREtfVjENCj4g
-PiArCWJvb2wgIkhTREsgdjEgUmVzZXQgRHJpdmVyIg0KPiA+ICsJZGVmYXVsdCBuDQo+IA0KPiBJ
-IHN1cHBvc2UgdGhlcmUgd2lsbCBiZSBhIFNPQ19IU0RLX1YxIG9yIHNpbWlsYXIgaW4gdGhlIGZ1
-dHVyZSBzbw0KPiB0aGF0DQo+IHdlIGNhbiBoaWRlIHRoaXMgb3B0aW9uIGFuZCBlbmFibGUgaXQg
-YnkgZGVmYXVsdCBsaWtlIHRoZSBvdGhlciByZXNldA0KPiBkcml2ZXJzPw0KQWN0dWFsbHkgd2Ug
-ZG9uJ3QgaGF2ZSAoYW5kIGRvbid0IHBsYW5uaW5nIHRvIGFkZCkgc3VjaCBTT0MvYm9hcmQtDQpz
-cGVjaWZpYyBrY29uZmlnIG9wdGlvbiwgc28gSSBhbSB3b25kZXJpbmcgaWYgaXQgaXMgT0sgdG8g
-anVzdCBsZWZ0DQp0aGlzIG9wdGlvbiBub3QgaGlkZGVuPw0KDQo+ID4gW3NuaXBdDQo+ID4gKw0K
-PiA+ICsjZGVmaW5lIENHVV9BUkNfUlNUX0NUUkwJCTB4MA0KPiA+ICsjZGVmaW5lIENHVV9TWVNf
-UlNUX0NUUkwJCTB4MjANCj4gPiArI2RlZmluZSBDR1VfRERSX1JTVF9DVFJMCQkweDQwDQo+ID4g
-KyNkZWZpbmUgQ0dVX1RVTl9SU1RfQ1RSTAkJMHg2MA0KPiANCj4gVGhlIEFSQywgRERSLCBhbmQg
-VFVOIHJlc2V0IGNvbnRyb2wgcmVnaXN0ZXJzIGFyZSBuZXZlciB1c2VkLg0KT2ssIEknbGwgcmVt
-b3ZlIHVudXNlZCByZWdpc3RlciBkZWZpbmVzLg0KDQo+ID4gW3NuaXBdDQo+IA0KPiByZWdhcmRz
-DQo+IFBoaWxpcHANCj4gDQpUaGFua3MuDQotLSANCsKgRXVnZW5peSBQYWx0c2V2
+On Wed, Jul 19, 2017 at 1:22 AM, Uwe Kleine-König
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Tue, Jul 18, 2017 at 04:42:41PM -0500, Rob Herring wrote:
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>
+> Oh nice. If the commit adding %pOF is already set in stone, i'd suggest
+> to mention the commit id here in the commit log.
+
+It is in 4.13, but I'm not really eager to update all 60 patches and
+I'd prefer consistency in the commit msg as quite a few have already
+been applied.
+
+>> of the full path string for each node.
+
+[...]
+
+>> @@ -103,8 +103,8 @@ void __init arm_dt_init_cpu_maps(void)
+>>                */
+>>               cell = of_get_property(cpu, "reg", &prop_bytes);
+>>               if (!cell || prop_bytes < sizeof(*cell)) {
+>> -                     pr_debug(" * %s missing reg property\n",
+>> -                                  cpu->full_name);
+>> +                     pr_debug(" * %pOF missing reg property\n",
+>> +                                  cpu);
+>
+> You could join lines here and in the next hunk. And there are two more
+> further down.
+
+Okay. I did that generally, but missed a few.
+
+Rob
