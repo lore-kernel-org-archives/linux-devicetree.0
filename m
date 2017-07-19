@@ -1,125 +1,277 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v16 2/7] power: add power sequence library
-Date: Wed, 19 Jul 2017 13:34:11 +0200
-Message-ID: <4318803.QsccSH3mIv@aspire.rjw.lan>
-References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com> <CAJZ5v0hGbJuqqY6Pq5cYPrawSGW-zdhYHj0ovhJ9zXRAkBPCRQ@mail.gmail.com> <20170719025559.GC26218@b29397-desktop>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH] ARM: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 13:43:57 +0200
+Message-ID: <878tjk7ite.fsf@free-electrons.com>
+References: <20170718214339.7774-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170719025559.GC26218@b29397-desktop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, frank.li-3arQi8VN3Tc@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718214339.7774-1-robh@kernel.org> (Rob Herring's message of
+        "Tue, 18 Jul 2017 16:42:41 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: arm@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Tony Lindgren <tony@atomide.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Heiko Stuebner <heiko@sntech.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, July 19, 2017 10:56:00 AM Peter Chen wrote:
-> On Tue, Jul 18, 2017 at 07:06:05PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Jul 18, 2017 at 6:29 AM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > On Mon, Jul 17, 2017 at 03:39:07PM +0200, Rafael J. Wysocki wrote:
-> > >> > Sorry, I should describe more.
-> > >> >
-> > >> > Let's take USB bus as an example, when the new USB device is at the
-> > >> > host port, the device structure at device model is not created until
-> > >> > it is discoverable by the USB bus. If this new USB device needs to be
-> > >> > powered on before can be discoverable by the bus, the device structure
-> > >> > will be not created without powering on operation. The code usb_alloc_dev
-> > >> > (drivers/usb/core/usb.c) is only called for discoverable device.
-> > >> >
-> > >> > Unlike the other bus, eg, platform bus, it creates device structure
-> > >> > according to DT node. The USB bus was designed for hot plug model, the
-> > >> > device structure is for discoverable device. In recent years, we begin
-> > >> > to have some hard-wired USB device, Eg, onboard USB-hub, onboard USB 4G
-> > >> > Modem, etc at the market. It needs some board level power operation before
-> > >> > it can be found by the USB bus. This patch set is designed primarily for
-> > >> > fix this kind of problem. You will see at at pwrseq_generic.c, we use DT
-> > >> > version clock API of_clk_get and DT version gpio API of_get_named_gpio_flags
-> > >> > instead of device structure version, like devm_clk_get and
-> > >> > devm_gpiod_get_optional.
-> > >> >
-> > >> > MMC system has similar use case, it creates power sequence platform
-> > >> > device for this issue, but all those power stuffs (clock, gpio, etc)
-> > >> > may not be suitable as a dedicated virtual device at DT, they are belonged
-> > >> > to one physical device, so this patch set is created to see if this issue
-> > >> > can be fixed better.
-> > >>
-> > >> OK, thanks for the explanation.
-> > >>
-> > >> The above needs to be part of your problem statement.
-> > >
-> > > Ok, I will add it to cover letter.
-> > >
-> > >> >
-> > >> > The bus will power up all device nodes in this bus according to DT
-> > >> > information, the device structure has not created at this time.
-> > >>
-> > >> OK
-> > >>
-> > >> I still think that the information on power resources depended on by devices
-> > >> should be used for power management as well as for the initial power-up.
-> > >>
-> > >> The most straightforward way to arrange for that would be to make it possible
-> > >> to find the DT node matching the device after the device has been discovered
-> > >> and struct device created for it, say by USB.  That would require adding some
-> > >> more information on the device to the DT node, probably.
-> > >
-> > > After the device is created, the device node structure is under struct
-> > > device, say dev->of_node. The most difficulty for this issue is the
-> > > device creation is dynamic and is after the physical device is
-> > > discovered by the bus, the initial power-up is needed before the device
-> > > can be discovered by the bus.
-> > 
-> > So you power up all devices on the bus using the information from
-> > of_nodes upfront.
-> > 
-> 
-> I think your mean call pm_device_power_up(struct device *dev) for bus
-> level device (eg, USB HUB for USB), yeah, I can do that. But we still
-> have below problem:
-> 
-> Where we can put the kinds of power sequence implementation
-> (eg, pwrseq_generic.c) and the match mechanism between device
-> node and kinds of power sequence(eg, of_pwrseq_on at core.c)? These
-> stuffs can be shared among subsystems, and is better to use
-> one framework for it. MMC subsystem adds such things at its core
-> folder (drivers/mmc/core/pwrseq*) currently.
+Hi Rob,
+ 
+ On mar., juil. 18 2017, Rob Herring <robh@kernel.org> wrote:
 
-The power sequence handling code can be generic IMO, because it doesn't
-depend on what bus the devices are on.  It just needs to provide some
-services to its users, but you need a clean interface between it and its
-users, of course.
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: "Benoît Cousson" <bcousson@baylibre.com>
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Magnus Damm <magnus.damm@gmail.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+>  arch/arm/kernel/cpuidle.c            | 4 ++--
+>  arch/arm/kernel/devtree.c            | 6 +++---
+>  arch/arm/kernel/topology.c           | 4 ++--
+>  arch/arm/mach-exynos/suspend.c       | 8 ++++----
+>  arch/arm/mach-imx/gpc.c              | 4 ++--
+>  arch/arm/mach-mvebu/kirkwood.c       | 4 ++--
 
-There basically are two categories of devices, let's refer to them as USB-type
-and MMC-type.  The difference between them, as far as power sequences go,
-boils down to initialization and discovery.
-
-For the USB-type ones you need an upfront power-up pass over of_nodes
-under the bus controller.  That needs to be initiated by the controller driver,
-but may be carried out by the common code.
-
-After that, you need to match of_nodes to devices while discovering them.
-That also needs to be initiated by the bus controller, but there may be
-a helper function in the common code for that.  It may take a struct device
-for the just discovered device and the bus controller's of_node as arguments,
-look for an of_node under the bus controller matching the device and then
-attach the power sequence information to the struct device as appropriate.
-
-After the power sequence information has been attached to the struct
-device, it can just be used for controlling its power state in a generic
-fashion.
-
-In the MMC-type devices case the discovery if through of_node lookup IIUC,
-so then you may power up things as you discover them and attach the
-power sequence information to their struct device objects right away.
-
-Again, once you have done that, the power sequence information is
-there and it can be used for controlling the power states of devices
-generically.
+For the krkwood part
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
 Thanks,
-Rafael
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory
+
+>  arch/arm/mach-omap2/omap-wakeupgen.c | 4 ++--
+>  arch/arm/mach-omap2/omap_hwmod.c     | 4 ++--
+>  arch/arm/mach-rockchip/platsmp.c     | 4 ++--
+>  arch/arm/mach-shmobile/pm-rmobile.c  | 8 ++++----
+>  10 files changed, 25 insertions(+), 25 deletions(-)
+>
+> diff --git a/arch/arm/kernel/cpuidle.c b/arch/arm/kernel/cpuidle.c
+> index a3308ad1a024..fda5579123a8 100644
+> --- a/arch/arm/kernel/cpuidle.c
+> +++ b/arch/arm/kernel/cpuidle.c
+> @@ -101,8 +101,8 @@ static int __init arm_cpuidle_read_ops(struct device_node *dn, int cpu)
+>
+>  	ops = arm_cpuidle_get_ops(enable_method);
+>  	if (!ops) {
+> -		pr_warn("%s: unsupported enable-method property: %s\n",
+> -			dn->full_name, enable_method);
+> +		pr_warn("%pOF: unsupported enable-method property: %s\n",
+> +			dn, enable_method);
+>  		return -EOPNOTSUPP;
+>  	}
+>
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index f676febbb270..28174c9a94ac 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -95,7 +95,7 @@ void __init arm_dt_init_cpu_maps(void)
+>  		if (of_node_cmp(cpu->type, "cpu"))
+>  			continue;
+>
+> -		pr_debug(" * %s...\n", cpu->full_name);
+> +		pr_debug(" * %pOF...\n", cpu);
+>  		/*
+>  		 * A device tree containing CPU nodes with missing "reg"
+>  		 * properties is considered invalid to build the
+> @@ -103,8 +103,8 @@ void __init arm_dt_init_cpu_maps(void)
+>  		 */
+>  		cell = of_get_property(cpu, "reg", &prop_bytes);
+>  		if (!cell || prop_bytes < sizeof(*cell)) {
+> -			pr_debug(" * %s missing reg property\n",
+> -				     cpu->full_name);
+> +			pr_debug(" * %pOF missing reg property\n",
+> +				     cpu);
+>  			of_node_put(cpu);
+>  			return;
+>  		}
+> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+> index bf949a763dbe..e596c5b8f931 100644
+> --- a/arch/arm/kernel/topology.c
+> +++ b/arch/arm/kernel/topology.c
+> @@ -127,8 +127,8 @@ static void __init parse_dt_topology(void)
+>
+>  		rate = of_get_property(cn, "clock-frequency", &len);
+>  		if (!rate || len != 4) {
+> -			pr_err("%s missing clock-frequency property\n",
+> -				cn->full_name);
+> +			pr_err("%pOF missing clock-frequency property\n",
+> +				cn);
+>  			continue;
+>  		}
+>
+> diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+> index 748cfb8d5212..3c7b66c22697 100644
+> --- a/arch/arm/mach-exynos/suspend.c
+> +++ b/arch/arm/mach-exynos/suspend.c
+> @@ -187,21 +187,21 @@ static int __init exynos_pmu_irq_init(struct device_node *node,
+>  	struct irq_domain *parent_domain, *domain;
+>
+>  	if (!parent) {
+> -		pr_err("%s: no parent, giving up\n", node->full_name);
+> +		pr_err("%pOF: no parent, giving up\n", node);
+>  		return -ENODEV;
+>  	}
+>
+>  	parent_domain = irq_find_host(parent);
+>  	if (!parent_domain) {
+> -		pr_err("%s: unable to obtain parent domain\n", node->full_name);
+> +		pr_err("%pOF: unable to obtain parent domain\n", node);
+>  		return -ENXIO;
+>  	}
+>
+>  	pmu_base_addr = of_iomap(node, 0);
+>
+>  	if (!pmu_base_addr) {
+> -		pr_err("%s: failed to find exynos pmu register\n",
+> -		       node->full_name);
+> +		pr_err("%pOF: failed to find exynos pmu register\n",
+> +		       node);
+>  		return -ENOMEM;
+>  	}
+>
+> diff --git a/arch/arm/mach-imx/gpc.c b/arch/arm/mach-imx/gpc.c
+> index 93f584ba0130..de535cb679b3 100644
+> --- a/arch/arm/mach-imx/gpc.c
+> +++ b/arch/arm/mach-imx/gpc.c
+> @@ -224,13 +224,13 @@ static int __init imx_gpc_init(struct device_node *node,
+>  	int i;
+>
+>  	if (!parent) {
+> -		pr_err("%s: no parent, giving up\n", node->full_name);
+> +		pr_err("%pOF: no parent, giving up\n", node);
+>  		return -ENODEV;
+>  	}
+>
+>  	parent_domain = irq_find_host(parent);
+>  	if (!parent_domain) {
+> -		pr_err("%s: unable to obtain parent domain\n", node->full_name);
+> +		pr_err("%pOF: unable to obtain parent domain\n", node);
+>  		return -ENXIO;
+>  	}
+>
+> diff --git a/arch/arm/mach-mvebu/kirkwood.c b/arch/arm/mach-mvebu/kirkwood.c
+> index 7d9f2fd9e450..419da435bc94 100644
+> --- a/arch/arm/mach-mvebu/kirkwood.c
+> +++ b/arch/arm/mach-mvebu/kirkwood.c
+> @@ -107,8 +107,8 @@ static void __init kirkwood_dt_eth_fixup(void)
+>  		clk_prepare_enable(clk);
+>
+>  		/* store MAC address register contents in local-mac-address */
+> -		pr_err(FW_INFO "%s: local-mac-address is not set\n",
+> -		       np->full_name);
+> +		pr_err(FW_INFO "%pOF: local-mac-address is not set\n",
+> +		       np);
+>
+>  		pmac = kzalloc(sizeof(*pmac) + 6, GFP_KERNEL);
+>  		if (!pmac)
+> diff --git a/arch/arm/mach-omap2/omap-wakeupgen.c b/arch/arm/mach-omap2/omap-wakeupgen.c
+> index 33ed5d53fa45..4bb6751864a5 100644
+> --- a/arch/arm/mach-omap2/omap-wakeupgen.c
+> +++ b/arch/arm/mach-omap2/omap-wakeupgen.c
+> @@ -522,13 +522,13 @@ static int __init wakeupgen_init(struct device_node *node,
+>  	u32 val;
+>
+>  	if (!parent) {
+> -		pr_err("%s: no parent, giving up\n", node->full_name);
+> +		pr_err("%pOF: no parent, giving up\n", node);
+>  		return -ENODEV;
+>  	}
+>
+>  	parent_domain = irq_find_host(parent);
+>  	if (!parent_domain) {
+> -		pr_err("%s: unable to obtain parent domain\n", node->full_name);
+> +		pr_err("%pOF: unable to obtain parent domain\n", node);
+>  		return -ENXIO;
+>  	}
+>  	/* Not supported on OMAP4 ES1.0 silicon */
+> diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
+> index 3b47ded5fa0c..2dbd63239c54 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod.c
+> @@ -2417,8 +2417,8 @@ static int __init _init_mpu_rt_base(struct omap_hwmod *oh, void *data,
+>  		if (mem)
+>  			pr_err("omap_hwmod: %s: Could not ioremap\n", oh->name);
+>  		else
+> -			pr_err("omap_hwmod: %s: Missing dt reg%i for %s\n",
+> -			       oh->name, index, np->full_name);
+> +			pr_err("omap_hwmod: %s: Missing dt reg%i for %pOF\n",
+> +			       oh->name, index, np);
+>  		return -ENXIO;
+>  	}
+>
+> diff --git a/arch/arm/mach-rockchip/platsmp.c b/arch/arm/mach-rockchip/platsmp.c
+> index 3abafdbdd7f4..2b5b0e43d657 100644
+> --- a/arch/arm/mach-rockchip/platsmp.c
+> +++ b/arch/arm/mach-rockchip/platsmp.c
+> @@ -182,8 +182,8 @@ static int __init rockchip_smp_prepare_sram(struct device_node *node)
+>
+>  	ret = of_address_to_resource(node, 0, &res);
+>  	if (ret < 0) {
+> -		pr_err("%s: could not get address for node %s\n",
+> -		       __func__, node->full_name);
+> +		pr_err("%s: could not get address for node %pOF\n",
+> +		       __func__, node);
+>  		return ret;
+>  	}
+>
+> diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
+> index 699429f28b73..4c395f9fd178 100644
+> --- a/arch/arm/mach-shmobile/pm-rmobile.c
+> +++ b/arch/arm/mach-shmobile/pm-rmobile.c
+> @@ -195,8 +195,8 @@ static void __init add_special_pd(struct device_node *np, enum pd_types type)
+>  		return;
+>  	}
+>
+> -	pr_debug("Special PM domain %s type %d for %s\n", pd->name, type,
+> -		 np->full_name);
+> +	pr_debug("Special PM domain %s type %d for %pOF\n", pd->name, type,
+> +		 np);
+>
+>  	special_pds[num_special_pds].pd = pd;
+>  	special_pds[num_special_pds].type = type;
+> @@ -331,13 +331,13 @@ static int __init rmobile_init_pm_domains(void)
+>  	for_each_compatible_node(np, NULL, "renesas,sysc-rmobile") {
+>  		base = of_iomap(np, 0);
+>  		if (!base) {
+> -			pr_warn("%s cannot map reg 0\n", np->full_name);
+> +			pr_warn("%pOF cannot map reg 0\n", np);
+>  			continue;
+>  		}
+>
+>  		pmd = of_get_child_by_name(np, "pm-domains");
+>  		if (!pmd) {
+> -			pr_warn("%s lacks pm-domains node\n", np->full_name);
+> +			pr_warn("%pOF lacks pm-domains node\n", np);
+>  			continue;
+>  		}
+>
+> --
+> 2.11.0
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
