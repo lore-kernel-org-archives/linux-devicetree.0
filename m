@@ -1,7 +1,7 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v2 3/8] phy: qcom-qmp: Fix phy pipe clock name
-Date: Wed, 19 Jul 2017 14:13:34 +0530
-Message-ID: <1500453819-5223-4-git-send-email-varada@codeaurora.org>
+Subject: [PATCH v2 4/8] phy: qcom-qmp: Handle unavailable registers
+Date: Wed, 19 Jul 2017 14:13:35 +0530
+Message-ID: <1500453819-5223-5-git-send-email-varada@codeaurora.org>
 References: <1500453819-5223-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500453819-5223-1-git-send-email-varada@codeaurora.org>
@@ -10,85 +10,55 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-
 Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Presently, the phy pipe clock's name is assumed to be either
-usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
-phy lane's number). However, this will not work if an SoC has
-more than one instance of the phy. Hence, instead of assuming
-the name of the clock, fetch it from the DT.
+In some implementations of the QMP phy, some registers might not
+be present. Provide a way identify such registers and not access
+those registers.
 
-Acked-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 78ca628..97020ec 100644
+index 97020ec..000ad1c 100644
 --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
 +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -925,20 +925,13 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
-  *    clk  |   +-------+   |                   +-----+
-  *         +---------------+
-  */
--static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
-+static int phy_pipe_clk_register(struct qcom_qmp *qmp, const char *clk_name)
- {
--	char name[24];
- 	struct clk_fixed_rate *fixed;
- 	struct clk_init_data init = { };
- 
--	switch (qmp->cfg->type) {
--	case PHY_TYPE_USB3:
--		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
--		break;
--	case PHY_TYPE_PCIE:
--		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
--		break;
--	default:
-+	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
-+	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
- 		/* not all phys register pipe clocks, so return success */
- 		return 0;
+@@ -187,6 +187,8 @@ struct qmp_phy_init_tbl {
+ 		.in_layout = 1,		\
  	}
-@@ -947,7 +940,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
- 	if (!fixed)
- 		return -ENOMEM;
  
--	init.name = name;
-+	init.name = clk_name;
- 	init.ops = &clk_fixed_rate_ops;
- 
- 	/* controllers using QMP phys use 125MHz pipe clock interface */
-@@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 
- 	id = 0;
- 	for_each_available_child_of_node(dev->of_node, child) {
-+		const char *clk_name;
++#define QPHY_REG_INVAL		0xffffffffu
 +
- 		/* Create per-lane phy */
- 		ret = qcom_qmp_phy_create(dev, child, id);
- 		if (ret) {
-@@ -1118,11 +1113,20 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 			return ret;
+ /* set of registers with offsets different per-PHY */
+ enum qphy_reg_layout {
+ 	/* Common block control registers */
+@@ -676,15 +678,18 @@ static int qcom_qmp_phy_com_init(struct qcom_qmp *qmp)
+ 		qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
+ 			     SERDES_START | PCS_START);
+ 
+-		status = serdes + cfg->regs[QPHY_COM_PCS_READY_STATUS];
+-		mask = cfg->mask_com_pcs_ready;
+-
+-		ret = readl_poll_timeout(status, val, (val & mask), 10,
+-					 PHY_INIT_COMPLETE_TIMEOUT);
+-		if (ret) {
+-			dev_err(qmp->dev,
+-				"phy common block init timed-out\n");
+-			goto err_com_init;
++		if (cfg->regs[QPHY_COM_PCS_READY_STATUS] != QPHY_REG_INVAL) {
++			status = serdes + cfg->regs[QPHY_COM_PCS_READY_STATUS];
++			mask = cfg->mask_com_pcs_ready;
++
++			ret = readl_poll_timeout(status, val, (val & mask), 10,
++						 PHY_INIT_COMPLETE_TIMEOUT);
++			if (ret) {
++				dev_err(qmp->dev,
++					"%s: phy common block init timed-out\n",
++					__func__);
++				goto err_com_init;
++			}
  		}
+ 	}
  
-+		ret = of_property_read_string(child, "clock-output-names",
-+							&clk_name);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to get clock-output-names for lane%d phy, %d\n",
-+				id, ret);
-+			return ret;
-+		}
-+
- 		/*
- 		 * Register the pipe clock provided by phy.
- 		 * See function description to see details of this pipe clock.
- 		 */
--		ret = phy_pipe_clk_register(qmp, id);
-+		ret = phy_pipe_clk_register(qmp, clk_name);
- 		if (ret) {
- 			dev_err(qmp->dev,
- 				"failed to register pipe clock source\n");
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
