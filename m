@@ -1,125 +1,39 @@
-From: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] IOMMU/PCI: Reserve IOVA for inbound memory for PCI masters
-Date: Wed, 19 Jul 2017 17:37:39 +0530
-Message-ID: <CAMSpPPdhBF7VzK6wxNuwF7TA+p3+i7qvXy2PxHpEwu9H27JBQQ@mail.gmail.com>
-References: <1495471182-12490-1-git-send-email-oza.oza@broadcom.com> <1495471182-12490-4-git-send-email-oza.oza@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 0/1] arm64: dts: Add Variscite DART-SD410 Evaluation board dts
+Date: Wed, 19 Jul 2017 15:16:54 +0300
+Message-ID: <20170719121655.686-1-leonid.s@variscite.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495471182-12490-4-git-send-email-oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robin,
+Add initial device tree support for Variscite DART-SD410 Evalueation board.
+This board is also known as VAR-SD410CustomBoard.
 
-My apology for noise.
+checkpatch.pl gives warnings for some lines that are over 80 characters,
+but I decided not to change them since similar lines in other dts files.
 
-I have taken care of your comments.
-but these whole patch-set, (specially PCI patch-set) inbound memory
-addition depends on Lorenzo's patch-set
-.
-So I will be posting version 8 patches for IOVA reservation soon after
-Lorenzo's patches are made in.
+Patch has been tested on 96Boards Dragonboard410c and Variscite SD410Customboard
+Both Linaro Linux 17.06 release
+https://discuss.96boards.org/t/linaro-linux-17-06-releases/2217
 
-Regards,
-Oza.
 
-On Mon, May 22, 2017 at 10:09 PM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> This patch reserves the inbound memory holes for PCI masters.
-> ARM64 based SOCs may have scattered memory banks.
-> For e.g as iproc based SOC has
->
-> <0x00000000 0x80000000 0x0 0x80000000>, /* 2G @ 2G */
-> <0x00000008 0x80000000 0x3 0x80000000>, /* 14G @ 34G */
-> <0x00000090 0x00000000 0x4 0x00000000>, /* 16G @ 576G */
-> <0x000000a0 0x00000000 0x4 0x00000000>; /* 16G @ 640G */
->
-> But incoming PCI transaction addressing capability is limited
-> by host bridge, for example if max incoming window capability
-> is 512 GB, then 0x00000090 and 0x000000a0 will fall beyond it.
->
-> To address this problem, iommu has to avoid allocating IOVA which
-> are reserved.
->
-> Which in turn does not allocate IOVA if it falls into hole.
-> and the holes should be reserved before any of the IOVA allocations
-> can happen.
->
-> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index 8348f366..efe3d07 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -171,16 +171,15 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
->  {
->         struct pci_host_bridge *bridge;
->         struct resource_entry *window;
-> +       struct iommu_resv_region *region;
-> +       phys_addr_t start, end;
-> +       size_t length;
->
->         if (!dev_is_pci(dev))
->                 return;
->
->         bridge = pci_find_host_bridge(to_pci_dev(dev)->bus);
->         resource_list_for_each_entry(window, &bridge->windows) {
-> -               struct iommu_resv_region *region;
-> -               phys_addr_t start;
-> -               size_t length;
-> -
->                 if (resource_type(window->res) != IORESOURCE_MEM)
->                         continue;
->
-> @@ -193,6 +192,43 @@ void iommu_dma_get_resv_regions(struct device *dev, struct list_head *list)
->
->                 list_add_tail(&region->list, list);
->         }
-> +
-> +       /* PCI inbound memory reservation. */
-> +       start = length = 0;
-> +       resource_list_for_each_entry(window, &bridge->inbound_windows) {
-> +               end = window->res->start - window->offset;
-> +
-> +               if (start > end) {
-> +                       /* multiple ranges assumed sorted. */
-> +                       pr_warn("PCI: failed to reserve iovas\n");
-> +                       return;
-> +               }
-> +
-> +               if (start != end) {
-> +                       length = end - start - 1;
-> +                       region = iommu_alloc_resv_region(start, length, 0,
-> +                               IOMMU_RESV_RESERVED);
-> +                       if (!region)
-> +                               return;
-> +
-> +                       list_add_tail(&region->list, list);
-> +               }
-> +
-> +               start += end + length + 1;
-> +       }
-> +       /*
-> +        * the last dma-range should honour based on the
-> +        * 32/64-bit dma addresses.
-> +        */
-> +       if ((start) && (start < DMA_BIT_MASK(sizeof(dma_addr_t) * 8))) {
-> +               length = DMA_BIT_MASK((sizeof(dma_addr_t) * 8)) - 1;
-> +               region = iommu_alloc_resv_region(start, length, 0,
-> +                       IOMMU_RESV_RESERVED);
-> +               if (!region)
-> +                       return;
-> +
-> +               list_add_tail(&region->list, list);
-> +       }
->  }
->  EXPORT_SYMBOL(iommu_dma_get_resv_regions);
->
-> --
-> 1.9.1
->
+Signed-off-by: Leonid Segal <leonid.s-/HTLZasLZWtl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../boot/dts/qcom/apq8016-var-dart-pmic-pins.dtsi  |  53 +++
+ .../boot/dts/qcom/apq8016-var-dart-soc-pins.dtsi   |  88 ++++
+ arch/arm64/boot/dts/qcom/apq8016-var-dart.dts      |  21 +
+ arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi     | 525 +++++++++++++++++++++
+ 5 files changed, 688 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-var-dart-pmic-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-var-dart-soc-pins.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-var-dart.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/apq8016-var-dart.dtsi
+ 
+-- 
+2.13.0
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
