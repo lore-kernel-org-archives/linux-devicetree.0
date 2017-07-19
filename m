@@ -1,81 +1,90 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
- board dts and Makefile
-Date: Wed, 19 Jul 2017 11:26:30 +0200
-Message-ID: <a470dfc9-71a4-6574-f342-fbd8d60aafce@gmail.com>
-References: <1498123975-9748-1-git-send-email-yt.shen@mediatek.com>
- <1498123975-9748-3-git-send-email-yt.shen@mediatek.com>
- <ddfb5e58-520f-1ef5-2351-d7545e17a429@gmail.com>
- <1500446884.14021.12.camel@mtksdaap41>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
+ controller
+Date: Wed, 19 Jul 2017 14:59:13 +0530
+Message-ID: <20170719092905.GA13546@codeaurora.org>
+References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+ <1500293043-1887-8-git-send-email-varada@codeaurora.org>
+ <20170717220718.GZ20973@minitux>
+ <20170718095814.GE32439@codeaurora.org>
+ <20170718164438.GE20973@minitux>
+ <20170719064943.GA29996@codeaurora.org>
+ <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500446884.14021.12.camel@mtksdaap41>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Stan,
 
+On Wed, Jul 19, 2017 at 10:12:45AM +0300, Stanimir Varbanov wrote:
+> Hi,
+>
+> On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
+> > On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
+> >> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
+> >>
+> >>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
+> >>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
+> >> [..]
+> >>>>
+> >>>> Can you confirm that this is actually version 4 of this block? Or are we
+> >>>> just incrementing an arbitrary number here?
+> >>>
+> >>> This is not exactly the 4th version of the block. However, it is
+> >>> a different version than the ones that are already supported in
+> >>> this driver. Since the existing driver didn't exactly tie it with
+> >>> the block IP version, I too followed the same versioning
+> >>> convention.
+> >>>
+> >>
+> >> Do you have a block IP version that you could base your numbering on, to
+> >> break the trend? (We should go back and fix up the others as well)
+> >
+> > Presently, the driver supports the ipq8064, apq8064, apq8084,
+> > msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
+> > the block IP versions are as follows.
+> >
+> > 	ipq8064 - v0 - 2.1.0
+> > 	apq8064 - v0 - 2.1.0
+> > 	apq8084 - v1 - 1.0.0
+> > 	msm8996 - v2 - 2.3.2
+> > 	ipq4019 - v3 - 2.4.0
+> > 	ipq8074 - v4 - 2.3.3
+>
+> That's nice, but I think we need the Synopsys IP versions too, can you
+> provide such an information and after that we can decide how the names
+> should look like.
 
-On 07/19/2017 08:48 AM, YT Shen wrote:
-> On Tue, 2017-07-18 at 18:29 +0200, Matthias Brugger wrote:
->>
->> On 06/22/2017 11:32 AM, YT Shen wrote:
->>> This adds basic chip support for Mediatek 2712
+Sorry, I posted v2 before I saw this e-mail. Will post v3 based
+on what naming style is decided.
 
-[...]
+The SoCs, qcom_pcie_ops version, the block IP version and
+Synopsys IP versions are as follows.
 
->>> +
->>> +	uart_clk: dummy26m {
->>> +		compatible = "fixed-clock";
->>> +		clock-frequency = <26000000>;
->>> +		#clock-cells = <0>;
->>> +	};
->>> +
+	ipq8064 - v0 - 2.1.0 - 4.01a
+	apq8064 - v0 - 2.1.0 - 4.01a
+	apq8084 - v1 - 1.0.0 - 4.11a
+	msm8996 - v2 - 2.3.2 - 4.21a
+	ipq4019 - v3 - 2.4.0 - 4.20a
+	ipq8074 - v4 - 2.3.3 - 4.30a
 
-[...]
+Thanks
+Varada
 
->>> +
->>> +	soc {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <2>;
->>> +		compatible = "simple-bus";
->>> +		ranges;
->>> +
->>> +		uart5: serial@1000f000 {
->>> +			compatible = "mediatek,mt2712-uart",
->>> +				     "mediatek,mt6577-uart";
->>> +			reg = <0 0x1000f000 0 0x400>;
->>> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
->>> +			clocks = <&uart_clk>, <&uart_clk>;
->>> +			clock-names = "baud", "bus";
->>> +			status = "disabled";
->>> +		};
->>
->> So baud and bus clock are both 26 MHz?
-> We didn't have CCF clock support in this series.
-> After we have clock source support, we could use the correct clocks to
-> the UARTs and drop the 26MHz fixed rate UART clock.
-> 
-> The bus clock is 26MHz.  The baud clock could be from another clock
-> source, using the same 26MHz fixed clock works also.
-> 
-> 
-> [1] https://patchwork.kernel.org/patch/9670877/
-> [2] https://patchwork.kernel.org/patch/6436021/
-> 
+> > I will rename the qcom_pcie_ops structure and related functions
+> > with the block IP version instead of vX numbering and post the
+> > patch.
+>
+>
+>
+> regards,
+> Stan
 
-Yes, just using one 26 MHz clock works, but it uses an deprecated 
-binding, so we should not do this, as through copying from the source of 
-other SoCs we will keep it alive forever. Anyway that's not your case, 
-as you defined the two clocks.
-
-The device tree should reflect the HW, that's why I asked for the clock 
-frequency of both clocks. I searched the git history and it was never 
-done right before. So you could be the first :)
-
-Thanks,
-Matthias
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
