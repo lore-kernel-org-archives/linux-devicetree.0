@@ -1,110 +1,35 @@
-From: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 6/9] usb: bdc: Add support for suspend/resume
-Date: Wed, 19 Jul 2017 15:11:45 -0400
-Message-ID: <1500491508-9783-7-git-send-email-alcooperx@gmail.com>
+From: Al Cooper <alcooperx@gmail.com>
+Subject: [PATCH V2 8/9] usb: bdc: Enable in Kconfig for ARCH_BRCMSTB systems
+Date: Wed, 19 Jul 2017 15:11:47 -0400
+Message-ID: <1500491508-9783-9-git-send-email-alcooperx@gmail.com>
 References: <1500491508-9783-1-git-send-email-alcooperx@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500491508-9783-1-git-send-email-alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yuan linyu <Linyu.Yuan-cfy2TCaE7SHLM0G2K2Xlo2/U75nxZMCp@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500491508-9783-1-git-send-email-alcooperx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Al Cooper <alcooperx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, yuan linyu <Linyu.Yuan@alcatel-sbell.com.cn>, Florian Fainelli <f.fainelli@gmail.com>, "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Based on a previous commit by Danesh Petigara <dpetigara-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-that added resume to solve the following problem:
-"The BDC driver will fail after resuming from S3 suspend and this
-will cause any upper layer gadget driver to fail."
-This commit also adds support for suspend and manages the clock during
-suspend/resume.
+Many ARM based Broadcom STB SoC's have a USB BDC controller so
+enable this driver for these systems.
 
-Signed-off-by: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc.h      |  1 +
- drivers/usb/gadget/udc/bdc/bdc_core.c | 36 +++++++++++++++++++++++++++++++++++
- 2 files changed, 37 insertions(+)
+ drivers/usb/gadget/udc/bdc/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc.h b/drivers/usb/gadget/udc/bdc/bdc.h
-index f657a4e..67c5f23 100644
---- a/drivers/usb/gadget/udc/bdc/bdc.h
-+++ b/drivers/usb/gadget/udc/bdc/bdc.h
-@@ -454,6 +454,7 @@ struct bdc {
- 	 * Func Wake packet every 2.5 secs. Refer to USB3 spec section 8.5.6.4
- 	 */
- 	struct delayed_work	func_wake_notify;
-+	struct clk		*clk;
- };
+diff --git a/drivers/usb/gadget/udc/bdc/Kconfig b/drivers/usb/gadget/udc/bdc/Kconfig
+index eb8b553..c74ac25 100644
+--- a/drivers/usb/gadget/udc/bdc/Kconfig
++++ b/drivers/usb/gadget/udc/bdc/Kconfig
+@@ -1,6 +1,7 @@
+ config USB_BDC_UDC
+ 	tristate "Broadcom USB3.0 device controller IP driver(BDC)"
+ 	depends on USB_GADGET && HAS_DMA
++	default ARCH_BRCMSTB
  
- static inline u32 bdc_readl(void __iomem *base, u32 offset)
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index bc0729b..2690b6f 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_core.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -473,6 +473,8 @@ static int bdc_probe(struct platform_device *pdev)
- 	if (!bdc)
- 		return -ENOMEM;
- 
-+	bdc->clk = clk;
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	bdc->regs = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(bdc->regs)) {
-@@ -529,10 +531,43 @@ static int bdc_remove(struct platform_device *pdev)
- 	dev_dbg(bdc->dev, "%s ()\n", __func__);
- 	bdc_udc_exit(bdc);
- 	bdc_hw_exit(bdc);
-+	clk_disable_unprepare(bdc->clk);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int bdc_suspend(struct device *dev)
-+{
-+	struct bdc *bdc = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(bdc->clk);
-+	return 0;
-+}
-+
-+static int bdc_resume(struct device *dev)
-+{
-+	struct bdc *bdc = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(bdc->clk);
-+	if (ret) {
-+		dev_err(bdc->dev, "err enabling the clock\n");
-+		return ret;
-+	}
-+	ret = bdc_reinit(bdc);
-+	if (ret) {
-+		dev_err(bdc->dev, "err in bdc reinit\n");
-+		return ret;
-+	}
- 
- 	return 0;
- }
- 
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
-+		bdc_resume);
-+
- static const struct of_device_id bdc_of_match[] = {
- 	{ .compatible = "brcm,bdc-v0.16" },
- 	{ .compatible = "brcm,bdc" },
-@@ -543,6 +578,7 @@ static int bdc_remove(struct platform_device *pdev)
- 	.driver		= {
- 		.name	= BRCM_BDC_NAME,
- 		.owner	= THIS_MODULE,
-+		.pm = &bdc_pm_ops,
- 		.of_match_table	= bdc_of_match,
- 	},
- 	.probe		= bdc_probe,
+ 	help
+ 	BDC is Broadcom's USB3.0 device controller IP. If your SOC has a BDC IP
 -- 
 1.9.0.138.g2de3478
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
