@@ -1,69 +1,179 @@
 From: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 0/6] Add support for BCM7271 style interrupt controller
-Date: Wed, 19 Jul 2017 12:07:28 -0700
-Message-ID: <20170719190734.18566-1-opendmb@gmail.com>
+Subject: [PATCH v2 4/6] irqchip: brcmstb-l2: Remove some processing from the handler
+Date: Wed, 19 Jul 2017 12:07:32 -0700
+Message-ID: <20170719190734.18566-5-opendmb@gmail.com>
+References: <20170719190734.18566-1-opendmb@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170719190734.18566-1-opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 Cc: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Marc Gonzalez <marc_gonzalez-y1yR0Z3OICC7zZZRDBGcUA@public.gmane.org>, Bartosz Golaszewski <brgl-ARrdPY/1zhM@public.gmane.org>, Sebastian Frias <sf84-QFKgK+z4sOrR7s880joybQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set extends the functionality of the irq-brcmstb-l2 interrupt
-controller driver to cover a hardware variant first introduced in the
-BCM7271 SoC.  The main difference between this variant and the block
-found in earlier brcmstb SoCs is that this variant only supports level
-sensitive interrupts and therefore does not latch the interrupt state
-based on edges.  Since there is no longer a need to ack interrupts with
-a register write to clear the latch the register map has been changed.
+Saving the generic chip pointer in the brcmstb_l2_intc_data prevents
+the need to call irq_get_domain_generic_chip().  Also don't need to
+save parent_irq and base there since local variables in the
+brcmstb_l2_intc_of_init() function are just as good.
 
-Therefore the change to add support for the new hardware block is to
-abstract the register accesses to accommodate different maps and to
-identify the block with a new device-tree compatible string.
+The handle_edge_irq flow or chained_irq_enter takes care of the
+acknowledgement of the interrupt so it is redundant to clear it in
+brcmstb_l2_intc_irq_handle().
 
-I also took the opportunity to make some small efficiency enhancements
-to the driver.  One of these was to make use of the slightly more
-efficient irq_mask_ack method.  However, I discovered that the defined
-irq_gc_mask_disable_reg_and_ack() generic irq function was insufficient
-for my needs.  The first three commits of this set are intended to be a
-correction of the existing generic irq implementation to provide a
-function that can be used by interrupt controller drivers for their
-irq_mask_ack method when disable/enable registers are used for masking
-and interrupts are acknowledged by setting a bit in an ack register.
+irq_linear_revmap() is a fast path equivalent of irq_find_mapping()
+that is appropriate to use for domain controllers of this type.
 
-I believe these first three commits should be added to the irq/core
-repository and possibly stable branches. The remaining commits should be
-added to the irqchip/core repository but I have included the complete
-set here for improved context since the irqchip patches are dependent on
-the irq patches.  This entire set is therefore based on the irq/core
-master branch.  Please let me know if you would like a different
-packaging.
+Defining irq_mask_ack is slightly more efficient than just
+implementing irq_mask and irq_ack seperately.
 
-If the changes to genirq are not acceptable I can implement the
-irq_mask_ask method locally in the irq-brcmstb-l2 driver and submit
-that on its own.
+Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/irqchip/irq-brcmstb-l2.c | 46 +++++++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 24 deletions(-)
 
-Changes in v2:
-
-- removed unused permutations of irq_mask_ack methods
-- added Reviewed-by and Acked-by responses from first submission
-
-Doug Berger (5):
-  genirq: generic chip: add irq_gc_mask_disable_and_ack_set()
-  genirq: generic chip: remove irq_gc_mask_disable_reg_and_ack()
-  irqchip: brcmstb-l2: Remove some processing from the handler
-  irqchip: brcmstb-l2: Abstract register accesses
-  irqchip: brcmstb-l2: Add support for the BCM7271 L2 controller
-
-Florian Fainelli (1):
-  irqchip/tango: Use irq_gc_mask_disable_and_ack_set
-
- .../bindings/interrupt-controller/brcm,l2-intc.txt |   3 +-
- drivers/irqchip/irq-brcmstb-l2.c                   | 145 ++++++++++++++-------
- drivers/irqchip/irq-tango.c                        |   2 +-
- include/linux/irq.h                                |   2 +-
- kernel/irq/generic-chip.c                          |  15 ++-
- 5 files changed, 114 insertions(+), 53 deletions(-)
-
+diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+index bddf169c4b37..977ae55d47d4 100644
+--- a/drivers/irqchip/irq-brcmstb-l2.c
++++ b/drivers/irqchip/irq-brcmstb-l2.c
+@@ -1,7 +1,7 @@
+ /*
+  * Generic Broadcom Set Top Box Level 2 Interrupt controller driver
+  *
+- * Copyright (C) 2014 Broadcom Corporation
++ * Copyright (C) 2014-2017 Broadcom
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -41,9 +41,8 @@
+ 
+ /* L2 intc private data structure */
+ struct brcmstb_l2_intc_data {
+-	int parent_irq;
+-	void __iomem *base;
+ 	struct irq_domain *domain;
++	struct irq_chip_generic *gc;
+ 	bool can_wake;
+ 	u32 saved_mask; /* for suspend/resume */
+ };
+@@ -51,15 +50,14 @@ struct brcmstb_l2_intc_data {
+ static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
+ {
+ 	struct brcmstb_l2_intc_data *b = irq_desc_get_handler_data(desc);
+-	struct irq_chip_generic *gc = irq_get_domain_generic_chip(b->domain, 0);
+ 	struct irq_chip *chip = irq_desc_get_chip(desc);
+ 	unsigned int irq;
+ 	u32 status;
+ 
+ 	chained_irq_enter(chip, desc);
+ 
+-	status = irq_reg_readl(gc, CPU_STATUS) &
+-		~(irq_reg_readl(gc, CPU_MASK_STATUS));
++	status = irq_reg_readl(b->gc, CPU_STATUS) &
++		~(irq_reg_readl(b->gc, CPU_MASK_STATUS));
+ 
+ 	if (status == 0) {
+ 		raw_spin_lock(&desc->lock);
+@@ -70,10 +68,8 @@ static void brcmstb_l2_intc_irq_handle(struct irq_desc *desc)
+ 
+ 	do {
+ 		irq = ffs(status) - 1;
+-		/* ack at our level */
+-		irq_reg_writel(gc, 1 << irq, CPU_CLEAR);
+ 		status &= ~(1 << irq);
+-		generic_handle_irq(irq_find_mapping(b->domain, irq));
++		generic_handle_irq(irq_linear_revmap(b->domain, irq));
+ 	} while (status);
+ out:
+ 	chained_irq_exit(chip, desc);
+@@ -116,32 +112,33 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ {
+ 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+ 	struct brcmstb_l2_intc_data *data;
+-	struct irq_chip_generic *gc;
+ 	struct irq_chip_type *ct;
+ 	int ret;
+ 	unsigned int flags;
++	int parent_irq;
++	void __iomem *base;
+ 
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	data->base = of_iomap(np, 0);
+-	if (!data->base) {
++	base = of_iomap(np, 0);
++	if (!base) {
+ 		pr_err("failed to remap intc L2 registers\n");
+ 		ret = -ENOMEM;
+ 		goto out_free;
+ 	}
+ 
+ 	/* Disable all interrupts by default */
+-	writel(0xffffffff, data->base + CPU_MASK_SET);
++	writel(0xffffffff, base + CPU_MASK_SET);
+ 
+ 	/* Wakeup interrupts may be retained from S5 (cold boot) */
+ 	data->can_wake = of_property_read_bool(np, "brcm,irq-can-wake");
+ 	if (!data->can_wake)
+-		writel(0xffffffff, data->base + CPU_CLEAR);
++		writel(0xffffffff, base + CPU_CLEAR);
+ 
+-	data->parent_irq = irq_of_parse_and_map(np, 0);
+-	if (!data->parent_irq) {
++	parent_irq = irq_of_parse_and_map(np, 0);
++	if (!parent_irq) {
+ 		pr_err("failed to find parent interrupt\n");
+ 		ret = -EINVAL;
+ 		goto out_unmap;
+@@ -170,18 +167,19 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 	}
+ 
+ 	/* Set the IRQ chaining logic */
+-	irq_set_chained_handler_and_data(data->parent_irq,
++	irq_set_chained_handler_and_data(parent_irq,
+ 					 brcmstb_l2_intc_irq_handle, data);
+ 
+-	gc = irq_get_domain_generic_chip(data->domain, 0);
+-	gc->reg_base = data->base;
+-	gc->private = data;
+-	ct = gc->chip_types;
++	data->gc = irq_get_domain_generic_chip(data->domain, 0);
++	data->gc->reg_base = base;
++	data->gc->private = data;
++	ct = data->gc->chip_types;
+ 
+ 	ct->chip.irq_ack = irq_gc_ack_set_bit;
+ 	ct->regs.ack = CPU_CLEAR;
+ 
+ 	ct->chip.irq_mask = irq_gc_mask_disable_reg;
++	ct->chip.irq_mask_ack = irq_gc_mask_disable_and_ack_set;
+ 	ct->regs.disable = CPU_MASK_SET;
+ 
+ 	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
+@@ -194,19 +192,19 @@ static int __init brcmstb_l2_intc_of_init(struct device_node *np,
+ 		/* This IRQ chip can wake the system, set all child interrupts
+ 		 * in wake_enabled mask
+ 		 */
+-		gc->wake_enabled = 0xffffffff;
++		data->gc->wake_enabled = 0xffffffff;
+ 		ct->chip.irq_set_wake = irq_gc_set_wake;
+ 	}
+ 
+ 	pr_info("registered L2 intc (mem: 0x%p, parent irq: %d)\n",
+-			data->base, data->parent_irq);
++			base, parent_irq);
+ 
+ 	return 0;
+ 
+ out_free_domain:
+ 	irq_domain_remove(data->domain);
+ out_unmap:
+-	iounmap(data->base);
++	iounmap(base);
+ out_free:
+ 	kfree(data);
+ 	return ret;
 -- 
 2.13.0
 
