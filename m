@@ -1,76 +1,98 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH] i2c: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 08:24:12 +0200
-Message-ID: <20170719062412.o6mghdmzlhsytkla@flea>
-References: <20170718214339.7774-26-robh@kernel.org>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v3 0/9] add support for Sama5d2 audio PLLs and enable
+ ClassD
+Date: Wed, 19 Jul 2017 08:28:17 +0200
+Message-ID: <b3b59278-8c7f-b3d1-e143-7f013ac0b873@free-electrons.com>
+References: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tv4e3pgc4wtkta5l"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-26-robh@kernel.org>
+In-Reply-To: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Haavard Skinnemoen <hskinnemoen@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chen-Yu Tsai <wens@csie.org>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---tv4e3pgc4wtkta5l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's been almost a week with no comments on this patch set, so kindly
+pinging.
 
-On Tue, Jul 18, 2017 at 04:43:06PM -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Haavard Skinnemoen <hskinnemoen@gmail.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->  drivers/i2c/busses/i2c-gpio.c         |  4 ++--
->  drivers/i2c/busses/i2c-powermac.c     | 10 ++++------
->  drivers/i2c/busses/i2c-sun6i-p2wi.c   |  4 ++--
+Thanks,
+Quentin
 
-For the P2WI driver:
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On 13/07/2017 09:49, Quentin Schulz wrote:
+> This patch series adds support for the audio PLLs and enables ClassD that
+> can be found in ATMEL Sama5d2 SoC.
+> 
+> There are two audio PLLs (PMC and PAD) that shares the same parent (FRAC).
+> FRAC can output between 620 and 700MHz and only multiply the rate of its
+> parent. The two audio PLLs then divide the FRAC rate to best match the
+> asked rate.
+> 
+> I basically took an old patch series posted by Nicolas on December, 6th
+> 2016[1][2][3] and the comments Boris did on the first version[4] Nicolas
+> sent on July, 15th 2015.
+> 
+> I also fixed the function used to compute the divisors, removed useless
+> spinlocks and added a range to the audio frac PLL to stay within vendor's
+> supported range. Clocks that are children of gclk (generated-clk) are now
+> able to propagate rate to the audio PLL clocks when needed.
+> 
+> However, there are multiple children clocks that could technically
+> change the rate of audio_pll (via gck). With the rate locking introduced
+> in Jerome Brunet's patch series[5], the first consumer to enable the clock
+> will be the one definitely setting the rate of the clock. Without the rate
+> locking, the last consumer to set the rate will be able to mess with the
+> rate.
+> Since audio IPs are most likely to request the same rate, we enforce
+> that the only clks able to modify gck rate are those of audio IPs.
+> 
+> To remain consistent, we deny other clocks to be children of audio_pll.
+> 
+> Thanks,
+> Quentin
+> 
+> [1] https://patchwork.kernel.org/patch/9462351/
+> [2] https://patchwork.kernel.org/patch/9462347/
+> [3] https://patchwork.kernel.org/patch/9462349/
+> [4] https://www.spinics.net/lists/arm-kernel/msg436120.html
+> [5] http://www.spinics.net/lists/linux-clk/msg17927.html
+> 
+> Cyrille Pitchen (2):
+>   ARM: dts: at91: sama5d2: add classd nodes
+>   ARM: dts: at91: sama5d2_xplained: add pin muxing and enable classd
+> 
+> Quentin Schulz (7):
+>   clk: at91: clk-generated: remove useless divisor loop
+>   clk: at91: add audio plls to the compatible list in DT binding
+>   clk: at91: add audio pll clock drivers
+>   clk: at91: clk-generated: create function to find best_diff
+>   clk: at91: clk-generated: make gclk determine audio_pll rate
+>   ASoC: atmel-classd: remove aclk clock from DT binding
+>   ASoC: atmel-classd: remove aclk clock
+> 
+>  .../devicetree/bindings/clock/at91-clock.txt       |  10 +
+>  .../devicetree/bindings/sound/atmel-classd.txt     |   9 +-
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  16 ++
+>  arch/arm/boot/dts/sama5d2.dtsi                     |  39 +++-
+>  arch/arm/mach-at91/Kconfig                         |   4 +
+>  drivers/clk/at91/Makefile                          |   2 +
+>  drivers/clk/at91/clk-audio-pll-pad.c               | 206 ++++++++++++++++++
+>  drivers/clk/at91/clk-audio-pll-pmc.c               | 174 +++++++++++++++
+>  drivers/clk/at91/clk-audio-pll.c                   | 239 +++++++++++++++++++++
+>  drivers/clk/at91/clk-generated.c                   | 101 +++++++--
+>  include/linux/clk/at91_pmc.h                       |  25 +++
+>  sound/soc/atmel/atmel-classd.c                     |  47 ++--
+>  12 files changed, 813 insertions(+), 59 deletions(-)
+>  create mode 100644 drivers/clk/at91/clk-audio-pll-pad.c
+>  create mode 100644 drivers/clk/at91/clk-audio-pll-pmc.c
+>  create mode 100644 drivers/clk/at91/clk-audio-pll.c
+> 
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
+-- 
+Quentin Schulz, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
-
---tv4e3pgc4wtkta5l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZbvsMAAoJEBx+YmzsjxAgRfQP/3G19XUIReb6gzvlyn/cx4+3
-wq13/YtCCWrxiab9iWFP4bd+tck+MGCa4G4mVMIt8aN756+pCY80StlpDbgPHMCg
-CUGFicFhd0t5NWF6iy63Tq7hUevZb/UTWUOA9HPNhm+3EXpcKAof2aI5fWOdI8jt
-TWCGf7xKLND1GRNtLcKCR3RUBzQ/yKA8Hx2us8mawazq/OOkIgVccZkwiOh51PEb
-CoJJBgnFgebsv13UbW9CxcmMxMVpWCkssyD89d+dnpQzZALMvJZ2XvEBzcB/Jg4J
-pRUlRacj/DQb9CW6/IACd2MNG6LlHmnPMjr5bt7S+qL8u98CeDXN3QtgjAPuY6hr
-WaPrzhW+1jepIxksqrBqyJOoqrcxYvtqopXOsf1vpm/KZ0OV9ReRUEQspfYWz4ue
-PLSdiJL+OoKmZ8CTWEmGchfAY0Ao0MHFn9/I64NfW9V9ibIU2FVQKK3xFBZKi/lU
-KFVX3T/fRBd5G+CYAKc8ChhEiTlXLaJERCOyOipAmjbkrC2FGuBXjmHk3Z4tUwWc
-+fEFIulsv+3M4EQvslqm/ACtVFIS/wAzrkbExrGofN8sECU1u2bcVwm5O7NGihcg
-EPPhtdjq+CI05b9W1SNbJ2wa5qwCE0eC2FuPrY/TqXhruUVHcpMaRnt1fgVnXu+h
-gz0QszaMGMyFhh0Vtdyw
-=2zI8
------END PGP SIGNATURE-----
-
---tv4e3pgc4wtkta5l--
