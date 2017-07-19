@@ -1,37 +1,96 @@
-From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] c6x: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 13:42:08 -0400
-Message-ID: <1500486128.14060.7.camel@redhat.com>
-References: <20170718214339.7774-3-robh@kernel.org>
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: Re: [PATCH v2 1/3] mux: Add mux_control_get_optional() API
+Date: Wed, 19 Jul 2017 11:02:43 -0700
+Message-ID: <150048736301.28753.6788345725743262236@sboyd-linaro>
+References: <20170714214005.14967-1-stephen.boyd@linaro.org>
+ <20170714214005.14967-2-stephen.boyd@linaro.org>
+ <aac61f46-f963-2631-00e0-2d62baac6bf4@axentia.se>
+ <150043011983.23422.10872793103087420242@sboyd-linaro>
+ <1c20e9bf-9b87-a021-bb4b-8add6c468c87@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718214339.7774-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aurelien Jacquiot <jacquiot.aurelien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1c20e9bf-9b87-a021-bb4b-8add6c468c87@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Peter Chen <Peter.Chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-07-18 at 16:42 -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
-> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
-> ---
->  arch/c6x/platforms/megamod-pic.c | 22 +++++++++++-----------
->  arch/c6x/platforms/plldata.c     |  4 ++--
->  arch/c6x/platforms/timer64.c     |  8 ++++----
->  3 files changed, 17 insertions(+), 17 deletions(-)
+Quoting Peter Rosin (2017-07-19 00:15:38)
+> On 2017-07-19 04:08, Stephen Boyd wrote:
+> > Quoting Peter Rosin (2017-07-17 01:20:14)
+> >> On 2017-07-14 23:40, Stephen Boyd wrote:
+> >>> @@ -441,6 +447,8 @@ struct mux_control *mux_control_get(struct device=
+ *dev, const char *mux_name)
+> >>>       if (mux_name) {
+> >>>               index =3D of_property_match_string(np, "mux-control-nam=
+es",
+> >>>                                                mux_name);
+> >>> +             if (index =3D=3D -EINVAL && optional)
+> >>> +                     return NULL;
+> >>
+> >> What about -ENODATA?
+> > =
 
-For the c6x bits:
-Acked-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> > At this point in the code we're finding the index of a mux-control-names
+> > property so I was trying to handle the case where there isn't a
+> > mux-control-names property at all
+> =
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yes, you indeed need to check for -EINVAL to catch that. No argument
+> about that.
+
+Ok.
+
+> =
+
+> >                                   but we're looking for something
+> > optional anyway. If there is a property, then we would see some other
+> > error if something went wrong and then pass the error up. There is a
+> > hole where there isn't a mux-control-names property and we're looking
+> > for something that's optional, but there is a mux-control property. Do
+> > we care though? The DT seems broken then.
+> =
+
+> I was thinking about the case where mux-control-names names *other* muxes
+> but not the one asked for in this call. That's not broken and should be
+> handled. The way I read it, you get -ENODATA in that case?
+
+Yes that would return -ENODATA. Similarly, it would be returned if we
+had a boolean mux-control-names property (which is completely broken).
+
+> =
+
+> >> And if an optional mux is found here, but lookup
+> >> fails later in e.g. the of_parse_phandle_with_args call, then I think
+> >> an error should be returned. Because that seems like an indication that
+> >> DT specifies that there *should* be a mux, but then there isn't one.
+> > =
+
+> > of_parse_phandle_with_args() would return ENOENT when there isn't a
+> > mux-control property in DT. So I've trapped that case and returned an
+> > "optional mux" pointer of NULL. I think we handle the case you mention,
+> > where some index is found but it returns an error, because that would
+> > return some error besides -ENOENT.
+> > =
+
+> > Sorry, I'm not really following what you're suggesting. Maybe it got
+> > mixed up with the NULL vs. non-NULL return value from mux_control_get().
+> =
+
+> What I mean is that if you have passed a mux_name and the index of that
+> name was indeed found in the of_property_match_string call, then any
+> failure from of_parse_phandle_with_args indicates a bad DT and should
+> IMO result in an error. I.e., when evaluating the result from
+> of_parse_phandle_with_args, you should account for the optional param
+> if and only if mux_name is NULL.
+> =
+
+> You can do that by e.g. setting optional to false after looking up the
+> mux_name index (because at that point the mux is no longer considered
+> optional). E.g. as the last statement in the if (!mux_name) block.
+> =
+
+
+Ok got it. I'll rework the logic.
