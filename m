@@ -1,85 +1,81 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 3/8] dt: bindings: Add a binding for referencing EEPROM
- from camera sensors
-Date: Wed, 19 Jul 2017 12:21:06 +0300
-Message-ID: <20170719092106.xqichkcd6yepchxy@kekkonen.localdomain>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
- <20170719075255.yuar2xbeyisgl3we@flea>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
+ board dts and Makefile
+Date: Wed, 19 Jul 2017 11:26:30 +0200
+Message-ID: <a470dfc9-71a4-6574-f342-fbd8d60aafce@gmail.com>
+References: <1498123975-9748-1-git-send-email-yt.shen@mediatek.com>
+ <1498123975-9748-3-git-send-email-yt.shen@mediatek.com>
+ <ddfb5e58-520f-1ef5-2351-d7545e17a429@gmail.com>
+ <1500446884.14021.12.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170719075255.yuar2xbeyisgl3we@flea>
-Sender: linux-leds-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, robh@kernel.org, pavel@ucw.cz
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500446884.14021.12.camel@mtksdaap41>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
 
-On Wed, Jul 19, 2017 at 09:52:55AM +0200, Maxime Ripard wrote:
-> Hi Sakari,
+
+On 07/19/2017 08:48 AM, YT Shen wrote:
+> On Tue, 2017-07-18 at 18:29 +0200, Matthias Brugger wrote:
+>>
+>> On 06/22/2017 11:32 AM, YT Shen wrote:
+>>> This adds basic chip support for Mediatek 2712
+
+[...]
+
+>>> +
+>>> +	uart_clk: dummy26m {
+>>> +		compatible = "fixed-clock";
+>>> +		clock-frequency = <26000000>;
+>>> +		#clock-cells = <0>;
+>>> +	};
+>>> +
+
+[...]
+
+>>> +
+>>> +	soc {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <2>;
+>>> +		compatible = "simple-bus";
+>>> +		ranges;
+>>> +
+>>> +		uart5: serial@1000f000 {
+>>> +			compatible = "mediatek,mt2712-uart",
+>>> +				     "mediatek,mt6577-uart";
+>>> +			reg = <0 0x1000f000 0 0x400>;
+>>> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+>>> +			clocks = <&uart_clk>, <&uart_clk>;
+>>> +			clock-names = "baud", "bus";
+>>> +			status = "disabled";
+>>> +		};
+>>
+>> So baud and bus clock are both 26 MHz?
+> We didn't have CCF clock support in this series.
+> After we have clock source support, we could use the correct clocks to
+> the UARTs and drop the 26MHz fixed rate UART clock.
 > 
-> On Wed, Jun 14, 2017 at 12:47:14PM +0300, Sakari Ailus wrote:
-> > Many camera sensor devices contain EEPROM chips that describe the
-> > properties of a given unit --- the data is specific to a given unit can
-> > thus is not stored e.g. in user space or the driver.
-> > 
-> > Some sensors embed the EEPROM chip and it can be accessed through the
-> > sensor's I2C interface. This property is to be used for devices where the
-> > EEPROM chip is accessed through a different I2C address than the sensor.
-> > 
-> > The intent is to later provide this information to the user space.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > ---
-> >  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index a18d9b2..ae259924 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -76,6 +76,9 @@ Optional properties
-> >  
-> >  - lens-focus: A phandle to the node of the focus lens controller.
-> >  
-> > +- eeprom: A phandle to the node of the EEPROM describing the camera sensor
-> > +  (i.e. device specific calibration data), in case it differs from the
-> > +  sensor node.
+> The bus clock is 26MHz.  The baud clock could be from another clock
+> source, using the same 26MHz fixed clock works also.
 > 
-> Wouldn't it makes sense (especially if you want to provide user space
-> access) to reuse what nvmem provides for this?
+> 
+> [1] https://patchwork.kernel.org/patch/9670877/
+> [2] https://patchwork.kernel.org/patch/6436021/
+> 
 
-I wasn't aware of the nvmem bindings. Thanks for the pointer.
+Yes, just using one 26 MHz clock works, but it uses an deprecated 
+binding, so we should not do this, as through copying from the source of 
+other SoCs we will keep it alive forever. Anyway that's not your case, 
+as you defined the two clocks.
 
-These are EEPROM chips that already have bindings documented under
-Documentation/devicetree/bindings/eeprom as well as existing drivers under
-drivers/misc/eeprom. Is there a reason why we have separate eeprom and
-nvmem devices? Do you see issues in adding nvmem support for the existing
-eeprom drivers, other than it misses using the nvmem framework?
+The device tree should reflect the HW, that's why I asked for the clock 
+frequency of both clocks. I searched the git history and it was never 
+done right before. So you could be the first :)
 
-There's also a small issue (or a big one, depending on which part of it you
-consider) of the EEPROM content being parsed in the user space. The sensor
-drivers do not use that information nor the contents are specific to the
-sensor alone, it is ultimately up to the system integrator what to put to
-the EEPROM. The typical size of an EEPROM is in perhaps one or two
-kilobytes so that there's a lot of room for storing different individual
-settings there.
-
-nvmem bindings require referring to individual data cells but it's rather
-the entire EEPROM contents that would be of interest here. I guess you
-could create a single node under the EEPROM chip that covers the entire
-chip. Or change the documentation to allow referring to the chip, rather
-than a node under it.
-
-Let me know your thoughts.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Thanks,
+Matthias
