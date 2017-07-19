@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v2 14/25] mtd: nand: qcom: add and initialize QPIC DMA resources
-Date: Wed, 19 Jul 2017 17:18:02 +0530
-Message-ID: <1500464893-11352-15-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v2 15/25] mtd: nand: qcom: DMA mapping support for register read buffer
+Date: Wed, 19 Jul 2017 17:18:03 +0530
+Message-ID: <1500464893-11352-16-git-send-email-absahu@codeaurora.org>
 References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
@@ -10,138 +10,130 @@ To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-elect
 Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-1. QPIC NAND uses 3 BAM channels: command, data tx and data
-   rx while EBI2 NAND uses only single ADM channel.
-2. CRCI is only required for ADM DMA and its not required for
-   QPIC NAND.
+The EBI2 NAND directly remaps register read buffer with
+dma_map_sg. The QPIC NAND will give register read buffer in its
+command descriptor and the command descriptor will be mapped with
+dma_map_sg instead of register read buffer. This command
+descriptor will contain the dma address of the register read
+buffer.
+
+This patch adds the DMA mapping support for register read buffer.
+This buffer will be DMA mapped during allocation time. Before
+starting of any operation, this buffer will be synced for device
+operation and after operation completion, it will be synced for
+CPU.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 83 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 65 insertions(+), 18 deletions(-)
+ drivers/mtd/nand/qcom_nandc.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 6d24630..cb2b245 100644
+index cb2b245..f49c3da 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -250,9 +250,19 @@ struct qcom_nand_controller {
- 	struct clk *core_clk;
- 	struct clk *aon_clk;
+@@ -229,6 +229,7 @@ struct nandc_regs {
+  *				by upper layers directly
+  * @buf_size/count/start:	markers for chip->read_buf/write_buf functions
+  * @reg_read_buf:		local buffer for reading back registers via DMA
++ * @reg_read_buf_phys:		contains dma address for register read buffer
+  * @reg_read_pos:		marker for data read in reg_read_buf
+  *
+  * @regs:			a contiguous chunk of memory for DMA register
+@@ -271,6 +272,7 @@ struct qcom_nand_controller {
+ 	int		buf_start;
  
--	struct dma_chan *chan;
--	unsigned int cmd_crci;
--	unsigned int data_crci;
-+	union {
-+		struct {
-+			struct dma_chan *tx_chan;
-+			struct dma_chan *rx_chan;
-+			struct dma_chan *cmd_chan;
-+		};
-+		struct {
-+			struct dma_chan *chan;
-+			unsigned int cmd_crci;
-+			unsigned int data_crci;
-+		};
-+	};
-+
- 	struct list_head desc_list;
+ 	__le32 *reg_read_buf;
++	dma_addr_t reg_read_buf_phys;
+ 	int reg_read_pos;
  
- 	u8		*data_buffer;
-@@ -1985,10 +1995,31 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
- 	if (!nandc->reg_read_buf)
- 		return -ENOMEM;
- 
--	nandc->chan = dma_request_slave_channel(nandc->dev, "rxtx");
--	if (!nandc->chan) {
--		dev_err(nandc->dev, "failed to request slave channel\n");
--		return -ENODEV;
-+	if (nandc->props->is_bam) {
-+		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
-+		if (!nandc->tx_chan) {
-+			dev_err(nandc->dev, "failed to request tx channel\n");
-+			return -ENODEV;
-+		}
-+
-+		nandc->rx_chan = dma_request_slave_channel(nandc->dev, "rx");
-+		if (!nandc->rx_chan) {
-+			dev_err(nandc->dev, "failed to request rx channel\n");
-+			return -ENODEV;
-+		}
-+
-+		nandc->cmd_chan = dma_request_slave_channel(nandc->dev, "cmd");
-+		if (!nandc->cmd_chan) {
-+			dev_err(nandc->dev, "failed to request cmd channel\n");
-+			return -ENODEV;
-+		}
-+	} else {
-+		nandc->chan = dma_request_slave_channel(nandc->dev, "rxtx");
-+		if (!nandc->chan) {
-+			dev_err(nandc->dev,
-+				"failed to request slave channel\n");
-+			return -ENODEV;
-+		}
- 	}
- 
- 	INIT_LIST_HEAD(&nandc->desc_list);
-@@ -2001,7 +2032,19 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
- 
- static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
- {
--	dma_release_channel(nandc->chan);
-+	if (nandc->props->is_bam) {
-+		if (nandc->tx_chan)
-+			dma_release_channel(nandc->tx_chan);
-+
-+		if (nandc->rx_chan)
-+			dma_release_channel(nandc->rx_chan);
-+
-+		if (nandc->cmd_chan)
-+			dma_release_channel(nandc->cmd_chan);
-+	} else {
-+		if (nandc->chan)
-+			dma_release_channel(nandc->chan);
-+	}
+ 	struct nandc_regs *regs;
+@@ -363,6 +365,24 @@ static inline void nandc_write(struct qcom_nand_controller *nandc, int offset,
+ 	iowrite32(val, nandc->base + offset);
  }
  
- /* one time setup of a few nand controller registers */
-@@ -2140,16 +2183,20 @@ static int qcom_nandc_parse_dt(struct platform_device *pdev)
- 	struct device_node *np = nandc->dev->of_node;
- 	int ret;
++static inline void nandc_read_buffer_sync(struct qcom_nand_controller *nandc,
++					  bool is_cpu)
++{
++	if (!nandc->props->is_bam)
++		return;
++
++	if (is_cpu)
++		dma_sync_single_for_cpu(nandc->dev, nandc->reg_read_buf_phys,
++					MAX_REG_RD *
++					sizeof(*nandc->reg_read_buf),
++					DMA_FROM_DEVICE);
++	else
++		dma_sync_single_for_device(nandc->dev, nandc->reg_read_buf_phys,
++					   MAX_REG_RD *
++					   sizeof(*nandc->reg_read_buf),
++					   DMA_FROM_DEVICE);
++}
++
+ static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
+ {
+ 	switch (offset) {
+@@ -847,6 +867,7 @@ static void free_descs(struct qcom_nand_controller *nandc)
+ static void clear_read_regs(struct qcom_nand_controller *nandc)
+ {
+ 	nandc->reg_read_pos = 0;
++	nandc_read_buffer_sync(nandc, false);
+ }
  
--	ret = of_property_read_u32(np, "qcom,cmd-crci", &nandc->cmd_crci);
--	if (ret) {
--		dev_err(nandc->dev, "command CRCI unspecified\n");
--		return ret;
--	}
-+	if (!nandc->props->is_bam) {
-+		ret = of_property_read_u32(np, "qcom,cmd-crci",
-+					   &nandc->cmd_crci);
-+		if (ret) {
-+			dev_err(nandc->dev, "command CRCI unspecified\n");
-+			return ret;
+ static void pre_command(struct qcom_nand_host *host, int command)
+@@ -876,6 +897,7 @@ static void parse_erase_write_errors(struct qcom_nand_host *host, int command)
+ 	int i;
+ 
+ 	num_cw = command == NAND_CMD_PAGEPROG ? ecc->steps : 1;
++	nandc_read_buffer_sync(nandc, true);
+ 
+ 	for (i = 0; i < num_cw; i++) {
+ 		u32 flash_status = le32_to_cpu(nandc->reg_read_buf[i]);
+@@ -897,6 +919,7 @@ static void post_command(struct qcom_nand_host *host, int command)
+ 
+ 	switch (command) {
+ 	case NAND_CMD_READID:
++		nandc_read_buffer_sync(nandc, true);
+ 		memcpy(nandc->data_buffer, nandc->reg_read_buf,
+ 		       nandc->buf_count);
+ 		break;
+@@ -1060,6 +1083,7 @@ static int parse_read_errors(struct qcom_nand_host *host, u8 *data_buf,
+ 	int i;
+ 
+ 	buf = (struct read_stats *)nandc->reg_read_buf;
++	nandc_read_buffer_sync(nandc, true);
+ 
+ 	for (i = 0; i < ecc->steps; i++, buf++) {
+ 		u32 flash, buffer, erased_cw;
+@@ -1996,6 +2020,16 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+ 		return -ENOMEM;
+ 
+ 	if (nandc->props->is_bam) {
++		nandc->reg_read_buf_phys =
++			dma_map_single(nandc->dev, nandc->reg_read_buf,
++				       MAX_REG_RD *
++				       sizeof(*nandc->reg_read_buf),
++				       DMA_FROM_DEVICE);
++		if (dma_mapping_error(nandc->dev, nandc->reg_read_buf_phys)) {
++			dev_err(nandc->dev, "failed to DMA MAP reg buffer\n");
++			return -EIO;
 +		}
++
+ 		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
+ 		if (!nandc->tx_chan) {
+ 			dev_err(nandc->dev, "failed to request tx channel\n");
+@@ -2033,6 +2067,12 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+ static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
+ {
+ 	if (nandc->props->is_bam) {
++		if (!dma_mapping_error(nandc->dev, nandc->reg_read_buf_phys))
++			dma_unmap_single(nandc->dev, nandc->reg_read_buf_phys,
++					 MAX_REG_RD *
++					 sizeof(*nandc->reg_read_buf),
++					 DMA_FROM_DEVICE);
++
+ 		if (nandc->tx_chan)
+ 			dma_release_channel(nandc->tx_chan);
  
--	ret = of_property_read_u32(np, "qcom,data-crci", &nandc->data_crci);
--	if (ret) {
--		dev_err(nandc->dev, "data CRCI unspecified\n");
--		return ret;
-+		ret = of_property_read_u32(np, "qcom,data-crci",
-+					   &nandc->data_crci);
-+		if (ret) {
-+			dev_err(nandc->dev, "data CRCI unspecified\n");
-+			return ret;
-+		}
- 	}
- 
- 	return 0;
-@@ -2199,7 +2246,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
- 
- 	ret = qcom_nandc_alloc(nandc);
- 	if (ret)
--		return ret;
-+		goto err_core_clk;
- 
- 	ret = clk_prepare_enable(nandc->core_clk);
- 	if (ret)
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
