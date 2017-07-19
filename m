@@ -1,75 +1,50 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v4 2/3] of: overlay: correctly apply overlay node with unit-address
-Date: Wed, 19 Jul 2017 09:25:21 -0700
-Message-ID: <1500481523-31083-3-git-send-email-frowand.list@gmail.com>
-References: <1500481523-31083-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500481523-31083-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, pantelis.antoniou@konsulko.com, Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/6] FlexRM driver improvements
+Date: Wed, 19 Jul 2017 09:52:35 -0700
+Message-ID: <9563f619-bcac-01cb-11c2-211697d0ac68@broadcom.com>
+References: <1500458142-19243-1-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500458142-19243-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+Patch series all looks good.
 
-Correct existing node name detection when overlay node name has
-a unit-address.
 
-Expected test result is overlay will update the nodes and properties
-for /testcase-data-2/fairway-1/ride@100/ after this commit.
-
-Before this commit:
-
-   Console error message near end of unittest:
-      OF: Duplicate name in fairway-1, renamed to "ride@100#1"
-
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/
-   $ # extra node: ride@100#1
-   $ ls
-   #address-cells  linux,phandle   phandle         ride@200
-   #size-cells     name            ride@100        status
-   compatible      orientation     ride@100#1
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
-   $ ls track@30/incline-up
-   ls: track@30/incline-up: No such file or directory
-   $ ls track@40/incline-up
-   ls: track@40/incline-up: No such file or directory
-
-After this commit:
-
-   Console error message no longer occurs
-
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/
-   $ # no extra node: ride@100#1
-   $ ls
-   #address-cells  compatible      name            phandle         ride@200
-   #size-cells     linux,phandle   orientation     ride@100        status
-   $ cd /proc/device-tree/testcase-data-2/fairway-1/ride@100/
-   $ ls track@30/incline-up
-   track@30/incline-up
-   $ ls track@40/incline-up
-   track@40/incline-up
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
- drivers/of/overlay.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index c0e4ee1cd1ba..bd3c32f2d411 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -130,7 +130,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 		return -ENOMEM;
- 
- 	/* NOTE: Multiple mods of created nodes not supported */
--	tchild = of_get_child_by_name(target, cname);
-+	for_each_child_of_node(target, tchild)
-+		if (!of_node_cmp(cname, kbasename(tchild->full_name)))
-+			break;
-+
- 	if (tchild != NULL) {
- 		/* new overlay phandle value conflicts with existing value */
- 		if (child->phandle)
--- 
-Frank Rowand <frank.rowand@sony.com>
+On 17-07-19 02:55 AM, Anup Patel wrote:
+> This patchset does various improvments to Broadcom FlexRM
+> mailbox controller driver and also adds FlexRM DT nodes
+> for Stingray SOC.
+>
+> The patches are based on Linux-4.13-rc1 and can also be
+> found at flexrm-imp-v1 branch of
+> https://github.com/Broadcom/arm64-linux.git
+>
+> Anup Patel (6):
+>    mailbox: bcm-flexrm-mailbox: Set IRQ affinity hint for FlexRM ring
+>      IRQs
+>    mailbox: bcm-flexrm-mailbox: Add debugfs support
+>    mailbox: bcm-flexrm-mailbox: Fix mask used in CMPL_START_ADDR_VALUE()
+>    mailbox: Make message send queue size dynamic in Linux mailbox
+>    mailbox: bcm-flexrm-mailbox: Set msg_queue_len for each channel
+>    arm64: dts: Add FlexRM DT nodes for Stingray
+>
+>   .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   |  54 +++++++
+>   .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   2 +
+>   drivers/mailbox/bcm-flexrm-mailbox.c               | 160 ++++++++++++++++++++-
+>   drivers/mailbox/mailbox.c                          |  15 +-
+>   include/linux/mailbox_controller.h                 |   5 +-
+>   5 files changed, 227 insertions(+), 9 deletions(-)
+>   create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+>
+Regards,
+  Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
