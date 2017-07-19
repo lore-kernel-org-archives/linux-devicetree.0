@@ -1,55 +1,54 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] extcon: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 10:37:52 +0900
-Message-ID: <596EB7F0.3040702@samsung.com>
-References: <CGME20170718214416epcas4p3552940694a30dd363e5d9c83c117e615@epcas4p3.samsung.com>
-        <20170718214339.7774-20-robh@kernel.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 10:38:17 +0900
+Message-ID: <596EB809.7050605@samsung.com>
+References: <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcas2p4.samsung.com>
+        <20170718214339.7774-17-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20170718214339.7774-20-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20170718214339.7774-17-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, MyungJoo Ham <myungjoo.ham@samsung.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 2017년 07월 19일 06:43, Rob Herring wrote:
+On 2017년 07월 19일 06:42, Rob Herring wrote:
 > Now that we have a custom printf format specifier, convert users of
 > full_name to use %pOF instead. This is preparation to remove storing
 > of the full path string for each node.
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: MyungJoo Ham <myungjoo.ham@samsung.com>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: linux-pm@vger.kernel.org
 > ---
->  drivers/extcon/extcon.c | 4 ++--
+>  drivers/devfreq/devfreq-event.c | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/extcon/extcon.c b/drivers/extcon/extcon.c
-> index 8eccf7b14937..229364a9d868 100644
-> --- a/drivers/extcon/extcon.c
-> +++ b/drivers/extcon/extcon.c
-> @@ -1363,8 +1363,8 @@ struct extcon_dev *extcon_get_edev_by_phandle(struct device *dev, int index)
-> 
->  	node = of_parse_phandle(dev->of_node, "extcon", index);
->  	if (!node) {
-> -		dev_dbg(dev, "failed to get phandle in %s node\n",
+> diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
+> index 8648b32ebc89..d67242d87744 100644
+> --- a/drivers/devfreq/devfreq-event.c
+> +++ b/drivers/devfreq/devfreq-event.c
+> @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
+>  						sizeof(u32));
+>  	if (count < 0) {
+>  		dev_err(dev,
+> -			"failed to get the count of devfreq-event in %s node\n",
 > -			dev->of_node->full_name);
-> +		dev_dbg(dev, "failed to get phandle in %pOF node\n",
+> +			"failed to get the count of devfreq-event in %pOF node\n",
 > +			dev->of_node);
->  		return ERR_PTR(-ENODEV);
+>  		return count;
 >  	}
+> 
 
-Applied it.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 -- 
 Best Regards,
 Chanwoo Choi
 Samsung Electronics
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
