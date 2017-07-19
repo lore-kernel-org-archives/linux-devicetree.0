@@ -1,67 +1,91 @@
-From: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] spi: imx: document use of native chip-selects in
- devicetree
-Date: Wed, 19 Jul 2017 03:32:41 +0300
-Message-ID: <c985824e-0a84-33ec-4960-6b84b3de8653@mleia.com>
-References: <1499746932-14850-1-git-send-email-gerg@linux-m68k.org>
- <1499746932-14850-3-git-send-email-gerg@linux-m68k.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [RFC PATCH v3 0/7] Reconstruct rockchip's PCIe and PCIe-PHY
+ driver for per-lane PHY model
+Date: Wed, 19 Jul 2017 08:51:02 +0800
+Message-ID: <6b886181-9d6d-e003-730a-f966fce48278@rock-chips.com>
+References: <1500364623-97041-1-git-send-email-shawn.lin@rock-chips.com>
+ <20170718202951.GA116895@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1499746932-14850-3-git-send-email-gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Ungerer <gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170718202951.GA116895@google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh@kernel.org>, Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Greg,
+Hi Brian,
 
-On 07/11/2017 07:22 AM, Greg Ungerer wrote:
-> Document the "<0>" notation for specifying use of a native chip-select
-> in the "cs-gpios" tag of an SPI device in devicetree. This isn't unique
-> to the spi-imx driver, but this clearly spells out that you can use it
-> with this driver.
+On 2017/7/19 4:29, Brian Norris wrote:
+> On Tue, Jul 18, 2017 at 03:56:56PM +0800, Shawn Lin wrote:
+>>
+>> This patchset is trying to reconstruct PCIe and PCIe-PHY driver
+>> for rockchip platform in order to support per-lane PHY mode. And
+>> we could idle the inactive lane(s) finally.
+>>
+>> We deprecate the legacy PHY mode but the code could still
+>> support it in order not to break backware compatibility of DTB. And I
+>> organize the patches carefully so that we don't introduce git-bisect
+>> issue.
+>>
+>> Note that I carry on Jeffy's test tag from v2 as he has locally tested
+>> my v3 patchset.
 > 
-> Signed-off-by: Greg Ungerer <gerg-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> I have a few nits for the patchset (will reply shortly), but otherwise
+> (if we're *really* going to go with this approach; I still would
+> appreciate a reply from Kishon on the original patchset, where I
+> suggested alternatives) at least the code is much better this time
+> around. So for the whole thing:
 > 
-> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> index 31b5b21..cf616ea 100644
-> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-> @@ -12,6 +12,7 @@ Required properties:
->  - reg : Offset and length of the register set for the device
->  - interrupts : Should contain CSPI/eCSPI interrupt
->  - cs-gpios : Specifies the gpio pins to be used for chipselects.
-> +	Specify use of native chipselects with "<0>" in place of a gpio.
->  - clocks : Clock specifiers for both ipg and per clocks.
->  - clock-names : Clock names should include both "ipg" and "per"
->  See the clock consumer binding,
-> @@ -38,7 +39,8 @@ ecspi@70010000 {
->  	reg = <0x70010000 0x4000>;
->  	interrupts = <36>;
->  	cs-gpios = <&gpio3 24 0>, /* GPIO3_24 */
-> -		   <&gpio3 25 0>; /* GPIO3_25 */
-> +		   <&gpio3 25 0>, /* GPIO3_25 */
-> +		   <0>;           /* Native chip select */
->  	dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
->  	dma-names = "rx", "tx";
->  	fsl,spi-rdy-drctl = <1>;
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+
+Thanks for your review and Jeffy's test!
+
+I probably will respin my v4 soon and wait for Kishon's final decision.
+If Kishon prefer to ack your alternative solution, I'm fine to commit
+some other bits as your alternatives seem a much simpler way.
+
 > 
-
-Adding Rob to Cc.
-
-Reviewed-by: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-
-Rob, if you find the change acceptable, can you ack it?
-
---
-With best wishes,
-Vladimir
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Changes in v3:
+>> - kill rockchip_pcie_manipulate_phys and related stuff
+>> - use phys array
+>> - improve the commit msg
+>> - remove unnecessary forward declaration
+>> - keep mutex inside struct rockchip_pcie_phy
+>> - fix wrong check of args number
+>> - move de-idle lanes after deasserting the reset
+>> - use cached lanes_map to avoid powering off inactive
+>>    lanes twice
+>> - rename the commit tile
+>>
+>> Changes in v2:
+>> - deprecate legacy PHY model
+>> - improve rockchip_pcie_phy_of_xlate
+>> - fix wrong calculation of pwr_cnt and add new init_cnt
+>> - add internal locking
+>> - introduce per-lane data to simply the code
+>>
+>> Shawn Lin (7):
+>>    PCI: rockchip: split out rockchip_pcie_get_phys
+>>    PCI: rockchip: introduce per-lanes PHYs support
+>>    phy: rockcip-pcie: reconstruct driver to support per-lane PHYs
+>>    PCI: rockchip: idle the inactive PHY(s)
+>>    arm64: dts: rockchip: convert PCIe to use per-lane PHYs for rk3339
+>>    dt-bindings: PCI: rockchip: convert to use per-lane PHY model
+>>    dt-bindings: phy: convert to use per-lane Rockchip PCIe PHY
+>>
+>>   .../devicetree/bindings/pci/rockchip-pcie.txt      |  25 ++++-
+>>   .../devicetree/bindings/phy/rockchip-pcie-phy.txt  |   7 +-
+>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi           |   8 +-
+>>   drivers/pci/host/pcie-rockchip.c                   | 123 ++++++++++++++++----
+>>   drivers/phy/rockchip/phy-rockchip-pcie.c           | 124 ++++++++++++++++++---
+>>   5 files changed, 245 insertions(+), 42 deletions(-)
+>>
+>> -- 
+>> 1.9.1
+>>
+>>
+> 
+> 
+> 
