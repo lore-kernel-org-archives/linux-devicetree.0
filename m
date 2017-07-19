@@ -1,95 +1,67 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH] cpufreq: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 07:06:06 +0000
-Message-ID: <25327197-4a70-e31c-5ccc-8becf4da8395@st.com>
-References: <20170718214339.7774-14-robh@kernel.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
+ controller
+Date: Wed, 19 Jul 2017 10:12:45 +0300
+Message-ID: <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
+References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+ <1500293043-1887-8-git-send-email-varada@codeaurora.org>
+ <20170717220718.GZ20973@minitux> <20170718095814.GE32439@codeaurora.org>
+ <20170718164438.GE20973@minitux> <20170719064943.GA29996@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170718214339.7774-14-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170719064943.GA29996@codeaurora.org>
 Content-Language: en-US
-Content-ID: <F74187E25C75E149AC5B2FDB089031AE@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 07/18/2017 11:42 PM, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
+On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
+> On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
+>> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
+>>
+>>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
+>>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
+>> [..]
+>>>>
+>>>> Can you confirm that this is actually version 4 of this block? Or are we
+>>>> just incrementing an arbitrary number here?
+>>>
+>>> This is not exactly the 4th version of the block. However, it is
+>>> a different version than the ones that are already supported in
+>>> this driver. Since the existing driver didn't exactly tie it with
+>>> the block IP version, I too followed the same versioning
+>>> convention.
+>>>
+>>
+>> Do you have a block IP version that you could base your numbering on, to
+>> break the trend? (We should go back and fix up the others as well)
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: kernel@stlinux.com
-> ---
->   drivers/cpufreq/pmac64-cpufreq.c | 2 +-
->   drivers/cpufreq/sti-cpufreq.c    | 8 ++++----
->   2 files changed, 5 insertions(+), 5 deletions(-)
+> Presently, the driver supports the ipq8064, apq8064, apq8084,
+> msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
+> the block IP versions are as follows.
 > 
-> diff --git a/drivers/cpufreq/pmac64-cpufreq.c b/drivers/cpufreq/pmac64-cpufreq.c
-> index 267e0894c62d..be623dd7b9f2 100644
-> --- a/drivers/cpufreq/pmac64-cpufreq.c
-> +++ b/drivers/cpufreq/pmac64-cpufreq.c
-> @@ -516,7 +516,7 @@ static int __init g5_pm72_cpufreq_init(struct device_node *cpunode)
->   		goto bail;
->   	}
-> 
-> -	DBG("cpufreq: i2c clock chip found: %s\n", hwclock->full_name);
-> +	DBG("cpufreq: i2c clock chip found: %pOF\n", hwclock);
-> 
->   	/* Now get all the platform functions */
->   	pfunc_cpu_getfreq =
-> diff --git a/drivers/cpufreq/sti-cpufreq.c b/drivers/cpufreq/sti-cpufreq.c
-> index d2d0430d09d4..47105735df12 100644
-> --- a/drivers/cpufreq/sti-cpufreq.c
-> +++ b/drivers/cpufreq/sti-cpufreq.c
-> @@ -65,8 +65,8 @@ static int sti_cpufreq_fetch_major(void) {
->   	ret = of_property_read_u32_index(np, "st,syscfg",
->   					 MAJOR_ID_INDEX, &major_offset);
->   	if (ret) {
-> -		dev_err(dev, "No major number offset provided in %s [%d]\n",
-> -			np->full_name, ret);
-> +		dev_err(dev, "No major number offset provided in %pOF [%d]\n",
-> +			np, ret);
->   		return ret;
->   	}
-> 
-> @@ -92,8 +92,8 @@ static int sti_cpufreq_fetch_minor(void)
->   					 MINOR_ID_INDEX, &minor_offset);
->   	if (ret) {
->   		dev_err(dev,
-> -			"No minor number offset provided %s [%d]\n",
-> -			np->full_name, ret);
-> +			"No minor number offset provided %pOF [%d]\n",
-> +			np, ret);
->   		return ret;
->   	}
-> 
-> --
-> 2.11.0
-> 
+> 	ipq8064 - v0 - 2.1.0
+> 	apq8064 - v0 - 2.1.0
+> 	apq8084 - v1 - 1.0.0
+> 	msm8996 - v2 - 2.3.2
+> 	ipq4019 - v3 - 2.4.0
+> 	ipq8074 - v4 - 2.3.3
 
-For ST cpufreq:
+That's nice, but I think we need the Synopsys IP versions too, can you
+provide such an information and after that we can decide how the names
+should look like.
 
-Acked-by: Patrice Chotard <patrice.chotard@st.com>
+> 
+> I will rename the qcom_pcie_ops structure and related functions
+> with the block IP version instead of vX numbering and post the
+> patch.
 
-Thanks
+
+
+regards,
+Stan
