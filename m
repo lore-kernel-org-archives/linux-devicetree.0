@@ -1,63 +1,66 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 0/9] add support for Sama5d2 audio PLLs and enable
- ClassD
-Date: Wed, 19 Jul 2017 11:19:46 +0100
-Message-ID: <20170719101946.keezbqmlrgt3waq6@sirena.org.uk>
-References: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
- <b3b59278-8c7f-b3d1-e143-7f013ac0b873@free-electrons.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] clk: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 12:24:58 +0200
+Message-ID: <2fd832a5-ec78-7563-8349-4321db745767@gmail.com>
+References: <20170718214339.7774-12-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gqzpn77cdxumuk2p"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b3b59278-8c7f-b3d1-e143-7f013ac0b873@free-electrons.com>
+In-Reply-To: <20170718214339.7774-12-robh@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---gqzpn77cdxumuk2p
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 19, 2017 at 08:28:17AM +0200, Quentin Schulz wrote:
-> Hi all,
->=20
-> It's been almost a week with no comments on this patch set, so kindly
-> pinging.
+On 07/18/2017 11:42 PM, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: "Emilio López" <emilio@elopez.com.ar>
+> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Prashant Gaikwad <pgaikwad@nvidia.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-tegra@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> ---
+>   drivers/clk/berlin/bg2.c             |  3 +--
+>   drivers/clk/berlin/bg2q.c            |  7 +++----
+>   drivers/clk/clk-asm9260.c            |  4 ++--
+>   drivers/clk/clk-conf.c               | 16 ++++++++--------
+>   drivers/clk/clk-moxart.c             | 12 ++++++------
+>   drivers/clk/clk-qoriq.c              |  7 +++----
+>   drivers/clk/clk-stm32f4.c            |  4 ++--
+>   drivers/clk/clk-xgene.c              | 15 ++++++---------
+>   drivers/clk/clk.c                    |  4 ++--
+>   drivers/clk/clkdev.c                 |  4 ++--
+>   drivers/clk/mediatek/clk-cpumux.c    |  2 +-
+>   drivers/clk/mediatek/clk-mtk.c       |  2 +-
+>   drivers/clk/mediatek/reset.c         |  2 +-
 
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
+For the mediatek parts.
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, though there are some other maintainers who like them - if in
-doubt look at how patches for the subsystem are normally handled.
-
---gqzpn77cdxumuk2p
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllvMj4ACgkQJNaLcl1U
-h9CtMQf/TXKy0m4fKgwWz6+mZZpEKf/S41ay2VDZ2dunxlQqp3fV4bTUNrGPBS0X
-8XpSP2s2AO2ma6/cV5WYfPSEIrhFUq0EHRs5KyuqEYc4vySDIQS+cTVOiBO+Qygv
-EXZFzrT55rTqjrQXAVXwRkKZVnYzk8rNSi6LUYlPaDGNv2gnL2HOPAzkPcm0DmUr
-YcmYDe7tBm7SKjFYscs2WNB7u/JneXhEYZd+3Mv8D8JOMFUmn9hB8+vjFlrAAapA
-KJsvFS4UE3vr9A7r4fFUcw5CfdzToe2aCPPZiLnxdi4Z473ET6uf6esQdn6793Bh
-FZltcca0lRhwV6AM5sbCH1r13RMWWw==
-=PivX
------END PGP SIGNATURE-----
-
---gqzpn77cdxumuk2p--
+Thanks,
+Matthias
