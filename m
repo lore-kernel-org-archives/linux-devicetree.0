@@ -1,71 +1,129 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: pwm-regulator: fix example syntax" to the regulator tree
-Date: Wed, 19 Jul 2017 12:27:35 +0100
-Message-ID: <E1dXn8h-0002iw-9u@debutante>
-References: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170717131823.19687-1-martin.blumenstingl@googlemail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, lgirdwood@gmail.combroonie@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.comlinux-kernel@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 05/11] mmc: sunxi: Support controllers that
+ can use both old and new timings
+Date: Wed, 19 Jul 2017 13:28:56 +0200
+Message-ID: <20170719112856.7vjcsel5cj6f5s5h@flea>
+References: <20170714064302.20383-1-wens@csie.org>
+ <20170714064302.20383-6-wens@csie.org>
+ <20170717091747.kcrlifbp7meihszm@flea>
+ <CAGb2v67VmdfrMNLFH=6hhbGAHr15e0q4toDUbJ17d3exS3maFw@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bd2jix6f475lfyof"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBA4FXXFQKGQEXWIGCBQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v67VmdfrMNLFH=6hhbGAHr15e0q4toDUbJ17d3exS3maFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   regulator: pwm-regulator: fix example syntax
+--bd2jix6f475lfyof
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Wed, Jul 19, 2017 at 04:59:23PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Jul 17, 2017 at 5:17 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Fri, Jul 14, 2017 at 02:42:56PM +0800, Chen-Yu Tsai wrote:
+> >> On the SoCs that introduced the new timing mode for MMC controllers,
+> >> both the old (where the clock delays are set in the CCU) and new
+> >> (where the clock delays are set in the MMC controller) timing modes
+> >> are available, and we have to support them both. However there are
+> >> two bits that control which mode is active. One is in the CCU, the
+> >> other is in the MMC controller. The settings on both sides must be
+> >> the same, or nothing will work.
+> >>
+> >> The CCU's get/set_phase callbacks return -ENOTSUPP when the new
+> >> timing mode is active. This provides a way to know which mode is
+> >> active on that side, and we can set the bit on the MMC controller
+> >> side accordingly.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  drivers/mmc/host/sunxi-mmc.c | 34 ++++++++++++++++++++++++++++++----
+> >>  1 file changed, 30 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc=
+.c
+> >> index 0fb4e4c119e1..56e45c65b52d 100644
+> >> --- a/drivers/mmc/host/sunxi-mmc.c
+> >> +++ b/drivers/mmc/host/sunxi-mmc.c
+> >> @@ -22,6 +22,7 @@
+> >>  #include <linux/err.h>
+> >>
+> >>  #include <linux/clk.h>
+> >> +#include <linux/clk/sunxi-ng.h>
+> >>  #include <linux/gpio.h>
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/spinlock.h>
+> >> @@ -259,7 +260,7 @@ struct sunxi_mmc_cfg {
+> >>       /* Does DATA0 needs to be masked while the clock is updated */
+> >>       bool mask_data0;
+> >>
+> >> -     bool needs_new_timings;
+> >> +     bool has_new_timings;
+> >
+> > I think we should have both, it's a bit different. Newer SoCs like the
+> > A64 can only operate using new timings, while the older ones can
+> > operate in both modes.
+> >
+> > In one case, we're forced to use it, in the other one it's a
+> > policy. We should differentiate both cases.
+>=20
+> For the A64's case, the limit is implied by not having any clk_delays.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+FWIW, I'm really not a big fan of that either :)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Explicit is better than implicit.=C2=A9
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+> But yes, I'll keep "needs_new_timings", and rename the new option to
+> "has_timing_switch" to make things clearer.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+Great, thanks!
+Maxime
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Thanks,
-Mark
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
->From 760068be07c744a4355a0387be4dcd4127ad2523 Mon Sep 17 00:00:00 2001
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date: Mon, 17 Jul 2017 15:18:23 +0200
-Subject: [PATCH] regulator: pwm-regulator: fix example syntax
+--bd2jix6f475lfyof
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The "Continuous Voltage" example specifies a pwm-dutycycle-range.
-However, an equal sign is missing between the property name and value.
-Fix this to allow copy and paste from the documentation when writing an
-own .dts file with a pwm-regulator.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/regulator/pwm-regulator.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+iQIcBAEBAgAGBQJZb0J4AAoJEBx+YmzsjxAglo8QALargjCFyEB5hU3tIpW6Ra7E
+c0XfzP2gdl60I5JiNl/iEuI+maNS6rwON70hmq0JW58rmCc1pGDf5WoLfT8U8tKi
+GwXhMqHpCHBpX5y+x5YDdEgOTEiKAVNotmtEgZkaIEnolsxUvYiMD8iTmoYUW6PD
+OKSt1HLXCmpsdx0vpYNiHAi0JpEpwBa+WTuzdas6+g4FF4WLx6fhqG03FvwIQ74d
+gainmHvUhWMzir8XXq9tSsV9aslCYCn8WmCQT6YWEMdmlxWDUHXxAI1lytd9GosE
+kuR4Y//zRk9M9KZuaNeGxy9Pp5+dK0ReX48GkcXTNz0L9hdk7qr1YYW6Xe046i0L
+Fliu7OZMw4mAOM0rqHZO5UIONTQ8ltl5N0/ZjsI1T9+A73Zi/+cpHWj9V6Gx8Uj9
+aZV8b+mYwptJQOACR74EYWVdTn/EPFFT1MDuBfppE88BMPJaBf4LnZw6Aid/8Q/G
+gpULc33RIAmu4sQHJvo4FOOAQ/3uWj0FZQYgkPHFsMXrdswHFbzRvzU0LSCjbuRn
+mDUM/aKdJFBPPfhT++5nvCt55sGvczf6i8FVYBg5bigzFoeNUiXNFQ2KAEcAx27q
+Z5Yko/t0O6QCSrifvbr206TkIuYnHCRIrcTpzTGq49QRizbz/nAwBrI1Bg8MZQgO
+lbb/OtQWwY9RjweQIgqa
+=D0Fp
+-----END PGP SIGNATURE-----
 
-diff --git a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-index bf85aa9ad6a7..3d78d507e29f 100644
---- a/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/pwm-regulator.txt
-@@ -71,7 +71,7 @@ Continuous Voltage With Enable GPIO Example:
- 		 * Inverted PWM logic, and the duty cycle range is limited
- 		 * to 30%-70%.
- 		 */
--		pwm-dutycycle-range <700 300>; /* */
-+		pwm-dutycycle-range = <700 300>; /* */
- 	};
- 
- Voltage Table Example:
--- 
-2.13.2
+--bd2jix6f475lfyof--
