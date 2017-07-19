@@ -1,66 +1,64 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] clk: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 12:24:58 +0200
-Message-ID: <2fd832a5-ec78-7563-8349-4321db745767@gmail.com>
-References: <20170718214339.7774-12-robh@kernel.org>
+Subject: Re: [PATCH] media: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 12:26:23 +0200
+Message-ID: <81c5f1c1-1c23-2a19-691e-811075be6010@gmail.com>
+References: <20170718214339.7774-33-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170718214339.7774-12-robh@kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170718214339.7774-33-robh@kernel.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert+renesas@glider.be>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, =?UTF-8?Q?Emilio_L=c3=b3pez?= <emilio@elopez.com.ar>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Songjun Wu <songjun.wu@microchip.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 07/18/2017 11:42 PM, Rob Herring wrote:
+On 07/18/2017 11:43 PM, Rob Herring wrote:
 > Now that we have a custom printf format specifier, convert users of
 > full_name to use %pOF instead. This is preparation to remove storing
 > of the full path string for each node.
 > 
 > Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+> Cc: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+> Cc: Songjun Wu <songjun.wu@microchip.com>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Kukjin Kim <kgene@kernel.org>
+> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+> Cc: Javier Martinez Canillas <javier@osg.samsung.com>
+> Cc: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+> Cc: Houlong Wei <houlong.wei@mediatek.com>
+> Cc: Andrew-CT Chen <andrew-ct.chen@mediatek.com>
 > Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: "Emilio López" <emilio@elopez.com.ar>
-> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Cc: Prashant Gaikwad <pgaikwad@nvidia.com>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: linux-clk@vger.kernel.org
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: "Niklas Söderlund" <niklas.soderlund@ragnatech.se>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: Hyun Kwon <hyun.kwon@xilinx.com>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Cc: "Sören Brinkmann" <soren.brinkmann@xilinx.com>
+> Cc: linux-media@vger.kernel.org
 > Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-samsung-soc@vger.kernel.org
 > Cc: linux-mediatek@lists.infradead.org
 > Cc: linux-renesas-soc@vger.kernel.org
-> Cc: linux-tegra@vger.kernel.org
-> Cc: linux-omap@vger.kernel.org
 > ---
->   drivers/clk/berlin/bg2.c             |  3 +--
->   drivers/clk/berlin/bg2q.c            |  7 +++----
->   drivers/clk/clk-asm9260.c            |  4 ++--
->   drivers/clk/clk-conf.c               | 16 ++++++++--------
->   drivers/clk/clk-moxart.c             | 12 ++++++------
->   drivers/clk/clk-qoriq.c              |  7 +++----
->   drivers/clk/clk-stm32f4.c            |  4 ++--
->   drivers/clk/clk-xgene.c              | 15 ++++++---------
->   drivers/clk/clk.c                    |  4 ++--
->   drivers/clk/clkdev.c                 |  4 ++--
->   drivers/clk/mediatek/clk-cpumux.c    |  2 +-
->   drivers/clk/mediatek/clk-mtk.c       |  2 +-
->   drivers/clk/mediatek/reset.c         |  2 +-
+>   drivers/media/i2c/s5c73m3/s5c73m3-core.c       |  3 +-
+>   drivers/media/i2c/s5k5baf.c                    |  7 ++--
+>   drivers/media/platform/am437x/am437x-vpfe.c    |  4 +-
+>   drivers/media/platform/atmel/atmel-isc.c       |  4 +-
+>   drivers/media/platform/davinci/vpif_capture.c  | 16 ++++----
+>   drivers/media/platform/exynos4-is/fimc-is.c    |  8 ++--
+>   drivers/media/platform/exynos4-is/fimc-lite.c  |  3 +-
+>   drivers/media/platform/exynos4-is/media-dev.c  |  8 ++--
+>   drivers/media/platform/exynos4-is/mipi-csis.c  |  4 +-
+>   drivers/media/platform/mtk-mdp/mtk_mdp_comp.c  |  6 +--
+>   drivers/media/platform/mtk-mdp/mtk_mdp_core.c  |  8 ++--
+
+For mediatek parts:
 
 Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-For the mediatek parts.
-
-Thanks,
-Matthias
