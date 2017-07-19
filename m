@@ -1,101 +1,88 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] irqchip: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 08:20:06 +0200
-Message-ID: <20170719062006.hivodv3zppq6swdo@flea>
-References: <20170718214339.7774-30-robh@kernel.org>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RFC 2/2] dt-bindings: add binding documentation for
+ Allwinner CSI
+Date: Wed, 19 Jul 2017 14:21:20 +0800
+Message-ID: <20170719142120.d00469cf9fce844d40b9988e@magewell.com>
+References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
+        <1498561654-14658-3-git-send-email-yong.deng@magewell.com>
+        <20170718115530.ssy7g5vv4siqnfpo@tarshish>
+        <20170719092249.2fb6ec720ba1b194cea320c8@magewell.com>
+        <20170719044923.yae2ye4slvrmtyfe@sapphire.tkos.co.il>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="7dqvm2bvmpvcpfsx"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-30-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Jonathan Hunter <j>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170719044923.yae2ye4slvrmtyfe-MwjkAAnuF3khR1HGirfZ1z4kX+cae0hd@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Baruch,
 
---7dqvm2bvmpvcpfsx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 19 Jul 2017 07:49:23 +0300
+Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
 
-On Tue, Jul 18, 2017 at 04:43:10PM -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->=20
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-> Cc: Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Cc: Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
-> Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> Cc: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-> Cc: Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: "S=F6ren Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/irqchip/irq-bcm2835.c            |  9 ++++-----
->  drivers/irqchip/irq-bcm2836.c            |  5 ++---
->  drivers/irqchip/irq-crossbar.c           |  6 +++---
->  drivers/irqchip/irq-digicolor.c          |  8 ++++----
->  drivers/irqchip/irq-dw-apb-ictl.c        | 12 ++++++------
->  drivers/irqchip/irq-gic-v3-its-pci-msi.c |  2 +-
->  drivers/irqchip/irq-gic-v3-its.c         |  6 +++---
->  drivers/irqchip/irq-gic-v3.c             | 11 ++++-------
->  drivers/irqchip/irq-imx-gpcv2.c          |  4 ++--
->  drivers/irqchip/irq-lpc32xx.c            |  2 +-
->  drivers/irqchip/irq-mtk-sysirq.c         |  3 +--
->  drivers/irqchip/irq-mxs.c                |  4 ++--
->  drivers/irqchip/irq-stm32-exti.c         |  8 ++++----
->  drivers/irqchip/irq-sun4i.c              |  6 +++---
+> Hi Yong,
+> 
+> On Wed, Jul 19, 2017 at 09:22:49AM +0800, Yong wrote:
+> > On Tue, 18 Jul 2017 14:55:30 +0300
+> > Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+> > > I am trying to get this driver working on the Olimex A33 OLinuXino. I 
+> > > didn't get it working yet, but I had some progress. See the comment below 
+> > > on one issue I encountered.
+> > > 
+> > > On Tue, Jun 27, 2017 at 07:07:34PM +0800, Yong Deng wrote:
+> > > > Add binding documentation for Allwinner CSI.
+> > > > 
+> > > > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> > > > ---
+> 
+> [...]
+> 
+> > > > +Example:
+> > > > +
+> > > > +	csi1: csi@01cb4000 {
+> > > > +		compatible = "allwinner,sun8i-v3s-csi";
+> > > > +		reg = <0x01cb4000 0x1000>;
+> > > 
+> > > You use platform_get_resource_byname() to get this IO resource. This requires 
+> > > adding mandatory
+> > > 
+> > >   reg-names = "csi";
+> > > 
+> > > But is it actually needed? Wouldn't a simple platform_get_resource() be 
+> > > enough?
+> > 
+> > You are right.
+> > This will be fixed in the next version.
+> > I am waiting for more comments for the sunxi-csi.h. It's pleasure if
+> > you have any suggestions about it.
+> 
+> You mean sunxi_csi.h, right?
 
-for sun4i:
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Yes. My spelling mistake.
 
-Maxime
+> 
+> Why do you need the sunxi_csi_ops indirection? Do you expect to add 
+> alternative implementations of these ops at some point?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+I want to seperate the sunxi_video.c and sunxi_csi_v3s.c. 
+sunxi_csi_v3s.c is Soc specific. Maybe there will be sunxi_csi_r40.c
+in the futrue. But the sunxi_video.c and sunxi_csi.c are common.
 
---7dqvm2bvmpvcpfsx
-Content-Type: application/pgp-signature; name="signature.asc"
+> 
+> baruch
+> 
+> -- 
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
 
------BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZbvoWAAoJEBx+YmzsjxAgxdoP/1CvqdT8vk9gLRWahyZUNHBc
-gz5fWqgLHRgFeOxLumxBHGl6p5ZwZhul2rK0PD/ZOwwxp53mMkguMzHuwgToZciv
-KDl+bU9rPRiX4mrnlQOBlNrawGr5IOr/Vtm9su94/7R8bmOVHq8CNazMuNNLqr7Q
-O9F+RiMg0JdwFrQ6bbGBsM7cdtN8JFr4qeutrYUrT+pOQLXRTMWJFEhAJRvuk1yP
-dUUu4dVEFqUEe+edSZYuJdrQPuQGTkTnKN6vjDFvKZryCQqmkQgpEtlDdGOWrXTc
-/ooj6mRT8vnd0RzeLouttpScC0No75URXls5o7xF+oOJcygpw80FUZEPo3gFGIx9
-lrSugAfRTlGTxLPN9Mj3ebmoFquU1VTQTibIEYxDmnmK8QY6IQDRRV5Jmfm6aler
-1OSvKI1ImuWd4i4iRrywuI2x8N89vzbdmlBIqkKf3D3NWwCbFsuX1yHjQRfAQkZz
-Y1SLJZ4IPvWm/SHr2b9h946keM6UxFiedAF4UvakgwQY5sj2F/yUrmkaemOMikEY
-hn014a26CIqjbq6w+JrbwkajUEkdcdeokzwZFyPqCkwaU92+i7OD+nJkmbYTuMkx
-fgrQv2hwP330166J2cbi72UQcbBmJE3SyAaHj5OWVN9Os4pZrcm1osyFvgw0cGc6
-UMV7s6/fCetapd//4i9Z
-=LXvg
------END PGP SIGNATURE-----
-
---7dqvm2bvmpvcpfsx--
+Thanks,
+Yong
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
