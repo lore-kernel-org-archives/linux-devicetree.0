@@ -1,132 +1,77 @@
-Return-Path: <SRS0=Kezz=6Y=mmayer.net=mmayer@kernel.org>
+Return-Path: <SRS0=59qh=6W=ideasonboard.com=laurent.pinchart@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] media: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 16:13:05 +0300
+Message-ID: <2365474.Q2cOWx8lkM@avalon>
+In-Reply-To: <564a6768-3b23-6dc7-ecb5-cb4f4359b633@samsung.com>
+References: <CGME20170718215328epcas2p2e5e1d7df96fcd894e70a961df864abdd@epcas2p2.samsung.com> <20170718214339.7774-33-robh@kernel.org> <564a6768-3b23-6dc7-ecb5-cb4f4359b633@samsung.com>
 MIME-Version: 1.0
-Sender: mmayer@mmayer.net
-In-Reply-To: <1b44dcc1381fda8ab3f29c97718e9999@milecki.pl>
-References: <20170721192735.6546-1-code@mmayer.net> <20170721192735.6546-3-code@mmayer.net>
- <1b44dcc1381fda8ab3f29c97718e9999@milecki.pl>
-From: Markus Mayer <code@mmayer.net>
-Date: Fri, 21 Jul 2017 13:12:53 -0700
-Message-ID: <CANEuBv5A_9UDm0j9R3b0ydAKT=Y6uDxiyLQKaJ+iozcPLTbffA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] thermal: add brcmstb AVS TMON driver
-Content-Type: multipart/alternative; boundary="001a11426c1c88ae560554d97d67"
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Cc: Markus Mayer <code@mmayer.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Rob Herring <robh@kernel.org>, linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Songjun Wu <songjun.wu@microchip.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-re nesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a11426c1c88ae560554d97d67
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hi Sylwester,
 
-On 21 July 2017 at 13:04, Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl> wrote:
+On Wednesday 19 Jul 2017 11:41:37 Sylwester Nawrocki wrote:
+> On 07/18/2017 11:43 PM, Rob Herring wrote:
+> > Now that we have a custom printf format specifier, convert users of
+> > full_name to use %pOF instead. This is preparation to remove storing
+> > of the full path string for each node.
+> > 
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > 
+> > ---
+> > 
+> >   drivers/media/i2c/s5c73m3/s5c73m3-core.c       |  3 +-
+> >   drivers/media/i2c/s5k5baf.c                    |  7 ++--
+> >   drivers/media/platform/am437x/am437x-vpfe.c    |  4 +-
+> >   drivers/media/platform/atmel/atmel-isc.c       |  4 +-
+> >   drivers/media/platform/davinci/vpif_capture.c  | 16 ++++----
+> >   drivers/media/platform/exynos4-is/fimc-is.c    |  8 ++--
+> >   drivers/media/platform/exynos4-is/fimc-lite.c  |  3 +-
+> >   drivers/media/platform/exynos4-is/media-dev.c  |  8 ++--
+> >   drivers/media/platform/exynos4-is/mipi-csis.c  |  4 +-
+> >   drivers/media/platform/mtk-mdp/mtk_mdp_comp.c  |  6 +--
+> >   drivers/media/platform/mtk-mdp/mtk_mdp_core.c  |  8 ++--
+> >   drivers/media/platform/omap3isp/isp.c          |  8 ++--
+> >   drivers/media/platform/pxa_camera.c            |  2 +-
+> >   drivers/media/platform/rcar-vin/rcar-core.c    |  4 +-
+> >   drivers/media/platform/soc_camera/soc_camera.c |  6 +--
+> >   drivers/media/platform/xilinx/xilinx-vipp.c    | 52 ++++++++++----------
+> >   drivers/media/v4l2-core/v4l2-async.c           |  4 +-
+> >   drivers/media/v4l2-core/v4l2-clk.c             |  3 +-
+> >   include/media/v4l2-clk.h                       |  4 +-
+> >   19 files changed, 71 insertions(+), 83 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c
+> > b/drivers/media/platform/xilinx/xilinx-vipp.c index
+> > ac4704388920..9233ad0b1b6b 100644
+> > --- a/drivers/media/platform/xilinx/xilinx-vipp.c
+> > +++ b/drivers/media/platform/xilinx/xilinx-vipp.c
+> > @@ -144,9 +144,8 @@ static int xvip_graph_build_one(struct
+> > xvip_composite_device *xdev,
+> >   		remote = ent->entity;
+> >   		if (link.remote_port >= remote->num_pads) {
+> > -			dev_err(xdev->dev, "invalid port number %u on %s\n",
+> > -				link.remote_port,
+> > -				to_of_node(link.remote_node)->full_name);
+> > +			dev_err(xdev->dev, "invalid port number %u on %pOF\n",
+> > +				link.remote_port, link.remote_node);
+> 
+> Shouldn't there be to_of_node(link.remote_node) instead of link.remote_node 
+?
 
-> I'm far from being thermal expert, to me it looks OK, only 1 trivial issu=
-e
-> noticed (see below).
->
-> On 2017-07-21 21:27, Markus Mayer wrote:
->
->> +static void avs_tmon_trip_enable(struct brcmstb_thermal_priv *priv,
->> +                                enum avs_tmon_trip_type type, int en)
->> +{
->> +       struct avs_tmon_trip *trip =3D &avs_tmon_trips[type];
->> +       u32 val =3D __raw_readl(priv->tmon_base + trip->enable_offs);
->> +
->> +       pr_debug("%sable trip, type %d\n", en ? "en" : "dis", type);
->>
->
-> This probably could be dev_dbg?
->
+Good catch, I had missed that one.
 
-Indeed. I made the change in my local copy for all three instances. I'll
-wait for more feedback before re-sending.
+> >   			v4l2_fwnode_put_link(&link);
+> >   			ret = -EINVAL;
+> >   			break;
 
-+static void avs_tmon_set_trip_temp(struct brcmstb_thermal_priv *priv,
->> +                                  enum avs_tmon_trip_type type,
->> +                                  int temp)
->> +{
->> +       struct avs_tmon_trip *trip =3D &avs_tmon_trips[type];
->> +       u32 val, orig;
->> +
->> +       pr_debug("set temp %d to %d\n", type, temp);
->>
->
-> Same here.
->
->
-> +static int brcmstb_set_trips(void *data, int low, int high)
->> +{
->> +       struct brcmstb_thermal_priv *priv =3D data;
->> +
->> +       pr_debug("set trips %d <--> %d\n", low, high);
->>
->
-> And the last time here.
->
+[snip]
 
---001a11426c1c88ae560554d97d67
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+-- 
+Regards,
 
-<div dir=3D"ltr"><div class=3D"gmail_extra"><div class=3D"gmail_quote">On 2=
-1 July 2017 at 13:04, Rafa=C5=82 Mi=C5=82ecki <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:rafal@milecki.pl" target=3D"_blank">rafal@milecki.pl</a>&gt;</sp=
-an> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;=
-border-left:1px #ccc solid;padding-left:1ex">I&#39;m far from being thermal=
- expert, to me it looks OK, only 1 trivial issue<br>
-noticed (see below).<br>
-<br>
-On 2017-07-21 21:27, Markus Mayer wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-+static void avs_tmon_trip_enable(struct brcmstb_thermal_priv *priv,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 enum avs_tmon_trip_type type, int en=
-)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct avs_tmon_trip *trip =3D &amp;avs_tmon_tr=
-ips[type];<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 val =3D __raw_readl(priv-&gt;tmon_base + tr=
-ip-&gt;enable_offs);<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0pr_debug(&quot;%sable trip, type %d\n&quot;, en=
- ? &quot;en&quot; : &quot;dis&quot;, type);<br>
-</blockquote>
-<br>
-This probably could be dev_dbg?<br></blockquote><div>=C2=A0<br></div><div>I=
-ndeed. I made the change in my local copy for all three instances. I&#39;ll=
- wait for more feedback before re-sending.<br></div><div><br></div><blockqu=
-ote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc s=
-olid;padding-left:1ex"><blockquote class=3D"gmail_quote" style=3D"margin:0 =
-0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-+static void avs_tmon_set_trip_temp(struct brcmstb_thermal_priv *priv,<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 enum avs_tmon_trip_type type,=
-<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 int temp)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct avs_tmon_trip *trip =3D &amp;avs_tmon_tr=
-ips[type];<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0u32 val, orig;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0pr_debug(&quot;set temp %d to %d\n&quot;, type,=
- temp);<br>
-</blockquote>
-<br>
-Same here.<br>
-<br>
-<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-+static int brcmstb_set_trips(void *data, int low, int high)<br>
-+{<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0struct brcmstb_thermal_priv *priv =3D data;<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0pr_debug(&quot;set trips %d &lt;--&gt; %d\n&quo=
-t;, low, high);<br>
-</blockquote>
-<br>
-And the last time here.<br>
-</blockquote></div><br></div></div>
-
---001a11426c1c88ae560554d97d67--
+Laurent Pinchart
