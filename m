@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 3/5] arm64: allwinner: a64: add AXP803 PMIC to
- SoPine DTSI
-Date: Thu, 20 Jul 2017 00:10:17 +0800
-Message-ID: <20170719161019.62133-4-icenowy@aosc.io>
+Subject: [PATCH 2/5] arm: allwinner: a64: drop the dummy vcc3v3
+ regulator in Pine64 DT
+Date: Thu, 20 Jul 2017 00:10:16 +0800
+Message-ID: <20170719161019.62133-3-icenowy@aosc.io>
 References: <20170719161019.62133-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBEEJX3FQKGQE7QDURUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBBUJX3FQKGQEIXCSNDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170719161019.62133-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,34 +20,44 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SoPine SoM has an AXP803 PMIC connected to the RSB bus of the A64
-SoC.
+The Pine64 DT used to contain a dummy vcc3v3 regulator, in order to
+satisfy some device nodes when proper AXP803 regulator support is
+available. It's in fact the DCDC1 regulator of AXP803.
 
-Add its device tree node to the DTSI.
+Drop the dummy regulator, and fix the reference of this regulator to
+DCDC1.
 
 Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 475518b031dd..ab9464dd50c5 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -63,3 +63,14 @@
- 	bus-width = <4>;
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index ac31c9477b25..68a47d9b07d9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -61,13 +61,6 @@
+ 	chosen {
+ 		stdout-path = "serial0:115200n8";
+ 	};
+-
+-	reg_vcc3v3: vcc3v3 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "vcc3v3";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
  };
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
+ 
+ &ehci0 {
+@@ -108,7 +101,7 @@
+ &mmc0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc0_pins>;
+-	vmmc-supply = <&reg_vcc3v3>;
++	vmmc-supply = <&reg_dcdc1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+ 	cd-inverted;
+ 	disable-wp;
 -- 
 2.13.0
