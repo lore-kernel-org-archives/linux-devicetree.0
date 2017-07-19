@@ -1,83 +1,38 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 1/4] ARM: dts: keystone-k2g: Add PMMC node to support
- TI-SCI protocol
-Date: Wed, 19 Jul 2017 10:25:41 -0500
-Message-ID: <d2cc6c0e-9f78-aac5-f20e-3695b36ec3a3@ti.com>
-References: <20170718032844.29490-1-s-anna@ti.com>
- <20170718032844.29490-2-s-anna@ti.com>
- <8b8c4eff-4f18-f0d2-e075-389921e5a990@ti.com>
- <4ff798de-9926-4bf8-74a5-572f0f0c1081@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] clocksource: Convert to using %pOF instead of full_name
+Date: Wed, 19 Jul 2017 10:28:51 -0500
+Message-ID: <CAL_Jsq+qMn2HHeNx2PmYSJ-pYMRFPYXVHivBgX5vpjKngJHShg@mail.gmail.com>
+References: <20170718214339.7774-13-robh@kernel.org> <b6f4661d-6655-0fb9-f212-2d777a12e11a@sigmadesigns.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4ff798de-9926-4bf8-74a5-572f0f0c1081@ti.com>
-Content-Language: en-US
+In-Reply-To: <b6f4661d-6655-0fb9-f212-2d777a12e11a@sigmadesigns.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Franklin S Cooper Jr <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+To: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 06:50 PM, Suman Anna wrote:
-> On 07/18/2017 10:00 AM, Andrew F. Davis wrote:
->> On 07/17/2017 10:28 PM, Suman Anna wrote:
->>> From: Nishanth Menon <nm@ti.com>
->>>
->>> Texas Instrument's System Control Interface (TI-SCI) Message Protocol
->>> is implemented in Keystone 2 generation 66AK2G SoC with the PMMC entity.
->>>
->>> Add the ti-sci node representing this 66AK2G PMMC module.
->>>
->>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>> [s-anna@ti.com: add unit address to DT node]
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  arch/arm/boot/dts/keystone-k2g.dtsi | 14 ++++++++++++++
->>>  1 file changed, 14 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
->>> index a789f75a1ed5..7f0f4180b373 100644
->>> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
->>> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
->>> @@ -139,5 +139,19 @@
->>>  			interrupts = <GIC_SPI 324 IRQ_TYPE_LEVEL_HIGH>,
->>>  				     <GIC_SPI 327 IRQ_TYPE_LEVEL_HIGH>;
->>>  		};
->>> +
->>> +		pmmc: pmmc@02921c00 {
->>> +			compatible = "ti,k2g-sci";
->>> +			/*
->>> +			 * In case of rare platforms that does not use k2g as
->>> +			 * system master, use /delete-property/
->>> +			 */
->>
->> This comment seems mis-worded, I believe this was meant to say "for
->> platforms that do not use the *PMMC* as the system master".
-> 
-> The comment is for the system-reboot-controller property, and is meant
-> to say that this property is to be deleted from this node if there is an
-> external entity on the board other than the K2G SoC that is responsible
-> for triggering a reboot.
-> 
+On Wed, Jul 19, 2017 at 3:55 AM, Marc Gonzalez
+<marc_gonzalez@sigmadesigns.com> wrote:
+> On 18/07/2017 23:42, Rob Herring wrote:
+>
+>> Now that we have a custom printf format specifier, convert users of
+>> full_name to use %pOF instead. This is preparation to remove storing
+>> of the full path string for each node.
+>
+> Nice. For my own reference:
+> http://elixir.free-electrons.com/linux/v4.13-rc1/source/Documentation/printk-formats.txt#L349
+>
+> About removing the full path. Does this mean that ultimately
+> %pOF will print just the name? And the 'f' spec will disappear?
 
-I see, that makes more sense, thanks for the clarification.
+No, the vsprintf code is already designed to print the full path
+whether full_name is the full path or just the basename. %pOF is just
+the default. "f" is needed so you can combine it with the other
+specifiers.
 
-Andrew
+> Is this done to save memory?
 
-> regards
-> Suman
-> 
->>
->> Andrew
->>
->>> +			ti,system-reboot-controller;
->>> +			mbox-names = "rx", "tx";
->>> +			mboxes= <&msgmgr 5 2>,
->>> +				<&msgmgr 0 0>;
->>> +			reg-names = "debug_messages";
->>> +			reg = <0x02921c00 0x400>;
->>> +		};
->>>  	};
->>>  };
->>>
-> 
+Yes. That's the next step.
+
+Rob
