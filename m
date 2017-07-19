@@ -1,69 +1,136 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] gpu: Convert to using %pOF instead of full_name
-Date: Wed, 19 Jul 2017 23:03:17 +0300
-Message-ID: <1822320.HPtxg24hjI@avalon>
-References: <20170718214339.7774-24-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170718214339.7774-24-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Chen Feng <puck.chen@hisilicon.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Carlo Caione <carlo@caione.org>, Jyri Sarha <jsarha@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-amlogic@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Seung-Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vge
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
+Date: Wed, 19 Jul 2017 13:19:16 -0700
+Message-ID: <20170719201916.22369-1-eric@anholt.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com, Eric Anholt <eric@anholt.net>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBUdWVzZGF5IDE4IEp1bCAyMDE3
-IDE2OjQzOjA0IFJvYiBIZXJyaW5nIHdyb3RlOgo+IE5vdyB0aGF0IHdlIGhhdmUgYSBjdXN0b20g
-cHJpbnRmIGZvcm1hdCBzcGVjaWZpZXIsIGNvbnZlcnQgdXNlcnMgb2YKPiBmdWxsX25hbWUgdG8g
-dXNlICVwT0YgaW5zdGVhZC4gVGhpcyBpcyBwcmVwYXJhdGlvbiB0byByZW1vdmUgc3RvcmluZwo+
-IG9mIHRoZSBmdWxsIHBhdGggc3RyaW5nIGZvciBlYWNoIG5vZGUuCj4gCj4gU2lnbmVkLW9mZi1i
-eTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPiBDYzogUnVzc2VsbCBLaW5nIDxsaW51
-eEBhcm1saW51eC5vcmcudWs+Cj4gQ2M6IERhdmlkIEFpcmxpZSA8YWlybGllZEBsaW51eC5pZT4K
-PiBDYzogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBpbnRlbC5jb20+Cj4gQ2M6IEphbmkg
-TmlrdWxhIDxqYW5pLm5pa3VsYUBsaW51eC5pbnRlbC5jb20+Cj4gQ2M6IFNlYW4gUGF1bCA8c2Vh
-bnBhdWxAY2hyb21pdW0ub3JnPgo+IENjOiBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+
-Cj4gQ2M6IEpvb255b3VuZyBTaGltIDxqeTA5MjIuc2hpbUBzYW1zdW5nLmNvbT4KPiBDYzogU2V1
-bmctV29vIEtpbSA8c3cwMzEyLmtpbUBzYW1zdW5nLmNvbT4KPiBDYzogS3l1bmdtaW4gUGFyayA8
-a3l1bmdtaW4ucGFya0BzYW1zdW5nLmNvbT4KPiBDYzogS3VramluIEtpbSA8a2dlbmVAa2VybmVs
-Lm9yZz4KPiBDYzogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgo+IENjOiBK
-YXZpZXIgTWFydGluZXogQ2FuaWxsYXMgPGphdmllckBvc2cuc2Ftc3VuZy5jb20+Cj4gQ2M6IFhp
-bmxpYW5nIExpdSA8ei5saXV4aW5saWFuZ0BoaXNpbGljb24uY29tPgo+IENjOiBSb25ncm9uZyBa
-b3UgPHpvdXJvbmdyb25nQGdtYWlsLmNvbT4KPiBDYzogWGlud2VpIEtvbmcgPGtvbmcua29uZ3hp
-bndlaUBoaXNpbGljb24uY29tPgo+IENjOiBDaGVuIEZlbmcgPHB1Y2suY2hlbkBoaXNpbGljb24u
-Y29tPgo+IENjOiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgo+IENjOiBQaGlsaXBwIFphYmVs
-IDxwLnphYmVsQHBlbmd1dHJvbml4LmRlPgo+IENjOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlh
-cy5iZ2dAZ21haWwuY29tPgo+IENjOiBOZWlsIEFybXN0cm9uZyA8bmFybXN0cm9uZ0BiYXlsaWJy
-ZS5jb20+Cj4gQ2M6IENhcmxvIENhaW9uZSA8Y2FybG9AY2Fpb25lLm9yZz4KPiBDYzogS2V2aW4g
-SGlsbWFuIDxraGlsbWFuQGJheWxpYnJlLmNvbT4KPiBDYzogVGhpZXJyeSBSZWRpbmcgPHRoaWVy
-cnkucmVkaW5nQGdtYWlsLmNvbT4KPiBDYzogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5j
-aGFydEBpZGVhc29uYm9hcmQuY29tPgo+IENjOiBNYXJrIFlhbyA8bWFyay55YW9Acm9jay1jaGlw
-cy5jb20+Cj4gQ2M6IEhlaWtvIFN0dWVibmVyIDxoZWlrb0BzbnRlY2guZGU+Cj4gQ2M6IE1heGlt
-ZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IENjOiBDaGVuLVl1
-IFRzYWkgPHdlbnNAY3NpZS5vcmc+Cj4gQ2M6IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+Cj4g
-Q2M6IFRvbWkgVmFsa2VpbmVuIDx0b21pLnZhbGtlaW5lbkB0aS5jb20+Cj4gQ2M6IGRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBDYzogbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCj4gQ2M6IGxpbnV4LXNhbXN1bmctc29jQHZnZXIua2VybmVsLm9yZwo+IENjOiBs
-aW51eC1tZWRpYXRla0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gQ2M6IGxpbnV4LWFtbG9naWNAbGlz
-dHMuaW5mcmFkZWFkLm9yZwo+IENjOiBsaW51eC1yZW5lc2FzLXNvY0B2Z2VyLmtlcm5lbC5vcmcK
-PiBDYzogbGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IC0tLQpbc25pcF0KPiAg
-ZHJpdmVycy9ncHUvZHJtL2RybV9taXBpX2RzaS5jICAgICAgICAgICAgICAgICAgfCAgNiArKyst
-LS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jICAgICAgICAgICAgICAgICAgICAgfCAg
-NCArKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYyAgICAgICAgICAgICAgICAgICAgICAg
-IHwgIDQgKystLQpbc25pcF0KPiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWx2ZHMuYyAg
-ICAgICAgICAgICAgfCAxNiArKysrKysrKy0tLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9yY2Fy
-LWR1L3JjYXJfZHVfZW5jb2Rlci5jICAgICAgIHwgIDQgKystLQo+ICBkcml2ZXJzL2dwdS9kcm0v
-cmNhci1kdS9yY2FyX2R1X2ttcy5jICAgICAgICAgICB8IDE2ICsrKysrKysrLS0tLS0tLS0KCkZv
-ciBhbGwgdGhlIGFib3ZlLAoKUmV2aWV3ZWQtYnk6IExhdXJlbnQgUGluY2hhcnQgPGxhdXJlbnQu
-cGluY2hhcnRAaWRlYXNvbmJvYXJkLmNvbT4KCi0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFy
-dAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+BCM2837 is somewhat unusual in that we build its DT on both arm32 and
+arm64.  Most devices are being run in arm32 mode.
+
+Having the body of the DT for 2837 separate from 2835/6 has been a
+source of pain, as we often need to make changes that span both
+directories simultaneously (for example, the thermal changes for 4.13,
+and pinmuxing changes earlier).  Other changes are made more
+complicated than they need to be, such as the SDHOST enabling, because
+we end up splitting a single change into a 283[56] half and a 2837
+half.
+
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+
+I had asked about what we could do about our DT merging troubles back
+in https://lkml.org/lkml/2017/5/16/707 with no response.  I'm hoping
+we can take this patch as a resolution to that, and submit (almost
+all) future RPi DT changes through the arm32 dt tree.
+
+
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 +++++++++++++++++++++-
+ .../dts/broadcom => arm/boot/dts}/bcm2837.dtsi     |  0
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +---------------------
+ 3 files changed, 42 insertions(+), 42 deletions(-)
+ rename arch/{arm64/boot/dts/broadcom => arm/boot/dts}/bcm2837.dtsi (100%)
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index c72a27d908b6..972f14db28ac 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -1 +1,41 @@
+-#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
++/dts-v1/;
++#include "bcm2837.dtsi"
++#include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
++
++/ {
++	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
++	model = "Raspberry Pi 3 Model B";
++
++	memory {
++		reg = <0 0x40000000>;
++	};
++
++	leds {
++		act {
++			gpios = <&gpio 47 0>;
++		};
++	};
++};
++
++&uart1 {
++	status = "okay";
++};
++
++/* SDHCI is used to control the SDIO for wireless */
++&sdhci {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	status = "okay";
++	bus-width = <4>;
++	non-removable;
++};
++
++/* SDHOST is used to drive the SD card */
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
++	bus-width = <4>;
++};
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+rename to arch/arm/boot/dts/bcm2837.dtsi
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 972f14db28ac..699d340a3437 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -1,41 +1 @@
+-/dts-v1/;
+-#include "bcm2837.dtsi"
+-#include "bcm2835-rpi.dtsi"
+-#include "bcm283x-rpi-smsc9514.dtsi"
+-#include "bcm283x-rpi-usb-host.dtsi"
+-
+-/ {
+-	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+-	model = "Raspberry Pi 3 Model B";
+-
+-	memory {
+-		reg = <0 0x40000000>;
+-	};
+-
+-	leds {
+-		act {
+-			gpios = <&gpio 47 0>;
+-		};
+-	};
+-};
+-
+-&uart1 {
+-	status = "okay";
+-};
+-
+-/* SDHCI is used to control the SDIO for wireless */
+-&sdhci {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&emmc_gpio34>;
+-	status = "okay";
+-	bus-width = <4>;
+-	non-removable;
+-};
+-
+-/* SDHOST is used to drive the SD card */
+-&sdhost {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdhost_gpio48>;
+-	status = "okay";
+-	bus-width = <4>;
+-};
++#include "arm/bcm2837-rpi-3-b.dts"
+-- 
+2.11.0
