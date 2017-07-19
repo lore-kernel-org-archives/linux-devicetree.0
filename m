@@ -1,131 +1,173 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/5] arm64: dts: rockchip: support mail and IPA thermal for rk3399
-Date: Wed, 19 Jul 2017 23:06:53 +0200
-Message-ID: <3610458.AeGaZ0pxhP@phil>
-References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com> <65759378-509b-3287-fd78-02361e89429b@rock-chips.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v7 3/3] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 20 Jul 2017 00:20:26 +0300
+Message-ID: <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
+References: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
+ <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <65759378-509b-3287-fd78-02361e89429b-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: gabriel.fernandez@st.com, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 19. Juli 2017, 17:06:59 CEST schrieb Caesar Wang:
-> Hi Rob & Heiko,
-> 
-> Do we have the chance to merge these patches?
+Hello Gabriel,
 
->From the mali-thermal thingy, it doesn't look like Rob likes that IPA stuff.
+On 07/19/2017 05:25 PM, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> This patch enables clocks for STM32H743 boards.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> for MFD changes:
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> 
+> for DT-Bindings
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   82 ++
 
-So I'll most likely pick the other patches that rely on approved bindings
-after I return from my vacation and leave the thermal issue until it can
-be resolved.
+I'll provide some review comments about device tree bindings only.
 
+>  drivers/clk/Makefile                               |    1 +
+>  drivers/clk/clk-stm32h7.c                          | 1409 ++++++++++++++++++++
+>  include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
+>  include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
+>  5 files changed, 1793 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>  create mode 100644 drivers/clk/clk-stm32h7.c
+>  create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>  create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+> new file mode 100644
+> index 0000000..442c50c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+> @@ -0,0 +1,82 @@
+> +STMicroelectronics STM32H7 Reset and Clock Controller
+> +=====================================================
+> +
+> +The RCC IP is both a reset and a clock controller.
+> +
+> +Please refer to clock-bindings.txt for common clock controller binding usage.
+> +Please also refer to reset.txt for common reset controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be:
+> +  "st,stm32h743-rcc"
+> +
+> +- reg: should be register base and length as documented in the
+> +  datasheet
+> +
+> +- #reset-cells: 1, see below
+> +
+> +- #clock-cells : from common clock binding; shall be set to 1
+> +
+> +- clocks: External oscillator clock phandle
+> +  - high speed external clock signal (HSE)
+> +  - low speed external clock signal (LSE)
+> +  - external I2S clock (I2S_CKIN)
+> +
+> +Optional properties:
+> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+> +  write protection (RTC clock).
+> +
+> +Example:
+> +
+> +	rcc: rcc@58024400 {
 
-Heiko
+'rcc' as a generic device node name is awkward.
 
-> 
-> I'm try to bring up the display and run webgl for testing with my github on
-> https://github.com/Caesar-github/rockchip/commits/gru/next-stable-chromeos
-> 
-> I believe the Rocky@RK will post patches to support the other SoCs after.
-> 
-> -Caesar
-> 
-> 在 2017年07月17日 16:14, Caesar Wang 写道:
-> > This series patches supported the mail in devicetree and used the
-> > thermal IPA by default.
-> >
-> > Verified with kernel is based on Linus's master branch and Heiko's
-> > v4.14-armsoc-tmp/dts64 branch. ( The Linux version 4.12.0 for now).
-> >
-> > The most rockchip SoCs will be supported with IPA mode for thermal
-> > in later.
-> >
-> > ---
-> >
-> > History version:
-> > 1. The first version found on
-> > https://www.spinics.net/lists/arm-kernel/msg593118.html
-> >
-> > Tested on Kevin board with bringing up ChromeOS.
-> > OS VERSION:
-> >      CHROMEOS_RELEASE_DESCRIPTION=9693.1.0 (Official Build) dev-channel kevin test
-> >
-> > BIOS VERSION:
-> >      Google_Kevin.8785.211.2017_06_20_1043
-> >
-> > EC VERSION:
-> >      Build info:    kevin_v1.10.217-24514961d 2017-07-03 07:46:36 wxt@nb
-> >
-> > With the ARM's lastest mali driver TX011-SW-99002-r18p0-01rel0 on
-> > https://developer.arm.com/products/software/mali-drivers/midgard-kernel
-> >
-> >  From the bootup log:
-> >      localhost devfreq0 # dmesg |grep mali
-> >      [    0.933334] mali ff9a0000.gpu: GPU identified as 0x0860 r2p0 status 0
-> >      [    0.940830] mali ff9a0000.gpu: Protected mode not available
-> >      [    0.947334] mali ff9a0000.gpu: Using configured power model mali-simple-power-model, and fallback mali-simple-power-model
-> >      [    0.960083] mali ff9a0000.gpu: Probed as mali0
-> >
-> >      localhost devfreq0 # pwd
-> >      /sys/devices/platform/ff9a0000.gpu/devfreq/devfreq0
-> >      localhost devfreq0 # ls
-> >      available_frequencies  device    min_freq          subsystem    uevent
-> >      available_governors    governor  polling_interval  target_freq  userspace
-> >      cur_freq               max_freq  power             trans_stat
-> >
-> >      localhost ff9a0000.gpu # ls
-> >      core_availability_policy  gpuinfo               modalias       soft_job_timeout
-> >      core_mask                 js_scheduling_period  of_node        subsystem
-> >      devfreq                   js_timeouts           pm_poweroff    uevent
-> >      driver                    mem_pool_max_size     power
-> >      driver_override           mem_pool_size         power_policy
-> >      dvfs_period               misc                  reset_timeout
-> > ---
-> >
-> > And for thermal with IPA.
-> > Try to run 'md5sum /dev/zero &' and octane/benchmark scripts to go up the temperature.
-> >  From the scripts to have a look at the actual control.
-> > "
-> > while true; do grep "" /sys/class/thermal/thermal_zone[0-1]/temp /sys/devices/system/cpu/cpu[0-5]/cpufreq/scaling_cur_freq /sys/devices/platform/ff9a0000.gpu/devfreq/devfreq0/cur_freq;date;sleep .5; done &
-> > "
-> >
-> > -Caesar
-> >
-> >
-> > Changes in v2:
-> > As Heiko comments on https://patchwork.kernel.org/patch/9835939/
-> > - interrupt-name use the lower case.
-> > - use the correct compatible "arm,mali-t860"
-> > - remove the clock name, since the mali only have one input clock.
-> > - foo@ will produce warnings when used without reg property.
-> > - update the commit to explain the two passive trip points changed.
-> >
-> > Caesar Wang (5):
-> >    dt-bindings: gpu: add the RK3399 mali for rockchip specifics
-> >    dt-bindings: gpu: add a power_model optional properties for MALI
-> >    arm64: dts: rockchip: add ARM Mali GPU node for RK3399 SoCs
-> >    arm64: dts: rockchip: enable the GPU for RK3399-GRU
-> >    arm64: dts: rockchip: update the thermal zones for RK3399 SoCs
-> >
-> >   .../devicetree/bindings/gpu/arm,mali-midgard.txt   | 13 ++++
-> >   arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       |  5 ++
-> >   arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi   | 33 ++++++++++
-> >   arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi       | 33 ++++++++++
-> >   arch/arm64/boot/dts/rockchip/rk3399.dtsi           | 74 ++++++++++++----------
-> >   5 files changed, 125 insertions(+), 33 deletions(-)
-> >
-> 
-> 
-> 
-> 
+I believe the main function of the device is clock controller (unlikely
+a generic reset controller can be converted into a clock controller),
+the locations of the document and device driver also indicate that
+primarily it is a clock controller, so I suggest to replace device node
+name with 'clock-controller' like below:
 
+	rcc: clock-controller@58024400 {
+
+> +		#reset-cells = <1>;
+> +		#clock-cells = <2>
+
+Missing trailing semicolon       ^^^
+
+My recommendation is to move #reset-cells and #clock-cells properties
+down after 'reg' or 'clocks' property in the list.
+
+> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+> +		reg = <0x58024400 0x400>;
+> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+> +
+> +		st,syscfg = <&pwrcfg>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+
+Please drop #address-cells and #size-cells properties completely, from
+the document the device node does not define any children subnodes.
+
+> +	};
+> +
+> +The peripheral clock consumer should specify the desired clock by
+> +having the clock ID in its "clocks" phandle cell.
+> +
+> +All available clocks are defined as preprocessor macros in
+> +dt-bindings/clock/stm32h7-clks.h header and can be used in device
+> +tree sources.
+> +
+> +Example:
+> +
+> +		timer5: timer@40000c00 {
+> +			compatible = "st,stm32-timer";
+> +			reg = <0x40000c00 0x400>;
+> +			interrupts = <50>;
+> +			clocks = <&rcc TIM5_CK>;
+> +
+
+Please remote the empty line above.
+
+> +		};
+> +
+> +Specifying softreset control of devices
+> +=======================================
+> +
+> +Device nodes should specify the reset channel required in their "resets"
+> +property, containing a phandle to the reset device node and an index specifying
+> +which channel to use.
+> +The index is the bit number within the RCC registers bank, starting from RCC
+> +base address.
+> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+> +Where bit_offset is the bit offset within the register.
+> +
+> +For example, for CRC reset:
+> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
+> +
+> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
+
+Double slashes ---------->                                           ^^^^ 
+
+I have doubts if it is permitted to add source paths into the device
+tree bindings documentation, because such information is specific to
+the Linux source code.
+
+Rob, can you clarify please?
+
+> +header and can be used in device tree sources.
+> +
+> +example:
+
+For unification, please capitalize it: 'Example:'
+
+> +
+> +	timer2 {
+> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
+> +	};
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+With best wishes,
+Vladimir
