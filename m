@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v2 13/25] mtd: nand: qcom: add QPIC NAND compatible string
-Date: Wed, 19 Jul 2017 17:18:01 +0530
-Message-ID: <1500464893-11352-14-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v2 14/25] mtd: nand: qcom: add and initialize QPIC DMA resources
+Date: Wed, 19 Jul 2017 17:18:02 +0530
+Message-ID: <1500464893-11352-15-git-send-email-absahu@codeaurora.org>
 References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
@@ -10,57 +10,138 @@ To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-elect
 Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The current driver only support EBI2 NAND which uses ADM DMA. The
-latest QCOM controller supports QPIC NAND which uses BAM DMA. NAND
-registers and programming sequence are same for EBI2 and QPIC
-NAND so the same driver can support QPIC NAND also by adding the
-BAM DMA support. This patch adds the QPIC NAND support in current
-NAND driver with compatible string "qcom,qpic-nandc-v1.4.0" and
-maps it with different configuration parameter in driver data.
+1. QPIC NAND uses 3 BAM channels: command, data tx and data
+   rx while EBI2 NAND uses only single ADM channel.
+2. CRCI is only required for ADM DMA and its not required for
+   QPIC NAND.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/mtd/nand/qcom_nandc.c | 83 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 65 insertions(+), 18 deletions(-)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 3b0ae91..6d24630 100644
+index 6d24630..cb2b245 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -323,9 +323,11 @@ struct qcom_nand_host {
-  * This data type corresponds to the nand controller properties which varies
-  * among different NAND controller IP's.
-  * @ecc_modes - ecc mode for NAND
-+ * @is_bam - whether NAND controller is using bam
-  */
- struct qcom_props {
- 	u32 ecc_modes;
-+	bool is_bam;
- };
+@@ -250,9 +250,19 @@ struct qcom_nand_controller {
+ 	struct clk *core_clk;
+ 	struct clk *aon_clk;
  
- static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
-@@ -2245,6 +2247,12 @@ static int qcom_nandc_remove(struct platform_device *pdev)
- 
- static const struct qcom_props ebi2_nandc_data = {
- 	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
-+	.is_bam = false,
-+};
+-	struct dma_chan *chan;
+-	unsigned int cmd_crci;
+-	unsigned int data_crci;
++	union {
++		struct {
++			struct dma_chan *tx_chan;
++			struct dma_chan *rx_chan;
++			struct dma_chan *cmd_chan;
++		};
++		struct {
++			struct dma_chan *chan;
++			unsigned int cmd_crci;
++			unsigned int data_crci;
++		};
++	};
 +
-+static const struct qcom_props qpic_nandc_v1_4_0_data = {
-+	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
-+	.is_bam = true,
- };
+ 	struct list_head desc_list;
  
- /*
-@@ -2255,6 +2263,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
- 	{	.compatible = "qcom,ebi2-nandc",
- 		.data = &ebi2_nandc_data,
- 	},
-+	{	.compatible = "qcom,qpic-nandc-v1.4.0",
-+		.data = &qpic_nandc_v1_4_0_data,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_nandc_of_match);
+ 	u8		*data_buffer;
+@@ -1985,10 +1995,31 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+ 	if (!nandc->reg_read_buf)
+ 		return -ENOMEM;
+ 
+-	nandc->chan = dma_request_slave_channel(nandc->dev, "rxtx");
+-	if (!nandc->chan) {
+-		dev_err(nandc->dev, "failed to request slave channel\n");
+-		return -ENODEV;
++	if (nandc->props->is_bam) {
++		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
++		if (!nandc->tx_chan) {
++			dev_err(nandc->dev, "failed to request tx channel\n");
++			return -ENODEV;
++		}
++
++		nandc->rx_chan = dma_request_slave_channel(nandc->dev, "rx");
++		if (!nandc->rx_chan) {
++			dev_err(nandc->dev, "failed to request rx channel\n");
++			return -ENODEV;
++		}
++
++		nandc->cmd_chan = dma_request_slave_channel(nandc->dev, "cmd");
++		if (!nandc->cmd_chan) {
++			dev_err(nandc->dev, "failed to request cmd channel\n");
++			return -ENODEV;
++		}
++	} else {
++		nandc->chan = dma_request_slave_channel(nandc->dev, "rxtx");
++		if (!nandc->chan) {
++			dev_err(nandc->dev,
++				"failed to request slave channel\n");
++			return -ENODEV;
++		}
+ 	}
+ 
+ 	INIT_LIST_HEAD(&nandc->desc_list);
+@@ -2001,7 +2032,19 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
+ 
+ static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
+ {
+-	dma_release_channel(nandc->chan);
++	if (nandc->props->is_bam) {
++		if (nandc->tx_chan)
++			dma_release_channel(nandc->tx_chan);
++
++		if (nandc->rx_chan)
++			dma_release_channel(nandc->rx_chan);
++
++		if (nandc->cmd_chan)
++			dma_release_channel(nandc->cmd_chan);
++	} else {
++		if (nandc->chan)
++			dma_release_channel(nandc->chan);
++	}
+ }
+ 
+ /* one time setup of a few nand controller registers */
+@@ -2140,16 +2183,20 @@ static int qcom_nandc_parse_dt(struct platform_device *pdev)
+ 	struct device_node *np = nandc->dev->of_node;
+ 	int ret;
+ 
+-	ret = of_property_read_u32(np, "qcom,cmd-crci", &nandc->cmd_crci);
+-	if (ret) {
+-		dev_err(nandc->dev, "command CRCI unspecified\n");
+-		return ret;
+-	}
++	if (!nandc->props->is_bam) {
++		ret = of_property_read_u32(np, "qcom,cmd-crci",
++					   &nandc->cmd_crci);
++		if (ret) {
++			dev_err(nandc->dev, "command CRCI unspecified\n");
++			return ret;
++		}
+ 
+-	ret = of_property_read_u32(np, "qcom,data-crci", &nandc->data_crci);
+-	if (ret) {
+-		dev_err(nandc->dev, "data CRCI unspecified\n");
+-		return ret;
++		ret = of_property_read_u32(np, "qcom,data-crci",
++					   &nandc->data_crci);
++		if (ret) {
++			dev_err(nandc->dev, "data CRCI unspecified\n");
++			return ret;
++		}
+ 	}
+ 
+ 	return 0;
+@@ -2199,7 +2246,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+ 
+ 	ret = qcom_nandc_alloc(nandc);
+ 	if (ret)
+-		return ret;
++		goto err_core_clk;
+ 
+ 	ret = clk_prepare_enable(nandc->core_clk);
+ 	if (ret)
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
