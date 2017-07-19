@@ -1,42 +1,105 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 1/4] gpio: davinci: Use devm_gpiochip_add_data in place of
- gpiochip_add_data
-Date: Wed, 19 Jul 2017 15:28:21 +0530
-Message-ID: <32f70ccc-e52e-af86-87ec-f7a243d518b0@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-2-git-send-email-j-keerthy@ti.com>
- <20170719093722.GW29638@localhost>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
+ controller
+Date: Wed, 19 Jul 2017 15:36:35 +0530
+Message-ID: <6b9988c7-1581-05fc-ef87-4d5486381cea@codeaurora.org>
+References: <1500293043-1887-1-git-send-email-varada@codeaurora.org>
+ <1500293043-1887-8-git-send-email-varada@codeaurora.org>
+ <20170717220718.GZ20973@minitux> <20170718095814.GE32439@codeaurora.org>
+ <20170718164438.GE20973@minitux> <20170719064943.GA29996@codeaurora.org>
+ <81d75c74-df15-cc9d-c07c-dd6f5cc30d18@mm-sol.com>
+ <20170719092905.GA13546@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170719093722.GW29638@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, fcooper@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170719092905.GA13546@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
 
-On Wednesday 19 July 2017 03:07 PM, Johan Hovold wrote:
-> On Tue, Jul 18, 2017 at 04:27:13PM +0530, Keerthy wrote:
->> Use the devm version of gpiochip_add_data and pass on the
->> return value. Reset the static variables to 0 before returning.
-> 
-> You need to describe not just what you do, but also why you it. In this
-> case, your fixing memory leaks and the gpio chip being left registered
-> if this driver is unbound.
+On 07/19/2017 02:59 PM, Varadarajan Narayanan wrote:
+> Stan,
+>
+> On Wed, Jul 19, 2017 at 10:12:45AM +0300, Stanimir Varbanov wrote:
+>> Hi,
+>>
+>> On 07/19/2017 09:49 AM, Varadarajan Narayanan wrote:
+>>> On Tue, Jul 18, 2017 at 09:44:38AM -0700, Bjorn Andersson wrote:
+>>>> On Tue 18 Jul 02:58 PDT 2017, Varadarajan Narayanan wrote:
+>>>>
+>>>>> On Mon, Jul 17, 2017 at 03:07:18PM -0700, Bjorn Andersson wrote:
+>>>>>> On Mon 17 Jul 05:04 PDT 2017, Varadarajan Narayanan wrote:
+>>>> [..]
+>>>>>> Can you confirm that this is actually version 4 of this block? Or are we
+>>>>>> just incrementing an arbitrary number here?
+>>>>> This is not exactly the 4th version of the block. However, it is
+>>>>> a different version than the ones that are already supported in
+>>>>> this driver. Since the existing driver didn't exactly tie it with
+>>>>> the block IP version, I too followed the same versioning
+>>>>> convention.
+>>>>>
+>>>> Do you have a block IP version that you could base your numbering on, to
+>>>> break the trend? (We should go back and fix up the others as well)
+>>> Presently, the driver supports the ipq8064, apq8064, apq8084,
+>>> msm8996, ipq4019 and ipq8074. The SoCs, qcom_pcie_ops version and
+>>> the block IP versions are as follows.
+>>>
+>>> 	ipq8064 - v0 - 2.1.0
+>>> 	apq8064 - v0 - 2.1.0
+>>> 	apq8084 - v1 - 1.0.0
+>>> 	msm8996 - v2 - 2.3.2
+>>> 	ipq4019 - v3 - 2.4.0
+>>> 	ipq8074 - v4 - 2.3.3
+>> That's nice, but I think we need the Synopsys IP versions too, can you
+>> provide such an information and after that we can decide how the names
+>> should look like.
+> Sorry, I posted v2 before I saw this e-mail. Will post v3 based
+> on what naming style is decided.
+>
+> The SoCs, qcom_pcie_ops version, the block IP version and
+> Synopsys IP versions are as follows.
+>
+> 	ipq8064 - v0 - 2.1.0 - 4.01a
+> 	apq8064 - v0 - 2.1.0 - 4.01a
+> 	apq8084 - v1 - 1.0.0 - 4.11a
+> 	msm8996 - v2 - 2.3.2 - 4.21a
+> 	ipq4019 - v3 - 2.4.0 - 4.20a
+> 	ipq8074 - v4 - 2.3.3 - 4.30a
 
-Sure i can add more description as mentioned above.
+I would have loved to say the dwc IP versions sounds better, but
+this is the qcom wrapper over dwc. So, for me it makes more sense
+to have qcom specific IP version names.
+Can we have couple or more versions of qcom pcie IPs based on
+same dwc IP version? I have not looked closely, but in that case
+too using qcom nomenclature would again make more sense.
 
-> 
-> Johan
-> 
+
+Thanks
+Vivek
+
+>
+> Thanks
+> Varada
+>
+>>> I will rename the qcom_pcie_ops structure and related functions
+>>> with the block IP version instead of vX numbering and post the
+>>> patch.
+>>
+>>
+>> regards,
+>> Stan
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
