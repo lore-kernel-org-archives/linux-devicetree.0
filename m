@@ -1,15 +1,18 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 0/5] Add support for the STM32F7 I2C
-Date: Thu, 20 Jul 2017 08:34:53 +0000
-Message-ID: <d749429a-3cdc-ea9b-84ef-afa9fdf55f29@st.com>
-References: <1499356386-28779-1-git-send-email-pierre-yves.mordret@st.com>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v2 0/7] Add support of OV9655 camera
+Date: Thu, 20 Jul 2017 10:37:58 +0200
+Message-ID: <AB91B71D-E34B-4645-BD70-A87226BA34C5@goldelico.com>
+References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
+ <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
+ <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
+ <BCD1BD18-96E3-4638-8935-B5C832D8EE52@goldelico.com>
+ <2dd3402e-55b0-231d-878f-5ba95ee8cb36@st.com>
+ <20170718195223.zrqfrefxxzqfsojd@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1499356386-28779-1-git-send-email-pierre-yves.mordret@st.com>
-Content-Language: en-US
-Content-ID: <090D44A4CD53EC40BEDA6060453C5FA9@st.com>
+In-Reply-To: <20170718195223.zrqfrefxxzqfsojd@valkosipuli.retiisi.org.uk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,54 +22,92 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>, Hugues FRUCHET <hugues.fruchet@st.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 07/06/2017 05:53 PM, Pierre-Yves MORDRET wrote:
-> This patchset adds support for the I2C controller embedded in STM32F7xx SoC.
-> It enables I2C transfer in interrupt mode with Standard-mode, Fast-mode and
-> Fast-mode+ bus speed.
-
-Gentle ping for driver review since DT Bindings has been acked by Rob 
-Herring.
-
-Thanks
-Py
-
-> ---
->   Version history:
->      v3:
->          * Move stm32f7_i2c_match above stm32f7_i2c_driver
->          * of_device_get_match_data instead of of_match_device
->          * Improve I2C Speed DT gathering
->          * dev_err into dev_dbg for Arbitration loss
->          * Remove useless space aligned
+> Am 18.07.2017 um 21:52 schrieb Sakari Ailus <sakari.ailus@iki.fi>:
 > 
->      v2:
->          * Implement an I2C timings computation algorithm instead of static
->            values(bindings). Algorithm uses generic I2C SCL Falling/Rising
->            bindings and System clock to compute its timings.
->          * I2C Device Tree Update
-> ---
-> Pierre-Yves MORDRET (5):
->    dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
->    i2c: i2c-stm32f4: use generic definition of speed enum
->    i2c: i2c-stm32f7: add driver
->    ARM: dts: stm32: Add I2C1 support for STM32F746 SoC
->    ARM: dts: stm32: Add I2C1 support for STM32F746 eval board
+> On Tue, Jul 18, 2017 at 12:53:12PM +0000, Hugues FRUCHET wrote:
+>> 
+>> 
+>> On 07/18/2017 02:17 PM, H. Nikolaus Schaller wrote:
+>>> Hi,
+>>> 
+>>>> Am 18.07.2017 um 13:59 schrieb Hans Verkuil <hverkuil@xs4all.nl>:
+>>>> 
+>>>> On 12/07/17 22:01, Sylwester Nawrocki wrote:
+>>>>> Hi Hugues,
+>>>>> 
+>>>>> On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
+>>>>>> This patchset enables OV9655 camera support.
+>>>>>> 
+>>>>>> OV9655 support has been tested using STM32F4DIS-CAM extension board
+>>>>>> plugged on connector P1 of STM32F746G-DISCO board.
+>>>>>> Due to lack of OV9650/52 hardware support, the modified related code
+>>>>>> could not have been checked for non-regression.
+>>>>>> 
+>>>>>> First patches upgrade current support of OV9650/52 to prepare then
+>>>>>> introduction of OV9655 variant patch.
+>>>>>> Because of OV9655 register set slightly different from OV9650/9652,
+>>>>>> not all of the driver features are supported (controls). Supported
+>>>>>> resolutions are limited to VGA, QVGA, QQVGA.
+>>>>>> Supported format is limited to RGB565.
+>>>>>> Controls are limited to color bar test pattern for test purpose.
+>>>>> 
+>>>>> I appreciate your efforts towards making a common driver but IMO it would be
+>>>>> better to create a separate driver for the OV9655 sensor.  The original driver
+>>>>> is 1576 lines of code, your patch set adds half of that (816).  There are
+>>>>> significant differences in the feature set of both sensors, there are
+>>>>> differences in the register layout.  I would go for a separate driver, we
+>>>>> would then have code easier to follow and wouldn't need to worry about possible
+>>>>> regressions.  I'm afraid I have lost the camera module and won't be able
+>>>>> to test the patch set against regressions.
+>>>>> 
+>>>>> IMHO from maintenance POV it's better to make a separate driver. In the end
+>>>>> of the day we wouldn't be adding much more code than it is being done now.
+>>>> 
+>>>> I agree. We do not have great experiences in the past with trying to support
+>>>> multiple variants in a single driver (unless the diffs are truly small).
+>>> 
+>>> Well,
+>>> IMHO the diffs in ov965x are smaller (but untestable because nobody seems
+>>> to have an ov9650/52 board) than within the bq27xxx chips, but I can dig out
+>>> an old pdata based separate ov9655 driver and extend that to become DT compatible.
+>>> 
+>>> I had abandoned that separate approach in favour of extending the ov965x driver.
+>>> 
+>>> Have to discuss with Hugues how to proceed.
+>>> 
+>>> BR and thanks,
+>>> Nikolaus
+>>> 
+>> 
+>> As Sylwester and Hans, I'm also in flavour of a separate driver, the 
+>> fact that register set seems similar but in fact is not and that we 
+>> cannot test for non-regression of 9650/52 are killer for me to continue 
+>> on a single driver.
+>> We can now restart from a new fresh state of the art sensor driver 
+>> getting rid of legacy (pdata, old gpio, etc...).
 > 
->   .../devicetree/bindings/i2c/i2c-stm32.txt          |  29 +-
->   arch/arm/boot/dts/stm32746g-eval.dts               |   8 +
->   arch/arm/boot/dts/stm32f746.dtsi                   |  22 +
->   drivers/i2c/busses/Kconfig                         |  10 +
->   drivers/i2c/busses/Makefile                        |   1 +
->   drivers/i2c/busses/i2c-stm32.h                     |  20 +
->   drivers/i2c/busses/i2c-stm32f4.c                   |  18 +-
->   drivers/i2c/busses/i2c-stm32f7.c                   | 974 +++++++++++++++++++++
->   8 files changed, 1068 insertions(+), 14 deletions(-)
->   create mode 100644 drivers/i2c/busses/i2c-stm32.h
->   create mode 100644 drivers/i2c/busses/i2c-stm32f7.c
-> 
+> Agreed. I bet the result will look cleaner indeed although this wasn't one
+> of the complex drivers.
+
+I finally managed to find the bug why mplayer did select-timeout on the GTA04.
+Was a bug in pinmux setup of the GTA04 for the omap3isp.
+
+And I have resurrected our years old 3.12 camera driver, which was based on the
+MT9P031 code. It was already separate from ov9650/52.
+
+I have extended it to support DT by including some parts of Hugues' work.
+
+It still needs some cleanup and discussion but will be a simple patch (one
+for ov9655.c + Kconfig + Makefile) and one for bindings (I hope it includes
+all your comments).
+
+I will post v1 in the next days.
+
+BR,
+Nikolaus
