@@ -1,50 +1,39 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH] ARM: dts: enable sdmmc for rockchip rv1108 evb
-Date: Thu, 20 Jul 2017 18:13:41 +0800
-Message-ID: <1500545621-20746-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
+ Qualcomm Camera subsystem driver
+Date: Thu, 20 Jul 2017 13:15:22 +0300
+Message-ID: <20170720101522.gwizeu4ganovshe2@valkosipuli.retiisi.org.uk>
+References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
+ <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, hans.verkuil@cisco.com, javier@osg.samsung.com, s.nawrocki@samsung.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable sdmmc on rv1108 evaluation board. Also
-add pinctrl for sdmmc controller.
+On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
+> Add DT binding document for Qualcomm Camera subsystem driver.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
+>  1 file changed, 191 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> new file mode 100644
+> index 0000000..f698498
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+qcom,camss.txt or qcom,camss-8x16.txt?
 
- arch/arm/boot/dts/rv1108-evb.dts | 4 ++++
- arch/arm/boot/dts/rv1108.dtsi    | 2 ++
- 2 files changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 58cf4ac..58ee0fb 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -56,6 +56,10 @@
- 	};
- };
- 
-+&sdmmc {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 437098b..0da144c 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -202,6 +202,8 @@
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
- 		fifo-depth = <0x100>;
- 		interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
- 		reg = <0x30130000 0x4000>;
 -- 
-2.7.4
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
