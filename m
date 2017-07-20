@@ -1,7 +1,7 @@
-From: Greg KH <gregkh@linuxfoundation.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 Subject: Re: [PATCH 1/1] drivers/staging/pi433: New driver
-Date: Thu, 20 Jul 2017 13:31:50 +0200
-Message-ID: <20170720113150.GA25299@kroah.com>
+Date: Thu, 20 Jul 2017 14:37:05 +0300
+Message-ID: <20170720113705.d65hxm3jbki2ynqd@mwanda>
 References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
  <201707172156.DCyTyWc2%fengguang.wu@intel.com>
  <652336354.3806.1500549785404@ox.hosteurope.de>
@@ -21,8 +21,10 @@ List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driver
 Errors-To: driverdev-devel-bounces@linuxdriverproject.org
 Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kbuild-all@01.org, grant.likely@linaro.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kbuild-all@01.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
+
+
 
 On Thu, Jul 20, 2017 at 01:23:05PM +0200, Marcus Wolf wrote:
 > Hi Greg,
@@ -37,15 +39,18 @@ On Thu, Jul 20, 2017 at 01:23:05PM +0200, Marcus Wolf wrote:
 > 
 > I don't know how to come arround this problem by modifying my code (except
 > reducing the accuracy of the calculation by not using floating point).
+
+I don't see any floating point?  You're not allowed to use floating
+point in the kernel.
+
 > 
 > Can we ignore the error or can I do something else?
 > Maybe a special include just in case of m68k can help??!?
 > I don't have an environment for building m68k.
+> 
 
-It looks like a 64bit issue, try wrapping your division in that function
-with a call to do_div() like you do elsewhere in that function.  That
-should solve the issue.
+I think the answer is to use div_u64() and div64_u64 instead of
+do_div()?  Or you could just add a depend in the Kconfig.
 
-thanks,
-
-greg k-h
+regards,
+dan carpenter
