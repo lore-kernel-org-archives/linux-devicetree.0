@@ -1,86 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
-Date: Thu, 20 Jul 2017 12:52:12 +0300
-Message-ID: <b04fea5c-c47b-4643-5305-090f5f17afe1@cogentembedded.com>
-References: <20170719233654.25908-1-fcooper@ti.com>
- <20170719233654.25908-2-fcooper@ti.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Documentation: mtk-quadspi: update DT bindings
+Date: Thu, 20 Jul 2017 11:55:12 +0200
+Message-ID: <8629861c-5da6-2ed3-cc69-e3ee18f48b07@gmail.com>
+References: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
+ <1500539352-9499-2-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170719233654.25908-2-fcooper-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1500539352-9499-2-git-send-email-guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
+To: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
 
-On 7/20/2017 2:36 AM, Franklin S Cooper Jr wrote:
 
-> Various CAN or CAN-FD IP may be able to run at a faster rate than
-> what the transceiver the CAN node is connected to. This can lead to
-> unexpected errors. However, CAN transceivers typically have fixed
-> limitations and provide no means to discover these limitations at
-> runtime. Therefore, add support for a fixed-transceiver node that
-> can be reused by other CAN peripheral drivers to determine for both
-> CAN and CAN-FD what the max bitrate that can be used. If the user
-> tries to configure CAN to pass these maximum bitrates it will throw
-> an error.
+On 07/20/2017 10:29 AM, Guochun Mao wrote:
+> Add "mediatek,mt2712-nor" for nor flash node's compatible.
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->   drivers/net/can/dev.c   | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
->   include/linux/can/dev.h |  5 +++++
->   2 files changed, 53 insertions(+)
+>   .../devicetree/bindings/mtd/mtk-quadspi.txt        |    1 +
+>   1 file changed, 1 insertion(+)
 > 
-> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-> index 365a8cc..fbab87d 100644
-> --- a/drivers/net/can/dev.c
-> +++ b/drivers/net/can/dev.c
-[...]
-> @@ -814,6 +830,38 @@ int open_candev(struct net_device *dev)
->   }
->   EXPORT_SYMBOL_GPL(open_candev);
+> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> index 5ded66a..592bb71 100644
+> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> @@ -2,6 +2,7 @@
 >   
-> +#ifdef CONFIG_OF
-> +void of_transceiver_is_fixed(struct net_device *dev)
+>   Required properties:
+>   - compatible: 	  The possible values are:
+> +		  "mediatek,mt2712-nor"
 
-    Strange name for a *void* function...
-    Also, I think 'struct net_device *' variables are typically called 'ndev'.
+Please sort in alphabetic order.
 
-> +{
-> +	struct device_node *dn;
-> +	struct can_priv *priv = netdev_priv(dev);
-> +	u32 max_frequency;
-> +	struct device_node *np;
-> +
-> +	np = dev->dev.parent->of_node;
-> +
-> +	/* New binding */
-> +	dn = of_get_child_by_name(np, "fixed-transceiver");
-> +	if (!dn)
-> +		return;
-> +
-> +	of_property_read_u32(dn, "max-arbitration-speed", &max_frequency);
+Thanks,
+Matthias
 
-    In case this function fails, 'max_frequency' will have no value -- you'd 
-better initialize it...
-
-> +
-> +	if (max_frequency > 0)
-> +		priv->max_trans_arbitration_speed = max_frequency;
-> +	else
-> +		priv->max_trans_arbitration_speed = -1;
-> +
-> +	of_property_read_u32(dn, "max-data-speed", &max_frequency);
-
-    Again, when that function fails, the variable will keep the value from the 
-previous call...
-
-[...]
-
-MBR, Sergei
+>   		  "mediatek,mt2701-nor"
+>   		  "mediatek,mt7623-nor"
+>   		  "mediatek,mt8173-nor"
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
