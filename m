@@ -1,128 +1,155 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
-Date: Wed, 19 Jul 2017 18:36:51 -0500
-Message-ID: <20170719233654.25908-2-fcooper@ti.com>
-References: <20170719233654.25908-1-fcooper@ti.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Move the BCM2837 DT contents from
+ arm64 to arm.
+Date: Wed, 19 Jul 2017 17:01:33 -0700
+Message-ID: <a2e79c17-f345-e7f2-8438-d4754e4ceb3a@broadcom.com>
+References: <20170719201916.22369-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170719233654.25908-1-fcooper@ti.com>
+In-Reply-To: <20170719201916.22369-1-eric@anholt.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+To: Eric Anholt <eric@anholt.net>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Various CAN or CAN-FD IP may be able to run at a faster rate than
-what the transceiver the CAN node is connected to. This can lead to
-unexpected errors. However, CAN transceivers typically have fixed
-limitations and provide no means to discover these limitations at
-runtime. Therefore, add support for a fixed-transceiver node that
-can be reused by other CAN peripheral drivers to determine for both
-CAN and CAN-FD what the max bitrate that can be used. If the user
-tries to configure CAN to pass these maximum bitrates it will throw
-an error.
+Hi Eric,
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- drivers/net/can/dev.c   | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/can/dev.h |  5 +++++
- 2 files changed, 53 insertions(+)
+suggestion inline
 
-diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-index 365a8cc..fbab87d 100644
---- a/drivers/net/can/dev.c
-+++ b/drivers/net/can/dev.c
-@@ -27,6 +27,7 @@
- #include <linux/can/skb.h>
- #include <linux/can/netlink.h>
- #include <linux/can/led.h>
-+#include <linux/of.h>
- #include <net/rtnetlink.h>
- 
- #define MOD_DESC "CAN device driver interface"
-@@ -806,6 +807,21 @@ int open_candev(struct net_device *dev)
- 		return -EINVAL;
- 	}
- 
-+	if (priv->max_trans_arbitration_speed > 0 &&
-+	    priv->bittiming.bitrate > priv->max_trans_arbitration_speed) {
-+		netdev_err(dev, "arbitration bitrate surpasses transceiver capabilities of %d bps\n",
-+			   priv->max_trans_arbitration_speed);
-+		return -EINVAL;
-+	}
-+
-+	if (priv->max_trans_data_speed  >= 0 &&
-+	    (priv->ctrlmode & CAN_CTRLMODE_FD) &&
-+	    (priv->data_bittiming.bitrate > priv->max_trans_data_speed)) {
-+		netdev_err(dev, "canfd data bitrate surpasses transceiver capabilities of %d bps\n",
-+			   priv->max_trans_data_speed);
-+		return -EINVAL;
-+	}
-+
- 	/* Switch carrier on if device was stopped while in bus-off state */
- 	if (!netif_carrier_ok(dev))
- 		netif_carrier_on(dev);
-@@ -814,6 +830,38 @@ int open_candev(struct net_device *dev)
- }
- EXPORT_SYMBOL_GPL(open_candev);
- 
-+#ifdef CONFIG_OF
-+void of_transceiver_is_fixed(struct net_device *dev)
-+{
-+	struct device_node *dn;
-+	struct can_priv *priv = netdev_priv(dev);
-+	u32 max_frequency;
-+	struct device_node *np;
-+
-+	np = dev->dev.parent->of_node;
-+
-+	/* New binding */
-+	dn = of_get_child_by_name(np, "fixed-transceiver");
-+	if (!dn)
-+		return;
-+
-+	of_property_read_u32(dn, "max-arbitration-speed", &max_frequency);
-+
-+	if (max_frequency > 0)
-+		priv->max_trans_arbitration_speed = max_frequency;
-+	else
-+		priv->max_trans_arbitration_speed = -1;
-+
-+	of_property_read_u32(dn, "max-data-speed", &max_frequency);
-+
-+	if (max_frequency >= 0)
-+		priv->max_trans_data_speed = max_frequency;
-+	else
-+		priv->max_trans_data_speed = -1;
-+}
-+EXPORT_SYMBOL(of_transceiver_is_fixed);
-+#endif
-+
- /*
-  * Common close function for cleanup before the device gets closed.
-  *
-diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
-index 141b05a..aec72b5 100644
---- a/include/linux/can/dev.h
-+++ b/include/linux/can/dev.h
-@@ -69,6 +69,9 @@ struct can_priv {
- 	unsigned int echo_skb_max;
- 	struct sk_buff **echo_skb;
- 
-+	unsigned int max_trans_arbitration_speed;
-+	unsigned int max_trans_data_speed;
-+
- #ifdef CONFIG_CAN_LEDS
- 	struct led_trigger *tx_led_trig;
- 	char tx_led_trig_name[CAN_LED_NAME_SZ];
-@@ -165,6 +168,8 @@ void can_put_echo_skb(struct sk_buff *skb, struct net_device *dev,
- unsigned int can_get_echo_skb(struct net_device *dev, unsigned int idx);
- void can_free_echo_skb(struct net_device *dev, unsigned int idx);
- 
-+void of_transceiver_is_fixed(struct net_device *dev);
-+
- struct sk_buff *alloc_can_skb(struct net_device *dev, struct can_frame **cf);
- struct sk_buff *alloc_canfd_skb(struct net_device *dev,
- 				struct canfd_frame **cfd);
--- 
-2.10.0
+
+On 17-07-19 01:19 PM, Eric Anholt wrote:
+> BCM2837 is somewhat unusual in that we build its DT on both arm32 and
+> arm64.  Most devices are being run in arm32 mode.
+>
+> Having the body of the DT for 2837 separate from 2835/6 has been a
+> source of pain, as we often need to make changes that span both
+> directories simultaneously (for example, the thermal changes for 4.13,
+> and pinmuxing changes earlier).  Other changes are made more
+> complicated than they need to be, such as the SDHOST enabling, because
+> we end up splitting a single change into a 283[56] half and a 2837
+> half.
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>
+> I had asked about what we could do about our DT merging troubles back
+> in https://lkml.org/lkml/2017/5/16/707 with no response.  I'm hoping
+> we can take this patch as a resolution to that, and submit (almost
+> all) future RPi DT changes through the arm32 dt tree.
+>
+>
+>   arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 +++++++++++++++++++++-
+>   .../dts/broadcom => arm/boot/dts}/bcm2837.dtsi     |  0
+>   arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +---------------------
+>   3 files changed, 42 insertions(+), 42 deletions(-)
+>   rename arch/{arm64/boot/dts/broadcom => arm/boot/dts}/bcm2837.dtsi (100%)
+>
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> index c72a27d908b6..972f14db28ac 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> @@ -1 +1,41 @@
+> -#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
+> +/dts-v1/;
+> +#include "bcm2837.dtsi"
+> +#include "bcm2835-rpi.dtsi"
+> +#include "bcm283x-rpi-smsc9514.dtsi"
+> +#include "bcm283x-rpi-usb-host.dtsi"
+If you're moving this back to the arm directory why not change the 
+include path and remove the 4 symlinks in arm64/boot/dts/broadcom?
+
++#include "arm/bcm2837.dtsi"
++#include "arm/bcm2835-rpi.dtsi"
++#include "arm/bcm283x-rpi-smsc9514.dtsi"
++#include "arm/bcm283x-rpi-usb-host.dtsi"
+
+
+> +
+> +/ {
+> +	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+> +	model = "Raspberry Pi 3 Model B";
+> +
+> +	memory {
+> +		reg = <0 0x40000000>;
+> +	};
+> +
+> +	leds {
+> +		act {
+> +			gpios = <&gpio 47 0>;
+> +		};
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +};
+> +
+> +/* SDHCI is used to control the SDIO for wireless */
+> +&sdhci {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_gpio34>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +	non-removable;
+> +};
+> +
+> +/* SDHOST is used to drive the SD card */
+> +&sdhost {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdhost_gpio48>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +};
+> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+> similarity index 100%
+> rename from arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+> rename to arch/arm/boot/dts/bcm2837.dtsi
+> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+> index 972f14db28ac..699d340a3437 100644
+> --- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+> @@ -1,41 +1 @@
+> -/dts-v1/;
+> -#include "bcm2837.dtsi"
+> -#include "bcm2835-rpi.dtsi"
+> -#include "bcm283x-rpi-smsc9514.dtsi"
+> -#include "bcm283x-rpi-usb-host.dtsi"
+> -
+> -/ {
+> -	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+> -	model = "Raspberry Pi 3 Model B";
+> -
+> -	memory {
+> -		reg = <0 0x40000000>;
+> -	};
+> -
+> -	leds {
+> -		act {
+> -			gpios = <&gpio 47 0>;
+> -		};
+> -	};
+> -};
+> -
+> -&uart1 {
+> -	status = "okay";
+> -};
+> -
+> -/* SDHCI is used to control the SDIO for wireless */
+> -&sdhci {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&emmc_gpio34>;
+> -	status = "okay";
+> -	bus-width = <4>;
+> -	non-removable;
+> -};
+> -
+> -/* SDHOST is used to drive the SD card */
+> -&sdhost {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&sdhost_gpio48>;
+> -	status = "okay";
+> -	bus-width = <4>;
+> -};
+> +#include "arm/bcm2837-rpi-3-b.dts"
