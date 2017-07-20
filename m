@@ -1,113 +1,92 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v2 0/7] Add support of OV9655 camera
-Date: Thu, 20 Jul 2017 10:37:58 +0200
-Message-ID: <AB91B71D-E34B-4645-BD70-A87226BA34C5@goldelico.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
- <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
- <BCD1BD18-96E3-4638-8935-B5C832D8EE52@goldelico.com>
- <2dd3402e-55b0-231d-878f-5ba95ee8cb36@st.com>
- <20170718195223.zrqfrefxxzqfsojd@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170718195223.zrqfrefxxzqfsojd@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Hugues FRUCHET <hugues.fruchet@st.com>, Sylwester Nawrocki <snawrocki@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: mfd: Add bindings for ZII RAVE
+ devices
+Date: Thu, 20 Jul 2017 10:04:46 +0100
+Message-ID: <20170720090446.gk5xxdimfrgj3tll@dell>
+References: <20170718175604.11735-1-andrew.smirnov@gmail.com>
+ <20170718175604.11735-3-andrew.smirnov@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170718175604.11735-3-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-kernel@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Where is patch 1?
 
-> Am 18.07.2017 um 21:52 schrieb Sakari Ailus <sakari.ailus@iki.fi>:
+> Cc: cphealy@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
 > 
-> On Tue, Jul 18, 2017 at 12:53:12PM +0000, Hugues FRUCHET wrote:
->> 
->> 
->> On 07/18/2017 02:17 PM, H. Nikolaus Schaller wrote:
->>> Hi,
->>> 
->>>> Am 18.07.2017 um 13:59 schrieb Hans Verkuil <hverkuil@xs4all.nl>:
->>>> 
->>>> On 12/07/17 22:01, Sylwester Nawrocki wrote:
->>>>> Hi Hugues,
->>>>> 
->>>>> On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
->>>>>> This patchset enables OV9655 camera support.
->>>>>> 
->>>>>> OV9655 support has been tested using STM32F4DIS-CAM extension board
->>>>>> plugged on connector P1 of STM32F746G-DISCO board.
->>>>>> Due to lack of OV9650/52 hardware support, the modified related code
->>>>>> could not have been checked for non-regression.
->>>>>> 
->>>>>> First patches upgrade current support of OV9650/52 to prepare then
->>>>>> introduction of OV9655 variant patch.
->>>>>> Because of OV9655 register set slightly different from OV9650/9652,
->>>>>> not all of the driver features are supported (controls). Supported
->>>>>> resolutions are limited to VGA, QVGA, QQVGA.
->>>>>> Supported format is limited to RGB565.
->>>>>> Controls are limited to color bar test pattern for test purpose.
->>>>> 
->>>>> I appreciate your efforts towards making a common driver but IMO it would be
->>>>> better to create a separate driver for the OV9655 sensor.  The original driver
->>>>> is 1576 lines of code, your patch set adds half of that (816).  There are
->>>>> significant differences in the feature set of both sensors, there are
->>>>> differences in the register layout.  I would go for a separate driver, we
->>>>> would then have code easier to follow and wouldn't need to worry about possible
->>>>> regressions.  I'm afraid I have lost the camera module and won't be able
->>>>> to test the patch set against regressions.
->>>>> 
->>>>> IMHO from maintenance POV it's better to make a separate driver. In the end
->>>>> of the day we wouldn't be adding much more code than it is being done now.
->>>> 
->>>> I agree. We do not have great experiences in the past with trying to support
->>>> multiple variants in a single driver (unless the diffs are truly small).
->>> 
->>> Well,
->>> IMHO the diffs in ov965x are smaller (but untestable because nobody seems
->>> to have an ov9650/52 board) than within the bq27xxx chips, but I can dig out
->>> an old pdata based separate ov9655 driver and extend that to become DT compatible.
->>> 
->>> I had abandoned that separate approach in favour of extending the ov965x driver.
->>> 
->>> Have to discuss with Hugues how to proceed.
->>> 
->>> BR and thanks,
->>> Nikolaus
->>> 
->> 
->> As Sylwester and Hans, I'm also in flavour of a separate driver, the 
->> fact that register set seems similar but in fact is not and that we 
->> cannot test for non-regression of 9650/52 are killer for me to continue 
->> on a single driver.
->> We can now restart from a new fresh state of the art sensor driver 
->> getting rid of legacy (pdata, old gpio, etc...).
-> 
-> Agreed. I bet the result will look cleaner indeed although this wasn't one
-> of the complex drivers.
+> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> new file mode 100644
+> index 000000000000..61d9105ded07
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+> @@ -0,0 +1,39 @@
+> +Zodiac Inflight Innovations RAVE Supervisory Processor
+> +
+> +RAVE Supervisory Processor communicates with SoC over UART. It is
+> +expected that its device-tree node is specified as a child of a node
 
-I finally managed to find the bug why mplayer did select-timeout on the GTA04.
-Was a bug in pinmux setup of the GTA04 for the omap3isp.
+Nit: Device Tree
 
-And I have resurrected our years old 3.12 camera driver, which was based on the
-MT9P031 code. It was already separate from ov9650/52.
+Once fixed, please apply my:
 
-I have extended it to support DT by including some parts of Hugues' work.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-It still needs some cleanup and discussion but will be a simple patch (one
-for ov9655.c + Kconfig + Makefile) and one for bindings (I hope it includes
-all your comments).
+> +corresponding to UART controller used for communication.
+> +
+> +Required parent device properties:
+> +
+> + - compatible: Should be one of:
+> +	- "zii,rave-sp-niu"
+> +	- "zii,rave-sp-mezz"
+> +	- "zii,rave-sp-esb"
+> +	- "zii,rave-sp-rdu1"
+> +	- "zii,rave-sp-rdu2"
+> +
+> + - current-speed: Should be set to baud rate SP device is using
+> +
+> +RAVE SP consists of the following sub-devices:
+> +
+> +Device				 Description
+> +------				 -----------
+> +rave-sp-wdt			: Watchdog
+> +rave-sp-nvmem			: Interface to onborad EEPROM
+> +rave-sp-backlight		: Display backlight
+> +rave-sp-hwmon			: Interface to onboard hardware sensors
+> +rave-sp-leds			: Interface to onboard LEDs
+> +rave-sp-input			: Interface to onboard power button
+> +
+> +Example of usage:
+> +
+> +	rdu {
+> +		compatible = "zii,rave-sp-rdu2";
+> +		current-speed = <1000000>;
+> +
+> +		watchdog {
+> +			compatible = "zii,rave-sp-watchdog";
+> +		};
+> +	};
+> +
 
-I will post v1 in the next days.
-
-BR,
-Nikolaus
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
