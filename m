@@ -1,92 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: mfd: Add bindings for ZII RAVE
- devices
-Date: Thu, 20 Jul 2017 10:04:46 +0100
-Message-ID: <20170720090446.gk5xxdimfrgj3tll@dell>
-References: <20170718175604.11735-1-andrew.smirnov@gmail.com>
- <20170718175604.11735-3-andrew.smirnov@gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 2/4] gpio: davinci: Handle the return value of
+ davinci_gpio_irq_setup function
+Date: Thu, 20 Jul 2017 14:40:37 +0530
+Message-ID: <cc66dfaf-05c5-8d55-03a6-556ec83c4487@ti.com>
+References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
+ <1500375436-9435-3-git-send-email-j-keerthy@ti.com>
+ <20170719111000.GX29638@localhost>
+ <cbea9082-3799-281b-1364-50e442f5362f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718175604.11735-3-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cbea9082-3799-281b-1364-50e442f5362f@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: linus.walleij@linaro.org, ssantosh@kernel.org, devicetree@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, fcooper@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Where is patch 1?
 
-> Cc: cphealy@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> ---
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+
+On Thursday 20 July 2017 12:14 PM, Keerthy wrote:
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> new file mode 100644
-> index 000000000000..61d9105ded07
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> @@ -0,0 +1,39 @@
-> +Zodiac Inflight Innovations RAVE Supervisory Processor
-> +
-> +RAVE Supervisory Processor communicates with SoC over UART. It is
-> +expected that its device-tree node is specified as a child of a node
+> 
+> On Wednesday 19 July 2017 04:40 PM, Johan Hovold wrote:
+>> On Tue, Jul 18, 2017 at 04:27:14PM +0530, Keerthy wrote:
+>>> Currently davinci_gpio_irq_setup return value is ignored. Handle the
+>>> return value appropriately.
+>>>
+>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>> ---
+>>>  drivers/gpio/gpio-davinci.c | 18 +++++++++++++-----
+>>>  1 file changed, 13 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+>>> index 2c88054..932f270 100644
+>>> --- a/drivers/gpio/gpio-davinci.c
+>>> +++ b/drivers/gpio/gpio-davinci.c
+>>> @@ -233,15 +233,23 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+>>>  		chips->regs[bank] = gpio_base + offset_array[bank];
+>>>  
+>>>  	ret = devm_gpiochip_add_data(dev, &chips->chip, chips);
+>>> +	if (ret)
+>>> +		goto err;
+>>> +
+>>> +	platform_set_drvdata(pdev, chips);
+>>> +	ret = davinci_gpio_irq_setup(pdev);
+>>>  	if (ret) {
+>>> -		ctrl_num = 0;
+>>> -		bank_base = 0;
+>>> -		return ret;
+>>> +		platform_set_drvdata(pdev, NULL);
+>>> +		goto err;
+>>>  	}
+>>>  
+>>> -	platform_set_drvdata(pdev, chips);
+>>> -	davinci_gpio_irq_setup(pdev);
+>>>  	return 0;
+>>
+>> There's a separate but related bug here too as the clk_prepare_enable()
+>> in davinci_gpio_irq_setup() is never balanced on driver unbind.
+> 
+> Yes Johan. I will send that as a separate patch.
 
-Nit: Device Tree
+This is already fixed in the latest kernel:
 
-Once fixed, please apply my:
+commit 6dc0048cff988858254fcc26becfc1e9753efa79
+Author: Arvind Yadav <arvind.yadav.cs@gmail.com>
+Date:   Tue May 23 14:48:57 2017 +0530
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
-> +corresponding to UART controller used for communication.
-> +
-> +Required parent device properties:
-> +
-> + - compatible: Should be one of:
-> +	- "zii,rave-sp-niu"
-> +	- "zii,rave-sp-mezz"
-> +	- "zii,rave-sp-esb"
-> +	- "zii,rave-sp-rdu1"
-> +	- "zii,rave-sp-rdu2"
-> +
-> + - current-speed: Should be set to baud rate SP device is using
-> +
-> +RAVE SP consists of the following sub-devices:
-> +
-> +Device				 Description
-> +------				 -----------
-> +rave-sp-wdt			: Watchdog
-> +rave-sp-nvmem			: Interface to onborad EEPROM
-> +rave-sp-backlight		: Display backlight
-> +rave-sp-hwmon			: Interface to onboard hardware sensors
-> +rave-sp-leds			: Interface to onboard LEDs
-> +rave-sp-input			: Interface to onboard power button
-> +
-> +Example of usage:
-> +
-> +	rdu {
-> +		compatible = "zii,rave-sp-rdu2";
-> +		current-speed = <1000000>;
-> +
-> +		watchdog {
-> +			compatible = "zii,rave-sp-watchdog";
-> +		};
-> +	};
-> +
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Regards,
+Keerthy
+> 
+>>
+>> Johan
+>>
