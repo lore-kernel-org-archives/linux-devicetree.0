@@ -1,13 +1,17 @@
-From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: [PATCH] Documentation: mtk-quadspi: update DT bindings
-Date: Thu, 20 Jul 2017 16:29:12 +0800
-Message-ID: <1500539352-9499-2-git-send-email-guochun.mao@mediatek.com>
-References: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [PATCH v7 3/3] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 20 Jul 2017 08:31:45 +0000
+Message-ID: <11c37627-a39b-7f2d-d0d4-af312eac8668@st.com>
+References: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
+ <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
+ <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
+In-Reply-To: <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
+Content-Language: en-US
+Content-ID: <72287505EB997745A3C0972C0EE2F7F2@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,28 +21,164 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Guochun Mao <guochun.mao@mediatek.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+To: Vladimir Zapolskiy <vz@mleia.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Olivier BIDEAU <olivier.bideau@st.com>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "gabriel.fernandez.st@gmail.com" <gabriel.fernandez.st@gmail.com>, Ludovic BARRE <ludovic.barre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, Arvind Yadav <arvind.yadav.cs@gmail.com>, Lee Jones <lee.jones@linaro.org>lin
 List-Id: devicetree@vger.kernel.org
 
-Add "mediatek,mt2712-nor" for nor flash node's compatible.
+Hi Vladimir,
 
-Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
----
- .../devicetree/bindings/mtd/mtk-quadspi.txt        |    1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-index 5ded66a..592bb71 100644
---- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-@@ -2,6 +2,7 @@
- 
- Required properties:
- - compatible: 	  The possible values are:
-+		  "mediatek,mt2712-nor"
- 		  "mediatek,mt2701-nor"
- 		  "mediatek,mt7623-nor"
- 		  "mediatek,mt8173-nor"
--- 
-1.7.9.5
+On 07/19/2017 11:20 PM, Vladimir Zapolskiy wrote:
+> Hello Gabriel,
+>
+> On 07/19/2017 05:25 PM, gabriel.fernandez@st.com wrote:
+>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> This patch enables clocks for STM32H743 boards.
+>>
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>
+>> for MFD changes:
+>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>
+>> for DT-Bindings
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>>   .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   82 ++
+> I'll provide some review comments about device tree bindings only.
+>
+>>   drivers/clk/Makefile                               |    1 +
+>>   drivers/clk/clk-stm32h7.c                          | 1409 ++++++++++++++++++++
+>>   include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
+>>   include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
+>>   5 files changed, 1793 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>   create mode 100644 drivers/clk/clk-stm32h7.c
+>>   create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>   create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> new file mode 100644
+>> index 0000000..442c50c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>> @@ -0,0 +1,82 @@
+>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>> +=====================================================
+>> +
+>> +The RCC IP is both a reset and a clock controller.
+>> +
+>> +Please refer to clock-bindings.txt for common clock controller binding usage.
+>> +Please also refer to reset.txt for common reset controller binding usage.
+>> +
+>> +Required properties:
+>> +- compatible: Should be:
+>> +  "st,stm32h743-rcc"
+>> +
+>> +- reg: should be register base and length as documented in the
+>> +  datasheet
+>> +
+>> +- #reset-cells: 1, see below
+>> +
+>> +- #clock-cells : from common clock binding; shall be set to 1
+>> +
+>> +- clocks: External oscillator clock phandle
+>> +  - high speed external clock signal (HSE)
+>> +  - low speed external clock signal (LSE)
+>> +  - external I2S clock (I2S_CKIN)
+>> +
+>> +Optional properties:
+>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+>> +  write protection (RTC clock).
+>> +
+>> +Example:
+>> +
+>> +	rcc: rcc@58024400 {
+> 'rcc' as a generic device node name is awkward.
+>
+> I believe the main function of the device is clock controller (unlikely
+> a generic reset controller can be converted into a clock controller),
+> the locations of the document and device driver also indicate that
+> primarily it is a clock controller, so I suggest to replace device node
+> name with 'clock-controller' like below:
+I prefer to keep rcc node name, to be coherent with the other ST 
+platforms (STM32F4/F7)
+> 	rcc: clock-controller@58024400 {
+>
+>> +		#reset-cells = <1>;
+>> +		#clock-cells = <2>
+> Missing trailing semicolon       ^^^
+ok
+> My recommendation is to move #reset-cells and #clock-cells properties
+> down after 'reg' or 'clocks' property in the list.
+ok
+>
+>> +		compatible = "st,stm32h743-rcc", "st,stm32-rcc";
+>> +		reg = <0x58024400 0x400>;
+>> +		clocks = <&clk_hse>, <&clk_lse>, <&clk_i2s_ckin>;
+>> +
+>> +		st,syscfg = <&pwrcfg>;
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> Please drop #address-cells and #size-cells properties completely, from
+> the document the device node does not define any children subnodes.
+ok
+>> +	};
+>> +
+>> +The peripheral clock consumer should specify the desired clock by
+>> +having the clock ID in its "clocks" phandle cell.
+>> +
+>> +All available clocks are defined as preprocessor macros in
+>> +dt-bindings/clock/stm32h7-clks.h header and can be used in device
+>> +tree sources.
+>> +
+>> +Example:
+>> +
+>> +		timer5: timer@40000c00 {
+>> +			compatible = "st,stm32-timer";
+>> +			reg = <0x40000c00 0x400>;
+>> +			interrupts = <50>;
+>> +			clocks = <&rcc TIM5_CK>;
+>> +
+> Please remote the empty line above.
+ok
+>> +		};
+>> +
+>> +Specifying softreset control of devices
+>> +=======================================
+>> +
+>> +Device nodes should specify the reset channel required in their "resets"
+>> +property, containing a phandle to the reset device node and an index specifying
+>> +which channel to use.
+>> +The index is the bit number within the RCC registers bank, starting from RCC
+>> +base address.
+>> +It is calculated as: index = register_offset / 4 * 32 + bit_offset.
+>> +Where bit_offset is the bit offset within the register.
+>> +
+>> +For example, for CRC reset:
+>> +  crc = AHB4RSTR_offset / 4 * 32 + CRCRST_bit_offset = 0x88 / 4 * 32 + 19 = 1107
+>> +
+>> +All available preprocessor macros for reset are defined dt-bindings//mfd/stm32h7-rcc.h
+> Double slashes ---------->                                           ^^^^
+ok
+> I have doubts if it is permitted to add source paths into the device
+> tree bindings documentation, because such information is specific to
+> the Linux source code.
+>
+> Rob, can you clarify please?
+>
+>> +header and can be used in device tree sources.
+>> +
+>> +example:
+> For unification, please capitalize it: 'Example:'
+ok
+>> +
+>> +	timer2 {
+>> +		resets	= <&rcc STM32H7_APB1L_RESET(TIM2)>;
+>> +	};
+> --
+> With best wishes,
+> Vladimir
+Best Regards
+Gabriel
