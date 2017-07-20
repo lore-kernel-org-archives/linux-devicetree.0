@@ -1,50 +1,221 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v6 0/6] provide power off support for iMX6 with external
- PMIC
-Date: Thu, 20 Jul 2017 14:12:12 +0100
-Message-ID: <20170720131212.GZ31807@n2100.armlinux.org.uk>
-References: <20170620140910.7568-1-o.rempel@pengutronix.de>
- <c64ce8db-eea6-3709-9c97-fda16e93481a@pengutronix.de>
- <20170720123701.d5zyhbevyic3odxk@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 06/18] drm/sun4i: tcon: Don't rely on encoders to enable
+ the TCON
+Date: Thu, 20 Jul 2017 15:20:44 +0200
+Message-ID: <20170720132044.sisl3liag3amfvlr@flea>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <e8e204b4b366f609db5b7d848f8cfb88345cd2d7.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v67LNwLWWJEkw=FKE-kPkVHPK7XZC-OY02A1a94w6E5e1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="jbk6umcmopawvdmy"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170720123701.d5zyhbevyic3odxk-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <CAGb2v67LNwLWWJEkw=FKE-kPkVHPK7XZC-OY02A1a94w6E5e1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 01:37:01PM +0100, Mark Brown wrote:
-> On Tue, Jul 18, 2017 at 06:53:54AM +0200, Oleksij Rempel wrote:
-> > Hallo all,
-> > 
-> > Here Gentle Ping to the Old King
-> > 
-> > DT is already ACKed.
-> 
-> Please don't send content free pings and please allow a reasonable time
-> for review.  People get busy, go on holiday, attend conferences and so 
-> on so unless there is some reason for urgency (like critical bug fixes)
-> please allow at least a couple of weeks for review.  If there have been
-> review comments then people may be waiting for those to be addressed.
-> 
-> Sending content free pings adds to the mail volume (if they are seen at
-> all) which is often the problem and since they can't be reviewed
-> directly if something has gone wrong you'll have to resend the patches
-> anyway, though there are some other maintainers who like them - if in
-> doubt look at how patches for the subsystem are normally handled.
 
-It also doesn't help that there's little context about who Oleksij is
-expecting a reply from.  There's 11 individuals in the To: header.
-Is the reference above refering to me?  Shrug, I don't know.  I doubt
-it because I'm not maintaining the imx6 SoC support.
+--jbk6umcmopawvdmy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Hi Chen-Yu,
+
+On Fri, Jul 14, 2017 at 11:40:07AM +0800, Chen-Yu Tsai wrote:
+> >  static void sun4i_rgb_encoder_mode_set(struct drm_encoder *encoder,
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i=
+/sun4i_tcon.c
+> > index d9791292553e..dc70bc2a42a5 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > @@ -14,6 +14,7 @@
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_crtc.h>
+> >  #include <drm/drm_crtc_helper.h>
+> > +#include <drm/drm_encoder.h>
+> >  #include <drm/drm_modes.h>
+> >  #include <drm/drm_of.h>
+> >
+> > @@ -32,66 +33,62 @@
+> >  #include "sun4i_tcon.h"
+> >  #include "sunxi_engine.h"
+> >
+> > -void sun4i_tcon_disable(struct sun4i_tcon *tcon)
+> > +static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int=
+ channel,
+> > +                                         bool enabled)
+> >  {
+> > -       DRM_DEBUG_DRIVER("Disabling TCON\n");
+> > +       struct clk *clk;
+> >
+> > -       /* Disable the TCON */
+> > -       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+> > -                          SUN4I_TCON_GCTL_TCON_ENABLE, 0);
+> > -}
+> > -EXPORT_SYMBOL(sun4i_tcon_disable);
+> > -
+> > -void sun4i_tcon_enable(struct sun4i_tcon *tcon)
+> > -{
+> > -       DRM_DEBUG_DRIVER("Enabling TCON\n");
+> > -
+> > -       /* Enable the TCON */
+> > -       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+> > -                          SUN4I_TCON_GCTL_TCON_ENABLE,
+> > -                          SUN4I_TCON_GCTL_TCON_ENABLE);
+> > -}
+> > -EXPORT_SYMBOL(sun4i_tcon_enable);
+> > -
+> > -void sun4i_tcon_channel_disable(struct sun4i_tcon *tcon, int channel)
+> > -{
+> > -       DRM_DEBUG_DRIVER("Disabling TCON channel %d\n", channel);
+> > -
+> > -       /* Disable the TCON's channel */
+> > -       if (channel =3D=3D 0) {
+> > +       switch (channel) {
+> > +       case 0:
+> >                 regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+> > -                                  SUN4I_TCON0_CTL_TCON_ENABLE, 0);
+> > -               clk_disable_unprepare(tcon->dclk);
+> > +                                  SUN4I_TCON0_CTL_TCON_ENABLE,
+> > +                                  enabled ? SUN4I_TCON0_CTL_TCON_ENABL=
+E : 0);
+> > +               clk =3D tcon->dclk;
+> > +               break;
+> > +       case 1:
+> > +               WARN_ON(!tcon->quirks->has_channel_1);
+> > +               regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+> > +                                  SUN4I_TCON1_CTL_TCON_ENABLE,
+> > +                                  enabled ? SUN4I_TCON1_CTL_TCON_ENABL=
+E : 0);
+> > +               clk =3D tcon->sclk1;
+> > +               break;
+> > +       default:
+> > +               DRM_DEBUG_DRIVER("Unknown channel... doing nothing\n");
+> >                 return;
+> >         }
+> >
+> > -       WARN_ON(!tcon->quirks->has_channel_1);
+> > -       regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+> > -                          SUN4I_TCON1_CTL_TCON_ENABLE, 0);
+> > -       clk_disable_unprepare(tcon->sclk1);
+> > +       if (enabled)
+> > +               clk_prepare_enable(clk);
+>=20
+> I wonder if it's better to enable the clk before the TCON?
+
+I think I kept the current behaviour, which seemed to work fine with
+that regard.
+
+>=20
+> > +       else
+> > +               clk_disable_unprepare(clk);
+> >  }
+> > -EXPORT_SYMBOL(sun4i_tcon_channel_disable);
+> >
+> > -void sun4i_tcon_channel_enable(struct sun4i_tcon *tcon, int channel)
+> > +void sun4i_tcon_set_status(struct sun4i_tcon *tcon,
+> > +                          struct drm_encoder *encoder,
+> > +                          bool enabled)
+> >  {
+> > -       DRM_DEBUG_DRIVER("Enabling TCON channel %d\n", channel);
+> > -
+> > -       /* Enable the TCON's channel */
+> > -       if (channel =3D=3D 0) {
+> > -               regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
+> > -                                  SUN4I_TCON0_CTL_TCON_ENABLE,
+> > -                                  SUN4I_TCON0_CTL_TCON_ENABLE);
+> > -               clk_prepare_enable(tcon->dclk);
+> > +       int channel;
+> > +
+> > +       switch (encoder->encoder_type) {
+> > +       case DRM_MODE_ENCODER_NONE:
+> > +               channel =3D 0;
+> > +               break;
+> > +       case DRM_MODE_ENCODER_TMDS:
+> > +       case DRM_MODE_ENCODER_TVDAC:
+> > +               channel =3D 1;
+> > +               break;
+> > +       default:
+> > +               DRM_DEBUG_DRIVER("Unknown encoder type, doing nothing..=
+=2E\n");
+>=20
+> We could simply add all the possible types, and print a big warning
+> if someone does something unexpected. IMHO this is better than having
+> the user enable some hidden debug flag to figure why the display isn't
+> working properly.
+
+I'm not sure about all types of encoders, but you're right, it should
+be a warning.
+
+> >                 return;
+> >         }
+> >
+> > -       WARN_ON(!tcon->quirks->has_channel_1);
+> > -       regmap_update_bits(tcon->regs, SUN4I_TCON1_CTL_REG,
+> > -                          SUN4I_TCON1_CTL_TCON_ENABLE,
+> > -                          SUN4I_TCON1_CTL_TCON_ENABLE);
+> > -       clk_prepare_enable(tcon->sclk1);
+> > +       sun4i_tcon_channel_set_status(tcon, channel, enabled);
+> > +
+> > +       regmap_update_bits(tcon->regs, SUN4I_TCON_GCTL_REG,
+> > +                          SUN4I_TCON_GCTL_TCON_ENABLE,
+> > +                          enabled ? SUN4I_TCON_GCTL_TCON_ENABLE : 0);
+>=20
+> The global enable bit should be set first.
+
+ACK
+
+
+> Also the manual says "When it=E2=80=99s disabled, the module will be rese=
+t to
+> idle state."
+> so you might get away with just disabling the global enable bit and retur=
+ning
+> directly after disabling the clock?
+
+I'd rather keep an explicit disable, just in case one SoC is broken,
+just like the DE is...
+
+> >  }
+> > -EXPORT_SYMBOL(sun4i_tcon_channel_enable);
+> > +EXPORT_SYMBOL(sun4i_tcon_set_status);
+>=20
+> The TCON and CRTC code are part of the same module.
+> There is no need to export this function.
+
+Ah, right. I'll remove it. Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--jbk6umcmopawvdmy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZcK4sAAoJEBx+YmzsjxAgRywQALDe7ZsBSRxKjuBqIULvDsPI
+lvS5VqZ6Hzstmdkk87avo+gktIHXx8Z/yfQ796pGn9+oVMILXA/Rmu53dsnPXwkI
+66Ea6NAFqPIMv3162nZ1+1+ovdMltRjp+qo6UoXHqt4OUCRxQm5v+M4kHOrvLDkR
+rEAO2fqrI86B4TTYLtHSkkyvqdT4QVzTE/bDO/XbhXkb/obdBK+foId2sGpfWZt7
+EiFiYi4TF/fXKvbtheeZ6w8yI/XLj2t0hQmIVLlWTqDA/DFKw4bQVTVJbNjXoGLW
+HIExPggWfbWpUcDj8Nf2MjcJj3zADtyy5tVgwILQUCVU3IqKWXdV9TULEAhA8loq
+jqE5oe/YRzim2yNfjN6dXd3kV1PlqeOsWt7u0e9MkXkyABQDd2cgAUeMV8Bp7qlw
+rnUyghrPK5DjiCJP54e0FHANhQSF+KJBN/TZUhky0lf124hFGX34WIWpvumZH5bF
+RB2U8NNKZboRe/1rT2Bw1oczvteuO41Zywil/Ss3I1Ua1zt8i1NLr+AENM0K94BN
+9BtdB7un1nA9Uf1ZmDVVe/NsKJPZDyvXgXe5b6n39qEXG3uwMGoJEFHh8//9Owo2
+mCfVHoCD5YoHMae2XCUHVV+k2KCffTaSfRE89kNsDrCHVIbCbUt7u9wADpihtX8k
+bZ/2vDF1XHHQP4JIcpbU
+=nCwp
+-----END PGP SIGNATURE-----
+
+--jbk6umcmopawvdmy--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
