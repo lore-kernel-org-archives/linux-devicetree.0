@@ -1,53 +1,80 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] fixed ethernet binding violation for reset signal
-Date: Thu, 20 Jul 2017 13:01:24 +0200
-Message-ID: <29c1debd-e7ac-9858-6969-cff37ae1d06f@gmail.com>
-References: <cover.1498030300.git.sean.wang@mediatek.com>
- <1500520073.25149.2.camel@mtkswgap22>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH] media: Convert to using %pOF instead of full_name
+Date: Thu, 20 Jul 2017 08:15:38 -0300
+Message-ID: <20170720081508.33563afe@vento.lan>
+References: <CGME20170718215328epcas2p2e5e1d7df96fcd894e70a961df864abdd@epcas2p2.samsung.com>
+        <20170718214339.7774-33-robh@kernel.org>
+        <564a6768-3b23-6dc7-ecb5-cb4f4359b633@samsung.com>
+        <CAL_JsqLDCgO60ECGB70pMNcaLg0zUcJ6_+50vH-evfGe-D266Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500520073.25149.2.camel@mtkswgap22>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLDCgO60ECGB70pMNcaLg0zUcJ6_+50vH-evfGe-D266Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Frank Rowand <frowand.list@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Songjun Wu <songjun.wu@microchip.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.>
 List-Id: devicetree@vger.kernel.org
 
+Em Wed, 19 Jul 2017 11:02:01 -0500
+Rob Herring <robh@kernel.org> escreveu:
 
+> On Wed, Jul 19, 2017 at 4:41 AM, Sylwester Nawrocki
+> <s.nawrocki@samsung.com> wrote:
+> > On 07/18/2017 11:43 PM, Rob Herring wrote:  
+> >> Now that we have a custom printf format specifier, convert users of
+> >> full_name to use %pOF instead. This is preparation to remove storing
+> >> of the full path string for each node.
+> >>
+> >> Signed-off-by: Rob Herring <robh@kernel.org>  
+> >  
+> >> ---
+> >>   drivers/media/i2c/s5c73m3/s5c73m3-core.c       |  3 +-
+> >>   drivers/media/i2c/s5k5baf.c                    |  7 ++--
+> >>   drivers/media/platform/am437x/am437x-vpfe.c    |  4 +-
+> >>   drivers/media/platform/atmel/atmel-isc.c       |  4 +-
+> >>   drivers/media/platform/davinci/vpif_capture.c  | 16 ++++----
+> >>   drivers/media/platform/exynos4-is/fimc-is.c    |  8 ++--
+> >>   drivers/media/platform/exynos4-is/fimc-lite.c  |  3 +-
+> >>   drivers/media/platform/exynos4-is/media-dev.c  |  8 ++--
+> >>   drivers/media/platform/exynos4-is/mipi-csis.c  |  4 +-
+> >>   drivers/media/platform/mtk-mdp/mtk_mdp_comp.c  |  6 +--
+> >>   drivers/media/platform/mtk-mdp/mtk_mdp_core.c  |  8 ++--
+> >>   drivers/media/platform/omap3isp/isp.c          |  8 ++--
+> >>   drivers/media/platform/pxa_camera.c            |  2 +-
+> >>   drivers/media/platform/rcar-vin/rcar-core.c    |  4 +-
+> >>   drivers/media/platform/soc_camera/soc_camera.c |  6 +--
+> >>   drivers/media/platform/xilinx/xilinx-vipp.c    | 52 +++++++++++++-------------
+> >>   drivers/media/v4l2-core/v4l2-async.c           |  4 +-
+> >>   drivers/media/v4l2-core/v4l2-clk.c             |  3 +-
+> >>   include/media/v4l2-clk.h                       |  4 +-
+> >>   19 files changed, 71 insertions(+), 83 deletions(-)  
+> >  
+> >> diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
+> >> index ac4704388920..9233ad0b1b6b 100644
+> >> --- a/drivers/media/platform/xilinx/xilinx-vipp.c
+> >> +++ b/drivers/media/platform/xilinx/xilinx-vipp.c  
+> >  
+> >> @@ -144,9 +144,8 @@ static int xvip_graph_build_one(struct xvip_composite_device *xdev,
+> >>               remote = ent->entity;
+> >>
+> >>               if (link.remote_port >= remote->num_pads) {
+> >> -                     dev_err(xdev->dev, "invalid port number %u on %s\n",
+> >> -                             link.remote_port,
+> >> -                             to_of_node(link.remote_node)->full_name);
+> >> +                     dev_err(xdev->dev, "invalid port number %u on %pOF\n",
+> >> +                             link.remote_port, link.remote_node);  
+> >
+> > Shouldn't there be to_of_node(link.remote_node) instead of link.remote_node ?  
+> 
+> Humm, yes. I thought I fixed that.
 
-On 07/20/2017 05:07 AM, Sean Wang wrote:
-> Hi, Matthias
-> 
-> just a gentle ping on this
-> 
+After such fix, I'm OK with this patch.
 
-Pushed now to v4.13-next/dts32
+Are you planning to apply it on your tree, or via the media one?
 
-Thanks!
+I guess it is probably better to apply via media, in order to avoid
+conflicts with other changes.
 
-> 	Sean
-> 
-> 
-> On Wed, 2017-06-21 at 15:49 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
->> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> Fixed binding violation and also updated related binding documentation to
->> reflect the reset signals the MediaTek Ethernet requires.
->>
->> Sean Wang (2):
->>    dt-bindings: net: mediatek: update documentation for reset signals
->>    arm: dts: mt7623: fixup binding violation missing reset in ethernet
->>      node
->>
->>   Documentation/devicetree/bindings/net/mediatek-net.txt | 6 ++++--
->>   arch/arm/boot/dts/mt7623.dtsi                          | 4 ++++
->>   2 files changed, 8 insertions(+), 2 deletions(-)
->>
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mauro
