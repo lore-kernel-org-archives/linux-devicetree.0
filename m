@@ -1,47 +1,116 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] net: mvneta: remove bogus use of device_node.data ptr
-Date: Thu, 20 Jul 2017 09:27:10 -0500
-Message-ID: <20170720142711.12847-1-robh@kernel.org>
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v2] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
+Date: Thu, 20 Jul 2017 17:30:39 +0300
+Message-ID: <20170720143039.821-1-c_mykolak@mellanox.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Nothing sets ever sets data, so it is always NULL. Remove it as this is
-the only user of data ptr in the whole kernel, and it is going to be
-removed from struct device_node.
+This controller supports fan tacho channels and pwm channels.
+Without this change only tachometer channels can be configured.
+Add extra level of hierarchy - for tachometer channel
+with fan subnodes and pwm channels with pwm subnodes.
 
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+It's add support for cooling device creation to
+aspeed-pwm-tacho.
+Cooling device could be bound to a thermal zone
+for the thermal control.
+
+v1 -> v2:
+ - Fix commit message.
+
+Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 ---
-Probably there's a better fix here to actually enable the h/w buffer 
-manager.
+ .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56 ++++++++++++++++++----
+ 1 file changed, 47 insertions(+), 9 deletions(-)
 
-I intend to take this thru the DT tree as patch 2 is dependent on this.
-
-Rob
-
- drivers/net/ethernet/marvell/mvneta.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index 0aab74c2a209..5624f4b49f9d 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -4296,8 +4296,8 @@ static int mvneta_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+index cf44605..df85aa7 100644
+--- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
++++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+@@ -23,9 +23,18 @@ Required properties for pwm-tacho node:
+ - clocks : a fixed clock providing input clock frequency(PWM
+ 	   and Fan Tach clock)
  
- 	/* Obtain access to BM resources if enabled and already initialized */
- 	bm_node = of_parse_phandle(dn, "buffer-manager", 0);
--	if (bm_node && bm_node->data) {
--		pp->bm_priv = bm_node->data;
-+	if (bm_node) {
-+		pp->bm_priv = NULL;
- 		err = mvneta_bm_port_init(pdev, pp);
- 		if (err < 0) {
- 			dev_info(&pdev->dev, "use SW buffer management\n");
++tach-channels subnode format:
++===================
++Under tach-channels subnode there can be fan child nodes.
++
++Required properties for tach-channels node:
++- #address-cells : should be 1.
++
++- #size-cells : should be 0.
++
+ fan subnode format:
+ ===================
+-Under fan subnode there can upto 8 child nodes, with each child node
++Under fan subnode there can be upto 8 child nodes, with each child node
+ representing a fan. If there are 8 fans each fan can have one PWM port and
+ one/two Fan tach inputs.
+ 
+@@ -39,6 +48,24 @@ Required properties for each child node:
+ 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+ 		Atleast one Fan tach input channel is required.
+ 
++pwm-channels subnode format:
++===================
++Under pwm-channels subnode there can be pwm child nodes.
++Required properties for tach-channels node:
++- #address-cells : should be 1.
++
++- #size-cells : should be 0.
++
++- #cooling-cells : should be 2;
++
++pwm subnode format:
++===================
++- reg : should be <0x00>.
++
++- cooling-levels      : PWM duty cycle values in a range from 0 to 255
++			which correspond to thermal cooling states.
++
++
+ Examples:
+ 
+ pwm_tacho_fixed_clk: fixedclk {
+@@ -55,14 +82,25 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+ 	clocks = <&pwm_tacho_fixed_clk>;
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+-
+-	fan@0 {
+-		reg = <0x00>;
+-		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	tach-channels {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		fan@0 {
++			reg = <0x00>;
++			aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++		};
++		fan@1 {
++			reg = <0x01>;
++			aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
++		};
+ 	};
+-
+-	fan@1 {
+-		reg = <0x01>;
+-		aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
++	pwm-channels {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		#cooling-cells = <2>;
++		pwm@0 {
++			reg = <0x00>;
++			cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
++		};
+ 	};
+ };
 -- 
-2.11.0
+2.8.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
