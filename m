@@ -1,73 +1,99 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 13/18] dt-bindings: vendor: Add Huarui Lighting
-Date: Thu, 20 Jul 2017 15:37:14 +0200
-Message-ID: <20170720133714.nffdm5y5cxzvz65c@flea>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
- <5b7ae43738fb5ea2fb1ebebddfc75d401da94677.1499955058.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v66hWsuQQQQXJwKD-1aub_1aysQ_A9Kn2Ka5WSFMDYHN0Q@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 00/16] omap_hsmmc: Add ADMA support and UHS/HS200/DDR
+ support
+Date: Thu, 20 Jul 2017 19:06:47 +0530
+Message-ID: <27776609-2425-9423-3eaa-dc128c4b07f0@ti.com>
+References: <20170616124544.15046-1-kishon@ti.com>
+ <CAPDyKFo+ORA=OpdikiUZWj3gpx+ssuqbC5MtqiFJneyJhu84dA@mail.gmail.com>
+ <fc9c1576-7419-b174-ea42-97ccf4666cee@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="2isstvrkuogruyrk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66hWsuQQQQXJwKD-1aub_1aysQ_A9Kn2Ka5WSFMDYHN0Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel <dri-devel@lists.freedesktop.org>, Daniel Vetter <daniel.vetter@intel.com>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fc9c1576-7419-b174-ea42-97ccf4666cee@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ravikumar Kattekola <rk@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ulf,
 
---2isstvrkuogruyrk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 11 July 2017 07:27 PM, Kishon Vijay Abraham I wrote:
+> Hi Ulf,
+> 
+> On Tuesday 11 July 2017 06:40 PM, Ulf Hansson wrote:
+>> On 16 June 2017 at 14:45, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>> This is the final part of the series originally sent as
+>>> part of [2].
+>>>
+>>> This series adds UHS, HS200, DDR mode and ADMA support to
+>>> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
+>>> SoCs.
+>>>
+>>> Changes from [2]:
+>>> *) No more updating omap2plus_defconfig or multi_v7_defconfig is
+>>>    required, so those patches are removed.
+>>> *) Addressed Rob Herring's comment on implementing a function
+>>>    instead of having a macro while getting pinctrl state.
+>>>
+>>> This series is created on top of [3], [4], [5] AND [6]
+>>> (i.e after
+>>>   ARM: dts: omap3-overo: Remove "vqmmc-supply" property from MMC dt node
+>>>   omap_hsmmc: use mmc_regulator_get_supply() to get regulators
+>>>   omap*: Fixes/Cleanups for MMC devicetree node
+>>>   ARM: dts: Add iodelay data for MMC)
+>>>
+>>> The functionality implemented in this series was sent before ([1]) but
+>>> was never followed up since supporting high speed modes in dra7 required
+>>> IODelay values to be configured. With IODelay driver being merged into
+>>> kernel, sending it as a fresh series with support for configuring IODelay
+>>> values.
+>>
+>> Is it safe to queue this via mmc tree for 4.14 or is there a
+>> dependency I must consider? The above didn't quite tell me that, could
+>> you please elaborate.
+> 
+> There is a dependency with https://www.spinics.net/lists/arm-kernel/msg586215.html.
+> 
+> I'll resend the series after all the platform data specific stuff is merged.
+>>
+>>>
+>>> Suggestions of migrating to sdhci driver (from omap_hsmmc driver) is not
+>>> addressed since
+>>> *) tuning ratio of MMC in dra7 is different from sdhci
+>>> *) IOdelay is required for dra7
+>>> *) GPIO based card detect is not supported in sdhci
+>>
+>> Lots of sdhci drivers calls mmc_of_parse(), and uses the mmc slot gpio
+>> APIs, so I don't this this is correct statement.
+>>
+>>> *) Some of the registers don't always have correct values as in sdhci
+>>>    (like PSTATE).
+>>> Supporting all of these in sdhci will result in adding lot of quirks in
+>>> sdhci driver.
+>>
+>> Is it really that much different? It would be nice if some really took
+>> on the challenge of converting omap_hsmmc into an sdhci variant.
+> 
+> Okay. I'll give that a shot and see how far I can get.
 
-Hi Chen-Yu,
+I created a sdhci variant and was able to get it working with high speed mode
+in dra7.
 
-On Fri, Jul 14, 2017 at 03:53:40PM +0800, Chen-Yu Tsai wrote:
-> On Thu, Jul 13, 2017 at 10:13 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Huarui Lighting makes display panel, add it to the list of panels.
->=20
-> I could not find any information on "Huarui Lighting" within the
-> context of LCD panels. The company I found makes LED lighting
-> fixtures, floodlights, and high power LED drivers.
->=20
-> This might not be a legitimate branding?
+I have a query on sdhci_set_power_noreg() in sdhci.c. sdhci_set_power_noreg
+sets SDHCI_POWER_CONTROL based on *vdd* value. However SDHCI_POWER_CONTROL is
+for setting bus voltage and need not be based on *vdd*. IMHO
+SDHCI_POWER_CONTROL should be set based on "ios->signal_voltage".
 
-The references are sparse, but the only time I could find a vendor for
-that part was here, page 51:
-https://www.codico.com/shop/media/datasheets/Quectel_SC20_Hardware_Design_V=
-1.2.pdf
+Let me know if my understanding is wrong.
 
-But maybe it's wrong. And since it has a BPi logo on it, maybe we
-should just use sinovoip as the vendor.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---2isstvrkuogruyrk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZcLIKAAoJEBx+YmzsjxAgxMAP/jxU7CBWNMp2OCzmPc6haiR/
-YfE+nxhiPedbODEZQrMqLdpHK9NGRPyAgP2a6Jn4gT0oGt2uyr/jg0bMsqrV4GJn
-5N19WOo8E+wJuw7aPTH1QNucqMzFsX/6S+GLz28IdQNB2Vy2Mv1D7Vm4qF/2oc5X
-jD2/vBekhgXsIRTTS6xGK+rOKnJXxTK9riY9pBWifsWJo/O+nNEG7tfvD0dB/4Hq
-mpSuxOUqZ8bPTlz8MTsKO+j6kdgKLz5nasRAscLSggUZ8ZYFD9eL9wy4+AnCb6AH
-rg66fwBo4WAsv3lhQTpW3hRSzyBKF0KPyDJzMB52AIMkFuJneoqHlPV/EMJ0yRuR
-ZUw44KtwNFiArVsX6O0obwLs+q4vyA7Y9zPle+IvNZTvvV4En5V5JLp97uTUju5S
-0du4ghPjKXC+WEnHgSFvAzOSS/ZXS5WDY8lb5WtHRNW2C62H3k02vCYyCMiFekEz
-3pIpfd/R2Vz+9bLghs3qvt5Z3Dzd3ffk+AGIX29cLQemNDwaRq/4qAtV1S378Ox4
-YV7UTmPj5Nk8W9CvUoKvo0gdKJz+iGUvf6zk4yrb9mkTkGsLSNODKwnt+J6tKY6Y
-zBqvt4n3p6lEpf/BoQa36ASZVkkzLgJeAD0KB84yAk24XH+yFol9jvoL8DR4RP96
-AlJfAnjSW7onod89ZJBZ
-=cjH0
------END PGP SIGNATURE-----
-
---2isstvrkuogruyrk--
+Thanks
+Kishon
