@@ -1,7 +1,7 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 02/10] arm64: zynqmp: Add idle state for ZynqMP
-Date: Thu, 20 Jul 2017 14:17:01 +0200
-Message-ID: <096d94cc880d5ab61de3633bf6b22f2a001a1885.1500552941.git.michal.simek@xilinx.com>
+Subject: [PATCH 01/10] arm64: zynqmp: Add references to cpu nodes
+Date: Thu, 20 Jul 2017 14:17:00 +0200
+Message-ID: <b9a61dfe7f5d4309b3131c1b9a82890888838087.1500552941.git.michal.simek@xilinx.com>
 References: <cover.1500552941.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,73 +20,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Stefan Krsmanovic <stefan.krsmanovic@aggios.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Dinh Nguyen <dinguyen@opensource.altera.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Stefan Krsmanovic <stefan.krsmanovic@aggios.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, Carlo Caione <carlo@endlessm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Wong <willw@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stefan Krsmanovic <stefan.krsmanovic@aggios.com>
+Add missing references to all cpu nodes.
 
-Added the idle-states node to describe zynqmp idle states. Only
-cpu-sleep-0 idle state is added in this patch. References to the
-idle-states node are added in all CPU nodes. Time values: entry/exit
-latencies and min-residency, needs to be tuned. arm,psci-suspend-param
-is selected to comply with PSCIv1.0 and Extended StateID format.
-
-Signed-off-by: Stefan Krsmanovic <stefan.krsmanovic@aggios.com>
-Acked-by: Will Wong <willw@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 4f7d9905e235..8e6cf0cf3a69 100644
+index 1a3f5e928bb9..4f7d9905e235 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -25,6 +25,7 @@
+@@ -20,28 +20,28 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
  			device_type = "cpu";
  			enable-method = "psci";
  			reg = <0x0>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
  		};
  
- 		cpu1: cpu@1 {
-@@ -32,6 +33,7 @@
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
  			device_type = "cpu";
  			enable-method = "psci";
  			reg = <0x1>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
  		};
  
- 		cpu2: cpu@2 {
-@@ -39,6 +41,7 @@
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
  			device_type = "cpu";
  			enable-method = "psci";
  			reg = <0x2>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
  		};
  
- 		cpu3: cpu@3 {
-@@ -46,6 +49,20 @@
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a53", "arm,armv8";
  			device_type = "cpu";
  			enable-method = "psci";
- 			reg = <0x3>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		idle-states {
-+			entry-method = "arm,psci";
-+
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				arm,psci-suspend-param = <0x40000000>;
-+				local-timer-stop;
-+				entry-latency-us = <300>;
-+				exit-latency-us = <600>;
-+				min-residency-us = <10000>;
-+			};
- 		};
- 	};
- 
 -- 
 1.9.1
