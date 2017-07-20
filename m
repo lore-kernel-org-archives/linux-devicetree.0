@@ -1,57 +1,35 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/4] arm: dts: rskrza1: Add SDHI1 pin group
-Date: Thu, 20 Jul 2017 13:20:18 -0500
-Message-ID: <20170720182019.85075-4-chris.brandt@renesas.com>
-References: <20170720182019.85075-1-chris.brandt@renesas.com>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] dt-bindings: Drop k2g genpd device ID macros
+Date: Thu, 20 Jul 2017 11:53:53 -0700
+Message-ID: <4beacba1-26f7-a4a4-9b1d-e3eb3db44b25@oracle.com>
+References: <20170720180403.14279-1-d-gerlach@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170720182019.85075-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170720180403.14279-1-d-gerlach-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, Franklin Cooper <fcooper-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pin configuration for SDHI ch1.
-
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index cedf887e809a..f8285b951140 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -78,6 +78,18 @@
- 			 <RZA1_PINMUX(2, 10, 2)>,	/* ET_RXD2  */
- 			 <RZA1_PINMUX(2, 11, 2)>;	/* ET_RXD3  */
- 	};
-+
-+	/* SDHI ch1 on CN1 */
-+	sdhi1_pins: sdhi1 {
-+		pinmux = <RZA1_PINMUX(3, 8, 7)>,	/* SD_CD_1 */
-+			 <RZA1_PINMUX(3, 9, 7)>,	/* SD_WP_1 */
-+			 <RZA1_PINMUX(3, 10, 7)>,	/* SD_D1_1 */
-+			 <RZA1_PINMUX(3, 11, 7)>,	/* SD_D0_1 */
-+			 <RZA1_PINMUX(3, 12, 7)>,	/* SD_CLK_1 */
-+			 <RZA1_PINMUX(3, 13, 7)>,	/* SD_CMD_1 */
-+			 <RZA1_PINMUX(3, 14, 7)>,	/* SD_D3_1 */
-+			 <RZA1_PINMUX(3, 15, 7)>;	/* SD_D2_1 */
-+	};
- };
- 
- &mtu2 {
-@@ -96,6 +108,8 @@
- };
- 
- &sdhi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhi1_pins>;
- 	bus-width = <4>;
- 	status = "okay";
- };
--- 
-2.13.0
-
+On 7/20/2017 11:04 AM, Dave Gerlach wrote:
+> Commit 7cc119f29b19 ("dt-bindings: Add TI SCI PM Domains") introduced a
+> number of K2G_DEV_x macros to represent each device ID available on the
+> K2G platform for use by the genpd, clock, and reset drivers. Rather than
+> use these macros, which are only used in the device tree for property
+> values and not actually used by the drivers, let's just use the device
+> ID number directly in the device tree to avoid macro bloat.
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+> ---
+> Santosh, Resend of https://www.spinics.net/lists/devicetree/msg177717.html
+> rebased on v4.13-rc1 and with Rob's ack included, unchanged otherwise and
+> ready for merge.
+>
+Adding to the queue. Thanks Dave !!
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
