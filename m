@@ -1,85 +1,52 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 09/18] drm/sun4i: tcon: Adjust dotclock dividers range
-Date: Thu, 20 Jul 2017 23:16:59 +0800
-Message-ID: <CAGb2v67zXwvC7cGTDpr+UrbU9rXKM01M5Z14AidEUWRQp95ZNg@mail.gmail.com>
-References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
- <74db696da66cffafe1e729fe2df73b437c8fd483.1499955058.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67WtqukOHPNkyzA+s8GAUR6fnomvT6Sqp8547euHH3G-Q@mail.gmail.com>
- <20170720145500.kpwj7iscrwyjqi5q@flea>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
+Date: Thu, 20 Jul 2017 10:55:51 -0500
+Message-ID: <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
+References: <20170719233654.25908-1-fcooper@ti.com>
+ <20170719233654.25908-2-fcooper@ti.com>
+ <f45ea1b4-0f46-0002-a89b-b997f2693bb5@hartkopp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170720145500.kpwj7iscrwyjqi5q@flea>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <f45ea1b4-0f46-0002-a89b-b997f2693bb5@hartkopp.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Oliver Hartkopp <socketcan@hartkopp.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdWwgMjAsIDIwMTcgYXQgMTA6NTUgUE0sIE1heGltZSBSaXBhcmQKPG1heGltZS5y
-aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBPbiBGcmksIEp1bCAxNCwgMjAxNyBh
-dCAxMjoxNDozN1BNICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4+IE9uIFRodSwgSnVsIDEz
-LCAyMDE3IGF0IDEwOjEzIFBNLCBNYXhpbWUgUmlwYXJkCj4+IDxtYXhpbWUucmlwYXJkQGZyZWUt
-ZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4+ID4gSXQgc2VlbXMgbGlrZSB0aGUgZG90Y2xvY2sgZGl2
-aWRlcnMgYXJlIGEgYml0IGxlc3Mgc3RyaWN0IHJhbmdlLCBhbmQgY2FuCj4+ID4gb3BlcmF0ZSBl
-dmVuIHdpdGggYSBzbWFsbGVyIHRoYW4gNiBkaXZpZGVyLiBMb29zZSB0aGUgYm91bmRhcmllcyBh
-IGJpdC4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
-cmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiA+IC0tLQo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vc3Vu
-NGkvc3VuNGlfZG90Y2xvY2suYyB8IDIwICsrKysrKysrKysrKysrKysrKystCj4+ID4gIDEgZmls
-ZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+ID4KPj4gPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2RvdGNsb2NrLmMgYi9kcml2ZXJz
-L2dwdS9kcm0vc3VuNGkvc3VuNGlfZG90Y2xvY2suYwo+PiA+IGluZGV4IGQ0MDExNTY0OTBmMy4u
-MGI4NDRjMGRkMTAyIDEwMDY0NAo+PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40
-aV9kb3RjbG9jay5jCj4+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2RvdGNs
-b2NrLmMKPj4gPiBAQCAtNzcsNyArNzcsMjUgQEAgc3RhdGljIGxvbmcgc3VuNGlfZGNsa19yb3Vu
-ZF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4+ID4gICAgICAg
-ICB1OCBiZXN0X2RpdiA9IDE7Cj4+ID4gICAgICAgICBpbnQgaTsKPj4gPgo+PiA+IC0gICAgICAg
-Zm9yIChpID0gNjsgaSA8PSAxMjc7IGkrKykgewo+PiA+ICsgICAgICAgLyoKPj4gPiArICAgICAg
-ICAqIFRoZXJlJ3Mgc29tZXRoaW5nIG9kZCBoZXJlLgo+PiA+ICsgICAgICAgICoKPj4gPiArICAg
-ICAgICAqIEluIHRoZSBBMTMgdXNlciBtYW51YWwsIHRoaXMgaXMgc3RhdGVkIHRvIGJlID49IDYg
-d2hlbgo+PiA+ICsgICAgICAgICogZGNsazEgYW5kIGRjbGsyIGFyZSB1c2VkICh3aXRob3V0IGFu
-eSBoaW50IG9uIGhvdyB0byB1c2UKPj4gPiArICAgICAgICAqIHRoZW0pLCBhbmQgPj0gNCB3aGVu
-IG9ubHkgZGNsayBpcyB1c2VkLgo+Pgo+PiBZb3Ugc2V0IGl0IGluIFRDT04wX0lPX1BPTF9SRUcs
-IHdoaWNoIHNldHMgdGhlIGNsb2NrIHBoYXNlIGRlbGF5Lgo+Cj4gb2gsIHNvIGl0J3MgZCBmb3Ig
-ZGVsYXk/IEkgYXNzdW1lZCBpdCB3YXMgZm9yIGRvdGNsb2NrLgoKVGhlIG1hbnVhbCBzYXlzICJk
-YXRhIGNsb2NrIiBmb3IgcmVnaXN0ZXIgMHg0NCAoVENPTjBfRENMS19SRUcpCgo+Cj4+IEkgdGhp
-bmsgd2Ugd2VyZSBzZXR0aW5nIHRoaXMgYmVmb3JlLCBidXQgeW91IHJlbW92ZWQgaXQgYXMgcGFy
-dCBvZgo+PiB0aGUgcHJldmlvdXMgVENPTiBjbGVhbiB1cCBwYXRjaGVzPwo+Cj4gSG1tbSwgSSBt
-aWdodCBoYXZlLi4gOikKPgo+PiBJbiB0aGUgQTMzLCB0aGVyZSBhcmUgZXZlbiBtb3JlIG9wdGlv
-bnMsIGxpa2UgRENMSyAvIDIgKHdpdGggMCBvciA5MAo+PiBkZWdyZWUgcGhhc2UgZGVsYXkpLgo+
-Cj4gV2hlcmUgZGlkIHlvdSBmaW5kIHRoaXMgZG9jdW1lbnRhdGlvbj8gSSB3YXMgdW5kZXIgdGhl
-IGltcHJlc3Npb24gdGhhdAo+IGFsbCB0aGF0IERDTEsgc3R1ZmYgd2FzIGluIHRoZSBoaWdoZXIg
-Yml0cyBvZiB0aGUgRENMSyByZWdpc3RlciwgYnV0Cj4gYXBwYXJlbnRseSB0aGVyZSdzIG1vcmUg
-dG8gaXQuCgpTYW1lIHNlY3Rpb24sIFRDT04wX0lPX1BPTF9SRUcgcmVnaXN0ZXIgYml0cy4KClRo
-ZSBiaXRzIGluIFRDT04wX0lPX1BPTF9SRUcgYXJlIGxpa2VseSBhIG11eCwgbGV0dGluZyB5b3Ug
-c2VsZWN0IHdoaWNoCm9uZSB0aGF0IGlzIGFjdHVhbGx5IHVzZWQgb24gdGhlIGV4dGVybmFsICh3
-aXRoIHJlZ2FyZCB0byB0aGUgVENPTikgcGluLgoKPgo+PiA+ICsgICAgICAgICoKPj4gPiArICAg
-ICAgICAqIEluIHRoZSBBMzMgdXNlciBtYW51YWwsIHdoZW4gb25seSBkY2xrIGlzIHVzZWQsIGl0
-IGlzIHNldAo+PiA+ICsgICAgICAgICogdG8gYmUgPj0gNiBpbiB0aGUgZm9ybWVyIGNhc2UsIGFu
-ZCA+PSAxIGluIHRoZQo+PiA+ICsgICAgICAgICogbGF0dGVyLiBUaGVyZSdzIGFsc28gc29tZSAo
-b2JzY3VyZSkgZXhwbGFuYXRpb25zIGFib3V0IHRoZQo+PiA+ICsgICAgICAgICogZGNsazEgYW5k
-IGRjbGsyIHZzIGRjbGsgdGhhdCBzZWVtcyB0byBiZSBpbiB0aGUgdXBwZXIgNAo+PiA+ICsgICAg
-ICAgICogYml0cy4gV2hhdCB0aG9zZSBjbG9ja3MgYXJlIGFuZCB3aGF0IGJpdCBkb2VzIHdoYXQg
-aXMgbm90Cj4+ID4gKyAgICAgICAgKiByZWFsbHkgY2xlYXIuCj4+Cj4+IExvb2tzIGxpa2UgbXV4
-IGJpdHMgdG8gbWUuIEhvdyB0aGV5IGRpZmZlciBmcm9tIFRDT04wX0lPX1BPTF9SRUcgaXMKPj4g
-YmV5b25kIG1lIEFUTS4KPgo+IEl0IG1pZ2h0IGJlIHNvbWUgYWRkaXRpb25hbCBkaXZpZGVycyB0
-b28uCgpNaWdodCBiZSBzb21ldGhpbmcgbGlrZSB0aGlzOgoKVENPTiBDSDAgY2xrIC0tLS0tIGRj
-bGtfZW4gICAtIG5vIGRlbGF5ICAgICAgICAtLS0tLS0tLS0tLS0tLVttdXhdLS0tIGRjbGsgb3V0
-CiAgICAgICAgICAgICAgIFxcLSBkY2xrMV9lbiAgLSAxLzMgcGhhc2UgZGVsYXkgLS0tLS0tLS0t
-LS0tLS0vLy8vCiAgICAgICAgICAgICAgICBcLSBkY2xrMl9lbiAgLSAyLzMgcGhhc2UgZGVsYXkg
-LS0tLS0tLS0tLS0tLS0vLy8KICAgICAgICAgICAgICAgICBcIGRjbGttMl9lbiAtIC8yIGRpdmlk
-ZXIgLSBubyBkZWxheSAtLS0tLS0tLS8vCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIFwgOTAgZGVncmVlIGRlbGF5IC0vCgpDaGVuWXUKCj4KPiBNYXhpbWUKPgo+IC0t
-Cj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2Vy
-bmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+Hi Oliver
+On 07/20/2017 02:43 AM, Oliver Hartkopp wrote:
+> Hi Franklin,
+> 
+> On 07/20/2017 01:36 AM, Franklin S Cooper Jr wrote:
+> 
+>> +#ifdef CONFIG_OF
+>> +void of_transceiver_is_fixed(struct net_device *dev)
+>> +{
+> 
+> (..)
+> 
+>> +}
+>> +EXPORT_SYMBOL(of_transceiver_is_fixed);
+>> +#endif
+> 
+> I'm not sure about the naming here.
+> 
+> As this is a CAN transceiver related option it should be named accordingly:
+> 
+> E.g.
+> 
+>     can_transceiver_is_fixed
+>     of_can_transceiver_is_fixed
+>     ...
+> 
+> Especially as it is defined in include/linux/can/dev.h
+
+Thanks for the feedback. I'll go with of_can_transceiver_is_fixed
+
+> 
+> Regards,
+> Oliver
+> 
+> 
