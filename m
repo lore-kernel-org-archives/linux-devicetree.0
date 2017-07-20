@@ -1,50 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/3] can: m_can: Make hclk optional
-Date: Thu, 20 Jul 2017 12:42:33 +0300
-Message-ID: <11cb765b-d69a-d7d5-b1e4-b55200764e63@cogentembedded.com>
-References: <20170719230926.10872-1-fcooper@ti.com>
- <20170719230926.10872-2-fcooper@ti.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 0/5] Add STM32 DMAMUX support
+Date: Thu, 20 Jul 2017 09:42:29 +0000
+Message-ID: <f84dd329-43e7-6d8a-81c9-841ba8e97db4@st.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170719230926.10872-2-fcooper@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499343623-5964-1-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com
+Content-ID: <F4A65DB5F088AC4F9CD87ED9FB57DA57-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 7/20/2017 2:09 AM, Franklin S Cooper Jr wrote:
-
-> Hclk is the MCAN's interface clock. However, for OMAP based devices such as
-> DRA7 SoC family the interface clock is handled by hwmod. Therefore, this
-> interface clock is managed by hwmod driver via pm_runtime_get and
-> pm_runtime_put calls. Therefore, this interface clock isn't defined in DT
-> and thus the driver shouldn't fail if this clock isn't found.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> ---
->   drivers/net/can/m_can/m_can.c | 9 +++++++--
->   1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-> index f4947a7..7fe9145 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> @@ -1568,8 +1568,13 @@ static int m_can_plat_probe(struct platform_device *pdev)
->   	hclk = devm_clk_get(&pdev->dev, "hclk");
->   	cclk = devm_clk_get(&pdev->dev, "cclk");
->   
-> -	if (IS_ERR(hclk) || IS_ERR(cclk)) {
-> -		dev_err(&pdev->dev, "no clock found\n");
-> +	if (IS_ERR(hclk)) {
-> +		dev_warn(&pdev->dev, "can't find hclk\n");
-> +		hclk = 0;
-
-    s/0/NULL/.
-
-[...]
-
-MBR, Sergei
+DQoNCk9uIDA3LzA2LzIwMTcgMDI6MjAgUE0sIFBpZXJyZS1ZdmVzIE1PUkRSRVQgd3JvdGU6DQo+
+IFRoaXMgcGF0Y2hzZXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgU1RNMzIgRE1BIG11bHRpcGxleGVy
+Lg0KPiBJdCBhbGxvd3MgdG8gbWFwIGFueSBwZXJpcGhlcmFsIERNQSByZXF1ZXN0IHRvIGFueSBj
+aGFubmVsIG9mIHRoZSBwcm9kdWN0DQo+IERNQXMuDQo+IFRoaXMgSVAgaGFzIGJlZW4gaW50cm9k
+dWNlZCB3aXRoIFNUTTMySDcgU29DLg0KPiANCg0KR2VudGxlIHBpbmcgZm9yIGRyaXZlciByZXZp
+ZXcgc2luY2UgRFQgQmluZGluZ3MgaGFzIGJlZW4gYWNrZWQgYnkgUm9iDQpIZXJyaW5nLg0KDQpU
+aGFua3MNClB5DQoNCj4gLS0tDQo+ICAgVmVyc2lvbiBoaXN0b3J5Og0KPiAgICAgIHYzOg0KPiAg
+ICAgICAgICAqIGNoYW5nZSBjb21wYXRpYmxlIHRvIHN0LHN0bTMyaDctZG1hbXV4IHRvIGJlIG1v
+ZGUgU29jIHNwZWNpZmljDQo+ICAgICAgICAgICogYWRkIHZlcmJvc2l0eSBpbiBkbWEtY2VsbHMN
+Cj4gLS0tDQo+IA0KPiBQaWVycmUtWXZlcyBNT1JEUkVUICg1KToNCj4gICAgZHQtYmluZGluZ3M6
+IERvY3VtZW50IHRoZSBTVE0zMiBETUFNVVggYmluZGluZ3MNCj4gICAgZG1hZW5naW5lOiBBZGQg
+U1RNMzIgRE1BTVVYIGRyaXZlcg0KPiAgICBkdC1iaW5kaW5nczogc3RtMzItZG1hOiBBZGQgcHJv
+cGVydHkgdG8gaGFuZGxlIFNUTTMyIERNQU1VWA0KPiAgICBkbWFlbmdpbmU6IHN0bTMyLWRtYTog
+QWRkIHN1cHBvcnQgZm9yIFNUTTMyIERNQU1VWA0KPiAgICBBUk06IGNvbmZpZ3M6IHN0bTMyOiBB
+ZGQgRE1BTVVYIHN1cHBvcnQgaW4gU1RNMzIgZGVmY29uZmlnDQo+IA0KPiAgIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2RtYS9zdG0zMi1kbWEudHh0ICAgICAgICAgIHwgICA1ICstDQo+ICAgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvZG1hL3N0bTMyLWRtYW11eC50eHQgICAgICAgfCAgNjAgKysr
+KysNCj4gICBhcmNoL2FybS9jb25maWdzL3N0bTMyX2RlZmNvbmZpZyAgICAgICAgICAgICAgICAg
+ICB8ICAgMSArDQo+ICAgZHJpdmVycy9kbWEvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfCAgIDkgKw0KPiAgIGRyaXZlcnMvZG1hL01ha2VmaWxlICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgICAxICsNCj4gICBkcml2ZXJzL2RtYS9zdG0zMi1kbWEuYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB8ICA0NCArKy0tDQo+ICAgZHJpdmVycy9kbWEvc3RtMzIt
+ZG1hbXV4LmMgICAgICAgICAgICAgICAgICAgICAgICAgfCAyNTMgKysrKysrKysrKysrKysrKysr
+KysrDQo+ICAgaW5jbHVkZS9saW51eC9kbWEvc3RtMzItZG1hbXV4LmggICAgICAgICAgICAgICAg
+ICAgfCAgMjEgKysNCj4gICA4IGZpbGVzIGNoYW5nZWQsIDM4MCBpbnNlcnRpb25zKCspLCAxNCBk
+ZWxldGlvbnMoLSkNCj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2RtYS9zdG0zMi1kbWFtdXgudHh0DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvZG1hL3N0bTMyLWRtYW11eC5jDQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1
+ZGUvbGludXgvZG1hL3N0bTMyLWRtYW11eC5oDQo+IA==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
