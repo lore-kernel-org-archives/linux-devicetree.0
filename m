@@ -1,31 +1,76 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 0/3] soc: rockchip: Modify power domain driver for rk3366 SoC
-Date: Thu, 20 Jul 2017 22:44:29 +0200
-Message-ID: <1659764.yKAhNPUJR3@phil>
-References: <1500015763-4940-1-git-send-email-zhangqing@rock-chips.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v5 1/3] Documentation: devicetree: add Freescale RNGC binding
+Date: Thu, 20 Jul 2017 16:34:30 -0500
+Message-ID: <CAL_Jsq+-PYDw80EXC-eOvvQX7v8O9rVke_0XuM0_Du3xKj_ZWQ@mail.gmail.com>
+References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de> <1500582447-28607-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500015763-4940-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1500582447-28607-1-git-send-email-martin@kaiser.cx>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-crypto@vger.kernel.org, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 14. Juli 2017, 15:02:40 CEST schrieb Elaine Zhang:
-> support rk3366 SoC power domain setting.
-> 
-> Elaine Zhang (3):
->   dt-bindings: power: add RK3366 SoCs header for power-domain
->   dt-bindings: add binding for rk3366 power domains
->   soc: rockchip: power-domain: add power domain support for rk3366
+On Thu, Jul 20, 2017 at 3:27 PM, Martin Kaiser <martin@kaiser.cx> wrote:
+> From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+>
+> Add binding documentation for the Freescale RNGC found on
+> some i.MX2/3 SoCs.
+>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+> Changes in v5:
+>   none
+>
+> Changes in v4:
+>   none
+>
+> Changes in v3:
+>   - add compatible string for imx35
+>   - remove imx5 from the commit message,
+>     I couldn't find an i.MX SOC that has RNGC
 
-applied all 3 for 4.14
+3 versions in 3 days... Give folks time to review.
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes in v2:
+>   none
+>
+>  Documentation/devicetree/bindings/rng/mxc_rngc.txt | 16 ++++++++++++++++
+
+Perhaps I wasn't clear. MXC is long dead. Use imx.
+
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/mxc_rngc.txt
+>
+> diff --git a/Documentation/devicetree/bindings/rng/mxc_rngc.txt b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
+> new file mode 100644
+> index 0000000..5a12ada
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
+> @@ -0,0 +1,16 @@
+> +Freescale RNGC (Random Number Generator Version C)
+> +
+> +Required properties:
+> +- compatible : Should be "fsl,imx25-rng" or "fsl,imx35-rng"
+
+rngc if that is what the block is called.
+
+Reformat to 1 valid set of compatibles per line.
+
+> +- reg : Offset and length of the register set of this block
+> +- interrupts : the interrupt number for the RNG block
+> +- clocks: should contain the RNG clk source
+> +
+> +Example:
+> +
+> +rng@53fb0000 {
+> +       compatible = "fsl,imx25-rng";
+> +       reg = <0x53fb0000 0x4000>;
+> +       interrupts = <22>;
+> +       clocks = <&trng_clk>;
+> +};
+> --
+> 2.1.4
+>
