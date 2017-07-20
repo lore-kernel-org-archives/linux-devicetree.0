@@ -1,11 +1,13 @@
 From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: [PATCH v1 1/1] Documentation: mtk-quadspi: update DT bindings
-Date: Thu, 20 Jul 2017 16:29:11 +0800
-Message-ID: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
+Subject: [PATCH] Documentation: mtk-quadspi: update DT bindings
+Date: Thu, 20 Jul 2017 16:29:12 +0800
+Message-ID: <1500539352-9499-2-git-send-email-guochun.mao@mediatek.com>
+References: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1500539352-9499-1-git-send-email-guochun.mao@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,14 +18,27 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Guochun Mao <guochun.mao@mediatek.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Guochun Mao (1):
-  Documentation: mtk-quadspi: update DT bindings
+Add "mediatek,mt2712-nor" for nor flash node's compatible.
 
- Documentation/devicetree/bindings/mtd/mtk-quadspi.txt | 1 +
+Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+---
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |    1 +
  1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+index 5ded66a..592bb71 100644
+--- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+@@ -2,6 +2,7 @@
+ 
+ Required properties:
+ - compatible: 	  The possible values are:
++		  "mediatek,mt2712-nor"
+ 		  "mediatek,mt2701-nor"
+ 		  "mediatek,mt7623-nor"
+ 		  "mediatek,mt8173-nor"
 -- 
-1.9.1
+1.7.9.5
