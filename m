@@ -1,121 +1,50 @@
-From: Vladimir Zapolskiy <vz@mleia.com>
-Subject: Re: [PATCH v7 3/3] clk: stm32h7: Add stm32h743 clock driver
-Date: Thu, 20 Jul 2017 14:51:06 +0300
-Message-ID: <c5264416-754b-6ec8-f9fb-3b0ac2ba3a58@mleia.com>
-References: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
- <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
- <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
- <11c37627-a39b-7f2d-d0d4-af312eac8668@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 1/2] arm64: zynqmp: Remove leading 0s from mtd table for spi flashes
+Date: Thu, 20 Jul 2017 14:08:57 +0200
+Message-ID: <26db4d8bc7cbcf95d2a60366e36c839ab3b5d6d9.1500552534.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <11c37627-a39b-7f2d-d0d4-af312eac8668@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kerne>
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Warnings:
+arch/arm64/boot/dts/xilinx/zynqmp-ep108.dtb: Warning
+(unit_address_format): Node
+/amba/spi@ff040000/spi0_flash0@0/spi0_flash0@00000000 unit name should
+not have leading 0s
+arch/arm64/boot/dts/xilinx/zynqmp-ep108.dtb: Warning
+(unit_address_format): Node
+/amba/spi@ff050000/spi1_flash0@0/spi1_flash0@00000000 unit name should
+not have leading 0s
 
-On 07/20/2017 11:31 AM, Gabriel FERNANDEZ wrote:
-> Hi Vladimir,
-> 
-> 
-> On 07/19/2017 11:20 PM, Vladimir Zapolskiy wrote:
->> Hello Gabriel,
->>
->> On 07/19/2017 05:25 PM, gabriel.fernandez@st.com wrote:
->>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>
->>> This patch enables clocks for STM32H743 boards.
->>>
->>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
->>>
->>> for MFD changes:
->>> Acked-by: Lee Jones <lee.jones@linaro.org>
->>>
->>> for DT-Bindings
->>> Acked-by: Rob Herring <robh@kernel.org>
->>> ---
->>>   .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   82 ++
->> I'll provide some review comments about device tree bindings only.
->>
->>>   drivers/clk/Makefile                               |    1 +
->>>   drivers/clk/clk-stm32h7.c                          | 1409 ++++++++++++++++++++
->>>   include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
->>>   include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
->>>   5 files changed, 1793 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>>   create mode 100644 drivers/clk/clk-stm32h7.c
->>>   create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
->>>   create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>> new file mode 100644
->>> index 0000000..442c50c
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
->>> @@ -0,0 +1,82 @@
->>> +STMicroelectronics STM32H7 Reset and Clock Controller
->>> +=====================================================
->>> +
->>> +The RCC IP is both a reset and a clock controller.
->>> +
->>> +Please refer to clock-bindings.txt for common clock controller binding usage.
->>> +Please also refer to reset.txt for common reset controller binding usage.
->>> +
->>> +Required properties:
->>> +- compatible: Should be:
->>> +  "st,stm32h743-rcc"
->>> +
->>> +- reg: should be register base and length as documented in the
->>> +  datasheet
->>> +
->>> +- #reset-cells: 1, see below
->>> +
->>> +- #clock-cells : from common clock binding; shall be set to 1
->>> +
->>> +- clocks: External oscillator clock phandle
->>> +  - high speed external clock signal (HSE)
->>> +  - low speed external clock signal (LSE)
->>> +  - external I2S clock (I2S_CKIN)
->>> +
->>> +Optional properties:
->>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
->>> +  write protection (RTC clock).
->>> +
->>> +Example:
->>> +
->>> +	rcc: rcc@58024400 {
->> 'rcc' as a generic device node name is awkward.
->>
->> I believe the main function of the device is clock controller (unlikely
->> a generic reset controller can be converted into a clock controller),
->> the locations of the document and device driver also indicate that
->> primarily it is a clock controller, so I suggest to replace device node
->> name with 'clock-controller' like below:
-> I prefer to keep rcc node name, to be coherent with the other ST 
-> platforms (STM32F4/F7)
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-the thing is, a device node name is expected to comply with ePAPR or
-the devicetree specification, which says
+ arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-	The name of a node should be somewhat generic, reflecting
-	the function of the device and not its precise programming model.
-
-If devicetree and CCF maintainers are fine with 'rcc', I won't object,
-my role is just to emphasize the found issue and recommend to use another
-and more common name 'clock-controller', it is a simple and fortunately
-backward compatible change to other ST platforms as well.
-
->> 	rcc: clock-controller@58024400 {
->>
->>> +		#reset-cells = <1>;
->>> +		#clock-cells = <2>
->> Missing trailing semicolon       ^^^
-> ok
-
---
-With best wishes,
-Vladimir
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+index ef1b9e573af0..ee7fa27e1e23 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
++++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
+@@ -92,7 +92,7 @@
+ 		spi-max-frequency = <50000000>;
+ 		reg = <0>;
+ 
+-		spi0_flash0@00000000 {
++		spi0_flash0@0 {
+ 			label = "spi0_flash0";
+ 			reg = <0x0 0x100000>;
+ 		};
+@@ -109,7 +109,7 @@
+ 		spi-max-frequency = <50000000>;
+ 		reg = <0>;
+ 
+-		spi1_flash0@00000000 {
++		spi1_flash0@0 {
+ 			label = "spi1_flash0";
+ 			reg = <0x0 0x100000>;
+ 		};
+-- 
+1.9.1
