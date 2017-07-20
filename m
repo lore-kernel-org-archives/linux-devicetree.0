@@ -1,504 +1,158 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v2 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
-Date: Thu, 20 Jul 2017 11:23:02 +0200
-Message-ID: <20170720092302.2982-3-maxime.ripard@free-electrons.com>
-References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Neil Webb <neilw@cadence.com>, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Steve Creaney <screaney@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v16 2/7] power: add power sequence library
+Date: Thu, 20 Jul 2017 17:35:34 +0800
+Message-ID: <20170720093534.GA12449@b29397-desktop>
+References: <1498027328-25078-1-git-send-email-peter.chen@nxp.com>
+ <CAJZ5v0hGbJuqqY6Pq5cYPrawSGW-zdhYHj0ovhJ9zXRAkBPCRQ@mail.gmail.com>
+ <20170719025559.GC26218@b29397-desktop>
+ <4318803.QsccSH3mIv@aspire.rjw.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4318803.QsccSH3mIv-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, frank.li-3arQi8VN3Tc@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, Pawel Moll <pawel.moll@arm>
 List-Id: devicetree@vger.kernel.org
 
-The Cadence CSI-2 RX Controller is an hardware block meant to be used as a
-bridge between a CSI-2 bus and pixel grabbers.
+On Wed, Jul 19, 2017 at 01:34:11PM +0200, Rafael J. Wysocki wrote:
+> On Wednesday, July 19, 2017 10:56:00 AM Peter Chen wrote:
+> > On Tue, Jul 18, 2017 at 07:06:05PM +0200, Rafael J. Wysocki wrote:
+> > > On Tue, Jul 18, 2017 at 6:29 AM, Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > > > On Mon, Jul 17, 2017 at 03:39:07PM +0200, Rafael J. Wysocki wrote:
+> > > >> > Sorry, I should describe more.
+> > > >> >
+> > > >> > Let's take USB bus as an example, when the new USB device is at the
+> > > >> > host port, the device structure at device model is not created until
+> > > >> > it is discoverable by the USB bus. If this new USB device needs to be
+> > > >> > powered on before can be discoverable by the bus, the device structure
+> > > >> > will be not created without powering on operation. The code usb_alloc_dev
+> > > >> > (drivers/usb/core/usb.c) is only called for discoverable device.
+> > > >> >
+> > > >> > Unlike the other bus, eg, platform bus, it creates device structure
+> > > >> > according to DT node. The USB bus was designed for hot plug model, the
+> > > >> > device structure is for discoverable device. In recent years, we begin
+> > > >> > to have some hard-wired USB device, Eg, onboard USB-hub, onboard USB 4G
+> > > >> > Modem, etc at the market. It needs some board level power operation before
+> > > >> > it can be found by the USB bus. This patch set is designed primarily for
+> > > >> > fix this kind of problem. You will see at at pwrseq_generic.c, we use DT
+> > > >> > version clock API of_clk_get and DT version gpio API of_get_named_gpio_flags
+> > > >> > instead of device structure version, like devm_clk_get and
+> > > >> > devm_gpiod_get_optional.
+> > > >> >
+> > > >> > MMC system has similar use case, it creates power sequence platform
+> > > >> > device for this issue, but all those power stuffs (clock, gpio, etc)
+> > > >> > may not be suitable as a dedicated virtual device at DT, they are belonged
+> > > >> > to one physical device, so this patch set is created to see if this issue
+> > > >> > can be fixed better.
+> > > >>
+> > > >> OK, thanks for the explanation.
+> > > >>
+> > > >> The above needs to be part of your problem statement.
+> > > >
+> > > > Ok, I will add it to cover letter.
+> > > >
+> > > >> >
+> > > >> > The bus will power up all device nodes in this bus according to DT
+> > > >> > information, the device structure has not created at this time.
+> > > >>
+> > > >> OK
+> > > >>
+> > > >> I still think that the information on power resources depended on by devices
+> > > >> should be used for power management as well as for the initial power-up.
+> > > >>
+> > > >> The most straightforward way to arrange for that would be to make it possible
+> > > >> to find the DT node matching the device after the device has been discovered
+> > > >> and struct device created for it, say by USB.  That would require adding some
+> > > >> more information on the device to the DT node, probably.
+> > > >
+> > > > After the device is created, the device node structure is under struct
+> > > > device, say dev->of_node. The most difficulty for this issue is the
+> > > > device creation is dynamic and is after the physical device is
+> > > > discovered by the bus, the initial power-up is needed before the device
+> > > > can be discovered by the bus.
+> > > 
+> > > So you power up all devices on the bus using the information from
+> > > of_nodes upfront.
+> > > 
+> > 
+> > I think your mean call pm_device_power_up(struct device *dev) for bus
+> > level device (eg, USB HUB for USB), yeah, I can do that. But we still
+> > have below problem:
+> > 
+> > Where we can put the kinds of power sequence implementation
+> > (eg, pwrseq_generic.c) and the match mechanism between device
+> > node and kinds of power sequence(eg, of_pwrseq_on at core.c)? These
+> > stuffs can be shared among subsystems, and is better to use
+> > one framework for it. MMC subsystem adds such things at its core
+> > folder (drivers/mmc/core/pwrseq*) currently.
+> 
+> The power sequence handling code can be generic IMO, because it doesn't
+> depend on what bus the devices are on.  It just needs to provide some
+> services to its users, but you need a clean interface between it and its
+> users, of course.
+> 
+> There basically are two categories of devices, let's refer to them as USB-type
+> and MMC-type.  The difference between them, as far as power sequences go,
+> boils down to initialization and discovery.
+> 
+> For the USB-type ones you need an upfront power-up pass over of_nodes
+> under the bus controller.  That needs to be initiated by the controller driver,
+> but may be carried out by the common code.
 
-It supports operating with internal or external D-PHY, with up to 4 lanes,
-or without any D-PHY. The current code only supports the former case.
+The upfront power-up can't use pm_device_power_up API, since the
+power sequence at device node is for the devices under the controller
+device, it has to use the power sequence APIs directly, eg,
+of_pwrseq_on_list or of_pwrseq_on.
 
-It also support dynamic mapping of the CSI-2 virtual channels to the
-associated pixel grabbers, but that isn't allowed at the moment either.
+> 
+> After that, you need to match of_nodes to devices while discovering them.
+> That also needs to be initiated by the bus controller, but there may be
+> a helper function in the common code for that.  It may take a struct device
+> for the just discovered device and the bus controller's of_node as arguments,
+> look for an of_node under the bus controller matching the device and then
+> attach the power sequence information to the struct device as appropriate.
+> 
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- drivers/media/platform/Kconfig               |   1 +
- drivers/media/platform/Makefile              |   2 +
- drivers/media/platform/cadence/Kconfig       |  12 +
- drivers/media/platform/cadence/Makefile      |   1 +
- drivers/media/platform/cadence/cdns-csi2rx.c | 413 +++++++++++++++++++++++++++
- 5 files changed, 429 insertions(+)
- create mode 100644 drivers/media/platform/cadence/Kconfig
- create mode 100644 drivers/media/platform/cadence/Makefile
- create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
+Yes, we can have a helper at pwrseq core, eg dev_add_pwrseq(dev->of_node)
+to do that, and call it at device_pm_init. At dev_add_pwrseq, we search
+the global pwrseq list, and do match according to the address of
+of_node, if matches, return the pointer of struct pwrseq.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 1313cd533436..a79d96e9b723 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -26,6 +26,7 @@ config VIDEO_VIA_CAMERA
- #
- # Platform multimedia device configuration
- #
-+source "drivers/media/platform/cadence/Kconfig"
- 
- source "drivers/media/platform/davinci/Kconfig"
- 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 9beadc760467..1d31eb51e9bb 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -2,6 +2,8 @@
- # Makefile for the video capture/playback device drivers.
- #
- 
-+obj-$(CONFIG_VIDEO_CADENCE)		+= cadence/
-+
- obj-$(CONFIG_VIDEO_M32R_AR_M64278) += arv.o
- 
- obj-$(CONFIG_VIDEO_VIA_CAMERA) += via-camera.o
-diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
-new file mode 100644
-index 000000000000..d1b6bbb6a0eb
---- /dev/null
-+++ b/drivers/media/platform/cadence/Kconfig
-@@ -0,0 +1,12 @@
-+config VIDEO_CADENCE
-+	bool "Cadence Video Devices"
-+
-+if VIDEO_CADENCE
-+
-+config VIDEO_CADENCE_CSI2RX
-+	tristate "Cadence MIPI-CSI2 RX Controller v1.3"
-+	depends on MEDIA_CONTROLLER
-+	depends on VIDEO_V4L2_SUBDEV_API
-+	select V4L2_FWNODE
-+
-+endif
-diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
-new file mode 100644
-index 000000000000..99a4086b7448
---- /dev/null
-+++ b/drivers/media/platform/cadence/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
-diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
-new file mode 100644
-index 000000000000..9a58f275f53c
---- /dev/null
-+++ b/drivers/media/platform/cadence/cdns-csi2rx.c
-@@ -0,0 +1,413 @@
-+/*
-+ * Driver for Cadence MIPI-CSI2 RX Controller v1.3
-+ *
-+ * Copyright (C) 2017 Cadence Design Systems Inc.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-fwnode.h>
-+#include <media/v4l2-subdev.h>
-+
-+#define CSI2RX_DEVICE_CFG_REG			0x000
-+
-+#define CSI2RX_SOFT_RESET_REG			0x004
-+#define CSI2RX_SOFT_RESET_PROTOCOL			BIT(1)
-+#define CSI2RX_SOFT_RESET_FRONT				BIT(0)
-+
-+#define CSI2RX_STATIC_CFG_REG			0x008
-+
-+#define CSI2RX_STREAM_BASE(n)		(((n) + 1) * 0x100)
-+
-+#define CSI2RX_STREAM_CTRL_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x000)
-+#define CSI2RX_STREAM_CTRL_START			BIT(0)
-+
-+#define CSI2RX_STREAM_DATA_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x008)
-+#define CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT		BIT(31)
-+#define CSI2RX_STREAM_DATA_CFG_VC_SELECT(n)		BIT((n) + 16)
-+
-+#define CSI2RX_STREAM_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x00c)
-+#define CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF		(1 << 8)
-+
-+#define CSI2RX_STREAMS_MAX	4
-+
-+enum csi2rx_pads {
-+	CSI2RX_PAD_SINK,
-+	CSI2RX_PAD_SOURCE_VC0,
-+	CSI2RX_PAD_SOURCE_VC1,
-+	CSI2RX_PAD_SOURCE_VC2,
-+	CSI2RX_PAD_SOURCE_VC3,
-+	CSI2RX_PAD_MAX,
-+};
-+
-+struct csi2rx_priv {
-+	struct device		*dev;
-+
-+	void __iomem		*base;
-+	struct clk		*sys_clk;
-+	struct clk		*p_clk;
-+	struct clk		*p_free_clk;
-+	struct clk		*pixel_clk[CSI2RX_STREAMS_MAX];
-+	struct clk		*dphy_rx_clk;
-+
-+	u8			lanes;
-+	u8			max_lanes;
-+	u8			max_streams;
-+	bool			cdns_dphy;
-+
-+	struct v4l2_subdev	subdev;
-+	struct media_pad	pads[CSI2RX_PAD_MAX];
-+
-+	/* Remote sensor */
-+	struct v4l2_async_subdev	asd;
-+	struct device_node		*sensor_node;
-+	struct v4l2_subdev		*sensor_subdev;
-+	int				sensor_pad;
-+};
-+
-+static inline
-+struct csi2rx_priv *v4l2_subdev_to_csi2rx(struct v4l2_subdev *subdev)
-+{
-+	return container_of(subdev, struct csi2rx_priv, subdev);
-+}
-+
-+static void csi2rx_reset(struct csi2rx_priv *csi2rx)
-+{
-+	writel(CSI2RX_SOFT_RESET_PROTOCOL | CSI2RX_SOFT_RESET_FRONT,
-+	       csi2rx->base + CSI2RX_SOFT_RESET_REG);
-+
-+	udelay(10);
-+
-+	writel(0, csi2rx->base + CSI2RX_SOFT_RESET_REG);
-+}
-+
-+static int csi2rx_start(struct csi2rx_priv *csi2rx)
-+{
-+	u32 reg;
-+	int i;
-+
-+	csi2rx_reset(csi2rx);
-+
-+	// TODO: modify the mapping of the DPHY lanes?
-+	reg = readl(csi2rx->base + CSI2RX_STATIC_CFG_REG);
-+	reg &= ~GENMASK(11, 8);
-+	writel(reg | (csi2rx->lanes << 8),
-+	       csi2rx->base + CSI2RX_STATIC_CFG_REG);
-+
-+	/*
-+	 * Create a static mapping between the CSI virtual channels
-+	 * and the output stream.
-+	 *
-+	 * This should be enhanced, but v4l2 lacks the support for
-+	 * changing that mapping dynamically.
-+	 */
-+	for (i = 0; i < csi2rx->max_streams; i++) {
-+		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
-+		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
-+
-+		writel(CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT |
-+		       CSI2RX_STREAM_DATA_CFG_VC_SELECT(i),
-+		       csi2rx->base + CSI2RX_STREAM_DATA_CFG_REG(i));
-+
-+		writel(CSI2RX_STREAM_CTRL_START,
-+		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-+	}
-+
-+	return 0;
-+}
-+
-+static int csi2rx_stop(struct csi2rx_priv *csi2rx)
-+{
-+	int i;
-+
-+	for (i = 0; i < csi2rx->max_streams; i++)
-+		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-+
-+	return 0;
-+}
-+
-+static int csi2rx_s_stream(struct v4l2_subdev *sd, int enable)
-+{
-+	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(sd);
-+
-+	v4l2_subdev_call(csi2rx->sensor_subdev, video, s_stream,
-+			 enable);
-+
-+	if (enable)
-+		csi2rx_start(csi2rx);
-+	else
-+		csi2rx_stop(csi2rx);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
-+	.s_stream	= csi2rx_s_stream,
-+};
-+
-+static struct v4l2_subdev_ops csi2rx_subdev_ops = {
-+	.video		= &csi2rx_video_ops,
-+};
-+
-+static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
-+			      struct v4l2_subdev *s_subdev,
-+			      struct v4l2_async_subdev *asd)
-+{
-+	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
-+	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-+
-+	csi2rx->sensor_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
-+							 &csi2rx->sensor_node->fwnode,
-+							 MEDIA_PAD_FL_SOURCE);
-+	if (csi2rx->sensor_pad < 0) {
-+		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
-+			s_subdev->name);
-+		return csi2rx->sensor_pad;
-+	}
-+
-+	csi2rx->sensor_subdev = s_subdev;
-+
-+	dev_dbg(csi2rx->dev, "Bound %s pad: %d\n", s_subdev->name,
-+		csi2rx->sensor_pad);
-+
-+	return 0;
-+}
-+
-+static int csi2rx_async_complete(struct v4l2_async_notifier *notifier)
-+{
-+	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
-+	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-+
-+	return media_create_pad_link(&csi2rx->sensor_subdev->entity,
-+				     csi2rx->sensor_pad,
-+				     &csi2rx->subdev.entity, 0,
-+				     MEDIA_LNK_FL_ENABLED |
-+				     MEDIA_LNK_FL_IMMUTABLE);
-+}
-+
-+static void csi2rx_async_unbind(struct v4l2_async_notifier *notifier,
-+				struct v4l2_subdev *s_subdev,
-+				struct v4l2_async_subdev *asd)
-+{
-+	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
-+	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
-+
-+	dev_dbg(csi2rx->dev, "Unbound %s pad: %d\n", s_subdev->name,
-+		csi2rx->sensor_pad);
-+
-+	csi2rx->sensor_subdev = NULL;
-+	csi2rx->sensor_pad = -EINVAL;
-+}
-+
-+static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
-+				struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	u32 reg;
-+	int i;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(csi2rx->base)) {
-+		dev_err(&pdev->dev, "Couldn't map our registers\n");
-+		return PTR_ERR(csi2rx->base);
-+	}
-+
-+	reg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
-+	csi2rx->max_lanes = (reg & 7) + 1;
-+	csi2rx->max_streams = ((reg >> 4) & 7);
-+	csi2rx->cdns_dphy = reg & BIT(3);
-+
-+	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
-+	if (IS_ERR(csi2rx->sys_clk)) {
-+		dev_err(&pdev->dev, "Couldn't get sys clock\n");
-+		return PTR_ERR(csi2rx->sys_clk);
-+	}
-+
-+	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
-+	if (IS_ERR(csi2rx->p_clk)) {
-+		dev_err(&pdev->dev, "Couldn't get P clock\n");
-+		return PTR_ERR(csi2rx->p_clk);
-+	}
-+
-+	csi2rx->p_free_clk = devm_clk_get(&pdev->dev, "p_free_clk");
-+	if (IS_ERR(csi2rx->p_free_clk)) {
-+		dev_err(&pdev->dev, "Couldn't get free running P clock\n");
-+		return PTR_ERR(csi2rx->p_free_clk);
-+	}
-+
-+	for (i = 0; i < csi2rx->max_streams; i++) {
-+		char clk_name[16];
-+
-+		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
-+		csi2rx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
-+		if (IS_ERR(csi2rx->pixel_clk[i])) {
-+			dev_err(&pdev->dev, "Couldn't get clock %s\n", clk_name);
-+			return PTR_ERR(csi2rx->pixel_clk[i]);
-+		}
-+	}
-+
-+	if (csi2rx->cdns_dphy) {
-+		csi2rx->dphy_rx_clk = devm_clk_get(&pdev->dev, "dphy_rx_clk");
-+		if (IS_ERR(csi2rx->dphy_rx_clk)) {
-+			dev_err(&pdev->dev, "Couldn't get D-PHY RX clock\n");
-+			return PTR_ERR(csi2rx->dphy_rx_clk);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
-+{
-+	struct v4l2_fwnode_endpoint v4l2_ep;
-+	struct v4l2_async_subdev **subdevs;
-+	struct device_node *ep, *remote;
-+	int ret = 0;
-+
-+	ep = of_graph_get_endpoint_by_regs(csi2rx->dev->of_node, 0, 0);
-+	if (!ep)
-+		return -EINVAL;
-+
-+	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
-+	if (ret) {
-+		dev_err(csi2rx->dev, "Could not parse v4l2 endpoint\n");
-+		goto out;
-+	}
-+
-+	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
-+		dev_err(csi2rx->dev, "Unsupported media bus type: 0x%x\n",
-+			v4l2_ep.bus_type);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	csi2rx->lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
-+	if (csi2rx->lanes > csi2rx->max_lanes) {
-+		dev_err(csi2rx->dev, "Unsupported number of data-lanes: %d\n",
-+			csi2rx->lanes);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	remote = of_graph_get_remote_port_parent(ep);
-+	if (!remote) {
-+		dev_err(csi2rx->dev, "No device found for endpoint %pOF\n", ep);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	dev_dbg(csi2rx->dev, "Found remote device %pOF\n", remote);
-+
-+	csi2rx->sensor_node = remote;
-+	csi2rx->asd.match.fwnode.fwnode = &remote->fwnode;
-+	csi2rx->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
-+
-+	subdevs = devm_kzalloc(csi2rx->dev, sizeof(*subdevs), GFP_KERNEL);
-+	if (subdevs == NULL)
-+		return -ENOMEM;
-+	subdevs[0] = &csi2rx->asd;
-+
-+	ret = v4l2_async_subdev_notifier_register(&csi2rx->subdev, 1, subdevs,
-+						  csi2rx_async_bound,
-+						  csi2rx_async_complete,
-+						  csi2rx_async_unbind);
-+	if (ret < 0) {
-+		dev_err(csi2rx->dev, "Failed to register our notifier\n");
-+		return ret;
-+	}
-+
-+out:
-+	of_node_put(ep);
-+	return ret;
-+}
-+
-+static int csi2rx_probe(struct platform_device *pdev)
-+{
-+	struct csi2rx_priv *csi2rx;
-+	int i, ret;
-+
-+	csi2rx = devm_kzalloc(&pdev->dev, sizeof(*csi2rx), GFP_KERNEL);
-+	if (!csi2rx)
-+		return -ENOMEM;
-+	platform_set_drvdata(pdev, csi2rx);
-+	csi2rx->dev = &pdev->dev;
-+
-+	ret = csi2rx_get_resources(csi2rx, pdev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to get our resources\n");
-+		return ret;
-+	}
-+
-+	ret = csi2rx_parse_dt(csi2rx);
-+	if (ret)
-+		return ret;
-+
-+	csi2rx->subdev.owner = THIS_MODULE;
-+	csi2rx->subdev.dev = &pdev->dev;
-+	v4l2_subdev_init(&csi2rx->subdev, &csi2rx_subdev_ops);
-+	v4l2_set_subdevdata(&csi2rx->subdev, &pdev->dev);
-+	snprintf(csi2rx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
-+		 KBUILD_MODNAME, dev_name(&pdev->dev));
-+
-+	/* Create our media pads */
-+	csi2rx->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
-+	csi2rx->pads[CSI2RX_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
-+	for (i = CSI2RX_PAD_SOURCE_VC0; i < CSI2RX_PAD_MAX; i++)
-+		csi2rx->pads[i].flags = MEDIA_PAD_FL_SOURCE;
-+
-+	ret = media_entity_pads_init(&csi2rx->subdev.entity, CSI2RX_PAD_MAX,
-+				     csi2rx->pads);
-+	if (ret)
-+		return ret;
-+
-+	ret = v4l2_async_register_subdev(&csi2rx->subdev);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_info(&pdev->dev,
-+		 "Probed CSI2RX with %d/%d lanes, %d streams, %s D-PHY\n",
-+		 csi2rx->lanes, csi2rx->max_lanes, csi2rx->max_streams,
-+		 csi2rx->cdns_dphy ? "Cadence" : "no");
-+
-+	return 0;
-+}
-+
-+static int csi2rx_remove(struct platform_device *pdev)
-+{
-+	struct csi2rx_priv *csi2rx = platform_get_drvdata(pdev);
-+
-+	v4l2_async_unregister_subdev(&csi2rx->subdev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id csi2rx_of_table[] = {
-+	{ .compatible = "cdns,csi2rx" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, csi2rx_of_table);
-+
-+static struct platform_driver csi2rx_driver = {
-+	.probe	= csi2rx_probe,
-+	.remove	= csi2rx_remove,
-+
-+	.driver	= {
-+		.name		= "cdns-csi2rx",
-+		.of_match_table	= csi2rx_of_table,
-+	},
-+};
-+module_platform_driver(csi2rx_driver);
+> After the power sequence information has been attached to the struct
+> device, it can just be used for controlling its power state in a generic
+> fashion.
+
+At least for USB use case, there is a problem here for this patch set, it
+doesn't need to control power state (on/off) during its struct device
+life-cycle, after the struct device is de-inintialized (call put_device(dev)),
+its (initial) power state is still on, its power state will be off when its
+parent (USB HUB or controller device) is going to be deleted.
+
+So, it is hard for me to have the use case to call pm_device_power_up
+and pm_device_power_off, the only thing I can do at my patch set
+is to set dev.state->type = POWER_STATE_ON when tries to add
+struct pwrseq to struct device.
+
+> 
+> In the MMC-type devices case the discovery if through of_node lookup IIUC,
+> so then you may power up things as you discover them and attach the
+> power sequence information to their struct device objects right away.
+> 
+> Again, once you have done that, the power sequence information is
+> there and it can be used for controlling the power states of devices
+> generically.
+
+Like I mentioned above, I can implement these helpers for that, but I
+only can update power state information for device, but no place to
+call and define its dev.state->power_on and dev.state->power_off. 
+
 -- 
-2.13.3
+
+Best Regards,
+Peter Chen
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
