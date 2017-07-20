@@ -1,7 +1,8 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 04/10] arm64: zynqmp: Add dcc console for zynqmp
-Date: Thu, 20 Jul 2017 14:17:03 +0200
-Message-ID: <af9ffc2a1a4894ae26077b8ea46382e6585c9931.1500552941.git.michal.simek@xilinx.com>
+Subject: [PATCH 06/10] arm64: zynqmp: Adding prefetchable memory space to pcie
+ node
+Date: Thu, 20 Jul 2017 14:17:05 +0200
+Message-ID: <e349cb0bfd9aa8678485da6a92bb38ac9ae30c6f.1500552941.git.michal.simek@xilinx.com>
 References: <cover.1500552941.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -20,36 +21,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Stefan Krsmanovic <stefan.krsmanovic@aggios.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: "Edgar E. Iglesias" <edgar.iglesias@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Stefan Krsmanovic <stefan.krsmanovic@aggios.com>, Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>, Will Deacon <will.deacon@arm.com>, Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Moritz Fischer <mdf@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add debug console to dtsi to be able to enable it in
-board dts file.
-Keep in your mind that every core has separate dcc port in case you want
-to run SMP kernel.
-DCC is very helpful communication channel for debugging.
+From: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
 
+Adding prefetchable memory space to pcie device tree node.
+Shifting configuration space to 64-bit address space.
+Removing pcie device tree node from amba as it requires size-cells=<2>
+in order to access 64-bit address space.
+
+Signed-off-by: Bharat Kumar Gogada <bharatku@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 50636e098724..3657fdbdb552 100644
+index f3968737e613..e7d1815c114b 100644
 --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
 +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -95,6 +95,11 @@
- 		};
- 	};
- 
-+	dcc: dcc {
-+		compatible = "arm,dcc";
-+		status = "disabled";
-+	};
-+
- 	pmu {
- 		compatible = "arm,armv8-pmuv3";
- 		interrupt-parent = <&gic>;
+@@ -285,12 +285,8 @@
+ 			      <0x0 0xfd480000 0x0 0x1000>,
+ 			      <0x80 0x00000000 0x0 0x1000000>;
+ 			reg-names = "breg", "pcireg", "cfg";
+-			ranges = <0x02000000 0x00000000 0xe0000000 0x00000000
+-				  0xe0000000 0x00000000 0x10000000
+-				  /* non-prefetchable memory */
+-				  0x43000000 0x00000006 0x00000000 0x00000006
+-				  0x00000000 0x00000002 0x00000000>;
+-				  /* prefetchable memory */
++			ranges = <0x02000000 0x00000000 0xe0000000 0x00000000 0xe0000000 0x00000000 0x10000000	/* non-prefetchable memory */
++				  0x43000000 0x00000006 0x00000000 0x00000006 0x00000000 0x00000002 0x00000000>;/* prefetchable memory */
+ 			bus-range = <0x00 0xff>;
+ 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+ 			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
 -- 
 1.9.1
