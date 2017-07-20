@@ -1,67 +1,45 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 0/4] arm64: dts: renesas: Add Support for R-Car D3 and Draak
-Date: Thu, 20 Jul 2017 14:54:33 +0200
-Message-ID: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/4] arm64: dts: renesas: r8a77995: Use r8a7795-cpg-mssr binding definitions
+Date: Thu, 20 Jul 2017 14:54:37 +0200
+Message-ID: <1500555277-22921-5-git-send-email-geert+renesas@glider.be>
+References: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Replace the hardcoded clock indices by R8A77995_CLK_* symbols.
 
-This patch series adds minimal support for the R-Car D3 SoC and the
-Draak development board, allowing to boot from a ramdisk using a serial
-console.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This depends on "clk: renesas: Add r8a77995 CPG Core Clock Definitions".
+---
+ arch/arm64/boot/dts/renesas/r8a77995.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  - The first two patches add DT sources for R-Car D3 and Draak.
-    Due to the use of hardcoded constants, they have no further (build)
-    dependencies (obviously there is a runtime dependency).
-  - The last two patches replace the hardcoded constants by symbols from
-    DT binding headers, and thus depend on those headers.  Hence it
-    should be postponed to v4.15.
-
-For proper operation, this depends on the 3 series I have just sent:
-  - [PATCH 0/3] arm64: renesas: Base R-Car D3 support,
-  - [PATCH 0/4] soc: renesas: Add R-Car D3 support,
-  - [PATCH 0/4] clk: renesas: Add R-Car D3 support.
-
-For testing, an integration branch containing all dependencies (and a
-few DT binding updates I do not want to send before "ARM: shmobile:
-Document R-Car D3 SoC DT bindings" has been accepted) is available in
-the topic/r8a77995-integration branch of the git repository at
-https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (4):
-  arm64: dts: renesas: Add Renesas R8A77995 SoC support
-  arm64: dts: renesas: Add Renesas Draak board support
-  arm64: dts: renesas: r8a77995: Use r8a7795-sysc binding definitions
-  arm64: dts: renesas: r8a77995: Use r8a7795-cpg-mssr binding
-    definitions
-
- arch/arm64/boot/dts/renesas/Makefile           |   1 +
- arch/arm64/boot/dts/renesas/r8a77995-draak.dts |  46 ++++++++
- arch/arm64/boot/dts/renesas/r8a77995.dtsi      | 151 +++++++++++++++++++++++++
- 3 files changed, 198 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a77995-draak.dts
- create mode 100644 arch/arm64/boot/dts/renesas/r8a77995.dtsi
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+index b984c174cf7edb70..74196882e555929d 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
+@@ -9,7 +9,7 @@
+  * kind, whether express or implied.
+  */
+ 
+-#include <dt-bindings/clock/renesas-cpg-mssr.h>
++#include <dt-bindings/clock/r8a77995-cpg-mssr.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/power/r8a77995-sysc.h>
+ 
+@@ -140,7 +140,7 @@
+ 			reg = <0 0xe6e88000 0 64>;
+ 			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&cpg CPG_MOD 310>,
+-				 <&cpg CPG_CORE 16>,
++				 <&cpg CPG_CORE R8A77995_CLK_S3D1C>,
+ 				 <&scif_clk>;
+ 			clock-names = "fck", "brg_int", "scif_clk";
+ 			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
 -- 
 2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
