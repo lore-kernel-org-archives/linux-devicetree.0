@@ -1,57 +1,59 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/4] soc: renesas: Add r8a77995 SYSC PM Domain Binding Definitions
-Date: Thu, 20 Jul 2017 14:34:52 +0200
-Message-ID: <1500554094-22198-3-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 4/4] soc: renesas: rcar-rst: Add support for R-Car D3
+Date: Thu, 20 Jul 2017 14:34:54 +0200
+Message-ID: <1500554094-22198-5-git-send-email-geert+renesas@glider.be>
 References: <1500554094-22198-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500554094-22198-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1500554094-22198-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add power domain indices for R-Car D3.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
 ---
- include/dt-bindings/power/r8a77995-sysc.h | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a77995-sysc.h
+ Documentation/devicetree/bindings/reset/renesas,rst.txt | 1 +
+ drivers/soc/renesas/Kconfig                             | 2 +-
+ drivers/soc/renesas/rcar-rst.c                          | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/include/dt-bindings/power/r8a77995-sysc.h b/include/dt-bindings/power/r8a77995-sysc.h
-new file mode 100644
-index 0000000000000000..09d0ed575b738aea
---- /dev/null
-+++ b/include/dt-bindings/power/r8a77995-sysc.h
-@@ -0,0 +1,23 @@
-+/*
-+ * Copyright (C) 2017 Glider bvba
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A77995_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A77995_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A77995_PD_CA53_CPU0		 5
-+#define R8A77995_PD_CA53_SCU		21
-+
-+/* Always-on power area */
-+#define R8A77995_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A77995_SYSC_H__ */
+diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+index fe5e0f37b3c93579..e5a03ffe04fb2af7 100644
+--- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
++++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 		  - "renesas,r8a7794-rst" (R-Car E2)
+ 		  - "renesas,r8a7795-rst" (R-Car H3)
+ 		  - "renesas,r8a7796-rst" (R-Car M3-W)
++		  - "renesas,r8a77995-rst" (R-Car D3)
+   - reg: Address start and address range for the device.
+ 
+ 
+diff --git a/drivers/soc/renesas/Kconfig b/drivers/soc/renesas/Kconfig
+index 680a5a29837b42d4..567414cb42ba2075 100644
+--- a/drivers/soc/renesas/Kconfig
++++ b/drivers/soc/renesas/Kconfig
+@@ -3,7 +3,7 @@ config SOC_RENESAS
+ 	default y if ARCH_RENESAS
+ 	select SOC_BUS
+ 	select RST_RCAR if ARCH_RCAR_GEN1 || ARCH_RCAR_GEN2 || \
+-			   ARCH_R8A7795 || ARCH_R8A7796
++			   ARCH_R8A7795 || ARCH_R8A7796 || ARCH_R8A77995
+ 	select SYSC_R8A7743 if ARCH_R8A7743
+ 	select SYSC_R8A7745 if ARCH_R8A7745
+ 	select SYSC_R8A7779 if ARCH_R8A7779
+diff --git a/drivers/soc/renesas/rcar-rst.c b/drivers/soc/renesas/rcar-rst.c
+index a6d1c26d31675cf3..d27d0abe6c2aa5eb 100644
+--- a/drivers/soc/renesas/rcar-rst.c
++++ b/drivers/soc/renesas/rcar-rst.c
+@@ -41,6 +41,7 @@ static const struct of_device_id rcar_rst_matches[] __initconst = {
+ 	/* R-Car Gen3 is handled like R-Car Gen2 */
+ 	{ .compatible = "renesas,r8a7795-rst", .data = &rcar_rst_gen2 },
+ 	{ .compatible = "renesas,r8a7796-rst", .data = &rcar_rst_gen2 },
++	{ .compatible = "renesas,r8a77995-rst", .data = &rcar_rst_gen2 },
+ 	{ /* sentinel */ }
+ };
+ 
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
