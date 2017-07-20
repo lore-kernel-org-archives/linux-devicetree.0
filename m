@@ -1,56 +1,121 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 1/1] drivers/staging/pi433: New driver
-Date: Thu, 20 Jul 2017 14:37:05 +0300
-Message-ID: <20170720113705.d65hxm3jbki2ynqd@mwanda>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
- <201707172156.DCyTyWc2%fengguang.wu@intel.com>
- <652336354.3806.1500549785404@ox.hosteurope.de>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH v7 3/3] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 20 Jul 2017 14:51:06 +0300
+Message-ID: <c5264416-754b-6ec8-f9fb-3b0ac2ba3a58@mleia.com>
+References: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
+ <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
+ <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
+ <11c37627-a39b-7f2d-d0d4-af312eac8668@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <652336354.3806.1500549785404@ox.hosteurope.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, kbuild-all@01.org, grant.likely@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <11c37627-a39b-7f2d-d0d4-af312eac8668@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, Sylvain Lemieux <slemieux.tyco@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kerne>
 List-Id: devicetree@vger.kernel.org
 
+Hi Gabriel,
 
-
-On Thu, Jul 20, 2017 at 01:23:05PM +0200, Marcus Wolf wrote:
-> Hi Greg,
+On 07/20/2017 11:31 AM, Gabriel FERNANDEZ wrote:
+> Hi Vladimir,
 > 
-> below you can see the report with the error on m68k. It was sent to me from a
-> test robot of intel.
 > 
-> According to my research, this problem occured, because there is no hardware
-> support for floating point on the m68k (or it was configured not to use it).
-> Therefore gcc uses an internal function, provided by libgcc. Obviously libgcc
-> wasn't linked...
-> 
-> I don't know how to come arround this problem by modifying my code (except
-> reducing the accuracy of the calculation by not using floating point).
+> On 07/19/2017 11:20 PM, Vladimir Zapolskiy wrote:
+>> Hello Gabriel,
+>>
+>> On 07/19/2017 05:25 PM, gabriel.fernandez@st.com wrote:
+>>> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>
+>>> This patch enables clocks for STM32H743 boards.
+>>>
+>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+>>>
+>>> for MFD changes:
+>>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>>>
+>>> for DT-Bindings
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>   .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   82 ++
+>> I'll provide some review comments about device tree bindings only.
+>>
+>>>   drivers/clk/Makefile                               |    1 +
+>>>   drivers/clk/clk-stm32h7.c                          | 1409 ++++++++++++++++++++
+>>>   include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
+>>>   include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
+>>>   5 files changed, 1793 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>>   create mode 100644 drivers/clk/clk-stm32h7.c
+>>>   create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+>>>   create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>> new file mode 100644
+>>> index 0000000..442c50c
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+>>> @@ -0,0 +1,82 @@
+>>> +STMicroelectronics STM32H7 Reset and Clock Controller
+>>> +=====================================================
+>>> +
+>>> +The RCC IP is both a reset and a clock controller.
+>>> +
+>>> +Please refer to clock-bindings.txt for common clock controller binding usage.
+>>> +Please also refer to reset.txt for common reset controller binding usage.
+>>> +
+>>> +Required properties:
+>>> +- compatible: Should be:
+>>> +  "st,stm32h743-rcc"
+>>> +
+>>> +- reg: should be register base and length as documented in the
+>>> +  datasheet
+>>> +
+>>> +- #reset-cells: 1, see below
+>>> +
+>>> +- #clock-cells : from common clock binding; shall be set to 1
+>>> +
+>>> +- clocks: External oscillator clock phandle
+>>> +  - high speed external clock signal (HSE)
+>>> +  - low speed external clock signal (LSE)
+>>> +  - external I2S clock (I2S_CKIN)
+>>> +
+>>> +Optional properties:
+>>> +- st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
+>>> +  write protection (RTC clock).
+>>> +
+>>> +Example:
+>>> +
+>>> +	rcc: rcc@58024400 {
+>> 'rcc' as a generic device node name is awkward.
+>>
+>> I believe the main function of the device is clock controller (unlikely
+>> a generic reset controller can be converted into a clock controller),
+>> the locations of the document and device driver also indicate that
+>> primarily it is a clock controller, so I suggest to replace device node
+>> name with 'clock-controller' like below:
+> I prefer to keep rcc node name, to be coherent with the other ST 
+> platforms (STM32F4/F7)
 
-I don't see any floating point?  You're not allowed to use floating
-point in the kernel.
+the thing is, a device node name is expected to comply with ePAPR or
+the devicetree specification, which says
 
-> 
-> Can we ignore the error or can I do something else?
-> Maybe a special include just in case of m68k can help??!?
-> I don't have an environment for building m68k.
-> 
+	The name of a node should be somewhat generic, reflecting
+	the function of the device and not its precise programming model.
 
-I think the answer is to use div_u64() and div64_u64 instead of
-do_div()?  Or you could just add a depend in the Kconfig.
+If devicetree and CCF maintainers are fine with 'rcc', I won't object,
+my role is just to emphasize the found issue and recommend to use another
+and more common name 'clock-controller', it is a simple and fortunately
+backward compatible change to other ST platforms as well.
 
-regards,
-dan carpenter
+>> 	rcc: clock-controller@58024400 {
+>>
+>>> +		#reset-cells = <1>;
+>>> +		#clock-cells = <2>
+>> Missing trailing semicolon       ^^^
+> ok
+
+--
+With best wishes,
+Vladimir
