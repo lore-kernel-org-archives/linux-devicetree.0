@@ -1,88 +1,39 @@
 From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] arm: zynq: Add device-type property for zynq ethernet phy nodes
-Date: Thu, 20 Jul 2017 15:32:45 +0200
-Message-ID: <4ad09fa434f85861fd5f2dfcb7780b4076f9c53b.1500557562.git.michal.simek@xilinx.com>
+Subject: [PATCH] arm: zynq: Label whole PL part as fpga_full region
+Date: Thu, 20 Jul 2017 15:33:16 +0200
+Message-ID: <226ad80923aeb24a1654db8414378db08381d10f.1500557594.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Sai Pavan Boddu <sai.pavan.boddu@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-From: Sai Pavan Boddu <sai.pavan.boddu@xilinx.com>
+This will simplify dt overlay structure for the whole PL.
 
-Mention device-type = "ethernet-phy", as qemu will need this in absence
-of compatible.
-
-Signed-off-by: Sai Pavan Boddu <saipava@xilinx.com>
 Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
 
- arch/arm/boot/dts/zynq-parallella.dts | 1 +
- arch/arm/boot/dts/zynq-zc702.dts      | 1 +
- arch/arm/boot/dts/zynq-zc706.dts      | 1 +
- arch/arm/boot/dts/zynq-zed.dts        | 1 +
- arch/arm/boot/dts/zynq-zybo.dts       | 1 +
- 5 files changed, 5 insertions(+)
+ arch/arm/boot/dts/zynq-7000.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
-index 64a6390fc501..77f6f10bf685 100644
---- a/arch/arm/boot/dts/zynq-parallella.dts
-+++ b/arch/arm/boot/dts/zynq-parallella.dts
-@@ -54,6 +54,7 @@
- 		compatible = "ethernet-phy-id0141.0e90",
- 		             "ethernet-phy-ieee802.3-c22";
- 		reg = <0>;
-+		device_type = "ethernet-phy";
- 		marvell,reg-init = <0x3 0x10 0xff00 0x1e>,
- 		                   <0x3 0x11 0xfff0 0xa>;
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index f3ac9bfe580e..0f79fe1ccd9d 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -42,6 +42,14 @@
+ 		};
  	};
-diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-index 2f99500faae5..a096275d903d 100644
---- a/arch/arm/boot/dts/zynq-zc702.dts
-+++ b/arch/arm/boot/dts/zynq-zc702.dts
-@@ -97,6 +97,7 @@
  
- 	ethernet_phy: ethernet-phy@7 {
- 		reg = <7>;
-+		device_type = "ethernet-phy";
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
-index 7283037ce9cb..689ec9d6f7b9 100644
---- a/arch/arm/boot/dts/zynq-zc706.dts
-+++ b/arch/arm/boot/dts/zynq-zc706.dts
-@@ -53,6 +53,7 @@
- 
- 	ethernet_phy: ethernet-phy@7 {
- 		reg = <7>;
-+		device_type = "ethernet-phy";
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
-index 35e631d86b12..c6a5749c8930 100644
---- a/arch/arm/boot/dts/zynq-zed.dts
-+++ b/arch/arm/boot/dts/zynq-zed.dts
-@@ -50,6 +50,7 @@
- 
- 	ethernet_phy: ethernet-phy@0 {
- 		reg = <0>;
-+		device_type = "ethernet-phy";
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
-index e19b58155d82..8b42fb199a8e 100644
---- a/arch/arm/boot/dts/zynq-zybo.dts
-+++ b/arch/arm/boot/dts/zynq-zybo.dts
-@@ -51,6 +51,7 @@
- 
- 	ethernet_phy: ethernet-phy@0 {
- 		reg = <0>;
-+		device_type = "ethernet-phy";
- 	};
- };
- 
++	fpga_full: fpga-full {
++		compatible = "fpga-region";
++		fpga-mgr = <&devcfg>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++	};
++
+ 	pmu@f8891000 {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupts = <0 5 4>, <0 6 4>;
 -- 
 1.9.1
