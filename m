@@ -1,63 +1,85 @@
-From: Adriana Reus <adriana.reus-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH V2 1/2] clk: imx: imx7d: Fix parent clock for OCRAM_CLK
-Date: Thu, 20 Jul 2017 18:06:41 +0300
-Message-ID: <1500563202-375-2-git-send-email-adriana.reus@nxp.com>
-References: <1500563202-375-1-git-send-email-adriana.reus@nxp.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 09/18] drm/sun4i: tcon: Adjust dotclock dividers range
+Date: Thu, 20 Jul 2017 23:16:59 +0800
+Message-ID: <CAGb2v67zXwvC7cGTDpr+UrbU9rXKM01M5Z14AidEUWRQp95ZNg@mail.gmail.com>
+References: <cover.a5e7407c191c66e264164d017f64582039c56acb.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <74db696da66cffafe1e729fe2df73b437c8fd483.1499955058.git-series.maxime.ripard@free-electrons.com>
+ <CAGb2v67WtqukOHPNkyzA+s8GAUR6fnomvT6Sqp8547euHH3G-Q@mail.gmail.com>
+ <20170720145500.kpwj7iscrwyjqi5q@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500563202-375-1-git-send-email-adriana.reus-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, anson.huang-3arQi8VN3Tc@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Adriana Reus <adriana.reus-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170720145500.kpwj7iscrwyjqi5q@flea>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The parent of OCRAM_CLK should be axi_main_root_clk
-and not axi_post_div.
-
-before:
-
-    axi_src                     1       1       332307692       0 0
-      axi_cg                    1       1       332307692       0 0
-        axi_pre_div             1       1       332307692       0 0
-          axi_post_div          1       1       332307692       0 0
-            ocram_clk           0       0       332307692       0 0
-            main_axi_root_clk   1       1       332307692       0 0
-
-after:
-
-    axi_src                     1       1       332307692       0 0
-      axi_cg                    1       1       332307692       0 0
-        axi_pre_div             1       1       332307692       0 0
-          axi_post_div          1       1       332307692       0 0
-            main_axi_root_clk   1       1       332307692       0 0
-              ocram_clk         0       0       332307692       0 0
-
-Fixes: 8f6d8094b215 ("ARM: imx: add imx7d clk tree support")
-Signed-off-by: Adriana Reus <adriana.reus-3arQi8VN3Tc@public.gmane.org>
----
- Changes since v1:
-  - added Fixes tag
- drivers/clk/imx/clk-imx7d.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clk/imx/clk-imx7d.c b/drivers/clk/imx/clk-imx7d.c
-index 3da1218..10f6a10 100644
---- a/drivers/clk/imx/clk-imx7d.c
-+++ b/drivers/clk/imx/clk-imx7d.c
-@@ -797,7 +797,7 @@ static void __init imx7d_clocks_init(struct device_node *ccm_node)
- 	clks[IMX7D_MAIN_AXI_ROOT_CLK] = imx_clk_gate4("main_axi_root_clk", "axi_post_div", base + 0x4040, 0);
- 	clks[IMX7D_DISP_AXI_ROOT_CLK] = imx_clk_gate4("disp_axi_root_clk", "disp_axi_post_div", base + 0x4050, 0);
- 	clks[IMX7D_ENET_AXI_ROOT_CLK] = imx_clk_gate4("enet_axi_root_clk", "enet_axi_post_div", base + 0x4060, 0);
--	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "axi_post_div", base + 0x4110, 0);
-+	clks[IMX7D_OCRAM_CLK] = imx_clk_gate4("ocram_clk", "main_axi_root_clk", base + 0x4110, 0);
- 	clks[IMX7D_OCRAM_S_CLK] = imx_clk_gate4("ocram_s_clk", "ahb_root_clk", base + 0x4120, 0);
- 	clks[IMX7D_DRAM_ROOT_CLK] = imx_clk_gate4("dram_root_clk", "dram_post_div", base + 0x4130, 0);
- 	clks[IMX7D_DRAM_PHYM_ROOT_CLK] = imx_clk_gate4("dram_phym_root_clk", "dram_phym_cg", base + 0x4130, 0);
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCBKdWwgMjAsIDIwMTcgYXQgMTA6NTUgUE0sIE1heGltZSBSaXBhcmQKPG1heGltZS5y
+aXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKPiBPbiBGcmksIEp1bCAxNCwgMjAxNyBh
+dCAxMjoxNDozN1BNICswODAwLCBDaGVuLVl1IFRzYWkgd3JvdGU6Cj4+IE9uIFRodSwgSnVsIDEz
+LCAyMDE3IGF0IDEwOjEzIFBNLCBNYXhpbWUgUmlwYXJkCj4+IDxtYXhpbWUucmlwYXJkQGZyZWUt
+ZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4+ID4gSXQgc2VlbXMgbGlrZSB0aGUgZG90Y2xvY2sgZGl2
+aWRlcnMgYXJlIGEgYml0IGxlc3Mgc3RyaWN0IHJhbmdlLCBhbmQgY2FuCj4+ID4gb3BlcmF0ZSBl
+dmVuIHdpdGggYSBzbWFsbGVyIHRoYW4gNiBkaXZpZGVyLiBMb29zZSB0aGUgYm91bmRhcmllcyBh
+IGJpdC4KPj4gPgo+PiA+IFNpZ25lZC1vZmYtYnk6IE1heGltZSBSaXBhcmQgPG1heGltZS5yaXBh
+cmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiA+IC0tLQo+PiA+ICBkcml2ZXJzL2dwdS9kcm0vc3Vu
+NGkvc3VuNGlfZG90Y2xvY2suYyB8IDIwICsrKysrKysrKysrKysrKysrKystCj4+ID4gIDEgZmls
+ZSBjaGFuZ2VkLCAxOSBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4+ID4KPj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2RvdGNsb2NrLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vc3VuNGkvc3VuNGlfZG90Y2xvY2suYwo+PiA+IGluZGV4IGQ0MDExNTY0OTBmMy4u
+MGI4NDRjMGRkMTAyIDEwMDY0NAo+PiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40
+aV9kb3RjbG9jay5jCj4+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2RvdGNs
+b2NrLmMKPj4gPiBAQCAtNzcsNyArNzcsMjUgQEAgc3RhdGljIGxvbmcgc3VuNGlfZGNsa19yb3Vu
+ZF9yYXRlKHN0cnVjdCBjbGtfaHcgKmh3LCB1bnNpZ25lZCBsb25nIHJhdGUsCj4+ID4gICAgICAg
+ICB1OCBiZXN0X2RpdiA9IDE7Cj4+ID4gICAgICAgICBpbnQgaTsKPj4gPgo+PiA+IC0gICAgICAg
+Zm9yIChpID0gNjsgaSA8PSAxMjc7IGkrKykgewo+PiA+ICsgICAgICAgLyoKPj4gPiArICAgICAg
+ICAqIFRoZXJlJ3Mgc29tZXRoaW5nIG9kZCBoZXJlLgo+PiA+ICsgICAgICAgICoKPj4gPiArICAg
+ICAgICAqIEluIHRoZSBBMTMgdXNlciBtYW51YWwsIHRoaXMgaXMgc3RhdGVkIHRvIGJlID49IDYg
+d2hlbgo+PiA+ICsgICAgICAgICogZGNsazEgYW5kIGRjbGsyIGFyZSB1c2VkICh3aXRob3V0IGFu
+eSBoaW50IG9uIGhvdyB0byB1c2UKPj4gPiArICAgICAgICAqIHRoZW0pLCBhbmQgPj0gNCB3aGVu
+IG9ubHkgZGNsayBpcyB1c2VkLgo+Pgo+PiBZb3Ugc2V0IGl0IGluIFRDT04wX0lPX1BPTF9SRUcs
+IHdoaWNoIHNldHMgdGhlIGNsb2NrIHBoYXNlIGRlbGF5Lgo+Cj4gb2gsIHNvIGl0J3MgZCBmb3Ig
+ZGVsYXk/IEkgYXNzdW1lZCBpdCB3YXMgZm9yIGRvdGNsb2NrLgoKVGhlIG1hbnVhbCBzYXlzICJk
+YXRhIGNsb2NrIiBmb3IgcmVnaXN0ZXIgMHg0NCAoVENPTjBfRENMS19SRUcpCgo+Cj4+IEkgdGhp
+bmsgd2Ugd2VyZSBzZXR0aW5nIHRoaXMgYmVmb3JlLCBidXQgeW91IHJlbW92ZWQgaXQgYXMgcGFy
+dCBvZgo+PiB0aGUgcHJldmlvdXMgVENPTiBjbGVhbiB1cCBwYXRjaGVzPwo+Cj4gSG1tbSwgSSBt
+aWdodCBoYXZlLi4gOikKPgo+PiBJbiB0aGUgQTMzLCB0aGVyZSBhcmUgZXZlbiBtb3JlIG9wdGlv
+bnMsIGxpa2UgRENMSyAvIDIgKHdpdGggMCBvciA5MAo+PiBkZWdyZWUgcGhhc2UgZGVsYXkpLgo+
+Cj4gV2hlcmUgZGlkIHlvdSBmaW5kIHRoaXMgZG9jdW1lbnRhdGlvbj8gSSB3YXMgdW5kZXIgdGhl
+IGltcHJlc3Npb24gdGhhdAo+IGFsbCB0aGF0IERDTEsgc3R1ZmYgd2FzIGluIHRoZSBoaWdoZXIg
+Yml0cyBvZiB0aGUgRENMSyByZWdpc3RlciwgYnV0Cj4gYXBwYXJlbnRseSB0aGVyZSdzIG1vcmUg
+dG8gaXQuCgpTYW1lIHNlY3Rpb24sIFRDT04wX0lPX1BPTF9SRUcgcmVnaXN0ZXIgYml0cy4KClRo
+ZSBiaXRzIGluIFRDT04wX0lPX1BPTF9SRUcgYXJlIGxpa2VseSBhIG11eCwgbGV0dGluZyB5b3Ug
+c2VsZWN0IHdoaWNoCm9uZSB0aGF0IGlzIGFjdHVhbGx5IHVzZWQgb24gdGhlIGV4dGVybmFsICh3
+aXRoIHJlZ2FyZCB0byB0aGUgVENPTikgcGluLgoKPgo+PiA+ICsgICAgICAgICoKPj4gPiArICAg
+ICAgICAqIEluIHRoZSBBMzMgdXNlciBtYW51YWwsIHdoZW4gb25seSBkY2xrIGlzIHVzZWQsIGl0
+IGlzIHNldAo+PiA+ICsgICAgICAgICogdG8gYmUgPj0gNiBpbiB0aGUgZm9ybWVyIGNhc2UsIGFu
+ZCA+PSAxIGluIHRoZQo+PiA+ICsgICAgICAgICogbGF0dGVyLiBUaGVyZSdzIGFsc28gc29tZSAo
+b2JzY3VyZSkgZXhwbGFuYXRpb25zIGFib3V0IHRoZQo+PiA+ICsgICAgICAgICogZGNsazEgYW5k
+IGRjbGsyIHZzIGRjbGsgdGhhdCBzZWVtcyB0byBiZSBpbiB0aGUgdXBwZXIgNAo+PiA+ICsgICAg
+ICAgICogYml0cy4gV2hhdCB0aG9zZSBjbG9ja3MgYXJlIGFuZCB3aGF0IGJpdCBkb2VzIHdoYXQg
+aXMgbm90Cj4+ID4gKyAgICAgICAgKiByZWFsbHkgY2xlYXIuCj4+Cj4+IExvb2tzIGxpa2UgbXV4
+IGJpdHMgdG8gbWUuIEhvdyB0aGV5IGRpZmZlciBmcm9tIFRDT04wX0lPX1BPTF9SRUcgaXMKPj4g
+YmV5b25kIG1lIEFUTS4KPgo+IEl0IG1pZ2h0IGJlIHNvbWUgYWRkaXRpb25hbCBkaXZpZGVycyB0
+b28uCgpNaWdodCBiZSBzb21ldGhpbmcgbGlrZSB0aGlzOgoKVENPTiBDSDAgY2xrIC0tLS0tIGRj
+bGtfZW4gICAtIG5vIGRlbGF5ICAgICAgICAtLS0tLS0tLS0tLS0tLVttdXhdLS0tIGRjbGsgb3V0
+CiAgICAgICAgICAgICAgIFxcLSBkY2xrMV9lbiAgLSAxLzMgcGhhc2UgZGVsYXkgLS0tLS0tLS0t
+LS0tLS0vLy8vCiAgICAgICAgICAgICAgICBcLSBkY2xrMl9lbiAgLSAyLzMgcGhhc2UgZGVsYXkg
+LS0tLS0tLS0tLS0tLS0vLy8KICAgICAgICAgICAgICAgICBcIGRjbGttMl9lbiAtIC8yIGRpdmlk
+ZXIgLSBubyBkZWxheSAtLS0tLS0tLS8vCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIFwgOTAgZGVncmVlIGRlbGF5IC0vCgpDaGVuWXUKCj4KPiBNYXhpbWUKPgo+IC0t
+Cj4gTWF4aW1lIFJpcGFyZCwgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBMaW51eCBhbmQgS2Vy
+bmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
