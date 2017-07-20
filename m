@@ -1,65 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 0/5] AXP803 regulator support for Pine64 and SoPine
-Date: Thu, 20 Jul 2017 12:11:00 +0800
-Message-ID: <CAGb2v67hcD=uihh8CCwiNEm-29vc=d4nrqJTm+CAtmg_sWu8Qw@mail.gmail.com>
-References: <20170719161019.62133-1-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v8 3/9] i2c: core: call of_i2c_setup_smbus_alert in
+ i2c_register_adapter
+Date: Thu, 20 Jul 2017 12:44:52 +0800
+Message-ID: <c6e4dce0-853f-a4d4-be64-ef4bb0f68162@electromag.com.au>
+References: <201707200255.SHskJrcM%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3O2YDFQKGQENCYZ3MQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170719161019.62133-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201707200255.SHskJrcM%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-AU
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 12:10 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> The Pine64 and SoPine w/ baseboard boards have an AXP803 PMIC, and the
-> regulators of the PMIC are used.
->
-> This patchset adds the regulators to the device tree of these two boards.
->
-> The first patch introduces proper AXP803 regulators to Pine64 DT, and the
-> second patch removed dummy regulators in the Pine64 DT.
->
-> The third patch enables AXP803 PMIC for SoPine.
->
-> The fourth patch and fifth patch are like the first and the second, but
-> they're for SoPine w/ baseboard.
->
-> Icenowy Zheng (5):
->   arm64: allwinner: a64: enable AXP803 regulators for Pine64
->   arm: allwinner: a64: drop the dummy vcc3v3 regulator in Pine64 DT
->   arm64: allwinner: a64: add AXP803 PMIC to SoPine DTSI
->   arm64: allwinner: a64: add AXP803 regulators support for SoPine
->   arm: allwinner: a64: drop vcc3v3 and vcc1v8 dummy regulators for
->     SoPine
+On 20/07/2017 02:30, kbuild test robot wrote:
+> Hi Phil,
+> 
+> [auto build test ERROR on wsa/i2c/for-next]
+> [also build test ERROR on v4.13-rc1]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Phil-Reid/i2c-i2c-smbus-Use-threaded-irq-for-smbalert/20170719-095934
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git i2c/for-next
+> config: powerpc-ppc6xx_defconfig (attached as .config)
+> compiler: powerpc-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>          wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          make.cross ARCH=powerpc
+> 
+> All errors (new ones prefixed by >>):
+> 
+>     drivers/i2c/i2c-core-base.o: In function `i2c_register_adapter':
+>>> drivers/i2c/i2c-core-base.c:1262: undefined reference to `of_i2c_setup_smbus_alert'
+> 
 
-The related drivers are all merged. There's really no reason to split
-these into separate patches. Patch 1 & 2 can be squashed together.
-Patch 3, 4 & 5 can be squashed together.
+I understand how this is occurring.
+I2C=y, OF=y and I2C_PARPORT=m
+I2C_PARPORT selects I2C_SMBUS setting it to m
 
-The patches themselves look good, though I have not checked them
-against the schematics.
+Calling a function in i2c-smbus (module) from i2c-core (builtin) is then a problem.
 
-ChenYu
+However there doesn't seem to be a way (that I can see) to have select statement force I2C_SMBUS=y if I2C=y
 
->
->  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 105 +++++++++++++++++++--
->  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  34 +++++--
->  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi      |  91 ++++++++++++++++--
->  3 files changed, 203 insertions(+), 27 deletions(-)
->
-> --
-> 2.13.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Can I get a hint on what the correct course of action is.
+
+
+
+-- 
+Regards
+Phil Reid
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
