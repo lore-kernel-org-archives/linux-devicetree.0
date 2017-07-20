@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 2/3] ARM: shmobile: Document Renesas Draak board DT bindings
-Date: Thu, 20 Jul 2017 14:29:00 +0200
-Message-ID: <1500553741-21890-3-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 3/3] arm64: renesas: Add Renesas R8A77995 Kconfig support
+Date: Thu, 20 Jul 2017 14:29:01 +0200
+Message-ID: <1500553741-21890-4-git-send-email-geert+renesas@glider.be>
 References: <1500553741-21890-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1500553741-21890-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
@@ -10,24 +10,33 @@ To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus
 Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add a configuration option for the R-Car D3 SoC.
+
+Note that r8a77995 is the first Renesas "r8a<n>" SoC using a 5 digit
+number in its Kconfig symbol, as r8a77990 will be a different SoC.
+
 Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/Kconfig.platforms | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 91f92d62650207fd..275cda1469b8b95c 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -55,6 +55,8 @@ Boards:
-     compatible = "renesas,blanche", "renesas,r8a7792"
-   - BOCK-W
-     compatible = "renesas,bockw", "renesas,r8a7778"
-+  - Draak (RTP0RC77995SEB0010S)
-+    compatible = "renesas,draak", "renesas,r8a77995"
-   - Genmai (RTK772100BC00000BR)
-     compatible = "renesas,genmai", "renesas,r7s72100"
-   - GR-Peach (X28A-M01-E/F)
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index f5f0c813dfecc56c..a1c9f4ed7a887ab2 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -184,6 +184,12 @@ config ARCH_R8A7796
+ 	help
+ 	  This enables support for the Renesas R-Car M3-W SoC.
+ 
++config ARCH_R8A77995
++	bool "Renesas R-Car D3 SoC Platform"
++	depends on ARCH_RENESAS
++	help
++	  This enables support for the Renesas R-Car D3 SoC.
++
+ config ARCH_STRATIX10
+ 	bool "Altera's Stratix 10 SoCFPGA Family"
+ 	help
 -- 
 2.7.4
 
