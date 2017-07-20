@@ -1,69 +1,241 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 2/4] gpio: davinci: Handle the return value of
- davinci_gpio_irq_setup function
-Date: Thu, 20 Jul 2017 15:40:22 +0530
-Message-ID: <574e0ecc-df20-e2da-46a5-a90a80cc57e3@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-3-git-send-email-j-keerthy@ti.com>
- <20170719111000.GX29638@localhost>
- <cbea9082-3799-281b-1364-50e442f5362f@ti.com>
- <cc66dfaf-05c5-8d55-03a6-556ec83c4487@ti.com>
- <20170720095047.GA2729@localhost>
- <47055927-5102-b39f-fdbb-b5d89cb14632@ti.com>
- <20170720100509.GB2729@localhost>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
+ Qualcomm Camera subsystem driver
+Date: Thu, 20 Jul 2017 13:13:46 +0300
+Message-ID: <20170720101345.eovx5ovuxr7sqpea@valkosipuli.retiisi.org.uk>
+References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
+ <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170720100509.GB2729@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Johan Hovold <johan@kernel.org>
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, fcooper@ti.com, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, hans.verkuil@cisco.com, javier@osg.samsung.com, s.nawrocki@samsung.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Todor,
 
-
-On Thursday 20 July 2017 03:35 PM, Johan Hovold wrote:
-> On Thu, Jul 20, 2017 at 03:32:27PM +0530, Keerthy wrote:
->> On Thursday 20 July 2017 03:20 PM, Johan Hovold wrote:
->>> On Thu, Jul 20, 2017 at 02:40:37PM +0530, Keerthy wrote:
->>>> On Thursday 20 July 2017 12:14 PM, Keerthy wrote:
->>>>> On Wednesday 19 July 2017 04:40 PM, Johan Hovold wrote:
+On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
+> Add DT binding document for Qualcomm Camera subsystem driver.
 > 
->>>>>> There's a separate but related bug here too as the clk_prepare_enable()
->>>>>> in davinci_gpio_irq_setup() is never balanced on driver unbind.
->>>>>
->>>>> Yes Johan. I will send that as a separate patch.
->>>>
->>>> This is already fixed in the latest kernel:
->>>>
->>>> commit 6dc0048cff988858254fcc26becfc1e9753efa79
->>>> Author: Arvind Yadav <arvind.yadav.cs@gmail.com>
->>>> Date:   Tue May 23 14:48:57 2017 +0530
->>>
->>> That change only handles errors in davinci_gpio_irq_setup() (i.e. during
->>> probe) and not the imbalance at driver unbind that I was referring to.
->>
->> Okay got it. One more clk_unprepare_disable() call needs to be there in
->> probe err path.
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
+>  1 file changed, 191 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
 > 
-> No, you need to balance it on driver unbind, that is, in a new remove()
-> callback.
+> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> new file mode 100644
+> index 0000000..f698498
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> @@ -0,0 +1,191 @@
+> +Qualcomm Camera Subsystem
+> +
+> +* Properties
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain:
+> +		- "qcom,msm8916-camss"
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Register ranges as listed in the reg-names property.
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries:
+> +		- "csiphy0"
+> +		- "csiphy0_clk_mux"
+> +		- "csiphy1"
+> +		- "csiphy1_clk_mux"
+> +		- "csid0"
+> +		- "csid1"
+> +		- "ispif"
+> +		- "csi_clk_mux"
+> +		- "vfe0"
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: Interrupts as listed in the interrupt-names property.
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries:
+> +		- "csiphy0"
+> +		- "csiphy1"
+> +		- "csid0"
+> +		- "csid1"
+> +		- "ispif"
+> +		- "vfe0"
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A phandle and power domain specifier pairs to the
+> +		    power domain which is responsible for collapsing
+> +		    and restoring power to the peripheral.
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of phandle and clock specifier pairs as listed
+> +		    in clock-names property.
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: Should contain the following entries:
+> +                - "camss_top_ahb"
+> +                - "ispif_ahb"
+> +                - "csiphy0_timer"
+> +                - "csiphy1_timer"
+> +                - "csi0_ahb"
+> +                - "csi0"
+> +                - "csi0_phy"
+> +                - "csi0_pix"
+> +                - "csi0_rdi"
+> +                - "csi1_ahb"
+> +                - "csi1"
+> +                - "csi1_phy"
+> +                - "csi1_pix"
+> +                - "csi1_rdi"
+> +                - "camss_ahb"
+> +                - "camss_vfe_vfe"
+> +                - "camss_csi_vfe"
+> +                - "iface"
+> +                - "bus"
+> +- vdda-supply:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: A phandle to voltage supply for CSI2.
+> +- iommus:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: A list of phandle and IOMMU specifier pairs.
+> +
+> +* Nodes
+> +
+> +- ports:
+> +	Usage: required
+> +	Definition: As described in video-interfaces.txt in same directory.
+> +	Properties:
+> +		- reg:
+> +			Usage: required
+> +			Value type: <u32>
+> +			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
+> +	Endpoint node properties:
+> +		- clock-lanes:
+> +			Usage: required
+> +			Value type: <u32>
+> +			Definition: The clock lane.
+> +		- data-lanes:
+> +			Usage: required
+> +			Value type: <prop-encoded-array>
+> +			Definition: An array of data lanes.
+> +
+> +* An Example
+> +
+> +	camss: camss@1b00000 {
+> +		compatible = "qcom,msm8916-camss";
+> +		reg = <0x1b0ac00 0x200>,
+> +			<0x1b00030 0x4>,
+> +			<0x1b0b000 0x200>,
+> +			<0x1b00038 0x4>,
+> +			<0x1b08000 0x100>,
+> +			<0x1b08400 0x100>,
+> +			<0x1b0a000 0x500>,
+> +			<0x1b00020 0x10>,
+> +			<0x1b10000 0x1000>;
+> +		reg-names = "csiphy0",
+> +			"csiphy0_clk_mux",
+> +			"csiphy1",
+> +			"csiphy1_clk_mux",
+> +			"csid0",
+> +			"csid1",
+> +			"ispif",
+> +			"csi_clk_mux",
+> +			"vfe0";
+> +		interrupts = <GIC_SPI 78 0>,
+> +			<GIC_SPI 79 0>,
+> +			<GIC_SPI 51 0>,
+> +			<GIC_SPI 52 0>,
+> +			<GIC_SPI 55 0>,
+> +			<GIC_SPI 57 0>;
+> +		interrupt-names = "csiphy0",
+> +			"csiphy1",
+> +			"csid0",
+> +			"csid1",
+> +			"ispif",
+> +			"vfe0";
+> +		power-domains = <&gcc VFE_GDSC>;
+> +		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
+> +			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
+> +			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
+> +			<&gcc GCC_CAMSS_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_VFE0_CLK>,
+> +			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+> +			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+> +			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+> +                clock-names = "camss_top_ahb",
+> +                        "ispif_ahb",
+> +                        "csiphy0_timer",
+> +                        "csiphy1_timer",
+> +                        "csi0_ahb",
+> +                        "csi0",
+> +                        "csi0_phy",
+> +                        "csi0_pix",
+> +                        "csi0_rdi",
+> +                        "csi1_ahb",
+> +                        "csi1",
+> +                        "csi1_phy",
+> +                        "csi1_pix",
+> +                        "csi1_rdi",
+> +                        "camss_ahb",
+> +                        "camss_vfe_vfe",
+> +                        "camss_csi_vfe",
+> +                        "iface",
+> +                        "bus";
+> +		vdda-supply = <&pm8916_l2>;
+> +		iommus = <&apps_iommu 3>;
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				csiphy0_ep: endpoint {
+> +					clock-lanes = <1>;
+> +					data-lanes = <0 2>;
 
-Okay yes davinci_gpio_irq_setup is the last call in probe so no need of
-that in probe error path. I will add a new remove() to balance.
+Do you support lane mapping? The values suggest "yes". That's something I
+could improve in the documentation: if lane mapping isn't supported, then
+the clock lane should be 0 and the data lanes from 1 to n.
 
-Thanks,
-Keerthy
+Is the split of the lanes between the ports static and specific to the
+hardware?
 
-> 
-> Johan
-> 
+> +					remote-endpoint = <&ov5645_ep>;
+> +				};
+> +			};
+> +		};
+> +	};
+
+-- 
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
