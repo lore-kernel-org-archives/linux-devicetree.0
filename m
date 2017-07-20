@@ -1,91 +1,51 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH 0/5] AXP803 regulator support for Pine64 and SoPine
-Date: Thu, 20 Jul 2017 21:12:27 +0800
-Message-ID: <cf799802f412ad51a14091f4ee2bbaee@aosc.io>
-References: <20170719161019.62133-1-icenowy@aosc.io>
- <CAGb2v67hcD=uihh8CCwiNEm-29vc=d4nrqJTm+CAtmg_sWu8Qw@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v6 0/6] provide power off support for iMX6 with external
+ PMIC
+Date: Thu, 20 Jul 2017 14:12:12 +0100
+Message-ID: <20170720131212.GZ31807@n2100.armlinux.org.uk>
+References: <20170620140910.7568-1-o.rempel@pengutronix.de>
+ <c64ce8db-eea6-3709-9c97-fda16e93481a@pengutronix.de>
+ <20170720123701.d5zyhbevyic3odxk@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPOYYLFQKGQEZ5EMBDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v67hcD=uihh8CCwiNEm-29vc=d4nrqJTm+CAtmg_sWu8Qw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: wens-jdAy2FN1RRM@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170720123701.d5zyhbevyic3odxk-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-07-20 12:11=EF=BC=8CChen-Yu Tsai =E5=86=99=E9=81=93=EF=BC=9A
-> On Thu, Jul 20, 2017 at 12:10 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>=20
-> wrote:
->> The Pine64 and SoPine w/ baseboard boards have an AXP803 PMIC, and the
->> regulators of the PMIC are used.
->>=20
->> This patchset adds the regulators to the device tree of these two=20
->> boards.
->>=20
->> The first patch introduces proper AXP803 regulators to Pine64 DT, and=20
->> the
->> second patch removed dummy regulators in the Pine64 DT.
->>=20
->> The third patch enables AXP803 PMIC for SoPine.
->>=20
->> The fourth patch and fifth patch are like the first and the second,=20
->> but
->> they're for SoPine w/ baseboard.
->>=20
->> Icenowy Zheng (5):
->>   arm64: allwinner: a64: enable AXP803 regulators for Pine64
->>   arm: allwinner: a64: drop the dummy vcc3v3 regulator in Pine64 DT
->>   arm64: allwinner: a64: add AXP803 PMIC to SoPine DTSI
->>   arm64: allwinner: a64: add AXP803 regulators support for SoPine
->>   arm: allwinner: a64: drop vcc3v3 and vcc1v8 dummy regulators for
->>     SoPine
->=20
-> The related drivers are all merged. There's really no reason to split
-> these into separate patches. Patch 1 & 2 can be squashed together.
-> Patch 3, 4 & 5 can be squashed together.
->=20
-> The patches themselves look good, though I have not checked them
-> against the schematics.
+On Thu, Jul 20, 2017 at 01:37:01PM +0100, Mark Brown wrote:
+> On Tue, Jul 18, 2017 at 06:53:54AM +0200, Oleksij Rempel wrote:
+> > Hallo all,
+> > 
+> > Here Gentle Ping to the Old King
+> > 
+> > DT is already ACKed.
+> 
+> Please don't send content free pings and please allow a reasonable time
+> for review.  People get busy, go on holiday, attend conferences and so 
+> on so unless there is some reason for urgency (like critical bug fixes)
+> please allow at least a couple of weeks for review.  If there have been
+> review comments then people may be waiting for those to be addressed.
+> 
+> Sending content free pings adds to the mail volume (if they are seen at
+> all) which is often the problem and since they can't be reviewed
+> directly if something has gone wrong you'll have to resend the patches
+> anyway, though there are some other maintainers who like them - if in
+> doubt look at how patches for the subsystem are normally handled.
 
-In fact I prefer to split out the patch that removes the dummy
-regulators, but if you think squashing them is better, I will
-do it.
+It also doesn't help that there's little context about who Oleksij is
+expecting a reply from.  There's 11 individuals in the To: header.
+Is the reference above refering to me?  Shrug, I don't know.  I doubt
+it because I'm not maintaining the imx6 SoC support.
 
-Squash 3 into 4 is of course okay.
-
->=20
-> ChenYu
->=20
->>=20
->>  .../arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 105=20
->> +++++++++++++++++++--
->>  .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  |  34 +++++--
->>  .../boot/dts/allwinner/sun50i-a64-sopine.dtsi      |  91=20
->> ++++++++++++++++--
->>  3 files changed, 203 insertions(+), 27 deletions(-)
->>=20
->> --
->> 2.13.0
->>=20
->> --
->> You received this message because you are subscribed to the Google=20
->> Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it, send=
-=20
->> an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->> For more options, visit https://groups.google.com/d/optout.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
