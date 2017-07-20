@@ -1,45 +1,96 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] arm64: dts: renesas: r8a77995: Use r8a7795-cpg-mssr binding definitions
-Date: Thu, 20 Jul 2017 14:54:37 +0200
-Message-ID: <1500555277-22921-5-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/4] arm64: dts: renesas: Add Renesas Draak board support
+Date: Thu, 20 Jul 2017 14:54:35 +0200
+Message-ID: <1500555277-22921-3-git-send-email-geert+renesas@glider.be>
 References: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1500555277-22921-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500555277-22921-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace the hardcoded clock indices by R8A77995_CLK_* symbols.
+Basic support for the Renesas Draak board based on R-Car D3:
+  - Memory,
+  - Main crystal,
+  - Serial console,
+  - Watchdog.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-This depends on "clk: renesas: Add r8a77995 CPG Core Clock Definitions".
----
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/renesas/Makefile           |  1 +
+ arch/arm64/boot/dts/renesas/r8a77995-draak.dts | 46 ++++++++++++++++++++++++++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/r8a77995-draak.dts
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index b984c174cf7edb70..74196882e555929d 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -9,7 +9,7 @@
-  * kind, whether express or implied.
-  */
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index acc4bb30d485b6bc..381928bc1358fd9c 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-salvator-x.dtb r8a7795-es1-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
++dtb-$(CONFIG_ARCH_R8A77995) += r8a77995-draak.dtb
  
--#include <dt-bindings/clock/renesas-cpg-mssr.h>
-+#include <dt-bindings/clock/r8a77995-cpg-mssr.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/power/r8a77995-sysc.h>
- 
-@@ -140,7 +140,7 @@
- 			reg = <0 0xe6e88000 0 64>;
- 			interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 310>,
--				 <&cpg CPG_CORE 16>,
-+				 <&cpg CPG_CORE R8A77995_CLK_S3D1C>,
- 				 <&scif_clk>;
- 			clock-names = "fck", "brg_int", "scif_clk";
- 			power-domains = <&sysc R8A77995_PD_ALWAYS_ON>;
+ always		:= $(dtb-y)
+ clean-files	:= *.dtb
+diff --git a/arch/arm64/boot/dts/renesas/r8a77995-draak.dts b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+new file mode 100644
+index 0000000000000000..d144370051d559fc
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a77995-draak.dts
+@@ -0,0 +1,46 @@
++/*
++ * Device Tree Source for the Draak board
++ *
++ * Copyright (C) 2016 Renesas Electronics Corp.
++ * Copyright (C) 2017 Glider bvba
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a77995.dtsi"
++
++/ {
++	model = "Renesas Draak board based on r8a77995";
++	compatible = "renesas,draak", "renesas,r8a77995";
++
++	aliases {
++		serial0 = &scif2;
++	};
++
++	chosen {
++		bootargs = "ignore_loglevel";
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x18000000>;
++	};
++};
++
++&extal_clk {
++	clock-frequency = <48000000>;
++};
++
++&scif2 {
++	status = "okay";
++};
++
++&rwdt {
++	timeout-sec = <60>;
++	status = "okay";
++};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
