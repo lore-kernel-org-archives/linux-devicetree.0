@@ -1,121 +1,65 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: bcm2835: Add Raspberry Pi Zero W
-Date: Thu, 20 Jul 2017 21:37:09 +0200
-Message-ID: <1500579429-9101-4-git-send-email-stefan.wahren@i2se.com>
-References: <1500579429-9101-1-git-send-email-stefan.wahren@i2se.com>
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH v5 1/3] Documentation: devicetree: add Freescale RNGC binding
+Date: Thu, 20 Jul 2017 22:27:25 +0200
+Message-ID: <1500582447-28607-1-git-send-email-martin@kaiser.cx>
+References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500579429-9101-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <1457705200-16951-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi Zero W has the same components like the Zero plus
-a Cypress CYW43438 wireless chip (wifi + bl).
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Add binding documentation for the Freescale RNGC found on
+some i.MX2/3 SoCs.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile               |  3 +-
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 73 ++++++++++++++++++++++++++++++++
- 2 files changed, 75 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+Changes in v5:
+  none
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index ec60f4f..f3bf9397 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -74,7 +74,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2836-rpi-2-b.dtb \
- 	bcm2837-rpi-3-b.dtb \
--	bcm2835-rpi-zero.dtb
-+	bcm2835-rpi-zero.dtb \
-+	bcm2835-rpi-zero-w.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+Changes in v4:
+  none
+
+Changes in v3:
+  - add compatible string for imx35
+  - remove imx5 from the commit message,
+    I couldn't find an i.MX SOC that has RNGC
+
+Changes in v2:
+  none
+
+ Documentation/devicetree/bindings/rng/mxc_rngc.txt | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/mxc_rngc.txt
+
+diff --git a/Documentation/devicetree/bindings/rng/mxc_rngc.txt b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
 new file mode 100644
-index 0000000..9c6d714
+index 0000000..5a12ada
 --- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -0,0 +1,73 @@
-+/*
-+ * Copyright (C) 2017 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
++++ b/Documentation/devicetree/bindings/rng/mxc_rngc.txt
+@@ -0,0 +1,16 @@
++Freescale RNGC (Random Number Generator Version C)
 +
-+/dts-v1/;
-+#include "bcm2835.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
++Required properties:
++- compatible : Should be "fsl,imx25-rng" or "fsl,imx35-rng"
++- reg : Offset and length of the register set of this block
++- interrupts : the interrupt number for the RNG block
++- clocks: should contain the RNG clk source
 +
-+/ {
-+	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
-+	model = "Raspberry Pi Zero W";
++Example:
 +
-+	aliases {
-+		uart0 = "/soc/serial@7e201000";
-+		uart1 = "/soc/serial@7e215040";
-+		serial0 = "/soc/serial@7e201000";
-+		serial1 = "/soc/serial@7e215040";
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wl_on>;
-+		reset-gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&gpio {
-+	pinctrl-0 = <&gpioout &alt0>;
-+
-+	wl_on: wl-on {
-+		brcm,pins = <41>;
-+		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
-+	};
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+};
-+
-+&sdhci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_gpio14>;
-+	status = "okay";
++rng@53fb0000 {
++	compatible = "fsl,imx25-rng";
++	reg = <0x53fb0000 0x4000>;
++	interrupts = <22>;
++	clocks = <&trng_clk>;
 +};
 -- 
-2.7.4
+2.1.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
