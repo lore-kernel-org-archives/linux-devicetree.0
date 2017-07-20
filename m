@@ -1,59 +1,93 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v6 0/6] provide power off support for iMX6 with external
- PMIC
-Date: Thu, 20 Jul 2017 13:37:01 +0100
-Message-ID: <20170720123701.d5zyhbevyic3odxk@sirena.org.uk>
-References: <20170620140910.7568-1-o.rempel@pengutronix.de>
- <c64ce8db-eea6-3709-9c97-fda16e93481a@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ha7ewm5ymxmzzapa"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/4] clk: renesas: Add r8a77995 CPG Core Clock Definitions
+Date: Thu, 20 Jul 2017 14:40:06 +0200
+Message-ID: <1500554409-22423-2-git-send-email-geert+renesas@glider.be>
+References: <1500554409-22423-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c64ce8db-eea6-3709-9c97-fda16e93481a@pengutronix.de>
+In-Reply-To: <1500554409-22423-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-clk-owner@vger.kernel.org
-To: Oleksij Rempel <ore@pengutronix.de>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Leonard Crestez <leonard.crestez@nxp.com>
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add all R-Car D3 Clock Pulse Generator Core Clock Outputs, as listed
+in Table 8.2f ("List of Clocks [R-Car D3]") of the R-Car Series, 3rd
+Generation Hardware User's Manual (Rev. 0.55, Jun. 30, 2017).
 
---ha7ewm5ymxmzzapa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Note that internal CPG clocks (S0, S1, S2, S3, S1C, S3C, SDSRC, and
+SSPSRC) are not included, as they are used as internal clock sources
+only, and never referenced from DT.
 
-On Tue, Jul 18, 2017 at 06:53:54AM +0200, Oleksij Rempel wrote:
-> Hallo all,
->=20
-> Here Gentle Ping to the Old King
->=20
-> DT is already ACKed.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+ include/dt-bindings/clock/r8a77995-cpg-mssr.h | 57 +++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 include/dt-bindings/clock/r8a77995-cpg-mssr.h
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
+diff --git a/include/dt-bindings/clock/r8a77995-cpg-mssr.h b/include/dt-bindings/clock/r8a77995-cpg-mssr.h
+new file mode 100644
+index 0000000000000000..4e8ae3dee5901b01
+--- /dev/null
++++ b/include/dt-bindings/clock/r8a77995-cpg-mssr.h
+@@ -0,0 +1,57 @@
++/*
++ * Copyright (C) 2017 Glider bvba
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++#ifndef __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__
++#define __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__
++
++#include <dt-bindings/clock/renesas-cpg-mssr.h>
++
++/* r8a77995 CPG Core Clocks */
++#define R8A77995_CLK_Z2			0
++#define R8A77995_CLK_ZG			1
++#define R8A77995_CLK_ZTR		2
++#define R8A77995_CLK_ZT			3
++#define R8A77995_CLK_ZX			4
++#define R8A77995_CLK_S0D1		5
++#define R8A77995_CLK_S1D1		6
++#define R8A77995_CLK_S1D2		7
++#define R8A77995_CLK_S1D4		8
++#define R8A77995_CLK_S2D1		9
++#define R8A77995_CLK_S2D2		10
++#define R8A77995_CLK_S2D4		11
++#define R8A77995_CLK_S3D1		12
++#define R8A77995_CLK_S3D2		13
++#define R8A77995_CLK_S3D4		14
++#define R8A77995_CLK_S1D4C		15
++#define R8A77995_CLK_S3D1C		16
++#define R8A77995_CLK_S3D2C		17
++#define R8A77995_CLK_S3D4C		18
++#define R8A77995_CLK_LB			19
++#define R8A77995_CLK_CL			20
++#define R8A77995_CLK_ZB3		21
++#define R8A77995_CLK_ZB3D2		22
++#define R8A77995_CLK_CR			23
++#define R8A77995_CLK_CRD2		24
++#define R8A77995_CLK_SD0H		25
++#define R8A77995_CLK_SD0		26
++#define R8A77995_CLK_SSP2		27
++#define R8A77995_CLK_SSP1		28
++#define R8A77995_CLK_RPC		29
++#define R8A77995_CLK_RPCD2		30
++#define R8A77995_CLK_ZA2		31
++#define R8A77995_CLK_ZA8		32
++#define R8A77995_CLK_Z2D		33
++#define R8A77995_CLK_CANFD		34
++#define R8A77995_CLK_MSO		35
++#define R8A77995_CLK_R			36
++#define R8A77995_CLK_OSC		37
++#define R8A77995_CLK_LV0		38
++#define R8A77995_CLK_LV1		39
++#define R8A77995_CLK_CP			40
++
++#endif /* __DT_BINDINGS_CLOCK_R8A77995_CPG_MSSR_H__ */
+-- 
+2.7.4
 
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, though there are some other maintainers who like them - if in
-doubt look at how patches for the subsystem are normally handled.
-
---ha7ewm5ymxmzzapa
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllwo+wACgkQJNaLcl1U
-h9BaWgf8Dd+2GB8489Rn903Eedz3w5oQIll96IExlYdYQMJJCPhoEyb5PkQQpGJr
-K+vkLCCZgfrsWVmBZP9x/HqtZVIl5wZgT5gSWCsOmN9X05STUHGc19FiFAmw89/W
-HQ8TmbWNWLl2HJVYTUKqubYkQYTiU1hDAywMFhtCpDOEv1f2bg1w8mPddoprY3qx
-uSGliuCCY+N3px90DtMRqwZFiy68cqsEqxwacJuBLCVin+pwNEbQeVdbuw45HMTn
-1icKRfPWDifRxgwuoJAQw3znb2CePASnoy8+LF8e35Rfcw/OypvaghnyKcrfhIs3
-CkV6dfX75RqHo+tlw5+doLxwJWKgXg==
-=a+rz
------END PGP SIGNATURE-----
-
---ha7ewm5ymxmzzapa--
