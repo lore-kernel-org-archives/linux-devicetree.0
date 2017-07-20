@@ -1,3265 +1,470 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH 3/4] crypto: axis: add ARTPEC-6/7 crypto accelerator driver
-Date: Thu, 20 Jul 2017 15:44:31 +0200
-Message-ID: <b2d7ce4b0fecc4e811c12573f44bd7c45f0147e2.1500557664.git.larper@axis.com>
-References: <cover.1500557664.git.larper@axis.com>
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <cover.1500557664.git.larper@axis.com>
-In-Reply-To: <cover.1500557664.git.larper@axis.com>
-References: <cover.1500557664.git.larper@axis.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Lars Persson <larper@axis.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH] gpu: Convert to using %pOF instead of full_name
+Date: Thu, 20 Jul 2017 09:53:52 -0400
+Message-ID: <20170720135352.ayyq26jm2yqzfcf3@art_vandelay>
+References: <20170718214339.7774-24-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170718214339.7774-24-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Daniel Vetter <daniel.vetter@intel.com>, linux-samsung-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Chen Feng <puck.chen@hisilicon.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Carlo Caione <carlo@caione.org>, Jyri Sarha <jsarha@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-amlogic@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Se
 List-Id: devicetree@vger.kernel.org
 
-This is an asynchronous crypto API driver for the accelerator present
-in the ARTPEC-6 and -7 SoCs from Axis Communications AB.
-
-The driver supports AES in ECB/CTR/CBC/XTS/GCM modes and SHA1/2 hash
-standards.
-
-Signed-off-by: Lars Persson <larper@axis.com>
----
- drivers/crypto/Kconfig               |   21 +
- drivers/crypto/Makefile              |    1 +
- drivers/crypto/axis/Makefile         |    1 +
- drivers/crypto/axis/artpec6_crypto.c | 3181 ++++++++++++++++++++++++++++++++++
- 4 files changed, 3204 insertions(+)
- create mode 100644 drivers/crypto/axis/Makefile
- create mode 100644 drivers/crypto/axis/artpec6_crypto.c
-
-diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
-index 5b5393f1b87a..fe33c199fc1a 100644
---- a/drivers/crypto/Kconfig
-+++ b/drivers/crypto/Kconfig
-@@ -708,4 +708,25 @@ config CRYPTO_DEV_SAFEXCEL
- 	  chain mode, AES cipher mode and SHA1/SHA224/SHA256/SHA512 hash
- 	  algorithms.
- 
-+config CRYPTO_DEV_ARTPEC6
-+	tristate "Support for Axis ARTPEC-6/7 hardware crypto acceleration."
-+	depends on ARM && (ARCH_ARTPEC || COMPILE_TEST)
-+	depends on HAS_DMA
-+	depends on OF
-+	select CRYPTO_AEAD
-+	select CRYPTO_AES
-+	select CRYPTO_ALGAPI
-+	select CRYPTO_BLKCIPHER
-+	select CRYPTO_CTR
-+	select CRYPTO_HASH
-+	select CRYPTO_SHA1
-+	select CRYPTO_SHA256
-+	select CRYPTO_SHA384
-+	select CRYPTO_SHA512
-+	help
-+	  Enables the driver for the on-chip crypto accelerator
-+	  of Axis ARTPEC SoCs.
-+
-+	  To compile this driver as a module, choose M here.
-+
- endif # CRYPTO_HW
-diff --git a/drivers/crypto/Makefile b/drivers/crypto/Makefile
-index de629165fde7..7bf0997eae25 100644
---- a/drivers/crypto/Makefile
-+++ b/drivers/crypto/Makefile
-@@ -44,3 +44,4 @@ obj-$(CONFIG_CRYPTO_DEV_VIRTIO) += virtio/
- obj-$(CONFIG_CRYPTO_DEV_VMX) += vmx/
- obj-$(CONFIG_CRYPTO_DEV_BCM_SPU) += bcm/
- obj-$(CONFIG_CRYPTO_DEV_SAFEXCEL) += inside-secure/
-+obj-$(CONFIG_CRYPTO_DEV_ARTPEC6) += axis/
-diff --git a/drivers/crypto/axis/Makefile b/drivers/crypto/axis/Makefile
-new file mode 100644
-index 000000000000..be9a84a4b667
---- /dev/null
-+++ b/drivers/crypto/axis/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_CRYPTO_DEV_ARTPEC6) := artpec6_crypto.o
-diff --git a/drivers/crypto/axis/artpec6_crypto.c b/drivers/crypto/axis/artpec6_crypto.c
-new file mode 100644
-index 000000000000..c30a06ca5784
---- /dev/null
-+++ b/drivers/crypto/axis/artpec6_crypto.c
-@@ -0,0 +1,3181 @@
-+/*
-+ *   Driver for ARTPEC-6 crypto block using the kernel asynchronous crypto api.
-+ *
-+ *    Copyright (C) 2014-2017  Axis Communications AB
-+ */
-+#define pr_fmt(fmt)     KBUILD_MODNAME ": " fmt
-+
-+#include <linux/bitfield.h>
-+#include <linux/crypto.h>
-+#include <linux/debugfs.h>
-+#include <linux/delay.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/fault-inject.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/scatterlist.h>
-+#include <linux/slab.h>
-+
-+#include <crypto/aes.h>
-+#include <crypto/internal/aead.h>
-+#include <crypto/internal/hash.h>
-+#include <crypto/internal/skcipher.h>
-+#include <crypto/scatterwalk.h>
-+#include <crypto/sha.h>
-+
-+/* Max length of a line in all cache levels for Artpec SoCs. */
-+#define ARTPEC_CACHE_LINE_MAX	32
-+
-+#define PDMA_OUT_CFG		0x0000
-+#define PDMA_OUT_BUF_CFG	0x0004
-+#define PDMA_OUT_CMD		0x0008
-+#define PDMA_OUT_DESCRQ_PUSH	0x0010
-+#define PDMA_OUT_DESCRQ_STAT	0x0014
-+
-+#define A6_PDMA_IN_CFG		0x0028
-+#define A6_PDMA_IN_BUF_CFG	0x002c
-+#define A6_PDMA_IN_CMD		0x0030
-+#define A6_PDMA_IN_STATQ_PUSH	0x0038
-+#define A6_PDMA_IN_DESCRQ_PUSH	0x0044
-+#define A6_PDMA_IN_DESCRQ_STAT	0x0048
-+#define A6_PDMA_INTR_MASK	0x0068
-+#define A6_PDMA_ACK_INTR	0x006c
-+#define A6_PDMA_MASKED_INTR	0x0074
-+
-+#define A7_PDMA_IN_CFG		0x002c
-+#define A7_PDMA_IN_BUF_CFG	0x0030
-+#define A7_PDMA_IN_CMD		0x0034
-+#define A7_PDMA_IN_STATQ_PUSH	0x003c
-+#define A7_PDMA_IN_DESCRQ_PUSH	0x0048
-+#define A7_PDMA_IN_DESCRQ_STAT	0x004C
-+#define A7_PDMA_INTR_MASK	0x006c
-+#define A7_PDMA_ACK_INTR	0x0070
-+#define A7_PDMA_MASKED_INTR	0x0078
-+
-+#define PDMA_OUT_CFG_EN				BIT(0)
-+
-+#define PDMA_OUT_BUF_CFG_DATA_BUF_SIZE		GENMASK(4, 0)
-+#define PDMA_OUT_BUF_CFG_DESCR_BUF_SIZE		GENMASK(9, 5)
-+
-+#define PDMA_OUT_CMD_START			BIT(0)
-+#define A6_PDMA_OUT_CMD_STOP			BIT(3)
-+#define A7_PDMA_OUT_CMD_STOP			BIT(2)
-+
-+#define PDMA_OUT_DESCRQ_PUSH_LEN		GENMASK(5, 0)
-+#define PDMA_OUT_DESCRQ_PUSH_ADDR		GENMASK(31, 6)
-+
-+#define PDMA_OUT_DESCRQ_STAT_LEVEL		GENMASK(3, 0)
-+#define PDMA_OUT_DESCRQ_STAT_SIZE		GENMASK(7, 4)
-+
-+#define PDMA_IN_CFG_EN				BIT(0)
-+
-+#define PDMA_IN_BUF_CFG_DATA_BUF_SIZE		GENMASK(4, 0)
-+#define PDMA_IN_BUF_CFG_DESCR_BUF_SIZE		GENMASK(9, 5)
-+#define PDMA_IN_BUF_CFG_STAT_BUF_SIZE		GENMASK(14, 10)
-+
-+#define PDMA_IN_CMD_START			BIT(0)
-+#define A6_PDMA_IN_CMD_FLUSH_STAT		BIT(2)
-+#define A6_PDMA_IN_CMD_STOP			BIT(3)
-+#define A7_PDMA_IN_CMD_FLUSH_STAT		BIT(1)
-+#define A7_PDMA_IN_CMD_STOP			BIT(2)
-+
-+#define PDMA_IN_STATQ_PUSH_LEN			GENMASK(5, 0)
-+#define PDMA_IN_STATQ_PUSH_ADDR			GENMASK(31, 6)
-+
-+#define PDMA_IN_DESCRQ_PUSH_LEN			GENMASK(5, 0)
-+#define PDMA_IN_DESCRQ_PUSH_ADDR		GENMASK(31, 6)
-+
-+#define PDMA_IN_DESCRQ_STAT_LEVEL		GENMASK(3, 0)
-+#define PDMA_IN_DESCRQ_STAT_SIZE		GENMASK(7, 4)
-+
-+#define A6_PDMA_INTR_MASK_IN_DATA		BIT(2)
-+#define A6_PDMA_INTR_MASK_IN_EOP		BIT(3)
-+#define A6_PDMA_INTR_MASK_IN_EOP_FLUSH		BIT(4)
-+
-+#define A7_PDMA_INTR_MASK_IN_DATA		BIT(3)
-+#define A7_PDMA_INTR_MASK_IN_EOP		BIT(4)
-+#define A7_PDMA_INTR_MASK_IN_EOP_FLUSH		BIT(5)
-+
-+#define A6_CRY_MD_OPER		GENMASK(19, 16)
-+
-+#define A6_CRY_MD_HASH_SEL_CTX	GENMASK(21, 20)
-+#define A6_CRY_MD_HASH_HMAC_FIN	BIT(23)
-+
-+#define A6_CRY_MD_CIPHER_LEN	GENMASK(21, 20)
-+#define A6_CRY_MD_CIPHER_DECR	BIT(22)
-+#define A6_CRY_MD_CIPHER_TWEAK	BIT(23)
-+#define A6_CRY_MD_CIPHER_DSEQ	BIT(24)
-+
-+#define A7_CRY_MD_OPER		GENMASK(11, 8)
-+
-+#define A7_CRY_MD_HASH_SEL_CTX	GENMASK(13, 12)
-+#define A7_CRY_MD_HASH_HMAC_FIN	BIT(15)
-+
-+#define A7_CRY_MD_CIPHER_LEN	GENMASK(13, 12)
-+#define A7_CRY_MD_CIPHER_DECR	BIT(14)
-+#define A7_CRY_MD_CIPHER_TWEAK	BIT(15)
-+#define A7_CRY_MD_CIPHER_DSEQ	BIT(16)
-+
-+/* DMA metadata constants */
-+#define regk_crypto_aes_cbc     0x00000002
-+#define regk_crypto_aes_ctr     0x00000003
-+#define regk_crypto_aes_ecb     0x00000001
-+#define regk_crypto_aes_gcm     0x00000004
-+#define regk_crypto_aes_xts     0x00000005
-+#define regk_crypto_cache       0x00000002
-+#define a6_regk_crypto_dlkey    0x0000000a
-+#define a7_regk_crypto_dlkey    0x0000000e
-+#define regk_crypto_ext         0x00000001
-+#define regk_crypto_hmac_sha1   0x00000007
-+#define regk_crypto_hmac_sha256 0x00000009
-+#define regk_crypto_hmac_sha384 0x0000000b
-+#define regk_crypto_hmac_sha512 0x0000000d
-+#define regk_crypto_init        0x00000000
-+#define regk_crypto_key_128     0x00000000
-+#define regk_crypto_key_192     0x00000001
-+#define regk_crypto_key_256     0x00000002
-+#define regk_crypto_null        0x00000000
-+#define regk_crypto_sha1        0x00000006
-+#define regk_crypto_sha256      0x00000008
-+#define regk_crypto_sha384      0x0000000a
-+#define regk_crypto_sha512      0x0000000c
-+
-+/* DMA descriptor structures */
-+struct pdma_descr_ctrl  {
-+	unsigned char short_descr : 1;
-+	unsigned char pad1        : 1;
-+	unsigned char eop         : 1;
-+	unsigned char intr        : 1;
-+	unsigned char short_len   : 3;
-+	unsigned char pad2        : 1;
-+} __packed;
-+
-+struct pdma_data_descr {
-+	unsigned int len : 24;
-+	unsigned int buf : 32;
-+} __packed;
-+
-+struct pdma_short_descr {
-+	unsigned char data[7];
-+} __packed;
-+
-+struct pdma_descr {
-+	struct pdma_descr_ctrl ctrl;
-+	union {
-+		struct pdma_data_descr   data;
-+		struct pdma_short_descr  shrt;
-+	};
-+};
-+
-+struct pdma_stat_descr {
-+	unsigned char pad1        : 1;
-+	unsigned char pad2        : 1;
-+	unsigned char eop         : 1;
-+	unsigned char pad3        : 5;
-+	unsigned int  len         : 24;
-+};
-+
-+/* Each descriptor array can hold max 64 entries */
-+#define PDMA_DESCR_COUNT	64
-+
-+#define MODULE_NAME   "Artpec-6 CA"
-+
-+/* Hash modes (including HMAC variants) */
-+#define ARTPEC6_CRYPTO_HASH_SHA1	1
-+#define ARTPEC6_CRYPTO_HASH_SHA256	2
-+#define ARTPEC6_CRYPTO_HASH_SHA384	3
-+#define ARTPEC6_CRYPTO_HASH_SHA512	4
-+
-+/* Crypto modes */
-+#define ARTPEC6_CRYPTO_CIPHER_NULL	0
-+#define ARTPEC6_CRYPTO_CIPHER_AES_ECB	1
-+#define ARTPEC6_CRYPTO_CIPHER_AES_CBC	2
-+#define ARTPEC6_CRYPTO_CIPHER_AES_CTR	3
-+#define ARTPEC6_CRYPTO_CIPHER_AES_XTS	5
-+
-+/* The PDMA is a DMA-engine tightly coupled with a ciphering engine.
-+ * It operates on a descriptor array with up to 64 descriptor entries.
-+ * The arrays must be 64 byte aligned in memory.
-+ *
-+ * The ciphering unit has no registers and is completely controlled by
-+ * a 4-byte metadata that is inserted at the beginning of each dma packet.
-+ *
-+ * A dma packet is a sequence of descriptors terminated by setting the .eop
-+ * field in the final descriptor of the packet.
-+ *
-+ * Multiple packets are used for providing context data, key data and
-+ * the plain/ciphertext.
-+ *
-+ *   PDMA Descriptors (Array)
-+ *  +------+------+------+~~+-------+------+----
-+ *  |  0   |  1   |  2   |~~| 11 EOP|  12  |  ....
-+ *  +--+---+--+---+----+-+~~+-------+----+-+----
-+ *     |      |        |       |         |
-+ *     |      |        |       |         |
-+ *   __|__  +-------++-------++-------+ +----+
-+ *  | MD  | |Payload||Payload||Payload| | MD |
-+ *  +-----+ +-------++-------++-------+ +----+
-+ */
-+
-+struct artpec6_crypto_bounce_buffer {
-+	struct list_head list;
-+	size_t length;
-+	struct scatterlist *sg;
-+	size_t offset;
-+	/* buf is aligned to ARTPEC_CACHE_LINE_MAX and
-+	 * holds up to ARTPEC_CACHE_LINE_MAX bytes data.
-+	 */
-+	void *buf;
-+};
-+
-+struct artpec6_crypto_dma_map {
-+	dma_addr_t dma_addr;
-+	size_t size;
-+	enum dma_data_direction dir;
-+};
-+
-+struct artpec6_crypto_dma_descriptors {
-+	struct pdma_descr out[PDMA_DESCR_COUNT] __aligned(64);
-+	struct pdma_descr in[PDMA_DESCR_COUNT] __aligned(64);
-+	u32 stat[PDMA_DESCR_COUNT] __aligned(64);
-+	struct list_head bounce_buffers;
-+	/* Enough maps for all out/in buffers, and all three descr. arrays */
-+	struct artpec6_crypto_dma_map maps[PDMA_DESCR_COUNT * 2 + 2];
-+	dma_addr_t out_dma_addr;
-+	dma_addr_t in_dma_addr;
-+	dma_addr_t stat_dma_addr;
-+	size_t out_cnt;
-+	size_t in_cnt;
-+	size_t map_count;
-+};
-+
-+enum artpec6_crypto_variant {
-+	ARTPEC6_CRYPTO,
-+	ARTPEC7_CRYPTO,
-+};
-+
-+struct artpec6_crypto {
-+	void __iomem *base;
-+	spinlock_t queue_lock;
-+	struct list_head queue; /* waiting for pdma fifo space */
-+	struct list_head pending; /* submitted to pdma fifo */
-+	struct tasklet_struct task;
-+	struct kmem_cache *dma_cache;
-+	int pending_count;
-+	struct timer_list timer;
-+	enum artpec6_crypto_variant variant;
-+	void *pad_buffer; /* cache-aligned block padding buffer */
-+	void *zero_buffer;
-+};
-+
-+enum artpec6_crypto_hash_flags {
-+	HASH_FLAG_INIT_CTX = 2,
-+	HASH_FLAG_UPDATE = 4,
-+	HASH_FLAG_FINALIZE = 8,
-+	HASH_FLAG_HMAC = 16,
-+	HASH_FLAG_UPDATE_KEY = 32,
-+};
-+
-+struct artpec6_crypto_req_common {
-+	struct list_head list;
-+	struct artpec6_crypto_dma_descriptors *dma;
-+	struct crypto_async_request *req;
-+	void (*complete)(struct crypto_async_request *req);
-+	gfp_t gfp_flags;
-+};
-+
-+struct artpec6_hash_request_context {
-+	char partial_buffer[SHA512_BLOCK_SIZE];
-+	char partial_buffer_out[SHA512_BLOCK_SIZE];
-+	char key_buffer[SHA512_BLOCK_SIZE];
-+	char pad_buffer[SHA512_BLOCK_SIZE + 32];
-+	unsigned char digeststate[SHA512_DIGEST_SIZE];
-+	size_t partial_bytes;
-+	u64 digcnt;
-+	u32 key_md;
-+	u32 hash_md;
-+	enum artpec6_crypto_hash_flags hash_flags;
-+	struct artpec6_crypto_req_common common;
-+};
-+
-+struct artpec6_hash_export_state {
-+	char partial_buffer[SHA512_BLOCK_SIZE];
-+	unsigned char digeststate[SHA512_DIGEST_SIZE];
-+	size_t partial_bytes;
-+	u64 digcnt;
-+	int oper;
-+	unsigned int hash_flags;
-+};
-+
-+struct artpec6_hashalg_context {
-+	char hmac_key[SHA512_BLOCK_SIZE];
-+	size_t hmac_key_length;
-+	struct crypto_shash *child_hash;
-+};
-+
-+struct artpec6_crypto_request_context {
-+	u32 cipher_md;
-+	bool decrypt;
-+	struct artpec6_crypto_req_common common;
-+};
-+
-+struct artpec6_cryptotfm_context {
-+	unsigned char aes_key[2*AES_MAX_KEY_SIZE];
-+	size_t key_length;
-+	u32 key_md;
-+	int crypto_type;
-+	struct crypto_skcipher *fallback;
-+};
-+
-+struct artpec6_crypto_aead_hw_ctx {
-+	__be64	aad_length_bits;
-+	__be64  text_length_bits;
-+	__u8	J0[AES_BLOCK_SIZE];
-+};
-+
-+struct artpec6_crypto_aead_req_ctx {
-+	struct artpec6_crypto_aead_hw_ctx hw_ctx;
-+	u32 cipher_md;
-+	bool decrypt;
-+	struct artpec6_crypto_req_common common;
-+	__u8 decryption_tag[AES_BLOCK_SIZE] ____cacheline_aligned;
-+};
-+
-+/* The crypto framework makes it hard to avoid this global. */
-+static struct device *artpec6_crypto_dev;
-+
-+static struct dentry *dbgfs_root;
-+
-+#ifdef CONFIG_FAULT_INJECTION
-+static DECLARE_FAULT_ATTR(artpec6_crypto_fail_status_read);
-+static DECLARE_FAULT_ATTR(artpec6_crypto_fail_dma_array_full);
-+#endif
-+
-+enum {
-+	ARTPEC6_CRYPTO_PREPARE_HASH_NO_START,
-+	ARTPEC6_CRYPTO_PREPARE_HASH_START,
-+};
-+
-+static int artpec6_crypto_prepare_aead(struct aead_request *areq);
-+static int artpec6_crypto_prepare_crypto(struct skcipher_request *areq);
-+static int artpec6_crypto_prepare_hash(struct ahash_request *areq);
-+
-+static void
-+artpec6_crypto_complete_crypto(struct crypto_async_request *req);
-+static void
-+artpec6_crypto_complete_cbc_encrypt(struct crypto_async_request *req);
-+static void
-+artpec6_crypto_complete_cbc_decrypt(struct crypto_async_request *req);
-+static void
-+artpec6_crypto_complete_aead(struct crypto_async_request *req);
-+static void
-+artpec6_crypto_complete_hash(struct crypto_async_request *req);
-+
-+static int
-+artpec6_crypto_common_destroy(struct artpec6_crypto_req_common *common);
-+
-+static void
-+artpec6_crypto_start_dma(struct artpec6_crypto_req_common *common);
-+
-+struct artpec6_crypto_walk {
-+	struct scatterlist *sg;
-+	size_t offset;
-+};
-+
-+static void artpec6_crypto_walk_init(struct artpec6_crypto_walk *awalk,
-+				     struct scatterlist *sg)
-+{
-+	awalk->sg = sg;
-+	awalk->offset = 0;
-+}
-+
-+static size_t artpec6_crypto_walk_advance(struct artpec6_crypto_walk *awalk,
-+					  size_t nbytes)
-+{
-+	while (nbytes && awalk->sg) {
-+		size_t piece;
-+
-+		WARN_ON(awalk->offset > awalk->sg->length);
-+
-+		piece = min(nbytes, (size_t)awalk->sg->length - awalk->offset);
-+		nbytes -= piece;
-+		awalk->offset += piece;
-+		if (awalk->offset == awalk->sg->length) {
-+			awalk->sg = sg_next(awalk->sg);
-+			awalk->offset = 0;
-+		}
-+
-+	}
-+
-+	return nbytes;
-+}
-+
-+static size_t
-+artpec6_crypto_walk_chunklen(const struct artpec6_crypto_walk *awalk)
-+{
-+	WARN_ON(awalk->sg->length == awalk->offset);
-+
-+	return awalk->sg->length - awalk->offset;
-+}
-+
-+static dma_addr_t
-+artpec6_crypto_walk_chunk_phys(const struct artpec6_crypto_walk *awalk)
-+{
-+	return sg_phys(awalk->sg) + awalk->offset;
-+}
-+
-+static void
-+artpec6_crypto_copy_bounce_buffers(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct artpec6_crypto_bounce_buffer *b;
-+	struct artpec6_crypto_bounce_buffer *next;
-+
-+	list_for_each_entry_safe(b, next, &dma->bounce_buffers, list) {
-+		pr_debug("bounce entry %p: %zu bytes @ %zu from %p\n",
-+			 b, b->length, b->offset, b->buf);
-+		sg_pcopy_from_buffer(b->sg,
-+				   1,
-+				   b->buf,
-+				   b->length,
-+				   b->offset);
-+
-+		list_del(&b->list);
-+		kfree(b);
-+	}
-+}
-+
-+static inline bool artpec6_crypto_busy(void)
-+{
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	int fifo_count = ac->pending_count;
-+
-+	return fifo_count > 6;
-+}
-+
-+static int artpec6_crypto_submit(struct artpec6_crypto_req_common *req)
-+{
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	int ret = -EBUSY;
-+
-+	spin_lock_bh(&ac->queue_lock);
-+
-+	if (!artpec6_crypto_busy()) {
-+		list_add_tail(&req->list, &ac->pending);
-+		artpec6_crypto_start_dma(req);
-+		ret = -EINPROGRESS;
-+	} else if (req->req->flags & CRYPTO_TFM_REQ_MAY_BACKLOG) {
-+		list_add_tail(&req->list, &ac->queue);
-+	} else {
-+		artpec6_crypto_common_destroy(req);
-+	}
-+
-+	spin_unlock_bh(&ac->queue_lock);
-+
-+	return ret;
-+}
-+
-+static void artpec6_crypto_start_dma(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	void __iomem *base = ac->base;
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	u32 ind, statd, outd;
-+
-+	/* Make descriptor content visible to the DMA before starting it. */
-+	wmb();
-+
-+	ind = FIELD_PREP(PDMA_IN_DESCRQ_PUSH_LEN, dma->in_cnt - 1) |
-+	      FIELD_PREP(PDMA_IN_DESCRQ_PUSH_ADDR, dma->in_dma_addr >> 6);
-+
-+	statd = FIELD_PREP(PDMA_IN_STATQ_PUSH_LEN, dma->in_cnt - 1) |
-+		FIELD_PREP(PDMA_IN_STATQ_PUSH_ADDR, dma->stat_dma_addr >> 6);
-+
-+	outd = FIELD_PREP(PDMA_OUT_DESCRQ_PUSH_LEN, dma->out_cnt - 1) |
-+	       FIELD_PREP(PDMA_OUT_DESCRQ_PUSH_ADDR, dma->out_dma_addr >> 6);
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		writel_relaxed(ind, base + A6_PDMA_IN_DESCRQ_PUSH);
-+		writel_relaxed(statd, base + A6_PDMA_IN_STATQ_PUSH);
-+		writel_relaxed(PDMA_IN_CMD_START, base + A6_PDMA_IN_CMD);
-+	} else {
-+		writel_relaxed(ind, base + A7_PDMA_IN_DESCRQ_PUSH);
-+		writel_relaxed(statd, base + A7_PDMA_IN_STATQ_PUSH);
-+		writel_relaxed(PDMA_IN_CMD_START, base + A7_PDMA_IN_CMD);
-+	}
-+
-+	writel_relaxed(outd, base + PDMA_OUT_DESCRQ_PUSH);
-+	writel_relaxed(PDMA_OUT_CMD_START, base + PDMA_OUT_CMD);
-+
-+	ac->pending_count++;
-+}
-+
-+static void
-+artpec6_crypto_init_dma_operation(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+
-+	dma->out_cnt = 0;
-+	dma->in_cnt = 0;
-+	dma->map_count = 0;
-+	INIT_LIST_HEAD(&dma->bounce_buffers);
-+}
-+
-+static bool fault_inject_dma_descr(void)
-+{
-+#ifdef CONFIG_FAULT_INJECTION
-+	return should_fail(&artpec6_crypto_fail_dma_array_full, 1);
-+#else
-+	return false;
-+#endif
-+}
-+
-+/** artpec6_crypto_setup_out_descr_phys - Setup an out channel with a
-+ *                                        physical address
-+ *
-+ * @addr: The physical address of the data buffer
-+ * @len:  The length of the data buffer
-+ * @eop:  True if this is the last buffer in the packet
-+ *
-+ * @return 0 on success or -ENOSPC if there are no more descriptors available
-+ */
-+static int
-+artpec6_crypto_setup_out_descr_phys(struct artpec6_crypto_req_common *common,
-+				    dma_addr_t addr, size_t len, bool eop)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct pdma_descr *d;
-+
-+	if (dma->out_cnt >= PDMA_DESCR_COUNT ||
-+	    fault_inject_dma_descr()) {
-+		pr_err("No free OUT DMA descriptors available!\n");
-+		return -ENOSPC;
-+	}
-+
-+	d = &dma->out[dma->out_cnt++];
-+	memset(d, 0, sizeof(*d));
-+
-+	d->ctrl.short_descr = 0;
-+	d->ctrl.eop = eop;
-+	d->data.len = len;
-+	d->data.buf = addr;
-+	return 0;
-+}
-+
-+/** artpec6_crypto_setup_out_descr_short - Setup a short out descriptor
-+ *
-+ * @dst: The virtual address of the data
-+ * @len: The length of the data, must be between 1 to 7 bytes
-+ * @eop: True if this is the last buffer in the packet
-+ *
-+ * @return 0 on success
-+ *	-ENOSPC if no more descriptors are available
-+ *	-EINVAL if the data length exceeds 7 bytes
-+ */
-+static int
-+artpec6_crypto_setup_out_descr_short(struct artpec6_crypto_req_common *common,
-+				     void *dst, unsigned int len, bool eop)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct pdma_descr *d;
-+
-+	if (dma->out_cnt >= PDMA_DESCR_COUNT ||
-+	    fault_inject_dma_descr()) {
-+		pr_err("No free OUT DMA descriptors available!\n");
-+		return -ENOSPC;
-+	} else if (len > 7 || len < 1) {
-+		return -EINVAL;
-+	}
-+	d = &dma->out[dma->out_cnt++];
-+	memset(d, 0, sizeof(*d));
-+
-+	d->ctrl.short_descr = 1;
-+	d->ctrl.short_len = len;
-+	d->ctrl.eop = eop;
-+	memcpy(d->shrt.data, dst, len);
-+	return 0;
-+}
-+
-+static int artpec6_crypto_dma_map_page(struct artpec6_crypto_req_common *common,
-+				      struct page *page, size_t offset,
-+				      size_t size,
-+				      enum dma_data_direction dir,
-+				      dma_addr_t *dma_addr_out)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct device *dev = artpec6_crypto_dev;
-+	struct artpec6_crypto_dma_map *map;
-+	dma_addr_t dma_addr;
-+
-+	*dma_addr_out = 0;
-+
-+	if (dma->map_count >= ARRAY_SIZE(dma->maps))
-+		return -ENOMEM;
-+
-+	dma_addr = dma_map_page(dev, page, offset, size, dir);
-+	if (dma_mapping_error(dev, dma_addr))
-+		return -ENOMEM;
-+
-+	map = &dma->maps[dma->map_count++];
-+	map->size = size;
-+	map->dma_addr = dma_addr;
-+	map->dir = dir;
-+
-+	*dma_addr_out = dma_addr;
-+
-+	return 0;
-+}
-+
-+static int
-+artpec6_crypto_dma_map_single(struct artpec6_crypto_req_common *common,
-+			      void *ptr, size_t size,
-+			      enum dma_data_direction dir,
-+			      dma_addr_t *dma_addr_out)
-+{
-+	struct page *page = virt_to_page(ptr);
-+	size_t offset = (uintptr_t)ptr & ~PAGE_MASK;
-+
-+	return artpec6_crypto_dma_map_page(common, page, offset, size, dir,
-+					  dma_addr_out);
-+}
-+
-+static int
-+artpec6_crypto_dma_map_descs(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	int ret;
-+
-+	ret = artpec6_crypto_dma_map_single(common, dma->in,
-+				sizeof(dma->in[0]) * dma->in_cnt,
-+				DMA_TO_DEVICE, &dma->in_dma_addr);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_dma_map_single(common, dma->out,
-+				sizeof(dma->out[0]) * dma->out_cnt,
-+				DMA_TO_DEVICE, &dma->out_dma_addr);
-+	if (ret)
-+		return ret;
-+
-+	/* We only read one stat descriptor */
-+	dma->stat[dma->in_cnt - 1] = 0;
-+
-+	/*
-+	 * DMA_BIDIRECTIONAL since we need our zeroing of the stat descriptor
-+	 * to be written.
-+	 */
-+	return artpec6_crypto_dma_map_single(common,
-+				dma->stat + dma->in_cnt - 1,
-+				sizeof(dma->stat[0]),
-+				DMA_BIDIRECTIONAL,
-+				&dma->stat_dma_addr);
-+}
-+
-+static void
-+artpec6_crypto_dma_unmap_all(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct device *dev = artpec6_crypto_dev;
-+	int i;
-+
-+	for (i = 0; i < dma->map_count; i++) {
-+		struct artpec6_crypto_dma_map *map = &dma->maps[i];
-+
-+		dma_unmap_page(dev, map->dma_addr, map->size, map->dir);
-+	}
-+
-+	dma->map_count = 0;
-+}
-+
-+/** artpec6_crypto_setup_out_descr - Setup an out descriptor
-+ *
-+ * @dst: The virtual address of the data
-+ * @len: The length of the data
-+ * @eop: True if this is the last buffer in the packet
-+ * @use_short: If this is true and the data length is 7 bytes or less then
-+ *	a short descriptor will be used
-+ *
-+ * @return 0 on success
-+ *	Any errors from artpec6_crypto_setup_out_descr_short() or
-+ *	setup_out_descr_phys()
-+ */
-+static int
-+artpec6_crypto_setup_out_descr(struct artpec6_crypto_req_common *common,
-+			       void *dst, unsigned int len, bool eop,
-+			       bool use_short)
-+{
-+	if (use_short && len < 7) {
-+		return artpec6_crypto_setup_out_descr_short(common, dst, len,
-+							    eop);
-+	} else {
-+		int ret;
-+		dma_addr_t dma_addr;
-+
-+		ret = artpec6_crypto_dma_map_single(common, dst, len,
-+						   DMA_TO_DEVICE,
-+						   &dma_addr);
-+		if (ret)
-+			return ret;
-+
-+		return artpec6_crypto_setup_out_descr_phys(common, dma_addr,
-+							   len, eop);
-+	}
-+}
-+
-+/** artpec6_crypto_setup_in_descr_phys - Setup an in channel with a
-+ *                                       physical address
-+ *
-+ * @addr: The physical address of the data buffer
-+ * @len:  The length of the data buffer
-+ * @intr: True if an interrupt should be fired after HW processing of this
-+ *	  descriptor
-+ *
-+ */
-+static int
-+artpec6_crypto_setup_in_descr_phys(struct artpec6_crypto_req_common *common,
-+			       dma_addr_t addr, unsigned int len, bool intr)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct pdma_descr *d;
-+
-+	if (dma->in_cnt >= PDMA_DESCR_COUNT ||
-+	    fault_inject_dma_descr()) {
-+		pr_err("No free IN DMA descriptors available!\n");
-+		return -ENOSPC;
-+	}
-+	d = &dma->in[dma->in_cnt++];
-+	memset(d, 0, sizeof(*d));
-+
-+	d->ctrl.intr = intr;
-+	d->data.len = len;
-+	d->data.buf = addr;
-+	return 0;
-+}
-+
-+/** artpec6_crypto_setup_in_descr - Setup an in channel descriptor
-+ *
-+ * @buffer: The virtual address to of the data buffer
-+ * @len:    The length of the data buffer
-+ * @last:   If this is the last data buffer in the request (i.e. an interrupt
-+ *	    is needed
-+ *
-+ * Short descriptors are not used for the in channel
-+ */
-+static int
-+artpec6_crypto_setup_in_descr(struct artpec6_crypto_req_common *common,
-+			  void *buffer, unsigned int len, bool last)
-+{
-+	dma_addr_t dma_addr;
-+	int ret;
-+
-+	ret = artpec6_crypto_dma_map_single(common, buffer, len,
-+					   DMA_FROM_DEVICE, &dma_addr);
-+	if (ret)
-+		return ret;
-+
-+	return artpec6_crypto_setup_in_descr_phys(common, dma_addr, len, last);
-+}
-+
-+static struct artpec6_crypto_bounce_buffer *
-+artpec6_crypto_alloc_bounce(gfp_t flags)
-+{
-+	void *base;
-+	size_t alloc_size = sizeof(struct artpec6_crypto_bounce_buffer) +
-+			    2 * ARTPEC_CACHE_LINE_MAX;
-+	struct artpec6_crypto_bounce_buffer *bbuf = kzalloc(alloc_size, flags);
-+
-+	if (!bbuf)
-+		return NULL;
-+
-+	base = bbuf + 1;
-+	bbuf->buf = PTR_ALIGN(base, ARTPEC_CACHE_LINE_MAX);
-+	return bbuf;
-+}
-+
-+static int setup_bounce_buffer_in(struct artpec6_crypto_req_common *common,
-+				  struct artpec6_crypto_walk *walk, size_t size)
-+{
-+	struct artpec6_crypto_bounce_buffer *bbuf;
-+	int ret;
-+
-+	bbuf = artpec6_crypto_alloc_bounce(common->gfp_flags);
-+	if (!bbuf)
-+		return -ENOMEM;
-+
-+	bbuf->length = size;
-+	bbuf->sg = walk->sg;
-+	bbuf->offset = walk->offset;
-+
-+	ret =  artpec6_crypto_setup_in_descr(common, bbuf->buf, size, false);
-+	if (ret) {
-+		kfree(bbuf);
-+		return ret;
-+	}
-+
-+	pr_debug("BOUNCE %zu offset %zu\n", size, walk->offset);
-+	list_add_tail(&bbuf->list, &common->dma->bounce_buffers);
-+	return 0;
-+}
-+
-+static int
-+artpec6_crypto_setup_sg_descrs_in(struct artpec6_crypto_req_common *common,
-+				  struct artpec6_crypto_walk *walk,
-+				  size_t count)
-+{
-+	size_t chunk;
-+	int ret;
-+	dma_addr_t addr;
-+
-+	while (walk->sg && count) {
-+		chunk = min(count, artpec6_crypto_walk_chunklen(walk));
-+		addr = artpec6_crypto_walk_chunk_phys(walk);
-+
-+		/* When destination buffers are not aligned to the cache line
-+		 * size we need bounce buffers. The DMA-API requires that the
-+		 * entire line is owned by the DMA buffer and this holds also
-+		 * for the case when coherent DMA is used.
-+		 */
-+		if (!IS_ALIGNED(addr, ARTPEC_CACHE_LINE_MAX)) {
-+			chunk = min_t(dma_addr_t, chunk,
-+				      ALIGN(addr, ARTPEC_CACHE_LINE_MAX) -
-+				      addr);
-+
-+			pr_debug("CHUNK-b %pad:%zu\n", &addr, chunk);
-+			ret = setup_bounce_buffer_in(common, walk, chunk);
-+		} else if (chunk < ARTPEC_CACHE_LINE_MAX) {
-+			pr_debug("CHUNK-b %pad:%zu\n", &addr, chunk);
-+			ret = setup_bounce_buffer_in(common, walk, chunk);
-+		} else {
-+			dma_addr_t dma_addr;
-+
-+			chunk = chunk & ~(ARTPEC_CACHE_LINE_MAX-1);
-+
-+			pr_debug("CHUNK %pad:%zu\n", &addr, chunk);
-+
-+			ret = artpec6_crypto_dma_map_page(common,
-+							 sg_page(walk->sg),
-+							 walk->sg->offset +
-+							 walk->offset,
-+							 chunk,
-+							 DMA_FROM_DEVICE,
-+							 &dma_addr);
-+			if (ret)
-+				return ret;
-+
-+			ret = artpec6_crypto_setup_in_descr_phys(common,
-+								 dma_addr,
-+								 chunk, false);
-+		}
-+
-+		if (ret)
-+			return ret;
-+
-+		count = count - chunk;
-+		artpec6_crypto_walk_advance(walk, chunk);
-+	}
-+
-+	if (count)
-+		pr_err("EOL unexpected %zu bytes left\n", count);
-+
-+	return count ? -EINVAL : 0;
-+}
-+
-+static int
-+artpec6_crypto_setup_sg_descrs_out(struct artpec6_crypto_req_common *common,
-+				   struct artpec6_crypto_walk *walk,
-+				   size_t count)
-+{
-+	size_t chunk;
-+	int ret;
-+	dma_addr_t addr;
-+
-+	while (walk->sg && count) {
-+		chunk = min(count, artpec6_crypto_walk_chunklen(walk));
-+		addr = artpec6_crypto_walk_chunk_phys(walk);
-+
-+		pr_debug("OUT-CHUNK %pad:%zu\n", &addr, chunk);
-+
-+		if (addr & 3) {
-+			char buf[3];
-+
-+			chunk = min_t(size_t, chunk, (4-(addr&3)));
-+
-+			sg_pcopy_to_buffer(walk->sg, 1, buf, chunk,
-+					   walk->offset);
-+
-+			ret = artpec6_crypto_setup_out_descr_short(common, buf,
-+								   chunk,
-+								   false);
-+		} else {
-+			dma_addr_t dma_addr;
-+
-+			ret = artpec6_crypto_dma_map_page(common,
-+							 sg_page(walk->sg),
-+							 walk->sg->offset +
-+							 walk->offset,
-+							 chunk,
-+							 DMA_TO_DEVICE,
-+							 &dma_addr);
-+			if (ret)
-+				return ret;
-+
-+			ret = artpec6_crypto_setup_out_descr_phys(common,
-+								 dma_addr,
-+								 chunk, false);
-+		}
-+
-+		if (ret)
-+			return ret;
-+
-+		count = count - chunk;
-+		artpec6_crypto_walk_advance(walk, chunk);
-+	}
-+
-+	if (count)
-+		pr_err("EOL unexpected %zu bytes left\n", count);
-+
-+	return count ? -EINVAL : 0;
-+}
-+
-+
-+/** artpec6_crypto_terminate_out_descrs - Set the EOP on the last out descriptor
-+ *
-+ * If the out descriptor list is non-empty, then the eop flag on the
-+ * last used out descriptor will be set.
-+ *
-+ * @return  0 on success
-+ *	-EINVAL if the out descriptor is empty or has overflown
-+ */
-+static int
-+artpec6_crypto_terminate_out_descrs(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct pdma_descr *d;
-+
-+	if (!dma->out_cnt || dma->out_cnt > PDMA_DESCR_COUNT) {
-+		pr_err("%s: OUT descriptor list is %s\n",
-+			MODULE_NAME, dma->out_cnt ? "empty" : "full");
-+		return -EINVAL;
-+
-+	}
-+
-+	d = &dma->out[dma->out_cnt-1];
-+	d->ctrl.eop = 1;
-+
-+	return 0;
-+}
-+
-+/** artpec6_crypto_terminate_in_descrs - Set the interrupt flag on the last
-+ *                                       in descriptor
-+ *
-+ * See artpec6_crypto_terminate_out_descrs() for return values
-+ */
-+static int
-+artpec6_crypto_terminate_in_descrs(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto_dma_descriptors *dma = common->dma;
-+	struct pdma_descr *d;
-+
-+	if (!dma->in_cnt || dma->in_cnt > PDMA_DESCR_COUNT) {
-+		pr_err("%s: IN descriptor list is %s\n",
-+			MODULE_NAME, dma->in_cnt ? "empty" : "full");
-+		return -EINVAL;
-+	}
-+
-+	d = &dma->in[dma->in_cnt-1];
-+	d->ctrl.intr = 1;
-+	return 0;
-+}
-+
-+/** create_hash_pad - Create a Secure Hash conformant pad
-+ *
-+ * @dst:      The destination buffer to write the pad. Must be at least 64 bytes
-+ * @dgstlen:  The total length of the hash digest in bytes
-+ * @bitcount: The total length of the digest in bits
-+ *
-+ * @return The total number of padding bytes written to @dst
-+ */
-+static size_t
-+create_hash_pad(int oper, unsigned char *dst, u64 dgstlen, u64 bitcount)
-+{
-+	unsigned int mod, target, diff, pad_bytes, size_bytes;
-+	__be64 bits = __cpu_to_be64(bitcount);
-+
-+	switch (oper) {
-+	case regk_crypto_sha1:
-+	case regk_crypto_sha256:
-+	case regk_crypto_hmac_sha1:
-+	case regk_crypto_hmac_sha256:
-+		target = 448 / 8;
-+		mod = 512 / 8;
-+		size_bytes = 8;
-+		break;
-+	default:
-+		target = 896 / 8;
-+		mod = 1024 / 8;
-+		size_bytes = 16;
-+		break;
-+	}
-+
-+	target -= 1;
-+	diff = dgstlen & (mod - 1);
-+	pad_bytes = diff > target ? target + mod - diff : target - diff;
-+
-+	memset(dst + 1, 0, pad_bytes);
-+	dst[0] = 0x80;
-+
-+	if (size_bytes == 16) {
-+		memset(dst + 1 + pad_bytes, 0, 8);
-+		memcpy(dst + 1 + pad_bytes + 8, &bits, 8);
-+	} else {
-+		memcpy(dst + 1 + pad_bytes, &bits, 8);
-+	}
-+
-+	return pad_bytes + size_bytes + 1;
-+}
-+
-+static int artpec6_crypto_common_init(struct artpec6_crypto_req_common *common,
-+		struct crypto_async_request *parent,
-+		void (*complete)(struct crypto_async_request *req),
-+		struct scatterlist *dstsg, unsigned int nbytes)
-+{
-+	gfp_t flags;
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+
-+	flags = (parent->flags & CRYPTO_TFM_REQ_MAY_SLEEP) ?
-+		 GFP_KERNEL : GFP_ATOMIC;
-+
-+	common->gfp_flags = flags;
-+	common->dma = kmem_cache_alloc(ac->dma_cache, flags);
-+	if (!common->dma)
-+		return -ENOMEM;
-+
-+	common->req = parent;
-+	common->complete = complete;
-+	return 0;
-+}
-+
-+static void
-+artpec6_crypto_bounce_destroy(struct artpec6_crypto_dma_descriptors *dma)
-+{
-+	struct artpec6_crypto_bounce_buffer *b;
-+	struct artpec6_crypto_bounce_buffer *next;
-+
-+	list_for_each_entry_safe(b, next, &dma->bounce_buffers, list) {
-+		kfree(b);
-+	}
-+}
-+
-+static int
-+artpec6_crypto_common_destroy(struct artpec6_crypto_req_common *common)
-+{
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+
-+	artpec6_crypto_dma_unmap_all(common);
-+	artpec6_crypto_bounce_destroy(common->dma);
-+	kmem_cache_free(ac->dma_cache, common->dma);
-+	common->dma = NULL;
-+	return 0;
-+}
-+
-+/*
-+ * Ciphering functions.
-+ */
-+static int artpec6_crypto_encrypt(struct skcipher_request *req)
-+{
-+	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(cipher);
-+	struct artpec6_crypto_request_context *req_ctx = NULL;
-+	void (*complete)(struct crypto_async_request *req);
-+	int ret;
-+
-+	req_ctx = skcipher_request_ctx(req);
-+
-+	switch (ctx->crypto_type) {
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CBC:
-+	case ARTPEC6_CRYPTO_CIPHER_AES_ECB:
-+	case ARTPEC6_CRYPTO_CIPHER_AES_XTS:
-+		req_ctx->decrypt = 0;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	switch (ctx->crypto_type) {
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CBC:
-+		complete = artpec6_crypto_complete_cbc_encrypt;
-+		break;
-+	default:
-+		complete = artpec6_crypto_complete_crypto;
-+		break;
-+	}
-+
-+	ret = artpec6_crypto_common_init(&req_ctx->common,
-+				  &req->base,
-+				  complete,
-+				  req->dst, req->cryptlen);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_prepare_crypto(req);
-+	if (ret) {
-+		artpec6_crypto_common_destroy(&req_ctx->common);
-+		return ret;
-+	}
-+
-+	return artpec6_crypto_submit(&req_ctx->common);
-+}
-+
-+static int artpec6_crypto_decrypt(struct skcipher_request *req)
-+{
-+	int ret;
-+	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(cipher);
-+	struct artpec6_crypto_request_context *req_ctx = NULL;
-+	void (*complete)(struct crypto_async_request *req);
-+
-+	req_ctx = skcipher_request_ctx(req);
-+
-+	switch (ctx->crypto_type) {
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CBC:
-+	case ARTPEC6_CRYPTO_CIPHER_AES_ECB:
-+	case ARTPEC6_CRYPTO_CIPHER_AES_XTS:
-+		req_ctx->decrypt = 1;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+
-+	switch (ctx->crypto_type) {
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CBC:
-+		complete = artpec6_crypto_complete_cbc_decrypt;
-+		break;
-+	default:
-+		complete = artpec6_crypto_complete_crypto;
-+		break;
-+	}
-+
-+	ret = artpec6_crypto_common_init(&req_ctx->common, &req->base,
-+				  complete,
-+				  req->dst, req->cryptlen);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_prepare_crypto(req);
-+	if (ret) {
-+		artpec6_crypto_common_destroy(&req_ctx->common);
-+		return ret;
-+	}
-+
-+	return artpec6_crypto_submit(&req_ctx->common);
-+}
-+
-+static int
-+artpec6_crypto_ctr_crypt(struct skcipher_request *req, bool encrypt)
-+{
-+	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(req);
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(cipher);
-+	size_t iv_len = crypto_skcipher_ivsize(cipher);
-+	unsigned int counter = be32_to_cpup((__be32 *)
-+					    (req->iv + iv_len - 4));
-+	unsigned int nblks = ALIGN(req->cryptlen, AES_BLOCK_SIZE) /
-+			     AES_BLOCK_SIZE;
-+
-+	/*
-+	 * The hardware uses only the last 32-bits as the counter while the
-+	 * kernel tests (aes_ctr_enc_tv_template[4] for example) expect that
-+	 * the whole IV is a counter.  So fallback if the counter is going to
-+	 * overlow.
-+	 */
-+	if (counter + nblks < counter) {
-+		int ret;
-+
-+		pr_debug("counter %x will overflow (nblks %u), falling back\n",
-+			 counter, counter + nblks);
-+
-+		ret = crypto_skcipher_setkey(ctx->fallback, ctx->aes_key,
-+					     ctx->key_length);
-+		if (ret)
-+			return ret;
-+
-+		{
-+			SKCIPHER_REQUEST_ON_STACK(subreq, ctx->fallback);
-+
-+			skcipher_request_set_tfm(subreq, ctx->fallback);
-+			skcipher_request_set_callback(subreq, req->base.flags,
-+						      NULL, NULL);
-+			skcipher_request_set_crypt(subreq, req->src, req->dst,
-+						   req->cryptlen, req->iv);
-+			ret = encrypt ? crypto_skcipher_encrypt(subreq)
-+				      : crypto_skcipher_decrypt(subreq);
-+			skcipher_request_zero(subreq);
-+		}
-+		return ret;
-+	}
-+
-+	return encrypt ? artpec6_crypto_encrypt(req)
-+		       : artpec6_crypto_decrypt(req);
-+}
-+
-+static int artpec6_crypto_ctr_encrypt(struct skcipher_request *req)
-+{
-+	return artpec6_crypto_ctr_crypt(req, true);
-+}
-+
-+static int artpec6_crypto_ctr_decrypt(struct skcipher_request *req)
-+{
-+	return artpec6_crypto_ctr_crypt(req, false);
-+}
-+
-+/*
-+ * AEAD functions
-+ */
-+static int artpec6_crypto_aead_init(struct crypto_aead *tfm)
-+{
-+	struct artpec6_cryptotfm_context *tfm_ctx = crypto_aead_ctx(tfm);
-+
-+	memset(tfm_ctx, 0, sizeof(*tfm_ctx));
-+
-+	crypto_aead_set_reqsize(tfm,
-+				sizeof(struct artpec6_crypto_aead_req_ctx));
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_aead_set_key(struct crypto_aead *tfm, const u8 *key,
-+			       unsigned int len)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_tfm_ctx(&tfm->base);
-+
-+	if (len != 16 && len != 24 && len != 32) {
-+		crypto_aead_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-+		return -1;
-+	}
-+
-+	ctx->key_length = len;
-+
-+	memcpy(ctx->aes_key, key, len);
-+	return 0;
-+}
-+
-+static int artpec6_crypto_aead_encrypt(struct aead_request *req)
-+{
-+	int ret;
-+	struct artpec6_crypto_aead_req_ctx *req_ctx = aead_request_ctx(req);
-+
-+	req_ctx->decrypt = false;
-+	ret = artpec6_crypto_common_init(&req_ctx->common, &req->base,
-+				  artpec6_crypto_complete_aead,
-+				  NULL, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_prepare_aead(req);
-+	if (ret) {
-+		artpec6_crypto_common_destroy(&req_ctx->common);
-+		return ret;
-+	}
-+
-+	return artpec6_crypto_submit(&req_ctx->common);
-+}
-+
-+static int artpec6_crypto_aead_decrypt(struct aead_request *req)
-+{
-+	int ret;
-+	struct artpec6_crypto_aead_req_ctx *req_ctx = aead_request_ctx(req);
-+
-+	req_ctx->decrypt = true;
-+	if (req->cryptlen < AES_BLOCK_SIZE)
-+		return -EINVAL;
-+
-+	ret = artpec6_crypto_common_init(&req_ctx->common,
-+				  &req->base,
-+				  artpec6_crypto_complete_aead,
-+				  NULL, 0);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_prepare_aead(req);
-+	if (ret) {
-+		artpec6_crypto_common_destroy(&req_ctx->common);
-+		return ret;
-+	}
-+
-+	return artpec6_crypto_submit(&req_ctx->common);
-+}
-+
-+static int artpec6_crypto_prepare_hash(struct ahash_request *areq)
-+{
-+	struct artpec6_hashalg_context *ctx = crypto_tfm_ctx(areq->base.tfm);
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(areq);
-+	size_t digestsize = crypto_ahash_digestsize(crypto_ahash_reqtfm(areq));
-+	size_t contextsize = digestsize == SHA384_DIGEST_SIZE ?
-+		SHA512_DIGEST_SIZE : digestsize;
-+	size_t blocksize = crypto_tfm_alg_blocksize(
-+		crypto_ahash_tfm(crypto_ahash_reqtfm(areq)));
-+	struct artpec6_crypto_req_common *common = &req_ctx->common;
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	u32 sel_ctx;
-+	bool ext_ctx = false;
-+	bool run_hw = false;
-+	int error = 0;
-+
-+	artpec6_crypto_init_dma_operation(common);
-+
-+	/* Upload HMAC key, must be first the first packet */
-+	if (req_ctx->hash_flags & HASH_FLAG_HMAC) {
-+		if (variant == ARTPEC6_CRYPTO) {
-+			req_ctx->key_md = FIELD_PREP(A6_CRY_MD_OPER,
-+						     a6_regk_crypto_dlkey);
-+		} else {
-+			req_ctx->key_md = FIELD_PREP(A7_CRY_MD_OPER,
-+						     a7_regk_crypto_dlkey);
-+		}
-+
-+		/* Copy and pad up the key */
-+		memcpy(req_ctx->key_buffer, ctx->hmac_key,
-+		       ctx->hmac_key_length);
-+		memset(req_ctx->key_buffer + ctx->hmac_key_length, 0,
-+		       blocksize - ctx->hmac_key_length);
-+
-+		error = artpec6_crypto_setup_out_descr(common,
-+					(void *)&req_ctx->key_md,
-+					sizeof(req_ctx->key_md), false, false);
-+		if (error)
-+			return error;
-+
-+		error = artpec6_crypto_setup_out_descr(common,
-+					req_ctx->key_buffer, blocksize,
-+					true, false);
-+		if (error)
-+			return error;
-+	}
-+
-+	if (!(req_ctx->hash_flags & HASH_FLAG_INIT_CTX)) {
-+		/* Restore context */
-+		sel_ctx = regk_crypto_ext;
-+		ext_ctx = true;
-+	} else {
-+		sel_ctx = regk_crypto_init;
-+	}
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		req_ctx->hash_md &= ~A6_CRY_MD_HASH_SEL_CTX;
-+		req_ctx->hash_md |= FIELD_PREP(A6_CRY_MD_HASH_SEL_CTX, sel_ctx);
-+
-+		/* If this is the final round, set the final flag */
-+		if (req_ctx->hash_flags & HASH_FLAG_FINALIZE)
-+			req_ctx->hash_md |= A6_CRY_MD_HASH_HMAC_FIN;
-+	} else {
-+		req_ctx->hash_md &= ~A7_CRY_MD_HASH_SEL_CTX;
-+		req_ctx->hash_md |= FIELD_PREP(A7_CRY_MD_HASH_SEL_CTX, sel_ctx);
-+
-+		/* If this is the final round, set the final flag */
-+		if (req_ctx->hash_flags & HASH_FLAG_FINALIZE)
-+			req_ctx->hash_md |= A7_CRY_MD_HASH_HMAC_FIN;
-+	}
-+
-+	/* Setup up metadata descriptors */
-+	error = artpec6_crypto_setup_out_descr(common,
-+				(void *)&req_ctx->hash_md,
-+				sizeof(req_ctx->hash_md), false, false);
-+	if (error)
-+		return error;
-+
-+	error = artpec6_crypto_setup_in_descr(common, ac->pad_buffer, 4, false);
-+	if (error)
-+		return error;
-+
-+	if (ext_ctx) {
-+		error = artpec6_crypto_setup_out_descr(common,
-+					req_ctx->digeststate,
-+					contextsize, false, false);
-+
-+		if (error)
-+			return error;
-+	}
-+
-+	if (req_ctx->hash_flags & HASH_FLAG_UPDATE) {
-+		size_t done_bytes = 0;
-+		size_t total_bytes = areq->nbytes + req_ctx->partial_bytes;
-+		size_t ready_bytes = round_down(total_bytes, blocksize);
-+		struct artpec6_crypto_walk walk;
-+
-+		run_hw = ready_bytes > 0;
-+		if (req_ctx->partial_bytes && ready_bytes) {
-+			/* We have a partial buffer and will at least some bytes
-+			 * to the HW. Empty this partial buffer before tackling
-+			 * the SG lists
-+			 */
-+			memcpy(req_ctx->partial_buffer_out,
-+				req_ctx->partial_buffer,
-+				req_ctx->partial_bytes);
-+
-+			error = artpec6_crypto_setup_out_descr(common,
-+						req_ctx->partial_buffer_out,
-+						req_ctx->partial_bytes,
-+						false, true);
-+			if (error)
-+				return error;
-+
-+			/* Reset partial buffer */
-+			done_bytes += req_ctx->partial_bytes;
-+			req_ctx->partial_bytes = 0;
-+		}
-+
-+		artpec6_crypto_walk_init(&walk, areq->src);
-+
-+		error = artpec6_crypto_setup_sg_descrs_out(common, &walk,
-+							   ready_bytes -
-+							   done_bytes);
-+		if (error)
-+			return error;
-+
-+		if (walk.sg) {
-+			size_t sg_skip = ready_bytes - done_bytes;
-+			size_t sg_rem = areq->nbytes - sg_skip;
-+
-+			sg_pcopy_to_buffer(areq->src, sg_nents(areq->src),
-+					   req_ctx->partial_buffer +
-+					   req_ctx->partial_bytes,
-+					   sg_rem, sg_skip);
-+
-+			req_ctx->partial_bytes += sg_rem;
-+		}
-+
-+		req_ctx->digcnt += ready_bytes;
-+		req_ctx->hash_flags &= ~(HASH_FLAG_UPDATE);
-+	}
-+
-+	/* Finalize */
-+	if (req_ctx->hash_flags & HASH_FLAG_FINALIZE) {
-+		bool needtrim = contextsize != digestsize;
-+		size_t hash_pad_len;
-+		u64 digest_bits;
-+		u32 oper;
-+
-+		if (variant == ARTPEC6_CRYPTO)
-+			oper = FIELD_GET(A6_CRY_MD_OPER, req_ctx->hash_md);
-+		else
-+			oper = FIELD_GET(A7_CRY_MD_OPER, req_ctx->hash_md);
-+
-+		/* Write out the partial buffer if present */
-+		if (req_ctx->partial_bytes) {
-+			memcpy(req_ctx->partial_buffer_out,
-+			       req_ctx->partial_buffer,
-+			       req_ctx->partial_bytes);
-+			error = artpec6_crypto_setup_out_descr(common,
-+						req_ctx->partial_buffer_out,
-+						req_ctx->partial_bytes,
-+						false, true);
-+			if (error)
-+				return error;
-+
-+			req_ctx->digcnt += req_ctx->partial_bytes;
-+			req_ctx->partial_bytes = 0;
-+		}
-+
-+		if (req_ctx->hash_flags & HASH_FLAG_HMAC)
-+			digest_bits = 8 * (req_ctx->digcnt + blocksize);
-+		else
-+			digest_bits = 8 * req_ctx->digcnt;
-+
-+		/* Add the hash pad */
-+		hash_pad_len = create_hash_pad(oper, req_ctx->pad_buffer,
-+					       req_ctx->digcnt, digest_bits);
-+		error = artpec6_crypto_setup_out_descr(common,
-+						      req_ctx->pad_buffer,
-+						      hash_pad_len, false,
-+						      true);
-+		req_ctx->digcnt = 0;
-+
-+		if (error)
-+			return error;
-+
-+		/* Descriptor for the final result */
-+		error = artpec6_crypto_setup_in_descr(common, areq->result,
-+						      digestsize,
-+						      !needtrim);
-+		if (error)
-+			return error;
-+
-+		if (needtrim) {
-+			/* Discard the extra context bytes for SHA-384 */
-+			error = artpec6_crypto_setup_in_descr(common,
-+					req_ctx->partial_buffer,
-+					digestsize - contextsize, true);
-+			if (error)
-+				return error;
-+		}
-+
-+	} else { /* This is not the final operation for this request */
-+		if (!run_hw)
-+			return ARTPEC6_CRYPTO_PREPARE_HASH_NO_START;
-+
-+		/* Save the result to the context */
-+		error = artpec6_crypto_setup_in_descr(common,
-+						      req_ctx->digeststate,
-+						      contextsize, false);
-+		if (error)
-+			return error;
-+		/* fall through */
-+	}
-+
-+	req_ctx->hash_flags &= ~(HASH_FLAG_INIT_CTX | HASH_FLAG_UPDATE |
-+				 HASH_FLAG_FINALIZE);
-+
-+	error = artpec6_crypto_terminate_in_descrs(common);
-+	if (error)
-+		return error;
-+
-+	error = artpec6_crypto_terminate_out_descrs(common);
-+	if (error)
-+		return error;
-+
-+	error = artpec6_crypto_dma_map_descs(common);
-+	if (error)
-+		return error;
-+
-+	return ARTPEC6_CRYPTO_PREPARE_HASH_START;
-+}
-+
-+
-+static int artpec6_crypto_aes_ecb_init(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	tfm->reqsize = sizeof(struct artpec6_crypto_request_context);
-+	ctx->crypto_type = ARTPEC6_CRYPTO_CIPHER_AES_ECB;
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_aes_ctr_init(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	ctx->fallback = crypto_alloc_skcipher(crypto_tfm_alg_name(&tfm->base),
-+					      0,
-+					      CRYPTO_ALG_ASYNC |
-+					      CRYPTO_ALG_NEED_FALLBACK);
-+	if (IS_ERR(ctx->fallback))
-+		return PTR_ERR(ctx->fallback);
-+
-+	tfm->reqsize = sizeof(struct artpec6_crypto_request_context);
-+	ctx->crypto_type = ARTPEC6_CRYPTO_CIPHER_AES_CTR;
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_aes_cbc_init(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	tfm->reqsize = sizeof(struct artpec6_crypto_request_context);
-+	ctx->crypto_type = ARTPEC6_CRYPTO_CIPHER_AES_CBC;
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_aes_xts_init(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	tfm->reqsize = sizeof(struct artpec6_crypto_request_context);
-+	ctx->crypto_type = ARTPEC6_CRYPTO_CIPHER_AES_XTS;
-+
-+	return 0;
-+}
-+
-+static void artpec6_crypto_aes_exit(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	memset(ctx, 0, sizeof(*ctx));
-+}
-+
-+static void artpec6_crypto_aes_ctr_exit(struct crypto_skcipher *tfm)
-+{
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(tfm);
-+
-+	crypto_free_skcipher(ctx->fallback);
-+	artpec6_crypto_aes_exit(tfm);
-+}
-+
-+static int
-+artpec6_crypto_cipher_set_key(struct crypto_skcipher *cipher, const u8 *key,
-+			      unsigned int keylen)
-+{
-+	struct artpec6_cryptotfm_context *ctx =
-+		crypto_skcipher_ctx(cipher);
-+
-+	if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_NULL)
-+		return 0;
-+
-+	switch (keylen) {
-+	case 16:
-+	case 24:
-+	case 32:
-+		break;
-+	case 48:
-+	case 64:
-+		if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_AES_XTS)
-+			break;
-+	default:
-+		pr_err("%s: Invalid key length %d\n", MODULE_NAME, keylen);
-+		crypto_skcipher_set_flags(cipher,
-+					  CRYPTO_TFM_RES_BAD_KEY_LEN);
-+		return -EINVAL;
-+	}
-+
-+	memcpy(ctx->aes_key, key, keylen);
-+	ctx->key_length = keylen;
-+	return 0;
-+}
-+
-+/** artpec6_crypto_process_crypto - Prepare an async block cipher crypto request
-+ *
-+ * @req: The asynch request to process
-+ *
-+ * @return 0 if the dma job was successfully prepared
-+ *	  <0 on error
-+ *
-+ * This function sets up the PDMA descriptors for a block cipher request.
-+ *
-+ * The required padding is added for AES-CTR using a statically defined
-+ * buffer.
-+ *
-+ * The PDMA descriptor list will be as follows:
-+ *
-+ * OUT: [KEY_MD][KEY][EOP]<CIPHER_MD>[IV]<data_0>...[data_n][AES-CTR_pad]<eop>
-+ * IN:  <CIPHER_MD><data_0>...[data_n]<intr>
-+ *
-+ */
-+static int artpec6_crypto_prepare_crypto(struct skcipher_request *areq)
-+{
-+	int ret;
-+	struct artpec6_crypto_walk walk;
-+	struct crypto_skcipher *cipher = crypto_skcipher_reqtfm(areq);
-+	struct artpec6_cryptotfm_context *ctx = crypto_skcipher_ctx(cipher);
-+	struct artpec6_crypto_request_context *req_ctx = NULL;
-+	size_t iv_len = crypto_skcipher_ivsize(cipher);
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	struct artpec6_crypto_req_common *common;
-+	bool cipher_decr = false;
-+	size_t cipher_klen;
-+	u32 cipher_len = 0; /* Same as regk_crypto_key_128 for NULL crypto */
-+	u32 oper;
-+
-+	req_ctx = skcipher_request_ctx(areq);
-+	common = &req_ctx->common;
-+
-+	artpec6_crypto_init_dma_operation(common);
-+
-+	if (variant == ARTPEC6_CRYPTO)
-+		ctx->key_md = FIELD_PREP(A6_CRY_MD_OPER, a6_regk_crypto_dlkey);
-+	else
-+		ctx->key_md = FIELD_PREP(A7_CRY_MD_OPER, a7_regk_crypto_dlkey);
-+
-+	ret = artpec6_crypto_setup_out_descr(common, (void *)&ctx->key_md,
-+					     sizeof(ctx->key_md), false, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_setup_out_descr(common, ctx->aes_key,
-+					      ctx->key_length, true, false);
-+	if (ret)
-+		return ret;
-+
-+	req_ctx->cipher_md = 0;
-+
-+	if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_AES_XTS)
-+		cipher_klen = ctx->key_length/2;
-+	else
-+		cipher_klen =  ctx->key_length;
-+
-+	/* Metadata */
-+	switch (cipher_klen) {
-+	case 16:
-+		cipher_len = regk_crypto_key_128;
-+		break;
-+	case 24:
-+		cipher_len = regk_crypto_key_192;
-+		break;
-+	case 32:
-+		cipher_len = regk_crypto_key_256;
-+		break;
-+	case 0:
-+		if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_NULL)
-+			break; /* Zero length key is OK for NULL */
-+		/* Fall through */
-+	default:
-+		pr_err("%s: Invalid key length %d!\n",
-+			MODULE_NAME, ctx->key_length);
-+		return -EINVAL;
-+	}
-+
-+	switch (ctx->crypto_type) {
-+	case ARTPEC6_CRYPTO_CIPHER_NULL:
-+		oper = regk_crypto_null;
-+		break;
-+
-+	case ARTPEC6_CRYPTO_CIPHER_AES_ECB:
-+		oper = regk_crypto_aes_ecb;
-+		cipher_decr = req_ctx->decrypt;
-+		break;
-+
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CBC:
-+		oper = regk_crypto_aes_cbc;
-+		cipher_decr = req_ctx->decrypt;
-+		break;
-+
-+	case ARTPEC6_CRYPTO_CIPHER_AES_CTR:
-+		oper = regk_crypto_aes_ctr;
-+		cipher_decr = false;
-+		break;
-+
-+	case ARTPEC6_CRYPTO_CIPHER_AES_XTS:
-+		oper = regk_crypto_aes_xts;
-+		cipher_decr = req_ctx->decrypt;
-+
-+		if (variant == ARTPEC6_CRYPTO)
-+			req_ctx->cipher_md |= A6_CRY_MD_CIPHER_DSEQ;
-+		else
-+			req_ctx->cipher_md |= A7_CRY_MD_CIPHER_DSEQ;
-+		break;
-+
-+	default:
-+		pr_err("%s: Invalid cipher mode %d!\n",
-+			MODULE_NAME, ctx->crypto_type);
-+		return -EINVAL;
-+	}
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		req_ctx->cipher_md |= FIELD_PREP(A6_CRY_MD_OPER, oper);
-+		req_ctx->cipher_md |= FIELD_PREP(A6_CRY_MD_CIPHER_LEN,
-+						 cipher_len);
-+		if (cipher_decr)
-+			req_ctx->cipher_md |= A6_CRY_MD_CIPHER_DECR;
-+	} else {
-+		req_ctx->cipher_md |= FIELD_PREP(A7_CRY_MD_OPER, oper);
-+		req_ctx->cipher_md |= FIELD_PREP(A7_CRY_MD_CIPHER_LEN,
-+						 cipher_len);
-+		if (cipher_decr)
-+			req_ctx->cipher_md |= A7_CRY_MD_CIPHER_DECR;
-+	}
-+
-+	ret = artpec6_crypto_setup_out_descr(common,
-+					    &req_ctx->cipher_md,
-+					    sizeof(req_ctx->cipher_md),
-+					    false, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_setup_in_descr(common, ac->pad_buffer, 4, false);
-+	if (ret)
-+		return ret;
-+
-+	if (iv_len) {
-+		ret = artpec6_crypto_setup_out_descr(common, areq->iv, iv_len,
-+						     false, false);
-+		if (ret)
-+			return ret;
-+	}
-+	/* Data out */
-+	artpec6_crypto_walk_init(&walk, areq->src);
-+	ret = artpec6_crypto_setup_sg_descrs_out(common, &walk, areq->cryptlen);
-+	if (ret)
-+		return ret;
-+
-+	/* Data in */
-+	artpec6_crypto_walk_init(&walk, areq->dst);
-+	ret = artpec6_crypto_setup_sg_descrs_in(common, &walk, areq->cryptlen);
-+	if (ret)
-+		return ret;
-+
-+	/* CTR-mode padding required by the HW. */
-+	if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_AES_CTR ||
-+	    ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_AES_XTS) {
-+		size_t pad = ALIGN(areq->cryptlen, AES_BLOCK_SIZE) -
-+			     areq->cryptlen;
-+
-+		if (pad) {
-+			ret = artpec6_crypto_setup_out_descr(common,
-+							     ac->pad_buffer,
-+							     pad, false, false);
-+			if (ret)
-+				return ret;
-+
-+			ret = artpec6_crypto_setup_in_descr(common,
-+							    ac->pad_buffer, pad,
-+							    false);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	ret = artpec6_crypto_terminate_out_descrs(common);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_terminate_in_descrs(common);
-+	if (ret)
-+		return ret;
-+
-+	return artpec6_crypto_dma_map_descs(common);
-+}
-+
-+static int artpec6_crypto_prepare_aead(struct aead_request *areq)
-+{
-+	size_t count;
-+	int ret;
-+	size_t input_length;
-+	struct artpec6_cryptotfm_context *ctx = crypto_tfm_ctx(areq->base.tfm);
-+	struct artpec6_crypto_aead_req_ctx *req_ctx = aead_request_ctx(areq);
-+	struct crypto_aead *cipher = crypto_aead_reqtfm(areq);
-+	struct artpec6_crypto_req_common *common = &req_ctx->common;
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	u32 md_cipher_len;
-+
-+	artpec6_crypto_init_dma_operation(common);
-+
-+	/* Key */
-+	if (variant == ARTPEC6_CRYPTO) {
-+		ctx->key_md = FIELD_PREP(A6_CRY_MD_OPER,
-+					 a6_regk_crypto_dlkey);
-+	} else {
-+		ctx->key_md = FIELD_PREP(A7_CRY_MD_OPER,
-+					 a7_regk_crypto_dlkey);
-+	}
-+	ret = artpec6_crypto_setup_out_descr(common, (void *)&ctx->key_md,
-+					     sizeof(ctx->key_md), false, false);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_setup_out_descr(common, ctx->aes_key,
-+					     ctx->key_length, true, false);
-+	if (ret)
-+		return ret;
-+
-+	req_ctx->cipher_md = 0;
-+
-+	switch (ctx->key_length) {
-+	case 16:
-+		md_cipher_len = regk_crypto_key_128;
-+		break;
-+	case 24:
-+		md_cipher_len = regk_crypto_key_192;
-+		break;
-+	case 32:
-+		md_cipher_len = regk_crypto_key_256;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		req_ctx->cipher_md |= FIELD_PREP(A6_CRY_MD_OPER,
-+						 regk_crypto_aes_gcm);
-+		req_ctx->cipher_md |= FIELD_PREP(A6_CRY_MD_CIPHER_LEN,
-+						 md_cipher_len);
-+		if (req_ctx->decrypt)
-+			req_ctx->cipher_md |= A6_CRY_MD_CIPHER_DECR;
-+	} else {
-+		req_ctx->cipher_md |= FIELD_PREP(A7_CRY_MD_OPER,
-+						 regk_crypto_aes_gcm);
-+		req_ctx->cipher_md |= FIELD_PREP(A7_CRY_MD_CIPHER_LEN,
-+						 md_cipher_len);
-+		if (req_ctx->decrypt)
-+			req_ctx->cipher_md |= A7_CRY_MD_CIPHER_DECR;
-+	}
-+
-+	ret = artpec6_crypto_setup_out_descr(common,
-+					    (void *) &req_ctx->cipher_md,
-+					    sizeof(req_ctx->cipher_md), false,
-+					    false);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_setup_in_descr(common, ac->pad_buffer, 4, false);
-+	if (ret)
-+		return ret;
-+
-+	/* For the decryption, cryptlen includes the tag. */
-+	input_length = areq->cryptlen;
-+	if (req_ctx->decrypt)
-+		input_length -= AES_BLOCK_SIZE;
-+
-+	/* Prepare the context buffer */
-+	req_ctx->hw_ctx.aad_length_bits =
-+		__cpu_to_be64(8*areq->assoclen);
-+
-+	req_ctx->hw_ctx.text_length_bits =
-+		__cpu_to_be64(8*input_length);
-+
-+	memcpy(req_ctx->hw_ctx.J0, areq->iv, crypto_aead_ivsize(cipher));
-+	// The HW omits the initial increment of the counter field.
-+	crypto_inc(req_ctx->hw_ctx.J0+12, 4);
-+
-+	ret = artpec6_crypto_setup_out_descr(common, &req_ctx->hw_ctx,
-+		sizeof(struct artpec6_crypto_aead_hw_ctx), false, false);
-+	if (ret)
-+		return ret;
-+
-+	{
-+		struct artpec6_crypto_walk walk;
-+
-+		artpec6_crypto_walk_init(&walk, areq->src);
-+
-+		/* Associated data */
-+		count = areq->assoclen;
-+		ret = artpec6_crypto_setup_sg_descrs_out(common, &walk, count);
-+		if (ret)
-+			return ret;
-+
-+		if (!IS_ALIGNED(areq->assoclen, 16)) {
-+			size_t assoc_pad = 16 - (areq->assoclen % 16);
-+			/* The HW mandates zero padding here */
-+			ret = artpec6_crypto_setup_out_descr(common,
-+							     ac->zero_buffer,
-+							     assoc_pad, false,
-+							     false);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		/* Data to crypto */
-+		count = input_length;
-+		ret = artpec6_crypto_setup_sg_descrs_out(common, &walk, count);
-+		if (ret)
-+			return ret;
-+
-+		if (!IS_ALIGNED(input_length, 16)) {
-+			size_t crypto_pad = 16 - (input_length % 16);
-+			/* The HW mandates zero padding here */
-+			ret = artpec6_crypto_setup_out_descr(common,
-+							     ac->zero_buffer,
-+							     crypto_pad,
-+							     false,
-+							     false);
-+			if (ret)
-+				return ret;
-+		}
-+	}
-+
-+	/* Data from crypto */
-+	{
-+		struct artpec6_crypto_walk walk;
-+		size_t output_len = areq->cryptlen;
-+
-+		if (req_ctx->decrypt)
-+			output_len -= AES_BLOCK_SIZE;
-+
-+		artpec6_crypto_walk_init(&walk, areq->dst);
-+
-+		/* skip associated data in the output */
-+		count = artpec6_crypto_walk_advance(&walk, areq->assoclen);
-+		if (count)
-+			return -EINVAL;
-+
-+		count = output_len;
-+		ret = artpec6_crypto_setup_sg_descrs_in(common, &walk, count);
-+		if (ret)
-+			return ret;
-+
-+		/* Put padding between the cryptotext and the auth tag */
-+		if (!IS_ALIGNED(output_len, 16)) {
-+			size_t crypto_pad = 16 - (output_len % 16);
-+
-+			ret = artpec6_crypto_setup_in_descr(common,
-+							    ac->pad_buffer,
-+							    crypto_pad, false);
-+			if (ret)
-+				return ret;
-+		}
-+
-+		/* The authentication tag shall follow immediately after
-+		 * the output ciphertext. For decryption it is put in a context
-+		 * buffer for later compare against the input tag.
-+		 */
-+		count = AES_BLOCK_SIZE;
-+
-+		if (req_ctx->decrypt) {
-+			ret = artpec6_crypto_setup_in_descr(common,
-+				req_ctx->decryption_tag, count, false);
-+			if (ret)
-+				return ret;
-+
-+		} else {
-+			ret = artpec6_crypto_setup_sg_descrs_in(common, &walk,
-+								count);
-+			if (ret)
-+				return ret;
-+		}
-+
-+	}
-+
-+	ret = artpec6_crypto_terminate_in_descrs(common);
-+	if (ret)
-+		return ret;
-+
-+	ret = artpec6_crypto_terminate_out_descrs(common);
-+	if (ret)
-+		return ret;
-+
-+	return artpec6_crypto_dma_map_descs(common);
-+}
-+
-+static void artpec6_crypto_process_queue(struct artpec6_crypto *ac)
-+{
-+	struct artpec6_crypto_req_common *req;
-+
-+	while (!list_empty(&ac->queue) && !artpec6_crypto_busy()) {
-+		req = list_first_entry(&ac->queue,
-+				       struct artpec6_crypto_req_common,
-+				       list);
-+		list_move_tail(&req->list, &ac->pending);
-+		artpec6_crypto_start_dma(req);
-+
-+		req->req->complete(req->req, -EINPROGRESS);
-+	}
-+
-+	/*
-+	 * In some cases, the hardware can raise an in_eop_flush interrupt
-+	 * before actually updating the status, so we have an timer which will
-+	 * recheck the status on timeout.  Since the cases are expected to be
-+	 * very rare, we use a relatively large timeout value.  There should be
-+	 * no noticeable negative effect if we timeout spuriously.
-+	 */
-+	if (ac->pending_count)
-+		mod_timer(&ac->timer, jiffies + msecs_to_jiffies(100));
-+	else
-+		del_timer(&ac->timer);
-+}
-+
-+static void artpec6_crypto_timeout(unsigned long data)
-+{
-+	struct artpec6_crypto *ac = (struct artpec6_crypto *) data;
-+
-+	dev_info_ratelimited(artpec6_crypto_dev, "timeout\n");
-+
-+	tasklet_schedule(&ac->task);
-+}
-+
-+static void artpec6_crypto_task(unsigned long data)
-+{
-+	struct artpec6_crypto *ac = (struct artpec6_crypto *)data;
-+	struct artpec6_crypto_req_common *req;
-+	struct artpec6_crypto_req_common *n;
-+
-+	if (list_empty(&ac->pending)) {
-+		pr_debug("Spurious IRQ\n");
-+		return;
-+	}
-+
-+	spin_lock_bh(&ac->queue_lock);
-+
-+	list_for_each_entry_safe(req, n, &ac->pending, list) {
-+		struct artpec6_crypto_dma_descriptors *dma = req->dma;
-+		u32 stat;
-+
-+		dma_sync_single_for_cpu(artpec6_crypto_dev, dma->stat_dma_addr,
-+					sizeof(dma->stat[0]),
-+					DMA_BIDIRECTIONAL);
-+
-+		stat = req->dma->stat[req->dma->in_cnt-1];
-+
-+		/* A non-zero final status descriptor indicates
-+		 * this job has finished.
-+		 */
-+		pr_debug("Request %p status is %X\n", req, stat);
-+		if (!stat)
-+			break;
-+
-+		/* Allow testing of timeout handling with fault injection */
-+#ifdef CONFIG_FAULT_INJECTION
-+		if (should_fail(&artpec6_crypto_fail_status_read, 1))
-+			continue;
-+#endif
-+
-+		pr_debug("Completing request %p\n", req);
-+
-+		list_del(&req->list);
-+
-+		artpec6_crypto_dma_unmap_all(req);
-+		artpec6_crypto_copy_bounce_buffers(req);
-+
-+		ac->pending_count--;
-+		artpec6_crypto_common_destroy(req);
-+		req->complete(req->req);
-+	}
-+
-+	artpec6_crypto_process_queue(ac);
-+
-+	spin_unlock_bh(&ac->queue_lock);
-+}
-+
-+static void artpec6_crypto_complete_crypto(struct crypto_async_request *req)
-+{
-+	req->complete(req, 0);
-+}
-+
-+static void
-+artpec6_crypto_complete_cbc_decrypt(struct crypto_async_request *req)
-+{
-+	struct skcipher_request *cipher_req = container_of(req,
-+		struct skcipher_request, base);
-+
-+	scatterwalk_map_and_copy(cipher_req->iv, cipher_req->src,
-+				 cipher_req->cryptlen - AES_BLOCK_SIZE,
-+				 AES_BLOCK_SIZE, 0);
-+	req->complete(req, 0);
-+}
-+
-+static void
-+artpec6_crypto_complete_cbc_encrypt(struct crypto_async_request *req)
-+{
-+	struct skcipher_request *cipher_req = container_of(req,
-+		struct skcipher_request, base);
-+
-+	scatterwalk_map_and_copy(cipher_req->iv, cipher_req->dst,
-+				 cipher_req->cryptlen - AES_BLOCK_SIZE,
-+				 AES_BLOCK_SIZE, 0);
-+	req->complete(req, 0);
-+}
-+
-+static void artpec6_crypto_complete_aead(struct crypto_async_request *req)
-+{
-+	int result = 0;
-+
-+	/* Verify GCM hashtag. */
-+	struct aead_request *areq = container_of(req,
-+		struct aead_request, base);
-+	struct artpec6_crypto_aead_req_ctx *req_ctx = aead_request_ctx(areq);
-+
-+	if (req_ctx->decrypt) {
-+		u8 input_tag[AES_BLOCK_SIZE];
-+
-+		sg_pcopy_to_buffer(areq->src,
-+				   sg_nents(areq->src),
-+				   input_tag,
-+				   AES_BLOCK_SIZE,
-+				   areq->assoclen + areq->cryptlen -
-+				   AES_BLOCK_SIZE);
-+
-+		if (memcmp(req_ctx->decryption_tag,
-+			   input_tag,
-+			   AES_BLOCK_SIZE)) {
-+			pr_debug("***EBADMSG:\n");
-+			print_hex_dump_debug("ref:", DUMP_PREFIX_ADDRESS, 32, 1,
-+					     input_tag, AES_BLOCK_SIZE, true);
-+			print_hex_dump_debug("out:", DUMP_PREFIX_ADDRESS, 32, 1,
-+					     req_ctx->decryption_tag,
-+					     AES_BLOCK_SIZE, true);
-+
-+			result = -EBADMSG;
-+		}
-+	}
-+
-+	req->complete(req, result);
-+}
-+
-+static void artpec6_crypto_complete_hash(struct crypto_async_request *req)
-+{
-+	req->complete(req, 0);
-+}
-+
-+
-+/*------------------- Hash functions -----------------------------------------*/
-+static int
-+artpec6_crypto_hash_set_key(struct crypto_ahash *tfm,
-+		    const u8 *key, unsigned int keylen)
-+{
-+	struct artpec6_hashalg_context *tfm_ctx = crypto_tfm_ctx(&tfm->base);
-+	size_t blocksize;
-+	int ret;
-+
-+	if (!keylen) {
-+		pr_err("Invalid length (%d) of HMAC key\n",
-+			keylen);
-+		return -EINVAL;
-+	}
-+
-+	memset(tfm_ctx->hmac_key, 0, sizeof(tfm_ctx->hmac_key));
-+
-+	blocksize = crypto_tfm_alg_blocksize(crypto_ahash_tfm(tfm));
-+
-+	if (keylen > blocksize) {
-+		SHASH_DESC_ON_STACK(hdesc, tfm_ctx->child_hash);
-+
-+		hdesc->tfm = tfm_ctx->child_hash;
-+		hdesc->flags = crypto_ahash_get_flags(tfm) &
-+			       CRYPTO_TFM_REQ_MAY_SLEEP;
-+
-+		tfm_ctx->hmac_key_length = blocksize;
-+		ret = crypto_shash_digest(hdesc, key, keylen,
-+					  tfm_ctx->hmac_key);
-+		if (ret)
-+			return ret;
-+
-+	} else {
-+		memcpy(tfm_ctx->hmac_key, key, keylen);
-+		tfm_ctx->hmac_key_length = keylen;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+artpec6_crypto_init_hash(struct ahash_request *req, u8 type, int hmac)
-+{
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+	u32 oper;
-+
-+	memset(req_ctx, 0, sizeof(*req_ctx));
-+
-+	req_ctx->hash_flags = HASH_FLAG_INIT_CTX;
-+	if (hmac)
-+		req_ctx->hash_flags |= (HASH_FLAG_HMAC | HASH_FLAG_UPDATE_KEY);
-+
-+	switch (type) {
-+	case ARTPEC6_CRYPTO_HASH_SHA1:
-+		oper = hmac ? regk_crypto_hmac_sha1 : regk_crypto_sha1;
-+		break;
-+	case ARTPEC6_CRYPTO_HASH_SHA256:
-+		oper = hmac ? regk_crypto_hmac_sha256 : regk_crypto_sha256;
-+		break;
-+	case ARTPEC6_CRYPTO_HASH_SHA384:
-+		oper = hmac ? regk_crypto_hmac_sha384 : regk_crypto_sha384;
-+		break;
-+	case ARTPEC6_CRYPTO_HASH_SHA512:
-+		oper = hmac ? regk_crypto_hmac_sha512 : regk_crypto_sha512;
-+		break;
-+
-+	default:
-+		pr_err("%s: Unsupported hash type 0x%x\n", MODULE_NAME, type);
-+		return -EINVAL;
-+	}
-+
-+	if (variant == ARTPEC6_CRYPTO)
-+		req_ctx->hash_md = FIELD_PREP(A6_CRY_MD_OPER, oper);
-+	else
-+		req_ctx->hash_md = FIELD_PREP(A7_CRY_MD_OPER, oper);
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_prepare_submit_hash(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+	int ret;
-+
-+	if (!req_ctx->common.dma) {
-+		ret = artpec6_crypto_common_init(&req_ctx->common,
-+					  &req->base,
-+					  artpec6_crypto_complete_hash,
-+					  NULL, 0);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = artpec6_crypto_prepare_hash(req);
-+	switch (ret) {
-+	case ARTPEC6_CRYPTO_PREPARE_HASH_START:
-+		ret = artpec6_crypto_submit(&req_ctx->common);
-+		break;
-+
-+	case ARTPEC6_CRYPTO_PREPARE_HASH_NO_START:
-+		ret = 0;
-+		/* Fallthrough */
-+
-+	default:
-+		artpec6_crypto_common_destroy(&req_ctx->common);
-+		break;
-+	}
-+
-+	return ret;
-+}
-+
-+static int artpec6_crypto_hash_final(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	req_ctx->hash_flags |= HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_hash_update(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_sha1_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA1, 0);
-+}
-+
-+static int artpec6_crypto_sha1_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA1, 0);
-+
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_sha256_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA256, 0);
-+}
-+
-+static int artpec6_crypto_sha256_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA256, 0);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int __maybe_unused artpec6_crypto_sha384_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA384, 0);
-+}
-+
-+static int __maybe_unused
-+artpec6_crypto_sha384_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA384, 0);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_sha512_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA512, 0);
-+}
-+
-+static int artpec6_crypto_sha512_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA512, 0);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_hmac_sha256_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA256, 1);
-+}
-+
-+static int __maybe_unused
-+artpec6_crypto_hmac_sha384_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA384, 1);
-+}
-+
-+static int artpec6_crypto_hmac_sha512_init(struct ahash_request *req)
-+{
-+	return artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA512, 1);
-+}
-+
-+static int artpec6_crypto_hmac_sha256_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA256, 1);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int __maybe_unused
-+artpec6_crypto_hmac_sha384_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA384, 1);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_hmac_sha512_digest(struct ahash_request *req)
-+{
-+	struct artpec6_hash_request_context *req_ctx = ahash_request_ctx(req);
-+
-+	artpec6_crypto_init_hash(req, ARTPEC6_CRYPTO_HASH_SHA512, 1);
-+	req_ctx->hash_flags |= HASH_FLAG_UPDATE | HASH_FLAG_FINALIZE;
-+
-+	return artpec6_crypto_prepare_submit_hash(req);
-+}
-+
-+static int artpec6_crypto_ahash_init_common(struct crypto_tfm *tfm,
-+				    const char *base_hash_name)
-+{
-+	struct artpec6_hashalg_context *tfm_ctx = crypto_tfm_ctx(tfm);
-+
-+	crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm),
-+				 sizeof(struct artpec6_hash_request_context));
-+	memset(tfm_ctx, 0, sizeof(*tfm_ctx));
-+
-+	if (base_hash_name) {
-+		struct crypto_shash *child;
-+
-+		child = crypto_alloc_shash(base_hash_name, 0,
-+					   CRYPTO_ALG_NEED_FALLBACK);
-+
-+		if (IS_ERR(child))
-+			return PTR_ERR(child);
-+
-+		tfm_ctx->child_hash = child;
-+	}
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_ahash_init(struct crypto_tfm *tfm)
-+{
-+	return artpec6_crypto_ahash_init_common(tfm, NULL);
-+}
-+
-+static int artpec6_crypto_ahash_init_hmac_sha256(struct crypto_tfm *tfm)
-+{
-+	return artpec6_crypto_ahash_init_common(tfm, "sha256");
-+}
-+
-+static int __maybe_unused
-+artpec6_crypto_ahash_init_hmac_sha384(struct crypto_tfm *tfm)
-+{
-+	return artpec6_crypto_ahash_init_common(tfm, "sha384");
-+}
-+
-+static int artpec6_crypto_ahash_init_hmac_sha512(struct crypto_tfm *tfm)
-+{
-+	return artpec6_crypto_ahash_init_common(tfm, "sha512");
-+}
-+
-+static void artpec6_crypto_ahash_exit(struct crypto_tfm *tfm)
-+{
-+	struct artpec6_hashalg_context *tfm_ctx = crypto_tfm_ctx(tfm);
-+
-+	if (tfm_ctx->child_hash)
-+		crypto_free_shash(tfm_ctx->child_hash);
-+
-+	memset(tfm_ctx->hmac_key, 0, sizeof(tfm_ctx->hmac_key));
-+	tfm_ctx->hmac_key_length = 0;
-+}
-+
-+static int artpec6_crypto_hash_export(struct ahash_request *req, void *out)
-+{
-+	const struct artpec6_hash_request_context *ctx = ahash_request_ctx(req);
-+	struct artpec6_hash_export_state *state = out;
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+
-+	BUILD_BUG_ON(sizeof(state->partial_buffer) !=
-+		     sizeof(ctx->partial_buffer));
-+	BUILD_BUG_ON(sizeof(state->digeststate) != sizeof(ctx->digeststate));
-+
-+	state->digcnt = ctx->digcnt;
-+	state->partial_bytes = ctx->partial_bytes;
-+	state->hash_flags = ctx->hash_flags;
-+
-+	if (variant == ARTPEC6_CRYPTO)
-+		state->oper = FIELD_GET(A6_CRY_MD_OPER, ctx->hash_md);
-+	else
-+		state->oper = FIELD_GET(A7_CRY_MD_OPER, ctx->hash_md);
-+
-+	memcpy(state->partial_buffer, ctx->partial_buffer,
-+	       sizeof(state->partial_buffer));
-+	memcpy(state->digeststate, ctx->digeststate,
-+	       sizeof(state->digeststate));
-+
-+	return 0;
-+}
-+
-+static int artpec6_crypto_hash_import(struct ahash_request *req, const void *in)
-+{
-+	struct artpec6_hash_request_context *ctx = ahash_request_ctx(req);
-+	const struct artpec6_hash_export_state *state = in;
-+	struct artpec6_crypto *ac = dev_get_drvdata(artpec6_crypto_dev);
-+	enum artpec6_crypto_variant variant = ac->variant;
-+
-+	memset(ctx, 0, sizeof(*ctx));
-+
-+	ctx->digcnt = state->digcnt;
-+	ctx->partial_bytes = state->partial_bytes;
-+	ctx->hash_flags = state->hash_flags;
-+
-+	if (variant == ARTPEC6_CRYPTO)
-+		ctx->hash_md = FIELD_PREP(A6_CRY_MD_OPER, state->oper);
-+	else
-+		ctx->hash_md = FIELD_PREP(A7_CRY_MD_OPER, state->oper);
-+
-+	memcpy(ctx->partial_buffer, state->partial_buffer,
-+	       sizeof(state->partial_buffer));
-+	memcpy(ctx->digeststate, state->digeststate,
-+	       sizeof(state->digeststate));
-+
-+	return 0;
-+}
-+
-+static int init_crypto_hw(struct artpec6_crypto *ac)
-+{
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	void __iomem *base = ac->base;
-+	u32 out_descr_buf_size;
-+	u32 out_data_buf_size;
-+	u32 in_data_buf_size;
-+	u32 in_descr_buf_size;
-+	u32 in_stat_buf_size;
-+	u32 in, out;
-+
-+	/*
-+	 * The PDMA unit contains 1984 bytes of internal memory for the OUT
-+	 * channels and 1024 bytes for the IN channel. This is an elastic
-+	 * memory used to internally store the descriptors and data. The values
-+	 * ares specified in 64 byte incremements.  Trustzone buffers are not
-+	 * used at this stage.
-+	 */
-+	out_data_buf_size = 16;  /* 1024 bytes for data */
-+	out_descr_buf_size = 15; /* 960 bytes for descriptors */
-+	in_data_buf_size = 8;    /* 512 bytes for data */
-+	in_descr_buf_size = 4;   /* 256 bytes for descriptors */
-+	in_stat_buf_size = 4;   /* 256 bytes for stat descrs */
-+
-+	BUILD_BUG_ON_MSG((out_data_buf_size
-+				+ out_descr_buf_size) * 64 > 1984,
-+			  "Invalid OUT configuration");
-+
-+	BUILD_BUG_ON_MSG((in_data_buf_size
-+				+ in_descr_buf_size
-+				+ in_stat_buf_size) * 64 > 1024,
-+			  "Invalid IN configuration");
-+
-+	in = FIELD_PREP(PDMA_IN_BUF_CFG_DATA_BUF_SIZE, in_data_buf_size) |
-+	     FIELD_PREP(PDMA_IN_BUF_CFG_DESCR_BUF_SIZE, in_descr_buf_size) |
-+	     FIELD_PREP(PDMA_IN_BUF_CFG_STAT_BUF_SIZE, in_stat_buf_size);
-+
-+	out = FIELD_PREP(PDMA_OUT_BUF_CFG_DATA_BUF_SIZE, out_data_buf_size) |
-+	      FIELD_PREP(PDMA_OUT_BUF_CFG_DESCR_BUF_SIZE, out_descr_buf_size);
-+
-+	writel_relaxed(out, base + PDMA_OUT_BUF_CFG);
-+	writel_relaxed(PDMA_OUT_CFG_EN, base + PDMA_OUT_CFG);
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		writel_relaxed(in, base + A6_PDMA_IN_BUF_CFG);
-+		writel_relaxed(PDMA_IN_CFG_EN, base + A6_PDMA_IN_CFG);
-+		writel_relaxed(A6_PDMA_INTR_MASK_IN_DATA |
-+			       A6_PDMA_INTR_MASK_IN_EOP_FLUSH,
-+			       base + A6_PDMA_INTR_MASK);
-+	} else {
-+		writel_relaxed(in, base + A7_PDMA_IN_BUF_CFG);
-+		writel_relaxed(PDMA_IN_CFG_EN, base + A7_PDMA_IN_CFG);
-+		writel_relaxed(A7_PDMA_INTR_MASK_IN_DATA |
-+			       A7_PDMA_INTR_MASK_IN_EOP_FLUSH,
-+			       base + A7_PDMA_INTR_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+static void artpec6_crypto_disable_hw(struct artpec6_crypto *ac)
-+{
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	void __iomem *base = ac->base;
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		writel_relaxed(A6_PDMA_IN_CMD_STOP, base + A6_PDMA_IN_CMD);
-+		writel_relaxed(0, base + A6_PDMA_IN_CFG);
-+		writel_relaxed(A6_PDMA_OUT_CMD_STOP, base + PDMA_OUT_CMD);
-+	} else {
-+		writel_relaxed(A7_PDMA_IN_CMD_STOP, base + A7_PDMA_IN_CMD);
-+		writel_relaxed(0, base + A7_PDMA_IN_CFG);
-+		writel_relaxed(A7_PDMA_OUT_CMD_STOP, base + PDMA_OUT_CMD);
-+	}
-+
-+	writel_relaxed(0, base + PDMA_OUT_CFG);
-+
-+}
-+
-+static irqreturn_t artpec6_crypto_irq(int irq, void *dev_id)
-+{
-+	struct artpec6_crypto *ac = dev_id;
-+	enum artpec6_crypto_variant variant = ac->variant;
-+	void __iomem *base = ac->base;
-+	u32 mask_in_data, mask_in_eop_flush;
-+	u32 in_cmd_flush_stat, in_cmd_reg;
-+	u32 ack_intr_reg;
-+	u32 ack = 0;
-+	u32 intr;
-+
-+	if (variant == ARTPEC6_CRYPTO) {
-+		intr = readl_relaxed(base + A6_PDMA_MASKED_INTR);
-+		mask_in_data = A6_PDMA_INTR_MASK_IN_DATA;
-+		mask_in_eop_flush = A6_PDMA_INTR_MASK_IN_EOP_FLUSH;
-+		in_cmd_flush_stat = A6_PDMA_IN_CMD_FLUSH_STAT;
-+		in_cmd_reg = A6_PDMA_IN_CMD;
-+		ack_intr_reg = A6_PDMA_ACK_INTR;
-+	} else {
-+		intr = readl_relaxed(base + A7_PDMA_MASKED_INTR);
-+		mask_in_data = A7_PDMA_INTR_MASK_IN_DATA;
-+		mask_in_eop_flush = A7_PDMA_INTR_MASK_IN_EOP_FLUSH;
-+		in_cmd_flush_stat = A7_PDMA_IN_CMD_FLUSH_STAT;
-+		in_cmd_reg = A7_PDMA_IN_CMD;
-+		ack_intr_reg = A7_PDMA_ACK_INTR;
-+	}
-+
-+	/* We get two interrupt notifications from each job.
-+	 * The in_data means all data was sent to memory and then
-+	 * we request a status flush command to write the per-job
-+	 * status to its status vector. This ensures that the
-+	 * tasklet can detect exactly how many submitted jobs
-+	 * that have finished.
-+	 */
-+	if (intr & mask_in_data)
-+		ack |= mask_in_data;
-+
-+	if (intr & mask_in_eop_flush)
-+		ack |= mask_in_eop_flush;
-+	else
-+		writel_relaxed(in_cmd_flush_stat, base + in_cmd_reg);
-+
-+	writel_relaxed(ack, base + ack_intr_reg);
-+
-+	if (intr & mask_in_eop_flush)
-+		tasklet_schedule(&ac->task);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+/*------------------- Algorithm definitions ----------------------------------*/
-+
-+/* Hashes */
-+static struct ahash_alg hash_algos[] = {
-+	/* SHA-1 */
-+	{
-+		.init = artpec6_crypto_sha1_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_sha1_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.halg.digestsize = SHA1_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "sha1",
-+			.cra_driver_name = "artpec-sha1",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA1_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+	/* SHA-256 */
-+	{
-+		.init = artpec6_crypto_sha256_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_sha256_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.halg.digestsize = SHA256_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "sha256",
-+			.cra_driver_name = "artpec-sha256",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA256_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+	/* HMAC SHA-256 */
-+	{
-+		.init = artpec6_crypto_hmac_sha256_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_hmac_sha256_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.setkey = artpec6_crypto_hash_set_key,
-+		.halg.digestsize = SHA256_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "hmac(sha256)",
-+			.cra_driver_name = "artpec-hmac-sha256",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA256_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init_hmac_sha256,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+};
-+
-+static struct ahash_alg artpec7_hash_algos[] = {
-+	/* SHA-384 */
-+	{
-+		.init = artpec6_crypto_sha384_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_sha384_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.halg.digestsize = SHA384_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "sha384",
-+			.cra_driver_name = "artpec-sha384",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA384_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+	/* HMAC SHA-384 */
-+	{
-+		.init = artpec6_crypto_hmac_sha384_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_hmac_sha384_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.setkey = artpec6_crypto_hash_set_key,
-+		.halg.digestsize = SHA384_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "hmac(sha384)",
-+			.cra_driver_name = "artpec-hmac-sha384",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA384_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init_hmac_sha384,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+	/* SHA-512 */
-+	{
-+		.init = artpec6_crypto_sha512_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_sha512_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.halg.digestsize = SHA512_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "sha512",
-+			.cra_driver_name = "artpec-sha512",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA512_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+	/* HMAC SHA-512 */
-+	{
-+		.init = artpec6_crypto_hmac_sha512_init,
-+		.update = artpec6_crypto_hash_update,
-+		.final = artpec6_crypto_hash_final,
-+		.digest = artpec6_crypto_hmac_sha512_digest,
-+		.import = artpec6_crypto_hash_import,
-+		.export = artpec6_crypto_hash_export,
-+		.setkey = artpec6_crypto_hash_set_key,
-+		.halg.digestsize = SHA512_DIGEST_SIZE,
-+		.halg.statesize = sizeof(struct artpec6_hash_export_state),
-+		.halg.base = {
-+			.cra_name = "hmac(sha512)",
-+			.cra_driver_name = "artpec-hmac-sha512",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AHASH | CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = SHA512_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_hashalg_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+			.cra_init = artpec6_crypto_ahash_init_hmac_sha512,
-+			.cra_exit = artpec6_crypto_ahash_exit,
-+		}
-+	},
-+};
-+
-+/* Crypto */
-+static struct skcipher_alg crypto_algos[] = {
-+	/* AES - ECB */
-+	{
-+		.base = {
-+			.cra_name = "ecb(aes)",
-+			.cra_driver_name = "artpec6-ecb-aes",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+				     CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_cryptotfm_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+		},
-+		.min_keysize = AES_MIN_KEY_SIZE,
-+		.max_keysize = AES_MAX_KEY_SIZE,
-+		.setkey = artpec6_crypto_cipher_set_key,
-+		.encrypt = artpec6_crypto_encrypt,
-+		.decrypt = artpec6_crypto_decrypt,
-+		.init = artpec6_crypto_aes_ecb_init,
-+		.exit = artpec6_crypto_aes_exit,
-+	},
-+	/* AES - CTR */
-+	{
-+		.base = {
-+			.cra_name = "ctr(aes)",
-+			.cra_driver_name = "artpec6-ctr-aes",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+				     CRYPTO_ALG_ASYNC |
-+				     CRYPTO_ALG_NEED_FALLBACK,
-+			.cra_blocksize = 1,
-+			.cra_ctxsize = sizeof(struct artpec6_cryptotfm_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+		},
-+		.min_keysize = AES_MIN_KEY_SIZE,
-+		.max_keysize = AES_MAX_KEY_SIZE,
-+		.ivsize = AES_BLOCK_SIZE,
-+		.setkey = artpec6_crypto_cipher_set_key,
-+		.encrypt = artpec6_crypto_ctr_encrypt,
-+		.decrypt = artpec6_crypto_ctr_decrypt,
-+		.init = artpec6_crypto_aes_ctr_init,
-+		.exit = artpec6_crypto_aes_ctr_exit,
-+	},
-+	/* AES - CBC */
-+	{
-+		.base = {
-+			.cra_name = "cbc(aes)",
-+			.cra_driver_name = "artpec6-cbc-aes",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+				     CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = AES_BLOCK_SIZE,
-+			.cra_ctxsize = sizeof(struct artpec6_cryptotfm_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+		},
-+		.min_keysize = AES_MIN_KEY_SIZE,
-+		.max_keysize = AES_MAX_KEY_SIZE,
-+		.ivsize = AES_BLOCK_SIZE,
-+		.setkey = artpec6_crypto_cipher_set_key,
-+		.encrypt = artpec6_crypto_encrypt,
-+		.decrypt = artpec6_crypto_decrypt,
-+		.init = artpec6_crypto_aes_cbc_init,
-+		.exit = artpec6_crypto_aes_exit
-+	},
-+	/* AES - XTS */
-+	{
-+		.base = {
-+			.cra_name = "xts(aes)",
-+			.cra_driver_name = "artpec6-xts-aes",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_ABLKCIPHER |
-+				     CRYPTO_ALG_ASYNC,
-+			.cra_blocksize = 1,
-+			.cra_ctxsize = sizeof(struct artpec6_cryptotfm_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+		},
-+		.min_keysize = 2*AES_MIN_KEY_SIZE,
-+		.max_keysize = 2*AES_MAX_KEY_SIZE,
-+		.ivsize = 16,
-+		.setkey = artpec6_crypto_cipher_set_key,
-+		.encrypt = artpec6_crypto_encrypt,
-+		.decrypt = artpec6_crypto_decrypt,
-+		.init = artpec6_crypto_aes_xts_init,
-+		.exit = artpec6_crypto_aes_exit,
-+	},
-+};
-+
-+static struct aead_alg aead_algos[] = {
-+	{
-+		.init   = artpec6_crypto_aead_init,
-+		.setkey = artpec6_crypto_aead_set_key,
-+		.encrypt = artpec6_crypto_aead_encrypt,
-+		.decrypt = artpec6_crypto_aead_decrypt,
-+		.ivsize = AES_BLOCK_SIZE,
-+		.maxauthsize = AES_BLOCK_SIZE,
-+
-+		.base = {
-+			.cra_name = "gcm(aes)",
-+			.cra_driver_name = "artpec-gcm-aes",
-+			.cra_priority = 300,
-+			.cra_flags = CRYPTO_ALG_TYPE_AEAD | CRYPTO_ALG_ASYNC |
-+				     CRYPTO_ALG_KERN_DRIVER_ONLY,
-+			.cra_blocksize = 1,
-+			.cra_ctxsize = sizeof(struct artpec6_cryptotfm_context),
-+			.cra_alignmask = 3,
-+			.cra_module = THIS_MODULE,
-+		},
-+	}
-+};
-+
-+#ifdef CONFIG_DEBUG_FS
-+
-+struct dbgfs_u32 {
-+	char *name;
-+	mode_t mode;
-+	u32 *flag;
-+	char *desc;
-+};
-+
-+static void artpec6_crypto_init_debugfs(void)
-+{
-+	dbgfs_root = debugfs_create_dir("artpec6_crypto", NULL);
-+
-+	if (!dbgfs_root || IS_ERR(dbgfs_root)) {
-+		dbgfs_root = NULL;
-+		pr_err("%s: Could not initialise debugfs!\n", MODULE_NAME);
-+		return;
-+	}
-+
-+#ifdef CONFIG_FAULT_INJECTION
-+	fault_create_debugfs_attr("fail_status_read", dbgfs_root,
-+				  &artpec6_crypto_fail_status_read);
-+
-+	fault_create_debugfs_attr("fail_dma_array_full", dbgfs_root,
-+				  &artpec6_crypto_fail_dma_array_full);
-+#endif
-+}
-+
-+static void artpec6_crypto_free_debugfs(void)
-+{
-+	if (!dbgfs_root)
-+		return;
-+
-+	debugfs_remove_recursive(dbgfs_root);
-+	dbgfs_root = NULL;
-+}
-+#endif
-+
-+static const struct of_device_id artpec6_crypto_of_match[] = {
-+	{ .compatible = "axis,artpec6-crypto", .data = (void *)ARTPEC6_CRYPTO },
-+	{ .compatible = "axis,artpec7-crypto", .data = (void *)ARTPEC7_CRYPTO },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, artpec6_crypto_of_match);
-+
-+static int artpec6_crypto_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	enum artpec6_crypto_variant variant;
-+	struct artpec6_crypto *ac;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *base;
-+	struct resource *res;
-+	int irq;
-+	int err;
-+
-+	if (artpec6_crypto_dev)
-+		return -ENODEV;
-+
-+	match = of_match_node(artpec6_crypto_of_match, dev->of_node);
-+	if (!match)
-+		return -EINVAL;
-+
-+	variant = (enum artpec6_crypto_variant)match->data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return -ENODEV;
-+
-+	ac = devm_kzalloc(&pdev->dev, sizeof(struct artpec6_crypto),
-+			  GFP_KERNEL);
-+	if (!ac)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, ac);
-+	ac->variant = variant;
-+
-+	spin_lock_init(&ac->queue_lock);
-+	INIT_LIST_HEAD(&ac->queue);
-+	INIT_LIST_HEAD(&ac->pending);
-+	setup_timer(&ac->timer, artpec6_crypto_timeout, (unsigned long) ac);
-+
-+	ac->base = base;
-+
-+	ac->dma_cache = kmem_cache_create("artpec6_crypto_dma",
-+		sizeof(struct artpec6_crypto_dma_descriptors),
-+		64,
-+		0,
-+		NULL);
-+	if (!ac->dma_cache)
-+		return -ENOMEM;
-+
-+#ifdef CONFIG_DEBUG_FS
-+	artpec6_crypto_init_debugfs();
-+#endif
-+
-+	tasklet_init(&ac->task, artpec6_crypto_task,
-+		     (unsigned long)ac);
-+
-+	ac->pad_buffer = devm_kzalloc(&pdev->dev, 2 * ARTPEC_CACHE_LINE_MAX,
-+				      GFP_KERNEL);
-+	if (!ac->pad_buffer)
-+		return -ENOMEM;
-+	ac->pad_buffer = PTR_ALIGN(ac->pad_buffer, ARTPEC_CACHE_LINE_MAX);
-+
-+	ac->zero_buffer = devm_kzalloc(&pdev->dev, 2 * ARTPEC_CACHE_LINE_MAX,
-+				      GFP_KERNEL);
-+	if (!ac->zero_buffer)
-+		return -ENOMEM;
-+	ac->zero_buffer = PTR_ALIGN(ac->zero_buffer, ARTPEC_CACHE_LINE_MAX);
-+
-+	err = init_crypto_hw(ac);
-+	if (err)
-+		goto free_cache;
-+
-+	err = devm_request_irq(&pdev->dev, irq, artpec6_crypto_irq, 0,
-+			       "artpec6-crypto", ac);
-+	if (err)
-+		goto disable_hw;
-+
-+	artpec6_crypto_dev = &pdev->dev;
-+
-+	err = crypto_register_ahashes(hash_algos, ARRAY_SIZE(hash_algos));
-+	if (err) {
-+		dev_err(dev, "Failed to register ahashes\n");
-+		goto disable_hw;
-+	}
-+
-+	if (variant != ARTPEC6_CRYPTO) {
-+		err = crypto_register_ahashes(artpec7_hash_algos,
-+					      ARRAY_SIZE(artpec7_hash_algos));
-+		if (err) {
-+			dev_err(dev, "Failed to register ahashes\n");
-+			goto unregister_ahashes;
-+		}
-+	}
-+
-+	err = crypto_register_skciphers(crypto_algos, ARRAY_SIZE(crypto_algos));
-+	if (err) {
-+		dev_err(dev, "Failed to register ciphers\n");
-+		goto unregister_a7_ahashes;
-+	}
-+
-+	err = crypto_register_aeads(aead_algos, ARRAY_SIZE(aead_algos));
-+	if (err) {
-+		dev_err(dev, "Failed to register aeads\n");
-+		goto unregister_algs;
-+	}
-+
-+	return 0;
-+
-+unregister_algs:
-+	crypto_register_skciphers(crypto_algos, ARRAY_SIZE(crypto_algos));
-+unregister_a7_ahashes:
-+	if (variant != ARTPEC6_CRYPTO)
-+		crypto_unregister_ahashes(artpec7_hash_algos,
-+					  ARRAY_SIZE(artpec7_hash_algos));
-+unregister_ahashes:
-+	crypto_unregister_ahashes(hash_algos, ARRAY_SIZE(hash_algos));
-+disable_hw:
-+	artpec6_crypto_disable_hw(ac);
-+free_cache:
-+	kmem_cache_destroy(ac->dma_cache);
-+	return err;
-+}
-+
-+static int artpec6_crypto_remove(struct platform_device *pdev)
-+{
-+	struct artpec6_crypto *ac = platform_get_drvdata(pdev);
-+	int irq = platform_get_irq(pdev, 0);
-+
-+	crypto_unregister_ahashes(hash_algos, ARRAY_SIZE(hash_algos));
-+	crypto_unregister_ahashes(hash_algos, ARRAY_SIZE(hash_algos));
-+	if (ac->variant != ARTPEC6_CRYPTO)
-+		crypto_unregister_ahashes(artpec7_hash_algos,
-+					  ARRAY_SIZE(artpec7_hash_algos));
-+	crypto_register_skciphers(crypto_algos, ARRAY_SIZE(crypto_algos));
-+	crypto_unregister_aeads(aead_algos, ARRAY_SIZE(aead_algos));
-+
-+	tasklet_disable(&ac->task);
-+	devm_free_irq(&pdev->dev, irq, ac);
-+	tasklet_kill(&ac->task);
-+	del_timer_sync(&ac->timer);
-+
-+	artpec6_crypto_disable_hw(ac);
-+
-+	kmem_cache_destroy(ac->dma_cache);
-+#ifdef CONFIG_DEBUG_FS
-+	artpec6_crypto_free_debugfs();
-+#endif
-+	return 0;
-+}
-+
-+static struct platform_driver artpec6_crypto_driver = {
-+	.probe   = artpec6_crypto_probe,
-+	.remove  = artpec6_crypto_remove,
-+	.driver  = {
-+		.name  = "artpec6-crypto",
-+		.owner = THIS_MODULE,
-+		.of_match_table = artpec6_crypto_of_match,
-+	},
-+};
-+
-+module_platform_driver(artpec6_crypto_driver);
-+
-+MODULE_AUTHOR("Axis Communications AB");
-+MODULE_DESCRIPTION("ARTPEC-6 Crypto driver");
-+MODULE_LICENSE("GPL");
--- 
-2.11.0
+T24gVHVlLCBKdWwgMTgsIDIwMTcgYXQgMDQ6NDM6MDRQTSAtMDUwMCwgUm9iIEhlcnJpbmcgd3Jv
+dGU6Cj4gTm93IHRoYXQgd2UgaGF2ZSBhIGN1c3RvbSBwcmludGYgZm9ybWF0IHNwZWNpZmllciwg
+Y29udmVydCB1c2VycyBvZgo+IGZ1bGxfbmFtZSB0byB1c2UgJXBPRiBpbnN0ZWFkLiBUaGlzIGlz
+IHByZXBhcmF0aW9uIHRvIHJlbW92ZSBzdG9yaW5nCj4gb2YgdGhlIGZ1bGwgcGF0aCBzdHJpbmcg
+Zm9yIGVhY2ggbm9kZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJu
+ZWwub3JnPgoKSGkgUm9iLApUaGFua3MgZm9yIHNlbmRpbmcgdGhpcyBwYXRjaCwgYW5kIHRoYW5r
+cyB0byBMYXVyZW50LCBQaGlsaXBwLCBhbmQgTWF4aW1lIGZvcgpyZXZpZXdzL2Fja3MuCgpJJ3Zl
+IGFwcGxpZWQgaXQgdG8gZHJtLW1pc2MtbmV4dC4KClNlYW4KCgo+IENjOiBSdXNzZWxsIEtpbmcg
+PGxpbnV4QGFybWxpbnV4Lm9yZy51az4KPiBDYzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4
+LmllPgo+IENjOiBEYW5pZWwgVmV0dGVyIDxkYW5pZWwudmV0dGVyQGludGVsLmNvbT4KPiBDYzog
+SmFuaSBOaWt1bGEgPGphbmkubmlrdWxhQGxpbnV4LmludGVsLmNvbT4KPiBDYzogU2VhbiBQYXVs
+IDxzZWFucGF1bEBjaHJvbWl1bS5vcmc+Cj4gQ2M6IElua2kgRGFlIDxpbmtpLmRhZUBzYW1zdW5n
+LmNvbT4KPiBDYzogSm9vbnlvdW5nIFNoaW0gPGp5MDkyMi5zaGltQHNhbXN1bmcuY29tPgo+IENj
+OiBTZXVuZy1Xb28gS2ltIDxzdzAzMTIua2ltQHNhbXN1bmcuY29tPgo+IENjOiBLeXVuZ21pbiBQ
+YXJrIDxreXVuZ21pbi5wYXJrQHNhbXN1bmcuY29tPgo+IENjOiBLdWtqaW4gS2ltIDxrZ2VuZUBr
+ZXJuZWwub3JnPgo+IENjOiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+Cj4g
+Q2M6IEphdmllciBNYXJ0aW5leiBDYW5pbGxhcyA8amF2aWVyQG9zZy5zYW1zdW5nLmNvbT4KPiBD
+YzogWGlubGlhbmcgTGl1IDx6LmxpdXhpbmxpYW5nQGhpc2lsaWNvbi5jb20+Cj4gQ2M6IFJvbmdy
+b25nIFpvdSA8em91cm9uZ3JvbmdAZ21haWwuY29tPgo+IENjOiBYaW53ZWkgS29uZyA8a29uZy5r
+b25neGlud2VpQGhpc2lsaWNvbi5jb20+Cj4gQ2M6IENoZW4gRmVuZyA8cHVjay5jaGVuQGhpc2ls
+aWNvbi5jb20+Cj4gQ2M6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+Cj4gQ2M6IFBoaWxpcHAg
+WmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+Cj4gQ2M6IE1hdHRoaWFzIEJydWdnZXIgPG1h
+dHRoaWFzLmJnZ0BnbWFpbC5jb20+Cj4gQ2M6IE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJh
+eWxpYnJlLmNvbT4KPiBDYzogQ2FybG8gQ2Fpb25lIDxjYXJsb0BjYWlvbmUub3JnPgo+IENjOiBL
+ZXZpbiBIaWxtYW4gPGtoaWxtYW5AYmF5bGlicmUuY29tPgo+IENjOiBUaGllcnJ5IFJlZGluZyA8
+dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPgo+IENjOiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
+LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Cj4gQ2M6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2Nr
+LWNoaXBzLmNvbT4KPiBDYzogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiBDYzog
+TWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gQ2M6IENo
+ZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPiBDYzogSnlyaSBTYXJoYSA8anNhcmhhQHRpLmNv
+bT4KPiBDYzogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KPiBDYzogZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IENjOiBsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKPiBDYzogbGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwub3JnCj4g
+Q2M6IGxpbnV4LW1lZGlhdGVrQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBDYzogbGludXgtYW1sb2dp
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gQ2M6IGxpbnV4LXJlbmVzYXMtc29jQHZnZXIua2VybmVs
+Lm9yZwo+IENjOiBsaW51eC1yb2NrY2hpcEBsaXN0cy5pbmZyYWRlYWQub3JnCj4gLS0tCj4gIGRy
+aXZlcnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2NydGMuYyAgICAgICAgICAgIHwgIDMgKy0tCj4g
+IGRyaXZlcnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2Rydi5jICAgICAgICAgICAgIHwgIDQgKyst
+LQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX21pcGlfZHNpLmMgICAgICAgICAgICAgICAgICB8ICA2
+ICsrKy0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX21vZGVzLmMgICAgICAgICAgICAgICAgICAg
+ICB8ICA0ICsrLS0KPiAgZHJpdmVycy9ncHUvZHJtL2RybV9vZi5jICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAgNCArKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2ku
+YyAgICAgICAgIHwgIDMgKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2ly
+aW5fZHJtX2FkZS5jIHwgIDMgKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlz
+cF9jb2xvci5jICAgICAgIHwgIDQgKystLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2Rpc3Bfb3ZsLmMgICAgICAgICB8ICA0ICsrLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kaXNwX3JkbWEuYyAgICAgICAgfCAgNCArKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRp
+YXRlay9tdGtfZHBpLmMgICAgICAgICAgICAgIHwgIDYgKysrLS0tCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyAgICAgICAgIHwgIDcgKysrLS0tLQo+ICBkcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jICAgICB8ICA2ICsrLS0tLQo+ICBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgICAgICAgICB8IDE2ICsrKysr
+KysrLS0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyAgICAgICAg
+ICAgICAgfCAgNCArKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jICAg
+ICAgICAgICAgIHwgIDggKysrKy0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lc29uL21lc29uX2Ry
+di5jICAgICAgICAgICAgICAgfCAgNSArKy0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFu
+ZWwtbHZkcy5jICAgICAgICAgICAgICB8IDE2ICsrKysrKysrLS0tLS0tLS0KPiAgZHJpdmVycy9n
+cHUvZHJtL3JjYXItZHUvcmNhcl9kdV9lbmNvZGVyLmMgICAgICAgfCAgNCArKy0tCj4gIGRyaXZl
+cnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfa21zLmMgICAgICAgICAgIHwgMTYgKysrKysrKyst
+LS0tLS0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5jICAg
+ICB8ICA0ICsrLS0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3Au
+YyAgICAgfCAgNCArKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jICAgICAgICAgICAg
+ICAgICAgICAgIHwgIDMgKy0tCj4gIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV9kcnYuYyAg
+ICAgICAgICAgICAgIHwgIDkgKysrKy0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
+Y2RjX2NydGMuYyAgICAgICAgICAgIHwgIDQgKystLQo+ICBkcml2ZXJzL2dwdS9pcHUtdjMvaXB1
+LWNvbW1vbi5jICAgICAgICAgICAgICAgICB8ICA0ICsrLS0KPiAgMjYgZmlsZXMgY2hhbmdlZCwg
+NzMgaW5zZXJ0aW9ucygrKSwgODIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm1hZGEv
+YXJtYWRhX2NydGMuYwo+IGluZGV4IDRmZTE5ZmRlODRmOS4uODU5NzdjMDg4NzllIDEwMDY0NAo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2NydGMuYwo+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2NydGMuYwo+IEBAIC0xMzI5LDggKzEzMjksNyBAQCBh
+cm1hZGFfbGNkX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIs
+IHZvaWQgKmRhdGEpCj4gIAkJcG9ydCA9IG9mX2dldF9jaGlsZF9ieV9uYW1lKHBhcmVudCwgInBv
+cnQiKTsKPiAgCQlvZl9ub2RlX3B1dChucCk7Cj4gIAkJaWYgKCFwb3J0KSB7Cj4gLQkJCWRldl9l
+cnIoZGV2LCAibm8gcG9ydCBub2RlIGZvdW5kIGluICVzXG4iLAo+IC0JCQkJcGFyZW50LT5mdWxs
+X25hbWUpOwo+ICsJCQlkZXZfZXJyKGRldiwgIm5vIHBvcnQgbm9kZSBmb3VuZCBpbiAlcE9GXG4i
+LCBwYXJlbnQpOwo+ICAJCQlyZXR1cm4gLUVOWElPOwo+ICAJCX0KPiAKPiBkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL2FybWFkYS9hcm1hZGFfZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJt
+YWRhL2FybWFkYV9kcnYuYwo+IGluZGV4IGU2MThmYWI3ZjUxOS4uMGIzMjI3YzAzOWQ3IDEwMDY0
+NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm1hZGEvYXJtYWRhX2Rydi5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL2FybWFkYS9hcm1hZGFfZHJ2LmMKPiBAQCAtMjMyLDggKzIzMiw4IEBAIHN0
+YXRpYyB2b2lkIGFybWFkYV9hZGRfZW5kcG9pbnRzKHN0cnVjdCBkZXZpY2UgKmRldiwKPiAgCQkJ
+b2Zfbm9kZV9wdXQocmVtb3RlKTsKPiAgCQkJY29udGludWU7Cj4gIAkJfSBlbHNlIGlmICghb2Zf
+ZGV2aWNlX2lzX2F2YWlsYWJsZShyZW1vdGUtPnBhcmVudCkpIHsKPiAtCQkJZGV2X3dhcm4oZGV2
+LCAicGFyZW50IGRldmljZSBvZiAlcyBpcyBub3QgYXZhaWxhYmxlXG4iLAo+IC0JCQkJIHJlbW90
+ZS0+ZnVsbF9uYW1lKTsKPiArCQkJZGV2X3dhcm4oZGV2LCAicGFyZW50IGRldmljZSBvZiAlcE9G
+IGlzIG5vdCBhdmFpbGFibGVcbiIsCj4gKwkJCQkgcmVtb3RlKTsKPiAgCQkJb2Zfbm9kZV9wdXQo
+cmVtb3RlKTsKPiAgCQkJY29udGludWU7Cj4gIAkJfQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vZHJtX21pcGlfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX21pcGlfZHNpLmMKPiBp
+bmRleCAxMTYwYTU3OWUwZGMuLjRiNDcyMjZiOTBkNCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vZHJtX21pcGlfZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX21pcGlfZHNp
+LmMKPiBAQCAtMTY1LDE0ICsxNjUsMTQgQEAgb2ZfbWlwaV9kc2lfZGV2aWNlX2FkZChzdHJ1Y3Qg
+bWlwaV9kc2lfaG9zdCAqaG9zdCwgc3RydWN0IGRldmljZV9ub2RlICpub2RlKQo+ICAJdTMyIHJl
+ZzsKPiAKPiAgCWlmIChvZl9tb2RhbGlhc19ub2RlKG5vZGUsIGluZm8udHlwZSwgc2l6ZW9mKGlu
+Zm8udHlwZSkpIDwgMCkgewo+IC0JCWRldl9lcnIoZGV2LCAibW9kYWxpYXMgZmFpbHVyZSBvbiAl
+c1xuIiwgbm9kZS0+ZnVsbF9uYW1lKTsKPiArCQlkZXZfZXJyKGRldiwgIm1vZGFsaWFzIGZhaWx1
+cmUgb24gJXBPRlxuIiwgbm9kZSk7Cj4gIAkJcmV0dXJuIEVSUl9QVFIoLUVJTlZBTCk7Cj4gIAl9
+Cj4gCj4gIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihub2RlLCAicmVnIiwgJnJlZyk7Cj4g
+IAlpZiAocmV0KSB7Cj4gLQkJZGV2X2VycihkZXYsICJkZXZpY2Ugbm9kZSAlcyBoYXMgbm8gdmFs
+aWQgcmVnIHByb3BlcnR5OiAlZFxuIiwKPiAtCQkJbm9kZS0+ZnVsbF9uYW1lLCByZXQpOwo+ICsJ
+CWRldl9lcnIoZGV2LCAiZGV2aWNlIG5vZGUgJXBPRiBoYXMgbm8gdmFsaWQgcmVnIHByb3BlcnR5
+OiAlZFxuIiwKPiArCQkJbm9kZSwgcmV0KTsKPiAgCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsK
+PiAgCX0KPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jIGIvZHJp
+dmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jCj4gaW5kZXggZjI0OTNiOWI4MmU2Li5hN2YyYTgxYzc2
+ZjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL2RybV9tb2Rlcy5jCj4gQEAgLTcwOSw4ICs3MDksOCBAQCBpbnQgb2ZfZ2V0
+X2RybV9kaXNwbGF5X21vZGUoc3RydWN0IGRldmljZV9ub2RlICpucCwKPiAgCWlmIChidXNfZmxh
+Z3MpCj4gIAkJZHJtX2J1c19mbGFnc19mcm9tX3ZpZGVvbW9kZSgmdm0sIGJ1c19mbGFncyk7Cj4g
+Cj4gLQlwcl9kZWJ1ZygiJXM6IGdvdCAlZHglZCBkaXNwbGF5IG1vZGUgZnJvbSAlc1xuIiwKPiAt
+CQlvZl9ub2RlX2Z1bGxfbmFtZShucCksIHZtLmhhY3RpdmUsIHZtLnZhY3RpdmUsIG5wLT5uYW1l
+KTsKPiArCXByX2RlYnVnKCIlcE9GOiBnb3QgJWR4JWQgZGlzcGxheSBtb2RlIGZyb20gJXNcbiIs
+Cj4gKwkJbnAsIHZtLmhhY3RpdmUsIHZtLnZhY3RpdmUsIG5wLT5uYW1lKTsKPiAgCWRybV9tb2Rl
+X2RlYnVnX3ByaW50bW9kZWxpbmUoZG1vZGUpOwo+IAo+ICAJcmV0dXJuIDA7Cj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYwo+
+IGluZGV4IDIxMjBmMzNiZGY0YS4uOGRhZmJkZmNkMmVhIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+Z3B1L2RybS9kcm1fb2YuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fb2YuYwo+IEBAIC0x
+NjAsOCArMTYwLDggQEAgaW50IGRybV9vZl9jb21wb25lbnRfcHJvYmUoc3RydWN0IGRldmljZSAq
+ZGV2LAo+ICAJCQkJb2Zfbm9kZV9wdXQocmVtb3RlKTsKPiAgCQkJCWNvbnRpbnVlOwo+ICAJCQl9
+IGVsc2UgaWYgKCFvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKHJlbW90ZS0+cGFyZW50KSkgewo+IC0J
+CQkJZGV2X3dhcm4oZGV2LCAicGFyZW50IGRldmljZSBvZiAlcyBpcyBub3QgYXZhaWxhYmxlXG4i
+LAo+IC0JCQkJCSByZW1vdGUtPmZ1bGxfbmFtZSk7Cj4gKwkJCQlkZXZfd2FybihkZXYsICJwYXJl
+bnQgZGV2aWNlIG9mICVwT0YgaXMgbm90IGF2YWlsYWJsZVxuIiwKPiArCQkJCQkgcmVtb3RlKTsK
+PiAgCQkJCW9mX25vZGVfcHV0KHJlbW90ZSk7Cj4gIAkJCQljb250aW51ZTsKPiAgCQkJfQo+IGRp
+ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBpbmRleCBhMTFiNzk1OTZlMmYu
+LmY1ODBiZTE3MDA4OSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNp
+LmMKPiBAQCAtMTYxOCw4ICsxNjE4LDcgQEAgc3RhdGljIGludCBleHlub3NfZHNpX29mX3JlYWRf
+dTMyKGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsCj4gIAlpbnQgcmV0ID0gb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsIHByb3BuYW1lLCBvdXRfdmFsdWUpOwo+IAo+ICAJaWYgKHJldCA8IDAp
+Cj4gLQkJcHJfZXJyKCIlczogZmFpbGVkIHRvIGdldCAnJXMnIHByb3BlcnR5XG4iLCBucC0+ZnVs
+bF9uYW1lLAo+IC0JCSAgICAgICBwcm9wbmFtZSk7Cj4gKwkJcHJfZXJyKCIlcE9GOiBmYWlsZWQg
+dG8gZ2V0ICclcycgcHJvcGVydHlcbiIsIG5wLCBwcm9wbmFtZSk7Cj4gCj4gIAlyZXR1cm4gcmV0
+Owo+ICB9Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2ly
+aW5fZHJtX2FkZS5jIGIvZHJpdmVycy9ncHUvZHJtL2hpc2lsaWNvbi9raXJpbi9raXJpbl9kcm1f
+YWRlLmMKPiBpbmRleCBjOTZjMjI4YTk4OTguLmE5ZTZkYjAyNDEzMSAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vaGlzaWxpY29uL2tpcmluL2tpcmluX2RybV9hZGUuYwo+ICsrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9oaXNpbGljb24va2lyaW4va2lyaW5fZHJtX2FkZS5jCj4gQEAgLTU4Myw4
+ICs1ODMsNyBAQCBzdGF0aWMgaW50IGFkZV9jcnRjX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRl
+diwgc3RydWN0IGRybV9jcnRjICpjcnRjLAo+ICAJICovCj4gIAlwb3J0ID0gb2ZfZ2V0X2NoaWxk
+X2J5X25hbWUoZGV2LT5kZXYtPm9mX25vZGUsICJwb3J0Iik7Cj4gIAlpZiAoIXBvcnQpIHsKPiAt
+CQlEUk1fRVJST1IoIm5vIHBvcnQgbm9kZSBmb3VuZCBpbiAlc1xuIiwKPiAtCQkJICBkZXYtPmRl
+di0+b2Zfbm9kZS0+ZnVsbF9uYW1lKTsKPiArCQlEUk1fRVJST1IoIm5vIHBvcnQgbm9kZSBmb3Vu
+ZCBpbiAlcE9GXG4iLCBkZXYtPmRldi0+b2Zfbm9kZSk7Cj4gIAkJcmV0dXJuIC1FSU5WQUw7Cj4g
+IAl9Cj4gIAlvZl9ub2RlX3B1dChwb3J0KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX2NvbG9yLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2Rpc3BfY29sb3IuYwo+IGluZGV4IGVmNzlhNmQ1NTY0Ni4uZjYwOWI2MmI4YmU2IDEwMDY0NAo+
+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9jb2xvci5jCj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX2NvbG9yLmMKPiBAQCAtODQsOCArODQs
+OCBAQCBzdGF0aWMgaW50IG10a19kaXNwX2NvbG9yX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBz
+dHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gCj4gIAlyZXQgPSBtdGtfZGRwX2NvbXBfcmVnaXN0ZXIo
+ZHJtX2RldiwgJnByaXYtPmRkcF9jb21wKTsKPiAgCWlmIChyZXQgPCAwKSB7Cj4gLQkJZGV2X2Vy
+cihkZXYsICJGYWlsZWQgdG8gcmVnaXN0ZXIgY29tcG9uZW50ICVzOiAlZFxuIiwKPiAtCQkJZGV2
+LT5vZl9ub2RlLT5mdWxsX25hbWUsIHJldCk7Cj4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8g
+cmVnaXN0ZXIgY29tcG9uZW50ICVwT0Y6ICVkXG4iLAo+ICsJCQlkZXYtPm9mX25vZGUsIHJldCk7
+Cj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kaXNwX292bC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+aXNwX292bC5jCj4gaW5kZXggMzViYzViYWJkYmY3Li45Nzg3ODJhNzc2MjkgMTAwNjQ0Cj4gLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gQEAgLTIzNSw4ICsyMzUsOCBAQCBz
+dGF0aWMgaW50IG10a19kaXNwX292bF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
+dmljZSAqbWFzdGVyLAo+IAo+ICAJcmV0ID0gbXRrX2RkcF9jb21wX3JlZ2lzdGVyKGRybV9kZXYs
+ICZwcml2LT5kZHBfY29tcCk7Cj4gIAlpZiAocmV0IDwgMCkgewo+IC0JCWRldl9lcnIoZGV2LCAi
+RmFpbGVkIHRvIHJlZ2lzdGVyIGNvbXBvbmVudCAlczogJWRcbiIsCj4gLQkJCWRldi0+b2Zfbm9k
+ZS0+ZnVsbF9uYW1lLCByZXQpOwo+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVy
+IGNvbXBvbmVudCAlcE9GOiAlZFxuIiwKPiArCQkJZGV2LT5vZl9ub2RlLCByZXQpOwo+ICAJCXJl
+dHVybiByZXQ7Cj4gIAl9Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZGlzcF9yZG1hLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRt
+YS5jCj4gaW5kZXggYjY4YTUxMzc2ZjgzLi41ODU5NDNjODFlMWYgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMKPiBAQCAtMTU1LDggKzE1NSw4IEBAIHN0YXRp
+YyBpbnQgbXRrX2Rpc3BfcmRtYV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmlj
+ZSAqbWFzdGVyLAo+IAo+ICAJcmV0ID0gbXRrX2RkcF9jb21wX3JlZ2lzdGVyKGRybV9kZXYsICZw
+cml2LT5kZHBfY29tcCk7Cj4gIAlpZiAocmV0IDwgMCkgewo+IC0JCWRldl9lcnIoZGV2LCAiRmFp
+bGVkIHRvIHJlZ2lzdGVyIGNvbXBvbmVudCAlczogJWRcbiIsCj4gLQkJCWRldi0+b2Zfbm9kZS0+
+ZnVsbF9uYW1lLCByZXQpOwo+ICsJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIGNv
+bXBvbmVudCAlcE9GOiAlZFxuIiwKPiArCQkJZGV2LT5vZl9ub2RlLCByZXQpOwo+ICAJCXJldHVy
+biByZXQ7Cj4gIAl9Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9t
+dGtfZHBpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RwaS5jCj4gaW5kZXggMzJj
+YTM1MWVjZDA5Li5lODBhNjAzZTVmYjAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcGkuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHBp
+LmMKPiBAQCAtNjA1LDggKzYwNSw4IEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9iaW5kKHN0cnVjdCBk
+ZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLCB2b2lkICpkYXRhKQo+IAo+ICAJcmV0
+ID0gbXRrX2RkcF9jb21wX3JlZ2lzdGVyKGRybV9kZXYsICZkcGktPmRkcF9jb21wKTsKPiAgCWlm
+IChyZXQgPCAwKSB7Cj4gLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gcmVnaXN0ZXIgY29tcG9u
+ZW50ICVzOiAlZFxuIiwKPiAtCQkJZGV2LT5vZl9ub2RlLT5mdWxsX25hbWUsIHJldCk7Cj4gKwkJ
+ZGV2X2VycihkZXYsICJGYWlsZWQgdG8gcmVnaXN0ZXIgY29tcG9uZW50ICVwT0Y6ICVkXG4iLAo+
+ICsJCQlkZXYtPm9mX25vZGUsIHJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiAgCX0KPiAKPiBAQCAt
+NzEwLDcgKzcxMCw3IEBAIHN0YXRpYyBpbnQgbXRrX2RwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2KQo+ICAJaWYgKCFicmlkZ2Vfbm9kZSkKPiAgCQlyZXR1cm4gLUVOT0RFVjsK
+PiAKPiAtCWRldl9pbmZvKGRldiwgIkZvdW5kIGJyaWRnZSBub2RlOiAlc1xuIiwgYnJpZGdlX25v
+ZGUtPmZ1bGxfbmFtZSk7Cj4gKwlkZXZfaW5mbyhkZXYsICJGb3VuZCBicmlkZ2Ugbm9kZTogJXBP
+RlxuIiwgYnJpZGdlX25vZGUpOwo+IAo+ICAJZHBpLT5icmlkZ2UgPSBvZl9kcm1fZmluZF9icmlk
+Z2UoYnJpZGdlX25vZGUpOwo+ICAJb2Zfbm9kZV9wdXQoYnJpZGdlX25vZGUpOwo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMKPiBpbmRleCBjYjMyYzkzNjlmM2EuLjlmYTJl
+M2QyMTdjMSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9j
+cnRjLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMKPiBA
+QCAtNTc3LDggKzU3Nyw3IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2
+aWNlICpkcm1fZGV2LAo+ICAJCW5vZGUgPSBwcml2LT5jb21wX25vZGVbY29tcF9pZF07Cj4gIAkJ
+Y29tcCA9IHByaXYtPmRkcF9jb21wW2NvbXBfaWRdOwo+ICAJCWlmICghY29tcCkgewo+IC0JCQlk
+ZXZfZXJyKGRldiwgIkNvbXBvbmVudCAlcyBub3QgaW5pdGlhbGl6ZWRcbiIsCj4gLQkJCQlub2Rl
+LT5mdWxsX25hbWUpOwo+ICsJCQlkZXZfZXJyKGRldiwgIkNvbXBvbmVudCAlcE9GIG5vdCBpbml0
+aWFsaXplZFxuIiwgbm9kZSk7Cj4gIAkJCXJldCA9IC1FTk9ERVY7Cj4gIAkJCWdvdG8gdW5wcmVw
+YXJlOwo+ICAJCX0KPiBAQCAtNTg2LDggKzU4NSw4IEBAIGludCBtdGtfZHJtX2NydGNfY3JlYXRl
+KHN0cnVjdCBkcm1fZGV2aWNlICpkcm1fZGV2LAo+ICAJCXJldCA9IGNsa19wcmVwYXJlKGNvbXAt
+PmNsayk7Cj4gIAkJaWYgKHJldCkgewo+ICAJCQlkZXZfZXJyKGRldiwKPiAtCQkJCSJGYWlsZWQg
+dG8gcHJlcGFyZSBjbG9jayBmb3IgY29tcG9uZW50ICVzOiAlZFxuIiwKPiAtCQkJCW5vZGUtPmZ1
+bGxfbmFtZSwgcmV0KTsKPiArCQkJCSJGYWlsZWQgdG8gcHJlcGFyZSBjbG9jayBmb3IgY29tcG9u
+ZW50ICVwT0Y6ICVkXG4iLAo+ICsJCQkJbm9kZSwgcmV0KTsKPiAgCQkJZ290byB1bnByZXBhcmU7
+Cj4gIAkJfQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
+Ywo+IGluZGV4IDA3ZDdlYTIyNjhlZi4uNDY3MjMxN2UzYWQxIDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKPiArKysgYi9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gQEAgLTI5NSwxNSArMjk1LDEzIEBA
+IGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqbm9kZSwKPiAgCWxhcmJfbm9kZSA9IG9mX3BhcnNlX3BoYW5kbGUobm9kZSwgIm1lZGlh
+dGVrLGxhcmIiLCAwKTsKPiAgCWlmICghbGFyYl9ub2RlKSB7Cj4gIAkJZGV2X2VycihkZXYsCj4g
+LQkJCSJNaXNzaW5nIG1lZGlhZGVrLGxhcmIgcGhhbmRsZSBpbiAlcyBub2RlXG4iLAo+IC0JCQlu
+b2RlLT5mdWxsX25hbWUpOwo+ICsJCQkiTWlzc2luZyBtZWRpYWRlayxsYXJiIHBoYW5kbGUgaW4g
+JXBPRiBub2RlXG4iLCBub2RlKTsKPiAgCQlyZXR1cm4gLUVJTlZBTDsKPiAgCX0KPiAKPiAgCWxh
+cmJfcGRldiA9IG9mX2ZpbmRfZGV2aWNlX2J5X25vZGUobGFyYl9ub2RlKTsKPiAgCWlmICghbGFy
+Yl9wZGV2KSB7Cj4gLQkJZGV2X3dhcm4oZGV2LCAiV2FpdGluZyBmb3IgbGFyYiBkZXZpY2UgJXNc
+biIsCj4gLQkJCSBsYXJiX25vZGUtPmZ1bGxfbmFtZSk7Cj4gKwkJZGV2X3dhcm4oZGV2LCAiV2Fp
+dGluZyBmb3IgbGFyYiBkZXZpY2UgJXBPRlxuIiwgbGFyYl9ub2RlKTsKPiAgCQlvZl9ub2RlX3B1
+dChsYXJiX25vZGUpOwo+ICAJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICAJfQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4gaW5kZXggNDFkMmNmZmU5NTNlLi5iNjc5MjM1
+ODlkYzIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2
+LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYwo+IEBAIC0x
+ODcsOCArMTg3LDggQEAgc3RhdGljIGludCBtdGtfZHJtX2ttc19pbml0KHN0cnVjdCBkcm1fZGV2
+aWNlICpkcm0pCj4gCj4gIAlwZGV2ID0gb2ZfZmluZF9kZXZpY2VfYnlfbm9kZShwcml2YXRlLT5t
+dXRleF9ub2RlKTsKPiAgCWlmICghcGRldikgewo+IC0JCWRldl9lcnIoZHJtLT5kZXYsICJXYWl0
+aW5nIGZvciBkaXNwLW11dGV4IGRldmljZSAlc1xuIiwKPiAtCQkJcHJpdmF0ZS0+bXV0ZXhfbm9k
+ZS0+ZnVsbF9uYW1lKTsKPiArCQlkZXZfZXJyKGRybS0+ZGV2LCAiV2FpdGluZyBmb3IgZGlzcC1t
+dXRleCBkZXZpY2UgJXBPRlxuIiwKPiArCQkJcHJpdmF0ZS0+bXV0ZXhfbm9kZSk7Cj4gIAkJb2Zf
+bm9kZV9wdXQocHJpdmF0ZS0+bXV0ZXhfbm9kZSk7Cj4gIAkJcmV0dXJuIC1FUFJPQkVfREVGRVI7
+Cj4gIAl9Cj4gQEAgLTQxNyw4ICs0MTcsOCBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQkJY29udGludWU7Cj4gCj4gIAkJaWYgKCFv
+Zl9kZXZpY2VfaXNfYXZhaWxhYmxlKG5vZGUpKSB7Cj4gLQkJCWRldl9kYmcoZGV2LCAiU2tpcHBp
+bmcgZGlzYWJsZWQgY29tcG9uZW50ICVzXG4iLAo+IC0JCQkJbm9kZS0+ZnVsbF9uYW1lKTsKPiAr
+CQkJZGV2X2RiZyhkZXYsICJTa2lwcGluZyBkaXNhYmxlZCBjb21wb25lbnQgJXBPRlxuIiwKPiAr
+CQkJCW5vZGUpOwo+ICAJCQljb250aW51ZTsKPiAgCQl9Cj4gCj4gQEAgLTQzMSw4ICs0MzEsOCBA
+QCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
+PiAKPiAgCQljb21wX2lkID0gbXRrX2RkcF9jb21wX2dldF9pZChub2RlLCBjb21wX3R5cGUpOwo+
+ICAJCWlmIChjb21wX2lkIDwgMCkgewo+IC0JCQlkZXZfd2FybihkZXYsICJTa2lwcGluZyB1bmtu
+b3duIGNvbXBvbmVudCAlc1xuIiwKPiAtCQkJCSBub2RlLT5mdWxsX25hbWUpOwo+ICsJCQlkZXZf
+d2FybihkZXYsICJTa2lwcGluZyB1bmtub3duIGNvbXBvbmVudCAlcE9GXG4iLAo+ICsJCQkJIG5v
+ZGUpOwo+ICAJCQljb250aW51ZTsKPiAgCQl9Cj4gCj4gQEAgLTQ0OCw4ICs0NDgsOCBAQCBzdGF0
+aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCQkg
+ICAgY29tcF90eXBlID09IE1US19ESVNQX1JETUEgfHwKPiAgCQkgICAgY29tcF90eXBlID09IE1U
+S19EU0kgfHwKPiAgCQkgICAgY29tcF90eXBlID09IE1US19EUEkpIHsKPiAtCQkJZGV2X2luZm8o
+ZGV2LCAiQWRkaW5nIGNvbXBvbmVudCBtYXRjaCBmb3IgJXNcbiIsCj4gLQkJCQkgbm9kZS0+ZnVs
+bF9uYW1lKTsKPiArCQkJZGV2X2luZm8oZGV2LCAiQWRkaW5nIGNvbXBvbmVudCBtYXRjaCBmb3Ig
+JXBPRlxuIiwKPiArCQkJCSBub2RlKTsKPiAgCQkJZHJtX29mX2NvbXBvbmVudF9tYXRjaF9hZGQo
+ZGV2LCAmbWF0Y2gsIGNvbXBhcmVfb2YsCj4gIAkJCQkJCSAgIG5vZGUpOwo+ICAJCX0gZWxzZSB7
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gaW5kZXggOTcyNTNjOGY4MTNiLi5hMzFi
+ZDJhODJkZTUgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2ku
+Ywo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiBAQCAtMTA0OCw4
+ICsxMDQ4LDggQEAgc3RhdGljIGludCBtdGtfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBz
+dHJ1Y3QgZGV2aWNlICptYXN0ZXIsIHZvaWQgKmRhdGEpCj4gCj4gIAlyZXQgPSBtdGtfZGRwX2Nv
+bXBfcmVnaXN0ZXIoZHJtLCAmZHNpLT5kZHBfY29tcCk7Cj4gIAlpZiAocmV0IDwgMCkgewo+IC0J
+CWRldl9lcnIoZGV2LCAiRmFpbGVkIHRvIHJlZ2lzdGVyIGNvbXBvbmVudCAlczogJWRcbiIsCj4g
+LQkJCWRldi0+b2Zfbm9kZS0+ZnVsbF9uYW1lLCByZXQpOwo+ICsJCWRldl9lcnIoZGV2LCAiRmFp
+bGVkIHRvIHJlZ2lzdGVyIGNvbXBvbmVudCAlcE9GOiAlZFxuIiwKPiArCQkJZGV2LT5vZl9ub2Rl
+LCByZXQpOwo+ICAJCXJldHVybiByZXQ7Cj4gIAl9Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19oZG1pLmMKPiBpbmRleCA3MWViNGZiYmZjODUuLmZlZjI0NmMyNTc3YyAxMDA2NDQKPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWkuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9tZWRpYXRlay9tdGtfaGRtaS5jCj4gQEAgLTE0NTYsOCArMTQ1Niw4IEBAIHN0YXRpYyBp
+bnQgbXRrX2hkbWlfZHRfcGFyc2VfcGRhdGEoc3RydWN0IG10a19oZG1pICpoZG1pLAo+IAo+ICAJ
+Y2VjX3BkZXYgPSBvZl9maW5kX2RldmljZV9ieV9ub2RlKGNlY19ucCk7Cj4gIAlpZiAoIWNlY19w
+ZGV2KSB7Cj4gLQkJZGV2X2VycihoZG1pLT5kZXYsICJXYWl0aW5nIGZvciBDRUMgZGV2aWNlICVz
+XG4iLAo+IC0JCQljZWNfbnAtPmZ1bGxfbmFtZSk7Cj4gKwkJZGV2X2VycihoZG1pLT5kZXYsICJX
+YWl0aW5nIGZvciBDRUMgZGV2aWNlICVwT0ZcbiIsCj4gKwkJCWNlY19ucCk7Cj4gIAkJcmV0dXJu
+IC1FUFJPQkVfREVGRVI7Cj4gIAl9Cj4gIAloZG1pLT5jZWNfZGV2ID0gJmNlY19wZGV2LT5kZXY7
+Cj4gQEAgLTE1MDEsOCArMTUwMSw4IEBAIHN0YXRpYyBpbnQgbXRrX2hkbWlfZHRfcGFyc2VfcGRh
+dGEoc3RydWN0IG10a19oZG1pICpoZG1pLAo+IAo+ICAJaTJjX25wID0gb2ZfcGFyc2VfcGhhbmRs
+ZShyZW1vdGUsICJkZGMtaTJjLWJ1cyIsIDApOwo+ICAJaWYgKCFpMmNfbnApIHsKPiAtCQlkZXZf
+ZXJyKGRldiwgIkZhaWxlZCB0byBmaW5kIGRkYy1pMmMtYnVzIG5vZGUgaW4gJXNcbiIsCj4gLQkJ
+CXJlbW90ZS0+ZnVsbF9uYW1lKTsKPiArCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBmaW5kIGRk
+Yy1pMmMtYnVzIG5vZGUgaW4gJXBPRlxuIiwKPiArCQkJcmVtb3RlKTsKPiAgCQlvZl9ub2RlX3B1
+dChyZW1vdGUpOwo+ICAJCXJldHVybiAtRUlOVkFMOwo+ICAJfQo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fZHJ2LmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVz
+b25fZHJ2LmMKPiBpbmRleCA0ZDk4ZmFjOTI3OTUuLjUzNzVlNmRjY2RkNyAxMDA2NDQKPiAtLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vbWVzb24vbWVzb25fZHJ2LmMKPiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vbWVzb24vbWVzb25fZHJ2LmMKPiBAQCAtMzAzLDkgKzMwMyw4IEBAIHN0YXRpYyBjb25zdCBz
+dHJ1Y3QgY29tcG9uZW50X21hc3Rlcl9vcHMgbWVzb25fZHJ2X21hc3Rlcl9vcHMgPSB7Cj4gCj4g
+IHN0YXRpYyBpbnQgY29tcGFyZV9vZihzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEpCj4g
+IHsKPiAtCURSTV9ERUJVR19EUklWRVIoIkNvbXBhcmluZyBvZiBub2RlICVzIHdpdGggJXNcbiIs
+Cj4gLQkJCSBvZl9ub2RlX2Z1bGxfbmFtZShkZXYtPm9mX25vZGUpLAo+IC0JCQkgb2Zfbm9kZV9m
+dWxsX25hbWUoZGF0YSkpOwo+ICsJRFJNX0RFQlVHX0RSSVZFUigiQ29tcGFyaW5nIG9mIG5vZGUg
+JXBPRiB3aXRoICVwT0ZcbiIsCj4gKwkJCSBkZXYtPm9mX25vZGUsIGRhdGEpOwo+IAo+ICAJcmV0
+dXJuIGRldi0+b2Zfbm9kZSA9PSBkYXRhOwo+ICB9Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9wYW5lbC9wYW5lbC1sdmRzLmMgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtbHZk
+cy5jCj4gaW5kZXggMzIxNmFhOWE4OGQ2Li5lMmQ1N2MwMTIwMGIgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLWx2ZHMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9w
+YW5lbC9wYW5lbC1sdmRzLmMKPiBAQCAtMTQzLDE0ICsxNDMsMTQgQEAgc3RhdGljIGludCBwYW5l
+bF9sdmRzX3BhcnNlX2R0KHN0cnVjdCBwYW5lbF9sdmRzICpsdmRzKQo+IAo+ICAJcmV0ID0gb2Zf
+cHJvcGVydHlfcmVhZF91MzIobnAsICJ3aWR0aC1tbSIsICZsdmRzLT53aWR0aCk7Cj4gIAlpZiAo
+cmV0IDwgMCkgewo+IC0JCWRldl9lcnIobHZkcy0+ZGV2LCAiJXM6IGludmFsaWQgb3IgbWlzc2lu
+ZyAlcyBEVCBwcm9wZXJ0eVxuIiwKPiAtCQkJb2Zfbm9kZV9mdWxsX25hbWUobnApLCAid2lkdGgt
+bW0iKTsKPiArCQlkZXZfZXJyKGx2ZHMtPmRldiwgIiVwT0Y6IGludmFsaWQgb3IgbWlzc2luZyAl
+cyBEVCBwcm9wZXJ0eVxuIiwKPiArCQkJbnAsICJ3aWR0aC1tbSIpOwo+ICAJCXJldHVybiAtRU5P
+REVWOwo+ICAJfQo+ICAJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJoZWlnaHQtbW0i
+LCAmbHZkcy0+aGVpZ2h0KTsKPiAgCWlmIChyZXQgPCAwKSB7Cj4gLQkJZGV2X2VycihsdmRzLT5k
+ZXYsICIlczogaW52YWxpZCBvciBtaXNzaW5nICVzIERUIHByb3BlcnR5XG4iLAo+IC0JCQlvZl9u
+b2RlX2Z1bGxfbmFtZShucCksICJoZWlnaHQtbW0iKTsKPiArCQlkZXZfZXJyKGx2ZHMtPmRldiwg
+IiVwT0Y6IGludmFsaWQgb3IgbWlzc2luZyAlcyBEVCBwcm9wZXJ0eVxuIiwKPiArCQkJbnAsICJo
+ZWlnaHQtbW0iKTsKPiAgCQlyZXR1cm4gLUVOT0RFVjsKPiAgCX0KPiAKPiBAQCAtMTU4LDggKzE1
+OCw4IEBAIHN0YXRpYyBpbnQgcGFuZWxfbHZkc19wYXJzZV9kdChzdHJ1Y3QgcGFuZWxfbHZkcyAq
+bHZkcykKPiAKPiAgCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5wLCAiZGF0YS1tYXBw
+aW5nIiwgJm1hcHBpbmcpOwo+ICAJaWYgKHJldCA8IDApIHsKPiAtCQlkZXZfZXJyKGx2ZHMtPmRl
+diwgIiVzOiBpbnZhbGlkIG9yIG1pc3NpbmcgJXMgRFQgcHJvcGVydHlcbiIsCj4gLQkJCW9mX25v
+ZGVfZnVsbF9uYW1lKG5wKSwgImRhdGEtbWFwcGluZyIpOwo+ICsJCWRldl9lcnIobHZkcy0+ZGV2
+LCAiJXBPRjogaW52YWxpZCBvciBtaXNzaW5nICVzIERUIHByb3BlcnR5XG4iLAo+ICsJCQlucCwg
+ImRhdGEtbWFwcGluZyIpOwo+ICAJCXJldHVybiAtRU5PREVWOwo+ICAJfQo+IAo+IEBAIC0xNzAs
+OCArMTcwLDggQEAgc3RhdGljIGludCBwYW5lbF9sdmRzX3BhcnNlX2R0KHN0cnVjdCBwYW5lbF9s
+dmRzICpsdmRzKQo+ICAJfSBlbHNlIGlmICghc3RyY21wKG1hcHBpbmcsICJ2ZXNhLTI0IikpIHsK
+PiAgCQlsdmRzLT5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVg3WDRfU1BXRzsK
+PiAgCX0gZWxzZSB7Cj4gLQkJZGV2X2VycihsdmRzLT5kZXYsICIlczogaW52YWxpZCBvciBtaXNz
+aW5nICVzIERUIHByb3BlcnR5XG4iLAo+IC0JCQlvZl9ub2RlX2Z1bGxfbmFtZShucCksICJkYXRh
+LW1hcHBpbmciKTsKPiArCQlkZXZfZXJyKGx2ZHMtPmRldiwgIiVwT0Y6IGludmFsaWQgb3IgbWlz
+c2luZyAlcyBEVCBwcm9wZXJ0eVxuIiwKPiArCQkJbnAsICJkYXRhLW1hcHBpbmciKTsKPiAgCQly
+ZXR1cm4gLUVJTlZBTDsKPiAgCX0KPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Jj
+YXItZHUvcmNhcl9kdV9lbmNvZGVyLmMgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1
+X2VuY29kZXIuYwo+IGluZGV4IDNlMDQ4ZGQ5OGI2NC4uYmE4ZDI4MDRjMWQxIDEwMDY0NAo+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfZW5jb2Rlci5jCj4gKysrIGIvZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9lbmNvZGVyLmMKPiBAQCAtMTg2LDggKzE4Niw4
+IEBAIGludCByY2FyX2R1X2VuY29kZXJfaW5pdChzdHJ1Y3QgcmNhcl9kdV9kZXZpY2UgKnJjZHUs
+Cj4gIAl9Cj4gCj4gIAlpZiAoZW5jX25vZGUpIHsKPiAtCQlkZXZfZGJnKHJjZHUtPmRldiwgImlu
+aXRpYWxpemluZyBlbmNvZGVyICVzIGZvciBvdXRwdXQgJXVcbiIsCj4gLQkJCW9mX25vZGVfZnVs
+bF9uYW1lKGVuY19ub2RlKSwgb3V0cHV0KTsKPiArCQlkZXZfZGJnKHJjZHUtPmRldiwgImluaXRp
+YWxpemluZyBlbmNvZGVyICVwT0YgZm9yIG91dHB1dCAldVxuIiwKPiArCQkJZW5jX25vZGUsIG91
+dHB1dCk7Cj4gCj4gIAkJLyogTG9jYXRlIHRoZSBEUk0gYnJpZGdlIGZyb20gdGhlIGVuY29kZXIg
+RFQgbm9kZS4gKi8KPiAgCQlicmlkZ2UgPSBvZl9kcm1fZmluZF9icmlkZ2UoZW5jX25vZGUpOwo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2ttcy5jIGIvZHJp
+dmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9kdV9rbXMuYwo+IGluZGV4IGY0MTI1YzhjYTkwMi4u
+NWQ2ODFlYTUzYmU2IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJf
+ZHVfa21zLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2ttcy5jCj4g
+QEAgLTI5NywxNSArMjk3LDE1IEBAIHN0YXRpYyBpbnQgcmNhcl9kdV9lbmNvZGVyc19pbml0X29u
+ZShzdHJ1Y3QgcmNhcl9kdV9kZXZpY2UgKnJjZHUsCj4gIAkgKi8KPiAgCWVudGl0eSA9IG9mX2dy
+YXBoX2dldF9yZW1vdGVfcG9ydF9wYXJlbnQoZXAtPmxvY2FsX25vZGUpOwo+ICAJaWYgKCFlbnRp
+dHkpIHsKPiAtCQlkZXZfZGJnKHJjZHUtPmRldiwgInVuY29ubmVjdGVkIGVuZHBvaW50ICVzLCBz
+a2lwcGluZ1xuIiwKPiAtCQkJZXAtPmxvY2FsX25vZGUtPmZ1bGxfbmFtZSk7Cj4gKwkJZGV2X2Ri
+ZyhyY2R1LT5kZXYsICJ1bmNvbm5lY3RlZCBlbmRwb2ludCAlcE9GLCBza2lwcGluZ1xuIiwKPiAr
+CQkJZXAtPmxvY2FsX25vZGUpOwo+ICAJCXJldHVybiAtRU5PREVWOwo+ICAJfQo+IAo+ICAJaWYg
+KCFvZl9kZXZpY2VfaXNfYXZhaWxhYmxlKGVudGl0eSkpIHsKPiAgCQlkZXZfZGJnKHJjZHUtPmRl
+diwKPiAtCQkJImNvbm5lY3RlZCBlbnRpdHkgJXMgaXMgZGlzYWJsZWQsIHNraXBwaW5nXG4iLAo+
+IC0JCQllbnRpdHktPmZ1bGxfbmFtZSk7Cj4gKwkJCSJjb25uZWN0ZWQgZW50aXR5ICVwT0YgaXMg
+ZGlzYWJsZWQsIHNraXBwaW5nXG4iLAo+ICsJCQllbnRpdHkpOwo+ICAJCXJldHVybiAtRU5PREVW
+Owo+ICAJfQo+IAo+IEBAIC0zMjUsOCArMzI1LDggQEAgc3RhdGljIGludCByY2FyX2R1X2VuY29k
+ZXJzX2luaXRfb25lKHN0cnVjdCByY2FyX2R1X2RldmljZSAqcmNkdSwKPiAKPiAgCQlpZiAoIWNv
+bm5lY3Rvcikgewo+ICAJCQlkZXZfd2FybihyY2R1LT5kZXYsCj4gLQkJCQkgIm5vIGNvbm5lY3Rv
+ciBmb3IgZW5jb2RlciAlcywgc2tpcHBpbmdcbiIsCj4gLQkJCQkgZW5jb2Rlci0+ZnVsbF9uYW1l
+KTsKPiArCQkJCSAibm8gY29ubmVjdG9yIGZvciBlbmNvZGVyICVwT0YsIHNraXBwaW5nXG4iLAo+
+ICsJCQkJIGVuY29kZXIpOwo+ICAJCQlvZl9ub2RlX3B1dChlbnRpdHlfZXBfbm9kZSk7Cj4gIAkJ
+CW9mX25vZGVfcHV0KGVuY29kZXIpOwo+ICAJCQlyZXR1cm4gLUVOT0RFVjsKPiBAQCAtMzQ4LDgg
+KzM0OCw4IEBAIHN0YXRpYyBpbnQgcmNhcl9kdV9lbmNvZGVyc19pbml0X29uZShzdHJ1Y3QgcmNh
+cl9kdV9kZXZpY2UgKnJjZHUsCj4gIAlyZXQgPSByY2FyX2R1X2VuY29kZXJfaW5pdChyY2R1LCBv
+dXRwdXQsIGVuY29kZXIsIGNvbm5lY3Rvcik7Cj4gIAlpZiAocmV0ICYmIHJldCAhPSAtRVBST0JF
+X0RFRkVSKQo+ICAJCWRldl93YXJuKHJjZHUtPmRldiwKPiAtCQkJICJmYWlsZWQgdG8gaW5pdGlh
+bGl6ZSBlbmNvZGVyICVzIG9uIG91dHB1dCAldSAoJWQpLCBza2lwcGluZ1xuIiwKPiAtCQkJIG9m
+X25vZGVfZnVsbF9uYW1lKGVuY29kZXIpLCBvdXRwdXQsIHJldCk7Cj4gKwkJCSAiZmFpbGVkIHRv
+IGluaXRpYWxpemUgZW5jb2RlciAlcE9GIG9uIG91dHB1dCAldSAoJWQpLCBza2lwcGluZ1xuIiwK
+PiArCQkJIGVuY29kZXIsIG91dHB1dCwgcmV0KTsKPiAKPiAgCW9mX25vZGVfcHV0KGVuY29kZXIp
+Owo+ICAJb2Zfbm9kZV9wdXQoY29ubmVjdG9yKTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9yb2NrY2hpcF9kcm1fZHJ2LmMKPiBpbmRleCBjNmIxYjdmM2EyYTMuLjAyNDEwNDI5ZWRmNyAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX2Rydi5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYuYwo+IEBA
+IC0zNzAsOCArMzcwLDggQEAgc3RhdGljIGludCByb2NrY2hpcF9kcm1fcGxhdGZvcm1fb2ZfcHJv
+YmUoc3RydWN0IGRldmljZSAqZGV2KQo+IAo+ICAJCWlvbW11ID0gb2ZfcGFyc2VfcGhhbmRsZShw
+b3J0LT5wYXJlbnQsICJpb21tdXMiLCAwKTsKPiAgCQlpZiAoIWlvbW11IHx8ICFvZl9kZXZpY2Vf
+aXNfYXZhaWxhYmxlKGlvbW11LT5wYXJlbnQpKSB7Cj4gLQkJCWRldl9kYmcoZGV2LCAibm8gaW9t
+bXUgYXR0YWNoZWQgZm9yICVzLCB1c2luZyBub24taW9tbXUgYnVmZmVyc1xuIiwKPiAtCQkJCXBv
+cnQtPnBhcmVudC0+ZnVsbF9uYW1lKTsKPiArCQkJZGV2X2RiZyhkZXYsICJubyBpb21tdSBhdHRh
+Y2hlZCBmb3IgJXBPRiwgdXNpbmcgbm9uLWlvbW11IGJ1ZmZlcnNcbiIsCj4gKwkJCQlwb3J0LT5w
+YXJlbnQpOwo+ICAJCQkvKgo+ICAJCQkgKiBpZiB0aGVyZSBpcyBhIGNydGMgbm90IHN1cHBvcnQg
+aW9tbXUsIGZvcmNlIHNldCBhbGwKPiAgCQkJICogY3J0YyB1c2Ugbm9uLWlvbW11IGJ1ZmZlci4K
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV92b3Au
+YyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9wLmMKPiBpbmRleCA1
+ZDQ1MDMzMmMyZmQuLmFhMzQwN2YxM2JiZCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL3JvY2tjaGlwX2RybV92b3AuYwo+IEBAIC0xMzQwLDggKzEzNDAsOCBAQCBzdGF0aWMgaW50
+IHZvcF9jcmVhdGVfY3J0YyhzdHJ1Y3Qgdm9wICp2b3ApCj4gCj4gIAlwb3J0ID0gb2ZfZ2V0X2No
+aWxkX2J5X25hbWUoZGV2LT5vZl9ub2RlLCAicG9ydCIpOwo+ICAJaWYgKCFwb3J0KSB7Cj4gLQkJ
+RFJNX0RFVl9FUlJPUih2b3AtPmRldiwgIm5vIHBvcnQgbm9kZSBmb3VuZCBpbiAlc1xuIiwKPiAt
+CQkJICAgICAgZGV2LT5vZl9ub2RlLT5mdWxsX25hbWUpOwo+ICsJCURSTV9ERVZfRVJST1Iodm9w
+LT5kZXYsICJubyBwb3J0IG5vZGUgZm91bmQgaW4gJXBPRlxuIiwKPiArCQkJICAgICAgZGV2LT5v
+Zl9ub2RlKTsKPiAgCQlyZXQgPSAtRU5PRU5UOwo+ICAJCWdvdG8gZXJyX2NsZWFudXBfY3J0YzsK
+PiAgCX0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vc3RtL2x0ZGMuYwo+IGluZGV4IDFiOTQ4M2Q0ZjJhNC4uY2Q0ZTc0NzQzZDc3IDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jCj4gKysrIGIvZHJpdmVycy9n
+cHUvZHJtL3N0bS9sdGRjLmMKPiBAQCAtOTk1LDggKzk5NSw3IEBAIHN0YXRpYyBzdHJ1Y3QgZHJt
+X3BhbmVsICpsdGRjX2dldF9wYW5lbChzdHJ1Y3QgZHJtX2RldmljZSAqZGRldikKPiAgCQkJcGFu
+ZWwgPSBvZl9kcm1fZmluZF9wYW5lbChwb3J0KTsKPiAgCQkJb2Zfbm9kZV9wdXQocG9ydCk7Cj4g
+IAkJCWlmIChwYW5lbCkgewo+IC0JCQkJRFJNX0RFQlVHX0RSSVZFUigicmVtb3RlIHBhbmVsICVz
+XG4iLAo+IC0JCQkJCQkgcG9ydC0+ZnVsbF9uYW1lKTsKPiArCQkJCURSTV9ERUJVR19EUklWRVIo
+InJlbW90ZSBwYW5lbCAlcE9GXG4iLCBwb3J0KTsKPiAgCQkJfSBlbHNlIHsKPiAgCQkJCURSTV9E
+RUJVR19EUklWRVIoInBhbmVsIG1pc3NpbmdcbiIpOwo+ICAJCQkJb2Zfbm9kZV9wdXQoZW50aXR5
+KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5jIGIvZHJp
+dmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5jCj4gaW5kZXggYWJjN2Q4ZmUwNmI0Li44OWNk
+NTkwNzIzYWMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5j
+Cj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX2Rydi5jCj4gQEAgLTE4Nyw5ICsx
+ODcsOSBAQCBzdGF0aWMgYm9vbCBzdW40aV9kcnZfbm9kZV9pc190Y29uKHN0cnVjdCBkZXZpY2Vf
+bm9kZSAqbm9kZSkKPiAKPiAgc3RhdGljIGludCBjb21wYXJlX29mKHN0cnVjdCBkZXZpY2UgKmRl
+diwgdm9pZCAqZGF0YSkKPiAgewo+IC0JRFJNX0RFQlVHX0RSSVZFUigiQ29tcGFyaW5nIG9mIG5v
+ZGUgJXMgd2l0aCAlc1xuIiwKPiAtCQkJIG9mX25vZGVfZnVsbF9uYW1lKGRldi0+b2Zfbm9kZSks
+Cj4gLQkJCSBvZl9ub2RlX2Z1bGxfbmFtZShkYXRhKSk7Cj4gKwlEUk1fREVCVUdfRFJJVkVSKCJD
+b21wYXJpbmcgb2Ygbm9kZSAlcE9GIHdpdGggJXBPRlxuIiwKPiArCQkJIGRldi0+b2Zfbm9kZSwK
+PiArCQkJIGRhdGEpOwo+IAo+ICAJcmV0dXJuIGRldi0+b2Zfbm9kZSA9PSBkYXRhOwo+ICB9Cj4g
+QEAgLTIxOSw4ICsyMTksNyBAQCBzdGF0aWMgaW50IHN1bjRpX2Rydl9hZGRfZW5kcG9pbnRzKHN0
+cnVjdCBkZXZpY2UgKmRldiwKPiAKPiAgCWlmICghc3VuNGlfZHJ2X25vZGVfaXNfZnJvbnRlbmQo
+bm9kZSkpIHsKPiAgCQkvKiBBZGQgY3VycmVudCBjb21wb25lbnQgKi8KPiAtCQlEUk1fREVCVUdf
+RFJJVkVSKCJBZGRpbmcgY29tcG9uZW50ICVzXG4iLAo+IC0JCQkJIG9mX25vZGVfZnVsbF9uYW1l
+KG5vZGUpKTsKPiArCQlEUk1fREVCVUdfRFJJVkVSKCJBZGRpbmcgY29tcG9uZW50ICVwT0ZcbiIs
+IG5vZGUpOwo+ICAJCWRybV9vZl9jb21wb25lbnRfbWF0Y2hfYWRkKGRldiwgbWF0Y2gsIGNvbXBh
+cmVfb2YsIG5vZGUpOwo+ICAJCWNvdW50Kys7Cj4gIAl9Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS90aWxjZGMvdGlsY2RjX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGls
+Y2RjX2NydGMuYwo+IGluZGV4IGQ1MjRlZDBkNTE0Ni4uODQxNmMxZmEwZGQ4IDEwMDY0NAo+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS90aWxjZGMvdGlsY2RjX2NydGMuYwo+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS90aWxjZGMvdGlsY2RjX2NydGMuYwo+IEBAIC0xMDM4LDggKzEwMzgsOCBAQCBpbnQg
+dGlsY2RjX2NydGNfY3JlYXRlKHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCj4gIAlpZiAocHJpdi0+
+aXNfY29tcG9uZW50aXplZCkgewo+ICAJCWNydGMtPnBvcnQgPSBvZl9ncmFwaF9nZXRfcG9ydF9i
+eV9pZChkZXYtPmRldi0+b2Zfbm9kZSwgMCk7Cj4gIAkJaWYgKCFjcnRjLT5wb3J0KSB7IC8qIFRo
+aXMgc2hvdWxkIG5ldmVyIGhhcHBlbiAqLwo+IC0JCQlkZXZfZXJyKGRldi0+ZGV2LCAiUG9ydCBu
+b2RlIG5vdCBmb3VuZCBpbiAlc1xuIiwKPiAtCQkJCWRldi0+ZGV2LT5vZl9ub2RlLT5mdWxsX25h
+bWUpOwo+ICsJCQlkZXZfZXJyKGRldi0+ZGV2LCAiUG9ydCBub2RlIG5vdCBmb3VuZCBpbiAlcE9G
+XG4iLAo+ICsJCQkJZGV2LT5kZXYtPm9mX25vZGUpOwo+ICAJCQlyZXQgPSAtRUlOVkFMOwo+ICAJ
+CQlnb3RvIGZhaWw7Cj4gIAkJfQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1
+LWNvbW1vbi5jIGIvZHJpdmVycy9ncHUvaXB1LXYzL2lwdS1jb21tb24uYwo+IGluZGV4IDk2MGQ4
+MTZhZDdmNy4uNmE1NzNkMjFkM2NjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2lwdS12My9p
+cHUtY29tbW9uLmMKPiArKysgYi9kcml2ZXJzL2dwdS9pcHUtdjMvaXB1LWNvbW1vbi5jCj4gQEAg
+LTEyMTcsOCArMTIxNyw4IEBAIHN0YXRpYyBpbnQgaXB1X2FkZF9jbGllbnRfZGV2aWNlcyhzdHJ1
+Y3QgaXB1X3NvYyAqaXB1LCB1bnNpZ25lZCBsb25nIGlwdV9iYXNlKQo+ICAJCW9mX25vZGUgPSBv
+Zl9ncmFwaF9nZXRfcG9ydF9ieV9pZChkZXYtPm9mX25vZGUsIGkpOwo+ICAJCWlmICghb2Zfbm9k
+ZSkgewo+ICAJCQlkZXZfaW5mbyhkZXYsCj4gLQkJCQkgIm5vIHBvcnRAJWQgbm9kZSBpbiAlcywg
+bm90IHVzaW5nICVzJWRcbiIsCj4gLQkJCQkgaSwgZGV2LT5vZl9ub2RlLT5mdWxsX25hbWUsCj4g
+KwkJCQkgIm5vIHBvcnRAJWQgbm9kZSBpbiAlcE9GLCBub3QgdXNpbmcgJXMlZFxuIiwKPiArCQkJ
+CSBpLCBkZXYtPm9mX25vZGUsCj4gIAkJCQkgKGkgLyAyKSA/ICJESSIgOiAiQ1NJIiwgaSAlIDIp
+Owo+ICAJCQljb250aW51ZTsKPiAgCQl9Cj4gLS0KPiAyLjExLjAKPiAKCi0tIApTZWFuIFBhdWws
+IFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
