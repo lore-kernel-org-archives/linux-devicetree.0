@@ -1,136 +1,125 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: [PATCH v2 0/7] Add support of OV9655 camera
-Date: Thu, 20 Jul 2017 09:17:38 +0000
-Message-ID: <8050f688-fc6e-c3c0-460a-93ad3ae8d735@st.com>
-References: <1499073368-31905-1-git-send-email-hugues.fruchet@st.com>
- <8157da84-1484-8375-1f2b-9831973915b4@kernel.org>
- <956f17e6-36dd-6733-0d35-9b801ed4244d@xs4all.nl>
- <BCD1BD18-96E3-4638-8935-B5C832D8EE52@goldelico.com>
- <2dd3402e-55b0-231d-878f-5ba95ee8cb36@st.com>
- <20170718195223.zrqfrefxxzqfsojd@valkosipuli.retiisi.org.uk>
- <AB91B71D-E34B-4645-BD70-A87226BA34C5@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AB91B71D-E34B-4645-BD70-A87226BA34C5@goldelico.com>
-Content-Language: en-US
-Content-ID: <6EB4E3EF8784074DAD57E64B1F57A9ED@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Sakari Ailus <sakari.ailus@iki.fi>, Sylwester Nawrocki <snawrocki@kernel.org>, Hans
- Verkuil <hverkuil@xs4all.nl>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/2] dt-bindings: media: Add Cadence MIPI-CSI2 RX Device Tree bindings
+Date: Thu, 20 Jul 2017 11:23:01 +0200
+Message-ID: <20170720092302.2982-2-maxime.ripard@free-electrons.com>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170720092302.2982-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The Cadence MIPI-CSI2 RX controller is a CSI2RX bridge that supports up to
+4 CSI-2 lanes, and can route the frames to up to 4 streams, depending on
+the hardware implementation.
 
+It can operate with an external D-PHY, an internal one or no D-PHY at all
+in some configurations.
 
-On 07/20/2017 10:37 AM, H. Nikolaus Schaller wrote:
-> Hi,
-> 
->> Am 18.07.2017 um 21:52 schrieb Sakari Ailus <sakari.ailus@iki.fi>:
->>
->> On Tue, Jul 18, 2017 at 12:53:12PM +0000, Hugues FRUCHET wrote:
->>>
->>>
->>> On 07/18/2017 02:17 PM, H. Nikolaus Schaller wrote:
->>>> Hi,
->>>>
->>>>> Am 18.07.2017 um 13:59 schrieb Hans Verkuil <hverkuil@xs4all.nl>:
->>>>>
->>>>> On 12/07/17 22:01, Sylwester Nawrocki wrote:
->>>>>> Hi Hugues,
->>>>>>
->>>>>> On 07/03/2017 11:16 AM, Hugues Fruchet wrote:
->>>>>>> This patchset enables OV9655 camera support.
->>>>>>>
->>>>>>> OV9655 support has been tested using STM32F4DIS-CAM extension board
->>>>>>> plugged on connector P1 of STM32F746G-DISCO board.
->>>>>>> Due to lack of OV9650/52 hardware support, the modified related code
->>>>>>> could not have been checked for non-regression.
->>>>>>>
->>>>>>> First patches upgrade current support of OV9650/52 to prepare then
->>>>>>> introduction of OV9655 variant patch.
->>>>>>> Because of OV9655 register set slightly different from OV9650/9652,
->>>>>>> not all of the driver features are supported (controls). Supported
->>>>>>> resolutions are limited to VGA, QVGA, QQVGA.
->>>>>>> Supported format is limited to RGB565.
->>>>>>> Controls are limited to color bar test pattern for test purpose.
->>>>>>
->>>>>> I appreciate your efforts towards making a common driver but IMO it would be
->>>>>> better to create a separate driver for the OV9655 sensor.  The original driver
->>>>>> is 1576 lines of code, your patch set adds half of that (816).  There are
->>>>>> significant differences in the feature set of both sensors, there are
->>>>>> differences in the register layout.  I would go for a separate driver, we
->>>>>> would then have code easier to follow and wouldn't need to worry about possible
->>>>>> regressions.  I'm afraid I have lost the camera module and won't be able
->>>>>> to test the patch set against regressions.
->>>>>>
->>>>>> IMHO from maintenance POV it's better to make a separate driver. In the end
->>>>>> of the day we wouldn't be adding much more code than it is being done now.
->>>>>
->>>>> I agree. We do not have great experiences in the past with trying to support
->>>>> multiple variants in a single driver (unless the diffs are truly small).
->>>>
->>>> Well,
->>>> IMHO the diffs in ov965x are smaller (but untestable because nobody seems
->>>> to have an ov9650/52 board) than within the bq27xxx chips, but I can dig out
->>>> an old pdata based separate ov9655 driver and extend that to become DT compatible.
->>>>
->>>> I had abandoned that separate approach in favour of extending the ov965x driver.
->>>>
->>>> Have to discuss with Hugues how to proceed.
->>>>
->>>> BR and thanks,
->>>> Nikolaus
->>>>
->>>
->>> As Sylwester and Hans, I'm also in flavour of a separate driver, the
->>> fact that register set seems similar but in fact is not and that we
->>> cannot test for non-regression of 9650/52 are killer for me to continue
->>> on a single driver.
->>> We can now restart from a new fresh state of the art sensor driver
->>> getting rid of legacy (pdata, old gpio, etc...).
->>
->> Agreed. I bet the result will look cleaner indeed although this wasn't one
->> of the complex drivers.
-> 
-> I finally managed to find the bug why mplayer did select-timeout on the GTA04.
-> Was a bug in pinmux setup of the GTA04 for the omap3isp.
-> 
-> And I have resurrected our years old 3.12 camera driver, which was based on the
-> MT9P031 code. It was already separate from ov9650/52.
-> 
-> I have extended it to support DT by including some parts of Hugues' work.
-> 
-> It still needs some cleanup and discussion but will be a simple patch (one
-> for ov9655.c + Kconfig + Makefile) and one for bindings (I hope it includes
-> all your comments).
-> 
-> I will post v1 in the next days.
-> 
-> BR,
-> Nikolaus
-> 
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/media/cdns-csi2rx.txt      | 87 ++++++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/cdns-csi2rx.txt
 
-Thanks Nikolaus,
+diff --git a/Documentation/devicetree/bindings/media/cdns-csi2rx.txt b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+new file mode 100644
+index 000000000000..e08547abe885
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/cdns-csi2rx.txt
+@@ -0,0 +1,87 @@
++Cadence MIPI-CSI2 RX controller
++===============================
++
++The Cadence MIPI-CSI2 RX controller is a CSI-2 bridge supporting up to 4 CSI
++lanes in input, and 4 different pixel streams in output.
++
++Required properties:
++  - compatible: must be set to "cdns,csi2rx" and an SoC-specific compatible
++  - reg: base address and size of the memory mapped region
++  - clocks: phandles to the clocks driving the controller
++  - clock-names: must contain:
++    * sys_clk: main clock
++    * p_clk: register bank clock
++    * p_free_clk: free running register bank clock
++    * pixel_ifX_clk: pixel stream output clock, one for each stream
++                     implemented in hardware, between 0 and 3
++    * dphy_rx_clk: D-PHY byte clock, if implemented in hardware
++  - phys: phandle to the external D-PHY
++  - phy-names: must contain dphy, if the implementation uses an
++               external D-PHY
++
++Required subnodes:
++  - ports: A ports node with endpoint definitions as defined in
++           Documentation/devicetree/bindings/media/video-interfaces.txt. The
++           first port subnode should be the input endpoint, the second one the
++           outputs
++
++  The output port should have as many endpoints as stream supported by
++  the hardware implementation, between 1 and 4, their ID being the
++  stream output number used in the implementation.
++
++Example:
++
++csi2rx: csi-bridge@0d060000 {
++	compatible = "cdns,csi2rx";
++	reg = <0x0d060000 0x1000>;
++	clocks = <&byteclock>, <&byteclock>, <&byteclock>,
++		 <&coreclock>, <&coreclock>,
++		 <&coreclock>, <&coreclock>;
++	clock-names = "sys_clk", "p_clk", "p_free_clk",
++		      "pixel_if0_clk", "pixel_if1_clk",
++		      "pixel_if2_clk", "pixel_if3_clk";
++
++	ports {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0>;
++
++			csi2rx_in_sensor: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&sensor_out_csi2rx>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++
++		port@1 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <1>;
++
++			csi2rx_out_grabber0: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&grabber0_in_csi2rx>;
++			};
++
++			csi2rx_out_grabber1: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&grabber1_in_csi2rx>;
++			};
++
++			csi2rx_out_grabber2: endpoint@2 {
++				reg = <2>;
++				remote-endpoint = <&grabber2_in_csi2rx>;
++			};
++
++			csi2rx_out_grabber3: endpoint@3 {
++				reg = <3>;
++				remote-endpoint = <&grabber3_in_csi2rx>;
++			};
++		};
++	};
++};
+-- 
+2.13.3
 
-I was ready to push the new version in new file ov9655.c with all 
-comments included, but as my version is very minimal and I suspect that 
-yours is more complete, let's merge things together.
-Can I consider that you now take ownership of this driver upstream ?
-If so I'll send to you my current patchset so you can compare, 
-double-check review comments and add missing support on your side 
-(RGB565 and VGA/QVGA resolution matter on my side).
-
-Thanks again Nikolaus for this work,
-
-BR,
-Hugues.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
