@@ -1,32 +1,87 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] ARC: reset: introduce HSDKv1 reset driver
-Date: Thu, 20 Jul 2017 15:58:33 +0200
-Message-ID: <1500559113.2354.77.camel@pengutronix.de>
-References: <20170719184511.18497-1-Eugeniy.Paltsev@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] media: Convert to using %pOF instead of full_name
+Date: Thu, 20 Jul 2017 09:06:01 -0500
+Message-ID: <CAL_JsqJcS_Ewfow0+iuUtLRab62m=AHO+bvbHXX-eSR0Hw_JaQ@mail.gmail.com>
+References: <CGME20170718215328epcas2p2e5e1d7df96fcd894e70a961df864abdd@epcas2p2.samsung.com>
+ <20170718214339.7774-33-robh@kernel.org> <564a6768-3b23-6dc7-ecb5-cb4f4359b633@samsung.com>
+ <CAL_JsqLDCgO60ECGB70pMNcaLg0zUcJ6_+50vH-evfGe-D266Q@mail.gmail.com> <20170720081508.33563afe@vento.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170719184511.18497-1-Eugeniy.Paltsev@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20170720081508.33563afe@vento.lan>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Frank Rowand <frowand.list@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, "Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Songjun Wu <songjun.wu@microchip.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-07-19 at 21:45 +0300, Eugeniy Paltsev wrote:
-> The HSDK v1 periphery IPs can be reset by accessing some registers
-> from the CGU block.
-> 
-> The list of available reset lines is documented in the DT bindings.
-> 
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-> ---
-> Changes v1 -> v2:
->  - Remove defines of the unused registers.
->  - Map io memory only for single CGU_SYS_RST_CTRL register instead
->    of CGU_SYS_*_CTRL, as we use only CGU_SYS_RST_CTRL.
+On Thu, Jul 20, 2017 at 6:15 AM, Mauro Carvalho Chehab
+<mchehab@s-opensource.com> wrote:
+> Em Wed, 19 Jul 2017 11:02:01 -0500
+> Rob Herring <robh@kernel.org> escreveu:
+>
+>> On Wed, Jul 19, 2017 at 4:41 AM, Sylwester Nawrocki
+>> <s.nawrocki@samsung.com> wrote:
+>> > On 07/18/2017 11:43 PM, Rob Herring wrote:
+>> >> Now that we have a custom printf format specifier, convert users of
+>> >> full_name to use %pOF instead. This is preparation to remove storing
+>> >> of the full path string for each node.
+>> >>
+>> >> Signed-off-by: Rob Herring <robh@kernel.org>
+>> >
+>> >> ---
+>> >>   drivers/media/i2c/s5c73m3/s5c73m3-core.c       |  3 +-
+>> >>   drivers/media/i2c/s5k5baf.c                    |  7 ++--
+>> >>   drivers/media/platform/am437x/am437x-vpfe.c    |  4 +-
+>> >>   drivers/media/platform/atmel/atmel-isc.c       |  4 +-
+>> >>   drivers/media/platform/davinci/vpif_capture.c  | 16 ++++----
+>> >>   drivers/media/platform/exynos4-is/fimc-is.c    |  8 ++--
+>> >>   drivers/media/platform/exynos4-is/fimc-lite.c  |  3 +-
+>> >>   drivers/media/platform/exynos4-is/media-dev.c  |  8 ++--
+>> >>   drivers/media/platform/exynos4-is/mipi-csis.c  |  4 +-
+>> >>   drivers/media/platform/mtk-mdp/mtk_mdp_comp.c  |  6 +--
+>> >>   drivers/media/platform/mtk-mdp/mtk_mdp_core.c  |  8 ++--
+>> >>   drivers/media/platform/omap3isp/isp.c          |  8 ++--
+>> >>   drivers/media/platform/pxa_camera.c            |  2 +-
+>> >>   drivers/media/platform/rcar-vin/rcar-core.c    |  4 +-
+>> >>   drivers/media/platform/soc_camera/soc_camera.c |  6 +--
+>> >>   drivers/media/platform/xilinx/xilinx-vipp.c    | 52 +++++++++++++-------------
+>> >>   drivers/media/v4l2-core/v4l2-async.c           |  4 +-
+>> >>   drivers/media/v4l2-core/v4l2-clk.c             |  3 +-
+>> >>   include/media/v4l2-clk.h                       |  4 +-
+>> >>   19 files changed, 71 insertions(+), 83 deletions(-)
+>> >
+>> >> diff --git a/drivers/media/platform/xilinx/xilinx-vipp.c b/drivers/media/platform/xilinx/xilinx-vipp.c
+>> >> index ac4704388920..9233ad0b1b6b 100644
+>> >> --- a/drivers/media/platform/xilinx/xilinx-vipp.c
+>> >> +++ b/drivers/media/platform/xilinx/xilinx-vipp.c
+>> >
+>> >> @@ -144,9 +144,8 @@ static int xvip_graph_build_one(struct xvip_composite_device *xdev,
+>> >>               remote = ent->entity;
+>> >>
+>> >>               if (link.remote_port >= remote->num_pads) {
+>> >> -                     dev_err(xdev->dev, "invalid port number %u on %s\n",
+>> >> -                             link.remote_port,
+>> >> -                             to_of_node(link.remote_node)->full_name);
+>> >> +                     dev_err(xdev->dev, "invalid port number %u on %pOF\n",
+>> >> +                             link.remote_port, link.remote_node);
+>> >
+>> > Shouldn't there be to_of_node(link.remote_node) instead of link.remote_node ?
+>>
+>> Humm, yes. I thought I fixed that.
+>
+> After such fix, I'm OK with this patch.
 
-Thank you, I have applied this patch to the reset/next branch.
+I'll send a new version.
 
-regards
-Philipp
+I think I'll send a revert of the referenced commit. It won't apply
+cleanly, but at least it will capture the change in behavior and why
+it was wrong.
+
+> Are you planning to apply it on your tree, or via the media one?
+>
+> I guess it is probably better to apply via media, in order to avoid
+> conflicts with other changes.
+
+Yes, you can take it.
+
+Rob
