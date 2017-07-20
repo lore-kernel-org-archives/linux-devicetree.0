@@ -1,47 +1,81 @@
-From: Mark Yao <mark.yao@rock-chips.com>
-Subject: [PATCH v5 6/7] dt-bindings: display: rockchip: fill Documents for vop
- series
-Date: Thu, 20 Jul 2017 10:43:53 +0800
-Message-ID: <1500518633-30761-1-git-send-email-mark.yao@rock-chips.com>
-References: <1500518564-30371-1-git-send-email-mark.yao@rock-chips.com>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH] usb: dts: fix the issue that usb is not detected on ls1088ardb
+Date: Thu, 20 Jul 2017 10:38:26 +0800
+Message-ID: <1500518306-9879-1-git-send-email-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1500518564-30371-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: "open list:OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mihai Bantea <mihai.bantea@nxp.com>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Liu Gang <Gang.Liu@nxp.com>, open list <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Tang Yuantian <Yuantian.Tang@nxp.com>, York Sun <york.sun@nxp.com>, "yinbo.zhu" <yinbo.zhu@nxp.com>, "moderated
+ list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgotLS0KQ2hh
-bmdlcyBpbiB2NToKLSBjbGVhbiBkb2N1bWVudCBjb21taXQgdGl0bGUKLSBtb3ZlIGNoYW5nZXMg
-ZGVzY3JpcHRpb24gb3V0IG9mIGRvY3VtbWl0IGNvbW1pdCBtc2cKCkNoYW5nZXMgaW4gdjI6Ci0g
-cmVuYW1lIHJrMzIyeCB0byByazMyMjgKLSBjb3JyZWN0IHNvbWUgdm9wIHJlZ2lzdGVycyBkZWZp
-bmUKCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9y
-b2NrY2hpcC12b3AudHh0IHwgNCArKysrCiAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
-CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQKaW5kZXggOWViM2YwYS4uNWQ4
-MzVkOSAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0CkBAIC04LDggKzgs
-MTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKIC0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJl
-IG9uZSBvZiB0aGUgZm9sbG93aW5nCiAJCSJyb2NrY2hpcCxyazMwMzYtdm9wIjsKIAkJInJvY2tj
-aGlwLHJrMzI4OC12b3AiOworCQkicm9ja2NoaXAscmszMzY4LXZvcCI7CisJCSJyb2NrY2hpcCxy
-azMzNjYtdm9wIjsKIAkJInJvY2tjaGlwLHJrMzM5OS12b3AtYmlnIjsKIAkJInJvY2tjaGlwLHJr
-MzM5OS12b3AtbGl0IjsKKwkJInJvY2tjaGlwLHJrMzIyOC12b3AiOworCQkicm9ja2NoaXAscmsz
-MzI4LXZvcCI7CiAKIC0gaW50ZXJydXB0czogc2hvdWxkIGNvbnRhaW4gYSBsaXN0IG9mIGFsbCBW
-T1AgSVAgYmxvY2sgaW50ZXJydXB0cyBpbiB0aGUKIAkJIG9yZGVyOiBWU1lOQywgTENEX1NZU1RF
-TS4gVGhlIGludGVycnVwdCBzcGVjaWZpZXIKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: "yinbo.zhu" <yinbo.zhu@nxp.com>
+
+Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+---
+ arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  8 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 18 ++++++++++++++++++
+ 2 files changed, 26 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+index e9276a5..d5c3d96 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
+@@ -149,6 +149,14 @@
+ 	status = "okay";
+ };
+ 
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
+ &emdio1 {
+ 	/* Freescale F104 PHY1 */
+ 	mdio1_phy1: emdio1_phy@1 {
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index 3a3be87..65b3059 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -566,6 +566,24 @@
+ 			fsl,qspi-has-second-chip;
+ 		};
+ 
++		usb0: usb3@3100000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3100000 0x0 0x10000>;
++			interrupts = <0 80 0x4>; /* Level high type */
++			dr_mode = "host";
++			configure-gfladj;
++			snps,dis_rxdet_inp3_quirk;
++		};
++
++		usb1: usb3@3110000 {
++			compatible = "snps,dwc3";
++			reg = <0x0 0x3110000 0x0 0x10000>;
++			interrupts = <0 81 0x4>; /* Level high type */
++			dr_mode = "host";
++			configure-gfladj;
++			snps,dis_rxdet_inp3_quirk;
++		};
++
+ 		pcie@3400000 {
+ 			compatible = "fsl,ls2088a-pcie", "fsl,ls1088a-pcie",
+ 				     "snps,dw-pcie";
+-- 
+2.1.0.27.g96db324
