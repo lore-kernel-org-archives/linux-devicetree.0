@@ -1,74 +1,29 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 1/2] net: mvneta: remove bogus use of
-Date: Thu, 20 Jul 2017 17:06:21 +0200
-Message-ID: <8760en5es2.fsf@free-electrons.com>
-References: <20170720142711.12847-1-robh@kernel.org>
+From: Adriana Reus <adriana.reus@nxp.com>
+Subject: [PATCH V2 0/2] clk: imx: imx7d: Fixes for imx7d-ccm clock driver
+Date: Thu, 20 Jul 2017 18:06:40 +0300
+Message-ID: <1500563202-375-1-git-send-email-adriana.reus@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170720142711.12847-1-robh@kernel.org> (Rob Herring's message
-        of "Thu, 20 Jul 2017 09:27:10 -0500")
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Marcin Wojtas <mw@semihalf.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: sboyd@codeaurora.org, mturquette@baylibre.com
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, anson.huang@nxp.com, linux-clk@vger.kernel.org, Adriana Reus <adriana.reus@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On jeu., juil. 20 2017, Rob Herring <robh@kernel.org> wrote:
+The first patch sets the OCRAM_CLK parent to main_axi_root_clk instead of
+axi_post_div.
 
-(Adding Marcin in CC who wrote this part of code)
+The second patch removes the ARM_M0 clock.
+IMX7d does not have an M0 and this clock is not otherwise used.
 
-> Nothing sets ever sets data, so it is always NULL. Remove it as this is
-> the only user of data ptr in the whole kernel, and it is going to be
-> removed from struct device_node.
+Adriana Reus (2):
+  clk: imx: imx7d: Fix parent clock for OCRAM_CLK
+  clk: imx: imx7d: Remove ARM_M0 clock
 
-Actually the use of device_node.data ptr is not bogus and it is set in
-mvneta_bm_probe:
-http://elixir.free-electrons.com/linux/latest/source/drivers/net/ethernet/marvell/mvneta_bm.c#L433
-
-Your patch will break the BM support on this driver. So if you need to
-remove this data ptr, then you have to offer an alternative for it.
-
-Thanks,
-
-Gregory
-
->
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Probably there's a better fix here to actually enable the h/w buffer 
-> manager.
->
-> I intend to take this thru the DT tree as patch 2 is dependent on this.
->
-> Rob
->
->  drivers/net/ethernet/marvell/mvneta.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> index 0aab74c2a209..5624f4b49f9d 100644
-> --- a/drivers/net/ethernet/marvell/mvneta.c
-> +++ b/drivers/net/ethernet/marvell/mvneta.c
-> @@ -4296,8 +4296,8 @@ static int mvneta_probe(struct platform_device *pdev)
->  
->  	/* Obtain access to BM resources if enabled and already initialized */
->  	bm_node = of_parse_phandle(dn, "buffer-manager", 0);
-> -	if (bm_node && bm_node->data) {
-> -		pp->bm_priv = bm_node->data;
-> +	if (bm_node) {
-> +		pp->bm_priv = NULL;
->  		err = mvneta_bm_port_init(pdev, pp);
->  		if (err < 0) {
->  			dev_info(&pdev->dev, "use SW buffer management\n");
-> -- 
-> 2.11.0
->
+ drivers/clk/imx/clk-imx7d.c             | 11 +----------
+ include/dt-bindings/clock/imx7d-clock.h |  8 ++++----
+ 2 files changed, 5 insertions(+), 14 deletions(-)
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.7.4
+
