@@ -1,69 +1,69 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] gpio: davinci: Handle the return value of
- davinci_gpio_irq_setup function
-Date: Thu, 20 Jul 2017 16:34:42 -0500
-Message-ID: <02965359-ecf1-b934-6b7a-87162d7d00a4@ti.com>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-3-git-send-email-j-keerthy@ti.com>
- <20170719111000.GX29638@localhost>
- <cbea9082-3799-281b-1364-50e442f5362f@ti.com>
- <cc66dfaf-05c5-8d55-03a6-556ec83c4487@ti.com>
- <20170720095047.GA2729@localhost>
- <47055927-5102-b39f-fdbb-b5d89cb14632@ti.com>
- <20170720100509.GB2729@localhost>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 1/3] arm64: allwinner: a64: enable USB host
+ controller for BPi M64
+Date: Fri, 21 Jul 2017 07:07:15 +0800
+Message-ID: <20170720230717.58255-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170720100509.GB2729@localhost>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBM7PYTFQKGQE2TSL64I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Banana Pi M64 connects the USB host-only controller on A64 SoC to a USB
+hub, which provided the two USB Type-A ports on the board.
 
+Enable the USB host controller.
 
-On 07/20/2017 05:05 AM, Johan Hovold wrote:
-> On Thu, Jul 20, 2017 at 03:32:27PM +0530, Keerthy wrote:
->> On Thursday 20 July 2017 03:20 PM, Johan Hovold wrote:
->>> On Thu, Jul 20, 2017 at 02:40:37PM +0530, Keerthy wrote:
->>>> On Thursday 20 July 2017 12:14 PM, Keerthy wrote:
->>>>> On Wednesday 19 July 2017 04:40 PM, Johan Hovold wrote:
-> 
->>>>>> There's a separate but related bug here too as the clk_prepare_enable()
->>>>>> in davinci_gpio_irq_setup() is never balanced on driver unbind.
->>>>>
->>>>> Yes Johan. I will send that as a separate patch.
->>>>
->>>> This is already fixed in the latest kernel:
->>>>
->>>> commit 6dc0048cff988858254fcc26becfc1e9753efa79
->>>> Author: Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Date:   Tue May 23 14:48:57 2017 +0530
->>>
->>> That change only handles errors in davinci_gpio_irq_setup() (i.e. during
->>> probe) and not the imbalance at driver unbind that I was referring to.
->>
->> Okay got it. One more clk_unprepare_disable() call needs to be there in
->> probe err path.
-> 
-> No, you need to balance it on driver unbind, that is, in a new remove()
-> callback.
-> 
+The OTG function of the Micro-USB port needs the drivevbus function of
+the AXP803 driver implemented, so it's not enabled now.
 
-Sry, but manual driver unbind for this driver is really smth unexpected ;(
-So, I'm not sure if it need to be implemented and even yes - it should not be
-a part of this patch. Probably, smth like "convert driver to be a module".
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-By the way, I've tried to unbind gpio-omap, result - failure (expected),
-as unbind does not take into account module refcnt state.
-
-
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+index 0d1f026d831a..829922d077fb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+@@ -67,6 +67,10 @@
+ 	};
+ };
+ 
++&ehci1 {
++	status = "okay";
++};
++
+ &emac {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&rgmii_pins>;
+@@ -122,6 +126,10 @@
+ 	status = "okay";
+ };
+ 
++&ohci1 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart0_pins_a>;
+@@ -133,3 +141,7 @@
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+ 	status = "okay";
+ };
++
++&usbphy {
++	status = "okay";
++};
 -- 
-regards,
--grygorii
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.0
