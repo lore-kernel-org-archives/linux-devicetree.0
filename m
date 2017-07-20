@@ -1,94 +1,61 @@
-From: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: Re: [PATCH] devfreq: Convert to using %pOF instead of full_name
-Date: Thu, 20 Jul 2017 05:25:53 +0000
-Message-ID: <20170720052553epcms1p24dc190a0d51f2e447a76e417e519bd28@epcms1p2>
-References: <596EB809.7050605@samsung.com>
-        <20170718214339.7774-17-robh@kernel.org>
-        <CGME20170718214411epcas2p43fc1475c80245889737ba9e731497e38@epcms1p2>
-Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 01/14] spi: qup: Enable chip select support
+Date: Thu, 20 Jul 2017 11:00:29 +0530
+Message-ID: <20170720053029.GA25583@codeaurora.org>
+References: <1498556731-13087-1-git-send-email-varada@codeaurora.org>
+ <1498556731-13087-2-git-send-email-varada@codeaurora.org>
+ <20170717160151.teozg2ni4mqxotbd@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <596EB809.7050605-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170717160151.teozg2ni4mqxotbd-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sham Muthayyan <smuthayy-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> On 2017년 07월 19일 06:42, Rob Herring wrote:
+Brown,
 
-> > Now that we have a custom printf format specifier, convert users of
+On Mon, Jul 17, 2017 at 05:01:51PM +0100, Mark Brown wrote:
+> On Tue, Jun 27, 2017 at 03:15:18PM +0530, Varadarajan Narayanan wrote:
+>
+> > the chip select support was removed earlier in commit
+> > 4a8573abe965115bc5b064401fd669b74e985258. Since the chip
+>
+> Please include human readable descriptions of things like commits and
+> issues being discussed in e-mail in your mails, this makes them much
+> easier for humans to read especially when they have no internet access.
+> I do frequently catch up on my mail on flights or while otherwise
+> travelling so this is even more pressing for me than just being about
+> making things a bit easier to read.
 
-> > full_name to use %pOF instead. This is preparation to remove storing
+Sorry. The commit being referred to is (https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4a8573abe965115bc5b064401fd669b74e985258)
 
-> > of the full path string for each node.
+	commit 4a8573abe965115bc5b064401fd669b74e985258
+	Author: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+	Date:   Thu Jun 12 14:34:10 2014 -0500
 
-> > 
+	spi: qup: Remove chip select function
 
-> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+	This patch removes the chip select function.  Chip select should instead be
+	supported using GPIOs, defining the DT entry "cs-gpios", and letting the SPI
+	core assert/deassert the chip select as it sees fit.
 
-> > Cc: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+	The chip select control inside the controller is buggy.  It is supposed to
+	automatically assert the chip select based on the activity in the controller,
+	but it is buggy and doesn't work at all.  So instead we elect to use GPIOs.
 
-> > Cc: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+	Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+	Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> > Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Will update the commit log and repost the patches.
 
-> > Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Thanks
+Varada
 
-> > ---
-
-> >  drivers/devfreq/devfreq-event.c | 4 ++--
-
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-
-> > 
-
-> > diff --git a/drivers/devfreq/devfreq-event.c b/drivers/devfreq/devfreq-event.c
-
-> > index 8648b32ebc89..d67242d87744 100644
-
-> > --- a/drivers/devfreq/devfreq-event.c
-
-> > +++ b/drivers/devfreq/devfreq-event.c
-
-> > @@ -277,8 +277,8 @@ int devfreq_event_get_edev_count(struct device *dev)
-
-> >  						sizeof(u32));
-
-> >  	if (count < 0) {
-
-> >  		dev_err(dev,
-
-> > -			"failed to get the count of devfreq-event in %s node\n",
-
-> > -			dev->of_node->full_name);
-
-> > +			"failed to get the count of devfreq-event in %pOF node\n",
-
-> > +			dev->of_node);
-
-> >  		return count;
-
-> >  	}
-
-> > 
-
-> 
-
-> Reviewed-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-> 
-
-
-
-Acked-by: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-
-
-
-
-
-
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
