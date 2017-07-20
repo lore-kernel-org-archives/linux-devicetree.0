@@ -1,92 +1,105 @@
-From: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
-Subject: Test of [PATCH 1/1] staging: pi433: fix problem with division in
- rf69_set_deviation
-Date: Thu, 20 Jul 2017 17:57:30 +0200 (CEST)
-Message-ID: <40815037.7071.1500566250933@ox.hosteurope.de>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
- <201707172156.DCyTyWc2%fengguang.wu@intel.com>
- <652336354.3806.1500549785404@ox.hosteurope.de>
- <20170720113705.d65hxm3jbki2ynqd@mwanda>
- <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
+Date: Thu, 20 Jul 2017 10:59:36 -0500
+Message-ID: <79d11682-83d8-f56b-4c17-8de1beec70f3@ti.com>
+References: <20170719233654.25908-1-fcooper@ti.com>
+ <20170719233654.25908-2-fcooper@ti.com>
+ <b04fea5c-c47b-4643-5305-090f5f17afe1@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <b04fea5c-c47b-4643-5305-090f5f17afe1-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, driverdevel <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-Since I don't have an environment for m68k and I would appreciate not
-having to set it up, I would be very happy, if someone could give
-the patch, named in the subjext, a try on ARCH=m68k...
-
-Thanks,
-
-Marcus
 
 
+On 07/20/2017 04:52 AM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 7/20/2017 2:36 AM, Franklin S Cooper Jr wrote:
+> 
+>> Various CAN or CAN-FD IP may be able to run at a faster rate than
+>> what the transceiver the CAN node is connected to. This can lead to
+>> unexpected errors. However, CAN transceivers typically have fixed
+>> limitations and provide no means to discover these limitations at
+>> runtime. Therefore, add support for a fixed-transceiver node that
+>> can be reused by other CAN peripheral drivers to determine for both
+>> CAN and CAN-FD what the max bitrate that can be used. If the user
+>> tries to configure CAN to pass these maximum bitrates it will throw
+>> an error.
+>>
+>> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/net/can/dev.c   | 48
+>> ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/can/dev.h |  5 +++++
+>>   2 files changed, 53 insertions(+)
+>>
+>> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+>> index 365a8cc..fbab87d 100644
+>> --- a/drivers/net/can/dev.c
+>> +++ b/drivers/net/can/dev.c
+> [...]
+>> @@ -814,6 +830,38 @@ int open_candev(struct net_device *dev)
+>>   }
+>>   EXPORT_SYMBOL_GPL(open_candev);
+>>   +#ifdef CONFIG_OF
+>> +void of_transceiver_is_fixed(struct net_device *dev)
+> 
+>    Strange name for a *void* function...
 
-> Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> hat am 20. Juli 2017 um 14:27
-> geschrieben:
->
->
-> Hi Dan,
->
-> On Thu, Jul 20, 2017 at 1:37 PM, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-> wrote:
-> > On Thu, Jul 20, 2017 at 01:23:05PM +0200, Marcus Wolf wrote:
-> >> below you can see the report with the error on m68k. It was sent to me from
-> >> a
-> >> test robot of intel.
-> >>
-> >> According to my research, this problem occured, because there is no
-> >> hardware
-> >> support for floating point on the m68k (or it was configured not to use
-> >> it).
-> >> Therefore gcc uses an internal function, provided by libgcc. Obviously
-> >> libgcc
-> >> wasn't linked...
-> >>
-> >> I don't know how to come arround this problem by modifying my code (except
-> >> reducing the accuracy of the calculation by not using floating point).
-> >
-> > I don't see any floating point? You're not allowed to use floating
-> > point in the kernel.
->
-> Indeed. __udivdi3 is used for 64-bit by 32-bit division.
->
-> >> Can we ignore the error or can I do something else?
-> >> Maybe a special include just in case of m68k can help??!?
-> >> I don't have an environment for building m68k.
->
-> https://www.kernel.org/pub/tools/crosstool/
->
-> > I think the answer is to use div_u64() and div64_u64 instead of
-> > do_div()?
->
-> do_div() is fine
-> The link error is not caused by do_div(), but by not using do_div() where
-> needed.
->
-> > Or you could just add a depend in the Kconfig.
->
-> Depend on what? !M68K? It's gonna fail on several 32-bit platforms.
-> Gr{oetje,eeting}s,
->
-> Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 --
-> geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like
-> that.
-> -- Linus Torvalds
->
+Ok I see what you mean since I'm not actually returning anything. I'll
+go with of_can_transceiver_fixed based on your comment also Oliver's
+suggestion.
+
+>    Also, I think 'struct net_device *' variables are typically called
+> 'ndev'.
+
+All other functions within this file uses struct net_device *dev. So I'm
+just following the style currently used.
+
+> 
+>> +{
+>> +    struct device_node *dn;
+>> +    struct can_priv *priv = netdev_priv(dev);
+>> +    u32 max_frequency;
+>> +    struct device_node *np;
+>> +
+>> +    np = dev->dev.parent->of_node;
+>> +
+>> +    /* New binding */
+>> +    dn = of_get_child_by_name(np, "fixed-transceiver");
+>> +    if (!dn)
+>> +        return;
+>> +
+>> +    of_property_read_u32(dn, "max-arbitration-speed", &max_frequency);
+> 
+>    In case this function fails, 'max_frequency' will have no value --
+> you'd better initialize it...
+
+Thanks for catching this. Will fix.
+
+> 
+>> +
+>> +    if (max_frequency > 0)
+>> +        priv->max_trans_arbitration_speed = max_frequency;
+>> +    else
+>> +        priv->max_trans_arbitration_speed = -1;
+>> +
+>> +    of_property_read_u32(dn, "max-data-speed", &max_frequency);
+> 
+>    Again, when that function fails, the variable will keep the value
+> from the previous call...
+
+Will fix.
+
+> 
+> [...]
+> 
+> MBR, Sergei
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
