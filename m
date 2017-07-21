@@ -1,60 +1,75 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] firmware: Convert to using %pOF instead of full_name
-Date: Fri, 21 Jul 2017 17:03:01 +0100
-Message-ID: <6445babc-73d3-005c-8b83-22290c5d8bab@arm.com>
-References: <20170718214339.7774-21-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718214339.7774-21-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
+Subject: [PATCH v3 1/8] Documentation: Add device tree binding for Goldfish RTC driver
+Date: Fri, 21 Jul 2017 18:53:30 +0200
+Message-ID: <1500656111-9520-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1500656111-9520-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1500656111-9520-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org
+Cc: Aleksandar Markovic <aleksandar.markovic@imgtec.com>, Miodrag Dinic <miodrag.dinic@imgtec.com>, Goran Ferenc <goran.ferenc@imgtec.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Hu <bohu@google.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@imgtec.com>, Jin Qian <jinqian@google.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Petar Jovanovic <petar.jovanovic@imgtec.com>, Raghu Gandham <raghu.gandham@imgtec.com>, Rob
 List-Id: devicetree@vger.kernel.org
 
+From: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
 
+Add documentation for DT binding of Goldfish RTC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-rtc".
 
-On 18/07/17 22:43, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> ---
->  drivers/firmware/arm_scpi.c | 2 +-
->  drivers/firmware/psci.c     | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/firmware/arm_scpi.c b/drivers/firmware/arm_scpi.c
-> index 8043e51de897..59190c374696 100644
-> --- a/drivers/firmware/arm_scpi.c
-> +++ b/drivers/firmware/arm_scpi.c
-> @@ -965,7 +965,7 @@ static int scpi_probe(struct platform_device *pdev)
-> 
->  	count = of_count_phandle_with_args(np, "mboxes", "#mbox-cells");
->  	if (count < 0) {
-> -		dev_err(dev, "no mboxes property in '%s'\n", np->full_name);
-> +		dev_err(dev, "no mboxes property in '%pOF'\n", np);
->  		return -ENODEV;
->  	}
-> 
+Signed-off-by: Miodrag Dinic <miodrag.dinic@imgtec.com>
+Signed-off-by: Goran Ferenc <goran.ferenc@imgtec.com>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
+---
+ .../devicetree/bindings/rtc/google,goldfish-rtc.txt     | 17 +++++++++++++++++
+ MAINTAINERS                                             |  5 +++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
 
-(For the SCPI part)
-Acked-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-
-I assume you will ask ARM-SoC guys to pick this up. Let us know if you
-think otherwise.
-
+diff --git a/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+new file mode 100644
+index 0000000..634312d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+@@ -0,0 +1,17 @@
++Android Goldfish RTC
++
++Android Goldfish RTC device used by Android emulator.
++
++Required properties:
++
++- compatible : should contain "google,goldfish-rtc"
++- reg        : <registers mapping>
++- interrupts : <interrupt mapping>
++
++Example:
++
++	goldfish_timer@9020000 {
++		compatible = "google,goldfish-rtc";
++		reg = <0x9020000 0x1000>;
++		interrupts = <0x3>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 02994f4..847da3f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -841,6 +841,11 @@ S:	Supported
+ F:	drivers/android/
+ F:	drivers/staging/android/
+ 
++ANDROID GOLDFISH RTC DRIVER
++M:	Miodrag Dinic <miodrag.dinic@imgtec.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
++
+ ANDROID ION DRIVER
+ M:	Laura Abbott <labbott@redhat.com>
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
 -- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
