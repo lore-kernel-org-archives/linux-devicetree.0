@@ -1,79 +1,93 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver (fwd)
-Date: Fri, 21 Jul 2017 13:34:06 +0530
-Message-ID: <20170721080405.GQ3053@localhost>
-References: <alpine.DEB.2.20.1707080813400.1971@hadrien>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v6 08/12] gpio: Add GPIO driver for the RK805 PMIC
+Date: Fri, 21 Jul 2017 10:12:45 +0200
+Message-ID: <1879271.veJUKjWuAS@phil>
+References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com> <1617153.S9fhFArdpW@diego> <67c2e8bb-dadd-faa3-dcd0-0f325b3cbfce@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1707080813400.1971@hadrien>
+In-Reply-To: <67c2e8bb-dadd-faa3-dcd0-0f325b3cbfce@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Julia Lawall <julia.lawall@lip6.fr>
-Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org
+To: Jianhong Chen <chenjh@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Tao Huang <huangtao@rock-chips.com>, Alexandre Courbot <gnurou@gmail.com>, zhangqing@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, tony.xie@rock-chips.com, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 08, 2017 at 08:14:51AM +0200, Julia Lawall wrote:
-> Please check on the comparison on line 1489.
+Am Freitag, 21. Juli 2017, 10:00:29 CEST schrieb Jianhong Chen:
 > 
-> julia
+> 在 2017/6/29 18:29, Heiko Stübner 写道:
 > 
-> ---------- Forwarded message ----------
-> Date: Sat, 8 Jul 2017 10:13:09 +0800
-> From: kbuild test robot <fengguang.wu@intel.com>
-> To: kbuild@01.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
+> > Hi,
+> >
+> > Am Mittwoch, 14. Juni 2017, 20:11:06 CEST schrieb Jianhong Chen:
+> >> 在 2017/6/9 20:17, Heiko Stuebner 写道:
+> >>> Am Freitag, 9. Juni 2017, 13:37:26 CEST schrieb Linus Walleij:
+> >>>> Heiko, can you please look at this patch.
+> >>>>
+> >>>> On Thu, Jun 8, 2017 at 9:30 AM, Jianhong Chen <chenjh@rock-chips.com>
+> > wrote:
+> >>>>> From: chenjh <chenjh@rock-chips.com>
+> >>>> Full name please.
+> >>> git config --global user.name "John Doe"
+> >>>
+> >>> might do the and make this permanent for all your commits :-)
+> >>>
+> >>>>> RK805 has two configurable GPIOs that can be used for several
+> >>>>> purposes. These are output only.
+> >>>>>
+> >>>>> This driver is generic for other Rockchip PMICs to be added.
+> >>>>>
+> >>>>> Signed-off-by: chenjh <chenjh@rock-chips.com>
+> >>>> Dito.
+> >>>>
+> >>>> Your commit message says they are output-only, yet you implement
+> >>>> .direction_input(). So what is is going to be?
+> >>> So far, I've only seen the rk808 and rk818. Both do not have any
+> >>> configurable pins.
+> >>>
+> >>> The rk805 which is a sort of variant of the above, does have the two
+> >>> pins defined below, but in the manual I could also only find them as
+> >>> output-only and having no other function than being output-pins.
+> >>>
+> >>> So I don't really know if all the input- or "gpio-mode"- handling is only
+> >>> an oversight (copy'n'paste) or if there are yet other rk808 variants
+> >>> around
+> >>> that can actually be configured as inputs or even non-gpio modes?
+> >>>
+> >>> I hope Jianhong will be able to answer that.
+> >>>
+> >>>
+> >>> Heiko
+> >> This driver is not only for rk805, but also intend for rk816 and furtrue
+> >> PMICs.
+> >> The rk816 has one multi function pin(TS/GPIO), when setting as gpio, it
+> >> can be configured as output or input.
+> >> Here is simple description from manual: "Thermistor input. Connect a
+> >> thermistor from this pin to ground. The thermistor is usually inside the
+> >> battery pack. (multi-function for GPIO) ".
+> > As Linus suggested, this sounds like you want a pinctrl driver that
+> > also handles the gpios.
+> >
+> > Ideally you might also directly provide support for this rk816 in the
+> > same patch series, so reviewers can see the full extend of what is
+> > supported.
+> >
+> >
+> > Heiko
+> >
 > 
-> Hi Pierre-Yves,
+> Hi, Heiko:
 > 
-> [auto build test WARNING on linus/master]
-> [also build test WARNING on v4.12 next-20170707]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>       I have moved gpio-rk805.c to drivers/pinctrl/pinctrl-rk805.c, this 
+> driver is also designed for rk816 or furture PMICs to extend.
+>       RK816 is not in our team's plan at this porting, it will be added 
+> at next time, so I don't directly provide rk816 in this driver. I will 
+> add more descriptions in commit message to express my design purpose.
 > 
-> url:    https://github.com/0day-ci/linux/commits/Pierre-Yves-MORDRET/Add-STM32-MDMA-driver/20170708-013345
-> :::::: branch date: 9 hours ago
-> :::::: commit date: 9 hours ago
-> 
-> >> drivers/dma/stm32-mdma.c:1489:5-16: WARNING: Unsigned expression compared with zero: dmadev -> irq < 0
-> 
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout c6b3687d964d5a49aa0f297918bf26f6cb7444db
-> vim +1489 drivers/dma/stm32-mdma.c
-> 
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1473  		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1474  	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1475  		BIT(DMA_MEM_TO_MEM);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1476  	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1477  	dd->max_burst = STM32_MDMA_MAX_BURST;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1478  	dd->dev = &pdev->dev;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1479  	INIT_LIST_HEAD(&dd->channels);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1480
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1481  	for (i = 0; i < dmadev->nr_channels; i++) {
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1482  		chan = &dmadev->chan[i];
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1483  		chan->id = i;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1484  		chan->vchan.desc_free = stm32_mdma_desc_free;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1485  		vchan_init(&chan->vchan, dd);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1486  	}
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1487
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1488  	dmadev->irq = platform_get_irq(pdev, 0);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06 @1489  	if (dmadev->irq < 0) {
+>       Are you agreed ?  If so, I will send [PATCH v7] today.
 
-This looks to be the case in current patchset too...
+yep, sounds good. But we will of course see more, once you have sent
+the patches :-) .
 
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1490  		dev_err(&pdev->dev, "failed to get IRQ\n");
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1491  		return dmadev->irq;
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1492  	}
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1493
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1494  	ret = devm_request_irq(&pdev->dev, dmadev->irq, stm32_mdma_irq_handler,
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1495  			       0, dev_name(&pdev->dev), dmadev);
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1496  	if (ret) {
-> c6b3687d Pierre-Yves MORDRET 2017-07-06  1497  		dev_err(&pdev->dev, "failed to request IRQ\n");
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
--- 
-~Vinod
+Heiko
