@@ -1,39 +1,50 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 1/8] ACPI: Use IS_ERR_OR_NULL() instead of non-NULL
- check in is_acpi_data_node
-Date: Fri, 21 Jul 2017 15:12:15 +0300
-Message-ID: <1500639135.29303.172.camel@linux.intel.com>
+Subject: Re: [PATCH v3 3/8] ACPI: Prepare for constifying
+ acpi_get_next_subnode() fwnode argument
+Date: Fri, 21 Jul 2017 15:30:58 +0300
+Message-ID: <1500640258.29303.176.camel@linux.intel.com>
 References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
-         <1500637177-16095-2-git-send-email-sakari.ailus@linux.intel.com>
-         <1500638399.29303.166.camel@linux.intel.com>
+         <1500637177-16095-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1500638399.29303.166.camel@linux.intel.com>
+In-Reply-To: <1500637177-16095-4-git-send-email-sakari.ailus@linux.intel.com>
 Sender: linux-acpi-owner@vger.kernel.org
 To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org
 Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, erik.veijola@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-07-21 at 14:59 +0300, Andy Shevchenko wrote:
-> On Fri, 2017-07-21 at 14:39 +0300, Sakari Ailus wrote:
-> > The is_acpi_data_node() function takes a struct fwnode_handle
-> > pointer
-> > as
-> > its argument. The validity of the pointer is first checked. Extend
-> > the
-> > check to cover error values as is done by similar is_acpi_node() and
-> > is_acpi_device_node() functions.
-> > 
+On Fri, 2017-07-21 at 14:39 +0300, Sakari Ailus wrote:
+> Make local variables const (head) or add new variables; adev was used
+> for
+> two purposes: to refer the root device node and its children. The two
+> purposes are separated by this patch.
 > 
-> 
-> It seems we will have three places with such code. Do we care to get
-> rid
-> of them in favor of is_acpi_data_node()? (I didn't read whole series
-> yet, maybe it's already done)
+> This is preparation for making fwnode arguments const for fwnode ops.
+> Don't constify the argument itself quite yet as this is used as a
+> callback
+> function.
 
-Please, ignore this comment, I messed up with FWNODE_ACPI type.
+>  		if (child) {
+> -			adev = to_acpi_device_node(child);
+> -			next = adev->node.next;
+> +			child_adev = to_acpi_device_node(child);
+> +			next = child_adev->node.next;
+>  			if (next == head) {
+>  				child = NULL;
+>  				goto nondev;
+>  			}
+> -			adev = list_entry(next, struct acpi_device,
+> node);
+> +			child_adev = list_entry(next, struct
+> acpi_device, node);
+
+
+Isn't it 
+
+list_first_entry_or_null() ?
+
 
 -- 
 Andy Shevchenko <andriy.shevchenko@linux.intel.com>
