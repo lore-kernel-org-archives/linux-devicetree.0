@@ -1,48 +1,49 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Documentation: mtk-quadspi: update DT bindings
-Date: Fri, 21 Jul 2017 13:49:12 +0200
-Message-ID: <3c0fcf5e-8b2d-6db3-b436-0cfba37dcbae@gmail.com>
-References: <1500607619-21969-1-git-send-email-guochun.mao@mediatek.com>
- <1500607619-21969-2-git-send-email-guochun.mao@mediatek.com>
+From: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/8] Remove fwnode type field, constify property fwnode arguments
+Date: Fri, 21 Jul 2017 13:52:18 +0200
+Message-ID: <CAJZ5v0gWvjd4m0etYAiUJxKyDL1GkzKdKWBynjKExvZ+3KF8jw@mail.gmail.com>
+References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500607619-21969-2-git-send-email-guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1500637177-16095-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: ACPI Devel Maling List <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, erik.veijola-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 21, 2017 at 1:39 PM, Sakari Ailus
+<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> Hello everyone,
+>
+> This set removes the struct fwnode_handle type field and constifies the
+> fwnode arguments in the fwnode property API more or less the way they are
+> const in OF property API.
+>
+> Comments are welcome.
+>
+> All the dependent patches are now in linux-pm master branch.
+>
+> <URL:http://www.spinics.net/lists/linux-acpi/msg75957.html>
+>
+> v1 can be found here:
+>
+> <URL:http://www.spinics.net/lists/linux-acpi/msg74564.html>
+>
+> changes since v2:
+>
+> - Add 8th patch "device property: Introduce
+>   fwnode_property_get_reference_args". This allows obtaining references
+>   with integer arguments using the fwnode interface.
+>
+>   The functionality will be soon needed in adding support for nvmem
+>   framework on ACPI as well as in referring to e.g. lens and flash devices
+>   on V4L2.
 
+OK, so if people have no objections, I'll queue this up for 4.14.
 
-On 07/21/2017 05:26 AM, Guochun Mao wrote:
-> Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
-> for nor flash node's compatible.
-> 
-> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-> ---
->   .../devicetree/bindings/mtd/mtk-quadspi.txt        |    2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> index 5ded66a..9845ff4 100644
-> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> @@ -3,6 +3,8 @@
->   Required properties:
->   - compatible: 	  The possible values are:
->   		  "mediatek,mt2701-nor"
-> +		  "mediatek,mt2712-nor"
-> +		  "mediatek,mt7622-nor"
->   		  "mediatek,mt7623-nor"
->   		  "mediatek,mt8173-nor"
->   		  For mt8173, compatible should be "mediatek,mt8173-nor".
-> 
+Thanks,
+Rafael
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
