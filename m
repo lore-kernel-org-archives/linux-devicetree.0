@@ -1,27 +1,37 @@
-From: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/1] Documentation: mtk-quadspi: update DT bindings
-Date: Fri, 21 Jul 2017 11:26:58 +0800
-Message-ID: <1500607619-21969-1-git-send-email-guochun.mao@mediatek.com>
+From: Guochun Mao <guochun.mao@mediatek.com>
+Subject: [PATCH] Documentation: mtk-quadspi: update DT bindings
+Date: Fri, 21 Jul 2017 11:26:59 +0800
+Message-ID: <1500607619-21969-2-git-send-email-guochun.mao@mediatek.com>
+References: <1500607619-21969-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500607619-21969-1-git-send-email-guochun.mao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Extra add "mediatek,mt7622-nor" compatible. 
+Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
+for nor flash node's compatible.
 
-Guochun Mao (1):
-  Documentation: mtk-quadspi: update DT bindings
-
- Documentation/devicetree/bindings/mtd/mtk-quadspi.txt | 2 ++
+Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+---
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |    2 ++
  1 file changed, 2 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+index 5ded66a..9845ff4 100644
+--- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
++++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+@@ -3,6 +3,8 @@
+ Required properties:
+ - compatible: 	  The possible values are:
+ 		  "mediatek,mt2701-nor"
++		  "mediatek,mt2712-nor"
++		  "mediatek,mt7622-nor"
+ 		  "mediatek,mt7623-nor"
+ 		  "mediatek,mt8173-nor"
+ 		  For mt8173, compatible should be "mediatek,mt8173-nor".
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
