@@ -1,63 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2] sound: fsl_dma: remove dma_object path member
-Date: Fri, 21 Jul 2017 14:28:35 -0500
-Message-ID: <20170721192835.25555-4-robh@kernel.org>
-References: <20170721192835.25555-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170721192835.25555-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Timur Tabi <timur@tabi.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org, linuxppc-dev@lists.ozlabs.org
+From: Markus Mayer <code@mmayer.net>
+Subject: [PATCH v2 0/4] thermal: add brcmstb AVS TMON driver
+Date: Fri, 21 Jul 2017 12:27:31 -0700
+Message-ID: <20170721192735.6546-1-code@mmayer.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Device Tree List <devicetree@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Markus Mayer <mmayer@broadcom.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-dma_object.path is unused, so rather than fix it to work with DT
-full_name changes, just remove it.
+From: Markus Mayer <mmayer@broadcom.com>
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Timur Tabi <timur@tabi.org>
-Cc: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Xiubo Li <Xiubo.Lee@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>
-Cc: Jaroslav Kysela <perex@perex.cz>
-Cc: Takashi Iwai <tiwai@suse.com>
-Cc: alsa-devel@alsa-project.org
-Cc: linuxppc-dev@lists.ozlabs.org
----
-v2:
-- Move printf specifier change to correct patch
+This series adds the brcmstb AVS TMON driver.
 
- sound/soc/fsl/fsl_dma.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+The driver was originally written by Brian Norris.
 
-diff --git a/sound/soc/fsl/fsl_dma.c b/sound/soc/fsl/fsl_dma.c
-index ed8ea002902d..b38dd328c783 100644
---- a/sound/soc/fsl/fsl_dma.c
-+++ b/sound/soc/fsl/fsl_dma.c
-@@ -63,7 +63,6 @@ struct dma_object {
- 	struct ccsr_dma_channel __iomem *channel;
- 	unsigned int irq;
- 	bool assigned;
--	char path[1];
- };
- 
- /*
-@@ -903,14 +902,13 @@ static int fsl_soc_dma_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	dma = kzalloc(sizeof(*dma) + strlen(np->full_name), GFP_KERNEL);
-+	dma = kzalloc(sizeof(*dma), GFP_KERNEL);
- 	if (!dma) {
- 		dev_err(&pdev->dev, "could not allocate dma object\n");
- 		of_node_put(ssi_np);
- 		return -ENOMEM;
- 	}
- 
--	strcpy(dma->path, np->full_name);
- 	dma->dai.ops = &fsl_dma_ops;
- 	dma->dai.pcm_new = fsl_dma_new;
- 	dma->dai.pcm_free = fsl_dma_free_dma_buffers;
+v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
+
+Changes since v1:
+- Fixed wording in binding document
+- Fixed lincensing to consistently mention GPL v2
+- Use thermal_zone_get_slope() and thermal_zone_get_offset()
+- Some minor clean-ups
+
+Brian Norris (2):
+  Documentation: devicetree: add binding for Broadcom STB AVS TMON
+  thermal: add brcmstb AVS TMON driver
+
+Markus Mayer (2):
+  ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
+  arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
+
+ .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |   2 +-
+ drivers/thermal/broadcom/Kconfig                   |   7 +
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/brcmstb_thermal.c         | 386 +++++++++++++++++++++
+ 8 files changed, 425 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+ create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
+
 -- 
-2.11.0
+2.7.4
