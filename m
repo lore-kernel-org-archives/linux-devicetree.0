@@ -1,33 +1,41 @@
-From: "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
-Date: Fri, 21 Jul 2017 15:03:23 -0700
-Message-ID: <20170721220323.GN19878@codeaurora.org>
-References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
- <20170227171837.eymnyebgn7ocsp7w@rob-hp-laptop>
- <DB6PR0402MB2837EB5F759C39616BF8A904F3210@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: irq: fix of_irq_to_resource() error check
+Date: Fri, 21 Jul 2017 17:07:52 -0500
+Message-ID: <20170721220752.3tn622apuetutbor@rob-hp-laptop>
+References: <20170721173108.578363976@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB2837EB5F759C39616BF8A904F3210-2mNvjAGDOPlOuRXvvz5UoY3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
+In-Reply-To: <20170721173108.578363976-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Y.T. Tang" <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Cc: "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/09, Y.T. Tang wrote:
-> Hi Michael and Stephen,
+On Fri, Jul 21, 2017 at 08:30:39PM +0300, Sergei Shtylyov wrote:
+> of_irq_to_resource() has recently been fixed to return negative error #'s
+> along with 0, however of_irq_to_resource_table() still only regards 0 as
+> invalid IRQ -- fix it up.
 > 
-> This patch set was acked by Rob Herring. Do you have any comments on them?
+> Fixes: 7a4228bbff76 ("of: irq: use of_irq_get() in of_irq_to_resource()")
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 > 
-> BTW:  Scott should stay in author, do I need to resend them with author changed or you can change it when applying?
+> ---
+> The patch is against the 'dt/linus' branch of Rob Herring's 'linux.git' repo.
 > 
+>  drivers/of/irq.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Please resend these two patches.
+Applied.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+BTW, all the users of of_irq_to_resource_table outside of the DT 
+platform code are erroneous IMO. Either the resources are already 
+available when probing or only a single resource is retrieved. These may 
+have been working around a problem that some resources couldn't be 
+resolved at device creation time which is now fixed.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
