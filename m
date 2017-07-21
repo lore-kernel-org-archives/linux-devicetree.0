@@ -1,114 +1,79 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v3 3/8] phy: qcom-qmp: Fix phy pipe clock name
-Date: Fri, 21 Jul 2017 13:31:08 +0530
-Message-ID: <84142e2d-39e1-082c-f3eb-6bb66baa8508@codeaurora.org>
-References: <1500528880-25804-1-git-send-email-varada@codeaurora.org>
- <1500528880-25804-4-git-send-email-varada@codeaurora.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver (fwd)
+Date: Fri, 21 Jul 2017 13:34:06 +0530
+Message-ID: <20170721080405.GQ3053@localhost>
+References: <alpine.DEB.2.20.1707080813400.1971@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500528880-25804-4-git-send-email-varada@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.20.1707080813400.1971@hadrien>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Julia Lawall <julia.lawall@lip6.fr>
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sat, Jul 08, 2017 at 08:14:51AM +0200, Julia Lawall wrote:
+> Please check on the comparison on line 1489.
+> 
+> julia
+> 
+> ---------- Forwarded message ----------
+> Date: Sat, 8 Jul 2017 10:13:09 +0800
+> From: kbuild test robot <fengguang.wu@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
+> 
+> Hi Pierre-Yves,
+> 
+> [auto build test WARNING on linus/master]
+> [also build test WARNING on v4.12 next-20170707]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Pierre-Yves-MORDRET/Add-STM32-MDMA-driver/20170708-013345
+> :::::: branch date: 9 hours ago
+> :::::: commit date: 9 hours ago
+> 
+> >> drivers/dma/stm32-mdma.c:1489:5-16: WARNING: Unsigned expression compared with zero: dmadev -> irq < 0
+> 
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout c6b3687d964d5a49aa0f297918bf26f6cb7444db
+> vim +1489 drivers/dma/stm32-mdma.c
+> 
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1473  		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1474  	dd->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV) |
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1475  		BIT(DMA_MEM_TO_MEM);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1476  	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1477  	dd->max_burst = STM32_MDMA_MAX_BURST;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1478  	dd->dev = &pdev->dev;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1479  	INIT_LIST_HEAD(&dd->channels);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1480
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1481  	for (i = 0; i < dmadev->nr_channels; i++) {
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1482  		chan = &dmadev->chan[i];
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1483  		chan->id = i;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1484  		chan->vchan.desc_free = stm32_mdma_desc_free;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1485  		vchan_init(&chan->vchan, dd);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1486  	}
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1487
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1488  	dmadev->irq = platform_get_irq(pdev, 0);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06 @1489  	if (dmadev->irq < 0) {
 
+This looks to be the case in current patchset too...
 
-On 07/20/2017 11:04 AM, Varadarajan Narayanan wrote:
-> Presently, the phy pipe clock's name is assumed to be either
-> usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
-> phy lane's number). However, this will not work if an SoC has
-> more than one instance of the phy. Hence, instead of assuming
-> the name of the clock, fetch it from the DT.
->
-> Acked-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1490  		dev_err(&pdev->dev, "failed to get IRQ\n");
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1491  		return dmadev->irq;
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1492  	}
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1493
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1494  	ret = devm_request_irq(&pdev->dev, dmadev->irq, stm32_mdma_irq_handler,
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1495  			       0, dev_name(&pdev->dev), dmadev);
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1496  	if (ret) {
+> c6b3687d Pierre-Yves MORDRET 2017-07-06  1497  		dev_err(&pdev->dev, "failed to request IRQ\n");
+> 
 > ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 28 ++++++++++++++++------------
->   1 file changed, 16 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 78ca628..97020ec 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -925,20 +925,13 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
->    *    clk  |   +-------+   |                   +-----+
->    *         +---------------+
->    */
-> -static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
-> +static int phy_pipe_clk_register(struct qcom_qmp *qmp, const char *clk_name)
->   {
-> -	char name[24];
->   	struct clk_fixed_rate *fixed;
->   	struct clk_init_data init = { };
->   
-> -	switch (qmp->cfg->type) {
-> -	case PHY_TYPE_USB3:
-> -		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
-> -		break;
-> -	case PHY_TYPE_PCIE:
-> -		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
-> -		break;
-> -	default:
-> +	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
-> +	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
->   		/* not all phys register pipe clocks, so return success */
->   		return 0;
->   	}
-> @@ -947,7 +940,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
->   	if (!fixed)
->   		return -ENOMEM;
->   
-> -	init.name = name;
-> +	init.name = clk_name;
->   	init.ops = &clk_fixed_rate_ops;
->   
->   	/* controllers using QMP phys use 125MHz pipe clock interface */
-> @@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
->   
->   	id = 0;
->   	for_each_available_child_of_node(dev->of_node, child) {
-> +		const char *clk_name;
-> +
->   		/* Create per-lane phy */
->   		ret = qcom_qmp_phy_create(dev, child, id);
->   		if (ret) {
-> @@ -1118,11 +1113,20 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
->   			return ret;
->   		}
->   
-> +		ret = of_property_read_string(child, "clock-output-names",
-> +							&clk_name);
-> +		if (ret) {
-
-Sorry, missed this earlier.
-You shouldn't error out for phys that don't expose 'clock-output'.
-So returning success in case the property doesn't exist for particular 
-phys makes sense.
-And again for usb and pcie this property becomes mandatory.
-
-
-Regards
-Vivek
-
-> +			dev_err(dev,
-> +				"failed to get clock-output-names for lane%d phy, %d\n",
-> +				id, ret);
-> +			return ret;
-> +		}
-> +
->   		/*
->   		 * Register the pipe clock provided by phy.
->   		 * See function description to see details of this pipe clock.
->   		 */
-> -		ret = phy_pipe_clk_register(qmp, id);
-> +		ret = phy_pipe_clk_register(qmp, clk_name);
->   		if (ret) {
->   			dev_err(qmp->dev,
->   				"failed to register pipe clock source\n");
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+~Vinod
