@@ -1,158 +1,123 @@
-From: Vinod Koul <vinod.koul@intel.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
-Date: Fri, 21 Jul 2017 15:24:12 +0530
-Message-ID: <20170721095411.GR3053@localhost>
+Date: Fri, 21 Jul 2017 10:32:49 +0000
+Message-ID: <3c04c9bf-572d-98a6-ff62-83498bbc7fdf@st.com>
 References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
  <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
  <20170721075547.GO3053@localhost>
  <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
+ <20170721095411.GR3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170721095411.GR3053@localhost>
+Content-Language: en-US
+Content-ID: <614ACB6B2D256348B08E69A4EF0FD442-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 21, 2017 at 09:30:00AM +0000, Pierre Yves MORDRET wrote:
-> >> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
-> >> +{
-> >> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
-> >> +
-> >> +	while (((buf_len % max_width) || (tlen < max_width)) &&
-> >> +	       (max_width > DMA_SLAVE_BUSWIDTH_1_BYTE))
-> >> +		max_width = max_width >> 1;
-> > 
-> > ok, this is a bit hard to read...
-> 
-> This code snippet has already been reworked and optimized. Would you mind to 
-> provide me a example with your expectation ? Thanks
-
-Code is optimized yes, but readable no
-
-I would like readability to be improved upon...
-
-> 
-> > 
-> >> +static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> >> +				     enum dma_transfer_direction direction,
-> >> +				     u32 *mdma_ccr, u32 *mdma_ctcr,
-> >> +				     u32 *mdma_ctbr, u32 buf_len)
-> >> +{
-> >> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> >> +	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
-> >> +	enum dma_slave_buswidth src_addr_width, dst_addr_width;
-> >> +	phys_addr_t src_addr, dst_addr;
-> >> +	int src_bus_width, dst_bus_width;
-> >> +	u32 src_maxburst, dst_maxburst, src_best_burst, dst_best_burst;
-> >> +	u32 ccr, ctcr, ctbr, tlen;
-> >> +
-> >> +	src_addr_width = chan->dma_config.src_addr_width;
-> >> +	dst_addr_width = chan->dma_config.dst_addr_width;
-> >> +	src_maxburst = chan->dma_config.src_maxburst;
-> >> +	dst_maxburst = chan->dma_config.dst_maxburst;
-> >> +	src_addr = chan->dma_config.src_addr;
-> >> +	dst_addr = chan->dma_config.dst_addr;
-> > 
-> > this doesn't seem right to me, only the periphral address would come from
-> > slave_config, the memory address is passed as an arg to transfer..
-> > 
-> > ...
-> > 
-> 
-> Correct. But these locals are managed in the case statement below. if direction 
-> is Mem2Dev only dst_addr(Peripheral) is considered. In the other way around with 
-> Dev2Mem direction only src_addr(Peripheral) is considered.
-> However to disambiguate I can move src_addr & dst_addr affectation in the 
-> corresponding case statement if you'd like.
-
-But below you are over writing both, so in effect this is wasted cycles..
-anyway latter one is more clear, so lets remove from here.
-
-> 
-> >> +static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
-> >> +				 struct stm32_mdma_desc *desc,
-> >> +				 struct scatterlist *sgl, u32 sg_len,
-> >> +				 enum dma_transfer_direction direction)
-> >> +{
-> >> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> >> +	struct dma_slave_config *dma_config = &chan->dma_config;
-> >> +	struct scatterlist *sg;
-> >> +	dma_addr_t src_addr, dst_addr;
-> >> +	u32 ccr, ctcr, ctbr;
-> >> +	int i, ret = 0;
-> >> +
-> >> +	for_each_sg(sgl, sg, sg_len, i) {
-> >> +		if (sg_dma_len(sg) > STM32_MDMA_MAX_BLOCK_LEN) {
-> >> +			dev_err(chan2dev(chan), "Invalid block len\n");
-> >> +			return -EINVAL;
-> >> +		}
-> >> +
-> >> +		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
-> >> +						&ctbr, sg_dma_len(sg));
-> >> +		if (ret < 0)
-> >> +			return ret;
-> >> +
-> >> +		if (direction == DMA_MEM_TO_DEV) {
-> >> +			src_addr = sg_dma_address(sg);
-> >> +			dst_addr = dma_config->dst_addr;
-> > 
-> > and this seems correct, but then why are we doing it in
-> > stm32_mdma_set_xfer_param()
-> > 
-> 
-> See comment above.
-> 
-> >> +static struct dma_async_tx_descriptor *stm32_mdma_prep_slave_sg(
-> >> +	struct dma_chan *c, struct scatterlist *sgl,
-> >> +	u32 sg_len, enum dma_transfer_direction direction,
-> >> +	unsigned long flags, void *context)
-> > 
-> > right justfied these please, it makes a terrible read
-> > 
-> 
-> Given the amount of parameters difficult to right align.
-> Agree with this formatting ?
-> 
-> static struct dma_async_tx_descriptor
-> *stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
-> 			  u32 sg_len, enum dma_transfer_direction direction,
-> 			  unsigned long flags, void *context)
-
-Yes looks much better :)
-
-> >> +static int stm32_mdma_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct stm32_mdma_chan *chan;
-> >> +	struct stm32_mdma_device *dmadev;
-> >> +	struct dma_device *dd;
-> >> +	struct device_node *of_node;
-> >> +	struct resource *res;
-> >> +	u32 nr_channels, nr_requests;
-> >> +	int i, count, ret;
-> >> +
-> >> +	of_node = pdev->dev.of_node;
-> >> +	if (!of_node)
-> >> +		return -ENODEV;
-> >> +
-> >> +	ret = of_property_read_u32(of_node, "dma-channels", &nr_channels);
-> >> +	if (ret)
-> >> +		nr_channels = STM32_MDMA_MAX_CHANNELS;
-> >> +
-> >> +	ret = of_property_read_u32(of_node, "dma-requests", &nr_requests);
-> >> +	if (ret)
-> >> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
-> > 
-> > wouldn't it make sense to print error about these properties not being
-> > present and continuing w/ defaults..?
-> 
-> Those are optional parameters as stated by bindings. I can print out a warning 
-> or info if you'd like but not error.
-
-Are these mandatory properties or optional. In case of latter warn should
-suffice.
-
--- 
-~Vinod
+DQoNCk9uIDA3LzIxLzIwMTcgMTE6NTQgQU0sIFZpbm9kIEtvdWwgd3JvdGU6DQo+IE9uIEZyaSwg
+SnVsIDIxLCAyMDE3IGF0IDA5OjMwOjAwQU0gKzAwMDAsIFBpZXJyZSBZdmVzIE1PUkRSRVQgd3Jv
+dGU6DQo+Pj4+ICtzdGF0aWMgZW51bSBkbWFfc2xhdmVfYnVzd2lkdGggc3RtMzJfbWRtYV9nZXRf
+bWF4X3dpZHRoKHUzMiBidWZfbGVuLCB1MzIgdGxlbikNCj4+Pj4gK3sNCj4+Pj4gKwllbnVtIGRt
+YV9zbGF2ZV9idXN3aWR0aCBtYXhfd2lkdGggPSBETUFfU0xBVkVfQlVTV0lEVEhfOF9CWVRFUzsN
+Cj4+Pj4gKw0KPj4+PiArCXdoaWxlICgoKGJ1Zl9sZW4gJSBtYXhfd2lkdGgpIHx8ICh0bGVuIDwg
+bWF4X3dpZHRoKSkgJiYNCj4+Pj4gKwkgICAgICAgKG1heF93aWR0aCA+IERNQV9TTEFWRV9CVVNX
+SURUSF8xX0JZVEUpKQ0KPj4+PiArCQltYXhfd2lkdGggPSBtYXhfd2lkdGggPj4gMTsNCj4+Pg0K
+Pj4+IG9rLCB0aGlzIGlzIGEgYml0IGhhcmQgdG8gcmVhZC4uLg0KPj4NCj4+IFRoaXMgY29kZSBz
+bmlwcGV0IGhhcyBhbHJlYWR5IGJlZW4gcmV3b3JrZWQgYW5kIG9wdGltaXplZC4gV291bGQgeW91
+IG1pbmQgdG8NCj4+IHByb3ZpZGUgbWUgYSBleGFtcGxlIHdpdGggeW91ciBleHBlY3RhdGlvbiA/
+IFRoYW5rcw0KPiANCj4gQ29kZSBpcyBvcHRpbWl6ZWQgeWVzLCBidXQgcmVhZGFibGUgbm8NCj4g
+DQo+IEkgd291bGQgbGlrZSByZWFkYWJpbGl0eSB0byBiZSBpbXByb3ZlZCB1cG9uLi4uDQo+IA0K
+DQpnb3RjaGENCg0KPj4NCj4+Pg0KPj4+PiArc3RhdGljIGludCBzdG0zMl9tZG1hX3NldF94ZmVy
+X3BhcmFtKHN0cnVjdCBzdG0zMl9tZG1hX2NoYW4gKmNoYW4sDQo+Pj4+ICsJCQkJICAgICBlbnVt
+IGRtYV90cmFuc2Zlcl9kaXJlY3Rpb24gZGlyZWN0aW9uLA0KPj4+PiArCQkJCSAgICAgdTMyICpt
+ZG1hX2NjciwgdTMyICptZG1hX2N0Y3IsDQo+Pj4+ICsJCQkJICAgICB1MzIgKm1kbWFfY3Riciwg
+dTMyIGJ1Zl9sZW4pDQo+Pj4+ICt7DQo+Pj4+ICsJc3RydWN0IHN0bTMyX21kbWFfZGV2aWNlICpk
+bWFkZXYgPSBzdG0zMl9tZG1hX2dldF9kZXYoY2hhbik7DQo+Pj4+ICsJc3RydWN0IHN0bTMyX21k
+bWFfY2hhbl9jb25maWcgKmNoYW5fY29uZmlnID0gJmNoYW4tPmNoYW5fY29uZmlnOw0KPj4+PiAr
+CWVudW0gZG1hX3NsYXZlX2J1c3dpZHRoIHNyY19hZGRyX3dpZHRoLCBkc3RfYWRkcl93aWR0aDsN
+Cj4+Pj4gKwlwaHlzX2FkZHJfdCBzcmNfYWRkciwgZHN0X2FkZHI7DQo+Pj4+ICsJaW50IHNyY19i
+dXNfd2lkdGgsIGRzdF9idXNfd2lkdGg7DQo+Pj4+ICsJdTMyIHNyY19tYXhidXJzdCwgZHN0X21h
+eGJ1cnN0LCBzcmNfYmVzdF9idXJzdCwgZHN0X2Jlc3RfYnVyc3Q7DQo+Pj4+ICsJdTMyIGNjciwg
+Y3RjciwgY3RiciwgdGxlbjsNCj4+Pj4gKw0KPj4+PiArCXNyY19hZGRyX3dpZHRoID0gY2hhbi0+
+ZG1hX2NvbmZpZy5zcmNfYWRkcl93aWR0aDsNCj4+Pj4gKwlkc3RfYWRkcl93aWR0aCA9IGNoYW4t
+PmRtYV9jb25maWcuZHN0X2FkZHJfd2lkdGg7DQo+Pj4+ICsJc3JjX21heGJ1cnN0ID0gY2hhbi0+
+ZG1hX2NvbmZpZy5zcmNfbWF4YnVyc3Q7DQo+Pj4+ICsJZHN0X21heGJ1cnN0ID0gY2hhbi0+ZG1h
+X2NvbmZpZy5kc3RfbWF4YnVyc3Q7DQo+Pj4+ICsJc3JjX2FkZHIgPSBjaGFuLT5kbWFfY29uZmln
+LnNyY19hZGRyOw0KPj4+PiArCWRzdF9hZGRyID0gY2hhbi0+ZG1hX2NvbmZpZy5kc3RfYWRkcjsN
+Cj4+Pg0KPj4+IHRoaXMgZG9lc24ndCBzZWVtIHJpZ2h0IHRvIG1lLCBvbmx5IHRoZSBwZXJpcGhy
+YWwgYWRkcmVzcyB3b3VsZCBjb21lIGZyb20NCj4+PiBzbGF2ZV9jb25maWcsIHRoZSBtZW1vcnkg
+YWRkcmVzcyBpcyBwYXNzZWQgYXMgYW4gYXJnIHRvIHRyYW5zZmVyLi4NCj4+Pg0KPj4+IC4uLg0K
+Pj4+DQo+Pg0KPj4gQ29ycmVjdC4gQnV0IHRoZXNlIGxvY2FscyBhcmUgbWFuYWdlZCBpbiB0aGUg
+Y2FzZSBzdGF0ZW1lbnQgYmVsb3cuIGlmIGRpcmVjdGlvbg0KPj4gaXMgTWVtMkRldiBvbmx5IGRz
+dF9hZGRyKFBlcmlwaGVyYWwpIGlzIGNvbnNpZGVyZWQuIEluIHRoZSBvdGhlciB3YXkgYXJvdW5k
+IHdpdGgNCj4+IERldjJNZW0gZGlyZWN0aW9uIG9ubHkgc3JjX2FkZHIoUGVyaXBoZXJhbCkgaXMg
+Y29uc2lkZXJlZC4NCj4+IEhvd2V2ZXIgdG8gZGlzYW1iaWd1YXRlIEkgY2FuIG1vdmUgc3JjX2Fk
+ZHIgJiBkc3RfYWRkciBhZmZlY3RhdGlvbiBpbiB0aGUNCj4+IGNvcnJlc3BvbmRpbmcgY2FzZSBz
+dGF0ZW1lbnQgaWYgeW91J2QgbGlrZS4NCj4gDQo+IEJ1dCBiZWxvdyB5b3UgYXJlIG92ZXIgd3Jp
+dGluZyBib3RoLCBzbyBpbiBlZmZlY3QgdGhpcyBpcyB3YXN0ZWQgY3ljbGVzLi4NCj4gYW55d2F5
+IGxhdHRlciBvbmUgaXMgbW9yZSBjbGVhciwgc28gbGV0cyByZW1vdmUgZnJvbSBoZXJlLg0KPiAN
+Cg0KU29ycnkgSSBkb24ndCBmb2xsb3cgLi4uIG9yIG1pc3Mgc29tZXRoaW5nDQpGb3IgaW5zdGFu
+Y2UgaWYgZGlyZWN0aW9uIGlzIE1lbTJEZXYgLi4uX3hmZXJfcGFyYW0gaXMgZ29pbmcgdG8gY29u
+ZmlndXJlIA0KRGVzdGluYXRpb24gQnVzIHdpZHRoIGFuZCBBZGRyIGdpdmVuIGJ5IHNsYXZlX2Nv
+bmZpZy4gLi4uX3NldHVwX3hmZXIgaW4gaXRzIHR1cm4gDQp3aWxsIGNvbmZpZ3VyZSBzb3VyY2Ug
+Z2l2ZW4gYXMgcGFyYW1ldGVyLg0KRG9uJ3QgdGhlIHNlZSB0aGUgb3Zlci13cml0aW5nDQoNCj4+
+DQo+Pj4+ICtzdGF0aWMgaW50IHN0bTMyX21kbWFfc2V0dXBfeGZlcihzdHJ1Y3Qgc3RtMzJfbWRt
+YV9jaGFuICpjaGFuLA0KPj4+PiArCQkJCSBzdHJ1Y3Qgc3RtMzJfbWRtYV9kZXNjICpkZXNjLA0K
+Pj4+PiArCQkJCSBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnbCwgdTMyIHNnX2xlbiwNCj4+Pj4gKwkJ
+CQkgZW51bSBkbWFfdHJhbnNmZXJfZGlyZWN0aW9uIGRpcmVjdGlvbikNCj4+Pj4gK3sNCj4+Pj4g
+KwlzdHJ1Y3Qgc3RtMzJfbWRtYV9kZXZpY2UgKmRtYWRldiA9IHN0bTMyX21kbWFfZ2V0X2Rldihj
+aGFuKTsNCj4+Pj4gKwlzdHJ1Y3QgZG1hX3NsYXZlX2NvbmZpZyAqZG1hX2NvbmZpZyA9ICZjaGFu
+LT5kbWFfY29uZmlnOw0KPj4+PiArCXN0cnVjdCBzY2F0dGVybGlzdCAqc2c7DQo+Pj4+ICsJZG1h
+X2FkZHJfdCBzcmNfYWRkciwgZHN0X2FkZHI7DQo+Pj4+ICsJdTMyIGNjciwgY3RjciwgY3RicjsN
+Cj4+Pj4gKwlpbnQgaSwgcmV0ID0gMDsNCj4+Pj4gKw0KPj4+PiArCWZvcl9lYWNoX3NnKHNnbCwg
+c2csIHNnX2xlbiwgaSkgew0KPj4+PiArCQlpZiAoc2dfZG1hX2xlbihzZykgPiBTVE0zMl9NRE1B
+X01BWF9CTE9DS19MRU4pIHsNCj4+Pj4gKwkJCWRldl9lcnIoY2hhbjJkZXYoY2hhbiksICJJbnZh
+bGlkIGJsb2NrIGxlblxuIik7DQo+Pj4+ICsJCQlyZXR1cm4gLUVJTlZBTDsNCj4+Pj4gKwkJfQ0K
+Pj4+PiArDQo+Pj4+ICsJCXJldCA9IHN0bTMyX21kbWFfc2V0X3hmZXJfcGFyYW0oY2hhbiwgZGly
+ZWN0aW9uLCAmY2NyLCAmY3RjciwNCj4+Pj4gKwkJCQkJCSZjdGJyLCBzZ19kbWFfbGVuKHNnKSk7
+DQo+Pj4+ICsJCWlmIChyZXQgPCAwKQ0KPj4+PiArCQkJcmV0dXJuIHJldDsNCj4+Pj4gKw0KPj4+
+PiArCQlpZiAoZGlyZWN0aW9uID09IERNQV9NRU1fVE9fREVWKSB7DQo+Pj4+ICsJCQlzcmNfYWRk
+ciA9IHNnX2RtYV9hZGRyZXNzKHNnKTsNCj4+Pj4gKwkJCWRzdF9hZGRyID0gZG1hX2NvbmZpZy0+
+ZHN0X2FkZHI7DQo+Pj4NCj4+PiBhbmQgdGhpcyBzZWVtcyBjb3JyZWN0LCBidXQgdGhlbiB3aHkg
+YXJlIHdlIGRvaW5nIGl0IGluDQo+Pj4gc3RtMzJfbWRtYV9zZXRfeGZlcl9wYXJhbSgpDQo+Pj4N
+Cj4+DQo+PiBTZWUgY29tbWVudCBhYm92ZS4NCj4+DQo+Pj4+ICtzdGF0aWMgc3RydWN0IGRtYV9h
+c3luY190eF9kZXNjcmlwdG9yICpzdG0zMl9tZG1hX3ByZXBfc2xhdmVfc2coDQo+Pj4+ICsJc3Ry
+dWN0IGRtYV9jaGFuICpjLCBzdHJ1Y3Qgc2NhdHRlcmxpc3QgKnNnbCwNCj4+Pj4gKwl1MzIgc2df
+bGVuLCBlbnVtIGRtYV90cmFuc2Zlcl9kaXJlY3Rpb24gZGlyZWN0aW9uLA0KPj4+PiArCXVuc2ln
+bmVkIGxvbmcgZmxhZ3MsIHZvaWQgKmNvbnRleHQpDQo+Pj4NCj4+PiByaWdodCBqdXN0ZmllZCB0
+aGVzZSBwbGVhc2UsIGl0IG1ha2VzIGEgdGVycmlibGUgcmVhZA0KPj4+DQo+Pg0KPj4gR2l2ZW4g
+dGhlIGFtb3VudCBvZiBwYXJhbWV0ZXJzIGRpZmZpY3VsdCB0byByaWdodCBhbGlnbi4NCj4+IEFn
+cmVlIHdpdGggdGhpcyBmb3JtYXR0aW5nID8NCj4+DQo+PiBzdGF0aWMgc3RydWN0IGRtYV9hc3lu
+Y190eF9kZXNjcmlwdG9yDQo+PiAqc3RtMzJfbWRtYV9wcmVwX3NsYXZlX3NnKHN0cnVjdCBkbWFf
+Y2hhbiAqYywgc3RydWN0IHNjYXR0ZXJsaXN0ICpzZ2wsDQo+PiAJCQkgIHUzMiBzZ19sZW4sIGVu
+dW0gZG1hX3RyYW5zZmVyX2RpcmVjdGlvbiBkaXJlY3Rpb24sDQo+PiAJCQkgIHVuc2lnbmVkIGxv
+bmcgZmxhZ3MsIHZvaWQgKmNvbnRleHQpDQo+IA0KPiBZZXMgbG9va3MgbXVjaCBiZXR0ZXIgOikN
+Cj4gDQoNCkdvb2QgOikNCg0KPj4+PiArc3RhdGljIGludCBzdG0zMl9tZG1hX3Byb2JlKHN0cnVj
+dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+Pj4+ICt7DQo+Pj4+ICsJc3RydWN0IHN0bTMyX21k
+bWFfY2hhbiAqY2hhbjsNCj4+Pj4gKwlzdHJ1Y3Qgc3RtMzJfbWRtYV9kZXZpY2UgKmRtYWRldjsN
+Cj4+Pj4gKwlzdHJ1Y3QgZG1hX2RldmljZSAqZGQ7DQo+Pj4+ICsJc3RydWN0IGRldmljZV9ub2Rl
+ICpvZl9ub2RlOw0KPj4+PiArCXN0cnVjdCByZXNvdXJjZSAqcmVzOw0KPj4+PiArCXUzMiBucl9j
+aGFubmVscywgbnJfcmVxdWVzdHM7DQo+Pj4+ICsJaW50IGksIGNvdW50LCByZXQ7DQo+Pj4+ICsN
+Cj4+Pj4gKwlvZl9ub2RlID0gcGRldi0+ZGV2Lm9mX25vZGU7DQo+Pj4+ICsJaWYgKCFvZl9ub2Rl
+KQ0KPj4+PiArCQlyZXR1cm4gLUVOT0RFVjsNCj4+Pj4gKw0KPj4+PiArCXJldCA9IG9mX3Byb3Bl
+cnR5X3JlYWRfdTMyKG9mX25vZGUsICJkbWEtY2hhbm5lbHMiLCAmbnJfY2hhbm5lbHMpOw0KPj4+
+PiArCWlmIChyZXQpDQo+Pj4+ICsJCW5yX2NoYW5uZWxzID0gU1RNMzJfTURNQV9NQVhfQ0hBTk5F
+TFM7DQo+Pj4+ICsNCj4+Pj4gKwlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihvZl9ub2RlLCAi
+ZG1hLXJlcXVlc3RzIiwgJm5yX3JlcXVlc3RzKTsNCj4+Pj4gKwlpZiAocmV0KQ0KPj4+PiArCQlu
+cl9yZXF1ZXN0cyA9IFNUTTMyX01ETUFfTUFYX1JFUVVFU1RTOw0KPj4+DQo+Pj4gd291bGRuJ3Qg
+aXQgbWFrZSBzZW5zZSB0byBwcmludCBlcnJvciBhYm91dCB0aGVzZSBwcm9wZXJ0aWVzIG5vdCBi
+ZWluZw0KPj4+IHByZXNlbnQgYW5kIGNvbnRpbnVpbmcgdy8gZGVmYXVsdHMuLj8NCj4+DQo+PiBU
+aG9zZSBhcmUgb3B0aW9uYWwgcGFyYW1ldGVycyBhcyBzdGF0ZWQgYnkgYmluZGluZ3MuIEkgY2Fu
+IHByaW50IG91dCBhIHdhcm5pbmcNCj4+IG9yIGluZm8gaWYgeW91J2QgbGlrZSBidXQgbm90IGVy
+cm9yLg0KPiANCj4gQXJlIHRoZXNlIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIG9yIG9wdGlvbmFsLiBJ
+biBjYXNlIG9mIGxhdHRlciB3YXJuIHNob3VsZA0KPiBzdWZmaWNlLg0KPiANCg0Kb3B0aW9uYWwu
+IExldCBwaWNrIG91dCB3YXJuIHRoZW4uDQoNClRoYW5rcw==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
