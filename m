@@ -1,122 +1,110 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 3/8] dt: bindings: Add a binding for referencing EEPROM
- from camera sensors
-Date: Fri, 21 Jul 2017 14:14:14 +0300
-Message-ID: <20170721111414.zzcww27bn3oqpshv@paasikivi.fi.intel.com>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
- <20170719075255.yuar2xbeyisgl3we@flea>
- <20170719092106.xqichkcd6yepchxy@kekkonen.localdomain>
- <20170719111843.kyoqtqonhdkyvrjz@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 00/12] rk808: Add RK805 support
+Date: Fri, 21 Jul 2017 19:14:29 +0800
+Message-ID: <1500635681-12477-1-git-send-email-chenjh@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170719111843.kyoqtqonhdkyvrjz@flea>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, divagar.mohandass-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rajmohan.mani-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+To: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
+change in v7:
+PATCH V7 1/12: NO change in V7
+PATCH V7 2/12: NO change in V7
+PATCH V7 3/12: fix missing: Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+PATCH V7 4/12: NO change in V7
+PATCH V7 5/12: NO change in V7
+PATCH V7 6/12: NO change in V7
+PATCH V7 7/12: fix missing: Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+PATCH V7 8/12: abandon drivers/gpio/gpio-rk805.c and add drivers/pinctrl/pinctrl-rk805.c
+PATCH V7 9/12: reset author and signed off with my english name
+	       reset MODULE_AUTHOR() with my english name
+	       replace devm_request_threaded_irq() with devm_request_any_context_irq()
+PATCH V7 10/12: replace 'gpio-rk805' with 'pinctrl-rk805' in struct mfd_cell rk805s[]
+PATCH V7 11/12: NO change in V7
+PATCH V7 12/12: dt-bindings: abandon gpio-rk805.txt and add pinctrl-rk805.txt
 
-On Wed, Jul 19, 2017 at 01:18:43PM +0200, Maxime Ripard wrote:
-> Hi Sakari,
-> 
-> On Wed, Jul 19, 2017 at 12:21:06PM +0300, Sakari Ailus wrote:
-> > On Wed, Jul 19, 2017 at 09:52:55AM +0200, Maxime Ripard wrote:
-> > > Hi Sakari,
-> > > 
-> > > On Wed, Jun 14, 2017 at 12:47:14PM +0300, Sakari Ailus wrote:
-> > > > Many camera sensor devices contain EEPROM chips that describe the
-> > > > properties of a given unit --- the data is specific to a given unit can
-> > > > thus is not stored e.g. in user space or the driver.
-> > > > 
-> > > > Some sensors embed the EEPROM chip and it can be accessed through the
-> > > > sensor's I2C interface. This property is to be used for devices where the
-> > > > EEPROM chip is accessed through a different I2C address than the sensor.
-> > > > 
-> > > > The intent is to later provide this information to the user space.
-> > > > 
-> > > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > > Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> > > > Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > > index a18d9b2..ae259924 100644
-> > > > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > > > @@ -76,6 +76,9 @@ Optional properties
-> > > >  
-> > > >  - lens-focus: A phandle to the node of the focus lens controller.
-> > > >  
-> > > > +- eeprom: A phandle to the node of the EEPROM describing the camera sensor
-> > > > +  (i.e. device specific calibration data), in case it differs from the
-> > > > +  sensor node.
-> > > 
-> > > Wouldn't it makes sense (especially if you want to provide user space
-> > > access) to reuse what nvmem provides for this?
-> > 
-> > I wasn't aware of the nvmem bindings. Thanks for the pointer.
-> > 
-> > These are EEPROM chips that already have bindings documented under
-> > Documentation/devicetree/bindings/eeprom as well as existing drivers under
-> > drivers/misc/eeprom. Is there a reason why we have separate eeprom and
-> > nvmem devices? Do you see issues in adding nvmem support for the existing
-> > eeprom drivers, other than it misses using the nvmem framework?
-> 
-> As far as I know, the nvmem framework has superseeded the
-> drivers/misc/eeprom one, and both AT24 and AT25's bindings are still
-> respected by their respective drivers in nvmem.
+change in v6:
+patch1~7 no changed in V6.
+add patch 8~12 for gpio and powerkey func for rk805.
 
-Right. This all makes sense now. Nvmem superseding the eeprom API isn't
-very well documented I'd say. Especially if you did only looked into eeprom
-drivers.
+change in v5:
+PATCH V5 1/7: NO change in V5
+PATCH V5 2/7: fix the rk805 reg addr in numerical order
+PATCH V5 3/7: NO change in V5
+PATCH V5 4/7: fix up the rk805_device_shutdown func
+PATCH V5 5/7: NO change in V5
+PATCH V5 6/7: NO change in V5
+PATCH V5 7/7: fix up the description of the rk805
 
-> 
-> > There's also a small issue (or a big one, depending on which part of it you
-> > consider) of the EEPROM content being parsed in the user space. The sensor
-> > drivers do not use that information nor the contents are specific to the
-> > sensor alone, it is ultimately up to the system integrator what to put to
-> > the EEPROM. The typical size of an EEPROM is in perhaps one or two
-> > kilobytes so that there's a lot of room for storing different individual
-> > settings there.
-> > 
-> > nvmem bindings require referring to individual data cells but it's rather
-> > the entire EEPROM contents that would be of interest here. I guess you
-> > could create a single node under the EEPROM chip that covers the entire
-> > chip. Or change the documentation to allow referring to the chip, rather
-> > than a node under it.
-> 
-> I'm not sure I really followed your thoughts here, but the fact that
-> the EEPROM are usually way larger than the data each and every driver
-> needs is indeed true. And this is exactly why we have cells, in order
-> to differentiate the camera calibration data, from the touchscreen
-> ones, and from the MAC address of the device.
-> 
-> I guess if you really need the whole EEPROM, yeah, a single big cell
-> would be the way to go I guess.
+change in v4:
+PATCH V4 1/7: NO change in V4
+PATCH V4 2/7: rename the commit message
+PATCH V4 3/7: NO change in V4
+PATCH V4 4/7: Split this patch up into subsystems patch 5/7 6/7
+PATCH V4 5/7: new added
+PATCH V4 6/7: new added
+PATCH V4 7/7: NO change in V4
 
-Ack.
 
-The nvmem framework requires ACPI support then. We'll see how to get there.
+change in V3:
+PATCH V3 1/5: NO change in V3
+PATCH V3 2/5: add rk805 RTC INT MASK define
+PATCH V3 3/5: RK805 set suspend enable and disable is different from rk808
+              use rk805_regs_ops and rk805_switch_ops
+PATCH V3 4/5: fix up the shutdown func
+              use pm_shutdown_prepare_fn to prepare shutdown
+              and pm_pwroff_fn pull down gpio to shut down rk805
+              it will update in the future(after rk808 support gpio func)
+PATCH V3 5/5: NO change in V3
 
-> 
-> And there's currently a way to lockdown the EEPROM at the provider
-> level, I guess it would make sense to have the same kind of API for
-> the consumer too if the data are to be protected.
-> 
-> I'm not that involved in nvmem anymore, so the maintainer might have a
-> different opinion though :)
+change in V2:
+PATCH V2 1/5: NO change in V2
+PATCH V2 2/5: add rk805 BUCK ILMAX define
+PATCH V2 3/5: NO change in V2
+PATCH V2 4/5: setting RK805 BUCK ILMAX in pre init
+PATCH V2 5/5: Add RK805 device tree bindings document
+
+Elaine Zhang (7):
+  mfd: rk808: fix up the chip id get failed
+  mfd: rk808: add rk805 regs addr and ID
+  regulator: rk808: Add regulator driver for RK805
+  mfd: rk808: Add RK805 support
+  clk: Kconfig: Name RK805 in Kconfig for COMMON_CLK_RK808
+  rtc: Kconfig: Name RK805 in Kconfig for RTC_DRV_RK808
+  mfd: dt-bindings: Add RK805 device tree bindings document
+
+Joseph Chen (5):
+  pinctrl: Add pinctrl driver for the RK805 PMIC
+  Input: Add power key driver for Rockchip RK805 PMIC
+  mfd: rk808: Add RK805 pinctrl support
+  mfd: rk808: Add RK805 power key support
+  pinctrl: dt-bindings: add bindings for Rockchip RK805 PMIC
+
+ Documentation/devicetree/bindings/mfd/rk808.txt    |  22 +-
+ .../devicetree/bindings/pinctrl/pinctrl-rk805.txt  |  63 +++
+ drivers/clk/Kconfig                                |   4 +-
+ drivers/input/misc/Kconfig                         |   6 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/rk805-pwrkey.c                  | 111 +++++
+ drivers/mfd/Kconfig                                |   4 +-
+ drivers/mfd/rk808.c                                | 147 +++++-
+ drivers/pinctrl/Kconfig                            |   8 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-rk805.c                    | 496 +++++++++++++++++++++
+ drivers/regulator/Kconfig                          |   4 +-
+ drivers/regulator/rk808-regulator.c                | 130 ++++++
+ drivers/rtc/Kconfig                                |   4 +-
+ include/linux/mfd/rk808.h                          | 121 +++++
+ 15 files changed, 1107 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-rk805.txt
+ create mode 100644 drivers/input/misc/rk805-pwrkey.c
+ create mode 100644 drivers/pinctrl/pinctrl-rk805.c
 
 -- 
-Regards,
+1.9.1
 
-Sakari Ailus
-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
