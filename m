@@ -1,75 +1,69 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: provide of_n_{addr,size}_cells wrappers for
- !CONFIG_OF
-Date: Fri, 21 Jul 2017 14:04:51 -0700
-Message-ID: <59726C73.6000000@gmail.com>
-References: <20170721202012.3360244-1-arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170721202012.3360244-1-arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: [PATCH v2] of: provide of_n_{addr,size}_cells wrappers for !CONFIG_OF
+Date: Fri, 21 Jul 2017 23:09:50 +0200
+Message-ID: <20170721211000.3382004-1-arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/17 13:19, Arnd Bergmann wrote:
-> The pci-rcar driver is enabled for compile tests, and this has
-> now shown that the driver cannot build without CONFIG_OF,
-> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
-> interrupt mapping when possible":
-> 
-> ../drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-> ../drivers/pci/host/pcie-rcar.c:856:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
->   parser->pna = of_n_addr_cells(node);
->   ^
-> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
-> supposed to build fine, which we can achieve if we make the
-> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
-> and provide an empty inline function otherwise, as we do for
-> a lot of other of interfaces.
-> 
-> This lets us build the rcar_pci driver again without CONFIG_OF
-> for build testing. All platforms using this driver select OF,
-> so this doesn't change anything for the users.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: devicetree@vger.kernel.org
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Magnus Damm <damm@opensource.se>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> 
-> ---
-> I originally sent the patch in 2014 when things initially broke
-> and then forgot about while it was applied in my randconfig patch
-> stack. I sent it again in 2016 without replay.
-> 
-> It's still broken and I think this is the correct fix.
-> ---
->  include/linux/of.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 4a8a70916237..1efdbe53136c 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -735,6 +735,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
->  	return NULL;
->  }
->  
-> +static inline int of_n_addr_cells(struct device_node *np) { return 0; }
-> +static inline int of_n_size_cells(struct device_node *np) { return 0; }
-> +
->  static inline int of_property_read_u64(const struct device_node *np,
->  				       const char *propname, u64 *out_value)
->  {
-> 
+The pci-rcar driver is enabled for compile tests, and this has
+shown that the driver cannot build without CONFIG_OF:
 
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+drivers/pci/host/pcie-rcar.c:1039:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
+  parser->pna = of_n_addr_cells(node);
+  ^
+As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+supposed to build fine, which we can achieve if we make the
+declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+and provide an empty inline function otherwise, as we do for
+a lot of other of interfaces.
+
+This lets us build the rcar_pci driver again without CONFIG_OF
+for build testing. All platforms using this driver select OF,
+so this doesn't change anything for the users.
+
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+I originally sent the patch in 2014 when things initially broke
+and then forgot about while it was applied in my randconfig patch
+stack. I sent it again in 2016 without reply.
+
+It's still broken and I think this is the correct fix.
+v2: modify changelog as Geert suggested.
+
+ include/linux/of.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4a8a70916237..1efdbe53136c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -735,6 +735,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+ 	return NULL;
+ }
+ 
++static inline int of_n_addr_cells(struct device_node *np) { return 0; }
++static inline int of_n_size_cells(struct device_node *np) { return 0; }
++
+ static inline int of_property_read_u64(const struct device_node *np,
+ 				       const char *propname, u64 *out_value)
+ {
+-- 
+2.9.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
