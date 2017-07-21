@@ -1,35 +1,30 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] of: irq: use of_property_read_bool() for
- "interrupt-controller" prop
-Date: Fri, 21 Jul 2017 10:46:04 -0500
-Message-ID: <20170721154604.kbjb74ebzicodckl@rob-hp-laptop>
-References: <20170708203318.045262932@cogentembedded.com>
+Subject: Re: [PATCH] of: remove unused pci_space variable from address.c
+Date: Fri, 21 Jul 2017 10:46:39 -0500
+Message-ID: <20170721154639.rd6lxok2oopd7nt5@rob-hp-laptop>
+References: <1499853546-82626-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170708203318.045262932-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1499853546-82626-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 08, 2017 at 11:29:51PM +0300, Sergei Shtylyov wrote:
-> The "interrupt-controller" property is boolean, i.e. has no value.  The DT
-> interrupt parsing code predates of_property_read_bool(), so it uses either
-> of_get_property() or of_find_property() -- the former isn't quite correct
-> for the boolean props (but works somehow). Use the modern boolean prop API
-> instead.
+On Wed, Jul 12, 2017 at 05:59:06PM +0800, Shawn Lin wrote:
+> It was never used and could be removed, otherwise
+> we could see a warning:
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> drivers/of/address.c: In function 'of_pci_range_parser_one':
+> drivers/of/address.c:277:14: warning: variable 'pci_space' set but not
+> used [-Wunused-but-set-variable]
 > 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > ---
->  drivers/of/irq.c |    5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
 
-Both applied, thanks.
-
-Any plans to convert other users?
+Applied, thanks.
 
 Rob
 --
