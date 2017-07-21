@@ -1,51 +1,58 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v3 3/8] ACPI: Prepare for constifying
- acpi_get_next_subnode() fwnode argument
-Date: Fri, 21 Jul 2017 15:30:58 +0300
-Message-ID: <1500640258.29303.176.camel@linux.intel.com>
-References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
-         <1500637177-16095-4-git-send-email-sakari.ailus@linux.intel.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [RFC PATCH v2] ARM: dts: stm32: change pinctrl bindings definition
+Date: Fri, 21 Jul 2017 14:34:13 +0200
+Message-ID: <1500640454-19656-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1500637177-16095-4-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org
-Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, erik.veijola@intel.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vikas.manocha-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-07-21 at 14:39 +0300, Sakari Ailus wrote:
-> Make local variables const (head) or add new variables; adev was used
-> for
-> two purposes: to refer the root device node and its children. The two
-> purposes are separated by this patch.
-> 
-> This is preparation for making fwnode arguments const for fwnode ops.
-> Don't constify the argument itself quite yet as this is used as a
-> callback
-> function.
+Initially each pin was declared in "include/dt-bindings/stm32f429-pinfunc.h"
+and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
+Since this approach was approved, the number of supported MCU has
+increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
+file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
+a new approach which consist to use a macro to define pin muxing in device
+tree. All STM32 DT will use the common macro to define pinmux. Furthermore, it
+will make maintenance and integration of new SOC easier.
 
->  		if (child) {
-> -			adev = to_acpi_device_node(child);
-> -			next = adev->node.next;
-> +			child_adev = to_acpi_device_node(child);
-> +			next = child_adev->node.next;
->  			if (next == head) {
->  				child = NULL;
->  				goto nondev;
->  			}
-> -			adev = list_entry(next, struct acpi_device,
-> node);
-> +			child_adev = list_entry(next, struct
-> acpi_device, node);
+To check that patch generate same dtb than befrore I used dtc binary to (re)generate dts files
+(before and after apply the series).
+Example on stm32f469-disco:
+
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-after.dts
+stm32f469-disco-after.dtb
+
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-before.dts
+stm32f469-disco-before.dtb
+
+Then diff -u stm32f469-disco-before.dts stm32f469-disco-after.dts
 
 
-Isn't it 
+Changes since v1:
+ -According to Vikas Manocha review, use generic macro to define port.
 
-list_first_entry_or_null() ?
 
+Regards
+Alex
+
+Alexandre Torgue (1):
+  ARM: dts: stm32: change pinctrl bindings definition
+
+ arch/arm/boot/dts/stm32f429.dtsi                |  176 ++--
+ include/dt-bindings/pinctrl/stm32-pinfunc.h     |   31 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h | 1239 -----------------------
+ 3 files changed, 119 insertions(+), 1327 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/stm32-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
