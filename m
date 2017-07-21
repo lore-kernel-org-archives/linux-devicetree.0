@@ -1,166 +1,85 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
-Date: Fri, 21 Jul 2017 13:25:47 +0530
-Message-ID: <20170721075547.GO3053@localhost>
-References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] PM / Domains: Convert to using %pOF instead of full_name
+Date: Fri, 21 Jul 2017 09:56:52 +0200
+Message-ID: <CAPDyKFpBGY+xZyubW6HdQyoJ1GVkEM04ZiJSB_hOq_gpjqZ4CQ@mail.gmail.com>
+References: <20170718214339.7774-10-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie Delaunay <amelie.delaunay@st.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170718214339.7774-10-robh@kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 06, 2017 at 02:25:39PM +0200, Pierre-Yves MORDRET wrote:
+On 18 July 2017 at 23:42, Rob Herring <robh@kernel.org> wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Kevin Hilman <khilman@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Len Brown <len.brown@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: linux-pm@vger.kernel.org
 
-> +config STM32_MDMA
-> +	bool "STMicroelectronics STM32 master dma support"
-> +	depends on ARCH_STM32  || COMPILE_TEST
-			    ^^^
-why multiple spaces
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
-> +{
-> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
-> +
-> +	while (((buf_len % max_width) || (tlen < max_width)) &&
-> +	       (max_width > DMA_SLAVE_BUSWIDTH_1_BYTE))
-> +		max_width = max_width >> 1;
+Kind regards
+Uffe
 
-ok, this is a bit hard to read...
-
-> +static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
-> +				     enum dma_transfer_direction direction,
-> +				     u32 *mdma_ccr, u32 *mdma_ctcr,
-> +				     u32 *mdma_ctbr, u32 buf_len)
-> +{
-> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> +	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
-> +	enum dma_slave_buswidth src_addr_width, dst_addr_width;
-> +	phys_addr_t src_addr, dst_addr;
-> +	int src_bus_width, dst_bus_width;
-> +	u32 src_maxburst, dst_maxburst, src_best_burst, dst_best_burst;
-> +	u32 ccr, ctcr, ctbr, tlen;
-> +
-> +	src_addr_width = chan->dma_config.src_addr_width;
-> +	dst_addr_width = chan->dma_config.dst_addr_width;
-> +	src_maxburst = chan->dma_config.src_maxburst;
-> +	dst_maxburst = chan->dma_config.dst_maxburst;
-> +	src_addr = chan->dma_config.src_addr;
-> +	dst_addr = chan->dma_config.dst_addr;
-
-this doesn't seem right to me, only the periphral address would come from
-slave_config, the memory address is passed as an arg to transfer..
-
-...
-
-> +static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
-> +				 struct stm32_mdma_desc *desc,
-> +				 struct scatterlist *sgl, u32 sg_len,
-> +				 enum dma_transfer_direction direction)
-> +{
-> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
-> +	struct dma_slave_config *dma_config = &chan->dma_config;
-> +	struct scatterlist *sg;
-> +	dma_addr_t src_addr, dst_addr;
-> +	u32 ccr, ctcr, ctbr;
-> +	int i, ret = 0;
-> +
-> +	for_each_sg(sgl, sg, sg_len, i) {
-> +		if (sg_dma_len(sg) > STM32_MDMA_MAX_BLOCK_LEN) {
-> +			dev_err(chan2dev(chan), "Invalid block len\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
-> +						&ctbr, sg_dma_len(sg));
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (direction == DMA_MEM_TO_DEV) {
-> +			src_addr = sg_dma_address(sg);
-> +			dst_addr = dma_config->dst_addr;
-
-and this seems correct, but then why are we doing it in
-stm32_mdma_set_xfer_param()
-
-> +static struct dma_async_tx_descriptor *stm32_mdma_prep_slave_sg(
-> +	struct dma_chan *c, struct scatterlist *sgl,
-> +	u32 sg_len, enum dma_transfer_direction direction,
-> +	unsigned long flags, void *context)
-
-right justfied these please, it makes a terrible read
-
-> +{
-> +	struct stm32_mdma_chan *chan = to_stm32_mdma_chan(c);
-> +	struct stm32_mdma_desc *desc;
-> +	int ret;
-> +
-> +	desc = stm32_mdma_alloc_desc(chan, sg_len);
-> +	if (!desc)
-> +		return NULL;
-> +
-> +	ret = stm32_mdma_setup_xfer(chan, desc, sgl, sg_len, direction);
-> +	if (ret < 0)
-> +		goto xfer_setup_err;
-> +
-> +	desc->cyclic = false;
-> +
-> +	return vchan_tx_prep(&chan->vchan, &desc->vdesc, flags);
-> +
-> +xfer_setup_err:
-> +	dma_pool_free(chan->desc_pool, &desc->hwdesc, desc->hwdesc_phys);
-> +	kfree(desc);
-> +	return NULL;
-> +}
-> +
-> +static struct dma_async_tx_descriptor *stm32_mdma_prep_dma_cyclic(
-> +	struct dma_chan *c, dma_addr_t buf_addr, size_t buf_len,
-> +	size_t period_len, enum dma_transfer_direction direction,
-> +	unsigned long flags)
-
-here too and few other places
-
-> +static int stm32_mdma_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_mdma_chan *chan;
-> +	struct stm32_mdma_device *dmadev;
-> +	struct dma_device *dd;
-> +	struct device_node *of_node;
-> +	struct resource *res;
-> +	u32 nr_channels, nr_requests;
-> +	int i, count, ret;
-> +
-> +	of_node = pdev->dev.of_node;
-> +	if (!of_node)
-> +		return -ENODEV;
-> +
-> +	ret = of_property_read_u32(of_node, "dma-channels", &nr_channels);
-> +	if (ret)
-> +		nr_channels = STM32_MDMA_MAX_CHANNELS;
-> +
-> +	ret = of_property_read_u32(of_node, "dma-requests", &nr_requests);
-> +	if (ret)
-> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
-
-wouldn't it make sense to print error about these properties not being
-present and continuing w/ defaults..?
-
-and can we have device_property_xxx instead of of_ variants?
-
-> +static int __init stm32_mdma_init(void)
-> +{
-> +	return platform_driver_probe(&stm32_mdma_driver, stm32_mdma_probe);
-> +}
-> +
-> +subsys_initcall(stm32_mdma_init);
-
-Where are the MODULE_xx tags, license is mandatory. You should add author
-too.
- 
-
--- 
-~Vinod
+> ---
+>  drivers/base/power/domain.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 3b8210ebb50e..d0989f9b5e67 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1743,7 +1743,7 @@ static int genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
+>         mutex_lock(&of_genpd_mutex);
+>         list_add(&cp->link, &of_genpd_providers);
+>         mutex_unlock(&of_genpd_mutex);
+> -       pr_debug("Added domain provider from %s\n", np->full_name);
+> +       pr_debug("Added domain provider from %pOF\n", np);
+>
+>         return 0;
+>  }
+> @@ -2149,16 +2149,16 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
+>         err = of_property_read_u32(state_node, "entry-latency-us",
+>                                                 &entry_latency);
+>         if (err) {
+> -               pr_debug(" * %s missing entry-latency-us property\n",
+> -                                               state_node->full_name);
+> +               pr_debug(" * %pOF missing entry-latency-us property\n",
+> +                                               state_node);
+>                 return -EINVAL;
+>         }
+>
+>         err = of_property_read_u32(state_node, "exit-latency-us",
+>                                                 &exit_latency);
+>         if (err) {
+> -               pr_debug(" * %s missing exit-latency-us property\n",
+> -                                               state_node->full_name);
+> +               pr_debug(" * %pOF missing exit-latency-us property\n",
+> +                                               state_node);
+>                 return -EINVAL;
+>         }
+>
+> @@ -2212,8 +2212,8 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+>                 ret = genpd_parse_state(&st[i++], np);
+>                 if (ret) {
+>                         pr_err
+> -                       ("Parsing idle state node %s failed with err %d\n",
+> -                                                       np->full_name, ret);
+> +                       ("Parsing idle state node %pOF failed with err %d\n",
+> +                                                       np, ret);
+>                         of_node_put(np);
+>                         kfree(st);
+>                         return ret;
+> --
+> 2.11.0
+>
