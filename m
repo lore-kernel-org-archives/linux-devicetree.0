@@ -1,42 +1,45 @@
 From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] of: irq: fix of_irq_to_resource() error check
-Date: Fri, 21 Jul 2017 20:30:39 +0300
-Message-ID: <20170721173108.578363976@cogentembedded.com>
+Subject: Re: [PATCH 1/2] of: irq: use of_property_read_bool() for
+ "interrupt-controller" prop
+Date: Fri, 21 Jul 2017 20:36:17 +0300
+Message-ID: <54c732e1-8458-cd27-2d0e-ce44a9870fd2@cogentembedded.com>
+References: <20170708203318.045262932@cogentembedded.com>
+ <20170721154604.kbjb74ebzicodckl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=of-irq-fix-of_irq_to_resource-error-check.patch
+In-Reply-To: <20170721154604.kbjb74ebzicodckl@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_irq_to_resource() has recently been fixed to return negative error #'s
-along with 0, however of_irq_to_resource_table() still only regards 0 as
-invalid IRQ -- fix it up.
+On 07/21/2017 06:46 PM, Rob Herring wrote:
 
-Fixes: 7a4228bbff76 ("of: irq: use of_irq_get() in of_irq_to_resource()")
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>> The "interrupt-controller" property is boolean, i.e. has no value.  The DT
+>> interrupt parsing code predates of_property_read_bool(), so it uses either
+>> of_get_property() or of_find_property() -- the former isn't quite correct
+>> for the boolean props (but works somehow). Use the modern boolean prop API
+>> instead.
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+>>
+>> ---
+>>  drivers/of/irq.c |    5 ++---
+>>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> Both applied, thanks.
 
----
-The patch is against the 'dt/linus' branch of Rob Herring's 'linux.git' repo.
+    TY!
 
- drivers/of/irq.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Any plans to convert other users?
 
-Index: linux/drivers/of/irq.c
-===================================================================
---- linux.orig/drivers/of/irq.c
-+++ linux/drivers/of/irq.c
-@@ -476,7 +476,7 @@ int of_irq_to_resource_table(struct devi
- 	int i;
- 
- 	for (i = 0; i < nr_irqs; i++, res++)
--		if (!of_irq_to_resource(dev, i, res))
-+		if (of_irq_to_resource(dev, i, res) <= 0)
- 			break;
- 
- 	return i;
+    No, not yet -- I fix things as I see them.
+
+> Rob
+
+MBR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
