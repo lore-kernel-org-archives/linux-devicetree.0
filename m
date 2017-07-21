@@ -1,43 +1,158 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v8 3/9] i2c: core: call of_i2c_setup_smbus_alert in
- i2c_register_adapter
-Date: Fri, 21 Jul 2017 11:37:59 +0200
-Message-ID: <20170721093759.GD11387@mail.corp.redhat.com>
-References: <201707200255.SHskJrcM%fengguang.wu@intel.com>
- <c6e4dce0-853f-a4d4-be64-ef4bb0f68162@electromag.com.au>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
+Date: Fri, 21 Jul 2017 15:24:12 +0530
+Message-ID: <20170721095411.GR3053@localhost>
+References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170721075547.GO3053@localhost>
+ <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c6e4dce0-853f-a4d4-be64-ef4bb0f68162@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Jul 20 2017 or thereabouts, Phil Reid wrote:
-> On 20/07/2017 02:30, kbuild test robot wrote:
+On Fri, Jul 21, 2017 at 09:30:00AM +0000, Pierre Yves MORDRET wrote:
+> >> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 tlen)
+> >> +{
+> >> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+> >> +
+> >> +	while (((buf_len % max_width) || (tlen < max_width)) &&
+> >> +	       (max_width > DMA_SLAVE_BUSWIDTH_1_BYTE))
+> >> +		max_width = max_width >> 1;
+> > 
+> > ok, this is a bit hard to read...
+> 
+> This code snippet has already been reworked and optimized. Would you mind to 
+> provide me a example with your expectation ? Thanks
+
+Code is optimized yes, but readable no
+
+I would like readability to be improved upon...
+
+> 
+> > 
+> >> +static int stm32_mdma_set_xfer_param(struct stm32_mdma_chan *chan,
+> >> +				     enum dma_transfer_direction direction,
+> >> +				     u32 *mdma_ccr, u32 *mdma_ctcr,
+> >> +				     u32 *mdma_ctbr, u32 buf_len)
+> >> +{
+> >> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+> >> +	struct stm32_mdma_chan_config *chan_config = &chan->chan_config;
+> >> +	enum dma_slave_buswidth src_addr_width, dst_addr_width;
+> >> +	phys_addr_t src_addr, dst_addr;
+> >> +	int src_bus_width, dst_bus_width;
+> >> +	u32 src_maxburst, dst_maxburst, src_best_burst, dst_best_burst;
+> >> +	u32 ccr, ctcr, ctbr, tlen;
+> >> +
+> >> +	src_addr_width = chan->dma_config.src_addr_width;
+> >> +	dst_addr_width = chan->dma_config.dst_addr_width;
+> >> +	src_maxburst = chan->dma_config.src_maxburst;
+> >> +	dst_maxburst = chan->dma_config.dst_maxburst;
+> >> +	src_addr = chan->dma_config.src_addr;
+> >> +	dst_addr = chan->dma_config.dst_addr;
+> > 
+> > this doesn't seem right to me, only the periphral address would come from
+> > slave_config, the memory address is passed as an arg to transfer..
+> > 
+> > ...
 > > 
 > 
-> I understand how this is occurring.
-> I2C=y, OF=y and I2C_PARPORT=m
-> I2C_PARPORT selects I2C_SMBUS setting it to m
-> 
-> Calling a function in i2c-smbus (module) from i2c-core (builtin) is then a problem.
-> 
-> However there doesn't seem to be a way (that I can see) to have select statement force I2C_SMBUS=y if I2C=y
+> Correct. But these locals are managed in the case statement below. if direction 
+> is Mem2Dev only dst_addr(Peripheral) is considered. In the other way around with 
+> Dev2Mem direction only src_addr(Peripheral) is considered.
+> However to disambiguate I can move src_addr & dst_addr affectation in the 
+> corresponding case statement if you'd like.
 
-What if I2C selects I2C_SMBUS directly?
-
-Cheers,
-Benjamin
+But below you are over writing both, so in effect this is wasted cycles..
+anyway latter one is more clear, so lets remove from here.
 
 > 
-> Can I get a hint on what the correct course of action is.
+> >> +static int stm32_mdma_setup_xfer(struct stm32_mdma_chan *chan,
+> >> +				 struct stm32_mdma_desc *desc,
+> >> +				 struct scatterlist *sgl, u32 sg_len,
+> >> +				 enum dma_transfer_direction direction)
+> >> +{
+> >> +	struct stm32_mdma_device *dmadev = stm32_mdma_get_dev(chan);
+> >> +	struct dma_slave_config *dma_config = &chan->dma_config;
+> >> +	struct scatterlist *sg;
+> >> +	dma_addr_t src_addr, dst_addr;
+> >> +	u32 ccr, ctcr, ctbr;
+> >> +	int i, ret = 0;
+> >> +
+> >> +	for_each_sg(sgl, sg, sg_len, i) {
+> >> +		if (sg_dma_len(sg) > STM32_MDMA_MAX_BLOCK_LEN) {
+> >> +			dev_err(chan2dev(chan), "Invalid block len\n");
+> >> +			return -EINVAL;
+> >> +		}
+> >> +
+> >> +		ret = stm32_mdma_set_xfer_param(chan, direction, &ccr, &ctcr,
+> >> +						&ctbr, sg_dma_len(sg));
+> >> +		if (ret < 0)
+> >> +			return ret;
+> >> +
+> >> +		if (direction == DMA_MEM_TO_DEV) {
+> >> +			src_addr = sg_dma_address(sg);
+> >> +			dst_addr = dma_config->dst_addr;
+> > 
+> > and this seems correct, but then why are we doing it in
+> > stm32_mdma_set_xfer_param()
+> > 
 > 
+> See comment above.
 > 
+> >> +static struct dma_async_tx_descriptor *stm32_mdma_prep_slave_sg(
+> >> +	struct dma_chan *c, struct scatterlist *sgl,
+> >> +	u32 sg_len, enum dma_transfer_direction direction,
+> >> +	unsigned long flags, void *context)
+> > 
+> > right justfied these please, it makes a terrible read
+> > 
 > 
-> -- 
-> Regards
-> Phil Reid
+> Given the amount of parameters difficult to right align.
+> Agree with this formatting ?
 > 
+> static struct dma_async_tx_descriptor
+> *stm32_mdma_prep_slave_sg(struct dma_chan *c, struct scatterlist *sgl,
+> 			  u32 sg_len, enum dma_transfer_direction direction,
+> 			  unsigned long flags, void *context)
+
+Yes looks much better :)
+
+> >> +static int stm32_mdma_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct stm32_mdma_chan *chan;
+> >> +	struct stm32_mdma_device *dmadev;
+> >> +	struct dma_device *dd;
+> >> +	struct device_node *of_node;
+> >> +	struct resource *res;
+> >> +	u32 nr_channels, nr_requests;
+> >> +	int i, count, ret;
+> >> +
+> >> +	of_node = pdev->dev.of_node;
+> >> +	if (!of_node)
+> >> +		return -ENODEV;
+> >> +
+> >> +	ret = of_property_read_u32(of_node, "dma-channels", &nr_channels);
+> >> +	if (ret)
+> >> +		nr_channels = STM32_MDMA_MAX_CHANNELS;
+> >> +
+> >> +	ret = of_property_read_u32(of_node, "dma-requests", &nr_requests);
+> >> +	if (ret)
+> >> +		nr_requests = STM32_MDMA_MAX_REQUESTS;
+> > 
+> > wouldn't it make sense to print error about these properties not being
+> > present and continuing w/ defaults..?
+> 
+> Those are optional parameters as stated by bindings. I can print out a warning 
+> or info if you'd like but not error.
+
+Are these mandatory properties or optional. In case of latter warn should
+suffice.
+
+-- 
+~Vinod
