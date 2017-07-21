@@ -1,63 +1,50 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] MAINTAINERS: device property: acpi: add fwnode.h
-Date: Fri, 21 Jul 2017 15:33:05 -0700
-Message-ID: <59728121.2020508@gmail.com>
-References: <1500578005-25893-1-git-send-email-frowand.list@gmail.com>
- <1500578005-25893-2-git-send-email-frowand.list@gmail.com>
- <2851122.8a0ts3VkAi@aspire.rjw.lan>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] clk: Convert to using %pOF instead of full_name
+Date: Fri, 21 Jul 2017 15:49:59 -0700
+Message-ID: <20170721224959.GA2146@codeaurora.org>
+References: <20170718214339.7774-12-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2851122.8a0ts3VkAi-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Len Brown <lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170718214339.7774-12-robh@kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Matthias Brugger <matthias.bgg@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Tero Kristo <t-kristo@ti.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.orglinu
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/17 15:03, Rafael J. Wysocki wrote:
-> On Thursday, July 20, 2017 12:13:24 PM frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>
->> ACPI is impacted by changes to fwnode.h, add a file entry
->> to ACPI
->>
->> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On 07/18, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
 > 
-> ACK for this one.
-> 
-> Or do you want me to apply it?
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: "Emilio López" <emilio@elopez.com.ar>
+> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Prashant Gaikwad <pgaikwad@nvidia.com>
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Tero Kristo <t-kristo@ti.com>
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-mediatek@lists.infradead.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: linux-tegra@vger.kernel.org
+> Cc: linux-omap@vger.kernel.org
+> ---
 
-Please apply it.  So there won't be any conflicts between trees if
-any other changes get made to this entry later in this cycle.
+Applied to clk-next
 
-Thanks,
-
-Frank
-
-
-> 
->> ---
->>  MAINTAINERS | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 205d3977ac46..c0ac362e850a 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -302,6 +302,7 @@ S:	Supported
->>  F:	drivers/acpi/
->>  F:	drivers/pnp/pnpacpi/
->>  F:	include/linux/acpi.h
->> +F:	include/linux/fwnode.h
->>  F:	include/acpi/
->>  F:	Documentation/acpi/
->>  F:	Documentation/ABI/testing/sysfs-bus-acpi
->>
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
