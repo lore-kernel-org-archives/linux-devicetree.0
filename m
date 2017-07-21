@@ -1,174 +1,125 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 4/7] mailbox: bcm-flexrm-mailbox: Use bitmap instead of IDA
-Date: Fri, 21 Jul 2017 12:25:39 +0530
-Message-ID: <1500620142-910-5-git-send-email-anup.patel@broadcom.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 5/7] mailbox: Make message send queue size dynamic in Linux mailbox
+Date: Fri, 21 Jul 2017 12:25:40 +0530
+Message-ID: <1500620142-910-6-git-send-email-anup.patel@broadcom.com>
 References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500620142-910-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, we are using IDA library for managing IDs
-on a FlexRM ring. The IDA library dynamically allocates
-memory for underlying data structures which can cause
-potential locking issue when allocating/free IDs from
-flexrm_new_request() and flexrm_process_completions().
+Currently, the message send queue size in Linux mailbox framework
+is hard-coded to MBOX_TX_QUEUE_LEN which is defined as 20.
 
-To tackle this, we replace use of IDA with bitmap for
-each FlexRM ring and also protect the bitmap with FlexRM
-ring lock.
+This message send queue can easily overflow if mbox_send_message()
+is called for same mailbox channel several times. The size of message
+send queue should not be hard-coded in Linux mailbox framework and
+instead mailbox controller driver should have a mechanism to specify
+message send queue size for each mailbox channel.
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+This patch makes message send queue size dynamic in Linux mailbox
+framework and provides a mechanism to set message send queue size
+for each mailbox channel. If mailbox controller driver does not set
+message send queue size then we assume the hard-coded value of 20.
+
+Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- drivers/mailbox/bcm-flexrm-mailbox.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ drivers/mailbox/mailbox.c          | 15 ++++++++++++---
+ include/linux/mailbox_controller.h |  5 +++--
+ 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
-index 46ad305..9873818 100644
---- a/drivers/mailbox/bcm-flexrm-mailbox.c
-+++ b/drivers/mailbox/bcm-flexrm-mailbox.c
-@@ -18,13 +18,13 @@
- #include <asm/barrier.h>
- #include <asm/byteorder.h>
- #include <linux/atomic.h>
-+#include <linux/bitmap.h>
- #include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/device.h>
- #include <linux/dma-mapping.h>
- #include <linux/dmapool.h>
- #include <linux/err.h>
--#include <linux/idr.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mailbox_controller.h>
-@@ -265,7 +265,6 @@ struct flexrm_ring {
- 	cpumask_t irq_aff_hint;
- 	unsigned int msi_timer_val;
- 	unsigned int msi_count_threshold;
--	struct ida requests_ida;
- 	struct brcm_message *requests[RING_MAX_REQ_COUNT];
- 	void *bd_base;
- 	dma_addr_t bd_dma_base;
-@@ -277,6 +276,7 @@ struct flexrm_ring {
- 	atomic_t msg_cmpl_count;
- 	/* Protected members */
- 	spinlock_t lock;
-+	DECLARE_BITMAP(requests_bmap, RING_MAX_REQ_COUNT);
- 	struct brcm_message *last_pending_msg;
- 	u32 cmpl_read_offset;
+diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+index 537f4f6..ccc2aea 100644
+--- a/drivers/mailbox/mailbox.c
++++ b/drivers/mailbox/mailbox.c
+@@ -34,7 +34,7 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 
+ 	/* See if there is any space left */
+-	if (chan->msg_count == MBOX_TX_QUEUE_LEN) {
++	if (chan->msg_count == chan->msg_queue_len) {
+ 		spin_unlock_irqrestore(&chan->lock, flags);
+ 		return -ENOBUFS;
+ 	}
+@@ -43,7 +43,7 @@ static int add_to_rbuf(struct mbox_chan *chan, void *mssg)
+ 	chan->msg_data[idx] = mssg;
+ 	chan->msg_count++;
+ 
+-	if (idx == MBOX_TX_QUEUE_LEN - 1)
++	if (idx == chan->msg_queue_len - 1)
+ 		chan->msg_free = 0;
+ 	else
+ 		chan->msg_free++;
+@@ -70,7 +70,7 @@ static void msg_submit(struct mbox_chan *chan)
+ 	if (idx >= count)
+ 		idx -= count;
+ 	else
+-		idx += MBOX_TX_QUEUE_LEN - count;
++		idx += chan->msg_queue_len - count;
+ 
+ 	data = chan->msg_data[idx];
+ 
+@@ -346,6 +346,12 @@ struct mbox_chan *mbox_request_channel(struct mbox_client *cl, int index)
+ 	spin_lock_irqsave(&chan->lock, flags);
+ 	chan->msg_free = 0;
+ 	chan->msg_count = 0;
++	chan->msg_data = kcalloc(chan->msg_queue_len,
++				 sizeof(void *), GFP_ATOMIC);
++	if (!chan->msg_data) {
++		spin_unlock_irqrestore(&chan->lock, flags);
++		return ERR_PTR(-ENOMEM);
++	}
+ 	chan->active_req = NULL;
+ 	chan->cl = cl;
+ 	init_completion(&chan->tx_complete);
+@@ -420,6 +426,7 @@ void mbox_free_channel(struct mbox_chan *chan)
+ 	chan->active_req = NULL;
+ 	if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
+ 		chan->txdone_method = TXDONE_BY_POLL;
++	kfree(chan->msg_data);
+ 
+ 	module_put(chan->mbox->dev->driver->owner);
+ 	spin_unlock_irqrestore(&chan->lock, flags);
+@@ -477,6 +484,8 @@ int mbox_controller_register(struct mbox_controller *mbox)
+ 		chan->cl = NULL;
+ 		chan->mbox = mbox;
+ 		chan->txdone_method = txdone;
++		if (chan->msg_queue_len < MBOX_TX_QUEUE_LEN)
++			chan->msg_queue_len = MBOX_TX_QUEUE_LEN;
+ 		spin_lock_init(&chan->lock);
+ 	}
+ 
+diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+index 74deadb..eba3fed 100644
+--- a/include/linux/mailbox_controller.h
++++ b/include/linux/mailbox_controller.h
+@@ -110,6 +110,7 @@ struct mbox_controller {
+  * @active_req:		Currently active request hook
+  * @msg_count:		No. of mssg currently queued
+  * @msg_free:		Index of next available mssg slot
++ * @msg_queue_len:	Max number of mssg which can be queued
+  * @msg_data:		Hook for data packet
+  * @lock:		Serialise access to the channel
+  * @con_priv:		Hook for controller driver to attach private data
+@@ -120,8 +121,8 @@ struct mbox_chan {
+ 	struct mbox_client *cl;
+ 	struct completion tx_complete;
+ 	void *active_req;
+-	unsigned msg_count, msg_free;
+-	void *msg_data[MBOX_TX_QUEUE_LEN];
++	unsigned int msg_count, msg_free, msg_queue_len;
++	void **msg_data;
+ 	spinlock_t lock; /* Serialise access to the channel */
+ 	void *con_priv;
  };
-@@ -994,10 +994,10 @@ static int flexrm_new_request(struct flexrm_ring *ring,
- 	msg->error = 0;
- 
- 	/* If no requests possible then save data pointer and goto done. */
--	reqid = ida_simple_get(&ring->requests_ida, 0,
--				RING_MAX_REQ_COUNT, GFP_KERNEL);
-+	spin_lock_irqsave(&ring->lock, flags);
-+	reqid = bitmap_find_free_region(ring->requests_bmap,
-+					RING_MAX_REQ_COUNT, 0);
- 	if (reqid < 0) {
--		spin_lock_irqsave(&ring->lock, flags);
- 		if (batch_msg)
- 			ring->last_pending_msg = batch_msg;
- 		else
-@@ -1005,13 +1005,16 @@ static int flexrm_new_request(struct flexrm_ring *ring,
- 		spin_unlock_irqrestore(&ring->lock, flags);
- 		return 0;
- 	}
-+	spin_unlock_irqrestore(&ring->lock, flags);
- 	ring->requests[reqid] = msg;
- 
- 	/* Do DMA mappings for the message */
- 	ret = flexrm_dma_map(ring->mbox->dev, msg);
- 	if (ret < 0) {
- 		ring->requests[reqid] = NULL;
--		ida_simple_remove(&ring->requests_ida, reqid);
-+		spin_lock_irqsave(&ring->lock, flags);
-+		bitmap_release_region(ring->requests_bmap, reqid, 0);
-+		spin_unlock_irqrestore(&ring->lock, flags);
- 		return ret;
- 	}
- 
-@@ -1088,7 +1091,9 @@ static int flexrm_new_request(struct flexrm_ring *ring,
- 	if (exit_cleanup) {
- 		flexrm_dma_unmap(ring->mbox->dev, msg);
- 		ring->requests[reqid] = NULL;
--		ida_simple_remove(&ring->requests_ida, reqid);
-+		spin_lock_irqsave(&ring->lock, flags);
-+		bitmap_release_region(ring->requests_bmap, reqid, 0);
-+		spin_unlock_irqrestore(&ring->lock, flags);
- 	}
- 
- 	return ret;
-@@ -1163,7 +1168,9 @@ static int flexrm_process_completions(struct flexrm_ring *ring)
- 
- 		/* Release reqid for recycling */
- 		ring->requests[reqid] = NULL;
--		ida_simple_remove(&ring->requests_ida, reqid);
-+		spin_lock_irqsave(&ring->lock, flags);
-+		bitmap_release_region(ring->requests_bmap, reqid, 0);
-+		spin_unlock_irqrestore(&ring->lock, flags);
- 
- 		/* Unmap DMA mappings */
- 		flexrm_dma_unmap(ring->mbox->dev, msg);
-@@ -1414,7 +1421,6 @@ static void flexrm_shutdown(struct mbox_chan *chan)
- 
- 		/* Release reqid for recycling */
- 		ring->requests[reqid] = NULL;
--		ida_simple_remove(&ring->requests_ida, reqid);
- 
- 		/* Unmap DMA mappings */
- 		flexrm_dma_unmap(ring->mbox->dev, msg);
-@@ -1424,6 +1430,9 @@ static void flexrm_shutdown(struct mbox_chan *chan)
- 		mbox_chan_received_data(chan, msg);
- 	}
- 
-+	/* Clear requests bitmap */
-+	bitmap_zero(ring->requests_bmap, RING_MAX_REQ_COUNT);
-+
- 	/* Release IRQ */
- 	if (ring->irq_requested) {
- 		irq_set_affinity_hint(ring->irq, NULL);
-@@ -1581,7 +1590,6 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 		ring->irq_requested = false;
- 		ring->msi_timer_val = MSI_TIMER_VAL_MASK;
- 		ring->msi_count_threshold = 0x1;
--		ida_init(&ring->requests_ida);
- 		memset(ring->requests, 0, sizeof(ring->requests));
- 		ring->bd_base = NULL;
- 		ring->bd_dma_base = 0;
-@@ -1590,6 +1598,7 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 		atomic_set(&ring->msg_send_count, 0);
- 		atomic_set(&ring->msg_cmpl_count, 0);
- 		spin_lock_init(&ring->lock);
-+		bitmap_zero(ring->requests_bmap, RING_MAX_REQ_COUNT);
- 		ring->last_pending_msg = NULL;
- 		ring->cmpl_read_offset = 0;
- 	}
-@@ -1701,9 +1710,7 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 
- static int flexrm_mbox_remove(struct platform_device *pdev)
- {
--	int index;
- 	struct device *dev = &pdev->dev;
--	struct flexrm_ring *ring;
- 	struct flexrm_mbox *mbox = platform_get_drvdata(pdev);
- 
- 	mbox_controller_unregister(&mbox->controller);
-@@ -1715,11 +1722,6 @@ static int flexrm_mbox_remove(struct platform_device *pdev)
- 	dma_pool_destroy(mbox->cmpl_pool);
- 	dma_pool_destroy(mbox->bd_pool);
- 
--	for (index = 0; index < mbox->num_rings; index++) {
--		ring = &mbox->rings[index];
--		ida_destroy(&ring->requests_ida);
--	}
--
- 	return 0;
- }
- 
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
