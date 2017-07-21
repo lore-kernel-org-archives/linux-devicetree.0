@@ -1,55 +1,50 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/6] FlexRM driver improvements
-Date: Fri, 21 Jul 2017 11:56:07 +0530
-Message-ID: <CAALAos8s880_waXZb+8hP2SYLYJ+-udmHMU_hZLWk+Wk5jS4qw@mail.gmail.com>
-References: <1500458142-19243-1-git-send-email-anup.patel@broadcom.com>
+From: Lars Persson <lars.persson@axis.com>
+Subject: Re: [PATCH 3/4] crypto: axis: add ARTPEC-6/7 crypto accelerator
+ driver
+Date: Fri, 21 Jul 2017 08:29:27 +0200
+Message-ID: <9a3e69da-bfa2-e47a-49a0-aeb50837308b@axis.com>
+References: <cover.1500557664.git.larper@axis.com>
+ <b2d7ce4b0fecc4e811c12573f44bd7c45f0147e2.1500557664.git.larper@axis.com>
+ <9168085.KJckqYBggK@tauon.chronox.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500458142-19243-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <9168085.KJckqYBggK@tauon.chronox.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: =?UTF-8?Q?Stephan_M=c3=bcller?= <smueller@chronox.de>, Lars Persson <larper@axis.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 19, 2017 at 3:25 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> This patchset does various improvments to Broadcom FlexRM
-> mailbox controller driver and also adds FlexRM DT nodes
-> for Stingray SOC.
->
-> The patches are based on Linux-4.13-rc1 and can also be
-> found at flexrm-imp-v1 branch of
-> https://github.com/Broadcom/arm64-linux.git
->
-> Anup Patel (6):
->   mailbox: bcm-flexrm-mailbox: Set IRQ affinity hint for FlexRM ring
->     IRQs
->   mailbox: bcm-flexrm-mailbox: Add debugfs support
->   mailbox: bcm-flexrm-mailbox: Fix mask used in CMPL_START_ADDR_VALUE()
->   mailbox: Make message send queue size dynamic in Linux mailbox
->   mailbox: bcm-flexrm-mailbox: Set msg_queue_len for each channel
->   arm64: dts: Add FlexRM DT nodes for Stingray
 
-One patch was missed-out in this series which was about
-using bitmap instead of IDA to avoid locking issues. I will
-send revised patchset to include this patch.
 
+On 07/20/2017 04:51 PM, Stephan Müller wrote:
+> Am Donnerstag, 20. Juli 2017, 15:44:31 CEST schrieb Lars Persson:
 >
->  .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   |  54 +++++++
->  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |   2 +
->  drivers/mailbox/bcm-flexrm-mailbox.c               | 160 ++++++++++++++++++++-
->  drivers/mailbox/mailbox.c                          |  15 +-
->  include/linux/mailbox_controller.h                 |   5 +-
->  5 files changed, 227 insertions(+), 9 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+> Hi Lars,
 >
-> --
-> 2.7.4
+>> +static int
+>> +artpec6_crypto_cipher_set_key(struct crypto_skcipher *cipher, const u8
+>> *key, +			      unsigned int keylen)
+>> +{
+>> +	struct artpec6_cryptotfm_context *ctx =
+>> +		crypto_skcipher_ctx(cipher);
+>> +
+>> +	if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_NULL)
+>> +		return 0;
+>> +
+>> +	switch (keylen) {
+>> +	case 16:
+>> +	case 24:
+>> +	case 32:
+>> +		break;
+>> +	case 48:
+>> +	case 64:
+>> +		if (ctx->crypto_type == ARTPEC6_CRYPTO_CIPHER_AES_XTS)
 >
+> Could you please add xts_check_key for XTS keys?
+>
+Sure, I will add this in v2.
 
-Regards,
-Anup
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+  Lars
