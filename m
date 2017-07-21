@@ -1,68 +1,33 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH v2] of: provide of_n_{addr,size}_cells wrappers for !CONFIG_OF
-Date: Fri, 21 Jul 2017 23:09:50 +0200
-Message-ID: <20170721211000.3382004-1-arnd@arndb.de>
+From: "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: qoriq-clock: Add coreclk
+Date: Fri, 21 Jul 2017 15:03:23 -0700
+Message-ID: <20170721220323.GN19878@codeaurora.org>
+References: <1487137656-4006-1-git-send-email-yuantian.tang@nxp.com>
+ <20170227171837.eymnyebgn7ocsp7w@rob-hp-laptop>
+ <DB6PR0402MB2837EB5F759C39616BF8A904F3210@DB6PR0402MB2837.eurprd04.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB2837EB5F759C39616BF8A904F3210-2mNvjAGDOPlOuRXvvz5UoY3W/0Ik+aLCnBOFsp37pqbUKgpGm//BTAC/G2K4zDHf@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Richard Fitzgerald <rf-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Y.T. Tang" <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Cc: "mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org" <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The pci-rcar driver is enabled for compile tests, and this has
-shown that the driver cannot build without CONFIG_OF:
+On 03/09, Y.T. Tang wrote:
+> Hi Michael and Stephen,
+> 
+> This patch set was acked by Rob Herring. Do you have any comments on them?
+> 
+> BTW:  Scott should stay in author, do I need to resend them with author changed or you can change it when applying?
+> 
 
-drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
-drivers/pci/host/pcie-rcar.c:1039:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
-  parser->pna = of_n_addr_cells(node);
-  ^
-As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
-supposed to build fine, which we can achieve if we make the
-declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
-and provide an empty inline function otherwise, as we do for
-a lot of other of interfaces.
+Please resend these two patches.
 
-This lets us build the rcar_pci driver again without CONFIG_OF
-for build testing. All platforms using this driver select OF,
-so this doesn't change anything for the users.
-
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Reviewed-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
-Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-I originally sent the patch in 2014 when things initially broke
-and then forgot about while it was applied in my randconfig patch
-stack. I sent it again in 2016 without reply.
-
-It's still broken and I think this is the correct fix.
-v2: modify changelog as Geert suggested.
-
- include/linux/of.h | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4a8a70916237..1efdbe53136c 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -735,6 +735,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
- 	return NULL;
- }
- 
-+static inline int of_n_addr_cells(struct device_node *np) { return 0; }
-+static inline int of_n_size_cells(struct device_node *np) { return 0; }
-+
- static inline int of_property_read_u64(const struct device_node *np,
- 				       const char *propname, u64 *out_value)
- {
 -- 
-2.9.0
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
