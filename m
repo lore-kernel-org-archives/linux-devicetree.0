@@ -1,50 +1,66 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
- bindings
-Date: Fri, 21 Jul 2017 13:44:39 -0700
-Message-ID: <20170721204439.GJ19878@codeaurora.org>
-References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
- <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
- <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] of: provide of_n_{addr,size}_cells wrappers for !CONFIG_OF
+Date: Fri, 21 Jul 2017 22:57:09 +0200
+Message-ID: <CAMuHMdV3Gm6S52kZ095MiJAbBMw1fr_bn1Z2TRBoDevQuhyavQ@mail.gmail.com>
+References: <20170721202012.3360244-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170721202012.3360244-1-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Sudeep Holla <sudeep.holla@arm.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Alan Tull <atull@opensource.altera.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Richard Fitzgerald <rf@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09, Rob Herring wrote:
-> On Thu, Jul 06, 2017 at 12:24:23PM +0200, Neil Armstrong wrote:
-> > On the first revision of the bindings, only the gates + resets were known
-> > in the AO Clock HW, but more registers used to configures AO clock are known
-> > to be spread among the AO register space.
-> > This patch adds these registers to the Ao Clock bindings with direct access
-> > and shared extcon access.
-> > 
-> > Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt         | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> This looks like the binding might be too specific with a reg list of 
-> single registers, and you should define a system controller node 
-> instead. Depends on what else is in the "A0" block.
-> 
+Hi Arnd,
 
-Agreed. Why can't we expand the size in DT and then access the
-registers directly in the driver. Hopefully it keeps working to
-apply the dts patch without the driver patch too (and
-vice-versa), because the kernel can only make a mapping as small
-as a page which would cover these newly added reg properties
-anyway.
+On Fri, Jul 21, 2017 at 10:19 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> The pci-rcar driver is enabled for compile tests, and this has
+> now shown that the driver cannot build without CONFIG_OF,
+> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+> interrupt mapping when possible":
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+That commit is for pci-rcar-gen2.c, not pcie-rcar.c.
+
+> ../drivers/pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+> ../drivers/pci/host/pcie-rcar.c:856:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
+
+The line number has changed to 1039 during the last 3 years?
+
+>   parser->pna = of_n_addr_cells(node);
+>   ^
+> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+> supposed to build fine, which we can achieve if we make the
+> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+> and provide an empty inline function otherwise, as we do for
+> a lot of other of interfaces.
+>
+> This lets us build the rcar_pci driver again without CONFIG_OF
+> for build testing. All platforms using this driver select OF,
+> so this doesn't change anything for the users.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Magnus Damm <damm@opensource.se>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+
+Apart from that, for the actual change:
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
