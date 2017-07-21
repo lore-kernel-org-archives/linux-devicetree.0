@@ -1,108 +1,71 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] dma: Add Spreadtrum DMA controller driver
-Date: Fri, 21 Jul 2017 11:27:43 +0800
-Message-ID: <CAMz4ku+Vcc3LO8wGTT8QjdwWwtZAwFBMJW0uD=Z5uNVRgyO3zw@mail.gmail.com>
-References: <63f2b93b3e484862f736e37d6d422b5566637163.1500361078.git.baolin.wang@spreadtrum.com>
- <4331ea088a26f515fe1f1912c568bfd07d539e9d.1500361078.git.baolin.wang@spreadtrum.com>
- <CAAfSe-sf=a_tAQm7rrnfUtOePRqvQrkmbN_M0hxSvLQ1KgocMA@mail.gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 2/4] gpio: davinci: Handle the return value of
+ davinci_gpio_irq_setup function
+Date: Fri, 21 Jul 2017 09:23:01 +0530
+Message-ID: <e92684af-9fc9-7643-ba7f-39799e64810f@ti.com>
+References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
+ <1500375436-9435-3-git-send-email-j-keerthy@ti.com>
+ <20170719111000.GX29638@localhost>
+ <cbea9082-3799-281b-1364-50e442f5362f@ti.com>
+ <cc66dfaf-05c5-8d55-03a6-556ec83c4487@ti.com>
+ <20170720095047.GA2729@localhost>
+ <47055927-5102-b39f-fdbb-b5d89cb14632@ti.com>
+ <20170720100509.GB2729@localhost>
+ <02965359-ecf1-b934-6b7a-87162d7d00a4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAAfSe-sf=a_tAQm7rrnfUtOePRqvQrkmbN_M0hxSvLQ1KgocMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <02965359-ecf1-b934-6b7a-87162d7d00a4@ti.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Johan Hovold <johan@kernel.org>
+Cc: linus.walleij@linaro.org, ssantosh@kernel.org, devicetree@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, fcooper@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunyan,
 
-On 21 July 2017 at 10:50, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Baolin,
->
-> On 18 July 2017 at 15:06, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
->> This patch adds the DMA controller driver for Spreadtrum SC9860 platform.
->
-> I guess this driver is not only for SC9860, instead it should work for
-> all most all Spreadtrum's platforms?
 
-No, now this driver is only for SC9860 platform. If we make this
-driver work on other Spreadtrum platform, we should submit new patches
-with modifing DT binding files and compatible string.
-
->
+On Friday 21 July 2017 03:04 AM, Grygorii Strashko wrote:
+> 
+> 
+> On 07/20/2017 05:05 AM, Johan Hovold wrote:
+>> On Thu, Jul 20, 2017 at 03:32:27PM +0530, Keerthy wrote:
+>>> On Thursday 20 July 2017 03:20 PM, Johan Hovold wrote:
+>>>> On Thu, Jul 20, 2017 at 02:40:37PM +0530, Keerthy wrote:
+>>>>> On Thursday 20 July 2017 12:14 PM, Keerthy wrote:
+>>>>>> On Wednesday 19 July 2017 04:40 PM, Johan Hovold wrote:
 >>
->> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
->> ---
->>  drivers/dma/Kconfig          |    7 +
->>  drivers/dma/Makefile         |    1 +
->>  drivers/dma/sprd-dma.c       | 1451 ++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/dma/sprd-dma.h |  270 ++++++++
->>  4 files changed, 1729 insertions(+)
->>  create mode 100644 drivers/dma/sprd-dma.c
->>  create mode 100644 include/linux/dma/sprd-dma.h
+>>>>>>> There's a separate but related bug here too as the clk_prepare_enable()
+>>>>>>> in davinci_gpio_irq_setup() is never balanced on driver unbind.
+>>>>>>
+>>>>>> Yes Johan. I will send that as a separate patch.
+>>>>>
+>>>>> This is already fixed in the latest kernel:
+>>>>>
+>>>>> commit 6dc0048cff988858254fcc26becfc1e9753efa79
+>>>>> Author: Arvind Yadav <arvind.yadav.cs@gmail.com>
+>>>>> Date:   Tue May 23 14:48:57 2017 +0530
+>>>>
+>>>> That change only handles errors in davinci_gpio_irq_setup() (i.e. during
+>>>> probe) and not the imbalance at driver unbind that I was referring to.
+>>>
+>>> Okay got it. One more clk_unprepare_disable() call needs to be there in
+>>> probe err path.
 >>
->> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> index fa8f9c0..961f6ea 100644
->> --- a/drivers/dma/Kconfig
->> +++ b/drivers/dma/Kconfig
->> @@ -477,6 +477,13 @@ config STM32_DMA
->>           If you have a board based on such a MCU and wish to use DMA say Y
->>           here.
+>> No, you need to balance it on driver unbind, that is, in a new remove()
+>> callback.
 >>
->> +config SPRD_DMA
->> +       bool "Spreadtrum DMA support"
->> +       depends on ARCH_SPRD
->> +       select DMA_ENGINE
->> +       help
->> +         Enable support for the on-chip DMA controller on Spreadtrum platform.
->> +
->>  config S3C24XX_DMAC
->>         bool "Samsung S3C24XX DMA support"
->>         depends on ARCH_S3C24XX || COMPILE_TEST
->> diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
->> index d12ab29..0fee561 100644
->> --- a/drivers/dma/Makefile
->> +++ b/drivers/dma/Makefile
->> @@ -58,6 +58,7 @@ obj-$(CONFIG_RENESAS_DMA) += sh/
->>  obj-$(CONFIG_SIRF_DMA) += sirf-dma.o
->>  obj-$(CONFIG_STE_DMA40) += ste_dma40.o ste_dma40_ll.o
->>  obj-$(CONFIG_STM32_DMA) += stm32-dma.o
->> +obj-$(CONFIG_SPRD_DMA) += sprd-dma.o
->>  obj-$(CONFIG_S3C24XX_DMAC) += s3c24xx-dma.o
->>  obj-$(CONFIG_TXX9_DMAC) += txx9dmac.o
->>  obj-$(CONFIG_TEGRA20_APB_DMA) += tegra20-apb-dma.o
->> diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
->> new file mode 100644
->> index 0000000..64eaef7
->> --- /dev/null
->> +++ b/drivers/dma/sprd-dma.c
->> @@ -0,0 +1,1451 @@
->> +/*
->> + * Copyright (C) 2017 Spreadtrum Communications Inc.
->> + *
->> + * This software is licensed under the terms of the GNU General Public
->> + * License version 2, as published by the Free Software Foundation, and
->> + * may be copied, distributed, and modified under those terms.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->
-> In order to keep consistent with other Spreadtrum's drivers/ DT files
-> that had been upstreamed, I suggest to use SPDX-License-Identifier
-> tag.
+> 
+> Sry, but manual driver unbind for this driver is really smth unexpected ;(
+> So, I'm not sure if it need to be implemented and even yes - it should not be
+> a part of this patch. Probably, smth like "convert driver to be a module".
+> 
 
-Since I saw other new drivers still use this license and I am not sure
-we must change to SPDX-License-Identifier tag. But it is fine for me
-to change the license tag.
+The GPIO_DAVINCI config is bool. Thanks for checking on that Grygorii.
 
--- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> By the way, I've tried to unbind gpio-omap, result - failure (expected),
+> as unbind does not take into account module refcnt state.
+
+Okay.
+
+> 
+> 
