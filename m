@@ -1,42 +1,45 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: irq: fix of_irq_to_resource() error check
-Date: Fri, 21 Jul 2017 17:07:52 -0500
-Message-ID: <20170721220752.3tn622apuetutbor@rob-hp-laptop>
-References: <20170721173108.578363976@cogentembedded.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/2] MAINTAINERS: device property: acpi: add fwnode.h
+Date: Sat, 22 Jul 2017 00:03:41 +0200
+Message-ID: <2851122.8a0ts3VkAi@aspire.rjw.lan>
+References: <1500578005-25893-1-git-send-email-frowand.list@gmail.com> <1500578005-25893-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170721173108.578363976-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1500578005-25893-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Rob Herring <robh+dt@kernel.org>, Len Brown <lenb@kernel.org>, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 21, 2017 at 08:30:39PM +0300, Sergei Shtylyov wrote:
-> of_irq_to_resource() has recently been fixed to return negative error #'s
-> along with 0, however of_irq_to_resource_table() still only regards 0 as
-> invalid IRQ -- fix it up.
+On Thursday, July 20, 2017 12:13:24 PM frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
-> Fixes: 7a4228bbff76 ("of: irq: use of_irq_get() in of_irq_to_resource()")
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> ACPI is impacted by changes to fwnode.h, add a file entry
+> to ACPI
 > 
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+
+ACK for this one.
+
+Or do you want me to apply it?
+
 > ---
-> The patch is against the 'dt/linus' branch of Rob Herring's 'linux.git' repo.
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  drivers/of/irq.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 205d3977ac46..c0ac362e850a 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -302,6 +302,7 @@ S:	Supported
+>  F:	drivers/acpi/
+>  F:	drivers/pnp/pnpacpi/
+>  F:	include/linux/acpi.h
+> +F:	include/linux/fwnode.h
+>  F:	include/acpi/
+>  F:	Documentation/acpi/
+>  F:	Documentation/ABI/testing/sysfs-bus-acpi
+> 
 
-Applied.
-
-BTW, all the users of of_irq_to_resource_table outside of the DT 
-platform code are erroneous IMO. Either the resources are already 
-available when probing or only a single resource is retrieved. These may 
-have been working around a problem that some resources couldn't be 
-resolved at device creation time which is now fixed.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
