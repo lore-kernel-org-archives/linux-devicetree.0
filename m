@@ -1,100 +1,47 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 7/7] arm64: dts: Add FlexRM DT nodes for Stingray
-Date: Fri, 21 Jul 2017 12:25:42 +0530
-Message-ID: <1500620142-910-8-git-send-email-anup.patel@broadcom.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for each channel
+Date: Fri, 21 Jul 2017 12:25:41 +0530
+Message-ID: <1500620142-910-7-git-send-email-anup.patel@broadcom.com>
 References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>, Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500620142-910-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-We have two instances of FlexRM on Stingray. One for SBA RAID
-offload engine and another for SPU2 Crypto offload engine.
+The Broadcom FlexRM ring (i.e. mailbox channel) can handle
+larger number of messages queued in one FlexRM ring hence
+this patch sets msg_queue_len for each mailbox channel to
+be same as RING_MAX_REQ_COUNT.
 
-This patch adds FlexRM mailbox controller DT nodes for Stingray.
-
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Signed-off-by: Raveendra Padasalagi <raveendra.padasalagi@broadcom.com>
+Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   | 54 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  2 +
- 2 files changed, 56 insertions(+)
- create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+ drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-new file mode 100644
-index 0000000..1f927c4
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-@@ -0,0 +1,54 @@
-+/*
-+ *  BSD LICENSE
-+ *
-+ *  Copyright(c) 2016-2017 Broadcom.  All rights reserved.
-+ *
-+ *  Redistribution and use in source and binary forms, with or without
-+ *  modification, are permitted provided that the following conditions
-+ *  are met:
-+ *
-+ *    * Redistributions of source code must retain the above copyright
-+ *      notice, this list of conditions and the following disclaimer.
-+ *    * Redistributions in binary form must reproduce the above copyright
-+ *      notice, this list of conditions and the following disclaimer in
-+ *      the documentation and/or other materials provided with the
-+ *      distribution.
-+ *    * Neither the name of Broadcom nor the names of its
-+ *      contributors may be used to endorse or promote products derived
-+ *      from this software without specific prior written permission.
-+ *
-+ *  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-+ *  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-+ *  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-+ *  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-+ *  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-+ *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-+ *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-+ *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-+ *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+	fs4: fs4 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x67000000 0x00800000>;
-+
-+		crypto_mbox: crypto_mbox@00000000 {
-+			compatible = "brcm,iproc-flexrm-mbox";
-+			reg = <0x00000000 0x200000>;
-+			msi-parent = <&gic_its 0x4100>;
-+			#mbox-cells = <3>;
-+			dma-coherent;
-+		};
-+
-+		raid_mbox: raid_mbox@00400000 {
-+			compatible = "brcm,iproc-flexrm-mbox";
-+			reg = <0x00400000 0x200000>;
-+			dma-coherent;
-+			msi-parent = <&gic_its 0x4300>;
-+			#mbox-cells = <3>;
-+		};
-+	};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 49933cf..a98fbe9a 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -261,6 +261,8 @@
- 		};
- 	};
+diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+index 9873818..20055a0 100644
+--- a/drivers/mailbox/bcm-flexrm-mailbox.c
++++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+@@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+ 		ret = -ENOMEM;
+ 		goto fail_free_debugfs_root;
+ 	}
+-	for (index = 0; index < mbox->num_rings; index++)
++	for (index = 0; index < mbox->num_rings; index++) {
++		mbox->controller.chans[index].msg_queue_len =
++						RING_MAX_REQ_COUNT;
+ 		mbox->controller.chans[index].con_priv = &mbox->rings[index];
++	}
  
-+	#include "stingray-fs4.dtsi"
-+
- 	hsls {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
+ 	/* Register mailbox controller */
+ 	ret = mbox_controller_register(&mbox->controller);
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
