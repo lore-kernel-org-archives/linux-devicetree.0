@@ -1,90 +1,28 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] iio: humidity: hts221: support open drain mode
-Date: Sat, 22 Jul 2017 21:25:24 +0100
-Message-ID: <20170722212524.6fc06db7@kernel.org>
-References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-        <20170717173905.8209-9-lorenzo.bianconi@st.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] ARM: dts: enable sdmmc for rockchip rv1108 evb
+Date: Sat, 22 Jul 2017 22:47:35 +0200
+Message-ID: <14029252.zVFmYa7h66@phil>
+References: <1500545621-20746-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173905.8209-9-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500545621-20746-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jul 2017 19:39:03 +0200
-Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-
-> Add open drain support in order to share requested IRQ line between
-> hts221 device and other peripherals
+Am Donnerstag, 20. Juli 2017, 18:13:41 CEST schrieb Andy Yan:
+> Enable sdmmc on rv1108 evaluation board. Also
+> add pinctrl for sdmmc controller.
 > 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-I'm going to hold off on the rest of this series to give Rob
-time to take another look at the bindings documentation and
-confirm he is happy with the changes.
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 
-Give me a poke if I seem to have forgotten them!
+applied for 4.14, after adapting the subject to
+	ARM: dts: rockchip: enable sdmmc for rv1108 evb
 
-Jonathan
-> ---
->  drivers/iio/humidity/hts221_buffer.c | 22 +++++++++++++++++++++-
->  1 file changed, 21 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-> index ad5222295b2c..f29f01a22375 100644
-> --- a/drivers/iio/humidity/hts221_buffer.c
-> +++ b/drivers/iio/humidity/hts221_buffer.c
-> @@ -20,10 +20,14 @@
->  #include <linux/iio/triggered_buffer.h>
->  #include <linux/iio/buffer.h>
->  
-> +#include <linux/platform_data/st_sensors_pdata.h>
-> +
->  #include "hts221.h"
->  
->  #define HTS221_REG_DRDY_HL_ADDR		0x22
->  #define HTS221_REG_DRDY_HL_MASK		BIT(7)
-> +#define HTS221_REG_DRDY_PP_OD_ADDR	0x22
-> +#define HTS221_REG_DRDY_PP_OD_MASK	BIT(6)
->  #define HTS221_REG_STATUS_ADDR		0x27
->  #define HTS221_RH_DRDY_MASK		BIT(1)
->  #define HTS221_TEMP_DRDY_MASK		BIT(0)
-> @@ -69,7 +73,9 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
->  int hts221_allocate_trigger(struct hts221_hw *hw)
->  {
->  	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
-> -	bool irq_active_low = false;
-> +	bool irq_active_low = false, open_drain = false;
-> +	struct device_node *np = hw->dev->of_node;
-> +	struct st_sensors_platform_data *pdata;
->  	unsigned long irq_type;
->  	int err;
->  
-> @@ -95,6 +101,20 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
->  				     HTS221_REG_DRDY_HL_MASK, irq_active_low);
->  	if (err < 0)
->  		return err;
-> +
-> +	pdata = (struct st_sensors_platform_data *)hw->dev->platform_data;
-> +	if ((np && of_property_read_bool(np, "drive-open-drain")) ||
-> +	    (pdata && pdata->open_drain)) {
-> +		irq_type |= IRQF_SHARED;
-> +		open_drain = true;
-> +	}
-> +
-> +	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_PP_OD_ADDR,
-> +				     HTS221_REG_DRDY_PP_OD_MASK,
-> +				     open_drain);
-> +	if (err < 0)
-> +		return err;
-> +
->  	err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
->  					hts221_trigger_handler_thread,
->  					irq_type | IRQF_ONESHOT,
+and moving the pinctrl properties down some lines
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Heiko
