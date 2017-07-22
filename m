@@ -1,73 +1,116 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCHv4 3/4] dt-bindings: mfd: da9052: support TSI as ADC
-Date: Sat, 22 Jul 2017 21:08:29 +0200
-Message-ID: <20170722190828.agqsto5sbfmtwprz@earth>
-References: <20170630143506.10541-1-sebastian.reichel@collabora.co.uk>
- <20170630143506.10541-4-sebastian.reichel@collabora.co.uk>
- <20170717104945.6qn6to7s3mlepxgj@dell>
- <20170717112711.eskydrt4pu32v74g@earth>
- <b0d58a26-d0b4-a6ec-811a-159bbb8b44d1@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="u73op4dt6wvruqqd"
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v4 1/7] dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentation
+Date: Sat, 22 Jul 2017 21:19:40 +0200
+Message-ID: <20170722191946.22938-2-martin.blumenstingl@googlemail.com>
+References: <20170722191946.22938-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b0d58a26-d0b4-a6ec-811a-159bbb8b44d1-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <20170722191946.22938-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Support Opensource <support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
 
---u73op4dt6wvruqqd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With this patch we add documentation for:
 
-Hi,
+* power-management-unit: the PMU is used to bring up the cores during
+  SMP operations
+* sram: among other things the sram is used to store the first code
+  executed by the core when it is powered up
+* cpu-enable-method: the CPU enable method used by Amlogic Meson8 and
+  Meson8b SoCs
 
-On Sat, Jul 22, 2017 at 08:09:08AM -0700, Guenter Roeck wrote:
-> Yes, but you dropped all the Acks in v6. That is supposed to mean that th=
-ere
-> was a substantial change to the patch, and that it needs to be re-reviewe=
-d.
-> For the hwmon patches, I ran a diff against v5 and noticed that there was=
- no
-> change between v5 and v6, yet you dropped my Acks. Do you really expect us
-> to do all that work on your behalf ?
->=20
-> Sorry if I sound a bit annoyed. That is because I _am_ a bit annoyed.
-> Please keep in mind that you are taking our time.
+Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+[also add Meson8 to the documentation]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/arm/amlogic/pmu.txt        | 18 ++++++++++++
+ .../devicetree/bindings/arm/amlogic/smp-sram.txt   | 32 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     |  2 ++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
 
-FWIW, I did not drop them, but forgot to add the ones I received in
-PATCHv5. Mainly since I initially did not plan to resend the whole
-patchset, but then decided otherwise.
+diff --git a/Documentation/devicetree/bindings/arm/amlogic/pmu.txt b/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+new file mode 100644
+index 000000000000..72f8d08198b6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/amlogic/pmu.txt
+@@ -0,0 +1,18 @@
++Amlogic Meson8 and Meson8b power-management-unit:
++-------------------------------------------------
++
++The pmu is used to turn off and on different power domains of the SoCs
++This includes the power to the CPU cores.
++
++Required node properties:
++- compatible value : depending on the SoC this should be one of:
++			"amlogic,meson8-pmu"
++			"amlogic,meson8b-pmu"
++- reg : physical base address and the size of the registers window
++
++Example:
++
++	pmu@c81000e4 {
++		compatible = "amlogic,meson8b-pmu", "syscon";
++		reg = <0xc81000e0 0x18>;
++	};
+diff --git a/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt b/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
+new file mode 100644
+index 000000000000..3473ddaadfac
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
+@@ -0,0 +1,32 @@
++Amlogic Meson8 and Meson8b SRAM for smp bringup:
++------------------------------------------------
++
++Amlogic's SMP-capable SoCs use part of the sram for the bringup of the cores.
++Once the core gets powered up it executes the code that is residing at a
++specific location.
++
++Therefore a reserved section sub-node has to be added to the mmio-sram
++declaration.
++
++Required sub-node properties:
++- compatible : depending on the SoC this should be one of:
++		"amlogic,meson8-smp-sram"
++		"amlogic,meson8b-smp-sram"
++
++The rest of the properties should follow the generic mmio-sram discription
++found in ../../misc/sram.txt
++
++Example:
++
++	sram: sram@d9000000 {
++		compatible = "mmio-sram";
++		reg = <0xd9000000 0x20000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0xd9000000 0x20000>;
++
++		smp-sram@1ff80 {
++			compatible = "amlogic,meson8b-smp-sram";
++			reg = <0x1ff80 0x8>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a44253cad269..1ef3e53b9be7 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -197,6 +197,8 @@ described below.
+ 			    "actions,s500-smp"
+ 			    "allwinner,sun6i-a31"
+ 			    "allwinner,sun8i-a23"
++			    "amlogic,meson8-smp"
++			    "amlogic,meson8b-smp"
+ 			    "arm,realview-smp"
+ 			    "brcm,bcm11351-cpu-method"
+ 			    "brcm,bcm23550"
+-- 
+2.13.3
 
-Sorry anyways.
-
--- Sebastian
-
---u73op4dt6wvruqqd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllzoqwACgkQ2O7X88g7
-+ppWxw//WMWPq4/3a6QHa1omjPHwvUTNlLZQYDg2n7rhD9fObHMLJLenmFSRr2c7
-c9jDCTe1knXjlvbvjnkaAIgRYLzCdYcweGnlIDaO872AncLSHyw3AiRG6SoqRzzU
-Prnbe0FsGovJQiQAikuvIJMJjgCHWm5KwfrNrS43q5wi1lhasgYVfqk1Xh7ot046
-3heU+StY2LlPCBJfeQKU/bUy6jxzDdcl6aj81Nq00UG7Hh4rDrbcIXfVAEFp/ceZ
-XKh3vItvm9kCSmysAFsrsmCkgvPqd+D+LRzMFI3XhFwVGjdzQIptOlaMgZvqXIXt
-sK3aAIwkalqHa12tT4WQY74d9K4kd8vdW65OTvNpgln5p7QX7mIh0+70Hlwf51rn
-DLyf5Q91ckO5SHjAN8Nvv8mHZZZNi4CIs4veKojwWropsnQQsOcwKXveSZyh+7K4
-eYoRzL2oZZc6ve9t1Plf6ydyMXcN1rlG8t04XjeYpqfbHL+hVkuZIpil9RjbSAWR
-aHNkxW6VFVIZLTK6MPYjL6fL+kFSSgihypmmiN3Aht6NoE2wR740135u+NDJRj7b
-Xwp3q9P/SkYs04kZGKISnY5bT0aTUWwyEWecqf5WFPtR8u9CinMPZo6AuglxvICz
-pzKuJf3oPuxYCG87pS0B1Q3yKVGXSdq3OdjLViGhoyLyUQGCCEY=
-=mAPT
------END PGP SIGNATURE-----
-
---u73op4dt6wvruqqd--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
