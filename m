@@ -1,56 +1,64 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/3] dt-bindings: clock: meson8b: describe the embedded reset controller
-Date: Sat, 22 Jul 2017 20:58:05 +0200
-Message-ID: <20170722185807.10504-2-martin.blumenstingl@googlemail.com>
-References: <20170722185807.10504-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/3] add the reset controller to the Meson8b clkc
+Date: Sat, 22 Jul 2017 20:58:04 +0200
+Message-ID: <20170722185807.10504-1-martin.blumenstingl@googlemail.com>
 Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170722185807.10504-1-martin.blumenstingl@googlemail.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, robh+dt@kernel.org
 Cc: devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic Meson8/Meson8b/Meson8m2 clock controller provides some reset
-lines. These are used for example to boot the secondary CPU cores.
+This registers the known (soft) reset lines provided by the clock
+controller's registers.
 
-This patch describes the reset controller which is embedded into the
-clock controller on these SoCs.
+This is the first preparation step for SMP and CPU hotplug support on
+Meson8/Meson8b/Meson8m2. Booting the secondary cores on these SoCs
+requires asserting and de-asserting a reset line (one for each CPU
+core). These reset lines are provided by the clock controller.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+The reset controller part of the meson8b clock controller has to be
+registered early (which I did through CLK_OF_DECLARE_DRIVER), because
+the secondary cores are started *very* early in the boot process (and
+meson8b_clkc_probe is invoked long after we need the reset controller
+to be available for booting the secondary CPU cores).
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-index 606da38c0959..e1af4764114d 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-+++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
-@@ -16,18 +16,24 @@ Required Properties:
- 	   mapped region.
- 
- - #clock-cells: should be 1.
-+- #reset-cells: should be 1.
- 
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume. All available clocks are defined as
- preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
- used in device tree sources.
-+This is also valid for the reset lines provided by the clock controller: a
-+preprocessor macro for each reset line is defined (in the same header file as
-+the clock identifiers).
-+
- 
- Example: Clock controller node:
- 
- 	clkc: clock-controller@c1104000 {
--		#clock-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
- 		reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
- 	};
- 
- 
+The user of the reset-controller (= the patches which enable SMP and
+CPU hotplug support) will follow in the next days. I decided to split
+this because the SMP series will probably consist of 6 patches alone
+(and may need to go through two separate trees).
+
+
+Changes since v1 at [0]:
+- updated cover letter description as we are now registering more than
+  four reset lines
+- split patch #1 into a dt-binding and clk driver patch
+- slightly reworded the dt-binding documentation so it's now clear that
+  the reset identifiers are preprocessor macros in
+  dt-bindings/clock/meson8b-clkc.h (v1 of this series didn't have these
+  macros at all)
+- patch #2 (previously part of patch #1) now registers all known reset
+  lines (see [1] and [2] for the results of my detective work)
+- patch #3 is untouched
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004283.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004330.html
+[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004347.html
+
+
+Martin Blumenstingl (3):
+  dt-bindings: clock: meson8b: describe the embedded reset controller
+  clk: meson: meson8b: register the built-in reset controller
+  ARM: dts: meson: mark the clock controller also as reset controller
+
+ .../bindings/clock/amlogic,meson8b-clkc.txt        |   8 +-
+ arch/arm/boot/dts/meson8.dtsi                      |   1 +
+ arch/arm/boot/dts/meson8b.dtsi                     |   1 +
+ drivers/clk/meson/Kconfig                          |   1 +
+ drivers/clk/meson/meson8b.c                        | 159 +++++++++++++++++++--
+ drivers/clk/meson/meson8b.h                        |  25 +++-
+ 6 files changed, 181 insertions(+), 14 deletions(-)
+
 -- 
 2.13.3
 
