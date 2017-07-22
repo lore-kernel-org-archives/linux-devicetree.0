@@ -1,61 +1,74 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/10] iio: humidity: hts221: move BDU configuration
- in probe routine
-Date: Sat, 22 Jul 2017 18:58:21 +0100
-Message-ID: <20170722185821.054fea8a@kernel.org>
+Subject: Re: [PATCH v2 03/10] iio: humidity: hts221: do not overwrite
+ reserved data during power-down
+Date: Sat, 22 Jul 2017 19:02:15 +0100
+Message-ID: <20170722190215.5922dafb@kernel.org>
 References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-        <20170717173905.8209-3-lorenzo.bianconi@st.com>
+        <20170717173905.8209-4-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173905.8209-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170717173905.8209-4-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jul 2017 19:38:57 +0200
+On Mon, 17 Jul 2017 19:38:58 +0200
 Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Enable Block Data Update in hts221_probe() in order to avoid to reconfigure
-> it every time the sensor is enabled
+> GENMASK(6, 3) in CTRL_REG1 and GENMASK(6, 2) in CTRL_REG2 are marked
+> reserved. Do not changed the original value (not declared in the
+> datasheet) during power-down/suspend routines.
 > 
+> Fixes: e4a70e3e7d84 (iio: humidity: add support to hts221 rh/temp device)
+> Fixes: b7079eeac5da (iio: humidity: hts221: add power management support)
 > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Applied.  Thanks,
+Applied to the togreg branch of iio.git and pushed out as testing.
+
+If we want to do a backport of this it would be fine, but it needs
+to require absolute minimal changes to the driver.
 
 Jonathan
 > ---
->  drivers/iio/humidity/hts221_core.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+>  drivers/iio/humidity/hts221_core.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 > 
 > diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> index d2f59626b040..47a29b2da1ce 100644
+> index 47a29b2da1ce..6e5847386a45 100644
 > --- a/drivers/iio/humidity/hts221_core.c
 > +++ b/drivers/iio/humidity/hts221_core.c
-> @@ -203,12 +203,6 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
->  	if (i == ARRAY_SIZE(hts221_odr_table))
->  		return -EINVAL;
+> @@ -305,11 +305,10 @@ int hts221_power_on(struct hts221_hw *hw)
 >  
-> -	/* enable Block Data Update */
-> -	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> -				     HTS221_BDU_MASK, 1);
-> -	if (err < 0)
-> -		return err;
-> -
->  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
->  				     HTS221_ODR_MASK, hts221_odr_table[i].val);
->  	if (err < 0)
-> @@ -644,6 +638,12 @@ int hts221_probe(struct iio_dev *iio_dev)
->  	iio_dev->name = HTS221_DEV_NAME;
->  	iio_dev->info = &hts221_info;
+>  int hts221_power_off(struct hts221_hw *hw)
+>  {
+> -	__le16 data = 0;
+>  	int err;
 >  
-> +	/* enable Block Data Update */
+> -	err = hw->tf->write(hw->dev, HTS221_REG_CNTRL1_ADDR, sizeof(data),
+> -			    (u8 *)&data);
 > +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
-> +				     HTS221_BDU_MASK, 1);
-> +	if (err < 0)
-> +		return err;
-> +
->  	/* configure humidity sensor */
->  	err = hts221_parse_rh_caldata(hw);
->  	if (err < 0) {
+> +				     HTS221_ENABLE_MASK, false);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -692,11 +691,10 @@ static int __maybe_unused hts221_suspend(struct device *dev)
+>  {
+>  	struct iio_dev *iio_dev = dev_get_drvdata(dev);
+>  	struct hts221_hw *hw = iio_priv(iio_dev);
+> -	__le16 data = 0;
+>  	int err;
+>  
+> -	err = hw->tf->write(hw->dev, HTS221_REG_CNTRL1_ADDR, sizeof(data),
+> -			    (u8 *)&data);
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_ENABLE_MASK, false);
+>  
+>  	return err < 0 ? err : 0;
+>  }
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
