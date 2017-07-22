@@ -1,28 +1,149 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: gpu: add the RK3399 mali for rockchip specifics
-Date: Sat, 22 Jul 2017 23:38:46 +0200
-Message-ID: <4279159.nOL8xous4R@phil>
-References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com> <1500279271-15249-2-git-send-email-wxt@rock-chips.com>
+Subject: Re: [PATCH v2 3/5] arm64: dts: rockchip: add ARM Mali GPU node for RK3399 SoCs
+Date: Sat, 22 Jul 2017 23:39:33 +0200
+Message-ID: <10008554.Km5xa7dVsC@phil>
+References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com> <1500279271-15249-4-git-send-email-wxt@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500279271-15249-2-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1500279271-15249-4-git-send-email-wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, William wu <wulf-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Roger Chen <roger.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 17. Juli 2017, 16:14:27 CEST schrieb Caesar Wang:
-> RK3399's GPU uses the quad-core Mali-T860, which is the new generation of
-> high-end graphics processors from ARM.
+Am Montag, 17. Juli 2017, 16:14:29 CEST schrieb Caesar Wang:
+> Add Mali GPU device tree node for the RK3399 SoCs, with devfreq
+> opp table.
 > 
-> This patch added "rockchip,rk3399-mali" for dt-bindings, in order to
-> support IPA of gpu thermal in later.
+> RK3399 and RK3399-OP1 SoCs have a different recommendation table with
+> gpu opp. Also, the ARM's mali driver found on
+> https://developer.arm.com/products/software/mali-drivers/midgard-kernel.
 > 
 > Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v2:
+> As Heiko comments on https://patchwork.kernel.org/patch/9835939/
+> - interrupt-name use the lower case.
+> - use the correct compatible "arm,mali-t860"
+> - remove the clock name, since the mali only have one input clock.
+> 
+>  arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi | 33 ++++++++++++++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi     | 33 ++++++++++++++++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3399.dtsi         | 12 +++++++++
+>  3 files changed, 78 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
+> index be7fe63..d8a120f 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-op1-opp.dtsi
+> @@ -118,6 +118,35 @@
+>  			opp-microvolt = <1250000>;
+>  		};
+>  	};
+> +
+> +	gpu_opp_table: opp-table2 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <800000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <297000000>;
+> +			opp-microvolt = <800000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			opp-microvolt = <825000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <500000000>;
+> +			opp-microvolt = <850000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <600000000>;
+> +			opp-microvolt = <925000>;
+> +		};
+> +		opp05 {
+> +			opp-hz = /bits/ 64 <800000000>;
+> +			opp-microvolt = <1075000>;
+> +		};
+> +	};
+>  };
+>  
+>  &cpu_l0 {
+> @@ -143,3 +172,7 @@
+>  &cpu_b1 {
+>  	operating-points-v2 = <&cluster1_opp>;
+>  };
+> +
+> +&gpu {
+> +	operating-points-v2 = <&gpu_opp_table>;
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+> index c83460d..81617bc 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+> @@ -110,6 +110,35 @@
+>  			opp-microvolt = <1200000>;
+>  		};
+>  	};
+> +
+> +	gpu_opp_table: opp-table2 {
+> +		compatible = "operating-points-v2";
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <200000000>;
+> +			opp-microvolt = <800000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <297000000>;
+> +			opp-microvolt = <800000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <400000000>;
+> +			opp-microvolt = <825000>;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <500000000>;
+> +			opp-microvolt = <875000>;
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <600000000>;
+> +			opp-microvolt = <925000>;
+> +		};
+> +		opp05 {
+> +			opp-hz = /bits/ 64 <800000000>;
+> +			opp-microvolt = <1100000>;
+> +		};
+> +	};
+>  };
+>  
+>  &cpu_l0 {
+> @@ -135,3 +164,7 @@
+>  &cpu_b1 {
+>  	operating-points-v2 = <&cluster1_opp>;
+>  };
+> +
+> +&gpu {
+> +	operating-points-v2 = <&gpu_opp_table>;
+> +};
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 1cbd7a2..77d67cb 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -1443,6 +1443,18 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	gpu: gpu@ff9a0000 {
+> +		compatible = "arm,rk3399-mali", "arm,mali-t860";
 
-applied for 4.14 with Rob's Ack
+applied for 4.14 after fixing the compatible to rockchip,rk3399-mali
 
 
 Heiko
