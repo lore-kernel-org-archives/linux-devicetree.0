@@ -1,35 +1,85 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
-Date: Sat, 22 Jul 2017 08:26:02 -0700
-Message-ID: <7ho9scsdbp.fsf@baylibre.com>
-References: <20170707013257.18250-1-joseph.kogut@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] soc: brcmstb: Add Product ID and Family ID helper
+ functions
+Date: Sat, 22 Jul 2017 10:01:10 -0700
+Message-ID: <48c39931-6323-625a-3632-7c5ba3f3ca6b@gmail.com>
+References: <1500646226-10659-1-git-send-email-alcooperx@gmail.com>
+ <1500646226-10659-2-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170707013257.18250-1-joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (Joseph Kogut's
-        message of "Thu, 6 Jul 2017 18:32:57 -0700")
+In-Reply-To: <1500646226-10659-2-git-send-email-alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joseph,
 
-Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-> Meson GXL appears to suffer from the same broken eee issue as GXB,
-> originally fixed by feb3cbea0946.
->
-> This patch disables the broken energy-efficient ethernet for GXL,
-> avoiding the tx link breakage.
->
-> Signed-off-by: Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 07/21/2017 07:10 AM, Al Cooper wrote:
+> Signed-off-by: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Can you share what platforms you tested to find/fix this problem?
+Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Thanks for the patch!
+> ---
+>  drivers/soc/bcm/brcmstb/common.c    | 12 ++++++++++++
+>  include/linux/soc/brcmstb/brcmstb.h | 10 ++++++++++
+>  2 files changed, 22 insertions(+)
+> 
+> diff --git a/drivers/soc/bcm/brcmstb/common.c b/drivers/soc/bcm/brcmstb/common.c
+> index b6195fd..184dbf5 100644
+> --- a/drivers/soc/bcm/brcmstb/common.c
+> +++ b/drivers/soc/bcm/brcmstb/common.c
+> @@ -40,6 +40,18 @@ bool soc_is_brcmstb(void)
+>  	return of_match_node(brcmstb_machine_match, root) != NULL;
+>  }
+>  
+> +u32 brcmstb_get_family_id(void)
+> +{
+> +	return family_id;
+> +}
+> +EXPORT_SYMBOL(brcmstb_get_family_id);
+> +
+> +u32 brcmstb_get_product_id(void)
+> +{
+> +	return product_id;
+> +}
+> +EXPORT_SYMBOL(brcmstb_get_product_id);
+> +
+>  static const struct of_device_id sun_top_ctrl_match[] = {
+>  	{ .compatible = "brcm,bcm7125-sun-top-ctrl", },
+>  	{ .compatible = "brcm,bcm7346-sun-top-ctrl", },
+> diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
+> index 337ce41..23e4dc9 100644
+> --- a/include/linux/soc/brcmstb/brcmstb.h
+> +++ b/include/linux/soc/brcmstb/brcmstb.h
+> @@ -1,10 +1,20 @@
+>  #ifndef __BRCMSTB_SOC_H
+>  #define __BRCMSTB_SOC_H
+>  
+> +#define BRCM_ID(reg)	((u32)reg >> 28 ? (u32)reg >> 16 : (u32)reg >> 8)
+> +#define BRCM_REV(reg)	((u32)reg & 0xff)
+> +
+>  /*
+>   * Bus Interface Unit control register setup, must happen early during boot,
+>   * before SMP is brought up, called by machine entry point.
+>   */
+>  void brcmstb_biuctrl_init(void);
+>  
+> +/*
+> + * Helper functions for getting family or product id from the
+> + * SoC driver.
+> + */
+> +u32 brcmstb_get_family_id(void);
+> +u32 brcmstb_get_product_id(void);
+> +
+>  #endif /* __BRCMSTB_SOC_H */
+> 
 
-Kevin
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
