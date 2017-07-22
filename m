@@ -1,178 +1,46 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: allwinner: a64: add AXP803 PMIC
- support to SoPine and the baseboard
-Date: Sat, 22 Jul 2017 10:18:43 +0800
-Message-ID: <20170722021843.6768-3-icenowy@aosc.io>
-References: <20170722021843.6768-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBIXMZLFQKGQEHBJT2ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170722021843.6768-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Subject: [PATCH 0/3] Add ethernet0 alias for several A64 boards
+Date: Sat, 22 Jul 2017 10:28:49 +0800
+Message-ID: <20170722022852.7868-1-icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SoPine SoM has an AXP803 PMIC connected to the RSB bus of the A64
-SoC, and the regulators of the PMIC are used both on the SoM itself and
-on the official baseboard
+Allwinner A64 SoC has an EMAC which is used to provide Ethernet
+function on several boards.
 
-Add related device tree parts to the SoPine SoM DTSI file and the
-baseboard DT.
+The EMAC itself doesn't have a fixed MAC address, but the sunxi
+mainline U-Boot have the ability to generate one based on the eFUSE
+SID in the chip, and add the generated MAC address to the device
+tree when booting.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- Squashed AXP803 enabling patch and AXP803 regulators patch together.
-- Change the min voltage of vdd-cpux to 1.04V.
-- Added constraints for FLDO1 (vcc-1v2-hsic), as it's connected to the SoC
-  (although HSIC function is not used).
+The MAC address setting step is based on the device tree's aliases,
+and device tree nodes prefixed "ethernet" will get the MAC address
+added. However, in several A64 boards' device tree, the alias is not
+set up, so that the U-Boot won't set the MAC address.
 
- .../dts/allwinner/sun50i-a64-sopine-baseboard.dts  | 23 ++++++
- .../boot/dts/allwinner/sun50i-a64-sopine.dtsi      | 86 ++++++++++++++++++++++
- 2 files changed, 109 insertions(+)
+Add the ethernet0 aliases to these boards.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-index 17eb1cc5bf6b..834a5d249bb2 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-@@ -81,6 +81,7 @@
- 	pinctrl-0 = <&rgmii_pins>;
- 	phy-mode = "rgmii";
- 	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_dc1sw>;
- 	status = "okay";
- };
- 
-@@ -110,6 +111,28 @@
- 	status = "okay";
- };
- 
-+&reg_dc1sw {
-+	regulator-name = "vcc-phy";
-+};
-+
-+&reg_dldo1 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-hdmi";
-+};
-+
-+&reg_dldo2 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-mipi";
-+};
-+
-+&reg_dldo4 {
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-wifi";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-index 475518b031dd..a5da18a6f286 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine.dtsi
-@@ -63,3 +63,89 @@
- 	bus-width = <4>;
- 	status = "okay";
- };
-+
-+&r_rsb {
-+	status = "okay";
-+
-+	axp803: pmic@3a3 {
-+		compatible = "x-powers,axp803";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
-+#include "axp803.dtsi"
-+
-+&reg_aldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-pl";
-+};
-+
-+&reg_aldo3 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3000000>;
-+	regulator-max-microvolt = <3000000>;
-+	regulator-name = "vcc-pll-avcc";
-+};
-+
-+&reg_dcdc1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
-+	regulator-name = "vcc-3v3";
-+};
-+
-+&reg_dcdc2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1040000>;
-+	regulator-max-microvolt = <1300000>;
-+	regulator-name = "vdd-cpux";
-+};
-+
-+/* DCDC3 is polyphased with DCDC2 */
-+
-+&reg_dcdc5 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-dram";
-+};
-+
-+&reg_dcdc6 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-sys";
-+};
-+
-+&reg_eldo1 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1800000>;
-+	regulator-max-microvolt = <1800000>;
-+	regulator-name = "vdd-1v8-lpddr";
-+};
-+
-+&reg_fldo1 {
-+	regulator-min-microvolt = <1200000>;
-+	regulator-max-microvolt = <1200000>;
-+	regulator-name = "vcc-1v2-hsic";
-+};
-+
-+/*
-+ * The A64 chip cannot work without this regulator off, although
-+ * it seems to be only driving the AR100 core.
-+ * Maybe we don't still know well about CPUs domain.
-+ */
-+&reg_fldo2 {
-+	regulator-always-on;
-+	regulator-min-microvolt = <1100000>;
-+	regulator-max-microvolt = <1100000>;
-+	regulator-name = "vdd-cpus";
-+};
-+
-+&reg_rtc_ldo {
-+	regulator-name = "vcc-rtc";
-+};
+I hope this patchset can be queued in 4.13, otherwise 4.13 kernels
+won't get non-volatile MAC addresses, and will use random ones
+instead, which is annoying to many users.
+
+Icenowy Zheng (3):
+  arm64: allwinner: a64: add ethernet0 alias for BPi M64 EMAC node
+  arm64: allwinner: a64: add ethernet0 alias for Pine64 EMAC node
+  arm64: allwinner: a64: add ethernet0 alias for SoPine EMAC node
+
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts     | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts           | 1 +
+ arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts | 1 +
+ 3 files changed, 3 insertions(+)
+
 -- 
 2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
