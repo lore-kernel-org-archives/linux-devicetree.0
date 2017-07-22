@@ -1,102 +1,93 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 6/7] ARM: dts: meson8: add support for booting the secondary CPU cores
-Date: Sat, 22 Jul 2017 21:19:45 +0200
-Message-ID: <20170722191946.22938-7-martin.blumenstingl@googlemail.com>
-References: <20170722191946.22938-1-martin.blumenstingl@googlemail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 04/10] iio: humidity: hts221: avoid useless ODR
+ reconfiguration
+Date: Sat, 22 Jul 2017 21:19:23 +0100
+Message-ID: <20170722211923.031cb54b@kernel.org>
+References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
+        <20170717173905.8209-5-lorenzo.bianconi@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170722191946.22938-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170717173905.8209-5-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Booting the secondary CPU cores involves the following nodes/devices:
-- SCU (Snoop-Control-Unit, for which we already have a DT node)
-- a reset line for each CPU core, provided by the reset-controller
-  which is built into the clock-controller
-- the PMU (power management unit) which controls the power of the CPU
-  cores
-- a range in the SRAM specifically reserved for booting secondary CPU
-  cores
-- the "enable-method" which activates booting the secondary CPU cores
+On Mon, 17 Jul 2017 19:38:59 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-This adds all required nodes and properties to boot the secondary CPU
-cores.
+> Configure sensor ODR just in hts221_write_raw() in order to avoid
+> to set device sample rate multiple times.
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
 
-Suggested-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/meson8.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+Thanks,
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index b98d44fde6b6..44515733df29 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -60,6 +60,8 @@
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
- 			reg = <0x200>;
-+			enable-method = "amlogic,meson8-smp";
-+			resets = <&clkc RESETID_CPU0_SOFT_RESET>;
- 		};
- 
- 		cpu@201 {
-@@ -67,6 +69,8 @@
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
- 			reg = <0x201>;
-+			enable-method = "amlogic,meson8-smp";
-+			resets = <&clkc RESETID_CPU1_SOFT_RESET>;
- 		};
- 
- 		cpu@202 {
-@@ -74,6 +78,8 @@
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
- 			reg = <0x202>;
-+			enable-method = "amlogic,meson8-smp";
-+			resets = <&clkc RESETID_CPU2_SOFT_RESET>;
- 		};
- 
- 		cpu@203 {
-@@ -81,6 +87,8 @@
- 			compatible = "arm,cortex-a9";
- 			next-level-cache = <&L2>;
- 			reg = <0x203>;
-+			enable-method = "amlogic,meson8-smp";
-+			resets = <&clkc RESETID_CPU3_SOFT_RESET>;
- 		};
- 	};
- 
-@@ -118,6 +126,11 @@
- }; /* end of / */
- 
- &aobus {
-+	pmu: pmu@e0 {
-+		compatible = "amlogic,meson8-pmu", "syscon";
-+		reg = <0xe0 0x8>;
-+	};
-+
- 	pinctrl_aobus: pinctrl@84 {
- 		compatible = "amlogic,meson8-aobus-pinctrl";
- 		reg = <0x84 0xc>;
-@@ -249,6 +262,13 @@
- 	};
- };
- 
-+&ahb_sram {
-+	smp-sram@1ff80 {
-+		compatible = "amlogic,meson8-smp-sram";
-+		reg = <0x1ff80 0x8>;
-+	};
-+};
-+
- &ethmac {
- 	clocks = <&clkc CLKID_ETH>;
- 	clock-names = "stmmaceth";
--- 
-2.13.3
+Jonathan
+> ---
+>  drivers/iio/humidity/hts221_core.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+> index 6e5847386a45..f99adc44139e 100644
+> --- a/drivers/iio/humidity/hts221_core.c
+> +++ b/drivers/iio/humidity/hts221_core.c
+> @@ -208,11 +208,6 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> -				     HTS221_ENABLE_MASK, 1);
+> -	if (err < 0)
+> -		return err;
+> -
+>  	hw->odr = odr;
+>  
+>  	return 0;
+> @@ -294,7 +289,8 @@ int hts221_power_on(struct hts221_hw *hw)
+>  {
+>  	int err;
+>  
+> -	err = hts221_update_odr(hw, hw->odr);
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_ENABLE_MASK, true);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -627,8 +623,6 @@ int hts221_probe(struct iio_dev *iio_dev)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	hw->odr = hts221_odr_table[0].hz;
+> -
+>  	iio_dev->modes = INDIO_DIRECT_MODE;
+>  	iio_dev->dev.parent = hw->dev;
+>  	iio_dev->available_scan_masks = hts221_scan_masks;
+> @@ -643,6 +637,10 @@ int hts221_probe(struct iio_dev *iio_dev)
+>  	if (err < 0)
+>  		return err;
+>  
+> +	err = hts221_update_odr(hw, hts221_odr_table[0].hz);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	/* configure humidity sensor */
+>  	err = hts221_parse_rh_caldata(hw);
+>  	if (err < 0) {
+> @@ -706,7 +704,8 @@ static int __maybe_unused hts221_resume(struct device *dev)
+>  	int err = 0;
+>  
+>  	if (hw->enabled)
+> -		err = hts221_update_odr(hw, hw->odr);
+> +		err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +					     HTS221_ENABLE_MASK, true);
+>  
+>  	return err;
+>  }
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
