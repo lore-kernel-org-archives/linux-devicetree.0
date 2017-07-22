@@ -1,76 +1,21 @@
-From: <gabriel.fernandez@st.com>
-Subject: [PATCH v8 1/3] clk: nxp: clk-lpc32xx: rename clk_gate_is_enabled()
-Date: Sat, 22 Jul 2017 14:01:08 +0200
-Message-ID: <1500724870-9071-2-git-send-email-gabriel.fernandez@st.com>
-References: <1500724870-9071-1-git-send-email-gabriel.fernandez@st.com>
+From: Jack <oficinaenlace-3EV2lv0kIKljyt6+kpjgJA@public.gmane.org>
+Subject: Hello Beautiful,
+Date: Sat, 22 Jul 2017 05:48:55 -0600 (CST)
+Message-ID: <1080042177.890826.1500724135466.JavaMail.zimbra__18106.2907715843$1500731334$gmane$org@migob.gob.ni>
+Reply-To: Jack <jackalways17-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500724870-9071-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>, Vladimir Zapolskiy <vz@mleia.com>, Sylvain Lemieux <slemieux.tyco@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com, gabriel.fernandez.st@gmail.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Good day dear, i hope this mail meets you well? my name is Jack, from the U.S. I know this may seem inappropriate so i ask for your forgiveness but i wish to get to know you better, if I may be so bold. I consider myself an easy-going man, adventurous, honest and fun loving person but I am currently looking for a relationship in which I will feel loved. I promise to answer any question that you may want to ask me...all i need is just your attention and the chance to know you more.
 
-We need to export clk_gate_is_enabled() from clk framework, then
-to avoid compilation issue we have to rename clk_gate_is_enabled()
-in NXP LPC32xx clock driver.
-We changed all gate op with 'lpc32xx_' prefix:
-lpc32xx_clk_gate_enable(),
-lpc32xx_clk_gate_disable(),
-lpc32xx_clk_gate_is_enabled().
+Please tell me more about yourself, if you do not mind. Hope to hear back from you soon.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Acked-by: Vladimir Zapolskiy <vz@mleia.com>
----
- drivers/clk/nxp/clk-lpc32xx.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/clk/nxp/clk-lpc32xx.c b/drivers/clk/nxp/clk-lpc32xx.c
-index 5b98ff9..7b359af 100644
---- a/drivers/clk/nxp/clk-lpc32xx.c
-+++ b/drivers/clk/nxp/clk-lpc32xx.c
-@@ -885,7 +885,7 @@ static unsigned long clk_usb_i2c_recalc_rate(struct clk_hw *hw,
- 	.recalc_rate = clk_usb_i2c_recalc_rate,
- };
- 
--static int clk_gate_enable(struct clk_hw *hw)
-+static int lpc32xx_clk_gate_enable(struct clk_hw *hw)
- {
- 	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
- 	u32 mask = BIT(clk->bit_idx);
-@@ -894,7 +894,7 @@ static int clk_gate_enable(struct clk_hw *hw)
- 	return regmap_update_bits(clk_regmap, clk->reg, mask, val);
- }
- 
--static void clk_gate_disable(struct clk_hw *hw)
-+static void lpc32xx_clk_gate_disable(struct clk_hw *hw)
- {
- 	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
- 	u32 mask = BIT(clk->bit_idx);
-@@ -903,7 +903,7 @@ static void clk_gate_disable(struct clk_hw *hw)
- 	regmap_update_bits(clk_regmap, clk->reg, mask, val);
- }
- 
--static int clk_gate_is_enabled(struct clk_hw *hw)
-+static int lpc32xx_clk_gate_is_enabled(struct clk_hw *hw)
- {
- 	struct lpc32xx_clk_gate *clk = to_lpc32xx_gate(hw);
- 	u32 val;
-@@ -916,9 +916,9 @@ static int clk_gate_is_enabled(struct clk_hw *hw)
- }
- 
- static const struct clk_ops lpc32xx_clk_gate_ops = {
--	.enable = clk_gate_enable,
--	.disable = clk_gate_disable,
--	.is_enabled = clk_gate_is_enabled,
-+	.enable = lpc32xx_clk_gate_enable,
-+	.disable = lpc32xx_clk_gate_disable,
-+	.is_enabled = lpc32xx_clk_gate_is_enabled,
- };
- 
- #define div_mask(width)	((1 << (width)) - 1)
--- 
-1.9.1
+Jack.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
