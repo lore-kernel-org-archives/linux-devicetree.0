@@ -1,101 +1,49 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 06/10] iio: humidity: hts221: support active-low
- interrupts
-Date: Sat, 22 Jul 2017 21:22:21 +0100
-Message-ID: <20170722212221.02d8a74b@kernel.org>
+Subject: Re: [PATCH v2 07/10] dt-bindings: iio: humidity: hts221: support
+ active-low interrupts
+Date: Sat, 22 Jul 2017 21:23:52 +0100
+Message-ID: <20170722212352.5149b4c1@kernel.org>
 References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-        <20170717173905.8209-7-lorenzo.bianconi@st.com>
+        <20170717173905.8209-8-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173905.8209-7-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170717173905.8209-8-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jul 2017 19:39:01 +0200
+On Mon, 17 Jul 2017 19:39:02 +0200
 Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Add support for active low interrupts (IRQF_TRIGGER_LOW and
-> IRQF_TRIGGER_FALLING). Configure the device as active high or low
-> according to the requested irq line.
+> Update hts221 device binding with active-low interrupts support
+> (IRQ_TYPE_LEVEL_LOW and IRQ_TYPE_EDGE_FALLING).
 > 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Applied
+Applied to the togreg branch of iio.git and pushed out as
+testing for the autobuilders to play with it.
+
+thanks,
+
+Jonathan
 > ---
->  drivers/iio/humidity/hts221.h        |  1 +
->  drivers/iio/humidity/hts221_buffer.c | 11 +++++++++++
->  drivers/iio/humidity/hts221_core.c   |  3 +--
->  3 files changed, 13 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
-> index 69dfa5c63ec2..c3de6e494f8c 100644
-> --- a/drivers/iio/humidity/hts221.h
-> +++ b/drivers/iio/humidity/hts221.h
-> @@ -61,6 +61,7 @@ struct hts221_hw {
->  extern const struct dev_pm_ops hts221_pm_ops;
+> diff --git a/Documentation/devicetree/bindings/iio/humidity/hts221.txt b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> index b20ab9c12080..fca263e13400 100644
+> --- a/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> +++ b/Documentation/devicetree/bindings/iio/humidity/hts221.txt
+> @@ -7,7 +7,8 @@ Required properties:
+>  Optional properties:
+>  - interrupt-parent: should be the phandle for the interrupt controller
+>  - interrupts: interrupt mapping for IRQ. It should be configured with
+> -  flags IRQ_TYPE_LEVEL_HIGH or IRQ_TYPE_EDGE_RISING.
+> +  flags IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+> +  IRQ_TYPE_EDGE_FALLING.
 >  
->  int hts221_config_drdy(struct hts221_hw *hw, bool enable);
-> +int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
->  int hts221_probe(struct iio_dev *iio_dev);
->  int hts221_set_enable(struct hts221_hw *hw, bool enable);
->  int hts221_allocate_buffers(struct hts221_hw *hw);
-> diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-> index c4ed153ad397..ad5222295b2c 100644
-> --- a/drivers/iio/humidity/hts221_buffer.c
-> +++ b/drivers/iio/humidity/hts221_buffer.c
-> @@ -22,6 +22,8 @@
->  
->  #include "hts221.h"
->  
-> +#define HTS221_REG_DRDY_HL_ADDR		0x22
-> +#define HTS221_REG_DRDY_HL_MASK		BIT(7)
->  #define HTS221_REG_STATUS_ADDR		0x27
->  #define HTS221_RH_DRDY_MASK		BIT(1)
->  #define HTS221_TEMP_DRDY_MASK		BIT(0)
-> @@ -67,6 +69,7 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
->  int hts221_allocate_trigger(struct hts221_hw *hw)
->  {
->  	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
-> +	bool irq_active_low = false;
->  	unsigned long irq_type;
->  	int err;
->  
-> @@ -76,6 +79,10 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
->  	case IRQF_TRIGGER_HIGH:
->  	case IRQF_TRIGGER_RISING:
->  		break;
-> +	case IRQF_TRIGGER_LOW:
-> +	case IRQF_TRIGGER_FALLING:
-> +		irq_active_low = true;
-> +		break;
->  	default:
->  		dev_info(hw->dev,
->  			 "mode %lx unsupported, using IRQF_TRIGGER_RISING\n",
-> @@ -84,6 +91,10 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
->  		break;
->  	}
->  
-> +	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_HL_ADDR,
-> +				     HTS221_REG_DRDY_HL_MASK, irq_active_low);
-> +	if (err < 0)
-> +		return err;
->  	err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
->  					hts221_trigger_handler_thread,
->  					irq_type | IRQF_ONESHOT,
-> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> index dc55d9fbc702..25fcb9993998 100644
-> --- a/drivers/iio/humidity/hts221_core.c
-> +++ b/drivers/iio/humidity/hts221_core.c
-> @@ -135,8 +135,7 @@ static const struct iio_chan_spec hts221_channels[] = {
->  	IIO_CHAN_SOFT_TIMESTAMP(2),
->  };
->  
-> -static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
-> -				  u8 val)
-> +int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val)
->  {
->  	u8 data;
->  	int err;
+>    Refer to interrupt-controller/interrupts.txt for generic interrupt
+>    client node bindings.
