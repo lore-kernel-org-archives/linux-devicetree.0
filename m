@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 5/7] clk: meson: meson8b: export the CPU soft reset lines
-Date: Sat, 22 Jul 2017 21:19:44 +0200
-Message-ID: <20170722191946.22938-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 3/7] ARM: smp_scu: allow the platform code to read the SCU CPU status
+Date: Sat, 22 Jul 2017 21:19:42 +0200
+Message-ID: <20170722191946.22938-4-martin.blumenstingl@googlemail.com>
 References: <20170722191946.22938-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170722191946.22938-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,55 +10,82 @@ To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-k
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Export the soft reset lines for the CPU cores so they can be used in the
-dt-bindings (required for SMP booting the CPU cores).
+On Amlogic Meson8 / Meson8m2 (both Cortex-A9) and Meson8b (Cortex-A5)
+the CPU hotplug code needs to wait until the SCU status of the CPU that
+is being taken offline is SCU_PM_POWEROFF.
+Provide a utility function (which can be invoked for example from
+.cpu_kill()) which allows reading the SCU status of a CPU.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/clk/meson/meson8b.h              | 8 ++++----
- include/dt-bindings/clock/meson8b-clkc.h | 7 ++++++-
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ arch/arm/include/asm/smp_scu.h |  6 ++++++
+ arch/arm/kernel/smp_scu.c      | 18 +++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index 5f4d8e49dd4d..d6e35c1acc05 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -169,10 +169,10 @@
- #define RESETID_L2_CACHE_SOFT_RESET				0
- #define RESETID_AXI_64_TO_128_BRIDGE_A5_SOFT_RESET		1
- #define RESETID_SCU_SOFT_RESET					2
--#define RESETID_CPU0_SOFT_RESET					3
--#define RESETID_CPU1_SOFT_RESET					4
--#define RESETID_CPU2_SOFT_RESET					5
--#define RESETID_CPU3_SOFT_RESET					6
-+/* RESETID_CPU0_SOFT_RESET */
-+/* RESETID_CPU1_SOFT_RESET */
-+/* RESETID_CPU2_SOFT_RESET */
-+/* RESETID_CPU3_SOFT_RESET */
- #define RESETID_A5_GLOBAL_RESET					7
- #define RESETID_A5_AXI_SOFT_RESET				8
- #define RESETID_A5_ABP_SOFT_RESET				9
-diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
-index e29227fb52a1..76920cfd1f33 100644
---- a/include/dt-bindings/clock/meson8b-clkc.h
-+++ b/include/dt-bindings/clock/meson8b-clkc.h
-@@ -1,5 +1,5 @@
- /*
-- * Meson8b clock tree IDs
-+ * Meson8b clock and reset tree IDs
-  */
+diff --git a/arch/arm/include/asm/smp_scu.h b/arch/arm/include/asm/smp_scu.h
+index 11e636f33ed9..992b34c4267f 100644
+--- a/arch/arm/include/asm/smp_scu.h
++++ b/arch/arm/include/asm/smp_scu.h
+@@ -27,6 +27,7 @@ static inline unsigned long scu_a9_get_base(void)
+ unsigned int scu_get_core_count(void __iomem *);
+ int scu_power_mode(void __iomem *, unsigned int);
+ int scu_cpu_power_enable(void __iomem *, unsigned int);
++int scu_get_cpu_power_mode(void __iomem *scu_base, unsigned int logical_cpu);
+ #else
+ static inline unsigned int scu_get_core_count(void __iomem *scu_base)
+ {
+@@ -41,6 +42,11 @@ static inline int scu_cpu_power_enable(void __iomem *scu_base,
+ {
+ 	return -EINVAL;
+ }
++static inline int scu_get_cpu_power_mode(void __iomem *scu_base,
++					 unsigned int logical_cpu)
++{
++	return -EINVAL;
++}
+ #endif
  
- #ifndef __MESON8B_CLKC_H
-@@ -32,4 +32,9 @@
- #define CLKID_USB0_DDR_BRIDGE	65
- #define CLKID_SANA		69
+ #if defined(CONFIG_SMP) && defined(CONFIG_HAVE_ARM_SCU)
+diff --git a/arch/arm/kernel/smp_scu.c b/arch/arm/kernel/smp_scu.c
+index ef09121b18eb..942f8acb82c1 100644
+--- a/arch/arm/kernel/smp_scu.c
++++ b/arch/arm/kernel/smp_scu.c
+@@ -21,6 +21,7 @@
+ #define SCU_STANDBY_ENABLE	(1 << 5)
+ #define SCU_CONFIG		0x04
+ #define SCU_CPU_STATUS		0x08
++#define SCU_CPU_STATUS_MASK	GENMASK(1, 0)
+ #define SCU_INVALIDATE		0x0c
+ #define SCU_FPGA_REVISION	0x10
  
-+#define RESETID_CPU0_SOFT_RESET					3
-+#define RESETID_CPU1_SOFT_RESET					4
-+#define RESETID_CPU2_SOFT_RESET					5
-+#define RESETID_CPU3_SOFT_RESET					6
+@@ -82,7 +83,8 @@ static int scu_set_power_mode_internal(void __iomem *scu_base,
+ 	if (mode > 3 || mode == 1 || cpu > 3)
+ 		return -EINVAL;
+ 
+-	val = readb_relaxed(scu_base + SCU_CPU_STATUS + cpu) & ~0x03;
++	val = readb_relaxed(scu_base + SCU_CPU_STATUS + cpu);
++	val &= ~SCU_CPU_STATUS_MASK;
+ 	val |= mode;
+ 	writeb_relaxed(val, scu_base + SCU_CPU_STATUS + cpu);
+ 
+@@ -113,3 +115,17 @@ int scu_cpu_power_enable(void __iomem *scu_base, unsigned int cpu)
+ {
+ 	return scu_set_power_mode_internal(scu_base, cpu, SCU_PM_NORMAL);
+ }
 +
- #endif /* __MESON8B_CLKC_H */
++int scu_get_cpu_power_mode(void __iomem *scu_base, unsigned int logical_cpu)
++{
++	unsigned int val;
++	int cpu = MPIDR_AFFINITY_LEVEL(cpu_logical_map(logical_cpu), 0);
++
++	if (cpu > 3)
++		return -EINVAL;
++
++	val = readb_relaxed(scu_base + SCU_CPU_STATUS + cpu);
++	val &= SCU_CPU_STATUS_MASK;
++
++	return val;
++}
 -- 
 2.13.3
 
