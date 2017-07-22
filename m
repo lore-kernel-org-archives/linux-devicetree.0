@@ -1,37 +1,63 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v2] media: Convert to using %pOF instead of full_name
-Date: Sat, 22 Jul 2017 08:42:11 +0200
-Message-ID: <97f42d10-d2ed-c5bb-9562-5515d5f13f7d@samsung.com>
-References: <20170721192835.25555-1-robh@kernel.org>
-        <CGME20170721192855epcas5p40919807b161c8dee900b5661ea5128aa@epcas5p4.samsung.com>
-        <20170721192835.25555-2-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <20170721192835.25555-2-robh@kernel.org>
-Content-language: en-GB
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, linux-media@vger.kernel.org
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Songjun Wu <songjun.wu@microchip.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Houlong Wei <houlong.wei@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hyun Kwon <hyun.kwon@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.
+From: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [linux-sunxi][PATCH] ARM: dts: sun7i: Add I2S0 pinctrl settings
+Date: Sat, 22 Jul 2017 08:43:13 +0200
+Message-ID: <20170722064313.7535-1-codekipper@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2017 09:28 PM, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring<robh@kernel.org>
-> Acked-by: Niklas Söderlund<niklas.soderlund+renesas@ragnatech.se>
-> Acked-by: Laurent Pinchart<laurent.pinchart@ideasonboard.com>
-> Reviewed-by: Matthias Brugger<matthias.bgg@gmail.com>
-> Acked-by: Nicolas Ferre<nicolas.ferre@microchip.com>
-> Acked-by: Lad, Prabhakar<prabhakar.csengg@gmail.com>
+From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> ---
-> v2:
-> - Fix missing to_of_node() in xilinx-vipp.c
-> - Drop v4l2-async.c changes. Doing as revert instead.
-> - Add acks
+The A20 SoC has a couple of i2s blocks. This patch adds
+the pinctrl settings for block i2s0.
 
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 96bee776e145..01f9ee329913 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -1163,6 +1163,31 @@
+ 				function = "i2c3";
+ 			};
+ 
++			i2s0_mclk: i2s0@0 {
++				pins = "PB5";
++				function = "i2s0";
++			};
++
++			i2s0_bclk: i2s0@1 {
++				pins = "PB6";
++				function = "i2s0";
++			};
++
++			i2s0_lrclk: i2s0@2 {
++				pins = "PB7";
++				function = "i2s0";
++			};
++
++			i2s0_sdo0: i2s0@3 {
++				pins = "PB8";
++				function = "i2s0";
++			};
++
++			i2s0_sdi: i2s0@4 {
++				pins = "PB12";
++				function = "i2s0";
++			};
++
+ 			ir0_rx_pins_a: ir0@0 {
+ 				pins = "PB4";
+ 				function = "ir0";
+-- 
+2.13.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
