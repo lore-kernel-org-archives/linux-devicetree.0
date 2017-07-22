@@ -1,85 +1,278 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] soc: brcmstb: Add Product ID and Family ID helper
- functions
-Date: Sat, 22 Jul 2017 10:01:10 -0700
-Message-ID: <48c39931-6323-625a-3632-7c5ba3f3ca6b@gmail.com>
-References: <1500646226-10659-1-git-send-email-alcooperx@gmail.com>
- <1500646226-10659-2-git-send-email-alcooperx@gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 01/10] iio: humidity: hts221: refactor
+ write_with_mask code
+Date: Sat, 22 Jul 2017 18:57:13 +0100
+Message-ID: <20170722185713.664334ea@kernel.org>
+References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
+        <20170717173905.8209-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500646226-10659-2-git-send-email-alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170717173905.8209-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 17 Jul 2017 19:38:56 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
+> Move bit-shift in hts221_write_with_mask() instead of coding
+> the shift depth in the configured value. That change will be necessary
+> to fix an issue in device power-down procedure.
+> Simplify hts221_avg_list table management
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Applied to the togreg branch of iio.git.  Whilst this is
+associated with a fix, the series to that point is really
+too invasive to be material suitable for heading mainline
+except during a merge window.
 
-On 07/21/2017 07:10 AM, Al Cooper wrote:
-> Signed-off-by: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Pushed out as testing for the autobuilders to play with it.
 
-Acked-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Thanks,
 
+Jonathan
 > ---
->  drivers/soc/bcm/brcmstb/common.c    | 12 ++++++++++++
->  include/linux/soc/brcmstb/brcmstb.h | 10 ++++++++++
->  2 files changed, 22 insertions(+)
+>  drivers/iio/humidity/hts221.h      |  6 ---
+>  drivers/iio/humidity/hts221_core.c | 94 +++++++++++++++++---------------------
+>  2 files changed, 42 insertions(+), 58 deletions(-)
 > 
-> diff --git a/drivers/soc/bcm/brcmstb/common.c b/drivers/soc/bcm/brcmstb/common.c
-> index b6195fd..184dbf5 100644
-> --- a/drivers/soc/bcm/brcmstb/common.c
-> +++ b/drivers/soc/bcm/brcmstb/common.c
-> @@ -40,6 +40,18 @@ bool soc_is_brcmstb(void)
->  	return of_match_node(brcmstb_machine_match, root) != NULL;
+> diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
+> index 94510266e0a5..bf33d8f6396c 100644
+> --- a/drivers/iio/humidity/hts221.h
+> +++ b/drivers/iio/humidity/hts221.h
+> @@ -30,12 +30,6 @@ struct hts221_transfer_function {
+>  	int (*write)(struct device *dev, u8 addr, int len, u8 *data);
+>  };
+>  
+> -#define HTS221_AVG_DEPTH	8
+> -struct hts221_avg_avl {
+> -	u16 avg;
+> -	u8 val;
+> -};
+> -
+>  enum hts221_sensor_type {
+>  	HTS221_SENSOR_H,
+>  	HTS221_SENSOR_T,
+> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
+> index a56da3999e00..d2f59626b040 100644
+> --- a/drivers/iio/humidity/hts221_core.c
+> +++ b/drivers/iio/humidity/hts221_core.c
+> @@ -32,30 +32,12 @@
+>  #define HTS221_HUMIDITY_AVG_MASK	0x07
+>  #define HTS221_TEMP_AVG_MASK		0x38
+>  
+> -#define HTS221_ODR_MASK			0x87
+> +#define HTS221_ODR_MASK			0x03
+>  #define HTS221_BDU_MASK			BIT(2)
+> +#define HTS221_ENABLE_MASK		BIT(7)
+>  
+>  #define HTS221_DRDY_MASK		BIT(2)
+>  
+> -#define HTS221_ENABLE_SENSOR		BIT(7)
+> -
+> -#define HTS221_HUMIDITY_AVG_4		0x00 /* 0.4 %RH */
+> -#define HTS221_HUMIDITY_AVG_8		0x01 /* 0.3 %RH */
+> -#define HTS221_HUMIDITY_AVG_16		0x02 /* 0.2 %RH */
+> -#define HTS221_HUMIDITY_AVG_32		0x03 /* 0.15 %RH */
+> -#define HTS221_HUMIDITY_AVG_64		0x04 /* 0.1 %RH */
+> -#define HTS221_HUMIDITY_AVG_128		0x05 /* 0.07 %RH */
+> -#define HTS221_HUMIDITY_AVG_256		0x06 /* 0.05 %RH */
+> -#define HTS221_HUMIDITY_AVG_512		0x07 /* 0.03 %RH */
+> -
+> -#define HTS221_TEMP_AVG_2		0x00 /* 0.08 degC */
+> -#define HTS221_TEMP_AVG_4		0x08 /* 0.05 degC */
+> -#define HTS221_TEMP_AVG_8		0x10 /* 0.04 degC */
+> -#define HTS221_TEMP_AVG_16		0x18 /* 0.03 degC */
+> -#define HTS221_TEMP_AVG_32		0x20 /* 0.02 degC */
+> -#define HTS221_TEMP_AVG_64		0x28 /* 0.015 degC */
+> -#define HTS221_TEMP_AVG_128		0x30 /* 0.01 degC */
+> -#define HTS221_TEMP_AVG_256		0x38 /* 0.007 degC */
+>  
+>  /* calibration registers */
+>  #define HTS221_REG_0RH_CAL_X_H		0x36
+> @@ -73,10 +55,11 @@ struct hts221_odr {
+>  	u8 val;
+>  };
+>  
+> +#define HTS221_AVG_DEPTH		8
+>  struct hts221_avg {
+>  	u8 addr;
+>  	u8 mask;
+> -	struct hts221_avg_avl avg_avl[HTS221_AVG_DEPTH];
+> +	u16 avg_avl[HTS221_AVG_DEPTH];
+>  };
+>  
+>  static const struct hts221_odr hts221_odr_table[] = {
+> @@ -90,28 +73,28 @@ static const struct hts221_avg hts221_avg_list[] = {
+>  		.addr = HTS221_REG_AVG_ADDR,
+>  		.mask = HTS221_HUMIDITY_AVG_MASK,
+>  		.avg_avl = {
+> -			{ 4, HTS221_HUMIDITY_AVG_4 },
+> -			{ 8, HTS221_HUMIDITY_AVG_8 },
+> -			{ 16, HTS221_HUMIDITY_AVG_16 },
+> -			{ 32, HTS221_HUMIDITY_AVG_32 },
+> -			{ 64, HTS221_HUMIDITY_AVG_64 },
+> -			{ 128, HTS221_HUMIDITY_AVG_128 },
+> -			{ 256, HTS221_HUMIDITY_AVG_256 },
+> -			{ 512, HTS221_HUMIDITY_AVG_512 },
+> +			4, /* 0.4 %RH */
+> +			8, /* 0.3 %RH */
+> +			16, /* 0.2 %RH */
+> +			32, /* 0.15 %RH */
+> +			64, /* 0.1 %RH */
+> +			128, /* 0.07 %RH */
+> +			256, /* 0.05 %RH */
+> +			512, /* 0.03 %RH */
+>  		},
+>  	},
+>  	{
+>  		.addr = HTS221_REG_AVG_ADDR,
+>  		.mask = HTS221_TEMP_AVG_MASK,
+>  		.avg_avl = {
+> -			{ 2, HTS221_TEMP_AVG_2 },
+> -			{ 4, HTS221_TEMP_AVG_4 },
+> -			{ 8, HTS221_TEMP_AVG_8 },
+> -			{ 16, HTS221_TEMP_AVG_16 },
+> -			{ 32, HTS221_TEMP_AVG_32 },
+> -			{ 64, HTS221_TEMP_AVG_64 },
+> -			{ 128, HTS221_TEMP_AVG_128 },
+> -			{ 256, HTS221_TEMP_AVG_256 },
+> +			2, /* 0.08 degC */
+> +			4, /* 0.05 degC */
+> +			8, /* 0.04 degC */
+> +			16, /* 0.03 degC */
+> +			32, /* 0.02 degC */
+> +			64, /* 0.015 degC */
+> +			128, /* 0.01 degC */
+> +			256, /* 0.007 degC */
+>  		},
+>  	},
+>  };
+> @@ -166,7 +149,7 @@ static int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask,
+>  		goto unlock;
+>  	}
+>  
+> -	data = (data & ~mask) | (val & mask);
+> +	data = (data & ~mask) | ((val << __ffs(mask)) & mask);
+>  
+>  	err = hw->tf->write(hw->dev, addr, sizeof(data), &data);
+>  	if (err < 0)
+> @@ -201,11 +184,10 @@ static int hts221_check_whoami(struct hts221_hw *hw)
+>  
+>  int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>  {
+> -	u8 val = enable ? BIT(2) : 0;
+>  	int err;
+>  
+>  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
+> -				     HTS221_DRDY_MASK, val);
+> +				     HTS221_DRDY_MASK, enable);
+>  
+>  	return err < 0 ? err : 0;
 >  }
+> @@ -213,7 +195,6 @@ int hts221_config_drdy(struct hts221_hw *hw, bool enable)
+>  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>  {
+>  	int i, err;
+> -	u8 val;
 >  
-> +u32 brcmstb_get_family_id(void)
-> +{
-> +	return family_id;
-> +}
-> +EXPORT_SYMBOL(brcmstb_get_family_id);
-> +
-> +u32 brcmstb_get_product_id(void)
-> +{
-> +	return product_id;
-> +}
-> +EXPORT_SYMBOL(brcmstb_get_product_id);
-> +
->  static const struct of_device_id sun_top_ctrl_match[] = {
->  	{ .compatible = "brcm,bcm7125-sun-top-ctrl", },
->  	{ .compatible = "brcm,bcm7346-sun-top-ctrl", },
-> diff --git a/include/linux/soc/brcmstb/brcmstb.h b/include/linux/soc/brcmstb/brcmstb.h
-> index 337ce41..23e4dc9 100644
-> --- a/include/linux/soc/brcmstb/brcmstb.h
-> +++ b/include/linux/soc/brcmstb/brcmstb.h
-> @@ -1,10 +1,20 @@
->  #ifndef __BRCMSTB_SOC_H
->  #define __BRCMSTB_SOC_H
+>  	for (i = 0; i < ARRAY_SIZE(hts221_odr_table); i++)
+>  		if (hts221_odr_table[i].hz == odr)
+> @@ -222,9 +203,19 @@ static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
+>  	if (i == ARRAY_SIZE(hts221_odr_table))
+>  		return -EINVAL;
 >  
-> +#define BRCM_ID(reg)	((u32)reg >> 28 ? (u32)reg >> 16 : (u32)reg >> 8)
-> +#define BRCM_REV(reg)	((u32)reg & 0xff)
+> -	val = HTS221_ENABLE_SENSOR | HTS221_BDU_MASK | hts221_odr_table[i].val;
+> +	/* enable Block Data Update */
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_BDU_MASK, 1);
+> +	if (err < 0)
+> +		return err;
 > +
->  /*
->   * Bus Interface Unit control register setup, must happen early during boot,
->   * before SMP is brought up, called by machine entry point.
->   */
->  void brcmstb_biuctrl_init(void);
+> +	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> +				     HTS221_ODR_MASK, hts221_odr_table[i].val);
+> +	if (err < 0)
+> +		return err;
+> +
+>  	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL1_ADDR,
+> -				     HTS221_ODR_MASK, val);
+> +				     HTS221_ENABLE_MASK, 1);
+>  	if (err < 0)
+>  		return err;
 >  
-> +/*
-> + * Helper functions for getting family or product id from the
-> + * SoC driver.
-> + */
-> +u32 brcmstb_get_family_id(void);
-> +u32 brcmstb_get_product_id(void);
-> +
->  #endif /* __BRCMSTB_SOC_H */
-> 
+> @@ -241,14 +232,13 @@ static int hts221_update_avg(struct hts221_hw *hw,
+>  	const struct hts221_avg *avg = &hts221_avg_list[type];
+>  
+>  	for (i = 0; i < HTS221_AVG_DEPTH; i++)
+> -		if (avg->avg_avl[i].avg == val)
+> +		if (avg->avg_avl[i] == val)
+>  			break;
+>  
+>  	if (i == HTS221_AVG_DEPTH)
+>  		return -EINVAL;
+>  
+> -	err = hts221_write_with_mask(hw, avg->addr, avg->mask,
+> -				     avg->avg_avl[i].val);
+> +	err = hts221_write_with_mask(hw, avg->addr, avg->mask, i);
+>  	if (err < 0)
+>  		return err;
+>  
+> @@ -283,7 +273,7 @@ hts221_sysfs_rh_oversampling_avail(struct device *dev,
+>  
+>  	for (i = 0; i < ARRAY_SIZE(avg->avg_avl); i++)
+>  		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
+> -				 avg->avg_avl[i].avg);
+> +				 avg->avg_avl[i]);
+>  	buf[len - 1] = '\n';
+>  
+>  	return len;
+> @@ -300,7 +290,7 @@ hts221_sysfs_temp_oversampling_avail(struct device *dev,
+>  
+>  	for (i = 0; i < ARRAY_SIZE(avg->avg_avl); i++)
+>  		len += scnprintf(buf + len, PAGE_SIZE - len, "%d ",
+> -				 avg->avg_avl[i].avg);
+> +				 avg->avg_avl[i]);
+>  	buf[len - 1] = '\n';
+>  
+>  	return len;
+> @@ -534,13 +524,13 @@ static int hts221_read_raw(struct iio_dev *iio_dev,
+>  		case IIO_HUMIDITYRELATIVE:
+>  			avg = &hts221_avg_list[HTS221_SENSOR_H];
+>  			idx = hw->sensors[HTS221_SENSOR_H].cur_avg_idx;
+> -			*val = avg->avg_avl[idx].avg;
+> +			*val = avg->avg_avl[idx];
+>  			ret = IIO_VAL_INT;
+>  			break;
+>  		case IIO_TEMP:
+>  			avg = &hts221_avg_list[HTS221_SENSOR_T];
+>  			idx = hw->sensors[HTS221_SENSOR_T].cur_avg_idx;
+> -			*val = avg->avg_avl[idx].avg;
+> +			*val = avg->avg_avl[idx];
+>  			ret = IIO_VAL_INT;
+>  			break;
+>  		default:
+> @@ -661,7 +651,7 @@ int hts221_probe(struct iio_dev *iio_dev)
+>  		return err;
+>  	}
+>  
+> -	data = hts221_avg_list[HTS221_SENSOR_H].avg_avl[3].avg;
+> +	data = hts221_avg_list[HTS221_SENSOR_H].avg_avl[3];
+>  	err = hts221_update_avg(hw, HTS221_SENSOR_H, data);
+>  	if (err < 0) {
+>  		dev_err(hw->dev, "failed to set rh oversampling ratio\n");
+> @@ -676,7 +666,7 @@ int hts221_probe(struct iio_dev *iio_dev)
+>  		return err;
+>  	}
+>  
+> -	data = hts221_avg_list[HTS221_SENSOR_T].avg_avl[3].avg;
+> +	data = hts221_avg_list[HTS221_SENSOR_T].avg_avl[3];
+>  	err = hts221_update_avg(hw, HTS221_SENSOR_T, data);
+>  	if (err < 0) {
+>  		dev_err(hw->dev,
 
--- 
-Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
