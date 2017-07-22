@@ -1,97 +1,64 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 0/7] SMP and CPU hotplug support for Meson8/Meson8b
-Date: Sat, 22 Jul 2017 21:19:39 +0200
-Message-ID: <20170722191946.22938-1-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 5/7] clk: meson: meson8b: export the CPU soft reset lines
+Date: Sat, 22 Jul 2017 21:19:44 +0200
+Message-ID: <20170722191946.22938-6-martin.blumenstingl@googlemail.com>
+References: <20170722191946.22938-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170722191946.22938-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for booting the secondary CPU cores (and
-taking them offline again) on Amlogic Meson8 and Meson8b SoCs.
-It is based on an earlier version from Carlo Caione - this helped me
-a lot to get a better understanding of how SMP/CPU hotplug works
-(compared to the code found in Amlogic's GPL kernel sources from
-year 2015).
+Export the soft reset lines for the CPU cores so they can be used in the
+dt-bindings (required for SMP booting the CPU cores).
 
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/clk/meson/meson8b.h              | 8 ++++----
+ include/dt-bindings/clock/meson8b-clkc.h | 7 ++++++-
+ 2 files changed, 10 insertions(+), 5 deletions(-)
 
-The .dts changes from series depend on:
-- "add the reset controller to the Meson8b clkc" version 2, see [1]
-- "ARM: dts: meson: add a node which describes the SRAM", see [2]
-
-
-Changes since v3 from [3]:
-- added Rob's ACK to patch #1
-- replaced a msleep(10) with usleep_range(10000, 15000) in patch #4
-- removed all "pen" code from patch #4 as that code was not needed
-  at all (it was left-over while trying to fix Meson8 secondary CPU
-  boot - which turned out to have nothing to do with this "pen" code)
-- removed all memory barrier operations as they were added based on
-  the code in the Amlogic GPL kernel tree (while trying to fix the
-  Meson8 secondary CPU boot - just like the "pen" code). Everything
-  still works fine with these on my Meson8m2 and Meson8b boards.
-- added PATCH #5 as we now have to export the reset identifiers
-  (just like we do it with the clock identifiers / preprocessor
-  macros) - this is the result of a change in the reset controller
-  patch in version 2, see [1]
-- use the reset line preprocessor macros (from patch #5) in patches
-  #6 and #7
-
-Changes since v2 from [0]:
-- added support for Meson8 (which requires a slightly different
-  enable-method)
-- implemented CPU hotplug support which allows taking a CPU core
-  offline for both, Meson8 and Meson8b
-- add a function to smp_scu.c which allows enabling a CPU core from
-  a different CPU (previously only the power mode for the current CPU
-  could be changed). Without this the CPU cores on Meson8 won't come
-  up (Amlogic's vendor GPL kernel sources also enable power through
-  SCU as very first step for Meson8b as well)
-- add a function to smp_scu.c to get the power status of a CPU core
-  (which is needed because the code in .cpu_kill needs to wait until
-  the core is actually powered off)
-- dropped patch "ARM: DTS: meson8b: Extend L2 cache controller node"
-  as it is already applied (for both, Meson8 and Meson8b)
-- dropped the patches which implement the reset controller which is
-  built into the clock-controller, these are a separate series: [1]
-- moved the enable-method property to each CPU node
-
-
-[0] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-December/390355.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004352.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004282.html
-[3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004297.html
-
-Carlo Caione (2):
-  dt-bindings: Amlogic: Add Meson8 and Meson8b SMP related documentation
-  ARM: dts: meson8b: add support for booting the secondary CPU cores
-
-Martin Blumenstingl (5):
-  ARM: smp_scu: add a helper for powering on a specific CPU
-  ARM: smp_scu: allow the platform code to read the SCU CPU status
-  ARM: meson: Add SMP bringup code for Meson8 and Meson8b
-  clk: meson: meson8b: export the CPU soft reset lines
-  ARM: dts: meson8: add support for booting the secondary CPU cores
-
- .../devicetree/bindings/arm/amlogic/pmu.txt        |  18 +
- .../devicetree/bindings/arm/amlogic/smp-sram.txt   |  32 ++
- Documentation/devicetree/bindings/arm/cpus.txt     |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/meson8.dtsi                      |  20 +
- arch/arm/boot/dts/meson8b.dtsi                     |  20 +
- arch/arm/include/asm/smp_scu.h                     |  12 +
- arch/arm/kernel/smp_scu.c                          |  47 ++-
- arch/arm/mach-meson/Kconfig                        |   1 +
- arch/arm/mach-meson/Makefile                       |   1 +
- arch/arm/mach-meson/platsmp.c                      | 440 +++++++++++++++++++++
- drivers/clk/meson/meson8b.h                        |   8 +-
- include/dt-bindings/clock/meson8b-clkc.h           |   7 +-
- 13 files changed, 598 insertions(+), 11 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/smp-sram.txt
- create mode 100644 arch/arm/mach-meson/platsmp.c
-
+diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+index 5f4d8e49dd4d..d6e35c1acc05 100644
+--- a/drivers/clk/meson/meson8b.h
++++ b/drivers/clk/meson/meson8b.h
+@@ -169,10 +169,10 @@
+ #define RESETID_L2_CACHE_SOFT_RESET				0
+ #define RESETID_AXI_64_TO_128_BRIDGE_A5_SOFT_RESET		1
+ #define RESETID_SCU_SOFT_RESET					2
+-#define RESETID_CPU0_SOFT_RESET					3
+-#define RESETID_CPU1_SOFT_RESET					4
+-#define RESETID_CPU2_SOFT_RESET					5
+-#define RESETID_CPU3_SOFT_RESET					6
++/* RESETID_CPU0_SOFT_RESET */
++/* RESETID_CPU1_SOFT_RESET */
++/* RESETID_CPU2_SOFT_RESET */
++/* RESETID_CPU3_SOFT_RESET */
+ #define RESETID_A5_GLOBAL_RESET					7
+ #define RESETID_A5_AXI_SOFT_RESET				8
+ #define RESETID_A5_ABP_SOFT_RESET				9
+diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+index e29227fb52a1..76920cfd1f33 100644
+--- a/include/dt-bindings/clock/meson8b-clkc.h
++++ b/include/dt-bindings/clock/meson8b-clkc.h
+@@ -1,5 +1,5 @@
+ /*
+- * Meson8b clock tree IDs
++ * Meson8b clock and reset tree IDs
+  */
+ 
+ #ifndef __MESON8B_CLKC_H
+@@ -32,4 +32,9 @@
+ #define CLKID_USB0_DDR_BRIDGE	65
+ #define CLKID_SANA		69
+ 
++#define RESETID_CPU0_SOFT_RESET					3
++#define RESETID_CPU1_SOFT_RESET					4
++#define RESETID_CPU2_SOFT_RESET					5
++#define RESETID_CPU3_SOFT_RESET					6
++
+ #endif /* __MESON8B_CLKC_H */
 -- 
 2.13.3
 
