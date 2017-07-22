@@ -1,119 +1,87 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] clk: stm32h7: Add stm32h743 clock driver
-Date: Sat, 22 Jul 2017 11:58:10 +0000
-Message-ID: <ea79cb25-a926-4f62-5696-c50485fd6ff3@st.com>
-References: <1500474344-9832-1-git-send-email-gabriel.fernandez@st.com>
- <1500474344-9832-4-git-send-email-gabriel.fernandez@st.com>
- <d999fc79-7b14-da8e-965f-371cf4352dd1@mleia.com>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v8 0/3] clk: stm32h7: Add stm32h743 clock driver
+Date: Sat, 22 Jul 2017 14:01:07 +0200
+Message-ID: <1500724870-9071-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d999fc79-7b14-da8e-965f-371cf4352dd1-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Content-ID: <912D35F0BFD06443BA4DF39E065D708B-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TZNg+MwTxZMZA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Sylvain Lemieux <slemieux.tyco-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org, gabriel.fernandez.st-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzE5LzIwMTcgMTE6MjAgUE0sIFZsYWRpbWlyIFphcG9sc2tpeSB3cm90ZToNCj4g
-SGVsbG8gR2FicmllbCwNCj4NCj4gT24gMDcvMTkvMjAxNyAwNToyNSBQTSwgZ2FicmllbC5mZXJu
-YW5kZXpAc3QuY29tIHdyb3RlOg0KPj4gRnJvbTogR2FicmllbCBGZXJuYW5kZXogPGdhYnJpZWwu
-ZmVybmFuZGV6QHN0LmNvbT4NCj4+DQo+PiBUaGlzIHBhdGNoIGVuYWJsZXMgY2xvY2tzIGZvciBT
-VE0zMkg3NDMgYm9hcmRzLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEdhYnJpZWwgRmVybmFuZGV6
-IDxnYWJyaWVsLmZlcm5hbmRlekBzdC5jb20+DQo+Pg0KPj4gZm9yIE1GRCBjaGFuZ2VzOg0KPj4g
-QWNrZWQtYnk6IExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+DQo+Pg0KPj4gZm9yIERU
-LUJpbmRpbmdzDQo+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4+
-IC0tLQ0KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zdCxzdG0zMmg3LXJjYy50
-eHQgICB8ICAgODIgKysNCj4gSSdsbCBwcm92aWRlIHNvbWUgcmV2aWV3IGNvbW1lbnRzIGFib3V0
-IGRldmljZSB0cmVlIGJpbmRpbmdzIG9ubHkuDQo+DQo+PiBIaSBkcml2ZXJzL2Nsay9NYWtlZmls
-ZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKw0KPj4gICBkcml2ZXJzL2Ns
-ay9jbGstc3RtMzJoNy5jICAgICAgICAgICAgICAgICAgICAgICAgICB8IDE0MDkgKysrKysrKysr
-KysrKysrKysrKysNCj4+ICAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9zdG0zMmg3LWNsa3Mu
-aCAgICAgICAgICAgfCAgMTY1ICsrKw0KPj4gICBpbmNsdWRlL2R0LWJpbmRpbmdzL21mZC9zdG0z
-Mmg3LXJjYy5oICAgICAgICAgICAgICB8ICAxMzYgKysNCj4+ICAgNSBmaWxlcyBjaGFuZ2VkLCAx
-NzkzIGluc2VydGlvbnMoKykNCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9zdCxzdG0zMmg3LXJjYy50eHQNCj4+ICAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGRyaXZlcnMvY2xrL2Nsay1zdG0zMmg3LmMNCj4+ICAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svc3RtMzJoNy1jbGtzLmgNCj4+ICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvbWZkL3N0bTMyaDctcmNjLmgNCj4+
-DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2Nr
-L3N0LHN0bTMyaDctcmNjLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9j
-bG9jay9zdCxzdG0zMmg3LXJjYy50eHQNCj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRl
-eCAwMDAwMDAwLi40NDJjNTBjDQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svc3Qsc3RtMzJoNy1yY2MudHh0DQo+PiBAQCAt
-MCwwICsxLDgyIEBADQo+PiArU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMySDcgUmVzZXQgYW5kIENs
-b2NrIENvbnRyb2xsZXINCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PQ0KPj4gKw0KPj4gK1RoZSBSQ0MgSVAgaXMgYm90aCBhIHJlc2V0IGFu
-ZCBhIGNsb2NrIGNvbnRyb2xsZXIuDQo+PiArDQo+PiArUGxlYXNlIHJlZmVyIHRvIGNsb2NrLWJp
-bmRpbmdzLnR4dCBmb3IgY29tbW9uIGNsb2NrIGNvbnRyb2xsZXIgYmluZGluZyB1c2FnZS4NCj4+
-ICtQbGVhc2UgYWxzbyByZWZlciB0byByZXNldC50eHQgZm9yIGNvbW1vbiByZXNldCBjb250cm9s
-bGVyIGJpbmRpbmcgdXNhZ2UuDQo+PiArDQo+PiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4+ICst
-IGNvbXBhdGlibGU6IFNob3VsZCBiZToNCj4+ICsgICJzdCxzdG0zMmg3NDMtcmNjIg0KPj4gKw0K
-Pj4gKy0gcmVnOiBzaG91bGQgYmUgcmVnaXN0ZXIgYmFzZSBhbmQgbGVuZ3RoIGFzIGRvY3VtZW50
-ZWQgaW4gdGhlDQo+PiArICBkYXRhc2hlZXQNCj4+ICsNCj4+ICstICNyZXNldC1jZWxsczogMSwg
-c2VlIGJlbG93DQo+PiArDQo+PiArLSAjY2xvY2stY2VsbHMgOiBmcm9tIGNvbW1vbiBjbG9jayBi
-aW5kaW5nOyBzaGFsbCBiZSBzZXQgdG8gMQ0KPj4gKw0KPj4gKy0gY2xvY2tzOiBFeHRlcm5hbCBv
-c2NpbGxhdG9yIGNsb2NrIHBoYW5kbGUNCj4+ICsgIC0gaGlnaCBzcGVlZCBleHRlcm5hbCBjbG9j
-ayBzaWduYWwgKEhTRSkNCj4+ICsgIC0gbG93IHNwZWVkIGV4dGVybmFsIGNsb2NrIHNpZ25hbCAo
-TFNFKQ0KPj4gKyAgLSBleHRlcm5hbCBJMlMgY2xvY2sgKEkyU19DS0lOKQ0KPj4gKw0KPj4gK09w
-dGlvbmFsIHByb3BlcnRpZXM6DQo+PiArLSBzdCxzeXNjZmc6IHBoYW5kbGUgZm9yIHB3cmNmZywg
-bWFuZGF0b3J5IHRvIGRpc2FibGUvZW5hYmxlIGJhY2t1cCBkb21haW4NCj4+ICsgIHdyaXRlIHBy
-b3RlY3Rpb24gKFJUQyBjbG9jaykuDQo+PiArDQo+PiArRXhhbXBsZToNCj4+ICsNCj4+ICsJcmNj
-OiByY2NANTgwMjQ0MDAgew0KPiAncmNjJyBhcyBhIGdlbmVyaWMgZGV2aWNlIG5vZGUgbmFtZSBp
-cyBhd2t3YXJkLg0KPg0KPiBJIGJlbGlldmUgdGhlIG1haW4gZnVuY3Rpb24gb2YgdGhlIGRldmlj
-ZSBpcyBjbG9jayBjb250cm9sbGVyICh1bmxpa2VseQ0KPiBhIGdlbmVyaWMgcmVzZXQgY29udHJv
-bGxlciBjYW4gYmUgY29udmVydGVkIGludG8gYSBjbG9jayBjb250cm9sbGVyKSwNCj4gdGhlIGxv
-Y2F0aW9ucyBvZiB0aGUgZG9jdW1lbnQgYW5kIGRldmljZSBkcml2ZXIgYWxzbyBpbmRpY2F0ZSB0
-aGF0DQo+IHByaW1hcmlseSBpdCBpcyBhIGNsb2NrIGNvbnRyb2xsZXIsIHNvIEkgc3VnZ2VzdCB0
-byByZXBsYWNlIGRldmljZSBub2RlDQo+IG5hbWUgd2l0aCAnY2xvY2stY29udHJvbGxlcicgbGlr
-ZSBiZWxvdzoNCj4NCj4gCXJjYzogY2xvY2stY29udHJvbGxlckA1ODAyNDQwMCB7DQo+DQo+PiAr
-CQkjcmVzZXQtY2VsbHMgPSA8MT47DQo+PiArCQkjY2xvY2stY2VsbHMgPSA8Mj4NCj4gTWlzc2lu
-ZyB0cmFpbGluZyBzZW1pY29sb24gICAgICAgXl5eDQo+DQo+IE15IHJlY29tbWVuZGF0aW9uIGlz
-IHRvIG1vdmUgI3Jlc2V0LWNlbGxzIGFuZCAjY2xvY2stY2VsbHMgcHJvcGVydGllcw0KPiBkb3du
-IGFmdGVyICdyZWcnIG9yICdjbG9ja3MnIHByb3BlcnR5IGluIHRoZSBsaXN0Lg0KPg0KPj4gKwkJ
-Y29tcGF0aWJsZSA9ICJzdCxzdG0zMmg3NDMtcmNjIiwgInN0LHN0bTMyLXJjYyI7DQo+PiArCQly
-ZWcgPSA8MHg1ODAyNDQwMCAweDQwMD47DQo+PiArCQljbG9ja3MgPSA8JmNsa19oc2U+LCA8JmNs
-a19sc2U+LCA8JmNsa19pMnNfY2tpbj47DQo+PiArDQo+PiArCQlzdCxzeXNjZmcgPSA8JnB3cmNm
-Zz47DQo+PiArDQo+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsNCj4+ICsJCSNzaXplLWNlbGxz
-ID0gPDA+Ow0KPiBQbGVhc2UgZHJvcCAjYWRkcmVzcy1jZWxscyBhbmQgI3NpemUtY2VsbHMgcHJv
-cGVydGllcyBjb21wbGV0ZWx5LCBmcm9tDQo+IHRoZSBkb2N1bWVudCB0aGUgZGV2aWNlIG5vZGUg
-ZG9lcyBub3QgZGVmaW5lIGFueSBjaGlsZHJlbiBzdWJub2Rlcy4NCj4NCj4+ICsJfTsNCj4+ICsN
-Cj4+ICtUaGUgcGVyaXBoZXJhbCBjbG9jayBjb25zdW1lciBzaG91bGQgc3BlY2lmeSB0aGUgZGVz
-aXJlZCBjbG9jayBieQ0KPj4gK2hhdmluZyB0aGUgY2xvY2sgSUQgaW4gaXRzICJjbG9ja3MiIHBo
-YW5kbGUgY2VsbC4NCj4+ICsNCj4+ICtBbGwgYXZhaWxhYmxlIGNsb2NrcyBhcmUgZGVmaW5lZCBh
-cyBwcmVwcm9jZXNzb3IgbWFjcm9zIGluDQo+PiArZHQtYmluZGluZ3MvY2xvY2svc3RtMzJoNy1j
-bGtzLmggaGVhZGVyIGFuZCBjYW4gYmUgdXNlZCBpbiBkZXZpY2UNCj4+ICt0cmVlIHNvdXJjZXMu
-DQo+PiArDQo+PiArRXhhbXBsZToNCj4+ICsNCj4+ICsJCXRpbWVyNTogdGltZXJANDAwMDBjMDAg
-ew0KPj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItdGltZXIiOw0KPj4gKwkJCXJlZyA9IDww
-eDQwMDAwYzAwIDB4NDAwPjsNCj4+ICsJCQlpbnRlcnJ1cHRzID0gPDUwPjsNCj4+ICsJCQljbG9j
-a3MgPSA8JnJjYyBUSU01X0NLPjsNCj4+ICsNCj4gUGxlYXNlIHJlbW90ZSB0aGUgZW1wdHkgbGlu
-ZSBhYm92ZS4NCj4NCj4+ICsJCX07DQo+PiArDQo+PiArU3BlY2lmeWluZyBzb2Z0cmVzZXQgY29u
-dHJvbCBvZiBkZXZpY2VzDQo+PiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09DQo+PiArDQo+PiArRGV2aWNlIG5vZGVzIHNob3VsZCBzcGVjaWZ5IHRoZSByZXNldCBjaGFu
-bmVsIHJlcXVpcmVkIGluIHRoZWlyICJyZXNldHMiDQo+PiArcHJvcGVydHksIGNvbnRhaW5pbmcg
-YSBwaGFuZGxlIHRvIHRoZSByZXNldCBkZXZpY2Ugbm9kZSBhbmQgYW4gaW5kZXggc3BlY2lmeWlu
-Zw0KPj4gK3doaWNoIGNoYW5uZWwgdG8gdXNlLg0KPj4gK1RoZSBpbmRleCBpcyB0aGUgYml0IG51
-bWJlciB3aXRoaW4gdGhlIFJDQyByZWdpc3RlcnMgYmFuaywgc3RhcnRpbmcgZnJvbSBSQ0MNCj4+
-ICtiYXNlIGFkZHJlc3MuDQo+PiArSXQgaXMgY2FsY3VsYXRlZCBhczogaW5kZXggPSByZWdpc3Rl
-cl9vZmZzZXQgLyA0ICogMzIgKyBiaXRfb2Zmc2V0Lg0KPj4gK1doZXJlIGJpdF9vZmZzZXQgaXMg
-dGhlIGJpdCBvZmZzZXQgd2l0aGluIHRoZSByZWdpc3Rlci4NCj4+ICsNCj4+ICtGb3IgZXhhbXBs
-ZSwgZm9yIENSQyByZXNldDoNCj4+ICsgIGNyYyA9IEFIQjRSU1RSX29mZnNldCAvIDQgKiAzMiAr
-IENSQ1JTVF9iaXRfb2Zmc2V0ID0gMHg4OCAvIDQgKiAzMiArIDE5ID0gMTEwNw0KPj4gKw0KPj4g
-K0FsbCBhdmFpbGFibGUgcHJlcHJvY2Vzc29yIG1hY3JvcyBmb3IgcmVzZXQgYXJlIGRlZmluZWQg
-ZHQtYmluZGluZ3MvL21mZC9zdG0zMmg3LXJjYy5oDQo+IERvdWJsZSBzbGFzaGVzIC0tLS0tLS0t
-LS0+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5eXl4NCj4NCj4g
-SSBoYXZlIGRvdWJ0cyBpZiBpdCBpcyBwZXJtaXR0ZWQgdG8gYWRkIHNvdXJjZSBwYXRocyBpbnRv
-IHRoZSBkZXZpY2UNCj4gdHJlZSBiaW5kaW5ncyBkb2N1bWVudGF0aW9uLCBiZWNhdXNlIHN1Y2gg
-aW5mb3JtYXRpb24gaXMgc3BlY2lmaWMgdG8NCj4gdGhlIExpbnV4IHNvdXJjZSBjb2RlLg0KPg0K
-PiBSb2IsIGNhbiB5b3UgY2xhcmlmeSBwbGVhc2U/DQppIHdpbGwgc3VwcHJlc3MgaXQsIGl0J3Mg
-bm90IGEgcHJvYmxlbQ0KDQpNYW55IFRoYW5rcyBWbGFkaW1pcg0KDQoNCj4+ICtoZWFkZXIgYW5k
-IGNhbiBiZSB1c2VkIGluIGRldmljZSB0cmVlIHNvdXJjZXMuDQo+PiArDQo+PiArZXhhbXBsZToN
-Cj4gRm9yIHVuaWZpY2F0aW9uLCBwbGVhc2UgY2FwaXRhbGl6ZSBpdDogJ0V4YW1wbGU6Jw0KPg0K
-Pj4gKw0KPj4gKwl0aW1lcjIgew0KPj4gKwkJcmVzZXRzCT0gPCZyY2MgU1RNMzJIN19BUEIxTF9S
-RVNFVChUSU0yKT47DQo+PiArCX07DQo+IC0tDQo+IFdpdGggYmVzdCB3aXNoZXMsDQo+IFZsYWRp
-bWlyDQo=
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+
+v8:
+  - Documentation remarks from Valdimir:
+	- rename 'rcc' node name into 'reset-clock-controller'
+	- delete source paths into the device tree bindings documentation
+	- other cosmetic changes
+v7:
+  - Documentation: put 'st,syscfg' phandle in optional section
+  - rename nxp gate op with lpc32xx_ prefix
+  - Suppress useless code to disable/enable backup domain write protection
+    (backup domaine write is disable at the init and never enabled)
+
+v6:
+  - rename clk_gate_is_enabled() in nxp lpc32xx driver.
+  - add EXPORT_SYMBOL_GPL(clk_gate_is_enabled)
+
+v5:
+  - return bool instead int for enable_power_domain_write_protection()
+  - add comment to explain use of CLK_OF_DECLARE_DRIVER()
+  - add comment to explain why we can't use read_poll_timeout()
+  - expose clk_gate_ops::is_enabled
+  - use of __clk_mux_determine_rate & clk_gate_is_enabled to avoid wrapper
+	function.
+
+v4:
+  - rename lock into stm32rcc_lock
+  - don't use clk_readl() 
+  - remove useless parentheses with GENMASK
+  - fix parents of timer_x clocks
+  - suppress pll configuration from DT
+  - fix kbuild warning
+
+v3:
+  - fix compatible string "stm32h7-pll" into "st,stm32h7-pll"
+  - fix bad parent name for mco2 clock
+  - set CLK_SET_RATE_PARENT for ltdc clock
+  - set CLK_IGNORE_UNUSED for pll1
+  - disable power domain write protection on disable ops if needed
+
+
+v2:
+  - rename compatible string "stm32,pll" into "stm32h7-pll"
+  - suppress "st,pllrge" property
+  - suppress "st, frac-status" property
+  - change management of "st,frac"  property
+	0 : enable 0 pll integer mode 
+	other values : enable pll in fractional mode (value is
+	the fractional factor)
+
+Gabriel Fernandez (3):
+  clk: nxp: clk-lpc32xx: rename clk_gate_is_enabled()
+  clk: gate: expose clk_gate_ops::is_enabled
+  clk: stm32h7: Add stm32h743 clock driver
+
+ .../devicetree/bindings/clock/st,stm32h7-rcc.txt   |   71 +
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/clk-gate.c                             |    3 +-
+ drivers/clk/clk-stm32h7.c                          | 1410 ++++++++++++++++++++
+ drivers/clk/nxp/clk-lpc32xx.c                      |   12 +-
+ include/dt-bindings/clock/stm32h7-clks.h           |  165 +++
+ include/dt-bindings/mfd/stm32h7-rcc.h              |  136 ++
+ include/linux/clk-provider.h                       |    1 +
+ 8 files changed, 1792 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/st,stm32h7-rcc.txt
+ create mode 100644 drivers/clk/clk-stm32h7.c
+ create mode 100644 include/dt-bindings/clock/stm32h7-clks.h
+ create mode 100644 include/dt-bindings/mfd/stm32h7-rcc.h
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
