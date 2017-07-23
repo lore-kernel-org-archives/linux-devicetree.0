@@ -1,68 +1,90 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 10/10] ARM: dts: sun8i: Add SY8106A regulator to Orange Pi PC
-Date: Sun, 23 Jul 2017 18:27:49 +0800
-Message-ID: <20170723102749.17323-11-icenowy@aosc.io>
-References: <20170723102749.17323-1-icenowy@aosc.io>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] iio: adc: stm32: fix common clock rate
+Date: Sun, 23 Jul 2017 11:51:48 +0100
+Message-ID: <20170723115148.07db4374@kernel.org>
+References: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
+        <1500381332-17086-2-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170723102749.17323-1-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <1500381332-17086-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
+On Tue, 18 Jul 2017 14:35:30 +0200
+Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
 
-Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
-Orange Pi PC, then set the power supply of the ARM cores to this
-regulator, in order to enable DVFS.
+> Fixes commit 95e339b6e85d ("iio: adc: stm32: add support for STM32H7")
+> 
+> Fix common clock rate used then by stm32-adc sub-devices: take common
+> prescaler into account.
+> Fix ADC max clock rate on STM32H7 (fADC from datasheet)
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Patch itself is fine, but the description could do with
+information on what the result of this being wrong is.
 
-Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-[Icenowy: Enable DVFS in this patch, slight changes and change commit
- message]
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+I have no idea if this is a patch I should be sending upstream
+asap or should hold for the next merge window.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index 998b60f8d295..d855f8b6254e 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -98,6 +98,10 @@
- 	status = "okay";
- };
- 
-+&cpu0 {
-+	cpu-supply = <&reg_sy8106a>;
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -160,6 +164,21 @@
- 	};
- };
- 
-+&r_i2c {
-+	status = "okay";
-+
-+	reg_sy8106a: regulator@65 {
-+		compatible = "silergy,sy8106a";
-+		reg = <0x65>;
-+		regulator-name = "vdd-cpux";
-+		regulator-min-microvolt = <1000000>;
-+		regulator-max-microvolt = <1400000>;
-+		regulator-ramp-delay = <200>;
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
-+};
-+
- &r_pio {
- 	leds_r_opc: led_pins@0 {
- 		pins = "PL10";
--- 
-2.13.0
+Thanks,
+
+Jonathan
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index e09233b..6096763 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -64,7 +64,7 @@
+>  #define STM32H7_CKMODE_MASK		GENMASK(17, 16)
+>  
+>  /* STM32 H7 maximum analog clock rate (from datasheet) */
+> -#define STM32H7_ADC_MAX_CLK_RATE	72000000
+> +#define STM32H7_ADC_MAX_CLK_RATE	36000000
+>  
+>  /**
+>   * stm32_adc_common_regs - stm32 common registers, compatible dependent data
+> @@ -148,14 +148,14 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	priv->common.rate = rate;
+> +	priv->common.rate = rate / stm32f4_pclk_div[i];
+>  	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
+>  	val &= ~STM32F4_ADC_ADCPRE_MASK;
+>  	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
+>  	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
+>  
+>  	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
+> -		rate / (stm32f4_pclk_div[i] * 1000));
+> +		priv->common.rate / 1000);
+>  
+>  	return 0;
+>  }
+> @@ -250,7 +250,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  
+>  out:
+>  	/* rate used later by each ADC instance to control BOOST mode */
+> -	priv->common.rate = rate;
+> +	priv->common.rate = rate / div;
+>  
+>  	/* Set common clock mode and prescaler */
+>  	val = readl_relaxed(priv->common.base + STM32H7_ADC_CCR);
+> @@ -260,7 +260,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  	writel_relaxed(val, priv->common.base + STM32H7_ADC_CCR);
+>  
+>  	dev_dbg(&pdev->dev, "Using %s clock/%d source at %ld kHz\n",
+> -		ckmode ? "bus" : "adc", div, rate / (div * 1000));
+> +		ckmode ? "bus" : "adc", div, priv->common.rate / 1000);
+>  
+>  	return 0;
+>  }
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
