@@ -1,49 +1,26 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/2] of: base: use of_property_read_string()
-Date: Sun, 23 Jul 2017 19:55:48 +0300
-Message-ID: <20170723165748.078949611@cogentembedded.com>
+From: Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
+Date: Sun, 23 Jul 2017 10:03:00 -0700
+Message-ID: <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
+References: <20170707013257.18250-1-joseph.kogut@gmail.com> <7ho9scsdbp.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=of-base-use-of_property_read_string.patch
+In-Reply-To: <7ho9scsdbp.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of_alias_scan() can use of_property_read_string() -- using the modern DT API
-adds some prop sanity checks as a bonus; it does add couple LoCs but only
-because the original code violated the 80-column limit...
+Hi Kevin,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+I tested on a P212 reference board, which is currently the only GXL
+based board I have.
 
----
- drivers/of/base.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
-
-Index: linux/drivers/of/base.c
-===================================================================
---- linux.orig/drivers/of/base.c
-+++ linux/drivers/of/base.c
-@@ -1662,11 +1662,13 @@ void of_alias_scan(void * (*dt_alloc)(u6
- 
- 	if (of_chosen) {
- 		/* linux,stdout-path and /aliases/stdout are for legacy compatibility */
--		const char *name = of_get_property(of_chosen, "stdout-path", NULL);
--		if (!name)
--			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
-+		const char *name = NULL;
-+
-+		if (of_property_read_string(of_chosen, "stdout-path", &name))
-+			of_property_read_string(of_chosen, "linux,stdout-path",
-+						&name);
- 		if (IS_ENABLED(CONFIG_PPC) && !name)
--			name = of_get_property(of_aliases, "stdout", NULL);
-+			of_property_read_string(of_aliases, "stdout", &name);
- 		if (name)
- 			of_stdout = of_find_node_opts_by_path(name, &of_stdout_options);
- 	}
-
+Before applying the patch, high activity on the ethernet interface
+would cause the link to break, requiring the interface to be brought
+down and back up before it would work again. After applying the patch,
+I could not get the link to break with any transfers.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
