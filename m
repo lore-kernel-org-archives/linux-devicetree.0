@@ -1,293 +1,97 @@
-From: =?UTF-8?Q?Andr=c3=a9_Przywara?= <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/8] mailbox: introduce ARM SMC based mailbox
-Date: Mon, 24 Jul 2017 00:20:08 +0100
-Message-ID: <22d23c1d-ea8d-9829-4624-6305cd83ad4a@arm.com>
-References: <20170630095608.24943-1-andre.przywara@arm.com>
- <20170630095608.24943-2-andre.przywara@arm.com>
- <CABb+yY18Aye3wr2A9-+jemqc=VSRyUA+xzKGo9s0G4KCt1ovyA@mail.gmail.com>
+From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 0/3] mailbox: arm: introduce smc triggered mailbox
+Date: Mon, 24 Jul 2017 00:23:23 +0100
+Message-ID: <1500852206-28771-1-git-send-email-andre.przywara@arm.com>
 Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRB3G72TFQKGQET6WOJ5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBOPB2TFQKGQEQPZIKAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CABb+yY18Aye3wr2A9-+jemqc=VSRyUA+xzKGo9s0G4KCt1ovyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Graf <agraf-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/17 06:55, Jassi Brar wrote:
+This is a reworked version of my previous post. It addresses Jassi's
+comments on the driver and also tries to cover Rob's and Mark's comments
+on the binding documentation.
+I dropped the more example-like DT changes from v1, as they are actually
+not meant to be merged into the Linux tree, but instead are provided as
+part of some firmware actually implementing this functionality.
 
-Hi Jassi,
-
-thank you very much for having a look!
-
-> On Fri, Jun 30, 2017 at 3:26 PM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
->> This mailbox driver implements a mailbox which signals transmitted data
->> via an ARM smc (secure monitor call) instruction. The mailbox receiver
->> is implemented in firmware and can synchronously return data when it
->> returns execution to the non-secure world again.
->> An asynchronous receive path is not implemented.
->> This allows the usage of a mailbox to trigger firmware actions on SoCs
->> which either don't have a separate management processor or on which such
->> a core is not available. A user of this mailbox could be the SCP
->> interface.
->>
->> Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  drivers/mailbox/Kconfig           |   8 ++
->>  drivers/mailbox/Makefile          |   2 +
->>  drivers/mailbox/arm-smc-mailbox.c | 172 ++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 182 insertions(+)
->>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
->>
->> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
->> index c5731e5..5664b7f 100644
->> --- a/drivers/mailbox/Kconfig
->> +++ b/drivers/mailbox/Kconfig
->> @@ -170,4 +170,12 @@ config BCM_FLEXRM_MBOX
->>           Mailbox implementation of the Broadcom FlexRM ring manager,
->>           which provides access to various offload engines on Broadcom
->>           SoCs. Say Y here if you want to use the Broadcom FlexRM.
->> +
->> +config ARM_SMC_MBOX
->> +       tristate "Generic ARM smc mailbox"
->> +       depends on OF && HAVE_ARM_SMCCC
->> +       help
->> +         Generic mailbox driver which uses ARM smc calls to call into
->> +         firmware for triggering mailboxes.
->> +
->>  endif
->> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
->> index d54e412..8ec6869 100644
->> --- a/drivers/mailbox/Makefile
->> +++ b/drivers/mailbox/Makefile
->> @@ -35,3 +35,5 @@ obj-$(CONFIG_BCM_FLEXRM_MBOX) += bcm-flexrm-mailbox.o
->>  obj-$(CONFIG_QCOM_APCS_IPC)    += qcom-apcs-ipc-mailbox.o
->>
->>  obj-$(CONFIG_TEGRA_HSP_MBOX)   += tegra-hsp.o
->> +
->> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
->> diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-mailbox.c
->> new file mode 100644
->> index 0000000..578aed2
->> --- /dev/null
->> +++ b/drivers/mailbox/arm-smc-mailbox.c
->> @@ -0,0 +1,172 @@
->> +/*
->> + *  Copyright (C) 2016,2017 ARM Ltd.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + *
->> + * This device provides a mechanism for emulating a mailbox by using
->> + * smc calls, allowing a "mailbox" consumer to sit in firmware running
->> + * on the same core.
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/kernel.h>
->> +#include <linux/mailbox_controller.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/arm-smccc.h>
->> +
-> Please have relook at what headers are really needed.
-
-Good point, indeed many of them are not needed.
-
->> +#define ARM_SMC_MBOX_SMC               (0 << 0)
->> +#define ARM_SMC_MBOX_HVC               (1 << 0)
->> +#define ARM_SMC_MBOX_METHOD_MASK       (1 << 0)
->> +
-> Maybe have only
->    #define ARM_SMC_MBOX_HVC    BIT(0)
-> 
->> +struct arm_smc_chan_data {
->> +       u32 function_id;
->> +       u32 flags;
->> +};
->> +
->> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
->> +{
->> +       struct arm_smc_chan_data *chan_data = link->con_priv;
->> +       u32 function_id = chan_data->function_id;
->> +       struct arm_smccc_res res;
->> +       u32 msg = *(u32 *)data;
->> +
->> +       if ((chan_data->flags & ARM_SMC_MBOX_METHOD_MASK) == ARM_SMC_MBOX_SMC)
->> +               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
->> +       else
->> +               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
->> +
->        if (chan_data->flags & ARM_SMC_MBOX_HVC)
->                arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
->        else
->                arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-> 
-> is simpler.
-
-Yeah, makes sense, I changed that.
-
->> +       mbox_chan_received_data(link, (void *)res.a0);
->> +
-> Or you can update the 'data' with value from 'a0' ?
-
-Mmh, I am a bit puzzled by this. Why would this be needed or useful? I
-see that the SCPI firmware driver (as the user of the mailbox API) is
-expecting the return value from a0 as returned above, translating the
-firmware error codes into Linux' ones.
-What am I missing here?
-
->> +       return 0;
->> +}
->> +
->> +static int arm_smc_startup(struct mbox_chan *link)
->> +{
->> +       return 0;
->> +}
->> +
->> +static void arm_smc_shutdown(struct mbox_chan *link)
->> +{
->> +}
->> +
-> startup and shutdown can be omitted now.
-
-Ah, thanks for the heads up, removed them.
-
->> +/* This mailbox is synchronous, so we are always done. */
->> +static bool arm_smc_last_tx_done(struct mbox_chan *link)
->> +{
->> +       return true;
->> +}
->> +
->> +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
->> +       .send_data      = arm_smc_send_data,
->> +       .startup        = arm_smc_startup,
->> +       .shutdown       = arm_smc_shutdown,
->> +       .last_tx_done   = arm_smc_last_tx_done
->> +};
->> +
->> +static int arm_smc_mbox_probe(struct platform_device *pdev)
->> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct mbox_controller *mbox;
->> +       struct arm_smc_chan_data *chan_data;
->> +       const char *method;
->> +       bool use_hvc = false;
->> +       int ret = 0, i;
->> +
-> No need to initialise 'ret'
-
-Indeed!
-
-Thanks for the comments!
+Please let me know what you think.
 
 Cheers,
 Andre.
 
->> +       ret = of_property_count_elems_of_size(dev->of_node, "arm,smc-func-ids",
->> +                                             sizeof(u32));
->> +       if (ret < 0)
->> +               return ret;
->> +
->> +       if (!of_property_read_string(dev->of_node, "method", &method)) {
->> +               if (!strcmp("hvc", method)) {
->> +                       use_hvc = true;
->> +               } else if (!strcmp("smc", method)) {
->> +                       use_hvc = false;
->> +               } else {
->> +                       dev_warn(dev, "invalid \"method\" property: %s\n",
->> +                                method);
->> +
->> +                       return -EINVAL;
->> +               }
->> +       }
->> +
->> +       mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
->> +       if (!mbox)
->> +               return -ENOMEM;
->> +
->> +       mbox->num_chans = ret;
->> +       mbox->chans = devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
->> +                                  GFP_KERNEL);
->> +       if (!mbox->chans)
->> +               return -ENOMEM;
->> +
->> +       chan_data = devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
->> +                                GFP_KERNEL);
->> +       if (!chan_data)
->> +               return -ENOMEM;
->> +
->> +       for (i = 0; i < mbox->num_chans; i++) {
->> +               u32 function_id;
->> +
->> +               ret = of_property_read_u32_index(dev->of_node,
->> +                                                "arm,smc-func-ids", i,
->> +                                                &function_id);
->> +               if (ret)
->> +                       return ret;
->> +
->> +               chan_data[i].function_id = function_id;
->> +               if (use_hvc)
->> +                       chan_data[i].flags |= ARM_SMC_MBOX_HVC;
->> +               mbox->chans[i].con_priv = &chan_data[i];
->> +       }
->> +
->> +       mbox->txdone_poll = true;
->> +       mbox->txdone_irq = false;
->> +       mbox->txpoll_period = 1;
->> +       mbox->ops = &arm_smc_mbox_chan_ops;
->> +       mbox->dev = dev;
->> +
->> +       ret = mbox_controller_register(mbox);
->> +       if (ret)
->> +               return ret;
->> +
->> +       platform_set_drvdata(pdev, mbox);
->> +       dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
->> +                mbox->num_chans, mbox->num_chans == 1 ? "" : "s");
->> +
->> +       return ret;
->> +}
->> +
->> +static int arm_smc_mbox_remove(struct platform_device *pdev)
->> +{
->> +       struct mbox_controller *mbox = platform_get_drvdata(pdev);
->> +
->> +       mbox_controller_unregister(mbox);
->> +       return 0;
->> +}
->> +
->> +static const struct of_device_id arm_smc_mbox_of_match[] = {
->> +       { .compatible = "arm,smc-mbox", },
->> +       {},
->> +};
->> +MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
->> +
->> +static struct platform_driver arm_smc_mbox_driver = {
->> +       .driver = {
->> +               .name = "arm-smc-mbox",
->> +               .of_match_table = arm_smc_mbox_of_match,
->> +       },
->> +       .probe          = arm_smc_mbox_probe,
->> +       .remove         = arm_smc_mbox_remove,
->> +};
->> +module_platform_driver(arm_smc_mbox_driver);
->> +
->> +MODULE_AUTHOR("Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>");
->> +MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 2.9.0
->>
+P.S. Leaving for holidays in a few hours, so don't expect timely answers.
+-------------------
+
+The traditional Linux mailbox mechanism uses some kind of dedicated hardware
+IP to signal a condition to some other processing unit, typically a dedicated
+management processor.
+This mailbox feature is used for instance by the SCPI protocol to signal a
+request for some action to be taken by the management processor.
+And while it seems useful to have a dedicated management core to provide
+those services offered via the SCPI protocol, a separate and independent
+execution unit is not always required, for instance for just setting up
+a clock or enabling a device power supply. Those services could be as well
+provided by firmware code running on the very same application processor
+cores as the OS, using the ARM TrustZone mechanism to protect and abstract
+those services. And while the existing SCPI implementation uses a rather
+flexible shared memory region to communicate commands and their parameters,
+it still requires a mailbox to actually trigger the action.
+
+This patch series provides a Linux mailbox compatible service which uses
+smc calls to invoke firmware code, for instance taking care of SCPI requests.
+The actual requests are still communicated using the standard SCPI way of
+shared memory regions, but a dedicated mailbox hardware IP can be replaced via
+this new driver, which not only serves as a trigger for the request, but also
+transfers execution to the firmware code in a safe and architected way.
+
+This simple driver uses the architected SMC calling convention to trigger
+firmware services, also allows for using "HVC" calls to call into hypervisors
+or firmware layers running in the EL2 exception level.
+
+Patch 1 contains the device tree binding documentation, patch 2 introduces
+the actual mailbox driver, and patch 3 enables the driver in Kconfig.
+
+Please note that this driver just provides a generic mailbox mechanism,
+though this is synchronous and one-way only (triggered by the OS only,
+without providing an asynchronous way of triggering request from the
+firmware).
+And while providing SCPI services was the reason for this exercise, this
+driver is in no way bound to this use case, but can be used generically
+where the OS wants to signal a mailbox condition to firmware or a
+hypervisor.
+Also the driver is in no way meant to replace any existing firmware
+interface, but actually to complement existing interfaces.
+
+Please have a look and comment whether this sounds like a useful addition
+to the kernel.
+
+Cheers,
+Andre.
+
+[1] https://github.com/apritzel/arm-trusted-firmware/commits/allwinner-scpi-wip
+
+Andre Przywara (3):
+  DT: mailbox: add binding doc for the ARM SMC mailbox
+  mailbox: introduce ARM SMC based mailbox
+  mailbox: Kconfig: enable ARM SMC mailbox on 64-bit Allwinner SoCs
+
+ .../devicetree/bindings/mailbox/arm-smc.txt        |  76 ++++++++++
+ drivers/mailbox/Kconfig                            |   9 ++
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/arm-smc-mailbox.c                  | 155 +++++++++++++++++++++
+ 4 files changed, 242 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+ create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+
+-- 
+2.8.2
