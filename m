@@ -1,27 +1,74 @@
-From: Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
-Date: Sun, 23 Jul 2017 10:03:00 -0700
-Message-ID: <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
-References: <20170707013257.18250-1-joseph.kogut@gmail.com> <7ho9scsdbp.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7ho9scsdbp.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v6 1/3] Documentation: devicetree: add Freescale RNGC binding
+Date: Sun, 23 Jul 2017 19:49:04 +0200
+Message-ID: <1500832146-8660-1-git-send-email-martin@kaiser.cx>
+References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>
+Cc: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 
-I tested on a P212 reference board, which is currently the only GXL
-based board I have.
+Add binding documentation for the Freescale RNGC found on
+some i.MX2/3 SoCs.
 
-Before applying the patch, high activity on the ethernet interface
-would cause the link to break, requiring the interface to be brought
-down and back up before it would work again. After applying the patch,
-I could not get the link to break with any transfers.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+---
+Changes in v6:
+  - be more precise about rngc and rngb
+  - get rid of mxc, rename the file to imx-rngc.txt
+  - reformat the compatible strings
+  - use RNGC instead of RNG
+  - clarify that clock is not optional (remove "should contain")
+
+Changes in v5:
+  none
+
+Changes in v4:
+  none
+
+Changes in v3:
+  - add compatible string for imx35
+  - remove imx5 from the commit message,
+    I couldn't find an i.MX SOC that has RNGC
+
+Changes in v2:
+  none
+
+ Documentation/devicetree/bindings/rng/imx-rngc.txt | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rng/imx-rngc.txt
+
+diff --git a/Documentation/devicetree/bindings/rng/imx-rngc.txt b/Documentation/devicetree/bindings/rng/imx-rngc.txt
+new file mode 100644
+index 0000000..93c7174
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/imx-rngc.txt
+@@ -0,0 +1,21 @@
++Freescale RNGC (Random Number Generator Version C)
++
++The driver also supports version B, which is mostly compatible
++to version C.
++
++Required properties:
++- compatible : should be one of
++               "fsl,imx25-rngb"
++               "fsl,imx35-rngc"
++- reg : offset and length of the register set of this block
++- interrupts : the interrupt number for the RNGC block
++- clocks : the RNGC clk source
++
++Example:
++
++rng@53fb0000 {
++	compatible = "fsl,imx25-rngb";
++	reg = <0x53fb0000 0x4000>;
++	interrupts = <22>;
++	clocks = <&trng_clk>;
++};
+-- 
+2.1.4
