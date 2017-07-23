@@ -1,87 +1,58 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v3 1/5] dt-bindings: update the Allwinner GPADC
- device tree binding for H3
-Date: Sun, 23 Jul 2017 22:13:50 +0800
-Message-ID: <20170723141354.42646-2-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v3 2/5] iio: adc: sun4i-gpadc-iio: rename A23/A33-specified registers to contain A23
+Date: Sun, 23 Jul 2017 22:13:51 +0800
+Message-ID: <20170723141354.42646-3-icenowy@aosc.io>
 References: <20170723141354.42646-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBO662LFQKGQEDEPGHCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170723141354.42646-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170723141354.42646-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Jonathan Cameron <jic23@kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H3 features a thermal sensor like the one in A33, but has its
-register re-arranged, the clock divider moved to CCU (originally the
-clock divider is in ADC) and added a pair of bus clock and reset.
+As the H3 SoC, which is also in sun8i line, has totally different
+register map for the thermal sensor (a cut down version of GPADC), we
+should rename A23/A33-specified registers to contain A23, in order to
+prevent obfuscation with H3 registers. Currently these registers are
+only prefixed "SUN8I", not "SUN8I_A23".
 
-Update the binding document to cover H3.
+Add "_A23" after "SUN8I" on the register names.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-Changes in v3:
-- Clock name changes.
-- Example node name changes.
-- Add interupts (not yet used by the driver).
+ drivers/iio/adc/sun4i-gpadc-iio.c | 2 +-
+ include/linux/mfd/sun4i-gpadc.h   | 6 +++---
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
- .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 25 ++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-index badff3611a98..986265c59b2a 100644
---- a/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-+++ b/Documentation/devicetree/bindings/mfd/sun4i-gpadc.txt
-@@ -4,12 +4,21 @@ The Allwinner SoCs all have an ADC that can also act as a thermal sensor
- and sometimes as a touchscreen controller.
+diff --git a/drivers/iio/adc/sun4i-gpadc-iio.c b/drivers/iio/adc/sun4i-gpadc-iio.c
+index 81d4c39e414a..41769bc6a429 100644
+--- a/drivers/iio/adc/sun4i-gpadc-iio.c
++++ b/drivers/iio/adc/sun4i-gpadc-iio.c
+@@ -88,7 +88,7 @@ static const struct gpadc_data sun6i_gpadc_data = {
+ static const struct gpadc_data sun8i_a33_gpadc_data = {
+ 	.temp_offset = -1662,
+ 	.temp_scale = 162,
+-	.tp_mode_en = SUN8I_GPADC_CTRL1_CHOP_TEMP_EN,
++	.tp_mode_en = SUN8I_A23_GPADC_CTRL1_CHOP_TEMP_EN,
+ };
  
- Required properties:
--  - compatible: "allwinner,sun8i-a33-ths",
-+  - compatible: must contain one of the following compatibles:
-+		- "allwinner,sun8i-a33-ths"
-+		- "allwinner,sun8i-h3-ths"
-   - reg: mmio address range of the chip,
-   - #thermal-sensor-cells: shall be 0,
-   - #io-channel-cells: shall be 0,
+ struct sun4i_gpadc_iio {
+diff --git a/include/linux/mfd/sun4i-gpadc.h b/include/linux/mfd/sun4i-gpadc.h
+index 139872c2e0fe..d31d962bb7d8 100644
+--- a/include/linux/mfd/sun4i-gpadc.h
++++ b/include/linux/mfd/sun4i-gpadc.h
+@@ -38,9 +38,9 @@
+ #define SUN6I_GPADC_CTRL1_ADC_CHAN_SELECT(x)		(GENMASK(3, 0) & BIT(x))
+ #define SUN6I_GPADC_CTRL1_ADC_CHAN_MASK			GENMASK(3, 0)
  
--Example:
-+Required properties for the following compatibles:
-+		- "allwinner,sun8i-h3-ths"
-+  - clocks: the bus clock and the input clock of the ADC,
-+  - clock-names: should be "bus" and "mod",
-+  - resets: the bus reset of the ADC,
-+  - interrupts: the sampling interrupt of the ADC,
-+
-+Example for A33:
- 	ths: ths@01c25000 {
- 		compatible = "allwinner,sun8i-a33-ths";
- 		reg = <0x01c25000 0x100>;
-@@ -17,6 +26,18 @@ Example:
- 		#io-channel-cells = <0>;
- 	};
+-/* TP_CTRL1 bits for sun8i SoCs */
+-#define SUN8I_GPADC_CTRL1_CHOP_TEMP_EN			BIT(8)
+-#define SUN8I_GPADC_CTRL1_GPADC_CALI_EN			BIT(7)
++/* TP_CTRL1 bits for sun8i A23/A33 SoCs */
++#define SUN8I_A23_GPADC_CTRL1_CHOP_TEMP_EN		BIT(8)
++#define SUN8I_A23_GPADC_CTRL1_GPADC_CALI_EN		BIT(7)
  
-+Example for H3:
-+	ths: thermal-sensor@1c25000 {
-+		compatible = "allwinner,sun8i-h3-ths";
-+		reg = <0x01c25000 0x400>;
-+		clocks = <&ccu CLK_BUS_THS>, <&ccu CLK_THS>;
-+		clock-names = "bus", "mod";
-+		resets = <&ccu RST_BUS_THS>;
-+		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+		#thermal-sensor-cells = <0>;
-+		#io-channel-cells = <0>;
-+	};
-+
- sun4i, sun5i and sun6i SoCs are also supported via the older binding:
+ #define SUN4I_GPADC_CTRL2				0x08
  
- sun4i resistive touchscreen controller
 -- 
 2.13.0
