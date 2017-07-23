@@ -1,37 +1,88 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] of_pci: use of_property_read_u32_array()
-Date: Sun, 23 Jul 2017 22:46:45 +0300
-Message-ID: <c97cebca-86c2-173d-2228-60afe109c8dc@cogentembedded.com>
-References: <20170723194327.508593685@cogentembedded.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx6qdl-wandboard: enable USB OTG
+Date: Sun, 23 Jul 2017 17:29:43 -0300
+Message-ID: <CAOMZO5DKVJN1JFBthotvnufodnN1JDd=hO12PGjLV1KFMQfs7A@mail.gmail.com>
+References: <1500828552-16237-1-git-send-email-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170723194327.508593685-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1500828552-16237-1-git-send-email-akurz-3EoFODjbY6Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Kurz <akurz-3EoFODjbY6Q@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2017 10:41 PM, Sergei Shtylyov wrote:
+[Adding Shawn]
 
-> of_pci_get_devfn() and of_pci_parse_bus_range() somehow didn't use
-> of_property_read_u32_array() though it was long available, basically
-> open-coding it.  Using the modern DT API saves several LoCs/bytes and
-
-    Oops, cut&paste error! This patch apparently doesn't save any LoCs, but it 
-does save 32 bytes of the object code (ARM gcc 4.8.5). Do I need to resend?
-
-> also adds some prop sanity checks as a bonus...
+On Sun, Jul 23, 2017 at 1:49 PM, Alexander Kurz <akurz-3EoFODjbY6Q@public.gmane.org> wrote:
+> Enable USB OTG (dual-role) on the Wandboard.
+> Note, that the USB_OTG_VBUS current is quite limited due to a 22R resistor
+> in the power line. Hence, the overcurrent signal of 1A will never be
+> triggered on this board.
 >
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->
+> Signed-off-by: Alexander Kurz <akurz-3EoFODjbY6Q@public.gmane.org>
+
+Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+
 > ---
->  drivers/of/of_pci.c |   28 ++++++++++++++--------------
->  1 file changed, 14 insertions(+), 14 deletions(-)
-[...]
-
-MBR, Sergei
-
+>  arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+> index b4fa7f1..f1abde8 100644
+> --- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
+> @@ -34,6 +34,16 @@
+>                         regulator-max-microvolt = <3300000>;
+>                         regulator-always-on;
+>                 };
+> +
+> +               reg_usb_otg_vbus: usb_otg_vbus {
+> +                       compatible = "regulator-fixed";
+> +                       regulator-name = "usb_otg_vbus";
+> +                       regulator-min-microvolt = <5000000>;
+> +                       regulator-max-microvolt = <5000000>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&pinctrl_usbotgvbus>;
+> +                       gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
+> +               };
+>         };
+>
+>         sound {
+> @@ -170,6 +180,12 @@
+>                         >;
+>                 };
+>
+> +               pinctrl_usbotgvbus: usbotgvbusgrp {
+> +                       fsl,pins = <
+> +                               MX6QDL_PAD_EIM_D22__GPIO3_IO22          0x130b0
+> +                       >;
+> +               };
+> +
+>                 pinctrl_usdhc1: usdhc1grp {
+>                         fsl,pins = <
+>                                 MX6QDL_PAD_SD1_CMD__SD1_CMD             0x17059
+> @@ -244,10 +260,11 @@
+>  };
+>
+>  &usbotg {
+> +       vbus-supply = <&reg_usb_otg_vbus>;
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_usbotg>;
+>         disable-over-current;
+> -       dr_mode = "peripheral";
+> +       dr_mode = "otg";
+>         status = "okay";
+>  };
+>
+> --
+> 2.1.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
