@@ -1,50 +1,30 @@
 From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] of_mdio: kill useless variable in of_phy_register_fixed_link()
-Date: Sun, 23 Jul 2017 21:45:47 +0300
-Message-ID: <20170723184612.321910595@cogentembedded.com>
+Subject: Re: [PATCH 1/2] of: base: use of_property_read_u32()
+Date: Sun, 23 Jul 2017 22:10:28 +0300
+Message-ID: <4a4fa56f-956e-aa9b-071c-6a34dbec224e@cogentembedded.com>
+References: <20170723165744.310866466@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=of_mdio-kill-useless-variable-in-of_phy_register_fixed_link.patch
+In-Reply-To: <20170723165744.310866466-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-of_phy_register_fixed_link() declares the 'err' variable to hold the result
-of of_property_read_string() but only uses it once after that, while that
-function can be called directly from the *if* statement...
+On 07/23/2017 07:55 PM, Sergei Shtylyov wrote:
 
-Remove that variable and move/regroup 'link_gpio' and 'len' variables in
-order to sort the declarations in the reverse Xmas tree order -- to please
-DaveM. ;-)
+> of_n_{addr|size}_cells(() predate of_property_read_u32(), so they have to
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+    Oops,. double open paren. Rob, could you please fxi while applying?
 
----
- drivers/of/of_mdio.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+> basically open-code it. Using the modern DT API saves several LoCs and also
+> adds some prop sanity checks as a bonus...
+>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+[...]
 
-Index: linux/drivers/of/of_mdio.c
-===================================================================
---- linux.orig/drivers/of/of_mdio.c
-+++ linux/drivers/of/of_mdio.c
-@@ -422,13 +422,11 @@ int of_phy_register_fixed_link(struct de
- 	struct fixed_phy_status status = {};
- 	struct device_node *fixed_link_node;
- 	const __be32 *fixed_link_prop;
--	int link_gpio;
--	int len, err;
- 	struct phy_device *phy;
- 	const char *managed;
-+	int link_gpio, len;
- 
--	err = of_property_read_string(np, "managed", &managed);
--	if (err == 0) {
-+	if (of_property_read_string(np, "managed", &managed) == 0) {
- 		if (strcmp(managed, "in-band-status") == 0) {
- 			/* status is zeroed, namely its .link member */
- 			phy = fixed_phy_register(PHY_POLL, &status, -1, np);
+MNR, Sergei
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
