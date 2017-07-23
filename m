@@ -1,80 +1,22 @@
-From: Alexander Kurz <akurz@blala.de>
-Subject: [PATCH v2] ARM: dts: imx6qdl-wandboard: enable USB OTG
-Date: Sun, 23 Jul 2017 18:49:12 +0200
-Message-ID: <1500828552-16237-1-git-send-email-akurz@blala.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: devicetree@vger.kernel.org, Alexander Kurz <akurz@blala.de>, linux-arm-kernel@lists.infradead.org
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/2] Teach the DT base code to use modern DT APIs
+Date: Sun, 23 Jul 2017 19:55:46 +0300
+Message-ID: <20170723165546.673423974@cogentembedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable USB OTG (dual-role) on the Wandboard.
-Note, that the USB_OTG_VBUS current is quite limited due to a 22R resistor
-in the power line. Hence, the overcurrent signal of 1A will never be
-triggered on this board.
+Hello!
 
-Signed-off-by: Alexander Kurz <akurz@blala.de>
----
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+Here's the set of 2 patches against Rob Herring's 'linux.git' repo's 'for-next'
+branch. I'm switching the DT base code to the modern DT APIs.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-index b4fa7f1..f1abde8 100644
---- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-@@ -34,6 +34,16 @@
- 			regulator-max-microvolt = <3300000>;
- 			regulator-always-on;
- 		};
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbotgvbus>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_LOW>;
-+		};
- 	};
- 
- 	sound {
-@@ -170,6 +180,12 @@
- 			>;
- 		};
- 
-+		pinctrl_usbotgvbus: usbotgvbusgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x130b0
-+			>;
-+		};
-+
- 		pinctrl_usdhc1: usdhc1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_SD1_CMD__SD1_CMD		0x17059
-@@ -244,10 +260,11 @@
- };
- 
- &usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbotg>;
- 	disable-over-current;
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
--- 
-2.1.4
+[1/2] of: base: use of_property_read_u32()
+[2/2] of: base: use of_property_read_string()
+
+MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
