@@ -1,33 +1,158 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] Documentation/devicetree: Update links to PCI DT bindings
-Date: Mon, 24 Jul 2017 13:30:19 -0500
-Message-ID: <20170724183019.pqoxf6cswank5uhk@rob-hp-laptop>
-References: <1500389167-34944-1-git-send-email-harvey.hunt@imgtec.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
+Date: Mon, 24 Jul 2017 20:32:01 +0200
+Message-ID: <1500921121.2401.5.camel@baylibre.com>
+References: <20170707013257.18250-1-joseph.kogut@gmail.com>
+         <7ho9scsdbp.fsf@baylibre.com>
+         <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
+         <cf71b3c2-29d7-3bdb-0d00-872f5e1267e2@baylibre.com>
+         <7519c9ee-54f0-d5fb-1683-11d6e24f0822@baylibre.com>
+         <1500912570.2401.3.camel@baylibre.com>
+         <CAFBinCBy6Ce79Tf2seQi4m3aNGOa0r00zjt=eZP-dYy+6WLo8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1500389167-34944-1-git-send-email-harvey.hunt@imgtec.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Harvey Hunt <harvey.hunt@imgtec.com>
-Cc: mark.rutland@arm.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCBy6Ce79Tf2seQi4m3aNGOa0r00zjt=eZP-dYy+6WLo8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 03:46:07PM +0100, Harvey Hunt wrote:
-> Update links to the PDFs of PCI and interrupt mapping bindings, as
-> the previous links are broken.
+On Mon, 2017-07-24 at 20:20 +0200, Martin Blumenstingl wrote:
+> On Mon, Jul 24, 2017 at 6:09 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> > On Mon, 2017-07-24 at 14:26 +0200, Neil Armstrong wrote:
+> > > On 07/24/2017 02:06 PM, Neil Armstrong wrote:
+> > > > On 07/23/2017 07:03 PM, Joseph Kogut wrote:
+> > > > > Hi Kevin,
+> > > > > 
+> > > > > I tested on a P212 reference board, which is currently the only GXL
+> > > > > based board I have.
+> > > > > 
+> > > > > Before applying the patch, high activity on the ethernet interface
+> > > > > would cause the link to break, requiring the interface to be brought
+> > > > > down and back up before it would work again. After applying the patch,
+> > > > > I could not get the link to break with any transfers.
+> > > > > 
+> > > > > _______________________________________________
+> > > > > linux-arm-kernel mailing list
+> > > > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > > > > 
+> > > > 
+> > > > Hi Joseph,
+> > > > 
+> > > > [please keep the history of the conversation when replying]
+> > > > 
+> > > > Is it a original P212 board, or a board based on the P212 ref design ?
+> > > > 
+> > > > I'm currently testing the v4.13-rc2 on the official P212 board we
+> > > > received
+> > > > from Amlogic
+> > > > and using iperf3 in both directions, I have an issue after a few minutes
+> > > > running iperf3 with :
+> > > > 
+> > > > # while true ; do iperf3 -c 192.168.1.21 ; iperf3 -c 192.168.1.21 -R ;
+> > > > done
+> > > > 
+> > > > That cycles between the two iperf directions.
+> > > > 
+> > > > After a few minutes, it stalls with :
+> > > > 
+> > > > Connecting to host 192.168.1.21, port 5201
+> > > > [  4] local 192.168.1.183 port 51286 connected to 192.168.1.21 port 5201
+> > > > [ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+> > > > [  4]   0.00-1.00   sec  1.64 MBytes  13.7 Mbits/sec    2   1.41 KBytes
+> > > > [  4]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+> > > > [  4]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+> > > > [  4]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+> > > > [  4]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+> > > > [  4]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+> > > > [  4]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+> > > > [  4]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+> > > > [  4]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+> > > > 
+> > 
+> > Same kind of test shows no issue on the libretech-cc and the khadas-vim
+> > In this case, I don't think meson-gxl.dtsi is where you should make your
+> > change.
+
+ahahah, silly me ! I forgot that it was 100MBps PHY.
+tx delay makes no sense here, 2ns delay would not make much difference on a
+25MHz clock
+
+Sorry for the confusion
+
+
+> > 
+> > > > 
+> > > > And then, after:
+> > > > # ifconfig eth0 down
+> > > > # ifconfig eth0 up
+> > > > 
+> > > > It cycles between :
+> > > > [ 1483.009919] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
+> > > > 100Mbps/Full - flow control rx/tx
+> > > > [ 1487.105725] meson8b-dwmac c9410000.ethernet eth0: Link is Down
+> > > > [ 1490.177943] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
+> > > > 100Mbps/Full - flow control rx/tx
+> > > > [ 1494.273713] meson8b-dwmac c9410000.ethernet eth0: Link is Down
+> > 
+> > This does not look like the issue we had on the odroid-c2.
+> > However, I have seen behavior like this (link down/up flickering) when the
+> > rgmii
+> >  delays are way off.
+> > 
+> > Maybe you could try playing with "amlogic,tx-delay-ns" property ?
 > 
-> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-pci@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/pci/pci.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> we need to change dwmac-meson8b.c so it applies the TX delay also for
+> RMII PHYs. currently the TX delay is always set to 0 for RMII PHYs,
+> see: [0]
+> 
+> > > > 
+> > > > and so on.
+> > > > 
+> > > > And this patch does not fix this at all.
+> > > > 
+> > > > It seems to be more a PHY driver issue here.
+> > > > 
+> > > > Could you share the results with the same command ?
+> > > > 
+> > > > Neil
+> > > > 
+> > > 
+> > > I forgot to precise, this issue occurs when the "GXL PHY driver" is
+> > > disabled,
+> > > only relying on the
+> > > Generic PHY Driver.
+> > > 
+> > > [  630.767538] Generic PHY 0.e40908ff:08: attached PHY driver [Generic
+> > > PHY]
+> > > (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
+> > > 
+> > > 
+> > > When the PHY driver is loaded the issue disappears, with and without your
+> > > patch.
+> > > 
+> > > [   25.355620] Meson GXL Internal PHY 0.e40908ff:08: attached PHY driver
+> > > [Meson GXL Internal PHY] (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
+> > > 
+> > > Could you please check the PHY Driver is loaded ?
+> > > 
+> > > Thanks,
+> > > Neil
+> > 
+> > 
+> > _______________________________________________
+> > linux-amlogic mailing list
+> > linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> 
+> 
+> [0] https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/stmicro
+> /stmmac/dwmac-meson8b.c#L222
 
-I'm working on setting up a mirror on devicetree.org, so I'd like to 
-hold off on fixing these links until then. And I already got a similar 
-patch for this.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
