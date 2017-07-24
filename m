@@ -1,52 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1] pinctrl: qcom: spmi-gpio: Add support for
- qcom,gpios-disallowed property
-Date: Mon, 24 Jul 2017 14:09:49 -0500
-Message-ID: <20170724190949.y45cx4zextmvb4tn@rob-hp-laptop>
-References: <20170719071804.3816-1-fenglinw@codeaurora.org>
+Subject: Re: [PATCH v2 04/25] dt-bindings: qcom_nandc: change compatible
+ string for EBI2 NANDC
+Date: Mon, 24 Jul 2017 14:13:07 -0500
+Message-ID: <20170724191307.pbgfnye5gsc4yso2@rob-hp-laptop>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-5-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170719071804.3816-1-fenglinw@codeaurora.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: fenglinw@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, collinsd@codeaurora.org, aghayal@codeaurora.org, wruan@codeaurora.org, kgunda@codeaurora.org
+In-Reply-To: <1500464893-11352-5-git-send-email-absahu@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, architt@codeaurora.org, devicetree@vger.kernel.org, richard@nod.at, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, marek.vasut@gmail.com, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, andy.gross@linaro.org, sricharan@codeaurora.org, computersforpeace@gmail.com, dwmw2@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 19, 2017 at 03:17:07PM +0800, fenglinw@codeaurora.org wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
-> 
-> Add support for qcom,gpios-disallowed property which is used to exclude
-> PMIC GPIOs not owned by the APSS processor from the pinctrl device.
-> 
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  12 ++
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 202 +++++++++++++++++----
->  2 files changed, 176 insertions(+), 38 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> index 8d893a8..435efe8 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-> @@ -43,6 +43,17 @@ PMIC's from Qualcomm.
->  		    the first cell will be used to define gpio number and the
->  		    second denotes the flags for this gpio
->  
-> +- qcom,gpios-disallowed:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: Array of the GPIO hardware numbers corresponding to GPIOs
-> +		    which the APSS processor is not allowed to configure.
-> +		    The hardware numbers are indexed from 1.
-> +		    The interrupt resources for these GPIOs must not be defined
-> +		    in "interrupts" and "interrupt-names" properties.
-> +		    GPIOs defined in this array won't be registered as pins
-> +		    in the pinctrl device or gpios in the gpio chip.
-
-Isn't simply not assigning GPIOs to anything in the DT sufficient to not 
-use GPIOs?
-
-Rob
-
+T24gV2VkLCBKdWwgMTksIDIwMTcgYXQgMDU6MTc6NTJQTSArMDUzMCwgQWJoaXNoZWsgU2FodSB3
+cm90ZToKPiBUaGUgY3VycmVudCBjb21wYXRpYmxlIHN0cmluZyDigJxxY29tLGlwcTgwNngtbmFu
+ZCIgaW1wbGllcyB0aGF0Cj4gdGhlIGRyaXZlciBpcyBzcGVjaWZpYyB0byBJUFE4MDZ4LiBUaGlz
+IGRyaXZlciBjYW4gYmUgdXNlZCBieQo+IGFueSBjaGlwIHdoaWNoIHVzZXMgRUJJMiBOQU5EIGNv
+bnRyb2xsZXIgc28gY2hhbmdlZCB0aGUKPiBjb21wYXRpYmxlIHN0cmluZyB0byDigJxxY29tLGVi
+aTItbmFuZGPigJ0gdG8gZ2l2ZSBpdCBtb3JlIGdlbmVyaWMKPiBuYW1lLgo+IAo+IFNpbmNlIHRo
+ZXJlIGlzIG5vIHVzZXIgZm9yIHRoaXMgZHJpdmVyIGN1cnJlbnRseSBpbiBzbwo+IGNoYW5naW5n
+IGNvbXBhdGlibGUgc3RyaW5nIGlzIHNhZmUuCj4gCj4gU2lnbmVkLW9mZi1ieTogQWJoaXNoZWsg
+U2FodSA8YWJzYWh1QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbXRkL3Fjb21fbmFuZGMudHh0IHwgNCArKystCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAzIGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9xY29tX25hbmRjLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvcWNvbV9uYW5kYy50eHQKPiBpbmRleCA3
+MGRkNTExLi40NTExOTE4IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvcWNvbV9uYW5kYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvbXRkL3Fjb21fbmFuZGMudHh0Cj4gQEAgLTEsNyArMSw5IEBACj4gICogUXVh
+bGNvbW0gTkFORCBjb250cm9sbGVyCj4gIAo+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+IC0tIGNv
+bXBhdGlibGU6CQlzaG91bGQgYmUgInFjb20saXBxODA2eC1uYW5kIgo+ICstIGNvbXBhdGlibGU6
+CQlzaG91bGQgYmUgInFjb20sZWJpMi1uYW5kYyIgLSBFQkkyIE5BTkQgd2hpY2ggdXNlcyBBRE0K
+PiArCQkJRE1BIGxpa2UgSVBRODA2NC4KCkNvbXBhdGlibGUgc3RyaW5ncyBhcmUgc3VwcG9zZWQg
+dG8gYmUgc3BlY2lmaWMgdG8gdGhlIFNvQy4gVGhlIG9sZCBvbmUgCndhc24ndCBxdWl0ZSBhbmQg
+dGhlIG5ldyBvbmUgbW92ZXMgaW4gdGhlIHdyb25nIGRpcmVjdGlvbi4KClJvYgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBk
+aXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LW10ZC8K
