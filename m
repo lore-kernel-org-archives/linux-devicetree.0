@@ -1,83 +1,91 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for
- each channel
-Date: Mon, 24 Jul 2017 22:06:39 +0530
-Message-ID: <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
-References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
- <1500620142-910-7-git-send-email-anup.patel@broadcom.com> <CABb+yY1Pxhgvvit=0eZr66DpLJ3MDEvRPx9dwDPJM8PwiKXiew@mail.gmail.com>
- <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: gpu: add a power_model optional
+ properties for MALI
+Date: Mon, 24 Jul 2017 11:39:37 -0500
+Message-ID: <20170724163937.ppz24xg6ltkmal7f@rob-hp-laptop>
+References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
+ <1500279271-15249-3-git-send-email-wxt@rock-chips.com>
+ <20170717200733.nax6jfbvs3rjd7t4@rob-hp-laptop>
+ <3b464bab-2d72-717c-3aa0-410b1e1bd930@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <3b464bab-2d72-717c-3aa0-410b1e1bd930@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Caesar Wang <wxt@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 9:26 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Jassi,
->
-> Sorry for the delayed response...
->
-> On Fri, Jul 21, 2017 at 9:16 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Hi Anup,
->>
->> On Fri, Jul 21, 2017 at 12:25 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> The Broadcom FlexRM ring (i.e. mailbox channel) can handle
->>> larger number of messages queued in one FlexRM ring hence
->>> this patch sets msg_queue_len for each mailbox channel to
->>> be same as RING_MAX_REQ_COUNT.
->>>
->>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
->>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
->>> index 9873818..20055a0 100644
->>> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
->>> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
->>> @@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
->>>                 ret = -ENOMEM;
->>>                 goto fail_free_debugfs_root;
->>>         }
->>> -       for (index = 0; index < mbox->num_rings; index++)
->>> +       for (index = 0; index < mbox->num_rings; index++) {
->>> +               mbox->controller.chans[index].msg_queue_len =
->>> +                                               RING_MAX_REQ_COUNT;
->>>                 mbox->controller.chans[index].con_priv = &mbox->rings[index];
->>> +       }
->>>
->> While writing mailbox.c I wasn't unaware that there is the option to
->> choose the queue length at runtime.
->> The idea was to keep the code as simple as possible. I am open to
->> making it a runtime thing, but first, please help me understand how
->> that is useful here.
->>
->> I understand FlexRm has a ring buffer of RING_MAX_REQ_COUNT(1024)
->> elements. Any message submitted to mailbox api can be immediately
->> written onto the ringbuffer if there is some space.
->> Is there any mechanism to report back to a client driver, if its
->> message in ringbuffer failed "to be sent"?
->> If there isn't any, then I think, in flexrm_last_tx_done() you should
->> simply return true if there is some space left in the rung-buffer,
->> false otherwise.
->
-> Yes, we have error code in "struct brcm_message" to report back
-> errors from send_message. In our mailbox clients, we check
-> return value of mbox_send_message() and also the error code
-> in "struct brcm_message".
->
-I meant after the message has been accepted in the ringbuffer but the
-remote failed to receive it.
-There seems no such provision. IIANW, then you should be able to
-consider every message as "sent successfully" once it is in the ring
-buffer i.e, immediately after mbox_send_message() returns 0.
-In that case I would think you don't need more than a couple of
-entries out of MBOX_TX_QUEUE_LEN ?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKdWwgMTgsIDIwMTcgYXQgMDg6NTg6NTBBTSArMDgwMCwgQ2Flc2FyIFdhbmcgd3Jv
+dGU6Cj4gUm9iLAo+IAo+IOWcqCAyMDE35bm0MDfmnIgxOOaXpSAwNDowNywgUm9iIEhlcnJpbmcg
+5YaZ6YGTOgo+ID4gT24gTW9uLCBKdWwgMTcsIDIwMTcgYXQgMDQ6MTQ6MjhQTSArMDgwMCwgQ2Fl
+c2FyIFdhbmcgd3JvdGU6Cj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgTUFMSSdzIHBvd2VyLW1v
+ZGVsIHRvIHNldCB0aGUgSVBBIG1vZGVsIHRvIGJlIHVzZWQKPiA+ID4gZm9yIHBvd2VyIG1hbmFn
+ZW1lbnQuCj4gPiBXaGF0J3MgSVBBPyBJbmRpYSBQYWxlIEFsZSBvciBJbnRlcm1lZGlhdGUgUGh5
+c2ljYWwgQWRkcmVzcz8KPiAKPiBJUEEgaXMgaW50ZWxsaWdlbnQgUG93ZXIgQWxsb2NhdG9yLiAg
+KEFzIHRoZSBBUk0gaW50cm9kdWNlZCBvbgo+IGh0dHBzOi8vZGV2ZWxvcGVyLmFybS5jb20vb3Bl
+bi1zb3VyY2UvaW50ZWxsaWdlbnQtcG93ZXItYWxsb2NhdGlvbikKPiAKPiA+IAo+ID4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+ID4gPiAtLS0KPiA+
+ID4gCj4gPiA+IENoYW5nZXMgaW4gdjI6IE5vbmUKPiA+ID4gCj4gPiA+ICAgRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCB8IDEyICsrKysr
+KysrKysrKwo+ID4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspCj4gPiA+IAo+
+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9h
+cm0sbWFsaS1taWRnYXJkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
+cHUvYXJtLG1hbGktbWlkZ2FyZC50eHQKPiA+ID4gaW5kZXggYTQ2MWU0Ny4uYjYxNmU2YiAxMDA2
+NDQKPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0s
+bWFsaS1taWRnYXJkLnR4dAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0Cj4gPiA+IEBAIC0zNyw2ICszNywxOCBAQCBP
+cHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgIC0gb3BlcmF0aW5nLXBvaW50cy12MiA6IFJlZmVy
+IHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9vcHAudHh0Cj4gPiA+
+ICAgICBmb3IgZGV0YWlscy4KPiA+ID4gKy0gcG93ZXJfbW9kZWwgOiBTZXRzIHBvd2VyIG1vZGVs
+IHBhcmFtZXRlcnMuIE5vdGUgdGhhdCB0aGlzIG1vZGVsIHdhcyBkZXNpZ25lZCBmb3IgdGhlIEp1
+bm8KPiA+ID4gKwkgICAgICAgIHBsYXRmb3JtLCBhbmQgbWF5IG5vdCBiZSBzdWl0YWJsZSBmb3Ig
+b3RoZXIgcGxhdGZvcm1zLiBBIHN0cnVjdHVyZSBjb250YWluaW5nIDoKPiA+ID4gKwktIGNvbXBh
+dGlibGU6IFNob3VsZCBiZSBhcm0sbWFsaS1zaW1wbGUtcG93ZXItbW9kZWwKPiA+ID4gKwktIGR5
+bmFtaWMtY29lZmZpY2llbnQ6IENvZWZmaWNpZW50LCBpbiBwVy8oSHogVl4yKSwgd2hpY2ggaXMg
+bXVsdGlwbGllZAo+ID4gPiArCSAgYnkgdl4yKmYgdG8gY2FsY3VsYXRlIHRoZSBkeW5hbWljIHBv
+d2VyIGNvbnN1bXB0aW9uLgo+ID4gPiArCS0gc3RhdGljLWNvZWZmaWNpZW50OiBDb2VmZmljaWVu
+dCwgaW4gdVcvVl4zLCB3aGljaCBpcyBtdWx0aXBsaWVkIGJ5Cj4gPiA+ICsJICB2XjMgdG8gY2Fs
+Y3VsYXRlIHRoZSBzdGF0aWMgcG93ZXIgY29uc3VtcHRpb24uCj4gPiA+ICsJLSB0czogQW4gYXJy
+YXkgY29udGFpbmluZyBjb2VmZmljaWVudHMgZm9yIHRoZSB0ZW1wZXJhdHVyZSBzY2FsaW5nCj4g
+PiA+ICsJICBmYWN0b3IuIFRoaXMgaXMgdXNlZCB0byBzY2FsZSB0aGUgc3RhdGljIHBvd2VyIGJ5
+IGEgZmFjdG9yIG9mCj4gPiA+ICsJICB0c2YvMTAwMDAwMCwgd2hlcmUgdHNmID0gdHNbM10qVF4z
+ICsgdHNbMl0qVF4yICsgdHNbMV0qVCArIHRzWzBdLAo+ID4gPiArCSAgYW5kIFQgPSB0ZW1wZXJh
+dHVyZSBpbiBkZWdyZWVzLgo+ID4gPiArCS0gdGhlcm1hbC16b25lOiBBIHN0cmluZyBpZGVudGlm
+eWluZyB0aGUgdGhlcm1hbCB6b25lIHVzZWQgZm9yIHRoZSBHUFUKPiA+IFRoaXMgY2FuIGFsbCBl
+YXNpbHkgYmUgaW1wbGllZCBieSB0aGUgY29tcGF0aWJsZSBzdHJpbmcuIEknbSBub3QKPiA+IGlu
+Y2xpbmVkIHRvIGFjY2VwdCBzb21ldGhpbmcgTWFsaSBzcGVjaWZpYyBoZXJlLgo+IAo+IElzbid0
+ICBhcm0sbWFsaS1taWRnYXJkLnR4dCBkb2N1bWVudCBzdWl0IGZvciBNYWxpIHNwZWNpZmljPyA6
+LSkKCkl0IGlzLCBidXQgSSdtIHNheWluZyB3ZSBzaG91bGRuJ3QgaGF2ZSBzb21ldGhpbmcgTWFs
+aSBzcGVjaWZpYyBoZXJlLiBJdCAKc2hvdWxkIGJlIHNvbWV0aGluZyB0aGF0IHdvcmtzIGFjcm9z
+cyBkaWZmZXJlbnQgR1BVcyBhdCBsZWFzdC4gSU9XLCBnZXQgCnNvbWUgYWdyZWVtZW50IHdpdGgg
+c2F5IGFkcmVubyBmb2xrcyB0aGF0IHRoZXNlIHByb3BlcnRpZXMgYXJlIHVzZWZ1bCBhbmQgCkkn
+bGwgYmUgbW9yZSByZWNlcHRpdmUuIAoKPiA+IAo+ID4gVGhpcyBsb29rcyAqdmVyeSogcHJlY2lz
+ZSwgYnV0IEknZCBiZSBzdXJwcmlzZWQgaWYgdGhlc2UgdmFsdWVzIGFyZSBhbnkKPiA+IG1vcmUg
+dGhhbiBtYWdpYyB2YWx1ZXMgKGF0IGxlYXN0IHRoZSBkeW5hbWljIGNvZWYpIGFkanVzdGVkIHVu
+dGlsIHRoZQo+ID4gZGVzaXJlZCBwb3dlci9wZXJmb3JtYW5jZSByZXF1aXJlbWVudHMgYXJlIGFj
+aGlldmVkLiBUbyBwdXQgaXQgYW5vdGhlcgo+ID4gd2F5LCB3aHkgZG9uJ3Qgd2UgaGF2ZSBzaW1p
+bGFyIHZhbHVlcyBmb3IgQ1BVcz8KPiAKPiBUaGVzZSB2YWx1ZSB3YXMgY2FsY3VsYXRlZCBieSBy
+dW5uaW5nIGZ1bGwgR1BVIHByb2Nlc3MuCj4gCj4gQ1BVIGhhZCB0aGUgc2ltaWxhciB2YWx1ZSBm
+b3IgZHRzaS4KPiAKPiBTYXk6IGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0
+c2kKPiAgICAgICAgIGNwdV9iMDogY3B1QDEwMCB7Cj4gICAgICAgICAgICAgLi4uCj4gICAgICAg
+ICAgICAgZHluYW1pYy1wb3dlci1jb2VmZmljaWVudCA9IDw0MzY+Owo+ICAgICAgICAgICAgIC4u
+Lgo+ICAgICAgICAgfTsKCkluZGVlZC4gV2hpbGUgaXQgaXMgZG9jdW1lbnRlZCBmb3IgQVJNIENQ
+VXMsIEkgZG9uJ3Qgc2VlIHRoYXQgaXQgCmlzIHdpZGVseSB1c2VkIGFzIG9ubHkgdGhlIGhpNjIy
+MCBkdHMgZGVmaW5lcyBpdC4gU28gZWl0aGVyIHN1cHBvcnQgZm9yIApwbGF0Zm9ybXMgaXMganVz
+dCBtaXNzaW5nLCBvciB1cHN0cmVhbSBpcyBub3QgcmVhbGx5IHVzaW5nIHRoaXMgcHJvcGVydHku
+CgpBbmQgaWYgd2UgYXJlIGdvaW5nIHRvIHVzZSB0aGlzLCB0aGVuIGl0IG5lZWRzIHRvIGJlIGRv
+Y3VtZW50ZWQgaW4gYSAKY29tbW9uIGxvY2F0aW9uIGFuZCBtb3ZlZCBvdXQgb2YgYXJtL2NwdXMu
+dHh0LgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
