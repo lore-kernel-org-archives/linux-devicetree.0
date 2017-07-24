@@ -1,35 +1,52 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
-Date: Mon, 24 Jul 2017 10:04:08 -0300
-Message-ID: <CAOMZO5A-8WDQJtoCmRxMFXF1OALpDSCCxNmVmZXoNBgWdyCWvQ@mail.gmail.com>
-References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
- <20170724125958.11939-1-gary.bisson@boundarydevices.com> <20170724125958.11939-3-gary.bisson@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170724125958.11939-3-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH] of: return of_get_cpu_node from of_cpu_device_node_get if CPUs are not registered
+Date: Mon, 24 Jul 2017 14:55:13 +0100
+Message-ID: <1500904513-10483-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 9:59 AM, Gary Bisson
-<gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> Declared as a regulator since the driver doesn't have a reset-gpios
-> property for this.
->
-> This ensures that the PHY is woken up, not depending on the state the
-> second stage bootloader leaves the pin.
->
-> This is a workaround until a proper mechanism is provided to reset such
-> devices like the pwrseq library [1] for instance.
->
-> [1] https://lkml.org/lkml/2017/2/10/779
->
-> Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Instead of the callsites choosing between of_cpu_device_node_get if the
+CPUs are registered as of_node is populated by then and of_get_cpu_node
+when the CPUs are not yet registered as CPU of_nodes are not yet stashed
+thereby needing to parse the device tree, we can call of_get_cpu_node
+in case the CPUs are not yet registered.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+This will allow to use of_cpu_device_node_get anywhere hiding the
+details from the caller.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ include/linux/of_device.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+Hi Rob,
+
+Let me know if you are OK with this change. I keep seeing different
+drivers calling of_get_cpu_node or of_cpu_device_node_get based on what
+they are aware of or copying from other place without knowing the
+details. I am trying to avoid that and ask to use of_cpu_device_node_get
+at all places instead.
+
+Regards,
+Sudeep
+
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index b4ad8b4f8506..611502524425 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -50,7 +50,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
+ 	struct device *cpu_dev;
+ 	cpu_dev = get_cpu_device(cpu);
+ 	if (!cpu_dev)
+-		return NULL;
++		return of_get_cpu_node(cpu, NULL);
+ 	return of_node_get(cpu_dev->of_node);
+ }
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
