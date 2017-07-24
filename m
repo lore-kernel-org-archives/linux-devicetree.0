@@ -1,39 +1,63 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
-Date: Mon, 24 Jul 2017 12:34:59 -0700
-Message-ID: <CAHQ1cqE5mALzDYkr1SEZuDHUD7EOT+rzhbRxUTKLAACj6t2VkA@mail.gmail.com>
-References: <20170724150915.4824-1-andrew.smirnov@gmail.com>
- <20170724150915.4824-3-andrew.smirnov@gmail.com> <20170724162316.a2ffizp2zvsnyfpf@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] can: m_can: Update documentation to mention new
+ fixed transceiver binding
+Date: Mon, 24 Jul 2017 14:50:54 -0500
+Message-ID: <20170724195054.or7vsl5mtvgh2tba@rob-hp-laptop>
+References: <20170719233654.25908-1-fcooper@ti.com>
+ <20170719233654.25908-4-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170724162316.a2ffizp2zvsnyfpf@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20170719233654.25908-4-fcooper-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 9:23 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jul 24, 2017 at 08:09:15AM -0700, Andrey Smirnov wrote:
->> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
->>  1 file changed, 39 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->
-> What happened to my ack?
+On Wed, Jul 19, 2017 at 06:36:53PM -0500, Franklin S Cooper Jr wrote:
+> Add information regarding fixed transceiver binding. This is especially
+> important for MCAN since the IP allows CAN FD mode to run significantly
+> faster than what most transceivers are capable of.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/can/m_can.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> index 9e33177..4440e4b 100644
+> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -43,6 +43,11 @@ Required properties:
+>  			  Please refer to 2.4.1 Message RAM Configuration in
+>  			  Bosch M_CAN user manual for details.
+>  
+> +Optional properties:
+> +- fixed-transceiver	: Fixed-transceiver subnode describing maximum speed
+> +			  that can be used for CAN and/or CAN-FD modes.  See
+> +			  Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+> +			  for details.
+>  Example:
+>  SoC dtsi:
+>  m_can1: can@020e8000 {
+> @@ -64,4 +69,9 @@ Board dts:
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_m_can1>;
+>  	status = "enabled";
+> +
+> +	fixed-transceiver@0 {
 
-Somehow I lost it, sorry about that. Will put it back in v4.
+unit-address should have corresponding reg prop or unit-address should 
+be dropped.
 
-Thanks,
-Andrey Smirnov
+> +		max-arbitration-speed = <1000000>;
+> +		max-data-speed = <5000000>;
+> +	};
+>  };
+> -- 
+> 2.10.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
