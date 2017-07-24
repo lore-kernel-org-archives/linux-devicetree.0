@@ -1,82 +1,69 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
- bindings
-Date: Mon, 24 Jul 2017 13:47:12 +0200
-Message-ID: <1a971e80-1f91-c446-7e28-d193354b2859@baylibre.com>
-References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
- <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
- <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
- <20170721204439.GJ19878@codeaurora.org>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH 07/10] cpufreq: dt: Add support for some new Allwinner SoCs
+Date: Mon, 24 Jul 2017 13:46:15 +0200
+Message-ID: <2436327.OLdY8skjMP@aspire.rjw.lan>
+References: <20170723102749.17323-1-icenowy@aosc.io> <20170723102749.17323-8-icenowy@aosc.io> <20170724085349.GT352@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170721204439.GJ19878-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170724085349.GT352@vireshk-i7>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2017 10:44 PM, Stephen Boyd wrote:
-> On 07/09, Rob Herring wrote:
->> On Thu, Jul 06, 2017 at 12:24:23PM +0200, Neil Armstrong wrote:
->>> On the first revision of the bindings, only the gates + resets were known
->>> in the AO Clock HW, but more registers used to configures AO clock are known
->>> to be spread among the AO register space.
->>> This patch adds these registers to the Ao Clock bindings with direct access
->>> and shared extcon access.
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt         | 11 +++++++++--
->>>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> This looks like the binding might be too specific with a reg list of 
->> single registers, and you should define a system controller node 
->> instead. Depends on what else is in the "A0" block.
->>
+On Monday, July 24, 2017 02:23:49 PM Viresh Kumar wrote:
+> On 23-07-17, 18:27, Icenowy Zheng wrote:
+> > Some new Allwinner SoCs get supported in the kernel after the
+> > compatibles are added to cpufreq-dt-platdev driver.
+> > 
+> > Add their compatible strings in the cpufreq-dt-platdev driver.
+> > 
+> > Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+> > Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > ---
+> >  drivers/cpufreq/cpufreq-dt-platdev.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > index 2eb40d46d357..c3851453e84a 100644
+> > --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> > +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> > @@ -24,7 +24,11 @@ static const struct of_device_id machines[] __initconst = {
+> >  	{ .compatible = "allwinner,sun8i-a23", },
+> >  	{ .compatible = "allwinner,sun8i-a33", },
+> >  	{ .compatible = "allwinner,sun8i-a83t", },
+> > +	{ .compatible = "allwinner,sun8i-h2-plus", },
+> >  	{ .compatible = "allwinner,sun8i-h3", },
+> > +	{ .compatible = "allwinner,sun8i-v3s", },
+> > +	{ .compatible = "allwinner,sun50i-a64", },
+> > +	{ .compatible = "allwinner,sun50i-h5", },
+> >  
+> >  	{ .compatible = "apm,xgene-shadowcat", },
+> >  
+> > @@ -43,6 +47,8 @@ static const struct of_device_id machines[] __initconst = {
+> >  	{ .compatible = "marvell,pxa250", },
+> >  	{ .compatible = "marvell,pxa270", },
+> >  
+> > +	{ .compatible = "nextthing,gr8", },
+> > +
+> >  	{ .compatible = "samsung,exynos3250", },
+> >  	{ .compatible = "samsung,exynos4210", },
+> >  	{ .compatible = "samsung,exynos4212", },
 > 
-> Agreed. Why can't we expand the size in DT and then access the
-> registers directly in the driver. Hopefully it keeps working to
-> apply the dts patch without the driver patch too (and
-> vice-versa), because the kernel can only make a mapping as small
-> as a page which would cover these newly added reg properties
-> anyway.
+> Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
 > 
 
-Hi Rob, Stephen,
+OK
 
-Thanks for your feedback, but on these Amlogic platforms, the AO register bank is
-filled with interleaved registers used for various purposes.
+I'm assuming this will go in via arm-soc along with the rest of the series.
 
-For instance, the first 1k of registers are :
+Thanks,
+Rafael
 
-0-c RTI_STATUS
-c-14 RTI_PWR_CNTL
-14-1c PIN_MUX
-1c RTI_STATUS
-24-30 GPIO
-30 JTAG_CONFIG
-34 WD
-38-40 CPU_CTRL
-40 RTI_GEN_CTRL
-44 CPU_CTRL
-4c-58 TIMER
-58 OSCIN
-60 AHB2DDR
-...
-
-
-And so on, and the clock related registers are split among this space.
-
-For sure, this could be declared as an system controller node, but this would imply completely
-re-designing the actual clock driver and drop the actual bindings.
-(and with re-writting the clock gate code to use regmap registers access)
-
-Anyway, I'm open to suggestions...
-
-Neil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
