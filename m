@@ -1,70 +1,71 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Subject: RE: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
  clock selector PHY
-Date: Mon, 24 Jul 2017 10:15:32 +0000
-Message-ID: <TY1PR06MB099263CA5AAEF5ECA6E16E9BD8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+Date: Mon, 24 Jul 2017 10:33:18 +0000
+Message-ID: <TY1PR06MB09927528BA504E1E758BD935D8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
 References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20170705211753.GV22780@codeaurora.org>
+ <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
+ <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
+ <CAMuHMdWkSqNdzDNTyvHvGaG-Tw2md_aGHSWh7jXVyoBYMJ8m7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170705211753.GV22780@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWkSqNdzDNTyvHvGaG-Tw2md_aGHSWh7jXVyoBYMJ8m7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Language: ja-JP
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen-san,
-
-Thank you for your comments!
-
-> From: Stephen Boyd
-> Sent: Thursday, July 6, 2017 6:18 AM
->=20
-> On 06/28, Yoshihiro Shimoda wrote:
-> > +
-> > +
-> > +	platform_set_drvdata(pdev, priv);
-> > +	dev_set_drvdata(dev, priv);
-> > +
-> > +	init.name =3D "rcar_usb2_clock_sel";
-> > +	init.ops =3D &usb2_clock_sel_clock_ops;
-> > +	init.flags =3D CLK_IS_BASIC;
->=20
-> Please drop CLK_IS_BASIC unless you need it.
-
-I got it.
-
-> > +	init.parent_names =3D NULL;
-> > +	init.num_parents =3D 0;
-> > +	priv->hw.init =3D &init;
-> > +
-> > +	clk =3D clk_register(NULL, &priv->hw);
-> > +	if (IS_ERR(clk))
-> > +		return PTR_ERR(clk);
-> > +
-> > +	error =3D of_clk_add_provider(np, of_clk_src_simple_get, clk);
->=20
-> Can you use clk_hw_register() and of_clk_add_hw_provider()
-> please?
-
-I could use of_clk_add_hw_provider().
-
-Best regards,
-Yoshihiro Shimoda
-
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct dev_pm_ops rcar_usb2_clock_sel_pm_ops =3D {
-> > +	.suspend	=3D rcar_usb2_clock_sel_suspend,
-> > +	.resume		=3D rcar_usb2_clock_sel_resume,
-> > +};
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+SGkgR2VlcnQtc2FuLA0KDQo+IEZyb206IEdlZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBXZWRu
+ZXNkYXksIEp1bHkgNSwgMjAxNyA5OjIyIFBNDQo+IA0KPiBIaSBTaGltb2RhLXNhbiwNCj4gDQo+
+IE9uIFdlZCwgSnVsIDUsIDIwMTcgYXQgMTo1NyBQTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlv
+c2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4gRnJvbTogR2VlcnQg
+VXl0dGVyaG9ldmVuDQo+ID4+IFNlbnQ6IFdlZG5lc2RheSwgSnVseSA1LCAyMDE3IDc6MDkgUE0N
+Cj4gPj4gT24gV2VkLCBKdW4gMjgsIDIwMTcgYXQgODoyOCBBTSwgWW9zaGloaXJvIFNoaW1vZGEN
+Cj4gPj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPj4gPiBS
+LUNhciBVU0IgMi4wIGNvbnRyb2xsZXIgY2FuIGNoYW5nZSB0aGUgY2xvY2sgc291cmNlIGZyb20g
+YW4gb3NjaWxsYXRvcg0KPiA+PiA+IHRvIGFuIGV4dGVybmFsIGNsb2NrIHZpYSBhIHJlZ2lzdGVy
+LiBTbywgdGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQNCj4gPj4gPiB0aGUgY2xvY2sgc291cmNlIHNl
+bGVjdG9yIGFzIGEgY2xvY2sgZHJpdmVyLg0KPiANCj4gPj4gPiAtLS0gL2Rldi9udWxsDQo+ID4+
+ID4gKysrIGIvZHJpdmVycy9jbGsvcmVuZXNhcy9yY2FyLXVzYjItY2xvY2stc2VsLmMNCj4gDQo+
+ID4+ID4gKy8qIFNpbmNlIHRoaXMgZHJpdmVyIG5lZWRzIG90aGVyIGNjZiBkcml2ZXJzLCB0aGlz
+IHVzZXMgc3Vic3lzX2luaXRjYWxsX3N5bmMgKi8NCj4gPj4gPiArc3Vic3lzX2luaXRjYWxsX3N5
+bmMocmNhcl91c2IyX2Nsb2NrX3NlbF9pbml0KTsNCj4gPj4NCj4gPj4gSSBzdXBwb3NlIHRoaXMg
+aXMgYSB3b3JrYXJvdW5kIGZvciB0aGUgbGFjayBvZiBwcm9iZSBkZWZlcnJhbCBzdXBwb3J0IGlu
+IHRoZQ0KPiA+PiBVU0Igc3Vic3lzdGVtPw0KPiA+DQo+ID4gVGhpcyBpcyBteSBmYXVsdC4gSSBh
+ZGRlZCAicG93ZXItZG9tYWlucyIgcHJvcGVydHkgaW50byB0aGlzIGRldmljZSdzIG5vZGUuDQo+
+ID4gQWZ0ZXIgSSByZW1vdmUgdGhlIHBvd2VyLWRvbWFpbnMgbGlrZSB0aGUgY3BnIG5vZGUsIHRo
+aXMgZHJpdmVyIGNhbiB1c2Ugc3Vic3lzX2luaXRjYWxsKCkNCj4gPiBpbnN0ZWFkIG9mIHN1YnN5
+c19pbml0Y2FsbF9zeW5jKCkuDQo+IA0KPiBEb2VzIHRoZSBjbG9jayBzZWwgbW9kdWxlIHJlcXVp
+cmVzIHRoZSBmdW5jdGlvbmFsIGNsb2NrICJlaGNpX29oY2kiIHRvIGJlDQo+IHJ1bm5pbmcgYmVm
+b3JlIHlvdSBjYW4gYWNjZXNzIGl0cyByZWdpc3RlcnM/DQo+IElmIHllcywgSSB0aGluayB0aGVy
+ZSBzaG91bGQgYmUgYSAicG93ZXItZG9tYWlucyIgcHJvcGVydHkuDQoNClllcy4gQnV0Li4uDQoN
+Cj4gVGhlbiwgeW91IGNhbiBzaW1wbGlmeSB0aGUgY29kZSBieSBjYWxsaW5nDQo+IA0KPiAgICAg
+ICAgIHBtX3J1bnRpbWVfZW5hYmxlKGRldik7DQo+ICAgICAgICAgcG1fcnVudGltZV9nZXRfc3lu
+YyhkZXYpOw0KPiANCj4gYW5kIHJlbW92ZSB0aGUgZXhwbGljaXQgaGFuZGxpbmcgb2YgdGhlIGZ1
+bmN0aW9uYWwgY2xvY2suDQo+IA0KPiBUaGF0IGRvZXMgbm90IHNvbHZlIHByb2JlIGRlZmVycmFs
+IGhhbmRsaW5nIGluIHRoZSBVU0Igc3Vic3lzdGVtLCB0aG91Z2guDQoNCkkgYWRkZWQgYSBkZWJ1
+ZyBtZXNzYWdlIGF0IGVuZCBvZiBjcGdfbXNzcl9wcm9iZSgpLCBhbmQgaWYgSSB1c2VkIHN1YnN5
+c19pbml0Y2FsbCgpIG9uDQpyY2FyLXVzYjItY2xvY2stc2VsIGRyaXZlciwga2VybmVsIGxvZyBv
+dXRwdXQgYmVsb3c6DQo9PT09PT09PT09PT09PT09PT09PT09PT0NClsgICAgMC4yNzI1NDddIHJj
+YXItdXNiMi1jbG9jay1zZWwgZTY1OTA2MzAuY2xvY2stY29udHJvbGxlcjogcHJvYmUgZGVmZXJy
+YWwgbm90IHN1cHBvcnRlZA0KWyAgICAwLjI3Mzk0NF0gIC0tLS0tLS0tLS0tLS0tLS0tIGNwZ19t
+c3NyX3Byb2JlOiBwcm9iZWQhDQo9PT09PT09PT09PT09PT09PT09PT09PT0NClNvLCBpdCBzZWVt
+cyB0aGUgcmVuZXNhcy1jcGctbXNzci5jIGRvZXNuJ3Qgc29sdmUgcHJvYmUgZGVmZXJyYWwgaGFu
+ZGxpbmcuDQooVGhlIGRyaXZlciByZW5lc2FzLWNwZy1tc3NyLmMgdXNlcyBwbGF0Zm9ybV9kcml2
+ZXJfcHJvYmUoKSBmb3Igbm93LikNCg0KU28sIElJVUMsIHRoaXMgcmNhci11c2IyLWNsb2NrLXNl
+bCBkcml2ZXIgY2Fubm90IHVzZSBzdWJzeXNfaW5pdGNhbGwoKS4NCk9yLCBzaG91bGQgd2UgbW9k
+aWZ5IHRoZSByZW5lc2FzLWNwZy1tc3NyLmMgc29tZWhvdz8NCg0KQmVzdCByZWdhcmRzLA0KWW9z
+aGloaXJvIFNoaW1vZGENCg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4gDQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIEdlZXJ0DQo+IA0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhl
+cmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+
+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
+YWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
+dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
