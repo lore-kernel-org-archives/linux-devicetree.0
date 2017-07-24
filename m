@@ -1,35 +1,58 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] pinctrl: qcom: spmi-gpio: Add dtest route for
- digital input
-Date: Mon, 24 Jul 2017 11:09:33 -0500
-Message-ID: <20170724160933.dh7pt2geva23k6ol@rob-hp-laptop>
-References: <20170719063136.5300-1-fenglinw@codeaurora.org>
- <20170719063136.5300-3-fenglinw@codeaurora.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 2/3] dt-bindings: iio: adc: stm32: add optional st,
+ min-sample-time-nsecs
+Date: Mon, 24 Jul 2017 18:10:39 +0200
+Message-ID: <1500912640-23927-3-git-send-email-fabrice.gasnier@st.com>
+References: <1500912640-23927-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170719063136.5300-3-fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aghayal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wruan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1500912640-23927-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 19, 2017 at 02:30:46PM +0800, fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
-> From: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> 
-> Add property "qcom,dtest-buffer" to specify which dtest rail to feed
-> when the pin is configured as a digital input.
-> 
-> Signed-off-by: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  7 +++
+STM32 ADC allows each channel to be sampled with a different sampling
+time. There's an application note that deals with this: 'How to get
+the best ADC accuracy in STM32...' It basically depends on analog input
+signal electrical properties (depends on board).
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add optional 'st,min-sample-time-nsecs' property so this can be tuned
+in dt.
 
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 50 ++++++++++++++++++++++
->  2 files changed, 57 insertions(+)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- Use 'st,min-sample-time-nsecs' instead of 'min-sample-time'.
+---
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index 8310073..48bfcaa3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -74,6 +74,11 @@ Optional properties:
+   * can be 6, 8, 10 or 12 on stm32f4
+   * can be 8, 10, 12, 14 or 16 on stm32h7
+   Default is maximum resolution if unset.
++- st,min-sample-time-nsecs: Minimum sampling time in nanoseconds.
++  Depending on hardware (board) e.g. high/low analog input source impedance,
++  fine tune of ADC sampling time may be recommended.
++  This can be either one value or an array that matches 'st,adc-channels' list,
++  to set sample time resp. for all channels, or independently for each channel.
+ 
+ Example:
+ 	adc: adc@40012000 {
+-- 
+1.9.1
