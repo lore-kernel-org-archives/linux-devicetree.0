@@ -1,52 +1,69 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] of: return of_get_cpu_node from of_cpu_device_node_get if CPUs are not registered
-Date: Mon, 24 Jul 2017 14:55:13 +0100
-Message-ID: <1500904513-10483-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Mon, 24 Jul 2017 13:55:10 +0000
+Message-ID: <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170722065133.GT3053@localhost>
+Content-Language: en-US
+Content-ID: <0F4A7EFD5F59A942A5E361513F54461D-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Instead of the callsites choosing between of_cpu_device_node_get if the
-CPUs are registered as of_node is populated by then and of_get_cpu_node
-when the CPUs are not yet registered as CPU of_nodes are not yet stashed
-thereby needing to parse the device tree, we can call of_get_cpu_node
-in case the CPUs are not yet registered.
-
-This will allow to use of_cpu_device_node_get anywhere hiding the
-details from the caller.
-
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- include/linux/of_device.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Hi Rob,
-
-Let me know if you are OK with this change. I keep seeing different
-drivers calling of_get_cpu_node or of_cpu_device_node_get based on what
-they are aware of or copying from other place without knowing the
-details. I am trying to avoid that and ask to use of_cpu_device_node_get
-at all places instead.
-
-Regards,
-Sudeep
-
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index b4ad8b4f8506..611502524425 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -50,7 +50,7 @@ static inline struct device_node *of_cpu_device_node_get(int cpu)
- 	struct device *cpu_dev;
- 	cpu_dev = get_cpu_device(cpu);
- 	if (!cpu_dev)
--		return NULL;
-+		return of_get_cpu_node(cpu, NULL);
- 	return of_node_get(cpu_dev->of_node);
- }
-
+DQoNCk9uIDA3LzIyLzIwMTcgMDg6NTEgQU0sIFZpbm9kIEtvdWwgd3JvdGU6DQo+IE9uIFRodSwg
+SnVsIDA2LCAyMDE3IGF0IDAyOjIwOjIwUE0gKzAyMDAsIFBpZXJyZS1ZdmVzIE1PUkRSRVQgd3Jv
+dGU6DQo+PiArc3RhdGljIGludCBzdG0zMl9kbWFtdXhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikNCj4+ICt7DQo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IHBkZXYt
+PmRldi5vZl9ub2RlOw0KPj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmRtYV9ub2RlOw0KPj4gKwlz
+dHJ1Y3Qgc3RtMzJfZG1hbXV4X2RhdGEgKnN0bTMyX2RtYW11eDsNCj4+ICsJc3RydWN0IHJlc291
+cmNlICpyZXM7DQo+PiArCXZvaWQgX19pb21lbSAqaW9tZW07DQo+PiArCWludCBpLCByZXQ7DQo+
+PiArDQo+PiArCWlmICghbm9kZSkNCj4+ICsJCXJldHVybiAtRU5PREVWOw0KPj4gKw0KPj4gKwlz
+dG0zMl9kbWFtdXggPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpzdG0zMl9kbWFt
+dXgpLA0KPj4gKwkJCQkgICAgR0ZQX0tFUk5FTCk7DQo+PiArCWlmICghc3RtMzJfZG1hbXV4KQ0K
+Pj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCWRtYV9ub2RlID0gb2ZfcGFyc2VfcGhh
+bmRsZShub2RlLCAiZG1hLW1hc3RlcnMiLCAwKTsNCj4+ICsJaWYgKCFkbWFfbm9kZSkgew0KPj4g
+KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiQ2FuJ3QgZ2V0IERNQSBtYXN0ZXIgbm9kZVxuIik7DQo+
+PiArCQlyZXR1cm4gLUVOT0RFVjsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlpZiAoZGV2aWNlX3Byb3Bl
+cnR5X3JlYWRfdTMyKCZwZGV2LT5kZXYsICJkbWEtY2hhbm5lbHMiLA0KPj4gKwkJCQkgICAgICZz
+dG0zMl9kbWFtdXgtPmRtYW11eF9jaGFubmVscykpDQo+PiArCQlzdG0zMl9kbWFtdXgtPmRtYW11
+eF9jaGFubmVscyA9IFNUTTMyX0RNQU1VWF9NQVhfQ0hBTk5FTFM7DQo+PiArDQo+PiArCWlmIChk
+ZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoJnBkZXYtPmRldiwgImRtYS1yZXF1ZXN0cyIsDQo+PiAr
+CQkJCSAgICAgJnN0bTMyX2RtYW11eC0+ZG1hbXV4X3JlcXVlc3RzKSkNCj4+ICsJCXN0bTMyX2Rt
+YW11eC0+ZG1hbXV4X3JlcXVlc3RzID0gU1RNMzJfRE1BTVVYX01BWF9SRVFVRVNUUzsNCj4gDQo+
+IEkgdGhpbmsgZGVmYXVsdHMgc2hvdWxkIGJlIHdhcm5lZCBoZXJlIHRvbw0KPiANCg0Kb2sNCg0K
+Pj4gKw0KPj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9N
+RU0sIDApOw0KPj4gKwlpZiAoIXJlcykNCj4+ICsJCXJldHVybiAtRU5PREVWOw0KPj4gKw0KPj4g
+Kwlpb21lbSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KPj4gKwlp
+ZiAoIWlvbWVtKQ0KPj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCXNwaW5fbG9ja19p
+bml0KCZzdG0zMl9kbWFtdXgtPmxvY2spOw0KPj4gKw0KPj4gKwlzdG0zMl9kbWFtdXgtPmNsayA9
+IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCBOVUxMKTsNCj4+ICsJaWYgKElTX0VSUihzdG0zMl9k
+bWFtdXgtPmNsaykpIHsNCj4+ICsJCWRldl9pbmZvKCZwZGV2LT5kZXYsICJNaXNzaW5nIGNvbnRy
+b2xsZXIgY2xvY2tcbiIpOw0KPiANCj4gQ2FuIHlvdSBjaGVjayBmb3IgRVBST0JFX0RFRkVSIGFu
+ZCBwcmludCBvbmx5IGZvciBpZiB0aGF0IGlzIG5vdCB0aGUgZXJyb3INCj4gb3RoZXJ3aXNlIHdl
+IGVuZCB1cCBzYXBtbWluZyB3aXRoIGRlZmVyZWQgcHJvYmUgaXNzdWVzDQo+IA0KDQpUaGlzIGlz
+IHdoYXQgeW91IG1lYW50ID8NCglpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSAhPSBFUFJP
+QkVfREVGRVIpIHsNCgkJZGV2X2luZm8oJnBkZXYtPmRldiwgIk1pc3NpbmcgY29udHJvbGxlciBj
+bG9ja1xuIik7DQoJCXJldHVybiBQVFJfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKTsNCgl9DQoNCk9S
+DQoNCglpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSkgew0KCQlpZiAoSVNfRVJSKHN0bTMy
+X2RtYW11eC0+Y2xrKSAhPSBFUFJPQkVfREVGRVIpDQoJCQlkZXZfaW5mbygmcGRldi0+ZGV2LCAi
+TWlzc2luZyBjb250cm9sbGVyIGNsb2NrXG4iKTsNCgkJcmV0dXJuIFBUUl9FUlIoc3RtMzJfZG1h
+bXV4LT5jbGspOw0KCX0NCg0KPj4gKw0KPj4gKyNpZm5kZWYgX19ETUFfU1RNMzJfRE1BTVVYX0gN
+Cj4+ICsjZGVmaW5lIF9fRE1BX1NUTTMyX0RNQU1VWF9IDQo+PiArDQo+PiArI2lmIGRlZmluZWQo
+Q09ORklHX1NUTTMyX0RNQU1VWCkNCj4+ICtpbnQgc3RtMzJfZG1hbXV4X3NldF9jb25maWcoc3Ry
+dWN0IGRldmljZSAqZGV2LCB2b2lkICpyb3V0ZV9kYXRhLCB1MzIgY2hhbl9pZCk7DQo+IA0KPiBX
+aHkgZG8gd2UgbmVlZCBhIGN1c3RvbSBBUEkgaW4gdGhpcyBjYXNlPw0KPiANCg0KVGhpcyBBUEkg
+aXMgY2FsbGVkIGJ5IERNQSB3aGVuIGEgc2xhdmUgaXMgcmVxdWVzdGVkIGJ5IGNsaWVudC4gRE1B
+IGNhbiB3b3JrDQp3aXRob3V0IERNQU1VWCB0aGlzIEFQSSBoYXMgYmVlbiBwdXQgaW4gcGxhY2Ug
+dG8gY29uZmlndXJlIERNQU1VWCB3aGV0aGVyIGNsaWVudA0KaXMgcmVxdWVzdGluZyBhIERNQU1V
+WCBDaGFubmVsIGluc3RlYWQgb2YgYSBETUEgb25lLg0KDQpUaGFua3MNClB5
 --
-2.7.4
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
