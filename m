@@ -1,13 +1,13 @@
-From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: imx6qdl-sabrelite: fix USB PHY reset
-Date: Mon, 24 Jul 2017 10:50:04 +0200
-Message-ID: <20170724085005.22101-2-gary.bisson@boundarydevices.com>
+From: Gary Bisson <gary.bisson@boundarydevices.com>
+Subject: [PATCH 2/2] ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
+Date: Mon, 24 Jul 2017 10:50:05 +0200
+Message-ID: <20170724085005.22101-3-gary.bisson@boundarydevices.com>
 References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170724085005.22101-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
 List-Id: devicetree@vger.kernel.org
 
 Declared as a regulator since the driver doesn't have a reset-gpios
@@ -21,23 +21,23 @@ devices like the pwrseq library [1] for instance.
 
 [1] https://lkml.org/lkml/2017/2/10/779
 
-Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
 ---
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 20 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 20 ++++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index afe7449c47da..7bd14e23afb8 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -123,6 +123,19 @@
- 			regulator-max-microvolt = <2800000>;
- 			regulator-always-on;
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index f22e5879340b..989376643cf6 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -108,6 +108,19 @@
+ 			startup-delay-us = <70000>;
+ 			enable-active-high;
  		};
 +
-+		reg_usb_h1_vbus: regulator@7 {
++		reg_usb_h1_vbus: regulator@5 {
 +			compatible = "regulator-fixed";
-+			reg = <7>;
++			reg = <5>;
 +			pinctrl-names = "default";
 +			pinctrl-0 = <&pinctrl_usbh1>;
 +			regulator-name = "usb_h1_vbus";
@@ -49,8 +49,8 @@ index afe7449c47da..7bd14e23afb8 100644
 +		};
  	};
  
- 	mipi_xclk: mipi_xclk {
-@@ -610,6 +623,12 @@
+ 	gpio-keys {
+@@ -515,6 +528,12 @@
  			>;
  		};
  
@@ -62,8 +62,8 @@ index afe7449c47da..7bd14e23afb8 100644
 +
  		pinctrl_usbotg: usbotggrp {
  			fsl,pins = <
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
-@@ -705,6 +724,7 @@
+ 				MX6QDL_PAD_GPIO_1__USB_OTG_ID	0x17059
+@@ -629,6 +648,7 @@
  };
  
  &usbh1 {
@@ -73,8 +73,3 @@ index afe7449c47da..7bd14e23afb8 100644
  
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
