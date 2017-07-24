@@ -1,47 +1,129 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] clk: renesas: cpg-mssr: Add R8A77995 support
-Date: Mon, 24 Jul 2017 15:09:15 -0500
-Message-ID: <20170724200915.ylyvovphokrqn4e2@rob-hp-laptop>
-References: <1500554409-22423-1-git-send-email-geert+renesas@glider.be>
- <1500554409-22423-5-git-send-email-geert+renesas@glider.be>
+Subject: Re: [patch v2] Documentation: dt-bindings: aspeed-pwm-tacho cooling
+ device.
+Date: Mon, 24 Jul 2017 15:18:10 -0500
+Message-ID: <20170724201810.qws2drb3aknyefom@rob-hp-laptop>
+References: <20170720143039.821-1-c_mykolak@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500554409-22423-5-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <20170720143039.821-1-c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 02:40:09PM +0200, Geert Uytterhoeven wrote:
-> Add R-Car D3 (R8A77995) Clock Pulse Generator / Module Standby and
-> Software Reset support, using the CPG/MSSR driver core and the common
-> R-Car Gen3 CPG code.
+On Thu, Jul 20, 2017 at 05:30:39PM +0300, Mykola Kostenok wrote:
+> This controller supports fan tacho channels and pwm channels.
+> Without this change only tachometer channels can be configured.
+> Add extra level of hierarchy - for tachometer channel
+> with fan subnodes and pwm channels with pwm subnodes.
 > 
-> Based on the R-Car Series, 3rd Generation Hardware User's Manual, Rev.
-> 0.55, Jun. 30, 2017.
+> It's add support for cooling device creation to
+> aspeed-pwm-tacho.
+> Cooling device could be bound to a thermal zone
+> for the thermal control.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> v1 -> v2:
+>  - Fix commit message.
+> 
+> Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 > ---
-> Notes:
->   - I couldn't verify the parent clocks of all module clocks.
->     For e.g. SYS-DMAC and some multimedia devices, I looked at how
->     related clocks were changed among R-Car H3, M3-W, and D3.
->   - For now, R clock handling is hardwired to internal RCLK.
-> ---
->  .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   3 +-
+>  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 56 ++++++++++++++++++----
+>  1 file changed, 47 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> index cf44605..df85aa7 100644
+> --- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> @@ -23,9 +23,18 @@ Required properties for pwm-tacho node:
+>  - clocks : a fixed clock providing input clock frequency(PWM
+>  	   and Fan Tach clock)
+>  
+> +tach-channels subnode format:
+> +===================
+> +Under tach-channels subnode there can be fan child nodes.
+> +
+> +Required properties for tach-channels node:
+> +- #address-cells : should be 1.
+> +
+> +- #size-cells : should be 0.
+> +
+>  fan subnode format:
+>  ===================
+> -Under fan subnode there can upto 8 child nodes, with each child node
+> +Under fan subnode there can be upto 8 child nodes, with each child node
+>  representing a fan. If there are 8 fans each fan can have one PWM port and
+>  one/two Fan tach inputs.
+>  
+> @@ -39,6 +48,24 @@ Required properties for each child node:
+>  		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+>  		Atleast one Fan tach input channel is required.
+>  
+> +pwm-channels subnode format:
+> +===================
+> +Under pwm-channels subnode there can be pwm child nodes.
+> +Required properties for tach-channels node:
+> +- #address-cells : should be 1.
+> +
+> +- #size-cells : should be 0.
+> +
+> +- #cooling-cells : should be 2;
+> +
+> +pwm subnode format:
+> +===================
+> +- reg : should be <0x00>.
+> +
+> +- cooling-levels      : PWM duty cycle values in a range from 0 to 255
+> +			which correspond to thermal cooling states.
+> +
+> +
+>  Examples:
+>  
+>  pwm_tacho_fixed_clk: fixedclk {
+> @@ -55,14 +82,25 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+>  	clocks = <&pwm_tacho_fixed_clk>;
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
+> -
+> -	fan@0 {
+> -		reg = <0x00>;
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The 0 here was the "pwm channel". Otherwise, the reg value is just 
+some made up index with no correlation to the h/w. So why can't you 
+accomplish the same thing adding cooling-levels here?
 
->  drivers/clk/renesas/Kconfig                        |   5 +
->  drivers/clk/renesas/Makefile                       |   1 +
->  drivers/clk/renesas/r8a77995-cpg-mssr.c            | 236 +++++++++++++++++++++
->  drivers/clk/renesas/renesas-cpg-mssr.c             |   6 +
->  drivers/clk/renesas/renesas-cpg-mssr.h             |   1 +
->  6 files changed, 251 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/renesas/r8a77995-cpg-mssr.c
+> -		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +	tach-channels {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		fan@0 {
+> +			reg = <0x00>;
+> +			aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+> +		};
+> +		fan@1 {
+> +			reg = <0x01>;
+> +			aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
+> +		};
+>  	};
+> -
+> -	fan@1 {
+> -		reg = <0x01>;
+> -		aspeed,fan-tach-ch = /bits/ 8 <0x01 0x02>;
+> +	pwm-channels {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		#cooling-cells = <2>;
+> +		pwm@0 {
+> +			reg = <0x00>;
+> +			cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.8.4
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
