@@ -1,54 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Mon, 24 Jul 2017 12:49:29 -0500
-Message-ID: <20170724174929.wtf5ifjr2h7eixdc@rob-hp-laptop>
-References: <20170717192539.7950-1-cbostic@linux.vnet.ibm.com>
- <20170717192539.7950-2-cbostic@linux.vnet.ibm.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH 1/8] mailbox: introduce ARM SMC based mailbox
+Date: Mon, 24 Jul 2017 23:22:41 +0530
+Message-ID: <CABb+yY0LYagAOet-KgP+PB__t26LdCSCnxtH6h_X+T37sq_5Wg@mail.gmail.com>
+References: <20170630095608.24943-1-andre.przywara@arm.com>
+ <20170630095608.24943-2-andre.przywara@arm.com>
+ <CABb+yY18Aye3wr2A9-+jemqc=VSRyUA+xzKGo9s0G4KCt1ovyA@mail.gmail.com>
+ <22d23c1d-ea8d-9829-4624-6305cd83ad4a@arm.com>
+ <CABb+yY2hjfXdiCSZXd5TJf8=janwjWEo2oSqrxdoWc=1oUtteQ@mail.gmail.com>
+ <0aaba7fb-2183-2d4d-ba04-64b30cd0ae10@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170717192539.7950-2-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0aaba7fb-2183-2d4d-ba04-64b30cd0ae10@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 02:25:38PM -0500, Christopher Bostic wrote:
-> Describe device tree optional properties:
-> 
->   * aspeed,reset-type = "cpu|soc|system|none"
->      One of three different, mutually exclusive, values
-> 
-> 	"cpu" : ARM CPU reset on signal
-> 	"soc" : 'System on chip' reset
-> 	"system" : Full system reset
-> 
->      The value can also be set to "none" which indicates that no
->      reset of any kind is to be done via this watchdog.  This assumes
->      another watchdog on the chip is to take care of resets.
-> 
->   * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
->   * aspeed,alt-boot - Boot from alternate block on signal
-> 
-> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
-> v5 - Removed aspeed,interrupt property - no plans at this point to
->      need this functionality in the driver.
-> v4 - Add aspeed-reset-type and assign one of four values,
->      cpu, soc, system, none.
-> v3 - Invert soc and sys reset to 'no' to preserve backwards
->      compatibility.  SOC and SYS reset will be set by default
->      without any optional parameters set
-> v2 - Add 'aspeed,' prefix to all optional properties
->    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> ---
->  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 32 ++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
+On Mon, Jul 24, 2017 at 11:08 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On 24/07/17 18:20, Jassi Brar wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> I see that the SCPI firmware driver (as the user of the mailbox API) is
+>>> expecting the return value from a0 as returned above, translating the
+>>> firmware error codes into Linux' ones.
+>>>
+>> I am afraid, SCPI driver is not the golden example for client drivers
+>> to follow. It is supposed to work only with MHU, and then, it is
+>> likely to break if some other protocol is running parallel to it.
+>>
+>
+> Not sure why do you say it works only with ARM MHU ? AmLogic uses it
+> with their mailbox driver. However they followed an interim version of
+> the SCPI spec which is termed "legacy" in the driver.
+>
+Screw coding... Just tell me what stuff do you smoke? Must be really good!
