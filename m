@@ -1,7 +1,7 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
-Date: Mon, 24 Jul 2017 14:59:58 +0200
-Message-ID: <20170724125958.11939-3-gary.bisson@boundarydevices.com>
+Subject: [PATCH v2 1/2] ARM: dts: imx6qdl-sabrelite: fix USB PHY reset
+Date: Mon, 24 Jul 2017 14:59:57 +0200
+Message-ID: <20170724125958.11939-2-gary.bisson@boundarydevices.com>
 References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
  <20170724125958.11939-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -24,21 +24,21 @@ devices like the pwrseq library [1] for instance.
 
 Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index f22e5879340b..d309a4d0eb08 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -108,6 +108,18 @@
- 			startup-delay-us = <70000>;
- 			enable-active-high;
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index afe7449c47da..756c5054f047 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -123,6 +123,18 @@
+ 			regulator-max-microvolt = <2800000>;
+ 			regulator-always-on;
  		};
 +
-+		reg_usb_h1_vbus: regulator@5 {
++		reg_usb_h1_vbus: regulator@7 {
 +			compatible = "regulator-fixed";
-+			reg = <5>;
++			reg = <7>;
 +			pinctrl-names = "default";
 +			pinctrl-0 = <&pinctrl_usbh1>;
 +			regulator-name = "usb_h1_vbus";
@@ -49,8 +49,8 @@ index f22e5879340b..d309a4d0eb08 100644
 +		};
  	};
  
- 	gpio-keys {
-@@ -515,6 +527,12 @@
+ 	mipi_xclk: mipi_xclk {
+@@ -610,6 +622,12 @@
  			>;
  		};
  
@@ -62,8 +62,8 @@ index f22e5879340b..d309a4d0eb08 100644
 +
  		pinctrl_usbotg: usbotggrp {
  			fsl,pins = <
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID	0x17059
-@@ -629,6 +647,7 @@
+ 				MX6QDL_PAD_GPIO_1__USB_OTG_ID		0x17059
+@@ -705,6 +723,7 @@
  };
  
  &usbh1 {
