@@ -1,435 +1,269 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 02/10] regulator: add support for SY8106A regulator
-Date: Mon, 24 Jul 2017 14:17:35 +0800
-Message-ID: <CAGb2v67XLNeAYFZ2yEFA9DQszfDgjXxFEKnVicL2UGhrJPqYgQ@mail.gmail.com>
-References: <20170723102749.17323-1-icenowy@aosc.io> <20170723102749.17323-3-icenowy@aosc.io>
- <CAGb2v640bB27M_Xd4r-oQ=acgfpHEwoV2tSk3vH0VZc7R-de6w@mail.gmail.com>
- <a40cabec7eb7f4ae7bb35c4e3e6d3795@aosc.io> <CAGb2v65k3V74MepvFnOF7DRdhyOsSR+6Bgh5Vaf4U2bJ=9=qjg@mail.gmail.com>
- <dce1ffc444edd9de64326e85152ee555@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH 2/2] dma: Add Spreadtrum DMA controller driver
+Date: Mon, 24 Jul 2017 14:46:00 +0800
+Message-ID: <20170724064600.GB22149@spreadtrum.com>
+References: <63f2b93b3e484862f736e37d6d422b5566637163.1500361078.git.baolin.wang@spreadtrum.com>
+ <4331ea088a26f515fe1f1912c568bfd07d539e9d.1500361078.git.baolin.wang@spreadtrum.com>
+ <20170722075730.GU3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGFC23FQKGQEHPLYTSQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <dce1ffc444edd9de64326e85152ee555-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170722075730.GU3053@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 11:38 AM,  <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> =E5=9C=A8 2017-07-24 11:33=EF=BC=8CChen-Yu Tsai =E5=86=99=E9=81=93=EF=BC=
-=9A
->>
->> On Mon, Jul 24, 2017 at 11:18 AM,  <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->>>
->>> =E5=9C=A8 2017-07-24 11:03=EF=BC=8CChen-Yu Tsai =E5=86=99=E9=81=93=EF=
-=BC=9A
->>>>
->>>>
->>>> On Sun, Jul 23, 2017 at 6:27 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote=
-:
->>>>>
->>>>>
->>>>> From: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>>>>
->>>>> SY8106A is an I2C attached single output regulator made by Silergy
->>>>> Corp,
->>>>> which is used on several Allwinner H3/H5 SBCs to control the power
->>>>> supply of the ARM cores.
->>>>>
->>>>> Add a driver for it.
->>>>>
->>>>> Signed-off-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>>>> [Icenowy: Change commit message]
->>>>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->>>>> ---
->>>>>  drivers/regulator/Kconfig             |   8 +-
->>>>>  drivers/regulator/Makefile            |   2 +-
->>>>>  drivers/regulator/sy8106a-regulator.c | 163
->>>>> ++++++++++++++++++++++++++++++++++
->>>>>  3 files changed, 171 insertions(+), 2 deletions(-)
->>>>>  create mode 100644 drivers/regulator/sy8106a-regulator.c
->>>>>
->>>>> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
->>>>> index 99b9362331b5..1efa73e18d07 100644
->>>>> --- a/drivers/regulator/Kconfig
->>>>> +++ b/drivers/regulator/Kconfig
->>>>> @@ -764,6 +764,13 @@ config REGULATOR_STW481X_VMMC
->>>>>           This driver supports the internal VMMC regulator in the
->>>>> STw481x
->>>>>           PMIC chips.
->>>>>
->>>>> +config REGULATOR_SY8106A
->>>>> +       tristate "Silergy SY8106A regulator"
->>>>> +       depends on I2C && (OF || COMPILE_TEST)
->>>>> +       select REGMAP_I2C
->>>>> +       help
->>>>> +         This driver supports SY8106A single output regulator.
->>>>> +
->>>>>  config REGULATOR_TPS51632
->>>>>         tristate "TI TPS51632 Power Regulator"
->>>>>         depends on I2C
->>>>> @@ -938,4 +945,3 @@ config REGULATOR_WM8994
->>>>>           WM8994 CODEC.
->>>>>
->>>>>  endif
->>>>> -
->>>>> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
->>>>> index 95b1e86ae692..f5120252f86a 100644
->>>>> --- a/drivers/regulator/Makefile
->>>>> +++ b/drivers/regulator/Makefile
->>>>> @@ -95,6 +95,7 @@ obj-$(CONFIG_REGULATOR_S2MPS11) +=3D s2mps11.o
->>>>>  obj-$(CONFIG_REGULATOR_S5M8767) +=3D s5m8767.o
->>>>>  obj-$(CONFIG_REGULATOR_SKY81452) +=3D sky81452-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_STW481X_VMMC) +=3D stw481x-vmmc.o
->>>>> +obj-$(CONFIG_REGULATOR_SY8106A) +=3D sy8106a-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_TI_ABB) +=3D ti-abb-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_TPS6105X) +=3D tps6105x-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_TPS62360) +=3D tps62360-regulator.o
->>>>> @@ -120,5 +121,4 @@ obj-$(CONFIG_REGULATOR_WM8350) +=3D
->>>>> wm8350-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_WM8400) +=3D wm8400-regulator.o
->>>>>  obj-$(CONFIG_REGULATOR_WM8994) +=3D wm8994-regulator.o
->>>>>
->>>>> -
->>>>>  ccflags-$(CONFIG_REGULATOR_DEBUG) +=3D -DDEBUG
->>>>> diff --git a/drivers/regulator/sy8106a-regulator.c
->>>>> b/drivers/regulator/sy8106a-regulator.c
->>>>> new file mode 100644
->>>>> index 000000000000..1df889f68b3d
->>>>> --- /dev/null
->>>>> +++ b/drivers/regulator/sy8106a-regulator.c
->>>>> @@ -0,0 +1,163 @@
->>>>> +/*
->>>>> + * sy8106a-regulator.c - Regulator device driver for SY8106A
->>>>> + *
->>>>> + * Copyright (C) 2016 Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
->>>>> + *
->>>>> + * This program is free software; you can redistribute it and/or
->>>>> + * modify it under the terms of the GNU Library General Public
->>>>> + * License as published by the Free Software Foundation; either
->>>>> + * version 2 of the License, or (at your option) any later version.
->>>>> + *
->>>>> + * This program is distributed in the hope that it will be useful,
->>>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
->>>>> + * Library General Public License for more details.
->>>>> + */
->>>>> +
->>>>> +#include <linux/err.h>
->>>>> +#include <linux/i2c.h>
->>>>> +#include <linux/module.h>
->>>>> +#include <linux/regmap.h>
->>>>> +#include <linux/regulator/driver.h>
->>>>> +#include <linux/regulator/of_regulator.h>
->>>>> +
->>>>> +#define SY8106A_REG_VOUT1_SEL          0x01
->>>>> +#define SY8106A_REG_VOUT_COM           0x02
->>>>> +#define SY8106A_REG_VOUT1_SEL_MASK     0x7f
->>>>> +#define SY8106A_DISABLE_REG            BIT(0)
->>>>> +#define SY8106A_GO_BIT                 BIT(7)
->>>>> +
->>>>> +struct sy8106a {
->>>>> +       struct regulator_dev *rdev;
->>>>> +       struct regmap *regmap;
->>>>> +};
->>>>> +
->>>>> +static const struct regmap_config sy8106a_regmap_config =3D {
->>>>> +       .reg_bits =3D 8,
->>>>> +       .val_bits =3D 8,
->>>>> +};
->>>>> +
->>>>> +static int sy8106a_set_voltage_sel(struct regulator_dev *rdev,
->>>>> unsigned
->>>>> int sel)
->>>>> +{
->>>>> +       /* We use our set_voltage_sel in order to avoid unnecessary I=
-2C
->>>>> +        * chatter, because the regulator_get_voltage_sel_regmap usin=
-g
->>>>> +        * apply_bit would perform 4 unnecessary transfers instead of
->>>>> one,
->>>>> +        * increasing the chance of error.
->>>>> +        */
->>>>> +       return regmap_write(rdev->regmap, rdev->desc->vsel_reg,
->>>>> +                           sel | SY8106A_GO_BIT);
->>>>
->>>>
->>>>
->>>> There should also be an explanation of what the "go bit" does.
->>>> In this case it enables control of the voltage over I2C.
->>>>
->>>>> +}
->>>>> +
->>>>> +static const struct regulator_ops sy8106a_ops =3D {
->>>>> +       .is_enabled =3D regulator_is_enabled_regmap,
->>>>> +       .set_voltage_sel =3D sy8106a_set_voltage_sel,
->>>>> +       .set_voltage_time_sel =3D regulator_set_voltage_time_sel,
->>>>> +       .get_voltage_sel =3D regulator_get_voltage_sel_regmap,
->>>>> +       .list_voltage =3D regulator_list_voltage_linear,
->>>>
->>>>
->>>>
->>>> No enable/disable ops?
->>>>
->>>>> +};
->>>>> +
->>>>> +/* Default limits measured in millivolts and milliamps */
->>>>> +#define SY8106A_MIN_MV         680
->>>>> +#define SY8106A_MAX_MV         1950
->>>>> +#define SY8106A_STEP_MV                10
->>>>> +
->>>>> +static const struct regulator_desc sy8106a_reg =3D {
->>>>> +       .name =3D "SY8106A",
->>>>> +       .id =3D 0,
->>>>> +       .ops =3D &sy8106a_ops,
->>>>> +       .type =3D REGULATOR_VOLTAGE,
->>>>> +       .n_voltages =3D ((SY8106A_MAX_MV - SY8106A_MIN_MV) /
->>>>> SY8106A_STEP_MV) + 1,
->>>>> +       .min_uV =3D (SY8106A_MIN_MV * 1000),
->>>>> +       .uV_step =3D (SY8106A_STEP_MV * 1000),
->>>>> +       .vsel_reg =3D SY8106A_REG_VOUT1_SEL,
->>>>> +       .vsel_mask =3D SY8106A_REG_VOUT1_SEL_MASK,
->>>>> +       .enable_reg =3D SY8106A_REG_VOUT_COM,
->>>>> +       .enable_mask =3D SY8106A_DISABLE_REG,
->>>>> +       .disable_val =3D SY8106A_DISABLE_REG,
->>>>> +       .enable_is_inverted =3D 1,
->>>>
->>>>
->>>>
->>>> As the regulator core helpers currently are, there is no way to disabl=
-e
->>>> this regulator. regulator_disable_regmap looks like:
->>>
->>>
->>>
->>> By reading the current code, I think removing the disable_val variable
->>> will
->>> just make it work -- when enabling, the enable_reg will be set to
->>> disable_val
->>> (as enable_is_inverted is 1), and disable_val is defaultly 0; when
->>> disabling,
->>> the enable_reg will be set to enable_mask (fallbacked from enable_val,
->>> which
->>> is also the default value 0), and the regulator successfully get
->>> disabled.
->>
->>
->> (Gmail is wrapping the lines :( )
->>
->> enable_mask is set to SY8106A_DISABLE_REG, which equals disable_val here=
-,
->> which is not 0. This is correct, as it is the bit mask passed to
->> regmap_update_bits. So no, it does not work.
->
->
-> From my personal understanding of the code, the behavior of
-> enable_is_inverted
-> is that switch the roles of enable_val and disable_val, so if
-> enable_is_inverted is set, the regulator_disable_regmap function will wri=
-te
-> enable_val (if it's 0, fallback to enable_mask) to the register, and
-> regulator_enable_regmap will write disable_val.
->
-> Maybe this design is used to ensure enable_val (then fallback to
-> enable_mask)
-> is not 0.
+Hi,
 
-I think the changes needed to the core are probably too invasive, i.e.
-affect too many other drivers, to be worth doing. Especially since we
-won't really be using enable/disable much, as the regulator supplies
-the CPU cores.
+On 六,  7月 22, 2017 at 01:27:31下午 +0530, Vinod Koul wrote:
+> On Tue, Jul 18, 2017 at 03:06:12PM +0800, Baolin Wang wrote:
+> 
+> > +/* DMA global registers definition */
+> > +#define DMA_GLB_PAUSE			0x0
+> > +#define DMA_GLB_FRAG_WAIT		0x4
+> > +#define DMA_GLB_REQ_PEND0_EN		0x8
+> > +#define DMA_GLB_REQ_PEND1_EN		0xc
+> > +#define DMA_GLB_INT_RAW_STS		0x10
+> > +#define DMA_GLB_INT_MSK_STS		0x14
+> > +#define DMA_GLB_REQ_STS			0x18
+> > +#define DMA_GLB_CHN_EN_STS		0x1c
+> > +#define DMA_GLB_DEBUG_STS		0x20
+> > +#define DMA_GLB_ARB_SEL_STS		0x24
+> > +#define DMA_GLB_CHN_START_CHN_CFG1	0x28
+> > +#define DMA_GLB_CHN_START_CHN_CFG2	0x2c
+> > +#define DMA_CHN_LLIST_OFFSET		0x10
+> > +#define DMA_GLB_REQ_CID(base, uid)	\
+> > +		((unsigned long)(base) + 0x2000 + 0x4 * ((uid) - 1))
+> 
+> why do you need a cast here...
 
-For now, lets just remove the enable/disable related fields, and leave
-a TODO note citing the possibly required changes to the core instead.
-You haven't assigned the callbacks anyway.
+Since the UID registers address is calculated by the UID number. But
+I can remove the cast and define the UID global macros.
 
-ChenYu
+> 
+> > +/* DMA_CHN_INTC register definition */
+> > +#define DMA_CHN_INT_MASK		GENMASK(4, 0)
+> > +#define DMA_CHN_INT_CLR_OFFSET		24
+> 
+> Why cant this be expressed in GENMASK?
 
->
->
->>
->> It seems quite a lot of drivers depend on this fallback behavior though.
->>
->> ChenYu
->>
->>>
->>>>
->>>>         if (rdev->desc->enable_is_inverted) {
->>>>                 val =3D rdev->desc->enable_val;
->>>>                 if (!val)
->>>>                         val =3D rdev->desc->enable_mask;
->>>>         } else {
->>>>                 val =3D rdev->desc->disable_val;
->>>>         }
->>>>
->>>>         return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg=
-,
->>>>                                   rdev->desc->enable_mask, val);
->>>>
->>>> Note the fallback to enable_mask if enable_val is not set. The enable
->>>> helper has a similar structure. This regulator uses an enable value
->>>> of 0, and disable value of 1, it is impossible to get it right. As
->>>> it is now, it doesn't really make sense to me.
->>>>
->>>> The code was introduced in ca5d1b3524b4 ("regulator: helpers: Modify
->>>> helpers enabling multi-bit control"). I wonder if it was an unintended
->>>> consequence of the change? (original author CC-ed)
->>>>
->>>>> +       .owner =3D THIS_MODULE,
->>>>> +};
->>>>> +
->>>>> +/*
->>>>> + * I2C driver interface functions
->>>>> + */
->>>>> +static int sy8106a_i2c_probe(struct i2c_client *i2c,
->>>>> +                           const struct i2c_device_id *id)
->>>>> +{
->>>>> +       struct sy8106a *chip;
->>>>> +       struct device *dev =3D &i2c->dev;
->>>>> +       struct regulator_dev *rdev =3D NULL;
->>>>> +       struct regulator_config config =3D { };
->>>>> +       unsigned int selector;
->>>>> +       int error;
->>>>> +
->>>>> +       chip =3D devm_kzalloc(&i2c->dev, sizeof(struct sy8106a),
->>>>> GFP_KERNEL);
->>>>> +       if (!chip)
->>>>> +               return -ENOMEM;
->>>>> +
->>>>> +       chip->regmap =3D devm_regmap_init_i2c(i2c,
->>>>> &sy8106a_regmap_config);
->>>>> +       if (IS_ERR(chip->regmap)) {
->>>>> +               error =3D PTR_ERR(chip->regmap);
->>>>> +               dev_err(&i2c->dev, "Failed to allocate register map:
->>>>> %d\n",
->>>>> +                       error);
->>>>> +               return error;
->>>>> +       }
->>>>> +
->>>>> +       config.dev =3D &i2c->dev;
->>>>> +       config.regmap =3D chip->regmap;
->>>>> +       config.driver_data =3D chip;
->>>>> +
->>>>> +       config.of_node =3D dev->of_node;
->>>>> +       config.init_data =3D of_get_regulator_init_data(dev,
->>>>> dev->of_node,
->>>>> +                                                     &sy8106a_reg);
->>>>> +
->>>>> +       if (!config.init_data)
->>>>> +               return -ENOMEM;
->>>>> +
->>>>> +       /* Probe regulator */
->>>>> +       error =3D regmap_read(chip->regmap, SY8106A_REG_VOUT1_SEL,
->>>>> &selector);
->>>>> +       if (error) {
->>>>> +               dev_err(&i2c->dev, "Failed to read voltage at probe
->>>>> time:
->>>>> %d\n", error);
->>>>> +               return error;
->>>>> +       }
->>>>> +
->>>>> +       rdev =3D devm_regulator_register(&i2c->dev, &sy8106a_reg,
->>>>> &config);
->>>>> +       if (IS_ERR(rdev)) {
->>>>> +               error =3D PTR_ERR(rdev);
->>>>> +               dev_err(&i2c->dev, "Failed to register SY8106A
->>>>> regulator:
->>>>> %d\n", error);
->>>>> +               return error;
->>>>> +       }
->>>>> +
->>>>> +       chip->rdev =3D rdev;
->>>>> +
->>>>> +       i2c_set_clientdata(i2c, chip);
->>>>> +
->>>>> +       return 0;
->>>>> +}
->>>>> +
->>>>> +static const struct of_device_id sy8106a_i2c_of_match[] =3D {
->>>>> +       { .compatible =3D "silergy,sy8106a" },
->>>>> +       { },
->>>>> +};
->>>>> +MODULE_DEVICE_TABLE(of, sy8106a_i2c_of_match);
->>>>> +
->>>>> +static const struct i2c_device_id sy8106a_i2c_id[] =3D {
->>>>> +       { "sy8106a", 0 },
->>>>> +       { },
->>>>> +};
->>>>> +MODULE_DEVICE_TABLE(i2c, sy8106a_i2c_id);
->>>>> +
->>>>> +static struct i2c_driver sy8106a_regulator_driver =3D {
->>>>> +       .driver =3D {
->>>>> +               .name =3D "sy8106a",
->>>>> +               .of_match_table =3D of_match_ptr(sy8106a_i2c_of_match=
-),
->>>>> +       },
->>>>> +       .probe =3D sy8106a_i2c_probe,
->>>>> +       .id_table =3D sy8106a_i2c_id,
->>>>> +};
->>>>> +
->>>>> +module_i2c_driver(sy8106a_regulator_driver);
->>>>> +
->>>>> +MODULE_AUTHOR("Ond=C5=99ej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>");
->>>>> +MODULE_DESCRIPTION("Regulator device driver for Silergy SY8106A");
->>>>> +MODULE_LICENSE("GPL v2");
->>>>
->>>>
->>>>
->>>> This should be "GPL", to match what the license at the very top says.
->>>>
->>>> Regards
->>>> ChenYu
->>>>
->>>>> --
->>>>> 2.13.0
->>>>>
->>>>> --
->>>>> You received this message because you are subscribed to the Google
->>>>> Groups
->>>>> "linux-sunxi" group.
->>>>> To unsubscribe from this group and stop receiving emails from it, sen=
-d
->>>>> an
->>>>> email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>>>> For more options, visit https://groups.google.com/d/optout.
->>>>
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-arm-kernel mailing list
->>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>
->>>
->>>
->>> --
->>> You received this message because you are subscribed to the Google Grou=
-ps
->>> "linux-sunxi" group.
->>> To unsubscribe from this group and stop receiving emails from it, send =
-an
->>> email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
->>> For more options, visit https://groups.google.com/d/optout.
->
->
-> --
-> You received this message because you are subscribed to the Google Groups
-> "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an
-> email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+Since this is not one mask, it is one offset. If we use GENMASK(4, 3)
+instead of magic number 24, it is not very clear for the offset bit.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> > +/* DMA_CHN_CFG register definition */
+> > +#define DMA_CHN_EN			BIT(0)
+> > +#define DMA_CHN_PRIORITY_OFFSET		12
+> > +#define LLIST_EN_OFFSET			4
+> > +#define CHN_WAIT_BDONE			24
+> > +#define DMA_DONOT_WAIT_BDONE		1
+> 
+> All these too...
+> 
+> > +static void sprd_dma_set_uid(struct sprd_dma_chn *mchan)
+> > +{
+> > +	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&mchan->chan);
+> > +	u32 dev_id = mchan->dev_id;
+> > +
+> > +	if (dev_id != DMA_SOFTWARE_UID)
+> 
+> Whats a UID?
+
+It is for users, every user was assigned one unique hardware ID.
+Then the user can trigger the DMA to transfer by the user ID.
+
+> 
+> > +		writel(mchan->chn_num + 1, (void __iomem *)DMA_GLB_REQ_CID(
+> > +		       sdev->glb_base, dev_id));
+> 
+> And again the cast, I dont think we need casts like this...
+
+OK.
+
+> 
+> > +static void sprd_dma_clear_int(struct sprd_dma_chn *mchan)
+> > +{
+> > +	u32 intc = readl(mchan->chn_base + DMA_CHN_INTC);
+> > +
+> > +	intc |= DMA_CHN_INT_MASK << DMA_CHN_INT_CLR_OFFSET;
+> > +	writel(intc, mchan->chn_base + DMA_CHN_INTC);
+> 
+> How about adding a updatel macro and use that here and few other places.
+
+OK.
+
+> 
+> > +static void sprd_dma_stop_and_disable(struct sprd_dma_chn *mchan)
+> > +{
+> > +	u32 cfg = readl(mchan->chn_base + DMA_CHN_CFG);
+> > +	u32 pause, timeout = DMA_CHN_PAUSE_CNT;
+> > +
+> > +	if (!(cfg & DMA_CHN_EN))
+> > +		return;
+> > +
+> > +	pause = readl(mchan->chn_base + DMA_CHN_PAUSE);
+> > +	pause |= DMA_CHN_PAUSE_EN;
+> > +	writel(pause, mchan->chn_base + DMA_CHN_PAUSE);
+> > +
+> > +	do {
+> > +		pause = readl(mchan->chn_base + DMA_CHN_PAUSE);
+> > +		if (pause & DMA_CHN_PAUSE_STS)
+> > +			break;
+> > +
+> > +		cpu_relax();
+> > +	} while (--timeout > 0);
+> 
+> We should check here if timeout occured and at least log the error
+
+Yes, will add one warning meesage.
+
+> 
+> > +static enum dma_int_type sprd_dma_get_int_type(struct sprd_dma_chn *mchan)
+> > +{
+> > +	u32 intc_reg = readl(mchan->chn_base + DMA_CHN_INTC);
+> > +
+> > +	if (intc_reg & CFGERR_INT_STS)
+> > +		return CONFIG_ERR;
+> > +	else if (intc_reg & LLIST_INT_STS)
+> > +		return LIST_DONE;
+> > +	else if (intc_reg & TRSC_INT_STS)
+> > +		return TRANS_DONE;
+> > +	else if (intc_reg & BLK_INT_STS)
+> > +		return BLK_DONE;
+> > +	else if (intc_reg & FRAG_INT_STS)
+> > +		return FRAG_DONE;
+> 
+> this seems a good case for using switch-cases
+
+OK.
+
+> 
+> > +static int sprd_dma_chn_start_chn(struct sprd_dma_chn *mchan,
+> > +				  struct sprd_dma_desc *mdesc)
+> > +{
+> > +	struct sprd_dma_dev *sdev = to_sprd_dma_dev(&mchan->chan);
+> > +	enum dma_flags flag = mdesc->dma_flags;
+> > +	int chn = mchan->chn_num + 1;
+> > +	unsigned int cfg_group1, cfg_group2, start_mode = 0;
+> > +
+> > +	if (!(flag & (DMA_GROUP1_SRC | DMA_GROUP2_SRC | DMA_GROUP1_DST |
+> > +		      DMA_GROUP2_DST)))
+> > +		return 0;
+> > +
+> > +	if (flag & (DMA_GROUP1_SRC | DMA_GROUP2_SRC)) {
+> > +		switch (flag & (DMA_MUTL_FRAG_DONE | DMA_MUTL_BLK_DONE |
+> > +			DMA_MUTL_TRANS_DONE | DMA_MUTL_LIST_DONE)) {
+> > +		case DMA_MUTL_FRAG_DONE:
+> > +			start_mode = 0;
+> > +			break;
+> 
+> empty line after each break helps with readability
+
+OK.
+
+> 
+> > +/*
+> > + * struct sprd_dma_cfg: DMA configuration for users
+> > + * @config: salve config structure
+> 
+> typo
+
+Sorry, will fix it.
+
+> 
+> > + * @chn_pri: the channel priority
+> > + * @datawidth: the data width
+> > + * @req_mode: the request mode
+> > + * @irq_mode: the interrupt mode
+> > + * @swt_mode: the switch mode
+> > + * @link_cfg_v: point to the virtual memory address to save link-list DMA
+> > + * configuration
+> > + * @link_cfg_p: point to the physical memory address to save link-list DMA
+> > + * configuration
+> > + * @src_addr: the source address
+> > + * @des_addr: the destination address
+> > + * @fragmens_len: one fragment request length
+> > + * @block_len; one block request length
+> > + * @transcation_len: one transaction request length
+> > + * @src_step: source side transfer step
+> > + * @des_step: destination side transfer step
+> > + * @src_frag_step: source fragment transfer step
+> > + * @dst_frag_step: destination fragment transfer step
+> > + * @src_blk_step: source block transfer step
+> > + * @dst_blk_step: destination block transfer step
+> > + * @wrap_ptr: wrap jump pointer address
+> > + * @wrap_to: wrap jump to address
+> > + * @dev_id: hardware device id to start DMA transfer
+> > + * @is_end: DMA configuration end type
+> > + */
+> > +struct sprd_dma_cfg {
+> > +	struct dma_slave_config config;
+> > +	enum dma_pri_level chn_pri;
+> > +	enum dma_datawidth datawidth;
+> 
+> why not use src/dst_addr_width
+
+OK.
+
+> 
+> > +	enum dma_request_mode req_mode;
+> > +	enum dma_int_type irq_mode;
+> > +	enum dma_switch_mode swt_mode;
+> 
+> what do these modes mean?
+
+I explained these structure where defining these modes.
+
+> 
+> > +	unsigned long link_cfg_v;
+> > +	unsigned long link_cfg_p;
+> 
+> why should clients know and send this, seems internal to dma
+
+Since there are some special cases for our DMA. This driver can
+cover several DMA controllers, but for some special cases one
+DMA controller just can access the memories which specified
+by the user. Anyway will fix this issue in next version.
+
+> 
+> > +	unsigned long src_addr;
+> > +	unsigned long des_addr;
+> 
+> whats wrong with src/dst_addr
+
+Will fix this.
+
+> 
+> > +	u32 fragmens_len;
+> > +	u32 block_len;
+> 
+> oh please, I think I will stop here now :(
+> 
+> > +	u32 transcation_len;
+> > +	u32 src_step;
+> > +	u32 des_step;
+> > +	u32 src_frag_step;
+> > +	u32 dst_frag_step;
+> > +	u32 src_blk_step;
+> > +	u32 dst_blk_step;
+> > +	u32 wrap_ptr;
+> > +	u32 wrap_to;
+> > +	u32 dev_id;
+> > +	enum dma_end_type is_end;
+> 
+> Looking at this I think these are overkill, many of them can be handled
+> properly by current dmaengine interfaces, so please use those before you
+> invent your own...
+> 
+> Also the code is bloated because you don't use virt-dma, pls use that. I
+> skipped many parts of the driver as I feel driver needs more work.
+
+OK. I will check the virt-dma. Thanks for your commnets.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
