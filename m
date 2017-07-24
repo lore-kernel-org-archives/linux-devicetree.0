@@ -1,91 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: gpu: add a power_model optional
- properties for MALI
-Date: Mon, 24 Jul 2017 11:39:37 -0500
-Message-ID: <20170724163937.ppz24xg6ltkmal7f@rob-hp-laptop>
-References: <1500279271-15249-1-git-send-email-wxt@rock-chips.com>
- <1500279271-15249-3-git-send-email-wxt@rock-chips.com>
- <20170717200733.nax6jfbvs3rjd7t4@rob-hp-laptop>
- <3b464bab-2d72-717c-3aa0-410b1e1bd930@rock-chips.com>
+Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
+ Qualcomm Camera subsystem driver
+Date: Mon, 24 Jul 2017 11:43:15 -0500
+Message-ID: <20170724164315.axenfak62hu57rdd@rob-hp-laptop>
+References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
+ <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3b464bab-2d72-717c-3aa0-410b1e1bd930@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Caesar Wang <wxt@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, rocky.hao@rock-chips.com
+In-Reply-To: <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Todor Tomov <todor.tomov@linaro.org>
+Cc: mchehab@kernel.org, hans.verkuil@cisco.com, javier@osg.samsung.com, s.nawrocki@samsung.com, sakari.ailus@iki.fi, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKdWwgMTgsIDIwMTcgYXQgMDg6NTg6NTBBTSArMDgwMCwgQ2Flc2FyIFdhbmcgd3Jv
-dGU6Cj4gUm9iLAo+IAo+IOWcqCAyMDE35bm0MDfmnIgxOOaXpSAwNDowNywgUm9iIEhlcnJpbmcg
-5YaZ6YGTOgo+ID4gT24gTW9uLCBKdWwgMTcsIDIwMTcgYXQgMDQ6MTQ6MjhQTSArMDgwMCwgQ2Fl
-c2FyIFdhbmcgd3JvdGU6Cj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyB0aGUgTUFMSSdzIHBvd2VyLW1v
-ZGVsIHRvIHNldCB0aGUgSVBBIG1vZGVsIHRvIGJlIHVzZWQKPiA+ID4gZm9yIHBvd2VyIG1hbmFn
-ZW1lbnQuCj4gPiBXaGF0J3MgSVBBPyBJbmRpYSBQYWxlIEFsZSBvciBJbnRlcm1lZGlhdGUgUGh5
-c2ljYWwgQWRkcmVzcz8KPiAKPiBJUEEgaXMgaW50ZWxsaWdlbnQgUG93ZXIgQWxsb2NhdG9yLiAg
-KEFzIHRoZSBBUk0gaW50cm9kdWNlZCBvbgo+IGh0dHBzOi8vZGV2ZWxvcGVyLmFybS5jb20vb3Bl
-bi1zb3VyY2UvaW50ZWxsaWdlbnQtcG93ZXItYWxsb2NhdGlvbikKPiAKPiA+IAo+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBDYWVzYXIgV2FuZyA8d3h0QHJvY2stY2hpcHMuY29tPgo+ID4gPiAtLS0KPiA+
-ID4gCj4gPiA+IENoYW5nZXMgaW4gdjI6IE5vbmUKPiA+ID4gCj4gPiA+ICAgRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0sbWFsaS1taWRnYXJkLnR4dCB8IDEyICsrKysr
-KysrKysrKwo+ID4gPiAgIDEgZmlsZSBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspCj4gPiA+IAo+
-ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9h
-cm0sbWFsaS1taWRnYXJkLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9n
-cHUvYXJtLG1hbGktbWlkZ2FyZC50eHQKPiA+ID4gaW5kZXggYTQ2MWU0Ny4uYjYxNmU2YiAxMDA2
-NDQKPiA+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwdS9hcm0s
-bWFsaS1taWRnYXJkLnR4dAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZ3B1L2FybSxtYWxpLW1pZGdhcmQudHh0Cj4gPiA+IEBAIC0zNyw2ICszNywxOCBAQCBP
-cHRpb25hbCBwcm9wZXJ0aWVzOgo+ID4gPiAgIC0gb3BlcmF0aW5nLXBvaW50cy12MiA6IFJlZmVy
-IHRvIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9vcHAudHh0Cj4gPiA+
-ICAgICBmb3IgZGV0YWlscy4KPiA+ID4gKy0gcG93ZXJfbW9kZWwgOiBTZXRzIHBvd2VyIG1vZGVs
-IHBhcmFtZXRlcnMuIE5vdGUgdGhhdCB0aGlzIG1vZGVsIHdhcyBkZXNpZ25lZCBmb3IgdGhlIEp1
-bm8KPiA+ID4gKwkgICAgICAgIHBsYXRmb3JtLCBhbmQgbWF5IG5vdCBiZSBzdWl0YWJsZSBmb3Ig
-b3RoZXIgcGxhdGZvcm1zLiBBIHN0cnVjdHVyZSBjb250YWluaW5nIDoKPiA+ID4gKwktIGNvbXBh
-dGlibGU6IFNob3VsZCBiZSBhcm0sbWFsaS1zaW1wbGUtcG93ZXItbW9kZWwKPiA+ID4gKwktIGR5
-bmFtaWMtY29lZmZpY2llbnQ6IENvZWZmaWNpZW50LCBpbiBwVy8oSHogVl4yKSwgd2hpY2ggaXMg
-bXVsdGlwbGllZAo+ID4gPiArCSAgYnkgdl4yKmYgdG8gY2FsY3VsYXRlIHRoZSBkeW5hbWljIHBv
-d2VyIGNvbnN1bXB0aW9uLgo+ID4gPiArCS0gc3RhdGljLWNvZWZmaWNpZW50OiBDb2VmZmljaWVu
-dCwgaW4gdVcvVl4zLCB3aGljaCBpcyBtdWx0aXBsaWVkIGJ5Cj4gPiA+ICsJICB2XjMgdG8gY2Fs
-Y3VsYXRlIHRoZSBzdGF0aWMgcG93ZXIgY29uc3VtcHRpb24uCj4gPiA+ICsJLSB0czogQW4gYXJy
-YXkgY29udGFpbmluZyBjb2VmZmljaWVudHMgZm9yIHRoZSB0ZW1wZXJhdHVyZSBzY2FsaW5nCj4g
-PiA+ICsJICBmYWN0b3IuIFRoaXMgaXMgdXNlZCB0byBzY2FsZSB0aGUgc3RhdGljIHBvd2VyIGJ5
-IGEgZmFjdG9yIG9mCj4gPiA+ICsJICB0c2YvMTAwMDAwMCwgd2hlcmUgdHNmID0gdHNbM10qVF4z
-ICsgdHNbMl0qVF4yICsgdHNbMV0qVCArIHRzWzBdLAo+ID4gPiArCSAgYW5kIFQgPSB0ZW1wZXJh
-dHVyZSBpbiBkZWdyZWVzLgo+ID4gPiArCS0gdGhlcm1hbC16b25lOiBBIHN0cmluZyBpZGVudGlm
-eWluZyB0aGUgdGhlcm1hbCB6b25lIHVzZWQgZm9yIHRoZSBHUFUKPiA+IFRoaXMgY2FuIGFsbCBl
-YXNpbHkgYmUgaW1wbGllZCBieSB0aGUgY29tcGF0aWJsZSBzdHJpbmcuIEknbSBub3QKPiA+IGlu
-Y2xpbmVkIHRvIGFjY2VwdCBzb21ldGhpbmcgTWFsaSBzcGVjaWZpYyBoZXJlLgo+IAo+IElzbid0
-ICBhcm0sbWFsaS1taWRnYXJkLnR4dCBkb2N1bWVudCBzdWl0IGZvciBNYWxpIHNwZWNpZmljPyA6
-LSkKCkl0IGlzLCBidXQgSSdtIHNheWluZyB3ZSBzaG91bGRuJ3QgaGF2ZSBzb21ldGhpbmcgTWFs
-aSBzcGVjaWZpYyBoZXJlLiBJdCAKc2hvdWxkIGJlIHNvbWV0aGluZyB0aGF0IHdvcmtzIGFjcm9z
-cyBkaWZmZXJlbnQgR1BVcyBhdCBsZWFzdC4gSU9XLCBnZXQgCnNvbWUgYWdyZWVtZW50IHdpdGgg
-c2F5IGFkcmVubyBmb2xrcyB0aGF0IHRoZXNlIHByb3BlcnRpZXMgYXJlIHVzZWZ1bCBhbmQgCkkn
-bGwgYmUgbW9yZSByZWNlcHRpdmUuIAoKPiA+IAo+ID4gVGhpcyBsb29rcyAqdmVyeSogcHJlY2lz
-ZSwgYnV0IEknZCBiZSBzdXJwcmlzZWQgaWYgdGhlc2UgdmFsdWVzIGFyZSBhbnkKPiA+IG1vcmUg
-dGhhbiBtYWdpYyB2YWx1ZXMgKGF0IGxlYXN0IHRoZSBkeW5hbWljIGNvZWYpIGFkanVzdGVkIHVu
-dGlsIHRoZQo+ID4gZGVzaXJlZCBwb3dlci9wZXJmb3JtYW5jZSByZXF1aXJlbWVudHMgYXJlIGFj
-aGlldmVkLiBUbyBwdXQgaXQgYW5vdGhlcgo+ID4gd2F5LCB3aHkgZG9uJ3Qgd2UgaGF2ZSBzaW1p
-bGFyIHZhbHVlcyBmb3IgQ1BVcz8KPiAKPiBUaGVzZSB2YWx1ZSB3YXMgY2FsY3VsYXRlZCBieSBy
-dW5uaW5nIGZ1bGwgR1BVIHByb2Nlc3MuCj4gCj4gQ1BVIGhhZCB0aGUgc2ltaWxhciB2YWx1ZSBm
-b3IgZHRzaS4KPiAKPiBTYXk6IGFyY2gvYXJtNjQvYm9vdC9kdHMvcm9ja2NoaXAvcmszMzk5LmR0
-c2kKPiAgICAgICAgIGNwdV9iMDogY3B1QDEwMCB7Cj4gICAgICAgICAgICAgLi4uCj4gICAgICAg
-ICAgICAgZHluYW1pYy1wb3dlci1jb2VmZmljaWVudCA9IDw0MzY+Owo+ICAgICAgICAgICAgIC4u
-Lgo+ICAgICAgICAgfTsKCkluZGVlZC4gV2hpbGUgaXQgaXMgZG9jdW1lbnRlZCBmb3IgQVJNIENQ
-VXMsIEkgZG9uJ3Qgc2VlIHRoYXQgaXQgCmlzIHdpZGVseSB1c2VkIGFzIG9ubHkgdGhlIGhpNjIy
-MCBkdHMgZGVmaW5lcyBpdC4gU28gZWl0aGVyIHN1cHBvcnQgZm9yIApwbGF0Zm9ybXMgaXMganVz
-dCBtaXNzaW5nLCBvciB1cHN0cmVhbSBpcyBub3QgcmVhbGx5IHVzaW5nIHRoaXMgcHJvcGVydHku
-CgpBbmQgaWYgd2UgYXJlIGdvaW5nIHRvIHVzZSB0aGlzLCB0aGVuIGl0IG5lZWRzIHRvIGJlIGRv
-Y3VtZW50ZWQgaW4gYSAKY29tbW9uIGxvY2F0aW9uIGFuZCBtb3ZlZCBvdXQgb2YgYXJtL2NwdXMu
-dHh0LgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
+> Add DT binding document for Qualcomm Camera subsystem driver.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org
+> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
+> ---
+>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
+>  1 file changed, 191 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
