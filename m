@@ -1,69 +1,47 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Mon, 24 Jul 2017 13:55:10 +0000
-Message-ID: <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170722065133.GT3053@localhost>
-Content-Language: en-US
-Content-ID: <0F4A7EFD5F59A942A5E361513F54461D-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v3 03/10] clk: sunxi-ng: a83t: Support new timing mode for mmc2 clock
+Date: Mon, 24 Jul 2017 21:58:58 +0800
+Message-ID: <20170724135905.28855-4-wens@csie.org>
+References: <20170724135905.28855-1-wens@csie.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170724135905.28855-1-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzIyLzIwMTcgMDg6NTEgQU0sIFZpbm9kIEtvdWwgd3JvdGU6DQo+IE9uIFRodSwg
-SnVsIDA2LCAyMDE3IGF0IDAyOjIwOjIwUE0gKzAyMDAsIFBpZXJyZS1ZdmVzIE1PUkRSRVQgd3Jv
-dGU6DQo+PiArc3RhdGljIGludCBzdG0zMl9kbWFtdXhfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCj4+ICt7DQo+PiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSA9IHBkZXYt
-PmRldi5vZl9ub2RlOw0KPj4gKwlzdHJ1Y3QgZGV2aWNlX25vZGUgKmRtYV9ub2RlOw0KPj4gKwlz
-dHJ1Y3Qgc3RtMzJfZG1hbXV4X2RhdGEgKnN0bTMyX2RtYW11eDsNCj4+ICsJc3RydWN0IHJlc291
-cmNlICpyZXM7DQo+PiArCXZvaWQgX19pb21lbSAqaW9tZW07DQo+PiArCWludCBpLCByZXQ7DQo+
-PiArDQo+PiArCWlmICghbm9kZSkNCj4+ICsJCXJldHVybiAtRU5PREVWOw0KPj4gKw0KPj4gKwlz
-dG0zMl9kbWFtdXggPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpzdG0zMl9kbWFt
-dXgpLA0KPj4gKwkJCQkgICAgR0ZQX0tFUk5FTCk7DQo+PiArCWlmICghc3RtMzJfZG1hbXV4KQ0K
-Pj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCWRtYV9ub2RlID0gb2ZfcGFyc2VfcGhh
-bmRsZShub2RlLCAiZG1hLW1hc3RlcnMiLCAwKTsNCj4+ICsJaWYgKCFkbWFfbm9kZSkgew0KPj4g
-KwkJZGV2X2VycigmcGRldi0+ZGV2LCAiQ2FuJ3QgZ2V0IERNQSBtYXN0ZXIgbm9kZVxuIik7DQo+
-PiArCQlyZXR1cm4gLUVOT0RFVjsNCj4+ICsJfQ0KPj4gKw0KPj4gKwlpZiAoZGV2aWNlX3Byb3Bl
-cnR5X3JlYWRfdTMyKCZwZGV2LT5kZXYsICJkbWEtY2hhbm5lbHMiLA0KPj4gKwkJCQkgICAgICZz
-dG0zMl9kbWFtdXgtPmRtYW11eF9jaGFubmVscykpDQo+PiArCQlzdG0zMl9kbWFtdXgtPmRtYW11
-eF9jaGFubmVscyA9IFNUTTMyX0RNQU1VWF9NQVhfQ0hBTk5FTFM7DQo+PiArDQo+PiArCWlmIChk
-ZXZpY2VfcHJvcGVydHlfcmVhZF91MzIoJnBkZXYtPmRldiwgImRtYS1yZXF1ZXN0cyIsDQo+PiAr
-CQkJCSAgICAgJnN0bTMyX2RtYW11eC0+ZG1hbXV4X3JlcXVlc3RzKSkNCj4+ICsJCXN0bTMyX2Rt
-YW11eC0+ZG1hbXV4X3JlcXVlc3RzID0gU1RNMzJfRE1BTVVYX01BWF9SRVFVRVNUUzsNCj4gDQo+
-IEkgdGhpbmsgZGVmYXVsdHMgc2hvdWxkIGJlIHdhcm5lZCBoZXJlIHRvbw0KPiANCg0Kb2sNCg0K
-Pj4gKw0KPj4gKwlyZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9N
-RU0sIDApOw0KPj4gKwlpZiAoIXJlcykNCj4+ICsJCXJldHVybiAtRU5PREVWOw0KPj4gKw0KPj4g
-Kwlpb21lbSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCByZXMpOw0KPj4gKwlp
-ZiAoIWlvbWVtKQ0KPj4gKwkJcmV0dXJuIC1FTk9NRU07DQo+PiArDQo+PiArCXNwaW5fbG9ja19p
-bml0KCZzdG0zMl9kbWFtdXgtPmxvY2spOw0KPj4gKw0KPj4gKwlzdG0zMl9kbWFtdXgtPmNsayA9
-IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCBOVUxMKTsNCj4+ICsJaWYgKElTX0VSUihzdG0zMl9k
-bWFtdXgtPmNsaykpIHsNCj4+ICsJCWRldl9pbmZvKCZwZGV2LT5kZXYsICJNaXNzaW5nIGNvbnRy
-b2xsZXIgY2xvY2tcbiIpOw0KPiANCj4gQ2FuIHlvdSBjaGVjayBmb3IgRVBST0JFX0RFRkVSIGFu
-ZCBwcmludCBvbmx5IGZvciBpZiB0aGF0IGlzIG5vdCB0aGUgZXJyb3INCj4gb3RoZXJ3aXNlIHdl
-IGVuZCB1cCBzYXBtbWluZyB3aXRoIGRlZmVyZWQgcHJvYmUgaXNzdWVzDQo+IA0KDQpUaGlzIGlz
-IHdoYXQgeW91IG1lYW50ID8NCglpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSAhPSBFUFJP
-QkVfREVGRVIpIHsNCgkJZGV2X2luZm8oJnBkZXYtPmRldiwgIk1pc3NpbmcgY29udHJvbGxlciBj
-bG9ja1xuIik7DQoJCXJldHVybiBQVFJfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKTsNCgl9DQoNCk9S
-DQoNCglpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSkgew0KCQlpZiAoSVNfRVJSKHN0bTMy
-X2RtYW11eC0+Y2xrKSAhPSBFUFJPQkVfREVGRVIpDQoJCQlkZXZfaW5mbygmcGRldi0+ZGV2LCAi
-TWlzc2luZyBjb250cm9sbGVyIGNsb2NrXG4iKTsNCgkJcmV0dXJuIFBUUl9FUlIoc3RtMzJfZG1h
-bXV4LT5jbGspOw0KCX0NCg0KPj4gKw0KPj4gKyNpZm5kZWYgX19ETUFfU1RNMzJfRE1BTVVYX0gN
-Cj4+ICsjZGVmaW5lIF9fRE1BX1NUTTMyX0RNQU1VWF9IDQo+PiArDQo+PiArI2lmIGRlZmluZWQo
-Q09ORklHX1NUTTMyX0RNQU1VWCkNCj4+ICtpbnQgc3RtMzJfZG1hbXV4X3NldF9jb25maWcoc3Ry
-dWN0IGRldmljZSAqZGV2LCB2b2lkICpyb3V0ZV9kYXRhLCB1MzIgY2hhbl9pZCk7DQo+IA0KPiBX
-aHkgZG8gd2UgbmVlZCBhIGN1c3RvbSBBUEkgaW4gdGhpcyBjYXNlPw0KPiANCg0KVGhpcyBBUEkg
-aXMgY2FsbGVkIGJ5IERNQSB3aGVuIGEgc2xhdmUgaXMgcmVxdWVzdGVkIGJ5IGNsaWVudC4gRE1B
-IGNhbiB3b3JrDQp3aXRob3V0IERNQU1VWCB0aGlzIEFQSSBoYXMgYmVlbiBwdXQgaW4gcGxhY2Ug
-dG8gY29uZmlndXJlIERNQU1VWCB3aGV0aGVyIGNsaWVudA0KaXMgcmVxdWVzdGluZyBhIERNQU1V
-WCBDaGFubmVsIGluc3RlYWQgb2YgYSBETUEgb25lLg0KDQpUaGFua3MNClB5
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The MMC2 clock supports a new timing mode. When the new mode is active,
+the output clock rate is halved.
+
+This patch sets the feature flag for the new timing mode, and adds
+a pre-divider based on the mode bit.
+
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/clk/sunxi-ng/ccu-sun8i-a83t.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+index 947f9f6e05d2..e43acebdfbcd 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
++++ b/drivers/clk/sunxi-ng/ccu-sun8i-a83t.c
+@@ -418,14 +418,8 @@ static SUNXI_CCU_PHASE(mmc1_sample_clk, "mmc1-sample", "mmc1",
+ static SUNXI_CCU_PHASE(mmc1_output_clk, "mmc1-output", "mmc1",
+ 		       0x08c, 8, 3, 0);
+ 
+-/* TODO Support MMC2 clock's new timing mode. */
+-static SUNXI_CCU_MP_WITH_MUX_GATE(mmc2_clk, "mmc2", mod0_default_parents,
+-				  0x090,
+-				  0, 4,		/* M */
+-				  16, 2,	/* P */
+-				  24, 2,	/* mux */
+-				  BIT(31),	/* gate */
+-				  0);
++static SUNXI_CCU_MP_MMC_WITH_MUX_GATE(mmc2_clk, "mmc2", mod0_default_parents,
++				      0x090, 0);
+ 
+ static SUNXI_CCU_PHASE(mmc2_sample_clk, "mmc2-sample", "mmc2",
+ 		       0x090, 20, 3, 0);
+-- 
+2.13.3
+
