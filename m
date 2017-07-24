@@ -1,59 +1,82 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v8 3/9] i2c: core: call of_i2c_setup_smbus_alert in
- i2c_register_adapter
-Date: Mon, 24 Jul 2017 16:27:21 +0800
-Message-ID: <4bb4c374-4934-ce19-7714-728661aa4416@electromag.com.au>
-References: <201707200255.SHskJrcM%fengguang.wu@intel.com>
- <c6e4dce0-853f-a4d4-be64-ef4bb0f68162@electromag.com.au>
- <20170721163310.1c003963@endymion>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] iio: adc: sun4i-gpadc-iio: add support for H3
+ thermal sensor
+Date: Mon, 24 Jul 2017 10:29:38 +0200
+Message-ID: <20170724082938.vsq3zd22vb6lqvu3@flea>
+References: <20170723141354.42646-1-icenowy@aosc.io>
+ <20170723141354.42646-4-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170721163310.1c003963@endymion>
-Content-Language: en-AU
-Sender: linux-i2c-owner@vger.kernel.org
-To: Jean Delvare <jdelvare@suse.de>
-Cc: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="w7qg7zijr6l4yjzz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170723141354.42646-4-icenowy-h8G6r0blFSE@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-G'day Jean,
-On 21/07/2017 22:33, Jean Delvare wrote:
-> Hi Phil,
-> 
-> On Thu, 20 Jul 2017 12:44:52 +0800, Phil Reid wrote:
->> Calling a function in i2c-smbus (module) from i2c-core (builtin) is then a problem.
->>
->> However there doesn't seem to be a way (that I can see) to have select statement force I2C_SMBUS=y if I2C=y
->>
->> Can I get a hint on what the correct course of action is.
-> 
-> Well, i2c-smbus is supposed to go on top of i2c-core. This means
-> i2c-smbus can make use of functions from i2c-core but not the other way
-> around.
-> 
-> So far, the split worked fine because i2c_setup_smbus_alert() was
-> always called from individual device drivers (typically built as
-> modules.) It was not supposed to be called from core code, but this is
-> what you are trying to do now (indirectly.)
-> 
-> I can think of 3 ways to sort it out:
-> 1* (Part of) the code you added (and possibly dependencies thereof)
->     should be in i2c-core instead of i2c-smbus.
-> 2* The call you added to i2c-core should in fact be somewhere else (for
->     example a dedicated module, which would depend on both i2c-core and
->     i2c-smbus).
-> 3* The whole idea of splitting the i2c-smbus code to a separate module
->     no longer flies, and i2c-core should be built from i2c-core.c +
->     i2c-smbus.c (and CONFIG_I2C_SMBUS becomes a boolean.)
-> 
-Thanks for the detailed response. That really clears things up for me.
 
-Moving i2c_setup_smbus_alert & of_i2c_setup_smbus_alert to i2c-core-smbus, as per 1*,
-seems to fix the problem.
+--w7qg7zijr6l4yjzz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Sun, Jul 23, 2017 at 10:13:52PM +0800, Icenowy Zheng wrote:
+> This adds support for the Allwinner H3 thermal sensor.
+>=20
+> Allwinner H3 has a thermal sensor like the one in A33, but have its
+> registers nearly all re-arranged, sample clock moved to CCU and a pair
+> of bus clock and reset added. It's also the base of newer SoCs' thermal
+> sensors.
+>=20
+> Some new options is added to gpadc_data struct, to mark the difference
+> between the old GPADCs and THS's and the new THS's.
+>=20
+> Thermal sampling via interrupts are still not supported, and polling
+> is used instead.
+>=20
+> The thermal sensors on A64 and H5 is like the one on H3, but with of
+> course different formula factors.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
+Could you split it in half? One patch that would rework the existing
+code, the other one adding the H3 support?
 
--- 
-Regards
-Phil Reid
+That's going to be much easier to review, bisect and revert if need be
+that way.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--w7qg7zijr6l4yjzz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZda/yAAoJEBx+YmzsjxAg/6QP/ApIELNPFnrdWqaedOyTJ0/e
+vvyBpxgyPaEzlrd4vzS9GAuGBfoKCwgfyn+in/MTVwygTPb2vZJqXywSKMJGkJAY
+g85iIT4Oz6cARBMU+p8ZF6Xxu1rkxvTtP030fLIfR8cJfYVxvhuh1Yh6v6XvRZGd
+KSsZ3pWAoPtMyrA7al2aSpA9zkfCJ1wnb5G7FQPEacyqqbyhXEK3ig2Ch7fXP1YN
+hqIQ8fACmgr6v+JCjTNSRKV70WYqt7T0APsTTen5JkdttREMlGtO2eDY11Ur8ePP
+DQ5jU+AM/9kiiVVCPxCHGBaaTuqprrMoh+AX3gl9VQi9QFoA5guGFgj6t4eJcMJv
+lqHEJSiTRZgtQI7QCX7PcpAoDC+HPcVHoQB7yvg+00HKtEyYS2W7jVzJTMwZs9T6
+XSNFoNOrrggqc+FpOHBDPD21iQPyC7UihKf2uOZXIcDVzwzCqqzPvafg5YSUDwW6
+XgitrYQB3nwAMjAuGUYoUqD5679YREv/7LalMs65xQ2m52fkhPnfbbX50asJVbdf
+nC2etuhMj5j9CJgLBR3koGnJFkDy1POvxWkEOc+FUorQBhHeX6/ORlI5249VnTi7
+JNew4dDMBJwBlJlAo7HhFtl6vYxMkPFl6COdP9yFzoai2myvEc/MOeIA+k5VXoD5
+YdlDck/VK6y1T7Oaw0Z9
+=Oj44
+-----END PGP SIGNATURE-----
+
+--w7qg7zijr6l4yjzz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
