@@ -1,75 +1,60 @@
-From: Gary Bisson <gary.bisson@boundarydevices.com>
-Subject: [PATCH 2/2] ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
-Date: Mon, 24 Jul 2017 10:50:05 +0200
-Message-ID: <20170724085005.22101-3-gary.bisson@boundarydevices.com>
-References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gary Bisson <gary.bisson@boundarydevices.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 07/10] cpufreq: dt: Add support for some new Allwinner
+ SoCs
+Date: Mon, 24 Jul 2017 14:23:49 +0530
+Message-ID: <20170724085349.GT352@vireshk-i7>
+References: <20170723102749.17323-1-icenowy@aosc.io>
+ <20170723102749.17323-8-icenowy@aosc.io>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170723102749.17323-8-icenowy@aosc.io>
+Sender: linux-pm-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-sunxi@googlegroups.com, "Rafael J. Wysocki" <rjw@rjwysocki.net>
 List-Id: devicetree@vger.kernel.org
 
-Declared as a regulator since the driver doesn't have a reset-gpios
-property for this.
+On 23-07-17, 18:27, Icenowy Zheng wrote:
+> Some new Allwinner SoCs get supported in the kernel after the
+> compatibles are added to cpufreq-dt-platdev driver.
+> 
+> Add their compatible strings in the cpufreq-dt-platdev driver.
+> 
+> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+> Cc: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/cpufreq/cpufreq-dt-platdev.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
+> index 2eb40d46d357..c3851453e84a 100644
+> --- a/drivers/cpufreq/cpufreq-dt-platdev.c
+> +++ b/drivers/cpufreq/cpufreq-dt-platdev.c
+> @@ -24,7 +24,11 @@ static const struct of_device_id machines[] __initconst = {
+>  	{ .compatible = "allwinner,sun8i-a23", },
+>  	{ .compatible = "allwinner,sun8i-a33", },
+>  	{ .compatible = "allwinner,sun8i-a83t", },
+> +	{ .compatible = "allwinner,sun8i-h2-plus", },
+>  	{ .compatible = "allwinner,sun8i-h3", },
+> +	{ .compatible = "allwinner,sun8i-v3s", },
+> +	{ .compatible = "allwinner,sun50i-a64", },
+> +	{ .compatible = "allwinner,sun50i-h5", },
+>  
+>  	{ .compatible = "apm,xgene-shadowcat", },
+>  
+> @@ -43,6 +47,8 @@ static const struct of_device_id machines[] __initconst = {
+>  	{ .compatible = "marvell,pxa250", },
+>  	{ .compatible = "marvell,pxa270", },
+>  
+> +	{ .compatible = "nextthing,gr8", },
+> +
+>  	{ .compatible = "samsung,exynos3250", },
+>  	{ .compatible = "samsung,exynos4210", },
+>  	{ .compatible = "samsung,exynos4212", },
 
-This ensures that the PHY is woken up, not depending on the state the
-second stage bootloader leaves the pin.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-This is a workaround until a proper mechanism is provided to reset such
-devices like the pwrseq library [1] for instance.
-
-[1] https://lkml.org/lkml/2017/2/10/779
-
-Signed-off-by: Gary Bisson <gary.bisson@boundarydevices.com>
----
- arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-index f22e5879340b..989376643cf6 100644
---- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
-@@ -108,6 +108,19 @@
- 			startup-delay-us = <70000>;
- 			enable-active-high;
- 		};
-+
-+		reg_usb_h1_vbus: regulator@5 {
-+			compatible = "regulator-fixed";
-+			reg = <5>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbh1>;
-+			regulator-name = "usb_h1_vbus";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+			enable-active-high;
-+			regulator-always-on;
-+		};
- 	};
- 
- 	gpio-keys {
-@@ -515,6 +528,12 @@
- 			>;
- 		};
- 
-+		pinctrl_usbh1: usbh1grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x030b0
-+			>;
-+		};
-+
- 		pinctrl_usbotg: usbotggrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_1__USB_OTG_ID	0x17059
-@@ -629,6 +648,7 @@
- };
- 
- &usbh1 {
-+	vbus-supply = <&reg_usb_h1_vbus>;
- 	status = "okay";
- };
- 
 -- 
-2.11.0
+viresh
