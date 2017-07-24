@@ -1,36 +1,172 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dw-mshc: deprecate num-slots
-Date: Mon, 24 Jul 2017 13:01:48 -0500
-Message-ID: <20170724180148.3lkyjkyj7vgcjgwd@rob-hp-laptop>
-References: <1500366698-117167-1-git-send-email-shawn.lin@rock-chips.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
+Date: Mon, 24 Jul 2017 11:06:49 -0700
+Message-ID: <59763739.4070708@gmail.com>
+References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+ <20170703090648.GV13989@umbus.fritz.box> <5967CAA6.6010801@gmail.com>
+ <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
+ <5967D2F7.60303@gmail.com> <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
+ <5967E8BC.4090307@gmail.com> <1500016861.19864.26.camel@hp800z>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1500366698-117167-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500016861.19864.26.camel@hp800z>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 04:31:38PM +0800, Shawn Lin wrote:
-> dwmmc host driver already deprecate it in the driver
-> but didn't modify the documentation to reflect the fact.
-> This patch deprecates it and clean up num-slots from the
-> examples of all variant host drivers.
-> 
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
->  Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt |  1 -
->  Documentation/devicetree/bindings/mmc/img-dw-mshc.txt    |  1 -
->  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt     |  2 --
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++---------
->  Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt     |  1 -
->  5 files changed, 7 insertions(+), 14 deletions(-)
+On 07/14/17 00:21, Pantelis Antoniou wrote:
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Keeping in mind that this thread was originally about libfdt,
+not the Linux kernel, I am mostly talking about the Linux
+kernel implementation in this email.
+
+
+> Hi Frank,
+> 
+> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
+>> On 07/13/17 14:22, Phil Elwell wrote:
+>>> On 13/07/2017 21:07, Frank Rowand wrote:
+>>>> On 07/13/17 12:38, Phil Elwell wrote:
+>>>>
+> 
+> [snip]
+> 
+>>> hope an inability to solve the problem posed by this advanced usage won't
+>>> prevent a solution to a simpler problem from being accepted.
+> 
+> I have waited until people started commenting on this patchset before
+> replying.
+> 
+> I think we agree on a few things to keep the discussion moving forward.
+> 
+> 1. Stacked overlays are useful and make overlays easier to use.
+
+Stacked overlays are required to handle an add-on board that
+contains physical connectors to plug in yet more things.
+
+I'm not sure what you mean when you say they "make overlays
+easier to use".  Can you elaborate on that a little bit?
+
+
+> 2. Changing the overlay symbols format now would be unwise.
+
+I strongly disagree.  I would say that it is desirable to maintain
+the current overlay format (not just __symbols__), and that there
+will be pain (for bootloaders???) if the format changes.  But
+the Linux implementation is not locked in if there is a good
+reason to change the format.
+
+
+> 3. A number of extensions have been put forward/requested.
+> 
+> 3.1. There should be a method to place a symbol on a node that didn't
+> have one originally (due to vendor supplying broken DTB or being
+> generated by firmware at runtime).
+
+You saw my reaction of what to do about a broken vendor DTB in that
+thread.  I do not think this method is a good idea.
+
+I don't know why a DTB generated by firmware would be missing a symbol.
+Was that discussed in that thread, and I'm just forgetting it?
+
+
+> 3.2. Scoping symbol visibility in case of clashes.
+
+Yes.  This especially makes sense when a board has
+multiple identical connectors, and the add-on board
+should not have to specify different symbols based
+on which connector it is plugged in to.
+
+
+> This can the ability
+
+This can add the ability?
+
+
+> to put multiple path references to a single label/symbol. i.e.
+> foo = "/path/bar", "/path/bar/baz";
+> Resolving the ambiguity would require the caller to provide it's
+> 'location' on the tree. I.e. a device under /path/bar/baz would resolve
+> to the latter. It is a big change semantically.
+
+That is one possible implementation.
+
+It would require changes to dtc.
+
+For a simple example:
+
+/ {
+	target: node@0 {
+	};
+	node@1 {
+		target: subnode@0 {
+		};
+	};
+};
+
+The current dtc will detect an error:
+  <stdout>: ERROR (duplicate_label): Duplicate label 'target' on /node@1/subnode@0 and /node@0
+
+To allow the same label at different scopes would lose the
+ability to detect this type of error.  I think this kind of
+error detection is critical since we rely so heavily on
+including a number of dtsi files into a dts file.
+
+Another possible implementation would be for the kernel to
+associate the contents of the __symbols__ node with the
+nodes added by the overlay that contained it.  Those
+symbols would then be visible to a subsequent overlay
+fragment that had a target that is either (1) the same
+target as the first overlay or (2) a child of the target
+of the first overlay, or (3) a descendant of the target
+of the first overlay.  I haven't thought through the
+implications of allowing (1) vs (2) vs (3).  For
+instance, if the connector format was to have a connector
+node that contained a child node which is where the
+add-on board was loaded, then the second overlay target
+would be that child node, and policy (3) would make sense.
+
+This would work with a single fragment in an overlay.  If
+there are multiple fragments in an overlay, maybe the
+symbols could be split apart by fragment (since the
+value of the properties in __symbols__ start with
+"/fragment@XXX/__overlay__/...").  I need to think about
+the implications of that a bit more.
+
+This method also seems like it would work well with the
+connector / plug architecture.
+
+There is another use case where maybe the concept of
+overlay symbol scoping would cause problems.  And that
+is the beaglebone architecture, where the add-on board
+connector does not contain just a "bus" or other I/O
+interface, but exposes much of the SOC pins.  In that
+case it might make more sense if overlay symbols were
+global.
+
+I'm sure there are other ways to implement scoping.
+Suggestions are welcome.
+
+
+> Do you have anything else?
+
+There is the issue of tracking what a loaded overlay
+is dependent upon.  At the moment this is avoided by
+unloading overlays in the reverse order that they
+were added.  But it would be nice to be able to
+unload independent overlays in a different order.
+That is not something that has to be handled in
+the first implementation, but it is something to
+keep in mind.
+
+Nothing else at the moment about exposing overlay
+symbols.  I'll keep thinking.
+
+
+> Regards
+> 
+> -- Pantelis
