@@ -1,168 +1,200 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: BCM53573: Add Broadcom BCM947189ACDBMR board
- support
-Date: Mon, 24 Jul 2017 10:39:54 -0700
-Message-ID: <bb5387cf-5d31-3a03-1bb9-1327768271ec@gmail.com>
-References: <20170718193740.8610-1-f.fainelli@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] media: rcar-csi2: add Renesas R-Car MIPI CSI-2
+ receiver documentation
+Date: Mon, 24 Jul 2017 12:46:59 -0500
+Message-ID: <20170724174659.2esawsxudve22dlw@rob-hp-laptop>
+References: <20170717170356.25568-1-niklas.soderlund+renesas@ragnatech.se>
+ <20170717170356.25568-2-niklas.soderlund+renesas@ragnatech.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170718193740.8610-1-f.fainelli@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, rafal@milecki.pl, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170717170356.25568-2-niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomoharu.fukawa.eb-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Kieran Bingham <kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 12:37 PM, Florian Fainelli wrote:
-> Adds support for the Broadcom reference board BCM947189ACDMBR which
-> features the following:
+On Mon, Jul 17, 2017 at 07:03:55PM +0200, Niklas Söderlund wrote:
+> Documentation for Renesas R-Car MIPI CSI-2 receiver. The CSI-2 receivers
+> are located between the video sources (CSI-2 transmitters) and the video
+> grabbers (VIN) on Gen3 of Renesas R-Car SoC.
 > 
-> * 128MB of DRAM
-> * External MoCA support through a Broadcom BCM6802 chip
-> * 1x external Gigabit PHY through the external BCM6802
-> * 1x USB 2.0 port
-> * 1x PCIE slot
-> * Few configurable buttons and LEDs
+> Each CSI-2 device is connected to more then one VIN device which
+> simultaneously can receive video from the same CSI-2 device. Each VIN
+> device can also be connected to more then one CSI-2 device. The routing
+> of which link are used are controlled by the VIN devices. There are only
+> a few possible routes which are set by hardware limitations, which are
+> different for each SoC in the Gen3 family.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Rafal, any feedback on this?
-
+> To work with the limitations of routing possibilities it is necessary
+> for the DT bindings to describe which VIN device is connected to which
+> CSI-2 device. This is why port 1 needs to to assign reg numbers for each
+> VIN device that be connected to it. To setup and to know which links are
+> valid for each SoC is the responsibility of the VIN driver since the
+> register to configure it belongs to the VIN hardware.
+> 
+> Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
 > ---
->  arch/arm/boot/dts/Makefile            |  3 +-
->  arch/arm/boot/dts/bcm947189acdbmr.dts | 97 +++++++++++++++++++++++++++++++++++
->  2 files changed, 99 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/bcm947189acdbmr.dts
+>  .../devicetree/bindings/media/rcar-csi2.txt        | 118 +++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/rcar-csi2.txt
 > 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 4b17f35dc9a7..236587e7f07d 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -106,7 +106,8 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
->  	bcm953012hr.dtb \
->  	bcm953012k.dtb
->  dtb-$(CONFIG_ARCH_BCM_53573) += \
-> -	bcm47189-tenda-ac9.dtb
-> +	bcm47189-tenda-ac9.dtb \
-> +	bcm947189acdbmr.dtb
->  dtb-$(CONFIG_ARCH_BCM_63XX) += \
->  	bcm963138dvt.dtb
->  dtb-$(CONFIG_ARCH_BCM_CYGNUS) += \
-> diff --git a/arch/arm/boot/dts/bcm947189acdbmr.dts b/arch/arm/boot/dts/bcm947189acdbmr.dts
+> diff --git a/Documentation/devicetree/bindings/media/rcar-csi2.txt b/Documentation/devicetree/bindings/media/rcar-csi2.txt
 > new file mode 100644
-> index 000000000000..ef263412fea5
+> index 0000000000000000..c298a7d821153219
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm947189acdbmr.dts
-> @@ -0,0 +1,97 @@
-> +/*
-> + * Copyright (C) 2017 Broadcom
-> + * Author: Florian Fainelli <f.fainelli@gmail.com>
-> + *
-> + * Licensed under the ISC license.
-> + */
+> +++ b/Documentation/devicetree/bindings/media/rcar-csi2.txt
+> @@ -0,0 +1,118 @@
+> +Renesas R-Car MIPI CSI-2
+> +------------------------
 > +
-> +/dts-v1/;
+> +The rcar-csi2 device provides MIPI CSI-2 capabilities for the Renesas R-Car
+> +family of devices. It is to be used in conjunction with the R-Car VIN module,
+> +which provides the video capture capabilities.
 > +
-> +#include "bcm53573.dtsi"
+> +Mandatory properties
+> +--------------------
+> + - compatible: Must be one or more of the following
+> +   - "renesas,r8a7795-csi2" for the R8A7795 device.
+> +   - "renesas,r8a7796-csi2" for the R8A7796 device.
+> +   - "renesas,rcar-gen3-csi2" for a generic R-Car Gen3 compatible device.
 > +
-> +/ {
-> +	compatible = "brcm,bcm947189acdbmr", "brcm,bcm47189", "brcm,bcm53573";
-> +	model = "Broadcom BCM947189ACDBMR";
+> +   When compatible with a generic version nodes must list the
+> +   SoC-specific version corresponding to the platform first
+> +   followed by the generic version.
 > +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlycon";
-> +	};
+> + - reg: the register base and size for the device registers
+> + - interrupts: the interrupt for the device
+> + - clocks: Reference to the parent clock
 > +
-> +	memory {
-> +		reg = <0x00000000 0x08000000>;
-> +	};
+> +The device node shall contain two 'port' child nodes according to the
+> +bindings defined in Documentation/devicetree/bindings/media/
+> +video-interfaces.txt. Port 0 shall connect the node that is the video
+> +source for to the CSI-2. Port 1 shall connect all the R-Car VIN
+> +modules, which can make use of the CSI-2 module.
 > +
-> +	leds {
-> +		compatible = "gpio-leds";
+> +- Port 0 - Video source (Mandatory)
+> +	- Reg 0 - sub-node describing the endpoint that is the video source
+
+Endpoint 0
+
+It's not very clear that you are talking endpoints here. I had to look 
+at the example.
+
 > +
-> +		wps {
-> +			label = "bcm53xx:blue:wps";
-> +			gpios = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
-> +		};
+> +- Port 1 - VIN instances (Mandatory for all VIN present in the SoC)
+> +	- Reg 0 - sub-node describing the endpoint that is VIN0
+
+Endpoint 0
+
+> +	- Reg 1 - sub-node describing the endpoint that is VIN1
+
+and so on.
+
+> +	- Reg 2 - sub-node describing the endpoint that is VIN2
+> +	- Reg 3 - sub-node describing the endpoint that is VIN3
+> +	- Reg 4 - sub-node describing the endpoint that is VIN4
+> +	- Reg 5 - sub-node describing the endpoint that is VIN5
+> +	- Reg 6 - sub-node describing the endpoint that is VIN6
+> +	- Reg 7 - sub-node describing the endpoint that is VIN7
 > +
-> +		5ghz {
-> +			label = "bcm53xx:blue:5ghz";
-> +			gpios = <&chipcommon 11 GPIO_ACTIVE_HIGH>;
-> +		};
+> +Example:
 > +
-> +		2ghz {
-> +			label = "bcm53xx:blue:2ghz";
-> +			gpios = <&chipcommon 12 GPIO_ACTIVE_HIGH>;
-> +		};
-> +	};
+> +/* SoC properties */
 > +
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +	 csi20: csi2@fea80000 {
+> +		 compatible = "renesas,r8a7796-csi2";
+> +		 reg = <0 0xfea80000 0 0x10000>;
+> +		 interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+> +		 clocks = <&cpg CPG_MOD 714>;
+> +		 power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +		 status = "disabled";
+
+Don't show status in examples.
+
 > +
-> +		restart {
-> +			label = "Reset";
-> +			linux,code = <KEY_RESTART>;
-> +			gpios = <&chipcommon 7 GPIO_ACTIVE_HIGH>;
-> +		};
+> +		 ports {
+> +			 #address-cells = <1>;
+> +			 #size-cells = <0>;
 > +
-> +		wps {
-> +			label = "WPS";
-> +			linux,code = <KEY_WPS_BUTTON>;
-> +			gpios = <&chipcommon 9 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
+> +			 port@1 {
+> +				 #address-cells = <1>;
+> +				 #size-cells = <0>;
 > +
-> +	spi {
-> +		compatible = "spi-gpio";
-> +		num-chipselects = <1>;
-> +		gpio-sck = <&chipcommon 21 0>;
-> +		gpio-miso = <&chipcommon 22 0>;
-> +		gpio-mosi = <&chipcommon 23 0>;
-> +		cs-gpios = <&chipcommon 24 0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+> +				 reg = <1>;
 > +
-> +		/* External BCM6802 MoCA chip is connected */
-> +	};
-> +};
+> +				 csi20vin0: endpoint@0 {
+> +					 reg = <0>;
+> +					 remote-endpoint = <&vin0csi20>;
+> +				 };
+> +				 csi20vin1: endpoint@1 {
+> +					 reg = <1>;
+> +					 remote-endpoint = <&vin1csi20>;
+> +				 };
+> +				 csi20vin2: endpoint@2 {
+> +					 reg = <2>;
+> +					 remote-endpoint = <&vin2csi20>;
+> +				 };
+> +				 csi20vin3: endpoint@3 {
+> +					 reg = <3>;
+> +					 remote-endpoint = <&vin3csi20>;
+> +				 };
+> +				 csi20vin4: endpoint@4 {
+> +					 reg = <4>;
+> +					 remote-endpoint = <&vin4csi20>;
+> +				 };
+> +				 csi20vin5: endpoint@5 {
+> +					 reg = <5>;
+> +					 remote-endpoint = <&vin5csi20>;
+> +				 };
+> +				 csi20vin6: endpoint@6 {
+> +					 reg = <6>;
+> +					 remote-endpoint = <&vin6csi20>;
+> +				 };
+> +				 csi20vin7: endpoint@7 {
+> +					 reg = <7>;
+> +					 remote-endpoint = <&vin7csi20>;
+> +				 };
+> +			 };
+> +		 };
+> +	 };
 > +
-> +&pcie0 {
-> +	ranges = <0x00000000 0 0 0 0 0x00100000>;
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
+> +/* Board properties */
+
+Don't split the example. This is source convention which is independent 
+of the binding.
+
 > +
-> +	bridge@0,0,0 {
-> +		reg = <0x0000 0 0 0 0>;
-> +		ranges = <0x00000000 0 0 0 0 0 0 0x00100000>;
-> +		#address-cells = <3>;
-> +		#size-cells = <2>;
+> +	&csi20 {
+> +		status = "okay";
 > +
-> +		wifi@0,1,0 {
-> +			reg = <0x0000 0 0 0 0>;
-> +			ranges = <0x00000000 0 0 0 0x00100000>;
+> +		ports {
 > +			#address-cells = <1>;
-> +			#size-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+
+Missing #address-cells and #size-cells.
+
+> +				csi20_in: endpoint@0 {
+> +					clock-lanes = <0>;
+> +					data-lanes = <1>;
+> +					remote-endpoint = <&adv7482_txb>;
+> +				};
+> +			};
 > +		};
 > +	};
-> +};
-> +
-> +&usb2 {
-> +	vcc-gpio = <&chipcommon 8 GPIO_ACTIVE_HIGH>;
-> +};
+> -- 
+> 2.13.1
 > 
-
-
--- 
-Florian
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
