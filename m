@@ -1,58 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] gpio: davinci: Add a separate compatible for
- keystone-k2g soc
-Date: Mon, 24 Jul 2017 13:24:27 -0500
-Message-ID: <20170724182427.64u5zmr2jl3hk5lh@rob-hp-laptop>
-References: <1500375436-9435-1-git-send-email-j-keerthy@ti.com>
- <1500375436-9435-4-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCH] Documentation/devicetree: Update links to PCI DT bindings
+Date: Mon, 24 Jul 2017 13:30:19 -0500
+Message-ID: <20170724183019.pqoxf6cswank5uhk@rob-hp-laptop>
+References: <1500389167-34944-1-git-send-email-harvey.hunt@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1500375436-9435-4-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linus.walleij@linaro.org, ssantosh@kernel.org, nsekhar@ti.com, s-anna@ti.com, fcooper@ti.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1500389167-34944-1-git-send-email-harvey.hunt@imgtec.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Harvey Hunt <harvey.hunt@imgtec.com>
+Cc: mark.rutland@arm.com, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 04:27:15PM +0530, Keerthy wrote:
-> Add a separate compatible for keystone-k2g soc
+On Tue, Jul 18, 2017 at 03:46:07PM +0100, Harvey Hunt wrote:
+> Update links to the PDFs of PCI and interrupt mapping bindings, as
+> the previous links are broken.
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Harvey Hunt <harvey.hunt@imgtec.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linux-pci@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-davinci.txt | 3 ++-
->  drivers/gpio/gpio-davinci.c                             | 1 +
->  2 files changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> index 5079ba7..1a5c1a2 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
-> @@ -1,7 +1,8 @@
->  Davinci/Keystone GPIO controller bindings
->  
->  Required Properties:
-> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
-> +- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio",
-> +	      "ti,keystone-k2g-gpio"
+>  Documentation/devicetree/bindings/pci/pci.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Reformat to one valid combination per line.
+I'm working on setting up a mirror on devicetree.org, so I'd like to 
+hold off on fixing these links until then. And I already got a similar 
+patch for this.
 
->  
->  - reg: Physical base address of the controller and the size of memory mapped
->         registers.
-> diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
-> index 932f270..a8d8dd9 100644
-> --- a/drivers/gpio/gpio-davinci.c
-> +++ b/drivers/gpio/gpio-davinci.c
-> @@ -610,6 +610,7 @@ static int davinci_gpio_irq_setup(struct platform_device *pdev)
->  static const struct of_device_id davinci_gpio_ids[] = {
->  	{ .compatible = "ti,keystone-gpio", keystone_gpio_get_irq_chip},
->  	{ .compatible = "ti,dm6441-gpio", davinci_gpio_get_irq_chip},
-> +	{ .compatible = "ti,keystone-k2g-gpio", keystone_gpio_get_irq_chip},
->  	{ /* sentinel */ },
->  };
->  MODULE_DEVICE_TABLE(of, davinci_gpio_ids);
-> -- 
-> 1.9.1
-> 
+Rob
