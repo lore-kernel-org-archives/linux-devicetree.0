@@ -1,89 +1,48 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
- clock selector PHY
-Date: Mon, 24 Jul 2017 14:58:44 +0200
-Message-ID: <CAMuHMdWqLTdw7k5Qwu92j37tcDn463T-MOQzff314=bCRyznzA@mail.gmail.com>
-References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
- <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdWkSqNdzDNTyvHvGaG-Tw2md_aGHSWh7jXVyoBYMJ8m7w@mail.gmail.com> <TY1PR06MB09927528BA504E1E758BD935D8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <TY1PR06MB09927528BA504E1E758BD935D8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: dts: sabrelite/nitrogen6x: fix USB PHY reset
+Date: Mon, 24 Jul 2017 14:59:56 +0200
+Message-ID: <20170724125958.11939-1-gary.bisson@boundarydevices.com>
+References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170724085005.22101-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Hi all,
 
-On Mon, Jul 24, 2017 at 12:33 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
->> From: Geert Uytterhoeven
->> Sent: Wednesday, July 5, 2017 9:22 PM
->> On Wed, Jul 5, 2017 at 1:57 PM, Yoshihiro Shimoda
->> <yoshihiro.shimoda.uh@renesas.com> wrote:
->> >> From: Geert Uytterhoeven
->> >> Sent: Wednesday, July 5, 2017 7:09 PM
->> >> On Wed, Jun 28, 2017 at 8:28 AM, Yoshihiro Shimoda
->> >> <yoshihiro.shimoda.uh@renesas.com> wrote:
->> >> > R-Car USB 2.0 controller can change the clock source from an oscillator
->> >> > to an external clock via a register. So, this patch adds support
->> >> > the clock source selector as a clock driver.
->>
->> >> > --- /dev/null
->> >> > +++ b/drivers/clk/renesas/rcar-usb2-clock-sel.c
->>
->> >> > +/* Since this driver needs other ccf drivers, this uses subsys_initcall_sync */
->> >> > +subsys_initcall_sync(rcar_usb2_clock_sel_init);
->> >>
->> >> I suppose this is a workaround for the lack of probe deferral support in the
->> >> USB subsystem?
->> >
->> > This is my fault. I added "power-domains" property into this device's node.
->> > After I remove the power-domains like the cpg node, this driver can use subsys_initcall()
->> > instead of subsys_initcall_sync().
->>
->> Does the clock sel module requires the functional clock "ehci_ohci" to be
->> running before you can access its registers?
->> If yes, I think there should be a "power-domains" property.
->
-> Yes. But...
->
->> Then, you can simplify the code by calling
->>
->>         pm_runtime_enable(dev);
->>         pm_runtime_get_sync(dev);
->>
->> and remove the explicit handling of the functional clock.
->>
->> That does not solve probe deferral handling in the USB subsystem, though.
->
-> I added a debug message at end of cpg_mssr_probe(), and if I used subsys_initcall() on
-> rcar-usb2-clock-sel driver, kernel log output below:
-> ========================
-> [    0.272547] rcar-usb2-clock-sel e6590630.clock-controller: probe deferral not supported
-> [    0.273944]  ----------------- cpg_mssr_probe: probed!
-> ========================
-> So, it seems the renesas-cpg-mssr.c doesn't solve probe deferral handling.
-> (The driver renesas-cpg-mssr.c uses platform_driver_probe() for now.)
->
-> So, IIUC, this rcar-usb2-clock-sel driver cannot use subsys_initcall().
-> Or, should we modify the renesas-cpg-mssr.c somehow?
+This series is follow-up to those two patches:
+https://patchwork.kernel.org/patch/9395531/
+https://patchwork.kernel.org/patch/9395539/
 
-Drivers should avoid using subsys_initcall().
-Why do you use a subsys_initcall()? To avoid probe deferral in the USB
-susbystem?
-What happens if the rcar-usb2-clock-sel uses builtin_platform_driver()?
+At the time they were refused because a pwrseq library was supposed to
+get in. Unfortunately that plan hasn't succeeded yet so re-submitting
+the original two patches with the following modifications:
+- Rebase on top of v4.13-rc2
+- Reword the title to make it clear this is a fix
+- Reword the changelog so it is clearly a temporary workaround
 
-Gr{oetje,eeting}s,
+Changelog v1->v2:
+- Remove 'regulator-always-on' property as suggested by Fabio
 
-                        Geert
+Let me know if you have any question.
+
+Regards,
+Gary
+
+Gary Bisson (2):
+  ARM: dts: imx6qdl-sabrelite: fix USB PHY reset
+  ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
+
+ arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi  | 19 +++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+
+-- 
+2.11.0
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
