@@ -1,16 +1,20 @@
 From: Jassi Brar <jassisinghbrar@gmail.com>
-Subject: Re: [PATCH 1/8] mailbox: introduce ARM SMC based mailbox
-Date: Mon, 24 Jul 2017 22:50:29 +0530
-Message-ID: <CABb+yY2hjfXdiCSZXd5TJf8=janwjWEo2oSqrxdoWc=1oUtteQ@mail.gmail.com>
-References: <20170630095608.24943-1-andre.przywara@arm.com>
- <20170630095608.24943-2-andre.przywara@arm.com>
- <CABb+yY18Aye3wr2A9-+jemqc=VSRyUA+xzKGo9s0G4KCt1ovyA@mail.gmail.com>
- <22d23c1d-ea8d-9829-4624-6305cd83ad4a@arm.com>
+Subject: Re: [PATCH 3/9] firmware: arm_scmi: add basic driver infrastructure
+ for SCMI
+Date: Mon, 24 Jul 2017 22:51:37 +0530
+Message-ID: <CABb+yY0tX3kgAPTYOSqVMXwVPXFBYGwdwo5gy+TgdtRpZkwx6Q@mail.gmail.com>
+References: <1498492513-29771-4-git-send-email-sudeep.holla@arm.com>
+ <1499446341-5956-1-git-send-email-jaswinder.singh@linaro.org>
+ <5f2e4f3c-297b-c5f8-9244-399c1c4e2c21@arm.com>
+ <CABb+yY3Xo-meg5bTZ5Cj1DAvf_0yOw0QB5Kq6U7VG+L_L+Mo3w@mail.gmail.com>
+ <f165d171-a55b-662f-888c-3be2c3e8f11a@arm.com>
+ <CABb+yY3NNUE7YXAhBLpMzVZkB7Kgx6iZk8a--crHa9Wpw6Ls4Q@mail.gmail.com>
+ <cd935dab-06b8-a91b-d393-cfc2f085c600@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <22d23c1d-ea8d-9829-4624-6305cd83ad4a@arm.com>
+In-Reply-To: <cd935dab-06b8-a91b-d393-cfc2f085c600@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,32 +24,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Sudeep Holla <sudeep.holla@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Nishanth Menon <nm@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, Harb Abdulhamid <harba@codeaurora.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Jassi Brar <jaswinder.singh@linaro.org>, DTML <devicetree@vger.kernel.org>, Loc Ho <lho@apm.com>, Matt Sealey <neko@bakuhatsu.net>, Alexey Klimov <alexey.klimov@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdWwgMjQsIDIwMTcgYXQgNDo1MCBBTSwgQW5kcsOpIFByenl3YXJhIDxhbmRyZS5w
-cnp5d2FyYUBhcm0uY29tPiB3cm90ZToKPiBPbiAwMi8wNy8xNyAwNjo1NSwgSmFzc2kgQnJhciB3
-cm90ZToKPgo+Pj4gKyAgICAgICBtYm94X2NoYW5fcmVjZWl2ZWRfZGF0YShsaW5rLCAodm9pZCAq
-KXJlcy5hMCk7Cj4+PiArCj4+IE9yIHlvdSBjYW4gdXBkYXRlIHRoZSAnZGF0YScgd2l0aCB2YWx1
-ZSBmcm9tICdhMCcgPwo+Cj4gTW1oLCBJIGFtIGEgYml0IHB1enpsZWQgYnkgdGhpcy4gV2h5IHdv
-dWxkIHRoaXMgYmUgbmVlZGVkIG9yIHVzZWZ1bD8KPgpJIG1lYW50IGluc3RlYWQgb2YgY2FsbGlu
-ZyBtYm94X2NoYW5fcmVjZWl2ZWRfZGF0YSgpLCBzaW1wbHkgdXBkYXRlCnRoZSB2YWx1ZSBhdCAn
-ZGF0YScgd2l0aCByZXMuYTAKClRlY2huaWNhbGx5IHRoZSBmaXJtd2FyZSBkb2VzIG5vdCAic2Vu
-ZCIgdXMgYSBtZXNzYWdlLiBJdCBvbmx5IHVwZGF0ZXMKdGhlIHN0cnVjdHVyZSB3ZSBzaGFyZSB3
-aXRoIGl0LiBTbyBtYXliZSB3ZSBjb3VsZCByZWZsZWN0IHRoYXQgYnkKdXBkYXRpbmcgdGhlIGRh
-dGEgcG9pbnRlciB0aGUgY2xpZW50IGRyaXZlciBhc2tlZCB0byBzZW5kLgpBbHNvIGl0IGlzIG9w
-dGlvbmFsIGZvciBjbGllbnRzIHRvIHByb3ZpZGUgdGhlIHJ4X2NhbGxiYWNrKCkuIEJ5CmNhbGxp
-bmcgbWJveF9jaGFuX3JlY2VpdmVkX2RhdGEoKSB5b3UgbWFuZGF0ZSBjbGllbnRzIHByb3ZpZGUg
-dGhhdApjYWxsYmFjay4KCk5vdGhpbmcgc2VyaW91cywganVzdCB0aGF0IGxvb2tpbmcgY2xvc2Vs
-eSwgdXBkYXRpbmcgJ2RhdGEnIHNlZW1zIGEKYmV0dGVyIG9wdGlvbi4KCj4gSSBzZWUgdGhhdCB0
-aGUgU0NQSSBmaXJtd2FyZSBkcml2ZXIgKGFzIHRoZSB1c2VyIG9mIHRoZSBtYWlsYm94IEFQSSkg
-aXMKPiBleHBlY3RpbmcgdGhlIHJldHVybiB2YWx1ZSBmcm9tIGEwIGFzIHJldHVybmVkIGFib3Zl
-LCB0cmFuc2xhdGluZyB0aGUKPiBmaXJtd2FyZSBlcnJvciBjb2RlcyBpbnRvIExpbnV4JyBvbmVz
-Lgo+CkkgYW0gYWZyYWlkLCBTQ1BJIGRyaXZlciBpcyBub3QgdGhlIGdvbGRlbiBleGFtcGxlIGZv
-ciBjbGllbnQgZHJpdmVycwp0byBmb2xsb3cuIEl0IGlzIHN1cHBvc2VkIHRvIHdvcmsgb25seSB3
-aXRoIE1IVSwgYW5kIHRoZW4sIGl0IGlzCmxpa2VseSB0byBicmVhayBpZiBzb21lIG90aGVyIHBy
-b3RvY29sIGlzIHJ1bm5pbmcgcGFyYWxsZWwgdG8gaXQuCgpUaGFua3MKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, Jul 24, 2017 at 9:51 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> On 24/07/17 16:41, Jassi Brar wrote:
+
+>> SCMI  calls
+>>     mbox_send_message(struct mbox_chan *chan, struct scmi_xfer *xfer);
+>>
+>> whereas the API expects
+>>     mbox_send_message(struct mbox_chan *chan, struct controller_specific *xfer);
+>>
+>
+> That's not hard to change ...
+
+Cool, please change it and lets move on.
