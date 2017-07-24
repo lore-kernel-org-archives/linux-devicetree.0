@@ -1,64 +1,83 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] some fixups for MediaTek cpufreq driver
-Date: Mon, 24 Jul 2017 22:56:28 +0200
-Message-ID: <1941970.gMtimJUdWe@aspire.rjw.lan>
-References: <cover.1500355954.git.sean.wang@mediatek.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v3 1/2] Documentation: dt: Update ti,emif bindings
+Date: Mon, 24 Jul 2017 16:24:53 -0500
+Message-ID: <20170724212454.27574-2-d-gerlach@ti.com>
+References: <20170724212454.27574-1-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1500355954.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170724212454.27574-1-d-gerlach@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy J <j-keerthy@ti.com>, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, July 18, 2017 02:01:42 PM sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Changes since v4:
-> - add back the missing Acked-by from v3
-> 
-> Changes since v3:
-> - remove the redundant line depends on ARM || ARM64 || COMPILE_TEST
-> since the whole Kconfig.arm file depends on ARM || ARM64.
-> - renaming from mtk-cpufreq.c to mediatek-cpufreq.c avoiding
-> collide and cause confusion at some point in time.
-> 
-> Changes since v2:
-> - correct the typo in the binding document
-> 
-> Changes since v1:
-> - drop those patches already accepted
-> - refine the commit messages and Kconfig dependency
-> - Kconfig menu entry and file name itself are updated with more
-> generic name to drop "MT8173" since this driver actually supports
-> all MediaTek SoCs.
-> - generate patchset again with git format-patch -C -M --thread=shallow
-> - fix binding examples by replacing '@' with '-' as the OPP nodes will
-> never have a "reg" property.
-> 
-> Hi,
-> 
-> The purpose of the series is
-> - (patch 1 to 3) to fix up current Mediatek cpufreq driver
-> can't work with the latest tree since one required CPU clock muxer missing
-> would cause the driver getting the resource fails when driver probe gets
-> called.
-> - (patch 4) to enable cpufreq feature on MT2701/MT7623 platform.
-> - (patch 5 to 6) to update the binding document to reflect
-> latest driver logic and add more examples guiding people how to apply for
-> Mediatek cpufreq driver.
-> 
-> Sean Wang (3):
->   cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
->   dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to
->     proper place
->   dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
+Update the Texas Instruments EMIF binding document to include the device
+tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
+the ti-emif-sram driver to provide low-level PM functionality.
 
-Series applied, thanks!
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+ .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+index 0db60470ebb6..8c0214b17c2b 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+@@ -8,6 +8,7 @@ of the EMIF IP and memory parts attached to it.
+ Required properties:
+ - compatible	: Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
+   is the IP revision of the specific EMIF instance.
++		  For am335x should be ti,emif-am3352.
+ 		  For am437x should be ti,emif-am4372.
+ 
+ - phy-type	: <u32> indicating the DDR phy type. Following are the
+@@ -21,6 +22,13 @@ Required properties:
+   the value shall be "emif<n>" where <n> is the number of the EMIF
+   instance with base 1.
+ 
++Required only for "ti,emif-am3352" and "ti,emif-am4372":
++- sram			: Phandles for generic sram driver nodes,
++  first should be type 'protect-exec' for the driver to use to copy
++  and run PM functions, second should be regular pool to be used for
++  data region for code. See Documentation/devicetree/bindings/sram/sram.txt
++  for more details.
++
+ Optional properties:
+ - cs1-used		: Have this property if CS1 of this EMIF
+   instance has a memory part attached to it. If there is a memory
+@@ -42,7 +50,7 @@ Optional properties:
+ - hw-caps-temp-alert	: Have this property if the controller
+   has capability for generating SDRAM temperature alerts
+ 
+-Example:
++-Examples:
+ 
+ emif1: emif@0x4c000000 {
+ 	compatible	= "ti,emif-4d";
+@@ -54,3 +62,11 @@ emif1: emif@0x4c000000 {
+ 	hw-caps-ll-interface;
+ 	hw-caps-temp-alert;
+ };
++
++/* From am33xx.dtsi */
++emif: emif@4c000000 {
++        compatible = "ti,emif-am3352";
++        reg =   <0x4C000000 0x1000>;
++        sram = <&pm_sram_code
++                &pm_sram_data>;
++};
+-- 
+2.13.0
