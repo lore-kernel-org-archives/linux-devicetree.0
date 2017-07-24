@@ -1,62 +1,63 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] thermal: add brcmstb AVS TMON driver
-Date: Mon, 24 Jul 2017 14:01:55 -0700
-Message-ID: <d2696633-574c-9505-c887-77f6c291e209@gmail.com>
-References: <20170721192735.6546-1-code@mmayer.net>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] some fixups for MediaTek cpufreq driver
+Date: Mon, 24 Jul 2017 22:56:28 +0200
+Message-ID: <1941970.gMtimJUdWe@aspire.rjw.lan>
+References: <cover.1500355954.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170721192735.6546-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <cover.1500355954.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/21/2017 12:27 PM, Markus Mayer wrote:
-> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Tuesday, July 18, 2017 02:01:42 PM sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> This series adds the brcmstb AVS TMON driver.
+> Changes since v4:
+> - add back the missing Acked-by from v3
 > 
-> The driver was originally written by Brian Norris.
+> Changes since v3:
+> - remove the redundant line depends on ARM || ARM64 || COMPILE_TEST
+> since the whole Kconfig.arm file depends on ARM || ARM64.
+> - renaming from mtk-cpufreq.c to mediatek-cpufreq.c avoiding
+> collide and cause confusion at some point in time.
 > 
-> v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
-
-Rui, Eduardo, I can take patches 3 and 4 through the Broadcom ARM/ARM64
-SoC pull requests while you take patches 1 and 2, thanks!
-
+> Changes since v2:
+> - correct the typo in the binding document
 > 
 > Changes since v1:
-> - Fixed wording in binding document
-> - Fixed lincensing to consistently mention GPL v2
-> - Use thermal_zone_get_slope() and thermal_zone_get_offset()
-> - Some minor clean-ups
+> - drop those patches already accepted
+> - refine the commit messages and Kconfig dependency
+> - Kconfig menu entry and file name itself are updated with more
+> generic name to drop "MT8173" since this driver actually supports
+> all MediaTek SoCs.
+> - generate patchset again with git format-patch -C -M --thread=shallow
+> - fix binding examples by replacing '@' with '-' as the OPP nodes will
+> never have a "reg" property.
 > 
-> Brian Norris (2):
->   Documentation: devicetree: add binding for Broadcom STB AVS TMON
->   thermal: add brcmstb AVS TMON driver
+> Hi,
 > 
-> Markus Mayer (2):
->   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
->   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
+> The purpose of the series is
+> - (patch 1 to 3) to fix up current Mediatek cpufreq driver
+> can't work with the latest tree since one required CPU clock muxer missing
+> would cause the driver getting the resource fails when driver probe gets
+> called.
+> - (patch 4) to enable cpufreq feature on MT2701/MT7623 platform.
+> - (patch 5 to 6) to update the binding document to reflect
+> latest driver logic and add more examples guiding people how to apply for
+> Mediatek cpufreq driver.
 > 
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
->  MAINTAINERS                                        |   8 +
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm64/configs/defconfig                       |   1 +
->  drivers/thermal/Kconfig                            |   2 +-
->  drivers/thermal/broadcom/Kconfig                   |   7 +
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/brcmstb_thermal.c         | 386 +++++++++++++++++++++
->  8 files changed, 425 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
->  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
-> 
+> Sean Wang (3):
+>   cpufreq: mediatek: Add support of cpufreq to MT2701/MT7623 SoC
+>   dt-bindings: cpufreq: move MediaTek cpufreq dt-bindings document to
+>     proper place
+>   dt-bindings: cpufreq: enhance MediaTek cpufreq dt-binding document
 
+Series applied, thanks!
 
--- 
-Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
