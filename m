@@ -1,79 +1,30 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH] power/reset: Convert to using %pOF instead of full_name
-Date: Mon, 24 Jul 2017 20:52:07 +0200
-Message-ID: <20170724185207.becsoxhqbu4z2vo3@earth>
-References: <20170718214339.7774-44-robh@kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: sound: add bindings for TAS6424
+Date: Mon, 24 Jul 2017 13:58:11 -0500
+Message-ID: <20170724185811.5sgotg7wh46uesw4@rob-hp-laptop>
+References: <1500405604-23511-1-git-send-email-m-stecklein@ti.com>
+ <1500405604-23511-2-git-send-email-m-stecklein@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ku4d5afpujxv3oxn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-44-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+In-Reply-To: <1500405604-23511-2-git-send-email-m-stecklein-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---ku4d5afpujxv3oxn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Tue, Jul 18, 2017 at 04:43:24PM -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Cc: Sebastian Reichel <sre@kernel.org>
-> Cc: linux-pm@vger.kernel.org
+On Tue, Jul 18, 2017 at 02:20:03PM -0500, Michael Stecklein wrote:
+> Add the bindings for the TAS6424 digital amplifier.
+> 
+> Signed-off-by: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
 > ---
->  drivers/power/reset/at91-sama5d2_shdwc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/reset/at91-sama5d2_shdwc.c b/drivers/power/res=
-et/at91-sama5d2_shdwc.c
-> index 55fce8b75245..31080c254124 100644
-> --- a/drivers/power/reset/at91-sama5d2_shdwc.c
-> +++ b/drivers/power/reset/at91-sama5d2_shdwc.c
-> @@ -171,8 +171,8 @@ static u32 at91_shdwc_get_wakeup_input(struct platfor=
-m_device *pdev,
->=20
->  	for_each_child_of_node(np, cnp) {
->  		if (of_property_read_u32(cnp, "reg", &wk_input)) {
-> -			dev_warn(&pdev->dev, "reg property is missing for %s\n",
-> -				 cnp->full_name);
-> +			dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
-> +				 cnp);
->  			continue;
->  		}
+>  .../devicetree/bindings/sound/ti,tas6424.txt       | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/ti,tas6424.txt
 
-Thanks, applied to power-supply's for-next branch.
-
--- Sebastian
-
---ku4d5afpujxv3oxn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll2QdcACgkQ2O7X88g7
-+pq5GQ/9H2HOxwqGPOj24VdHAsd/f4X3v/y/vCmZla4GZA5LQjWc7XE6NA3JbNWB
-yvRLQgyXapNFawasj+dEf7EkDP5eOovQqsWtOZfciqAOnq9uMO8Qn+oTwVX0OV/V
-9QtDAEra1lp6CB/LEjKyxC1A4+ofm7mGl7laQynMTfghyNBHIYFUgl2RtWJTTrOG
-Fhofrps66aVKv+1V8fq7xuOkeYhRnZJ10aDMndHZxhlui2uv2oWxMvjTTmd5cuNQ
-N4vtGWffcdme19GDj4M1WmYL+um4SVs4HD/6p0TIbghXrzxO0VvV4V/7DAfLZQ5x
-aCHrEgOAkHSaZ1JYiY0Qg7V9Rwo4wiKrRRIjlOGNQDK+uSl/fCyPZqKHT+kghHxp
-S7Mj591NoXhPryYsJedNhNt+nN8CLhFXpw87FDSt8EMlrkQ7I/bcRue3MHFykqdM
-9SEeDBx6qwPUNvWTL1AXZ2D9YeN8N4gTtZvQiAE9VGNqqgfe1GK7Zq6e6REavhwk
-1vruPv7L5EKGvqtqUFXi0BI6IUNE1oUXlrXGYw9FK8Trjtbpt5iLJc8zcAZWvSUr
-X5Ij22gTTqSTx9X1S7uDxA1kpK8aS82BxM2uwghcL1LWBbgCaULCmuxc1xngnE3j
-7q2KQGa5c/cA7frmcRI+6iqeC4wDzA39/LkcwGrmOTQXk5Pl1II=
-=OBmc
------END PGP SIGNATURE-----
-
---ku4d5afpujxv3oxn--
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
