@@ -1,205 +1,62 @@
-From: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Mon, 24 Jul 2017 21:51:16 +0100
-Message-ID: <7b6a51ad-70a4-efaf-0a11-c576a95fd222@gmail.com>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20170703090648.GV13989@umbus.fritz.box> <5967CAA6.6010801@gmail.com>
- <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
- <5967D2F7.60303@gmail.com> <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
- <5967E8BC.4090307@gmail.com> <1500016861.19864.26.camel@hp800z>
- <59763739.4070708@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] thermal: add brcmstb AVS TMON driver
+Date: Mon, 24 Jul 2017 14:01:55 -0700
+Message-ID: <d2696633-574c-9505-c887-77f6c291e209@gmail.com>
+References: <20170721192735.6546-1-code@mmayer.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <59763739.4070708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170721192735.6546-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/07/2017 19:06, Frank Rowand wrote:
-> On 07/14/17 00:21, Pantelis Antoniou wrote:
->
-> Keeping in mind that this thread was originally about libfdt,
-> not the Linux kernel, I am mostly talking about the Linux
-> kernel implementation in this email.
->
->
->> Hi Frank,
->>
->> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
->>> On 07/13/17 14:22, Phil Elwell wrote:
->>>> On 13/07/2017 21:07, Frank Rowand wrote:
->>>>> On 07/13/17 12:38, Phil Elwell wrote:
->>>>>
->>
->> [snip]
->>
->>>> hope an inability to solve the problem posed by this advanced usage won't
->>>> prevent a solution to a simpler problem from being accepted.
->>
->> I have waited until people started commenting on this patchset before
->> replying.
->>
->> I think we agree on a few things to keep the discussion moving forward.
->>
->> 1. Stacked overlays are useful and make overlays easier to use.
->
-> Stacked overlays are required to handle an add-on board that
-> contains physical connectors to plug in yet more things.
->
-> I'm not sure what you mean when you say they "make overlays
-> easier to use".  Can you elaborate on that a little bit?
->
->
->> 2. Changing the overlay symbols format now would be unwise.
->
-> I strongly disagree.  I would say that it is desirable to maintain
-> the current overlay format (not just __symbols__), and that there
-> will be pain (for bootloaders???) if the format changes.  But
-> the Linux implementation is not locked in if there is a good
-> reason to change the format.
+On 07/21/2017 12:27 PM, Markus Mayer wrote:
+> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> This series adds the brcmstb AVS TMON driver.
+> 
+> The driver was originally written by Brian Norris.
+> 
+> v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
 
-And I gently disagree. Provided changes are made in a way that permits
-overlays written in the old style to be distinguished unambiguously then
-a new format may be the best way to tackle all of the new requirements.
+Rui, Eduardo, I can take patches 3 and 4 through the Broadcom ARM/ARM64
+SoC pull requests while you take patches 1 and 2, thanks!
 
->> 3. A number of extensions have been put forward/requested.
->>
->> 3.1. There should be a method to place a symbol on a node that didn't
->> have one originally (due to vendor supplying broken DTB or being
->> generated by firmware at runtime).
->
-> You saw my reaction of what to do about a broken vendor DTB in that
-> thread.  I do not think this method is a good idea.
->
-> I don't know why a DTB generated by firmware would be missing a symbol.
-> Was that discussed in that thread, and I'm just forgetting it?
->
->
->> 3.2. Scoping symbol visibility in case of clashes.
->
-> Yes.  This especially makes sense when a board has
-> multiple identical connectors, and the add-on board
-> should not have to specify different symbols based
-> on which connector it is plugged in to.
->
->
->> This can the ability
->
-> This can add the ability?
->
->
->> to put multiple path references to a single label/symbol. i.e.
->> foo = "/path/bar", "/path/bar/baz";
->> Resolving the ambiguity would require the caller to provide it's
->> 'location' on the tree. I.e. a device under /path/bar/baz would resolve
->> to the latter. It is a big change semantically.
->
-> That is one possible implementation.
->
-> It would require changes to dtc.
->
-> For a simple example:
->
-> / {
-> 	target: node@0 {
-> 	};
-> 	node@1 {
-> 		target: subnode@0 {
-> 		};
-> 	};
-> };
->
-> The current dtc will detect an error:
->   <stdout>: ERROR (duplicate_label): Duplicate label 'target' on /node@1/subnode@0 and /node@0
->
-> To allow the same label at different scopes would lose the
-> ability to detect this type of error.  I think this kind of
-> error detection is critical since we rely so heavily on
-> including a number of dtsi files into a dts file.
->
-> Another possible implementation would be for the kernel to
-> associate the contents of the __symbols__ node with the
-> nodes added by the overlay that contained it.  Those
-> symbols would then be visible to a subsequent overlay
-> fragment that had a target that is either (1) the same
-> target as the first overlay or (2) a child of the target
-> of the first overlay, or (3) a descendant of the target
-> of the first overlay.  I haven't thought through the
-> implications of allowing (1) vs (2) vs (3).  For
-> instance, if the connector format was to have a connector
-> node that contained a child node which is where the
-> add-on board was loaded, then the second overlay target
-> would be that child node, and policy (3) would make sense.
->
-> This would work with a single fragment in an overlay.  If
-> there are multiple fragments in an overlay, maybe the
-> symbols could be split apart by fragment (since the
-> value of the properties in __symbols__ start with
-> "/fragment@XXX/__overlay__/...").  I need to think about
-> the implications of that a bit more.
->
-> This method also seems like it would work well with the
-> connector / plug architecture.
->
-> There is another use case where maybe the concept of
-> overlay symbol scoping would cause problems.  And that
-> is the beaglebone architecture, where the add-on board
-> connector does not contain just a "bus" or other I/O
-> interface, but exposes much of the SOC pins.  In that
-> case it might make more sense if overlay symbols were
-> global.
->
-> I'm sure there are other ways to implement scoping.
-> Suggestions are welcome.
+> 
+> Changes since v1:
+> - Fixed wording in binding document
+> - Fixed lincensing to consistently mention GPL v2
+> - Use thermal_zone_get_slope() and thermal_zone_get_offset()
+> - Some minor clean-ups
+> 
+> Brian Norris (2):
+>   Documentation: devicetree: add binding for Broadcom STB AVS TMON
+>   thermal: add brcmstb AVS TMON driver
+> 
+> Markus Mayer (2):
+>   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
+>   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
+> 
+>  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
+>  MAINTAINERS                                        |   8 +
+>  arch/arm/configs/multi_v7_defconfig                |   1 +
+>  arch/arm64/configs/defconfig                       |   1 +
+>  drivers/thermal/Kconfig                            |   2 +-
+>  drivers/thermal/broadcom/Kconfig                   |   7 +
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/brcmstb_thermal.c         | 386 +++++++++++++++++++++
+>  8 files changed, 425 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+>  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
+> 
 
-If a label is considered to be local to the scope of the containing
-node and its children, is it necessary to permit the same label to be
-redefined while a previous definition is in scope?
 
-To modify your example, consider:
-
-/ {
-	target0: node@0 {
-		subtarget: subnode@0 {
-		};
-	};
-	target1: node@1 {
-		subtarget: subnode@0 {
-		};
-	};
-};
-
-If duplicate symbols were restricted in this way then it would still
-be possible to detect many cases of accidental symbol re-use without
-removing much (any?) useful functionality.
-
->> Do you have anything else?
->
-> There is the issue of tracking what a loaded overlay
-> is dependent upon.  At the moment this is avoided by
-> unloading overlays in the reverse order that they
-> were added.  But it would be nice to be able to
-> unload independent overlays in a different order.
-> That is not something that has to be handled in
-> the first implementation, but it is something to
-> keep in mind.
->
-> Nothing else at the moment about exposing overlay
-> symbols.  I'll keep thinking.
-
-Although not a symbol issue, I'd like to repeat my request for
-a way for an overlay to delete properties (necessary for boolean
-properties) and perhaps nodes, so that it can be considered
-during any redesign.
-
-Regards,
-
-Phil
-
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
