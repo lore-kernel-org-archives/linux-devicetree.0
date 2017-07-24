@@ -1,53 +1,88 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v5 04/14] spi: qup: Place the QUP in run mode before DMA
-Date: Mon, 24 Jul 2017 13:17:15 +0530
-Message-ID: <1500882445-29008-5-git-send-email-varada@codeaurora.org>
-References: <1500882445-29008-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500882445-29008-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: stm32: add optional
+ min-sample-time
+Date: Mon, 24 Jul 2017 09:55:37 +0200
+Message-ID: <81cabf83-689c-277a-5cf9-510df5cc9045@st.com>
+References: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
+ <1500381332-17086-3-git-send-email-fabrice.gasnier@st.com>
+ <20170723115337.1e34e173@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170723115337.1e34e173@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Gross <andy.gross@linaro.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/spi/spi-qup.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 07/23/2017 12:53 PM, Jonathan Cameron wrote:
+> On Tue, 18 Jul 2017 14:35:31 +0200
+> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> 
+>> STM32 ADC allows each channel to be sampled with a different sampling
+>> time. There's an application note that deals with this: 'How to get
+>> the best ADC accuracy in STM32...' It basically depends on analog input
+>> signal electrical properties (depends on board).
+>>
+>> Add optional 'min-sample-time' property so this can be tuned in dt.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> 
+> This isn't yet very standard, so I think it needs a manufacturer
+> prefix, e.g. st,min-sample-time.  Also convention is I believe
+> to include the units as part of the naming where appropriate.
+> 
+> Hence st,min-sample-time-nsecs
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 92922b6..e6294f8 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -342,6 +342,14 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
- 	else if (xfer->tx_buf)
- 		tx_done = spi_qup_dma_done;
- 
-+	/* before issuing the descriptors, set the QUP to run */
-+	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
-+	if (ret) {
-+		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
-+				__func__, __LINE__);
-+		return ret;
-+	}
-+
- 	if (xfer->rx_buf) {
- 		ret = spi_qup_prep_sg(master, xfer, DMA_DEV_TO_MEM, rx_done);
- 		if (ret)
-@@ -387,6 +395,13 @@ static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer,
- 
- 	spi_qup_fifo_write(qup, xfer);
- 
-+	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
-+	if (ret) {
-+		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
-+				__func__, __LINE__);
-+		return ret;
-+	}
-+
- 	if (!wait_for_completion_timeout(&qup->done, timeout))
- 		return -ETIMEDOUT;
- 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Hi Jonathan,
+
+I originally used st,... form, when writing this patch, until I found
+out there's 'min-sample-time' in vf610 adc dt-bindings:
+- Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
+It looks like to me very similar.
+
+I also agree it misses '-nsecs' units. Sure, I can use your suggestion
+above...
+
+Please can you just confirm if I should use same property as vf610 adc,
+or 'st,min-sample-time-nsecs' ?
+
+Thanks for reviewing,
+Best regards,
+Fabrice
+
+> 
+> Otherwise, seems good to me.
+> 
+> Jonathan
+>> ---
+>>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> index 8310073..9cd964b 100644
+>> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+>> @@ -74,6 +74,11 @@ Optional properties:
+>>    * can be 6, 8, 10 or 12 on stm32f4
+>>    * can be 8, 10, 12, 14 or 16 on stm32h7
+>>    Default is maximum resolution if unset.
+>> +- min-sample-time: Minimum sampling time in nanoseconds.
+>> +  Depending on hardware (board) e.g. high/low analog input source impedance,
+>> +  fine tune of ADC sampling time may be recommended.
+>> +  This can be either one value or an array that matches 'st,adc-channels' list,
+>> +  to set sample time resp. for all channels, or independently for each channel.
+>>  
+>>  Example:
+>>  	adc: adc@40012000 {
+> 
