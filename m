@@ -1,54 +1,36 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH v2 3/4] can: m_can: Update documentation to mention new fixed transceiver binding
-Date: Mon, 24 Jul 2017 18:05:20 -0500
-Message-ID: <20170724230521.1436-4-fcooper@ti.com>
-References: <20170724230521.1436-1-fcooper@ti.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] of_mdio: kill useless variable in
+ of_phy_register_fixed_link()
+Date: Mon, 24 Jul 2017 16:28:21 -0700 (PDT)
+Message-ID: <20170724.162821.65962444296157910.davem@davemloft.net>
+References: <20170723184612.321910595@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170724230521.1436-1-fcooper@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
-Cc: Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170723184612.321910595-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add information regarding fixed transceiver binding. This is especially
-important for MCAN since the IP allows CAN FD mode to run significantly
-faster than what most transceivers are capable of.
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Date: Sun, 23 Jul 2017 21:45:47 +0300
 
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
-Version 2 changes:
-Drop unit address
+> of_phy_register_fixed_link() declares the 'err' variable to hold the result
+> of of_property_read_string() but only uses it once after that, while that
+> function can be called directly from the *if* statement...
+> 
+> Remove that variable and move/regroup 'link_gpio' and 'len' variables in
+> order to sort the declarations in the reverse Xmas tree order -- to please
+> DaveM. ;-)
 
- Documentation/devicetree/bindings/net/can/m_can.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Respect MY AUTHORITY! :-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-index 9e33177..e4abd2c 100644
---- a/Documentation/devicetree/bindings/net/can/m_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-@@ -43,6 +43,11 @@ Required properties:
- 			  Please refer to 2.4.1 Message RAM Configuration in
- 			  Bosch M_CAN user manual for details.
- 
-+Optional properties:
-+- fixed-transceiver	: Fixed-transceiver subnode describing maximum speed
-+			  that can be used for CAN and/or CAN-FD modes.  See
-+			  Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
-+			  for details.
- Example:
- SoC dtsi:
- m_can1: can@020e8000 {
-@@ -64,4 +69,9 @@ Board dts:
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_m_can1>;
- 	status = "enabled";
-+
-+	fixed-transceiver {
-+		max-arbitration-speed = <1000000>;
-+		max-data-speed = <5000000>;
-+	};
- };
--- 
-2.10.0
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
