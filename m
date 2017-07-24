@@ -1,39 +1,27 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND] dt-bindings: chosen: document kaslr-seed
- property
-Date: Mon, 24 Jul 2017 12:50:28 -0500
-Message-ID: <20170724175028.b5tytwcpajky575i@rob-hp-laptop>
-References: <20170717220511.GA140556@beast>
+Subject: Re: [PATCH v2 09/10] dt-bindings: iio: humidity: hts221: support
+ open drain mode
+Date: Mon, 24 Jul 2017 12:48:16 -0500
+Message-ID: <20170724174816.zgdsfzuq2frsggzn@rob-hp-laptop>
+References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
+ <20170717173905.8209-10-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170717220511.GA140556@beast>
+In-Reply-To: <20170717173905.8209-10-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 17, 2017 at 03:05:11PM -0700, Kees Cook wrote:
-> Document the /chosen/kaslr-seed property (and its interaction with the
-> EFI_RNG_PROTOCOL API). Thanks to Ard for clarifications.
-> 
-> Signed-off-by: Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+On Mon, Jul 17, 2017 at 07:39:04PM +0200, Lorenzo Bianconi wrote:
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 > ---
-> v2:
-> - improved the language a bit based on Ard's notes
-> - added Acks.
-> - (resent to include lists)
-> ---
->  Documentation/devicetree/bindings/chosen.txt | 26 ++++++++++++++++++++++++--
->  1 file changed, 24 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
