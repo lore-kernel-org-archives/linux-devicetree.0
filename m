@@ -1,125 +1,34 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
-Date: Mon, 24 Jul 2017 18:09:30 +0200
-Message-ID: <1500912570.2401.3.camel@baylibre.com>
-References: <20170707013257.18250-1-joseph.kogut@gmail.com>
-         <7ho9scsdbp.fsf@baylibre.com>
-         <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
-         <cf71b3c2-29d7-3bdb-0d00-872f5e1267e2@baylibre.com>
-         <7519c9ee-54f0-d5fb-1683-11d6e24f0822@baylibre.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] pinctrl: qcom: spmi-gpio: Add dtest route for
+ digital input
+Date: Mon, 24 Jul 2017 11:09:33 -0500
+Message-ID: <20170724160933.dh7pt2geva23k6ol@rob-hp-laptop>
+References: <20170719063136.5300-1-fenglinw@codeaurora.org>
+ <20170719063136.5300-3-fenglinw@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7519c9ee-54f0-d5fb-1683-11d6e24f0822-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170719063136.5300-3-fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Joseph Kogut <joseph.kogut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aghayal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wruan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-07-24 at 14:26 +0200, Neil Armstrong wrote:
-> On 07/24/2017 02:06 PM, Neil Armstrong wrote:
-> > On 07/23/2017 07:03 PM, Joseph Kogut wrote:
-> > > Hi Kevin,
-> > > 
-> > > I tested on a P212 reference board, which is currently the only GXL
-> > > based board I have.
-> > > 
-> > > Before applying the patch, high activity on the ethernet interface
-> > > would cause the link to break, requiring the interface to be brought
-> > > down and back up before it would work again. After applying the patch,
-> > > I could not get the link to break with any transfers.
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> > > 
-> > 
-> > Hi Joseph,
-> > 
-> > [please keep the history of the conversation when replying]
-> > 
-> > Is it a original P212 board, or a board based on the P212 ref design ?
-> > 
-> > I'm currently testing the v4.13-rc2 on the official P212 board we received
-> > from Amlogic
-> > and using iperf3 in both directions, I have an issue after a few minutes
-> > running iperf3 with :
-> > 
-> > # while true ; do iperf3 -c 192.168.1.21 ; iperf3 -c 192.168.1.21 -R ; done
-> > 
-> > That cycles between the two iperf directions.
-> > 
-> > After a few minutes, it stalls with :
-> > 
-> > Connecting to host 192.168.1.21, port 5201
-> > [  4] local 192.168.1.183 port 51286 connected to 192.168.1.21 port 5201
-> > [ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
-> > [  4]   0.00-1.00   sec  1.64 MBytes  13.7 Mbits/sec    2   1.41 KBytes
-> > [  4]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > [  4]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > [  4]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > [  4]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > [  4]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > [  4]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
-> > [  4]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > [  4]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
-> > 
+On Wed, Jul 19, 2017 at 02:30:46PM +0800, fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
+> From: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> Add property "qcom,dtest-buffer" to specify which dtest rail to feed
+> when the pin is configured as a digital input.
+> 
+> Signed-off-by: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  7 +++
 
-Same kind of test shows no issue on the libretech-cc and the khadas-vim
-In this case, I don't think meson-gxl.dtsi is where you should make your change.
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> > 
-> > And then, after:
-> > # ifconfig eth0 down
-> > # ifconfig eth0 up
-> > 
-> > It cycles between :
-> > [ 1483.009919] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
-> > 100Mbps/Full - flow control rx/tx
-> > [ 1487.105725] meson8b-dwmac c9410000.ethernet eth0: Link is Down
-> > [ 1490.177943] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
-> > 100Mbps/Full - flow control rx/tx
-> > [ 1494.273713] meson8b-dwmac c9410000.ethernet eth0: Link is Down
-
-This does not look like the issue we had on the odroid-c2.
-However, I have seen behavior like this (link down/up flickering) when the rgmii
- delays are way off.
-
-Maybe you could try playing with "amlogic,tx-delay-ns" property ?
-
-> > 
-> > and so on.
-> > 
-> > And this patch does not fix this at all.
-> > 
-> > It seems to be more a PHY driver issue here.
-> > 
-> > Could you share the results with the same command ?
-> > 
-> > Neil
-> > 
-> 
-> I forgot to precise, this issue occurs when the "GXL PHY driver" is disabled,
-> only relying on the
-> Generic PHY Driver.
-> 
-> [  630.767538] Generic PHY 0.e40908ff:08: attached PHY driver [Generic PHY]
-> (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
-> 
-> 
-> When the PHY driver is loaded the issue disappears, with and without your
-> patch.
-> 
-> [   25.355620] Meson GXL Internal PHY 0.e40908ff:08: attached PHY driver
-> [Meson GXL Internal PHY] (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
-> 
-> Could you please check the PHY Driver is loaded ?
-> 
-> Thanks,
-> Neil
-
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 50 ++++++++++++++++++++++
+>  2 files changed, 57 insertions(+)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
