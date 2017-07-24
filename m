@@ -1,156 +1,135 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/9] firmware: arm_scmi: add basic driver infrastructure
- for SCMI
-Date: Mon, 24 Jul 2017 10:50:03 +0100
-Message-ID: <f165d171-a55b-662f-888c-3be2c3e8f11a@arm.com>
-References: <1498492513-29771-4-git-send-email-sudeep.holla@arm.com>
- <1499446341-5956-1-git-send-email-jaswinder.singh@linaro.org>
- <5f2e4f3c-297b-c5f8-9244-399c1c4e2c21@arm.com>
- <CABb+yY3Xo-meg5bTZ5Cj1DAvf_0yOw0QB5Kq6U7VG+L_L+Mo3w@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: RE: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
+ clock selector PHY
+Date: Mon, 24 Jul 2017 10:13:04 +0000
+Message-ID: <TY1PR06MB0992A6CD9B43399DF1A7B2B8D8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
+References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20170705141532.slvvbxh33sgwotje@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY3Xo-meg5bTZ5Cj1DAvf_0yOw0QB5Kq6U7VG+L_L+Mo3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>, ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170705141532.slvvbxh33sgwotje@rob-hp-laptop>
+Content-Language: ja-JP
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
+> -----Original Message-----
+> From: Rob Herring
+> Sent: Wednesday, July 5, 2017 11:16 PM
+>=20
+> On Wed, Jun 28, 2017 at 03:28:35PM +0900, Yoshihiro Shimoda wrote:
+> > R-Car USB 2.0 controller can change the clock source from an oscillator
+> > to an external clock via a register. So, this patch adds support
+> > the clock source selector as a clock driver.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  This patch is based on the renesas-drivers.git /
+> > renesas-drivers-2017-06-27-v4.12-rc7 tag.
+> >
+> >  Changes from v1:
+> >   - Change this driver as a clock driver from a generic phy driver.
+> >     https://patchwork.kernel.org/patch/9788697/
+> >   - Remove "RFC" tag.
+> >
+> >  .../bindings/clock/renesas,rcar-usb2-clock-sel.txt |  54 ++++++
+> >  drivers/clk/renesas/Kconfig                        |   5 +
+> >  drivers/clk/renesas/Makefile                       |   1 +
+> >  drivers/clk/renesas/rcar-usb2-clock-sel.c          | 205 +++++++++++++=
+++++++++
+> >  4 files changed, 265 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/renesas,rca=
+r-usb2-clock-sel.txt
+> >  create mode 100644 drivers/clk/renesas/rcar-usb2-clock-sel.c
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-=
+clock-sel.txt
+> b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-sel.txt
+> > new file mode 100644
+> > index 0000000..75ccafc
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/renesas,rcar-usb2-clock-s=
+el.txt
+> > @@ -0,0 +1,54 @@
+> > +* Renesas R-Car USB 2.0 clock selector
+> > +
+> > +This file provides information on what the device node for the R-Car U=
+SB 2.0
+> > +clock selector.
+> > +
+> > +If you connect an external clock to the USB_EXTAL pin only, you should=
+ set
+> > +the clock rate to "usb_extal" node only.
+> > +If you connect an oscillator to both the USB_XTAL and USB_EXTAL, this =
+module
+> > +is not needed because this is default setting. (Of course, you can set=
+ the
+> > +clock rates to both "usb_extal" and "usb_xtal" nodes.
+> > +
+> > +Case 1: An external clock connects to R-Car SoC
+> > +        +----------+   +--- R-Car ---------------------+
+> > +        |External  |---|USB_EXTAL ---> all usb channels|
+> > +        |clock     |   |USB_XTAL                       |
+> > +        +----------+   +-------------------------------+
+> > +In this case, we need this driver with "usb_extal" clock.
+> > +
+> > +Case 2: An oscillator connects to R-Car SoC
+> > +        +----------+   +--- R-Car ---------------------+
+> > +        |Oscillator|---|USB_EXTAL -+-> all usb channels|
+> > +        |          |---|USB_XTAL --+                   |
+> > +        +----------+   +-------------------------------+
+> > +In this case, we don't need this selector.
+> > +
+> > +Required properties:
+> > +- compatible: "renesas,r8a7795-rcar-usb2-clock-sel" if the device is a=
+ part of
+> > +	      an R8A7795 SoC.
+> > +              "renesas,r8a7796-rcar-usb2-clock-sel" if the device if a=
+ part of
+> > +	      an R8A7796 SoC.
+> > +              "renesas,rcar-gen3-usb2-clock-sel" for a generic R-Car G=
+en3
+> > +              compatible device.
+> > +
+> > +              When compatible with the generic version, nodes must lis=
+t the
+> > +              SoC-specific version corresponding to the platform first
+> > +              followed by the generic version.
+> > +
+> > +- reg: offset and length of the USB 2.0 clock selector register block.
+> > +- clocks: A list of phandles and specifier pairs.
+> > +- clock-names: Name of the clocks.
+> > + - The functional clock must be "ehci_ohci"
+> > + - The USB_EXTAL clock pin must be "usb_extal"
+> > + - The USB_XTAL clock pin must be "usb_xtal"
+> > +- #clock-cells: Must be 0
+> > +
+> > +Exxample (R-Car H3):
+> > +
+> > +        usb2_clksel: clock-controller@e6590630 {
+> > +                compatible =3D "renesas,r8a77950-rcar-usb2-clock-sel",
+> > +                             "renesas,rcar-gen3-usb2-clock-sel";
+> > +                reg =3D <0 0xe6590630 0 0x02>;
+> > +                clocks =3D <&cpg CPG_MOD 703>, <&usb_extal>, <&usb_xta=
+l>;
+> > +                clock-names =3D "ehci_ohci", "usb_extal", "usb_xtal";
+>=20
+> Missing #clock-cells
 
-On 08/07/17 06:32, Jassi Brar wrote:
-> Hi Roy, Matt, Nishant, Harb Abdulhamid, Loc,
-> 
-> I have a gut feeling you guys were part of the SCMI spec committee. If
-> so, could you please chime in?
-> 
+Oops, I will fix it.
 
-I take complete silence as no objection.
+> With that, for the binding:
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-> 
-> On Fri, Jul 7, 2017 at 11:09 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 07/07/17 17:52, Jassi Brar wrote:
->>> Hi Arnd, Hi Rob, Hi Mark,
->>>
->>> [CC'ing only those who I have the email id of]
->>>
->>>> +/**
->>>> + * scmi_do_xfer() - Do one transfer
->>>> + *
->>>> + * @info: Pointer to SCMI entity information
->>>> + * @xfer: Transfer to initiate and wait for response
->>>> + *
->>>> + * Return: -ETIMEDOUT in case of no response, if transmit error,
->>>> + *   return corresponding error, else if all goes well,
->>>> + *   return 0.
->>>> + */
->>>> +int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
->>>> +{
->>>> +    int ret;
->>>> +    int timeout;
->>>> +    struct scmi_info *info = handle_to_scmi_info(handle);
->>>> +    struct device *dev = info->dev;
->>>> +
->>>> +    ret = mbox_send_message(info->tx_chan, xfer);
->>>> +
->>>>
->>> The api is
->>>
->>>     int mbox_send_message(struct mbox_chan *chan, void *mssg)
->>>
->>> where each controller driver defines its own format in which it accepts
->>> the 'mssg' to be transmitted.
->>>
->>
->> Yes they can continue that, but SCMI just doesn't depend on that.
->>
->>> For example :-
->>> ti_msgmgr_send_data(struct mbox_chan *, struct ti_msgmgr_message *)
->>> rockchip_mbox_send_data(struct mbox_chan *, struct rockchip_mbox_msg *)
->>> ....and so on...  you get the idea.
->>>
->>
->> Yes I am aware of that.
->>
->>> Some controller driver may ignore the 'mssg' because only an interrupt line
->>> is shared with the remote and not some register/fifo.
->>> For example,
->>>   sti_mbox_send_data(struct mbox_chan *, void *ignored)
->>>
->>
->> Exactly, now with SCMI, every controller *can do* that, as we just care
->> about the signaling which in other terms I have so far referred as
->> "doorbell".
->>
+Thank you for your Acked-by!
 
-You keep combining the 2 changes. Please treat them differently.
-I need ARM MHU doorbell changes as I need to support multiple channels
-on my platform which are independent and run different protocol.
-That doorbell change *is not SCMI* specific. I am not sure how to conver
-that message to you. All my attempts have failed so far.
+Best regards,
+Yoshihiro Shimoda
 
-> No, the controllers can not ... unless you clone and adapt the 9
-> drivers+bindings to conform to the expectations of SCMI (like you
-> attempted with MHU recently). Also, then mandate every future
-> controller driver must emulate "doorbell" channels.
-> 
-
-Why do you think so ? Please give me your understanding on what SCMI
-specification expects as you seem to think we need to clone ?
-All I am saying is we don't pass any information in the controller.
-The current drivers just need a way to trigger the remote and I believe
-all of them already have.
-
-> As the mailbox maintainer, I am open to suggestions that would allow
-> every controller to support SCMI.
-
-That's good to know.
-
-> But compared to the options of scmi-as-a-library and
-> scmi-as-child-node-of-platform-parent, this does not even qualify as
-> an option.
-> 
-
-I don't understand this.
-
-> Why? Because SCMI is but one protocol that provides 4 features ATM,
-> and certainly can not provide for every whim and quirk of future
-> platforms.  Among the sane requirements are watchdog,
-> suspend/resume/hibernation and thermal _control_ (not just sensor
-> readings) and among the weird are video, network and storage over
-> mailbox api. And even a filesystem backed by read/write over mailbox!!
->  And these are only that I have worked on first hand.
-> 
-
-Fine. We need to support them I am not saying that we don't. Please
-answer my question above which I believe should reduce the confusion.
-
->   The point is : you can not assume SCMI to be the only protocol
-> running over a controller _and_ you can not dictate other protocols to
-> not touch certain bits of the signal register/fifo.
-> 
-
-NO, I am saying again that I am not assuming that and you are the one
-who is assuming MHU *must* work in the way the driver is written
-currently and constantly/repeatedly ignoring the fact what MHY
-specification states and mixing that change with SCMI here.
-
-> In simplest terms, controller driver can not cater to only a
-> particular client. That's the reason we have the controller driver
-> define the message format and clients conform to it.
-
-100%. You need to understand the fact that my changes makes it work with
-SCMI and other protocol and MHU as it stands only work with whatever
-platform you have with whatever client that supports.
-
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Rob
