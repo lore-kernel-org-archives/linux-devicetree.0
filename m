@@ -1,88 +1,52 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/3] dt-bindings: iio: adc: stm32: add optional
- min-sample-time
-Date: Mon, 24 Jul 2017 09:55:37 +0200
-Message-ID: <81cabf83-689c-277a-5cf9-510df5cc9045@st.com>
-References: <1500381332-17086-1-git-send-email-fabrice.gasnier@st.com>
- <1500381332-17086-3-git-send-email-fabrice.gasnier@st.com>
- <20170723115337.1e34e173@kernel.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] AXP803 regulators support for Pine64
+ and SoPine
+Date: Mon, 24 Jul 2017 09:57:46 +0200
+Message-ID: <20170724075746.cuv7wclwzj5mhpm7@flea>
+References: <20170722021843.6768-1-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170723115337.1e34e173@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4aijhwbwo4y6f2dv"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBWR23FQKGQEDEGE3RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170722021843.6768-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/23/2017 12:53 PM, Jonathan Cameron wrote:
-> On Tue, 18 Jul 2017 14:35:31 +0200
-> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
-> 
->> STM32 ADC allows each channel to be sampled with a different sampling
->> time. There's an application note that deals with this: 'How to get
->> the best ADC accuracy in STM32...' It basically depends on analog input
->> signal electrical properties (depends on board).
->>
->> Add optional 'min-sample-time' property so this can be tuned in dt.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> 
-> This isn't yet very standard, so I think it needs a manufacturer
-> prefix, e.g. st,min-sample-time.  Also convention is I believe
-> to include the units as part of the naming where appropriate.
-> 
-> Hence st,min-sample-time-nsecs
 
-Hi Jonathan,
+--4aijhwbwo4y6f2dv
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-I originally used st,... form, when writing this patch, until I found
-out there's 'min-sample-time' in vf610 adc dt-bindings:
-- Documentation/devicetree/bindings/iio/adc/vf610-adc.txt
-It looks like to me very similar.
-
-I also agree it misses '-nsecs' units. Sure, I can use your suggestion
-above...
-
-Please can you just confirm if I should use same property as vf610 adc,
-or 'st,min-sample-time-nsecs' ?
-
-Thanks for reviewing,
-Best regards,
-Fabrice
-
+On Sat, Jul 22, 2017 at 10:18:41AM +0800, Icenowy Zheng wrote:
+> The Pine64 and SoPine w/ baseboard boards have an AXP803 PMIC, and the
+> regulators of the PMIC are used.
 > 
-> Otherwise, seems good to me.
+> This patchset adds the regulators to the device tree of these two boards.
 > 
-> Jonathan
->> ---
->>  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> index 8310073..9cd964b 100644
->> --- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
->> @@ -74,6 +74,11 @@ Optional properties:
->>    * can be 6, 8, 10 or 12 on stm32f4
->>    * can be 8, 10, 12, 14 or 16 on stm32h7
->>    Default is maximum resolution if unset.
->> +- min-sample-time: Minimum sampling time in nanoseconds.
->> +  Depending on hardware (board) e.g. high/low analog input source impedance,
->> +  fine tune of ADC sampling time may be recommended.
->> +  This can be either one value or an array that matches 'st,adc-channels' list,
->> +  to set sample time resp. for all channels, or independently for each channel.
->>  
->>  Example:
->>  	adc: adc@40012000 {
-> 
+> The first patch is for Pine64 and the second if for SoPine w/ official
+> baseboard.
+
+Applied the two.
+
+> The patches that drop the dummy regulators in v1 are removed.
+
+Please resend that one.
+
+Thanks!
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--4aijhwbwo4y6f2dv--
