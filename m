@@ -1,44 +1,76 @@
 From: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: [PATCH v2 0/2] ARM: dts: sabrelite/nitrogen6x: fix USB PHY reset
-Date: Mon, 24 Jul 2017 14:59:56 +0200
-Message-ID: <20170724125958.11939-1-gary.bisson@boundarydevices.com>
+Subject: [PATCH v2 2/2] ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
+Date: Mon, 24 Jul 2017 14:59:58 +0200
+Message-ID: <20170724125958.11939-3-gary.bisson@boundarydevices.com>
 References: <20170724085005.22101-1-gary.bisson@boundarydevices.com>
+ <20170724125958.11939-1-gary.bisson@boundarydevices.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170724085005.22101-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+In-Reply-To: <20170724125958.11939-1-gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+Declared as a regulator since the driver doesn't have a reset-gpios
+property for this.
 
-This series is follow-up to those two patches:
-https://patchwork.kernel.org/patch/9395531/
-https://patchwork.kernel.org/patch/9395539/
+This ensures that the PHY is woken up, not depending on the state the
+second stage bootloader leaves the pin.
 
-At the time they were refused because a pwrseq library was supposed to
-get in. Unfortunately that plan hasn't succeeded yet so re-submitting
-the original two patches with the following modifications:
-- Rebase on top of v4.13-rc2
-- Reword the title to make it clear this is a fix
-- Reword the changelog so it is clearly a temporary workaround
+This is a workaround until a proper mechanism is provided to reset such
+devices like the pwrseq library [1] for instance.
 
-Changelog v1->v2:
-- Remove 'regulator-always-on' property as suggested by Fabio
+[1] https://lkml.org/lkml/2017/2/10/779
 
-Let me know if you have any question.
-
-Regards,
-Gary
-
-Gary Bisson (2):
-  ARM: dts: imx6qdl-sabrelite: fix USB PHY reset
-  ARM: dts: imx6qdl-nitrogen6x: fix USB PHY reset
-
+Signed-off-by: Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+---
  arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi | 19 +++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi  | 19 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ 1 file changed, 19 insertions(+)
 
+diff --git a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+index f22e5879340b..d309a4d0eb08 100644
+--- a/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi
+@@ -108,6 +108,18 @@
+ 			startup-delay-us = <70000>;
+ 			enable-active-high;
+ 		};
++
++		reg_usb_h1_vbus: regulator@5 {
++			compatible = "regulator-fixed";
++			reg = <5>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usbh1>;
++			regulator-name = "usb_h1_vbus";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			gpio = <&gpio7 12 GPIO_ACTIVE_HIGH>;
++			enable-active-high;
++		};
+ 	};
+ 
+ 	gpio-keys {
+@@ -515,6 +527,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_usbh1: usbh1grp {
++			fsl,pins = <
++				MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x030b0
++			>;
++		};
++
+ 		pinctrl_usbotg: usbotggrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_GPIO_1__USB_OTG_ID	0x17059
+@@ -629,6 +647,7 @@
+ };
+ 
+ &usbh1 {
++	vbus-supply = <&reg_usb_h1_vbus>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.11.0
 
