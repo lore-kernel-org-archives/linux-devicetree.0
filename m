@@ -1,161 +1,100 @@
-From: crow <crow@linux.org.ba>
-Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
-Date: Tue, 25 Jul 2017 19:03:14 +0200
-Message-ID: <CAG_g8w6Xp18zuGyVvh77ekmc9uc7wOq7RUe1+DQOo=V=Ti87og@mail.gmail.com>
-References: <20170707013257.18250-1-joseph.kogut@gmail.com>
- <7ho9scsdbp.fsf@baylibre.com> <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
- <cf71b3c2-29d7-3bdb-0d00-872f5e1267e2@baylibre.com> <7519c9ee-54f0-d5fb-1683-11d6e24f0822@baylibre.com>
- <1500912570.2401.3.camel@baylibre.com> <CAFBinCBy6Ce79Tf2seQi4m3aNGOa0r00zjt=eZP-dYy+6WLo8w@mail.gmail.com>
- <1500921121.2401.5.camel@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500921121.2401.5.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Joseph Kogut <joseph.kogut@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, carlo@caione.org, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] Introduce fdt_setprop_placeholder() method
+Date: Tue, 25 Jul 2017 20:24:21 +0300
+Message-ID: <1501003461-2421-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+In some cases you need to add a property but the contents of it
+are not known at creation time, merely the extend of it.
 
-On Mon, Jul 24, 2017 at 8:32 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
-> On Mon, 2017-07-24 at 20:20 +0200, Martin Blumenstingl wrote:
->> On Mon, Jul 24, 2017 at 6:09 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
->> > On Mon, 2017-07-24 at 14:26 +0200, Neil Armstrong wrote:
->> > > On 07/24/2017 02:06 PM, Neil Armstrong wrote:
->> > > > On 07/23/2017 07:03 PM, Joseph Kogut wrote:
->> > > > > Hi Kevin,
->> > > > >
->> > > > > I tested on a P212 reference board, which is currently the only GXL
->> > > > > based board I have.
->> > > > >
->> > > > > Before applying the patch, high activity on the ethernet interface
->> > > > > would cause the link to break, requiring the interface to be brought
->> > > > > down and back up before it would work again. After applying the patch,
->> > > > > I could not get the link to break with any transfers.
->> > > > >
->> > > > > _______________________________________________
->> > > > > linux-arm-kernel mailing list
->> > > > > linux-arm-kernel@lists.infradead.org
->> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->> > > > >
->> > > >
->> > > > Hi Joseph,
->> > > >
->> > > > [please keep the history of the conversation when replying]
->> > > >
->> > > > Is it a original P212 board, or a board based on the P212 ref design ?
->> > > >
->> > > > I'm currently testing the v4.13-rc2 on the official P212 board we
->> > > > received
->> > > > from Amlogic
->> > > > and using iperf3 in both directions, I have an issue after a few minutes
->> > > > running iperf3 with :
->> > > >
->> > > > # while true ; do iperf3 -c 192.168.1.21 ; iperf3 -c 192.168.1.21 -R ;
->> > > > done
->> > > >
->> > > > That cycles between the two iperf directions.
->> > > >
->> > > > After a few minutes, it stalls with :
->> > > >
->> > > > Connecting to host 192.168.1.21, port 5201
->> > > > [  4] local 192.168.1.183 port 51286 connected to 192.168.1.21 port 5201
->> > > > [ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
->> > > > [  4]   0.00-1.00   sec  1.64 MBytes  13.7 Mbits/sec    2   1.41 KBytes
->> > > > [  4]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
->> > > > [  4]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
->> > > > [  4]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
->> > > > [  4]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
->> > > > [  4]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
->> > > > [  4]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
->> > > > [  4]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
->> > > > [  4]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
->> > > >
->> >
->> > Same kind of test shows no issue on the libretech-cc and the khadas-vim
->> > In this case, I don't think meson-gxl.dtsi is where you should make your
->> > change.
+This method allows you to create a property of a given size
+which will be set to zero while a pointer to the property data
+will be provided.
 
-I am using mainline Kernel on Khadas VIM Pro and have such problems. I
-did send today an update [0] to my older mailinglist post.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ libfdt/fdt_rw.c | 21 +++++++++++++++++++++
+ libfdt/libfdt.h | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
 
-> ahahah, silly me ! I forgot that it was 100MBps PHY.
-> tx delay makes no sense here, 2ns delay would not make much difference on a
-> 25MHz clock
->
-> Sorry for the confusion
->
->
->> >
->> > > >
->> > > > And then, after:
->> > > > # ifconfig eth0 down
->> > > > # ifconfig eth0 up
->> > > >
->> > > > It cycles between :
->> > > > [ 1483.009919] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
->> > > > 100Mbps/Full - flow control rx/tx
->> > > > [ 1487.105725] meson8b-dwmac c9410000.ethernet eth0: Link is Down
->> > > > [ 1490.177943] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
->> > > > 100Mbps/Full - flow control rx/tx
->> > > > [ 1494.273713] meson8b-dwmac c9410000.ethernet eth0: Link is Down
->> >
->> > This does not look like the issue we had on the odroid-c2.
->> > However, I have seen behavior like this (link down/up flickering) when the
->> > rgmii
->> >  delays are way off.
->> >
->> > Maybe you could try playing with "amlogic,tx-delay-ns" property ?
->>
->> we need to change dwmac-meson8b.c so it applies the TX delay also for
->> RMII PHYs. currently the TX delay is always set to 0 for RMII PHYs,
->> see: [0]
->>
->> > > >
->> > > > and so on.
->> > > >
->> > > > And this patch does not fix this at all.
->> > > >
->> > > > It seems to be more a PHY driver issue here.
->> > > >
->> > > > Could you share the results with the same command ?
->> > > >
->> > > > Neil
->> > > >
->> > >
->> > > I forgot to precise, this issue occurs when the "GXL PHY driver" is
->> > > disabled,
->> > > only relying on the
->> > > Generic PHY Driver.
->> > >
->> > > [  630.767538] Generic PHY 0.e40908ff:08: attached PHY driver [Generic
->> > > PHY]
->> > > (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
->> > >
->> > >
->> > > When the PHY driver is loaded the issue disappears, with and without your
->> > > patch.
->> > >
->> > > [   25.355620] Meson GXL Internal PHY 0.e40908ff:08: attached PHY driver
->> > > [Meson GXL Internal PHY] (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
->> > >
->> > > Could you please check the PHY Driver is loaded ?
->> > >
->> > > Thanks,
->> > > Neil
->> >
->> >
->> > _______________________________________________
->> > linux-amlogic mailing list
->> > linux-amlogic@lists.infradead.org
->> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
->>
->>
->> [0] https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/stmicro
->> /stmmac/dwmac-meson8b.c#L222
->
-
-Regards,
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004393.html
+diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
+index 8b487f6..2b4432f 100644
+--- a/libfdt/fdt_rw.c
++++ b/libfdt/fdt_rw.c
+@@ -288,6 +288,27 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+ 	return 0;
+ }
+ 
++int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
++			    int len, void **prop_data)
++{
++	struct fdt_property *prop;
++	int err;
++
++	FDT_RW_CHECK_HEADER(fdt);
++
++	err = _fdt_resize_property(fdt, nodeoffset, name, len, &prop);
++	if (err == -FDT_ERR_NOTFOUND)
++		err = _fdt_add_property(fdt, nodeoffset, name, len, &prop);
++	if (err)
++		return err;
++
++	if (len)
++		memset(prop->data, 0, len);
++	if (prop_data)
++		*prop_data = prop->data;
++	return 0;
++}
++
+ int fdt_appendprop(void *fdt, int nodeoffset, const char *name,
+ 		   const void *val, int len)
+ {
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index a248b1b..7ea9a0c 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -1449,6 +1449,38 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+ 		const void *val, int len);
+ 
+ /**
++ * fdt_setprop _placeholder - allocate space for a property
++ * @fdt: pointer to the device tree blob
++ * @nodeoffset: offset of the node whose property to change
++ * @name: name of the property to change
++ * @len: length of the property value
++ * @prop_data: return pointer to property data
++ *
++ * fdt_setprop_placeholer() allocates the named property in the given node.
++ * If the property exists it is resized. In either case it filled with
++ * zeroes and if a prop_data argument is provided a pointer to the
++ * property data is returned.
++ *
++ * This function may insert or delete data from the blob, and will
++ * therefore change the offsets of some existing nodes.
++ *
++ * returns:
++ *	0, on success
++ *	-FDT_ERR_NOSPACE, there is insufficient free space in the blob to
++ *		contain the new property value
++ *	-FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag
++ *	-FDT_ERR_BADLAYOUT,
++ *	-FDT_ERR_BADMAGIC,
++ *	-FDT_ERR_BADVERSION,
++ *	-FDT_ERR_BADSTATE,
++ *	-FDT_ERR_BADSTRUCTURE,
++ *	-FDT_ERR_BADLAYOUT,
++ *	-FDT_ERR_TRUNCATED, standard meanings
++ */
++int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
++			    int len, void **prop_data);
++
++/**
+  * fdt_setprop_u32 - set a property to a 32-bit integer
+  * @fdt: pointer to the device tree blob
+  * @nodeoffset: offset of the node whose property to change
+-- 
+2.1.4
