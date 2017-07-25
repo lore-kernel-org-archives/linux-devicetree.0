@@ -1,13 +1,15 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/4] ARM: sun9i: SMP bring-up with Multi-Cluster
- Power Management
-Date: Tue, 25 Jul 2017 13:09:15 +0800
-Message-ID: <20170725050919.16036-1-wens@csie.org>
+Subject: [PATCH 3/4] ARM: dts: sun9i: Add CPUCFG device node for
+ A80 dtsi
+Date: Tue, 25 Jul 2017 13:09:18 +0800
+Message-ID: <20170725050919.16036-4-wens@csie.org>
+References: <20170725050919.16036-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLVF3PFQKGQEV5G5BFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLFF3PFQKGQE2S6GSDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170725050919.16036-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,106 +20,32 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+CPUCFG is a collection of registers that are mapped to the SoC's signals
+from each individual processor core and associated peripherals, such as
+resets for processors, L1/L2 cache and other things.
 
-This is a partial resend of my sun9i SMP support with MCPM series from
-over two years ago [1]. Not much has changed since then. We've tried
-to implement PSCI for both the A80 and A83T. Results were not promising.
-The issue is that these two chips have a broken security extensions
-implementation. If a specific bit is not burned in its e-fuse, most if
-not all security protections don't work [2]. Even worse, non-secure
-access to the GIC become secure. This requires a crazy workaround in
-the GIC driver which probably doesn't work in all cases [3].
+These registers are used for SMP bringup and CPU hotplugging.
 
-Nicolas mentioned that the MCPM framework is likely overkill in our
-case [4]. However the framework does provide cluster/core state tracking
-and proper sequencing of cache related operations. We could rework
-the code to use standard smp_ops, but I would like to actually get
-a working version in first.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Core and cluster power-down, aka hotplugging, is not included in this
-series. Nicolas mentioned that a new optional callback should be added
-in cases where the kernel has to do the actual power down [5]. This
-will be done later on. Only patches 1 ~ 4 from the original RFC series
-are resent.
-
-Changes since RFC:
-
-  - Have MACH_SUN9I imply MCPM, and have SUN9I_A80_MCPM default to
-    MACH_SUN9I. This means no defconfig changes are required.
-
-
-Please have a look.
-
-Regards
-ChenYu
-
-[1] http://www.spinics.net/lists/arm-kernel/msg418350.html
-[2] https://lists.denx.de/pipermail/u-boot/2017-June/294637.html
-[3] https://github.com/wens/linux/commit/c48654c1f737116e7a7660183c8c74fa91970528
-[4] http://www.spinics.net/lists/arm-kernel/msg434160.html
-[5] http://www.spinics.net/lists/arm-kernel/msg434408.html
-
-
-Original cover letter from the old RFC series:
-
-This is my attempt to support SMP and CPU hot plugging on the Allwinner
-A80 SoC. The A80 is a big.Little processor with 2 clusters of 4x Cortex-A7
-and 4x Cortex-A15 cores.
-
-Much of the sunxi-specific MCPM code is derived from Allwinner code and
-documentation, with some references to the other MCPM implementations,
-as well as the Cortex's Technical Reference Manuals for the power
-sequencing info.
-
-One major difference compared to other platforms is we currently do not
-have a standalone PMU or other embedded firmware to do the actually power
-sequencing. All power/reset control is done by the kernel. As such, I
-couldn't figure out where to put the code to power off the outbound
-processor. I'm putting it in the .wait_for_powerdown() callback for now.
-This does not get called by the big.Little switcher. But since we lack
-cpufreq support at the moment, big.Little switcher is probably not going
-to work anyway.
-
-The code has been tested on my A80 Optimus, and reliably brings up all
-cores. CPU hotplugging works as well. One issue I have is the processors
-in cluster 0 do not stay in WFI after they are signaled to go offline.
-I haven't tested the CCI-400 PMU bits yet.
-
-I've done the best I could to fit the code into the new MCPM callbacks,
-unlike the Allwinner code which uses the old .power_up()/.power_down()
-ones. However my knowledge of ARM internals is limited, so it is quite
-possible I got something wrong. Reviews are highly appreciated.
-
-The actual work is split into 3 phases:
-
-Patch 1 adds basic SMP bringup code using the common MCPM code.
-No hotplugging is supported.
-
-Patch 2 ~ 4 add the required DT device nodes.
-
-Patch 5 adds support for hotplugging processor cores 1~7.
-
-Patch 6 adds support for cpu0 hotplugging. The BROM checks a region
-of secure SRAM for special flags. If they are set, execution is
-diverted to the configured secondary startup address, just like it
-would be for all the other processor cores.
-
-Patch 7 adds the DT nodes for the secure SRAM.
-
-Chen-Yu Tsai (4):
-  ARM: sun9i: Support SMP on A80 with Multi-Cluster Power Management
-    (MCPM)
-  ARM: dts: sun9i: Add CCI-400 device nodes for A80
-  ARM: dts: sun9i: Add CPUCFG device node for A80 dtsi
-  ARM: dts: sun9i: Add PRCM device node for the A80 dtsi
-
- arch/arm/boot/dts/sun9i-a80.dtsi |  56 ++++++
- arch/arm/mach-sunxi/Kconfig      |  10 +
- arch/arm/mach-sunxi/Makefile     |   1 +
- arch/arm/mach-sunxi/mcpm.c       | 391 +++++++++++++++++++++++++++++++++++++++
- 4 files changed, 458 insertions(+)
- create mode 100644 arch/arm/mach-sunxi/mcpm.c
-
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index fc179b8ab038..cc5db467f616 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -368,6 +368,11 @@
+ 			#reset-cells = <1>;
+ 		};
+ 
++		cpucfg@01700000 {
++			compatible = "allwinner,sun9i-a80-cpucfg";
++			reg = <0x01700000 0x100>;
++		};
++
+ 		mmc0: mmc@01c0f000 {
+ 			compatible = "allwinner,sun9i-a80-mmc";
+ 			reg = <0x01c0f000 0x1000>;
 -- 
 2.13.3
