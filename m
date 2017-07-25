@@ -1,129 +1,87 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/4] ARM: sun9i: Support SMP on A80 with Multi-Cluster
- Power Management (MCPM)
-Date: Tue, 25 Jul 2017 23:18:08 +0800
-Message-ID: <CAGb2v65wdwJNrNvrG4pDy7=7n0mw4k7q_PNJ6Hth=PH6pkGK3A@mail.gmail.com>
-References: <20170725050919.16036-1-wens@csie.org> <20170725050919.16036-2-wens@csie.org>
- <20170725074759.5mqrwcp7djeju33g@flea> <CAGb2v67tGuivydj1r+uD=5aw+yYZyBabbNsKwik9ZONNQmc=jQ@mail.gmail.com>
- <20170725144006.3bz45ozpv6dwu6k4@flea>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v4 1/9] clk: at91: clk-generated: remove
+ useless divisor loop
+Date: Tue, 25 Jul 2017 17:28:02 +0200
+Message-ID: <4bffddd0-cf9d-8f68-204a-f754f7f384d5@microchip.com>
+References: <cover.c8ce78c15296190b2aa5c452c0c4512528e28518.1500968090.git-series.quentin.schulz@free-electrons.com>
+ <b9d92004d22f745e8acde0599359d67538c006a9.1500968090.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170725144006.3bz45ozpv6dwu6k4@flea>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <b9d92004d22f745e8acde0599359d67538c006a9.1500968090.git-series.quentin.schulz@free-electrons.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 25, 2017 at 10:40 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Jul 25, 2017 at 04:29:52PM +0800, Chen-Yu Tsai wrote:
->>          default ARCH_SUNXI
->> On Tue, Jul 25, 2017 at 3:47 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi Chen-Yu,
->> >
->> > On Tue, Jul 25, 2017 at 01:09:16PM +0800, Chen-Yu Tsai wrote:
->> >> The A80 is a big.LITTLE SoC with 1 cluster of 4 Cortex-A7s and
->> >> 1 cluster of 4 Cortex-A15s.
->> >>
->> >> This patch adds support to bring up the second cluster and thus all
->> >> cores using the common MCPM code. Core/cluster power down has not
->> >> been implemented, thus CPU hotplugging and big.LITTLE switcher is
->> >> not supported.
->> >>
->> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> ---
->> >>  arch/arm/mach-sunxi/Kconfig  |  10 ++
->> >>  arch/arm/mach-sunxi/Makefile |   1 +
->> >>  arch/arm/mach-sunxi/mcpm.c   | 391 +++++++++++++++++++++++++++++++++++++++++++
->> >>  3 files changed, 402 insertions(+)
->> >>  create mode 100644 arch/arm/mach-sunxi/mcpm.c
->> >>
->> >> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
->> >> index 58153cdf025b..177380548d99 100644
->> >> --- a/arch/arm/mach-sunxi/Kconfig
->> >> +++ b/arch/arm/mach-sunxi/Kconfig
->> >> @@ -47,5 +47,15 @@ config MACH_SUN9I
->> >>       bool "Allwinner (sun9i) SoCs support"
->> >>       default ARCH_SUNXI
->> >>       select ARM_GIC
->> >> +     imply MCPM
->> >> +
->> >> +config SUN9I_A80_MCPM
->> >> +     bool "Allwinner A80 Multi-Cluster PM support"
->> >> +     depends on MCPM && MACH_SUN9I
->> >> +     default MACH_SUN9I
->> >> +     select ARM_CCI400_PORT_CTRL
->> >> +     help
->> >> +       This is needed to provide CPU and cluster power management
->> >> +       on Allwinner A80 implementing big.LITTLE.
->> >
->> > Do we really need an option for that? we don't provide the option to
->> > disable the CPU SMP operations for the rest of the SoCs.
->>
->> It was an option as it also required MCPM and CCI400 support to be built.
->> We could hide it. Or, using mach-hisi as a reference, we could do:
->>
->> config MACH_SUN9I
->>         default ARCH_SUNXI
->>         select ARM_GIC
->>         select MCPM if SMP
->>         select ARM_CCI400_PORT_CTRL if SMP
->>
->> and in the Makefile:
->>
->> obj-$(CONFIG_MCPM) += sun9i-mcpm.o
->
-> I guess a hidden option would work for me.
+On 25/07/2017 at 09:37, Quentin Schulz wrote:
+> The driver requests the current clk rate of each of its parent clocks to
+> decide whether a clock rate is suitable or not. It does not request
+> determine_rate from a parent clock which could request a rate change in
+> parent clock (i.e. there is no parent rate propagation).
+> 
+> We know the rate we want (passed along req argument of the function) and
+> the parent clock rate, thus we know the closest rounded divisor, we
+> don't need to iterate over the available divisors to find the best one
+> for a given clock.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-I kind of prefer mach-hisi's solution though.
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
->
->> >> +#define SUNXI_CPUS_PER_CLUSTER               4
->> >> +#define SUNXI_NR_CLUSTERS            2
->> >> +
->> >> +#define SUN9I_A80_A15_CLUSTER                1
->> >
->> > Don't we have a way to derive that from the DT ?
->>
->> Indeed we can.
->>
->> It would be slighty more complicated though:
->>
->> node = of_cpu_device_node_get(cluster * SUNXI_CPUS_PER_CLUSTER + cpu);
->> if (of_device_is_compatible(node, "arm,cortex-a15")) {
->>         ...
->> }
->
-> There's no helper to create that map?
+> ---
+>  drivers/clk/at91/clk-generated.c | 25 ++++++++++++-------------
+>  1 file changed, 12 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+> index f0b7ae9..ef4b4e0 100644
+> --- a/drivers/clk/at91/clk-generated.c
+> +++ b/drivers/clk/at91/clk-generated.c
+> @@ -124,19 +124,18 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+>  		    (gck->range.max && min_rate > gck->range.max))
+>  			continue;
+>  
+> -		for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
+> -			tmp_rate = DIV_ROUND_CLOSEST(parent_rate, div);
+> -			tmp_diff = abs(req->rate - tmp_rate);
+> -
+> -			if (best_diff < 0 || best_diff > tmp_diff) {
+> -				best_rate = tmp_rate;
+> -				best_diff = tmp_diff;
+> -				req->best_parent_rate = parent_rate;
+> -				req->best_parent_hw = parent;
+> -			}
+> -
+> -			if (!best_diff || tmp_rate < req->rate)
+> -				break;
+> +		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
+> +		if (!div)
+> +			tmp_rate = parent_rate;
+> +		else
+> +			tmp_rate = parent_rate / div;
+> +		tmp_diff = abs(req->rate - tmp_rate);
+> +
+> +		if (best_diff < 0 || best_diff > tmp_diff) {
+> +			best_rate = tmp_rate;
+> +			best_diff = tmp_diff;
+> +			req->best_parent_rate = parent_rate;
+> +			req->best_parent_hw = parent;
+>  		}
+>  
+>  		if (!best_diff)
+> 
 
-Are you referring to the topology map? That one only stores topology,
-not what type of cores they are. The CPU capacity part doesn't either.
-It only stores the results.
 
-> We'll use it for A83T too, so the complexity will be reduced anyway.
-
-I'll just put it in a helper function.
-
-[...]
-
->> >
->> > It looks mostly good, and I would replace the sunxi by sun9i, and call
->> > that file sun9i-mcpm.c
->>
->> I was hoping to reuse the file for the A83T, so it was sunxi-mcpm.c
->> or just mcpm. Most of the stuff is similiar, except the A83T has two
->> revisions and one of them has two gate/power bits swapped. :(
->
-> Hmmm, that's true.
->
-> What about just mcpm then?
-
-Works for me. I don't need to change anything. :)
-
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Nicolas Ferre
