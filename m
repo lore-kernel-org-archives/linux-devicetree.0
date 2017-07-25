@@ -1,62 +1,113 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v3 1/3] include: uapi: usb: Introduce USB charger type and state definition
-Date: Tue, 25 Jul 2017 15:59:59 +0800
-Message-ID: <67d041fc5b387696874186f36231b8d696aec6ee.1500968745.git.baolin.wang@linaro.org>
-References: <cover.1500968744.git.baolin.wang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1500968744.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1500968744.git.baolin.wang@linaro.org>
-References: <cover.1500968744.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@kernel.org, gregkh@linuxfoundation.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: jun.li@nxp.com, peter.chen@freescale.com, broonie@kernel.org, john.stultz@linaro.org, neilb@suse.com, patches@opensource.wolfsonmicro.com, baolin.wang@linaro.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, device-mainlining@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 7/7] ARM: dts: meson8b: add support for booting the
+ secondary CPU cores
+Date: Tue, 25 Jul 2017 10:01:01 +0200
+Message-ID: <5976FABD.7050104@baylibre.com>
+References: <20170722191946.22938-1-martin.blumenstingl@googlemail.com> <20170722191946.22938-8-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170722191946.22938-8-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introducing USB charger type and state definition can help
-to support USB charging which will be added in USB phy core.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- include/uapi/linux/usb/charger.h |   31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 include/uapi/linux/usb/charger.h
 
-diff --git a/include/uapi/linux/usb/charger.h b/include/uapi/linux/usb/charger.h
-new file mode 100644
-index 0000000..5f72af3
---- /dev/null
-+++ b/include/uapi/linux/usb/charger.h
-@@ -0,0 +1,31 @@
-+/*
-+ * This file defines the USB charger type and state that are needed for
-+ * USB device APIs.
-+ */
-+
-+#ifndef _UAPI__LINUX_USB_CHARGER_H
-+#define _UAPI__LINUX_USB_CHARGER_H
-+
-+/*
-+ * USB charger type:
-+ * SDP (Standard Downstream Port)
-+ * DCP (Dedicated Charging Port)
-+ * CDP (Charging Downstream Port)
-+ * ACA (Accessory Charger Adapters)
-+ */
-+enum usb_charger_type {
-+	UNKNOWN_TYPE,
-+	SDP_TYPE,
-+	DCP_TYPE,
-+	CDP_TYPE,
-+	ACA_TYPE,
-+};
-+
-+/* USB charger state */
-+enum usb_charger_state {
-+	USB_CHARGER_DEFAULT,
-+	USB_CHARGER_PRESENT,
-+	USB_CHARGER_ABSENT,
-+};
-+
-+#endif /* _UAPI__LINUX_USB_CHARGER_H */
--- 
-1.7.9.5
+Le 22/07/2017 21:19, Martin Blumenstingl a écrit :
+> From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> 
+> Booting the secondary CPU cores involves the following nodes/devices:
+> - SCU (Snoop-Control-Unit, for which we already have a DT node)
+> - a reset line for each CPU core, provided by the reset-controller
+>   which is built into the clock-controller
+> - the PMU (power management unit) which controls the power of the CPU
+>   cores
+> - a range in the SRAM specifically reserved for booting secondary CPU
+>   cores
+> - the "enable-method" which activates booting the secondary CPU cores
+> 
+> This adds all required nodes and properties to boot the secondary CPU
+> cores.
+> 
+> Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/meson8b.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index bc278da7df0d..c9e74d2fcbdf 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -59,6 +59,8 @@
+>  			compatible = "arm,cortex-a5";
+>  			next-level-cache = <&L2>;
+>  			reg = <0x200>;
+> +			enable-method = "amlogic,meson8b-smp";
+> +			resets = <&clkc RESETID_CPU0_SOFT_RESET>;
+>  		};
+>  
+>  		cpu@201 {
+> @@ -66,6 +68,8 @@
+>  			compatible = "arm,cortex-a5";
+>  			next-level-cache = <&L2>;
+>  			reg = <0x201>;
+> +			enable-method = "amlogic,meson8b-smp";
+> +			resets = <&clkc RESETID_CPU1_SOFT_RESET>;
+>  		};
+>  
+>  		cpu@202 {
+> @@ -73,6 +77,8 @@
+>  			compatible = "arm,cortex-a5";
+>  			next-level-cache = <&L2>;
+>  			reg = <0x202>;
+> +			enable-method = "amlogic,meson8b-smp";
+> +			resets = <&clkc RESETID_CPU2_SOFT_RESET>;
+>  		};
+>  
+>  		cpu@203 {
+> @@ -80,6 +86,8 @@
+>  			compatible = "arm,cortex-a5";
+>  			next-level-cache = <&L2>;
+>  			reg = <0x203>;
+> +			enable-method = "amlogic,meson8b-smp";
+> +			resets = <&clkc RESETID_CPU3_SOFT_RESET>;
+>  		};
+>  	};
+>  
+> @@ -90,6 +98,11 @@
+>  }; /* end of / */
+>  
+>  &aobus {
+> +	pmu: pmu@e0 {
+> +		compatible = "amlogic,meson8b-pmu", "syscon";
+> +		reg = <0xe0 0x18>;
+> +	};
+> +
+>  	pinctrl_aobus: pinctrl@84 {
+>  		compatible = "amlogic,meson8b-aobus-pinctrl";
+>  		reg = <0x84 0xc>;
+> @@ -157,6 +170,13 @@
+>  	};
+>  };
+>  
+> +&ahb_sram {
+> +	smp-sram@1ff80 {
+> +		compatible = "amlogic,meson8b-smp-sram";
+> +		reg = <0x1ff80 0x8>;
+> +	};
+> +};
+> +
+>  &ethmac {
+>  	clocks = <&clkc CLKID_ETH>;
+>  	clock-names = "stmmaceth";
+> 
+
+Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
