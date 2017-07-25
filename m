@@ -1,88 +1,73 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: mfd: Add bindings for ZII RAVE devices
-Date: Tue, 25 Jul 2017 11:42:49 -0700
-Message-ID: <CAHQ1cqFQT_gWvgeU1tKxEnnGLd7x47YYSjkB0P1jt1R4B99swQ@mail.gmail.com>
-References: <20170725150245.2192-1-andrew.smirnov@gmail.com> <20170725150245.2192-3-andrew.smirnov@gmail.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND documentation
+Date: Wed, 26 Jul 2017 00:13:03 +0530
+Message-ID: <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
+ <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170725150245.2192-3-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Rest of the series ended up missing proper "To:" field. I'll resend
-the series shortly. Please disregard this e-mail.
+On 2017-07-25 00:47, Rob Herring wrote:
+> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:
+>> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
+>> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
+>>    while EBI2 NAND uses only single ADM channel.
+>> 3. CRCI is only required for ADM DMA and its not required for
+>>    QPIC NAND.
+>> 
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54 
+>> ++++++++++++++++++++--
+>>  1 file changed, 51 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt 
+>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> index b24adfe..8efaeb0 100644
+>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+>> @@ -1,13 +1,15 @@
+>>  * Qualcomm NAND controller
+>> 
+>>  Required properties:
+>> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses ADM
+>> -			DMA like IPQ8064.
+>> -
+>> +- compatible:		must be one of the following:
+>> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
+>> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA 
+>> like IPQ4019.
+> 
+> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
+> compatible strings.
 
-Sorry about the noise.
-Andrey Smirnov
+  We have 3 versions of NAND HW currently.
+  EBI2,
+  QPIC version 1.4.0
+  QPIC version 1.5.0
 
-On Tue, Jul 25, 2017 at 8:02 AM, Andrey Smirnov
-<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->
-> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> new file mode 100644
-> index 000000000000..088eff9ddb78
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> @@ -0,0 +1,39 @@
-> +Zodiac Inflight Innovations RAVE Supervisory Processor
-> +
-> +RAVE Supervisory Processor communicates with SoC over UART. It is
-> +expected that its Device Tree node is specified as a child of a node
-> +corresponding to UART controller used for communication.
-> +
-> +Required parent device properties:
-> +
-> + - compatible: Should be one of:
-> +       - "zii,rave-sp-niu"
-> +       - "zii,rave-sp-mezz"
-> +       - "zii,rave-sp-esb"
-> +       - "zii,rave-sp-rdu1"
-> +       - "zii,rave-sp-rdu2"
-> +
-> + - current-speed: Should be set to baud rate SP device is using
-> +
-> +RAVE SP consists of the following sub-devices:
-> +
-> +Device                          Description
-> +------                          -----------
-> +rave-sp-wdt                    : Watchdog
-> +rave-sp-nvmem                  : Interface to onborad EEPROM
-> +rave-sp-backlight              : Display backlight
-> +rave-sp-hwmon                  : Interface to onboard hardware sensors
-> +rave-sp-leds                   : Interface to onboard LEDs
-> +rave-sp-input                  : Interface to onboard power button
-> +
-> +Example of usage:
-> +
-> +       rdu {
-> +               compatible = "zii,rave-sp-rdu2";
-> +               current-speed = <1000000>;
-> +
-> +               watchdog {
-> +                       compatible = "zii,rave-sp-watchdog";
-> +               };
-> +       };
-> +
-> --
-> 2.13.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+  and multiple Qualcomm SoCs which use any one of these.
+
+  The original plan was to have compatible string for NAND version since
+  same NAND hardware is being in different SoC and SoC dtsi will simply
+  use its NAND version compatible string like other Qualcomm hardwares
+
+  
+http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+  
+http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+
+> 
+> Rob
+
+-- 
+Abhishek Sahu
