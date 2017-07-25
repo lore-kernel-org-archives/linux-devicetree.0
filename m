@@ -1,67 +1,113 @@
-From: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>
-Subject: Re: Duplicated memory node in the Device-Tree (WAS [XEN] Re:
- Duplicated memory nodes cause the BUG())
-Date: Tue, 25 Jul 2017 18:27:31 +0300
-Message-ID: <c77f71a3-edd9-3700-001b-feee05165454@epam.com>
-References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
- <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v4 5/9] clk: at91: clk-generated: create
+ function to find best_diff
+Date: Tue, 25 Jul 2017 17:33:50 +0200
+Message-ID: <f384980c-6a01-6879-e60c-d261fb4ae388@microchip.com>
+References: <cover.c8ce78c15296190b2aa5c452c0c4512528e28518.1500968090.git-series.quentin.schulz@free-electrons.com>
+ <8fe980cd3343111a57bd1b099beaaf51b95396d4.1500968090.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7-5wv7dgnIgG8@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <8fe980cd3343111a57bd1b099beaaf51b95396d4.1500968090.git-series.quentin.schulz@free-electrons.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
-Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Julien,
+On 25/07/2017 at 09:37, Quentin Schulz wrote:
+> The way to find the best_diff and do the appropriate process afterwards
+> can be re-used.
+> 
+> This patch prepares the driver for an upcoming patch that will allow
+> clk_generated to determine the rate of the audio_pll.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-On 25.07.17 17:23, Julien Grall wrote:
-> I think this is by chance rather than by design. The first question to 
-> answer is why a Firmware would specify twice the same memory banks? Is 
-> it valid from the specification?
-Yep, that is the question.
+> ---
+>  drivers/clk/at91/clk-generated.c | 41 +++++++++++++++++++++------------
+>  1 file changed, 27 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+> index ef4b4e0..7260e49 100644
+> --- a/drivers/clk/at91/clk-generated.c
+> +++ b/drivers/clk/at91/clk-generated.c
+> @@ -99,15 +99,36 @@ clk_generated_recalc_rate(struct clk_hw *hw,
+>  	return DIV_ROUND_CLOSEST(parent_rate, gck->gckdiv + 1);
+>  }
+>  
+> +static void clk_generated_best_diff(struct clk_rate_request *req,
+> +				    struct clk_hw *parent,
+> +				    unsigned long parent_rate, u32 div,
+> +				    int *best_diff, long *best_rate)
+> +{
+> +	unsigned long tmp_rate;
+> +	int tmp_diff;
+> +
+> +	if (!div)
+> +		tmp_rate = parent_rate;
+> +	else
+> +		tmp_rate = parent_rate / div;
+> +	tmp_diff = abs(req->rate - tmp_rate);
+> +
+> +	if (*best_diff < 0 || *best_diff > tmp_diff) {
+> +		*best_rate = tmp_rate;
+> +		*best_diff = tmp_diff;
+> +		req->best_parent_rate = parent_rate;
+> +		req->best_parent_hw = parent;
+> +	}
+> +}
+> +
+>  static int clk_generated_determine_rate(struct clk_hw *hw,
+>  					struct clk_rate_request *req)
+>  {
+>  	struct clk_generated *gck = to_clk_generated(hw);
+>  	struct clk_hw *parent = NULL;
+>  	long best_rate = -EINVAL;
+> -	unsigned long tmp_rate, min_rate;
+> +	unsigned long min_rate;
+>  	int best_diff = -1;
+> -	int tmp_diff;
+>  	int i;
+>  
+>  	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
+> @@ -125,18 +146,10 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+>  			continue;
+>  
+>  		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
+> -		if (!div)
+> -			tmp_rate = parent_rate;
+> -		else
+> -			tmp_rate = parent_rate / div;
+> -		tmp_diff = abs(req->rate - tmp_rate);
+> -
+> -		if (best_diff < 0 || best_diff > tmp_diff) {
+> -			best_rate = tmp_rate;
+> -			best_diff = tmp_diff;
+> -			req->best_parent_rate = parent_rate;
+> -			req->best_parent_hw = parent;
+> -		}
+> +
+> +		clk_generated_best_diff(req, parent, parent_rate, div,
+> +					&best_diff, &best_rate);
+> +
+>  
+>  		if (!best_diff)
+>  			break;
+> 
 
-> Regardless that, it looks like to me that the device-tree you give to 
-> the board should not contain the memory nodes.
-The device-tree is provided by vendor in that form, and u-boot is 
-theirs. It seems to me that they do not really care since the kernel 
-tolerates duplication.
-
->>  ps. Linux kernel does tolerate duplicated memory nodes by merging 
->> memory blocks. I.e. memblock_add_range() function is commented as 
->> following:
->> /**
->>      * memblock_add_range - add new memblock region
->>      * @type: memblock type to add new region into
->>      * @base: base address of the new region
->>      * @size: size of the new region
->>      * @nid: nid of the new region
->>      * @flags: flags of the new region
->>      *
->>      * Add new memblock region [@base,@base+@size) into @type. The new
->> region
->>      * is allowed to overlap with existing ones - overlaps don't affect
->> already
->>      * existing regions.  @type is guaranteed to be minimal (all
->> neighbouring
->>      * compatible regions are merged) after the addition.
->>      *
->>      * RETURNS:
->>      * 0 on success, -errno on failure.
->>      */
-IMO the function description is pretty straight-forward.
-But let us wait for device tree guys feedback.
 
 -- 
-
-*Andrii Anisov*
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nicolas Ferre
