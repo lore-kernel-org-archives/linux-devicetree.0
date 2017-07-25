@@ -1,7 +1,7 @@
 From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH 3/3] ARM: dts: NSP: Add USB3 and USB3 PHY to NSP
-Date: Tue, 25 Jul 2017 18:06:12 -0400
-Message-ID: <1501020372-19607-4-git-send-email-jon.mason@broadcom.com>
+Subject: [PATCH 2/3] ARM: dts: NSP: Rearrage USB entries
+Date: Tue, 25 Jul 2017 18:06:11 -0400
+Message-ID: <1501020372-19607-3-git-send-email-jon.mason@broadcom.com>
 References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
@@ -10,169 +10,64 @@ To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, M
 Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This uses the existing Northstar USB3 PHY driver to enable the USB3
-ports on NSP.
+The rest of the DTSI file is in incrementing addresses, but the USB
+OHCI/ECHI entries are out of sequence.  Move them to put them in the
+proper place.
 
 Signed-off-by: Jon Mason <jon.mason@broadcom.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi     | 19 +++++++++++++++++++
- arch/arm/boot/dts/bcm958522er.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958525er.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958525xmc.dts |  8 ++++++++
- arch/arm/boot/dts/bcm958622hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958623hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958625hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958625k.dts   |  8 ++++++++
- 8 files changed, 75 insertions(+)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 32 ++++++++++++++++----------------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
 
 diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 770aa2e7970c..8ba53b834cc8 100644
+index c8d734d9f5fc..770aa2e7970c 100644
 --- a/arch/arm/boot/dts/bcm-nsp.dtsi
 +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -303,6 +303,16 @@
+@@ -303,6 +303,22 @@
  			#size-cells = <0>;
  		};
  
-+		xhci: usb@29000 {
-+			compatible = "generic-xhci";
-+			reg = <0x29000 0x1000>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usb3_phy>;
-+			phy-names = "usb3-phy";
++		ehci0: usb@2a000 {
++			compatible = "generic-ehci";
++			reg = <0x2a000 0x100>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
 +			dma-coherent;
 +			status = "disabled";
 +		};
 +
- 		ehci0: usb@2a000 {
- 			compatible = "generic-ehci";
- 			reg = <0x2a000 0x100>;
-@@ -471,6 +481,15 @@
- 				phy-names = "sata-phy";
- 			};
- 		};
-+
-+		usb3_phy: usb3-phy@104000 {
-+			compatible = "brcm,ns-bx-usb3-phy";
-+			reg = <0x104000 0x1000>,
-+			      <0x032000 0x1000>;
-+			reg-names = "dmp", "ccb-mii";
-+			#phy-cells = <0>;
++		ohci0: usb@2b000 {
++			compatible = "generic-ohci";
++			reg = <0x2b000 0x100>;
++			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
++			dma-coherent;
 +			status = "disabled";
 +		};
- 	};
++
+ 		crypto@2f000 {
+ 			compatible = "brcm,spum-nsp-crypto";
+ 			reg = <0x2f000 0x900>;
+@@ -327,22 +343,6 @@
+ 			status = "disabled";
+ 		};
  
- 	pcie0: pcie@18012000 {
-diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
-index f5c42962c201..f9dd342cc2ae 100644
---- a/arch/arm/boot/dts/bcm958522er.dts
-+++ b/arch/arm/boot/dts/bcm958522er.dts
-@@ -170,3 +170,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
-index efcb1f67bdad..374508a9cfbf 100644
---- a/arch/arm/boot/dts/bcm958525er.dts
-+++ b/arch/arm/boot/dts/bcm958525er.dts
-@@ -182,3 +182,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
-index b335ce02e32f..403250c5ad8e 100644
---- a/arch/arm/boot/dts/bcm958525xmc.dts
-+++ b/arch/arm/boot/dts/bcm958525xmc.dts
-@@ -202,3 +202,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
-index 16ab2d82a14b..fd8b8c689ffe 100644
---- a/arch/arm/boot/dts/bcm958622hr.dts
-+++ b/arch/arm/boot/dts/bcm958622hr.dts
-@@ -219,3 +219,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-index 9b921c6aa8f8..3bc50849d013 100644
---- a/arch/arm/boot/dts/bcm958623hr.dts
-+++ b/arch/arm/boot/dts/bcm958623hr.dts
-@@ -227,3 +227,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index 006b08e41a3b..d94d14b3c745 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -229,3 +229,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index 64740f85cf4c..2cf2392483b2 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -264,3 +264,11 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
+-		ehci0: usb@2a000 {
+-			compatible = "generic-ehci";
+-			reg = <0x2a000 0x100>;
+-			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+-			dma-coherent;
+-			status = "disabled";
+-		};
+-
+-		ohci0: usb@2b000 {
+-			compatible = "generic-ohci";
+-			reg = <0x2b000 0x100>;
+-			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+-			dma-coherent;
+-			status = "disabled";
+-		};
+-
+ 		rng: rng@33000 {
+ 			compatible = "brcm,bcm-nsp-rng";
+ 			reg = <0x33000 0x14>;
 -- 
 2.7.4
