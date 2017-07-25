@@ -1,77 +1,72 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v4 0/2] ZII RAVE platform driver
-Date: Tue, 25 Jul 2017 08:02:43 -0700
-Message-ID: <20170725150245.2192-1-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, cphealy@gmail.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCHv3 0/6] Motorola Droid 4 Audio Support
+Date: Tue, 25 Jul 2017 17:10:24 +0200
+Message-ID: <20170725151030.26863-1-sebastian.reichel@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Hi,
 
-This patch series is v4 of the driver for supervisory processor found
-on RAVE series of devices from ZII. Supervisory processor is a PIC
-microcontroller connected to various electrical subsystems on RAVE
-devices whose firmware implements protocol to command/qery them.
+This adds audio support to Motorola Droid 4.
 
-Changes since [v3]:
+Tested:
+ - Playing via both DACs using Speaker, Earpiece, Headphone
+ - Recording using internal Mic
+ - Volume Controls
 
-    - Re-collected lost Acked-by from Rob
+Known not to work:
+ - 3.5mm detection support (requires closed source firmware,
+   needs further investigation)
+ - Modem / Bluetooth Audio (actually untested, but probably
+   needs some quirks)
 
-    - Incorporated further feedback from Andy Shevchenko
+Changes since PATCHv2:
+ * Fix a whitespace issue
+ * Fix const notes Takashi provided
+ * Fix a DAPM route issue I accidently introduced in v2
 
-    - Dropped useless change (stray newline) to drivers/mfd/Makefile
+Changes since PATCHv1:
+ * Add patch from Tony exporting soc_dpcm_runtime_update
+ * Integrate DT patch for vaudio initial mode
+ * Split dt-binding from codec patch and add Ack from Rob
+ * Fix CPCAP position in Kconfig/Makefile
+ * Avoid "err +=" constructs
+ * Simplify reset function
+ * Drop cpcap_audio_read/write helpers
+ * Do not use tertiary operator for mute register value
+ * Update Input Mux logic
+ * Switch from simple-audio-card to audio-graph-card
 
-Changes since [v2]:
+-- Sebastian
 
-    - Fixed swapped command codes in rave_sp_common_get_boot_source()
-      and rave_sp_common_set_boot_source() revealed by further testing
-      of the code
+Sebastian Reichel (5):
+  dt-bindings: sound: add motorola,cpcap-audio-codec
+  ASoC: codec: cpcap: new codec
+  ARM: dts: motorola-cpcap-mapphone: add audio-codec
+  ARM: dts: motorola-cpcap-mapphone: set initial mode for vaudio
+  ARM: dts: omap4-droid4: add soundcard
 
-    - Incorporated feedback from Andy Shevchenko
+Tony Lindgren (1):
+  ALSA: pcm: Export soc_dpcm_runtime_update
 
-Changes since [v1]:
-
-    - Updated wording in DT-bindings as per Rob's request.
-
-    - Collected Rob's Acked-by for patch 2/2
-
-NOTE:
-
- * The driver for "zii,rave-sp-watchdog" exists, but I haven't
-   submitted it yet, becuase I wanted to make sure that API exposed by
-   this MFD is acceptable and doesn't need drastic changes.
-
- * This driver is dependent on crc_ccitt_false() introduced in
-   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
-
-Feedback is greatly appreciated!
-
-Thanks,
-Andrey Smirnov
-
-[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov@gmail.com
-[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov@gmail.com
-[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov@gmail.com
-
-Andrey Smirnov (2):
-  platform: Add driver for RAVE Supervisory Processor
-  dt-bindings: mfd: Add bindings for ZII RAVE devices
-
- .../devicetree/bindings/mfd/zii,rave-sp.txt        |   39 +
- drivers/platform/Kconfig                           |    2 +
- drivers/platform/Makefile                          |    1 +
- drivers/platform/rave/Kconfig                      |   26 +
- drivers/platform/rave/Makefile                     |    1 +
- drivers/platform/rave/rave-sp.c                    | 1126 ++++++++++++++++++++
- include/linux/rave-sp.h                            |   54 +
- 7 files changed, 1249 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
- create mode 100644 drivers/platform/rave/Kconfig
- create mode 100644 drivers/platform/rave/Makefile
- create mode 100644 drivers/platform/rave/rave-sp.c
- create mode 100644 include/linux/rave-sp.h
+ .../bindings/sound/motorola,cpcap-audio-codec.txt  |   19 +
+ arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi     |    7 +
+ arch/arm/boot/dts/omap4-droid4-xt894.dts           |   84 ++
+ sound/soc/codecs/Kconfig                           |    5 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/cpcap.c                           | 1594 ++++++++++++++++++++
+ sound/soc/soc-pcm.c                                |    2 +
+ 7 files changed, 1713 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/motorola,cpcap-audio-codec.txt
+ create mode 100644 sound/soc/codecs/cpcap.c
 
 -- 
-2.13.3
+2.13.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
