@@ -1,61 +1,161 @@
-From: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>
-Subject: Re: Duplicated memory node in the Device-Tree (WAS [XEN] Re:
- Duplicated memory nodes cause the BUG())
-Date: Tue, 25 Jul 2017 19:51:51 +0300
-Message-ID: <6e9456a3-7f0f-72e5-b4be-2bd51939d850@epam.com>
-References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
- <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
- <c77f71a3-edd9-3700-001b-feee05165454@epam.com>
- <7c1c8267-a065-f8ee-7e20-147d722c59be@arm.com>
- <b454b264-1f04-7446-fe0b-fafa82954353@epam.com>
- <eb0fbb83-a6de-d06e-f230-d06c615b0f88@citrix.com>
+From: crow <crow@linux.org.ba>
+Subject: Re: [PATCH] ARM64: meson-gxl: disable broken eee
+Date: Tue, 25 Jul 2017 19:03:14 +0200
+Message-ID: <CAG_g8w6Xp18zuGyVvh77ekmc9uc7wOq7RUe1+DQOo=V=Ti87og@mail.gmail.com>
+References: <20170707013257.18250-1-joseph.kogut@gmail.com>
+ <7ho9scsdbp.fsf@baylibre.com> <CAMWSM7hB1e8gJEY3RvQ6UyWsZC0qB-rV2PTxun_4mdzO0e8X-A@mail.gmail.com>
+ <cf71b3c2-29d7-3bdb-0d00-872f5e1267e2@baylibre.com> <7519c9ee-54f0-d5fb-1683-11d6e24f0822@baylibre.com>
+ <1500912570.2401.3.camel@baylibre.com> <CAFBinCBy6Ce79Tf2seQi4m3aNGOa0r00zjt=eZP-dYy+6WLo8w@mail.gmail.com>
+ <1500921121.2401.5.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eb0fbb83-a6de-d06e-f230-d06c615b0f88-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
-Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500921121.2401.5.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Joseph Kogut <joseph.kogut@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, carlo@caione.org, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andrew,
+Hello,
 
+On Mon, Jul 24, 2017 at 8:32 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> On Mon, 2017-07-24 at 20:20 +0200, Martin Blumenstingl wrote:
+>> On Mon, Jul 24, 2017 at 6:09 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> > On Mon, 2017-07-24 at 14:26 +0200, Neil Armstrong wrote:
+>> > > On 07/24/2017 02:06 PM, Neil Armstrong wrote:
+>> > > > On 07/23/2017 07:03 PM, Joseph Kogut wrote:
+>> > > > > Hi Kevin,
+>> > > > >
+>> > > > > I tested on a P212 reference board, which is currently the only GXL
+>> > > > > based board I have.
+>> > > > >
+>> > > > > Before applying the patch, high activity on the ethernet interface
+>> > > > > would cause the link to break, requiring the interface to be brought
+>> > > > > down and back up before it would work again. After applying the patch,
+>> > > > > I could not get the link to break with any transfers.
+>> > > > >
+>> > > > > _______________________________________________
+>> > > > > linux-arm-kernel mailing list
+>> > > > > linux-arm-kernel@lists.infradead.org
+>> > > > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> > > > >
+>> > > >
+>> > > > Hi Joseph,
+>> > > >
+>> > > > [please keep the history of the conversation when replying]
+>> > > >
+>> > > > Is it a original P212 board, or a board based on the P212 ref design ?
+>> > > >
+>> > > > I'm currently testing the v4.13-rc2 on the official P212 board we
+>> > > > received
+>> > > > from Amlogic
+>> > > > and using iperf3 in both directions, I have an issue after a few minutes
+>> > > > running iperf3 with :
+>> > > >
+>> > > > # while true ; do iperf3 -c 192.168.1.21 ; iperf3 -c 192.168.1.21 -R ;
+>> > > > done
+>> > > >
+>> > > > That cycles between the two iperf directions.
+>> > > >
+>> > > > After a few minutes, it stalls with :
+>> > > >
+>> > > > Connecting to host 192.168.1.21, port 5201
+>> > > > [  4] local 192.168.1.183 port 51286 connected to 192.168.1.21 port 5201
+>> > > > [ ID] Interval           Transfer     Bandwidth       Retr  Cwnd
+>> > > > [  4]   0.00-1.00   sec  1.64 MBytes  13.7 Mbits/sec    2   1.41 KBytes
+>> > > > [  4]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+>> > > > [  4]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+>> > > > [  4]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+>> > > > [  4]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+>> > > > [  4]   5.00-6.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+>> > > > [  4]   6.00-7.00   sec  0.00 Bytes  0.00 bits/sec    1   1.41 KBytes
+>> > > > [  4]   7.00-8.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+>> > > > [  4]   8.00-9.00   sec  0.00 Bytes  0.00 bits/sec    0   1.41 KBytes
+>> > > >
+>> >
+>> > Same kind of test shows no issue on the libretech-cc and the khadas-vim
+>> > In this case, I don't think meson-gxl.dtsi is where you should make your
+>> > change.
 
-On 25.07.17 19:23, Andrew Cooper wrote:
-> As a general rule, Xen needs to be able to tolerate and cope with any
-> quantity of crap described by the firmware.  On the x86 side, we have
-> large quantities of workarounds for buggy ACPI/MP/SMBIOS tables.
-That approach somehow covered with early mentioned options:
+I am using mainline Kernel on Khadas VIM Pro and have such problems. I
+did send today an update [0] to my older mailinglist post.
 
-On 25.07.17 15:24, Andrii Anisov wrote:
-> * ignore next duplicating (overlapping) memory node in favor of one 
-> already in a memory banks list
-> * merge duplicating (overlapping), even neighboring, memory banks 
+> ahahah, silly me ! I forgot that it was 100MBps PHY.
+> tx delay makes no sense here, 2ns delay would not make much difference on a
+> 25MHz clock
+>
+> Sorry for the confusion
+>
+>
+>> >
+>> > > >
+>> > > > And then, after:
+>> > > > # ifconfig eth0 down
+>> > > > # ifconfig eth0 up
+>> > > >
+>> > > > It cycles between :
+>> > > > [ 1483.009919] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
+>> > > > 100Mbps/Full - flow control rx/tx
+>> > > > [ 1487.105725] meson8b-dwmac c9410000.ethernet eth0: Link is Down
+>> > > > [ 1490.177943] meson8b-dwmac c9410000.ethernet eth0: Link is Up -
+>> > > > 100Mbps/Full - flow control rx/tx
+>> > > > [ 1494.273713] meson8b-dwmac c9410000.ethernet eth0: Link is Down
+>> >
+>> > This does not look like the issue we had on the odroid-c2.
+>> > However, I have seen behavior like this (link down/up flickering) when the
+>> > rgmii
+>> >  delays are way off.
+>> >
+>> > Maybe you could try playing with "amlogic,tx-delay-ns" property ?
+>>
+>> we need to change dwmac-meson8b.c so it applies the TX delay also for
+>> RMII PHYs. currently the TX delay is always set to 0 for RMII PHYs,
+>> see: [0]
+>>
+>> > > >
+>> > > > and so on.
+>> > > >
+>> > > > And this patch does not fix this at all.
+>> > > >
+>> > > > It seems to be more a PHY driver issue here.
+>> > > >
+>> > > > Could you share the results with the same command ?
+>> > > >
+>> > > > Neil
+>> > > >
+>> > >
+>> > > I forgot to precise, this issue occurs when the "GXL PHY driver" is
+>> > > disabled,
+>> > > only relying on the
+>> > > Generic PHY Driver.
+>> > >
+>> > > [  630.767538] Generic PHY 0.e40908ff:08: attached PHY driver [Generic
+>> > > PHY]
+>> > > (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
+>> > >
+>> > >
+>> > > When the PHY driver is loaded the issue disappears, with and without your
+>> > > patch.
+>> > >
+>> > > [   25.355620] Meson GXL Internal PHY 0.e40908ff:08: attached PHY driver
+>> > > [Meson GXL Internal PHY] (mii_bus:phy_addr=0.e40908ff:08, irq=-1)
+>> > >
+>> > > Could you please check the PHY Driver is loaded ?
+>> > >
+>> > > Thanks,
+>> > > Neil
+>> >
+>> >
+>> > _______________________________________________
+>> > linux-amlogic mailing list
+>> > linux-amlogic@lists.infradead.org
+>> > http://lists.infradead.org/mailman/listinfo/linux-amlogic
+>>
+>>
+>> [0] https://github.com/torvalds/linux/blob/master/drivers/net/ethernet/stmicro
+>> /stmmac/dwmac-meson8b.c#L222
+>
 
-On 25.07.17 19:23, Andrew Cooper wrote:
-> It might be the case that the best Xen can do is give up, but it should
-> do so with a clear error message identifying what the firmware has done
-> which is sufficiently crazy to prevent further booting.
-We have one more option to choose for the case:
+Regards,
 
-* BUG() with clear notification at the moment we are trying to add 
-overlapping memory bank
-
-So what to choose?
-
-ps:
-> Hitting a BUG()
-Actually silently dying without earlyprintk enabled in this case. It 
-happens pretty early.
-
--- 
-
-*Andrii Anisov*
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004393.html
