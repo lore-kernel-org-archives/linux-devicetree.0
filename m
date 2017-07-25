@@ -1,153 +1,98 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Duplicated memory node in the Device-Tree (WAS [XEN] Re: Duplicated
- memory nodes cause the BUG())
-Date: Tue, 25 Jul 2017 15:23:40 +0100
-Message-ID: <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
-References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/3] Add ethernet0 alias for several A64 boards
+Date: Tue, 25 Jul 2017 16:31:27 +0200
+Message-ID: <20170725143127.ioojcafwaeimvren@flea>
+References: <20170722022852.7868-1-icenowy@aosc.io>
+ <20170724075823.7ttjq4tnvoupo776@flea>
+ <f4016e61dbe4655a0e672c3377f35dd2@aosc.io>
+ <20170725031819.ryllvq5a3tdwyblj@angband.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914-uRwfk40T5oI@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
-Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="wscbb7enm5xhjebo"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170725031819.ryllvq5a3tdwyblj@angband.pl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Adam Borowski <kilobyte@angband.pl>
+Cc: icenowy@aosc.io, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--wscbb7enm5xhjebo
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 25/07/17 13:24, Andrii Anisov wrote:
-> Dear All,
+On Tue, Jul 25, 2017 at 05:18:19AM +0200, Adam Borowski wrote:
+> On Tue, Jul 25, 2017 at 11:04:24AM +0800, icenowy@aosc.io wrote:
+> > =E5=9C=A8 2017-07-24 15:58=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
+=BC=9A
+> > > On Sat, Jul 22, 2017 at 10:28:49AM +0800, Icenowy Zheng wrote:
+> > > > Allwinner A64 SoC has an EMAC which is used to provide Ethernet
+> > > > function on several boards.
+> > > >=20
+> > > > The EMAC itself doesn't have a fixed MAC address, but the sunxi
+> > > > mainline U-Boot have the ability to generate one based on the eFUSE
+> > > > SID in the chip, and add the generated MAC address to the device
+> > > > tree when booting.
+> > > >=20
+> > > > The MAC address setting step is based on the device tree's aliases,
+> > > > and device tree nodes prefixed "ethernet" will get the MAC address
+> > > > added. However, in several A64 boards' device tree, the alias is not
+> > > > set up, so that the U-Boot won't set the MAC address.
+> > > >=20
+> > > > Add the ethernet0 aliases to these boards.
+> > > >=20
+> > > > I hope this patchset can be queued in 4.13, otherwise 4.13 kernels
+> > > > won't get non-volatile MAC addresses, and will use random ones
+> > > > instead, which is annoying to many users.
+> > > >=20
+> > > > Icenowy Zheng (3):
+> > > >   arm64: allwinner: a64: add ethernet0 alias for BPi M64 EMAC node
+> > > >   arm64: allwinner: a64: add ethernet0 alias for Pine64 EMAC node
+> > > >   arm64: allwinner: a64: add ethernet0 alias for SoPine EMAC node
+> > >=20
+> > > Applied all three, thanks!
+> >=20
+> > Sorry, but could you queue them to 4.13?
+> >=20
+> > Otherwise 4.13 kernel release will have annoying random MAC problem,
+> > which heavily affects headless usages.
+>=20
+> Perhaps it would be better to reword the commit subject as "fix missing
+> ethernet0 alias ..."?  That'd convey that the previous behaviour is a def=
+ect
+> that needs these patches as a fix.
 
-Hi,
+Yes, definitely.
 
->
->
-> In case of memory nodes duplication (or overlapping) in a device tree,
-> we get a BUG at page_alloc.c:226.
->
-> This appears e.g. for Renesas R-Car Gen3 SoC based boards. Their u-boot
-> does write memory nodes to the device tree before image (Linux kernel,
-> xen) boot. So having following memory description in the compiled device
-> tree for Salvator-X:
-> \ {
->         memory@48000000 {
->                 device_type = "memory";
->                 reg = <0x0 0x48000000 0x0 0x38000000>;
->         };
->         memory@500000000 {
->                 device_type = "memory";
->                 reg = <0x5 0x00000000 0x0 0x40000000>;
->         };
->         memory@600000000 {
->                 device_type = "memory";
->                 reg = <0x6 0x00000000 0x0 0x40000000>;
->         };
->         memory@700000000 {
->                 device_type = "memory";
->                 reg = <0x7 0x00000000 0x0 0x40000000>;
->         };
-> }
->
-> The hypervisor in runtime receives following:
-> \ {
->         memory@48000000 {
->                 device_type = "memory";
->                 reg = <0x0 0x48000000 0x0 0x38000000>,
->                           <0x5 0x00000000 0x0 0x40000000>,
->                           <0x6 0x00000000 0x0 0x40000000>,
->                           <0x7 0x00000000 0x0 0x40000000>;
->         };
->         memory@500000000 {
->                 device_type = "memory";
->                 reg = <0x5 0x00000000 0x0 0x40000000>;
->         };
->         memory@600000000 {
->                 device_type = "memory";
->                 reg = <0x6 0x00000000 0x0 0x40000000>;
->         };
->         memory@700000000 {
->                 device_type = "memory";
->                 reg = <0x7 0x00000000 0x0 0x40000000>;
->         };
-> }
->
-> And crashes:
->
-> (XEN) Checking for initrd in /chosen
-> (XEN) RAM: 0000000048000000 - 000000007fffffff
-> (XEN) RAM: 0000000500000000 - 000000053fffffff
-> (XEN) RAM: 0000000600000000 - 000000063fffffff
-> (XEN) RAM: 0000000700000000 - 000000073fffffff
-> (XEN) RAM: 0000000500000000 - 000000053fffffff
-> (XEN) RAM: 0000000600000000 - 000000063fffffff
-> (XEN) RAM: 0000000700000000 - 000000073fffffff
-> (XEN)
-> (XEN) MODULE[0]: 0000000048000000 - 0000000048011000 Device Tree
-> (XEN) MODULE[1]: 000000007a000000 - 000000007c000000 Kernel
-> (XEN)  RESVD[0]: 0000000048000000 - 0000000048011000
-> (XEN)
-> (XEN) Command line: dom0_mem=752M console=dtuart dtuart=serial0
-> dom0_max_vcpus=4
-> (XEN) Placing Xen at 0x000000073fe00000-0x0000000740000000
-> (XEN) Update BOOTMOD_XEN from 0000000078080000-0000000078192d81 =>
-> 000000073fe00000-000000073ff12d81
-> (XEN) PFN compression on bits 19...19
-> (XEN)
-> (XEN) ****************************************
-> (XEN) Panic on CPU 0:
-> (XEN) Boot BUG at page_alloc.c:226
-> (XEN) ****************************************
-> (XEN)
-> (XEN) Reboot in five seconds...
->
-> This mainly happens because duplicated memory nodes are accounted as
-> separate memory banks (in process_memory_node()).
-> I select now of two approaches to fix the issue:
-> * ignore next duplicating (overlapping) memory node in favor of one
-> already in a memory banks list
-> * merge duplicating (overlapping), even neighboring, memory banks
->
-> Actually I tend to follow the second approach, but want to get some
-> advisory from community first.
-> ps. Linux kernel does tolerate duplicated memory nodes by merging memory
-> blocks. I.e. memblock_add_range() function is commented as following:
+That and having a fixes: tag.
 
-I think this is by chance rather than by design. The first question to 
-answer is why a Firmware would specify twice the same memory banks? Is 
-it valid from the specification?
+Maxime
 
-I have CCed the devicetree ML to get feedback from them here.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Regardless that, it looks like to me that the device-tree you give to 
-the board should not contain the memory nodes.
+--wscbb7enm5xhjebo
+Content-Type: application/pgp-signature; name="signature.asc"
 
->     /**
->      * memblock_add_range - add new memblock region
->      * @type: memblock type to add new region into
->      * @base: base address of the new region
->      * @size: size of the new region
->      * @nid: nid of the new region
->      * @flags: flags of the new region
->      *
->      * Add new memblock region [@base,@base+@size) into @type.  The new
-> region
->      * is allowed to overlap with existing ones - overlaps don't affect
-> already
->      * existing regions.  @type is guaranteed to be minimal (all
-> neighbouring
->      * compatible regions are merged) after the addition.
->      *
->      * RETURNS:
->      * 0 on success, -errno on failure.
->      */
->
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
+iQIcBAEBAgAGBQJZd1Y/AAoJEBx+YmzsjxAgKJQQAIzaFdJH62iDNfeuK9fN5eUW
+cV1Ok6+mXwrZREFFguBD7yT6kqQ044cOo8Yz+nXi3Lagj+OiJvlG9kRp5sEnAGqb
+7mJJlWK0fjR6yXuL5uIYVn2LQGshpzhdAkrUvwNjvXWwaF3P7yAsQaVm4g1HLbDy
+VMJzevrZbmkNSOWQjfefNhisx9wQYnKNQdI+T+XASiKg6VBXULnmLtj7qazx8hOP
+yEKmlfit1R8DObdLlCZAg1uuNtAYAzB6vnh5JSdB+eV0RkFyJ5rDSo0VPmPUDlzp
+PO09ELszqVpl+ZjSQLWnUNYsqXFBjycVOrK5+CzzPI60xM4mhQqqHbqZDJbWwaaX
+a1uXL5hJLi41zgMm14PmdEFQHNfhFn8kjihpata1oZWMuR5q2bgZFCqwAWsJfP1Z
+YTmYs1kAl8RkZBTgFjMjMxBYxFR2xlmkLVaBNjEpl7oioFXD9qD42PkY5ywZVKS+
+rxouUiLEg1smW9CMIwGgSwiKMo7NFu9QfOV3YynDtUBdCNd3KQ0TYSEQw2sZ81Xh
+kgDnw05BIIGi5SrlJQX11brKvIwbN6ylHosZTLdCkrXDm/2BJKAlRLO/IoIcc5DH
+K9Jw08WHpSKt58bwRMuP5bw8R2sm+Z4SE/1aJXCDchhd+fgXaoz+ZTnfw+8d4nGT
+nacI0QMw37ArDFmL0Y2F
+=rXsT
+-----END PGP SIGNATURE-----
 
--- 
-Julien Grall
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--wscbb7enm5xhjebo--
