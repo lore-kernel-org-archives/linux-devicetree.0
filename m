@@ -1,56 +1,75 @@
-From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
- fixed transceiver bindings
-Date: Tue, 25 Jul 2017 13:14:26 -0500
-Message-ID: <04e3986b-bbeb-50ad-30e0-fb74bb534aa6@ti.com>
-References: <20170724230521.1436-1-fcooper@ti.com>
- <20170724230521.1436-3-fcooper@ti.com>
- <29df7e04-01c6-a09b-491e-1354dab98cd0@hartkopp.net>
+From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Patch "of: device: Export of_device_{get_modalias, uvent_modalias} to modules" has been added to the 3.18-stable tree
+Date: Tue, 25 Jul 2017 11:25:18 -0700
+Message-ID: <150100711852254@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <29df7e04-01c6-a09b-491e-1354dab98cd0-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-commits-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+This is a note to let you know that I've just added the patch titled
 
-On 07/25/2017 11:32 AM, Oliver Hartkopp wrote:
-> 
->> + max-data-speed:    a positive non 0 value that determines the max
->> data rate
->> +            that can be used in CAN-FD mode. A value of -1 implies
->> +            CAN-FD is not supported by the transceiver.
->> +
->> +Examples:
-> 
-> (..)
-> 
->> +    fixed-transceiver {
->> +        max-data-speed = <(-1)>;
-> 
-> Looks ugly IMHO.
-> 
-> Why didn't you stay on '0' for 'not supported'??
+    of: device: Export of_device_{get_modalias, uvent_modalias} to modules
 
-Unless a driver specifically calls of_can_transceiver_fixed
-priv->max_trans_data_speed will be by default 0. Therefore, all drivers
-that support CAN-FD will claim that the transceiver indicates that it
-isn't supported. So one option was to update every single driver to set
-this property by default which I started to do but it end up becoming a
-massive patch and it was risky in case I missed a driver which would of
-resulted in major regressions. Its also problematic for new drivers that
-miss this property or the many out of tree CAN drivers. The other option
-was to create another variable to track to see if
-of_can_transceiver_fixed was called but I didn't think that was the
-better solution. So using signed values in DT is a bit ugly due to
-syntax but was valid and I made sure I documented it so its clear.
-> 
-> Regards,
-> Oliver
-> 
+to the 3.18-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     of-device-export-of_device_-get_modalias-uvent_modalias-to-modules.patch
+and it can be found in the queue-3.18 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> know about it.
+
+
+>From 7a3b7cd332db08546f3cdd984f11773e0d1999e7 Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Wed, 28 Dec 2016 14:56:48 -0800
+Subject: of: device: Export of_device_{get_modalias, uvent_modalias} to modules
+
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+commit 7a3b7cd332db08546f3cdd984f11773e0d1999e7 upstream.
+
+The ULPI bus can be built as a module, and it will soon be
+calling these functions when it supports probing devices from DT.
+Export them so they can be used by the ULPI module.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+
+---
+ drivers/of/device.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -128,6 +128,7 @@ ssize_t of_device_get_modalias(struct de
+ 
+ 	return tsize;
+ }
++EXPORT_SYMBOL_GPL(of_device_get_modalias);
+ 
+ /**
+  * of_device_uevent - Display OF related uevent information
+@@ -190,3 +191,4 @@ int of_device_uevent_modalias(struct dev
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+
+
+Patches currently in stable-queue which might be from stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org are
+
+queue-3.18/of-device-export-of_device_-get_modalias-uvent_modalias-to-modules.patch
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
