@@ -1,51 +1,100 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: sun9i: Add CPUCFG device node for
- A80 dtsi
-Date: Tue, 25 Jul 2017 13:09:18 +0800
-Message-ID: <20170725050919.16036-4-wens@csie.org>
-References: <20170725050919.16036-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for
+ each channel
+Date: Tue, 25 Jul 2017 11:11:21 +0530
+Message-ID: <CAALAos9T0YtCvgjGCMVPn=dw2JKY=jTxz-v431NgpBCKFo1vVQ@mail.gmail.com>
+References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
+ <1500620142-910-7-git-send-email-anup.patel@broadcom.com> <CABb+yY1Pxhgvvit=0eZr66DpLJ3MDEvRPx9dwDPJM8PwiKXiew@mail.gmail.com>
+ <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w@mail.gmail.com> <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBLFF3PFQKGQE2S6GSDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170725050919.16036-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-CPUCFG is a collection of registers that are mapped to the SoC's signals
-from each individual processor core and associated peripherals, such as
-resets for processors, L1/L2 cache and other things.
+On Mon, Jul 24, 2017 at 10:06 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+> On Mon, Jul 24, 2017 at 9:26 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>> Hi Jassi,
+>>
+>> Sorry for the delayed response...
+>>
+>> On Fri, Jul 21, 2017 at 9:16 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>>> Hi Anup,
+>>>
+>>> On Fri, Jul 21, 2017 at 12:25 PM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>>> The Broadcom FlexRM ring (i.e. mailbox channel) can handle
+>>>> larger number of messages queued in one FlexRM ring hence
+>>>> this patch sets msg_queue_len for each mailbox channel to
+>>>> be same as RING_MAX_REQ_COUNT.
+>>>>
+>>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>> ---
+>>>>  drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
+>>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>> index 9873818..20055a0 100644
+>>>> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>> @@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+>>>>                 ret = -ENOMEM;
+>>>>                 goto fail_free_debugfs_root;
+>>>>         }
+>>>> -       for (index = 0; index < mbox->num_rings; index++)
+>>>> +       for (index = 0; index < mbox->num_rings; index++) {
+>>>> +               mbox->controller.chans[index].msg_queue_len =
+>>>> +                                               RING_MAX_REQ_COUNT;
+>>>>                 mbox->controller.chans[index].con_priv = &mbox->rings[index];
+>>>> +       }
+>>>>
+>>> While writing mailbox.c I wasn't unaware that there is the option to
+>>> choose the queue length at runtime.
+>>> The idea was to keep the code as simple as possible. I am open to
+>>> making it a runtime thing, but first, please help me understand how
+>>> that is useful here.
+>>>
+>>> I understand FlexRm has a ring buffer of RING_MAX_REQ_COUNT(1024)
+>>> elements. Any message submitted to mailbox api can be immediately
+>>> written onto the ringbuffer if there is some space.
+>>> Is there any mechanism to report back to a client driver, if its
+>>> message in ringbuffer failed "to be sent"?
+>>> If there isn't any, then I think, in flexrm_last_tx_done() you should
+>>> simply return true if there is some space left in the rung-buffer,
+>>> false otherwise.
+>>
+>> Yes, we have error code in "struct brcm_message" to report back
+>> errors from send_message. In our mailbox clients, we check
+>> return value of mbox_send_message() and also the error code
+>> in "struct brcm_message".
+>>
+> I meant after the message has been accepted in the ringbuffer but the
+> remote failed to receive it.
 
-These registers are used for SMP bringup and CPU hotplugging.
+Yes, even this case is handled.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+In case of IO errors after message has been put in ring buffer, we get
+completion message with error code and mailbox client drivers will
+receive back "struct brcm_message" with error set.
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index fc179b8ab038..cc5db467f616 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -368,6 +368,11 @@
- 			#reset-cells = <1>;
- 		};
- 
-+		cpucfg@01700000 {
-+			compatible = "allwinner,sun9i-a80-cpucfg";
-+			reg = <0x01700000 0x100>;
-+		};
-+
- 		mmc0: mmc@01c0f000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c0f000 0x1000>;
--- 
-2.13.3
+You can refer flexrm_process_completions() for more details.
+
+> There seems no such provision. IIANW, then you should be able to
+> consider every message as "sent successfully" once it is in the ring
+> buffer i.e, immediately after mbox_send_message() returns 0.
+> In that case I would think you don't need more than a couple of
+> entries out of MBOX_TX_QUEUE_LEN ?
+
+What I am trying to suggest is that we can take upto 1024 messages
+in a FlexRM ring but the MBOX_TX_QUEUE_LEN limits us queuing
+more messages. This issue manifest easily when multiple CPUs
+queues to same FlexRM ring (i.e. same mailbox channel).
+
+Another quick fix is to make MBOX_TX_QUEUE_LEN as 1024 but
+it will not be generic fix.
+
+Regards,
+Anup
