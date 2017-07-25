@@ -1,57 +1,73 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] scripts/dtc: fix '%zx' warning
-Date: Tue, 25 Jul 2017 17:20:09 +0100
-Message-ID: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Duplicated memory node in the Device-Tree (WAS [XEN] Re:
+ Duplicated memory nodes cause the BUG())
+Date: Tue, 25 Jul 2017 17:20:54 +0100
+Message-ID: <20170725162054.GD12749@leverpostej>
+References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
+ <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
+ <c77f71a3-edd9-3700-001b-feee05165454@epam.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
+In-Reply-To: <c77f71a3-edd9-3700-001b-feee05165454-uRwfk40T5oI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>
+Cc: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-dtc uses an incorrect format specifier for printing a uint64_t value.
-uint64_t may be either 'unsigned long' or 'unsigned long long' depending
-on the host architecture.
+On Tue, Jul 25, 2017 at 06:27:31PM +0300, Andrii Anisov wrote:
+> On 25.07.17 17:23, Julien Grall wrote:
+> >I think this is by chance rather than by design. The first
+> >question to answer is why a Firmware would specify twice the same
+> >memory banks? Is it valid from the specification?
+> Yep, that is the question.
 
-Fix this by using %llx and casting to unsigned long long, which ensures
-that we always have a wide enough variable to print 64 bits of hex.
+I beleive that all memory regions described in any memory node's reg
+entries should be disjoint (i.e. should not overlap). Per IEEE-1275, reg
+entries (within a node) are supposed to be disjoint, and I would expect
+this requirement to extend across nodes in the case of memory nodes.
 
-  HOSTCC  scripts/dtc/checks.o
-scripts/dtc/checks.c: In function 'check_simple_bus_reg':
-scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
-  snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
-  ^
-scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+Currently, the DT spec is somewhat sparse in wording, but this can be
+corrected.
 
-Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
- scripts/dtc/checks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >Regardless that, it looks like to me that the device-tree you give
+> >to the board should not contain the memory nodes.
+> The device-tree is provided by vendor in that form, and u-boot is
+> theirs. It seems to me that they do not really care since the kernel
+> tolerates duplication.
+> 
+> >> ps. Linux kernel does tolerate duplicated memory nodes by
+> >>merging memory blocks. I.e. memblock_add_range() function is
+> >>commented as following:
+> >>/**
+> >>     * memblock_add_range - add new memblock region
+> >>     * @type: memblock type to add new region into
+> >>     * @base: base address of the new region
+> >>     * @size: size of the new region
+> >>     * @nid: nid of the new region
+> >>     * @flags: flags of the new region
+> >>     *
+> >>     * Add new memblock region [@base,@base+@size) into @type. The new
+> >>region
+> >>     * is allowed to overlap with existing ones - overlaps don't affect
+> >>already
+> >>     * existing regions.  @type is guaranteed to be minimal (all
+> >>neighbouring
+> >>     * compatible regions are merged) after the addition.
+> >>     *
+> >>     * RETURNS:
+> >>     * 0 on success, -errno on failure.
+> >>     */
+> IMO the function description is pretty straight-forward.
+> But let us wait for device tree guys feedback.
 
-I've been carrying this patch for some time, but I guess hardly anyone
-builds DT based kernels on 32-bit x86 boxes anymore as it has remained
-unfixed.
+This might be the designed of *memblock*, but that does not mean that it
+is a deliberate part of the DT handling. I beleive this is simply an
+implementation detail that happens to mask a DT bug.
 
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index 4b72b530c84f..62ea8f83d4a0 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -873,7 +873,7 @@ static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct no
- 	while (size--)
- 		reg = (reg << 32) | fdt32_to_cpu(*(cells++));
- 
--	snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
-+	snprintf(unit_addr, sizeof(unit_addr), "%llx", (unsigned long long)reg);
- 	if (!streq(unitname, unit_addr))
- 		FAIL(c, dti, "Node %s simple-bus unit address format error, expected \"%s\"",
- 		     node->fullpath, unit_addr);
--- 
-2.7.4
-
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
