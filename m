@@ -1,166 +1,23 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1] clk: rockchip: rk3128: modify rk3128 clk driver to support rk3126
-Date: Tue, 25 Jul 2017 10:07:02 +0200
-Message-ID: <2781955.2VuQGUX9V5@diego>
-References: <1500966996-5660-1-git-send-email-zhangqing@rock-chips.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 2/5] nvmem: core: Add nvmem_cell_read_u32
+Date: Tue, 25 Jul 2017 16:07:59 +0800
+Message-ID: <20170725080758.GC20064@dragon>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
+ <eedf98ecb5d9d47f3c8b9ffbf58e03c7a2fb8db4.1500041281.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500966996-5660-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <eedf98ecb5d9d47f3c8b9ffbf58e03c7a2fb8db4.1500041281.git.leonard.crestez@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Elaine,
+On Fri, Jul 14, 2017 at 05:11:07PM +0300, Leonard Crestez wrote:
+> This function does a quick and easy read of an u32 value without any
+> kind of resource management code on the consumer side.
+> 
+> Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
 
-Am Dienstag, 25. Juli 2017, 15:16:36 CEST schrieb Elaine Zhang:
-> rk3128 and rk3126 have some gate registers describe differences.
-> So need to make some distinctions.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  drivers/clk/rockchip/clk-rk3128.c      | 59
-> +++++++++++++++++++++++++++++++--- include/dt-bindings/clock/rk3128-cru.h |
->  3 ++
->  2 files changed, 57 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/clk/rockchip/clk-rk3128.c
-> b/drivers/clk/rockchip/clk-rk3128.c index e243f2eae68f..0039b8940900 100644
-> --- a/drivers/clk/rockchip/clk-rk3128.c
-> +++ b/drivers/clk/rockchip/clk-rk3128.c
-> @@ -459,9 +459,8 @@ enum rk3128_plls {
->  			RK2928_CLKSEL_CON(2), 14, 2, MFLAGS, 8, 5, DFLAGS,
->  			RK2928_CLKGATE_CON(10), 15, GFLAGS),
-> 
-> -	COMPOSITE(SCLK_SFC, "sclk_sfc", mux_sclk_sfc_src_p, 0,
-> -			RK2928_CLKSEL_CON(11), 14, 2, MFLAGS, 8, 5, DFLAGS,
-> -			RK2928_CLKGATE_CON(3), 15, GFLAGS),
-> +	COMPOSITE_NOGATE(0, "sclk_sfc_src", mux_sclk_sfc_src_p, 0,
-> +			RK2928_CLKSEL_CON(11), 14, 2, MFLAGS, 8, 5, DFLAGS),
-> 
->  	COMPOSITE_NOMUX(PCLK_PMU_PRE, "pclk_pmu_pre", "cpll", 0,
->  			RK2928_CLKSEL_CON(29), 8, 6, DFLAGS,
-> @@ -495,7 +494,6 @@ enum rk3128_plls {
->  	GATE(ACLK_DMAC, "aclk_dmac", "aclk_peri", 0, RK2928_CLKGATE_CON(5), 1,
-> GFLAGS), GATE(0, "aclk_peri_niu", "aclk_peri", CLK_IGNORE_UNUSED,
-> RK2928_CLKGATE_CON(9), 15, GFLAGS), GATE(0, "aclk_cpu_to_peri",
-> "aclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 2, GFLAGS),
-> -	GATE(HCLK_GPS, "hclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(3), 14,
-> GFLAGS),
-> 
->  	GATE(HCLK_I2S_8CH, "hclk_i2s_8ch", "hclk_peri", 0, RK2928_CLKGATE_CON(7),
-> 4, GFLAGS), GATE(0, "hclk_peri_matrix", "hclk_peri", CLK_IGNORE_UNUSED,
-> RK2928_CLKGATE_CON(4), 0, GFLAGS), @@ -541,7 +539,6 @@ enum rk3128_plls {
->  	GATE(0, "hclk_rom", "hclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5),
-> 6, GFLAGS), GATE(HCLK_CRYPTO, "hclk_crypto", "hclk_cpu", 0,
-> RK2928_CLKGATE_CON(3), 5, GFLAGS),
-> 
-> -	GATE(PCLK_HDMI, "pclk_hdmi", "pclk_cpu", 0, RK2928_CLKGATE_CON(3), 8,
-> GFLAGS), GATE(PCLK_ACODEC, "pclk_acodec", "pclk_cpu", 0,
-> RK2928_CLKGATE_CON(5), 14, GFLAGS), GATE(0, "pclk_ddrupctl", "pclk_cpu",
-> CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5), 7, GFLAGS), GATE(0, "pclk_grf",
-> "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5), 4, GFLAGS), @@ -574,6
-> +571,7 @@ static void __init rk3128_clk_init(struct device_node *np) {
->  	struct rockchip_clk_provider *ctx;
->  	void __iomem *reg_base;
-> +	struct clk *clk;
-> 
->  	reg_base = of_iomap(np, 0);
->  	if (!reg_base) {
-> @@ -593,6 +591,57 @@ static void __init rk3128_clk_init(struct device_node
-> *np) RK3128_GRF_SOC_STATUS0);
->  	rockchip_clk_register_branches(ctx, rk3128_clk_branches,
->  				  ARRAY_SIZE(rk3128_clk_branches));
-> +
-> +	if (of_machine_is_compatible("rockchip,rk3128")) {
-> +		clk = clk_register_gate(NULL, "sclk_sfc", "sclk_sfc_src", 0,
-> +				ctx->reg_base + RK2928_CLKGATE_CON(3), 15, GFLAGS, &ctx->lock);
-> +		if (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock sclk_sfc: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, SCLK_SFC);
-> +
-
-Instead of having this in (hard to read) open code, could you look at how
-rk3066/rk3188 does that please?
-
-I.e. have the differences in separate tables (common clocks stay in the same 
-table of course) and then use a real rockchip,rk3128-cru / rockchip,rk3126-cru 
-clock init to use the correct set of clock tables.
-
-
-Thanks
-Heiko
-
-> +		clk = clk_register_gate(NULL, "hclk_gps", "aclk_peri", 0,
-> +				ctx->reg_base + RK2928_CLKGATE_CON(3), 14, GFLAGS, &ctx->lock);
-> +		if (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock hclk_gps: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, HCLK_GPS);
-> +
-> +		clk = clk_register_gate(NULL, "pclk_hdmi", "pclk_cpu", 0,
-> +				ctx->reg_base + RK2928_CLKGATE_CON(3), 8, GFLAGS, &ctx->lock);
-> +		if (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock pclk_hdmi: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, PCLK_HDMI);
-> +	} else {
-> +		clk = clk_register_gate(NULL, "pclk_stimer", "pclk_cpu",
-> CLK_IGNORE_UNUSED, +				ctx->reg_base + RK2928_CLKGATE_CON(3), 15, 
-GFLAGS,
-> &ctx->lock); +		if (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock pclk_stimer: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, PCLK_STIMER);
-> +
-> +		clk = clk_register_gate(NULL, "pclk_s_efuse", "pclk_cpu",
-> CLK_IGNORE_UNUSED, +				ctx->reg_base + RK2928_CLKGATE_CON(3), 14, 
-GFLAGS,
-> &ctx->lock); +		if (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock pclk_s_efuse: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, PCLK_S_EFUSE);
-> +
-> +		clk = clk_register_gate(NULL, "pclk_sgrf", "pclk_cpu", 
-CLK_IGNORE_UNUSED,
-> +				ctx->reg_base + RK2928_CLKGATE_CON(3), 8, GFLAGS, &ctx->lock); +		
-if
-> (IS_ERR(clk))
-> +			pr_warn("%s: could not register clock pclk_sgrf: %ld\n",
-> +				__func__, PTR_ERR(clk));
-> +		else
-> +			rockchip_clk_add_lookup(ctx, clk, PCLK_SGRF);
-> +	}
-> +
->  	rockchip_clk_protect_critical(rk3128_critical_clocks,
->  				      ARRAY_SIZE(rk3128_critical_clocks));
-> 
-> diff --git a/include/dt-bindings/clock/rk3128-cru.h
-> b/include/dt-bindings/clock/rk3128-cru.h index 92894f4306cf..0451c9c42375
-> 100644
-> --- a/include/dt-bindings/clock/rk3128-cru.h
-> +++ b/include/dt-bindings/clock/rk3128-cru.h
-> @@ -125,6 +125,9 @@
->  #define PCLK_GMAC		367
->  #define PCLK_PMU_PRE		368
->  #define PCLK_SIM_CARD		369
-> +#define PCLK_STIMER		370
-> +#define PCLK_S_EFUSE		371
-> +#define PCLK_SGRF		372
-> 
->  /* hclk gates */
->  #define HCLK_SPDIF		440
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Shawn Guo <shawnguo@kernel.org>
