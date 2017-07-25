@@ -1,91 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/4] powerpc: pseries: remove dlpar_attach_node dependency on full path
-Date: Tue, 25 Jul 2017 16:44:25 -0500
-Message-ID: <20170725214427.25768-3-robh@kernel.org>
-References: <20170725214427.25768-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170725214427.25768-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/3] ARM: dts: NSP: dma-coherent and USB3 changes
+Date: Tue, 25 Jul 2017 18:06:09 -0400
+Message-ID: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation to stop storing the full node path in full_name, remove the
-dependency on full_name from dlpar_attach_node(). Callers of
-dlpar_attach_node() already have the parent device_node, so just pass the
-parent node into dlpar_attach_node instead of the path. This avoids doing
-a lookup of the parent node by the path.
+Add dma-coherent to the relevant DT entries, and add USB3 support
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
----
- arch/powerpc/platforms/pseries/dlpar.c       | 6 ++----
- arch/powerpc/platforms/pseries/hotplug-cpu.c | 2 +-
- arch/powerpc/platforms/pseries/mobility.c    | 2 +-
- arch/powerpc/platforms/pseries/pseries.h     | 2 +-
- 4 files changed, 5 insertions(+), 7 deletions(-)
+Jon Mason (3):
+  ARM: dts: NSP: Add dma-coherent to relevant DT entries
+  ARM: dts: NSP: Rearrage USB entries
+  ARM: dts: NSP: Add USB3 and USB3 PHY to NSP
 
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index 80b84c9c8509..783f36364690 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -254,13 +254,11 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
- 	return first_dn;
- }
- 
--int dlpar_attach_node(struct device_node *dn)
-+int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
- {
- 	int rc;
- 
--	dn->parent = pseries_of_derive_parent(dn->full_name);
--	if (IS_ERR(dn->parent))
--		return PTR_ERR(dn->parent);
-+	dn->parent = parent;
- 
- 	rc = of_attach_node(dn);
- 	if (rc) {
-diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-index 0a93093fbcef..b357f1ae0b0a 100644
---- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
-@@ -463,7 +463,7 @@ static ssize_t dlpar_cpu_add(u32 drc_index)
- 		return -EINVAL;
- 	}
- 
--	rc = dlpar_attach_node(dn);
-+	rc = dlpar_attach_node(dn, parent);
- 	if (rc) {
- 		saved_rc = rc;
- 		pr_warn("Failed to attach node %s, rc: %d, drc index: %x\n",
-diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
-index 2da4851eff99..210ce632d63e 100644
---- a/arch/powerpc/platforms/pseries/mobility.c
-+++ b/arch/powerpc/platforms/pseries/mobility.c
-@@ -229,7 +229,7 @@ static int add_dt_node(__be32 parent_phandle, __be32 drc_index)
- 	if (!dn)
- 		return -ENOENT;
- 
--	rc = dlpar_attach_node(dn);
-+	rc = dlpar_attach_node(dn, parent_dn);
- 	if (rc)
- 		dlpar_free_cc_nodes(dn);
- 
-diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
-index 1361a9db534b..4470a3194311 100644
---- a/arch/powerpc/platforms/pseries/pseries.h
-+++ b/arch/powerpc/platforms/pseries/pseries.h
-@@ -46,7 +46,7 @@ extern void dlpar_free_cc_nodes(struct device_node *);
- extern void dlpar_free_cc_property(struct property *);
- extern struct device_node *dlpar_configure_connector(__be32,
- 						struct device_node *);
--extern int dlpar_attach_node(struct device_node *);
-+extern int dlpar_attach_node(struct device_node *, struct device_node *);
- extern int dlpar_detach_node(struct device_node *);
- extern int dlpar_acquire_drc(u32 drc_index);
- extern int dlpar_release_drc(u32 drc_index);
+ arch/arm/boot/dts/bcm-nsp.dtsi     | 61 +++++++++++++++++++++++++++++---------
+ arch/arm/boot/dts/bcm958522er.dts  |  8 +++++
+ arch/arm/boot/dts/bcm958525er.dts  |  8 +++++
+ arch/arm/boot/dts/bcm958525xmc.dts |  8 +++++
+ arch/arm/boot/dts/bcm958622hr.dts  |  8 +++++
+ arch/arm/boot/dts/bcm958623hr.dts  |  8 +++++
+ arch/arm/boot/dts/bcm958625hr.dts  |  8 +++++
+ arch/arm/boot/dts/bcm958625k.dts   |  8 +++++
+ 8 files changed, 103 insertions(+), 14 deletions(-)
+
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
