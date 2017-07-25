@@ -1,72 +1,513 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 0/3] Add ethernet0 alias for several A64 boards
-Date: Tue, 25 Jul 2017 16:31:27 +0200
-Message-ID: <20170725143127.ioojcafwaeimvren@flea>
-References: <20170722022852.7868-1-icenowy@aosc.io>
- <20170724075823.7ttjq4tnvoupo776@flea>
- <f4016e61dbe4655a0e672c3377f35dd2@aosc.io>
- <20170725031819.ryllvq5a3tdwyblj@angband.pl>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: sun9i: Support SMP on A80 with Multi-Cluster
+ Power Management (MCPM)
+Date: Tue, 25 Jul 2017 16:40:06 +0200
+Message-ID: <20170725144006.3bz45ozpv6dwu6k4@flea>
+References: <20170725050919.16036-1-wens@csie.org>
+ <20170725050919.16036-2-wens@csie.org>
+ <20170725074759.5mqrwcp7djeju33g@flea>
+ <CAGb2v67tGuivydj1r+uD=5aw+yYZyBabbNsKwik9ZONNQmc=jQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="wscbb7enm5xhjebo"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+        protocol="application/pgp-signature"; boundary="cd4cwlczusak7fcr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170725031819.ryllvq5a3tdwyblj@angband.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Borowski <kilobyte@angband.pl>
-Cc: icenowy@aosc.io, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAGb2v67tGuivydj1r+uD=5aw+yYZyBabbNsKwik9ZONNQmc=jQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---wscbb7enm5xhjebo
-Content-Type: text/plain; charset=utf-8
+--cd4cwlczusak7fcr
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 25, 2017 at 05:18:19AM +0200, Adam Borowski wrote:
-> On Tue, Jul 25, 2017 at 11:04:24AM +0800, icenowy@aosc.io wrote:
-> > =E5=9C=A8 2017-07-24 15:58=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
-=BC=9A
-> > > On Sat, Jul 22, 2017 at 10:28:49AM +0800, Icenowy Zheng wrote:
-> > > > Allwinner A64 SoC has an EMAC which is used to provide Ethernet
-> > > > function on several boards.
-> > > >=20
-> > > > The EMAC itself doesn't have a fixed MAC address, but the sunxi
-> > > > mainline U-Boot have the ability to generate one based on the eFUSE
-> > > > SID in the chip, and add the generated MAC address to the device
-> > > > tree when booting.
-> > > >=20
-> > > > The MAC address setting step is based on the device tree's aliases,
-> > > > and device tree nodes prefixed "ethernet" will get the MAC address
-> > > > added. However, in several A64 boards' device tree, the alias is not
-> > > > set up, so that the U-Boot won't set the MAC address.
-> > > >=20
-> > > > Add the ethernet0 aliases to these boards.
-> > > >=20
-> > > > I hope this patchset can be queued in 4.13, otherwise 4.13 kernels
-> > > > won't get non-volatile MAC addresses, and will use random ones
-> > > > instead, which is annoying to many users.
-> > > >=20
-> > > > Icenowy Zheng (3):
-> > > >   arm64: allwinner: a64: add ethernet0 alias for BPi M64 EMAC node
-> > > >   arm64: allwinner: a64: add ethernet0 alias for Pine64 EMAC node
-> > > >   arm64: allwinner: a64: add ethernet0 alias for SoPine EMAC node
-> > >=20
-> > > Applied all three, thanks!
-> >=20
-> > Sorry, but could you queue them to 4.13?
-> >=20
-> > Otherwise 4.13 kernel release will have annoying random MAC problem,
-> > which heavily affects headless usages.
+On Tue, Jul 25, 2017 at 04:29:52PM +0800, Chen-Yu Tsai wrote:
+>          default ARCH_SUNXI
+> On Tue, Jul 25, 2017 at 3:47 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi Chen-Yu,
+> >
+> > On Tue, Jul 25, 2017 at 01:09:16PM +0800, Chen-Yu Tsai wrote:
+> >> The A80 is a big.LITTLE SoC with 1 cluster of 4 Cortex-A7s and
+> >> 1 cluster of 4 Cortex-A15s.
+> >>
+> >> This patch adds support to bring up the second cluster and thus all
+> >> cores using the common MCPM code. Core/cluster power down has not
+> >> been implemented, thus CPU hotplugging and big.LITTLE switcher is
+> >> not supported.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  arch/arm/mach-sunxi/Kconfig  |  10 ++
+> >>  arch/arm/mach-sunxi/Makefile |   1 +
+> >>  arch/arm/mach-sunxi/mcpm.c   | 391 ++++++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 402 insertions(+)
+> >>  create mode 100644 arch/arm/mach-sunxi/mcpm.c
+> >>
+> >> diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+> >> index 58153cdf025b..177380548d99 100644
+> >> --- a/arch/arm/mach-sunxi/Kconfig
+> >> +++ b/arch/arm/mach-sunxi/Kconfig
+> >> @@ -47,5 +47,15 @@ config MACH_SUN9I
+> >>       bool "Allwinner (sun9i) SoCs support"
+> >>       default ARCH_SUNXI
+> >>       select ARM_GIC
+> >> +     imply MCPM
+> >> +
+> >> +config SUN9I_A80_MCPM
+> >> +     bool "Allwinner A80 Multi-Cluster PM support"
+> >> +     depends on MCPM && MACH_SUN9I
+> >> +     default MACH_SUN9I
+> >> +     select ARM_CCI400_PORT_CTRL
+> >> +     help
+> >> +       This is needed to provide CPU and cluster power management
+> >> +       on Allwinner A80 implementing big.LITTLE.
+> >
+> > Do we really need an option for that? we don't provide the option to
+> > disable the CPU SMP operations for the rest of the SoCs.
 >=20
-> Perhaps it would be better to reword the commit subject as "fix missing
-> ethernet0 alias ..."?  That'd convey that the previous behaviour is a def=
-ect
-> that needs these patches as a fix.
+> It was an option as it also required MCPM and CCI400 support to be built.
+> We could hide it. Or, using mach-hisi as a reference, we could do:
+>=20
+> config MACH_SUN9I
+>         default ARCH_SUNXI
+>         select ARM_GIC
+>         select MCPM if SMP
+>         select ARM_CCI400_PORT_CTRL if SMP
+>=20
+> and in the Makefile:
+>=20
+> obj-$(CONFIG_MCPM) +=3D sun9i-mcpm.o
 
-Yes, definitely.
+I guess a hidden option would work for me.
 
-That and having a fixes: tag.
+> >> +#define SUNXI_CPUS_PER_CLUSTER               4
+> >> +#define SUNXI_NR_CLUSTERS            2
+> >> +
+> >> +#define SUN9I_A80_A15_CLUSTER                1
+> >
+> > Don't we have a way to derive that from the DT ?
+>=20
+> Indeed we can.
+>=20
+> It would be slighty more complicated though:
+>=20
+> node =3D of_cpu_device_node_get(cluster * SUNXI_CPUS_PER_CLUSTER + cpu);
+> if (of_device_is_compatible(node, "arm,cortex-a15")) {
+>         ...
+> }
+
+There's no helper to create that map?
+
+We'll use it for A83T too, so the complexity will be reduced anyway.
+
+> >
+> >> +#define CPUCFG_CX_CTRL_REG0(c)               (0x10 * (c))
+> >> +#define CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE(n)        BIT(n)
+> >> +#define CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE_ALL       0xf
+> >> +#define CPUCFG_CX_CTRL_REG0_L2_RST_DISABLE_A7        BIT(4)
+> >> +#define CPUCFG_CX_CTRL_REG0_L2_RST_DISABLE_A15       BIT(0)
+> >> +#define CPUCFG_CX_CTRL_REG1(c)               (0x10 * (c) + 0x4)
+> >> +#define CPUCFG_CX_CTRL_REG1_ACINACTM BIT(0)
+> >> +#define CPUCFG_CX_RST_CTRL(c)                (0x80 + 0x4 * (c))
+> >> +#define CPUCFG_CX_RST_CTRL_DBG_SOC_RST       BIT(24)
+> >> +#define CPUCFG_CX_RST_CTRL_ETM_RST(n)        BIT(20 + (n))
+> >> +#define CPUCFG_CX_RST_CTRL_ETM_RST_ALL       (0xf << 20)
+> >> +#define CPUCFG_CX_RST_CTRL_DBG_RST(n)        BIT(16 + (n))
+> >> +#define CPUCFG_CX_RST_CTRL_DBG_RST_ALL       (0xf << 16)
+> >> +#define CPUCFG_CX_RST_CTRL_H_RST     BIT(12)
+> >> +#define CPUCFG_CX_RST_CTRL_L2_RST    BIT(8)
+> >> +#define CPUCFG_CX_RST_CTRL_CX_RST(n) BIT(4 + (n))
+> >> +#define CPUCFG_CX_RST_CTRL_CORE_RST(n)       BIT(n)
+> >> +
+> >> +#define PRCM_CPU_PO_RST_CTRL(c)              (0x4 + 0x4 * (c))
+> >> +#define PRCM_CPU_PO_RST_CTRL_CORE(n) BIT(n)
+> >> +#define PRCM_CPU_PO_RST_CTRL_CORE_ALL        0xf
+> >> +#define PRCM_PWROFF_GATING_REG(c)    (0x100 + 0x4 * (c))
+> >> +#define PRCM_PWROFF_GATING_REG_CLUSTER       BIT(4)
+> >> +#define PRCM_PWROFF_GATING_REG_CORE(n)       BIT(n)
+> >> +#define PRCM_PWR_SWITCH_REG(c, cpu)  (0x140 + 0x10 * (c) + 0x4 * (cpu=
+))
+> >> +#define PRCM_CPU_SOFT_ENTRY_REG              0x164
+> >> +
+> >> +static void __iomem *cpucfg_base;
+> >> +static void __iomem *prcm_base;
+> >> +
+> >> +static int sunxi_cpu_power_switch_set(unsigned int cpu, unsigned int =
+cluster,
+> >> +                                   bool enable)
+> >> +{
+> >> +     u32 reg;
+> >> +
+> >> +     /* control sequence from Allwinner A80 user manual v1.2 PRCM sec=
+tion */
+> >> +     reg =3D readl(prcm_base + PRCM_PWR_SWITCH_REG(cluster, cpu));
+> >> +     if (enable) {
+> >> +             if (reg =3D=3D 0x00) {
+> >> +                     pr_debug("power clamp for cluster %u cpu %u alre=
+ady open\n",
+> >> +                              cluster, cpu);
+> >> +                     return 0;
+> >> +             }
+> >> +
+> >> +             writel(0xff, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +             writel(0xfe, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +             writel(0xf8, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +             writel(0xf0, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +             writel(0x00, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +     } else {
+> >> +             writel(0xff, prcm_base + PRCM_PWR_SWITCH_REG(cluster, cp=
+u));
+> >> +             udelay(10);
+> >> +     }
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sunxi_cpu_powerup(unsigned int cpu, unsigned int cluster)
+> >> +{
+> >> +     u32 reg;
+> >> +
+> >> +     pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+> >> +     if (cpu >=3D SUNXI_CPUS_PER_CLUSTER || cluster >=3D SUNXI_NR_CLU=
+STERS)
+> >> +             return -EINVAL;
+> >> +
+> >> +     /* assert processor power-on reset */
+> >> +     reg =3D readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +     reg &=3D ~PRCM_CPU_PO_RST_CTRL_CORE(cpu);
+> >> +     writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +
+> >> +     /* Cortex-A7: hold L1 reset disable signal low */
+> >> +     if (!(of_machine_is_compatible("allwinner,sun9i-a80") &&
+> >> +                     cluster =3D=3D SUN9I_A80_A15_CLUSTER)) {
+> >> +             reg =3D readl(cpucfg_base + CPUCFG_CX_CTRL_REG0(cluster)=
+);
+> >> +             reg &=3D ~CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE(cpu);
+> >> +             writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG0(cluster));
+> >> +     }
+> >> +
+> >> +     /* assert processor related resets */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +     reg &=3D ~CPUCFG_CX_RST_CTRL_DBG_RST(cpu);
+> >> +
+> >> +     /*
+> >> +      * Allwinner code also asserts resets for NEON on A15. According
+> >> +      * to ARM manuals, asserting power-on reset is sufficient.
+> >> +      */
+> >> +     if (!(of_machine_is_compatible("allwinner,sun9i-a80") &&
+> >> +                     cluster =3D=3D SUN9I_A80_A15_CLUSTER)) {
+> >> +             reg &=3D ~CPUCFG_CX_RST_CTRL_ETM_RST(cpu);
+> >> +     }
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +
+> >> +     /* open power switch */
+> >> +     sunxi_cpu_power_switch_set(cpu, cluster, true);
+> >> +
+> >> +     /* clear processor power gate */
+> >> +     reg =3D readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+> >> +     reg &=3D ~PRCM_PWROFF_GATING_REG_CORE(cpu);
+> >> +     writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+> >> +     udelay(20);
+> >> +
+> >> +     /* de-assert processor power-on reset */
+> >> +     reg =3D readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +     reg |=3D PRCM_CPU_PO_RST_CTRL_CORE(cpu);
+> >> +     writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +
+> >> +     /* de-assert all processor resets */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +     reg |=3D CPUCFG_CX_RST_CTRL_DBG_RST(cpu);
+> >> +     reg |=3D CPUCFG_CX_RST_CTRL_CORE_RST(cpu);
+> >> +     if (!(of_machine_is_compatible("allwinner,sun9i-a80") &&
+> >> +                     cluster =3D=3D SUN9I_A80_A15_CLUSTER)) {
+> >> +             reg |=3D CPUCFG_CX_RST_CTRL_ETM_RST(cpu);
+> >> +     } else {
+> >> +             reg |=3D CPUCFG_CX_RST_CTRL_CX_RST(cpu); /* NEON */
+> >> +     }
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static int sunxi_cluster_powerup(unsigned int cluster)
+> >> +{
+> >> +     u32 reg;
+> >> +
+> >> +     pr_debug("%s: cluster %u\n", __func__, cluster);
+> >> +     if (cluster >=3D SUNXI_NR_CLUSTERS)
+> >> +             return -EINVAL;
+> >> +
+> >> +     /* assert ACINACTM */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +     reg |=3D CPUCFG_CX_CTRL_REG1_ACINACTM;
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +
+> >> +     /* assert cluster processor power-on resets */
+> >> +     reg =3D readl(prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +     reg &=3D ~PRCM_CPU_PO_RST_CTRL_CORE_ALL;
+> >> +     writel(reg, prcm_base + PRCM_CPU_PO_RST_CTRL(cluster));
+> >> +
+> >> +     /* assert cluster resets */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +     reg &=3D ~CPUCFG_CX_RST_CTRL_DBG_SOC_RST;
+> >> +     reg &=3D ~CPUCFG_CX_RST_CTRL_DBG_RST_ALL;
+> >> +     reg &=3D ~CPUCFG_CX_RST_CTRL_H_RST;
+> >> +     reg &=3D ~CPUCFG_CX_RST_CTRL_L2_RST;
+> >> +
+> >> +     /*
+> >> +      * Allwinner code also asserts resets for NEON on A15. According
+> >> +      * to ARM manuals, asserting power-on reset is sufficient.
+> >> +      */
+> >> +     if (!(of_machine_is_compatible("allwinner,sun9i-a80") &&
+> >> +                     cluster =3D=3D SUN9I_A80_A15_CLUSTER)) {
+> >> +             reg &=3D ~CPUCFG_CX_RST_CTRL_ETM_RST_ALL;
+> >> +     }
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +
+> >> +     /* hold L1/L2 reset disable signals low */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_CTRL_REG0(cluster));
+> >> +     if (of_machine_is_compatible("allwinner,sun9i-a80") &&
+> >> +                     cluster =3D=3D SUN9I_A80_A15_CLUSTER) {
+> >> +             /* Cortex-A15: hold L2RSTDISABLE low */
+> >> +             reg &=3D ~CPUCFG_CX_CTRL_REG0_L2_RST_DISABLE_A15;
+> >> +     } else {
+> >> +             /* Cortex-A7: hold L1RSTDISABLE and L2RSTDISABLE low */
+> >> +             reg &=3D ~CPUCFG_CX_CTRL_REG0_L1_RST_DISABLE_ALL;
+> >> +             reg &=3D ~CPUCFG_CX_CTRL_REG0_L2_RST_DISABLE_A7;
+> >> +     }
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG0(cluster));
+> >> +
+> >> +     /* clear cluster power gate */
+> >> +     reg =3D readl(prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+> >> +     reg &=3D ~PRCM_PWROFF_GATING_REG_CLUSTER;
+> >> +     writel(reg, prcm_base + PRCM_PWROFF_GATING_REG(cluster));
+> >> +     udelay(20);
+> >> +
+> >> +     /* de-assert cluster resets */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +     reg |=3D CPUCFG_CX_RST_CTRL_DBG_SOC_RST;
+> >> +     reg |=3D CPUCFG_CX_RST_CTRL_H_RST;
+> >> +     reg |=3D CPUCFG_CX_RST_CTRL_L2_RST;
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_RST_CTRL(cluster));
+> >> +
+> >> +     /* de-assert ACINACTM */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +     reg &=3D ~CPUCFG_CX_CTRL_REG1_ACINACTM;
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +
+> >> +static void sunxi_cpu_cache_disable(void)
+> >> +{
+> >> +     /* Disable and flush the local CPU cache. */
+> >> +     v7_exit_coherency_flush(louis);
+> >> +}
+> >> +
+> >> +/*
+> >> + * This bit is shared between the initial mcpm_sync_init call to enab=
+le
+> >> + * CCI-400 and proper cluster cache disable before power down.
+> >> + */
+> >> +static void sunxi_cluster_cache_disable_without_axi(void)
+> >> +{
+> >> +     if (read_cpuid_part() =3D=3D ARM_CPU_PART_CORTEX_A15) {
+> >> +             /*
+> >> +              * On the Cortex-A15 we need to disable
+> >> +              * L2 prefetching before flushing the cache.
+> >> +              */
+> >> +             asm volatile(
+> >> +             "mcr    p15, 1, %0, c15, c0, 3\n"
+> >> +             "isb\n"
+> >> +             "dsb"
+> >> +             : : "r" (0x400));
+> >> +     }
+> >> +
+> >> +     /* Flush all cache levels for this cluster. */
+> >> +     v7_exit_coherency_flush(all);
+> >> +
+> >> +     /*
+> >> +      * Disable cluster-level coherency by masking
+> >> +      * incoming snoops and DVM messages:
+> >> +      */
+> >> +     cci_disable_port_by_cpu(read_cpuid_mpidr());
+> >> +}
+> >> +
+> >> +static void sunxi_cluster_cache_disable(void)
+> >> +{
+> >> +     unsigned int cluster =3D MPIDR_AFFINITY_LEVEL(read_cpuid_mpidr()=
+, 1);
+> >> +     u32 reg;
+> >> +
+> >> +     pr_info("%s: cluster %u\n", __func__, cluster);
+> >> +
+> >> +     sunxi_cluster_cache_disable_without_axi();
+> >> +
+> >> +     /* last man standing, assert ACINACTM */
+> >> +     reg =3D readl(cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +     reg |=3D CPUCFG_CX_CTRL_REG1_ACINACTM;
+> >> +     writel(reg, cpucfg_base + CPUCFG_CX_CTRL_REG1(cluster));
+> >> +}
+> >> +
+> >> +static const struct mcpm_platform_ops sunxi_power_ops =3D {
+> >> +     .cpu_powerup            =3D sunxi_cpu_powerup,
+> >> +     .cluster_powerup        =3D sunxi_cluster_powerup,
+> >> +     .cpu_cache_disable      =3D sunxi_cpu_cache_disable,
+> >> +     .cluster_cache_disable  =3D sunxi_cluster_cache_disable,
+> >> +};
+> >> +
+> >> +/*
+> >> + * Enable cluster-level coherency, in preparation for turning on the =
+MMU.
+> >> + *
+> >> + * Also enable regional clock gating and L2 data latency settings for
+> >> + * Cortex-A15.
+> >> + */
+> >> +static void __naked sunxi_power_up_setup(unsigned int affinity_level)
+> >> +{
+> >> +     asm volatile (
+> >> +             "mrc    p15, 0, r1, c0, c0, 0\n"
+> >> +             "movw   r2, #" __stringify(ARM_CPU_PART_MASK & 0xffff) "=
+\n"
+> >> +             "movt   r2, #" __stringify(ARM_CPU_PART_MASK >> 16) "\n"
+> >> +             "and    r1, r1, r2\n"
+> >> +             "movw   r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 & 0xf=
+fff) "\n"
+> >> +             "movt   r2, #" __stringify(ARM_CPU_PART_CORTEX_A15 >> 16=
+) "\n"
+> >> +             "cmp    r1, r2\n"
+> >> +             "bne    not_a15\n"
+> >> +
+> >> +             /* The following is Cortex-A15 specific */
+> >> +
+> >> +             /* L2CTRL: Enable CPU regional clock gates */
+> >> +             "mrc p15, 1, r1, c15, c0, 4\n"
+> >> +             "orr r1, r1, #(0x1<<31)\n"
+> >> +             "mcr p15, 1, r1, c15, c0, 4\n"
+> >> +
+> >> +             /* L2ACTLR */
+> >> +             "mrc p15, 1, r1, c15, c0, 0\n"
+> >> +             /* Enable L2, GIC, and Timer regional clock gates */
+> >> +             "orr r1, r1, #(0x1<<26)\n"
+> >> +             /* Disable clean/evict from being pushed to external */
+> >> +             "orr r1, r1, #(0x1<<3)\n"
+> >> +             "mcr p15, 1, r1, c15, c0, 0\n"
+> >> +
+> >> +             /* L2 data RAM latency */
+> >> +             "mrc p15, 1, r1, c9, c0, 2\n"
+> >> +             "bic r1, r1, #(0x7<<0)\n"
+> >> +             "orr r1, r1, #(0x3<<0)\n"
+> >> +             "mcr p15, 1, r1, c9, c0, 2\n"
+> >> +
+> >> +             /* End of Cortex-A15 specific setup */
+> >> +             "not_a15:\n"
+> >> +
+> >> +             "cmp    r0, #1\n"
+> >> +             "bxne   lr\n"
+> >> +             "b      cci_enable_port_for_self"
+> >> +     );
+> >> +}
+> >> +
+> >> +static void sunxi_mcpm_setup_entry_point(void)
+> >> +{
+> >> +     __raw_writel(virt_to_phys(mcpm_entry_point),
+> >> +                  prcm_base + PRCM_CPU_SOFT_ENTRY_REG);
+> >> +}
+> >> +
+> >> +static int __init sunxi_mcpm_init(void)
+> >> +{
+> >> +     struct device_node *node;
+> >> +     int ret;
+> >> +
+> >> +     if (!of_machine_is_compatible("allwinner,sun9i-a80"))
+> >> +             return -ENODEV;
+> >> +
+> >> +     if (!cci_probed())
+> >> +             return -ENODEV;
+> >> +
+> >> +     node =3D of_find_compatible_node(NULL, NULL,
+> >> +                     "allwinner,sun9i-a80-cpucfg");
+> >> +     if (!node)
+> >> +             return -ENODEV;
+> >> +
+> >> +     cpucfg_base =3D of_iomap(node, 0);
+> >> +     of_node_put(node);
+> >> +     if (!cpucfg_base) {
+> >> +             pr_err("%s: failed to map CPUCFG registers\n", __func__);
+> >> +             return -ENOMEM;
+> >> +     }
+> >
+> > Can't we request the region as well?
+>=20
+> Yes we can! But only for the CPUCFG registers. The PRCM block is
+> shared with all the PRCM block clock drivers. :(
+
+Yeah, I know :/
+
+> >
+> >> +
+> >> +     node =3D of_find_compatible_node(NULL, NULL,
+> >> +                     "allwinner,sun9i-a80-prcm");
+> >> +     if (!node)
+> >> +             return -ENODEV;
+> >> +
+> >> +     prcm_base =3D of_iomap(node, 0);
+> >> +
+> >> +     of_node_put(node);
+> >> +     if (!prcm_base) {
+> >> +             pr_err("%s: failed to map PRCM registers\n", __func__);
+> >> +             iounmap(prcm_base);
+> >> +             return -ENOMEM;
+> >> +     }
+> >> +
+> >> +     ret =3D mcpm_platform_register(&sunxi_power_ops);
+> >> +     if (!ret)
+> >> +             ret =3D mcpm_sync_init(sunxi_power_up_setup);
+> >> +     if (!ret)
+> >> +             /* do not disable AXI master as no one will re-enable it=
+ */
+> >> +             ret =3D mcpm_loopback(sunxi_cluster_cache_disable_withou=
+t_axi);
+> >> +     if (ret) {
+> >> +             iounmap(cpucfg_base);
+> >> +             iounmap(prcm_base);
+> >> +             return ret;
+> >> +     }
+> >> +
+> >> +     mcpm_smp_set_ops();
+> >> +
+> >> +     pr_info("sunxi MCPM support installed\n");
+> >> +
+> >> +     sunxi_mcpm_setup_entry_point();
+> >> +
+> >> +     return ret;
+> >> +}
+> >
+> > It looks mostly good, and I would replace the sunxi by sun9i, and call
+> > that file sun9i-mcpm.c
+>=20
+> I was hoping to reuse the file for the A83T, so it was sunxi-mcpm.c
+> or just mcpm. Most of the stuff is similiar, except the A83T has two
+> revisions and one of them has two gate/power bits swapped. :(
+
+Hmmm, that's true.
+
+What about just mcpm then?
 
 Maxime
 
@@ -75,24 +516,28 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---wscbb7enm5xhjebo
+--cd4cwlczusak7fcr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZd1Y/AAoJEBx+YmzsjxAgKJQQAIzaFdJH62iDNfeuK9fN5eUW
-cV1Ok6+mXwrZREFFguBD7yT6kqQ044cOo8Yz+nXi3Lagj+OiJvlG9kRp5sEnAGqb
-7mJJlWK0fjR6yXuL5uIYVn2LQGshpzhdAkrUvwNjvXWwaF3P7yAsQaVm4g1HLbDy
-VMJzevrZbmkNSOWQjfefNhisx9wQYnKNQdI+T+XASiKg6VBXULnmLtj7qazx8hOP
-yEKmlfit1R8DObdLlCZAg1uuNtAYAzB6vnh5JSdB+eV0RkFyJ5rDSo0VPmPUDlzp
-PO09ELszqVpl+ZjSQLWnUNYsqXFBjycVOrK5+CzzPI60xM4mhQqqHbqZDJbWwaaX
-a1uXL5hJLi41zgMm14PmdEFQHNfhFn8kjihpata1oZWMuR5q2bgZFCqwAWsJfP1Z
-YTmYs1kAl8RkZBTgFjMjMxBYxFR2xlmkLVaBNjEpl7oioFXD9qD42PkY5ywZVKS+
-rxouUiLEg1smW9CMIwGgSwiKMo7NFu9QfOV3YynDtUBdCNd3KQ0TYSEQw2sZ81Xh
-kgDnw05BIIGi5SrlJQX11brKvIwbN6ylHosZTLdCkrXDm/2BJKAlRLO/IoIcc5DH
-K9Jw08WHpSKt58bwRMuP5bw8R2sm+Z4SE/1aJXCDchhd+fgXaoz+ZTnfw+8d4nGT
-nacI0QMw37ArDFmL0Y2F
-=rXsT
+iQIcBAEBAgAGBQJZd1hGAAoJEBx+YmzsjxAghagP/2dTyO6ENb3nf2d+as5BsQUJ
+6mrXFNFktf//HJ0wrFEy7zhIuaurbdXllkmIGi5+kswevporBOi5fy4kOYb0qxem
+8RecAPIVEuoR90HNTTgIEq48J2h70CqeGyDOoyCYeAYLJiSZRWYjB1Mzjl1e5A0O
+KldPQwLGpFJP0afeHTqMTP/KAw3hYDY8VyU2MTsfD+MwiRl9CiLwN/pMWK3TOzzm
+S+l7eNvvvxOmGRQ1V0m2cxLxd0M4ChV+M3ZprxXKFX7+qhUZBmswEGMgmdpPxF58
+avCo2XA4fbE2RkscVucDGbn0PeXknmnXehUL0/nZnbmt1oYWGE6XG4SMSBYzjxss
+Pfy2m8AImiuXvvV8kOsymHTobmWhi0z02uJ6UBanDfD1TAWBvHUQkfUhzeMN5S62
+JGuqB+U4Ew6IaPWHzBObi026beh7xEzcDIuoKgvuizAOV1w9BpKO/7k76NA3LN8v
+YohnDfgg7VtpAPiaWy1uYXFCi3+gQGE4SQ+29ME+fnLmJBYpa068kX+zhxWEVkCa
+sfXKLgUqexYDiK52+/MzN559aHheBTwrCOmE8SCeDLCgFbjqTqf8PisjfrXqCAss
+5sU1JzKy4OMhD+Sz7Giyn/SktPAA8wtUpxfGnKWiRo+RxlUYFlv2I4g8DUGQDZJe
+/X3t61yx9k3JmhBGHNSw
+=jwYt
 -----END PGP SIGNATURE-----
 
---wscbb7enm5xhjebo--
+--cd4cwlczusak7fcr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
