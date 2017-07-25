@@ -1,88 +1,141 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v2] clk: renesas: rcar-usb2-clock-sel: Add R-Car USB 2.0
- clock selector PHY
-Date: Tue, 25 Jul 2017 04:00:00 +0000
-Message-ID: <TY1PR06MB099296645252A10FC497EDB5D8B80@TY1PR06MB0992.apcprd06.prod.outlook.com>
-References: <1498631315-15730-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <CAMuHMdV1QvFAD3h7u0rL3-hx6OMRmxdvcj_jUo-ewdCHmcU0fQ@mail.gmail.com>
- <TY1PR06MB09928B28AAA01C47471B6969D8D40@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdWkSqNdzDNTyvHvGaG-Tw2md_aGHSWh7jXVyoBYMJ8m7w@mail.gmail.com>
- <TY1PR06MB09927528BA504E1E758BD935D8BB0@TY1PR06MB0992.apcprd06.prod.outlook.com>
- <CAMuHMdWqLTdw7k5Qwu92j37tcDn463T-MOQzff314=bCRyznzA@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 2/4] ARM: dts: sun9i: Add CCI-400 device nodes
+ for A80
+Date: Tue, 25 Jul 2017 13:09:17 +0800
+Message-ID: <20170725050919.16036-3-wens@csie.org>
+References: <20170725050919.16036-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdWqLTdw7k5Qwu92j37tcDn463T-MOQzff314=bCRyznzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja-JP
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLFF3PFQKGQE2S6GSDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170725050919.16036-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQtc2FuLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEdl
-ZXJ0IFV5dHRlcmhvZXZlbg0KPiBTZW50OiBNb25kYXksIEp1bHkgMjQsIDIwMTcgOTo1OSBQTQ0K
-PiANCj4gSGkgU2hpbW9kYS1zYW4sDQo+IA0KPiBPbiBNb24sIEp1bCAyNCwgMjAxNyBhdCAxMjoz
-MyBQTSwgWW9zaGloaXJvIFNoaW1vZGENCj4gPHlvc2hpaGlyby5zaGltb2RhLnVoQHJlbmVzYXMu
-Y29tPiB3cm90ZToNCj4gPj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4+IFNlbnQ6IFdl
-ZG5lc2RheSwgSnVseSA1LCAyMDE3IDk6MjIgUE0NCj4gPj4gT24gV2VkLCBKdWwgNSwgMjAxNyBh
-dCAxOjU3IFBNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA+PiA8eW9zaGloaXJvLnNoaW1vZGEudWhA
-cmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiA+PiBGcm9tOiBHZWVydCBVeXR0ZXJob2V2ZW4NCj4g
-Pj4gPj4gU2VudDogV2VkbmVzZGF5LCBKdWx5IDUsIDIwMTcgNzowOSBQTQ0KPiA+PiA+PiBPbiBX
-ZWQsIEp1biAyOCwgMjAxNyBhdCA4OjI4IEFNLCBZb3NoaWhpcm8gU2hpbW9kYQ0KPiA+PiA+PiA8
-eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+PiA+PiA+IFItQ2Fy
-IFVTQiAyLjAgY29udHJvbGxlciBjYW4gY2hhbmdlIHRoZSBjbG9jayBzb3VyY2UgZnJvbSBhbiBv
-c2NpbGxhdG9yDQo+ID4+ID4+ID4gdG8gYW4gZXh0ZXJuYWwgY2xvY2sgdmlhIGEgcmVnaXN0ZXIu
-IFNvLCB0aGlzIHBhdGNoIGFkZHMgc3VwcG9ydA0KPiA+PiA+PiA+IHRoZSBjbG9jayBzb3VyY2Ug
-c2VsZWN0b3IgYXMgYSBjbG9jayBkcml2ZXIuDQo+ID4+DQo+ID4+ID4+ID4gLS0tIC9kZXYvbnVs
-bA0KPiA+PiA+PiA+ICsrKyBiL2RyaXZlcnMvY2xrL3JlbmVzYXMvcmNhci11c2IyLWNsb2NrLXNl
-bC5jDQo+ID4+DQo+ID4+ID4+ID4gKy8qIFNpbmNlIHRoaXMgZHJpdmVyIG5lZWRzIG90aGVyIGNj
-ZiBkcml2ZXJzLCB0aGlzIHVzZXMgc3Vic3lzX2luaXRjYWxsX3N5bmMgKi8NCj4gPj4gPj4gPiAr
-c3Vic3lzX2luaXRjYWxsX3N5bmMocmNhcl91c2IyX2Nsb2NrX3NlbF9pbml0KTsNCj4gPj4gPj4N
-Cj4gPj4gPj4gSSBzdXBwb3NlIHRoaXMgaXMgYSB3b3JrYXJvdW5kIGZvciB0aGUgbGFjayBvZiBw
-cm9iZSBkZWZlcnJhbCBzdXBwb3J0IGluIHRoZQ0KPiA+PiA+PiBVU0Igc3Vic3lzdGVtPw0KPiA+
-PiA+DQo+ID4+ID4gVGhpcyBpcyBteSBmYXVsdC4gSSBhZGRlZCAicG93ZXItZG9tYWlucyIgcHJv
-cGVydHkgaW50byB0aGlzIGRldmljZSdzIG5vZGUuDQo+ID4+ID4gQWZ0ZXIgSSByZW1vdmUgdGhl
-IHBvd2VyLWRvbWFpbnMgbGlrZSB0aGUgY3BnIG5vZGUsIHRoaXMgZHJpdmVyIGNhbiB1c2Ugc3Vi
-c3lzX2luaXRjYWxsKCkNCj4gPj4gPiBpbnN0ZWFkIG9mIHN1YnN5c19pbml0Y2FsbF9zeW5jKCku
-DQo+ID4+DQo+ID4+IERvZXMgdGhlIGNsb2NrIHNlbCBtb2R1bGUgcmVxdWlyZXMgdGhlIGZ1bmN0
-aW9uYWwgY2xvY2sgImVoY2lfb2hjaSIgdG8gYmUNCj4gPj4gcnVubmluZyBiZWZvcmUgeW91IGNh
-biBhY2Nlc3MgaXRzIHJlZ2lzdGVycz8NCj4gPj4gSWYgeWVzLCBJIHRoaW5rIHRoZXJlIHNob3Vs
-ZCBiZSBhICJwb3dlci1kb21haW5zIiBwcm9wZXJ0eS4NCj4gPg0KPiA+IFllcy4gQnV0Li4uDQo+
-ID4NCj4gPj4gVGhlbiwgeW91IGNhbiBzaW1wbGlmeSB0aGUgY29kZSBieSBjYWxsaW5nDQo+ID4+
-DQo+ID4+ICAgICAgICAgcG1fcnVudGltZV9lbmFibGUoZGV2KTsNCj4gPj4gICAgICAgICBwbV9y
-dW50aW1lX2dldF9zeW5jKGRldik7DQo+ID4+DQo+ID4+IGFuZCByZW1vdmUgdGhlIGV4cGxpY2l0
-IGhhbmRsaW5nIG9mIHRoZSBmdW5jdGlvbmFsIGNsb2NrLg0KPiA+Pg0KPiA+PiBUaGF0IGRvZXMg
-bm90IHNvbHZlIHByb2JlIGRlZmVycmFsIGhhbmRsaW5nIGluIHRoZSBVU0Igc3Vic3lzdGVtLCB0
-aG91Z2guDQo+ID4NCj4gPiBJIGFkZGVkIGEgZGVidWcgbWVzc2FnZSBhdCBlbmQgb2YgY3BnX21z
-c3JfcHJvYmUoKSwgYW5kIGlmIEkgdXNlZCBzdWJzeXNfaW5pdGNhbGwoKSBvbg0KPiA+IHJjYXIt
-dXNiMi1jbG9jay1zZWwgZHJpdmVyLCBrZXJuZWwgbG9nIG91dHB1dCBiZWxvdzoNCj4gPiA9PT09
-PT09PT09PT09PT09PT09PT09PT0NCj4gPiBbICAgIDAuMjcyNTQ3XSByY2FyLXVzYjItY2xvY2st
-c2VsIGU2NTkwNjMwLmNsb2NrLWNvbnRyb2xsZXI6IHByb2JlIGRlZmVycmFsIG5vdCBzdXBwb3J0
-ZWQNCj4gPiBbICAgIDAuMjczOTQ0XSAgLS0tLS0tLS0tLS0tLS0tLS0gY3BnX21zc3JfcHJvYmU6
-IHByb2JlZCENCj4gPiA9PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiBTbywgaXQgc2VlbXMg
-dGhlIHJlbmVzYXMtY3BnLW1zc3IuYyBkb2Vzbid0IHNvbHZlIHByb2JlIGRlZmVycmFsIGhhbmRs
-aW5nLg0KPiA+IChUaGUgZHJpdmVyIHJlbmVzYXMtY3BnLW1zc3IuYyB1c2VzIHBsYXRmb3JtX2Ry
-aXZlcl9wcm9iZSgpIGZvciBub3cuKQ0KPiA+DQo+ID4gU28sIElJVUMsIHRoaXMgcmNhci11c2Iy
-LWNsb2NrLXNlbCBkcml2ZXIgY2Fubm90IHVzZSBzdWJzeXNfaW5pdGNhbGwoKS4NCj4gPiBPciwg
-c2hvdWxkIHdlIG1vZGlmeSB0aGUgcmVuZXNhcy1jcGctbXNzci5jIHNvbWVob3c/DQo+IA0KPiBE
-cml2ZXJzIHNob3VsZCBhdm9pZCB1c2luZyBzdWJzeXNfaW5pdGNhbGwoKS4NCj4gV2h5IGRvIHlv
-dSB1c2UgYSBzdWJzeXNfaW5pdGNhbGwoKT8gVG8gYXZvaWQgcHJvYmUgZGVmZXJyYWwgaW4gdGhl
-IFVTQg0KPiBzdXNieXN0ZW0/DQoNCk9oLCB0aGlzIGlzIG15IGZhdWx0Lg0KSSBoYWQgYXNzdW1l
-ZCBhIGNsb2NrIGRyaXZlciBzaG91bGQgdXNlIHN1YnN5c19pbml0Y2FsbCgpLi4uDQpMaWtlIGNs
-ay1maXhlZC1yYXRlLmMsIHdlIGNhbiB1c2UgYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIgaW4gZ2Vu
-ZXJhbC4NCg0KPiBXaGF0IGhhcHBlbnMgaWYgdGhlIHJjYXItdXNiMi1jbG9jay1zZWwgdXNlcyBi
-dWlsdGluX3BsYXRmb3JtX2RyaXZlcigpPw0KDQpJIHRyaWVkIGl0IHRvZGF5LCBhbmQgdGhlbiB0
-aGUgcmNhci11c2IyLWNsb2NrLXNlbCB3b3JrcyA6KQ0KU28sIEkgd2lsbCBzdWJtaXQgdjMgcGF0
-Y2guDQoNCkJlc3QgcmVnYXJkcywNCllvc2hpaGlybyBTaGltb2RhDQoNCj4gR3J7b2V0amUsZWV0
-aW5nfXMsDQo+IA0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPiANCj4gLS0NCj4g
-R2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAt
-LSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPiANCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3
-aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVu
-IEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNv
-bWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0g
-TGludXMgVG9ydmFsZHMNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The A80 includes an ARM CCI-400 interconnect to support multi-cluster
+CPU caches.
+
+Also add the maximum clock frequency for the CPUs, as listed in the
+A80 Optimus Board FEX file.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun9i-a80.dtsi | 46 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
+index 759a72317eb8..fc179b8ab038 100644
+--- a/arch/arm/boot/dts/sun9i-a80.dtsi
++++ b/arch/arm/boot/dts/sun9i-a80.dtsi
+@@ -63,48 +63,64 @@
+ 		cpu0: cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x0>;
+ 		};
+ 
+ 		cpu1: cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x1>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x2>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control0>;
++			clock-frequency = <12000000>;
+ 			reg = <0x3>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x100>;
+ 		};
+ 
+ 		cpu5: cpu@101 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x101>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x102>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+ 			compatible = "arm,cortex-a15";
+ 			device_type = "cpu";
++			cci-control-port = <&cci_control1>;
++			clock-frequency = <18000000>;
+ 			reg = <0x103>;
+ 		};
+ 	};
+@@ -436,6 +452,36 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		cci: cci@01c90000 {
++			compatible = "arm,cci-400";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x01c90000 0x1000>;
++			ranges = <0x0 0x01c90000 0x10000>;
++
++			cci_control0: slave-if@4000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x4000 0x1000>;
++			};
++
++			cci_control1: slave-if@5000 {
++				compatible = "arm,cci-400-ctrl-if";
++				interface-type = "ace";
++				reg = <0x5000 0x1000>;
++			};
++
++			pmu@9000 {
++				 compatible = "arm,cci-400-pmu,r1";
++				 reg = <0x9000 0x5000>;
++				 interrupts = <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>,
++					      <GIC_SPI 134 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
+ 		de_clocks: clock@03000000 {
+ 			compatible = "allwinner,sun9i-a80-de-clks";
+ 			reg = <0x03000000 0x30>;
+-- 
+2.13.3
