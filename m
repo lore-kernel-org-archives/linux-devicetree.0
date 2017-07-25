@@ -1,81 +1,79 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCHv2 0/2] Input: atmel_mxt_ts: Add reset support
-Date: Tue, 25 Jul 2017 15:56:56 +0200
-Message-ID: <20170725135656.2ua5j76fctkkdmlr@earth>
-References: <20170703123843.19340-1-sebastian.reichel@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="q6a732z5ywabqqao"
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v3] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
+Date: Tue, 25 Jul 2017 17:14:22 +0300
+Message-ID: <20170725141422.7924-1-c_mykolak@mellanox.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170703123843.19340-1-sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Henrik Rydberg <rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+It's add support for cooling device creation to
+aspeed-pwm-tacho.
+Cooling device could be bound to a thermal zone
+for the thermal control.
 
---q6a732z5ywabqqao
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+v1 -> v2:
+ - Fix commit message.
+v2 -> v3:
+ Pointed out by Rob Herring:
+ - Put cooling-levels under fan subnodes.
 
-Hi Dmitry,
+Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Gentle ping on this one. This helps to remove a hack from the
-Droid 4 DT and will also be used by PPD, which is currently
-being upstreamed:
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+index cf44605..367c820 100644
+--- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
++++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+@@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
+ 
+ - #size-cells : should be 1.
+ 
++- #cooling-cells: should be 2.
++
+ - reg : address and length of the register set for the device.
+ 
+ - pinctrl-names : a pinctrl state named "default" must be defined.
+@@ -28,12 +30,17 @@ fan subnode format:
+ Under fan subnode there can upto 8 child nodes, with each child node
+ representing a fan. If there are 8 fans each fan can have one PWM port and
+ one/two Fan tach inputs.
++For PWM port can be configured cooling-levels to create cooling device.
++Cooling device could be bound to a thermal zone for the thermal control.
+ 
+ Required properties for each child node:
+ - reg : should specify PWM source port.
+ 	integer value in the range 0 to 7 with 0 indicating PWM port A and
+ 	7 indicating PWM port H.
+ 
++- cooling-levels: PWM duty cycle values in a range from 0 to 255
++                  which correspond to thermal cooling states.
++
+ - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+                 integer value in the range 0 through 15, with 0 indicating
+ 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+@@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
+ pwm_tacho: pwmtachocontroller@1e786000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
++	#cooling-cells = <2>;
+ 	reg = <0x1E786000 0x1000>;
+ 	compatible = "aspeed,ast2500-pwm-tacho";
+ 	clocks = <&pwm_tacho_fixed_clk>;
+@@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+ 
+ 	fan@0 {
+ 		reg = <0x00>;
++		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
+ 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+ 	};
+ 
+-- 
+2.8.4
 
-https://lkml.org/lkml/2017/7/19/898
-
--- Sebastian
-
-On Mon, Jul 03, 2017 at 02:38:41PM +0200, Sebastian Reichel wrote:
-> Hi,
->=20
-> This adds support for the reset pin of Atmel MXT.
->=20
-> Changes since PATCHv1:
->  - Add new patch preparing for resource managed gpio
->  - Use resource managed gpio
->  - Wait for interrupt after reset
->=20
-> -- Sebastian
->=20
-> Sebastian Reichel (2):
->   Input: atmel_mxt_ts: Use more managed resources
->   Input: atmel_mxt_ts: Add support for reset line
->=20
->  .../devicetree/bindings/input/atmel,maxtouch.txt   |  2 ++
->  drivers/input/touchscreen/atmel_mxt_ts.c           | 42 +++++++++++++++-=
-------
->  2 files changed, 31 insertions(+), 13 deletions(-)
->=20
-> --=20
-> 2.13.2
->=20
-
---q6a732z5ywabqqao
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll3TigACgkQ2O7X88g7
-+pq9wA/+NxlcW+Xa8vFK+p1swCC1gFc0D9ljRG+VG0ptvQaMJyEaiqA6wOvhjMbw
-U2MGwHYfB7VD9BikBkSvsn9FFxH9I8K1PLLPZYaqFNSiUFQadg21zlO2Gc3+4rxi
-Klc1aJceSMtbKoLjxasvlnlrSFyqmV6EYqw9CyOuybcg8rTezgCcFQ7AQ+dJGGtG
-GditDl7LfFsmfO3VyduDtfu4FomDw7sLwlMpcSFPW0QfxL3GfidM51KbLAVU506H
-qZZkcVgZ8ZJhTqjq2ClRV1t27x8nhtEIWJeP7t6UgNyWoz5BdJREFvXEz6MwmsJv
-iRNVyfXeInHcoR3Rv4GS7O92wFkafLHAZby1zFYaqv4m++8WoC422owYRjlOEmxv
-x7pMhSyz9efUjtutWB1Teu9jVr+tifbFJ9yXsGXhkIBLJaD/GYotAj+tTV1vYBRe
-UKxbI9hZSCVNU2NkTRJUw6q7gmcQyLJBojdPcWbh/slkfY/JSbj+cUupgFMIhkuA
-0rDky9C/PKO7bDFMFshOwVi619WKNoPkFFn8di9sBdzNH62t9rZKU7INBkCJlKg5
-z1LzU7GeHHYI31mo9DxBGima3lpwElpVKQsgzYd3QBhz7yDSAFqwsN8TCQrwRIzB
-8SgfPcIpB3/0vgvmlVkmCohf+arahKo/iaiE99FloEs3wDtUpnk=
-=dZY6
------END PGP SIGNATURE-----
-
---q6a732z5ywabqqao--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
