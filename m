@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 4/4] of/fdt: only store the device node basename in full_name
-Date: Tue, 25 Jul 2017 16:44:27 -0500
-Message-ID: <20170725214427.25768-5-robh@kernel.org>
+Subject: [PATCH 2/4] powerpc: pseries: remove dlpar_attach_node dependency on full path
+Date: Tue, 25 Jul 2017 16:44:25 -0500
+Message-ID: <20170725214427.25768-3-robh@kernel.org>
 References: <20170725214427.25768-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170725214427.25768-1-robh@kernel.org>
@@ -10,153 +10,82 @@ To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-With dependencies on a statically allocated full path name converted to
-use %pOF format specifier, we can store just the basename of node, and
-the unflattening of the FDT can be simplified.
-
-This commit will affect the remaining users of full_name. After
-analyzing these users, the remaining cases should only change some print
-messages. The main users of full_name are providing a name for struct
-resource. The resource names shouldn't be important other than providing
-/proc/iomem names.
-
-We no longer distinguish between pre and post 0x10 dtb formats as either
-a full path or basename will work. However, less than 0x10 formats have
-been broken since the conversion to use libfdt (and no one has cared).
-The conversion of the unflattening code to be non-recursive also broke
-pre 0x10 formats as the populate_node function would return 0 in that
-case.
+In preparation to stop storing the full node path in full_name, remove the
+dependency on full_name from dlpar_attach_node(). Callers of
+dlpar_attach_node() already have the parent device_node, so just pass the
+parent node into dlpar_attach_node instead of the path. This avoids doing
+a lookup of the parent node by the path.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- drivers/of/fdt.c | 69 +++++++++-----------------------------------------------
- 1 file changed, 11 insertions(+), 58 deletions(-)
+ arch/powerpc/platforms/pseries/dlpar.c       | 6 ++----
+ arch/powerpc/platforms/pseries/hotplug-cpu.c | 2 +-
+ arch/powerpc/platforms/pseries/mobility.c    | 2 +-
+ arch/powerpc/platforms/pseries/pseries.h     | 2 +-
+ 4 files changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ce30c9a588a4..27c535af0be8 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -266,74 +266,32 @@ static void populate_properties(const void *blob,
- 		*pprev = NULL;
+diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
+index 80b84c9c8509..783f36364690 100644
+--- a/arch/powerpc/platforms/pseries/dlpar.c
++++ b/arch/powerpc/platforms/pseries/dlpar.c
+@@ -254,13 +254,11 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
+ 	return first_dn;
  }
  
--static unsigned int populate_node(const void *blob,
--				  int offset,
--				  void **mem,
--				  struct device_node *dad,
--				  unsigned int fpsize,
--				  struct device_node **pnp,
--				  bool dryrun)
-+static bool populate_node(const void *blob,
-+			  int offset,
-+			  void **mem,
-+			  struct device_node *dad,
-+			  struct device_node **pnp,
-+			  bool dryrun)
+-int dlpar_attach_node(struct device_node *dn)
++int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
  {
- 	struct device_node *np;
- 	const char *pathp;
- 	unsigned int l, allocl;
--	int new_format = 0;
+ 	int rc;
  
- 	pathp = fdt_get_name(blob, offset, &l);
- 	if (!pathp) {
- 		*pnp = NULL;
--		return 0;
-+		return false;
+-	dn->parent = pseries_of_derive_parent(dn->full_name);
+-	if (IS_ERR(dn->parent))
+-		return PTR_ERR(dn->parent);
++	dn->parent = parent;
+ 
+ 	rc = of_attach_node(dn);
+ 	if (rc) {
+diff --git a/arch/powerpc/platforms/pseries/hotplug-cpu.c b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+index 0a93093fbcef..b357f1ae0b0a 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-cpu.c
++++ b/arch/powerpc/platforms/pseries/hotplug-cpu.c
+@@ -463,7 +463,7 @@ static ssize_t dlpar_cpu_add(u32 drc_index)
+ 		return -EINVAL;
  	}
  
- 	allocl = ++l;
+-	rc = dlpar_attach_node(dn);
++	rc = dlpar_attach_node(dn, parent);
+ 	if (rc) {
+ 		saved_rc = rc;
+ 		pr_warn("Failed to attach node %s, rc: %d, drc index: %x\n",
+diff --git a/arch/powerpc/platforms/pseries/mobility.c b/arch/powerpc/platforms/pseries/mobility.c
+index 2da4851eff99..210ce632d63e 100644
+--- a/arch/powerpc/platforms/pseries/mobility.c
++++ b/arch/powerpc/platforms/pseries/mobility.c
+@@ -229,7 +229,7 @@ static int add_dt_node(__be32 parent_phandle, __be32 drc_index)
+ 	if (!dn)
+ 		return -ENOENT;
  
--	/* version 0x10 has a more compact unit name here instead of the full
--	 * path. we accumulate the full path size using "fpsize", we'll rebuild
--	 * it later. We detect this because the first character of the name is
--	 * not '/'.
--	 */
--	if ((*pathp) != '/') {
--		new_format = 1;
--		if (fpsize == 0) {
--			/* root node: special case. fpsize accounts for path
--			 * plus terminating zero. root node only has '/', so
--			 * fpsize should be 2, but we want to avoid the first
--			 * level nodes to have two '/' so we use fpsize 1 here
--			 */
--			fpsize = 1;
--			allocl = 2;
--			l = 1;
--			pathp = "";
--		} else {
--			/* account for '/' and path size minus terminal 0
--			 * already in 'l'
--			 */
--			fpsize += l;
--			allocl = fpsize;
--		}
--	}
--
- 	np = unflatten_dt_alloc(mem, sizeof(struct device_node) + allocl,
- 				__alignof__(struct device_node));
- 	if (!dryrun) {
- 		char *fn;
- 		of_node_init(np);
- 		np->full_name = fn = ((char *)np) + sizeof(*np);
--		if (new_format) {
--			/* rebuild full path for new format */
--			if (dad && dad->parent) {
--				strcpy(fn, dad->full_name);
--#ifdef DEBUG
--				if ((strlen(fn) + l + 1) != allocl) {
--					pr_debug("%s: p: %d, l: %d, a: %d\n",
--						pathp, (int)strlen(fn),
--						l, allocl);
--				}
--#endif
--				fn += strlen(fn);
--			}
--			*(fn++) = '/';
--		}
-+
- 		memcpy(fn, pathp, l);
+-	rc = dlpar_attach_node(dn);
++	rc = dlpar_attach_node(dn, parent_dn);
+ 	if (rc)
+ 		dlpar_free_cc_nodes(dn);
  
- 		if (dad != NULL) {
-@@ -355,7 +313,7 @@ static unsigned int populate_node(const void *blob,
- 	}
- 
- 	*pnp = np;
--	return fpsize;
-+	return true;
- }
- 
- static void reverse_nodes(struct device_node *parent)
-@@ -399,7 +357,6 @@ static int unflatten_dt_nodes(const void *blob,
- 	struct device_node *root;
- 	int offset = 0, depth = 0, initial_depth = 0;
- #define FDT_MAX_DEPTH	64
--	unsigned int fpsizes[FDT_MAX_DEPTH];
- 	struct device_node *nps[FDT_MAX_DEPTH];
- 	void *base = mem;
- 	bool dryrun = !base;
-@@ -418,7 +375,6 @@ static int unflatten_dt_nodes(const void *blob,
- 		depth = initial_depth = 1;
- 
- 	root = dad;
--	fpsizes[depth] = dad ? strlen(of_node_full_name(dad)) : 0;
- 	nps[depth] = dad;
- 
- 	for (offset = 0;
-@@ -427,11 +383,8 @@ static int unflatten_dt_nodes(const void *blob,
- 		if (WARN_ON_ONCE(depth >= FDT_MAX_DEPTH))
- 			continue;
- 
--		fpsizes[depth+1] = populate_node(blob, offset, &mem,
--						 nps[depth],
--						 fpsizes[depth],
--						 &nps[depth+1], dryrun);
--		if (!fpsizes[depth+1])
-+		if (!populate_node(blob, offset, &mem, nps[depth],
-+				   &nps[depth+1], dryrun))
- 			return mem - base;
- 
- 		if (!dryrun && nodepp && !*nodepp)
+diff --git a/arch/powerpc/platforms/pseries/pseries.h b/arch/powerpc/platforms/pseries/pseries.h
+index 1361a9db534b..4470a3194311 100644
+--- a/arch/powerpc/platforms/pseries/pseries.h
++++ b/arch/powerpc/platforms/pseries/pseries.h
+@@ -46,7 +46,7 @@ extern void dlpar_free_cc_nodes(struct device_node *);
+ extern void dlpar_free_cc_property(struct property *);
+ extern struct device_node *dlpar_configure_connector(__be32,
+ 						struct device_node *);
+-extern int dlpar_attach_node(struct device_node *);
++extern int dlpar_attach_node(struct device_node *, struct device_node *);
+ extern int dlpar_detach_node(struct device_node *);
+ extern int dlpar_acquire_drc(u32 drc_index);
+ extern int dlpar_release_drc(u32 drc_index);
 -- 
 2.11.0
