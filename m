@@ -1,72 +1,62 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 3/3] arm64: allwinner: a64: add proper
- support for the Wi-Fi on BPi M64
-Date: Tue, 25 Jul 2017 20:45:04 +0800
-Message-ID: <20170725124504.40242-3-icenowy@aosc.io>
-References: <20170725124504.40242-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: add device tree binding for Allwinner XR819 SDIO Wi-Fi
+Date: Tue, 25 Jul 2017 16:14:28 +0300
+Message-ID: <87bmo8irpn.fsf@codeaurora.org>
+References: <20170718072940.17872-1-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBNP63TFQKGQENCFTEHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170725124504.40242-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718072940.17872-1-icenowy-h8G6r0blFSE@public.gmane.org> (Icenowy Zheng's message
+        of "Tue, 18 Jul 2017 15:29:40 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-BPi M64 has an AP6212 Wi-Fi/Bluetooth combo module, and the Wi-Fi SDIO
-card is connected to the mmc1 controller.
+Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
 
-The pwrseq of the mmc1 (used to reset the card) used to missing, and the
-out-of-band interrupt line of the card is not specified.
+> Allwinner XR819 is a SDIO Wi-Fi chip, which has the functionality to use
+> an out-of-band interrupt pin instead of SDIO in-band interrupt.
+>
+> Add the device tree binding of this chip, in order to make it possible
+> to add this interrupt pin to device trees.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../bindings/net/wireless/allwinner,xr819.txt      | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+>
+> diff --git
+> a/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> new file mode 100644
+> index 000000000000..64dd9c1c0584
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> @@ -0,0 +1,37 @@
+> +Allwinner XRadio wireless SDIO devices
+> +
+> +This node provides properties for controlling the XRadio wireless device. The
+> +node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - compatible : Should be "allwinner,xr819".
+> +
+> +Optional properties:
+> + - interrupt-parent : the phandle for the interrupt controller to which the
+> +	device interrupts are connected.
+> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+> +	When not specified the device will use in-band SDIO interrupts.
 
-Fix these issues for proper Wi-Fi support of BPi M64.
+Where is the driver which uses this? I don't see it in
+drivers/net/wireless but I guess that's not a blocker for the bindings?
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index ec72ca8c8b30..4a8d3f83a36e 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -59,6 +59,11 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	wifi_pwrseq: wifi_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 0 2 GPIO_ACTIVE_LOW>; /* PL2 */
-+	};
- };
- 
- &ehci1 {
-@@ -107,9 +112,18 @@
- 	pinctrl-0 = <&mmc1_pins>;
- 	vmmc-supply = <&reg_dldo2>;
- 	vqmmc-supply = <&reg_dldo4>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
- 	bus-width = <4>;
- 	non-removable;
- 	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <0 3 IRQ_TYPE_LEVEL_LOW>; /* PL3 */
-+		interrupt-names = "host-wake";
-+	};
- };
- 
- &mmc2 {
 -- 
-2.13.0
+Kalle Valo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
