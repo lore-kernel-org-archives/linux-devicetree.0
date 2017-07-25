@@ -1,75 +1,93 @@
-From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Patch "of: device: Export of_device_{get_modalias, uvent_modalias} to modules" has been added to the 4.9-stable tree
-Date: Tue, 25 Jul 2017 11:29:52 -0700
-Message-ID: <150100739263238@kroah.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] ZII RAVE platform driver
+Date: Tue, 25 Jul 2017 11:42:20 -0700
+Message-ID: <CAHQ1cqFj9M0r5e7PipmvJL6uosbKd8hkDFvH-ttE=0TUdHjCQw@mail.gmail.com>
+References: <20170725150245.2192-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170725150245.2192-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stable-commits-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Rest of the series ended up missing proper "To:" field. I'll resend
+the series shortly. Please disregard this e-mail.
 
-This is a note to let you know that I've just added the patch titled
+Sorry about the noise.
+Andrey Smirnov
 
-    of: device: Export of_device_{get_modalias, uvent_modalias} to modules
-
-to the 4.9-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     of-device-export-of_device_-get_modalias-uvent_modalias-to-modules.patch
-and it can be found in the queue-4.9 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org> know about it.
-
-
->From 7a3b7cd332db08546f3cdd984f11773e0d1999e7 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed, 28 Dec 2016 14:56:48 -0800
-Subject: of: device: Export of_device_{get_modalias, uvent_modalias} to modules
-
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-commit 7a3b7cd332db08546f3cdd984f11773e0d1999e7 upstream.
-
-The ULPI bus can be built as a module, and it will soon be
-calling these functions when it supports probing devices from DT.
-Export them so they can be used by the ULPI module.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-
----
- drivers/of/device.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct de
- 
- 	return tsize;
- }
-+EXPORT_SYMBOL_GPL(of_device_get_modalias);
- 
- /**
-  * of_device_uevent - Display OF related uevent information
-@@ -287,3 +288,4 @@ int of_device_uevent_modalias(struct dev
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
-
-
-Patches currently in stable-queue which might be from stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org are
-
-queue-4.9/of-device-export-of_device_-get_modalias-uvent_modalias-to-modules.patch
+On Tue, Jul 25, 2017 at 8:02 AM, Andrey Smirnov
+<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi everyone,
+>
+> This patch series is v4 of the driver for supervisory processor found
+> on RAVE series of devices from ZII. Supervisory processor is a PIC
+> microcontroller connected to various electrical subsystems on RAVE
+> devices whose firmware implements protocol to command/qery them.
+>
+> Changes since [v3]:
+>
+>     - Re-collected lost Acked-by from Rob
+>
+>     - Incorporated further feedback from Andy Shevchenko
+>
+>     - Dropped useless change (stray newline) to drivers/mfd/Makefile
+>
+> Changes since [v2]:
+>
+>     - Fixed swapped command codes in rave_sp_common_get_boot_source()
+>       and rave_sp_common_set_boot_source() revealed by further testing
+>       of the code
+>
+>     - Incorporated feedback from Andy Shevchenko
+>
+> Changes since [v1]:
+>
+>     - Updated wording in DT-bindings as per Rob's request.
+>
+>     - Collected Rob's Acked-by for patch 2/2
+>
+> NOTE:
+>
+>  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+>    submitted it yet, becuase I wanted to make sure that API exposed by
+>    this MFD is acceptable and doesn't need drastic changes.
+>
+>  * This driver is dependent on crc_ccitt_false() introduced in
+>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+>
+> Feedback is greatly appreciated!
+>
+> Thanks,
+> Andrey Smirnov
+>
+> [v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> [v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> [v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>
+> Andrey Smirnov (2):
+>   platform: Add driver for RAVE Supervisory Processor
+>   dt-bindings: mfd: Add bindings for ZII RAVE devices
+>
+>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   39 +
+>  drivers/platform/Kconfig                           |    2 +
+>  drivers/platform/Makefile                          |    1 +
+>  drivers/platform/rave/Kconfig                      |   26 +
+>  drivers/platform/rave/Makefile                     |    1 +
+>  drivers/platform/rave/rave-sp.c                    | 1126 ++++++++++++++++++++
+>  include/linux/rave-sp.h                            |   54 +
+>  7 files changed, 1249 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>  create mode 100644 drivers/platform/rave/Kconfig
+>  create mode 100644 drivers/platform/rave/Makefile
+>  create mode 100644 drivers/platform/rave/rave-sp.c
+>  create mode 100644 include/linux/rave-sp.h
+>
+> --
+> 2.13.3
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
