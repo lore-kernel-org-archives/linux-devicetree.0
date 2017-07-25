@@ -1,169 +1,31 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2] clk: rockchip: rk3128: modify rk3128 clk driver to support rk3126
-Date: Tue, 25 Jul 2017 17:42:50 +0800
-Message-ID: <1500975770-25046-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v3 3/3] power: wm831x_power: Support USB charger current
+ limit management
+Date: Tue, 25 Jul 2017 10:38:59 +0100
+Message-ID: <20170725093859.dtohintweufce32f@localhost.localdomain>
+References: <cover.1500968744.git.baolin.wang@linaro.org>
+ <c6dbaa6b4417eb9213032404b90330c924613ed0.1500968745.git.baolin.wang@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c6dbaa6b4417eb9213032404b90330c924613ed0.1500968745.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, sre@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.li@nxp.com, peter.chen@freescale.com, broonie@kernel.org, john.stultz@linaro.org, neilb@suse.com, patches@opensource.wolfsonmicro.com, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, device-mainlining@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-rk3128 and rk3126 have some gate registers describe differences.
-So need to make some distinctions.
-The RK3126 and RK3128 Same clock description we move it to
-the common clock branches.
-And the different clks description use the own clock branches.
+On Tue, Jul 25, 2017 at 04:00:01PM +0800, Baolin Wang wrote:
+> Integrate with the newly added USB charger interface to limit the current
+> we draw from the USB input based on the input device configuration
+> identified by the USB stack, allowing us to charge more quickly from high
+> current inputs without drawing more current than specified from others.
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/clk/rockchip/clk-rk3128.c | 69 +++++++++++++++++++++++++++++++--------
- 1 file changed, 55 insertions(+), 14 deletions(-)
+Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 
-diff --git a/drivers/clk/rockchip/clk-rk3128.c b/drivers/clk/rockchip/clk-rk3128.c
-index e243f2eae68f..62d7854e4b87 100644
---- a/drivers/clk/rockchip/clk-rk3128.c
-+++ b/drivers/clk/rockchip/clk-rk3128.c
-@@ -201,7 +201,7 @@ enum rk3128_plls {
- 	MUX(SCLK_UART2, "sclk_uart2", mux_uart2_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(15), 8, 2, MFLAGS);
- 
--static struct rockchip_clk_branch rk3128_clk_branches[] __initdata = {
-+static struct rockchip_clk_branch common_clk_branches[] __initdata = {
- 	/*
- 	 * Clock-Architecture Diagram 1
- 	 */
-@@ -459,10 +459,6 @@ enum rk3128_plls {
- 			RK2928_CLKSEL_CON(2), 14, 2, MFLAGS, 8, 5, DFLAGS,
- 			RK2928_CLKGATE_CON(10), 15, GFLAGS),
- 
--	COMPOSITE(SCLK_SFC, "sclk_sfc", mux_sclk_sfc_src_p, 0,
--			RK2928_CLKSEL_CON(11), 14, 2, MFLAGS, 8, 5, DFLAGS,
--			RK2928_CLKGATE_CON(3), 15, GFLAGS),
--
- 	COMPOSITE_NOMUX(PCLK_PMU_PRE, "pclk_pmu_pre", "cpll", 0,
- 			RK2928_CLKSEL_CON(29), 8, 6, DFLAGS,
- 			RK2928_CLKGATE_CON(1), 0, GFLAGS),
-@@ -495,7 +491,6 @@ enum rk3128_plls {
- 	GATE(ACLK_DMAC, "aclk_dmac", "aclk_peri", 0, RK2928_CLKGATE_CON(5), 1, GFLAGS),
- 	GATE(0, "aclk_peri_niu", "aclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(9), 15, GFLAGS),
- 	GATE(0, "aclk_cpu_to_peri", "aclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 2, GFLAGS),
--	GATE(HCLK_GPS, "hclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(3), 14, GFLAGS),
- 
- 	GATE(HCLK_I2S_8CH, "hclk_i2s_8ch", "hclk_peri", 0, RK2928_CLKGATE_CON(7), 4, GFLAGS),
- 	GATE(0, "hclk_peri_matrix", "hclk_peri", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(4), 0, GFLAGS),
-@@ -541,7 +536,6 @@ enum rk3128_plls {
- 	GATE(0, "hclk_rom", "hclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5), 6, GFLAGS),
- 	GATE(HCLK_CRYPTO, "hclk_crypto", "hclk_cpu", 0, RK2928_CLKGATE_CON(3), 5, GFLAGS),
- 
--	GATE(PCLK_HDMI, "pclk_hdmi", "pclk_cpu", 0, RK2928_CLKGATE_CON(3), 8, GFLAGS),
- 	GATE(PCLK_ACODEC, "pclk_acodec", "pclk_cpu", 0, RK2928_CLKGATE_CON(5), 14, GFLAGS),
- 	GATE(0, "pclk_ddrupctl", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5), 7, GFLAGS),
- 	GATE(0, "pclk_grf", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(5), 4, GFLAGS),
-@@ -561,6 +555,21 @@ enum rk3128_plls {
- 	MMC(SCLK_EMMC_SAMPLE,  "emmc_sample",  "sclk_emmc",  RK3228_EMMC_CON1,  0),
- };
- 
-+static struct rockchip_clk_branch rk3126_clk_branches[] __initdata = {
-+	GATE(0, "pclk_stimer", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 15, GFLAGS),
-+	GATE(0, "pclk_s_efuse", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 14, GFLAGS),
-+	GATE(0, "pclk_sgrf", "pclk_cpu", CLK_IGNORE_UNUSED, RK2928_CLKGATE_CON(3), 8, GFLAGS),
-+};
-+
-+static struct rockchip_clk_branch rk3128_clk_branches[] __initdata = {
-+	COMPOSITE(SCLK_SFC, "sclk_sfc", mux_sclk_sfc_src_p, 0,
-+			RK2928_CLKSEL_CON(11), 14, 2, MFLAGS, 8, 5, DFLAGS,
-+			RK2928_CLKGATE_CON(3), 15, GFLAGS),
-+
-+	GATE(HCLK_GPS, "hclk_gps", "aclk_peri", 0, RK2928_CLKGATE_CON(3), 14, GFLAGS),
-+	GATE(PCLK_HDMI, "pclk_hdmi", "pclk_cpu", 0, RK2928_CLKGATE_CON(3), 8, GFLAGS),
-+};
-+
- static const char *const rk3128_critical_clocks[] __initconst = {
- 	"aclk_cpu",
- 	"hclk_cpu",
-@@ -570,7 +579,7 @@ enum rk3128_plls {
- 	"pclk_peri",
- };
- 
--static void __init rk3128_clk_init(struct device_node *np)
-+static struct rockchip_clk_provider *__init rk3128_common_clk_init(struct device_node *np)
- {
- 	struct rockchip_clk_provider *ctx;
- 	void __iomem *reg_base;
-@@ -578,23 +587,21 @@ static void __init rk3128_clk_init(struct device_node *np)
- 	reg_base = of_iomap(np, 0);
- 	if (!reg_base) {
- 		pr_err("%s: could not map cru region\n", __func__);
--		return;
-+		return ERR_PTR(-ENOMEM);
- 	}
- 
- 	ctx = rockchip_clk_init(np, reg_base, CLK_NR_CLKS);
- 	if (IS_ERR(ctx)) {
- 		pr_err("%s: rockchip clk init failed\n", __func__);
- 		iounmap(reg_base);
--		return;
-+		return ERR_PTR(-ENOMEM);
- 	}
- 
- 	rockchip_clk_register_plls(ctx, rk3128_pll_clks,
- 				   ARRAY_SIZE(rk3128_pll_clks),
- 				   RK3128_GRF_SOC_STATUS0);
--	rockchip_clk_register_branches(ctx, rk3128_clk_branches,
--				  ARRAY_SIZE(rk3128_clk_branches));
--	rockchip_clk_protect_critical(rk3128_critical_clocks,
--				      ARRAY_SIZE(rk3128_critical_clocks));
-+	rockchip_clk_register_branches(ctx, common_clk_branches,
-+				  ARRAY_SIZE(common_clk_branches));
- 
- 	rockchip_clk_register_armclk(ctx, ARMCLK, "armclk",
- 			mux_armclk_p, ARRAY_SIZE(mux_armclk_p),
-@@ -606,6 +613,40 @@ static void __init rk3128_clk_init(struct device_node *np)
- 
- 	rockchip_register_restart_notifier(ctx, RK2928_GLB_SRST_FST, NULL);
- 
-+	return ctx;
-+}
-+
-+static void __init rk3126_clk_init(struct device_node *np)
-+{
-+	struct rockchip_clk_provider *ctx;
-+
-+	ctx = rk3128_common_clk_init(np);
-+	if (IS_ERR(ctx))
-+		return;
-+
-+	rockchip_clk_register_branches(ctx, rk3126_clk_branches,
-+				       ARRAY_SIZE(rk3126_clk_branches));
-+	rockchip_clk_protect_critical(rk3128_critical_clocks,
-+				      ARRAY_SIZE(rk3128_critical_clocks));
-+
-+	rockchip_clk_of_add_provider(np, ctx);
-+}
-+
-+CLK_OF_DECLARE(rk3126_cru, "rockchip,rk3126-cru", rk3126_clk_init);
-+
-+static void __init rk3128_clk_init(struct device_node *np)
-+{
-+	struct rockchip_clk_provider *ctx;
-+
-+	ctx = rk3128_common_clk_init(np);
-+	if (IS_ERR(ctx))
-+		return;
-+
-+	rockchip_clk_register_branches(ctx, rk3128_clk_branches,
-+				       ARRAY_SIZE(rk3128_clk_branches));
-+	rockchip_clk_protect_critical(rk3128_critical_clocks,
-+				      ARRAY_SIZE(rk3128_critical_clocks));
-+
- 	rockchip_clk_of_add_provider(np, ctx);
- }
- 
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Charles
