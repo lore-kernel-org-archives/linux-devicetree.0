@@ -1,90 +1,51 @@
-From: Chris Healy <cphealy@gmail.com>
-Subject: Re: [RESEND PATCH v4 0/2] ZII RAVE platform driver
-Date: Tue, 25 Jul 2017 14:06:11 -0700
-Message-ID: <CAFXsbZpGee52c2ip06vhgxbvHa-pisX8Oi-7xE0Uh-eLaH7Gvw@mail.gmail.com>
-References: <20170725184450.13171-1-andrew.smirnov@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 3.18 56/60] of: device: Export of_device_{get_modalias, uvent_modalias} to modules
+Date: Tue, 25 Jul 2017 12:16:47 -0700
+Message-ID: <20170725191622.090725432@linuxfoundation.org>
+References: <20170725191614.043749784@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170725184450.13171-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20170725191614.043749784@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <peter.chen@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Full series successfully tested on both RDU1 and RDU2 platforms.
-Builds and executes correctly.
+3.18-stable review patch.  If anyone has any objections, please let me know.
 
-Tested-by: Chris Healy <cphealy@gmail.com>
+------------------
 
+From: Stephen Boyd <stephen.boyd@linaro.org>
 
-On Tue, Jul 25, 2017 at 11:44 AM, Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
-> Hi everyone,
->
-> This patch series is v4 of the driver for supervisory processor found
-> on RAVE series of devices from ZII. Supervisory processor is a PIC
-> microcontroller connected to various electrical subsystems on RAVE
-> devices whose firmware implements protocol to command/qery them.
->
-> Changes since [v3]:
->
->     - Re-collected lost Acked-by from Rob
->
->     - Incorporated further feedback from Andy Shevchenko
->
->     - Dropped useless change (stray newline) to drivers/mfd/Makefile
->
-> Changes since [v2]:
->
->     - Fixed swapped command codes in rave_sp_common_get_boot_source()
->       and rave_sp_common_set_boot_source() revealed by further testing
->       of the code
->
->     - Incorporated feedback from Andy Shevchenko
->
-> Changes since [v1]:
->
->     - Updated wording in DT-bindings as per Rob's request.
->
->     - Collected Rob's Acked-by for patch 2/2
->
-> NOTE:
->
->  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
->    submitted it yet, becuase I wanted to make sure that API exposed by
->    this MFD is acceptable and doesn't need drastic changes.
->
->  * This driver is dependent on crc_ccitt_false() introduced in
->    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
->
-> Feedback is greatly appreciated!
->
-> Thanks,
-> Andrey Smirnov
->
-> [v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov@gmail.com
-> [v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov@gmail.com
-> [v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov@gmail.com
->
-> Andrey Smirnov (2):
->   platform: Add driver for RAVE Supervisory Processor
->   dt-bindings: mfd: Add bindings for ZII RAVE devices
->
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   39 +
->  drivers/platform/Kconfig                           |    2 +
->  drivers/platform/Makefile                          |    1 +
->  drivers/platform/rave/Kconfig                      |   26 +
->  drivers/platform/rave/Makefile                     |    1 +
->  drivers/platform/rave/rave-sp.c                    | 1126 ++++++++++++++++++++
->  include/linux/rave-sp.h                            |   54 +
->  7 files changed, 1249 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->  create mode 100644 drivers/platform/rave/Kconfig
->  create mode 100644 drivers/platform/rave/Makefile
->  create mode 100644 drivers/platform/rave/rave-sp.c
->  create mode 100644 include/linux/rave-sp.h
->
-> --
-> 2.13.3
->
+commit 7a3b7cd332db08546f3cdd984f11773e0d1999e7 upstream.
+
+The ULPI bus can be built as a module, and it will soon be
+calling these functions when it supports probing devices from DT.
+Export them so they can be used by the ULPI module.
+
+Acked-by: Rob Herring <robh@kernel.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/of/device.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -128,6 +128,7 @@ ssize_t of_device_get_modalias(struct de
+ 
+ 	return tsize;
+ }
++EXPORT_SYMBOL_GPL(of_device_get_modalias);
+ 
+ /**
+  * of_device_uevent - Display OF related uevent information
+@@ -190,3 +191,4 @@ int of_device_uevent_modalias(struct dev
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
