@@ -1,99 +1,34 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] iio: humidity: hts221: support open drain mode
-Date: Tue, 25 Jul 2017 20:01:12 +0100
-Message-ID: <20170725200112.06fa7187@jic23.retrosnub.co.uk>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 09/10] dt-bindings: iio: humidity: hts221: support
+ open drain mode
+Date: Tue, 25 Jul 2017 20:02:31 +0100
+Message-ID: <20170725200231.517ec147@kernel.org>
 References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-        <20170717173905.8209-9-lorenzo.bianconi@st.com>
-        <20170722212524.6fc06db7@kernel.org>
+        <20170717173905.8209-10-lorenzo.bianconi@st.com>
+        <20170724174816.zgdsfzuq2frsggzn@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170722212524.6fc06db7-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170724174816.zgdsfzuq2frsggzn@rob-hp-laptop>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Jul 2017 21:25:24 +0100
-Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Mon, 24 Jul 2017 12:48:16 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-> On Mon, 17 Jul 2017 19:39:03 +0200
-> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Jul 17, 2017 at 07:39:04PM +0200, Lorenzo Bianconi wrote:
+> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/iio/humidity/hts221.txt | 8 ++++++++
+> >  1 file changed, 8 insertions(+)  
 > 
-> > Add open drain support in order to share requested IRQ line between
-> > hts221 device and other peripherals
-> > 
-> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
-> I'm going to hold off on the rest of this series to give Rob
-> time to take another look at the bindings documentation and
-> confirm he is happy with the changes.
-> 
-> Give me a poke if I seem to have forgotten them!
-Applied to the togreg branch of iio.git.
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Applied to the togreg branch of iio.git and pushed out as testing
 
 Thanks,
 
 Jonathan
-> 
-> Jonathan
-> > ---
-> >  drivers/iio/humidity/hts221_buffer.c | 22 +++++++++++++++++++++-
-> >  1 file changed, 21 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-> > index ad5222295b2c..f29f01a22375 100644
-> > --- a/drivers/iio/humidity/hts221_buffer.c
-> > +++ b/drivers/iio/humidity/hts221_buffer.c
-> > @@ -20,10 +20,14 @@
-> >  #include <linux/iio/triggered_buffer.h>
-> >  #include <linux/iio/buffer.h>
-> >  
-> > +#include <linux/platform_data/st_sensors_pdata.h>
-> > +
-> >  #include "hts221.h"
-> >  
-> >  #define HTS221_REG_DRDY_HL_ADDR		0x22
-> >  #define HTS221_REG_DRDY_HL_MASK		BIT(7)
-> > +#define HTS221_REG_DRDY_PP_OD_ADDR	0x22
-> > +#define HTS221_REG_DRDY_PP_OD_MASK	BIT(6)
-> >  #define HTS221_REG_STATUS_ADDR		0x27
-> >  #define HTS221_RH_DRDY_MASK		BIT(1)
-> >  #define HTS221_TEMP_DRDY_MASK		BIT(0)
-> > @@ -69,7 +73,9 @@ static irqreturn_t hts221_trigger_handler_thread(int irq, void *private)
-> >  int hts221_allocate_trigger(struct hts221_hw *hw)
-> >  {
-> >  	struct iio_dev *iio_dev = iio_priv_to_dev(hw);
-> > -	bool irq_active_low = false;
-> > +	bool irq_active_low = false, open_drain = false;
-> > +	struct device_node *np = hw->dev->of_node;
-> > +	struct st_sensors_platform_data *pdata;
-> >  	unsigned long irq_type;
-> >  	int err;
-> >  
-> > @@ -95,6 +101,20 @@ int hts221_allocate_trigger(struct hts221_hw *hw)
-> >  				     HTS221_REG_DRDY_HL_MASK, irq_active_low);
-> >  	if (err < 0)
-> >  		return err;
-> > +
-> > +	pdata = (struct st_sensors_platform_data *)hw->dev->platform_data;
-> > +	if ((np && of_property_read_bool(np, "drive-open-drain")) ||
-> > +	    (pdata && pdata->open_drain)) {
-> > +		irq_type |= IRQF_SHARED;
-> > +		open_drain = true;
-> > +	}
-> > +
-> > +	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_PP_OD_ADDR,
-> > +				     HTS221_REG_DRDY_PP_OD_MASK,
-> > +				     open_drain);
-> > +	if (err < 0)
-> > +		return err;
-> > +
-> >  	err = devm_request_threaded_irq(hw->dev, hw->irq, NULL,
-> >  					hts221_trigger_handler_thread,
-> >  					irq_type | IRQF_ONESHOT,  
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
