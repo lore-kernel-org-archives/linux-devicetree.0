@@ -1,73 +1,82 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND documentation
-Date: Wed, 26 Jul 2017 00:13:03 +0530
-Message-ID: <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
- <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RESEND PATCH v4 0/2] ZII RAVE platform driver
+Date: Tue, 25 Jul 2017 11:44:48 -0700
+Message-ID: <20170725184450.13171-1-andrew.smirnov@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-25 00:47, Rob Herring wrote:
-> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:
->> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
->> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
->>    while EBI2 NAND uses only single ADM channel.
->> 3. CRCI is only required for ADM DMA and its not required for
->>    QPIC NAND.
->> 
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> ---
->>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54 
->> ++++++++++++++++++++--
->>  1 file changed, 51 insertions(+), 3 deletions(-)
->> 
->> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt 
->> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> index b24adfe..8efaeb0 100644
->> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> @@ -1,13 +1,15 @@
->>  * Qualcomm NAND controller
->> 
->>  Required properties:
->> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses ADM
->> -			DMA like IPQ8064.
->> -
->> +- compatible:		must be one of the following:
->> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
->> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA 
->> like IPQ4019.
-> 
-> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
-> compatible strings.
+Hi everyone,
 
-  We have 3 versions of NAND HW currently.
-  EBI2,
-  QPIC version 1.4.0
-  QPIC version 1.5.0
+This patch series is v4 of the driver for supervisory processor found
+on RAVE series of devices from ZII. Supervisory processor is a PIC
+microcontroller connected to various electrical subsystems on RAVE
+devices whose firmware implements protocol to command/qery them.
 
-  and multiple Qualcomm SoCs which use any one of these.
+Changes since [v3]:
 
-  The original plan was to have compatible string for NAND version since
-  same NAND hardware is being in different SoC and SoC dtsi will simply
-  use its NAND version compatible string like other Qualcomm hardwares
+    - Re-collected lost Acked-by from Rob
 
-  
-http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-  
-http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+    - Incorporated further feedback from Andy Shevchenko
 
-> 
-> Rob
+    - Dropped useless change (stray newline) to drivers/mfd/Makefile
+
+Changes since [v2]:
+
+    - Fixed swapped command codes in rave_sp_common_get_boot_source()
+      and rave_sp_common_set_boot_source() revealed by further testing
+      of the code
+
+    - Incorporated feedback from Andy Shevchenko
+
+Changes since [v1]:
+
+    - Updated wording in DT-bindings as per Rob's request.
+
+    - Collected Rob's Acked-by for patch 2/2
+
+NOTE:
+
+ * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+   submitted it yet, becuase I wanted to make sure that API exposed by
+   this MFD is acceptable and doesn't need drastic changes.
+
+ * This driver is dependent on crc_ccitt_false() introduced in
+   2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+
+Feedback is greatly appreciated!
+
+Thanks,
+Andrey Smirnov
+
+[v3] lkml.kernel.org/r/20170724150915.4824-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v2] lkml.kernel.org/r/20170718175604.11735-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[v1] lkml.kernel.org/r/20170710170449.4544-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Andrey Smirnov (2):
+  platform: Add driver for RAVE Supervisory Processor
+  dt-bindings: mfd: Add bindings for ZII RAVE devices
+
+ .../devicetree/bindings/mfd/zii,rave-sp.txt        |   39 +
+ drivers/platform/Kconfig                           |    2 +
+ drivers/platform/Makefile                          |    1 +
+ drivers/platform/rave/Kconfig                      |   26 +
+ drivers/platform/rave/Makefile                     |    1 +
+ drivers/platform/rave/rave-sp.c                    | 1126 ++++++++++++++++++++
+ include/linux/rave-sp.h                            |   54 +
+ 7 files changed, 1249 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+ create mode 100644 drivers/platform/rave/Kconfig
+ create mode 100644 drivers/platform/rave/Makefile
+ create mode 100644 drivers/platform/rave/rave-sp.c
+ create mode 100644 include/linux/rave-sp.h
 
 -- 
-Abhishek Sahu
+2.13.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
