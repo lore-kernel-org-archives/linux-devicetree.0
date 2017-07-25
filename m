@@ -1,30 +1,37 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6: RIoTboard provide gpio-line-names
-Date: Tue, 25 Jul 2017 17:10:45 +0800
-Message-ID: <20170725091043.GJ20064@dragon>
-References: <20170718054022.2867-1-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rocky Hao <rocky.hao@rock-chips.com>
+Subject: [PATCH 5/5] arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation board
+Date: Tue, 25 Jul 2017 17:16:10 +0800
+Message-ID: <1500974170-23132-1-git-send-email-rocky.hao@rock-chips.com>
+References: <1500973788-14627-1-git-send-email-rocky.hao@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718054022.2867-1-o.rempel@pengutronix.de>
+In-Reply-To: <1500973788-14627-1-git-send-email-rocky.hao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: shawn.lin@rock-chips.com, cl@rock-chips.com, william.wu@rock-chips.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, xxx@rock-chips.com, jay.xu@rock-chips.com, wxt@rock-chips.com, huangtao@rock-chips.com, rocky.hao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 07:40:22AM +0200, Oleksij Rempel wrote:
-> gpio-line-names may help to make work with GPIOs from user space easier.
-> Following examples are provided with libgpiod
-> https://github.com/brgl/libgpiod :
-> |# Toggle a GPIO by name, then wait for the user to press ENTER.
-> |$ gpioset --mode=wait `gpiofind "USR-LED-2"`=1
-> |# Pause execution until a single event of any type occurs. Don't print
-> |# anything. Find the line by name.
-> |$ gpiomon --num-events=1 --silent `gpiofind "USR-IN"`
-> 
-> Used names was taken from RIoTboard schematics, version 1 (2013.12.07).
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+enable tsadc module on RK3328 eavluation board
 
-Applied, thanks.
+Change-Id: Ieb45a02b90dae3fbefe7d2b571b3961412d866ad
+Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
+---
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+index 8c61d91bf89b..e7db0dc97ce0 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
+@@ -52,6 +52,10 @@
+ 	};
+ };
+ 
++&tsadc {
++	status = "okay";
++};
++
+ &uart2 {
+ 	status = "okay";
+ };
+-- 
+1.9.1
