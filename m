@@ -1,159 +1,75 @@
-Return-Path: <philip.j.elwell@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5967CAA6.6010801@gmail.com>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20170703090648.GV13989@umbus.fritz.box> <5967CAA6.6010801@gmail.com>
-From: Phil Elwell <philip.j.elwell@gmail.com>
-Date: Thu, 13 Jul 2017 20:38:10 +0100
-Message-ID: <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Content-Type: multipart/alternative; boundary="001a113e228a9dacc805543812ef"
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robherring2@gmail.com>, Devicetree Compiler <devicetree-compiler@vger.kernel.org>, David Gibson <david@gibson.dropbear.id.au>, Tom Rini <trini@konsulko.com>, devicetree@vger.kernel.org, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Tero Kristo <t-kristo@ti.com>, Simon Glass <sjg@chromium.org>
+In-Reply-To: <20170724212454.27574-2-d-gerlach@ti.com>
+References: <20170724212454.27574-1-d-gerlach@ti.com>
+	<20170724212454.27574-2-d-gerlach@ti.com>
+Date: Tue, 25 Jul 2017 10:53:09 -0500
+Message-ID: <CAL_Jsq+WDWVJHuc2xaCsZnGWTvT9QYwBbcAJCkMAO60wvJ4WTA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] Documentation: dt: Update ti,emif bindings
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <ssantosh@kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Keerthy J <j-keerthy@ti.com>, Johan Hovold <johan@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a113e228a9dacc805543812ef
-Content-Type: text/plain; charset="UTF-8"
-
-Can we also consider a mechanism for overlay-local symbols, i.e. symbols
-that are used purely to create links within an overlay - perhaps using a
-particular naming convention? This would make it easier to instantiate an
-overlay multiple times without having to uniquify all symbols, and it would
-avoid polluting the global namespace without reason.
-
-Phil
-
-On 13 Jul 2017 8:32 pm, "Frank Rowand" <frowand.list@gmail.com> wrote:
-
-> On 07/03/17 02:06, David Gibson wrote:
-> > On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
-> >> This patch enables an overlay to refer to a previous overlay's
-> >> labels by performing a merge of symbol information at application
-> >> time.
-> >
-> > This seems to be doing things the hard way.
-> >
-> > You're essentially extending the semantics of overlay application to
-> > add the symbol merging.  You've implemented these extended semantics
-> > in libfdt, which is all very well, but that's not the only overlay
-> > application implementation.
-> >
-> >
-> > It seems to me a better approach would be to change dtc's -@
-> > implementation, so that in /plugin/ mode instead of making a global
-> > __symbols__ node, it puts it into the individual fragments.  That way
-> > the existing overlay application semantics will update the __symbols__
-> > node.
+On Mon, Jul 24, 2017 at 4:24 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> Update the Texas Instruments EMIF binding document to include the device
+> tree bindings for ti,emif-am3352 and ti,emif-am4372 which are used by
+> the ti-emif-sram driver to provide low-level PM functionality.
 >
-> If the __symbols__ node was inside a fragment, then the existing
-> code would add (or update) a __symbols__ node located at the location
-> pointed to by the fragment's target path, instead of updating the
-> node /__symbols__.
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
+>  .../devicetree/bindings/memory-controllers/ti/emif.txt | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 >
-> It makes sense to me to have only one global __symbols__ node instead
-> of several.
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+> index 0db60470ebb6..8c0214b17c2b 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+> +++ b/Documentation/devicetree/bindings/memory-controllers/ti/emif.txt
+> @@ -8,6 +8,7 @@ of the EMIF IP and memory parts attached to it.
+>  Required properties:
+>  - compatible   : Should be of the form "ti,emif-<ip-rev>" where <ip-rev>
+>    is the IP revision of the specific EMIF instance.
+> +                 For am335x should be ti,emif-am3352.
+>                   For am437x should be ti,emif-am4372.
 >
-> If there is a global __symbols__ node then we have a single name
-> space for symbols.
+>  - phy-type     : <u32> indicating the DDR phy type. Following are the
+> @@ -21,6 +22,13 @@ Required properties:
+>    the value shall be "emif<n>" where <n> is the number of the EMIF
+>    instance with base 1.
 >
-> If there are multiple __symbols__ nodes spread throughout the tree,
-> then to me that would imply different name spaces spread throughout
-> the tree, where namespaces are determined by fragments.  This sounds
-> confusing to me.  Or if the intent is to have a single name space
-> then the __symbols__ information would be scattered throughout the
-> tree instead of located in a single node.
+> +Required only for "ti,emif-am3352" and "ti,emif-am4372":
+> +- sram                 : Phandles for generic sram driver nodes,
+> +  first should be type 'protect-exec' for the driver to use to copy
+> +  and run PM functions, second should be regular pool to be used for
+> +  data region for code. See Documentation/devicetree/bindings/sram/sram.txt
+> +  for more details.
+> +
+>  Optional properties:
+>  - cs1-used             : Have this property if CS1 of this EMIF
+>    instance has a memory part attached to it. If there is a memory
+> @@ -42,7 +50,7 @@ Optional properties:
+>  - hw-caps-temp-alert   : Have this property if the controller
+>    has capability for generating SDRAM temperature alerts
 >
-> My current patch (under review), targeted for Linux 4.13-rc1, puts
-> an overlay's __symbols__ node properties into the overlay's
-> changeset, so they get added when the overlay is loaded and
-> removed when the overlay is unloaded.
+> -Example:
+> +-Examples:
 >
-> -Frank
->
+>  emif1: emif@0x4c000000 {
+>         compatible      = "ti,emif-4d";
+> @@ -54,3 +62,11 @@ emif1: emif@0x4c000000 {
+>         hw-caps-ll-interface;
+>         hw-caps-temp-alert;
+>  };
+> +
+> +/* From am33xx.dtsi */
+> +emif: emif@4c000000 {
+> +        compatible = "ti,emif-am3352";
+> +        reg =   <0x4C000000 0x1000>;
+> +        sram = <&pm_sram_code
+> +                &pm_sram_data>;
+> +};
 > --
-> To unsubscribe from this list: send the line "unsubscribe
-> devicetree-compiler" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.13.0
 >
-
---001a113e228a9dacc805543812ef
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto">Can we also consider a mechanism for overlay-local symbol=
-s, i.e. symbols that are used purely to create links within an overlay - pe=
-rhaps using a particular naming convention? This would make it easier to in=
-stantiate an overlay multiple times without having to uniquify all symbols,=
- and it would avoid polluting the global namespace without reason.<div dir=
-=3D"auto"><br></div><div dir=3D"auto">Phil</div></div><div class=3D"gmail_e=
-xtra"><br><div class=3D"gmail_quote">On 13 Jul 2017 8:32 pm, &quot;Frank Ro=
-wand&quot; &lt;<a href=3D"mailto:frowand.list@gmail.com">frowand.list@gmail=
-.com</a>&gt; wrote:<br type=3D"attribution"><blockquote class=3D"gmail_quot=
-e" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">=
-On 07/03/17 02:06, David Gibson wrote:<br>
-&gt; On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:<br>
-&gt;&gt; This patch enables an overlay to refer to a previous overlay&#39;s=
-<br>
-&gt;&gt; labels by performing a merge of symbol information at application<=
-br>
-&gt;&gt; time.<br>
-&gt;<br>
-&gt; This seems to be doing things the hard way.<br>
-&gt;<br>
-&gt; You&#39;re essentially extending the semantics of overlay application =
-to<br>
-&gt; add the symbol merging.=C2=A0 You&#39;ve implemented these extended se=
-mantics<br>
-&gt; in libfdt, which is all very well, but that&#39;s not the only overlay=
-<br>
-&gt; application implementation.<br>
-&gt;<br>
-&gt;<br>
-&gt; It seems to me a better approach would be to change dtc&#39;s -@<br>
-&gt; implementation, so that in /plugin/ mode instead of making a global<br=
->
-&gt; __symbols__ node, it puts it into the individual fragments.=C2=A0 That=
- way<br>
-&gt; the existing overlay application semantics will update the __symbols__=
-<br>
-&gt; node.<br>
-<br>
-If the __symbols__ node was inside a fragment, then the existing<br>
-code would add (or update) a __symbols__ node located at the location<br>
-pointed to by the fragment&#39;s target path, instead of updating the<br>
-node /__symbols__.<br>
-<br>
-It makes sense to me to have only one global __symbols__ node instead<br>
-of several.<br>
-<br>
-If there is a global __symbols__ node then we have a single name<br>
-space for symbols.<br>
-<br>
-If there are multiple __symbols__ nodes spread throughout the tree,<br>
-then to me that would imply different name spaces spread throughout<br>
-the tree, where namespaces are determined by fragments.=C2=A0 This sounds<b=
-r>
-confusing to me.=C2=A0 Or if the intent is to have a single name space<br>
-then the __symbols__ information would be scattered throughout the<br>
-tree instead of located in a single node.<br>
-<br>
-My current patch (under review), targeted for Linux 4.13-rc1, puts<br>
-an overlay&#39;s __symbols__ node properties into the overlay&#39;s<br>
-changeset, so they get added when the overlay is loaded and<br>
-removed when the overlay is unloaded.<br>
-<br>
--Frank<br>
-<br>
---<br>
-To unsubscribe from this list: send the line &quot;unsubscribe devicetree-c=
-ompiler&quot; in<br>
-the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">major=
-domo@vger.kernel.org</a><br>
-More majordomo info at=C2=A0 <a href=3D"http://vger.kernel.org/majordomo-in=
-fo.html" rel=3D"noreferrer" target=3D"_blank">http://vger.kernel.org/<wbr>m=
-ajordomo-info.html</a><br>
-</blockquote></div></div>
-
---001a113e228a9dacc805543812ef--
