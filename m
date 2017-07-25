@@ -1,198 +1,102 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] soc: mediatek: add SCPSYS power domain driver for
- MediaTek MT7622 SoC
-Date: Tue, 25 Jul 2017 10:56:30 +0200
-Message-ID: <a44d92b0-41e6-8bb3-fd3f-9add05040b91@gmail.com>
-References: <cover.1500608650.git.sean.wang@mediatek.com>
- <284911261d7e423e5bb47625858b3284be713a1b.1500608650.git.sean.wang@mediatek.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCHv4 1/3] dt-bindings: input: add pwm-vibrator
+Date: Tue, 25 Jul 2017 10:59:49 +0200
+Message-ID: <20170725085949.2v3b373p5xkje47a@earth>
+References: <20170714100151.31234-1-sebastian.reichel@collabora.co.uk>
+ <20170714100151.31234-2-sebastian.reichel@collabora.co.uk>
+ <20170724192017.GE32425@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <284911261d7e423e5bb47625858b3284be713a1b.1500608650.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="gj2fo7nfy4g724kh"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170724192017.GE32425@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--gj2fo7nfy4g724kh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 07/21/2017 05:57 AM, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> Add SCPSYS power domain driver for MT7622 SoC having four power domains
-> which are respectively ETHSYS for Ethernet including embedded switch,
-> WBSYS for WIFI and Bluetooth, HIF0SYS for PCI-E and SATA, and HIF1SYS for
-> USB. Those functions could be selectively powered gated when the
-> corresponding function is no longer to use in order to reach more minimal
-> power dissipation.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   drivers/soc/mediatek/mtk-scpsys.c     | 76 +++++++++++++++++++++++++++++++++++
->   include/linux/soc/mediatek/infracfg.h |  8 +++-
->   2 files changed, 83 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-> index beb7916..8a0ca02 100644
-> --- a/drivers/soc/mediatek/mtk-scpsys.c
-> +++ b/drivers/soc/mediatek/mtk-scpsys.c
-> @@ -21,6 +21,7 @@
->   #include <linux/soc/mediatek/infracfg.h>
->   
->   #include <dt-bindings/power/mt2701-power.h>
-> +#include <dt-bindings/power/mt7622-power.h>
->   #include <dt-bindings/power/mt8173-power.h>
->   
->   #define SPM_VDE_PWR_CON			0x0210
-> @@ -38,6 +39,11 @@
->   #define SPM_MFG_2D_PWR_CON		0x02c0
->   #define SPM_MFG_ASYNC_PWR_CON		0x02c4
->   #define SPM_USB_PWR_CON			0x02cc
-> +#define SPM_ETHSYS_PWR_CON		0x02e0	/* MT7622 */
-> +#define SPM_HIF0_PWR_CON		0x02e4	/* MT7622 */
-> +#define SPM_HIF1_PWR_CON		0x02e8	/* MT7622 */
-> +#define SPM_WB_PWR_CON			0x02ec	/* MT7622 */
-> +
->   
->   #define SPM_PWR_STATUS			0x060c
->   #define SPM_PWR_STATUS_2ND		0x0610
-> @@ -63,6 +69,10 @@
->   #define PWR_STATUS_MFG_ASYNC		BIT(23)
->   #define PWR_STATUS_AUDIO		BIT(24)
->   #define PWR_STATUS_USB			BIT(25)
-> +#define PWR_STATUS_ETHSYS		BIT(24)	/* MT7622 */
-> +#define PWR_STATUS_HIF0			BIT(25)	/* MT7622 */
-> +#define PWR_STATUS_HIF1			BIT(26)	/* MT7622 */
-> +#define PWR_STATUS_WB			BIT(27)	/* MT7622 */
->   
->   enum clk_id {
->   	CLK_NONE,
-> @@ -71,6 +81,7 @@ enum clk_id {
->   	CLK_VENC,
->   	CLK_VENC_LT,
->   	CLK_ETHIF,
-> +	CLK_HIFSEL,
->   	CLK_MAX,
->   };
->   
-> @@ -81,6 +92,7 @@ static const char * const clk_names[] = {
->   	"venc",
->   	"venc_lt",
->   	"ethif",
-> +	"hif_sel",
->   	NULL,
->   };
->   
-> @@ -567,6 +579,67 @@ static int __init scpsys_probe_mt2701(struct platform_device *pdev)
->   }
->   
->   /*
-> + * MT7622 power domain support
-> + */
-> +static const struct scp_domain_data scp_domain_data_mt7622[] = {
-> +	[MT7622_POWER_DOMAIN_ETHSYS] = {
-> +		.name = "ethsys",
-> +		.sta_mask = PWR_STATUS_ETHSYS,
-> +		.ctl_offs = SPM_ETHSYS_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(15, 12),
-> +		.clk_id = {CLK_NONE},
-> +		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_ETHSYS,
-> +		.active_wakeup = true,
-> +	},
-> +	[MT7622_POWER_DOMAIN_HIF0] = {
-> +		.name = "hif0",
-> +		.sta_mask = PWR_STATUS_HIF0,
-> +		.ctl_offs = SPM_HIF0_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(15, 12),
-> +		.clk_id = {CLK_HIFSEL},
-> +		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_HIF0,
-> +		.active_wakeup = true,
-> +	},
-> +	[MT7622_POWER_DOMAIN_HIF1] = {
-> +		.name = "hif1",
-> +		.sta_mask = PWR_STATUS_HIF1,
-> +		.ctl_offs = SPM_HIF1_PWR_CON,
-> +		.sram_pdn_bits = GENMASK(11, 8),
-> +		.sram_pdn_ack_bits = GENMASK(15, 12),
-> +		.clk_id = {CLK_HIFSEL},
-> +		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_HIF1,
-> +		.active_wakeup = true,
-> +	},
-> +	[MT7622_POWER_DOMAIN_WB] = {
-> +		.name = "wb",
-> +		.sta_mask = PWR_STATUS_WB,
-> +		.ctl_offs = SPM_WB_PWR_CON,
-> +		.sram_pdn_bits = 0,
-> +		.sram_pdn_ack_bits = 0,
-> +		.clk_id = {CLK_NONE},
-> +		.bus_prot_mask = MT7622_TOP_AXI_PROT_EN_WB,
-> +		.active_wakeup = true,
-> +	},
-> +};
-> +
-> +#define NUM_DOMAINS_MT7622	ARRAY_SIZE(scp_domain_data_mt7622)
-> +
-> +static int __init scpsys_probe_mt7622(struct platform_device *pdev)
-> +{
-> +	struct scp *scp;
-> +
-> +	scp = init_scp(pdev, scp_domain_data_mt7622, NUM_DOMAINS_MT7622);
+Hi,
 
-This does not look correct, init_scp awaits 4 arguments.
+On Mon, Jul 24, 2017 at 09:20:17PM +0200, Pavel Machek wrote:
+> On Fri 2017-07-14 12:01:49, Sebastian Reichel wrote:
+> > Add DT binding document for PWM controlled vibrator devices.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+>=20
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> > index 000000000000..09145d18491d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
+> > @@ -0,0 +1,66 @@
+> > +* PWM vibrator device tree bindings
+> > +
+> > +Registers a PWM device as vibrator. It is expected, that the vibrator's
+> > +strength increases based on the duty cycle of the enable PWM channel
+> > +(100% duty cycle meaning strongest vibration, 0% meaning no vibration).
+> > +
+> > +The binding supports an optional direction PWM channel, that can be
+> > +driven at fixed duty cycle. If available this is can be used to increa=
+se
+> > +the vibration effect of some devices.
+>=20
+> Actually what "direction" does would be nice to explain, because I
+> don't know. Does it make the motor turn the other way around?
 
-Apart, please rebase your patches against v4.13-rc1 as this does not apply cleanly.
+Yes, at least that's how I understand it. IIUIC this will increase
+the imbalance effect and thus the vibration.
 
-Thanks,
-Matthias
+> > +Required properties:
+> > +- compatible: should contain "pwm-vibrator"
+>=20
+> should->Should.
+>
+> > +- pwm-names: Should contain "enable" and optionally "direction"
+> > +- pwms: Should contain a PWM handle for each entry in pwm-names
+> > +
+> > +Optional properties:
+> > +- vcc-supply: Phandle for the regulator supplying power
+> > +- direction-duty-cycle-ns: Duty cycle of the direction PWM channel in
+> > +                           nanoseconds, defaults to 50% of the channel=
+'s
+> > +			   period.
+>=20
+> Is nanoseconds right unit here? It drives a motor...
 
-> +	if (IS_ERR(scp))
-> +		return PTR_ERR(scp);
-> +
-> +	mtk_register_power_domains(pdev, scp, NUM_DOMAINS_MT7622);
-> +
-> +	return 0;
-> +}
-> +
-> +/*
->    * MT8173 power domain support
->    */
->   
-> @@ -698,6 +771,9 @@ static const struct of_device_id of_scpsys_match_tbl[] = {
->   		.compatible = "mediatek,mt2701-scpsys",
->   		.data = scpsys_probe_mt2701,
->   	}, {
-> +		.compatible = "mediatek,mt7622-scpsys",
-> +		.data = scpsys_probe_mt7622,
-> +	}, {
->   		.compatible = "mediatek,mt8173-scpsys",
->   		.data = scpsys_probe_mt8173,
->   	}, {
-> diff --git a/include/linux/soc/mediatek/infracfg.h b/include/linux/soc/mediatek/infracfg.h
-> index a5714e9..c1e5062 100644
-> --- a/include/linux/soc/mediatek/infracfg.h
-> +++ b/include/linux/soc/mediatek/infracfg.h
-> @@ -20,7 +20,13 @@
->   #define MT8173_TOP_AXI_PROT_EN_MFG_M1		BIT(22)
->   #define MT8173_TOP_AXI_PROT_EN_MFG_SNOOP_OUT	BIT(23)
->   
-> +#define MT7622_TOP_AXI_PROT_EN_ETHSYS		(BIT(3) | BIT(17))
-> +#define MT7622_TOP_AXI_PROT_EN_HIF0		(BIT(24) | BIT(25))
-> +#define MT7622_TOP_AXI_PROT_EN_HIF1		(BIT(26) | BIT(27) | \
-> +						 BIT(28))
-> +#define MT7622_TOP_AXI_PROT_EN_WB		(BIT(2) | BIT(6) | \
-> +						 BIT(7) | BIT(8))
-> +
->   int mtk_infracfg_set_bus_protection(struct regmap *infracfg, u32 mask);
->   int mtk_infracfg_clear_bus_protection(struct regmap *infracfg, u32 mask);
-> -
->   #endif /* __SOC_MEDIATEK_INFRACFG_H */
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, for the driving the motor the values will be very big
+and we could use milliseconds. But the PWM specifier [0] uses
+nanoseconds for the period and I think period and duty cycle
+should be described in the same scale.
+
+[0] Documentation/devicetree/bindings/pwm/pwm.txt
+
+-- Sebastian
+
+--gj2fo7nfy4g724kh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll3CIIACgkQ2O7X88g7
++poeDg//efMooQSkEg59ZZ2bwL3s1NuVIbz/TNcA8qYzqOIycTh5ZAEaU6HNprlE
+SD1JAzj/VpTcV3bpZG85jghmYVdFMxMZWBHQCo29A5A5k+0BFF9BU8nOIHth44aa
+Yb5iee0sf45Ye5DqVJrdmQLFGN9ykQTuHZdw0rebOCOfiuUq6cer2Doiq93pHPk0
+HeFrvOn1pe2ExQkxWKO5w4pdKpAsFMmkmaPKzvf0JtbZ66ebpQM9u2GzTZlfr6Wg
+Cf0qEGRMj7W63LQ9PhpnZNSQXMOV1uvP9rBGLNPKDqLnVAQAvGy5drC88KZ3PXWA
+reltaAgX3xdwb4SFz3RU5Oa/keWadu9Ok03Xj8fPsijLVT/W789d/GjQ2suCu2iV
+SXQ7+vY9KOGeJyFSNo/8XRZTEm+Xnm1tLK0tRs09BcNIXjM5uyyG2MgpJ2reTcFg
+b15iOgOlDmMGXr/fdTkql/6Y4aeLj741yxgBCv5saU4/l3A09qlyRtzyu4qi+3Wi
+igeWvo07e6aNLZ1OOpykpKELNjfDpkOuN9kXCoxZKPluNspst6/k/931V6KRlZ9h
+y1ZUpF0IBJilhautAn4csNQgmvDf+H1bZ/ykXonFHdQiDwqBLJD3soIRFohIyMV3
+teTXijvdXRX3qqcKpFS/+ydDmzpJLUAlCkJ8b9IcaHmp8vcdhBw=
+=FHp6
+-----END PGP SIGNATURE-----
+
+--gj2fo7nfy4g724kh--
