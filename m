@@ -1,114 +1,299 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 10/10] iio: humidity: hts221: move drdy enable logic
- in hts221_trig_set_state()
-Date: Tue, 25 Jul 2017 20:03:35 +0100
-Message-ID: <20170725200335.224f0c35@kernel.org>
-References: <20170717173905.8209-1-lorenzo.bianconi@st.com>
-        <20170717173905.8209-11-lorenzo.bianconi@st.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [RFCv2 usb-next 2/3] usb: host: add a generic platform USB
+ roothub driver
+Date: Tue, 25 Jul 2017 21:06:19 +0200
+Message-ID: <CAFBinCC2x--naerAzhPw5hhxB-9+tkA6TL-bkP6aw9gtu+UMfg@mail.gmail.com>
+References: <20170713105939.31566-1-martin.blumenstingl@googlemail.com>
+ <20170713105939.31566-3-martin.blumenstingl@googlemail.com> <1500964843.25536.107.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717173905.8209-11-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500964843.25536.107.camel@mhfsdcap03>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Jul 2017 19:39:05 +0200
-Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Tue, Jul 25, 2017 at 8:40 AM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> On Thu, 2017-07-13 at 12:59 +0200, Martin Blumenstingl wrote:
+>> Many SoC platforms have separate devices for the USB PHY which are
+>> registered through the generic PHY framework. These PHYs have to be
+>> enabled to make the USB controller actually work. They also have to be
+>> disabled again on shutdown/suspend.
+>>
+>> Currently (at least) the following HCI platform drivers are using custom
+>> code to obtain all PHYs via devicetree for the roothub/controller and
+>> disable/enable them when required:
+>> - ehci-platform.c has ehci_platform_power_{on,off}
+>> - xhci-mtk.c has xhci_mtk_phy_{init,exit,power_on,power_off}
+>> - ohci-platform.c has ohci_platform_power_{on,off}
+>>
+>> These drivers are not using the generic devicetree USB device bindings
+>> yet which were only introduced recently (documentation is available in
+>> devicetree/bindings/usb/usb-device.txt).
+>> With this new driver the usb2-phy and usb3-phy can be specified directly
+>> in the child-node of the corresponding port of the roothub via
+>> devicetree. This can be extended by not just parsing PHYs (some of the
+>> other drivers listed above are for example also parsing a list of clocks
+>> as well) when required.
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> ---
+>>  drivers/usb/host/Kconfig            |   3 +
+>>  drivers/usb/host/Makefile           |   2 +
+>>  drivers/usb/host/platform-roothub.c | 146 ++++++++++++++++++++++++++++++++++++
+>>  drivers/usb/host/platform-roothub.h |  14 ++++
+>>  4 files changed, 165 insertions(+)
+>>  create mode 100644 drivers/usb/host/platform-roothub.c
+>>  create mode 100644 drivers/usb/host/platform-roothub.h
+>>
+>> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+>> index fa5692dec832..b8b05c786b2a 100644
+>> --- a/drivers/usb/host/Kconfig
+>> +++ b/drivers/usb/host/Kconfig
+>> @@ -805,6 +805,9 @@ config USB_HCD_SSB
+>>
+>>         If unsure, say N.
+>>
+>> +config USB_PLATFORM_ROOTHUB
+>> +     bool
+>> +
+>>  config USB_HCD_TEST_MODE
+>>       bool "HCD test mode support"
+>>       ---help---
+>> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+>> index cf2691fffcc0..dc817f82d632 100644
+>> --- a/drivers/usb/host/Makefile
+>> +++ b/drivers/usb/host/Makefile
+>> @@ -29,6 +29,8 @@ obj-$(CONFIG_USB_WHCI_HCD)  += whci/
+>>
+>>  obj-$(CONFIG_USB_PCI)        += pci-quirks.o
+>>
+>> +obj-$(CONFIG_USB_PLATFORM_ROOTHUB)   += platform-roothub.o
+>> +
+>>  obj-$(CONFIG_USB_EHCI_HCD)   += ehci-hcd.o
+>>  obj-$(CONFIG_USB_EHCI_PCI)   += ehci-pci.o
+>>  obj-$(CONFIG_USB_EHCI_HCD_PLATFORM)  += ehci-platform.o
+>> diff --git a/drivers/usb/host/platform-roothub.c b/drivers/usb/host/platform-roothub.c
+>> new file mode 100644
+>> index 000000000000..84837e42b006
+>> --- /dev/null
+>> +++ b/drivers/usb/host/platform-roothub.c
+>> @@ -0,0 +1,146 @@
+>> +/*
+>> + * platform roothub driver - a virtual PHY device which passes all phy_*
+>> + * function calls to multiple (actual) PHY devices. This is comes handy when
+>> + * initializing all PHYs on a root-hub (to keep them all in the same state).
+>> + *
+>> + * Copyright (C) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/list.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/of.h>
+>> +#include <linux/usb/of.h>
+>> +
+>> +#include "platform-roothub.h"
+>> +
+>> +#define ROOTHUB_PORTNUM              0
+>> +
+>> +struct platform_roothub {
+>> +     struct phy              *phy;
+>> +     struct list_head        list;
+>> +};
+>> +
+>> +static struct platform_roothub *platform_roothub_alloc(struct device *dev)
+>> +{
+>> +     struct platform_roothub *roothub_entry;
+>> +
+>> +     roothub_entry = devm_kzalloc(dev, sizeof(*roothub_entry), GFP_KERNEL);
+>> +     if (!roothub_entry)
+>> +             return ERR_PTR(-ENOMEM);
+>> +
+>> +     INIT_LIST_HEAD(&roothub_entry->list);
+>> +
+>> +     return roothub_entry;
+>> +}
+>> +
+>> +static int platform_roothub_add_phy(struct device *dev,
+>> +                                 struct device_node *port_np,
+>> +                                 const char *con_id, struct list_head *list)
+>> +{
+>> +     struct platform_roothub *roothub_entry;
+>> +     struct phy *phy = devm_of_phy_get(dev, port_np, con_id);
+>> +
+>> +     if (IS_ERR_OR_NULL(phy)) {
+>> +             if (!phy || PTR_ERR(phy) == -ENODEV)
+>> +                     return 0;
+>> +             else
+>> +                     return PTR_ERR(phy);
+>> +     }
+>> +
+>> +     roothub_entry = platform_roothub_alloc(dev);
+>> +     if (IS_ERR(roothub_entry))
+>> +             return PTR_ERR(roothub_entry);
+>> +
+>> +     roothub_entry->phy = phy;
+>> +
+>> +     list_add_tail(&roothub_entry->list, list);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +struct platform_roothub *platform_roothub_init(struct device *dev)
+>> +{
+>> +     struct device_node *roothub_np, *port_np;
+>> +     struct platform_roothub *plat_roothub;
+>> +     int err;
+>> +
+>> +     roothub_np = usb_of_get_child_node(dev->of_node, ROOTHUB_PORTNUM);
+>> +     if (!of_device_is_available(roothub_np))
+>> +             return NULL;
+>> +
+>> +     plat_roothub = platform_roothub_alloc(dev);
+>> +     if (IS_ERR(plat_roothub))
+>> +             return plat_roothub;
+>> +
+>> +     for_each_available_child_of_node(roothub_np, port_np) {
+>> +             err = platform_roothub_add_phy(dev, port_np, "usb2-phy",
+>> +                                            &plat_roothub->list);
+>> +             if (err)
+>> +                     return ERR_PTR(err);
+>> +
+>> +             err = platform_roothub_add_phy(dev, port_np, "usb3-phy",
+>> +                                            &plat_roothub->list);
+>> +             if (err)
+>> +                     return ERR_PTR(err);
+>> +     }
+>> +
+>> +     return plat_roothub;
+>> +}
+>> +EXPORT_SYMBOL_GPL(platform_roothub_init);
+> Can we process the case without phy-names property?
+> as following one, phy-names may be redundant, because the phy type is
+> informed in phys property.
+>
+> port@2 {
+>     reg = <2>;
+>     phys = <&u2port1 PHY_TYPE_USB2>, <&u3port1 PHY_TYPE_USB3>;
+>     phy-names = "usb2-phy", "usb3-phy";
+> };
+according to the PHY binding documentation the phy-names property is
+mandatory: [0]
+this would have to be discussed with the PHY framework maintainers
 
-> Move data-ready configuration in hts221_buffer.c since it is only related
-> to trigger logic
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Applied to the togreg branch of iio.git and pushed out as testing
-for the autobuilders to play with it.
+>
+>> +
+>> +int platform_roothub_power_on(struct platform_roothub *plat_roothub)
+>> +{
+>> +     struct platform_roothub *roothub_entry;
+>> +     struct list_head *head;
+>> +     int err;
+>> +
+>> +     if (!plat_roothub)
+>> +             return 0;
+>> +
+>> +     head = &plat_roothub->list;
+>> +
+>> +     list_for_each_entry(roothub_entry, head, list) {
+>> +             err = phy_init(roothub_entry->phy);
+>> +             if (err)
+>> +                     goto err_out;
+>> +
+>> +             err = phy_power_on(roothub_entry->phy);
+>> +             if (err) {
+>> +                     phy_exit(roothub_entry->phy);
+>> +                     goto err_out;
+>> +             }
+>> +     }
+>> +
+>> +     return 0;
+>> +
+>> +err_out:
+>> +     list_for_each_entry_continue_reverse(roothub_entry, head, list) {
+>> +             phy_power_off(roothub_entry->phy);
+>> +             phy_exit(roothub_entry->phy);
+>> +     }
+>> +
+>> +     return err;
+>> +}
+>> +EXPORT_SYMBOL_GPL(platform_roothub_power_on);
+>> +
+>> +void platform_roothub_power_off(struct platform_roothub *plat_roothub)
+>> +{
+>> +     struct platform_roothub *roothub_entry;
+>> +
+>> +     if (!plat_roothub)
+>> +             return;
+>> +
+>> +     list_for_each_entry_reverse(roothub_entry, &plat_roothub->list, list) {
+>> +             phy_power_off(roothub_entry->phy);
+>> +             phy_exit(roothub_entry->phy);
+>> +     }
+>> +}
+>> +EXPORT_SYMBOL_GPL(platform_roothub_power_off);
+> I test it, and works fine on mt8173.
+many thanks!
 
-Thanks
+> It will be flexible enough if some more APIs are provided, such as
+> porwer_on/off all phys but not init/exit them.
+> e.g. In order to keep link state on mt8173, we just power off all
+> phys(not exit) when system enter suspend, then power on
+> them again (needn't init, otherwise device will be disconnected) when
+> system resume, this can avoid re-enumerating device.
+OK, that sounds reasonable - we don't have suspend support on the
+Amlogic platforms yet so I couldn't test this. I will add separate
+_init and _exit functions and use them in the appropriate places in
+the third patch. thanks for this suggestion!
 
-Jonathan
-> ---
->  drivers/iio/humidity/hts221.h        |  1 -
->  drivers/iio/humidity/hts221_buffer.c |  8 +++++++-
->  drivers/iio/humidity/hts221_core.c   | 14 --------------
->  3 files changed, 7 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/iio/humidity/hts221.h b/drivers/iio/humidity/hts221.h
-> index c3de6e494f8c..51d021966222 100644
-> --- a/drivers/iio/humidity/hts221.h
-> +++ b/drivers/iio/humidity/hts221.h
-> @@ -60,7 +60,6 @@ struct hts221_hw {
->  
->  extern const struct dev_pm_ops hts221_pm_ops;
->  
-> -int hts221_config_drdy(struct hts221_hw *hw, bool enable);
->  int hts221_write_with_mask(struct hts221_hw *hw, u8 addr, u8 mask, u8 val);
->  int hts221_probe(struct iio_dev *iio_dev);
->  int hts221_set_enable(struct hts221_hw *hw, bool enable);
-> diff --git a/drivers/iio/humidity/hts221_buffer.c b/drivers/iio/humidity/hts221_buffer.c
-> index f29f01a22375..9690dfe9a844 100644
-> --- a/drivers/iio/humidity/hts221_buffer.c
-> +++ b/drivers/iio/humidity/hts221_buffer.c
-> @@ -28,6 +28,8 @@
->  #define HTS221_REG_DRDY_HL_MASK		BIT(7)
->  #define HTS221_REG_DRDY_PP_OD_ADDR	0x22
->  #define HTS221_REG_DRDY_PP_OD_MASK	BIT(6)
-> +#define HTS221_REG_DRDY_EN_ADDR		0x22
-> +#define HTS221_REG_DRDY_EN_MASK		BIT(2)
->  #define HTS221_REG_STATUS_ADDR		0x27
->  #define HTS221_RH_DRDY_MASK		BIT(1)
->  #define HTS221_TEMP_DRDY_MASK		BIT(0)
-> @@ -36,8 +38,12 @@ static int hts221_trig_set_state(struct iio_trigger *trig, bool state)
->  {
->  	struct iio_dev *iio_dev = iio_trigger_get_drvdata(trig);
->  	struct hts221_hw *hw = iio_priv(iio_dev);
-> +	int err;
-> +
-> +	err = hts221_write_with_mask(hw, HTS221_REG_DRDY_EN_ADDR,
-> +				     HTS221_REG_DRDY_EN_MASK, state);
->  
-> -	return hts221_config_drdy(hw, state);
-> +	return err < 0 ? err : 0;
->  }
->  
->  static const struct iio_trigger_ops hts221_trigger_ops = {
-> diff --git a/drivers/iio/humidity/hts221_core.c b/drivers/iio/humidity/hts221_core.c
-> index 25fcb9993998..32524a8dc66f 100644
-> --- a/drivers/iio/humidity/hts221_core.c
-> +++ b/drivers/iio/humidity/hts221_core.c
-> @@ -23,7 +23,6 @@
->  
->  #define HTS221_REG_CNTRL1_ADDR		0x20
->  #define HTS221_REG_CNTRL2_ADDR		0x21
-> -#define HTS221_REG_CNTRL3_ADDR		0x22
->  
->  #define HTS221_REG_AVG_ADDR		0x10
->  #define HTS221_REG_H_OUT_L		0x28
-> @@ -36,9 +35,6 @@
->  #define HTS221_BDU_MASK			BIT(2)
->  #define HTS221_ENABLE_MASK		BIT(7)
->  
-> -#define HTS221_DRDY_MASK		BIT(2)
-> -
-> -
->  /* calibration registers */
->  #define HTS221_REG_0RH_CAL_X_H		0x36
->  #define HTS221_REG_1RH_CAL_X_H		0x3a
-> @@ -181,16 +177,6 @@ static int hts221_check_whoami(struct hts221_hw *hw)
->  	return 0;
->  }
->  
-> -int hts221_config_drdy(struct hts221_hw *hw, bool enable)
-> -{
-> -	int err;
-> -
-> -	err = hts221_write_with_mask(hw, HTS221_REG_CNTRL3_ADDR,
-> -				     HTS221_DRDY_MASK, enable);
-> -
-> -	return err < 0 ? err : 0;
-> -}
-> -
->  static int hts221_update_odr(struct hts221_hw *hw, u8 odr)
->  {
->  	int i, err;
+>
+>> diff --git a/drivers/usb/host/platform-roothub.h b/drivers/usb/host/platform-roothub.h
+>> new file mode 100644
+>> index 000000000000..bde0bf299e3b
+>> --- /dev/null
+>> +++ b/drivers/usb/host/platform-roothub.h
+>> @@ -0,0 +1,14 @@
+>> +#ifndef USB_HOST_PLATFORM_ROOTHUB_H
+>> +#define USB_HOST_PLATFORM_ROOTHUB_H
+>> +
+>> +struct phy;
+>> +struct device_node;
+> These two declarations are not needed, when I remove them, and still
+> compile pass.
+thanks for spotting - neither of these is used inside the header, so
+you are right: they should be removed
+
+>> +
+>> +struct platform_roothub;
+>> +
+>> +struct platform_roothub *platform_roothub_init(struct device *dev);
+>> +
+>> +int platform_roothub_power_on(struct platform_roothub *plat_roothub);
+>> +void platform_roothub_power_off(struct platform_roothub *plat_roothub);
+>> +
+>> +#endif /* USB_HOST_PLATFORM_ROOTHUB_H */
+>
+>
+
+I will fix these issues and send an update next weekend.
+it would be great if the USB maintainers (especially Mathias Nyman,
+since you're the xhci-plat.c maintainer) could comment on this series
+
+
+Regards,
+Martin
+
+
+[0] http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/phy/phy-bindings.txt#L33
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
