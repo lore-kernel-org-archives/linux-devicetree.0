@@ -1,56 +1,67 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH v3 3/9] clk: at91: add audio pll clock drivers
-Date: Tue, 25 Jul 2017 13:30:29 +0200
-Message-ID: <5f6fd25b-8f99-8dec-39b6-0e7677675c24@free-electrons.com>
-References: <20170713074927.10882-1-quentin.schulz@free-electrons.com>
- <20170713074927.10882-4-quentin.schulz@free-electrons.com>
- <20170721222029.GO19878@codeaurora.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] pwm: Convert to using %pOF instead of full_name
+Date: Tue, 25 Jul 2017 13:38:54 +0200
+Message-ID: <20170725113854.GA22355@ulmo>
+References: <20170718214339.7774-45-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170721222029.GO19878@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mark.rutland@arm.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, linux-clk@vger.kernel.org, lgirdwood@gmail.com, Nicolas Ferre <nicolas.ferre@atmel.com>, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, broonie@kernel.org, cyrille.pitchen@wedev4u.fr, linux@armlinux.org.uk, perex@perex.cz, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170718214339.7774-45-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
 
-I forgot to answer one of your questions:
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 22/07/2017 00:20, Stephen Boyd wrote:
-> On 07/13, Quentin Schulz wrote:
->> diff --git a/drivers/clk/at91/clk-audio-pll-pad.c b/drivers/clk/at91/clk-audio-pll-pad.c
->> new file mode 100644
->> index 000000000000..10dd6d625696
->> --- /dev/null
->> +++ b/drivers/clk/at91/clk-audio-pll-pad.c
-[...]
->> +}
->> +
->> +CLK_OF_DECLARE(of_sama5d2_clk_audio_pll_pad_setup,
->> +	       "atmel,sama5d2-clk-audio-pll-pad",
->> +	       of_sama5d2_clk_audio_pll_pad_setup);
-> 
-> We can't have a device driver for this?
-> 
+On Tue, Jul 18, 2017 at 04:43:25PM -0500, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+>=20
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+> Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> ---
+>  drivers/pwm/pwm-meson.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I tried to work on that but the device does not get probed because the
-parent node (pmc) does not register its children. We would need to
-modify the DT to add such a support and break DT compat.
+Applied, thanks.
 
-As we are speaking about getting rid of clk subnodes (c.f. Rob and
-Alexandre answers on the first version of this patch series:
-https://patchwork.kernel.org/patch/9805991/) in favor of a clock
-controller node that would break the DT compat as well, IMHO it would be
-best to break the DT compat as few times as possible and thus, rework
-this driver once we switch to a clock controller node.
+Thierry
 
-Thanks,
-Quentin
--- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAll3LcoACgkQ3SOs138+
+s6HTMA//fz+bs4r8D0dSnuIYttegcttTvpJk0/5rfZiYhSiMgc/vy2Ysa/1bPtt9
+2ACeEQZM95tW5L45p9hmW3PMSlRXsSy5F0/4UAwnze5C0WvD378xGgJR0pOIuGBd
+8bwBpswV8TV5cu1h5Ly1M36HCJ/paH4CPpJ9wACifDGP1D4j2R1hxHwzxWfhMCTT
+XCcp1Jw+xs0eRqyruQ5PL674IXhsC1eWoAVefL6guVYZYUiNPMp+w8z4Imp3PbHl
+41s4gHU9viLvloOOQTsZg6yQcJmenSq0TTmKkL0RrUvcBmusKurDGf35eo63bXH7
+0Q+uAkX34Br+c1EFCmlbsLZyiktneCk9wsCXzjp0v4l7Sfyy/YOrIxm2e31uzrfi
+aRez4tpSuUYP+8p6OdlvC6mOhGk9lMXs8ymm/e3vbdZLtaswBBUu/K2jZCUApw+r
+XsyO6oyp+qzmWXjgbU4P6O85uVjIp1fWSPO7JXc/Vreyq/DRRfPvvEo1HQsvnrT/
+6VVMsU0CCunnmIt7FabhXSYg5yRUxFET1FJChiIkoDFTsBtCqn/dJlmavc4dfSFV
+F14+/eY21gA7nKfkPfUvu4SnFMRxQcFNtNLuGqNRjiLprxBhGCXfh2WgL+9VfNiD
+X2vIpYVORdqXgJi64sLsXzcwesvTNlGIEK9TKO25RPlyCgLaWIA=
+=pH7M
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
