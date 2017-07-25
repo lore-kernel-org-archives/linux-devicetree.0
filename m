@@ -1,75 +1,53 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH v4 2/9] dt-bindings: clk: at91: add audio
- plls to the compatible list
-Date: Tue, 25 Jul 2017 17:45:05 +0200
-Message-ID: <edbdb328-7684-3087-79ec-63fcc9ff1b37@microchip.com>
-References: <cover.c8ce78c15296190b2aa5c452c0c4512528e28518.1500968090.git-series.quentin.schulz@free-electrons.com>
- <ab59b9d6b4bcd3a26672ce83e379f49c551eb9ba.1500968090.git-series.quentin.schulz@free-electrons.com>
+From: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>
+Subject: Re: Duplicated memory node in the Device-Tree (WAS [XEN] Re:
+ Duplicated memory nodes cause the BUG())
+Date: Tue, 25 Jul 2017 19:02:24 +0300
+Message-ID: <b454b264-1f04-7446-fe0b-fafa82954353@epam.com>
+References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
+ <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
+ <c77f71a3-edd9-3700-001b-feee05165454@epam.com>
+ <7c1c8267-a065-f8ee-7e20-147d722c59be@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <ab59b9d6b4bcd3a26672ce83e379f49c551eb9ba.1500968090.git-series.quentin.schulz@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7c1c8267-a065-f8ee-7e20-147d722c59be-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
+Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/2017 at 09:37, Quentin Schulz wrote:
-> This new clock driver set allows to have a fractional divided clock that
-> would generate a precise clock particularly suitable for audio
-> applications.
-> 
-> The main audio pll clock has two children clocks: one that is connected
-> to the PMC, the other that can directly drive a pad. As these two routes
-> have different enable bits and different dividers and divider formulas,
-> they are handled by two different drivers.
-> 
-> This adds the audio plls (frac, pad and pmc) to the compatible list of
-> at91 clocks in DT binding.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-> ---
->  Documentation/devicetree/bindings/clock/at91-clock.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> index 5f3ad65..51c259a 100644
-> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> @@ -81,6 +81,16 @@ Required properties:
->  	"atmel,sama5d2-clk-generated":
->  		at91 generated clock
->  
-> +	"atmel,sama5d2-clk-audio-pll-frac":
-> +		at91 audio fractional pll
-> +
-> +	"atmel,sama5d2-clk-audio-pll-pad":
-> +		at91 audio pll CLK_AUDIO output pin
-> +
-> +	"atmel,sama5d2-clk-audio-pll-pmc"
-> +		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
-> +		and can be used by peripheral clock or generic clock
-> +
->  Required properties for SCKC node:
->  - reg : defines the IO memory reserved for the SCKC.
->  - #size-cells : shall be 0 (reg is used to encode clk id).
-> 
+Hello Julien,
 
 
+On 25.07.17 18:44, Julien Grall wrote:
+> I have seen work on this board for the past year and it is the first 
+> time I have seen a complain about memory overlap. So why this sudden 
+> change?
+It just an approach change. I'm cleaning up nits for the board.
+
+> Is that a comment from the vendor or your guess?
+It is my impression.
+But yes, it could be worth to ask them why do they hardcode the memory 
+layout in their u-boot but stuff the dts with number of memory nodes.
+Actually from the beginning of our time for this board the solution was 
+merging all memory description nodes in one in a dts for XEN, like [1]. 
+So u-boot runtime updates to the dtb were just ignored.
+
+> You need to differentiate the device-tree spec itself and Linux 
+> implementation. memblock is something common to all architecture. It 
+> does not mean it is something valid to do.
+That is why I asked for an advice.
+
+[1] 
+https://github.com/xen-troops/meta-demo/blob/master/meta-rcar-gen3-xen/recipes-kernel/linux/linux-renesas/r8a7795-salvator-x-xen.dts#L61
 -- 
-Nicolas Ferre
+
+*Andrii Anisov*
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
