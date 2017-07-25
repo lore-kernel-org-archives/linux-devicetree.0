@@ -1,61 +1,108 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: add device tree binding for Allwinner XR819 SDIO Wi-Fi
-Date: Tue, 25 Jul 2017 16:14:28 +0300
-Message-ID: <87bmo8irpn.fsf@codeaurora.org>
-References: <20170718072940.17872-1-icenowy@aosc.io>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ARM: dts: imx: add CX9020 Embedded PC device tree
+Date: Tue, 25 Jul 2017 21:17:16 +0800
+Message-ID: <20170725131715.GA29754@dragon>
+References: <20170712090408.12212-1-linux-kernel-dev@beckhoff.com>
+ <20170721040640.31424-1-linux-kernel-dev@beckhoff.com>
+ <20170721040640.31424-3-linux-kernel-dev@beckhoff.com>
+ <20170725075934.GA20064@dragon>
+ <3BB206AB2B1BD448954845CE6FF69A8E0182B4CFE8@nt-mail04>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718072940.17872-1-icenowy-h8G6r0blFSE@public.gmane.org> (Icenowy Zheng's message
-        of "Tue, 18 Jul 2017 15:29:40 +0800")
+Content-Disposition: inline
+In-Reply-To: <3BB206AB2B1BD448954845CE6FF69A8E0182B4CFE8@nt-mail04>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Patrick =?iso-8859-1?Q?Br=FCnn?= <P.Bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Cc: linux-kernel-dev <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> writes:
+On Tue, Jul 25, 2017 at 11:41:56AM +0000, Patrick Brünn wrote:
+> >From: Shawn Guo [mailto:shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org]
+> >On Fri, Jul 21, 2017 at 06:06:40AM +0200, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
+> >wrote:
+> >> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+> >>
+> >> The CX9020 differs from i.MX53 Quick Start Board by:
+> >> - use uart2 instead of uart1
+> >> - DVI-D connector instead of VGA
+> >> - no audio
+> >> - no SATA connector
+> >> - CCAT FPGA connected to emi
+> >> - enable rtc
+> >>
+> >> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+> >
+> >Where is the patch 1/2?
+> >
+> You can find a copy here [1], or wait for the next revision, I will try to improve my git send-mail skills until then.
+> I used git send-email with "--to-cmd ./scripts/get_maintainer.pl" to send the series. I just
+> discovered it would have been better to use To: and Cc: in the cover letter and send with
+> "--to-cover --cc-cover".
+> I will drop "--in-reply-to" for the next revision, too...
+> Is there something like patman [2] from the u-boot project for the kernel, that I am missing?
 
-> Allwinner XR819 is a SDIO Wi-Fi chip, which has the functionality to use
-> an out-of-band interrupt pin instead of SDIO in-band interrupt.
->
-> Add the device tree binding of this chip, in order to make it possible
-> to add this interrupt pin to device trees.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  .../bindings/net/wireless/allwinner,xr819.txt      | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
->
-> diff --git
-> a/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
-> b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
-> new file mode 100644
-> index 000000000000..64dd9c1c0584
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
-> @@ -0,0 +1,37 @@
-> +Allwinner XRadio wireless SDIO devices
-> +
-> +This node provides properties for controlling the XRadio wireless device. The
-> +node is expected to be specified as a child node to the SDIO controller that
-> +connects the device to the system.
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "allwinner,xr819".
-> +
-> +Optional properties:
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +	device interrupts are connected.
-> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
-> +	When not specified the device will use in-band SDIO interrupts.
+I do not use anything like that, but always manually edit recipients.
+It's a bit silly, but can make the recipients more precise and limited.
 
-Where is the driver which uses this? I don't see it in
-drivers/net/wireless but I guess that's not a blocker for the bindings?
+> >>
+> >> ---
+> >>
+> >> v4:
+> >> - move alternative UART2 pinmux settings to imx53-pinfunc.h
+> >> - fix copyright notice and model name to clearify cx9020 is a
+> >>   Beckhoff board and not from Freescale/NXP/Qualcomm
+> >> - add "bhf,cx9020" compatible
+> >> - remove ccat node and pin configuration as long as the ccat
+> >>   driver is not mainlined
+> >> - use dvi-connector + ti,tfp410 instead of panel-simple
+> >> - add newlines between property list and child nodes
+> >> - replace underscores in node names with hypens
+> >> - replace magic number 0 with polarity defines from
+> >>   include/dt-bindings/gpio/gpio.h
+> >> - move rtc node into imx53.dtsi, change it's name into 'srtc',
+> >>   to avoid a conflict with 'rtc' node in imx53-m53.dtsi
+> >> - rename regulator-3p2v
+> >> - drop imx53-qsb container node
+> >> - make iomux configuration explicit
+> >> - remove unused audmux
+> >> - remove unused led_pin_gpio3_23 configuration
+> >> - use blue gpio-leds as disk-activity indicators for mmc0 and mmc1
+> >> - add mmc indicator leds to sdhc pingroups
+> >> - keep node names in alphabetical order
+> >> - remove unused sata and ssi2
+> >> - remove unused pin configs from hoggrp
+> >> - add entry for imx53-cx9020.dts to MAINTAINERS
+> >>
+> >> v3: add missig changelog
+> >> v2:
+> >> - keep alphabetic order of dts/Makefile
+> >> - configure uart2 with 'fsl,dte-mode'
+> >> - use display-0 and panel-0 as node names
+> >> - remove unnecessary "simple-bus" for fixed regulators
+> >>
+> >> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> >> ---
+> >>  MAINTAINERS                        |   1 +
+> >
+> >I do not take the changes on this file.
+> >
+> Do you mean you keep maintainership for imx53-cx9020.dts, or do you
+> mean I should group it in the patch which adds imx53-cx9020.dts?
+> I am fine with both and would be glad to have your guidance. I just
+> didn't understand clearly what was meant.
 
--- 
-Kalle Valo
+I meant that I do not have the authority to take patches that update
+MAINTAINERS file.  But now I think we do not even need to update
+MAINTAINERS just for imx53-cx9020.dts, since we already have IMX
+maintainer-ship covering all IMX dts files.
+
+ARM/FREESCALE IMX / MXC ARM ARCHITECTURE
+...
+F:      arch/arm/boot/dts/imx*
+
+Shawn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
