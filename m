@@ -1,80 +1,73 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v7 3/3] ARM: dts: rockchip: enable sfc for rv1108 evb
-Date: Tue, 25 Jul 2017 18:09:26 +0800
-Message-ID: <1500977366-15155-1-git-send-email-andy.yan@rock-chips.com>
-References: <1500977251-15001-1-git-send-email-andy.yan@rock-chips.com>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v6 0/3] power: supply: ltc2941-battery-gauge: Support
+ LTC2942 and LTC2944
+Date: Tue, 25 Jul 2017 12:20:07 +0200
+Message-ID: <20170725102007.o5rfdxndap6lilad@earth>
+References: <20170716093202.vfea4yylbzfec72v@lenoch>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nronmwcbzgcbblw4"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500977251-15001-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170716093202.vfea4yylbzfec72v@lenoch>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, Dragos Bogdan <dragos.bogdan-OyLXuOCK7orQT0dZR+AlfA@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the sfc support for rv1108 evaluation board.
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+--nronmwcbzgcbblw4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v7: None
-Changes in v6: None
-Changes in v5: None
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
+Hi,
 
- arch/arm/boot/dts/rv1108-evb.dts | 10 ++++++++++
- arch/arm/boot/dts/rv1108.dtsi    | 13 +++++++++++++
- 2 files changed, 23 insertions(+)
+On Sun, Jul 16, 2017 at 11:32:02AM +0200, Ladislav Michl wrote:
+> This is the 6th version of patch.
+> Changelog:
+> - v2: reworked voltage computing to not overflow and keep precision
+> - v3: update devicetree binding documentation
+> - v4: add ltc2942 devicetree compatible
+> - v5: reworked to incorporate Dragos' LTC2944 patch
+> - v6: fix missing break in the switch statement, move LTC2942 and LTC2944
+>       id definitions into respective patches
+> =20
+> LTC2942 is pin compatible with LTC2941 providing few more registers
+> holding information about battery voltage and temperature. It can
+> be runtime detected using bit A7 in the Status register.
+>=20
+> LTC2944 is compatible with LTC2943, but uses different
+> voltage and current computing constants.
+>=20
+> Comments welcome,
+> 	ladis
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index e0d192d..44feea7 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -61,6 +61,16 @@
- 	status = "okay";
- };
- 
-+&sfc {
-+	status = "okay";
-+	spi-nor@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <100000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+	};
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 675f774..452e397 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -210,6 +210,19 @@
- 		status = "disabled";
- 	};
- 
-+	sfc: sfc@301c0000 {
-+		compatible = "rockchip,rv1108-sfc", "rockchip,sfc";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
-+		clock-names = "sfc", "hsfc";
-+		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0x301c0000 0x1000>;
-+		/* If you want to use PIO mode, activate this */
-+		/*rockchip,sfc-no-dma;*/
-+		status = "disabled";
-+	};
-+
- 	gic: interrupt-controller@32010000 {
- 		compatible = "arm,gic-400";
- 		interrupt-controller;
--- 
-2.7.4
+Thanks, queued the whole patchset to power-supply's for-next branch.
 
+-- Sebastian
 
+--nronmwcbzgcbblw4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll3G1QACgkQ2O7X88g7
++prNCQ//QaE+oOAb60Hmy4kq72yT1j9sP1wRhJ9TGjNPaezpldTIzbzr67vGc/Ht
+QEqEg6jGWnZNO6P6kyHb63PXHQF6qFgt3atqTK8OgFLEIGo3z1ZnB2u4ZBZT3dZ4
+mh7Map604MLgTsr9183hOmwGmDR8YVL+1cNmcvdw9Gwu1bvIuDIaNt5L+tET8/Hj
+2QWrP1Km7/uzMqYhjbPjOnSvG04CowYMUQZdkpP3d6sseGuNA+49jPLrfhNCAzPI
+iQqTzQ3Hl3KkxPvTwQs46fKzte/lAys7Xble9GzjGq5H9SQxa0DpBLuLTzYfh1en
+s0+G2WsjQvgvJ5kv9aljiD00pv36FWHpc4NGGtqeoHrc1SDA1+vNfT71CG9Ek/la
+B934su7bGPT+DfN2n3Tsw61jZqsEJFMhnSeTh9DFhOBg02v2rGXZhgWnZoT9g3LS
+ayUYr/CeM/t5uyuB+N1zd5JxWeZ3Alej8cjsiCHk0ZmPnLmFSctv8TJhcRTcj7uy
+bqv0xgwcW2JBzHgtIT8Hfry/J1mRlBAwS1Gg6SJO16pBoIJiJNyg5kLT/UUEM9bd
+gl1KKzDXicXbwjWZKgjWLV7miEOOhWmcmCYUIrCLaYdPUgcZgTrhJLG1yZkB3s/j
+J6P/Ea/qQV8Xf4YPaii0hERfi3QMBLGNjF1i9TZEerU42Hd+wKg=
+=hsG0
+-----END PGP SIGNATURE-----
+
+--nronmwcbzgcbblw4--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
