@@ -1,184 +1,112 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH v3 3/3] power: wm831x_power: Support USB charger current
- limit management
-Date: Tue, 25 Jul 2017 11:59:31 +0200
-Message-ID: <20170725095931.qmxtn766wam7vufe@earth>
-References: <cover.1500968744.git.baolin.wang@linaro.org>
- <c6dbaa6b4417eb9213032404b90330c924613ed0.1500968745.git.baolin.wang@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wyr77slj2fwquqrn"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c6dbaa6b4417eb9213032404b90330c924613ed0.1500968745.git.baolin.wang@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: balbi@kernel.org, gregkh@linuxfoundation.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.li@nxp.com, peter.chen@freescale.com, broonie@kernel.org, john.stultz@linaro.org, neilb@suse.com, patches@opensource.wolfsonmicro.com, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, device-mainlining@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v7 0/3] Add Rockchip SFC(serial flash controller) support
+Date: Tue, 25 Jul 2017 18:07:31 +0800
+Message-ID: <1500977251-15001-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---wyr77slj2fwquqrn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is try to support SFC found on Rockchip RV1108 platform.
+As Shawn's workload is a little heavy, I go on with his steps
+from v6 [1].
 
-Hi,
+Feature:
+(1) Support x1, x2, x4 data bits mode
+(2) Support up to 4 chip select
+(3) Support two independent clock domain: AHB clock and SPI clock
+(4) Support DMA master up to 16KB/transfer
 
-On Tue, Jul 25, 2017 at 04:00:01PM +0800, Baolin Wang wrote:
-> Integrate with the newly added USB charger interface to limit the current
-> we draw from the USB input based on the input device configuration
-> identified by the USB stack, allowing us to charge more quickly from high
-> current inputs without drawing more current than specified from others.
->=20
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
->  drivers/power/supply/wm831x_power.c              |   58 ++++++++++++++++=
-++++++
->  2 files changed, 59 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documenta=
-tion/devicetree/bindings/mfd/wm831x.txt
-> index 9f8b743..4e3bc07 100644
-> --- a/Documentation/devicetree/bindings/mfd/wm831x.txt
-> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
-> @@ -31,6 +31,7 @@ Required properties:
->      ../interrupt-controller/interrupts.txt
-> =20
->  Optional sub-nodes:
-> +  - usb-phy : Contains a phandle to the USB PHY.
->    - regulators : Contains sub-nodes for each of the regulators supplied =
-by
->      the device. The regulators are bound using their names listed below:
-> =20
-> diff --git a/drivers/power/supply/wm831x_power.c b/drivers/power/supply/w=
-m831x_power.c
-> index 7082301..d3948ab 100644
-> --- a/drivers/power/supply/wm831x_power.c
-> +++ b/drivers/power/supply/wm831x_power.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/power_supply.h>
->  #include <linux/slab.h>
-> +#include <linux/usb/phy.h>
-> =20
->  #include <linux/mfd/wm831x/core.h>
->  #include <linux/mfd/wm831x/auxadc.h>
-> @@ -31,6 +32,8 @@ struct wm831x_power {
->  	char usb_name[20];
->  	char battery_name[20];
->  	bool have_battery;
-> +	struct usb_phy *usb_phy;
-> +	struct notifier_block usb_notify;
->  };
-> =20
->  static int wm831x_power_check_online(struct wm831x *wm831x, int supply,
-> @@ -125,6 +128,43 @@ static int wm831x_usb_get_prop(struct power_supply *=
-psy,
->  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
->  };
-> =20
-> +/* In milliamps */
-> +static const unsigned int wm831x_usb_limits[] =3D {
-> +	0,
-> +	2,
-> +	100,
-> +	500,
-> +	900,
-> +	1500,
-> +	1800,
-> +	550,
-> +};
-> +
-> +static int wm831x_usb_limit_change(struct notifier_block *nb,
-> +				   unsigned long limit, void *data)
-> +{
-> +	struct wm831x_power *wm831x_power =3D container_of(nb,
-> +							 struct wm831x_power,
-> +							 usb_notify);
-> +	unsigned int i, best;
-> +
-> +	/* Find the highest supported limit */
-> +	best =3D 0;
-> +	for (i =3D 0; i < ARRAY_SIZE(wm831x_usb_limits); i++) {
-> +		if (limit >=3D wm831x_usb_limits[i] &&
-> +		    wm831x_usb_limits[best] < wm831x_usb_limits[i])
-> +			best =3D i;
-> +	}
-> +
-> +	dev_dbg(wm831x_power->wm831x->dev,
-> +		"Limiting USB current to %umA", wm831x_usb_limits[best]);
-> +
-> +	wm831x_set_bits(wm831x_power->wm831x, WM831X_POWER_STATE,
-> +		        WM831X_USB_ILIM_MASK, best);
-> +
-> +	return 0;
-> +}
-> +
->  /*********************************************************************
->   *		Battery properties
->   *********************************************************************/
-> @@ -607,6 +647,19 @@ static int wm831x_power_probe(struct platform_device=
- *pdev)
->  		}
->  	}
-> =20
-> +	power->usb_phy =3D devm_usb_get_phy_by_phandle(&pdev->dev,
-> +						     "usb-phy", 0);
-> +	if (!IS_ERR(power->usb_phy)) {
-> +		power->usb_notify.notifier_call =3D wm831x_usb_limit_change;
-> +		ret =3D usb_register_notifier(power->usb_phy,
-> +					    &power->usb_notify);
-> +		if (ret) {
-> +			dev_err(&pdev->dev, "Failed to register notifier: %d\n",
-> +				ret);
-> +			goto err_bat_irq;
-> +		}
-> +	}
+Test environment:
+This patchset was tested on RK1108 evb boards with Winboud w25q256,
+Gigadevice GD25Q256, working fine with PIO or DMA mode.
 
-No error handling for power->usb_phy? I think you should bail out
-for all errors except for "not defined in DT". Especially I would
-expect probe defer handling in case the power supply driver is
-loaded before the phy driver.
+[1] https://patchwork.kernel.org/patch/9586107/
 
->  	return ret;
-> =20
->  err_bat_irq:
-> @@ -637,6 +690,11 @@ static int wm831x_power_remove(struct platform_devic=
-e *pdev)
->  	struct wm831x *wm831x =3D wm831x_power->wm831x;
->  	int irq, i;
-> =20
-> +	if (!IS_ERR(wm831x_power->usb_phy)) {
-> +		usb_unregister_notifier(wm831x_power->usb_phy,
-> +					&wm831x_power->usb_notify);
-> +	}
-> +
->  	for (i =3D 0; i < ARRAY_SIZE(wm831x_bat_irqs); i++) {
->  		irq =3D wm831x_irq(wm831x,=20
->  				 platform_get_irq_byname(pdev,
+Changes in v7:
+- correct the fifo status check in pio read/write mode.
+- copy data from user buffer to dma buffer
 
--- Sebastian
+Changes in v6:
+- fold in Andy's improvement for checking fifo level
+  before pio read
+- rename the controller to rv1108 since offically it's
+  renamed and acked by Rob.
+- use dma_coerce_mask_and_coherent suggested by Andy.
 
---wyr77slj2fwquqrn
-Content-Type: application/pgp-signature; name="signature.asc"
+Changes in v5:
+- check if the buf is aligned to 32bit
+- check if the buf for dma comes from vmalloc
+- fix to use 1-1-n according to the current framework
+- avoid bytes cnt overflow
 
------BEGIN PGP SIGNATURE-----
+Changes in v4:
+- use uppercase DMA for description
+- simplify the code of get_if_type
+- use dma_dir to simplify the code
+- simplify the rockchip_sfc_do_rd_wr
+- some minor improvements
+- add reset controller when doing resume
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll3FoAACgkQ2O7X88g7
-+pqaEg/8C34OTp3Suxydxe9tJmPh0wz2K6FlIB9eQz4TKa25mateRFfS4jsTbDzt
-Q3VpLSBE+Qcy5MHAF50XwNchxRTFiHKXJsb1VMohTyTPq/U0y0Q+p0BzDvdSxqsT
-yduzXhlN1pkEYOHxIzl7PKxt/gia3+INXWloOb4bINlnHtuSHoOskI8Q00yTKijB
-oSvigZH7W+4BFGvH1ljsqAX6mzwVCru8YVH7TdsByLHckJx3afvJ8acOhL57lEJP
-jDGCTbayVh7N9bPveHtfQWtEy7HFpuvlOOvqSd+hHQf5bzWy0mVAN+ohFKXaqmb7
-tTMtLjIr+LOOJqcTQ/EXG7R4QS36tPD4TZmTbAMhYCbNn4CUmxaqrYD0IymOfG3d
-+Cb4HmlRmT6U3rVA6m9bFPWYJ78cwp63pnVmVLZbxd8nv+WFyRAHpJcePvNSJFyu
-VdbSeV4VkqIFY56I7U36w4GGNfq5lLrPPQhb3QAMETVx5MkbODVxj7VC2L8T19VK
-+aXtEy4i2YwnOgmQqDZf2G+Vv9WnMq+zpbKxZqihqGiRvFVvlQUxixIMtsYktFKJ
-1HJJ6bEmjOnPZspCnJt4FiVIyfYJ8sMqO+IsCXNFBQwy2lL0papIg6vJFDkyK9C6
-4nvTJCMC007XRAJe8+U+kUc1KvMNVd3YPNVGrAzyphOZsphgBzM=
-=ax3C
------END PGP SIGNATURE-----
+Changes in v3:
+- use io{read32,write32}_rep to simplify the corner cases
+- remove more unnecessary bit definitions
+- some minor comment fixes and improvement
+- fix wrong unregister function
+- unify more code
+- use nor to avoid constantly replicating the whole
+  sfc->flash[sfc->num_chip].nor
+- add email for MODULE_AUTHOR
+- remove #if 1 --- #endif
+- extract DMA code to imporve the code structure
+- reset all when failing to do dma
+- pass sfc to get_if_type
+- rename sfc-no-dma to sfc-no-DMA
 
---wyr77slj2fwquqrn--
+Changes in v2:
+- fix typos
+- add some comment for buffer and others operations
+- rename SFC_MAX_CHIP_NUM to MAX_CHIPSELECT_NUM
+- use u8 for cs
+- return -EINVAL for default case of get_if_type
+- use readl_poll_*() to check timeout cases
+- simplify and clarify some condition checks
+- rework the bitshifts to simplify the code
+- define SFC_CMD_DUMMY(x)
+- fix ummap for dma read path and finish all the
+  cache maintenance.
+- rename to rockchip_sfc_chip_priv and embed struct spi_nor
+  in it.
+- add MODULE_AUTHOR
+- add runtime PM and general PM support.
+- Thanks for Marek's comments. Link:
+  http://lists.infradead.org/pipermail/linux-mtd/2016-November/070321.html
+
+Andy Yan (1):
+  ARM: dts: rockchip: enable sfc for rv1108 evb
+
+Shawn Lin (2):
+  mtd: spi-nor: Bindings for Rockchip serial flash controller
+  mtd: spi-nor: add rockchip serial flash controller driver
+
+ .../devicetree/bindings/mtd/rockchip-sfc.txt       |  31 +
+ MAINTAINERS                                        |   8 +
+ arch/arm/boot/dts/rv1108-evb.dts                   |  10 +
+ arch/arm/boot/dts/rv1108.dtsi                      |  13 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   3 +-
+ drivers/mtd/spi-nor/rockchip-sfc.c                 | 942 +++++++++++++++++++++
+ 7 files changed, 1013 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+ create mode 100644 drivers/mtd/spi-nor/rockchip-sfc.c
+
+-- 
+2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
