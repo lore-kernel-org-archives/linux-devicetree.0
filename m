@@ -1,51 +1,45 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.18 56/60] of: device: Export of_device_{get_modalias, uvent_modalias} to modules
-Date: Tue, 25 Jul 2017 12:16:47 -0700
-Message-ID: <20170725191622.090725432@linuxfoundation.org>
-References: <20170725191614.043749784@linuxfoundation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 0/4] Removing full paths from DT full_name
+Date: Tue, 25 Jul 2017 16:44:23 -0500
+Message-ID: <20170725214427.25768-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170725191614.043749784@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <peter.chen@nxp.com>
+To: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-3.18-stable review patch.  If anyone has any objections, please let me know.
+This series is the last steps to remove storing the full path for every 
+DT node. Instead, we can create full path strings dynamically as needed 
+with printf %pOF specifiers (commit ce4fecf1fe15). There are a number of 
+remaining direct users of full_name after this series. I don't believe 
+there should be any functional impact for those users with the change to 
+only the node name (+unit-address). The majority are for struct 
+resource.name. This should only affect /proc/iomem display.
 
-------------------
+Patches 1 and 2 can be applied now for 4.14. For patches 3 and 4, my 
+target is 4.15 after all the dependencies have been merged.
 
-From: Stephen Boyd <stephen.boyd@linaro.org>
+PPC folks, Please test! The PPC parts are untested. A git branch with 
+all the dependencies is here[1].
 
-commit 7a3b7cd332db08546f3cdd984f11773e0d1999e7 upstream.
+Rob
 
-The ULPI bus can be built as a module, and it will soon be
-calling these functions when it supports probing devices from DT.
-Export them so they can be used by the ULPI module.
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt-printf
 
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Rob Herring (4):
+  powerpc: pseries: vio: match parent nodes with of_find_node_by_path
+  powerpc: pseries: remove dlpar_attach_node dependency on full path
+  powerpc: pseries: only store the device node basename in full_name
+  of/fdt: only store the device node basename in full_name
 
----
- drivers/of/device.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/platforms/pseries/dlpar.c       | 26 +++--------
+ arch/powerpc/platforms/pseries/hotplug-cpu.c |  2 +-
+ arch/powerpc/platforms/pseries/mobility.c    |  2 +-
+ arch/powerpc/platforms/pseries/pseries.h     |  2 +-
+ arch/powerpc/platforms/pseries/reconfig.c    |  2 +-
+ arch/powerpc/platforms/pseries/vio.c         |  4 +-
+ drivers/of/fdt.c                             | 69 +++++-----------------------
+ 7 files changed, 23 insertions(+), 84 deletions(-)
 
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -128,6 +128,7 @@ ssize_t of_device_get_modalias(struct de
- 
- 	return tsize;
- }
-+EXPORT_SYMBOL_GPL(of_device_get_modalias);
- 
- /**
-  * of_device_uevent - Display OF related uevent information
-@@ -190,3 +191,4 @@ int of_device_uevent_modalias(struct dev
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+-- 
+2.11.0
