@@ -1,107 +1,61 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/2] tests: Add stacked overlay tests on fdtoverlay
-Date: Tue, 25 Jul 2017 20:24:36 +0300
-Message-ID: <1501003476-2480-3-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1501003476-2480-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [Xen-devel] Duplicated memory node in the Device-Tree (WAS [XEN]
+ Re: Duplicated memory nodes cause the BUG())
+Date: Tue, 25 Jul 2017 10:52:58 -0700 (PDT)
+Message-ID: <alpine.DEB.2.10.1707251045140.22381@sstabellini-ThinkPad-X260>
+References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com> <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com> <c77f71a3-edd9-3700-001b-feee05165454@epam.com> <7c1c8267-a065-f8ee-7e20-147d722c59be@arm.com> <b454b264-1f04-7446-fe0b-fafa82954353@epam.com>
+ <eb0fbb83-a6de-d06e-f230-d06c615b0f88@citrix.com> <6e9456a3-7f0f-72e5-b4be-2bd51939d850@epam.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501003476-2480-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <6e9456a3-7f0f-72e5-b4be-2bd51939d850-uRwfk40T5oI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>
+Cc: Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a stacked overlay unit test, piggybacking on fdtoverlay.
+On Tue, 25 Jul 2017, Andrii Anisov wrote:
+> Hello Andrew,
+> 
+> 
+> On 25.07.17 19:23, Andrew Cooper wrote:
+> > As a general rule, Xen needs to be able to tolerate and cope with any
+> > quantity of crap described by the firmware.  On the x86 side, we have
+> > large quantities of workarounds for buggy ACPI/MP/SMBIOS tables.
+> That approach somehow covered with early mentioned options:
+> 
+> On 25.07.17 15:24, Andrii Anisov wrote:
+> > * ignore next duplicating (overlapping) memory node in favor of one already
+> > in a memory banks list
+> > * merge duplicating (overlapping), even neighboring, memory banks 
+> 
+> On 25.07.17 19:23, Andrew Cooper wrote:
+> > It might be the case that the best Xen can do is give up, but it should
+> > do so with a clear error message identifying what the firmware has done
+> > which is sufficiently crazy to prevent further booting.
+> We have one more option to choose for the case:
+> 
+> * BUG() with clear notification at the moment we are trying to add overlapping
+> memory bank
+> 
+> So what to choose?
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- tests/run_tests.sh             | 15 +++++++++++++++
- tests/stacked_overlay_bar.dts  | 13 +++++++++++++
- tests/stacked_overlay_base.dts |  6 ++++++
- tests/stacked_overlay_baz.dts  | 13 +++++++++++++
- 4 files changed, 47 insertions(+)
- create mode 100644 tests/stacked_overlay_bar.dts
- create mode 100644 tests/stacked_overlay_base.dts
- create mode 100644 tests/stacked_overlay_baz.dts
+Certainly we need to print a clear warning.
 
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index b8a2825..9e3d35d 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -791,6 +791,21 @@ fdtoverlay_tests() {
- 
-     # test that the new property is installed
-     run_fdtoverlay_test foobar "/test-node" "test-str-property" "-ts" ${basedtb} ${targetdtb} ${overlaydtb}
-+
-+    stacked_base=stacked_overlay_base.dts
-+    stacked_basedtb=stacked_overlay_base.fdtoverlay.test.dtb
-+    stacked_bar=stacked_overlay_bar.dts
-+    stacked_bardtb=stacked_overlay_bar.fdtoverlay.test.dtb
-+    stacked_baz=stacked_overlay_baz.dts
-+    stacked_bazdtb=stacked_overlay_baz.fdtoverlay.test.dtb
-+    stacked_targetdtb=stacked_overlay_target.fdoverlay.test.dtb
-+
-+    run_dtc_test -@ -I dts -O dtb -o $stacked_basedtb $stacked_base
-+    run_dtc_test -@ -I dts -O dtb -o $stacked_bardtb $stacked_bar
-+    run_dtc_test -@ -I dts -O dtb -o $stacked_bazdtb $stacked_baz
-+
-+    # test that baz correctly inserted the property
-+    run_fdtoverlay_test baz "/foonode/barnode/baznode" "baz-property" "-ts" ${stacked_basedtb} ${stacked_targetdtb} ${stacked_bardtb} ${stacked_bazdtb}
- }
- 
- pylibfdt_tests () {
-diff --git a/tests/stacked_overlay_bar.dts b/tests/stacked_overlay_bar.dts
-new file mode 100644
-index 0000000..c646399
---- /dev/null
-+++ b/tests/stacked_overlay_bar.dts
-@@ -0,0 +1,13 @@
-+/dts-v1/;
-+/plugin/;
-+/ {
-+	fragment@1 {
-+		target = <&foo>;
-+		__overlay__ {
-+			overlay-1-property;
-+			bar: barnode {
-+				bar-property = "bar";
-+			};
-+		};
-+	};
-+};
-diff --git a/tests/stacked_overlay_base.dts b/tests/stacked_overlay_base.dts
-new file mode 100644
-index 0000000..2916423
---- /dev/null
-+++ b/tests/stacked_overlay_base.dts
-@@ -0,0 +1,6 @@
-+/dts-v1/;
-+/ {
-+	foo: foonode {
-+		foo-property = "foo";
-+	};
-+};
-diff --git a/tests/stacked_overlay_baz.dts b/tests/stacked_overlay_baz.dts
-new file mode 100644
-index 0000000..a52f0cc
---- /dev/null
-+++ b/tests/stacked_overlay_baz.dts
-@@ -0,0 +1,13 @@
-+/dts-v1/;
-+/plugin/;
-+/ {
-+	fragment@1 {
-+		target = <&bar>;
-+		__overlay__ {
-+			overlay-2-property;
-+			baz: baznode {
-+				baz-property = "baz";
-+			};
-+		};
-+	};
-+};
--- 
-2.1.4
+Then, we can decide whether we prefer to crash (as we do today), or
+work-around the broken device-tree. I think it would be more beneficial
+to Xen users if we tried to continue anyway, and probably the best way
+to do that would be by merging the overlapping memory regions.
 
+I fully understand that this is not required by the spec, but lots of
+hardware (x86 and ARM) get released every day with some sort of broken
+spec compliance. It's our job to decide on a case by case basis whether
+it makes sense for us to support these platforms anyway.
+
+In this case, the cost of supporting the Renesas R-Car Gen3 seems pretty
+limited to me. Of course, I would have to see the patch, but if we can
+make this work with limited amount of changes, very maintainable, I
+would take them. Otherwise, screw it :-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
