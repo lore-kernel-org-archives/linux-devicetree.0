@@ -1,79 +1,75 @@
-From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Duplicated memory node in the Device-Tree (WAS [XEN] Re:
- Duplicated memory nodes cause the BUG())
-Date: Tue, 25 Jul 2017 16:44:05 +0100
-Message-ID: <7c1c8267-a065-f8ee-7e20-147d722c59be@arm.com>
-References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
- <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
- <c77f71a3-edd9-3700-001b-feee05165454@epam.com>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH v4 2/9] dt-bindings: clk: at91: add audio
+ plls to the compatible list
+Date: Tue, 25 Jul 2017 17:45:05 +0200
+Message-ID: <edbdb328-7684-3087-79ec-63fcc9ff1b37@microchip.com>
+References: <cover.c8ce78c15296190b2aa5c452c0c4512528e28518.1500968090.git-series.quentin.schulz@free-electrons.com>
+ <ab59b9d6b4bcd3a26672ce83e379f49c551eb9ba.1500968090.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c77f71a3-edd9-3700-001b-feee05165454-uRwfk40T5oI@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
-Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <ab59b9d6b4bcd3a26672ce83e379f49c551eb9ba.1500968090.git-series.quentin.schulz@free-electrons.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/17 16:27, Andrii Anisov wrote:
-> Hello Julien,
+On 25/07/2017 at 09:37, Quentin Schulz wrote:
+> This new clock driver set allows to have a fractional divided clock that
+> would generate a precise clock particularly suitable for audio
+> applications.
+> 
+> The main audio pll clock has two children clocks: one that is connected
+> to the PMC, the other that can directly drive a pad. As these two routes
+> have different enable bits and different dividers and divider formulas,
+> they are handled by two different drivers.
+> 
+> This adds the audio plls (frac, pad and pmc) to the compatible list of
+> at91 clocks in DT binding.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 
-Hi Andrii,
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 
-> On 25.07.17 17:23, Julien Grall wrote:
->> I think this is by chance rather than by design. The first question to
->> answer is why a Firmware would specify twice the same memory banks? Is
->> it valid from the specification?
-> Yep, that is the question.
->
->> Regardless that, it looks like to me that the device-tree you give to
->> the board should not contain the memory nodes.
-> The device-tree is provided by vendor in that form, and u-boot is
-> theirs. It seems to me that they do not really care since the kernel
-> tolerates duplication.
+> ---
+>  Documentation/devicetree/bindings/clock/at91-clock.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> index 5f3ad65..51c259a 100644
+> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> @@ -81,6 +81,16 @@ Required properties:
+>  	"atmel,sama5d2-clk-generated":
+>  		at91 generated clock
+>  
+> +	"atmel,sama5d2-clk-audio-pll-frac":
+> +		at91 audio fractional pll
+> +
+> +	"atmel,sama5d2-clk-audio-pll-pad":
+> +		at91 audio pll CLK_AUDIO output pin
+> +
+> +	"atmel,sama5d2-clk-audio-pll-pmc"
+> +		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
+> +		and can be used by peripheral clock or generic clock
+> +
+>  Required properties for SCKC node:
+>  - reg : defines the IO memory reserved for the SCKC.
+>  - #size-cells : shall be 0 (reg is used to encode clk id).
+> 
 
-I have seen work on this board for the past year and it is the first 
-time I have seen a complain about memory overlap. So why this sudden 
-change? Is that a comment from the vendor or your guess?
-
->
->>>  ps. Linux kernel does tolerate duplicated memory nodes by merging
->>> memory blocks. I.e. memblock_add_range() function is commented as
->>> following:
->>> /**
->>>      * memblock_add_range - add new memblock region
->>>      * @type: memblock type to add new region into
->>>      * @base: base address of the new region
->>>      * @size: size of the new region
->>>      * @nid: nid of the new region
->>>      * @flags: flags of the new region
->>>      *
->>>      * Add new memblock region [@base,@base+@size) into @type. The new
->>> region
->>>      * is allowed to overlap with existing ones - overlaps don't affect
->>> already
->>>      * existing regions.  @type is guaranteed to be minimal (all
->>> neighbouring
->>>      * compatible regions are merged) after the addition.
->>>      *
->>>      * RETURNS:
->>>      * 0 on success, -errno on failure.
->>>      */
-> IMO the function description is pretty straight-forward.
-
-You need to differentiate the device-tree spec itself and Linux 
-implementation. memblock is something common to all architecture. It 
-does not mean it is something valid to do.
-
-> But let us wait for device tree guys feedback.
->
-
-Cheers,
 
 -- 
-Julien Grall
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nicolas Ferre
