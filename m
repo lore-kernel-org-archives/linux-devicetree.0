@@ -1,100 +1,51 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for
- each channel
-Date: Tue, 25 Jul 2017 11:11:21 +0530
-Message-ID: <CAALAos9T0YtCvgjGCMVPn=dw2JKY=jTxz-v431NgpBCKFo1vVQ@mail.gmail.com>
-References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
- <1500620142-910-7-git-send-email-anup.patel@broadcom.com> <CABb+yY1Pxhgvvit=0eZr66DpLJ3MDEvRPx9dwDPJM8PwiKXiew@mail.gmail.com>
- <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w@mail.gmail.com> <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
+From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: dma: Add Spreadtrum SC9860 DMA controller
+Date: Tue, 25 Jul 2017 14:23:29 +0800
+Message-ID: <CAMz4ku+PnouY3vNL18Psvp9+0MMqqm-MrOLis_3B=00WeRs1Hw@mail.gmail.com>
+References: <63f2b93b3e484862f736e37d6d422b5566637163.1500361078.git.baolin.wang@spreadtrum.com>
+ <20170724175246.fgqtls664zmg4r4y@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170724175246.fgqtls664zmg4r4y@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 10:06 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
-> On Mon, Jul 24, 2017 at 9:26 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->> Hi Jassi,
+On 25 July 2017 at 01:52, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Jul 18, 2017 at 03:06:11PM +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC9860 DMA
+>> controller device.
 >>
->> Sorry for the delayed response...
+>> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/dma/sprd-dma.txt |   41 ++++++++++++++++++++
+>>  1 file changed, 41 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/dma/sprd-dma.txt
 >>
->> On Fri, Jul 21, 2017 at 9:16 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
->>> Hi Anup,
->>>
->>> On Fri, Jul 21, 2017 at 12:25 PM, Anup Patel <anup.patel@broadcom.com> wrote:
->>>> The Broadcom FlexRM ring (i.e. mailbox channel) can handle
->>>> larger number of messages queued in one FlexRM ring hence
->>>> this patch sets msg_queue_len for each mailbox channel to
->>>> be same as RING_MAX_REQ_COUNT.
->>>>
->>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>> ---
->>>>  drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
->>>>  1 file changed, 4 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
->>>> index 9873818..20055a0 100644
->>>> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
->>>> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
->>>> @@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
->>>>                 ret = -ENOMEM;
->>>>                 goto fail_free_debugfs_root;
->>>>         }
->>>> -       for (index = 0; index < mbox->num_rings; index++)
->>>> +       for (index = 0; index < mbox->num_rings; index++) {
->>>> +               mbox->controller.chans[index].msg_queue_len =
->>>> +                                               RING_MAX_REQ_COUNT;
->>>>                 mbox->controller.chans[index].con_priv = &mbox->rings[index];
->>>> +       }
->>>>
->>> While writing mailbox.c I wasn't unaware that there is the option to
->>> choose the queue length at runtime.
->>> The idea was to keep the code as simple as possible. I am open to
->>> making it a runtime thing, but first, please help me understand how
->>> that is useful here.
->>>
->>> I understand FlexRm has a ring buffer of RING_MAX_REQ_COUNT(1024)
->>> elements. Any message submitted to mailbox api can be immediately
->>> written onto the ringbuffer if there is some space.
->>> Is there any mechanism to report back to a client driver, if its
->>> message in ringbuffer failed "to be sent"?
->>> If there isn't any, then I think, in flexrm_last_tx_done() you should
->>> simply return true if there is some space left in the rung-buffer,
->>> false otherwise.
->>
->> Yes, we have error code in "struct brcm_message" to report back
->> errors from send_message. In our mailbox clients, we check
->> return value of mbox_send_message() and also the error code
->> in "struct brcm_message".
->>
-> I meant after the message has been accepted in the ringbuffer but the
-> remote failed to receive it.
+>> diff --git a/Documentation/devicetree/bindings/dma/sprd-dma.txt b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+>> new file mode 100644
+>> index 0000000..3ccf776
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/dma/sprd-dma.txt
+>> @@ -0,0 +1,41 @@
+>> +* Spreadtrum DMA controller
+>> +
+>> +This driver follows the generic DMA bindings defined in dma.txt.
+>
+> s/driver/binding/
+>
+> With that,
+>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yes, even this case is handled.
+Will fix this in next version. Thanks Rob.
 
-In case of IO errors after message has been put in ring buffer, we get
-completion message with error code and mailbox client drivers will
-receive back "struct brcm_message" with error set.
-
-You can refer flexrm_process_completions() for more details.
-
-> There seems no such provision. IIANW, then you should be able to
-> consider every message as "sent successfully" once it is in the ring
-> buffer i.e, immediately after mbox_send_message() returns 0.
-> In that case I would think you don't need more than a couple of
-> entries out of MBOX_TX_QUEUE_LEN ?
-
-What I am trying to suggest is that we can take upto 1024 messages
-in a FlexRM ring but the MBOX_TX_QUEUE_LEN limits us queuing
-more messages. This issue manifest easily when multiple CPUs
-queues to same FlexRM ring (i.e. same mailbox channel).
-
-Another quick fix is to make MBOX_TX_QUEUE_LEN as 1024 but
-it will not be generic fix.
-
-Regards,
-Anup
+-- 
+Baolin.wang
+Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
