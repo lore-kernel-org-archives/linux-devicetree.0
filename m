@@ -1,102 +1,37 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCHv4 1/3] dt-bindings: input: add pwm-vibrator
-Date: Tue, 25 Jul 2017 10:59:49 +0200
-Message-ID: <20170725085949.2v3b373p5xkje47a@earth>
-References: <20170714100151.31234-1-sebastian.reichel@collabora.co.uk>
- <20170714100151.31234-2-sebastian.reichel@collabora.co.uk>
- <20170724192017.GE32425@amd>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="gj2fo7nfy4g724kh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170724192017.GE32425@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Rocky Hao <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/5] thermal: rockchip: add tsadc support in thermal driver and IPA thermal control for rk3328 in dts
+Date: Tue, 25 Jul 2017 17:09:43 +0800
+Message-ID: <1500973788-14627-1-git-send-email-rocky.hao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This series patches add the tsadc support in thermal driver and in devicetree for rk3328.
+Also add thermal control with Intelligent Power Allocation (IPA) policy by default.  Please
+refer to https://developer.arm.com/open-source/intelligent-power-allocation for more information
+about IPA.
 
---gj2fo7nfy4g724kh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Rocky Hao (5):
+  dt-bindings: rockchip-thermal: Support the RK3328 SoC compatible
+  thermal: rockchip: Support the RK3328 SOC in thermal driver
+  arm64: dts: rockchip: add tsadc node for rk3328 SoC
+  arm64: dts: rockchip: add thermal nodes for rk3328 SoC
+  arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation board
 
-On Mon, Jul 24, 2017 at 09:20:17PM +0200, Pavel Machek wrote:
-> On Fri 2017-07-14 12:01:49, Sebastian Reichel wrote:
-> > Add DT binding document for PWM controlled vibrator devices.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
->=20
-> Acked-by: Pavel Machek <pavel@ucw.cz>
->=20
-> > index 000000000000..09145d18491d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> > @@ -0,0 +1,66 @@
-> > +* PWM vibrator device tree bindings
-> > +
-> > +Registers a PWM device as vibrator. It is expected, that the vibrator's
-> > +strength increases based on the duty cycle of the enable PWM channel
-> > +(100% duty cycle meaning strongest vibration, 0% meaning no vibration).
-> > +
-> > +The binding supports an optional direction PWM channel, that can be
-> > +driven at fixed duty cycle. If available this is can be used to increa=
-se
-> > +the vibration effect of some devices.
->=20
-> Actually what "direction" does would be nice to explain, because I
-> don't know. Does it make the motor turn the other way around?
+ .../bindings/thermal/rockchip-thermal.txt          |  1 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  4 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 63 +++++++++++++++++++++
+ drivers/thermal/rockchip_thermal.c                 | 65 ++++++++++++++++++++++
+ 4 files changed, 133 insertions(+)
 
-Yes, at least that's how I understand it. IIUIC this will increase
-the imbalance effect and thus the vibration.
+-- 
+1.9.1
 
-> > +Required properties:
-> > +- compatible: should contain "pwm-vibrator"
->=20
-> should->Should.
->
-> > +- pwm-names: Should contain "enable" and optionally "direction"
-> > +- pwms: Should contain a PWM handle for each entry in pwm-names
-> > +
-> > +Optional properties:
-> > +- vcc-supply: Phandle for the regulator supplying power
-> > +- direction-duty-cycle-ns: Duty cycle of the direction PWM channel in
-> > +                           nanoseconds, defaults to 50% of the channel=
-'s
-> > +			   period.
->=20
-> Is nanoseconds right unit here? It drives a motor...
 
-Yes, for the driving the motor the values will be very big
-and we could use milliseconds. But the PWM specifier [0] uses
-nanoseconds for the period and I think period and duty cycle
-should be described in the same scale.
-
-[0] Documentation/devicetree/bindings/pwm/pwm.txt
-
--- Sebastian
-
---gj2fo7nfy4g724kh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAll3CIIACgkQ2O7X88g7
-+poeDg//efMooQSkEg59ZZ2bwL3s1NuVIbz/TNcA8qYzqOIycTh5ZAEaU6HNprlE
-SD1JAzj/VpTcV3bpZG85jghmYVdFMxMZWBHQCo29A5A5k+0BFF9BU8nOIHth44aa
-Yb5iee0sf45Ye5DqVJrdmQLFGN9ykQTuHZdw0rebOCOfiuUq6cer2Doiq93pHPk0
-HeFrvOn1pe2ExQkxWKO5w4pdKpAsFMmkmaPKzvf0JtbZ66ebpQM9u2GzTZlfr6Wg
-Cf0qEGRMj7W63LQ9PhpnZNSQXMOV1uvP9rBGLNPKDqLnVAQAvGy5drC88KZ3PXWA
-reltaAgX3xdwb4SFz3RU5Oa/keWadu9Ok03Xj8fPsijLVT/W789d/GjQ2suCu2iV
-SXQ7+vY9KOGeJyFSNo/8XRZTEm+Xnm1tLK0tRs09BcNIXjM5uyyG2MgpJ2reTcFg
-b15iOgOlDmMGXr/fdTkql/6Y4aeLj741yxgBCv5saU4/l3A09qlyRtzyu4qi+3Wi
-igeWvo07e6aNLZ1OOpykpKELNjfDpkOuN9kXCoxZKPluNspst6/k/931V6KRlZ9h
-y1ZUpF0IBJilhautAn4csNQgmvDf+H1bZ/ykXonFHdQiDwqBLJD3soIRFohIyMV3
-teTXijvdXRX3qqcKpFS/+ydDmzpJLUAlCkJ8b9IcaHmp8vcdhBw=
-=FHp6
------END PGP SIGNATURE-----
-
---gj2fo7nfy4g724kh--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
