@@ -1,51 +1,39 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 120/125] of: device: Export of_device_{get_modalias, uvent_modalias} to modules
-Date: Tue, 25 Jul 2017 12:20:35 -0700
-Message-ID: <20170725192020.880134322@linuxfoundation.org>
-References: <20170725192014.314851996@linuxfoundation.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Tue, 25 Jul 2017 15:36:29 -0500
+Message-ID: <CAL_JsqKZ5JcunaY9K5MEjyS-sxargKtJq11x+DVMwHs8WrnH+Q@mail.gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com> <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170725192014.314851996@linuxfoundation.org>
+In-Reply-To: <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <peter.chen@nxp.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-4.9-stable review patch.  If anyone has any objections, please let me know.
+On Tue, Apr 25, 2017 at 7:09 PM,  <frowand.list@gmail.com> wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Existing overlay unit tests examine individual pieces of the overlay
+> code.  The new tests target the entire process of applying an overlay.
+>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> ---
 
-------------------
+[...]
 
-From: Stephen Boyd <stephen.boyd@linaro.org>
+> @@ -1261,6 +1263,8 @@ void __init unflatten_device_tree(void)
+>
+>         /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>         of_alias_scan(early_init_dt_alloc_memory_arch);
+> +
+> +       unittest_unflatten_overlay_base();
 
-commit 7a3b7cd332db08546f3cdd984f11773e0d1999e7 upstream.
+This breaks on systems that don't boot with FDT and call
+unflatten_device_tree, namely x86 and UML (UML needs a few hacks to
+work) which was a feature of the unittest. Considering applying
+overlays on x86 is something we'll want to support, the unittest
+should support that case.
 
-The ULPI bus can be built as a module, and it will soon be
-calling these functions when it supports probing devices from DT.
-Export them so they can be used by the ULPI module.
-
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/of/device.c |    2 ++
- 1 file changed, 2 insertions(+)
-
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -225,6 +225,7 @@ ssize_t of_device_get_modalias(struct de
- 
- 	return tsize;
- }
-+EXPORT_SYMBOL_GPL(of_device_get_modalias);
- 
- /**
-  * of_device_uevent - Display OF related uevent information
-@@ -287,3 +288,4 @@ int of_device_uevent_modalias(struct dev
- 
- 	return 0;
- }
-+EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+Rob
