@@ -1,79 +1,152 @@
-From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v3] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
-Date: Tue, 25 Jul 2017 17:14:22 +0300
-Message-ID: <20170725141422.7924-1-c_mykolak@mellanox.com>
+From: Julien Grall <julien.grall-5wv7dgnIgG8@public.gmane.org>
+Subject: Duplicated memory node in the Device-Tree (WAS [XEN] Re: Duplicated
+ memory nodes cause the BUG())
+Date: Tue, 25 Jul 2017 15:23:40 +0100
+Message-ID: <6d1fb061-03b0-3b58-e70a-3c0e0777d8d7@arm.com>
+References: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914@epam.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <835d808c-9d5e-2dc0-6cf9-8fbecdc49914-uRwfk40T5oI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Andrii Anisov <andrii_anisov-uRwfk40T5oI@public.gmane.org>, xen-devel <xen-devel-GuqFBffKawtpuQazS67q72D2FQJk+8+b@public.gmane.org>
+Cc: Stefano Stabellini <sstabellini-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Cooper <andrew.cooper3-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Ian Jackson <ian.jackson-mvvWK6WmYclDPfheJLI6IQ@public.gmane.org>, Wei Liu <wei.liu2-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Jan Beulich <JBeulich-IBi9RG/b67k@public.gmane.org>, Konrad Rzeszutek Wilk <konrad.wilk-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, George Dunlap <george.dunlap-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org>, Tim Deegan <tim-LM2mM/qkH7s@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-It's add support for cooling device creation to
-aspeed-pwm-tacho.
-Cooling device could be bound to a thermal zone
-for the thermal control.
 
-v1 -> v2:
- - Fix commit message.
-v2 -> v3:
- Pointed out by Rob Herring:
- - Put cooling-levels under fan subnodes.
 
-Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 25/07/17 13:24, Andrii Anisov wrote:
+> Dear All,
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-index cf44605..367c820 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
- 
- - #size-cells : should be 1.
- 
-+- #cooling-cells: should be 2.
-+
- - reg : address and length of the register set for the device.
- 
- - pinctrl-names : a pinctrl state named "default" must be defined.
-@@ -28,12 +30,17 @@ fan subnode format:
- Under fan subnode there can upto 8 child nodes, with each child node
- representing a fan. If there are 8 fans each fan can have one PWM port and
- one/two Fan tach inputs.
-+For PWM port can be configured cooling-levels to create cooling device.
-+Cooling device could be bound to a thermal zone for the thermal control.
- 
- Required properties for each child node:
- - reg : should specify PWM source port.
- 	integer value in the range 0 to 7 with 0 indicating PWM port A and
- 	7 indicating PWM port H.
- 
-+- cooling-levels: PWM duty cycle values in a range from 0 to 255
-+                  which correspond to thermal cooling states.
-+
- - aspeed,fan-tach-ch : should specify the Fan tach input channel.
-                 integer value in the range 0 through 15, with 0 indicating
- 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
-@@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
- pwm_tacho: pwmtachocontroller@1e786000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	#cooling-cells = <2>;
- 	reg = <0x1E786000 0x1000>;
- 	compatible = "aspeed,ast2500-pwm-tacho";
- 	clocks = <&pwm_tacho_fixed_clk>;
-@@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
- 
- 	fan@0 {
- 		reg = <0x00>;
-+		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
- 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
- 	};
- 
+Hi,
+
+>
+>
+> In case of memory nodes duplication (or overlapping) in a device tree,
+> we get a BUG at page_alloc.c:226.
+>
+> This appears e.g. for Renesas R-Car Gen3 SoC based boards. Their u-boot
+> does write memory nodes to the device tree before image (Linux kernel,
+> xen) boot. So having following memory description in the compiled device
+> tree for Salvator-X:
+> \ {
+>         memory@48000000 {
+>                 device_type = "memory";
+>                 reg = <0x0 0x48000000 0x0 0x38000000>;
+>         };
+>         memory@500000000 {
+>                 device_type = "memory";
+>                 reg = <0x5 0x00000000 0x0 0x40000000>;
+>         };
+>         memory@600000000 {
+>                 device_type = "memory";
+>                 reg = <0x6 0x00000000 0x0 0x40000000>;
+>         };
+>         memory@700000000 {
+>                 device_type = "memory";
+>                 reg = <0x7 0x00000000 0x0 0x40000000>;
+>         };
+> }
+>
+> The hypervisor in runtime receives following:
+> \ {
+>         memory@48000000 {
+>                 device_type = "memory";
+>                 reg = <0x0 0x48000000 0x0 0x38000000>,
+>                           <0x5 0x00000000 0x0 0x40000000>,
+>                           <0x6 0x00000000 0x0 0x40000000>,
+>                           <0x7 0x00000000 0x0 0x40000000>;
+>         };
+>         memory@500000000 {
+>                 device_type = "memory";
+>                 reg = <0x5 0x00000000 0x0 0x40000000>;
+>         };
+>         memory@600000000 {
+>                 device_type = "memory";
+>                 reg = <0x6 0x00000000 0x0 0x40000000>;
+>         };
+>         memory@700000000 {
+>                 device_type = "memory";
+>                 reg = <0x7 0x00000000 0x0 0x40000000>;
+>         };
+> }
+>
+> And crashes:
+>
+> (XEN) Checking for initrd in /chosen
+> (XEN) RAM: 0000000048000000 - 000000007fffffff
+> (XEN) RAM: 0000000500000000 - 000000053fffffff
+> (XEN) RAM: 0000000600000000 - 000000063fffffff
+> (XEN) RAM: 0000000700000000 - 000000073fffffff
+> (XEN) RAM: 0000000500000000 - 000000053fffffff
+> (XEN) RAM: 0000000600000000 - 000000063fffffff
+> (XEN) RAM: 0000000700000000 - 000000073fffffff
+> (XEN)
+> (XEN) MODULE[0]: 0000000048000000 - 0000000048011000 Device Tree
+> (XEN) MODULE[1]: 000000007a000000 - 000000007c000000 Kernel
+> (XEN)  RESVD[0]: 0000000048000000 - 0000000048011000
+> (XEN)
+> (XEN) Command line: dom0_mem=752M console=dtuart dtuart=serial0
+> dom0_max_vcpus=4
+> (XEN) Placing Xen at 0x000000073fe00000-0x0000000740000000
+> (XEN) Update BOOTMOD_XEN from 0000000078080000-0000000078192d81 =>
+> 000000073fe00000-000000073ff12d81
+> (XEN) PFN compression on bits 19...19
+> (XEN)
+> (XEN) ****************************************
+> (XEN) Panic on CPU 0:
+> (XEN) Boot BUG at page_alloc.c:226
+> (XEN) ****************************************
+> (XEN)
+> (XEN) Reboot in five seconds...
+>
+> This mainly happens because duplicated memory nodes are accounted as
+> separate memory banks (in process_memory_node()).
+> I select now of two approaches to fix the issue:
+> * ignore next duplicating (overlapping) memory node in favor of one
+> already in a memory banks list
+> * merge duplicating (overlapping), even neighboring, memory banks
+>
+> Actually I tend to follow the second approach, but want to get some
+> advisory from community first.
+> ps. Linux kernel does tolerate duplicated memory nodes by merging memory
+> blocks. I.e. memblock_add_range() function is commented as following:
+
+I think this is by chance rather than by design. The first question to 
+answer is why a Firmware would specify twice the same memory banks? Is 
+it valid from the specification?
+
+I have CCed the devicetree ML to get feedback from them here.
+
+Regardless that, it looks like to me that the device-tree you give to 
+the board should not contain the memory nodes.
+
+>     /**
+>      * memblock_add_range - add new memblock region
+>      * @type: memblock type to add new region into
+>      * @base: base address of the new region
+>      * @size: size of the new region
+>      * @nid: nid of the new region
+>      * @flags: flags of the new region
+>      *
+>      * Add new memblock region [@base,@base+@size) into @type.  The new
+> region
+>      * is allowed to overlap with existing ones - overlaps don't affect
+> already
+>      * existing regions.  @type is guaranteed to be minimal (all
+> neighbouring
+>      * compatible regions are merged) after the addition.
+>      *
+>      * RETURNS:
+>      * 0 on success, -errno on failure.
+>      */
+>
+
+Cheers,
+
 -- 
-2.8.4
-
+Julien Grall
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
