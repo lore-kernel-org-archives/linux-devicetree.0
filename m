@@ -1,40 +1,77 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 05/10] clk: sunxi-ng: h3: gate then ungate
- PLL CPU clk after rate change
-Date: Tue, 25 Jul 2017 17:36:50 -0700
-Message-ID: <20170726003650.GH2146@codeaurora.org>
-References: <20170723102749.17323-1-icenowy@aosc.io>
- <20170723102749.17323-6-icenowy@aosc.io>
-Reply-To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
+ bindings
+Date: Tue, 25 Jul 2017 17:48:30 -0700
+Message-ID: <20170726004830.GI2146@codeaurora.org>
+References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
+ <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
+ <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
+ <20170721204439.GJ19878@codeaurora.org>
+ <1a971e80-1f91-c446-7e28-d193354b2859@baylibre.com>
+ <1500897650.2401.1.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDHZXHXDRAMBBJGI37FQKGQEOINYWHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170723102749.17323-6-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1500897650.2401.1.camel@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/23, Icenowy Zheng wrote:
-> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> 
-> This patch utilizes the new PLL clk notifier to gate then ungate the
-> PLL CPU clock after rate changes. This should prevent any system hangs
-> resulting from cpufreq changes to the clk.
-> 
-> Reported-by: Ondrej Jirman <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Tested-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
+On 07/24, Jerome Brunet wrote:
+> On Mon, 2017-07-24 at 13:47 +0200, Neil Armstrong wrote:
+> > 
+> > Hi Rob, Stephen,
+> > 
+> > Thanks for your feedback, but on these Amlogic platforms, the AO register bank
+> > is
+> > filled with interleaved registers used for various purposes.
+> > 
+> > For instance, the first 1k of registers are :
+> > 
+> > 0-c RTI_STATUS
+> > c-14 RTI_PWR_CNTL
+> > 14-1c PIN_MUX
+> > 1c RTI_STATUS
+> > 24-30 GPIO
+> > 30 JTAG_CONFIG
+> > 34 WD
+> > 38-40 CPU_CTRL
+> > 40 RTI_GEN_CTRL
+> > 44 CPU_CTRL
+> > 4c-58 TIMER
+> > 58 OSCIN
+> > 60 AHB2DDR
+> > ...
+> > 
+> > 
+> > And so on, and the clock related registers are split among this space.
+> > 
+> > For sure, this could be declared as an system controller node, but this would
+> > imply completely
+> > re-designing the actual clock driver and drop the actual bindings.
+> > (and with re-writting the clock gate code to use regmap registers access)
 
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+I'm not suggesting a sycon node or binding usage here. There's an
+"always on" hw block here that could be implemented as an MFD
+driver that binds and creates a clk subdevice and whatever else
+is sitting in here. Those subdevices could be informed of the
+register base by knowing their parent driver is an MFD with a
+certain driver data structure inside and then get at an __iomem
+pointer through the parent's driver data. Or they could use a
+regmap approach and rewrite a bunch of code. Or there could be
+just a clk driver that binds to this node for now until a later
+time that other features are needed.
+
+> 
+> Maybe it is time to investigate having the regmap clock from qcom available to
+> every other platform ?
+
+I think we have regmap clk duplicated a couple times in the
+drivers/clk/ directory now. Not sure how this is related, except
+for that there looks to be a desire to use a syscon binding here
+and that forces regmap on drivers?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
