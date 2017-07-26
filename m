@@ -1,35 +1,86 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v4 9/9] ARM: dts: at91: sama5d2_xplained: add pin muxing
- and enable classd
-Date: Wed, 26 Jul 2017 08:59:39 +0200
-Message-ID: <20170726065939.5xnfypocdj3qftiy@piout.net>
-References: <cover.c8ce78c15296190b2aa5c452c0c4512528e28518.1500968090.git-series.quentin.schulz@free-electrons.com>
- <f2f55956879fd7e80cf0fb72ba743f8c5cb28fcc.1500968090.git-series.quentin.schulz@free-electrons.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH 10/10] ARM: dts: sun8i: Add SY8106A
+ regulator to Orange Pi PC
+Date: Wed, 26 Jul 2017 15:08:06 +0800
+Message-ID: <CAGb2v66AGjazHT-+hWVLyNBLDw=DJ5yTmNxF-_=BtZFfjnni-A@mail.gmail.com>
+References: <20170723102749.17323-1-icenowy@aosc.io> <20170723102749.17323-11-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <f2f55956879fd7e80cf0fb72ba743f8c5cb28fcc.1500968090.git-series.quentin.schulz@free-electrons.com>
+In-Reply-To: <20170723102749.17323-11-icenowy@aosc.io>
 Sender: linux-clk-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Nicolas Ferre <nicolas.ferre@atmel.com>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Ondrej Jirman <megous@megous.com>
 List-Id: devicetree@vger.kernel.org
 
-On 25/07/2017 at 09:37:10 +0200, Quentin Schulz wrote:
-> From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> 
-> This patch adds the pin muxing for classd and enables it.
-> 
-> Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+On Sun, Jul 23, 2017 at 6:27 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
+> Orange Pi PC, then set the power supply of the ARM cores to this
+> regulator, in order to enable DVFS.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> [Icenowy: Enable DVFS in this patch, slight changes and change commit
+>  message]
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 > ---
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-Applied, thanks.
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> index 998b60f8d295..d855f8b6254e 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
+> @@ -98,6 +98,10 @@
+>         status = "okay";
+>  };
+>
+> +&cpu0 {
+> +       cpu-supply = <&reg_sy8106a>;
+> +};
+> +
+>  &ehci0 {
+>         status = "okay";
+>  };
+> @@ -160,6 +164,21 @@
+>         };
+>  };
+>
+> +&r_i2c {
+> +       status = "okay";
+> +
+> +       reg_sy8106a: regulator@65 {
+> +               compatible = "silergy,sy8106a";
+> +               reg = <0x65>;
+> +               regulator-name = "vdd-cpux";
+> +               regulator-min-microvolt = <1000000>;
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+According to the H3 datasheet, the minimum voltage is 1.1V, not 1V.
+
+Otherwse
+
+> +               regulator-max-microvolt = <1400000>;
+> +               regulator-ramp-delay = <200>;
+
+Is this an actual constraint of the SoC? Or is it a characteristic
+of the regulator? If it is the latter, it belongs in the driver.
+AFAIK the regulator supports varying the ramp delay (slew rate).
+
+ChenYu
+
+> +               regulator-boot-on;
+> +               regulator-always-on;
+> +       };
+> +};
+> +
+>  &r_pio {
+>         leds_r_opc: led_pins@0 {
+>                 pins = "PL10";
+> --
+> 2.13.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
