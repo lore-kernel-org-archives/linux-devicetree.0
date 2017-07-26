@@ -1,49 +1,30 @@
-From: Jiri Pirko <jiri@resnulli.us>
-Subject: Re: [patch v1 1/2] mfd: Add Mellanox regmap core driver
-Date: Wed, 26 Jul 2017 13:28:20 +0200
-Message-ID: <20170726112820.GB1845@nanopsycho>
-References: <1501001499-21971-1-git-send-email-vadimp@mellanox.com>
- <1501001499-21971-2-git-send-email-vadimp@mellanox.com>
- <20170726111846.GB6033@amd>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/5] arm64: dts: renesas: r8a7795: add usb2.0 for R-Car H3 ES2.0
+Date: Wed, 26 Jul 2017 20:29:35 +0900
+Message-ID: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170726111846.GB6033@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Vadim Pasternak <vadimp@mellanox.com>, lee.jones@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Wed, Jul 26, 2017 at 01:18:46PM CEST, pavel@ucw.cz wrote:
->Hi!
->
+This patch is based on the renesas-drivers.git /
+renesas-drivers-2017-07-18-v4.13-rc1 tag.
 
-[...]
+Kazuya Mizuguchi (1):
+  arm64: dts: renesas: r8a7795: Add usb companion property in EHCI
 
+Yoshihiro Shimoda (4):
+  arm64: dts: renesas: r8a7795: add usb2_phy ch3 device node
+  arm64: dts: renesas: r8a7795: add usb2.0 host ch3 device nodes
+  arm64: dts: renesas: r8a7795: add usb-dmac ch2 and ch3 device nodes
+  arm64: dts: renesas: r8a7795: add hsusb ch3 device node
 
->
->> +static void
->> +mlxreg_core_work_helper(struct mlxreg_core_priv_data *priv,
->> +			struct mlxreg_core_item *item, u8 is_inverse,
->> +			u16 off, u32 mask, u32 *cache)
->> +{
->> +	struct mlxreg_core_data *data;
->> +	u32 asserted, regval, bit;
->> +	int ret;
->> +
->> +	/*
->> +	 * Validate if item related to received signal type is valid.
->> +	 * It should never happen, excepted the situation when some
->> +	 * piece of hardware is broken. In such situation just produce
->> +	 * error message and return. Caller must continue to handle the
->> +	 * signals from other devices if any.
->> +	 */
->> +	if (unlikely(!item)) {
->> +		dev_err(priv->dev, "False signal is received: register at offset 0x%02x, mask 0x%02x.\n",
->> +			off, mask);
->
->Slightly too long line.
+ arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi |  8 +++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi     | 85 ++++++++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
 
-That is totally ok to have it like that for printables though. Actually,
-wraping the text in half would be wrong.
+-- 
+1.9.1
