@@ -1,82 +1,78 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 0/9] mfd: axp20x: Add basic support for AXP813
-Date: Wed, 26 Jul 2017 10:32:42 +0200
-Message-ID: <20170726083242.k35gnk22h35as55n@flea>
-References: <20170726082832.16789-1-wens@csie.org>
+From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] nvmem: upstream snvs_lpgpr driver
+Date: Wed, 26 Jul 2017 10:01:37 +0100
+Message-ID: <e0abdef9-91af-8c7b-957c-b55be48ca7b4@linaro.org>
+References: <20170620070932.10353-1-o.rempel@pengutronix.de>
+ <07198c02-ac87-ec1f-accd-75ad6fd0ac30@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="hrs6dd53v4fytgzv"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170726082832.16789-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <07198c02-ac87-ec1f-accd-75ad6fd0ac30-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---hrs6dd53v4fytgzv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 26, 2017 at 04:28:23PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
->=20
-> This is v2 of my AXP813 support series. The device tree patches are
-> based on my A83T MMC support series. These will go through the sunxi
-> tree. The dt-binding and mfd patches are based on v4.13-rc1. These
-> will go through Lee's mfd tree.
->=20
-> Changes since v1:
->=20
->   - Provided relative path for ac100.txt in dt-bindings/mfd/axp20x.txt
->=20
->   - Added Rob's acks to dt-binding patches
->=20
->   - Added Quentin's "mfd: axp20x: use correct platform device id for
->     many PEK" patch to this series. This patch depends on mfd changes
->     in this series. It is included so Lee can take them together in
->     one go.
->=20
->   - Added Lee's mfd-acks to mfd patches
->=20
->   - Added axp818 compatible with axp813 fallback. The two chips are
->     identical except for the markings. The added compatible matches
->     what is actually on the board, to avoid confusing readers.
->=20
->   - Fixed up device tree patches to mention which board is changed
->=20
->   - Added device tree patches for the H8 homlet
+On 18/07/17 05:52, Oleksij Rempel wrote:
+> Hallo all,
+> 
+> Here Gentle Ping to the Old King ;)
+> 
+> DT is already ACKed.
 
-For the whole serie,
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Thanks for patience, As this is a new driver it will be queued for 4.14 
+just before 4.13-rc5 is released.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---hrs6dd53v4fytgzv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZeFOqAAoJEBx+YmzsjxAgwTIP/AuEUSfLbTJ4x9TMdg/KUvXf
-OUv0XyR2SIJCSb7TI/ZUZCIXqrVaHhsdbJ9Rory3thSH/aJBwdOFxUKVirYfOWaj
-KR0V+rqZr6kOom4HGdM6hkU55tIMu73Su8sKSqfFQv2vrVG4q8Kdp/YDErK1HfeB
-8KmVLZUn5PQDsque2iR3dOMGuHiGO6ZCt0y3VFRb2V38+VBgQrpDUVs+g5KaZt2l
-dNtNxfi6DzttbbhqU3cDn/NPhEDKkENSGhiEvOphf9ofkPYF7UbRaVHjUcJfqsz7
-2xPi2g9BPnK4j9raaokrLA7/Cgri8aEMlMJFCswJuQicA76bVq33VsuqXEzNOdPP
-iJkAmtU1TjFAZKdw8s4XT9lSszzWZ2j9hWD0o63Zu5vpdAp+x77C1NMmZG/W6cGB
-H+uk8lJqiwnBSSnvirA6r6/+I4NkNG4ABKW/yvaY+LtBw89Ti4e5GGNQxyEhL6Jt
-ztrDU8xbMRBhF2xcqSI/Pp+L2DBYGEkLBWKzdmR4uGW7KeFi2hOR92t0i1yO/Z4D
-VIftYa98MUpWz4P0Dd9A9ZhjPAqkF6bnhxfaVCIJJdSUWAtbPA4M3VGAqeeThLTQ
-EyrSfsnDdef2pZY+h26N7L3p8FwYnoYVPEIkPBoOz5hqBtgzTuGdr50t0u4brW1W
-J/ixTydXuYJFlJEvt5DH
-=qMHF
------END PGP SIGNATURE-----
-
---hrs6dd53v4fytgzv--
+thanks,
+srini
+> 
+> On 20.06.2017 09:09, Oleksij Rempel wrote:
+>> changes v7:
+>>  - split imx6ul patch and squash it with with main patches.
+>>  - spell fixes in the binding documentation
+>>  - return regmap_bulk_read directly.
+>>
+>> changes v6:
+>>  - check if device is writable by reading GPR_SL and GPR_HL bits
+>>  - use regmap_bulk_* functions instead of while() { regmap_read/write }
+>>  - add patch for imx6ul
+>>
+>> changes v5:
+>>  - use dcfg->offset instead of priv->offset.
+>>
+>> changes v4:
+>>  - change dependencies in Kconfig
+>>  - remove unused includes and order them alphabetically
+>>  - set MODULE_LICENSE = GPL v2
+>>  - remove unused int err variable
+>>
+>> changes v3:
+>>  - remove regmap and offset properties.
+>>
+>> changes v2:
+>>  - correct typos: Registe, parrent...
+>>
+>> Oleksij Rempel (3):
+>>   nvmem: dt: document SNVS LPGPR binding
+>>   nvmem: add snvs_lpgpr driver
+>>   ARM: dts: imx6qdl.dtsi/imx6ul.dtsi: add "fsl,imx6q-snvs-lpgpr" node
+>>
+>>  .../devicetree/bindings/nvmem/snvs-lpgpr.txt       |  20 +++
+>>  arch/arm/boot/dts/imx6qdl.dtsi                     |   4 +
+>>  arch/arm/boot/dts/imx6ul.dtsi                      |   4 +
+>>  drivers/nvmem/Kconfig                              |  10 ++
+>>  drivers/nvmem/Makefile                             |   2 +
+>>  drivers/nvmem/snvs_lpgpr.c                         | 155 
+>> +++++++++++++++++++++
+>>  6 files changed, 195 insertions(+)
+>>  create mode 100644 
+>> Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>  create mode 100644 drivers/nvmem/snvs_lpgpr.c
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
