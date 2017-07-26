@@ -1,84 +1,44 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [patch v1 1/2] mfd: Add Mellanox regmap core driver
-Date: Wed, 26 Jul 2017 13:42:50 +0200
-Message-ID: <20170726114250.GA7826@amd>
-References: <1501001499-21971-1-git-send-email-vadimp@mellanox.com>
- <1501001499-21971-2-git-send-email-vadimp@mellanox.com>
- <20170726111846.GB6033@amd>
- <20170726112820.GB1845@nanopsycho>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/4] ARM64: dts: rockchip: rk3328 add iommu nodes
+Date: Wed, 26 Jul 2017 13:44:02 +0200
+Message-ID: <7545443.2JTXH2SMA9@diego>
+References: <1500863530-32792-1-git-send-email-xxm@rock-chips.com> <20170726105818.GK15833@8bytes.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170726112820.GB1845@nanopsycho>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jiri Pirko <jiri@resnulli.us>
-Cc: Vadim Pasternak <vadimp@mellanox.com>, lee.jones@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726105818.GK15833-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Joerg,
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am Mittwoch, 26. Juli 2017, 12:58:19 CEST schrieb Joerg Roedel:
+> On Mon, Jul 24, 2017 at 10:32:07AM +0800, Simon Xue wrote:
+> > Add H265e/VEPU/VPU/VDEC/VOP iommu nodes
+> > 
+> > Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> > 
+> > changes since V2:
+> >  - none
+> >  
+> >  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 45
+> >  ++++++++++++++++++++++++++++++++ 1 file changed, 45 insertions(+)
+> 
+> Applied all, thanks.
 
-On Wed 2017-07-26 13:28:20, Jiri Pirko wrote:
-> Wed, Jul 26, 2017 at 01:18:46PM CEST, pavel@ucw.cz wrote:
-> >Hi!
-> >
->=20
-> [...]
->=20
->=20
-> >
-> >> +static void
-> >> +mlxreg_core_work_helper(struct mlxreg_core_priv_data *priv,
-> >> +			struct mlxreg_core_item *item, u8 is_inverse,
-> >> +			u16 off, u32 mask, u32 *cache)
-> >> +{
-> >> +	struct mlxreg_core_data *data;
-> >> +	u32 asserted, regval, bit;
-> >> +	int ret;
-> >> +
-> >> +	/*
-> >> +	 * Validate if item related to received signal type is valid.
-> >> +	 * It should never happen, excepted the situation when some
-> >> +	 * piece of hardware is broken. In such situation just produce
-> >> +	 * error message and return. Caller must continue to handle the
-> >> +	 * signals from other devices if any.
-> >> +	 */
-> >> +	if (unlikely(!item)) {
-> >> +		dev_err(priv->dev, "False signal is received: register at offset 0x=
-%02x, mask 0x%02x.\n",
-> >> +			off, mask);
-> >
-> >Slightly too long line.
->=20
-> That is totally ok to have it like that for printables though. Actually,
-> wraping the text in half would be wrong.
+I really would prefer iommu dt-nodes going through my tree :-)
 
-Wrapping the text would be wrong, yes.
+Especially as parts of these conflict with already pending patches for
+graphics support and with the iommu nodes sitting in your tree these
+would need to wait another kernel release.
 
-Nothing prevents you from moving text at separate line... or rewording
-it to be shorter.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAll4gDoACgkQMOfwapXb+vJ99ACeOsqyMZ0TB/7z7pftw+DC/GNk
-TpgAn29L1UmOfwacwGfHPANegPKlNiH2
-=zMgx
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
