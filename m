@@ -1,55 +1,44 @@
-From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
-Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
-Date: Wed, 26 Jul 2017 22:04:03 +0200
-Message-ID: <20170726200403.GD6873@airbook.vandijck-laurijssen.be>
-References: <20170719233654.25908-1-fcooper@ti.com>
- <20170719233654.25908-2-fcooper@ti.com>
- <f45ea1b4-0f46-0002-a89b-b997f2693bb5@hartkopp.net>
- <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 3/3] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
+ bindings
+Date: Wed, 26 Jul 2017 22:07:14 +0200
+Message-ID: <1501099634.2401.37.camel@baylibre.com>
+References: <1499336663-23875-1-git-send-email-narmstrong@baylibre.com>
+         <1499336663-23875-4-git-send-email-narmstrong@baylibre.com>
+         <20170710035031.rdbi64ookkbq6zeo@rob-hp-laptop>
+         <20170721204439.GJ19878@codeaurora.org>
+         <1a971e80-1f91-c446-7e28-d193354b2859@baylibre.com>
+         <1500897650.2401.1.camel@baylibre.com>
+         <20170726004830.GI2146@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, andrew@lunn.ch
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170726004830.GI2146@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh@kernel.org>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I know my response is late ...
-
-> Hi Oliver
-> On 07/20/2017 02:43 AM, Oliver Hartkopp wrote:
-> > Hi Franklin,
+On Tue, 2017-07-25 at 17:48 -0700, Stephen Boyd wrote:
 > > 
-> > On 07/20/2017 01:36 AM, Franklin S Cooper Jr wrote:
-> > 
-> >> +#ifdef CONFIG_OF
-> >> +void of_transceiver_is_fixed(struct net_device *dev)
-> >> +{
-> > 
-> > (..)
-> > 
-> >> +}
-> >> +EXPORT_SYMBOL(of_transceiver_is_fixed);
-> >> +#endif
-> > 
-> > I'm not sure about the naming here.
-> > 
-> > As this is a CAN transceiver related option it should be named accordingly:
+> > Maybe it is time to investigate having the regmap clock from qcom available
+> > to
+> > every other platform ?
+> 
+> I think we have regmap clk duplicated a couple times in the
+> drivers/clk/ directory now.
 
-I contest the the name too:
-1) the can transceiver isn't fixed at all, it limited to the higher
-bitrates.
+Which is why we may start thinking of common and generic "regmap" compatible
+solution in the CCF, at least for things like gates, dividers and muxes
 
-2) of_can_transceiver_is_fixed suggests to test if a transceiver is
-fixed, it does not suggest to load some properties from the device tree.
-of_can_load_transceiver looks way more clear to me.
+The approach used in qcom with regmap clocks could be a candidate for this,
+don't you think ?
 
-That's my opinion.
-The important things, like the contents of the functions, look good.
+> Not sure how this is related, except
+> for that there looks to be a desire to use a syscon binding here
+> and that forces regmap on drivers?
 
-Kind regards,
-Kurt Van Dijck
+Syscon has been created exactly for this case where you want to create an mfd
+just for sharing a register region between several, otherwise well separated,
+devices, isn't it ?
