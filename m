@@ -1,27 +1,55 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/3] arm64: dts: renesas: r8a7795: salvator-xs: enable usb 2.0 channel 3
-Date: Wed, 26 Jul 2017 20:30:57 +0900
-Message-ID: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable usb2_phy ch3
+Date: Wed, 26 Jul 2017 20:30:58 +0900
+Message-ID: <1501068660-4032-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch is based on the renesas-drivers.git /
-renesas-drivers-2017-07-18-v4.13-rc1 tag and
-"pinctrl: sh-pfc: r8a7795: add usb2.0 on R-Car H3 ES2.0" patch set and
-"arm64: dts: renesas: r8a7795: add usb2.0 for R-Car H3 ES2.0" patch set.
+This patch enables usb2_phy channel 3.
 
-Yoshihiro Shimoda (3):
-  arm64: dts: renesas: r8a7795: salvator-xs: enable usb2_phy ch3
-  arm64: dts: renesas: r8a7795: salvator-xs: enable USB 2.0 channel 3
-  arm64: dts: renesas: r8a7795: salvator-xs: enable HSUSB channel 3
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
- .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 24 ++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+index 7675de5..e18bf4f 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+@@ -99,6 +99,11 @@
+ 		groups = "usb2";
+ 		function = "usb2";
+ 	};
++
++	usb2_ch3_pins: usb2_ch3 {
++		groups = "usb2_ch3";
++		function = "usb2_ch3";
++	};
+ };
+ 
+ &usb2_phy2 {
+@@ -107,3 +112,10 @@
+ 
+ 	status = "okay";
+ };
++
++&usb2_phy3 {
++	pinctrl-0 = <&usb2_ch3_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
