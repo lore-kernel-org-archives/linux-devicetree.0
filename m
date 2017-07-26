@@ -1,110 +1,135 @@
-From: =?UTF-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-Subject: Re: [linux-sunxi] [PATCH 10/10] ARM: dts: sun8i: Add SY8106A
- regulator to Orange Pi PC
-Date: Wed, 26 Jul 2017 14:54:40 +0200
-Message-ID: <1501073680.20056.3.camel@megous.com>
-References: <20170723102749.17323-1-icenowy@aosc.io>
-         <20170723102749.17323-11-icenowy@aosc.io>
-         <CAGb2v66AGjazHT-+hWVLyNBLDw=DJ5yTmNxF-_=BtZFfjnni-A@mail.gmail.com>
-         <25C8A89C-8495-4787-934C-8E9667CD70BF@aosc.io>
-         <CAGb2v64xXOmC44TKrSDZFAh6i_rgFEccCHj4EG+1fxFJd9fjjw@mail.gmail.com>
-         <82507f40a1ddba8517cf09f51d3afa33@aosc.io>
-         <1501064628.14577.1.camel@megous.com>
-         <20170726114420.ipirqgbluqmggcjy@flea>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Wed, 26 Jul 2017 08:00:13 -0500
+Message-ID: <5aa0d273-8e05-a5ff-7931-b9a94acade36@ti.com>
+References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-REyDzSfTfJmwRCLe+i2k"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170726114420.ipirqgbluqmggcjy@flea>
-Sender: linux-clk-owner@vger.kernel.org
-To: maxime.ripard@free-electrons.com
-Cc: icenowy@aosc.io, wens@csie.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501051524-5990-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Keerthy,
 
---=-REyDzSfTfJmwRCLe+i2k
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 07/26/2017 01:45 AM, Keerthy wrote:
+> The patch adds keystone-k2g compatible, specific properties and
+> an example.
 
-Maxime Ripard p=C3=AD=C5=A1e v St 26. 07. 2017 v 13:44 +0200:
-> Hi,
->=20
-> On Wed, Jul 26, 2017 at 12:23:48PM +0200, Ond=C5=99ej Jirman wrote:
-> > Hi,
-> >=20
-> > icenowy@aosc.io p=C3=AD=C5=A1e v St 26. 07. 2017 v 15:36 +0800:
-> > >=20
-> > > > > >=20
-> > > > > > Otherwse
-> > > > > >=20
-> > > > > > > +               regulator-max-microvolt =3D <1400000>;
-> > > > > > > +               regulator-ramp-delay =3D <200>;
-> > > > > >=20
-> > > > > > Is this an actual constraint of the SoC? Or is it a characteris=
-tic
-> > > > > > of the regulator? If it is the latter, it belongs in the driver=
-.
-> > > > > > AFAIK the regulator supports varying the ramp delay (slew rate)=
-.
-> > >=20
-> > > I don't know...
-> > >=20
-> > > Maybe I should ask Ondrej?
-> >=20
-> > It is probably neither.
-> >=20
-> > It is used to calculate a delay inserted by the kernel between setting
-> > a new target voltage over I2C and changing the frequency of the CPU.
-> > The actual delay is calculated by the difference between previous and
-> > the new voltage.
-> >=20
-> > I don't remember seeing anything in the datasheet of the regulator.
-> > This is just some low value that works.
-> >=20
-> > It would probably be dependent on the capacitance on the output of the
-> > regulator, actual load (which varies), etc. So it is a board specific
-> > value. One could measure it with an oscilloscope if there's a need to
-> > optimize this.
->=20
-> If this is a reasonable default, then this should be in the
-> driver. You can't expect anyone to properly calculate a ramp delay and
-> have access to both a scope and the CPU power lines.
+Please update patch header to "dt-bindings: gpio: davinci: ...."
 
-It translates to 1ms per 0.2V which is highly conservative. The real
-times will be in 1-10us range. So I guess this could be a default in
-the driver.
+> 
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> ---
+> 
+> Changes in v3:
+> 
+>   * Added details about family of SoCs corresponding to compatibles.
+> 
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      | 40 +++++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index 5079ba7..fb9efee 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,10 @@
+>  Davinci/Keystone GPIO controller bindings
+>  
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+> +- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs 
+> +			"ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
+> +						66AK2E SoCs
+> +			"ti,keystone-k2g-gpio", "ti,keystone-gpio": for 66AK2G
+>  
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> @@ -26,6 +29,17 @@ The GPIO controller also acts as an interrupt controller. It uses the default
+>  two cells specifier as described in Documentation/devicetree/bindings/
+>  interrupt-controller/interrupts.txt.
+>  
+> +Required Properties specific to keystone-k2g
 
-regards,
-  o.
+Thanks for updating the binding for the clocks, but clocks are not
+specific to K2G. They also apply to other K2 SoCs. Davinci platforms do
+not have DT clocks atm, so the Davinci portion can be updated later if
+and when they get added.
 
-> Maxime
->=20
-> --=20
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->=20
---=-REyDzSfTfJmwRCLe+i2k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> +
+> +- clocks: Should contain devices input clock. The first parameter
+> +           is a handle to k2g_clks. The second parameter is the
+> +           device ID and the third parameter is the clock ID. One can
+> +           refer: http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
 
------BEGIN PGP SIGNATURE-----
+No need for this link here, just refer to the appropriate clock
+bindings. Some thing like the following would be better
 
-iQIzBAABCAAdFiEEmrE4sgaRYhzUz5ICbmQmxnfP7/EFAll4kRAACgkQbmQmxnfP
-7/GqCA/+K2EiDc36p+JOPRl52doDVV6V7e/2gyMQzpoGj/n+EsBh3blMoSH1Nsd5
-jR1DBREUxLJaRBM6kJ5pvjnknxYBUL4eB12jxzPVhJY2m+o1XRdEGo46EOoVzjB4
-S5xEAKJHb8E4eup+gJLOWLc/1X2A/6k+oHcaEj7IV7o45Qt3bvr2F8LrgpddqfdT
-HiIpTZQUArxOnyDLDdUj/nPLpI9WXxA5gaLBGApd0LyobsDf6Eti4JxpI84ApWcI
-x5JnVOAgVdfG+jDuC+tTcGksIuqg3K7Ss+MPP03/C6E4QMV6ihgRQd4QmL8zUb6K
-C5JyfG9ZNodL7mOP5fv5WMylw1zEzYDAr8cpL8IJz0WVjD/1/AlnsUgKgHcs1ILY
-yGmrUBhdyHdnxZ7d63TzBYoIup54dUacouKZWhTXiAz4wghTK8Wasl0xJU8sQx+b
-hYLUMu6VJXcvfc4U/3qtgwLD7NeiNsPiksZbWp8dk/eLVxEP3Ddl4FdxbnJZjtaI
-L77DQTbQgyN6jVBoHdCbc6Zf8MhraqLBwxe5Gv5sv0lHDblg/zFXhOZ7NsKMdtNT
-G2M2JxT7A6isxw3iNCr3z+CPB5O/XZsgoJIxGnF7cOQNg7j72TKw8f1FrZaiRwjk
-nsCZg4DJHOHMyALL4BYtsonkziMkGraY39nbBUpVJ6qcpdKXW5M=
-=IzQR
------END PGP SIGNATURE-----
+- clocks:               Should contain the device's input clock, and
+                        should be defined as per the appropriate clock
+bindings consumer usage in,
 
---=-REyDzSfTfJmwRCLe+i2k--
+Documentation/devicetree/bindings/clock/keystone-gate.txt
+                            for 66AK2HK/66AK2L/66AK2E SoCs or,
 
+Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+                            for 66AK2G SoCs
+
+> +
+> +           Example: <&k2g_clks 0x001c 0x0>;
+
+This can be dropped as well, below example already demonstrates it.
+
+> +
+> +- clock-names: The driver expects the clock name to be "gpio";
+
+Just say, Should be "gpio". No need of mentioning about the driver.
+
+> +
+>  Example:
+>  
+>  gpio: gpio@1e26000 {
+> @@ -60,3 +74,27 @@ leds {
+>  		...
+>  	};
+>  };
+> +
+> +Example for keystone-k2g:
+
+s/keystone-k2g/66AK2G/
+
+> +
+> +gpio0: gpio@2603000 {
+> +	compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
+> +	reg = <0x02603000 0x100>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +	interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	ti,ngpio = <144>;
+> +	ti,davinci-gpio-unbanked = <0>;
+> +	clocks = <&k2g_clks 0x001b 0x0>;
+> +	clock-names = "gpio";
+> +};
+> 
+
+regards
+Suman
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
