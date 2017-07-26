@@ -1,119 +1,203 @@
 From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
- fixed transceiver bindings
-Date: Wed, 26 Jul 2017 13:29:19 -0500
-Message-ID: <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
-References: <20170724230521.1436-1-fcooper@ti.com>
- <20170724230521.1436-3-fcooper@ti.com> <20170726164124.GL12049@lunn.ch>
- <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
+Subject: Re: [PATCH v3 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Wed, 26 Jul 2017 13:37:36 -0500
+Message-ID: <01db3e6a-67d0-2cc5-5aa0-85a919874252@ti.com>
+References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
+ <5aa0d273-8e05-a5ff-7931-b9a94acade36@ti.com>
+ <8021c424-460c-def4-3a67-ed760997193d@ti.com>
+ <2eeaeea5-9476-8631-8680-7db3322151bf@ti.com>
+ <da92fe60-d70b-6a37-6b88-2ac95dd67b6a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <355b90b3-97ce-1057-6617-d5d709449c48-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <da92fe60-d70b-6a37-6b88-2ac95dd67b6a-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 07/26/2017 12:05 PM, Oliver Hartkopp wrote:
-> On 07/26/2017 06:41 PM, Andrew Lunn wrote:
->> On Mon, Jul 24, 2017 at 06:05:19PM -0500, Franklin S Cooper Jr wrote:
-> 
->>> +
->>> +Optional:
->>> + max-arbitration-speed: a positive non 0 value that determines the max
->>> +            speed that CAN can run in non CAN-FD mode or during the
->>> +            arbitration phase in CAN-FD mode.
+On 07/26/2017 09:20 AM, Suman Anna wrote:
+> On 07/26/2017 08:36 AM, Keerthy wrote:
 >>
->> Hi Franklin
+>> On Wednesday 26 July 2017 06:57 PM, Franklin S Cooper Jr wrote:
+>>>
+>>>
+>>> On 07/26/2017 08:00 AM, Suman Anna wrote:
+>>>> Hi Keerthy,
+>>>>
+>>>> On 07/26/2017 01:45 AM, Keerthy wrote:
+>>>>> The patch adds keystone-k2g compatible, specific properties and
+>>>>> an example.
+>>>
+>>> Seems we are adding information regarding several Keystone 2 SoCs. So
+>>> the commit and subject should be tweaked to reflect this.
 >>
->> Since this and the next property are optional, it is good to document
->> what happens when they are not in the DT blob. Also document what 0
->> means.
-
-The driver ignores values less than 0 with the exception being
-max-data-speed which supports a value of -1. Not sure what I'm
-documenting when the binding specifically says to use a positive non
-zero value. Its the same reason I don't document what happens if you
-give it a negative value.
-
+>> Okay i can add that as well.
 >>
->>> +
->>> + max-data-speed:    a positive non 0 value that determines the max
->>> data rate
->>> +            that can be used in CAN-FD mode. A value of -1 implies
->>> +            CAN-FD is not supported by the transceiver.
+>>>>
+>>>> Please update patch header to "dt-bindings: gpio: davinci: ...."
+>>>>
+>>>>>
+>>>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> Changes in v3:
+>>>>>
+>>>>>   * Added details about family of SoCs corresponding to compatibles.
+>>>>>
+>>>>>  .../devicetree/bindings/gpio/gpio-davinci.txt      | 40 +++++++++++++++++++++-
+>>>>>  1 file changed, 39 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>>> index 5079ba7..fb9efee 100644
+>>>>> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+>>>>> @@ -1,7 +1,10 @@
+>>>>>  Davinci/Keystone GPIO controller bindings
+>>>>>  
+>>>>>  Required Properties:
+>>>>> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+>>>>> +- compatible: should be "ti,dm6441-gpio": for Davinci da850 SoCs 
+>>>>> +			"ti,keystone-gpio": for Keystone 2 66AK2H/K, 66AK2L,
+>>>>> +						66AK2E SoCs
+>>>>> +			"ti,keystone-k2g-gpio", "ti,keystone-gpio": for 66AK2G
+>>>>>  
+>>>>>  - reg: Physical base address of the controller and the size of memory mapped
+>>>>>         registers.
+>>>>> @@ -26,6 +29,17 @@ The GPIO controller also acts as an interrupt controller. It uses the default
+>>>>>  two cells specifier as described in Documentation/devicetree/bindings/
+>>>>>  interrupt-controller/interrupts.txt.
+>>>>>  
+>>>>> +Required Properties specific to keystone-k2g
+>>>>
+>>>> Thanks for updating the binding for the clocks, but clocks are not
+>>>> specific to K2G. They also apply to other K2 SoCs. Davinci platforms do
+>>>> not have DT clocks atm, so the Davinci portion can be updated later if
+>>>> and when they get added.
+>>>>
+>>>
+>>> What about power-domain property?
+> 
+> The correct name is "power-domains".
+> 
+>> Driver has no pm_runtime implemented yet.
+> 
+> True, not yet, but this is in general a required property on K2G SoCs to
+> automatically enable clocks through runtime_pm. Clock properties on K2G
+> nodes should only be truly required if a driver is using clk API
+> (ideally to control optional clocks or for adjusting clock frequencies).
+> When the gpio-davinci driver gets updated to use pm_runtime, the clock
+> properties will be rendered obsolete for K2G.
+
+Now I understand better when we do or do not need this property after
+some offline discussion. If the driver doesn't support pm_runtime then
+no point in adding this property. Binding should discuss how to use the
+current driver. Not how a feature that may never exist may possibly be used.
+
+> 
+> Rob,
+> Any suggestions on how we need to handle this? Should we be adding the
+> property now or later when we adapt the driver for runtime_pm? This
+> would be a common theme for K2G nodes that are reusing Davinci drivers.
+> 
+> My take on this would be to add the property now, and mark the clock
+> properties obsolete when the driver gets converted.
+> 
+> regards
+> Suman
+> 
 >>
->> -1 is ugly. I think it would be better to have a missing
->> max-data-speed property indicate that CAN-FD is not supported.
-> 
-
-Although this leads to your later point I don't think this is the right
-approach. Its an optional property. Not including the property should
-not assume it isn't supported.
-
-> Thanks Andrew! I had the same feeling about '-1' :-)
-
-Ok I'll go back to having 0 = not supported. Which will handle the
-documentation comment above.
-
-> 
->> And
->> maybe put 'fd' into the property name.
-> 
-> Good point. In fact the common naming to set bitrates for CAN(FD)
-> controllers are 'bitrate' and 'data bitrate'.
-> 
-> 'speed' is not really a good word for that.
-
-I'm fine with switching to using bitrate instead of speed. Kurk was
-originally the one that suggested to use the term arbitration and data
-since thats how the spec refers to it. Which I do agree with. But your
-right that in the drivers (struct can_priv) we just use bittiming and
-data_bittiming (CAN-FD timings). I don't think adding "fd" into the
-property name makes sense unless we are calling it something like
-"max-canfd-bitrate" which I would agree is the easiest to understand.
-
-So what is the preference if we end up sticking with two properties?
-Option 1 or 2?
-
-1)
-max-bitrate
-max-data-bitrate
-
-2)
-max-bitrate
-max-canfd-bitrate
-
-
-
-> 
-> Finally, @Franklin:
-> 
-> A CAN transceiver is limited in bandwidth. But you only have one RX and
-> one TX line between the CAN controller and the CAN transceiver. The
-> transceiver does not know about CAN FD - it has just a physical(!) layer
-> with a limited bandwidth. This is ONE limitation.
-> 
-> So I tend to specify only ONE 'max-bitrate' property for the
-> fixed-transceiver binding.
-> 
-> The fact whether the CAN controller is CAN FD capable or not is provided
-> by the netlink configuration interface for CAN controllers.
-
-Part of the reasoning to have two properties is to indicate that you
-don't support CAN FD while limiting the "arbitration" bit rate. With one
-property you can not determine this and end up having to make some
-assumptions that can quickly end up biting people.
-
-
-
-> 
-> Regards,
-> Oliver
+>>>
+>>>>> +
+>>>>> +- clocks: Should contain devices input clock. The first parameter
+>>>>> +           is a handle to k2g_clks. The second parameter is the
+>>>>> +           device ID and the third parameter is the clock ID. One can
+>>>>> +           refer: http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
+>>>>
+>>>> No need for this link here, just refer to the appropriate clock
+>>>> bindings. Some thing like the following would be better
+>>>
+>>> This information is helpful especially with the macros being dropped.
+>>> However, I agree that this is not the place for this information.
+>>> Probably should be linked to in the ti,sci-clk.txt and
+>>> sci-pm-domain.txt. However, both of these are outdated since it is
+>>> referring to macros and includes that don't exist or will no longer exist.
+>>
+>> Hence included here but yes i can point to something like what Suman
+>> asked me to.
+>>
+>>>
+>>>>
+>>>> - clocks:               Should contain the device's input clock, and
+>>>>                         should be defined as per the appropriate clock
+>>>> bindings consumer usage in,
+>>>>
+>>>> Documentation/devicetree/bindings/clock/keystone-gate.txt
+>>>>                             for 66AK2HK/66AK2L/66AK2E SoCs or,
+>>>>
+>>>> Documentation/devicetree/bindings/clock/ti,sci-clk.txt
+>>>>                             for 66AK2G SoCs
+>>>>
+>>>>> +
+>>>>> +           Example: <&k2g_clks 0x001c 0x0>;
+>>>>
+>>>> This can be dropped as well, below example already demonstrates it.
+>>>>
+>>>>> +
+>>>>> +- clock-names: The driver expects the clock name to be "gpio";
+>>>>
+>>>> Just say, Should be "gpio". No need of mentioning about the driver.
+>>>>
+>>>>> +
+>>>>>  Example:
+>>>>>  
+>>>>>  gpio: gpio@1e26000 {
+>>>>> @@ -60,3 +74,27 @@ leds {
+>>>>>  		...
+>>>>>  	};
+>>>>>  };
+>>>>> +
+>>>>> +Example for keystone-k2g:
+>>>>
+>>>> s/keystone-k2g/66AK2G/
+>>>>
+>>>>> +
+>>>>> +gpio0: gpio@2603000 {
+>>>>> +	compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
+>>>>> +	reg = <0x02603000 0x100>;
+>>>>> +	gpio-controller;
+>>>>> +	#gpio-cells = <2>;
+>>>>> +	interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
+>>>>> +			<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
+>>>>> +	interrupt-controller;
+>>>>> +	#interrupt-cells = <2>;
+>>>>> +	ti,ngpio = <144>;
+>>>>> +	ti,davinci-gpio-unbanked = <0>;
+>>>>> +	clocks = <&k2g_clks 0x001b 0x0>;
+>>>>> +	clock-names = "gpio";
+>>>>> +};
+>>>
+>>> If your going to talk about other Keystone 2 devices it would be helpful
+>>> to include an example for one of them since they have slightly different
+>>> properties.
+>>
+>> Sure.
+>>
+>>>>>
+>>>>
+>>>> regards
+>>>> Suman
+>>>>
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
