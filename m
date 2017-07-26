@@ -1,53 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: cavium: fix PCI bus dtc warnings
-Date: Wed, 26 Jul 2017 16:09:43 -0500
-Message-ID: <20170726210943.6875-7-robh@kernel.org>
-References: <20170726210943.6875-1-robh@kernel.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 1/3] Documentation: devicetree: add Freescale RNGC binding
+Date: Wed, 26 Jul 2017 17:55:47 -0500
+Message-ID: <CAL_Jsq+2Z94apqTsvs4HQdS49GdzT50XmPS4RvA7MDp_kK5Wow@mail.gmail.com>
+References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de> <1500832146-8660-1-git-send-email-martin@kaiser.cx>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726210943.6875-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1500832146-8660-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+To: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, PrasannaKumar Muralidharan <prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-dtc recently added PCI bus checks. Fix these warnings:
+On Sun, Jul 23, 2017 at 12:49 PM, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org> wrote:
+> From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>
+> Add binding documentation for the Freescale RNGC found on
+> some i.MX2/3 SoCs.
+>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+> ---
+> Changes in v6:
+>   - be more precise about rngc and rngb
+>   - get rid of mxc, rename the file to imx-rngc.txt
+>   - reformat the compatible strings
+>   - use RNGC instead of RNG
+>   - clarify that clock is not optional (remove "should contain")
+>
+> Changes in v5:
+>   none
+>
+> Changes in v4:
+>   none
+>
+> Changes in v3:
+>   - add compatible string for imx35
+>   - remove imx5 from the commit message,
+>     I couldn't find an i.MX SOC that has RNGC
+>
+> Changes in v2:
+>   none
+>
+>  Documentation/devicetree/bindings/rng/imx-rngc.txt | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rng/imx-rngc.txt
 
-arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (pci_bridge): Node /pci missing bus-range for PCI bridge
-arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (unit_address_vs_reg): Node /pci has a reg or ranges property, but no unit name
-
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
----
-v2:
-- Reapply broadcom vulkan changes to thunder2.
-
- arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-index 4220fbdcb24a..ea50c1320bf7 100644
---- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-+++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
-@@ -98,7 +98,7 @@
- 		clock-output-names = "clk125mhz";
- 	};
- 
--	pci {
-+	pci@30000000 {
- 		compatible = "pci-host-ecam-generic";
- 		device_type = "pci";
- 		#interrupt-cells = <1>;
-@@ -118,6 +118,7 @@
- 		ranges =
- 		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
- 		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
-+		bus-range = <0 0xff>;
- 		interrupt-map-mask = <0 0 0 7>;
- 		interrupt-map =
- 		      /* addr  pin  ic   icaddr  icintr */
--- 
-2.11.0
-
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
