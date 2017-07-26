@@ -1,85 +1,102 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 00/10] ARM: sun8i: a83t: Add support for MMC
- controllers
-Date: Wed, 26 Jul 2017 21:45:22 +0200
-Message-ID: <20170726194522.7d64f7c2danrknfi@flea>
-References: <20170724135905.28855-1-wens@csie.org>
- <CAGb2v66DQ3H2Mta7h+t1P+UzSRLnMABRebeYcopaPkN0gOiwxA@mail.gmail.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
+Date: Wed, 26 Jul 2017 13:00:02 -0700
+Message-ID: <87y3rbx931.fsf@eliezer.anholt.net>
+References: <20170719201916.22369-1-eric@anholt.net> <a2e79c17-f345-e7f2-8438-d4754e4ceb3a@broadcom.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="t4p4sc5v3likqkxq"
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66DQ3H2Mta7h+t1P+UzSRLnMABRebeYcopaPkN0gOiwxA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <a2e79c17-f345-e7f2-8438-d4754e4ceb3a-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---t4p4sc5v3likqkxq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--=-=-=
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 26, 2017 at 10:09:41PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Jul 24, 2017 at 9:58 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> > Hi everyone,
-> >
-> > This is v3 of my MMC controller support series.
-> >
->=20
-> [...]
->=20
-> > Chen-Yu Tsai (10):
-> >   clk: sunxi-ng: Add interface to query or configure MMC timing modes.
-> >   clk: sunxi-ng: Add MP_MMC clocks that support MMC timing modes
-> >     switching
-> >   clk: sunxi-ng: a83t: Support new timing mode for mmc2 clock
-> >   mmc: sunxi: Support controllers that can use both old and new timings
-> >   mmc: sunxi: Support MMC DDR52 transfer mode with new timing mode
-> >   mmc: sunxi: Add support for A83T eMMC (MMC2)
->=20
-> So this series seems to be ready for inclusion, unless Ulf has further
-> concerns about the clk usage.
->=20
-> The first mmc patch have build time dependencies on the first clk patch.
-> Shall we put the clk patch on a separate immutable branch for both trees
-> to pull? Or we could just merge everything through the mmc tree? I don't
-> think we'll touch this part of the sunxi-ng clk driver for the remainder
-> of this cycle.
+Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
 
-I guess the easiest would be for it to go through Ulf tree, unless he
-says otherwise of course :)
+> Hi Eric,
+>
+> suggestion inline
+>
+>
+> On 17-07-19 01:19 PM, Eric Anholt wrote:
+>> BCM2837 is somewhat unusual in that we build its DT on both arm32 and
+>> arm64.  Most devices are being run in arm32 mode.
+>>
+>> Having the body of the DT for 2837 separate from 2835/6 has been a
+>> source of pain, as we often need to make changes that span both
+>> directories simultaneously (for example, the thermal changes for 4.13,
+>> and pinmuxing changes earlier).  Other changes are made more
+>> complicated than they need to be, such as the SDHOST enabling, because
+>> we end up splitting a single change into a 283[56] half and a 2837
+>> half.
+>>
+>> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+>> ---
+>>
+>> I had asked about what we could do about our DT merging troubles back
+>> in https://lkml.org/lkml/2017/5/16/707 with no response.  I'm hoping
+>> we can take this patch as a resolution to that, and submit (almost
+>> all) future RPi DT changes through the arm32 dt tree.
+>>
+>>
+>>   arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 ++++++++++++++=
++++++++-
+>>   .../dts/broadcom =3D> arm/boot/dts}/bcm2837.dtsi     |  0
+>>   arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +-------------=
+--------
+>>   3 files changed, 42 insertions(+), 42 deletions(-)
+>>   rename arch/{arm64/boot/dts/broadcom =3D> arm/boot/dts}/bcm2837.dtsi (=
+100%)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/b=
+cm2837-rpi-3-b.dts
+>> index c72a27d908b6..972f14db28ac 100644
+>> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+>> @@ -1 +1,41 @@
+>> -#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
+>> +/dts-v1/;
+>> +#include "bcm2837.dtsi"
+>> +#include "bcm2835-rpi.dtsi"
+>> +#include "bcm283x-rpi-smsc9514.dtsi"
+>> +#include "bcm283x-rpi-usb-host.dtsi"
+> If you're moving this back to the arm directory why not change the=20
+> include path and remove the 4 symlinks in arm64/boot/dts/broadcom?
+>
+> +#include "arm/bcm2837.dtsi"
+> +#include "arm/bcm2835-rpi.dtsi"
+> +#include "arm/bcm283x-rpi-smsc9514.dtsi"
+> +#include "arm/bcm283x-rpi-usb-host.dtsi"
 
-Maxime
+Even better, it seems we don't need the arm/ here -- when we're
+processing the include in arm/, the neighboring files get found.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---t4p4sc5v3likqkxq
+--=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZePFSAAoJEBx+YmzsjxAgJJEQAMAPkqxIgWt5zhdvRBodODdm
-r8UKPzetUTraLKvZ1U8hzOQ5jMlEAC8hjWO+RNcwE6xp9/uQaqBXrMLiZFEAe8HQ
-6+rwxwtEjO9y9DrYC7EWS1pv7NoewULPIjhXBMHcb7EhpSo+Yy9UHF4iy2/EzJcl
-AWAP1nVPGlyzcCUbG1Ace2WH+1PWjpkz9HXJHxVcRqJtOx7TkQrhZFKwXCMDmyYJ
-K8P+wexUpDF7eAlZ5ZMkwmzmIA6qYRSTl5kM3y0iHIv1QI2ypMXAPupw9UondAE+
-KAJzWR0fzq9hh+bf63onGA4z5xc1h8ULDAPaOUsEIvhlUsWNcNP8FP3ZRyP/HflC
-MvRjUgFUmtCaREjXHUzSivkPoATm4tWp4nxX8tKzhANJFBwfRf0MsneMaOgKuHgl
-de7CTGPEDmqumyZU8n7d/lyrmpESFFadF1E4BSDnMgxnLAWsjQvt9C2KYcRi8Mbv
-wLT5c7ezeaoyE0ubsLJrqHTx/Z3VbrCK4U2aXKLLk2OjKbmJyr9xAoTmOl+rPCQx
-eDLxzk03P84VqXpprSDtaPlEowyhEncdpKzSIiA7lFEedT0No0pJ90hOXWQBW2zC
-udU5tzD9yDlTD/jnF+X67T8ixNYv0jWWId/7UfeRuEqYzVVy9b4p1PpAdnKBbepj
-C6VA8IuvJreF7bkpdIO9
-=VcM4
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAll49MIACgkQtdYpNtH8
+nuh5PQ/+MhruFd5DEZicJPY7xe3Od2ztwr1n8GxjD1Wc9QBz3hINy3xX8B8ibjI1
+NHHcHjs0TgDxHCsO7GaiZwrygYP/pThlI8zExGAu5Y7Bh8w926pUgUYk7pVG/nU8
+ew5ksvB9cVgaTYIjXUjOTK3Vb88TQX1GYL1wdaY90It/O8kl1k3we9VyuC7HfZxl
+6CUz9iycReIPF4S3t9byI1jlfVwiPjleO49FE6zlMO7lus3kiu1ExWVSlscojmpR
+EsAl9Gzg6EpZUyrtDvUBucylvHt8AztwMnwlNVdTCAUMe2mUQry/gR9viRCFtcNz
+qvYOyuE/MSmCIEzhXNqxbLpXxDvPaXUfIrm7ny66dBMC067jUA+mbK4OghfOFx23
+jM4lQ/Q8x70dGm3ANYwRyAH6Iszv4ea6TC8ttrrzqdTxzAf9BE/lJOWfW7EltRTv
+UiEZrNNvOgcqY/vibkx+CPSoWqGIsl+ve7WAEFzrTb9zawNaFYnBJqZSRka5kEnM
+TPqIxqCVdRNt9MId7Bc8RdcI1Z6r6Xtw5XAf3R4t2UGNmodVJU2Bldjx4noxz+vX
+dmzltn3Nkcg4nRA2GHqBInqSMqWFiC9tQ8guhTJ+HB7oo+tSsd3wdn9wYWJhP4Gy
+yZHaUtvOTk7xP71qcjjLCPckAfIOGSRZi+vHxjj7QXUqr1UVEBY=
+=J1PF
 -----END PGP SIGNATURE-----
-
---t4p4sc5v3likqkxq--
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
