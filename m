@@ -1,49 +1,112 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] powerpc: pseries: only store the device node basename
- in full_name
-Date: Wed, 26 Jul 2017 09:34:17 -0500
-Message-ID: <CAL_JsqK6ioLTv+hgb7kZS2ySnDuM_FuOCUGBhtCG8hT607Js_Q@mail.gmail.com>
-References: <20170725214427.25768-1-robh@kernel.org> <20170725214427.25768-4-robh@kernel.org>
- <063D6719AE5E284EB5DD2968C1650D6DD00419B2@AcuExch.aculab.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <063D6719AE5E284EB5DD2968C1650D6DD00419B2@AcuExch.aculab.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Laight <David.Laight@aculab.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Mackerras <paulus@samba.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] Introduce fdt_setprop_placeholder() method
+Date: Wed, 26 Jul 2017 17:46:58 +0300
+Message-ID: <1501080418-26548-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 5:07 AM, David Laight <David.Laight@aculab.com> wrote:
-> From: Rob Herring
->> Sent: 25 July 2017 22:44
->> With dependencies on full_name containing the entire device node path
->> removed, stop storing the full_name in nodes created by
->> dlpar_configure_connector() and pSeries_reconfig_add_node().
-> ...
->>       dn = kzalloc(sizeof(*dn), GFP_KERNEL);
->>       if (!dn)
->>               return NULL;
->>
->>       name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
->> -     dn->full_name = kasprintf(GFP_KERNEL, "%s/%s", path, name);
->> +     dn->full_name = kasprintf(GFP_KERNEL, "%s", name);
->
-> Isn't this just strdup()?
+In some cases you need to add a property but the contents of it
+are not known at creation time, merely the extend of it.
 
-Yes, it can be simplified to that now.
+This method allows you to create a property of a given size
+which will be set to zero while a pointer to the property data
+will be provided.
 
-> Perhaps you should rename full_name to name - since it is no longer 'full'?
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ libfdt/fdt_rw.c | 20 +++++++++++++++++---
+ libfdt/libfdt.h | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 3 deletions(-)
 
-Ideally, yes. However, we still have users in other places tree wide
-(which should still work with the change) and I don't think it is
-worth the additional churn. Also, we already have "name" as that is
-the node name without the unit-address. I'd like to get rid of that,
-but name is special in that it is exposed as a property too. Finally,
-full_name is still the full path on Sparc.
+diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
+index 8b487f6..5c3a2bb 100644
+--- a/libfdt/fdt_rw.c
++++ b/libfdt/fdt_rw.c
+@@ -269,8 +269,8 @@ int fdt_set_name(void *fdt, int nodeoffset, const char *name)
+ 	return 0;
+ }
+ 
+-int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+-		const void *val, int len)
++int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
++			    int len, void **prop_data)
+ {
+ 	struct fdt_property *prop;
+ 	int err;
+@@ -283,8 +283,22 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+ 	if (err)
+ 		return err;
+ 
++	*prop_data = prop->data;
++	return 0;
++}
++
++int fdt_setprop(void *fdt, int nodeoffset, const char *name,
++		const void *val, int len)
++{
++	void *prop_data;
++	int err;
++
++	err = fdt_setprop_placeholder(fdt, nodeoffset, name, len, &prop_data);
++	if (err)
++		return err;
++
+ 	if (len)
+-		memcpy(prop->data, val, len);
++		memcpy(prop_data, val, len);
+ 	return 0;
+ }
+ 
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index a248b1b..7ea9a0c 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -1449,6 +1449,38 @@ int fdt_setprop(void *fdt, int nodeoffset, const char *name,
+ 		const void *val, int len);
+ 
+ /**
++ * fdt_setprop _placeholder - allocate space for a property
++ * @fdt: pointer to the device tree blob
++ * @nodeoffset: offset of the node whose property to change
++ * @name: name of the property to change
++ * @len: length of the property value
++ * @prop_data: return pointer to property data
++ *
++ * fdt_setprop_placeholer() allocates the named property in the given node.
++ * If the property exists it is resized. In either case it filled with
++ * zeroes and if a prop_data argument is provided a pointer to the
++ * property data is returned.
++ *
++ * This function may insert or delete data from the blob, and will
++ * therefore change the offsets of some existing nodes.
++ *
++ * returns:
++ *	0, on success
++ *	-FDT_ERR_NOSPACE, there is insufficient free space in the blob to
++ *		contain the new property value
++ *	-FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag
++ *	-FDT_ERR_BADLAYOUT,
++ *	-FDT_ERR_BADMAGIC,
++ *	-FDT_ERR_BADVERSION,
++ *	-FDT_ERR_BADSTATE,
++ *	-FDT_ERR_BADSTRUCTURE,
++ *	-FDT_ERR_BADLAYOUT,
++ *	-FDT_ERR_TRUNCATED, standard meanings
++ */
++int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
++			    int len, void **prop_data);
++
++/**
+  * fdt_setprop_u32 - set a property to a 32-bit integer
+  * @fdt: pointer to the device tree blob
+  * @nodeoffset: offset of the node whose property to change
+-- 
+2.1.4
 
-> Maybe you could do a single malloc() for both 'dn' and the name?
-
-Sure.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
