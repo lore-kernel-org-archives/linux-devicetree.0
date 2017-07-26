@@ -1,133 +1,49 @@
-From: <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: ls2088a: add cpu idle support
-Date: Wed, 26 Jul 2017 15:24:53 +0800
-Message-ID: <1501053893-20897-2-git-send-email-andy.tang@nxp.com>
-References: <1501053893-20897-1-git-send-email-andy.tang@nxp.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 1/9] dt-bindings: mfd: axp20x: Add AXP806 to
+ supported list of chips
+Date: Wed, 26 Jul 2017 16:28:24 +0800
+Message-ID: <20170726082832.16789-2-wens@csie.org>
+References: <20170726082832.16789-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501053893-20897-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBM5F4HFQKGQEDU32R3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170726082832.16789-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
+The binding already lists compatibles and regulators for the AXP806,
+but it is missing from the list of supported chips at the beginning.
 
-ls2088a supports another cpu idle state which is pw20 which saves
-more power when cpu is idle.
-It was implemented through psci firmware.
+Add it.
 
-Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi | 17 +++++++++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |  5 +++++
- 2 files changed, 22 insertions(+)
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-index 5c695c6..6aa319d 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-@@ -53,6 +53,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x0>;
- 		clocks = <&clockgen 1 0>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster0_l2>;
- 		#cooling-cells = <2>;
- 	};
-@@ -62,6 +63,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x1>;
- 		clocks = <&clockgen 1 0>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster0_l2>;
- 	};
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index aca09af66514..211a100c6b20 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -7,6 +7,7 @@ axp209 (X-Powers)
+ axp221 (X-Powers)
+ axp223 (X-Powers)
+ axp803 (X-Powers)
++axp806 (X-Powers)
+ axp809 (X-Powers)
  
-@@ -70,6 +72,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x100>;
- 		clocks = <&clockgen 1 1>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster1_l2>;
- 		#cooling-cells = <2>;
- 	};
-@@ -79,6 +82,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x101>;
- 		clocks = <&clockgen 1 1>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster1_l2>;
- 	};
- 
-@@ -88,6 +92,7 @@
- 		reg = <0x200>;
- 		clocks = <&clockgen 1 2>;
- 		next-level-cache = <&cluster2_l2>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		#cooling-cells = <2>;
- 	};
- 
-@@ -96,6 +101,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x201>;
- 		clocks = <&clockgen 1 2>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster2_l2>;
- 	};
- 
-@@ -104,6 +110,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x300>;
- 		clocks = <&clockgen 1 3>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster3_l2>;
- 		#cooling-cells = <2>;
- 	};
-@@ -113,6 +120,7 @@
- 		compatible = "arm,cortex-a72";
- 		reg = <0x301>;
- 		clocks = <&clockgen 1 3>;
-+		cpu-idle-states = <&CPU_PW20>;
- 		next-level-cache = <&cluster3_l2>;
- 	};
- 
-@@ -131,6 +139,15 @@
- 	cluster3_l2: l2-cache3 {
- 		compatible = "cache";
- 	};
-+
-+	CPU_PW20: cpu-pw20 {
-+		compatible = "arm,idle-state";
-+		idle-state-name = "PW20";
-+		arm,psci-suspend-param = <0x00010000>;
-+		entry-latency-us = <2000>;
-+		exit-latency-us = <2000>;
-+		min-residency-us = <6000>;
-+	};
- };
- 
- &pcie1 {
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 94cdd30..205b7f7 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -118,6 +118,11 @@
- 		interrupts = <1 7 0x8>; /* PMU PPI, Level low type */
- 	};
- 
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
+ Required properties:
 -- 
-2.1.0.27.g96db324
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.3
