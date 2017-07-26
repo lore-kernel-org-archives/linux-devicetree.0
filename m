@@ -1,100 +1,120 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [patch v1 1/2] mfd: Add Mellanox regmap core driver
-Date: Wed, 26 Jul 2017 20:25:09 +0200
-Message-ID: <20170726182509.GA29978@amd>
-References: <1501001499-21971-1-git-send-email-vadimp@mellanox.com>
- <1501001499-21971-2-git-send-email-vadimp@mellanox.com>
- <20170726111846.GB6033@amd>
- <AM4PR05MB3330F7C7913391C906CB2069A2B90@AM4PR05MB3330.eurprd05.prod.outlook.com>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Wed, 26 Jul 2017 13:29:19 -0500
+Message-ID: <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
+References: <20170724230521.1436-1-fcooper@ti.com>
+ <20170724230521.1436-3-fcooper@ti.com> <20170726164124.GL12049@lunn.ch>
+ <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <AM4PR05MB3330F7C7913391C906CB2069A2B90-n5Jp0YuYvM1LPiJj6BpYmdqRiQSDpxhJvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+In-Reply-To: <355b90b3-97ce-1057-6617-d5d709449c48-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>
+To: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---k1lZvvs/B4yU6o8G
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 07/26/2017 12:05 PM, Oliver Hartkopp wrote:
+> On 07/26/2017 06:41 PM, Andrew Lunn wrote:
+>> On Mon, Jul 24, 2017 at 06:05:19PM -0500, Franklin S Cooper Jr wrote:
+> 
+>>> +
+>>> +Optional:
+>>> + max-arbitration-speed: a positive non 0 value that determines the max
+>>> +            speed that CAN can run in non CAN-FD mode or during the
+>>> +            arbitration phase in CAN-FD mode.
+>>
+>> Hi Franklin
+>>
+>> Since this and the next property are optional, it is good to document
+>> what happens when they are not in the DT blob. Also document what 0
+>> means.
 
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> > > @@ -0,0 +1,347 @@
-> > > +Mellanox programmable device control.
-> > > +-------------------------------------
-> > > +This binding defines the device control interface over I2C bus for
-> > > +Mellanox BMC based switches.
-> >=20
-> > You'll need to cc dt maintainers here.
->=20
-> Hi Pavel,
->=20
-> Thank you very much for review.
->=20
-> I have in to: Rob Herring and in c: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+The driver ignores values less than 0 with the exception being
+max-data-speed which supports a value of -1. Not sure what I'm
+documenting when the binding specifically says to use a positive non
+zero value. Its the same reason I don't document what happens if you
+give it a negative value.
 
-Aha, sorry, did not notice that.
+>>
+>>> +
+>>> + max-data-speed:    a positive non 0 value that determines the max
+>>> data rate
+>>> +            that can be used in CAN-FD mode. A value of -1 implies
+>>> +            CAN-FD is not supported by the transceiver.
+>>
+>> -1 is ugly. I think it would be better to have a missing
+>> max-data-speed property indicate that CAN-FD is not supported.
+> 
 
-> Should it be separate mail, or it's OK?
+Although this leads to your later point I don't think this is the right
+approach. Its an optional property. Not including the property should
+not assume it isn't supported.
 
-They prefer separate mails, yes.
+> Thanks Andrew! I had the same feeling about '-1' :-)
 
-> > > +	for (i =3D 0; i < priv->item[grp->type]->count; i++, id++, data++) {
-> > > +		priv->mlxreg_core_attr[id] =3D
-> > > +				&priv-
-> > >mlxreg_core_dev_attr[id].dev_attr.attr;
-> > > +		if (grp->use_grp_name)
-> > > +			priv->mlxreg_core_attr[id]->name =3D
-> > > +				devm_kasprintf(priv->dev, GFP_KERNEL,
-> > > +					       "%s%u", grp->name, id %
-> > > +						priv->item[grp->type]-
-> > >count
-> > > +						+ 1);
-> > > +		else
-> > > +			priv->mlxreg_core_attr[id]->name =3D
-> > > +				devm_kasprintf(priv->dev, GFP_KERNEL,
-> > > +					       data->label);
-> >=20
-> > Is it really neccessary to dynamically generate it? Static table could =
-be
-> > simpler...
->=20
-> But I don't know how many groups and attributes can be defined for partic=
-ular device.
-> On the system I am working on know I have four programmable device with d=
-ifferent purposes and different set of attributes.
->
+Ok I'll go back to having 0 = not supported. Which will handle the
+documentation comment above.
 
-I guess that's good reason. But if you could make that code simpler /
-easier to follow, it would be nice.
-									Pavel
+> 
+>> And
+>> maybe put 'fd' into the property name.
+> 
+> Good point. In fact the common naming to set bitrates for CAN(FD)
+> controllers are 'bitrate' and 'data bitrate'.
+> 
+> 'speed' is not really a good word for that.
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+I'm fine with switching to using bitrate instead of speed. Kurk was
+originally the one that suggested to use the term arbitration and data
+since thats how the spec refers to it. Which I do agree with. But your
+right that in the drivers (struct can_priv) we just use bittiming and
+data_bittiming (CAN-FD timings). I don't think adding "fd" into the
+property name makes sense unless we are calling it something like
+"max-canfd-bitrate" which I would agree is the easiest to understand.
 
---k1lZvvs/B4yU6o8G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+So what is the preference if we end up sticking with two properties?
+Option 1 or 2?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+1)
+max-bitrate
+max-data-bitrate
 
-iEYEARECAAYFAll43oUACgkQMOfwapXb+vIq7gCgwIi5ZwjF7UGTEax64c96azLB
-4fUAn0YSC+owijkOiUo7IxJ+ceZ+iZiG
-=kteh
------END PGP SIGNATURE-----
+2)
+max-bitrate
+max-canfd-bitrate
 
---k1lZvvs/B4yU6o8G--
+
+
+> 
+> Finally, @Franklin:
+> 
+> A CAN transceiver is limited in bandwidth. But you only have one RX and
+> one TX line between the CAN controller and the CAN transceiver. The
+> transceiver does not know about CAN FD - it has just a physical(!) layer
+> with a limited bandwidth. This is ONE limitation.
+> 
+> So I tend to specify only ONE 'max-bitrate' property for the
+> fixed-transceiver binding.
+> 
+> The fact whether the CAN controller is CAN FD capable or not is provided
+> by the netlink configuration interface for CAN controllers.
+
+Part of the reasoning to have two properties is to indicate that you
+don't support CAN FD while limiting the "arbitration" bit rate. With one
+property you can not determine this and end up having to make some
+assumptions that can quickly end up biting people.
+
+
+
+> 
+> Regards,
+> Oliver
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
