@@ -1,102 +1,87 @@
 From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Wed, 26 Jul 2017 06:59:35 -0700
-Message-ID: <5978A047.6060406@gmail.com>
+Date: Wed, 26 Jul 2017 07:03:11 -0700
+Message-ID: <5978A11F.1010008@gmail.com>
 References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
  <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
  <20170703090648.GV13989@umbus.fritz.box> <5967CAA6.6010801@gmail.com>
  <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
  <5967D2F7.60303@gmail.com> <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
  <5967E8BC.4090307@gmail.com> <1500016861.19864.26.camel@hp800z>
- <20170726043227.GC8978@umbus.fritz.box>
+ <59763739.4070708@gmail.com> <20170726045533.GD8978@umbus.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726043227.GC8978-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+In-Reply-To: <20170726045533.GD8978-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/25/17 21:32, David Gibson wrote:
-> On Fri, Jul 14, 2017 at 10:21:01AM +0300, Pantelis Antoniou wrote:
->> Hi Frank,
+On 07/25/17 21:55, David Gibson wrote:
+> On Mon, Jul 24, 2017 at 11:06:49AM -0700, Frank Rowand wrote:
+>> On 07/14/17 00:21, Pantelis Antoniou wrote:
 >>
->> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
->>> On 07/13/17 14:22, Phil Elwell wrote:
->>>> On 13/07/2017 21:07, Frank Rowand wrote:
->>>>> On 07/13/17 12:38, Phil Elwell wrote:
->>>>>
+>> Keeping in mind that this thread was originally about libfdt,
+>> not the Linux kernel, I am mostly talking about the Linux
+>> kernel implementation in this email.
 >>
->> [snip]
 >>
->>>> hope an inability to solve the problem posed by this advanced usage won't
->>>> prevent a solution to a simpler problem from being accepted.
+>>> Hi Frank,
+>>>
+>>> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
+>>>> On 07/13/17 14:22, Phil Elwell wrote:
+>>>>> On 13/07/2017 21:07, Frank Rowand wrote:
+>>>>>> On 07/13/17 12:38, Phil Elwell wrote:
+>>>>>>
+>>>
+>>> [snip]
+>>>
+>>>>> hope an inability to solve the problem posed by this advanced usage won't
+>>>>> prevent a solution to a simpler problem from being accepted.
+>>>
+>>> I have waited until people started commenting on this patchset before
+>>> replying.
+>>>
+>>> I think we agree on a few things to keep the discussion moving forward.
+>>>
+>>> 1. Stacked overlays are useful and make overlays easier to use.
 >>
->> I have waited until people started commenting on this patchset before
->> replying.
+>> Stacked overlays are required to handle an add-on board that
+>> contains physical connectors to plug in yet more things.
 >>
->> I think we agree on a few things to keep the discussion moving forward.
+>> I'm not sure what you mean when you say they "make overlays
+>> easier to use".  Can you elaborate on that a little bit?
 >>
->> 1. Stacked overlays are useful and make overlays easier to use.
+>>
+>>> 2. Changing the overlay symbols format now would be unwise.
+>>
+>> I strongly disagree.  I would say that it is desirable to maintain
+>> the current overlay format (not just __symbols__), and that there
+>> will be pain (for bootloaders???) if the format changes.  But
+>> the Linux implementation is not locked in if there is a good
+>> reason to change the format.
+>>
+>>
+>>> 3. A number of extensions have been put forward/requested.
+>>>
+>>> 3.1. There should be a method to place a symbol on a node that didn't
+>>> have one originally (due to vendor supplying broken DTB or being
+>>> generated by firmware at runtime).
+>>
+>> You saw my reaction of what to do about a broken vendor DTB in that
+>> thread.  I do not think this method is a good idea.
+>>
+>> I don't know why a DTB generated by firmware would be missing a symbol.
+>> Was that discussed in that thread, and I'm just forgetting it?
 > 
-> Agreed.
-> 
->> 2. Changing the overlay symbols format now would be unwise.
-> 
-> Agreed.  At least, I don't think updating the symbols alone would be
-> silly without revisiting everything in the overlay format and making
-> something completely new.
-> 
->> 3. A number of extensions have been put forward/requested.
->>
->> 3.1. There should be a method to place a symbol on a node that didn't
->> have one originally (due to vendor supplying broken DTB or being
->> generated by firmware at runtime).
-> 
-> There already is.  An overlay can update *anything* in the base tree,
-> including the /__symbols__ node.  Of course you need the exact path of
-> the node to tag in the base tree, but you were always going to need
-> that.
+> Because 9 times out of 10, firmware is crap?
 
-I haven't tested that, but it should work with the existing dtc and
-Linux kernel.
-
-But it will stop working in the future _if_ some changes are made
-that I would like:
-
-  - dtc no longer accept node names beginning with underscore as
-    valid.
-  - dtc supports Pantelis' sugar syntax
-
-My intent behind these changes is to hide the implementation details
-of the overlay extensions (__symbols__, __fixups__, __local_fixups__,
-fragements nodes, etc) from the normal dts developer.  This should
-make it easier to write and understand overlays, and reduce errors
-in the dtb.
-
-With those changes, it would not be possible to write an overlay
-that applied against node __symbols__ because it would not be
-possible to create a label on __symbols__, which would be needed
-to reference __symbols__ with the sugar syntax.
+Which is part of why I want access to, ability to modify, and ability
+to update device trees in the hands of the user, not just the vendor.
 
 -Frank
-
->> 3.2. Scoping symbol visibility in case of clashes. This can the ability
->> to put multiple path references to a single label/symbol. i.e.
->> foo = "/path/bar", "/path/bar/baz";
->> Resolving the ambiguity would require the caller to provide it's
->> 'location' on the tree. I.e. a device under /path/bar/baz would resolve
->> to the latter. It is a big change semantically.
-> 
-> I think this would be a nice idea, but trying to do it as a update to
-> the existing overlay format will be really difficult verging on
-> impossible.
-> 
-> Better to keep this in mind as a design goal for a new format to
-> replace overlays.
-> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
