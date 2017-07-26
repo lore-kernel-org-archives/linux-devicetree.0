@@ -1,180 +1,170 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v5 2/6] drivers/i2c: Add port structure to FSI algorithm
-Date: Wed, 26 Jul 2017 12:13:14 -0500
-Message-ID: <1501089198-10356-3-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501089198-10356-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, wsa@the-dreams.de, robh+dt@kernel.org, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, cbostic@linux.vnet.ibm.com, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [patch v1 1/2] mfd: Add Mellanox regmap core driver
+Date: Wed, 26 Jul 2017 17:18:20 +0000
+Message-ID: <AM4PR05MB3330F7C7913391C906CB2069A2B90@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1501001499-21971-1-git-send-email-vadimp@mellanox.com>
+ <1501001499-21971-2-git-send-email-vadimp@mellanox.com>
+ <20170726111846.GB6033@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726111846.GB6033@amd>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
 
-Add and initialize I2C adapters for each port on the FSI-attached I2C
-master. Ports for each master are defined in the devicetree.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
----
- drivers/i2c/busses/i2c-fsi.c | 96 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 96 insertions(+)
+> -----Original Message-----
+> From: Pavel Machek [mailto:pavel-+ZI9xUNit7I@public.gmane.org]
+> Sent: Wednesday, July 26, 2017 2:19 PM
+> To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org; linux-
+> leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org
+> Subject: Re: [patch v1 1/2] mfd: Add Mellanox regmap core driver
+>=20
+> Hi!
+>=20
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
+> > @@ -0,0 +1,347 @@
+> > +Mellanox programmable device control.
+> > +-------------------------------------
+> > +This binding defines the device control interface over I2C bus for
+> > +Mellanox BMC based switches.
+>=20
+> You'll need to cc dt maintainers here.
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index 79475f8..4ad5d68 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -14,7 +14,9 @@
- #include <linux/fsi.h>
- #include <linux/i2c.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
- #define FSI_ENGID_I2C		0x7
- 
-@@ -130,6 +132,14 @@
- struct fsi_i2c_master {
- 	struct fsi_device	*fsi;
- 	u8			fifo_size;
-+	struct list_head	ports;
-+};
-+
-+struct fsi_i2c_port {
-+	struct list_head	list;
-+	struct i2c_adapter	adapter;
-+	struct fsi_i2c_master	*master;
-+	u16			port;
- };
- 
- static int fsi_i2c_read_reg(struct fsi_device *fsi, unsigned int reg,
-@@ -186,9 +196,44 @@ static int fsi_i2c_dev_init(struct fsi_i2c_master *i2c)
- 	return rc;
- }
- 
-+static int fsi_i2c_set_port(struct fsi_i2c_port *port)
-+{
-+	int rc;
-+	struct fsi_device *fsi = port->master->fsi;
-+	u32 mode, dummy = 0;
-+	u16 old_port;
-+
-+	rc = fsi_i2c_read_reg(fsi, I2C_FSI_MODE, &mode);
-+	if (rc)
-+		return rc;
-+
-+	old_port = GETFIELD(I2C_MODE_PORT, mode);
-+
-+	if (old_port != port->port) {
-+		mode = SETFIELD(I2C_MODE_PORT, mode, port->port);
-+		rc = fsi_i2c_write_reg(fsi, I2C_FSI_MODE, &mode);
-+		if (rc)
-+			return rc;
-+
-+		/* reset engine when port is changed */
-+		rc = fsi_i2c_write_reg(fsi, I2C_FSI_RESET_ERR, &dummy);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return rc;
-+}
-+
- static int fsi_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
- 			int num)
- {
-+	int rc;
-+	struct fsi_i2c_port *port = adap->algo_data;
-+
-+	rc = fsi_i2c_set_port(port);
-+	if (rc)
-+		return rc;
-+
- 	return -EOPNOTSUPP;
- }
- 
-@@ -206,23 +251,73 @@ static u32 fsi_i2c_functionality(struct i2c_adapter *adap)
- static int fsi_i2c_probe(struct device *dev)
- {
- 	struct fsi_i2c_master *i2c;
-+	struct fsi_i2c_port *port;
-+	struct device_node *np;
- 	int rc;
-+	u32 port_no;
- 
- 	i2c = devm_kzalloc(dev, sizeof(*i2c), GFP_KERNEL);
- 	if (!i2c)
- 		return -ENOMEM;
- 
- 	i2c->fsi = to_fsi_dev(dev);
-+	INIT_LIST_HEAD(&i2c->ports);
- 
- 	rc = fsi_i2c_dev_init(i2c);
- 	if (rc)
- 		return rc;
- 
-+	/* Add adapter for each i2c port of the master. */
-+	for_each_available_child_of_node(dev->of_node, np) {
-+		rc = of_property_read_u32(np, "reg", &port_no);
-+		if (rc || port_no > USHRT_MAX)
-+			continue;
-+
-+		port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
-+		if (!port)
-+			break;
-+
-+		port->master = i2c;
-+		port->port = port_no;
-+
-+		port->adapter.owner = THIS_MODULE;
-+		port->adapter.dev.of_node = np;
-+		port->adapter.dev.parent = dev;
-+		port->adapter.algo = &fsi_i2c_algorithm;
-+		port->adapter.algo_data = port;
-+
-+		snprintf(port->adapter.name, sizeof(port->adapter.name),
-+			 "i2c_bus-%u", port_no);
-+
-+		rc = i2c_add_adapter(&port->adapter);
-+		if (rc < 0) {
-+			dev_err(dev, "Failed to register adapter: %d\n", rc);
-+			devm_kfree(dev, port);
-+			continue;
-+		}
-+
-+		list_add(&port->list, &i2c->ports);
-+	}
-+
- 	dev_set_drvdata(dev, i2c);
- 
- 	return 0;
- }
- 
-+static int fsi_i2c_remove(struct device *dev)
-+{
-+	struct fsi_i2c_master *i2c = dev_get_drvdata(dev);
-+	struct fsi_i2c_port *port;
-+
-+	if (!list_empty(&i2c->ports)) {
-+		list_for_each_entry(port, &i2c->ports, list) {
-+			i2c_del_adapter(&port->adapter);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- static const struct fsi_device_id fsi_i2c_ids[] = {
- 	{ FSI_ENGID_I2C, FSI_VERSION_ANY },
- 	{ 0 }
-@@ -234,6 +329,7 @@ static int fsi_i2c_probe(struct device *dev)
- 		.name = "i2c-fsi",
- 		.bus = &fsi_bus_type,
- 		.probe = fsi_i2c_probe,
-+		.remove = fsi_i2c_remove,
- 	},
- };
- 
--- 
-1.8.3.1
+Hi Pavel,
+
+Thank you very much for review.
+
+I have in to: Rob Herring and in c: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Should it be separate mail, or it's OK?
+
+
+>=20
+> > +Required properties:
+> > +- compatible =3D "mellanox,mlxreg-i2c",
+> > +	       "mellanox,mlxreg-i2c-16",
+> > +	       "mellanox,mlxreg-core";
+> > +- #address-cells : must be 1;
+> > +- #size-cells : must be 0;
+> > +- reg : I2C address;
+>=20
+> > +			cpu_watchdog {
+> > +				reg =3D <0x1d>;
+> > +				mask =3D <0xef>;
+> > +			};
+> > +
+> > +			cpu_kernel_panic {
+> > +				reg =3D <0x1d>;
+> > +				mask =3D <0xef>;
+> > +			};
+> > +			bmc_warm_reset {
+> > +				reg =3D <0x71>;
+> > +				mask =3D <0xfe>;
+> > +			};
+>=20
+> Extra newline.
+>=20
+> > +static ssize_t mlxreg_core_attr_show(struct device *dev,
+> > +				     struct device_attribute *attr,
+> > +				     char *buf)
+> > +{
+> > +	struct mlxreg_core_priv_data *priv =3D dev_get_drvdata(dev);
+> > +	int index =3D to_sensor_dev_attr_2(attr)->index;
+> > +	int nr =3D to_sensor_dev_attr_2(attr)->nr;
+> > +	struct mlxreg_core_data *data;
+> > +	u32 regval =3D 0;
+> > +	int ret;
+> > +
+> > +	switch (nr) {
+> > +	case MLXREG_CORE_ATTR_PSU:
+> > +	case MLXREG_CORE_ATTR_FAN:
+> > +		/* Bit =3D 0 : item is functional. */
+> > +		ret =3D regmap_read(priv->regmap,
+> > +				  priv->item[mlxreg_core_grp[nr].type]->reg,
+> > +				  &regval);
+> > +		if (ret)
+> > +			goto access_error;
+> > +
+> > +		regval =3D !!!(regval & BIT(mlxreg_core_get_pos(priv,
+> > +					  &mlxreg_core_grp[nr],
+>=20
+> Uff. You really really mean it. But one ! should be enough.
+>=20
+> > +static int
+> > +mlxreg_core_add_attr_group(struct mlxreg_core_priv_data *priv,
+> > +			   struct mlxreg_core_grp *grp, int id) {
+> > +	struct mlxreg_core_data *data =3D priv->item[grp->type]->data;
+> > +	int i;
+> > +
+> > +	/* Skip group with negative access value. */
+> > +	if (grp->access < 0)
+> > +		return id;
+> > +
+> > +	priv->item[grp->type]->ind =3D id;
+> > +	for (i =3D 0; i < priv->item[grp->type]->count; i++, id++, data++) {
+> > +		priv->mlxreg_core_attr[id] =3D
+> > +				&priv-
+> >mlxreg_core_dev_attr[id].dev_attr.attr;
+> > +		if (grp->use_grp_name)
+> > +			priv->mlxreg_core_attr[id]->name =3D
+> > +				devm_kasprintf(priv->dev, GFP_KERNEL,
+> > +					       "%s%u", grp->name, id %
+> > +						priv->item[grp->type]-
+> >count
+> > +						+ 1);
+> > +		else
+> > +			priv->mlxreg_core_attr[id]->name =3D
+> > +				devm_kasprintf(priv->dev, GFP_KERNEL,
+> > +					       data->label);
+>=20
+> Is it really neccessary to dynamically generate it? Static table could be
+> simpler...
+
+But I don't know how many groups and attributes can be defined for particul=
+ar device.
+On the system I am working on know I have four programmable device with dif=
+ferent purposes and different set of attributes.
+
+>=20
+> > +static void
+> > +mlxreg_core_work_helper(struct mlxreg_core_priv_data *priv,
+> > +			struct mlxreg_core_item *item, u8 is_inverse,
+> > +			u16 off, u32 mask, u32 *cache)
+> > +{
+> > +	struct mlxreg_core_data *data;
+> > +	u32 asserted, regval, bit;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Validate if item related to received signal type is valid.
+> > +	 * It should never happen, excepted the situation when some
+> > +	 * piece of hardware is broken. In such situation just produce
+> > +	 * error message and return. Caller must continue to handle the
+> > +	 * signals from other devices if any.
+> > +	 */
+> > +	if (unlikely(!item)) {
+> > +		dev_err(priv->dev, "False signal is received: register at offset
+> 0x%02x, mask 0x%02x.\n",
+> > +			off, mask);
+>=20
+> Slightly too long line.
+>=20
+> Thanks,
+> 									Pavel
+>=20
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
