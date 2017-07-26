@@ -1,99 +1,78 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2 2/2] ARM: dts: keystone-k2g-evm: Add gpio nodes
-Date: Wed, 26 Jul 2017 11:20:28 +0530
-Message-ID: <1501048228-3492-2-git-send-email-j-keerthy@ti.com>
-References: <1501048228-3492-1-git-send-email-j-keerthy@ti.com>
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v6 0/7] drm/rockchip: add all full framework vop support
+Date: Wed, 26 Jul 2017 14:18:50 +0800
+Message-ID: <1501049930-5794-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1501048228-3492-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: ssantosh@kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, fcooper@ti.com, s-anna@ti.com, nsekhar@ti.com, j-keerthy@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-66AK2G has 2 instances of gpio. The first one has all the 144 GPIOs
-functional( 9 banks with 16 gpios = 144). The second instance has
-only the GPIO0:GPIO67 functional and rest are marked reserved.
+These patches try to make all current rockchip full framework vop works
+on drm, fill missing vop on full framework.
+Vop Full framework now has following vops:
+IP version    chipname
+      3.1           rk3288
+      3.2           rk3368
+      3.4           rk3366
+      3.5           rk3399 big
+      3.6           rk3399 lit
+      3.7           rk3228
+      3.8           rk3328
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+Group the vop register, it would make register  definition clearer and
+more easily to reuse same group register define for difference vops.
 
-The patch depends on the below series:
+Tested on rk3399 excavator board with kernel 4.13-rc1.
 
-http://marc.info/?l=linux-arm-kernel&m=150034845427555&w=2
-http://marc.info/?l=linux-arm-kernel&m=150034856627618&w=2
+And other chips tested on rockchip kernel 4.4:
+   https://github.com/rockchip-linux/kernel/tree/release-4.4/drivers/gpu/drm/rockchip
 
-Driver patches related are already posted:
+Changes in v6:
+- fix some patches complie error
+- fix rk3036 display blank
 
-https://www.spinics.net/lists/arm-kernel/msg594862.html
+Changes in v5:
+- clean document commit title
+- move changes description out of docummit commit msg
+
+Changes in v4:
+- rebase to newest torvalds kernel, fix merge conflict 
+
+Changes in v3:
+- group vop register instead using VOP_REG_VER mechanism
+- Explain more on patch commit message
+- move write_relaxed flags to vop registers
+- fix rk3328 overlay abnormal
 
 Changes in v2:
+- rename rk322x to rk3228
+- correct some vop registers define
 
-  * Split the documentation part into a separate patch.
+Mark Yao (7):
+  drm/rockchip: vop: initialize registers directly
+  drm/rockchip: vop: move write_relaxed flags to vop register
+  drm/rockchip: vop: move line_flag_num to interrupt registers
+  drm/rockchip: vop: group vop registers
+  drm/rockchip: vop: add a series of vop support
+  dt-bindings: display: rockchip: fill Documents for vop series
+  drm/rockchip: vop: rk3328: fix overlay abnormal
 
- arch/arm/boot/dts/keystone-k2g.dtsi | 42 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ .../bindings/display/rockchip/rockchip-vop.txt     |   4 +
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.c        | 109 ++-
+ drivers/gpu/drm/rockchip/rockchip_drm_vop.h        |  81 +-
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        | 375 ++++++---
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.h        | 905 ++++++++++++++++-----
+ 5 files changed, 1075 insertions(+), 399 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index bf4d1fa..f9ff299 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -15,6 +15,7 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/pinctrl/keystone.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	compatible = "ti,k2g","ti,keystone";
-@@ -168,5 +169,46 @@
- 				#reset-cells = <2>;
- 			};
- 		};
-+
-+		gpio0: gpio@2603000 {
-+			compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
-+			reg = <0x02603000 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			ti,ngpio = <144>;
-+			ti,davinci-gpio-unbanked = <0>;
-+			clocks = <&k2g_clks 0x001b 0x0>;
-+			clock-names = "gpio";
-+		};
-+
-+		gpio1: gpio@260a000 {
-+			compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
-+			reg = <0x0260a000 0x100>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupts = <GIC_SPI 442 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 443 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 444 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 445 IRQ_TYPE_EDGE_RISING>,
-+					<GIC_SPI 446 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			ti,ngpio = <68>;
-+			ti,davinci-gpio-unbanked = <0>;
-+			clocks = <&k2g_clks 0x001c 0x0>;
-+			clock-names = "gpio";
-+		};
- 	};
- };
 -- 
 1.9.1
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
