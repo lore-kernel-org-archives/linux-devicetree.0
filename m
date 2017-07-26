@@ -1,88 +1,54 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH v3 2/2] ARM: dts: keystone-k2g-evm: Add gpio nodes
-Date: Wed, 26 Jul 2017 19:13:12 +0530
-Message-ID: <7687bd4b-a098-2eaf-dab0-ad24bc23b2d6@ti.com>
-References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
- <1501051524-5990-2-git-send-email-j-keerthy@ti.com>
- <1fb21a17-c38e-539f-7cd3-b72bd819a531@ti.com>
- <ecb45045-057a-98c1-9c22-bc6c0df6f5bd@ti.com>
- <20170726133342.GO31807@n2100.armlinux.org.uk>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH V3 1/4] ARM64: dts: rockchip: rk3328 add iommu nodes
+Date: Wed, 26 Jul 2017 15:53:06 +0200
+Message-ID: <1668393.AqADimcrsl@diego>
+References: <1500863530-32792-1-git-send-email-xxm@rock-chips.com>
+	<7545443.2JTXH2SMA9@diego> <20170726122753.GQ15833@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170726133342.GO31807@n2100.armlinux.org.uk>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Suman Anna <s-anna@ti.com>, ssantosh@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, nsekhar@ti.com, t-kristo@ti.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fcooper@ti.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170726122753.GQ15833-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Joerg,
+
+Am Mittwoch, 26. Juli 2017, 14:27:53 CEST schrieb Joerg Roedel:
+> On Wed, Jul 26, 2017 at 01:44:02PM +0200, Heiko St=FCbner wrote:
+> > I really would prefer iommu dt-nodes going through my tree :-)
+> > =
+
+> > Especially as parts of these conflict with already pending patches for
+> > graphics support and with the iommu nodes sitting in your tree these
+> > would need to wait another kernel release.
+> =
+
+> Sure, no problem. I have nothing pushed yet, so it's easy to remove
+> again. Do you want to take all three patch-sets from Simon through your
+> tree or just this one?
+
+no, I'm of course fine with (and even very much in favor of) iommu-code
+going through your tree :-) . I just want to keep the devicetree changes
+together to prevent conflicts (and unnecessary wait times).
+
+Having code and dts changes go through different trees is no problem, as th=
+ey =
+
+don't have a compile-time dependencies on each other and come together nice=
+ly =
+
+in linux-next again.
 
 
-On Wednesday 26 July 2017 07:03 PM, Russell King - ARM Linux wrote:
-> On Wed, Jul 26, 2017 at 06:59:58PM +0530, Keerthy wrote:
->>>> +
->>>> +		gpio0: gpio@2603000 {
->>>> +			compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
->>>> +			reg = <0x02603000 0x100>;
->>>> +			gpio-controller;
->>>> +			#gpio-cells = <2>;
->>>> +
->>>> +			interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
->>>> +			interrupt-controller;
->>>> +			#interrupt-cells = <2>;
->>>> +			ti,ngpio = <144>;
->>>> +			ti,davinci-gpio-unbanked = <0>;
->>>> +			clocks = <&k2g_clks 0x001b 0x0>;
->>>> +			clock-names = "gpio";
->>>> +		};
->>>> +
->>>> +		gpio1: gpio@260a000 {
->>>> +			compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
->>>> +			reg = <0x0260a000 0x100>;
->>>> +			gpio-controller;
->>>> +			#gpio-cells = <2>;
->>>> +			interrupts = <GIC_SPI 442 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 443 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 444 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 445 IRQ_TYPE_EDGE_RISING>,
->>>> +					<GIC_SPI 446 IRQ_TYPE_EDGE_RISING>;
->>>> +			interrupt-controller;
->>>> +			#interrupt-cells = <2>;
->>>> +			ti,ngpio = <68>;
->>>> +			ti,davinci-gpio-unbanked = <0>;
->>>> +			clocks = <&k2g_clks 0x001c 0x0>;
->>>> +			clock-names = "gpio";
->>>> +		};
-> 
-> With the addition of GPIO support, does that mean there is a chance to
-> control the noisy fan via the kernel's thermal management?  Do we have
-> temperature sensor support for Keystone 2 ?
-
-Russell,
-
-GPIO support using davinci driver for K2HK/L/E was there for a long time
-here: arch/arm/boot/dts/keystone.dtsi
-
-commit 970c225636ac4ae98739094d6b6bbf2bdc3694f9
-Author: Grygorii Strashko <grygorii.strashko@ti.com>
-Date:   Mon Feb 10 18:41:18 2014 +0200
-
-    ARM: dts: keystone: add gpio device entry
-
-I have only added the k2g nodes now as it is different compared to other
-keystone 2 platforms.
-
-I believe there is no temperature sensor support for Keystone 2 yet.
-
-Regards,
-Keerthy
-> 
+Heiko
