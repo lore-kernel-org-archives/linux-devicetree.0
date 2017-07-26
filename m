@@ -1,79 +1,125 @@
 From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v4 2/7] dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-Date: Wed, 26 Jul 2017 20:33:46 +0530
-Message-ID: <CAFp+6iG+PL_dY7JiiSAuLaFBzaykqO9XCP9f_Y4Odqdh4sf9gw@mail.gmail.com>
-References: <1500636977-11934-1-git-send-email-varada@codeaurora.org> <1500636977-11934-3-git-send-email-varada@codeaurora.org>
+Subject: Re: [PATCH v4 3/7] phy: qcom-qmp: Fix phy pipe clock name
+Date: Wed, 26 Jul 2017 20:59:07 +0530
+Message-ID: <c23942fd-68ba-69db-db05-b2ebef6b6a01@codeaurora.org>
+References: <1500636977-11934-1-git-send-email-varada@codeaurora.org>
+ <1500636977-11934-4-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500636977-11934-3-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, robh+dt <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, svarbanov@mm-sol.com, kishon <kishon@ti.com>, Stephen Boyd <sboyd@codeaurora.org>, fengguang.wu@intel.com, Wei Yongjun <weiyongjun1@huawei.com>, linux-pci@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1500636977-11934-4-git-send-email-varada@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 21, 2017 at 5:06 PM, Varadarajan Narayanan
-<varada@codeaurora.org> wrote:
-> IPQ8074 uses QMP phy controller that provides support to PCIe and
-> USB. Adding dt binding information for the same.
+
+
+On 07/21/2017 05:06 PM, Varadarajan Narayanan wrote:
+> Presently, the phy pipe clock's name is assumed to be either
+> usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
+> phy lane's number). However, this will not work if an SoC has
+> more than one instance of the phy. Hence, instead of assuming
+> the name of the clock, fetch it from the DT.
 >
 > Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>   drivers/phy/qualcomm/phy-qcom-qmp.c | 45 +++++++++++++++++++++++--------------
+>   1 file changed, 28 insertions(+), 17 deletions(-)
 >
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> index 5d7a51f..82fe0c4 100644
-> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -6,6 +6,7 @@ controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
->
->  Required properties:
->   - compatible: compatible list, contains:
-> +              "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
->                "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->                "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
->
-> @@ -38,6 +39,8 @@ Required properties:
->                  "phy", "common", "cfg".
->                 For "qcom,msm8996-qmp-usb3-phy" must contain
->                  "phy", "common".
-> +               For "qcom,ipq8074-qmp-pcie-phy" must contain:
-> +                "phy", "phy_phy".
-
-Actually the "common" reset for msm8996-qmp-usb3-phy is
-usb3phy_phy_reset in the datasheets, which functions in a
-similar fashion as this "phy_phy" reset. So may be we don't
-need another name?
-
-regards
-Vivek
-
->
->   - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
->   - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-> @@ -63,6 +66,11 @@ Required properties for child node:
->   - clock-output-names: Name of the phy clock that will be the parent for
->                        the above pipe clock.
->
-> +       For "qcom,ipq8074-qmp-pcie-phy":
-> +               - "pcie20_phy0_pipe_clk"        Pipe Clock parent
-> +                       (or)
-> +                 "pcie20_phy1_pipe_clk"
+> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> index 78ca628..b046866 100644
+> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
+> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+> @@ -925,20 +925,13 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
+>    *    clk  |   +-------+   |                   +-----+
+>    *         +---------------+
+>    */
+> -static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
+> +static int phy_pipe_clk_register(struct qcom_qmp *qmp, const char *clk_name)
+>   {
+> -	char name[24];
+>   	struct clk_fixed_rate *fixed;
+>   	struct clk_init_data init = { };
+>   
+> -	switch (qmp->cfg->type) {
+> -	case PHY_TYPE_USB3:
+> -		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
+> -		break;
+> -	case PHY_TYPE_PCIE:
+> -		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
+> -		break;
+> -	default:
+> +	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
+> +	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
+>   		/* not all phys register pipe clocks, so return success */
+>   		return 0;
+>   	}
+> @@ -947,7 +940,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
+>   	if (!fixed)
+>   		return -ENOMEM;
+>   
+> -	init.name = name;
+> +	init.name = clk_name;
+>   	init.ops = &clk_fixed_rate_ops;
+>   
+>   	/* controllers using QMP phys use 125MHz pipe clock interface */
+> @@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>   
+>   	id = 0;
+>   	for_each_available_child_of_node(dev->of_node, child) {
+> +		const char *clk_name;
 > +
->   - resets: a list of phandles and reset controller specifier pairs,
->            one for each entry in reset-names.
->   - reset-names: Must contain following for pcie qmp phys:
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   		/* Create per-lane phy */
+>   		ret = qcom_qmp_phy_create(dev, child, id);
+>   		if (ret) {
+> @@ -1119,15 +1114,31 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+>   		}
+>   
+>   		/*
+> -		 * Register the pipe clock provided by phy.
+> -		 * See function description to see details of this pipe clock.
+> +		 * This property is mandatory only for PCIe/USB phys.
+> +		 * For other phy types don't return failure.
+>   		 */
+> -		ret = phy_pipe_clk_register(qmp, id);
+> -		if (ret) {
+> -			dev_err(qmp->dev,
+> -				"failed to register pipe clock source\n");
+> +		ret = of_property_read_string(child, "clock-output-names",
+> +							&clk_name);
+> +		if (ret && (qmp->cfg->type == PHY_TYPE_PCIE ||
+> +			    qmp->cfg->type == PHY_TYPE_USB3)) {
 
+Let's not check the phy type twice. Once here and once again in the
+phy_pipe_clk_register().
+May be we can move this property read in phy_pipe_clk_registe() itself.
+That way you can avoid passing the clk_name also. WDUT?
 
+Regards
+Vivek
+> +			dev_err(dev,
+> +				"failed to get clock-output-names for lane%d phy, %d\n",
+> +				id, ret);
+>   			return ret;
+>   		}
+> +
+> +		if (!ret) {
+> +			/*
+> +			 * Register the pipe clock provided by phy. See function
+> +			 * description to see details of this pipe clock.
+> +			 */
+> +			ret = phy_pipe_clk_register(qmp, clk_name);
+> +			if (ret) {
+> +				dev_err(qmp->dev,
+> +					"failed to register pipe clock source\n");
+> +				return ret;
+> +			}
+> +		}
+>   		id++;
+>   	}
+>   
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
