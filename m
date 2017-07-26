@@ -1,98 +1,107 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 0/3] Add ethernet0 alias for several A64 boards
-Date: Wed, 26 Jul 2017 12:12:21 +0800
-Message-ID: <CAGb2v64L0fja4hBv=7YDTj41+HdJLNNeeia=4=V2EjH+_wwdiA@mail.gmail.com>
-References: <20170722022852.7868-1-icenowy@aosc.io> <20170724075823.7ttjq4tnvoupo776@flea>
- <f4016e61dbe4655a0e672c3377f35dd2@aosc.io> <20170725031819.ryllvq5a3tdwyblj@angband.pl>
- <20170725143127.ioojcafwaeimvren@flea> <00809C21-F663-4A54-8A9C-31A39739F539@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
+Date: Wed, 26 Jul 2017 14:21:42 +1000
+Message-ID: <20170726042142.GZ8978@umbus.fritz.box>
+References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+ <20170703090648.GV13989@umbus.fritz.box>
+ <5967CAA6.6010801@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPVN4DFQKGQEO7RSPVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <00809C21-F663-4A54-8A9C-31A39739F539-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Adam Borowski <kilobyte-b9QjgO8OEXPVItvQsEIGlw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2+IDmuKgu0wSQZlt"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5967CAA6.6010801-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 7:54 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->
->
-> =E4=BA=8E 2017=E5=B9=B47=E6=9C=8825=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=88=
-10:31:27, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
->>On Tue, Jul 25, 2017 at 05:18:19AM +0200, Adam Borowski wrote:
->>> On Tue, Jul 25, 2017 at 11:04:24AM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->>> > =E5=9C=A8 2017-07-24 15:58=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=
-=EF=BC=9A
->>> > > On Sat, Jul 22, 2017 at 10:28:49AM +0800, Icenowy Zheng wrote:
->>> > > > Allwinner A64 SoC has an EMAC which is used to provide Ethernet
->>> > > > function on several boards.
->>> > > >
->>> > > > The EMAC itself doesn't have a fixed MAC address, but the sunxi
->>> > > > mainline U-Boot have the ability to generate one based on the
->>eFUSE
->>> > > > SID in the chip, and add the generated MAC address to the
->>device
->>> > > > tree when booting.
->>> > > >
->>> > > > The MAC address setting step is based on the device tree's
->>aliases,
->>> > > > and device tree nodes prefixed "ethernet" will get the MAC
->>address
->>> > > > added. However, in several A64 boards' device tree, the alias
->>is not
->>> > > > set up, so that the U-Boot won't set the MAC address.
->>> > > >
->>> > > > Add the ethernet0 aliases to these boards.
->>> > > >
->>> > > > I hope this patchset can be queued in 4.13, otherwise 4.13
->>kernels
->>> > > > won't get non-volatile MAC addresses, and will use random ones
->>> > > > instead, which is annoying to many users.
->>> > > >
->>> > > > Icenowy Zheng (3):
->>> > > >   arm64: allwinner: a64: add ethernet0 alias for BPi M64 EMAC
->>node
->>> > > >   arm64: allwinner: a64: add ethernet0 alias for Pine64 EMAC
->>node
->>> > > >   arm64: allwinner: a64: add ethernet0 alias for SoPine EMAC
->>node
->>> > >
->>> > > Applied all three, thanks!
->>> >
->>> > Sorry, but could you queue them to 4.13?
->>> >
->>> > Otherwise 4.13 kernel release will have annoying random MAC
->>problem,
->>> > which heavily affects headless usages.
->>>
->>> Perhaps it would be better to reword the commit subject as "fix
->>missing
->>> ethernet0 alias ..."?  That'd convey that the previous behaviour is a
->>defect
->>> that needs these patches as a fix.
->>
->>Yes, definitely.
->>
->>That and having a fixes: tag.
->
-> Should I resend them with different commit message?
 
-Yes please. And add the "Fixes:" tag.
+--2+IDmuKgu0wSQZlt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-ChenYu
+On Thu, Jul 13, 2017 at 12:31:50PM -0700, Frank Rowand wrote:
+> On 07/03/17 02:06, David Gibson wrote:
+> > On Wed, Jun 14, 2017 at 05:52:25PM +0300, Pantelis Antoniou wrote:
+> >> This patch enables an overlay to refer to a previous overlay's
+> >> labels by performing a merge of symbol information at application
+> >> time.
+> >=20
+> > This seems to be doing things the hard way.
+> >=20
+> > You're essentially extending the semantics of overlay application to
+> > add the symbol merging.  You've implemented these extended semantics
+> > in libfdt, which is all very well, but that's not the only overlay
+> > application implementation.
+> >=20
+> >=20
+> > It seems to me a better approach would be to change dtc's -@
+> > implementation, so that in /plugin/ mode instead of making a global
+> > __symbols__ node, it puts it into the individual fragments.  That way
+> > the existing overlay application semantics will update the __symbols__
+> > node.
+>=20
+> If the __symbols__ node was inside a fragment, then the existing
+> code would add (or update) a __symbols__ node located at the location
+> pointed to by the fragment's target path, instead of updating the
+> node /__symbols__.
+
+No, what I meant was that an overlay can update anything, including
+__symbols__, so you could have a fragment which made the __symbols__
+updates.
+
+But I realised shortly afterwards that doesn't work, because we don't
+know the correct resolved target paths.
+
+> It makes sense to me to have only one global __symbols__ node instead
+> of several.
+
+Having realized the above, that does make sense.
+
+> If there is a global __symbols__ node then we have a single name
+> space for symbols.
+>=20
+> If there are multiple __symbols__ nodes spread throughout the tree,
+> then to me that would imply different name spaces spread throughout
+> the tree, where namespaces are determined by fragments.  This sounds
+> confusing to me.  Or if the intent is to have a single name space
+> then the __symbols__ information would be scattered throughout the
+> tree instead of located in a single node.
+>=20
+> My current patch (under review), targeted for Linux 4.13-rc1, puts
+> an overlay's __symbols__ node properties into the overlay's
+> changeset, so they get added when the overlay is loaded and
+> removed when the overlay is unloaded.
+
+True, but not relevant to what I was proposing.
 
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--2+IDmuKgu0wSQZlt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll4GNYACgkQbDjKyiDZ
+s5JsaQ/9GMHfa10JDfEJuNGkgU51c4ShaEW3xPolmsEVckZgojhj4lEcf+i/PjIQ
+owdx29JgDW051N+hLX13/UMCt2hx+ElTE8XV/NuKcEEbOWDCsrW8GSJet1f+6RP1
+FRY3EU72IAisQn9CR3OEUrfErw3N/vpAHVwZX+h0BmHXR0kIDPWh/Qsiealutxgx
+C6jj9Uo1mmo+N7frwE08vQXT/dsMKDRa81dNfpy3XlUDVYzKbfP98GLw0aMAi5KF
+8Vq5e9LJsyo7hdu5G0RZU8Hf3zViVlN8MaKFOifD6Ispj41raUKOJg1mUWTvN9f6
+z2KQ8+QV8iuJdKffV4cZ334/Sz37VYvfbqiOOYe1VPIoggoVmqg7qz4JYqfyszCS
+bF7BhQrwJyN4ePlAbqQ6sBsGZGWAFddfg1upC7agJpfLlqXJjUpFgxKvQngnelh2
+el+KU2hNDFPtOMhdEFV5RjX9Xm1D/Hag54j/CjKIkx5UcVSdgjBYIGeWPIV08yNp
+RJKIsEJEmc+exc4Gs7OLF2z5wBE9oWLQ4whFj7L1gZehty9TXv7foGiWiYxMteIQ
+yQS3IxQQ8CF6t3smqMWEFF/5GYcKUv+wXTJz3Fw9nGIHl2HsyZYEetrU639+NvK7
+oWZOq/9qQb+Ql7U/ea5QmJNcaqFULqfUY54fWgtI63pls0tzg4c=
+=ols0
+-----END PGP SIGNATURE-----
+
+--2+IDmuKgu0wSQZlt--
