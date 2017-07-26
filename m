@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 6/9] ARM: sun8i: a83t: cubietruck-plus:
- Enable PMIC part of AXP818 PMIC
-Date: Wed, 26 Jul 2017 16:28:29 +0800
-Message-ID: <20170726082832.16789-7-wens@csie.org>
+Subject: [PATCH v2 7/9] ARM: sun8i: a83t: cubietruck-plus:
+ Enable AC100 combo chip in AXP818 PMIC
+Date: Wed, 26 Jul 2017 16:28:30 +0800
+Message-ID: <20170726082832.16789-8-wens@csie.org>
 References: <20170726082832.16789-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNFF4HFQKGQE65WVHLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNVF4HFQKGQEDVH76BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170726082832.16789-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -24,37 +24,48 @@ The AXP813/AXP818 PMICs used with the A83T/H8 SoCs are actually 2 dies
 in one package sharing the serial bus (I2C/RSB) pins. One die is the
 actual PMIC. The other is an AC100 codec / RTC combo chip.
 
-This patch enables the RSB controller and adds a device node for the
-PMIC die to the Cubietruck Plus device tree. Since the AXP813 and
-AXP818 are virtually identical, this patch uses the compatible string
-for the former as a fallback.
+This patch adds the device nodes for the AC100 chip to the Cubietruck
+Plus device tree.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-index 163ddf8868b5..d88a22ac6222 100644
+index d88a22ac6222..f583e5b9a1c8 100644
 --- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
 +++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
-@@ -129,6 +129,17 @@
- 	status = "okay";
+@@ -138,6 +138,30 @@
+ 		interrupt-parent = <&r_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+ 	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 11 IRQ_TYPE_LEVEL_LOW>; /* PL11 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&r_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
  };
  
-+&r_rsb {
-+	status = "okay";
-+
-+	axp81x: pmic@3a3 {
-+		compatible = "x-powers,axp818", "x-powers,axp813";
-+		reg = <0x3a3>;
-+		interrupt-parent = <&r_intc>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+};
-+
  &spdif {
- 	status = "okay";
- };
 -- 
 2.13.3
