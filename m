@@ -1,170 +1,125 @@
-From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [patch v1 1/2] mfd: Add Mellanox regmap core driver
-Date: Wed, 26 Jul 2017 17:18:20 +0000
-Message-ID: <AM4PR05MB3330F7C7913391C906CB2069A2B90@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1501001499-21971-1-git-send-email-vadimp@mellanox.com>
- <1501001499-21971-2-git-send-email-vadimp@mellanox.com>
- <20170726111846.GB6033@amd>
+From: Michael Stecklein <m-stecklein@ti.com>
+Subject: Re: [PATCH v3 2/2] ASoC: add support for TAS6424
+	digital amplifier
+Date: Wed, 26 Jul 2017 12:44:34 -0500
+Message-ID: <f94172dc-3e29-999f-ffb5-7eb955fcb1a5@ti.com>
+References: <1500405604-23511-1-git-send-email-m-stecklein@ti.com>
+ <1500405604-23511-3-git-send-email-m-stecklein@ti.com>
+ <20170719110842.lb2f5cqawnkenhsb@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726111846.GB6033@amd>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170719110842.lb2f5cqawnkenhsb@sirena.org.uk>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: "lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
 
-
-> -----Original Message-----
-> From: Pavel Machek [mailto:pavel-+ZI9xUNit7I@public.gmane.org]
-> Sent: Wednesday, July 26, 2017 2:19 PM
-> To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org; linux-
-> leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org
-> Subject: Re: [patch v1 1/2] mfd: Add Mellanox regmap core driver
->=20
-> Hi!
->=20
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> > @@ -0,0 +1,347 @@
-> > +Mellanox programmable device control.
-> > +-------------------------------------
-> > +This binding defines the device control interface over I2C bus for
-> > +Mellanox BMC based switches.
->=20
-> You'll need to cc dt maintainers here.
-
-Hi Pavel,
-
-Thank you very much for review.
-
-I have in to: Rob Herring and in c: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Should it be separate mail, or it's OK?
-
-
->=20
-> > +Required properties:
-> > +- compatible =3D "mellanox,mlxreg-i2c",
-> > +	       "mellanox,mlxreg-i2c-16",
-> > +	       "mellanox,mlxreg-core";
-> > +- #address-cells : must be 1;
-> > +- #size-cells : must be 0;
-> > +- reg : I2C address;
->=20
-> > +			cpu_watchdog {
-> > +				reg =3D <0x1d>;
-> > +				mask =3D <0xef>;
-> > +			};
-> > +
-> > +			cpu_kernel_panic {
-> > +				reg =3D <0x1d>;
-> > +				mask =3D <0xef>;
-> > +			};
-> > +			bmc_warm_reset {
-> > +				reg =3D <0x71>;
-> > +				mask =3D <0xfe>;
-> > +			};
->=20
-> Extra newline.
->=20
-> > +static ssize_t mlxreg_core_attr_show(struct device *dev,
-> > +				     struct device_attribute *attr,
-> > +				     char *buf)
-> > +{
-> > +	struct mlxreg_core_priv_data *priv =3D dev_get_drvdata(dev);
-> > +	int index =3D to_sensor_dev_attr_2(attr)->index;
-> > +	int nr =3D to_sensor_dev_attr_2(attr)->nr;
-> > +	struct mlxreg_core_data *data;
-> > +	u32 regval =3D 0;
-> > +	int ret;
-> > +
-> > +	switch (nr) {
-> > +	case MLXREG_CORE_ATTR_PSU:
-> > +	case MLXREG_CORE_ATTR_FAN:
-> > +		/* Bit =3D 0 : item is functional. */
-> > +		ret =3D regmap_read(priv->regmap,
-> > +				  priv->item[mlxreg_core_grp[nr].type]->reg,
-> > +				  &regval);
-> > +		if (ret)
-> > +			goto access_error;
-> > +
-> > +		regval =3D !!!(regval & BIT(mlxreg_core_get_pos(priv,
-> > +					  &mlxreg_core_grp[nr],
->=20
-> Uff. You really really mean it. But one ! should be enough.
->=20
-> > +static int
-> > +mlxreg_core_add_attr_group(struct mlxreg_core_priv_data *priv,
-> > +			   struct mlxreg_core_grp *grp, int id) {
-> > +	struct mlxreg_core_data *data =3D priv->item[grp->type]->data;
-> > +	int i;
-> > +
-> > +	/* Skip group with negative access value. */
-> > +	if (grp->access < 0)
-> > +		return id;
-> > +
-> > +	priv->item[grp->type]->ind =3D id;
-> > +	for (i =3D 0; i < priv->item[grp->type]->count; i++, id++, data++) {
-> > +		priv->mlxreg_core_attr[id] =3D
-> > +				&priv-
-> >mlxreg_core_dev_attr[id].dev_attr.attr;
-> > +		if (grp->use_grp_name)
-> > +			priv->mlxreg_core_attr[id]->name =3D
-> > +				devm_kasprintf(priv->dev, GFP_KERNEL,
-> > +					       "%s%u", grp->name, id %
-> > +						priv->item[grp->type]-
-> >count
-> > +						+ 1);
-> > +		else
-> > +			priv->mlxreg_core_attr[id]->name =3D
-> > +				devm_kasprintf(priv->dev, GFP_KERNEL,
-> > +					       data->label);
->=20
-> Is it really neccessary to dynamically generate it? Static table could be
-> simpler...
-
-But I don't know how many groups and attributes can be defined for particul=
-ar device.
-On the system I am working on know I have four programmable device with dif=
-ferent purposes and different set of attributes.
-
->=20
-> > +static void
-> > +mlxreg_core_work_helper(struct mlxreg_core_priv_data *priv,
-> > +			struct mlxreg_core_item *item, u8 is_inverse,
-> > +			u16 off, u32 mask, u32 *cache)
-> > +{
-> > +	struct mlxreg_core_data *data;
-> > +	u32 asserted, regval, bit;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Validate if item related to received signal type is valid.
-> > +	 * It should never happen, excepted the situation when some
-> > +	 * piece of hardware is broken. In such situation just produce
-> > +	 * error message and return. Caller must continue to handle the
-> > +	 * signals from other devices if any.
-> > +	 */
-> > +	if (unlikely(!item)) {
-> > +		dev_err(priv->dev, "False signal is received: register at offset
-> 0x%02x, mask 0x%02x.\n",
-> > +			off, mask);
->=20
-> Slightly too long line.
->=20
-> Thanks,
-> 									Pavel
->=20
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 07/19/2017 06:08 AM, Mark Brown wrote:
+> On Tue, Jul 18, 2017 at 02:20:04PM -0500, Michael Stecklein wrote:
+>
+>> +	if (!tx_mask) {
+>> +		dev_err(codec->dev, "tdm mask must not be 0\n");
+>> +		return -EINVAL;
+>> +	}
+> Setting the mask to 0 is used when turning off TDM.
+When turning off TDM, will the set_tdm_slot function ever get
+called? (Since the TDM was turned off the slots don't need to
+be set.) Also, for this device TDM mode is automatically
+selected based on the presence of a TDM clock, so there is
+nothing to do to switch into or out of TDM mode. Similar
+parts handle this the same way, such as: tlv320aic3x.c,
+tas2552.c, tas5720.c, ssm4567.c
+>
+>> +	if ((reg & TAS6424_WARN_VDD_UV) && !(tas6424->last_warn & TAS6424_WARN_VDD_UV))
+>> +		dev_warn(dev, "experienced a VDD under voltage condition\n");
+>> +
+>> +	if ((reg & TAS6424_WARN_VDD_POR) && !(tas6424->last_warn & TAS6424_WARN_VDD_POR))
+>> +		dev_warn(dev, "experienced a VDD POR condition\n");
+> These look like they are errors rather than warnings and should be
+> critical prints like the other errors.
+These conditions happened on the previous shutdown/reset
+of the device. We are letting the user know about them, but
+they are not critical to the current device state, so I have left
+them as warnings.
+>
+>> +	/* Store current warn value so we can detect any changes next time */
+>> +	tas6424->last_warn = reg;
+> It would be better to clear these at some point, perhaps after a delay.
+> Especially with thermal issues they could come and go over device
+> operation.
+Since this function is called every 200ms, if an issue comes
+and goes, last_warn will be cleared during the next function
+call after the issue ends; the function regmap_read will read
+in a 0 for that flag's bit, and that new reg value will be saved.
+Therefore, the user will be warned only once if the issue is
+persistent, but rewarned if the issues leaves and comes
+back, so I do not think clearing after a delay is necessary.
+>
+>> +static int tas6424_codec_probe(struct snd_soc_codec *codec)
+>> +{
+>> +	struct tas6424_data *tas6424 = snd_soc_codec_get_drvdata(codec);
+>> +	int ret;
+>> +
+>> +	tas6424->codec = codec;
+>> +
+>> +	ret = regulator_bulk_enable(ARRAY_SIZE(tas6424->supplies),
+>> +				    tas6424->supplies);
+>> +	if (ret != 0) {
+>> +		dev_err(codec->dev, "failed to enable supplies: %d\n", ret);
+>> +		return ret;
+>> +	}
+> This init stuff should be in either the main I2C probe, DAPM or bias
+> level management.  The CODEC probe should be very minimal.
+This is a single codec device, does it make sense to leave the
+device running without its codec? Other single codec devices
+initialize regulators in codec probe similarly.
+>
+>> +	if (event & SND_SOC_DAPM_POST_PMU) {
+>> +	} else if (event & SND_SOC_DAPM_PRE_PMD) {
+> You're trying to write a switch statement here.
+Acked.
+>
+>> +	switch (level) {
+>> +	case SND_SOC_BIAS_ON:
+>> +	case SND_SOC_BIAS_PREPARE:
+>> +		msleep(500);
+>> +		break;
+> You need a 500ms sleep in all these cases?  That's a lot of sleeping.
+Unfortunately, the device runs diagnostics at this point,
+which take upwards of 480ms.
+>
+>> +	case SND_SOC_BIAS_STANDBY:
+>> +		ret = snd_soc_update_bits(codec, TAS6424_CH_STATE_CTRL_REG,
+>> +					  0xff, TAS6424_CH1_STATE_MUTE | TAS6424_CH2_STATE_MUTE |
+>> +					  TAS6424_CH3_STATE_MUTE | TAS6424_CH4_STATE_MUTE);
+>> +
+>> +		if (ret < 0) {
+>> +			dev_err(codec->dev, "error resuming device: %d\n", ret);
+>> +			return ret;
+>> +		}
+>> +		break;
+>> +	case SND_SOC_BIAS_OFF:
+>> +		ret = snd_soc_update_bits(codec, TAS6424_CH_STATE_CTRL_REG,
+>> +					  0xff, TAS6424_CH1_STATE_HIZ | TAS6424_CH2_STATE_HIZ |
+>> +					  TAS6424_CH3_STATE_HIZ | TAS6424_CH4_STATE_HIZ);
+>> +
+>> +		if (ret < 0) {
+>> +			dev_err(codec->dev, "error suspending device: %d\n", ret);
+>> +			return ret;
+>> +		}
+> These mutes seem very random disassociated from anything else?
+What do you mean by this comment? The control register is
+set to STATE_MUTE and STATE_HIZ depending on what the
+device needs for the new BIAS level.
