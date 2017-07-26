@@ -1,78 +1,117 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
-Date: Wed, 26 Jul 2017 10:30:07 +0530
-Message-ID: <20170726050007.GE3053@localhost>
-References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
- <20170721075547.GO3053@localhost>
- <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
- <20170721095411.GR3053@localhost>
- <3c04c9bf-572d-98a6-ff62-83498bbc7fdf@st.com>
- <20170721171735.GS3053@localhost>
- <320f8def-19a4-0491-e879-b41815889e15@st.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
+Date: Wed, 26 Jul 2017 14:55:33 +1000
+Message-ID: <20170726045533.GD8978@umbus.fritz.box>
+References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+ <20170703090648.GV13989@umbus.fritz.box>
+ <5967CAA6.6010801@gmail.com>
+ <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
+ <5967D2F7.60303@gmail.com>
+ <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
+ <5967E8BC.4090307@gmail.com>
+ <1500016861.19864.26.camel@hp800z>
+ <59763739.4070708@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="MEatx1zidE5asLAI"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <320f8def-19a4-0491-e879-b41815889e15-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <59763739.4070708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 09:34:18AM +0000, Pierre Yves MORDRET wrote:
-> 
-> On 07/21/2017 12:32 PM, Pierre Yves MORDRET wrote:
->  >
->  >
->  > On 07/21/2017 11:54 AM, Vinod Koul wrote:
->  >> On Fri, Jul 21, 2017 at 09:30:00AM +0000, Pierre Yves MORDRET wrote:
->  >>>>> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 
-> tlen)
->  >>>>> +{
->  >>>>> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
->  >>>>> +
->  >>>>> +	while (((buf_len % max_width) || (tlen < max_width)) &&
->  >>>>> +	       (max_width > DMA_SLAVE_BUSWIDTH_1_BYTE))
->  >>>>> +		max_width = max_width >> 1;
->  >>>>
->  >>>> ok, this is a bit hard to read...
->  >>>
->  >>> This code snippet has already been reworked and optimized. Would you mind to
->  >>> provide me a example with your expectation ? Thanks
->  >>
->  >> Code is optimized yes, but readable no
->  >>
->  >> I would like readability to be improved upon...
->  >>
->  >
->  > gotcha
->  >
-> 
-> Doest he code snippet below has a better looking for you ?
-> 
-> 	for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
-> 	     max_width > DMA_SLAVE_BUSWIDTH_1_BYTE; max_width >>= 1)
-> 		if (((buf_len % max_width) == 0) && (tlen >= max_width))
-> 			break;
 
-Am actually not sure :(
+--MEatx1zidE5asLAI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Indentation wise it is still a bit messy to follow..
+On Mon, Jul 24, 2017 at 11:06:49AM -0700, Frank Rowand wrote:
+> On 07/14/17 00:21, Pantelis Antoniou wrote:
+>=20
+> Keeping in mind that this thread was originally about libfdt,
+> not the Linux kernel, I am mostly talking about the Linux
+> kernel implementation in this email.
+>=20
+>=20
+> > Hi Frank,
+> >=20
+> > On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
+> >> On 07/13/17 14:22, Phil Elwell wrote:
+> >>> On 13/07/2017 21:07, Frank Rowand wrote:
+> >>>> On 07/13/17 12:38, Phil Elwell wrote:
+> >>>>
+> >=20
+> > [snip]
+> >=20
+> >>> hope an inability to solve the problem posed by this advanced usage w=
+on't
+> >>> prevent a solution to a simpler problem from being accepted.
+> >=20
+> > I have waited until people started commenting on this patchset before
+> > replying.
+> >=20
+> > I think we agree on a few things to keep the discussion moving forward.
+> >=20
+> > 1. Stacked overlays are useful and make overlays easier to use.
+>=20
+> Stacked overlays are required to handle an add-on board that
+> contains physical connectors to plug in yet more things.
+>=20
+> I'm not sure what you mean when you say they "make overlays
+> easier to use".  Can you elaborate on that a little bit?
+>=20
+>=20
+> > 2. Changing the overlay symbols format now would be unwise.
+>=20
+> I strongly disagree.  I would say that it is desirable to maintain
+> the current overlay format (not just __symbols__), and that there
+> will be pain (for bootloaders???) if the format changes.  But
+> the Linux implementation is not locked in if there is a good
+> reason to change the format.
+>=20
+>=20
+> > 3. A number of extensions have been put forward/requested.
+> >=20
+> > 3.1. There should be a method to place a symbol on a node that didn't
+> > have one originally (due to vendor supplying broken DTB or being
+> > generated by firmware at runtime).
+>=20
+> You saw my reaction of what to do about a broken vendor DTB in that
+> thread.  I do not think this method is a good idea.
+>=20
+> I don't know why a DTB generated by firmware would be missing a symbol.
+> Was that discussed in that thread, and I'm just forgetting it?
 
-How about:
+Because 9 times out of 10, firmware is crap?
 
-	for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
-			max_width > DMA_SLAVE_BUSWIDTH_1_BYTE;
-			max_width >>=1) {
-		if (((buf_len % max_width) == 0) && (tlen >= max_width))
-			break;
-	}
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-Thanks
--- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--MEatx1zidE5asLAI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll4IMAACgkQbDjKyiDZ
+s5JxQg//Q41tsTat/HcehEzMEoVdc2Z3Z4+7piFYvams/DCfUwTa8CtbzZpE6+eZ
+yk7wEYNW9jdOjKr7vXvOL1Ib/+P572Zk8G0hkqyrPTdmux3p4Wa+T0CAB4a6S7aS
+Sj7cn9omWENV5iaIVyUgxMhA6n7ySLMTPCfqxxfM2vqaGoqrmQV2RNxYQ6lGHbSh
+4HgFh77GDzW8PgKU0VmOa+g633rZr604xzgPt9byDnGvzoKx97adzEX5R0nBzSBN
+v1gc3tcpx0lSwtmH8oITuw6m2BwNM9a/bUpLXVkSwsxgrveJj/AJCJ1FIRvMueU7
+DHjzJtqfgoBJjbtuQre7V1O5lazcJbDBJj8cLO7Rd4pao8faFsHIv7fpH6aBM7tx
+ml1MXJGUEbxP2cOLZdk+2jDB/f0xWaa6jgicb+iX0jt08MSaBeaJL5OBh1IzVJFO
+LRvFwV+ETZb2OJyYzymNBZNPQlOW7sLb1ldG/0QZfOoj0ZWv1CwhVlWPZ6Iz9wwy
+IUT1S564K7l7emPE+cqw+faAknXhLHko6vAejPAvmmbhX/ZhqRDjWn1cqflsWWY5
+hy9nIdI/QJJrhQ/4kme5JdSr+8psQ+SuBBt8CxwVQlcW/ZIlVqnqcj/ELFVgwBH4
+Y24mcoEpEXvaFFk/glHpcVzTO27ZypdgjrBate8Gs/PYy12CLnI=
+=aMY1
+-----END PGP SIGNATURE-----
+
+--MEatx1zidE5asLAI--
