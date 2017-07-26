@@ -1,102 +1,86 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 6/6] arm64: dts: Add SBA-RAID DT nodes for Stingray SoC
-Date: Wed, 26 Jul 2017 11:06:44 +0530
-Message-ID: <1501047404-14456-7-git-send-email-anup.patel@broadcom.com>
-References: <1501047404-14456-1-git-send-email-anup.patel@broadcom.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Wed, 26 Jul 2017 11:20:27 +0530
+Message-ID: <1501048228-3492-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501047404-14456-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, j-keerthy-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Broadcom SBA-RAID DT nodes for Stingray SoC.
+The patch adds keystone-k2g compatible, specific properties and
+an example.
 
-The Stingray SoC has total 32 SBA-RAID FlexRM rings and it has
-8 CPUs so we create 8 SBA-RAID instances (one for each CPU).
-This way Linux DMAENGINE will have one SBA-RAID DMA device for
-each CPU.
-
-Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 ---
- .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ .../devicetree/bindings/gpio/gpio-davinci.txt      | 39 +++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-index 1f927c4..8bf1dc6 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-@@ -51,4 +51,68 @@
- 			msi-parent = <&gic_its 0x4300>;
- 			#mbox-cells = <3>;
- 		};
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+index 5079ba7..9f4f612 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+@@ -1,7 +1,9 @@
+ Davinci/Keystone GPIO controller bindings
+ 
+ Required Properties:
+-- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
++- compatible: should be "ti,dm6441-gpio",
++			 "ti,keystone-gpio",
++			 "ti,keystone-k2g-gpio"
+ 
+ - reg: Physical base address of the controller and the size of memory mapped
+        registers.
+@@ -26,6 +28,17 @@ The GPIO controller also acts as an interrupt controller. It uses the default
+ two cells specifier as described in Documentation/devicetree/bindings/
+ interrupt-controller/interrupts.txt.
+ 
++Required Properties specific to keystone-k2g
 +
-+		raid0: raid@0 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 0 0x1 0xff00>,
-+				 <&raid_mbox 1 0x1 0xff00>,
-+				 <&raid_mbox 2 0x1 0xff00>,
-+				 <&raid_mbox 3 0x1 0xff00>;
-+		};
++- clocks: Should contain devices input clock. The first parameter
++           is a handle to k2g_clks. The second parameter is the
++           device ID and the third parameter is the clock ID. One can
++           refer: http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
 +
-+		raid1: raid@1 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 4 0x1 0xff00>,
-+				 <&raid_mbox 5 0x1 0xff00>,
-+				 <&raid_mbox 6 0x1 0xff00>,
-+				 <&raid_mbox 7 0x1 0xff00>;
-+		};
++           Example: <&k2g_clks 0x001c 0x0>;
 +
-+		raid2: raid@2 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 8 0x1 0xff00>,
-+				 <&raid_mbox 9 0x1 0xff00>,
-+				 <&raid_mbox 10 0x1 0xff00>,
-+				 <&raid_mbox 11 0x1 0xff00>;
-+		};
++- clock-names: The driver expects the clock name to be "gpio";
 +
-+		raid3: raid@3 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 12 0x1 0xff00>,
-+				 <&raid_mbox 13 0x1 0xff00>,
-+				 <&raid_mbox 14 0x1 0xff00>,
-+				 <&raid_mbox 15 0x1 0xff00>;
-+		};
-+
-+		raid4: raid@4 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 16 0x1 0xff00>,
-+				 <&raid_mbox 17 0x1 0xff00>,
-+				 <&raid_mbox 18 0x1 0xff00>,
-+				 <&raid_mbox 19 0x1 0xff00>;
-+		};
-+
-+		raid5: raid@5 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 20 0x1 0xff00>,
-+				 <&raid_mbox 21 0x1 0xff00>,
-+				 <&raid_mbox 22 0x1 0xff00>,
-+				 <&raid_mbox 23 0x1 0xff00>;
-+		};
-+
-+		raid6: raid@6 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 24 0x1 0xff00>,
-+				 <&raid_mbox 25 0x1 0xff00>,
-+				 <&raid_mbox 26 0x1 0xff00>,
-+				 <&raid_mbox 27 0x1 0xff00>;
-+		};
-+
-+		raid7: raid@7 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 28 0x1 0xff00>,
-+				 <&raid_mbox 29 0x1 0xff00>,
-+				 <&raid_mbox 30 0x1 0xff00>,
-+				 <&raid_mbox 31 0x1 0xff00>;
-+		};
+ Example:
+ 
+ gpio: gpio@1e26000 {
+@@ -60,3 +73,27 @@ leds {
+ 		...
  	};
+ };
++
++Example for keystone-k2g:
++
++gpio0: gpio@2603000 {
++	compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
++	reg = <0x02603000 0x100>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
++			<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	ti,ngpio = <144>;
++	ti,davinci-gpio-unbanked = <0>;
++	clocks = <&k2g_clks 0x001b 0x0>;
++	clock-names = "gpio";
++};
 -- 
-2.7.4
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
