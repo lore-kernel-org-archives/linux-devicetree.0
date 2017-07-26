@@ -1,123 +1,54 @@
-From: icenowy@aosc.io
-Subject: Re: [linux-sunxi] [PATCH 10/10] ARM: dts: sun8i: Add SY8106A
- regulator to Orange Pi PC
-Date: Wed, 26 Jul 2017 15:36:27 +0800
-Message-ID: <82507f40a1ddba8517cf09f51d3afa33@aosc.io>
-References: <20170723102749.17323-1-icenowy@aosc.io>
- <20170723102749.17323-11-icenowy@aosc.io>
- <CAGb2v66AGjazHT-+hWVLyNBLDw=DJ5yTmNxF-_=BtZFfjnni-A@mail.gmail.com>
- <25C8A89C-8495-4787-934C-8E9667CD70BF@aosc.io>
- <CAGb2v64xXOmC44TKrSDZFAh6i_rgFEccCHj4EG+1fxFJd9fjjw@mail.gmail.com>
+From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Wed, 26 Jul 2017 07:38:02 +0000
+Message-ID: <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v64xXOmC44TKrSDZFAh6i_rgFEccCHj4EG+1fxFJd9fjjw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: wens@csie.org
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Ondrej Jirman <megous@megous.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170726052930.GF3053@localhost>
+Content-Language: en-US
+Content-ID: <B433A82BE688B64A94720B93069992C7@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-在 2017-07-26 15:30，Chen-Yu Tsai 写道：
-> On Wed, Jul 26, 2017 at 3:16 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
->> 
->> 
->> 于 2017年7月26日 GMT+08:00 下午3:08:06, Chen-Yu Tsai <wens@csie.org> 写到:
->>> On Sun, Jul 23, 2017 at 6:27 PM, Icenowy Zheng <icenowy@aosc.io> 
->>> wrote:
->>>> From: Ondrej Jirman <megous@megous.com>
->>>> 
->>>> Add SY8106A regulator to r_i2c bus and enable the r_i2c bus on
->>>> Orange Pi PC, then set the power supply of the ARM cores to this
->>>> regulator, in order to enable DVFS.
->>>> 
->>>> Signed-off-by: Ondrej Jirman <megous@megous.com>
->>>> [Icenowy: Enable DVFS in this patch, slight changes and change 
->>>> commit
->>>>  message]
->>>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>>> ---
->>>>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 19 +++++++++++++++++++
->>>>  1 file changed, 19 insertions(+)
->>>> 
->>>> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>> b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> index 998b60f8d295..d855f8b6254e 100644
->>>> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
->>>> @@ -98,6 +98,10 @@
->>>>         status = "okay";
->>>>  };
->>>> 
->>>> +&cpu0 {
->>>> +       cpu-supply = <&reg_sy8106a>;
->>>> +};
->>>> +
->>>>  &ehci0 {
->>>>         status = "okay";
->>>>  };
->>>> @@ -160,6 +164,21 @@
->>>>         };
->>>>  };
->>>> 
->>>> +&r_i2c {
->>>> +       status = "okay";
->>>> +
->>>> +       reg_sy8106a: regulator@65 {
->>>> +               compatible = "silergy,sy8106a";
->>>> +               reg = <0x65>;
->>>> +               regulator-name = "vdd-cpux";
->>>> +               regulator-min-microvolt = <1000000>;
->>> 
->>> According to the H3 datasheet, the minimum voltage is 1.1V, not 1V.
->> 
->> But the Armbian OPP table for H3 contains several
->> OPP under 1.1V...
-> 
-> Can you provide a link?
-> 
-> If Armbian users have actually field tested this (a big if),
-> then I would like to see some evidence of the SoC running
-> stably at those OPPs with those lower voltages under full load.
-
-See [1].
-
-[1] 
-https://github.com/armbian/build/blob/master/config/fex/orangepipc.fex#L736
-
-> 
-> Even then you should still leave a note describing why we allow
-> voltages below the recommended range.
-> 
-> ChenYu
-> 
->> 
->>> 
->>> Otherwse
->>> 
->>>> +               regulator-max-microvolt = <1400000>;
->>>> +               regulator-ramp-delay = <200>;
->>> 
->>> Is this an actual constraint of the SoC? Or is it a characteristic
->>> of the regulator? If it is the latter, it belongs in the driver.
->>> AFAIK the regulator supports varying the ramp delay (slew rate).
-
-I don't know...
-
-Maybe I should ask Ondrej?
-
->>> 
->>> ChenYu
->>> 
->>>> +               regulator-boot-on;
->>>> +               regulator-always-on;
->>>> +       };
->>>> +};
->>>> +
->>>>  &r_pio {
->>>>         leds_r_opc: led_pins@0 {
->>>>                 pins = "PL10";
->>>> --
->>>> 2.13.0
->>>> 
+DQoNCk9uIDA3LzI2LzIwMTcgMDc6MjkgQU0sIFZpbm9kIEtvdWwgd3JvdGU6DQo+IE9uIE1vbiwg
+SnVsIDI0LCAyMDE3IGF0IDAxOjU1OjEwUE0gKzAwMDAsIFBpZXJyZSBZdmVzIE1PUkRSRVQgd3Jv
+dGU6DQo+IA0KPj4+PiArDQo+Pj4+ICsJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYs
+IElPUkVTT1VSQ0VfTUVNLCAwKTsNCj4+Pj4gKwlpZiAoIXJlcykNCj4+Pj4gKwkJcmV0dXJuIC1F
+Tk9ERVY7DQo+Pj4+ICsNCj4+Pj4gKwlpb21lbSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRl
+di0+ZGV2LCByZXMpOw0KPj4+PiArCWlmICghaW9tZW0pDQo+Pj4+ICsJCXJldHVybiAtRU5PTUVN
+Ow0KPj4+PiArDQo+Pj4+ICsJc3Bpbl9sb2NrX2luaXQoJnN0bTMyX2RtYW11eC0+bG9jayk7DQo+
+Pj4+ICsNCj4+Pj4gKwlzdG0zMl9kbWFtdXgtPmNsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2
+LCBOVUxMKTsNCj4+Pj4gKwlpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSkgew0KPj4+PiAr
+CQlkZXZfaW5mbygmcGRldi0+ZGV2LCAiTWlzc2luZyBjb250cm9sbGVyIGNsb2NrXG4iKTsNCj4+
+Pg0KPj4+IENhbiB5b3UgY2hlY2sgZm9yIEVQUk9CRV9ERUZFUiBhbmQgcHJpbnQgb25seSBmb3Ig
+aWYgdGhhdCBpcyBub3QgdGhlIGVycm9yDQo+Pj4gb3RoZXJ3aXNlIHdlIGVuZCB1cCBzYXBtbWlu
+ZyB3aXRoIGRlZmVyZWQgcHJvYmUgaXNzdWVzDQo+Pj4NCj4+DQo+PiBUaGlzIGlzIHdoYXQgeW91
+IG1lYW50ID8NCj4+IAlpZiAoSVNfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKSAhPSBFUFJPQkVfREVG
+RVIpIHsNCj4+IAkJZGV2X2luZm8oJnBkZXYtPmRldiwgIk1pc3NpbmcgY29udHJvbGxlciBjbG9j
+a1xuIik7DQo+PiAJCXJldHVybiBQVFJfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKTsNCj4+IAl9DQo+
+Pg0KPj4gT1INCj4+DQo+PiAJaWYgKElTX0VSUihzdG0zMl9kbWFtdXgtPmNsaykpIHsNCj4+IAkJ
+aWYgKElTX0VSUihzdG0zMl9kbWFtdXgtPmNsaykgIT0gRVBST0JFX0RFRkVSKQ0KPj4gCQkJZGV2
+X2luZm8oJnBkZXYtPmRldiwgIk1pc3NpbmcgY29udHJvbGxlciBjbG9ja1xuIik7DQo+PiAJCXJl
+dHVybiBQVFJfRVJSKHN0bTMyX2RtYW11eC0+Y2xrKTsNCj4+IAl9DQo+IA0KPiBUaGlzIG9uZSBw
+bGVhc2UNCj4gDQoNCm9rDQoNCj4+DQo+Pj4+ICsNCj4+Pj4gKyNpZm5kZWYgX19ETUFfU1RNMzJf
+RE1BTVVYX0gNCj4+Pj4gKyNkZWZpbmUgX19ETUFfU1RNMzJfRE1BTVVYX0gNCj4+Pj4gKw0KPj4+
+PiArI2lmIGRlZmluZWQoQ09ORklHX1NUTTMyX0RNQU1VWCkNCj4+Pj4gK2ludCBzdG0zMl9kbWFt
+dXhfc2V0X2NvbmZpZyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKnJvdXRlX2RhdGEsIHUzMiBj
+aGFuX2lkKTsNCj4+Pg0KPj4+IFdoeSBkbyB3ZSBuZWVkIGEgY3VzdG9tIEFQSSBpbiB0aGlzIGNh
+c2U/DQo+Pj4NCj4+DQo+PiBUaGlzIEFQSSBpcyBjYWxsZWQgYnkgRE1BIHdoZW4gYSBzbGF2ZSBp
+cyByZXF1ZXN0ZWQgYnkgY2xpZW50LiBETUEgY2FuIHdvcmsNCj4+IHdpdGhvdXQgRE1BTVVYIHRo
+aXMgQVBJIGhhcyBiZWVuIHB1dCBpbiBwbGFjZSB0byBjb25maWd1cmUgRE1BTVVYIHdoZXRoZXIg
+Y2xpZW50DQo+PiBpcyByZXF1ZXN0aW5nIGEgRE1BTVVYIENoYW5uZWwgaW5zdGVhZCBvZiBhIERN
+QSBvbmUuDQo+IA0KPiBZb3UgbWVhbiB0aGUgZG1hZW5naW5lIGRyaXZlciByaWdodD8NCj4gDQoN
+Clllcy4gVGhlIEFQSSBpcyBtYWlubHkgY2FsbGVkIGJ5ICJkZXZpY2VfY29uZmlnIiB0aHJvdWdo
+IG91dCBTVE0zMiBETUEgRHJpdmVyDQp3aGVuIGEgcm91dGVyIGlzIGluIHBsYWNlIGZvciBjbGll
+bnQuDQpQbGVhc2UgcmVmZXIgdG8gUGF0Y2ggNC81IG9uIHRoaXMgc2V0Lg0KDQpUaGFua3MNClB5
