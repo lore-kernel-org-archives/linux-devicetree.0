@@ -1,125 +1,203 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v4 3/7] phy: qcom-qmp: Fix phy pipe clock name
-Date: Wed, 26 Jul 2017 20:59:07 +0530
-Message-ID: <c23942fd-68ba-69db-db05-b2ebef6b6a01@codeaurora.org>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 4/7] phy: qcom-qmp: Add support for IPQ8074
+Date: Wed, 26 Jul 2017 21:01:36 +0530
+Message-ID: <785581e8-84c9-9f7d-d545-46e567efc5c9@codeaurora.org>
 References: <1500636977-11934-1-git-send-email-varada@codeaurora.org>
- <1500636977-11934-4-git-send-email-varada@codeaurora.org>
+ <1500636977-11934-5-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1500636977-11934-4-git-send-email-varada@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500636977-11934-5-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: smuthayy <smuthayy-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 07/21/2017 05:06 PM, Varadarajan Narayanan wrote:
-> Presently, the phy pipe clock's name is assumed to be either
-> usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
-> phy lane's number). However, this will not work if an SoC has
-> more than one instance of the phy. Hence, instead of assuming
-> the name of the clock, fetch it from the DT.
+> Add definitions required to enable QMP phy support for IPQ8074.
 >
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> Signed-off-by: smuthayy <smuthayy-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 45 +++++++++++++++++++++++--------------
->   1 file changed, 28 insertions(+), 17 deletions(-)
+>   drivers/phy/qualcomm/phy-qcom-qmp.c | 124 ++++++++++++++++++++++++++++++++++++
+>   1 file changed, 124 insertions(+)
 >
 > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 78ca628..b046866 100644
+> index b046866..ec277fd 100644
 > --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
 > +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -925,20 +925,13 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
->    *    clk  |   +-------+   |                   +-----+
->    *         +---------------+
->    */
-> -static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
-> +static int phy_pipe_clk_register(struct qcom_qmp *qmp, const char *clk_name)
->   {
-> -	char name[24];
->   	struct clk_fixed_rate *fixed;
->   	struct clk_init_data init = { };
+> @@ -59,6 +59,7 @@
+>   #define QSERDES_COM_PLL_RCTRL_MODE1			0x088
+>   #define QSERDES_COM_PLL_CCTRL_MODE0			0x090
+>   #define QSERDES_COM_PLL_CCTRL_MODE1			0x094
+> +#define QSERDES_COM_BIAS_EN_CTRL_BY_PSM			0x0a8
+>   #define QSERDES_COM_SYSCLK_EN_SEL			0x0ac
+>   #define QSERDES_COM_RESETSM_CNTRL			0x0b4
+>   #define QSERDES_COM_RESTRIM_CTRL			0x0bc
+> @@ -143,6 +144,11 @@
+>   #define QPHY_LOCK_DETECT_CONFIG3			0x88
+>   #define QPHY_PWRUP_RESET_DLY_TIME_AUXCLK		0xa0
+>   #define QPHY_LP_WAKEUP_DLY_TIME_AUXCLK			0xa4
+> +#define QPHY_PLL_LOCK_CHK_DLY_TIME_AUXCLK_LSB		0x1A8
+> +#define QPHY_OSC_DTCT_ACTIONS				0x1AC
+> +#define QPHY_RX_SIGDET_LVL				0x1D8
+> +#define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB		0x1DC
+> +#define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB		0x1E0
 >   
-> -	switch (qmp->cfg->type) {
-> -	case PHY_TYPE_USB3:
-> -		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
-> -		break;
-> -	case PHY_TYPE_PCIE:
-> -		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
-> -		break;
-> -	default:
-> +	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
-> +	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
->   		/* not all phys register pipe clocks, so return success */
->   		return 0;
->   	}
-> @@ -947,7 +940,7 @@ static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
->   	if (!fixed)
->   		return -ENOMEM;
+>   /* QPHY_SW_RESET bit */
+>   #define SW_RESET				BIT(0)
+> @@ -580,6 +586,121 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+>   	.mask_pcs_ready		= PHYSTATUS,
+>   };
 >   
-> -	init.name = name;
-> +	init.name = clk_name;
->   	init.ops = &clk_fixed_rate_ops;
->   
->   	/* controllers using QMP phys use 125MHz pipe clock interface */
-> @@ -1110,6 +1103,8 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
->   
->   	id = 0;
->   	for_each_available_child_of_node(dev->of_node, child) {
-> +		const char *clk_name;
+> +static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x18),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0xf),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0x1f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x6),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0xf),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x20),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CORECLK_DIV, 0xa),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_RESETSM_CNTRL, 0x20),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0xa),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0xa),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x3),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x55),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0xD),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0xD04),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x33),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x2),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_BUF_ENABLE, 0x1f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0xb),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CTRL_BY_PSM, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0xa),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER1, 0x2),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER2, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0x2f),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x19),
+> +	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_EP_DIV, 0x19),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x7),
+> +};
 > +
->   		/* Create per-lane phy */
->   		ret = qcom_qmp_phy_create(dev, child, id);
->   		if (ret) {
-> @@ -1119,15 +1114,31 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
->   		}
->   
->   		/*
-> -		 * Register the pipe clock provided by phy.
-> -		 * See function description to see details of this pipe clock.
-> +		 * This property is mandatory only for PCIe/USB phys.
-> +		 * For other phy types don't return failure.
->   		 */
-> -		ret = phy_pipe_clk_register(qmp, id);
-> -		if (ret) {
-> -			dev_err(qmp->dev,
-> -				"failed to register pipe clock source\n");
-> +		ret = of_property_read_string(child, "clock-output-names",
-> +							&clk_name);
-> +		if (ret && (qmp->cfg->type == PHY_TYPE_PCIE ||
-> +			    qmp->cfg->type == PHY_TYPE_USB3)) {
+> +static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN, 0x45),
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x6),
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_RES_CODE_LANE_OFFSET, 0x2),
+> +	QMP_PHY_INIT_CFG(QSERDES_TX_RCV_DETECT_LVL_2, 0x12),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_ENABLES, 0x1c),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x14),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x1),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL3, 0x0),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xdb),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x4),
+> +	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN_HALF, 0x4),
+> +};
+> +
+> +static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
+> +	QMP_PHY_INIT_CFG(QPHY_ENDPOINT_REFCLK_DRIVE, 0x4),
+> +	QMP_PHY_INIT_CFG(QPHY_OSC_DTCT_ACTIONS, 0x0),
+> +	QMP_PHY_INIT_CFG(QPHY_PWRUP_RESET_DLY_TIME_AUXCLK, 0x40),
+> +	QMP_PHY_INIT_CFG(QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x0),
+> +	QMP_PHY_INIT_CFG(QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB, 0x40),
+> +	QMP_PHY_INIT_CFG(QPHY_PLL_LOCK_CHK_DLY_TIME_AUXCLK_LSB, 0x0),
+> +	QMP_PHY_INIT_CFG(QPHY_LP_WAKEUP_DLY_TIME_AUXCLK, 0x40),
+> +	QMP_PHY_INIT_CFG_L(QPHY_PLL_LOCK_CHK_DLY_TIME, 0x73),
+> +	QMP_PHY_INIT_CFG(QPHY_RX_SIGDET_LVL, 0x99),
+> +	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M6DB_V0, 0x15),
+> +	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M3P5DB_V0, 0xe),
+> +	QMP_PHY_INIT_CFG_L(QPHY_SW_RESET, 0x0),
+> +	QMP_PHY_INIT_CFG_L(QPHY_START_CTRL, 0x3),
+> +};
+> +
+> +/* list of resets */
+> +static const char * const ipq8074_pciephy_reset_l[] = {
+> +	"phy", "phy_phy",
+> +};
 
-Let's not check the phy type twice. Once here and once again in the
-phy_pipe_clk_register().
-May be we can move this property read in phy_pipe_clk_registe() itself.
-That way you can avoid passing the clk_name also. WDUT?
+Just a nit in this patch.
+Can you arrange these data inline to how they are currently in the driver?
+So please place the init tables along with other tables, and the reset and
+other driver data also along side other such definitions.
+Thanks
+
 
 Regards
-Vivek
-> +			dev_err(dev,
-> +				"failed to get clock-output-names for lane%d phy, %d\n",
-> +				id, ret);
->   			return ret;
->   		}
+vivek
+
 > +
-> +		if (!ret) {
-> +			/*
-> +			 * Register the pipe clock provided by phy. See function
-> +			 * description to see details of this pipe clock.
-> +			 */
-> +			ret = phy_pipe_clk_register(qmp, clk_name);
-> +			if (ret) {
-> +				dev_err(qmp->dev,
-> +					"failed to register pipe clock source\n");
-> +				return ret;
-> +			}
-> +		}
->   		id++;
->   	}
->   
+> +static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
+> +	.type			= PHY_TYPE_PCIE,
+> +	.nlanes			= 1,
+> +
+> +	.serdes_tbl		= ipq8074_pcie_serdes_tbl,
+> +	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_pcie_serdes_tbl),
+> +	.tx_tbl			= ipq8074_pcie_tx_tbl,
+> +	.tx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_tx_tbl),
+> +	.rx_tbl			= ipq8074_pcie_rx_tbl,
+> +	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
+> +	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
+> +	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
+> +	.clk_list		= NULL,
+> +	.num_clks		= 0,
+> +	.reset_list		= ipq8074_pciephy_reset_l,
+> +	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
+> +	.vreg_list		= NULL,
+> +	.num_vregs		= 0,
+> +	.regs			= pciephy_regs_layout,
+> +
+> +	.start_ctrl		= SERDES_START | PCS_START,
+> +	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> +	.mask_pcs_ready		= PHYSTATUS,
+> +
+> +	.has_phy_com_ctrl	= false,
+> +	.has_lane_rst		= false,
+> +	.has_pwrdn_delay	= true,
+> +	.pwrdn_delay_min	= 995,		/* us */
+> +	.pwrdn_delay_max	= 1005,		/* us */
+> +};
+> +
+>   static void qcom_qmp_phy_configure(void __iomem *base,
+>   				   const unsigned int *regs,
+>   				   const struct qmp_phy_init_tbl tbl[],
+> @@ -1042,6 +1163,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+>   	}, {
+>   		.compatible = "qcom,msm8996-qmp-usb3-phy",
+>   		.data = &msm8996_usb3phy_cfg,
+> +	}, {
+> +		.compatible = "qcom,ipq8074-qmp-pcie-phy",
+> +		.data = &ipq8074_pciephy_cfg,
+>   	},
+>   	{ },
+>   };
 
 -- 
 The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
