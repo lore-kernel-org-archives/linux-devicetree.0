@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 1/9] dt-bindings: mfd: axp20x: Add AXP806 to
- supported list of chips
-Date: Wed, 26 Jul 2017 16:28:24 +0800
-Message-ID: <20170726082832.16789-2-wens@csie.org>
+Subject: [PATCH v2 6/9] ARM: sun8i: a83t: cubietruck-plus:
+ Enable PMIC part of AXP818 PMIC
+Date: Wed, 26 Jul 2017 16:28:29 +0800
+Message-ID: <20170726082832.16789-7-wens@csie.org>
 References: <20170726082832.16789-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBM5F4HFQKGQEDU32R3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNFF4HFQKGQE65WVHLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170726082832.16789-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,30 +20,41 @@ To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The binding already lists compatibles and regulators for the AXP806,
-but it is missing from the list of supported chips at the beginning.
+The AXP813/AXP818 PMICs used with the A83T/H8 SoCs are actually 2 dies
+in one package sharing the serial bus (I2C/RSB) pins. One die is the
+actual PMIC. The other is an AC100 codec / RTC combo chip.
 
-Add it.
+This patch enables the RSB controller and adds a device node for the
+PMIC die to the Cubietruck Plus device tree. Since the AXP813 and
+AXP818 are virtually identical, this patch uses the compatible string
+for the former as a fallback.
 
-Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index aca09af66514..211a100c6b20 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -7,6 +7,7 @@ axp209 (X-Powers)
- axp221 (X-Powers)
- axp223 (X-Powers)
- axp803 (X-Powers)
-+axp806 (X-Powers)
- axp809 (X-Powers)
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index 163ddf8868b5..d88a22ac6222 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -129,6 +129,17 @@
+ 	status = "okay";
+ };
  
- Required properties:
++&r_rsb {
++	status = "okay";
++
++	axp81x: pmic@3a3 {
++		compatible = "x-powers,axp818", "x-powers,axp813";
++		reg = <0x3a3>;
++		interrupt-parent = <&r_intc>;
++		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++	};
++};
++
+ &spdif {
+ 	status = "okay";
+ };
 -- 
 2.13.3
