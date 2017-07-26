@@ -1,182 +1,55 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
-Date: Wed, 26 Jul 2017 13:01:56 -0700
-Message-ID: <20170726200156.30161-1-eric@anholt.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
+Date: Wed, 26 Jul 2017 22:04:03 +0200
+Message-ID: <20170726200403.GD6873@airbook.vandijck-laurijssen.be>
+References: <20170719233654.25908-1-fcooper@ti.com>
+ <20170719233654.25908-2-fcooper@ti.com>
+ <f45ea1b4-0f46-0002-a89b-b997f2693bb5@hartkopp.net>
+ <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-BCM2837 is somewhat unusual in that we build its DT on both arm32 and
-arm64.  Most devices are being run in arm32 mode.
+Hi,
 
-Having the body of the DT for 2837 separate from 2835/6 has been a
-source of pain, as we often need to make changes that span both
-directories simultaneously (for example, the thermal changes for 4.13,
-or anything that changes the name of a node referenced by '&' from
-board files).  Other changes are made more complicated than they need
-to be, such as the SDHOST enabling, because we have to split a single
-logical change into a 283[56] half and a 2837 half.
+I know my response is late ...
 
-To fix this, make the stub board include file live in arm64 instead of
-arm32, and keep all of BCM283x's contents in arm32.  From here on, our
-changes to DT contents can be submitted through a single tree.
+> Hi Oliver
+> On 07/20/2017 02:43 AM, Oliver Hartkopp wrote:
+> > Hi Franklin,
+> > 
+> > On 07/20/2017 01:36 AM, Franklin S Cooper Jr wrote:
+> > 
+> >> +#ifdef CONFIG_OF
+> >> +void of_transceiver_is_fixed(struct net_device *dev)
+> >> +{
+> > 
+> > (..)
+> > 
+> >> +}
+> >> +EXPORT_SYMBOL(of_transceiver_is_fixed);
+> >> +#endif
+> > 
+> > I'm not sure about the naming here.
+> > 
+> > As this is a CAN transceiver related option it should be named accordingly:
 
-Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
----
+I contest the the name too:
+1) the can transceiver isn't fixed at all, it limited to the higher
+bitrates.
 
-v2: Drop the .dtsi symlinks from arm64 -- they get successfully found
-    by the .dtsi in arm/
+2) of_can_transceiver_is_fixed suggests to test if a transceiver is
+fixed, it does not suggest to load some properties from the device tree.
+of_can_load_transceiver looks way more clear to me.
 
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 +++++++++++++++++++++-
- .../dts/broadcom => arm/boot/dts}/bcm2837.dtsi     |  0
- arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi      |  1 -
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +---------------------
- .../boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi    |  1 -
- .../boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi    |  1 -
- arch/arm64/boot/dts/broadcom/bcm283x.dtsi          |  1 -
- 7 files changed, 42 insertions(+), 46 deletions(-)
- rename arch/{arm64/boot/dts/broadcom => arm/boot/dts}/bcm2837.dtsi (100%)
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
- delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+That's my opinion.
+The important things, like the contents of the functions, look good.
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index c72a27d908b6..972f14db28ac 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -1 +1,41 @@
--#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
-+/dts-v1/;
-+#include "bcm2837.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-smsc9514.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-+	model = "Raspberry Pi 3 Model B";
-+
-+	memory {
-+		reg = <0 0x40000000>;
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 0>;
-+		};
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+/* SDHCI is used to control the SDIO for wireless */
-+&sdhci {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emmc_gpio34>;
-+	status = "okay";
-+	bus-width = <4>;
-+	non-removable;
-+};
-+
-+/* SDHOST is used to drive the SD card */
-+&sdhost {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdhost_gpio48>;
-+	status = "okay";
-+	bus-width = <4>;
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-similarity index 100%
-rename from arch/arm64/boot/dts/broadcom/bcm2837.dtsi
-rename to arch/arm/boot/dts/bcm2837.dtsi
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-deleted file mode 120000
-index 3937b77cb310..000000000000
---- a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm/boot/dts/bcm2835-rpi.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-index 972f14db28ac..699d340a3437 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-@@ -1,41 +1 @@
--/dts-v1/;
--#include "bcm2837.dtsi"
--#include "bcm2835-rpi.dtsi"
--#include "bcm283x-rpi-smsc9514.dtsi"
--#include "bcm283x-rpi-usb-host.dtsi"
--
--/ {
--	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
--	model = "Raspberry Pi 3 Model B";
--
--	memory {
--		reg = <0 0x40000000>;
--	};
--
--	leds {
--		act {
--			gpios = <&gpio 47 0>;
--		};
--	};
--};
--
--&uart1 {
--	status = "okay";
--};
--
--/* SDHCI is used to control the SDIO for wireless */
--&sdhci {
--	pinctrl-names = "default";
--	pinctrl-0 = <&emmc_gpio34>;
--	status = "okay";
--	bus-width = <4>;
--	non-removable;
--};
--
--/* SDHOST is used to drive the SD card */
--&sdhost {
--	pinctrl-names = "default";
--	pinctrl-0 = <&sdhost_gpio48>;
--	status = "okay";
--	bus-width = <4>;
--};
-+#include "arm/bcm2837-rpi-3-b.dts"
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-deleted file mode 120000
-index dca7c057d5a5..000000000000
---- a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
-deleted file mode 120000
-index cbeebe312ff8..000000000000
---- a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm/boot/dts/bcm283x-rpi-usb-host.dtsi
-\ No newline at end of file
-diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-deleted file mode 120000
-index 5f54e4cab99b..000000000000
---- a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
-+++ /dev/null
-@@ -1 +0,0 @@
--../../../../arm/boot/dts/bcm283x.dtsi
-\ No newline at end of file
--- 
-2.13.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+Kurt Van Dijck
