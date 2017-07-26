@@ -1,26 +1,51 @@
-From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v2 0/1] Introduce Device Tree bindings for Mellanox programming devices
-Date: Wed, 26 Jul 2017 22:29:43 +0000
-Message-ID: <1501108184-17088-1-git-send-email-vadimp@mellanox.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: exynos: fix PCI bus dtc warnings
+Date: Wed, 26 Jul 2017 16:09:38 -0500
+Message-ID: <20170726210943.6875-2-robh@kernel.org>
+References: <20170726210943.6875-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726210943.6875-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch related to the previously sent:
-[patch v2 1/2] mfd: Add Mellanox regmap core driver
+dtc recently added PCI bus checks. Fix these warnings.
 
-Vadim Pasternak (1):
-  Documentation: dt-bindings: Add Device Tree bindings for Mellanox
-    programming devices
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+v2:
+- rebase on v4.13-rc2
 
- .../devicetree/bindings/mfd/mellanox,mlxreg-core   | 346 +++++++++++++++++++++
- 1 file changed, 346 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
+ arch/arm/boot/dts/exynos5440.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+index bc4954e69f7b..7a00be7ea6d7 100644
+--- a/arch/arm/boot/dts/exynos5440.dtsi
++++ b/arch/arm/boot/dts/exynos5440.dtsi
+@@ -317,6 +317,7 @@
+ 		phys = <&pcie_phy0>;
+ 		ranges = <0x81000000 0 0	  0x40001000 0 0x00010000   /* downstream I/O */
+ 			  0x82000000 0 0x40011000 0x40011000 0 0x1ffef000>; /* non-prefetchable memory */
++		bus-range = <0x00 0xff>;
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 0 0>;
+ 		interrupt-map = <0x0 0 &gic 53>;
+@@ -339,6 +340,7 @@
+ 		phys = <&pcie_phy1>;
+ 		ranges = <0x81000000 0 0	  0x60001000 0 0x00010000   /* downstream I/O */
+ 			  0x82000000 0 0x60011000 0x60011000 0 0x1ffef000>; /* non-prefetchable memory */
++		bus-range = <0x00 0xff>;
+ 		#interrupt-cells = <1>;
+ 		interrupt-map-mask = <0 0 0 0>;
+ 		interrupt-map = <0x0 0 &gic 56>;
 -- 
-2.1.4
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
