@@ -1,102 +1,181 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
-Date: Wed, 26 Jul 2017 13:00:02 -0700
-Message-ID: <87y3rbx931.fsf@eliezer.anholt.net>
-References: <20170719201916.22369-1-eric@anholt.net> <a2e79c17-f345-e7f2-8438-d4754e4ceb3a@broadcom.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Subject: [PATCH v2] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
+Date: Wed, 26 Jul 2017 13:01:56 -0700
+Message-ID: <20170726200156.30161-1-eric@anholt.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a2e79c17-f345-e7f2-8438-d4754e4ceb3a-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+BCM2837 is somewhat unusual in that we build its DT on both arm32 and
+arm64.  Most devices are being run in arm32 mode.
 
-Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> writes:
+Having the body of the DT for 2837 separate from 2835/6 has been a
+source of pain, as we often need to make changes that span both
+directories simultaneously (for example, the thermal changes for 4.13,
+or anything that changes the name of a node referenced by '&' from
+board files).  Other changes are made more complicated than they need
+to be, such as the SDHOST enabling, because we have to split a single
+logical change into a 283[56] half and a 2837 half.
 
-> Hi Eric,
->
-> suggestion inline
->
->
-> On 17-07-19 01:19 PM, Eric Anholt wrote:
->> BCM2837 is somewhat unusual in that we build its DT on both arm32 and
->> arm64.  Most devices are being run in arm32 mode.
->>
->> Having the body of the DT for 2837 separate from 2835/6 has been a
->> source of pain, as we often need to make changes that span both
->> directories simultaneously (for example, the thermal changes for 4.13,
->> and pinmuxing changes earlier).  Other changes are made more
->> complicated than they need to be, such as the SDHOST enabling, because
->> we end up splitting a single change into a 283[56] half and a 2837
->> half.
->>
->> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> ---
->>
->> I had asked about what we could do about our DT merging troubles back
->> in https://lkml.org/lkml/2017/5/16/707 with no response.  I'm hoping
->> we can take this patch as a resolution to that, and submit (almost
->> all) future RPi DT changes through the arm32 dt tree.
->>
->>
->>   arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 ++++++++++++++=
-+++++++-
->>   .../dts/broadcom =3D> arm/boot/dts}/bcm2837.dtsi     |  0
->>   arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +-------------=
---------
->>   3 files changed, 42 insertions(+), 42 deletions(-)
->>   rename arch/{arm64/boot/dts/broadcom =3D> arm/boot/dts}/bcm2837.dtsi (=
-100%)
->>
->> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/b=
-cm2837-rpi-3-b.dts
->> index c72a27d908b6..972f14db28ac 100644
->> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> @@ -1 +1,41 @@
->> -#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
->> +/dts-v1/;
->> +#include "bcm2837.dtsi"
->> +#include "bcm2835-rpi.dtsi"
->> +#include "bcm283x-rpi-smsc9514.dtsi"
->> +#include "bcm283x-rpi-usb-host.dtsi"
-> If you're moving this back to the arm directory why not change the=20
-> include path and remove the 4 symlinks in arm64/boot/dts/broadcom?
->
-> +#include "arm/bcm2837.dtsi"
-> +#include "arm/bcm2835-rpi.dtsi"
-> +#include "arm/bcm283x-rpi-smsc9514.dtsi"
-> +#include "arm/bcm283x-rpi-usb-host.dtsi"
+To fix this, make the stub board include file live in arm64 instead of
+arm32, and keep all of BCM283x's contents in arm32.  From here on, our
+changes to DT contents can be submitted through a single tree.
 
-Even better, it seems we don't need the arm/ here -- when we're
-processing the include in arm/, the neighboring files get found.
+Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+---
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+v2: Drop the .dtsi symlinks from arm64 -- they get successfully found
+    by the .dtsi in arm/
 
------BEGIN PGP SIGNATURE-----
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts              | 42 +++++++++++++++++++++-
+ .../dts/broadcom => arm/boot/dts}/bcm2837.dtsi     |  0
+ arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi      |  1 -
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 42 +---------------------
+ .../boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi    |  1 -
+ .../boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi    |  1 -
+ arch/arm64/boot/dts/broadcom/bcm283x.dtsi          |  1 -
+ 7 files changed, 42 insertions(+), 46 deletions(-)
+ rename arch/{arm64/boot/dts/broadcom => arm/boot/dts}/bcm2837.dtsi (100%)
+ delete mode 120000 arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+ delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+ delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
+ delete mode 120000 arch/arm64/boot/dts/broadcom/bcm283x.dtsi
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAll49MIACgkQtdYpNtH8
-nuh5PQ/+MhruFd5DEZicJPY7xe3Od2ztwr1n8GxjD1Wc9QBz3hINy3xX8B8ibjI1
-NHHcHjs0TgDxHCsO7GaiZwrygYP/pThlI8zExGAu5Y7Bh8w926pUgUYk7pVG/nU8
-ew5ksvB9cVgaTYIjXUjOTK3Vb88TQX1GYL1wdaY90It/O8kl1k3we9VyuC7HfZxl
-6CUz9iycReIPF4S3t9byI1jlfVwiPjleO49FE6zlMO7lus3kiu1ExWVSlscojmpR
-EsAl9Gzg6EpZUyrtDvUBucylvHt8AztwMnwlNVdTCAUMe2mUQry/gR9viRCFtcNz
-qvYOyuE/MSmCIEzhXNqxbLpXxDvPaXUfIrm7ny66dBMC067jUA+mbK4OghfOFx23
-jM4lQ/Q8x70dGm3ANYwRyAH6Iszv4ea6TC8ttrrzqdTxzAf9BE/lJOWfW7EltRTv
-UiEZrNNvOgcqY/vibkx+CPSoWqGIsl+ve7WAEFzrTb9zawNaFYnBJqZSRka5kEnM
-TPqIxqCVdRNt9MId7Bc8RdcI1Z6r6Xtw5XAf3R4t2UGNmodVJU2Bldjx4noxz+vX
-dmzltn3Nkcg4nRA2GHqBInqSMqWFiC9tQ8guhTJ+HB7oo+tSsd3wdn9wYWJhP4Gy
-yZHaUtvOTk7xP71qcjjLCPckAfIOGSRZi+vHxjj7QXUqr1UVEBY=
-=J1PF
------END PGP SIGNATURE-----
---=-=-=--
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index c72a27d908b6..972f14db28ac 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -1 +1,41 @@
+-#include "arm64/broadcom/bcm2837-rpi-3-b.dts"
++/dts-v1/;
++#include "bcm2837.dtsi"
++#include "bcm2835-rpi.dtsi"
++#include "bcm283x-rpi-smsc9514.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
++
++/ {
++	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
++	model = "Raspberry Pi 3 Model B";
++
++	memory {
++		reg = <0 0x40000000>;
++	};
++
++	leds {
++		act {
++			gpios = <&gpio 47 0>;
++		};
++	};
++};
++
++&uart1 {
++	status = "okay";
++};
++
++/* SDHCI is used to control the SDIO for wireless */
++&sdhci {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	status = "okay";
++	bus-width = <4>;
++	non-removable;
++};
++
++/* SDHOST is used to drive the SD card */
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
++	bus-width = <4>;
++};
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+similarity index 100%
+rename from arch/arm64/boot/dts/broadcom/bcm2837.dtsi
+rename to arch/arm/boot/dts/bcm2837.dtsi
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi b/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
+deleted file mode 120000
+index 3937b77cb310..000000000000
+--- a/arch/arm64/boot/dts/broadcom/bcm2835-rpi.dtsi
++++ /dev/null
+@@ -1 +0,0 @@
+-../../../../arm/boot/dts/bcm2835-rpi.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 972f14db28ac..699d340a3437 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -1,41 +1 @@
+-/dts-v1/;
+-#include "bcm2837.dtsi"
+-#include "bcm2835-rpi.dtsi"
+-#include "bcm283x-rpi-smsc9514.dtsi"
+-#include "bcm283x-rpi-usb-host.dtsi"
+-
+-/ {
+-	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+-	model = "Raspberry Pi 3 Model B";
+-
+-	memory {
+-		reg = <0 0x40000000>;
+-	};
+-
+-	leds {
+-		act {
+-			gpios = <&gpio 47 0>;
+-		};
+-	};
+-};
+-
+-&uart1 {
+-	status = "okay";
+-};
+-
+-/* SDHCI is used to control the SDIO for wireless */
+-&sdhci {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&emmc_gpio34>;
+-	status = "okay";
+-	bus-width = <4>;
+-	non-removable;
+-};
+-
+-/* SDHOST is used to drive the SD card */
+-&sdhost {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&sdhost_gpio48>;
+-	status = "okay";
+-	bus-width = <4>;
+-};
++#include "arm/bcm2837-rpi-3-b.dts"
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
+deleted file mode 120000
+index dca7c057d5a5..000000000000
+--- a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-smsc9514.dtsi
++++ /dev/null
+@@ -1 +0,0 @@
+-../../../../arm/boot/dts/bcm283x-rpi-smsc9514.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
+deleted file mode 120000
+index cbeebe312ff8..000000000000
+--- a/arch/arm64/boot/dts/broadcom/bcm283x-rpi-usb-host.dtsi
++++ /dev/null
+@@ -1 +0,0 @@
+-../../../../arm/boot/dts/bcm283x-rpi-usb-host.dtsi
+\ No newline at end of file
+diff --git a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi b/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
+deleted file mode 120000
+index 5f54e4cab99b..000000000000
+--- a/arch/arm64/boot/dts/broadcom/bcm283x.dtsi
++++ /dev/null
+@@ -1 +0,0 @@
+-../../../../arm/boot/dts/bcm283x.dtsi
+\ No newline at end of file
+-- 
+2.13.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
