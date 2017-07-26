@@ -1,44 +1,97 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH V3 1/4] ARM64: dts: rockchip: rk3328 add iommu nodes
-Date: Wed, 26 Jul 2017 13:44:02 +0200
-Message-ID: <7545443.2JTXH2SMA9@diego>
-References: <1500863530-32792-1-git-send-email-xxm@rock-chips.com> <20170726105818.GK15833@8bytes.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [linux-sunxi] [PATCH 10/10] ARM: dts: sun8i: Add SY8106A
+ regulator to Orange Pi PC
+Date: Wed, 26 Jul 2017 13:44:20 +0200
+Message-ID: <20170726114420.ipirqgbluqmggcjy@flea>
+References: <20170723102749.17323-1-icenowy@aosc.io>
+ <20170723102749.17323-11-icenowy@aosc.io>
+ <CAGb2v66AGjazHT-+hWVLyNBLDw=DJ5yTmNxF-_=BtZFfjnni-A@mail.gmail.com>
+ <25C8A89C-8495-4787-934C-8E9667CD70BF@aosc.io>
+ <CAGb2v64xXOmC44TKrSDZFAh6i_rgFEccCHj4EG+1fxFJd9fjjw@mail.gmail.com>
+ <82507f40a1ddba8517cf09f51d3afa33@aosc.io>
+ <1501064628.14577.1.camel@megous.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726105818.GK15833-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="tpwlf6xvobw3hsae"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501064628.14577.1.camel@megous.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+Cc: icenowy@aosc.io, wens@csie.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
 
-Am Mittwoch, 26. Juli 2017, 12:58:19 CEST schrieb Joerg Roedel:
-> On Mon, Jul 24, 2017 at 10:32:07AM +0800, Simon Xue wrote:
-> > Add H265e/VEPU/VPU/VDEC/VOP iommu nodes
-> > 
-> > Signed-off-by: Simon Xue <xxm-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > ---
-> > 
-> > changes since V2:
-> >  - none
-> >  
-> >  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 45
-> >  ++++++++++++++++++++++++++++++++ 1 file changed, 45 insertions(+)
-> 
-> Applied all, thanks.
+--tpwlf6xvobw3hsae
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I really would prefer iommu dt-nodes going through my tree :-)
+Hi,
 
-Especially as parts of these conflict with already pending patches for
-graphics support and with the iommu nodes sitting in your tree these
-would need to wait another kernel release.
+On Wed, Jul 26, 2017 at 12:23:48PM +0200, Ond=C5=99ej Jirman wrote:
+> Hi,
+>=20
+> icenowy@aosc.io p=C3=AD=C5=A1e v St 26. 07. 2017 v 15:36 +0800:
+> >=20
+> > > > >=20
+> > > > > Otherwse
+> > > > >=20
+> > > > > > +               regulator-max-microvolt =3D <1400000>;
+> > > > > > +               regulator-ramp-delay =3D <200>;
+> > > > >=20
+> > > > > Is this an actual constraint of the SoC? Or is it a characteristic
+> > > > > of the regulator? If it is the latter, it belongs in the driver.
+> > > > > AFAIK the regulator supports varying the ramp delay (slew rate).
+> >=20
+> > I don't know...
+> >=20
+> > Maybe I should ask Ondrej?
+>=20
+> It is probably neither.
+>=20
+> It is used to calculate a delay inserted by the kernel between setting
+> a new target voltage over I2C and changing the frequency of the CPU.
+> The actual delay is calculated by the difference between previous and
+> the new voltage.
+>=20
+> I don't remember seeing anything in the datasheet of the regulator.
+> This is just some low value that works.
+>=20
+> It would probably be dependent on the capacitance on the output of the
+> regulator, actual load (which varies), etc. So it is a board specific
+> value. One could measure it with an oscilloscope if there's a need to
+> optimize this.
 
+If this is a reasonable default, then this should be in the
+driver. You can't expect anyone to properly calculate a ramp delay and
+have access to both a scope and the CPU power lines.
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--tpwlf6xvobw3hsae
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZeICUAAoJEBx+YmzsjxAgnDgP/jvGHNkgGXAkd3SWUgBf3Rqk
+4rOyU+/OnTtKBYWImQ+PYHGvL5dNTJtGRIzRVGaL50ZjUT8GbMTaUOrwJu51c3kP
+Psbt2w4TQCrjbw/Qe/KoePCPsI9nT6JWnAsdYSQTiN0M9FUF6JQBS6dxSjeBpP6s
+sY+1ogf5qlQf/Pe5FNkeNgmuVC03Pthsl68Ua13X0YSjIsjEFNrnExDGhG8W9ZVW
+MLcOTTNjpwMLdLUUWOa44RI1ud/x/h1ejyOArbRBiwoDNG66y2cwEBojjHXYMNu+
+LScMmvq6dICFRsOGd71aUNm57NiW5T1lKLuWfL0uOXLMZmnOuwyAJtIt983dfEJt
+xkRjjaBmY+nfTNZsZwzp/5dfLS/btHKig676oeHVbHuTy+qVJqTni9oKKhKQxfFw
+7WJ5RpYo7/DcQDf6G2mSrh1iKp9ypA4Y2Olz+orECuGkjAWvO138BgIXRwNkxlQZ
+5RMIPyzRxiCmndaxSF3Jp6OFtGUGlPhH2Wxv3TwDRteOWELlmEC2MDVM1tUDy8pl
+o6qVuPzJU/dntWYg7DovJLcVxQDSDKuyJQLIun1dCgKE+erdMuDxh+1wwuiKoCnt
+S8FL+K0VZG+hVHM9fwVX47TijDI+FORTnZFYjIUutWJv/CN/tN+svrPi11+PgO5k
+P+OodljiTEvlm/sOqeoh
+=qLeE
+-----END PGP SIGNATURE-----
+
+--tpwlf6xvobw3hsae--
