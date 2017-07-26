@@ -1,112 +1,78 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Wed, 26 Jul 2017 14:32:27 +1000
-Message-ID: <20170726043227.GC8978@umbus.fritz.box>
-References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
- <20170703090648.GV13989@umbus.fritz.box>
- <5967CAA6.6010801@gmail.com>
- <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
- <5967D2F7.60303@gmail.com>
- <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
- <5967E8BC.4090307@gmail.com>
- <1500016861.19864.26.camel@hp800z>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] dmaengine: Add STM32 MDMA driver
+Date: Wed, 26 Jul 2017 10:30:07 +0530
+Message-ID: <20170726050007.GE3053@localhost>
+References: <1499343941-6375-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343941-6375-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170721075547.GO3053@localhost>
+ <ee278ecf-02a3-7799-888a-9590d1105bb3@st.com>
+ <20170721095411.GR3053@localhost>
+ <3c04c9bf-572d-98a6-ff62-83498bbc7fdf@st.com>
+ <20170721171735.GS3053@localhost>
+ <320f8def-19a4-0491-e879-b41815889e15@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="La/RrqhzniGiVaa5"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1500016861.19864.26.camel@hp800z>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <320f8def-19a4-0491-e879-b41815889e15-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 24, 2017 at 09:34:18AM +0000, Pierre Yves MORDRET wrote:
+> 
+> On 07/21/2017 12:32 PM, Pierre Yves MORDRET wrote:
+>  >
+>  >
+>  > On 07/21/2017 11:54 AM, Vinod Koul wrote:
+>  >> On Fri, Jul 21, 2017 at 09:30:00AM +0000, Pierre Yves MORDRET wrote:
+>  >>>>> +static enum dma_slave_buswidth stm32_mdma_get_max_width(u32 buf_len, u32 
+> tlen)
+>  >>>>> +{
+>  >>>>> +	enum dma_slave_buswidth max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+>  >>>>> +
+>  >>>>> +	while (((buf_len % max_width) || (tlen < max_width)) &&
+>  >>>>> +	       (max_width > DMA_SLAVE_BUSWIDTH_1_BYTE))
+>  >>>>> +		max_width = max_width >> 1;
+>  >>>>
+>  >>>> ok, this is a bit hard to read...
+>  >>>
+>  >>> This code snippet has already been reworked and optimized. Would you mind to
+>  >>> provide me a example with your expectation ? Thanks
+>  >>
+>  >> Code is optimized yes, but readable no
+>  >>
+>  >> I would like readability to be improved upon...
+>  >>
+>  >
+>  > gotcha
+>  >
+> 
+> Doest he code snippet below has a better looking for you ?
+> 
+> 	for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+> 	     max_width > DMA_SLAVE_BUSWIDTH_1_BYTE; max_width >>= 1)
+> 		if (((buf_len % max_width) == 0) && (tlen >= max_width))
+> 			break;
 
---La/RrqhzniGiVaa5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Am actually not sure :(
 
-On Fri, Jul 14, 2017 at 10:21:01AM +0300, Pantelis Antoniou wrote:
-> Hi Frank,
->=20
-> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
-> > On 07/13/17 14:22, Phil Elwell wrote:
-> > > On 13/07/2017 21:07, Frank Rowand wrote:
-> > >> On 07/13/17 12:38, Phil Elwell wrote:
-> > >>
->=20
-> [snip]
->=20
-> > > hope an inability to solve the problem posed by this advanced usage w=
-on't
-> > > prevent a solution to a simpler problem from being accepted.
->=20
-> I have waited until people started commenting on this patchset before
-> replying.
->=20
-> I think we agree on a few things to keep the discussion moving forward.
->=20
-> 1. Stacked overlays are useful and make overlays easier to use.
+Indentation wise it is still a bit messy to follow..
 
-Agreed.
+How about:
 
-> 2. Changing the overlay symbols format now would be unwise.
+	for (max_width = DMA_SLAVE_BUSWIDTH_8_BYTES;
+			max_width > DMA_SLAVE_BUSWIDTH_1_BYTE;
+			max_width >>=1) {
+		if (((buf_len % max_width) == 0) && (tlen >= max_width))
+			break;
+	}
 
-Agreed.  At least, I don't think updating the symbols alone would be
-silly without revisiting everything in the overlay format and making
-something completely new.
-
-> 3. A number of extensions have been put forward/requested.
->=20
-> 3.1. There should be a method to place a symbol on a node that didn't
-> have one originally (due to vendor supplying broken DTB or being
-> generated by firmware at runtime).
-
-There already is.  An overlay can update *anything* in the base tree,
-including the /__symbols__ node.  Of course you need the exact path of
-the node to tag in the base tree, but you were always going to need
-that.
-
-> 3.2. Scoping symbol visibility in case of clashes. This can the ability
-> to put multiple path references to a single label/symbol. i.e.
-> foo =3D "/path/bar", "/path/bar/baz";
-> Resolving the ambiguity would require the caller to provide it's
-> 'location' on the tree. I.e. a device under /path/bar/baz would resolve
-> to the latter. It is a big change semantically.
-
-I think this would be a nice idea, but trying to do it as a update to
-the existing overlay format will be really difficult verging on
-impossible.
-
-Better to keep this in mind as a design goal for a new format to
-replace overlays.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---La/RrqhzniGiVaa5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll4G1sACgkQbDjKyiDZ
-s5LK7A//eW3gY6qCFwUptHHFmtUMZ46RLOrLSuMP8gcb+SItGndAblDRDFhan4OO
-W9MEX3z39fH1OT87iUmDd6psL4ymW0mO1myKxLkKN3djB8nTVBCsA/p/spyaeNEo
-g9HdHZSJ5vS30Yf/gU6iP+rQMEy1wiprI/xNHLq8fyH22HI8aVO+YRn+8JpR3KQP
-IqkFRfTVb36ixFSc/OtmwtLpWjTlphDTpWcSIudQpbVWqa8LxWXRIHjt3JQpAWIY
-nM/+tn73URcFZjYKSzyVyO68mjU/x72Z1NPbbXQ6aXTapjk5/cR/Nwre4jxIoCp6
-nUIO4lHo8RPt5tyI8YjwSjRQh30ZrPzg7Hxc46eWJSW5WfXlvhqYoUxl1zgU9ACa
-N9ZzAUEw5e8vXkRPPpzEkrOmHy0S53TzKIY4AINtKF4bbw5gqSdC/sPzZqcS79qc
-jvEmMngxFORAOuNGZBwbjP3iviCGVKgPI0mMcgBcnQC4capjPlxv2kur4ftpWn/r
-62K/ENn7cwtQeclggRtkrNvQzpsUCyYCfGCWxfOkaa+SYSYgNyOxgA5hAGI5t0Qq
-QZggGpYF1bGZrCnyEemo3Jv5D8pCLmLCC53IzY7zquimmCvE2vbL0cWLmmrAaacP
-tClqUdKmqldxanpHd+vlY7QFFZFbfRqkUEifIkz8ujUKkbrcw2U=
-=zMGs
------END PGP SIGNATURE-----
-
---La/RrqhzniGiVaa5--
+Thanks
+-- 
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
