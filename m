@@ -1,54 +1,65 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH V3 1/4] ARM64: dts: rockchip: rk3328 add iommu nodes
-Date: Wed, 26 Jul 2017 15:53:06 +0200
-Message-ID: <1668393.AqADimcrsl@diego>
-References: <1500863530-32792-1-git-send-email-xxm@rock-chips.com>
-	<7545443.2JTXH2SMA9@diego> <20170726122753.GQ15833@8bytes.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170726122753.GQ15833-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH RESEND v3 1/3] SoC: es8328-i2c: Add compatible for ES8323
+Date: Wed, 26 Jul 2017 15:55:16 +0200
+Message-ID: <20170726135526.475-2-romain.perier@collabora.com>
+References: <20170726135526.475-1-romain.perier@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726135526.475-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joerg,
+This commit adds a compatible string for everest,es8323. This is an
+audio codec that is compatible with es8328 and can be found for example
+on the Firefly-RK3288 board.
 
-Am Mittwoch, 26. Juli 2017, 14:27:53 CEST schrieb Joerg Roedel:
-> On Wed, Jul 26, 2017 at 01:44:02PM +0200, Heiko St=FCbner wrote:
-> > I really would prefer iommu dt-nodes going through my tree :-)
-> > =
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/es8328.txt | 5 ++++-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-> > Especially as parts of these conflict with already pending patches for
-> > graphics support and with the iommu nodes sitting in your tree these
-> > would need to wait another kernel release.
-> =
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 33fbf058c997..86b6d6e99732 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,10 @@ This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+-  - compatible  : Should be "everest,es8328" or "everest,es8388"
++  - compatible  : Should be one of the following:
++	- "everest,es8323"
++	- "everest,es8328"
++	- "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 318ab28c5351..be3f03c35137 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -19,6 +19,7 @@
+ #include "es8328.h"
+ 
+ static const struct i2c_device_id es8328_id[] = {
++	{ "es8323", 0 },
+ 	{ "es8328", 0 },
+ 	{ "es8388", 0 },
+ 	{ }
+@@ -26,6 +27,7 @@ static const struct i2c_device_id es8328_id[] = {
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
++	{ .compatible = "everest,es8323", },
+ 	{ .compatible = "everest,es8328", },
+ 	{ .compatible = "everest,es8388", },
+ 	{ }
+-- 
+2.11.0
 
-> Sure, no problem. I have nothing pushed yet, so it's easy to remove
-> again. Do you want to take all three patch-sets from Simon through your
-> tree or just this one?
-
-no, I'm of course fine with (and even very much in favor of) iommu-code
-going through your tree :-) . I just want to keep the devicetree changes
-together to prevent conflicts (and unnecessary wait times).
-
-Having code and dts changes go through different trees is no problem, as th=
-ey =
-
-don't have a compile-time dependencies on each other and come together nice=
-ly =
-
-in linux-next again.
-
-
-Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
