@@ -1,78 +1,86 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4/5] arm64: dts: renesas: r8a7795: add usb-dmac ch2 and ch3 device nodes
-Date: Wed, 26 Jul 2017 20:29:39 +0900
-Message-ID: <1501068580-3981-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 3/5] arm64: dts: renesas: r8a7795: add usb2.0 host ch3 device nodes
+Date: Wed, 26 Jul 2017 20:29:38 +0900
+Message-ID: <1501068580-3981-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for usb-dmac ch2 and ch3 device nodes for
-R-Car H3 ES2.0.
+This patch adds support for usb2.0 host ch3 device nodes for R-Car
+H3 ES2.0.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi |  3 +++
- arch/arm64/boot/dts/renesas/r8a7795.dtsi     | 28 ++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi |  2 ++
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi     | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-index 1eccc7c..9743aca 100644
+index 2c24943..1eccc7c 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-es1.dtsi
-@@ -25,6 +25,9 @@
- 	/delete-node/ usb@ee0e0100;
- 	/delete-node/ usb@ee0e0000;
+@@ -22,6 +22,8 @@
+ 	};
  
-+	/delete-node/ dma-controller@e6460000;
-+	/delete-node/ dma-controller@e6470000;
-+
+ 	/delete-node/ usb-phy@ee0e0200;
++	/delete-node/ usb@ee0e0100;
++	/delete-node/ usb@ee0e0000;
+ 
  	fcpf2: fcp@fe952000 {
  		compatible = "renesas,fcpf";
- 		reg = <0 0xfe952000 0 0x200>;
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-index c3b1285..d1381d9 100644
+index 1b20892..c3b1285 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
 +++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-@@ -1499,6 +1499,34 @@
- 			dma-channels = <2>;
+@@ -1628,6 +1628,19 @@
+ 			status = "disabled";
  		};
  
-+		usb_dmac2: dma-controller@e6460000 {
-+			compatible = "renesas,r8a7795-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe6460000 0 0x100>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 326>;
++		ehci3: usb@ee0e0100 {
++			compatible = "generic-ehci";
++			reg = <0 0xee0e0100 0 0x100>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 700>;
++			phys = <&usb2_phy3>;
++			phy-names = "usb";
++			companion= <&ohci3>;
 +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 326>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
++			resets = <&cpg 700>;
++			status = "disabled";
 +		};
 +
-+		usb_dmac3: dma-controller@e6470000 {
-+			compatible = "renesas,r8a7795-usb-dmac",
-+				     "renesas,usb-dmac";
-+			reg = <0 0xe6470000 0 0x100>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH
-+				      GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "ch0", "ch1";
-+			clocks = <&cpg CPG_MOD 329>;
+ 		ohci0: usb@ee080000 {
+ 			compatible = "generic-ohci";
+ 			reg = <0 0xee080000 0 0x100>;
+@@ -1664,6 +1677,18 @@
+ 			status = "disabled";
+ 		};
+ 
++		ohci3: usb@ee0e0000 {
++			compatible = "generic-ohci";
++			reg = <0 0xee0e0000 0 0x100>;
++			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 700>;
++			phys = <&usb2_phy3>;
++			phy-names = "usb";
 +			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+			resets = <&cpg 329>;
-+			#dma-cells = <1>;
-+			dma-channels = <2>;
++			resets = <&cpg 700>;
++			status = "disabled";
 +		};
 +
- 		sdhi0: sd@ee100000 {
- 			compatible = "renesas,sdhi-r8a7795";
- 			reg = <0 0xee100000 0 0x2000>;
+ 		hsusb: usb@e6590000 {
+ 			compatible = "renesas,usbhs-r8a7795",
+ 				     "renesas,rcar-gen3-usbhs";
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
