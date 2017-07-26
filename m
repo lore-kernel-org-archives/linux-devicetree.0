@@ -1,44 +1,41 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] arm64: dts: xilinx: fix PCI bus dtc warnings
-Date: Wed, 26 Jul 2017 16:09:42 -0500
-Message-ID: <20170726210943.6875-6-robh@kernel.org>
+Subject: [PATCH v2] ARM: dts: versatile: fix PCI bus dtc warnings
+Date: Wed, 26 Jul 2017 16:09:40 -0500
+Message-ID: <20170726210943.6875-4-robh@kernel.org>
 References: <20170726210943.6875-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170726210943.6875-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 dtc recently added PCI bus checks. Fix these warnings.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "Sören Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 ---
 v2:
 - rebase on v4.13-rc2
 
-Michal, you said you applied v1, but it looks like it never was.
+arm-soc, Please apply as Versatile has no maintainer.
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/versatile-pb.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 54dc28351c8c..1a3f5e928bb9 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -221,6 +221,7 @@
- 				  0x43000000 0x00000006 0x00000000 0x00000006
- 				  0x00000000 0x00000002 0x00000000>;
- 				  /* prefetchable memory */
-+			bus-range = <0x00 0xff>;
- 			interrupt-map-mask = <0x0 0x0 0x0 0x7>;
- 			interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc 0x1>,
- 					<0x0 0x0 0x0 0x2 &pcie_intc 0x2>,
+diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
+index 06e2331f666d..9abe26028c8b 100644
+--- a/arch/arm/boot/dts/versatile-pb.dts
++++ b/arch/arm/boot/dts/versatile-pb.dts
+@@ -39,7 +39,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		pci-controller@10001000 {
++		pci@10001000 {
+ 			compatible = "arm,versatile-pci";
+ 			device_type = "pci";
+ 			reg = <0x10001000 0x1000
 -- 
 2.11.0
 
