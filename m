@@ -1,137 +1,96 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH v2 3/4] arm64: dts: hisilicon: add usb2 controller and phy nodes for poplar board.
-Date: Wed, 26 Jul 2017 14:06:02 +0800
-Message-ID: <1501049163-18892-4-git-send-email-xuejiancheng@hisilicon.com>
-References: <1501049163-18892-1-git-send-email-xuejiancheng@hisilicon.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Wed, 26 Jul 2017 12:11:55 +0530
+Message-ID: <17cfbd91-105d-cdb9-472d-d4e83925418b@ti.com>
+References: <1501048228-3492-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501049163-18892-1-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hermit.wangheming@hisilicon.com, project-aspen-dev@linaro.org, Jiancheng Xue <xuejiancheng@hisilicon.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501048228-3492-1-git-send-email-j-keerthy-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fcooper-l0cyMroinI0@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb2 controller and phy nodes for poplar board.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 13 +++++
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 60 ++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-index b914287..4656ba9 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-@@ -63,6 +63,10 @@
- 	};
- };
- 
-+&ehci {
-+	status = "okay";
-+};
-+
- &gmac1 {
- 	status = "okay";
- 	#address-cells = <1>;
-@@ -146,6 +150,10 @@
- 	status = "okay";
- };
- 
-+&ohci {
-+	status = "okay";
-+};
-+
- &spi0 {
- 	status = "okay";
- 	label = "LS-SPI0";
-@@ -160,3 +168,8 @@
- 	label = "LS-UART0";
- };
- /* No optional LS-UART1 on Low Speed Expansion Connector. */
-+
-+&usb2_phy1 {
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-index 75865f8a..250b68b 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -106,6 +106,11 @@
- 			#reset-cells = <2>;
- 		};
- 
-+		peri_ctrl: system-controller@8a20000 {
-+			compatible = "syscon";
-+			reg = <0x8a20000 0x1000>;
-+		};
-+
- 		uart0: serial@8b00000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x8b00000 0x1000>;
-@@ -407,5 +412,60 @@
- 			clocks = <&sysctrl HISTB_IR_CLK>;
- 			status = "disabled";
- 		};
-+
-+		ehci: ehci@0x9890000 {
-+			compatible = "generic-ehci";
-+			reg = <0x9890000 0x10000>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_USB2_BUS_CLK>,
-+				 <&crg HISTB_USB2_PHY_CLK>,
-+				 <&crg HISTB_USB2_UTMI_CLK>;
-+			clock-names = "ehci_system", "phy", "utmi";
-+			resets = <&crg 0xb8 12>,
-+				 <&crg 0xb8 16>,
-+				 <&crg 0xb8 13>;
-+			reset-names = "bus", "phy", "utmi";
-+			status = "disabled";
-+		};
-+
-+		ohci: ohci@0x9880000 {
-+			compatible = "generic-ohci";
-+			reg = <0x9880000 0x10000>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_USB2_BUS_CLK>,
-+				 <&crg HISTB_USB2_12M_CLK>,
-+				 <&crg HISTB_USB2_48M_CLK>;
-+			clock-names = "ahb_biu", "clk12", "clk48";
-+			resets = <&crg 0xb8 12>;
-+			reset-names = "bus";
-+			status = "disabled";
-+		};
-+
-+		usb2_phy1: usb-phy@1 {
-+			compatible = "hisilicon,hi3798cv200-usb2-phy";
-+			#phy-cells = <0>;
-+			hisilicon,peripheral-syscon = <&peri_ctrl>;
-+			hisilicon,phycon-reg = <0x120>;
-+			hisilicon,port-num = <2>;
-+			clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
-+			resets = <&crg 0xbc 4>,
-+				 <&crg 0xbc 8>,
-+				 <&crg 0xbc 9>;
-+			reset-names = "power_on", "utmi0", "utmi1";
-+			status = "disabled";
-+		};
-+
-+		usb2_phy2: usb-phy@2 {
-+			compatible = "hisilicon,hi3798cv200-usb2-phy";
-+			#phy-cells = <0>;
-+			hisilicon,peripheral-syscon = <&peri_ctrl>;
-+			hisilicon,phycon-reg = <0x124>;
-+			hisilicon,port-num = <1>;
-+			clocks = <&crg HISTB_USB2_PHY2_REF_CLK>;
-+			resets = <&crg 0xbc 6>,
-+				 <&crg 0xbc 10>;
-+			reset-names = "power_on", "utmi0";
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-1.9.1
+On Wednesday 26 July 2017 11:20 AM, Keerthy wrote:
+> The patch adds keystone-k2g compatible, specific properties and
+> an example.
+> 
+> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-davinci.txt      | 39 +++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> index 5079ba7..9f4f612 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-davinci.txt
+> @@ -1,7 +1,9 @@
+>  Davinci/Keystone GPIO controller bindings
+>  
+>  Required Properties:
+> -- compatible: should be "ti,dm6441-gpio", "ti,keystone-gpio"
+> +- compatible: should be "ti,dm6441-gpio",
+> +			 "ti,keystone-gpio",
+> +			 "ti,keystone-k2g-gpio"
+
+My bad i have not added the SoCs related to corresponding compatibles. I
+will send v3 fixing that.
+
+>  
+>  - reg: Physical base address of the controller and the size of memory mapped
+>         registers.
+> @@ -26,6 +28,17 @@ The GPIO controller also acts as an interrupt controller. It uses the default
+>  two cells specifier as described in Documentation/devicetree/bindings/
+>  interrupt-controller/interrupts.txt.
+>  
+> +Required Properties specific to keystone-k2g
+> +
+> +- clocks: Should contain devices input clock. The first parameter
+> +           is a handle to k2g_clks. The second parameter is the
+> +           device ID and the third parameter is the clock ID. One can
+> +           refer: http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
+> +
+> +           Example: <&k2g_clks 0x001c 0x0>;
+> +
+> +- clock-names: The driver expects the clock name to be "gpio";
+> +
+>  Example:
+>  
+>  gpio: gpio@1e26000 {
+> @@ -60,3 +73,27 @@ leds {
+>  		...
+>  	};
+>  };
+> +
+> +Example for keystone-k2g:
+> +
+> +gpio0: gpio@2603000 {
+> +	compatible = "ti,keystone-k2g-gpio", "ti,keystone-gpio";
+> +	reg = <0x02603000 0x100>;
+> +	gpio-controller;
+> +	#gpio-cells = <2>;
+> +	interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
+> +			<GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	ti,ngpio = <144>;
+> +	ti,davinci-gpio-unbanked = <0>;
+> +	clocks = <&k2g_clks 0x001b 0x0>;
+> +	clock-names = "gpio";
+> +};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
