@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] arm64: dts: renesas: r8a7795: salvator-xs: enable usb2_phy ch3
-Date: Wed, 26 Jul 2017 20:30:58 +0900
-Message-ID: <1501068660-4032-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/3] arm64: dts: renesas: r8a7795: salvator-xs: enable USB 2.0 channel 3
+Date: Wed, 26 Jul 2017 20:30:59 +0900
+Message-ID: <1501068660-4032-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,40 +12,39 @@ To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8Avxtiu
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables usb2_phy channel 3.
+If we turn the SW31-[34] on, we can use USB2.0 channel 3 on the board.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-index 7675de5..e18bf4f 100644
+index e18bf4f..365c8df 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-@@ -99,6 +99,11 @@
- 		groups = "usb2";
- 		function = "usb2";
- 	};
-+
-+	usb2_ch3_pins: usb2_ch3 {
-+		groups = "usb2_ch3";
-+		function = "usb2_ch3";
-+	};
- };
- 
- &usb2_phy2 {
-@@ -107,3 +112,10 @@
- 
+@@ -56,6 +56,10 @@
  	status = "okay";
  };
-+
-+&usb2_phy3 {
-+	pinctrl-0 = <&usb2_ch3_pins>;
-+	pinctrl-names = "default";
-+
+ 
++&ehci3 {
 +	status = "okay";
 +};
++
+ &hdmi0 {
+ 	status = "okay";
+ 
+@@ -94,6 +98,10 @@
+ 	status = "okay";
+ };
+ 
++&ohci3 {
++	status = "okay";
++};
++
+ &pfc {
+ 	usb2_pins: usb2 {
+ 		groups = "usb2";
 -- 
 1.9.1
 
