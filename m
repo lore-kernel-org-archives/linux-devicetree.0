@@ -1,43 +1,46 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: renesas: r8a7795: salvator-xs: enable HSUSB channel 3
-Date: Wed, 26 Jul 2017 20:31:00 +0900
-Message-ID: <1501068660-4032-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv3 1/6] ALSA: pcm: Export soc_dpcm_runtime_update
+Date: Wed, 26 Jul 2017 12:38:48 +0100
+Message-ID: <20170726113848.cyfshdejbuxpcs6u@sirena.org.uk>
+References: <20170725151030.26863-1-sebastian.reichel@collabora.co.uk>
+ <20170725151030.26863-2-sebastian.reichel@collabora.co.uk>
+ <s5h7eywjzek.wl-tiwai@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="p4bj5ql7ziq24hm2"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <s5h7eywjzek.wl-tiwai@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Takashi Iwai <tiwai@suse.de>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, alsa-devel@alsa-project.org, Jaroslav Kysela <perex@perex.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables HSUSB channel 3.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+--p4bj5ql7ziq24hm2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-index 365c8df..344ca99 100644
---- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-@@ -94,6 +94,10 @@
- 	remote-endpoint = <&rcar_dw_hdmi1_out>;
- };
- 
-+&hsusb3 {
-+	status = "okay";
-+};
-+
- &ohci2 {
- 	status = "okay";
- };
--- 
-1.9.1
+On Tue, Jul 25, 2017 at 05:42:59PM +0200, Takashi Iwai wrote:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Last but not least, this is specific to ASoC, so use "ASoC" prefix to
+> the subject line.
+
+Right, that's a good way to get the patch skipped in review :(
+
+--p4bj5ql7ziq24hm2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAll4f0cACgkQJNaLcl1U
+h9B6RQf/YYYru1kOsNa9XyTFXUEJ3o4mXZIPEYOqaaA22v9oRYRaX3zdOSqemXcV
+Snc+j7Q3/qNbma/rv/+0o8bDnePx+K9SkTsKgO4mgCyXN9RDSdJgSAB3fe0unmn6
+RyHJJdRQpz0iu8D8ewBCQWdXh/RJmnrDmSaOkTIrcCHffS6887q0beTiEVP5/G4H
+/bOZe7fEemurT7cZMXiUvZ9d5dElnm6gKQTKPvYtCdtOTtQshCq7YfqcUWcoxc1o
+IUM9P6IxN+AGLqyzhmP3UXukh37rMYe6Lfq+/4lkzzLsMxfo856rXhHpAU0c8Wum
+asToD6zPB87Ums+uzSvqXjiVmUHdEg==
+=UYjx
+-----END PGP SIGNATURE-----
+
+--p4bj5ql7ziq24hm2--
