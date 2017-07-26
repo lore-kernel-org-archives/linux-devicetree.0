@@ -1,41 +1,71 @@
-From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: dts: stm32: Remove rdinit from bootargs
-Date: Wed, 26 Jul 2017 18:24:46 +0200
-Message-ID: <c38e634a-0475-4541-1127-b7a2fb390daa@st.com>
-References: <1500280565-26049-1-git-send-email-alexandre.torgue@st.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Wed, 26 Jul 2017 18:41:24 +0200
+Message-ID: <20170726164124.GL12049@lunn.ch>
+References: <20170724230521.1436-1-fcooper@ti.com>
+ <20170724230521.1436-3-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500280565-26049-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170724230521.1436-3-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jul 24, 2017 at 06:05:19PM -0500, Franklin S Cooper Jr wrote:
+> Add documentation to describe usage of the new fixed transceiver binding.
+> This new binding is applicable for any CAN device therefore it exists as
+> its own document.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+> Version 2:
+> Tweak commit message working
+> Tweak wording for properties
+> Drop unit addressing
+> Give example if CAN-FD isn't supported
+> 
+>  .../bindings/net/can/fixed-transceiver.txt         | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+> new file mode 100644
+> index 0000000..dc7e3eb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+> @@ -0,0 +1,42 @@
+> +Fixed transceiver Device Tree binding
+> +------------------------------
+> +
+> +CAN transceiver typically limits the max speed in standard CAN and CAN FD
+> +modes. Typically these limitations are static and the transceivers themselves
+> +provide no way to detect this limitation at runtime. For this situation,
+> +the "fixed-transceiver" node can be used.
+> +
+> +Properties:
+> +
+> +Optional:
+> + max-arbitration-speed: a positive non 0 value that determines the max
+> +			speed that CAN can run in non CAN-FD mode or during the
+> +			arbitration phase in CAN-FD mode.
 
+Hi Franklin
 
-On 07/17/2017 10:36 AM, Alexandre TORGUE wrote:
-> This series remove rdinit from bootargs on stm32f4 boards (429-eval,
-> 429-disco, 469-disco). Indeed, rootfs is independent from boards.
-> Furthermore it will align stm32 F4 devicetree on stm32 F7/H7 one.
-> 
-> Regards
-> Alex
-> 
-> Alexandre TORGUE (3):
->    ARM: dts: stm32: Remove rdinit from bootargs on stm32f469-disco
->    ARM: dts: stm32: Remove rdinit from bootargs on stm32f429i-eval
->    ARM: dts: stm32: Remove rdinit from bootargs on stm32f429-disco
-> 
->   arch/arm/boot/dts/stm32429i-eval.dts  | 2 +-
->   arch/arm/boot/dts/stm32f429-disco.dts | 2 +-
->   arch/arm/boot/dts/stm32f469-disco.dts | 2 +-
->   3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-Series applied on stm32-dt-for-v4.14 branch.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Since this and the next property are optional, it is good to document
+what happens when they are not in the DT blob. Also document what 0
+means.
+
+> +
+> + max-data-speed:	a positive non 0 value that determines the max data rate
+> +			that can be used in CAN-FD mode. A value of -1 implies
+> +			CAN-FD is not supported by the transceiver.
+
+-1 is ugly. I think it would be better to have a missing
+max-data-speed property indicate that CAN-FD is not supported. And
+maybe put 'fd' into the property name.
+
+      Andrew
