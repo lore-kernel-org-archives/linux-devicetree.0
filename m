@@ -1,117 +1,82 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 0/9] mfd: axp20x: Add basic support for AXP813
-Date: Wed, 26 Jul 2017 16:28:23 +0800
-Message-ID: <20170726082832.16789-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 0/9] mfd: axp20x: Add basic support for AXP813
+Date: Wed, 26 Jul 2017 10:32:42 +0200
+Message-ID: <20170726083242.k35gnk22h35as55n@flea>
+References: <20170726082832.16789-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNFF4HFQKGQE65WVHLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="hrs6dd53v4fytgzv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170726082832.16789-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
 
-This is v2 of my AXP813 support series. The device tree patches are
-based on my A83T MMC support series. These will go through the sunxi
-tree. The dt-binding and mfd patches are based on v4.13-rc1. These
-will go through Lee's mfd tree.
+--hrs6dd53v4fytgzv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes since v1:
+On Wed, Jul 26, 2017 at 04:28:23PM +0800, Chen-Yu Tsai wrote:
+> Hi everyone,
+>=20
+> This is v2 of my AXP813 support series. The device tree patches are
+> based on my A83T MMC support series. These will go through the sunxi
+> tree. The dt-binding and mfd patches are based on v4.13-rc1. These
+> will go through Lee's mfd tree.
+>=20
+> Changes since v1:
+>=20
+>   - Provided relative path for ac100.txt in dt-bindings/mfd/axp20x.txt
+>=20
+>   - Added Rob's acks to dt-binding patches
+>=20
+>   - Added Quentin's "mfd: axp20x: use correct platform device id for
+>     many PEK" patch to this series. This patch depends on mfd changes
+>     in this series. It is included so Lee can take them together in
+>     one go.
+>=20
+>   - Added Lee's mfd-acks to mfd patches
+>=20
+>   - Added axp818 compatible with axp813 fallback. The two chips are
+>     identical except for the markings. The added compatible matches
+>     what is actually on the board, to avoid confusing readers.
+>=20
+>   - Fixed up device tree patches to mention which board is changed
+>=20
+>   - Added device tree patches for the H8 homlet
 
-  - Provided relative path for ac100.txt in dt-bindings/mfd/axp20x.txt
+For the whole serie,
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-  - Added Rob's acks to dt-binding patches
+Maxime
 
-  - Added Quentin's "mfd: axp20x: use correct platform device id for
-    many PEK" patch to this series. This patch depends on mfd changes
-    in this series. It is included so Lee can take them together in
-    one go.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-  - Added Lee's mfd-acks to mfd patches
+--hrs6dd53v4fytgzv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  - Added axp818 compatible with axp813 fallback. The two chips are
-    identical except for the markings. The added compatible matches
-    what is actually on the board, to avoid confusing readers.
+-----BEGIN PGP SIGNATURE-----
 
-  - Fixed up device tree patches to mention which board is changed
+iQIcBAEBAgAGBQJZeFOqAAoJEBx+YmzsjxAgwTIP/AuEUSfLbTJ4x9TMdg/KUvXf
+OUv0XyR2SIJCSb7TI/ZUZCIXqrVaHhsdbJ9Rory3thSH/aJBwdOFxUKVirYfOWaj
+KR0V+rqZr6kOom4HGdM6hkU55tIMu73Su8sKSqfFQv2vrVG4q8Kdp/YDErK1HfeB
+8KmVLZUn5PQDsque2iR3dOMGuHiGO6ZCt0y3VFRb2V38+VBgQrpDUVs+g5KaZt2l
+dNtNxfi6DzttbbhqU3cDn/NPhEDKkENSGhiEvOphf9ofkPYF7UbRaVHjUcJfqsz7
+2xPi2g9BPnK4j9raaokrLA7/Cgri8aEMlMJFCswJuQicA76bVq33VsuqXEzNOdPP
+iJkAmtU1TjFAZKdw8s4XT9lSszzWZ2j9hWD0o63Zu5vpdAp+x77C1NMmZG/W6cGB
+H+uk8lJqiwnBSSnvirA6r6/+I4NkNG4ABKW/yvaY+LtBw89Ti4e5GGNQxyEhL6Jt
+ztrDU8xbMRBhF2xcqSI/Pp+L2DBYGEkLBWKzdmR4uGW7KeFi2hOR92t0i1yO/Z4D
+VIftYa98MUpWz4P0Dd9A9ZhjPAqkF6bnhxfaVCIJJdSUWAtbPA4M3VGAqeeThLTQ
+EyrSfsnDdef2pZY+h26N7L3p8FwYnoYVPEIkPBoOz5hqBtgzTuGdr50t0u4brW1W
+J/ixTydXuYJFlJEvt5DH
+=qMHF
+-----END PGP SIGNATURE-----
 
-  - Added device tree patches for the H8 homlet
-
-Patch 1 adds AXP806 to the main list of supported chips, which was
-missing.
-
-Patch 2 adds bindings for the AXP813.
-
-Patch 3 adds basic mfd driver support with PEK enabled for AXP813.
-
-Patch 4 changes the PEK sub-device's platform ID for AXP22x and
-later PMICs. This is included as it depends on the previous patch.
-
-Patch 5 adds the device node and pinmux settings for the RSB controller
-on the A83T. This is used to communicate with the PMIC.
-
-Patch 6 adds a device node for the PMIC part of the chip for the
-Cubietruck Plus.
-
-Patch 7 adds a device node for the embedded AC100 part of the chip
-for the Cubietruck Plus.
-
-Patch 8 adds a device node for the PMIC part of the chip for the
-H8 homlet board.
-
-Patch 9 adds a device node for the embedded AC100 part of the chip
-for the H8 homlet board.
-
-
-Excerpt from original cover letter from v1:
-
-This series adds basic device tree bindings and driver support for the
-AXP813/818 PMICs. The two models are identical when comparing their
-datasheets. These PMICs are actually two dies in one package: one being
-the actual PMIC, the other being an AC100 codec/RTC combo chip. The
-latter has its own device tree binding.
-
-This series only adds the basic parts of the device tree binding and
-driver. For the bindings, only the core and regulator bits are added.
-Any sub-devices that have their own binding will be updated later on.
-For the driver, only the mfd part with a basic power button (PEK) cell
-is added, along with regulator IDs.
-
-
-Regards
-ChenYu
-
-Chen-Yu Tsai (8):
-  dt-bindings: mfd: axp20x: Add AXP806 to supported list of chips
-  dt-bindings: mfd: axp20x: Introduce bindings for AXP813
-  mfd: axp20x: Add support for AXP813 PMIC
-  ARM: sun8i: a83t: Add device node and pinmux setting for RSB
-    controller
-  ARM: sun8i: a83t: cubietruck-plus: Enable PMIC part of AXP818 PMIC
-  ARM: sun8i: a83t: cubietruck-plus: Enable AC100 combo chip in AXP818
-    PMIC
-  ARM: sun8i: a83t: h8homlet-v2: Enable PMIC part of AXP818 PMIC
-  ARM: sun8i: a83t: h8homlet-v2: Enable AC100 combo chip in AXP818 PMIC
-
-Quentin Schulz (1):
-  mfd: axp20x: use correct platform device id for many PEK
-
- Documentation/devicetree/bindings/mfd/axp20x.txt   | 50 +++++++++++++++++++---
- .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 35 +++++++++++++++
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts   | 35 +++++++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi                  | 23 ++++++++++
- drivers/mfd/axp20x-rsb.c                           |  1 +
- drivers/mfd/axp20x.c                               | 32 +++++++++++---
- include/linux/mfd/axp20x.h                         | 29 +++++++++++++
- 7 files changed, 195 insertions(+), 10 deletions(-)
-
--- 
-2.13.3
+--hrs6dd53v4fytgzv--
