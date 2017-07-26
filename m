@@ -1,41 +1,172 @@
-From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
-Subject: RE: [PATCH 3/4] powerpc: pseries: only store the device node
- basename in full_name
-Date: Wed, 26 Jul 2017 10:07:01 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6DD00419B2@AcuExch.aculab.com>
-References: <20170725214427.25768-1-robh@kernel.org>
- <20170725214427.25768-4-robh@kernel.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT
+ entries
+Date: Wed, 26 Jul 2017 11:19:06 +0100
+Message-ID: <6b419bfc-56e8-5a6d-e995-78fbeca02282@arm.com>
+References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
+ <1501020372-19607-2-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170725214427.25768-4-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1501020372-19607-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring
-> Sent: 25 July 2017 22:44
-> With dependencies on full_name containing the entire device node path
-> removed, stop storing the full_name in nodes created by
-> dlpar_configure_connector() and pSeries_reconfig_add_node().
-...
->	dn = kzalloc(sizeof(*dn), GFP_KERNEL);
-> 	if (!dn)
-> 		return NULL;
+Hi Jon,
+
+On 25/07/17 23:06, Jon Mason wrote:
+> Cache related issues with DMA rings and performance issues related to
+> caching are being caused by not properly setting the "dma-coherent" flag
+> in the device tree entries.  Adding it here to correct the issue.
 > 
-> 	name = (char *)ccwa + be32_to_cpu(ccwa->name_offset);
-> -	dn->full_name = kasprintf(GFP_KERNEL, "%s/%s", path, name);
-> +	dn->full_name = kasprintf(GFP_KERNEL, "%s", name);
+> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
+> Fixes: 3107fa5bcfb2 ("ARM: dts: NSP: Add SD/MMC support")
+> Fixes: 13d04f20935c ("ARM: dts: NSP: Add AMAC entries")
+> Fixes: 5aeda7bf8a1e ("ARM: dts: NSP: Add and enable amac2")
+> Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+> Fixes: 1d8ece6639e1 ("ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree")
+> Fixes: bf2289bedef4 ("ARM: dts: NSP: Add Switch Register Access Block node")
+> Fixes: 0f9f27a36d09 ("ARM: dts: NSP: Add I2C support to the DT")
+> Fixes: 8dbcad020f2e ("ARM: dts: nsp: Add sata device tree entry")
+> Fixes: 522199029fdc ("ARM: dts: NSP: Fix PCIE DT issue")
+> ---
+>  arch/arm/boot/dts/bcm-nsp.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index 7204d1def23d..c8d734d9f5fc 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -207,6 +207,7 @@
+>  			clocks = <&iprocslow>;
+>  			clock-names = "apb_pclk";
+>  			#dma-cells = <1>;
+> +			dma-coherent;
 
-Isn't this just strdup()?
-Perhaps you should rename full_name to name - since it is no longer 'full'?
+Just to check, does this actually work? I ask because the pl330 driver
+currently never sets src_cache_ctrl/dst_cache_ctrl to anything other
+than noncacheable nonbufferable, so if your interconnect respects those
+attributes this seems liable to make things go wrong under current
+kernels, even if it is an accurate description of the hardware. If on
+the other hand the interconnect does its own magic and will manage to
+snoop caches appropriately regardless of AXI attributes, then I guess
+it's fine, if a little scary ;)
 
-Maybe you could do a single malloc() for both 'dn' and the name?
+Robin.
 
-	David
+>  		};
+>  
+>  		sdio: sdhci@21000 {
+> @@ -215,6 +216,7 @@
+>  			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+>  			sdhci,auto-cmd12;
+>  			clocks = <&lcpll0 BCM_NSP_LCPLL0_SDIO_CLK>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -224,6 +226,7 @@
+>  			      <0x110000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -233,6 +236,7 @@
+>  			      <0x111000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -242,6 +246,7 @@
+>  			      <0x112000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -252,6 +257,7 @@
+>  			#mbox-cells = <1>;
+>  			brcm,rx-status-len = <32>;
+>  			brcm,use-bcm-hdr;
+> +			dma-coherent;
+>  		};
+>  
+>  		nand: nand@26000 {
+> @@ -325,6 +331,7 @@
+>  			compatible = "generic-ehci";
+>  			reg = <0x2a000 0x100>;
+>  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -332,6 +339,7 @@
+>  			compatible = "generic-ohci";
+>  			reg = <0x2b000 0x100>;
+>  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -364,6 +372,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  
+> +			dma-coherent;
+>  			status = "disabled";
+>  
+>  			/* ports are defined in board DTS */
+> @@ -376,6 +385,7 @@
+>  			#size-cells = <0>;
+>  			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
+>  			clock-frequency = <100000>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -446,6 +456,7 @@
+>  			interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  
+>  			sata0: sata-port@0 {
+> @@ -483,6 +494,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi0>;
+> @@ -519,6 +531,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi1>;
+> @@ -555,6 +568,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi2>;
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
