@@ -1,51 +1,215 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 07/17] regulator: arizona-micsupp: Add
- support for Cirrus Logic Madera codecs
-Date: Thu, 27 Jul 2017 12:45:50 +0100
-Message-ID: <1501155950.5479.1.camel@rf-debian.wolfsonmicro.main>
-References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
- <1496415790-19164-8-git-send-email-rf@opensource.wolfsonmicro.com>
- <20170605171006.3ppsjia2xvb22ld2@rob-hp-laptop>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for
+ each channel
+Date: Thu, 27 Jul 2017 17:23:52 +0530
+Message-ID: <CABb+yY2gj3SBTCzcGim0=c1G9SzAiQ0HxA1F24kjs-jS42Z+dg@mail.gmail.com>
+References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
+ <1500620142-910-7-git-send-email-anup.patel@broadcom.com> <CABb+yY1Pxhgvvit=0eZr66DpLJ3MDEvRPx9dwDPJM8PwiKXiew@mail.gmail.com>
+ <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w@mail.gmail.com>
+ <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
+ <CAALAos9T0YtCvgjGCMVPn=dw2JKY=jTxz-v431NgpBCKFo1vVQ@mail.gmail.com>
+ <CABb+yY2x1Wb=RZhq+eUnM0wkcih4YkFDrKRgqhs1erGQGH3tdw@mail.gmail.com>
+ <CAALAos-aKDw8p2_BFausm+VC4teoAW22239+gnkPfFUaiZxB6w@mail.gmail.com>
+ <CABb+yY3fwPTSc0PKh44uvgdbvQJhu-X3O_L5EtumB6ovsaOdSw@mail.gmail.com> <CAALAos9RoAbZcsyQV_U_aUeVSO9SMYNqNpqOdCF0ytNXK8SrnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170605171006.3ppsjia2xvb22ld2@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAALAos9RoAbZcsyQV_U_aUeVSO9SMYNqNpqOdCF0ytNXK8SrnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-06-05 at 12:10 -0500, Rob Herring wrote:
-> On Fri, Jun 02, 2017 at 04:03:00PM +0100, Richard Fitzgerald wrote:
-> > This adds a new driver identity "madera-micsupp" and probe function
-> > so that this driver can be used to control the micsupp regulator on
-> > Cirrus Logic Madera codecs.
-> > 
-> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-> > ---
-> > No changes since V2
-> > 
-> >  .../bindings/regulator/arizona-regulator.txt       |  3 +-
-> 
-> I already acked v2. Please add acks when posting new versions.
+On Thu, Jul 27, 2017 at 11:20 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> On Thu, Jul 27, 2017 at 10:29 AM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Some maintainers have bitten my head off when I've carried forward their
-ack so I never know what people want.
+>>>>>>> Sorry for the delayed response...
+>>>>>>>
+>>>>>>> On Fri, Jul 21, 2017 at 9:16 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>>>> Hi Anup,
+>>>>>>>>
+>>>>>>>> On Fri, Jul 21, 2017 at 12:25 PM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>>>>>>> The Broadcom FlexRM ring (i.e. mailbox channel) can handle
+>>>>>>>>> larger number of messages queued in one FlexRM ring hence
+>>>>>>>>> this patch sets msg_queue_len for each mailbox channel to
+>>>>>>>>> be same as RING_MAX_REQ_COUNT.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>>>>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>>>>> ---
+>>>>>>>>>  drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
+>>>>>>>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>> index 9873818..20055a0 100644
+>>>>>>>>> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>> @@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+>>>>>>>>>                 ret = -ENOMEM;
+>>>>>>>>>                 goto fail_free_debugfs_root;
+>>>>>>>>>         }
+>>>>>>>>> -       for (index = 0; index < mbox->num_rings; index++)
+>>>>>>>>> +       for (index = 0; index < mbox->num_rings; index++) {
+>>>>>>>>> +               mbox->controller.chans[index].msg_queue_len =
+>>>>>>>>> +                                               RING_MAX_REQ_COUNT;
+>>>>>>>>>                 mbox->controller.chans[index].con_priv = &mbox->rings[index];
+>>>>>>>>> +       }
+>>>>>>>>>
+>>>>>>>> While writing mailbox.c I wasn't unaware that there is the option to
+>>>>>>>> choose the queue length at runtime.
+>>>>>>>> The idea was to keep the code as simple as possible. I am open to
+>>>>>>>> making it a runtime thing, but first, please help me understand how
+>>>>>>>> that is useful here.
+>>>>>>>>
+>>>>>>>> I understand FlexRm has a ring buffer of RING_MAX_REQ_COUNT(1024)
+>>>>>>>> elements. Any message submitted to mailbox api can be immediately
+>>>>>>>> written onto the ringbuffer if there is some space.
+>>>>>>>> Is there any mechanism to report back to a client driver, if its
+>>>>>>>> message in ringbuffer failed "to be sent"?
+>>>>>>>> If there isn't any, then I think, in flexrm_last_tx_done() you should
+>>>>>>>> simply return true if there is some space left in the rung-buffer,
+>>>>>>>> false otherwise.
+>>>>>>>
+>>>>>>> Yes, we have error code in "struct brcm_message" to report back
+>>>>>>> errors from send_message. In our mailbox clients, we check
+>>>>>>> return value of mbox_send_message() and also the error code
+>>>>>>> in "struct brcm_message".
+>>>>>>>
+>>>>>> I meant after the message has been accepted in the ringbuffer but the
+>>>>>> remote failed to receive it.
+>>>>>
+>>>>> Yes, even this case is handled.
+>>>>>
+>>>>> In case of IO errors after message has been put in ring buffer, we get
+>>>>> completion message with error code and mailbox client drivers will
+>>>>> receive back "struct brcm_message" with error set.
+>>>>>
+>>>>> You can refer flexrm_process_completions() for more details.
+>>>>>
+>> It doesn't seem to be what I suggest. I see two issues in
+>> flexrm_process_completions()
+>> 1) It calls mbox_send_message(), which is a big NO for a controller
+>> driver. Why should you have one more message stored outside of
+>> ringbuffer?
+>
+> The "last_pending_msg" in each FlexRM ring was added to fit FlexRM
+> in Mailbox framework.
+>
+> We don't have any IRQ for TX done so "txdone_irq" out of the question for
+> FlexRM. We only have completions for both success or failures (IO errors).
+>
+> This means we have to use "txdone_poll" for FlexRM. For "txdone_poll",
+> we have to provide last_tx_done() callback. The last_tx_done() callback
+> is supposed to return true if last send_data() call succeeded.
+>
+> To implement last_tx_done() in FlexRM driver, we added "last_pending_msg".
+>
+> When "last_pending_msg" is NULL it means last call to send_data() succeeded
+> and when "last_pending_msg" is != NULL it means last call to send_data()
+> did not go through due to lack of space in FlexRM ring.
+>
+It could be simpler.
+Since flexrm_send_data() is essentially about putting the message in
+the ring-buffer (and not about _transmission_ failures), the
+last_tx_done() should simply return true if requests_ida has not all
+ids allocated. False otherwise.
 
-> 
-> >  drivers/regulator/Kconfig                          |  7 ++-
-> >  drivers/regulator/arizona-micsupp.c                | 71 +++++++++++++++++++++-
-> >  3 files changed, 76 insertions(+), 5 deletions(-)
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel@alsa-project.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+>>
+>> 2) It calls mbox_chan_received_data()  which is for messages received
+>> from the remote. And not the way to report failed _transmission_, for
+>> which the api calls back mbox_client.tx_done() .  In your client
+>> driver please populate mbox_client.tx_done() and see which message is
+>> reported "sent fine" when.
+>>
+>>
+>>>>>> There seems no such provision. IIANW, then you should be able to
+>>>>>> consider every message as "sent successfully" once it is in the ring
+>>>>>> buffer i.e, immediately after mbox_send_message() returns 0.
+>>>>>> In that case I would think you don't need more than a couple of
+>>>>>> entries out of MBOX_TX_QUEUE_LEN ?
+>>>>>
+>>>>> What I am trying to suggest is that we can take upto 1024 messages
+>>>>> in a FlexRM ring but the MBOX_TX_QUEUE_LEN limits us queuing
+>>>>> more messages. This issue manifest easily when multiple CPUs
+>>>>> queues to same FlexRM ring (i.e. same mailbox channel).
+>>>>>
+>>>> OK then, I guess we have to make the queue length a runtime decision.
+>>>
+>>> Do you agree with approach taken by PATCH5 and PATCH6 to
+>>> make queue length runtime?
+>>>
+>> I agree that we may have to get the queue length from platform, if
+>> MBOX_TX_QUEUE_LEN is limiting performance. That will be easier on both
+>> of us. However I suspect the right fix for _this_ situation is in
+>> flexrm driver. See above.
+>
+> The current implementation is trying to model FlexRM using "txdone_poll"
+> method and that's why we have dependency on MBOX_TX_QUEUE_LEN
+>
+> I think what we really need is new method for "txdone" to model ring
+> manager HW (such as FlexRM). Let's call it "txdone_none".
+>
+> For "txdone_none", it means there is no "txdone" reporting in HW
+> and mbox_send_data() should simply return value returned by
+> send_data() callback. The last_tx_done() callback is not required
+> for "txdone_none" and MBOX_TX_QUEUE_LEN also has no
+> effect on "txdone_none". Both blocking and non-blocking clients
+> are treated same for "txdone_none".
+>
+That is already supported :)
+
+In drivers/dma/bcm-sba-raid.c
+
+sba_send_mbox_request(...)
+{
+           ......
+        req->msg.error = 0;
+        ret = mbox_send_message(sba->mchans[mchans_idx], &req->msg);
+        if (ret < 0) {
+                dev_err(sba->dev, "send message failed with error %d", ret);
+                return ret;
+        }
+        ret = req->msg.error;
+        if (ret < 0) {
+                dev_err(sba->dev, "message error %d", ret);
+                return ret;
+        }
+          .....
+}
+
+Here you _do_ assume that as soon as the mbox_send_message() returns,
+the last_tx_done() is true. In other words, this is a case of client
+'knows_txdone'.
+
+So ideally you should specify cl->knows_txdone = true during
+mbox_request_channel() and have ...
+
+sba_send_mbox_request(...)
+{
+        ret = mbox_send_message(sba->mchans[mchans_idx], &req->msg);
+        if (ret < 0) {
+                dev_err(sba->dev, "send message failed with error %d", ret);
+                return ret;
+        }
+
+        ret = req->msg.error;
+
+       /* Message successfully placed in the ringbuffer, i.e, done */
+       mbox_client_txdone(sba->mchans[mchans_idx], ret);
+
+       if (ret < 0) {
+                dev_err(sba->dev, "message error %d", ret);
+                return ret;
+        }
+
+        .....
+}
+
+This way MBOX_TX_QUEUE_LEN should be more than enough and pose no bottleneck.
+
+
+Cheers!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
