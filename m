@@ -1,40 +1,61 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2] arm64: dts: xilinx: fix PCI bus dtc warnings
-Date: Thu, 27 Jul 2017 08:22:04 +0200
-Message-ID: <8b5c2d43-5365-0923-c122-84b4b35e3fb3@xilinx.com>
-References: <20170726210943.6875-1-robh@kernel.org>
- <20170726210943.6875-6-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726210943.6875-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH 1/2] pinctrl: qcom: spmi-gpio: Add pmi8994 gpio support
+Date: Thu, 27 Jul 2017 12:00:35 +0530
+Message-ID: <1501137036-20155-1-git-send-email-vivek.gautam@codeaurora.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: rnayak@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26.7.2017 23:09, Rob Herring wrote:
-> dtc recently added PCI bus checks. Fix these warnings.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Cc: "Sören Brinkmann" <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2:
-> - rebase on v4.13-rc2
-> 
-> Michal, you said you applied v1, but it looks like it never was.
+Update the bindings doc and driver for pmi8994-gpio devices.
 
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+---
 
-I have this in my branch but it wasn't merged to arm-soc tree yet.
+- Have been using this patch-set on db820c [1] for extcon with
+  usb controller. The usb controller uses one of these gpios
+  for usb-id/vbus detection.
 
-https://github.com/Xilinx/linux-xlnx/commits/zynqmp/dt
+[1] https://github.com/boddob/linux/tree/for-qcomlt/4.13rc2-merged
 
-Thanks,
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+index 8d893a874634..74932318d41d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
+@@ -15,6 +15,7 @@ PMIC's from Qualcomm.
+ 		    "qcom,pm8921-gpio"
+ 		    "qcom,pm8941-gpio"
+ 		    "qcom,pm8994-gpio"
++		    "qcom,pmi8994-gpio"
+ 		    "qcom,pma8084-gpio"
+ 
+ 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
+@@ -84,6 +85,7 @@ to specify in a pin configuration subnode:
+ 		    gpio1-gpio44 for pm8921
+ 		    gpio1-gpio36 for pm8941
+ 		    gpio1-gpio22 for pm8994
++		    gpio1-gpio10 for pmi8994
+ 		    gpio1-gpio22 for pma8084
+ 
+ - function:
+diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+index 664b641fd776..bf0a6438424b 100644
+--- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
++++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+@@ -799,6 +799,7 @@ static int pmic_gpio_remove(struct platform_device *pdev)
+ 	{ .compatible = "qcom,pm8916-gpio" },	/* 4 GPIO's */
+ 	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
+ 	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
++	{ .compatible = "qcom,pmi8994-gpio" },	/* 10 GPIO's */
+ 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
+ 	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
+ 	{ },
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
