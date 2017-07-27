@@ -1,291 +1,51 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Thu, 27 Jul 2017 16:13:36 -0700
-Message-ID: <597A73A0.7080601@gmail.com>
-References: <1501174151.1055.8.camel@hp800z>
- <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
- <1501181931.1055.18.camel@hp800z> <597A4B80.7000106@gmail.com>
- <1501191985.1055.50.camel@hp800z>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v4 2/2] of: Add unit tests for applying overlays
+Date: Thu, 27 Jul 2017 16:46:23 -0700
+Message-ID: <597A7B4F.2000702@gmail.com>
+References: <1493165394-29367-1-git-send-email-frowand.list@gmail.com>
+ <1493165394-29367-3-git-send-email-frowand.list@gmail.com>
+ <CAL_JsqKZ5JcunaY9K5MEjyS-sxargKtJq11x+DVMwHs8WrnH+Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501191985.1055.50.camel@hp800z>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKZ5JcunaY9K5MEjyS-sxargKtJq11x+DVMwHs8WrnH+Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, Michal Marek <mmarek@suse.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/27/17 14:46, Pantelis Antoniou wrote:
-> Hi Frank,
-> 
-> On Thu, 2017-07-27 at 13:22 -0700, Frank Rowand wrote:
->> Hi Pantelis,
+On 07/25/17 13:36, Rob Herring wrote:
+> On Tue, Apr 25, 2017 at 7:09 PM,  <frowand.list@gmail.com> wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
 >>
->> Keep in mind one of the reasons Linus says he is very direct is to
->> avoid leading a developer on, so that they don't waste a lot of time
->> trying to resolve the maintainer's issues instead of realizing that
->> the maintainer is saying "no". Please read my current answer as being
->> "no, not likely to ever be accepted", not "no, not in the current form".
+>> Existing overlay unit tests examine individual pieces of the overlay
+>> code.  The new tests target the entire process of applying an overlay.
 >>
->> My first reaction is: no, this is not a good idea for the Linux kernel.
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+> 
+> [...]
+> 
+>> @@ -1261,6 +1263,8 @@ void __init unflatten_device_tree(void)
 >>
+>>         /* Get pointer to "/chosen" and "/aliases" nodes for use everywhere */
+>>         of_alias_scan(early_init_dt_alloc_memory_arch);
+>> +
+>> +       unittest_unflatten_overlay_base();
 > 
-> This has nothing to do with the kernel. It spits out valid DTBs that the
-> kernel (or anything else) may use.
-
-I just wanted to distinguish between my opinion of the use of this tool
-in the Linux kernel tree and not comment as much on the value of it
-outside the Linux kernel tree.
-
-It impacts the Linux kernel _if_ the use of this alternate format for
-source device trees to be used by the Linux kernel becomes common.
-Either we would have to accept the YAML device tree source files and
-a YAML compiler into the Linux kernel source tree, or we would lose
-the advantages of the current practice of hosting device tree source
-files in the Linux kernel tree. I place great value on having the
-source code that generates a DTB that will be used to boot a Linux
-kernel being available to modify, and the ability to update device
-trees being in the hands of the user.  So if a different device tree
-source format becomes widely used, that impacts the Linux kernel.
-
-
->> On 07/27/17 11:58, Pantelis Antoniou wrote:
->>> On Thu, 2017-07-27 at 13:09 -0500, Rob Herring wrote:
->>>> On Thu, Jul 27, 2017 at 11:49 AM, Pantelis Antoniou
->>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>>> Hi all,
->>>>>
->>>>> This is a project I've been working on lately and it's finally in a
->>>>> usuable form.
->>>>>
->>>>> I'm introducing yamldt.
->>>>>
->>>>> A YAML to DT blob generator/compiler, utilizing a YAML schema that is
->>>>> functionaly equivalent to DTS and supports all DTS features.
->>>>
->>>> What problem are you trying to solve?
->>>>
->>>
->>> I am demonstrating that the DTS source format is not the only way to
->>> describe hardware and generate a DTB that is functionally equivalent.
->>>
->>> I feel that the reliance on DTS has been holding progress back in
->>> expressing modern hardware and having a tool that generates DTB as well
->>> will allow me to experiment in ways that things like overlays and
->>> portable overlays can be defined.
->>
->> That seems to be multiple things, that should be expressed as individual
->> issues and not lumped into a simple statement (and thus can be addressed
->> separately):
->>
->>   1) DTS format is holding progress back in expressing modern hardware
->>
->> What are the issues you have encountered?
+> This breaks on systems that don't boot with FDT and call
+> unflatten_device_tree, namely x86 and UML (UML needs a few hacks to
+> work) which was a feature of the unittest. Considering applying
+> overlays on x86 is something we'll want to support, the unittest
+> should support that case.
 > 
-> DTS syntax is archaic and makes expressing things like overlays (and
-> portable connectors) extremely hard.
+> Rob
 > 
-> When you have a very large set of boards with are different but similar
-> in ways, the syntax of DTS and the implementation of the single program
-> that can generate a DTB is an impediment.
-> 
-> Going on and fixing it is pointless since..
-> 
->> How would yaml syntax solve those issues?
-> 
-> YAML has features that apply well to problem I'm trying to solve.
 
+I meant to reply when I read this...
 
-> The main thing is the availability of type information that can be made
-> available both at runtime and at compile time.
-> 
-> And no, just having integers and strings does not cut it anymore. You
-> need user defined types and clear marks about how arrays and scalars are
-> sequenced.
-
-OK, those two paragraphs are the level of specificity that I was looking
-for.
-
-I'll have to think that through a bit.  I know that you are so immersed
-in this stuff that it is sort of like breathing because it is so obvious
-to you.  But it takes some time for me to mull this over and try to put
-it into the full context and try to understand more fully the implications.
+I'll look at this, probably next week.  Thanks for pointing out
+the issue.
 
 -Frank
-
->> Why can't we solve those issues in DTS format?
->>
-> 
-> Solve in what timeframe? A minor change to the format is taking ages to
-> resolve. We're now at 4.5 years and counting.
-> 
-> I thought the whole point of open source was about having an itch and
-> solving it. Apparently we're now at the point where debating about
-> 'shoddy' design, of a feature that was implemented in such a way so that
-> it's effect was minimal. Apparently it is useful since it's been widely
-> used, even when having people carrying non-upstreamed patches around.
-> 
->>
->>   2) having a tool that generates DTB ... will allow me to experiment in ways
->>      that things like overlays and portable overlays can be defined.
->>
->> Is this saying that it is difficult to
->>   - modify your own copy of dtc to experiment with different source formats?
-> 
-> There are better ways to spend ones time. Like root canal maybe? I've
-> been doing that for close to 5 years. I'm out of teeth.
-> 
->>   - experiment with changes to DTB format for overlays?
-> 
-> The DTB format never had to change. It's a simple key/value store with a
-> few funny bits.
-> 
->>   - get patches to dtc accepted?
->>
-> 
-> Bingo.
-> 
->>   I think I'm reading between the lines here, and probably not understanding
->>   what you intend, but instead putting words in your mouth.
->>
-> 
-> No need.
-> 
->>
->>>>> yamldl parses a device tree description (source) file in YAML format and
->>>>> outputs a (bit-exact if the -C option is used) device tree blob.
->>>>>
->>>>> A DT aware YAML schema is a good fit as a DTS syntax alternative.
->>>>>
->>>>> YAML is a human-readable data serialization language, and is expressive
->>>>> enough to cover all DTS source features.
->>>>>
->>>>> Simple YAML files are just key value pairs that are very easy to parse,
->>>>> even without using a formal YAML parser. For instance YAML in restricted
->>>>> environments may simple be appending a few lines of text in a given YAML
->>>>> file.
->>>>>
->>>>> The parsers of YAML are very mature, as it has been released in 2001. It
->>>>> is in wide-spread use and schema validation tools are available. YAML
->>>>> support is available for every major programming language.
->>>>>
->>>>> Data in YAML can easily be converted to/form other format that a
->>>>> particular tool that we may use in the future understands.
->>>>>
->>>>> More importantly YAML offers (an optional) type information for each
->>>>> data, which is IMHO crucial for thorough validation and checking against
->>>>> device tree bindings (when they will be converted to a machine readable
->>>>> format, preferably YAML).
->>>>
->>>> We have type information in dts. We can distinguish numbers, strings,
->>>> phandles, etc. The problem is we loose that information in the DTB and
->>>> this does nothing to help that problem.
->>>>
->>>
->>> This is not enough information IMO. We not only need those scalar types
->>> but type information about references (what phandles really are) and
->>> use them to enforce type checking and promotion.
->>
->> So is this a proposal to not just express the equivalent of DTS source,
->> but to instead add types and type checking into a YAML encoded source
->> file?  If so, that should have been a headline, or sub-headline of the
->> proposal.
->>
-> 
-> I can't fit everything in single subject line.
-> 
->> If that is a key issue, could DTS format be extended in a reasonable
->> and acceptable manner to achieve the same result?
->>
-> 
-> It's not worth it. YAML is here, available and has all the bits we need.
-> 
->>
->>> And of course DTS throws away all type information away and has no
->>> way to be extended. In YAML this is a solved problem. 
->>>
->>>>>
->>>>> For more take a look here.
->>>>>
->>>>> https://github.com/pantoniou/yamldt
->>>>
->>>> Looking at the example, I find the syntax harder to follow. Parsing
->>>> what are node names vs labels is one. Relying on indentation for tree
->>>> hierarchy is another.
->>
->> I agree with Rob.
->>
->> And I don't like the YAML feature that the same information can be
->> expressed in very different syntax (as shown in the example immediately
->> below in the email I am replying to), which can result in two functionally
->> equivalent YAML source files looking very different - that is a big usability
->> issue to me.  But now I'm getting to a much lower level of detail than I
->> want to - I want to stay mostly at the architectural level for my issues.
->>
-> 
-> It's all a matter of preference. YAML is way more familiar to people
-> than DTS btw. For them it's DTS that's the weird one out.
-> 
->>
->>> This is really debatable. You can use curly braces if you don't like the
->>> indentation.
->>>
->>> I.e.
->>>
->>> foo:
->>>   bar: true
->>>
->>> Can be written as
->>> foo: { bar: true }
->>>
->>> YAML is a JSON superset which uses the curly braces as a map separator.
->>>
->>> And frankly there are about x1000 more people aware of YAML syntax than
->>> DTS syntax.
->>>
->>>> Does C preprocessing of the YAML files work? I'm surprised if it does.
->>>>
->>>
->>> I think you should check the code out and see for yourself.
->>>
->>> The complete set of C preprocessing of DTS is available, and works
->>> perfectly AFAIKT.
->>>
->>>>>
->>>>> I am eagerly awaiting for your comments.
->>>>
->>>> I could see some uses here to extract data from dts files more easily.
->>>> For example, to extract all compatible strings for some set of dts
->>>> files. I did this by hacking dtc to dump them. Or as a starting point
->>>> to create YAML based DT binding schema. I wonder how Grant is coming
->>>> along with that.
->>
->> But the proposal is not to process DTS format files with this new tool.
->> The proposal is to convert device tree source files to a YAML format
->> and have the new tool compile only YAML format source files.
->>
-> 
-> There is just an RFC. It has served it's purpose.
-> 
->> Having a tool to convert DTS format to a YAML format within a validation
->> toll is something that has been proposed several times.  If I recall
->> correctly, Grant had a prototype that did that step in a handful of
->> lines.  (I'm not sure how complete that conversion process was in
->> his prototype form.)
->>
->> -Frank
->>
->>>>
->>>> Rob
->>>
->>>
->>>
->>
-> 
-> Regards
-> 
-> -- Pantelis
-> 
-> 
-> 
