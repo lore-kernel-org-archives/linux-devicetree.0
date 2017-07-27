@@ -1,136 +1,57 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Thu, 27 Jul 2017 17:23:51 +1000
-Message-ID: <20170727072351.GA7970@umbus.fritz.box>
-References: <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
+Date: Thu, 27 Jul 2017 17:25:34 +1000
+Message-ID: <20170727072534.GC7970@umbus.fritz.box>
+References: <1497451946-15443-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <1497451946-15443-2-git-send-email-pantelis.antoniou@konsulko.com>
  <20170703090648.GV13989@umbus.fritz.box>
  <5967CAA6.6010801@gmail.com>
  <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
- <5967D2F7.60303@gmail.com>
- <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
- <5967E8BC.4090307@gmail.com>
- <1500016861.19864.26.camel@hp800z>
- <20170726043227.GC8978@umbus.fritz.box>
- <5978A047.6060406@gmail.com>
+ <20170726042315.GA8978@umbus.fritz.box>
+ <20170726150148.GD26163@bill-the-cat>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+HP7ph2BbKc20aGI"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="MnLPg7ZWsaic7Fhd"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5978A047.6060406-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <20170726150148.GD26163@bill-the-cat>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---+HP7ph2BbKc20aGI
+--MnLPg7ZWsaic7Fhd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 26, 2017 at 06:59:35AM -0700, Frank Rowand wrote:
-> On 07/25/17 21:32, David Gibson wrote:
-> > On Fri, Jul 14, 2017 at 10:21:01AM +0300, Pantelis Antoniou wrote:
-> >> Hi Frank,
-> >>
-> >> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
-> >>> On 07/13/17 14:22, Phil Elwell wrote:
-> >>>> On 13/07/2017 21:07, Frank Rowand wrote:
-> >>>>> On 07/13/17 12:38, Phil Elwell wrote:
-> >>>>>
-> >>
-> >> [snip]
-> >>
-> >>>> hope an inability to solve the problem posed by this advanced usage =
-won't
-> >>>> prevent a solution to a simpler problem from being accepted.
-> >>
-> >> I have waited until people started commenting on this patchset before
-> >> replying.
-> >>
-> >> I think we agree on a few things to keep the discussion moving forward.
-> >>
-> >> 1. Stacked overlays are useful and make overlays easier to use.
+On Wed, Jul 26, 2017 at 11:01:48AM -0400, Tom Rini wrote:
+> On Wed, Jul 26, 2017 at 02:23:15PM +1000, David Gibson wrote:
+> > On Thu, Jul 13, 2017 at 08:38:10PM +0100, Phil Elwell wrote:
+> > > Can we also consider a mechanism for overlay-local symbols, i.e. symb=
+ols
+> > > that are used purely to create links within an overlay - perhaps usin=
+g a
+> > > particular naming convention? This would make it easier to instantiat=
+e an
+> > > overlay multiple times without having to uniquify all symbols, and it=
+ would
+> > > avoid polluting the global namespace without reason.
 > >=20
-> > Agreed.
-> >=20
-> >> 2. Changing the overlay symbols format now would be unwise.
-> >=20
-> > Agreed.  At least, I don't think updating the symbols alone would be
-> > silly without revisiting everything in the overlay format and making
-> > something completely new.
-> >=20
-> >> 3. A number of extensions have been put forward/requested.
-> >>
-> >> 3.1. There should be a method to place a symbol on a node that didn't
-> >> have one originally (due to vendor supplying broken DTB or being
-> >> generated by firmware at runtime).
-> >=20
-> > There already is.  An overlay can update *anything* in the base tree,
-> > including the /__symbols__ node.  Of course you need the exact path of
-> > the node to tag in the base tree, but you were always going to need
-> > that.
+> > I'd really prefer not to add yet more features and complexity to the
+> > existing shoddily designed overlay mechanism.  I'd prefer for people
+> > to focus on a better replacement - which includes considering these
+> > sorts of use cases and how to handle them.
 >=20
-> I haven't tested that, but it should work with the existing dtc and
-> Linux kernel.
->=20
-> But it will stop working in the future _if_ some changes are made
-> that I would like:
->=20
->   - dtc no longer accept node names beginning with underscore as
->     valid.
+> Can we go for incremental progress over time instead of replacing what
+> was finally accepted?  Maybe one or two concrete examples that need
+> improvement upon, and go from there?  Thanks!
 
-I don't like that idea.  Warning, sure, but I don't wish to outright
-ban constructs which are allowed by the syntax and IEEE1275.  Allowing
-special effects like the above is one reason for that.
-
->   - dtc supports Pantelis' sugar syntax
-
-Uh.. I don't see how that's relevant.
-
-> My intent behind these changes is to hide the implementation details
-> of the overlay extensions (__symbols__, __fixups__, __local_fixups__,
-> fragements nodes, etc) from the normal dts developer.
-
-A good goal, but that doesn't preclude them being accessible to
-the.. uh.. abnormal dts developer?
-
-> This should
-> make it easier to write and understand overlays, and reduce errors
-> in the dtb.
->=20
-> With those changes, it would not be possible to write an overlay
-> that applied against node __symbols__ because it would not be
-> possible to create a label on __symbols__, which would be needed
-> to reference __symbols__ with the sugar syntax.
-
-I haven't looked at Pantelis' latest patches.  But AFAIK it's based on
-the existing compile time overlay syntax, which allows addressing by
-path as well label.  So you could do
-
-&{/__symbols__} {
-	gadget =3D "/path/to/forgotten/gadget";
-};
-
->=20
-> -Frank
->=20
-> >> 3.2. Scoping symbol visibility in case of clashes. This can the ability
-> >> to put multiple path references to a single label/symbol. i.e.
-> >> foo =3D "/path/bar", "/path/bar/baz";
-> >> Resolving the ambiguity would require the caller to provide it's
-> >> 'location' on the tree. I.e. a device under /path/bar/baz would resolve
-> >> to the latter. It is a big change semantically.
-> >=20
-> > I think this would be a nice idea, but trying to do it as a update to
-> > the existing overlay format will be really difficult verging on
-> > impossible.
-> >=20
-> > Better to keep this in mind as a design goal for a new format to
-> > replace overlays.
-> >=20
->=20
+As a general rule, I'd agree with that approach, but not this time.
+Incremental improvements are great if you have a solid base from which
+to work, at the moment we don't.  What we have is a half-arsed hack
+that become widely deployed enough that we have to live with it.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -138,28 +59,24 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---+HP7ph2BbKc20aGI
+--MnLPg7ZWsaic7Fhd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll5lQQACgkQbDjKyiDZ
-s5IwdhAAtsMaqQWXQrbSNsGl9equhTJ5rXukxGyx1aWDExntouZX8xTfV9D21Rlk
-FQYwzNnivUKTHynt0qrGwoxVCtte2SMfEfFffidYd9Rc4d5zYhtzXuumn7e3U/fq
-OQO2STYhTjuVHiDO/iSYWkoA5mlOt9U6cSLq6d12nuXaQQcHSXKLaFop1DEuLzOo
-vRhgODC5wCx70+toO09jidBAjbbtKYnmqAI99lULQuyG7S3X2LzO2xUL3iaK91BE
-rd78hL8ioY78o8FwJzUXvMv8xLdj92Nu3ehEA/aOAmH11NZ0hSeyBAap8MtecCTt
-9APbPfT5bpZcpYUjhSD7nhD9slJPCHwZacmUwH8j2KQEa6rEAwizBbL7CaRZNm4i
-aOHlB2Mb0xCx5wJOSas7QN4ZjrbZvBmdeyHJk/uFstY3riP0clhBDHDDiuFroH3c
-+xtp9JHVEfnzG44EGWekVbWHF/yIWowyxPbnAeQcGnnhjGcWgG5Rc66fmLvcSioi
-gT12WYIqJ1fUYomacYXbh+qxztdhE6JP3JK2z5McUeO+idu581isgkE/Lcnvv4Vj
-QSYh7GrjQNYI5wrBptf3Hw1KQtQXLW9h/qH6tfoRvky/j7DjyvMufW14O6PLK7HU
-fD/NEHRqx7ohn9XIeqRoMA3fwdUF0rz+St1ctew4y3fMQDDEf3Y=
-=KIXc
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll5lW4ACgkQbDjKyiDZ
+s5JJRg/+LxDiNySBuatWu3+H2UGQMAofjzchm/1e2VtbHYGk+cufY+4lLLmgzs8Z
+mIrLWpWsZOE2EwH0ueJ3DkJHaT9vvmuqxnD5MpwT+iaTkWJLphZ2D5lPSWMtezYT
+Yca1LoBL2AlbLLjBrbdrMzRkmob5njmufwLDliwaboVhTsSCNtfF0Y/H2ZXwKviJ
+MrKVlw+dKFzdWJb0nNyUh0aIjIX2Bi2O4RuIVFJzSq+UM7pXVOBVL6DZD02hVXsI
+B9vsHodtU2LlZntcZcReHyyKU5N/dtCqRvzBn34RzAH2LANIrVVq7PYjXzGGvxML
+ZM/44Qt56BhZryMSR2+gymZWV6cBLTx4Ue6fSfRXU719927RiyK//kJ4NNQuifLc
+GYJUjmBIh7y+pPIk6iqIgTCKzoXj73CzUAGTUfSx/TIThI4D6l5MVIunzvNQL/DQ
+R6EEYrwNgPEc2IGw1tH87auDii14eyXd8qi9wBUZHpurMAUfR5V6czSu27weztGY
+MObc+uZBBJ9VJPSoyWREVitI+H1QvuhhKlF/Hngcv0FJOM/qkQYTOgddz/PPVWa2
+gcRXKhWopv5wF5DW7BpO7SQEpYmPITXpZ7YhKII07c6f12aNVv/DUSNpslbvCYba
+5jipoPl14U/ts4nNTncyWWi3J6vj5yf935H4k80RWg57cDNfKTA=
+=3FM/
 -----END PGP SIGNATURE-----
 
---+HP7ph2BbKc20aGI--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--MnLPg7ZWsaic7Fhd--
