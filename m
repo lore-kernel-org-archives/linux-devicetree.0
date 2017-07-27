@@ -1,104 +1,207 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 08/10] Documentation: hwmon: Add OCC documentation
-Date: Thu, 27 Jul 2017 09:30:27 -0500
-Message-ID: <1501165829-12395-9-git-send-email-eajames@linux.vnet.ibm.com>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 06/10] drivers/hwmon/occ: Add non-hwmon attributes
+Date: Thu, 27 Jul 2017 09:30:25 -0500
+Message-ID: <1501165829-12395-7-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501165829-12395-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-Document the hwmon interface for the OCC.
+Create device attributes for additional OCC properties that do not
+belong as hwmon sensors. These provide additional information as to the
+state of the processor and system.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 ---
- Documentation/hwmon/occ | 74 +++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/hwmon/occ
+ drivers/hwmon/occ/common.c | 83 ++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/occ/common.h |  1 +
+ drivers/hwmon/occ/p8_i2c.c | 10 ++++++
+ drivers/hwmon/occ/p9_sbe.c | 10 ++++++
+ 4 files changed, 104 insertions(+)
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-new file mode 100644
-index 0000000..dcae911
---- /dev/null
-+++ b/Documentation/hwmon/occ
-@@ -0,0 +1,74 @@
-+Kernel driver occ-hwmon
-+=======================
+diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
+index bad7f4b..2459e12 100644
+--- a/drivers/hwmon/occ/common.c
++++ b/drivers/hwmon/occ/common.c
+@@ -19,6 +19,14 @@
+ 
+ #define OCC_UPDATE_FREQUENCY		msecs_to_jiffies(1000)
+ 
++/* OCC status bits */
++#define OCC_STAT_MASTER			0x80
++#define OCC_STAT_ACTIVE			0x01
++#define OCC_EXT_STAT_DVFS_OT		0x80
++#define OCC_EXT_STAT_DVFS_POWER		0x40
++#define OCC_EXT_STAT_MEM_THROTTLE	0x20
++#define OCC_EXT_STAT_QUICK_DROP		0x10
 +
-+Supported chips:
-+  * POWER8
-+  * POWER9
+ /* OCC sensor type and version definitions */
+ 
+ struct temp_sensor_1 {
+@@ -1044,6 +1052,71 @@ static int occ_setup_sensor_attrs(struct occ *occ)
+ 	return 0;
+ }
+ 
++static ssize_t occ_show_status(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	int rc;
++	int val = 0;
++	struct occ *occ = dev_get_drvdata(dev);
++	struct occ_poll_response_header *header;
++	struct sensor_device_attribute *sattr = to_sensor_dev_attr(attr);
 +
-+Author: Eddie James <eajames@us.ibm.com>
++	rc = occ_update_response(occ);
++	if (rc)
++		return rc;
 +
-+Description
-+-----------
++	header = (struct occ_poll_response_header *)occ->resp.data;
 +
-+This driver supports hardware monitoring for the On-Chip Controller (OCC)
-+embedded on POWER processors. The OCC is a device that collects and aggregates
-+sensor data from the processor and the system. The OCC can provide the raw
-+sensor data as well as perform thermal and power management on the system.
++	switch (sattr->index) {
++	case 0:
++		val = (header->status & OCC_STAT_MASTER) ? 1 : 0;
++		break;
++	case 1:
++		val = (header->status & OCC_STAT_ACTIVE) ? 1 : 0;
++		break;
++	case 2:
++		val = (header->ext_status & OCC_EXT_STAT_DVFS_OT) ? 1 : 0;
++		break;
++	case 3:
++		val = (header->ext_status & OCC_EXT_STAT_DVFS_POWER) ? 1 : 0;
++		break;
++	case 4:
++		val = (header->ext_status & OCC_EXT_STAT_MEM_THROTTLE) ? 1 : 0;
++		break;
++	case 5:
++		val = (header->ext_status & OCC_EXT_STAT_QUICK_DROP) ? 1 : 0;
++		break;
++	case 6:
++		val = header->occ_state;
++		break;
++	}
 +
-+The P8 version of this driver is a client driver of I2C. It may be probed
-+manually if an "ibm,p8-occ-hwmon" compatible device is found under the
-+appropriate I2C bus node in the device-tree.
++	return snprintf(buf, PAGE_SIZE - 1, "%d\n", val);
++}
 +
-+The P9 version of this driver is a client driver of the FSI-based OCC driver.
-+It will be probed automatically by the FSI-based OCC driver. Please see the
-+device-tree bindings documentation for that driver for details on probing
-+an OCC device (Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt).
++static SENSOR_DEVICE_ATTR(occ_master, 0444, occ_show_status, NULL, 0);
++static SENSOR_DEVICE_ATTR(occ_active, 0444, occ_show_status, NULL, 1);
++static SENSOR_DEVICE_ATTR(occ_dvfs_ot, 0444, occ_show_status, NULL, 2);
++static SENSOR_DEVICE_ATTR(occ_dvfs_power, 0444, occ_show_status, NULL, 3);
++static SENSOR_DEVICE_ATTR(occ_mem_throttle, 0444, occ_show_status, NULL, 4);
++static SENSOR_DEVICE_ATTR(occ_quick_drop, 0444, occ_show_status, NULL, 5);
++static SENSOR_DEVICE_ATTR(occ_status, 0444, occ_show_status, NULL, 6);
 +
-+Sysfs entries
-+-------------
++static struct attribute *occ_attributes[] = {
++	&sensor_dev_attr_occ_master.dev_attr.attr,
++	&sensor_dev_attr_occ_active.dev_attr.attr,
++	&sensor_dev_attr_occ_dvfs_ot.dev_attr.attr,
++	&sensor_dev_attr_occ_dvfs_power.dev_attr.attr,
++	&sensor_dev_attr_occ_mem_throttle.dev_attr.attr,
++	&sensor_dev_attr_occ_quick_drop.dev_attr.attr,
++	&sensor_dev_attr_occ_status.dev_attr.attr,
++	NULL
++};
 +
-+The following attributes are supported. All attributes are read-only unless
-+specified.
++static const struct attribute_group occ_attr_group = {
++	.attrs = occ_attributes,
++};
 +
-+temp[1-n]_label		OCC sensor id.
-+temp[1-n]_input		Measured temperature in millidegrees C.
-+[with temperature sensor version 2+]
-+    temp[1-n]_fru_type		Given FRU (Field Replaceable Unit) type.
+ /* only need to do this once at startup, as OCC won't change sensors on us */
+ static void occ_parse_poll_response(struct occ *occ)
+ {
+@@ -1124,5 +1197,15 @@ int occ_setup(struct occ *occ, const char *name)
+ 		return rc;
+ 	}
+ 
++	rc = sysfs_create_group(&occ->bus_dev->kobj, &occ_attr_group);
++	if (rc)
++		dev_warn(occ->bus_dev, "failed to create status attrs: %d\n",
++			 rc);
 +
-+freq[1-n]_label		OCC sensor id.
-+freq[1-n]_input		Measured frequency.
+ 	return 0;
+ }
 +
-+power[1-n]_label	OCC sensor id.
-+power[1-n]_input	Measured power in watts.
-+power[1-n]_update_tag	Number of 250us samples represented in accumulator.
-+power[1-n]_accumulator	Accumulation of 250us power readings.
-+[with power sensor version 2+]
-+    power[1-n]_function_id	Identifies what the power reading is for.
-+    power[1-n]_apss_channel	Indicates APSS channel.
++void occ_shutdown(struct occ *occ)
++{
++	sysfs_remove_group(&occ->bus_dev->kobj, &occ_attr_group);
++}
+diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
+index 049c3b4..dc9e06d 100644
+--- a/drivers/hwmon/occ/common.h
++++ b/drivers/hwmon/occ/common.h
+@@ -110,5 +110,6 @@ struct occ {
+ };
+ 
+ int occ_setup(struct occ *occ, const char *name);
++void occ_shutdown(struct occ *occ);
+ 
+ #endif /* OCC_COMMON_H */
+diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
+index 745fb52..ee9cef7 100644
+--- a/drivers/hwmon/occ/p8_i2c.c
++++ b/drivers/hwmon/occ/p8_i2c.c
+@@ -229,6 +229,15 @@ static int p8_i2c_occ_probe(struct i2c_client *client,
+ 	return occ_setup(occ, "p8_occ");
+ }
+ 
++static int p8_i2c_occ_remove(struct i2c_client *client)
++{
++	struct occ *occ = dev_get_drvdata(&client->dev);
 +
-+[power version 0xa0 only]
-+power1_id			OCC sensor id.
-+power[1-n]_label		Sensor type, "system", "proc", "vdd", or "vdn".
-+power[1-n]_input		Most recent power reading in watts.
-+power[1-n]_update_tag		Number of samples in the accumulator.
-+power[1-n]_accumulator		Accumulation of power readings.
-+[with sensor type "system" and "proc" only]
-+    power[1-n]_update_time	Time in us that the power value is read.
++	occ_shutdown(occ);
 +
-+caps1_current		Current OCC power cap in watts.
-+caps1_reading		Current system output power in watts.
-+caps1_norm		Power cap without redundant power.
-+caps1_max		Maximum power cap.
-+[caps version 1 and 2 only]
-+    caps1_min		Minimum power cap.
-+[caps version 3+]
-+    caps1_min_hard		Hard minimum cap that can be set and held.
-+    caps1_min_soft		Soft minimum cap below hard, not guaranteed.
-+caps1_user		The powercap specified by the user. Will be 0 if no
-+			user powercap exists. This attribute is read-write.
-+[caps version 1+]
-+    caps1_user_source	Indicates how the user power limit was set.
++	return 0;
++}
 +
-+extn[1-n]_label		ASCII id or sensor id.
-+extn[1-n]_flags		Indicates type of label attribute.
-+extn[1-n]_input		Data.
+ static const struct of_device_id p8_i2c_occ_of_match[] = {
+ 	{ .compatible = "ibm,p8-occ-hwmon" },
+ 	{}
+@@ -242,6 +251,7 @@ static int p8_i2c_occ_probe(struct i2c_client *client,
+ 		.of_match_table = p8_i2c_occ_of_match,
+ 	},
+ 	.probe = p8_i2c_occ_probe,
++	.remove = p8_i2c_occ_remove,
+ };
+ 
+ module_i2c_driver(p8_i2c_occ_driver);
+diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
+index 667d190..d36ce0b 100644
+--- a/drivers/hwmon/occ/p9_sbe.c
++++ b/drivers/hwmon/occ/p9_sbe.c
+@@ -94,6 +94,15 @@ static int p9_sbe_occ_probe(struct platform_device *pdev)
+ 	return occ_setup(occ, "p9_occ");
+ }
+ 
++static int p9_sbe_occ_remove(struct platform_device *pdev)
++{
++	struct occ *occ = platform_get_drvdata(pdev);
++
++	occ_shutdown(occ);
++
++	return 0;
++}
++
+ static const struct of_device_id p9_sbe_occ_of_match[] = {
+ 	{ .compatible = "ibm,p9-occ-hwmon" },
+ 	{ },
+@@ -105,6 +114,7 @@ static int p9_sbe_occ_probe(struct platform_device *pdev)
+ 		.of_match_table	= p9_sbe_occ_of_match,
+ 	},
+ 	.probe	= p9_sbe_occ_probe,
++	.remove = p9_sbe_occ_remove,
+ };
+ 
+ module_platform_driver(p9_sbe_occ_driver);
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
