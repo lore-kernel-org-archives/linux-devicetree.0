@@ -1,62 +1,70 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Thu, 27 Jul 2017 19:49:11 +0300
-Message-ID: <1501174151.1055.8.camel@hp800z>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Thu, 27 Jul 2017 09:54:01 -0700
+Message-ID: <65ae1747-4dff-b1d8-8aa3-684fc8c7809a@gmail.com>
+References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
+ <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
+ <20170727134834.GD18666@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170727134834.GD18666@lunn.ch>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, David Wu <david.wu@rock-chips.com>
+Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On 07/27/2017 06:48 AM, Andrew Lunn wrote:
+> On Thu, Jul 27, 2017 at 09:02:16PM +0800, David Wu wrote:
+>> To make internal phy work, need to configure the phy_clock,
+>> phy cru_reset and related registers.
+>>
+>> Signed-off-by: David Wu <david.wu@rock-chips.com>
+>> ---
+>> changes in v2:
+>>  - Use the standard "phy-mode" property for internal phy. (Florian)
+> 
+> I think we need to discuss this. This PHY appears to be on an MDIO
+> bus, it uses a standard PHY driver, and it appears to be using an RMII
+> interface. So it is just an ordinary PHY.
 
-This is a project I've been working on lately and it's finally in a
-usuable form.
+First, the fact that the internal PHY also appears through MDIO is
+orthogonal to the fact that it is internal or external. Plenty of
+designs have internal PHYs exposed through MDIO because that is
+convenient. What matters though is how the data/clock lines are wired
+internally, which is what "phy-mode" describes.
 
-I'm introducing yamldt.
+> 
+> Internal is supposed to be something which is not ordinary, does not
+> use one of the standard phy modes, needs something special to make it
+> work.
+> 
+> Florain, it appears to be your suggestion to use internal. What do you
+> say?
 
-A YAML to DT blob generator/compiler, utilizing a YAML schema that is
-functionaly equivalent to DTS and supports all DTS features.
+phy-mode = "internal" really means that it is not a standard MII variant
+to connect the data/clock lines between the Ethernet MAC and the PHY,
+and this can happen in some designs (although quite unlikely). So from
+there we could do several things depending on the requirements:
 
-yamldl parses a device tree description (source) file in YAML format and
-outputs a (bit-exact if the -C option is used) device tree blob.
+- if you can have your Ethernet MAC driver perform the necessary
+configuration *after* you have been able to bind the PHY device with its
+PHY driver, then the PHY driver should have PHY_IS_INTERNAL in its
+flags, and you can use phy_is_internal() from PHYLIB to tell you that
+and we could imagine using: phy-mode = "rmii" because that would not too
+much of a stretch
 
-A DT aware YAML schema is a good fit as a DTS syntax alternative.
+- if you need knowledge about this PHY connection type prior to binding
+the PHY device and its driver (that is, before of_phy_connect()) we
+could add a boolean property e.g: "phy-is-internal" that allows us to
+know that, or we can have a new phy-mode value, e.g: "internal-rmii"
+which describes that, either way would probably be fine, but the former
+scales better
 
-YAML is a human-readable data serialization language, and is expressive
-enough to cover all DTS source features.
-
-Simple YAML files are just key value pairs that are very easy to parse,
-even without using a formal YAML parser. For instance YAML in restricted
-environments may simple be appending a few lines of text in a given YAML
-file.
-
-The parsers of YAML are very mature, as it has been released in 2001. It
-is in wide-spread use and schema validation tools are available. YAML
-support is available for every major programming language.
-
-Data in YAML can easily be converted to/form other format that a
-particular tool that we may use in the future understands.
-
-More importantly YAML offers (an optional) type information for each
-data, which is IMHO crucial for thorough validation and checking against
-device tree bindings (when they will be converted to a machine readable
-format, preferably YAML).
-
-For more take a look here.
-
-https://github.com/pantoniou/yamldt
-
-I am eagerly awaiting for your comments.
-
-Regards
-
--- Pantelis
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then again, using phy-mode = "internal" even though this is Reduced MII
+is not big of a deal IMHO as long as there is no loss of information and
+that internal de-facto means internal reduced MII for instance.
+-- 
+Florian
