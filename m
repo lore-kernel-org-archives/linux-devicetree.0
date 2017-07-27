@@ -1,162 +1,51 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: bcm2835: Add Raspberry Pi Zero W
-Date: Thu, 27 Jul 2017 13:35:18 +0200
-Message-ID: <1bc16f65-7872-d554-d29b-d9cd746c28bd@i2se.com>
-References: <1500579429-9101-1-git-send-email-stefan.wahren@i2se.com>
- <1500579429-9101-4-git-send-email-stefan.wahren@i2se.com>
- <87vamfx8nx.fsf@eliezer.anholt.net>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 07/17] regulator: arizona-micsupp: Add
+ support for Cirrus Logic Madera codecs
+Date: Thu, 27 Jul 2017 12:45:50 +0100
+Message-ID: <1501155950.5479.1.camel@rf-debian.wolfsonmicro.main>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1496415790-19164-8-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170605171006.3ppsjia2xvb22ld2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87vamfx8nx.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-Content-Language: de-DE
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170605171006.3ppsjia2xvb22ld2@rob-hp-laptop>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rob Herring <robh@kernel.org>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, tglx@linutronix.de, lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Am 26.07.2017 um 22:09 schrieb Eric Anholt:
-> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
->
->> The Raspberry Pi Zero W has the same components like the Zero plus
->> a Cypress CYW43438 wireless chip (wifi + bl).
-> I sent out v2 of the arm64 patch so that hopefully we can get started
-> merging this.  Couple of comments on a re-read.
->
->> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/Makefile               |  3 +-
->>  arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 73 ++++++++++++++++++++++++++++++++
->>  2 files changed, 75 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index ec60f4f..f3bf9397 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -74,7 +74,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->>  	bcm2835-rpi-a-plus.dtb \
->>  	bcm2836-rpi-2-b.dtb \
->>  	bcm2837-rpi-3-b.dtb \
->> -	bcm2835-rpi-zero.dtb
->> +	bcm2835-rpi-zero.dtb \
->> +	bcm2835-rpi-zero-w.dtb
->>  dtb-$(CONFIG_ARCH_BCM_5301X) += \
->>  	bcm4708-asus-rt-ac56u.dtb \
->>  	bcm4708-asus-rt-ac68u.dtb \
->> diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->> new file mode 100644
->> index 0000000..9c6d714
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
->> @@ -0,0 +1,73 @@
->> +/*
->> + * Copyright (C) 2017 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->> + *
->> + * The code contained herein is licensed under the GNU General Public
->> + * License. You may obtain a copy of the GNU General Public License
->> + * Version 2 or later at the following locations:
->> + *
->> + * http://www.opensource.org/licenses/gpl-license.html
->> + * http://www.gnu.org/copyleft/gpl.html
->> + */
->> +
->> +/dts-v1/;
->> +#include "bcm2835.dtsi"
->> +#include "bcm2835-rpi.dtsi"
->> +#include "bcm283x-rpi-usb-host.dtsi"
->> +
->> +/ {
->> +	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
->> +	model = "Raspberry Pi Zero W";
->> +
->> +	aliases {
->> +		uart0 = "/soc/serial@7e201000";
->> +		uart1 = "/soc/serial@7e215040";
->> +		serial0 = "/soc/serial@7e201000";
->> +		serial1 = "/soc/serial@7e215040";
->> +	};
-> Should we have this in the other board DTs?  What does it do?
+On Mon, 2017-06-05 at 12:10 -0500, Rob Herring wrote:
+> On Fri, Jun 02, 2017 at 04:03:00PM +0100, Richard Fitzgerald wrote:
+> > This adds a new driver identity "madera-micsupp" and probe function
+> > so that this driver can be used to control the micsupp regulator on
+> > Cirrus Logic Madera codecs.
+> > 
+> > Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> > ---
+> > No changes since V2
+> > 
+> >  .../bindings/regulator/arizona-regulator.txt       |  3 +-
+> 
+> I already acked v2. Please add acks when posting new versions.
 
-This was the hardest part to make the Zero W useable. I took it from
-downstream [1], because without it i don't see anything on debug UART
-(config.txt already has enable_uart=1).
+Some maintainers have bitten my head off when I've carried forward their
+ack so I never know what people want.
 
-I could add a helpful comment, but i can't explain why it's necessary
-for RPI Zero W and not for the older RPI Zero.
-
-Maybe the foundation guys have an alternative solution or at least
-explanation.
-
-[1] -
-https://github.com/raspberrypi/linux/blob/rpi-4.9.y/arch/arm/boot/dts/bcm2708-rpi.dtsi
-[2] -
-https://github.com/raspberrypi/linux/blob/rpi-4.9.y/arch/arm/boot/dts/overlays/pi3-disable-bt-overlay.dts
-
->
->> +
->> +	leds {
->> +		act {
->> +			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
->> +		};
->> +	};
->> +
->> +	wifi_pwrseq: wifi-pwrseq {
->> +		compatible = "mmc-pwrseq-simple";
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&wl_on>;
->> +		reset-gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
->> +	};
->> +};
->> +
->> +&gpio {
->> +	pinctrl-0 = <&gpioout &alt0>;
->> +
->> +	wl_on: wl-on {
->> +		brcm,pins = <41>;
->> +		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
->> +	};
->> +};
-> Would you be up for adding gpio-line-names based on the dt-blob.dts?
-
-Sure
-
->
->> +
->> +&hdmi {
->> +	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
->> +};
->> +
->> +&sdhci {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
->> +	mmc-pwrseq = <&wifi_pwrseq>;
->> +	non-removable;
->> +	status = "okay";
->> +
->> +	brcmf: wifi@1 {
->> +		reg = <1>;
->> +		compatible = "brcm,bcm4329-fmac";
->> +	};
->> +};
->> +
->> +&uart0 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart0_gpio14>;
->> +	status = "okay";
->> +};
->> -- 
->> 2.7.4
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> >  drivers/regulator/Kconfig                          |  7 ++-
+> >  drivers/regulator/arizona-micsupp.c                | 71 +++++++++++++++++++++-
+> >  3 files changed, 76 insertions(+), 5 deletions(-)
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel@alsa-project.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
