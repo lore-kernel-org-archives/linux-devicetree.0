@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 07/10] drivers/hwmon/occ: Add error handling
-Date: Thu, 27 Jul 2017 09:30:26 -0500
-Message-ID: <1501165829-12395-8-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 05/10] drivers/hwmon/occ: Add sensor attributes and register hwmon device
+Date: Thu, 27 Jul 2017 09:30:24 -0500
+Message-ID: <1501165829-12395-6-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
@@ -12,170 +12,520 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames@us.ibm.com>
 
-Add logic to detect a number of error scenarios on the OCC. Export any
-errors through an additional non-hwmon device attribute. The error
-counting and state verification are required by the OCC hardware
-specification.
+Setup the sensor attributes for every OCC sensor found by the first poll
+response. Register the attributes with hwmon. Add hwmon documentation
+for the driver.
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- drivers/hwmon/occ/common.c | 82 ++++++++++++++++++++++++++++++++++++++++++++--
- drivers/hwmon/occ/common.h |  4 +++
- 2 files changed, 84 insertions(+), 2 deletions(-)
+ drivers/hwmon/occ/common.c | 432 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/occ/common.h |  15 ++
+ 2 files changed, 447 insertions(+)
 
 diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-index 2459e12..970b31f 100644
+index 5243e54..bad7f4b 100644
 --- a/drivers/hwmon/occ/common.c
 +++ b/drivers/hwmon/occ/common.c
-@@ -17,6 +17,11 @@
+@@ -8,9 +8,11 @@
+  */
+ 
+ #include <linux/device.h>
++#include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
++#include <linux/sysfs.h>
+ #include <asm/unaligned.h>
  
  #include "common.h"
- 
-+#define OCC_ERROR_COUNT_THRESHOLD	2	/* OCC HW defined */
-+
-+#define OCC_STATE_SAFE			4
-+#define OCC_SAFE_TIMEOUT		msecs_to_jiffies(60000) /* 1 min */
-+
- #define OCC_UPDATE_FREQUENCY		msecs_to_jiffies(1000)
- 
- /* OCC status bits */
-@@ -126,10 +131,33 @@ struct extended_sensor {
- 	u8 data[6];
- } __packed;
- 
-+static atomic_t occs_present = ATOMIC_INIT(0);
-+
-+static ssize_t occ_show_error(struct device *dev,
-+			      struct device_attribute *attr, char *buf)
-+{
-+	struct occ *occ = dev_get_drvdata(dev);
-+
-+	return snprintf(buf, PAGE_SIZE - 1, "%d\n", occ->error);
-+}
-+
-+static DEVICE_ATTR(occ_error, 0444, occ_show_error, NULL);
-+
-+/* Notify user if we have an error and a change in error state. */
-+static void occ_notify_error(struct occ *occ, int old_error)
-+{
-+	/* check hwmon pointer to verify error attribute has been added */
-+	if (occ->error != old_error && occ->error && occ->hwmon)
-+		sysfs_notify(&occ->bus_dev->kobj, NULL,
-+			     dev_attr_occ_error.attr.name);
-+}
-+
- static int occ_poll(struct occ *occ)
- {
-+	struct occ_poll_response_header *header;
- 	u16 checksum = occ->poll_cmd_data + 1;
- 	u8 cmd[8];
-+	int rc, old_error = occ->error;
- 
- 	/* big endian */
- 	cmd[0] = 0;			/* sequence number */
-@@ -142,12 +170,47 @@ static int occ_poll(struct occ *occ)
- 	cmd[7] = 0;
- 
- 	/* mutex should already be locked if necessary */
--	return occ->send_cmd(occ, cmd);
-+	rc = occ->send_cmd(occ, cmd);
-+	if (rc) {
-+		if (occ->error_count++ > OCC_ERROR_COUNT_THRESHOLD)
-+			occ->error = rc;
-+
-+		goto done;
-+	}
-+
-+	/* clear error since communication was successful */
-+	occ->error_count = 0;
-+	occ->error = 0;
-+
-+	header = (struct occ_poll_response_header *)occ->resp.data;
-+	/* check for safe state */
-+	if (header->occ_state == OCC_STATE_SAFE) {
-+		if (occ->last_safe) {
-+			if (time_after(jiffies,
-+				       occ->last_safe + OCC_SAFE_TIMEOUT))
-+				occ->error = -EHOSTDOWN;
-+		} else {
-+			occ->last_safe = jiffies;
-+		}
-+	} else {
-+		occ->last_safe = 0;
-+	}
-+
-+	if (header->status & OCC_STAT_MASTER) {
-+		/* check if we're missing any OCCs */
-+		if (hweight8(header->occs_present) !=
-+		    atomic_read(&occs_present))
-+			occ->error = -ENXIO;
-+	}
-+
-+done:
-+	occ_notify_error(occ, old_error);
-+	return rc;
- }
- 
- static int occ_set_user_power_cap(struct occ *occ, u16 user_power_cap)
- {
--	int rc;
-+	int rc, old_error = occ->error;
- 	u8 cmd[8];
- 	u16 checksum = 0x24;
- 	__be16 user_power_cap_be = cpu_to_be16(user_power_cap);
-@@ -171,6 +234,16 @@ static int occ_set_user_power_cap(struct occ *occ, u16 user_power_cap)
- 
- 	mutex_unlock(&occ->lock);
- 
-+	if (rc) {
-+		if (occ->error_count++ > OCC_ERROR_COUNT_THRESHOLD)
-+			occ->error = rc;
-+	} else {
-+		/* successful communication so clear the error */
-+		occ->error_count = 0;
-+		occ->error = 0;
-+	}
-+
-+	occ_notify_error(occ, old_error);
+@@ -629,6 +631,419 @@ static ssize_t occ_show_extended(struct device *dev,
  	return rc;
  }
  
-@@ -1110,6 +1183,7 @@ static ssize_t occ_show_status(struct device *dev,
- 	&sensor_dev_attr_occ_mem_throttle.dev_attr.attr,
- 	&sensor_dev_attr_occ_quick_drop.dev_attr.attr,
- 	&sensor_dev_attr_occ_status.dev_attr.attr,
-+	&dev_attr_occ_error.attr,
- 	NULL
- };
- 
-@@ -1197,6 +1271,8 @@ int occ_setup(struct occ *occ, const char *name)
- 		return rc;
- 	}
- 
-+	atomic_inc(&occs_present);
++/* Some helper macros to make it easier to define an occ_attribute. Since these
++ * are dynamically allocated, we shouldn't use the existing kernel macros which
++ * stringify the name argument.
++ */
++#define ATTR_OCC(_name, _mode, _show, _store) {				\
++	.attr	= {							\
++		.name = _name,						\
++		.mode = VERIFY_OCTAL_PERMISSIONS(_mode),		\
++	},								\
++	.show	= _show,						\
++	.store	= _store,						\
++}
 +
- 	rc = sysfs_create_group(&occ->bus_dev->kobj, &occ_attr_group);
- 	if (rc)
- 		dev_warn(occ->bus_dev, "failed to create status attrs: %d\n",
-@@ -1208,4 +1284,6 @@ int occ_setup(struct occ *occ, const char *name)
- void occ_shutdown(struct occ *occ)
++#define SENSOR_ATTR_OCC(_name, _mode, _show, _store, _nr, _index) {	\
++	.dev_attr	= ATTR_OCC(_name, _mode, _show, _store),	\
++	.index		= _index,					\
++	.nr		= _nr,						\
++}
++
++#define OCC_INIT_ATTR(_name, _mode, _show, _store, _nr, _index)		\
++	((struct sensor_device_attribute_2)				\
++		SENSOR_ATTR_OCC(_name, _mode, _show, _store, _nr, _index))
++
++/* Allocate and instatiate sensor_device_attribute_2s. It's most efficient to
++ * use our own instead of the built-in hwmon attribute types.
++ */
++static int occ_setup_sensor_attrs(struct occ *occ)
++{
++	unsigned int i, s, num_attrs = 0;
++	struct device *dev = occ->bus_dev;
++	struct occ_sensors *sensors = &occ->sensors;
++	struct occ_attribute *attr;
++	ssize_t (*show_temp)(struct device *, struct device_attribute *,
++			     char *) = occ_show_temp_1;
++	ssize_t (*show_freq)(struct device *, struct device_attribute *,
++			     char *) = occ_show_freq_1;
++	ssize_t (*show_power)(struct device *, struct device_attribute *,
++			      char *) = occ_show_power_1;
++	ssize_t (*show_caps)(struct device *, struct device_attribute *,
++			     char *) = occ_show_caps_1;
++
++	switch (sensors->temp.version) {
++	case 1:
++		num_attrs += (sensors->temp.num_sensors * 2);
++		break;
++	case 2:
++		num_attrs += (sensors->temp.num_sensors * 3);
++		show_temp = occ_show_temp_2;
++		break;
++	default:
++		sensors->temp.num_sensors = 0;
++	}
++
++	switch (sensors->freq.version) {
++	case 2:
++		show_freq = occ_show_freq_2;
++		/* fall through */
++	case 1:
++		num_attrs += (sensors->freq.num_sensors * 2);
++		break;
++	default:
++		sensors->freq.num_sensors = 0;
++	}
++
++	switch (sensors->power.version) {
++	case 1:
++		num_attrs += (sensors->power.num_sensors * 4);
++		break;
++	case 2:
++		num_attrs += (sensors->power.num_sensors * 6);
++		show_power = occ_show_power_2;
++		break;
++	case 0xA0:
++		num_attrs += (sensors->power.num_sensors * 19);
++		show_power = occ_show_power_a0;
++		break;
++	default:
++		sensors->power.num_sensors = 0;
++	}
++
++	switch (sensors->caps.version) {
++	case 1:
++		num_attrs += (sensors->caps.num_sensors * 6);
++		break;
++	case 2:
++		num_attrs += (sensors->caps.num_sensors * 7);
++		show_caps = occ_show_caps_2;
++		break;
++	case 3:
++		num_attrs += (sensors->caps.num_sensors * 8);
++		show_caps = occ_show_caps_3;
++		break;
++	default:
++		sensors->caps.num_sensors = 0;
++	}
++
++	switch (sensors->extended.version) {
++	case 1:
++		num_attrs += sensors->extended.num_sensors;
++		break;
++	default:
++		sensors->extended.num_sensors = 0;
++	}
++
++	occ->attrs = devm_kzalloc(dev, sizeof(*occ->attrs) * num_attrs,
++				  GFP_KERNEL);
++	if (!occ->attrs)
++		return -ENOMEM;
++
++	/* null-terminated list */
++	occ->group.attrs = devm_kzalloc(dev, sizeof(*occ->group.attrs) *
++					num_attrs + 1, GFP_KERNEL);
++	if (!occ->group.attrs)
++		return -ENOMEM;
++
++	attr = occ->attrs;
++
++	for (i = 0; i < sensors->temp.num_sensors; ++i) {
++		s = i + 1;
++
++		snprintf(attr->name, sizeof(attr->name), "temp%d_label", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_temp, NULL,
++					     0, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "temp%d_input", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_temp, NULL,
++					     1, i);
++		attr++;
++
++		if (sensors->temp.version > 1) {
++			snprintf(attr->name, sizeof(attr->name),
++				 "temp%d_fru_type", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_temp, NULL, 2, i);
++			attr++;
++		}
++	}
++
++	for (i = 0; i < sensors->freq.num_sensors; ++i) {
++		s = i + 1;
++
++		snprintf(attr->name, sizeof(attr->name), "freq%d_label", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_freq, NULL,
++					     0, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "freq%d_input", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_freq, NULL,
++					     1, i);
++		attr++;
++	}
++
++	if (sensors->power.version == 0xA0) {
++		/* Special case for many-attribute power sensor. Split it into
++		 * a sensor number per power type, emulating several sensors.
++		 */
++		for (i = 0; i < sensors->power.num_sensors; ) {
++			s = (i * 4) + 1;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_id", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 0, i);
++			attr++;
++
++			/* system power attributes */
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_label", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 1, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_time", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 2, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_input", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 3, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_tag", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 4, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_accumulator", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 5, i);
++			attr++;
++
++			s++;
++
++			/* processor power attributes */
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_label", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 6, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_time", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 7, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_input", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 8, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_tag", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 9, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_accumulator", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 10, i);
++			attr++;
++
++			s++;
++
++			/* vdd power attributes */
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_label", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 11, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_input", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 12, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_tag", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 13, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_accumulator", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 14, i);
++			attr++;
++
++			s++;
++
++			/* vdn power attributes */
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_label", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 15, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_input", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 16, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_tag", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 17, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_accumulator", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 18, i);
++			attr++;
++		}
++	} else {
++		for (i = 0; i < sensors->power.num_sensors; ++i) {
++			s = i + 1;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_label", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 0, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_update_tag", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 1, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_accumulator", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 2, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "power%d_input", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_power, NULL, 3, i);
++			attr++;
++
++			if (sensors->power.version > 1) {
++				snprintf(attr->name, sizeof(attr->name),
++					 "power%d_function_id", s);
++				attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++							     show_power, NULL,
++							     4, i);
++				attr++;
++
++				snprintf(attr->name, sizeof(attr->name),
++					 "power%d_apss_channel", s);
++				attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++							     show_power, NULL,
++							     5, i);
++				attr++;
++			}
++		}
++	}
++
++	for (i = 0; i < sensors->caps.num_sensors; ++i) {
++		s = i + 1;
++
++		snprintf(attr->name, sizeof(attr->name), "caps%d_current", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_caps, NULL,
++					     0, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "caps%d_reading", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_caps, NULL,
++					     1, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "caps%d_norm", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_caps, NULL,
++					     2, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "caps%d_max", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444, show_caps, NULL,
++					     3, i);
++		attr++;
++
++		if (sensors->caps.version > 2) {
++			snprintf(attr->name, sizeof(attr->name),
++				 "caps%d_min_hard", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_caps, NULL, 4, i);
++			attr++;
++
++			snprintf(attr->name, sizeof(attr->name),
++				 "caps%d_min_soft", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_caps, NULL, 7, i);
++			attr++;
++		} else {
++			snprintf(attr->name, sizeof(attr->name), "caps%d_min",
++				 s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_caps, NULL, 4, i);
++			attr++;
++		}
++
++		snprintf(attr->name, sizeof(attr->name), "caps%d_user", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0644, show_caps,
++					     occ_store_caps_user, 5, i);
++		attr++;
++
++		if (sensors->caps.version > 1) {
++			snprintf(attr->name, sizeof(attr->name),
++				 "caps%d_user_source", s);
++			attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++						     show_caps, NULL, 6, i);
++			attr++;
++		}
++	}
++
++	for (i = 0; i < sensors->extended.num_sensors; ++i) {
++		s = i + 1;
++
++		snprintf(attr->name, sizeof(attr->name), "extn%d_label", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++					     occ_show_extended, NULL, 0, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "extn%d_flags", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++					     occ_show_extended, NULL, 1, i);
++		attr++;
++
++		snprintf(attr->name, sizeof(attr->name), "extn%d_input", s);
++		attr->sensor = OCC_INIT_ATTR(attr->name, 0444,
++					     occ_show_extended, NULL, 2, i);
++		attr++;
++	}
++
++	/* put the sensors in the group */
++	for (i = 0; i < num_attrs; ++i)
++		occ->group.attrs[i] = &occ->attrs[i].sensor.dev_attr.attr;
++
++	return 0;
++}
++
+ /* only need to do this once at startup, as OCC won't change sensors on us */
+ static void occ_parse_poll_response(struct occ *occ)
  {
- 	sysfs_remove_group(&occ->bus_dev->kobj, &occ_attr_group);
+@@ -681,6 +1096,7 @@ int occ_setup(struct occ *occ, const char *name)
+ 	int rc;
+ 
+ 	mutex_init(&occ->lock);
++	occ->groups[0] = &occ->group;
+ 
+ 	/* no need to lock */
+ 	rc = occ_poll(occ);
+@@ -692,5 +1108,21 @@ int occ_setup(struct occ *occ, const char *name)
+ 
+ 	occ_parse_poll_response(occ);
+ 
++	rc = occ_setup_sensor_attrs(occ);
++	if (rc) {
++		dev_err(occ->bus_dev, "failed to setup sensor attrs: %d\n",
++			rc);
++		return rc;
++	}
 +
-+	atomic_dec(&occs_present);
++	occ->hwmon = devm_hwmon_device_register_with_groups(occ->bus_dev, name,
++							    occ, occ->groups);
++	if (IS_ERR(occ->hwmon)) {
++		rc = PTR_ERR(occ->hwmon);
++		dev_err(occ->bus_dev, "failed to register hwmon device: %d\n",
++			rc);
++		return rc;
++	}
++
+ 	return 0;
  }
 diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
-index dc9e06d..cef2174 100644
+index 3e4ca4d..049c3b4 100644
 --- a/drivers/hwmon/occ/common.h
 +++ b/drivers/hwmon/occ/common.h
-@@ -107,6 +107,10 @@ struct occ {
- 	struct occ_attribute *attrs;
- 	struct attribute_group group;
- 	const struct attribute_group *groups[2];
+@@ -10,7 +10,9 @@
+ #ifndef OCC_COMMON_H
+ #define OCC_COMMON_H
+ 
++#include <linux/hwmon-sysfs.h>
+ #include <linux/mutex.h>
++#include <linux/sysfs.h>
+ 
+ struct device;
+ 
+@@ -81,6 +83,14 @@ struct occ_sensors {
+ 	struct occ_sensor extended;
+ };
+ 
++/* Use our own attribute struct so we can dynamically allocate space for the
++ * name.
++ */
++struct occ_attribute {
++	char name[32];
++	struct sensor_device_attribute_2 sensor;
++};
 +
-+	int error;
-+	unsigned int error_count;	/* number of errors observed */
-+	unsigned long last_safe;	/* time OCC entered safe state */
+ struct occ {
+ 	struct device *bus_dev;
+ 
+@@ -92,6 +102,11 @@ struct occ {
+ 
+ 	unsigned long last_update;
+ 	struct mutex lock;		/* lock OCC access */
++
++	struct device *hwmon;
++	struct occ_attribute *attrs;
++	struct attribute_group group;
++	const struct attribute_group *groups[2];
  };
  
  int occ_setup(struct occ *occ, const char *name);
