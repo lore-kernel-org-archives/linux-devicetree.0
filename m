@@ -1,151 +1,106 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Documentation: dw-mshc: deprecate num-slots
-Date: Thu, 27 Jul 2017 16:47:54 +0200
-Message-ID: <CAPDyKFpKsa8a0TNFT4a-g-cRH6MBoywHDp2VN+=6nA2h51iDHw@mail.gmail.com>
-References: <1500366698-117167-1-git-send-email-shawn.lin@rock-chips.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: Convert to using %pOF instead of full_name
+Date: Thu, 27 Jul 2017 16:48:45 +0200
+Message-ID: <CAPDyKFpyj8ntOcHvwGb6bJ4ndgGqdk-ZUOMkUFXtYGtuChyDtg@mail.gmail.com>
+References: <20170718214339.7774-36-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500366698-117167-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718214339.7774-36-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>, Jan Glauber <jglauber@cavium.com>, David Daney <david.daney@cavium.com>, "Steven J. Hill" <Steven.Hill@cavium.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 July 2017 at 10:31, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> dwmmc host driver already deprecate it in the driver
-> but didn't modify the documentation to reflect the fact.
-> This patch deprecates it and clean up num-slots from the
-> examples of all variant host drivers.
+On 18 July 2017 at 23:43, Rob Herring <robh@kernel.org> wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
 >
-> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Cc: Jan Glauber <jglauber@cavium.com>
+> Cc: David Daney <david.daney@cavium.com>
+> Cc: "Steven J. Hill" <Steven.Hill@cavium.com>
+> Cc: linux-mmc@vger.kernel.org
 
-Thanks, applied for fixes and added a fixes tag.
+Thanks, applied for next!
 
 Kind regards
 Uffe
 
 > ---
+>  drivers/mmc/core/core.c      | 8 ++++----
+>  drivers/mmc/host/atmel-mci.c | 4 ++--
+>  drivers/mmc/host/cavium.c    | 6 ++----
+>  3 files changed, 8 insertions(+), 10 deletions(-)
 >
->  Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt |  1 -
->  Documentation/devicetree/bindings/mmc/img-dw-mshc.txt    |  1 -
->  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt     |  2 --
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++---------
->  Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt     |  1 -
->  5 files changed, 7 insertions(+), 14 deletions(-)
+> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+> index 26431267a3e2..6b4117615ad6 100644
+> --- a/drivers/mmc/core/core.c
+> +++ b/drivers/mmc/core/core.c
+> @@ -1137,11 +1137,11 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
+>         voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
+>         num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
+>         if (!voltage_ranges) {
+> -               pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
+> +               pr_debug("%pOF: voltage-ranges unspecified\n", np);
+>                 return 0;
+>         }
+>         if (!num_ranges) {
+> -               pr_err("%s: voltage-ranges empty\n", np->full_name);
+> +               pr_err("%pOF: voltage-ranges empty\n", np);
+>                 return -EINVAL;
+>         }
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index aad9844..a58c173 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -78,7 +78,6 @@ Example:
->         };
+> @@ -1153,8 +1153,8 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
+>                                 be32_to_cpu(voltage_ranges[j]),
+>                                 be32_to_cpu(voltage_ranges[j + 1]));
+>                 if (!ocr_mask) {
+> -                       pr_err("%s: voltage-range #%d is invalid\n",
+> -                               np->full_name, i);
+> +                       pr_err("%pOF: voltage-range #%d is invalid\n",
+> +                               np, i);
+>                         return -EINVAL;
+>                 }
+>                 *mask |= ocr_mask;
+> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
+> index 97de2d32ba84..b7c1cd384306 100644
+> --- a/drivers/mmc/host/atmel-mci.c
+> +++ b/drivers/mmc/host/atmel-mci.c
+> @@ -665,8 +665,8 @@ atmci_of_init(struct platform_device *pdev)
 >
->         dwmmc0@12200000 {
-> -               num-slots = <1>;
->                 cap-mmc-highspeed;
->                 cap-sd-highspeed;
->                 broken-cd;
-> diff --git a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-> index 85de99f..c54e577 100644
-> --- a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
-> @@ -24,6 +24,5 @@ Example:
+>         for_each_child_of_node(np, cnp) {
+>                 if (of_property_read_u32(cnp, "reg", &slot_id)) {
+> -                       dev_warn(&pdev->dev, "reg property is missing for %s\n",
+> -                                cnp->full_name);
+> +                       dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
+> +                                cnp);
+>                         continue;
+>                 }
 >
->                 fifo-depth = <0x20>;
->                 bus-width = <4>;
-> -               num-slots = <1>;
->                 disable-wp;
->         };
-> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> index 8af1afc..07242d1 100644
-> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> @@ -36,7 +36,6 @@ Example:
+> diff --git a/drivers/mmc/host/cavium.c b/drivers/mmc/host/cavium.c
+> index 3686d77c717b..27fb625cbcf3 100644
+> --- a/drivers/mmc/host/cavium.c
+> +++ b/drivers/mmc/host/cavium.c
+> @@ -957,14 +957,12 @@ static int cvm_mmc_of_parse(struct device *dev, struct cvm_mmc_slot *slot)
 >
->         /* Board portion */
->         dwmmc0@fcd03000 {
-> -               num-slots = <1>;
->                 vmmc-supply = <&ldo12>;
->                 fifo-depth = <0x100>;
->                 pinctrl-names = "default";
-> @@ -52,7 +51,6 @@ Example:
+>         ret = of_property_read_u32(node, "reg", &id);
+>         if (ret) {
+> -               dev_err(dev, "Missing or invalid reg property on %s\n",
+> -                       of_node_full_name(node));
+> +               dev_err(dev, "Missing or invalid reg property on %pOF\n", node);
+>                 return ret;
+>         }
 >
->         dwmmc_1: dwmmc1@f723e000 {
->                 compatible = "hisilicon,hi6220-dw-mshc";
-> -               num-slots = <0x1>;
->                 bus-width = <0x4>;
->                 disable-wp;
->                 cap-sd-highspeed;
-> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> index 9cb55ca..ef3e5f1 100644
-> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
-> @@ -12,12 +12,12 @@ Required Properties:
->  * #address-cells: should be 1.
->  * #size-cells: should be 0.
->
-> -# Slots: The slot specific information are contained within child-nodes with
-> -  each child-node representing a supported slot. There should be atleast one
-> -  child node representing a card slot. The name of the child node representing
-> -  the slot is recommended to be slot@n where n is the unique number of the slot
-> -  connected to the controller. The following are optional properties which
-> -  can be included in the slot child node.
-> +# Slots (DEPRECATED): The slot specific information are contained within
-> +  child-nodes with each child-node representing a supported slot. There should
-> +  be atleast one child node representing a card slot. The name of the child node
-> +  representing the slot is recommended to be slot@n where n is the unique number
-> +  of the slot connected to the controller. The following are optional properties
-> +  which can be included in the slot child node.
->
->         * reg: specifies the physical slot number. The valid values of this
->           property is 0 to (num-slots -1), where num-slots is the value
-> @@ -63,7 +63,7 @@ Optional properties:
->    clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
->           (Use the "max-frequency" instead of "clock-freq-min-max".)
->
-> -* num-slots: specifies the number of slots supported by the controller.
-> +* num-slots (DEPRECATED): specifies the number of slots supported by the controller.
->    The number of physical slots actually used could be equal or less than the
->    value specified by num-slots. If this property is not specified, the value
->    of num-slot property is assumed to be 1.
-> @@ -124,7 +124,6 @@ board specific portions as listed below.
->         dwmmc0@12200000 {
->                 clock-frequency = <400000000>;
->                 clock-freq-min-max = <400000 200000000>;
-> -               num-slots = <1>;
->                 broken-cd;
->                 fifo-depth = <0x80>;
->                 card-detect-delay = <200>;
-> @@ -139,7 +138,6 @@ board specific portions as listed below.
->         dwmmc0@12200000 {
->                 clock-frequency = <400000000>;
->                 clock-freq-min-max = <400000 200000000>;
-> -               num-slots = <1>;
->                 broken-cd;
->                 fifo-depth = <0x80>;
->                 card-detect-delay = <200>;
-> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-> index eaade0e..906819a 100644
-> --- a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
-> @@ -25,7 +25,6 @@ Example:
->                 clock-frequency = <50000000>;
->                 clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
->                 clock-names = "biu", "ciu";
-> -               num-slots = <1>;
->                 max-frequency = <50000000>;
->                 cap-sdio-irq;
->                 cap-sd-highspeed;
-> --
-> 1.9.1
->
+>         if (id >= CAVIUM_MAX_MMC || slot->host->slot[id]) {
+> -               dev_err(dev, "Invalid reg property on %s\n",
+> -                       of_node_full_name(node));
+> +               dev_err(dev, "Invalid reg property on %pOF\n", node);
+>                 return -EINVAL;
+>         }
 >
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 2.11.0
+>
