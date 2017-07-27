@@ -1,70 +1,61 @@
-From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Thu, 27 Jul 2017 15:16:44 +0300
-Message-ID: <20170727121644.jtpge4x432gfxhvw@tarshish>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [GIT PULL] Immutable branch between MFD, ARM and I2C due for the
+ v4.14 merge window
+Date: Thu, 27 Jul 2017 14:21:15 +0200
+Message-ID: <20170727122115.kvwq6qk7pjp73lkn@ninjato>
+References: <20170615184928.12007-1-javier@dowhile0.org>
+ <20170718080441.g3kmastovt32y33y@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ufwtyazw4hbcs3it"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501131697-1359-2-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert
+In-Reply-To: <20170718080441.g3kmastovt32y33y@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
 
-I managed to get the Frame Done interrupt with the previous version of this 
-driver on the A33 OLinuXino. No data yet (all zeros). I'm still working on it.
+--ufwtyazw4hbcs3it
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-One comment below.
+On Tue, Jul 18, 2017 at 09:04:41AM +0100, Lee Jones wrote:
+> Enjoy!
+>=20
+> The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba208=
+77:
+>=20
+>   Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
+>=20
+> are available in the git repository at:
+>=20
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-i2=
+c-v4.14
 
-On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
-> Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
-> and CSI1 is used for parallel interface. This is not documented in
-> datasheet but by testing and guess.
-> 
-> This patch implement a v4l2 framework driver for it.
-> 
-> Currently, the driver only support the parallel interface. MIPI-CSI2,
-> ISP's support are not included in this patch.
-> 
-> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> ---
+Pulled, thanks!
 
-[...]
 
-> +static int update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
-> +{
-> +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-> +	/* transform physical address to bus address */
-> +	dma_addr_t bus_addr = addr - 0x40000000;
+--ufwtyazw4hbcs3it
+Content-Type: application/pgp-signature; name="signature.asc"
 
-What is the source of this magic number? Is it platform dependent? Are there 
-other devices doing DMA that need this adjustment?
+-----BEGIN PGP SIGNATURE-----
 
-baruch
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAll52rcACgkQFA3kzBSg
+KbaLUQ//dDrho4sppWiFcCDTWswRI4zmTOUCCB2gRoybkiS8jcrO+b0zlLVBB70N
+PSw3fyvweXwwYzLMzmKnlS/fKid3ROGWDiAo2GReMnZP9l88Msr0ylyrM5RmzDop
+GP6pU9oJl6yfyQ3gP6oEEREz/AaMIEEO7lAhW4BdqABrms65d4JsaJwxrwnUKjBP
+bUatFJ56B/B/cAz/YG/SA9N0Kdh1wuzyaoCOVl8J7brOdCuUmCxAr0+1uaCL7/Sx
+9axljcJ67TWa1J48JZptGZuc2iShK5BRpcTHPrwnefnaxE6kciJ+2XrRALDY7o6V
+lJC0Iz8wjDqEcGA5vClt77er0s8CEOnJVvuxTfk1eQtEJG9vFDgRlCM238jcrK5Q
+KoPFM8+Wm8rKtdIUVmpi39pa6oQJHBYD4n0v/Tz/7sQTh79BzQWSn3lZ9FWGGQtf
+huvTtaVjAELaNZwi1lIsKI5Hf4gSDIwnedvJ78iGspIoCEBW1ZJF71ZqZzUnOyjD
+LRb8+q/jJaNt9idvdkYGaB2ghbs1+5L3IFMJUuAnqWJ9TeqMZt6quc/Wk00J3yec
+jlqNv74hmyH2nruM3MpE+tdkEx/NCTKVvHg/LO5UyUss6NxmKzVqeisMnG+Iagv1
+wQgLG0K2/Uvh94B/9L96QQPsgQzjsCNbX6rwvzQ/c+zXKIV+8N0=
+=S1kz
+-----END PGP SIGNATURE-----
 
-> +
-> +	regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
-> +		     (bus_addr + sdev->planar_offset[0]) >> 2);
-> +	if (sdev->planar_offset[1] != -1)
-> +		regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
-> +			     (bus_addr + sdev->planar_offset[1]) >> 2);
-> +	if (sdev->planar_offset[2] != -1)
-> +		regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
-> +			     (bus_addr + sdev->planar_offset[2]) >> 2);
-> +
-> +	return 0;
-> +}
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ufwtyazw4hbcs3it--
