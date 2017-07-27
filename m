@@ -1,37 +1,78 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
-Date: Thu, 27 Jul 2017 15:48:34 +0200
-Message-ID: <20170727134834.GD18666@lunn.ch>
-References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
- <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: [PATCH v3] ARM: dts: stm32: change pinctrl bindings definition
+Date: Thu, 27 Jul 2017 15:49:52 +0200
+Message-ID: <1501163393-28884-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: davem@davemloft.net, heiko@sntech.de, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, vikas.manocha@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 09:02:16PM +0800, David Wu wrote:
-> To make internal phy work, need to configure the phy_clock,
-> phy cru_reset and related registers.
-> 
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> ---
-> changes in v2:
->  - Use the standard "phy-mode" property for internal phy. (Florian)
+Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
+and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
+Since this approach was approved, the number of supported MCU has
+increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
+file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
+a new approach which consist to use a macro to define pin muxing in device
+tree. All STM32 DT will use the common macro to define pinmux. Furthermore, it
+will make maintenance and integration of new SOC easier.
 
-I think we need to discuss this. This PHY appears to be on an MDIO
-bus, it uses a standard PHY driver, and it appears to be using an RMII
-interface. So it is just an ordinary PHY.
+I made only one patch to avoid dependencies. Let me know if you prefer that I
+split it.
 
-Internal is supposed to be something which is not ordinary, does not
-use one of the standard phy modes, needs something special to make it
-work.
+To check that patch generate same dtb than befrore I used dtc binary to (re)generate dts files
+(before and after apply the series).
 
-Florain, it appears to be your suggestion to use internal. What do you
-say?
+Example on stm32f469-disco:
 
-	Andrew
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-after.dts
+stm32f469-disco-after.dtb
+
+./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-before.dts
+stm32f469-disco-before.dtb
+
+Then diff -u stm32f469-disco-before.dts stm32f469-disco-after.dts
+
+Changes since v2:
+ -Drop RFC tag
+ -Add reviewers
+ -Enhance modifications to all STM32 (F4/F7/H7)
+
+Changes since v1:
+ -According to Vikas Manocha review, use generic macro to define port.
+
+
+Regards
+Alex
+
+
+Alexandre Torgue (1):
+  ARM: dts: stm32: change pinctrl bindings definition
+
+ .../bindings/pinctrl/st,stm32-pinctrl.txt          |   37 +-
+ arch/arm/boot/dts/stm32f429.dtsi                   |  176 +--
+ arch/arm/boot/dts/stm32f746.dtsi                   |   10 +-
+ arch/arm/boot/dts/stm32h743-pinctrl.dtsi           |   10 +-
+ include/dt-bindings/pinctrl/stm32-pinfunc.h        |   31 +
+ include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1239 ---------------
+ include/dt-bindings/pinctrl/stm32f746-pinfunc.h    | 1324 ----------------
+ include/dt-bindings/pinctrl/stm32h7-pinfunc.h      | 1612 --------------------
+ 8 files changed, 150 insertions(+), 4289 deletions(-)
+ create mode 100644 include/dt-bindings/pinctrl/stm32-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32f746-pinfunc.h
+ delete mode 100644 include/dt-bindings/pinctrl/stm32h7-pinfunc.h
+
+-- 
+2.7.4
