@@ -1,50 +1,42 @@
-From: David Wu <david.wu@rock-chips.com>
-Subject: [PATCH v2 11/11] ARM64: dts: rockchip: Enable gmac2phy for rk3328-evb
-Date: Thu, 27 Jul 2017 21:10:54 +0800
-Message-ID: <1501161054-30863-1-git-send-email-david.wu@rock-chips.com>
-References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
-Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Wu <david.wu@rock-chips.com>
+From: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Subject: [PATCH 0/3] tty: serial: 8250 introduce mctrl_gpio helpers
+Date: Thu, 27 Jul 2017 15:17:33 +0200
+Message-ID: <1501161456-13367-1-git-send-email-yegorslists@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the gmac2phy, make the gmac2phy work on
-the rk3328-evb board.
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-Signed-off-by: David Wu <david.wu@rock-chips.com>
----
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+This patch series aims to reintroduce the  mctrl_gpio helpers for 8250
+UARTs.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-index cf27239..b9f36da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-@@ -50,6 +50,23 @@
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_phy";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&gmac2phy {
-+	phy-supply = <&vcc_phy>;
-+	clock_in_out = "output";
-+	assigned-clocks = <&cru SCLK_MAC2PHY_SRC>;
-+	assigned-clock-rate = <50000000>;
-+	assigned-clocks = <&cru SCLK_MAC2PHY>;
-+	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
-+	status = "okay";
- };
- 
- &uart2 {
+There are some UARTs that use GPIO signals as a wakeup-sourse.
+The first patch addresses this issue and tries to destinguish GPIO usage
+via searching for "wakeup-sourse" property. Though it must be decided whether
+this property is secure to use for this purpose.
+
+Yegor Yefremov (3):
+  serial: mctrl_gpio: restrict MCTRL initialization
+  tty/serial/8250: use mctrl_gpio helpers
+  tty/serial/8250: add DT bindings description for mctrl_gpio helpers
+
+ Documentation/devicetree/bindings/serial/8250.txt | 26 +++++++++++++++++
+ drivers/tty/serial/8250/8250.h                    | 35 ++++++++++++++++++++++-
+ drivers/tty/serial/8250/8250_core.c               |  9 ++++++
+ drivers/tty/serial/8250/8250_omap.c               | 31 +++++++++++---------
+ drivers/tty/serial/8250/8250_port.c               |  7 ++++-
+ drivers/tty/serial/8250/Kconfig                   |  1 +
+ drivers/tty/serial/serial_mctrl_gpio.c            |  4 +++
+ include/linux/serial_8250.h                       |  1 +
+ 8 files changed, 99 insertions(+), 15 deletions(-)
+
 -- 
-1.9.1
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
