@@ -1,58 +1,70 @@
-From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 1/4] ARM64: dts: rockchip: rk3328 add iommu nodes
-Date: Thu, 27 Jul 2017 14:15:18 +0200
-Message-ID: <20170727121518.GB21502@8bytes.org>
-References: <1500863530-32792-1-git-send-email-xxm@rock-chips.com>
-	<7545443.2JTXH2SMA9@diego> <20170726122753.GQ15833@8bytes.org>
-	<1668393.AqADimcrsl@diego>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
+Date: Thu, 27 Jul 2017 15:16:44 +0300
+Message-ID: <20170727121644.jtpge4x432gfxhvw@tarshish>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+ <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1668393.AqADimcrsl@diego>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1501131697-1359-2-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert
 List-Id: devicetree@vger.kernel.org
 
-Hey Heiko,
+Hi Yong,
 
-On Wed, Jul 26, 2017 at 03:53:06PM +0200, Heiko St=FCbner wrote:
-> Having code and dts changes go through different trees is no problem, as =
-they =
+I managed to get the Frame Done interrupt with the previous version of this 
+driver on the A33 OLinuXino. No data yet (all zeros). I'm still working on it.
 
-> don't have a compile-time dependencies on each other and come together ni=
-cely =
+One comment below.
 
-> in linux-next again.
+On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
+> Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> and CSI1 is used for parallel interface. This is not documented in
+> datasheet but by testing and guess.
+> 
+> This patch implement a v4l2 framework driver for it.
+> 
+> Currently, the driver only support the parallel interface. MIPI-CSI2,
+> ISP's support are not included in this patch.
+> 
+> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> ---
 
-Okay, I removed
+[...]
 
-ARM64: dts: rockchip: rk3328 add iommu nodes
-ARM: dts: rockchip: rk322x add iommu nodes
-ARM64: dts: rockchip: rk3368 add iommu nodes
-ARM64: dts: rockchip: rk3399 add iommu nodes
-ARM64: dts: rockchip: rk3328 add iommu nodes
-ARM: dts: rockchip: rk322x add iommu nodes
-ARM64: dts: rockchip: rk3368 add iommu nodes
-ARM64: dts: rockchip: rk3399 add iommu nodes
+> +static int update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
+> +{
+> +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> +	/* transform physical address to bus address */
+> +	dma_addr_t bus_addr = addr - 0x40000000;
 
-from my tree again and kept
+What is the source of this magic number? Is it platform dependent? Are there 
+other devices doing DMA that need this adjustment?
 
-Docs: dt: rockchip: add rockchip,disable-mmu-reset property
-iommu/rockchip: add multi irqs support
-iommu/rockchip: ignore isp mmu reset operation
+baruch
 
+> +
+> +	regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
+> +		     (bus_addr + sdev->planar_offset[0]) >> 2);
+> +	if (sdev->planar_offset[1] != -1)
+> +		regmap_write(sdev->regmap, CSI_CH_F1_BUFA_REG,
+> +			     (bus_addr + sdev->planar_offset[1]) >> 2);
+> +	if (sdev->planar_offset[2] != -1)
+> +		regmap_write(sdev->regmap, CSI_CH_F2_BUFA_REG,
+> +			     (bus_addr + sdev->planar_offset[2]) >> 2);
+> +
+> +	return 0;
+> +}
 
-Regards,
-
-	Joerg
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
