@@ -1,30 +1,30 @@
-From: <honghui.zhang@mediatek.com>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Subject: [PATCH v2 5/5] dt-bindings: PCI: add support for new generation controller
-Date: Thu, 27 Jul 2017 10:58:39 +0800
-Message-ID: <06c9b3439431221794fc9f723fef52ff59be7ec6.1501122135.git.honghui.zhang@mediatek.com>
-References: <cover.1501122135.git.honghui.zhang@mediatek.com>
+Date: Thu, 27 Jul 2017 11:14:21 +0800
+Message-ID: <54392579509fd9b9b4635559c1c4e32be63d9781.1501125202.git.honghui.zhang@mediatek.com>
+References: <cover.1501125202.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1501122135.git.honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1501125202.git.honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh-+zGGX9k9yNkdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
 Add support for MediaTek new generation controller and update related
 properities.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
  .../devicetree/bindings/pci/mediatek-pcie.txt      | 168 ++++++++++++++++++++-
  1 file changed, 161 insertions(+), 7 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-index a968f25..179329b 100644
+index a968f25..b9e73bf 100644
 --- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
 +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
 @@ -3,18 +3,31 @@ MediaTek Gen2 PCIe controller
@@ -100,7 +100,7 @@ index a968f25..179329b 100644
 +
 +Examples for MT2712:
 +	pcie: pcie@11700000 {
-+		compatible = "mediatek,generic-pcie-v2";
++		compatible = "mediatek,mt2712-pcie";
 +		device_type = "pci";
 +		reg = <0 0x11700000 0 0x1000>,
 +		      <0 0x112ff000 0 0x1000>;
@@ -109,10 +109,10 @@ index a968f25..179329b 100644
 +		#size-cells = <2>;
 +		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
 +			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&pericfg CLK_PERI_PCIE0>,
-+			 <&pericfg CLK_PERI_PCIE1>,
-+			 <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
-+			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>;
++		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
++			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
++			 <&pericfg CLK_PERI_PCIE0>,
++			 <&pericfg CLK_PERI_PCIE1>;
 +		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1";
 +		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
 +		phy-names = "pcie-phy0", "pcie-phy1";
@@ -162,7 +162,7 @@ index a968f25..179329b 100644
 +
 +Examples for MT7622:
 +	pcie: pcie@1a140000 {
-+		compatible = "mediatek,generic-pcie-v2";
++		compatible = "mediatek,mt7622-pcie";
 +		device_type = "pci";
 +		reg = <0 0x1a140000 0 0x1000>,
 +		      <0 0x1a143000 0 0x1000>,
@@ -235,3 +235,8 @@ index a968f25..179329b 100644
 +	};
 -- 
 2.6.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
