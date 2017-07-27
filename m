@@ -1,58 +1,36 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v3 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
-Date: Thu, 27 Jul 2017 17:20:30 +0200
-Message-ID: <1501168830-5308-3-git-send-email-narmstrong@baylibre.com>
-References: <1501168830-5308-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501168830-5308-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, hans.verkuil@cisco.com
-Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64: dts: renesas: r8a7795: salvator-xs: enable
+ usb 2.0 channel 3
+Date: Thu, 27 Jul 2017 17:20:47 +0200
+Message-ID: <20170727152047.GI16143@verge.net.au>
+References: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1501068660-4032-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
-device bindings.
+On Wed, Jul 26, 2017 at 08:30:57PM +0900, Yoshihiro Shimoda wrote:
+> This patch is based on the renesas-drivers.git /
+> renesas-drivers-2017-07-18-v4.13-rc1 tag and
+> "pinctrl: sh-pfc: r8a7795: add usb2.0 on R-Car H3 ES2.0" patch set and
+> "arm64: dts: renesas: r8a7795: add usb2.0 for R-Car H3 ES2.0" patch set.
+> 
+> Yoshihiro Shimoda (3):
+>   arm64: dts: renesas: r8a7795: salvator-xs: enable usb2_phy ch3
+>   arm64: dts: renesas: r8a7795: salvator-xs: enable USB 2.0 channel 3
+>   arm64: dts: renesas: r8a7795: salvator-xs: enable HSUSB channel 3
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
+Hi Shimoda-san,
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-new file mode 100644
-index 0000000..8671bdb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
-@@ -0,0 +1,28 @@
-+* Amlogic Meson AO-CEC driver
-+
-+The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
-+to handle communication between HDMI connected devices over the CEC bus.
-+
-+Required properties:
-+  - compatible : value should be following
-+	"amlogic,meson-gx-ao-cec"
-+
-+  - reg : Physical base address of the IP registers and length of memory
-+	  mapped region.
-+
-+  - interrupts : AO-CEC interrupt number to the CPU.
-+  - clocks : from common clock binding: handle to AO-CEC clock.
-+  - clock-names : from common clock binding: must contain "core",
-+		  corresponding to entry in the clocks property.
-+  - hdmi-phandle: phandle to the HDMI controller
-+
-+Example:
-+
-+cec_AO: cec@100 {
-+	compatible = "amlogic,meson-gx-ao-cec";
-+	reg = <0x0 0x00100 0x0 0x14>;
-+	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
-+	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
-+	clock-names = "core";
-+	hdmi-phandle = <&hdmi_tx>;
-+};
--- 
-1.9.1
+I am marking these patches as deferred pending an Ack from Geert
+on the pfc changes. I assume that will not happen until after he comes
+back from holiday's. Let me know if that is going to be a problem.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
