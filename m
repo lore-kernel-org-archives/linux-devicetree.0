@@ -1,101 +1,75 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 1/2] fdt: Allow stacked overlays phandle references
-Date: Thu, 27 Jul 2017 17:24:08 +1000
-Message-ID: <20170727072408.GB7970@umbus.fritz.box>
-References: <20170703090648.GV13989@umbus.fritz.box>
- <5967CAA6.6010801@gmail.com>
- <CAPhXvM4NzU61dENLeJ2Xt=arKqYFjXaPBvzrjxAJ7h3Y-gT4Nw@mail.gmail.com>
- <5967D2F7.60303@gmail.com>
- <f06fe24c-7f32-4e7d-c28b-2e5b31c5dbf0@gmail.com>
- <5967E8BC.4090307@gmail.com>
- <1500016861.19864.26.camel@hp800z>
- <59763739.4070708@gmail.com>
- <20170726045533.GD8978@umbus.fritz.box>
- <5978A11F.1010008@gmail.com>
+Subject: Re: [PATCH] Introduce fdt_setprop_placeholder() method
+Date: Thu, 27 Jul 2017 17:35:46 +1000
+Message-ID: <20170727073546.GE7970@umbus.fritz.box>
+References: <1501080418-26548-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="0ntfKIWw70PvrIHh"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="a1QUDc0q7S3U7/Jg"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5978A11F.1010008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1501080418-26548-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---0ntfKIWw70PvrIHh
+--a1QUDc0q7S3U7/Jg
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 26, 2017 at 07:03:11AM -0700, Frank Rowand wrote:
-> On 07/25/17 21:55, David Gibson wrote:
-> > On Mon, Jul 24, 2017 at 11:06:49AM -0700, Frank Rowand wrote:
-> >> On 07/14/17 00:21, Pantelis Antoniou wrote:
-> >>
-> >> Keeping in mind that this thread was originally about libfdt,
-> >> not the Linux kernel, I am mostly talking about the Linux
-> >> kernel implementation in this email.
-> >>
-> >>
-> >>> Hi Frank,
-> >>>
-> >>> On Thu, 2017-07-13 at 14:40 -0700, Frank Rowand wrote:
-> >>>> On 07/13/17 14:22, Phil Elwell wrote:
-> >>>>> On 13/07/2017 21:07, Frank Rowand wrote:
-> >>>>>> On 07/13/17 12:38, Phil Elwell wrote:
-> >>>>>>
-> >>>
-> >>> [snip]
-> >>>
-> >>>>> hope an inability to solve the problem posed by this advanced usage=
- won't
-> >>>>> prevent a solution to a simpler problem from being accepted.
-> >>>
-> >>> I have waited until people started commenting on this patchset before
-> >>> replying.
-> >>>
-> >>> I think we agree on a few things to keep the discussion moving forwar=
-d.
-> >>>
-> >>> 1. Stacked overlays are useful and make overlays easier to use.
-> >>
-> >> Stacked overlays are required to handle an add-on board that
-> >> contains physical connectors to plug in yet more things.
-> >>
-> >> I'm not sure what you mean when you say they "make overlays
-> >> easier to use".  Can you elaborate on that a little bit?
-> >>
-> >>
-> >>> 2. Changing the overlay symbols format now would be unwise.
-> >>
-> >> I strongly disagree.  I would say that it is desirable to maintain
-> >> the current overlay format (not just __symbols__), and that there
-> >> will be pain (for bootloaders???) if the format changes.  But
-> >> the Linux implementation is not locked in if there is a good
-> >> reason to change the format.
-> >>
-> >>
-> >>> 3. A number of extensions have been put forward/requested.
-> >>>
-> >>> 3.1. There should be a method to place a symbol on a node that didn't
-> >>> have one originally (due to vendor supplying broken DTB or being
-> >>> generated by firmware at runtime).
-> >>
-> >> You saw my reaction of what to do about a broken vendor DTB in that
-> >> thread.  I do not think this method is a good idea.
-> >>
-> >> I don't know why a DTB generated by firmware would be missing a symbol.
-> >> Was that discussed in that thread, and I'm just forgetting it?
-> >=20
-> > Because 9 times out of 10, firmware is crap?
+On Wed, Jul 26, 2017 at 05:46:58PM +0300, Pantelis Antoniou wrote:
+> In some cases you need to add a property but the contents of it
+> are not known at creation time, merely the extend of it.
 >=20
-> Which is part of why I want access to, ability to modify, and ability
-> to update device trees in the hands of the user, not just the
-> vendor.
+> This method allows you to create a property of a given size
+> which will be set to zero while a pointer to the property data
+> will be provided.
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+[snip]
+>  /**
+> + * fdt_setprop _placeholder - allocate space for a property
+> + * @fdt: pointer to the device tree blob
+> + * @nodeoffset: offset of the node whose property to change
+> + * @name: name of the property to change
+> + * @len: length of the property value
+> + * @prop_data: return pointer to property data
+> + *
+> + * fdt_setprop_placeholer() allocates the named property in the given no=
+de.
+> + * If the property exists it is resized. In either case it filled with
+> + * zeroes and if a prop_data argument is provided a pointer to the
+> + * property data is returned.
 
-Couldn't agree more.
+Doc comment hasn't been updated to reflect the latest chnages (not zeroed).
+
+> + * This function may insert or delete data from the blob, and will
+> + * therefore change the offsets of some existing nodes.
+> + *
+> + * returns:
+> + *	0, on success
+> + *	-FDT_ERR_NOSPACE, there is insufficient free space in the blob to
+> + *		contain the new property value
+> + *	-FDT_ERR_BADOFFSET, nodeoffset did not point to FDT_BEGIN_NODE tag
+> + *	-FDT_ERR_BADLAYOUT,
+> + *	-FDT_ERR_BADMAGIC,
+> + *	-FDT_ERR_BADVERSION,
+> + *	-FDT_ERR_BADSTATE,
+> + *	-FDT_ERR_BADSTRUCTURE,
+> + *	-FDT_ERR_BADLAYOUT,
+> + *	-FDT_ERR_TRUNCATED, standard meanings
+> + */
+> +int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
+> +			    int len, void **prop_data);
+> +
+> +/**
+>   * fdt_setprop_u32 - set a property to a 32-bit integer
+>   * @fdt: pointer to the device tree blob
+>   * @nodeoffset: offset of the node whose property to change
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -103,28 +77,24 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---0ntfKIWw70PvrIHh
+--a1QUDc0q7S3U7/Jg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll5lRgACgkQbDjKyiDZ
-s5JSwA/9H8DYPC2m3uUzNiHZv03HSYxIGETDHx+irXEOUTn0DXtP21+pRtlDli02
-Cdn8RRyIvRGf3L5PQhSSas5jAN8j41ow7Lsg2VlQZLD+YstAiMs5riBWPbq5L3GR
-R9afvp1FCvAQHpWts3gvYmSqpbeqiIa4fhouiZCgiYHN0n0Ft9SpgMWFxN/D1xkF
-m5nhub0FGS7z5DueuiOKIf9ElLA/RX/2qWCwM/dTgjY+D/uQ9sP0St2z+K/7vTkx
-jUmC0w/XcJPTq1NrRMrRegH0gLx1h2Xt2st5BFvaZ1zy1bSP0lGFCSJ0d2/av2yH
-4NFoWfjJidW/rI8qHl/GxBpHM6L6+MXtFwN3aBiCNI2WYTiQxf4cNHYqbpiOpTnY
-aMnrGw//L0cRSpqU8Xj34x9uGgrcONtNhRKCSXtPOWIQ5emp09W3qMzjrMVaDngb
-XKh7+M7r6Fjo4Y8RQv5JDNuLDytAuN7C7r+nuJLCHmrEAUcVvEC3VMvunX8qA5hr
-AuH8jsREnvvIAoyk+FtGdyQ7F5GwZM0J+lO/VZsgFNB7ze0LKvfkTQwOw0650sRb
-LS+3gzmCaeT/KvyY02hgy4Y1tWgIklY633nULrgRUgFZZb5+9/SCYMvThSX8VSsm
-E7NQmBMtceA5sbm7JdPkvmP1q7KOhTH5YFJx1SMiLkthns8UDuU=
-=3I3x
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll5l9IACgkQbDjKyiDZ
+s5LMfg//RpfOMCJo1fTw+zeUNtDWGw9lOONX0WkVmdivU/rD6SyXBS61BLGyQ+e+
+FoLtFvY/AtOBx6DTPUaicp7NrKu/D/2FAmvMZVhIQ2qRbe2XhmhdAMRKuJWTuDnh
+Amqe3JKUJcKqvFsGv9FN0TJDLmMCFWwfcmoUKRJXJZzJ3DKL1Hhr/B9glVZ8izeN
+7pGXY9Dgu5PEYdZiSzsamS3uQSQ78eJedIzJmF3eaYv3JNaoL8eeNMHpru0LhBof
+53KdVxhNYE1BlgYZ6BGqqGRHBK6VzBgwDAfMRFoc4BetO5FjHPCixFELl5y9HO+O
+xeDrT4hbK190X/4B/n1AmjcdV2FEVMUysqwRkDgBM9wHV3v8ZFqNbifEApp0NV5q
+uHYvOeix3LMkKH0YoSI/1O4yWrJpNOnI7w4FiV9qPjp8PTUv8yFGMkcQmkBYhE7o
+QjqWsCzU1wvxW6eDvI/bPUn+dYSYNJMZwgurvqCyE7sbvA2eJ4aVS64oc6m/COeo
+8exd6cg6rwSYDerleW/AwHH0YZcW85pUD6gDYjbu8H8fbX5CzW0E5IDQhq7NX4EG
+nVJueCzd3VLg+etfoZFi2utMgboUvSHvzfsob/OJqJkuxBKunPg3LjGtUeaFwN36
+szQkxQrz8GNfAS7FKIELumaaaKThxwvr3hduWGossLuA+p1Oipw=
+=HALe
 -----END PGP SIGNATURE-----
 
---0ntfKIWw70PvrIHh--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--a1QUDc0q7S3U7/Jg--
