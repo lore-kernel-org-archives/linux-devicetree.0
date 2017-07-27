@@ -1,319 +1,153 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v2 02/22] fpga: add FPGA device framework
-Date: Thu, 27 Jul 2017 11:35:58 -0500
-Message-ID: <CANk1AXRoxz7nOY--UYfBtg-3kGFy0gqCz0cbF9mOvzU2+EdzpA@mail.gmail.com>
-References: <1498441938-14046-1-git-send-email-hao.wu@intel.com> <1498441938-14046-3-git-send-email-hao.wu@intel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: add support for TAS6424 digital amplifier
+Date: Thu, 27 Jul 2017 17:41:54 +0100
+Message-ID: <20170727164154.vzfxwv4xc6sxvgty@sirena.org.uk>
+References: <1500405604-23511-1-git-send-email-m-stecklein@ti.com>
+ <1500405604-23511-3-git-send-email-m-stecklein@ti.com>
+ <20170719110842.lb2f5cqawnkenhsb@sirena.org.uk>
+ <f94172dc-3e29-999f-ffb5-7eb955fcb1a5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498441938-14046-3-git-send-email-hao.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wu Hao <hao.wu@intel.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Moritz Fischer <mdf@kernel.org>, linux-fpga@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org, "Kang, Luwei" <luwei.kang@intel.com>, "Zhang, Yi Z" <yi.z.zhang@intel.com>, Tim Whisonant <tim.whisonant@intel.com>, Enno Luebbers <enno.luebbers@intel.com>, Shiva Rao <shiva.rao@intel.com>, Christopher Rauer <christopher.rauer@intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rh7wvcwhcbzyhtly"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <f94172dc-3e29-999f-ffb5-7eb955fcb1a5-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 25, 2017 at 8:51 PM, Wu Hao <hao.wu@intel.com> wrote:
 
-Hi Rob,
+--rh7wvcwhcbzyhtly
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I was hoping to pick your brain a bit on a DT question.
+On Wed, Jul 26, 2017 at 12:44:34PM -0500, Michael Stecklein wrote:
+> On 07/19/2017 06:08 AM, Mark Brown wrote:
+> > On Tue, Jul 18, 2017 at 02:20:04PM -0500, Michael Stecklein wrote:
 
-> During FPGA device (e.g PCI-based) discovery, platform devices are
-> registered for different FPGA function units. But the device node path
-> isn't quite friendly to applications.
->
-> Consider this case, applications want to access child device's sysfs file
-> for some information.
->
-> 1) Access using bus-based path (e.g PCI)
->
->   /sys/bus/pci/devices/xxxxx/fpga_func_a.0/sysfs_file
->
->   From the path, it's clear which PCI device is the parent, but not perfect
->   solution for applications. PCI device BDF is not fixed, application may
->   need to search all PCI device to find the actual FPGA Device.
->
-> 2) Or access using platform device path
->
->   /sys/bus/platform/devices/fpga_func_a.0/sysfs_file
->
->   Applications find the actual function by name easily, but no information
->   about which fpga device it belongs to. It's quite confusing if multiple
->   FPGA devices are in one system.
+Please leave blank lines between paragraphs, it makes things easier to
+read.
 
-There's a proposal for adding sysfs nodes that correspond to each FPGA
-device., with the devices located on each FPGA under them.  It makes
-it easier to see which device is on which FPGA.
+> >> +	if (!tx_mask) {
+> >> +		dev_err(codec->dev, "tdm mask must not be 0\n");
+> >> +		return -EINVAL;
+> >> +	}
 
->
-> 'FPGA Device' class is introduced to resolve this problem. Each node under
-> this class represents a fpga device, which may have one or more child
-> devices. Applications only need to search under this FPGA Device class
-> folder to find the child device node it needs.
->
-> For example, for the platform has 2 fpga devices, each fpga device has
-> 3 child devices, the hierarchy looks like this.
->
-> Two nodes are under /sys/class/fpga/:
-> /sys/class/fpga/fpga.0
-> /sys/class/fpga/fpga.1
->
-> Each node has 1 function A device and 2 function B devices:
-> /sys/class/fpga/fpga.0/func_a.0
-> /sys/class/fpga/fpga.0/func_b.0
-> /sys/class/fpga/fpga.0/func_b.1
->
-> /sys/class/fpga/fpga.1/func_a.1
-> /sys/class/fpga/fpga.1/func_b.2
-> /sys/class/fpga/fpga.1/func_b.3
+> > Setting the mask to 0 is used when turning off TDM.
 
-I can see the value of having sysfs nodes that correspond to fpga
-devices and being able to find devices under them.  I'm thinking what
-that would mean for Device Tree when fpga-dev is used on DT enabled
-systems.  In Device Tree, what is a fpga-dev?
+> When turning off TDM, will the set_tdm_slot function ever get
+> called? (Since the TDM was turned off the slots don't need to
 
-Currently the DT would have a FPGA bridge corresponding to each FPGA's
-hardware bridge and a heirarchy of bridges, regions and devices under
-it.  On systems that don't support partial reconfiguration under the
-OS (so not main bridge that was controlled by the OS), there would be
-a FPGA region, then its child regions, bridges, and devices.
+Of course, that's how you turn off TDM mode.
 
-Alan
+> be set.) Also, for this device TDM mode is automatically
+> selected based on the presence of a TDM clock, so there is
+> nothing to do to switch into or out of TDM mode. Similar
+> parts handle this the same way, such as: tlv320aic3x.c,
+> tas2552.c, tas5720.c, ssm4567.c
 
->
-> This following APIs are provided by FPGA device framework:
-> * fpga_dev_create
->   Create fpga device under the given parent device.
-> * fpga_dev_destroy
->   Destroy fpga device
->
-> The following sysfs files are created:
-> * /sys/class/fpga/<fpga.x>/name
->   Name of the fpga device.
->
-> Signed-off-by: Tim Whisonant <tim.whisonant@intel.com>
-> Signed-off-by: Enno Luebbers <enno.luebbers@intel.com>
-> Signed-off-by: Shiva Rao <shiva.rao@intel.com>
-> Signed-off-by: Christopher Rauer <christopher.rauer@intel.com>
-> Signed-off-by: Xiao Guangrong <guangrong.xiao@linux.intel.com>
-> Signed-off-by: Wu Hao <hao.wu@intel.com>
-> ---
-> v2: added sysfs documentation for fpga-dev class.
->     switched to GPLv2 license.
-> ---
->  Documentation/ABI/testing/sysfs-class-fpga-dev |   5 ++
->  drivers/fpga/Kconfig                           |   6 ++
->  drivers/fpga/Makefile                          |   3 +
->  drivers/fpga/fpga-dev.c                        | 118 +++++++++++++++++++++++++
->  include/linux/fpga/fpga-dev.h                  |  31 +++++++
->  5 files changed, 163 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-class-fpga-dev
->  create mode 100644 drivers/fpga/fpga-dev.c
->  create mode 100644 include/linux/fpga/fpga-dev.h
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-fpga-dev b/Documentation/ABI/testing/sysfs-class-fpga-dev
-> new file mode 100644
-> index 0000000..ce162df
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-class-fpga-dev
-> @@ -0,0 +1,5 @@
-> +What:          /sys/class/fpga/<device>/name
-> +Date:          June 2017
-> +KernelVersion: 4.12
-> +Contact:       Wu Hao <hao.wu@intel.com>
-> +Description:   Name of FPGA device
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 394c141..ed600d5 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -12,6 +12,12 @@ config FPGA
->           manager drivers.
->
->  if FPGA
-> +config FPGA_DEVICE
-> +       tristate "FPGA Device Framework"
-> +       help
-> +         Say Y here if you want support for FPGA Devices from the kernel.
-> +         The FPGA Device Framework adds a FPGA device class and provide
-> +         interfaces to create FPGA devices.
->
->  config FPGA_REGION
->         tristate "FPGA Region"
-> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
-> index 85b45d0..8950a8f 100644
-> --- a/drivers/fpga/Makefile
-> +++ b/drivers/fpga/Makefile
-> @@ -5,6 +5,9 @@
->  # Core FPGA Manager Framework
->  obj-$(CONFIG_FPGA)                     += fpga-mgr.o
->
-> +# FPGA Device Framework
-> +obj-$(CONFIG_FPGA_DEVICE)              += fpga-dev.o
-> +
->  # FPGA Manager Drivers
->  obj-$(CONFIG_FPGA_MGR_ICE40_SPI)       += ice40-spi.o
->  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         += socfpga.o
-> diff --git a/drivers/fpga/fpga-dev.c b/drivers/fpga/fpga-dev.c
-> new file mode 100644
-> index 0000000..5778ebc
-> --- /dev/null
-> +++ b/drivers/fpga/fpga-dev.c
-> @@ -0,0 +1,118 @@
-> +/*
-> + * FPGA Device Framework Driver
-> + *
-> + * Copyright (C) 2017 Intel Corporation, Inc.
-> + *
-> + * This work is licensed under the terms of the GNU GPL version 2. See
-> + * the COPYING file in the top-level directory.
-> + */
-> +#include <linux/device.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +#include <linux/fpga/fpga-dev.h>
-> +
-> +static DEFINE_IDA(fpga_dev_ida);
-> +static struct class *fpga_dev_class;
-> +
-> +static ssize_t name_show(struct device *dev,
-> +                        struct device_attribute *attr, char *buf)
-> +{
-> +       struct fpga_dev *fdev = to_fpga_dev(dev);
-> +
-> +       return sprintf(buf, "%s\n", fdev->name);
-> +}
-> +static DEVICE_ATTR_RO(name);
-> +
-> +static struct attribute *fpga_dev_attrs[] = {
-> +       &dev_attr_name.attr,
-> +       NULL,
-> +};
-> +ATTRIBUTE_GROUPS(fpga_dev);
-> +
-> +/**
-> + * fpga_dev_create - create a fpga device
-> + * @parent: parent device
-> + * @name: fpga device name
-> + *
-> + * Return fpga_dev struct for success, error code otherwise.
-> + */
-> +struct fpga_dev *fpga_dev_create(struct device *parent, const char *name)
-> +{
-> +       struct fpga_dev *fdev;
-> +       int id, ret = 0;
-> +
-> +       if (!name || !strlen(name)) {
-> +               dev_err(parent, "Attempt to register with no name!\n");
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       fdev = kzalloc(sizeof(*fdev), GFP_KERNEL);
-> +       if (!fdev)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       id = ida_simple_get(&fpga_dev_ida, 0, 0, GFP_KERNEL);
-> +       if (id < 0) {
-> +               ret = id;
-> +               goto error_kfree;
-> +       }
-> +
-> +       fdev->name = name;
-> +
-> +       device_initialize(&fdev->dev);
-> +       fdev->dev.class = fpga_dev_class;
-> +       fdev->dev.parent = parent;
-> +       fdev->dev.id = id;
-> +
-> +       ret = dev_set_name(&fdev->dev, "fpga.%d", id);
-> +       if (ret)
-> +               goto error_device;
-> +
-> +       ret = device_add(&fdev->dev);
-> +       if (ret)
-> +               goto error_device;
-> +
-> +       dev_dbg(fdev->dev.parent, "fpga device [%s] created\n", fdev->name);
-> +
-> +       return fdev;
-> +
-> +error_device:
-> +       ida_simple_remove(&fpga_dev_ida, id);
-> +error_kfree:
-> +       kfree(fdev);
-> +
-> +       return ERR_PTR(ret);
-> +}
-> +EXPORT_SYMBOL_GPL(fpga_dev_create);
-> +
-> +static void fpga_dev_release(struct device *dev)
-> +{
-> +       struct fpga_dev *fdev = to_fpga_dev(dev);
-> +
-> +       ida_simple_remove(&fpga_dev_ida, fdev->dev.id);
-> +       kfree(fdev);
-> +}
-> +
-> +static int __init fpga_dev_class_init(void)
-> +{
-> +       pr_info("FPGA Device framework\n");
-> +
-> +       fpga_dev_class = class_create(THIS_MODULE, "fpga");
-> +       if (IS_ERR(fpga_dev_class))
-> +               return PTR_ERR(fpga_dev_class);
-> +
-> +       fpga_dev_class->dev_groups = fpga_dev_groups;
-> +       fpga_dev_class->dev_release = fpga_dev_release;
-> +
-> +       return 0;
-> +}
-> +
-> +static void __exit fpga_dev_class_exit(void)
-> +{
-> +       class_destroy(fpga_dev_class);
-> +}
-> +
-> +MODULE_DESCRIPTION("FPGA Device framework");
-> +MODULE_LICENSE("GPL v2");
-> +
-> +subsys_initcall(fpga_dev_class_init);
-> +module_exit(fpga_dev_class_exit);
-> diff --git a/include/linux/fpga/fpga-dev.h b/include/linux/fpga/fpga-dev.h
-> new file mode 100644
-> index 0000000..ee693cc
-> --- /dev/null
-> +++ b/include/linux/fpga/fpga-dev.h
-> @@ -0,0 +1,31 @@
-> +/*
-> + * FPGA Device Driver Header
-> + *
-> + * Copyright (C) 2017 Intel Corporation, Inc.
-> + *
-> + * This work is licensed under the terms of the GNU GPL version 2. See
-> + * the COPYING file in the top-level directory.
-> + */
-> +#ifndef _LINUX_FPGA_DEV_H
-> +#define _LINUX_FPGA_DEV_H
-> +
-> +/**
-> + * struct fpga_dev - fpga device structure
-> + * @name: name of fpga device
-> + * @dev: fpga device
-> + */
-> +struct fpga_dev {
-> +       const char *name;
-> +       struct device dev;
-> +};
-> +
-> +#define to_fpga_dev(d) container_of(d, struct fpga_dev, dev)
-> +
-> +struct fpga_dev *fpga_dev_create(struct device *parent, const char *name);
-> +
-> +static inline void fpga_dev_destroy(struct fpga_dev *fdev)
-> +{
-> +       device_unregister(&fdev->dev);
-> +}
-> +
-> +#endif
-> --
-> 1.8.3.1
->
+It's possible there's bugs in older drivers, sometimes things get missed
+in review.
+
+> >> +	if ((reg & TAS6424_WARN_VDD_UV) && !(tas6424->last_warn & TAS6424_WARN_VDD_UV))
+> >> +		dev_warn(dev, "experienced a VDD under voltage condition\n");
+> >> +
+> >> +	if ((reg & TAS6424_WARN_VDD_POR) && !(tas6424->last_warn & TAS6424_WARN_VDD_POR))
+> >> +		dev_warn(dev, "experienced a VDD POR condition\n");
+
+> > These look like they are errors rather than warnings and should be
+> > critical prints like the other errors.
+
+> These conditions happened on the previous shutdown/reset
+> of the device. We are letting the user know about them, but
+> they are not critical to the current device state, so I have left
+> them as warnings.
+
+I'd expect errors from previous uses of the driver to be discarded,
+especially things that might've resulted from something like the reboot
+process.
+
+> >> +static int tas6424_codec_probe(struct snd_soc_codec *codec)
+> >> +{
+> >> +	struct tas6424_data *tas6424 = snd_soc_codec_get_drvdata(codec);
+> >> +	int ret;
+> >> +
+> >> +	tas6424->codec = codec;
+> >> +
+> >> +	ret = regulator_bulk_enable(ARRAY_SIZE(tas6424->supplies),
+> >> +				    tas6424->supplies);
+> >> +	if (ret != 0) {
+> >> +		dev_err(codec->dev, "failed to enable supplies: %d\n", ret);
+> >> +		return ret;
+> >> +	}
+> > This init stuff should be in either the main I2C probe, DAPM or bias
+> > level management.  The CODEC probe should be very minimal.
+> This is a single codec device, does it make sense to leave the
+> device running without its codec? Other single codec devices
+> initialize regulators in codec probe similarly.
+
+I'm not sure what you mean by a "single CODEC device".  Most devices are
+so CODEC enables in I2C probe and then either leave everything on all
+the time or manage the regulators with runtime power management of some
+kind (either actual runtime PM or DAPM).  Managing things only in the
+ASoC level probe increases complexity and in actual running systems
+makes a marginal difference to real systems (you'd need to enable the
+CODEC but not the card).
+
+> >> +	switch (level) {
+> >> +	case SND_SOC_BIAS_ON:
+> >> +	case SND_SOC_BIAS_PREPARE:
+> >> +		msleep(500);
+> >> +		break;
+> > You need a 500ms sleep in all these cases?  That's a lot of sleeping.
+> Unfortunately, the device runs diagnostics at this point,
+> which take upwards of 480ms.
+
+On both entry to _ON and both entries to _PREPARE (from _ON and from
+_STANDBY)?  How does the device know we made these state changes?  It's
+a total sleep of 1s on power on.
+
+
+> >> +	case SND_SOC_BIAS_OFF:
+> >> +		ret = snd_soc_update_bits(codec, TAS6424_CH_STATE_CTRL_REG,
+> >> +					  0xff, TAS6424_CH1_STATE_HIZ | TAS6424_CH2_STATE_HIZ |
+> >> +					  TAS6424_CH3_STATE_HIZ | TAS6424_CH4_STATE_HIZ);
+> >> +
+> >> +		if (ret < 0) {
+> >> +			dev_err(codec->dev, "error suspending device: %d\n", ret);
+> >> +			return ret;
+> >> +		}
+
+> > These mutes seem very random disassociated from anything else?
+
+> What do you mean by this comment? The control register is
+> set to STATE_MUTE and STATE_HIZ depending on what the
+> device needs for the new BIAS level.
+
+This doesn't seem very joined up with the rest of the power control of
+the device - you're setting the high impedence state here, it's not
+clear what undoes that and there's other power control in the suspend
+and resume stuff.  I didn't notice anything in a nearby place that
+cleared this state for example.
+
+--rh7wvcwhcbzyhtly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAll6F9EACgkQJNaLcl1U
+h9AG2gf/WCImb0pKbOcS//ns+AxWN1NGDYa57kuYStjgwJixeNZPJFddv34XdjmN
+RWTUZNNyK67Dsm3QX31J71icKb92NbkEEkrAGEe/Y0Eyn+gMP52unIv7GtsP92gQ
+ALmlQktg/dsMzC86SoMGUArysdXxjtPtJfFv8Je0CQuFxiJXn+WnbXZ4EosxiORI
+A/50V6bFfIOXbvkYPFBy/pIAX33PmyWd4Chy1dU4vLqoSNFU76w65vcdQFJxjSHX
+UpzgaSYH2GfePAO93izhbzP4qrAW6cs5W13671nzKVJJci0jr79Sm8XEEr/GWlFB
+755w2MnqyZHZyhH5rp6pFGH3V8WP1g==
+=FA1k
+-----END PGP SIGNATURE-----
+
+--rh7wvcwhcbzyhtly--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
