@@ -1,61 +1,48 @@
 From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: [PATCH 1/2] pinctrl: qcom: spmi-gpio: Add pmi8994 gpio support
-Date: Thu, 27 Jul 2017 12:00:35 +0530
-Message-ID: <1501137036-20155-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
+Subject: [PATCH 2/2] arm64: dts: Add device node for pmi8994 gpios
+Date: Thu, 27 Jul 2017 12:00:36 +0530
+Message-ID: <1501137036-20155-2-git-send-email-vivek.gautam@codeaurora.org>
+References: <1501137036-20155-1-git-send-email-vivek.gautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501137036-20155-1-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
 Cc: rnayak@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the bindings doc and driver for pmi8994-gpio devices.
-
 Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 ---
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-- Have been using this patch-set on db820c [1] for extcon with
-  usb controller. The usb controller uses one of these gpios
-  for usb-id/vbus detection.
-
-[1] https://github.com/boddob/linux/tree/for-qcomlt/4.13rc2-merged
-
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
- 2 files changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index 8d893a874634..74932318d41d 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -15,6 +15,7 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8921-gpio"
- 		    "qcom,pm8941-gpio"
- 		    "qcom,pm8994-gpio"
-+		    "qcom,pmi8994-gpio"
- 		    "qcom,pma8084-gpio"
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index d3879a4e8076..3b04ca63c31e 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -8,6 +8,23 @@
+ 		reg = <0x2 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmi8994_gpios: gpios@c000 {
++			compatible = "qcom,pmi8994-gpio";
++			reg = <0xc000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <2 0xc0 0 IRQ_TYPE_NONE>,
++				     <2 0xc1 0 IRQ_TYPE_NONE>,
++				     <2 0xc2 0 IRQ_TYPE_NONE>,
++				     <2 0xc3 0 IRQ_TYPE_NONE>,
++				     <2 0xc4 0 IRQ_TYPE_NONE>,
++				     <2 0xc5 0 IRQ_TYPE_NONE>,
++				     <2 0xc6 0 IRQ_TYPE_NONE>,
++				     <2 0xc7 0 IRQ_TYPE_NONE>,
++				     <2 0xc8 0 IRQ_TYPE_NONE>,
++				     <2 0xc9 0 IRQ_TYPE_NONE>;
++		};
+ 	};
  
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
-@@ -84,6 +85,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio44 for pm8921
- 		    gpio1-gpio36 for pm8941
- 		    gpio1-gpio22 for pm8994
-+		    gpio1-gpio10 for pmi8994
- 		    gpio1-gpio22 for pma8084
- 
- - function:
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 664b641fd776..bf0a6438424b 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -799,6 +799,7 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- 	{ .compatible = "qcom,pm8916-gpio" },	/* 4 GPIO's */
- 	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
- 	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
-+	{ .compatible = "qcom,pmi8994-gpio" },	/* 10 GPIO's */
- 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
- 	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
- 	{ },
+ 	pmic@3 {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
