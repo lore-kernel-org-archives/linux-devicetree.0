@@ -1,183 +1,93 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v7 02/12] mfd: rk808: add rk805 regs addr and ID
-Date: Thu, 27 Jul 2017 23:07:25 +0200
-Message-ID: <4167643.JGZsyoLtym@phil>
-References: <1500635681-12477-1-git-send-email-chenjh@rock-chips.com> <1500635681-12477-3-git-send-email-chenjh@rock-chips.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Thu, 27 Jul 2017 16:10:14 -0500
+Message-ID: <932602fe-d06a-7a17-5a0c-24265cf2e643@ti.com>
+References: <20170724230521.1436-1-fcooper@ti.com>
+ <20170724230521.1436-3-fcooper@ti.com> <20170726164124.GL12049@lunn.ch>
+ <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
+ <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
+ <fe99189e-d077-ba65-4dfc-a4d8beee62b3@hartkopp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1500635681-12477-3-git-send-email-chenjh@rock-chips.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: Joseph Chen <chenjh@rock-chips.com>, gnurou@gmail.com, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, wdc@rock-chips.com, tony.xie@rock-chips.com, linux-input@vger.kernel.org, mark.rutland@arm.com, w.egorov@phytec.de
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <fe99189e-d077-ba65-4dfc-a4d8beee62b3@hartkopp.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Oliver Hartkopp <socketcan@hartkopp.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Joseph,
 
-Am Freitag, 21. Juli 2017, 19:14:31 CEST schrieb Joseph Chen:
-> From: Elaine Zhang <zhangqing@rock-chips.com>
+
+On 07/27/2017 01:47 PM, Oliver Hartkopp wrote:
+> On 07/26/2017 08:29 PM, Franklin S Cooper Jr wrote:
+>>
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-
-When you send out patches from someone else you should still add your own
-Signed-off-by line. So the patches that are originally from Elaine, should have
-her Signed-off first and yours below.
-
-Same for other patches in this series not authored by you.
-
-Heiko
-
-> ---
->  include/linux/mfd/rk808.h | 120 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
+>> I'm fine with switching to using bitrate instead of speed. Kurk was
+>> originally the one that suggested to use the term arbitration and data
+>> since thats how the spec refers to it. Which I do agree with. But your
+>> right that in the drivers (struct can_priv) we just use bittiming and
+>> data_bittiming (CAN-FD timings). I don't think adding "fd" into the
+>> property name makes sense unless we are calling it something like
+>> "max-canfd-bitrate" which I would agree is the easiest to understand.
+>>
+>> So what is the preference if we end up sticking with two properties?
+>> Option 1 or 2?
+>>
+>> 1)
+>> max-bitrate
+>> max-data-bitrate
+>>
+>> 2)
+>> max-bitrate
+>> max-canfd-bitrate
+>>
+>>
 > 
-> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
-> index 54feb14..d315659 100644
-> --- a/include/linux/mfd/rk808.h
-> +++ b/include/linux/mfd/rk808.h
-> @@ -206,6 +206,97 @@ enum rk818_reg {
->  #define RK818_USB_ILMIN_2000MA		0x7
->  #define RK818_USB_CHG_SD_VSEL_MASK	0x70
->  
-> +/* RK805 */
-> +enum rk805_reg {
-> +	RK805_ID_DCDC1,
-> +	RK805_ID_DCDC2,
-> +	RK805_ID_DCDC3,
-> +	RK805_ID_DCDC4,
-> +	RK805_ID_LDO1,
-> +	RK805_ID_LDO2,
-> +	RK805_ID_LDO3,
-> +};
-> +
-> +/* CONFIG REGISTER */
-> +#define RK805_VB_MON_REG		0x21
-> +#define RK805_THERMAL_REG		0x22
-> +
-> +/* POWER CHANNELS ENABLE REGISTER */
-> +#define RK805_DCDC_EN_REG		0x23
-> +#define RK805_SLP_DCDC_EN_REG		0x25
-> +#define RK805_SLP_LDO_EN_REG		0x26
-> +#define RK805_LDO_EN_REG		0x27
-> +
-> +/* BUCK AND LDO CONFIG REGISTER */
-> +#define RK805_BUCK_LDO_SLP_LP_EN_REG	0x2A
-> +#define RK805_BUCK1_CONFIG_REG		0x2E
-> +#define RK805_BUCK1_ON_VSEL_REG		0x2F
-> +#define RK805_BUCK1_SLP_VSEL_REG	0x30
-> +#define RK805_BUCK2_CONFIG_REG		0x32
-> +#define RK805_BUCK2_ON_VSEL_REG		0x33
-> +#define RK805_BUCK2_SLP_VSEL_REG	0x34
-> +#define RK805_BUCK3_CONFIG_REG		0x36
-> +#define RK805_BUCK4_CONFIG_REG		0x37
-> +#define RK805_BUCK4_ON_VSEL_REG		0x38
-> +#define RK805_BUCK4_SLP_VSEL_REG	0x39
-> +#define RK805_LDO1_ON_VSEL_REG		0x3B
-> +#define RK805_LDO1_SLP_VSEL_REG		0x3C
-> +#define RK805_LDO2_ON_VSEL_REG		0x3D
-> +#define RK805_LDO2_SLP_VSEL_REG		0x3E
-> +#define RK805_LDO3_ON_VSEL_REG		0x3F
-> +#define RK805_LDO3_SLP_VSEL_REG		0x40
-> +
-> +/* INTERRUPT REGISTER */
-> +#define RK805_PWRON_LP_INT_TIME_REG	0x47
-> +#define RK805_PWRON_DB_REG		0x48
-> +#define RK805_DEV_CTRL_REG		0x4B
-> +#define RK805_INT_STS_REG		0x4C
-> +#define RK805_INT_STS_MSK_REG		0x4D
-> +#define RK805_GPIO_IO_POL_REG		0x50
-> +#define RK805_OUT_REG			0x52
-> +#define RK805_ON_SOURCE_REG		0xAE
-> +#define RK805_OFF_SOURCE_REG		0xAF
-> +
-> +#define RK805_NUM_REGULATORS		7
-> +
-> +#define RK805_PWRON_FALL_RISE_INT_EN	0x0
-> +#define RK805_PWRON_FALL_RISE_INT_MSK	0x81
-> +
-> +/* RK805 IRQ Definitions */
-> +#define RK805_IRQ_PWRON_RISE		0
-> +#define RK805_IRQ_VB_LOW		1
-> +#define RK805_IRQ_PWRON			2
-> +#define RK805_IRQ_PWRON_LP		3
-> +#define RK805_IRQ_HOTDIE		4
-> +#define RK805_IRQ_RTC_ALARM		5
-> +#define RK805_IRQ_RTC_PERIOD		6
-> +#define RK805_IRQ_PWRON_FALL		7
-> +
-> +#define RK805_IRQ_PWRON_RISE_MSK	BIT(0)
-> +#define RK805_IRQ_VB_LOW_MSK		BIT(1)
-> +#define RK805_IRQ_PWRON_MSK		BIT(2)
-> +#define RK805_IRQ_PWRON_LP_MSK		BIT(3)
-> +#define RK805_IRQ_HOTDIE_MSK		BIT(4)
-> +#define RK805_IRQ_RTC_ALARM_MSK		BIT(5)
-> +#define RK805_IRQ_RTC_PERIOD_MSK	BIT(6)
-> +#define RK805_IRQ_PWRON_FALL_MSK	BIT(7)
-> +
-> +#define RK805_PWR_RISE_INT_STATUS	BIT(0)
-> +#define RK805_VB_LOW_INT_STATUS		BIT(1)
-> +#define RK805_PWRON_INT_STATUS		BIT(2)
-> +#define RK805_PWRON_LP_INT_STATUS	BIT(3)
-> +#define RK805_HOTDIE_INT_STATUS		BIT(4)
-> +#define RK805_ALARM_INT_STATUS		BIT(5)
-> +#define RK805_PERIOD_INT_STATUS		BIT(6)
-> +#define RK805_PWR_FALL_INT_STATUS	BIT(7)
-> +
-> +#define RK805_BUCK1_2_ILMAX_MASK	(3 << 6)
-> +#define RK805_BUCK3_4_ILMAX_MASK        (3 << 3)
-> +#define RK805_RTC_PERIOD_INT_MASK	(1 << 6)
-> +#define RK805_RTC_ALARM_INT_MASK	(1 << 5)
-> +#define RK805_INT_ALARM_EN		(1 << 3)
-> +#define RK805_INT_TIMER_EN		(1 << 2)
-> +
->  /* RK808 IRQ Definitions */
->  #define RK808_IRQ_VOUT_LO	0
->  #define RK808_IRQ_VB_LO		1
-> @@ -298,7 +389,14 @@ enum rk818_reg {
->  #define VOUT_LO_INT	BIT(0)
->  #define CLK32KOUT2_EN	BIT(0)
->  
-> +#define TEMP115C			0x0c
-> +#define TEMP_HOTDIE_MSK			0x0c
-> +#define SLP_SD_MSK			(0x3 << 2)
-> +#define SHUTDOWN_FUN			(0x2 << 2)
-> +#define SLEEP_FUN			(0x1 << 2)
->  #define RK8XX_ID_MSK			0xfff0
-> +#define FPWM_MODE			BIT(7)
-> +
->  enum {
->  	BUCK_ILMIN_50MA,
->  	BUCK_ILMIN_100MA,
-> @@ -322,6 +420,28 @@ enum {
->  };
->  
->  enum {
-> +	RK805_BUCK1_2_ILMAX_2500MA,
-> +	RK805_BUCK1_2_ILMAX_3000MA,
-> +	RK805_BUCK1_2_ILMAX_3500MA,
-> +	RK805_BUCK1_2_ILMAX_4000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK3_ILMAX_1500MA,
-> +	RK805_BUCK3_ILMAX_2000MA,
-> +	RK805_BUCK3_ILMAX_2500MA,
-> +	RK805_BUCK3_ILMAX_3000MA,
-> +};
-> +
-> +enum {
-> +	RK805_BUCK4_ILMAX_2000MA,
-> +	RK805_BUCK4_ILMAX_2500MA,
-> +	RK805_BUCK4_ILMAX_3000MA,
-> +	RK805_BUCK4_ILMAX_3500MA,
-> +};
-> +
-> +enum {
-> +	RK805_ID = 0x8050,
->  	RK808_ID = 0x0000,
->  	RK818_ID = 0x8181,
->  };
+> 1
 > 
+>>> A CAN transceiver is limited in bandwidth. But you only have one RX and
+>>> one TX line between the CAN controller and the CAN transceiver. The
+>>> transceiver does not know about CAN FD - it has just a physical(!) layer
+>>> with a limited bandwidth. This is ONE limitation.
+>>>
+>>> So I tend to specify only ONE 'max-bitrate' property for the
+>>> fixed-transceiver binding.
+>>>
+>>> The fact whether the CAN controller is CAN FD capable or not is provided
+>>> by the netlink configuration interface for CAN controllers.
+>>
+>> Part of the reasoning to have two properties is to indicate that you
+>> don't support CAN FD while limiting the "arbitration" bit rate.
+> 
+> ??
+> 
+> It's a physical layer device which only has a bandwidth limitation.
+> The transceiver does not know about CAN FD.
+> 
+>> With one
+>> property you can not determine this and end up having to make some
+>> assumptions that can quickly end up biting people.
+> 
+> Despite the fact that the transceiver does not know anything about ISO
+> layer 2 (CAN/CAN FD) the properties should look like
+> 
+>     max-bitrate
+>     canfd-capable
+> 
+> then.
+> 
+> But when the tranceiver is 'canfd-capable' agnostic, why provide a
+> property for it?
+> 
+> Maybe I'm wrong but I still can't follow your argumentation ideas.
 
+Your right. I spoke to our CAN transceiver team and I finally get your
+points.
 
+So yes using "max-bitrate" alone is all we need. Sorry for the confusion
+and I'll create a new rev using this approach.
+> 
+> Regards,
+> Oliver
