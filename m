@@ -1,64 +1,83 @@
-From: <yinbo.zhu@nxp.com>
-Subject: [PATCH] config: ls1012aqds: Add USB EHCI support for
-	ls1012aqds
-Date: Thu, 27 Jul 2017 17:49:05 +0800
-Message-ID: <1501148945-11775-1-git-send-email-yinbo.zhu@nxp.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 0/6] Motorola Droid 4 Audio Support
+Date: Thu, 27 Jul 2017 11:23:21 +0100
+Message-ID: <20170727102321.gq5ttxd4vcxcn4yz@sirena.org.uk>
+References: <20170712151846.24621-1-sebastian.reichel@collabora.co.uk>
+ <20170717092904.GG10026@atomide.com>
+ <20170717101258.llyly7kwfnwtoftr@earth>
+ <20170717101709.GI10026@atomide.com>
+ <20170717141347.t2642xbkol3g36rv@earth>
+ <20170718054833.GL10026@atomide.com>
+ <20170718092931.be3lyp6m6xvjb5yv@earth>
+ <s5h7ez6ccgm.wl-tiwai@suse.de> <20170727093943.GC10026@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <u-boot-bounces@lists.denx.de>
-List-Unsubscribe: <https://lists.denx.de/options/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=unsubscribe>
-List-Archive: <http://lists.denx.de/pipermail/u-boot/>
-List-Post: <mailto:u-boot@lists.denx.de>
-List-Help: <mailto:u-boot-request@lists.denx.de?subject=help>
-List-Subscribe: <https://lists.denx.de/listinfo/u-boot>,
- <mailto:u-boot-request@lists.denx.de?subject=subscribe>
-Errors-To: u-boot-bounces@lists.denx.de
-Sender: "U-Boot" <u-boot-bounces@lists.denx.de>
-To: u-boot@lists.denx.de
-Cc: "open list:OPEN FIRMWARE AND
- FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mihai Bantea <mihai.bantea@nxp.com>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Liu Gang <Gang.Liu@nxp.com>, open list <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Rajat Srivastava <rajat.srivastava@nxp.com>, "yinbo.zhu" <yinbo.zhu@nxp.com>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============5246149484835968958=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170727093943.GC10026@atomide.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFqZXNoIEJoYWdhdCA8cmFqZXNoLmJoYWdhdEBueHAuY29tPgoKQWRkIFVTQiBFSENJ
-IHN1cHBvcnQgZm9yIGxzMTAxMmFxZHMgcGxhdGZvcm0KClNpZ25lZC1vZmYtYnk6IFJhamF0IFNy
-aXZhc3RhdmEgPHJhamF0LnNyaXZhc3RhdmFAbnhwLmNvbT4KU2lnbmVkLW9mZi1ieTogUmFqZXNo
-IEJoYWdhdCA8cmFqZXNoLmJoYWdhdEBueHAuY29tPgpTaWduZWQtb2ZmLWJ5OiB5aW5iby56aHUg
-PHlpbmJvLnpodUBueHAuY29tPgotLS0KIGFyY2gvYXJtL2luY2x1ZGUvYXNtL2FyY2gtZnNsLWxh
-eWVyc2NhcGUvaW1tYXBfbHNjaDIuaCB8IDEgKwogaW5jbHVkZS9jb25maWdzL2xzMTAxMmFxZHMu
-aCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMiArKwogaW5jbHVkZS91c2IvZWhjaS1jaS5o
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMiArLQogMyBmaWxlcyBjaGFuZ2Vk
-LCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9p
-bmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBlL2ltbWFwX2xzY2gyLmggYi9hcmNoL2FybS9p
-bmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBlL2ltbWFwX2xzY2gyLmgKaW5kZXggOGFkMTk5
-Zi4uNGFmYzMzOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vaW5jbHVkZS9hc20vYXJjaC1mc2wtbGF5
-ZXJzY2FwZS9pbW1hcF9sc2NoMi5oCisrKyBiL2FyY2gvYXJtL2luY2x1ZGUvYXNtL2FyY2gtZnNs
-LWxheWVyc2NhcGUvaW1tYXBfbHNjaDIuaApAQCAtMzUsNiArMzUsNyBAQAogI2RlZmluZSBDT05G
-SUdfU1lTX1hIQ0lfVVNCMV9BRERSCQkoQ09ORklHX1NZU19JTU1SICsgMHgwMWYwMDAwMCkKICNk
-ZWZpbmUgQ09ORklHX1NZU19YSENJX1VTQjJfQUREUgkJKENPTkZJR19TWVNfSU1NUiArIDB4MDIw
-MDAwMDApCiAjZGVmaW5lIENPTkZJR19TWVNfWEhDSV9VU0IzX0FERFIJCShDT05GSUdfU1lTX0lN
-TVIgKyAweDAyMTAwMDAwKQorI2RlZmluZSBDT05GSUdfU1lTX0VIQ0lfVVNCMV9BRERSCQkoQ09O
-RklHX1NZU19JTU1SICsgMHgwNzYwMDAwMCkKICNkZWZpbmUgQ09ORklHX1NZU19QQ0lFMV9BRERS
-CQkJKENPTkZJR19TWVNfSU1NUiArIDB4MjQwMDAwMCkKICNkZWZpbmUgQ09ORklHX1NZU19QQ0lF
-Ml9BRERSCQkJKENPTkZJR19TWVNfSU1NUiArIDB4MjUwMDAwMCkKICNkZWZpbmUgQ09ORklHX1NZ
-U19QQ0lFM19BRERSCQkJKENPTkZJR19TWVNfSU1NUiArIDB4MjYwMDAwMCkKZGlmZiAtLWdpdCBh
-L2luY2x1ZGUvY29uZmlncy9sczEwMTJhcWRzLmggYi9pbmNsdWRlL2NvbmZpZ3MvbHMxMDEyYXFk
-cy5oCmluZGV4IDViODUwMGIuLjU1ZjI1NzggMTAwNjQ0Ci0tLSBhL2luY2x1ZGUvY29uZmlncy9s
-czEwMTJhcWRzLmgKKysrIGIvaW5jbHVkZS9jb25maWdzL2xzMTAxMmFxZHMuaApAQCAtMTE1LDYg
-KzExNSw4IEBACiAKICNpZmRlZiBDT05GSUdfSEFTX0ZTTF9EUl9VU0IKICNkZWZpbmUgQ09ORklH
-X1VTQl9FSENJX0ZTTAorI2RlZmluZSBDT05GSUdfVVNCX1VMUEkKKyNkZWZpbmUgQ09ORklHX1VT
-Ql9VTFBJX1ZJRVdQT1JUCiAjZGVmaW5lIENPTkZJR19FSENJX0hDRF9JTklUX0FGVEVSX1JFU0VU
-CiAjZW5kaWYKIApkaWZmIC0tZ2l0IGEvaW5jbHVkZS91c2IvZWhjaS1jaS5oIGIvaW5jbHVkZS91
-c2IvZWhjaS1jaS5oCmluZGV4IDg0N2I2OTguLmNkM2ViNDcgMTAwNjQ0Ci0tLSBhL2luY2x1ZGUv
-dXNiL2VoY2ktY2kuaAorKysgYi9pbmNsdWRlL3VzYi9laGNpLWNpLmgKQEAgLTE1Niw3ICsxNTYs
-NyBAQAogI2VsaWYgZGVmaW5lZChDT05GSUdfTVBDODV4eCkKICNkZWZpbmUgQ09ORklHX1NZU19G
-U0xfVVNCMV9BRERSIENPTkZJR19TWVNfTVBDODV4eF9VU0IxX0FERFIKICNkZWZpbmUgQ09ORklH
-X1NZU19GU0xfVVNCMl9BRERSIENPTkZJR19TWVNfTVBDODV4eF9VU0IyX0FERFIKLSNlbGlmIGRl
-ZmluZWQoQ09ORklHX0FSQ0hfTFMxMDIxQSkKKyNlbGlmIGRlZmluZWQoQ09ORklHX0xTMTAyWEEp
-IHx8IGRlZmluZWQoQ09ORklHX0FSQ0hfTFMxMDEyQSkKICNkZWZpbmUgQ09ORklHX1NZU19GU0xf
-VVNCMV9BRERSIENPTkZJR19TWVNfRUhDSV9VU0IxX0FERFIKICNkZWZpbmUgQ09ORklHX1NZU19G
-U0xfVVNCMl9BRERSICAgICAgICAwCiAjZW5kaWYKLS0gCjIuMS4wLjI3Lmc5NmRiMzI0CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpVLUJvb3QgbWFpbGlu
-ZyBsaXN0ClUtQm9vdEBsaXN0cy5kZW54LmRlCmh0dHBzOi8vbGlzdHMuZGVueC5kZS9saXN0aW5m
-by91LWJvb3QK
+
+--===============5246149484835968958==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="5pshuhw4ekdubyav"
+Content-Disposition: inline
+
+
+--5pshuhw4ekdubyav
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 27, 2017 at 02:39:43AM -0700, Tony Lindgren wrote:
+> * Takashi Iwai <tiwai@suse.de> [170718 02:38]:
+
+> > The problem manifests itself as an unblanaced of node reference.
+> > The node is released mistakenly at of_node_put() and this is caught as
+> > sleep-in-atomic, fortunately.
+
+> > So likely either something forgot to take the node ref or it hits the
+> > unreference due to the missing object by the implicit probe disorder,
+> > etc, I suppose.
+
+> Yup you're right. This is what happens, will send a fix for it shortly.
+
+There was also a separate thread where people were trying to fix this
+having run into it elsewhere.  The of_graph APIs look pretty confusing
+=66rom a user point of view sadly :(
+
+--5pshuhw4ekdubyav
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAll5vxgACgkQJNaLcl1U
+h9ABAAf/aUte/JM4cSp+xi85Km1CU0rB38QE5HFirgzYSf96aJdTA0gt78efZ9ba
+HszuD3Q0vK8wefBA929fcCtoycA/9zH4gKWRm6QLOGE5pG6bQyScjpUGDEA/e2NK
+2+eg0u4li2eRJ3BLOzHCiaP+UEbSMezhbA+ZaqR03q4ArWDiKyRHdWX/P1csUp4L
+rZaao2RWdufEkKfsM0IKpwqa/oWVC0QTX53OTIK7ssciO+/tKGBpYyOtg5SNxdwJ
+5rtsrqM0Q4r7v5rr3U0ASL/UP9ZTssyBUKPCQuC2BvcrwhD2Za30Dg58DvsrKdL/
+Wrpm7c3rkfwX+LGfHr9Vi2FAKfBvNg==
+=6EYK
+-----END PGP SIGNATURE-----
+
+--5pshuhw4ekdubyav--
+
+--===============5246149484835968958==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5246149484835968958==--
