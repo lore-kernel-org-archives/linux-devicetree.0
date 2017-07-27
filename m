@@ -1,86 +1,126 @@
-From: Oliver Hartkopp <socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
- fixed transceiver bindings
-Date: Thu, 27 Jul 2017 20:47:37 +0200
-Message-ID: <fe99189e-d077-ba65-4dfc-a4d8beee62b3@hartkopp.net>
-References: <20170724230521.1436-1-fcooper@ti.com>
- <20170724230521.1436-3-fcooper@ti.com> <20170726164124.GL12049@lunn.ch>
- <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
- <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
+Date: Thu, 27 Jul 2017 21:58:51 +0300
+Message-ID: <1501181931.1055.18.camel@hp800z>
+References: <1501174151.1055.8.camel@hp800z>
+         <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a77fe395-33c7-9405-b51a-5d3372e5c58b-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/26/2017 08:29 PM, Franklin S Cooper Jr wrote:
->
+On Thu, 2017-07-27 at 13:09 -0500, Rob Herring wrote:
+> On Thu, Jul 27, 2017 at 11:49 AM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> > Hi all,
+> >
+> > This is a project I've been working on lately and it's finally in a
+> > usuable form.
+> >
+> > I'm introducing yamldt.
+> >
+> > A YAML to DT blob generator/compiler, utilizing a YAML schema that is
+> > functionaly equivalent to DTS and supports all DTS features.
+> 
+> What problem are you trying to solve?
+> 
 
-> I'm fine with switching to using bitrate instead of speed. Kurk was
-> originally the one that suggested to use the term arbitration and data
-> since thats how the spec refers to it. Which I do agree with. But your
-> right that in the drivers (struct can_priv) we just use bittiming and
-> data_bittiming (CAN-FD timings). I don't think adding "fd" into the
-> property name makes sense unless we are calling it something like
-> "max-canfd-bitrate" which I would agree is the easiest to understand.
->
-> So what is the preference if we end up sticking with two properties?
-> Option 1 or 2?
->
-> 1)
-> max-bitrate
-> max-data-bitrate
->
-> 2)
-> max-bitrate
-> max-canfd-bitrate
->
->
+I am demonstrating that the DTS source format is not the only way to
+describe hardware and generate a DTB that is functionally equivalent.
 
-1
+I feel that the reliance on DTS has been holding progress back in
+expressing modern hardware and having a tool that generates DTB as well
+will allow me to experiment in ways that things like overlays and
+portable overlays can be defined.
 
->> A CAN transceiver is limited in bandwidth. But you only have one RX and
->> one TX line between the CAN controller and the CAN transceiver. The
->> transceiver does not know about CAN FD - it has just a physical(!) layer
->> with a limited bandwidth. This is ONE limitation.
->>
->> So I tend to specify only ONE 'max-bitrate' property for the
->> fixed-transceiver binding.
->>
->> The fact whether the CAN controller is CAN FD capable or not is provided
->> by the netlink configuration interface for CAN controllers.
->
-> Part of the reasoning to have two properties is to indicate that you
-> don't support CAN FD while limiting the "arbitration" bit rate.
+> > yamldl parses a device tree description (source) file in YAML format and
+> > outputs a (bit-exact if the -C option is used) device tree blob.
+> >
+> > A DT aware YAML schema is a good fit as a DTS syntax alternative.
+> >
+> > YAML is a human-readable data serialization language, and is expressive
+> > enough to cover all DTS source features.
+> >
+> > Simple YAML files are just key value pairs that are very easy to parse,
+> > even without using a formal YAML parser. For instance YAML in restricted
+> > environments may simple be appending a few lines of text in a given YAML
+> > file.
+> >
+> > The parsers of YAML are very mature, as it has been released in 2001. It
+> > is in wide-spread use and schema validation tools are available. YAML
+> > support is available for every major programming language.
+> >
+> > Data in YAML can easily be converted to/form other format that a
+> > particular tool that we may use in the future understands.
+> >
+> > More importantly YAML offers (an optional) type information for each
+> > data, which is IMHO crucial for thorough validation and checking against
+> > device tree bindings (when they will be converted to a machine readable
+> > format, preferably YAML).
+> 
+> We have type information in dts. We can distinguish numbers, strings,
+> phandles, etc. The problem is we loose that information in the DTB and
+> this does nothing to help that problem.
+> 
 
-??
+This is not enough information IMO. We not only need those scalar types
+but type information about references (what phandles really are) and
+use them to enforce type checking and promotion.
 
-It's a physical layer device which only has a bandwidth limitation.
-The transceiver does not know about CAN FD.
+And of course DTS throws away all type information away and has no
+way to be extended. In YAML this is a solved problem. 
 
-> With one
-> property you can not determine this and end up having to make some
-> assumptions that can quickly end up biting people.
+> >
+> > For more take a look here.
+> >
+> > https://github.com/pantoniou/yamldt
+> 
+> Looking at the example, I find the syntax harder to follow. Parsing
+> what are node names vs labels is one. Relying on indentation for tree
+> hierarchy is another.
+> 
 
-Despite the fact that the transceiver does not know anything about ISO 
-layer 2 (CAN/CAN FD) the properties should look like
+This is really debatable. You can use curly braces if you don't like the
+indentation.
 
-	max-bitrate
-	canfd-capable
+I.e.
 
-then.
+foo:
+  bar: true
 
-But when the tranceiver is 'canfd-capable' agnostic, why provide a 
-property for it?
+Can be written as
+foo: { bar: true }
 
-Maybe I'm wrong but I still can't follow your argumentation ideas.
+YAML is a JSON superset which uses the curly braces as a map separator.
 
-Regards,
-Oliver
+And frankly there are about x1000 more people aware of YAML syntax than
+DTS syntax.
+
+> Does C preprocessing of the YAML files work? I'm surprised if it does.
+> 
+
+I think you should check the code out and see for yourself.
+
+The complete set of C preprocessing of DTS is available, and works
+perfectly AFAIKT.
+
+> >
+> > I am eagerly awaiting for your comments.
+> 
+> I could see some uses here to extract data from dts files more easily.
+> For example, to extract all compatible strings for some set of dts
+> files. I did this by hacking dtc to dump them. Or as a starting point
+> to create YAML based DT binding schema. I wonder how Grant is coming
+> along with that.
+> 
+> Rob
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
