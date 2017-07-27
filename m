@@ -1,32 +1,58 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/5] arm64: dts: renesas: r8a7795: add usb2.0 for R-Car
- H3 ES2.0
-Date: Thu, 27 Jul 2017 17:19:33 +0200
-Message-ID: <20170727151933.GH16143@verge.net.au>
-References: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501068580-3981-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 2/2] dt-bindings: media: Add Amlogic Meson AO-CEC bindings
+Date: Thu, 27 Jul 2017 17:20:30 +0200
+Message-ID: <1501168830-5308-3-git-send-email-narmstrong@baylibre.com>
+References: <1501168830-5308-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501168830-5308-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@kernel.org, hans.verkuil@cisco.com
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 08:29:35PM +0900, Yoshihiro Shimoda wrote:
-> This patch is based on the renesas-drivers.git /
-> renesas-drivers-2017-07-18-v4.13-rc1 tag.
-> 
-> Kazuya Mizuguchi (1):
->   arm64: dts: renesas: r8a7795: Add usb companion property in EHCI
-> 
-> Yoshihiro Shimoda (4):
->   arm64: dts: renesas: r8a7795: add usb2_phy ch3 device node
->   arm64: dts: renesas: r8a7795: add usb2.0 host ch3 device nodes
->   arm64: dts: renesas: r8a7795: add usb-dmac ch2 and ch3 device nodes
->   arm64: dts: renesas: r8a7795: add hsusb ch3 device node
+The Amlogic SoCs embeds a standalone CEC Controller, this patch adds this
+device bindings.
 
-Thanks Shimoda-san,
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../devicetree/bindings/media/meson-ao-cec.txt     | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/meson-ao-cec.txt
 
-I have applied these for v4.14.
+diff --git a/Documentation/devicetree/bindings/media/meson-ao-cec.txt b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+new file mode 100644
+index 0000000..8671bdb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/meson-ao-cec.txt
+@@ -0,0 +1,28 @@
++* Amlogic Meson AO-CEC driver
++
++The Amlogic Meson AO-CEC module is present is Amlogic SoCs and its purpose is
++to handle communication between HDMI connected devices over the CEC bus.
++
++Required properties:
++  - compatible : value should be following
++	"amlogic,meson-gx-ao-cec"
++
++  - reg : Physical base address of the IP registers and length of memory
++	  mapped region.
++
++  - interrupts : AO-CEC interrupt number to the CPU.
++  - clocks : from common clock binding: handle to AO-CEC clock.
++  - clock-names : from common clock binding: must contain "core",
++		  corresponding to entry in the clocks property.
++  - hdmi-phandle: phandle to the HDMI controller
++
++Example:
++
++cec_AO: cec@100 {
++	compatible = "amlogic,meson-gx-ao-cec";
++	reg = <0x0 0x00100 0x0 0x14>;
++	interrupts = <GIC_SPI 199 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&clkc_AO CLKID_AO_CEC_32K>;
++	clock-names = "core";
++	hdmi-phandle = <&hdmi_tx>;
++};
+-- 
+1.9.1
