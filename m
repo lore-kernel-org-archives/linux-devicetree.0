@@ -1,106 +1,74 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: Convert to using %pOF instead of full_name
-Date: Thu, 27 Jul 2017 16:48:45 +0200
-Message-ID: <CAPDyKFpyj8ntOcHvwGb6bJ4ndgGqdk-ZUOMkUFXtYGtuChyDtg@mail.gmail.com>
-References: <20170718214339.7774-36-robh@kernel.org>
+From: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/3] Initial Allwinner V3s CSI Support
+Date: Thu, 27 Jul 2017 11:51:11 +0800
+Message-ID: <1501127474-40895-1-git-send-email-yong.deng__41165.7174038284$1501166954$gmane$org@magewell.com>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170718214339.7774-36-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ludovic Desroches <ludovic.desroches@microchip.com>, Jan Glauber <jglauber@cavium.com>, David Daney <david.daney@cavium.com>, "Steven J. Hill" <Steven.Hill@cavium.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Return-path: <linux-sunxi+bncBAABBX7247FQKGQEALYRCXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel@li
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18 July 2017 at 23:43, Rob Herring <robh@kernel.org> wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Jan Glauber <jglauber@cavium.com>
-> Cc: David Daney <david.daney@cavium.com>
-> Cc: "Steven J. Hill" <Steven.Hill@cavium.com>
-> Cc: linux-mmc@vger.kernel.org
+This patchset add initial support for Allwinner V3s CSI.
 
-Thanks, applied for next!
+Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+and CSI1 is used for parallel interface. This is not documented in
+datasheet but by testing and guess.
 
-Kind regards
-Uffe
+This patchset implement a v4l2 framework driver and add a binding 
+documentation for it. 
 
-> ---
->  drivers/mmc/core/core.c      | 8 ++++----
->  drivers/mmc/host/atmel-mci.c | 4 ++--
->  drivers/mmc/host/cavium.c    | 6 ++----
->  3 files changed, 8 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> index 26431267a3e2..6b4117615ad6 100644
-> --- a/drivers/mmc/core/core.c
-> +++ b/drivers/mmc/core/core.c
-> @@ -1137,11 +1137,11 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
->         voltage_ranges = of_get_property(np, "voltage-ranges", &num_ranges);
->         num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
->         if (!voltage_ranges) {
-> -               pr_debug("%s: voltage-ranges unspecified\n", np->full_name);
-> +               pr_debug("%pOF: voltage-ranges unspecified\n", np);
->                 return 0;
->         }
->         if (!num_ranges) {
-> -               pr_err("%s: voltage-ranges empty\n", np->full_name);
-> +               pr_err("%pOF: voltage-ranges empty\n", np);
->                 return -EINVAL;
->         }
->
-> @@ -1153,8 +1153,8 @@ int mmc_of_parse_voltage(struct device_node *np, u32 *mask)
->                                 be32_to_cpu(voltage_ranges[j]),
->                                 be32_to_cpu(voltage_ranges[j + 1]));
->                 if (!ocr_mask) {
-> -                       pr_err("%s: voltage-range #%d is invalid\n",
-> -                               np->full_name, i);
-> +                       pr_err("%pOF: voltage-range #%d is invalid\n",
-> +                               np, i);
->                         return -EINVAL;
->                 }
->                 *mask |= ocr_mask;
-> diff --git a/drivers/mmc/host/atmel-mci.c b/drivers/mmc/host/atmel-mci.c
-> index 97de2d32ba84..b7c1cd384306 100644
-> --- a/drivers/mmc/host/atmel-mci.c
-> +++ b/drivers/mmc/host/atmel-mci.c
-> @@ -665,8 +665,8 @@ atmci_of_init(struct platform_device *pdev)
->
->         for_each_child_of_node(np, cnp) {
->                 if (of_property_read_u32(cnp, "reg", &slot_id)) {
-> -                       dev_warn(&pdev->dev, "reg property is missing for %s\n",
-> -                                cnp->full_name);
-> +                       dev_warn(&pdev->dev, "reg property is missing for %pOF\n",
-> +                                cnp);
->                         continue;
->                 }
->
-> diff --git a/drivers/mmc/host/cavium.c b/drivers/mmc/host/cavium.c
-> index 3686d77c717b..27fb625cbcf3 100644
-> --- a/drivers/mmc/host/cavium.c
-> +++ b/drivers/mmc/host/cavium.c
-> @@ -957,14 +957,12 @@ static int cvm_mmc_of_parse(struct device *dev, struct cvm_mmc_slot *slot)
->
->         ret = of_property_read_u32(node, "reg", &id);
->         if (ret) {
-> -               dev_err(dev, "Missing or invalid reg property on %s\n",
-> -                       of_node_full_name(node));
-> +               dev_err(dev, "Missing or invalid reg property on %pOF\n", node);
->                 return ret;
->         }
->
->         if (id >= CAVIUM_MAX_MMC || slot->host->slot[id]) {
-> -               dev_err(dev, "Invalid reg property on %s\n",
-> -                       of_node_full_name(node));
-> +               dev_err(dev, "Invalid reg property on %pOF\n", node);
->                 return -EINVAL;
->         }
->
-> --
-> 2.11.0
->
+Currently, the driver only support the parallel interface. And has been
+tested with a BT1120 signal which generating from FPGA. The following
+fetures are not support with this patchset:
+  - ISP 
+  - MIPI-CSI2
+  - Master clock for camera sensor
+  - Power regulator for the front end IC
+
+sun6i_csi_ops is still there. I seriously thought about it. Without 
+sun6i_csi_ops, the dependency between sun6i_video and sun6i_csi_v3s
+will be complicated. Comments and criticisms are welcome.
+
+Changes in v2:
+  * Change sunxi-csi to sun6i-csi
+  * Rebase to media_tree master branch
+
+Yong Deng (3):
+  media: V3s: Add support for Allwinner CSI.
+  dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+  media: MAINTAINERS: add entries for Allwinner V3s CSI
+
+ .../devicetree/bindings/media/sun6i-csi.txt        |  49 ++
+ MAINTAINERS                                        |   8 +
+ drivers/media/platform/Kconfig                     |   1 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/sun6i-csi/Kconfig           |   9 +
+ drivers/media/platform/sun6i-csi/Makefile          |   3 +
+ drivers/media/platform/sun6i-csi/sun6i_csi.c       | 545 ++++++++++++++
+ drivers/media/platform/sun6i-csi/sun6i_csi.h       | 203 +++++
+ drivers/media/platform/sun6i-csi/sun6i_csi_v3s.c   | 827 +++++++++++++++++++++
+ drivers/media/platform/sun6i-csi/sun6i_csi_v3s.h   | 206 +++++
+ drivers/media/platform/sun6i-csi/sun6i_video.c     | 663 +++++++++++++++++
+ drivers/media/platform/sun6i-csi/sun6i_video.h     |  61 ++
+ 12 files changed, 2577 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+ create mode 100644 drivers/media/platform/sun6i-csi/Kconfig
+ create mode 100644 drivers/media/platform/sun6i-csi/Makefile
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi.c
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi.h
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi_v3s.c
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi_v3s.h
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_video.c
+ create mode 100644 drivers/media/platform/sun6i-csi/sun6i_video.h
+
+-- 
+1.8.3.1
