@@ -1,71 +1,71 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/3] serial: mctrl_gpio: restrict MCTRL initialization
-Date: Thu, 27 Jul 2017 17:01:32 +0300
-Message-ID: <1501164092.29303.270.camel@linux.intel.com>
-References: <1501161456-13367-1-git-send-email-yegorslists@googlemail.com>
-         <1501161456-13367-2-git-send-email-yegorslists@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501161456-13367-2-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 00/10] drivers/hwmon: Add On-Chip Controller (OCC) hwmon driver
+Date: Thu, 27 Jul 2017 09:30:19 -0500
+Message-ID: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-07-27 at 15:17 +0200, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
-> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> 
-> GPIOs specified for serial port can be used either as GPIO driven
-> MCTRL
-> or as a wakeup-source. Use the latter property to abort the MCTRL
-> initialization.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-Please, elaborate on a choice of error code for this (-ENOSYS).
+This series adds a hwmon driver to support the OCC on POWER8 and POWER9
+processors. The OCC is an embedded processor that provides realtime power and
+thermal monitoring and management.
 
-> 
-> Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+This driver has two different platform drivers as a "base" for the
+hwmon interface, as the means of communicating with the OCC on P8 and P9 is
+completely different. For P8, the driver is an I2C client driver. For P9 the
+driver is an FSI-based OCC client driver, and uses the OCC driver in-kernel
+API. The OCC driver is on the LKML (latest https://lkml.org/lkml/2017/7/5/633).
 
-Suggested-by: I suppose.
+Changes since v1:
+ * Remove wait loop in P9 code, as that is now handled by FSI OCC driver.
+ * Removed dt binding documentation for P9, FSI OCC driver will probe OCC hwmon
+   driver automatically.
+ * Moved OCC response code definitions to the OCC include file.
+ * Fixed includes.
+ * Changed some structure fields to __beXX as that is what they are.
+ * Changed some errnos.
+ * Removed some dev_err().
+ * Refactored P8 code a bit to use #defined addresses and magic values, and
+   changed "goto retry" to a loop.
+ * Refactored error handling a bit.
 
-I dunno about documentation part for this property, I leave it for DT
-people to decide. Below part looks good to me.
+Edward A. James (10):
+  drivers/hwmon: Add On-Chip Controller (OCC) hwmon driver
+  drivers/hwmon/occ: Add command transport method for P8 and P9
+  drivers/hwmon/occ: Parse OCC poll response
+  drivers/hwmon/occ: Add sensor types and versions
+  drivers/hwmon/occ: Add sensor attributes and register hwmon device
+  drivers/hwmon/occ: Add non-hwmon attributes
+  drivers/hwmon/occ: Add error handling
+  Documentation: hwmon: Add OCC documentation
+  Documentation: ABI: Add occ-hwmon driver sysfs documentation
+  dt-bindings: i2c: Add P8 OCC hwmon driver documentation
 
-> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  drivers/tty/serial/serial_mctrl_gpio.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c
-> b/drivers/tty/serial/serial_mctrl_gpio.c
-> index d2da6aa..dce661c 100644
-> --- a/drivers/tty/serial/serial_mctrl_gpio.c
-> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
-> @@ -19,6 +19,7 @@
->  #include <linux/irq.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/termios.h>
-> +#include <linux/property.h>
->  #include <linux/serial_core.h>
->  #include <linux/module.h>
->  
-> @@ -118,6 +119,9 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct
-> device *dev, unsigned int idx)
->  	struct mctrl_gpios *gpios;
->  	enum mctrl_gpio_idx i;
->  
-> +	if (device_property_present(dev, "wakeup-source"))
-> +		return ERR_PTR(-ENOSYS);
-> +
->  	gpios = devm_kzalloc(dev, sizeof(*gpios), GFP_KERNEL);
->  	if (!gpios)
->  		return ERR_PTR(-ENOMEM);
+ Documentation/ABI/testing/sysfs-driver-occ-hwmon   |   77 ++
+ .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
+ Documentation/hwmon/occ                            |   74 ++
+ drivers/hwmon/Kconfig                              |    2 +
+ drivers/hwmon/Makefile                             |    1 +
+ drivers/hwmon/occ/Kconfig                          |   28 +
+ drivers/hwmon/occ/Makefile                         |   11 +
+ drivers/hwmon/occ/common.c                         | 1289 ++++++++++++++++++++
+ drivers/hwmon/occ/common.h                         |  119 ++
+ drivers/hwmon/occ/p8_i2c.c                         |  261 ++++
+ drivers/hwmon/occ/p9_sbe.c                         |  124 ++
+ 11 files changed, 2011 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-occ-hwmon
+ create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/common.c
+ create mode 100644 drivers/hwmon/occ/common.h
+ create mode 100644 drivers/hwmon/occ/p8_i2c.c
+ create mode 100644 drivers/hwmon/occ/p9_sbe.c
 
 -- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.1
