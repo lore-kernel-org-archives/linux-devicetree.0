@@ -1,64 +1,51 @@
-From: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] ARM: dts: rockchip: add spdif for rk322x SoCs
-Date: Thu, 27 Jul 2017 14:50:27 +0800
-Message-ID: <1501138227-11796-1-git-send-email-sugar.zhang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: sugar <sugar.zhang@rock-chips.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: add spdif for rk322x SoCs
+Date: Thu, 27 Jul 2017 15:20:02 +0800
+Message-ID: <2dd9d195-92fb-4f83-fb13-034850b403ec@rock-chips.com>
+References: <1501138227-11796-1-git-send-email-sugar.zhang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1501138227-11796-1-git-send-email-sugar.zhang@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de, broonie@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add the spdif dt node for rk322x SoCs.
-
-Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
-
- arch/arm/boot/dts/rk322x.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index f3e4ffd..b3b80e1 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -196,6 +196,20 @@
- 		status = "disabled";
- 	};
- 
-+	spdif: spdif@100d0000 {
-+		compatible = "rockchip,rk3228-spdif";
-+		reg = <0x100d0000 0x1000>;
-+		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF_8CH>;
-+		clock-names = "mclk", "hclk";
-+		dmas = <&pdma 10>;
-+		#dma-cells = <1>;
-+		dma-names = "tx";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spdif_tx>;
-+		status = "disabled";
-+	};
-+
- 	i2s2: i2s2@100e0000 {
- 		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
- 		reg = <0x100e0000 0x4000>;
-@@ -835,6 +849,12 @@
- 			};
- 		};
- 
-+		spdif {
-+			spdif_tx: spdif-tx {
-+				rockchip,pins = <3 31 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		tsadc {
- 			otp_gpio: otp-gpio {
- 				rockchip,pins = <0 24 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.7.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpwbGVhc2UgaWdub3JlIHRoaXMgZW1haWwsIEkgcmVtZW1iZXIgYW5vdGhlciBwYXRjaCBh
+Ym91dCB0aGlzIHdhcyBiZWVuIAptZXJnZWQuCgrlnKggNy8yNy8yMDE3IDE0OjUwLCBTdWdhciBa
+aGFuZyDlhpnpgZM6Cj4gVGhpcyBwYXRjaCBhZGQgdGhlIHNwZGlmIGR0IG5vZGUgZm9yIHJrMzIy
+eCBTb0NzLgo+Cj4gU2lnbmVkLW9mZi1ieTogU3VnYXIgWmhhbmcgPHN1Z2FyLnpoYW5nQHJvY2st
+Y2hpcHMuY29tPgo+IC0tLQo+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzIyeC5kdHNpIHwgMjAg
+KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDIwIGluc2VydGlvbnMoKykK
+Pgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yazMyMnguZHRzaSBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL3JrMzIyeC5kdHNpCj4gaW5kZXggZjNlNGZmZC4uYjNiODBlMSAxMDA2NDQKPiAt
+LS0gYS9hcmNoL2FybS9ib290L2R0cy9yazMyMnguZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3Qv
+ZHRzL3JrMzIyeC5kdHNpCj4gQEAgLTE5Niw2ICsxOTYsMjAgQEAKPiAgCQlzdGF0dXMgPSAiZGlz
+YWJsZWQiOwo+ICAJfTsKPgo+ICsJc3BkaWY6IHNwZGlmQDEwMGQwMDAwIHsKPiArCQljb21wYXRp
+YmxlID0gInJvY2tjaGlwLHJrMzIyOC1zcGRpZiI7Cj4gKwkJcmVnID0gPDB4MTAwZDAwMDAgMHgx
+MDAwPjsKPiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMjkgSVJRX1RZUEVfTEVWRUxfSElHSD47
+Cj4gKwkJY2xvY2tzID0gPCZjcnUgU0NMS19TUERJRj4sIDwmY3J1IEhDTEtfU1BESUZfOENIPjsK
+PiArCQljbG9jay1uYW1lcyA9ICJtY2xrIiwgImhjbGsiOwo+ICsJCWRtYXMgPSA8JnBkbWEgMTA+
+Owo+ICsJCSNkbWEtY2VsbHMgPSA8MT47Cj4gKwkJZG1hLW5hbWVzID0gInR4IjsKPiArCQlwaW5j
+dHJsLW5hbWVzID0gImRlZmF1bHQiOwo+ICsJCXBpbmN0cmwtMCA9IDwmc3BkaWZfdHg+Owo+ICsJ
+CXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gKwl9Owo+ICsKPiAgCWkyczI6IGkyczJAMTAwZTAwMDAg
+ewo+ICAJCWNvbXBhdGlibGUgPSAicm9ja2NoaXAscmszMjI4LWkycyIsICJyb2NrY2hpcCxyazMw
+NjYtaTJzIjsKPiAgCQlyZWcgPSA8MHgxMDBlMDAwMCAweDQwMDA+Owo+IEBAIC04MzUsNiArODQ5
+LDEyIEBACj4gIAkJCX07Cj4gIAkJfTsKPgo+ICsJCXNwZGlmIHsKPiArCQkJc3BkaWZfdHg6IHNw
+ZGlmLXR4IHsKPiArCQkJCXJvY2tjaGlwLHBpbnMgPSA8MyAzMSBSS19GVU5DXzIgJnBjZmdfcHVs
+bF9ub25lPjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiAgCQl0c2FkYyB7Cj4gIAkJCW90cF9ncGlv
+OiBvdHAtZ3BpbyB7Cj4gIAkJCQlyb2NrY2hpcCxwaW5zID0gPDAgMjQgUktfRlVOQ19HUElPICZw
+Y2ZnX3B1bGxfbm9uZT47Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
