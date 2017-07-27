@@ -1,49 +1,121 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] device property: Fix usecount for
- of_graph_get_port_parent()
-Date: Thu, 27 Jul 2017 17:17:07 +0100
-Message-ID: <20170727161707.uc36lxpg5x2bxajp@sirena.org.uk>
-References: <20170727094405.19778-1-tony@atomide.com>
+From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] of: Add helper for mapping device node to logical
+ CPU number
+Date: Thu, 27 Jul 2017 17:27:19 +0100
+Message-ID: <d93a64ad-2fc1-99bc-388e-09ded391f62a@arm.com>
+References: <1501168218-26741-1-git-send-email-suzuki.poulose@arm.com>
+ <1501168218-26741-3-git-send-email-suzuki.poulose@arm.com>
+ <CAL_JsqKTdysnhHMRKyqODm7VN4k=tkddozmUYXWv9nOmYGtzdQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bpwpucmuuosseaxz"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170727094405.19778-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKTdysnhHMRKyqODm7VN4k=tkddozmUYXWv9nOmYGtzdQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan.Cameron-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 27/07/17 16:48, Rob Herring wrote:
+> Please use get_maintainers and cc the right people/lists.
+>
 
---bpwpucmuuosseaxz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Sorry about that, will fix it.
 
-On Thu, Jul 27, 2017 at 02:44:05AM -0700, Tony Lindgren wrote:
-> Fix inconsistent use of of_graph_get_port_parent() where
-> asoc_simple_card_parse_graph_dai() does of_node_get() before
-> calling it while other callers do not. We can fix this by
-> not trashing the node passed to of_graph_get_port_parent().
+> +Frank, DT list
+>
+> On Thu, Jul 27, 2017 at 10:10 AM, Suzuki K Poulose
+> <suzuki.poulose-5wv7dgnIgG8@public.gmane.org> wrote:
+>> Add a helper to map a device node to a logical CPU number to avoid
+>> duplication. Currently this is open coded in different places (e.g
+>> gic-v3, coresight). The helper tries to map device node to a "possible"
+>> logical CPU id, which may not be online yet. It is the responsibility
+>> of the user to make sure that the CPU is online. The helper uses
+>> of_get_cpu_node() which uses arch specific backends to match the phyiscal
+>> ids.
+>>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> Reviewed-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/of/base.c         | 26 ++++++++++++++++++++++++++
+>>  include/linux/of_device.h |  7 +++++++
+>>  2 files changed, 33 insertions(+)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index 686628d..0b01515 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -420,6 +420,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+>>  EXPORT_SYMBOL(of_get_cpu_node);
+>>
+>>  /**
+>> + * of_device_node_get_cpu: Get the logical CPU number for a given device_node
+>> + *
+>> + * @cpu_node: Pointer to the device_node for CPU.
+>> + *
+>> + * Returns the logical CPU number of the given CPU device_node.
+>> + * Returns >= nr_cpu_ids if CPU is not found.
+>
+> Wouldn't negative be easier to test for? Then the caller doesn't need
+> to know nr_cpu_ids.
 
-This looks like it gives a much less surprising API so hopefully helps
-avoid issues in callers:
+I followed the conventions used by cpu_mask upon error here. But, we
+could return -ENODEV upon failure here.
+>
+>> + */
+>> +int of_device_node_get_cpu(struct device_node *cpu_node)
+>
+> of_device_* is for functions operating on struct device. So find
+> another name. of_cpu_node_to_id perhaps.
+>
+> _get functions generally imply incrementing ref counts which you are
+> not doing here.
+>
 
-Reviewed-by: Mark Brown <broonie@kernel.org>
+OK, I can switch to of_cpu_node_to_id().
 
---bpwpucmuuosseaxz
-Content-Type: application/pgp-signature; name="signature.asc"
+>> +{
+>> +       int cpu;
+>> +       bool found = false;
+>> +       struct device_node *np;
+>> +
+>> +       for_each_possible_cpu(cpu) {
+>> +               np = of_get_cpu_node(cpu, NULL);
+>> +               found = (cpu_node == np);
+>> +               of_node_put(np);
+>> +               if (found)
+>> +                       break;
+>> +       }
+>> +
+>> +       return cpu;
+>> +}
+>> +EXPORT_SYMBOL(of_device_node_get_cpu);
+>> +
+>> +/**
+>>   * __of_device_is_compatible() - Check if the node matches given constraints
+>>   * @device: pointer to node
+>>   * @compat: required compatible string, NULL or "" for any match
+>> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+>> index b4ad8b4..00a4ba9 100644
+>> --- a/include/linux/of_device.h
+>> +++ b/include/linux/of_device.h
+>> @@ -40,6 +40,8 @@ extern int of_device_request_module(struct device *dev);
+>>  extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+>>  extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+>>
+>> +extern int of_device_node_get_cpu(struct device_node *np);
+>> +
+>
+> Wrong place for this.
+>
 
------BEGIN PGP SIGNATURE-----
+How about include/linux/of.h ?
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAll6EgIACgkQJNaLcl1U
-h9B+OQf+N+0ajW5ZH/YBmCCSI/SUncBjj4w16WX6pS1o6C17X3UdY2ZSVQBUOM7j
-dwS22opewhLX2Pfbr6zEIMeanLSDq5pec2amVPTLKmTc1nOhiqODL46D+e65ZANI
-Tv/ZGi6SCVnHn6yh11/eOh2AQfiC6bg0SuP9Nueb4XF2/+tKpe7DZkmc65dobMcR
-p8tLJgXcHcpTjdrybIO8P3UomsuoDasI7NAid1kCyaan2zo6uLtjxFPv5xZfNs1k
-6hC4znKV+jYaHyrg021vgi6tMM81RCu/4DhEBPXJvE0HIRVMIsbifHz1Cn79SiXJ
-LpQlDqMjz8N/Z37U+bg8U5Qk/gpthQ==
-=KMaW
------END PGP SIGNATURE-----
-
---bpwpucmuuosseaxz--
+Suzuki
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
