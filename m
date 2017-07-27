@@ -1,31 +1,37 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 01/11] net: phy: Add rockchip phy driver support
-Date: Thu, 27 Jul 2017 15:38:00 +0200
-Message-ID: <20170727133800.GC18666@lunn.ch>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Thu, 27 Jul 2017 15:48:34 +0200
+Message-ID: <20170727134834.GD18666@lunn.ch>
 References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
- <1501160156-30328-2-git-send-email-david.wu@rock-chips.com>
+ <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501160156-30328-2-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: davem@davemloft.net, heiko@sntech.de, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +	/*
-> +	 * If mode switch happens from 10BT to 100BT, all DSP/AFE
-> +	 * registers are set to default values. So any AFE/DSP
-> +	 * registers have to be re-initialized in this case.
-> +	 */
+On Thu, Jul 27, 2017 at 09:02:16PM +0800, David Wu wrote:
+> To make internal phy work, need to configure the phy_clock,
+> phy cru_reset and related registers.
+> 
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> ---
+> changes in v2:
+>  - Use the standard "phy-mode" property for internal phy. (Florian)
 
-Hi David
+I think we need to discuss this. This PHY appears to be on an MDIO
+bus, it uses a standard PHY driver, and it appears to be using an RMII
+interface. So it is just an ordinary PHY.
 
-Are they also lost on suspend and resume?
+Internal is supposed to be something which is not ordinary, does not
+use one of the standard phy modes, needs something special to make it
+work.
 
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florain, it appears to be your suggestion to use internal. What do you
+say?
+
+	Andrew
