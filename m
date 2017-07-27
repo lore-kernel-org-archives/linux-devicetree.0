@@ -1,56 +1,104 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 10/10] dt-bindings: i2c: Add P8 OCC hwmon driver documentation
-Date: Thu, 27 Jul 2017 09:30:29 -0500
-Message-ID: <1501165829-12395-11-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 08/10] Documentation: hwmon: Add OCC documentation
+Date: Thu, 27 Jul 2017 09:30:27 -0500
+Message-ID: <1501165829-12395-9-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames@us.ibm.com>
 
-Document the bindings for I2C-based OCC hwmon driver.
+Document the hwmon interface for the OCC.
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+ Documentation/hwmon/occ | 74 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/hwmon/occ
 
-diff --git a/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
 new file mode 100644
-index 0000000..8c765d0
+index 0000000..dcae911
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
-@@ -0,0 +1,25 @@
-+Device-tree bindings for I2C-based On-Chip Controller hwmon driver
-+------------------------------------------------------------------
++++ b/Documentation/hwmon/occ
+@@ -0,0 +1,74 @@
++Kernel driver occ-hwmon
++=======================
 +
-+Required properties:
-+ - compatible = "ibm,p8-occ-hwmon";
-+ - reg = <I2C address>;			: I2C bus address
++Supported chips:
++  * POWER8
++  * POWER9
 +
-+Examples:
++Author: Eddie James <eajames@us.ibm.com>
 +
-+    i2c-bus@100 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        clock-frequency = <100000>;
-+        < more properties >
++Description
++-----------
 +
-+        occ-hwmon@1 {
-+            compatible = "ibm,p8-occ-hwmon";
-+            reg = <0x50>;
-+        };
++This driver supports hardware monitoring for the On-Chip Controller (OCC)
++embedded on POWER processors. The OCC is a device that collects and aggregates
++sensor data from the processor and the system. The OCC can provide the raw
++sensor data as well as perform thermal and power management on the system.
 +
-+        occ-hwmon@2 {
-+            compatible = "ibm,p8-occ-hwmon";
-+            reg = <0x51>;
-+        };
-+    };
++The P8 version of this driver is a client driver of I2C. It may be probed
++manually if an "ibm,p8-occ-hwmon" compatible device is found under the
++appropriate I2C bus node in the device-tree.
++
++The P9 version of this driver is a client driver of the FSI-based OCC driver.
++It will be probed automatically by the FSI-based OCC driver. Please see the
++device-tree bindings documentation for that driver for details on probing
++an OCC device (Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt).
++
++Sysfs entries
++-------------
++
++The following attributes are supported. All attributes are read-only unless
++specified.
++
++temp[1-n]_label		OCC sensor id.
++temp[1-n]_input		Measured temperature in millidegrees C.
++[with temperature sensor version 2+]
++    temp[1-n]_fru_type		Given FRU (Field Replaceable Unit) type.
++
++freq[1-n]_label		OCC sensor id.
++freq[1-n]_input		Measured frequency.
++
++power[1-n]_label	OCC sensor id.
++power[1-n]_input	Measured power in watts.
++power[1-n]_update_tag	Number of 250us samples represented in accumulator.
++power[1-n]_accumulator	Accumulation of 250us power readings.
++[with power sensor version 2+]
++    power[1-n]_function_id	Identifies what the power reading is for.
++    power[1-n]_apss_channel	Indicates APSS channel.
++
++[power version 0xa0 only]
++power1_id			OCC sensor id.
++power[1-n]_label		Sensor type, "system", "proc", "vdd", or "vdn".
++power[1-n]_input		Most recent power reading in watts.
++power[1-n]_update_tag		Number of samples in the accumulator.
++power[1-n]_accumulator		Accumulation of power readings.
++[with sensor type "system" and "proc" only]
++    power[1-n]_update_time	Time in us that the power value is read.
++
++caps1_current		Current OCC power cap in watts.
++caps1_reading		Current system output power in watts.
++caps1_norm		Power cap without redundant power.
++caps1_max		Maximum power cap.
++[caps version 1 and 2 only]
++    caps1_min		Minimum power cap.
++[caps version 3+]
++    caps1_min_hard		Hard minimum cap that can be set and held.
++    caps1_min_soft		Soft minimum cap below hard, not guaranteed.
++caps1_user		The powercap specified by the user. Will be 0 if no
++			user powercap exists. This attribute is read-write.
++[caps version 1+]
++    caps1_user_source	Indicates how the user power limit was set.
++
++extn[1-n]_label		ASCII id or sensor id.
++extn[1-n]_flags		Indicates type of label attribute.
++extn[1-n]_input		Data.
 -- 
 1.8.3.1
-
