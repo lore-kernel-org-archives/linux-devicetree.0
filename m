@@ -1,178 +1,76 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: [PATCH v2 3/3] ARM: dts: NSP: Add USB3 and USB3 PHY to NSP
-Date: Mon, 31 Jul 2017 17:54:23 -0400
-Message-ID: <1501538063-32662-4-git-send-email-jon.mason@broadcom.com>
-References: <1501538063-32662-1-git-send-email-jon.mason@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501538063-32662-1-git-send-email-jon.mason@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jon Mason <jon.mason@broadcom.com>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <SRS0=Y/bB=66=magewell.com=yong.deng@kernel.org>
+From: Yong Deng <yong.deng@magewell.com>
+Subject: [PATCH v2 2/3] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+Date: Thu, 27 Jul 2017 11:51:13 +0800
+Message-Id: <1501127474-40895-3-git-send-email-yong.deng@magewell.com>
+In-Reply-To: <1501127474-40895-1-git-send-email-yong.deng@magewell.com>
+References: <1501127474-40895-1-git-send-email-yong.deng@magewell.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
+Cc: Yong Deng <yong.deng@magewell.com>
+List-ID: <devicetree@vger.kernel.org>
 
-This uses the existing Northstar USB3 PHY driver to enable the USB3
-ports on NSP.
+Add binding documentation for Allwinner V3s CSI.
 
-Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Signed-off-by: Yong Deng <yong.deng@magewell.com>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi     | 19 +++++++++++++++++++
- arch/arm/boot/dts/bcm958522er.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958525er.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958525xmc.dts |  8 ++++++++
- arch/arm/boot/dts/bcm958622hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958623hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958625hr.dts  |  8 ++++++++
- arch/arm/boot/dts/bcm958625k.dts   |  8 ++++++++
- 8 files changed, 75 insertions(+)
+ .../devicetree/bindings/media/sun6i-csi.txt        | 49 ++++++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 9feb3689d191..dff66974feed 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -302,6 +302,16 @@
- 			#size-cells = <0>;
- 		};
- 
-+		xhci: usb@29000 {
-+			compatible = "generic-xhci";
-+			reg = <0x29000 0x1000>;
-+			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&usb3_phy>;
-+			phy-names = "usb3-phy";
-+			dma-coherent;
-+			status = "disabled";
+diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+new file mode 100644
+index 0000000..f8d83f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+@@ -0,0 +1,49 @@
++Allwinner V3s Camera Sensor Interface
++------------------------------
++
++Required properties:
++  - compatible: value must be "allwinner,sun8i-v3s-csi"
++  - reg: base address and size of the memory-mapped region.
++  - interrupts: interrupt associated to this IP
++  - clocks: phandles to the clocks feeding the CSI
++    * ahb: the CSI interface clock
++    * mod: the CSI module clock
++    * ram: the CSI DRAM clock
++  - clock-names: the clock names mentioned above
++  - resets: phandles to the reset line driving the CSI
++
++- ports: A ports node with endpoint definitions as defined in
++  Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	csi1: csi@01cb4000 {
++		compatible = "allwinner,sun8i-v3s-csi";
++		reg = <0x01cb4000 0x1000>;
++		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&ccu CLK_BUS_CSI>,
++			 <&ccu CLK_CSI1_SCLK>,
++			 <&ccu CLK_DRAM_CSI>;
++		clock-names = "ahb", "mod", "ram";
++		resets = <&ccu RST_BUS_CSI>;
++
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* Parallel bus endpoint */
++			csi1_ep: endpoint {
++				remote-endpoint = <&adv7611_ep>;
++				bus-width = <16>;
++				data-shift = <0>;
++
++				/* If hsync-active/vsync-active are missing,
++				   embedded BT.656 sync is used */
++				hsync-active = <0>; /* Active low */
++				vsync-active = <0>; /* Active low */
++				data-active = <1>;  /* Active high */
++				pclk-sample = <1>;  /* Rising */
++			};
 +		};
++	};
 +
- 		ehci0: usb@2a000 {
- 			compatible = "generic-ehci";
- 			reg = <0x2a000 0x100>;
-@@ -469,6 +479,15 @@
- 				phy-names = "sata-phy";
- 			};
- 		};
-+
-+		usb3_phy: usb3-phy@104000 {
-+			compatible = "brcm,ns-bx-usb3-phy";
-+			reg = <0x104000 0x1000>,
-+			      <0x032000 0x1000>;
-+			reg-names = "dmp", "ccb-mii";
-+			#phy-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
- 
- 	pcie0: pcie@18012000 {
-diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
-index f5c42962c201..f9dd342cc2ae 100644
---- a/arch/arm/boot/dts/bcm958522er.dts
-+++ b/arch/arm/boot/dts/bcm958522er.dts
-@@ -170,3 +170,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
-index efcb1f67bdad..374508a9cfbf 100644
---- a/arch/arm/boot/dts/bcm958525er.dts
-+++ b/arch/arm/boot/dts/bcm958525er.dts
-@@ -182,3 +182,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
-index b335ce02e32f..403250c5ad8e 100644
---- a/arch/arm/boot/dts/bcm958525xmc.dts
-+++ b/arch/arm/boot/dts/bcm958525xmc.dts
-@@ -202,3 +202,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
-index 16ab2d82a14b..fd8b8c689ffe 100644
---- a/arch/arm/boot/dts/bcm958622hr.dts
-+++ b/arch/arm/boot/dts/bcm958622hr.dts
-@@ -219,3 +219,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
-index 9b921c6aa8f8..3bc50849d013 100644
---- a/arch/arm/boot/dts/bcm958623hr.dts
-+++ b/arch/arm/boot/dts/bcm958623hr.dts
-@@ -227,3 +227,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
-index 006b08e41a3b..d94d14b3c745 100644
---- a/arch/arm/boot/dts/bcm958625hr.dts
-+++ b/arch/arm/boot/dts/bcm958625hr.dts
-@@ -229,3 +229,11 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
-index 64740f85cf4c..2cf2392483b2 100644
---- a/arch/arm/boot/dts/bcm958625k.dts
-+++ b/arch/arm/boot/dts/bcm958625k.dts
-@@ -264,3 +264,11 @@
- &uart1 {
- 	status = "okay";
- };
-+
-+&usb3_phy {
-+	status = "okay";
-+};
-+
-+&xhci {
-+	status = "okay";
-+};
 -- 
-2.7.4
+1.8.3.1
