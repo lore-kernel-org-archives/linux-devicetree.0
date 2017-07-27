@@ -1,47 +1,45 @@
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v1 2/2] arm64: dts: rockchip: add rk3328 spdif node
-Date: Thu, 27 Jul 2017 16:16:04 +0800
-Message-ID: <1501143365-76104-3-git-send-email-sugar.zhang@rock-chips.com>
-References: <1501143365-76104-1-git-send-email-sugar.zhang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501143365-76104-1-git-send-email-sugar.zhang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, broonie@kernel.org
-Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liang Chen <cl@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] pwm: add ZTE ZX PWM device driver
+Date: Thu, 27 Jul 2017 16:26:51 +0800
+Message-ID: <20170727082649.GJ29754@dragon>
+References: <1498704874-14599-1-git-send-email-shawnguo@kernel.org>
+ <1498704874-14599-3-git-send-email-shawnguo@kernel.org>
+ <20170725115343.GD22355@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170725115343.GD22355@ulmo>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Baoyou Xie <xie.baoyou@sanechips.com.cn>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the spdif dt node for rk3328.
+On Tue, Jul 25, 2017 at 01:53:43PM +0200, Thierry Reding wrote:
+> On Thu, Jun 29, 2017 at 10:54:34AM +0800, Shawn Guo wrote:
+> > From: Shawn Guo <shawn.guo@linaro.org>
+> > 
+> > It adds PWM device driver for ZTE ZX family SoCs.  The PWM controller
+> > supports 4 devices with polarity configuration.
+> > 
+> > The driver has been tested with pwm-regulator support to scale core
+> > voltage via cpufreq.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> >  drivers/pwm/Kconfig  |   9 ++
+> >  drivers/pwm/Makefile |   1 +
+> >  drivers/pwm/pwm-zx.c | 244 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 254 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-zx.c
+> 
+> Hi Shawn,
+> 
+> This is close to perfect. Two minor things, see below.
 
-Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Hi Thierry,
 
----
+Thanks for helping review the patch.  I just send out v2 to address
+your comments.
 
- arch/arm64/boot/dts/rockchip/rk3328.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-index f1a284b..d278670 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -189,6 +189,19 @@
- 		status = "disabled";
- 	};
- 
-+	spdif: spdif@ff030000 {
-+		compatible = "rockchip,rk3328-spdif";
-+		reg = <0x0 0xff030000 0x0 0x1000>;
-+		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF_8CH>;
-+		clock-names = "mclk", "hclk";
-+		dmas = <&dmac 10>;
-+		dma-names = "tx";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spdifm2_tx>;
-+		status = "disabled";
-+	};
-+
- 	grf: syscon@ff100000 {
- 		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
- 		reg = <0x0 0xff100000 0x0 0x1000>;
--- 
-2.7.4
+Shawn
