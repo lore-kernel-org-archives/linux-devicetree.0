@@ -1,303 +1,92 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 02/10] drivers/hwmon/occ: Add command transport method for P8 and P9
-Date: Thu, 27 Jul 2017 09:30:21 -0500
-Message-ID: <1501165829-12395-3-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 9/9] arm: dts: mt7623: add dts file for Bananapi R2
+ (BPI-R2) board
+Date: Thu, 27 Jul 2017 16:39:39 +0200
+Message-ID: <805ad5c4-db47-ef10-565d-b63e33a84bdf@gmail.com>
+References: <cover.1495683769.git.sean.wang@mediatek.com>
+ <5cc5489b38fc2723c30c8cfe0d4353f967d100f3.1495683769.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5cc5489b38fc2723c30c8cfe0d4353f967d100f3.1495683769.git.sean.wang@mediatek.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
 
-For the P8 OCC, add the procedure to send a command to the OCC over I2C
-bus. This involves writing the OCC command registers with serial
-communication operations (SCOMs) interpreted by the I2C slave. For the
-P9 OCC, add a procedure to use the OCC in-kernel API to send a command
-to the OCC through the SBE engine.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
----
- drivers/hwmon/occ/p8_i2c.c | 184 ++++++++++++++++++++++++++++++++++++++++++++-
- drivers/hwmon/occ/p9_sbe.c |  50 +++++++++++-
- 2 files changed, 232 insertions(+), 2 deletions(-)
+On 05/25/2017 06:02 AM, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Add support for the Bananapi R2 (BPI-R2) development board from
+> BIPAI KEJI. Detailed hardware information for BPI-R2 which could be
+> found on http://www.banana-pi.org/r2.html
+> 
+> The patch currently only adds Mediatek GMAC, MT7530 Switch, the crypto
+> engine, USB, IR, I2S, I2C, UART, SPI, PWM, GPIO keys, GPIO LEDs and
+> PMIC LEDs. As to the other missing hardware and peripherals, they would
+> be added and integrated continuously.
+> 
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>   Documentation/devicetree/bindings/arm/mediatek.txt |   2 +
+>   arch/arm/boot/dts/Makefile                         |   1 +
+>   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 440 +++++++++++++++++++++
+>   3 files changed, 443 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> 
+[...]
+> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> new file mode 100644
+> index 0000000..72c7984
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+[...]
+> +
+> +&eth {
+> +	status = "okay";
+> +	gmac0: mac@0 {
+> +		compatible = "mediatek,eth-mac";
+> +		reg = <0>;
+> +		phy-mode = "trgmii";
+> +		fixed-link {
+> +			speed = <1000>;
+> +			full-duplex;
+> +			pause;
+> +		};
+> +	};
+> +
+> +	mdio: mdio-bus {
+> +		switch@0 {
+> +			compatible = "mediatek,mt7530";
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
 
-diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
-index 025471f..745fb52 100644
---- a/drivers/hwmon/occ/p8_i2c.c
-+++ b/drivers/hwmon/occ/p8_i2c.c
-@@ -11,9 +11,26 @@
- #include <linux/errno.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
-+#include <linux/occ.h>
-+#include <linux/sched.h>
-+#include <asm/unaligned.h>
- 
- #include "common.h"
- 
-+#define OCC_TIMEOUT_MS			1000
-+#define OCC_CMD_IN_PRG_WAIT_MS		50
-+
-+/* OCB (on-chip control bridge - interface to OCC) registers */
-+#define OCB_DATA1			0x6B035
-+#define OCB_ADDR			0x6B070
-+#define OCB_DATA3			0x6B075
-+
-+/* OCC SRAM address space */
-+#define OCC_SRAM_ADDR_CMD		0xFFFF6000
-+#define OCC_SRAM_ADDR_RESP		0xFFFF7000
-+
-+#define OCC_DATA_ATTN			0x20010000
-+
- struct p8_i2c_occ {
- 	struct occ occ;
- 	struct i2c_client *client;
-@@ -21,9 +38,174 @@ struct p8_i2c_occ {
- 
- #define to_p8_i2c_occ(x)	container_of((x), struct p8_i2c_occ, occ)
- 
-+static int p8_i2c_occ_getscom(struct i2c_client *client, u32 address, u8 *data)
-+{
-+	ssize_t rc;
-+	__be64 buf;
-+	struct i2c_msg msgs[2];
-+
-+	/* p8 i2c slave requires shift */
-+	address <<= 1;
-+
-+	msgs[0].addr = client->addr;
-+	msgs[0].flags = client->flags & I2C_M_TEN;
-+	msgs[0].len = sizeof(u32);
-+	/* address is a scom address; bus-endian */
-+	msgs[0].buf = (char *)&address;
-+
-+	/* data from OCC is big-endian */
-+	msgs[1].addr = client->addr;
-+	msgs[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
-+	msgs[1].len = sizeof(u64);
-+	msgs[1].buf = (char *)&buf;
-+
-+	rc = i2c_transfer(client->adapter, msgs, 2);
-+	if (rc < 0)
-+		return rc;
-+
-+	*(u64 *)data = be64_to_cpu(buf);
-+
-+	return 0;
-+}
-+
-+static int p8_i2c_occ_putscom(struct i2c_client *client, u32 address, u8 *data)
-+{
-+	u32 buf[3];
-+	ssize_t rc;
-+
-+	/* p8 i2c slave requires shift */
-+	address <<= 1;
-+
-+	/* address is bus-endian; data passed through from user as-is */
-+	buf[0] = address;
-+	memcpy(&buf[1], &data[4], sizeof(u32));
-+	memcpy(&buf[2], data, sizeof(u32));
-+
-+	rc = i2c_master_send(client, (const char *)buf, sizeof(buf));
-+	if (rc < 0)
-+		return rc;
-+	else if (rc != sizeof(buf))
-+		return -EIO;
-+
-+	return 0;
-+}
-+
-+static int p8_i2c_occ_putscom_u32(struct i2c_client *client, u32 address,
-+				  u32 data0, u32 data1)
-+{
-+	u8 buf[8];
-+
-+	memcpy(buf, &data0, 4);
-+	memcpy(buf + 4, &data1, 4);
-+
-+	return p8_i2c_occ_putscom(client, address, buf);
-+}
-+
-+static int p8_i2c_occ_putscom_be(struct i2c_client *client, u32 address,
-+				 u8 *data)
-+{
-+	__be32 data0, data1;
-+
-+	memcpy(&data0, data, 4);
-+	memcpy(&data1, data + 4, 4);
-+
-+	return p8_i2c_occ_putscom_u32(client, address, be32_to_cpu(data0),
-+				      be32_to_cpu(data1));
-+}
-+
- static int p8_i2c_occ_send_cmd(struct occ *occ, u8 *cmd)
- {
--	return -EOPNOTSUPP;
-+	int i, rc;
-+	unsigned long start;
-+	u16 data_length;
-+	const unsigned long timeout = msecs_to_jiffies(OCC_TIMEOUT_MS);
-+	const long int wait_time = msecs_to_jiffies(OCC_CMD_IN_PRG_WAIT_MS);
-+	struct p8_i2c_occ *p8_i2c_occ = to_p8_i2c_occ(occ);
-+	struct i2c_client *client = p8_i2c_occ->client;
-+	struct occ_response *resp = &occ->resp;
-+
-+	start = jiffies;
-+
-+	/* set sram address for command */
-+	rc = p8_i2c_occ_putscom_u32(client, OCB_ADDR, OCC_SRAM_ADDR_CMD, 0);
-+	if (rc)
-+		return rc;
-+
-+	/* write command (expected to already be BE), we need bus-endian... */
-+	rc = p8_i2c_occ_putscom_be(client, OCB_DATA3, cmd);
-+	if (rc)
-+		return rc;
-+
-+	/* trigger OCC attention */
-+	rc = p8_i2c_occ_putscom_u32(client, OCB_DATA1, OCC_DATA_ATTN, 0);
-+	if (rc)
-+		return rc;
-+
-+	do {
-+		/* set sram address for response */
-+		rc = p8_i2c_occ_putscom_u32(client, OCB_ADDR,
-+					    OCC_SRAM_ADDR_RESP, 0);
-+		if (rc)
-+			return rc;
-+
-+		rc = p8_i2c_occ_getscom(client, OCB_DATA3, (u8 *)resp);
-+		if (rc)
-+			return rc;
-+
-+		/* wait for OCC */
-+		if (resp->return_status == OCC_RESP_CMD_IN_PRG) {
-+			rc = -EALREADY;
-+
-+			if (time_after(jiffies, start + timeout))
-+				break;
-+
-+			set_current_state(TASK_INTERRUPTIBLE);
-+			schedule_timeout(wait_time);
-+		}
-+	} while (rc);
-+
-+	/* check the OCC response */
-+	switch (resp->return_status) {
-+	case OCC_RESP_CMD_IN_PRG:
-+		rc = -ETIMEDOUT;
-+		break;
-+	case OCC_RESP_SUCCESS:
-+		rc = 0;
-+		break;
-+	case OCC_RESP_CMD_INVAL:
-+	case OCC_RESP_CMD_LEN_INVAL:
-+	case OCC_RESP_DATA_INVAL:
-+	case OCC_RESP_CHKSUM_ERR:
-+		rc = -EINVAL;
-+		break;
-+	case OCC_RESP_INT_ERR:
-+	case OCC_RESP_BAD_STATE:
-+	case OCC_RESP_CRIT_EXCEPT:
-+	case OCC_RESP_CRIT_INIT:
-+	case OCC_RESP_CRIT_WATCHDOG:
-+	case OCC_RESP_CRIT_OCB:
-+	case OCC_RESP_CRIT_HW:
-+		rc = -EREMOTEIO;
-+		break;
-+	default:
-+		rc = -EPROTO;
-+	}
-+
-+	if (rc < 0)
-+		return rc;
-+
-+	data_length = get_unaligned_be16(&resp->data_length);
-+	if (data_length > OCC_RESP_DATA_BYTES)
-+		return -EMSGSIZE;
-+
-+	/* fetch the rest of the response data */
-+	for (i = 8; i < data_length + 7; i += 8) {
-+		rc = p8_i2c_occ_getscom(client, OCB_DATA3, ((u8 *)resp) + i);
-+		if (rc)
-+			return rc;
-+	}
-+
-+	return 0;
- }
- 
- static int p8_i2c_occ_probe(struct i2c_client *client,
-diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
-index 58c3bb2..667d190 100644
---- a/drivers/hwmon/occ/p9_sbe.c
-+++ b/drivers/hwmon/occ/p9_sbe.c
-@@ -10,6 +10,7 @@
- #include <linux/device.h>
- #include <linux/errno.h>
- #include <linux/module.h>
-+#include <linux/occ.h>
- #include <linux/platform_device.h>
- 
- #include "common.h"
-@@ -23,7 +24,54 @@ struct p9_sbe_occ {
- 
- static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd)
- {
--	return -EOPNOTSUPP;
-+	int rc;
-+	struct occ_client *client;
-+	struct occ_response *resp = &occ->resp;
-+	struct p9_sbe_occ *p9_sbe_occ = to_p9_sbe_occ(occ);
-+
-+	client = occ_drv_open(p9_sbe_occ->sbe, 0);
-+	if (!client)
-+		return -ENODEV;
-+
-+	/* skip first byte (sequence number), OCC driver handles it */
-+	rc = occ_drv_write(client, (const char *)&cmd[1], 7);
-+	if (rc < 0)
-+		goto err;
-+
-+	rc = occ_drv_read(client, (char *)resp, sizeof(*resp));
-+	if (rc < 0)
-+		goto err;
-+
-+	/* check the OCC response */
-+	switch (resp->return_status) {
-+	case OCC_RESP_CMD_IN_PRG:
-+		rc = -ETIMEDOUT;
-+		break;
-+	case OCC_RESP_SUCCESS:
-+		rc = 0;
-+		break;
-+	case OCC_RESP_CMD_INVAL:
-+	case OCC_RESP_CMD_LEN_INVAL:
-+	case OCC_RESP_DATA_INVAL:
-+	case OCC_RESP_CHKSUM_ERR:
-+		rc = -EINVAL;
-+		break;
-+	case OCC_RESP_INT_ERR:
-+	case OCC_RESP_BAD_STATE:
-+	case OCC_RESP_CRIT_EXCEPT:
-+	case OCC_RESP_CRIT_INIT:
-+	case OCC_RESP_CRIT_WATCHDOG:
-+	case OCC_RESP_CRIT_OCB:
-+	case OCC_RESP_CRIT_HW:
-+		rc = -EREMOTEIO;
-+		break;
-+	default:
-+		rc = -EPROTO;
-+	}
-+
-+err:
-+	occ_drv_release(client);
-+	return rc;
- }
- 
- static int p9_sbe_occ_probe(struct platform_device *pdev)
--- 
-1.8.3.1
+What is this reg needed for? I can't find it neither in the code nor in the 
+bindings (mt7530 and general dsa bindings). Actually it throws a warning when 
+compiling:
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (reg_format): "reg" 
+property in /ethernet@1b100000/mdio-bus/switch@0 has invalid length (4 bytes) 
+(#address-cells == 2, #size-cells == 1)
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning 
+(avoid_default_addr_size): Relying on default #address-cells value for 
+/ethernet@1b100000/mdio-bus/switch@0
+arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning 
+(avoid_default_addr_size): Relying on default #size-cells value for 
+/ethernet@1b100000/mdio-bus/switch@0
+
+Regards,
+Matthias
