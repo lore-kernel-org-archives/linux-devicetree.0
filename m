@@ -1,92 +1,151 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 9/9] arm: dts: mt7623: add dts file for Bananapi R2
- (BPI-R2) board
-Date: Thu, 27 Jul 2017 16:39:39 +0200
-Message-ID: <805ad5c4-db47-ef10-565d-b63e33a84bdf@gmail.com>
-References: <cover.1495683769.git.sean.wang@mediatek.com>
- <5cc5489b38fc2723c30c8cfe0d4353f967d100f3.1495683769.git.sean.wang@mediatek.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Documentation: dw-mshc: deprecate num-slots
+Date: Thu, 27 Jul 2017 16:47:54 +0200
+Message-ID: <CAPDyKFpKsa8a0TNFT4a-g-cRH6MBoywHDp2VN+=6nA2h51iDHw@mail.gmail.com>
+References: <1500366698-117167-1-git-send-email-shawn.lin@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5cc5489b38fc2723c30c8cfe0d4353f967d100f3.1495683769.git.sean.wang@mediatek.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500366698-117167-1-git-send-email-shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 18 July 2017 at 10:31, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> dwmmc host driver already deprecate it in the driver
+> but didn't modify the documentation to reflect the fact.
+> This patch deprecates it and clean up num-slots from the
+> examples of all variant host drivers.
+>
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
+Thanks, applied for fixes and added a fixes tag.
 
-On 05/25/2017 06:02 AM, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add support for the Bananapi R2 (BPI-R2) development board from
-> BIPAI KEJI. Detailed hardware information for BPI-R2 which could be
-> found on http://www.banana-pi.org/r2.html
-> 
-> The patch currently only adds Mediatek GMAC, MT7530 Switch, the crypto
-> engine, USB, IR, I2S, I2C, UART, SPI, PWM, GPIO keys, GPIO LEDs and
-> PMIC LEDs. As to the other missing hardware and peripherals, they would
-> be added and integrated continuously.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+Kind regards
+Uffe
+
 > ---
->   Documentation/devicetree/bindings/arm/mediatek.txt |   2 +
->   arch/arm/boot/dts/Makefile                         |   1 +
->   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 440 +++++++++++++++++++++
->   3 files changed, 443 insertions(+)
->   create mode 100644 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> 
-[...]
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> new file mode 100644
-> index 0000000..72c7984
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-[...]
-> +
-> +&eth {
-> +	status = "okay";
-> +	gmac0: mac@0 {
-> +		compatible = "mediatek,eth-mac";
-> +		reg = <0>;
-> +		phy-mode = "trgmii";
-> +		fixed-link {
-> +			speed = <1000>;
-> +			full-duplex;
-> +			pause;
-> +		};
-> +	};
-> +
-> +	mdio: mdio-bus {
-> +		switch@0 {
-> +			compatible = "mediatek,mt7530";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-
-What is this reg needed for? I can't find it neither in the code nor in the 
-bindings (mt7530 and general dsa bindings). Actually it throws a warning when 
-compiling:
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning (reg_format): "reg" 
-property in /ethernet@1b100000/mdio-bus/switch@0 has invalid length (4 bytes) 
-(#address-cells == 2, #size-cells == 1)
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning 
-(avoid_default_addr_size): Relying on default #address-cells value for 
-/ethernet@1b100000/mdio-bus/switch@0
-arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dtb: Warning 
-(avoid_default_addr_size): Relying on default #size-cells value for 
-/ethernet@1b100000/mdio-bus/switch@0
-
-Regards,
-Matthias
+>
+>  Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt |  1 -
+>  Documentation/devicetree/bindings/mmc/img-dw-mshc.txt    |  1 -
+>  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt     |  2 --
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt         | 16 +++++++---------
+>  Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt     |  1 -
+>  5 files changed, 7 insertions(+), 14 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index aad9844..a58c173 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -78,7 +78,6 @@ Example:
+>         };
+>
+>         dwmmc0@12200000 {
+> -               num-slots = <1>;
+>                 cap-mmc-highspeed;
+>                 cap-sd-highspeed;
+>                 broken-cd;
+> diff --git a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
+> index 85de99f..c54e577 100644
+> --- a/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/img-dw-mshc.txt
+> @@ -24,6 +24,5 @@ Example:
+>
+>                 fifo-depth = <0x20>;
+>                 bus-width = <4>;
+> -               num-slots = <1>;
+>                 disable-wp;
+>         };
+> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> index 8af1afc..07242d1 100644
+> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> @@ -36,7 +36,6 @@ Example:
+>
+>         /* Board portion */
+>         dwmmc0@fcd03000 {
+> -               num-slots = <1>;
+>                 vmmc-supply = <&ldo12>;
+>                 fifo-depth = <0x100>;
+>                 pinctrl-names = "default";
+> @@ -52,7 +51,6 @@ Example:
+>
+>         dwmmc_1: dwmmc1@f723e000 {
+>                 compatible = "hisilicon,hi6220-dw-mshc";
+> -               num-slots = <0x1>;
+>                 bus-width = <0x4>;
+>                 disable-wp;
+>                 cap-sd-highspeed;
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> index 9cb55ca..ef3e5f1 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> @@ -12,12 +12,12 @@ Required Properties:
+>  * #address-cells: should be 1.
+>  * #size-cells: should be 0.
+>
+> -# Slots: The slot specific information are contained within child-nodes with
+> -  each child-node representing a supported slot. There should be atleast one
+> -  child node representing a card slot. The name of the child node representing
+> -  the slot is recommended to be slot@n where n is the unique number of the slot
+> -  connected to the controller. The following are optional properties which
+> -  can be included in the slot child node.
+> +# Slots (DEPRECATED): The slot specific information are contained within
+> +  child-nodes with each child-node representing a supported slot. There should
+> +  be atleast one child node representing a card slot. The name of the child node
+> +  representing the slot is recommended to be slot@n where n is the unique number
+> +  of the slot connected to the controller. The following are optional properties
+> +  which can be included in the slot child node.
+>
+>         * reg: specifies the physical slot number. The valid values of this
+>           property is 0 to (num-slots -1), where num-slots is the value
+> @@ -63,7 +63,7 @@ Optional properties:
+>    clock(cclk_out). If it's not specified, max is 200MHZ and min is 400KHz by default.
+>           (Use the "max-frequency" instead of "clock-freq-min-max".)
+>
+> -* num-slots: specifies the number of slots supported by the controller.
+> +* num-slots (DEPRECATED): specifies the number of slots supported by the controller.
+>    The number of physical slots actually used could be equal or less than the
+>    value specified by num-slots. If this property is not specified, the value
+>    of num-slot property is assumed to be 1.
+> @@ -124,7 +124,6 @@ board specific portions as listed below.
+>         dwmmc0@12200000 {
+>                 clock-frequency = <400000000>;
+>                 clock-freq-min-max = <400000 200000000>;
+> -               num-slots = <1>;
+>                 broken-cd;
+>                 fifo-depth = <0x80>;
+>                 card-detect-delay = <200>;
+> @@ -139,7 +138,6 @@ board specific portions as listed below.
+>         dwmmc0@12200000 {
+>                 clock-frequency = <400000000>;
+>                 clock-freq-min-max = <400000 200000000>;
+> -               num-slots = <1>;
+>                 broken-cd;
+>                 fifo-depth = <0x80>;
+>                 card-detect-delay = <200>;
+> diff --git a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+> index eaade0e..906819a 100644
+> --- a/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/zx-dw-mshc.txt
+> @@ -25,7 +25,6 @@ Example:
+>                 clock-frequency = <50000000>;
+>                 clocks = <&topcrm SD0_AHB>, <&topcrm SD0_WCLK>;
+>                 clock-names = "biu", "ciu";
+> -               num-slots = <1>;
+>                 max-frequency = <50000000>;
+>                 cap-sdio-irq;
+>                 cap-sd-highspeed;
+> --
+> 1.9.1
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
