@@ -1,79 +1,65 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: Re: [PATCH 1/4] can: dev: Add support for limiting configured bitrate
-Date: Wed, 26 Jul 2017 20:44:33 -0500
-Message-ID: <05ca373b-977c-1a59-69fe-c17e5ec4ae75@ti.com>
-References: <20170719233654.25908-1-fcooper@ti.com>
- <20170719233654.25908-2-fcooper@ti.com>
- <f45ea1b4-0f46-0002-a89b-b997f2693bb5@hartkopp.net>
- <055c00f5-0775-4e35-309c-0d1c8aa0afdf@ti.com>
- <20170726200403.GD6873@airbook.vandijck-laurijssen.be>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/3] memory: mtk-smi: add larbid init routine
+Date: Thu, 27 Jul 2017 10:01:10 +0800
+Message-ID: <1501120872-19652-2-git-send-email-honghui.zhang@mediatek.com>
+References: <1501120872-19652-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170726200403.GD6873@airbook.vandijck-laurijssen.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, andrew@lunn.ch
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1501120872-19652-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Hi Kurt,
-On 07/26/2017 03:04 PM, Kurt Van Dijck wrote:
-> Hi,
-> 
-> I know my response is late ...
-> 
->> Hi Oliver
->> On 07/20/2017 02:43 AM, Oliver Hartkopp wrote:
->>> Hi Franklin,
->>>
->>> On 07/20/2017 01:36 AM, Franklin S Cooper Jr wrote:
->>>
->>>> +#ifdef CONFIG_OF
->>>> +void of_transceiver_is_fixed(struct net_device *dev)
->>>> +{
->>>
->>> (..)
->>>
->>>> +}
->>>> +EXPORT_SYMBOL(of_transceiver_is_fixed);
->>>> +#endif
->>>
->>> I'm not sure about the naming here.
->>>
->>> As this is a CAN transceiver related option it should be named accordingly:
-> 
-> I contest the the name too:
-> 1) the can transceiver isn't fixed at all, it limited to the higher
-> bitrates.
+In the commit 3c8f4ad85c4b ("memory/mediatek: add support for mt2701"),
+the larb->larbid was added but not initialized.
+Mediatek's gen1 smi need this hardware larbid information to get the
+register offset which controls whether enable iommu for this larb.
+This patch add the initialize routine for larbid.
 
-Its "possible" that this subnode may have additional properties beyond
-bitrates in the future. But your right as of now it is specifically
-addressing max bit rates. The naming of this function and subnode is
-based on "fixed-link". So "fixed" is just implying that certain
-properties can't be changed.
+Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/memory/mtk-smi.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-> 
-> 2) of_can_transceiver_is_fixed suggests to test if a transceiver is
-> fixed, it does not suggest to load some properties from the device tree.
-> of_can_load_transceiver looks way more clear to me.
-
-I address this partially in my rev 2 that I've already sent. I'm now
-using of_can_transceiver_fixed. The fact its of_ already implies it is
-loading properties from device tree. So I don't think
-of_can_load_transceiver really makes things clearer.
-
-> 
-> That's my opinion.
-> The important things, like the contents of the functions, look good.
-
-You mind throwing your two cents in the thread for my latest patch?
-Specifically the conversation regarding naming the properties. A couple
-of people prefer to not use "arbitration" in one of the property names.
-Currently I believe there are two options on property names that can be
-used and I'm open to a majority vote on which one to go with.
-
-> 
-> Kind regards,
-> Kurt Van Dijck
-> 
+diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+index 2b798bb4..fe36b3e 100644
+--- a/drivers/memory/mtk-smi.c
++++ b/drivers/memory/mtk-smi.c
+@@ -240,6 +240,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *smi_node;
+ 	struct platform_device *smi_pdev;
++	int err;
+ 
+ 	if (!dev->pm_domain)
+ 		return -EPROBE_DEFER;
+@@ -263,6 +264,14 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+ 		return PTR_ERR(larb->smi.clk_smi);
+ 	larb->smi.dev = dev;
+ 
++	err = of_property_read_u32(dev->of_node, "mediatek,larbid",
++				   &larb->larbid);
++	if (err && of_device_is_compatible(dev->of_node,
++					   "mediatek,mt2701-smi-larb")) {
++		dev_err(dev, "missing larbid property\n");
++		return err;
++	}
++
+ 	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
+ 	if (!smi_node)
+ 		return -EINVAL;
+-- 
+2.6.4
