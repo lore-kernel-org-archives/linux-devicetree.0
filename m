@@ -1,79 +1,39 @@
-From: Yong Deng <yong.deng@magewell.com>
-Subject: [PATCH v2 0/3] Initial Allwinner V3s CSI Support
-Date: Thu, 27 Jul 2017 12:35:32 +0800
-Message-ID: <1501130135-41670-1-git-send-email-yong.deng@magewell.com>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/6] dma: bcm-sba-raid: Peek mbox when we are left with no
+ free requests
+Date: Thu, 27 Jul 2017 10:25:25 +0530
+Message-ID: <CAALAos_+ba+fg8wiqtgzWdf3L554G_jW83-J7jFoDNni5_yS9w@mail.gmail.com>
+References: <1501047404-14456-1-git-send-email-anup.patel@broadcom.com>
+ <1501047404-14456-3-git-send-email-anup.patel@broadcom.com> <20170726171028.GJ3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.in
-Cc: Yong Deng <yong.deng@magewell.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726171028.GJ3053@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for resend the patch. Delivering to somebody in cc has failed at
-last time.
+On Wed, Jul 26, 2017 at 10:40 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Jul 26, 2017 at 11:06:40AM +0530, Anup Patel wrote:
+>> We should peek mbox channels when we are left with no free
+>> sba_requests in sba_alloc_request()
+>
+> and why is the world should we do that, how does that help??
 
-This patchset add initial support for Allwinner V3s CSI.
+When setting up RAID array on several NVMe disk we observed
+that sba_alloc_request() start failing (due to no free requests left)
+and RAID array setup becomes very slow.
 
-Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
-and CSI1 is used for parallel interface. This is not documented in
-datasheet but by testing and guess.
+Doing mbox channel peek when we have no free requests left,
+improves performance of RAID array setup.
 
-This patchset implement a v4l2 framework driver and add a binding 
-documentation for it. 
+This change is inspired from mv_chan_alloc_slot() implemented
+in drivers/dma/mv_xor.c
 
-Currently, the driver only support the parallel interface. And has been
-tested with a BT1120 signal which generating from FPGA. The following
-fetures are not support with this patchset:
-  - ISP 
-  - MIPI-CSI2
-  - Master clock for camera sensor
-  - Power regulator for the front end IC
-
-sun6i_csi_ops is still there. I seriously thought about it. Without 
-sun6i_csi_ops, the dependency between sun6i_video and sun6i_csi_v3s
-will be complicated. Comments and criticisms are welcome.
-
-Changes in v2:
-  * Change sunxi-csi to sun6i-csi
-  * Rebase to media_tree master branch
-
-Yong Deng (3):
-  media: V3s: Add support for Allwinner CSI.
-  dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-  media: MAINTAINERS: add entries for Allwinner V3s CSI
-
- .../devicetree/bindings/media/sun6i-csi.txt        |  49 ++
- MAINTAINERS                                        |   8 +
- drivers/media/platform/Kconfig                     |   1 +
- drivers/media/platform/Makefile                    |   2 +
- drivers/media/platform/sun6i-csi/Kconfig           |   9 +
- drivers/media/platform/sun6i-csi/Makefile          |   3 +
- drivers/media/platform/sun6i-csi/sun6i_csi.c       | 545 ++++++++++++++
- drivers/media/platform/sun6i-csi/sun6i_csi.h       | 203 +++++
- drivers/media/platform/sun6i-csi/sun6i_csi_v3s.c   | 827 +++++++++++++++++++++
- drivers/media/platform/sun6i-csi/sun6i_csi_v3s.h   | 206 +++++
- drivers/media/platform/sun6i-csi/sun6i_video.c     | 663 +++++++++++++++++
- drivers/media/platform/sun6i-csi/sun6i_video.h     |  61 ++
- 12 files changed, 2577 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
- create mode 100644 drivers/media/platform/sun6i-csi/Kconfig
- create mode 100644 drivers/media/platform/sun6i-csi/Makefile
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi.c
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi.h
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi_v3s.c
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_csi_v3s.h
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_video.c
- create mode 100644 drivers/media/platform/sun6i-csi/sun6i_video.h
-
--- 
-1.8.3.1
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
