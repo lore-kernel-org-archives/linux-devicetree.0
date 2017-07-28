@@ -1,55 +1,52 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 1/2] Documentation: dt: pinctrl: Add pmi8994 gpio support
-Date: Fri, 28 Jul 2017 18:48:12 +0530
-Message-ID: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: [PATCH v2 2/2] arm64: dts: pmi8994: Add device node for pmi8994 gpios
+Date: Fri, 28 Jul 2017 18:48:13 +0530
+Message-ID: <1501247893-30226-2-git-send-email-vivek.gautam@codeaurora.org>
+References: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: sboyd@codeaurora.org, rnayak@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vivek Gautam <vivek.gautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Update the binding doc for qcom pmi8994-gpio devices.
-
-Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 ---
 
-- Have been testing this patch-set on db820c for extcon with
-  usb controller. The usb controller uses one of these gpios
-  for usb-id/vbus detection.
-
 Changes since v1:
- - Dropped "qcom,pmi8994-gpio" compatible addition to the driver
-   since we can use the generic "qcom,spmi-gpio" compatible.
- - Sorted to add pmi8994-gpio in alphabatical order.
+ - Added "qcom,spmi-gpio" to the compatible.
 
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index 8d893a874634..d6f8adbf25c6 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -16,6 +16,7 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8941-gpio"
- 		    "qcom,pm8994-gpio"
- 		    "qcom,pma8084-gpio"
-+		    "qcom,pmi8994-gpio"
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index d3879a4e8076..57673f92805d 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -8,6 +8,23 @@
+ 		reg = <0x2 SPMI_USID>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++
++		pmi8994_gpios: gpios@c000 {
++			compatible = "qcom,pmi8994-gpio", "qcom,spmi-gpio";
++			reg = <0xc000>;
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupts = <2 0xc0 0 IRQ_TYPE_NONE>,
++				     <2 0xc1 0 IRQ_TYPE_NONE>,
++				     <2 0xc2 0 IRQ_TYPE_NONE>,
++				     <2 0xc3 0 IRQ_TYPE_NONE>,
++				     <2 0xc4 0 IRQ_TYPE_NONE>,
++				     <2 0xc5 0 IRQ_TYPE_NONE>,
++				     <2 0xc6 0 IRQ_TYPE_NONE>,
++				     <2 0xc7 0 IRQ_TYPE_NONE>,
++				     <2 0xc8 0 IRQ_TYPE_NONE>,
++				     <2 0xc9 0 IRQ_TYPE_NONE>;
++		};
+ 	};
  
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
- 		    if the device is on an spmi bus or an ssbi bus respectively
-@@ -85,6 +86,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio36 for pm8941
- 		    gpio1-gpio22 for pm8994
- 		    gpio1-gpio22 for pma8084
-+		    gpio1-gpio10 for pmi8994
- 
- - function:
- 	Usage: required
+ 	pmic@3 {
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
