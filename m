@@ -1,101 +1,30 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 4/6] ARM: dts: keystone-k2hk-evm: Add and enable common DSP CMA memory pool
-Date: Fri, 28 Jul 2017 18:19:16 -0500
-Message-ID: <20170728231918.16778-5-s-anna@ti.com>
-References: <20170728231918.16778-1-s-anna@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm64: dts: move ns2 into northstar2 directory
+Date: Fri, 28 Jul 2017 16:31:36 -0700
+Message-ID: <92ccb588-744f-ee91-bfba-ced7e6675335@gmail.com>
+References: <1500483950-9217-1-git-send-email-scott.branden@broadcom.com>
+ <1500483950-9217-2-git-send-email-scott.branden@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170728231918.16778-1-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>, Sam Nelson <sam.nelson@ti.com>, "Andrew F. Davis" <afd@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500483950-9217-2-git-send-email-scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sam Nelson <sam.nelson@ti.com>
+On 07/19/2017 10:05 AM, Scott Branden wrote:
+> Place northstar2 into its own subdirectory.  This helps as the number
+> of Broadcom boards grow and we can separate them per SoC.
+> 
+> Signed-off-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-A common CMA memory pool reserved memory node is added, and is attached
-to all the DSP nodes through the 'memory-region' property on the 66AK2H
-EVM board. This area will be used for allocating virtio rings and buffers.
-The common node allows the DSP Memory Protection and Address Extension
-(MPAX) module to be configured uniformly across all the DSP processors.
-
-The reserved memory node and all the user DSP nodes are also marked okay
-to enable the DSPs on the 66AK2K EVM board.
-
-Signed-off-by: Sam Nelson <sam.nelson@ti.com>
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 53 +++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index 2156ff92d08f..6dd13b98aaba 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -16,6 +16,19 @@
- 	compatible =  "ti,k2hk-evm", "ti,k2hk", "ti,keystone";
- 	model = "Texas Instruments Keystone 2 Kepler/Hawking EVM";
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		dsp_common_memory: dsp-common-memory@81f800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+	};
-+
- 	soc {
- 		clocks {
- 			refclksys: refclksys {
-@@ -184,3 +197,43 @@
- 		reg = <1>;
- 	};
- };
-+
-+&dsp0 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp1 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp2 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp3 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp4 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp5 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp6 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
-+
-+&dsp7 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
+Applied, thanks Scott.
 -- 
-2.13.1
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
