@@ -1,144 +1,56 @@
-From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Subject: [PATCH v4 10/17] pinctrl: madera: Add DT bindings for
-	Cirrus Logic Madera codecs
-Date: Fri, 28 Jul 2017 10:47:12 +0100
-Message-ID: <1501235239-11145-11-git-send-email-rf@opensource.wolfsonmicro.com>
-References: <1501235239-11145-1-git-send-email-rf@opensource.wolfsonmicro.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 3/3] net-next: stmmac: dwmac-sun8i: choose
+ internal PHY via compatible
+Date: Fri, 28 Jul 2017 17:49:55 +0800
+Message-ID: <CAGb2v64w-KCmYExN7OqvuLj42-pHN-BN5iKpxA+KW84v+RfCDQ@mail.gmail.com>
+References: <20170728092818.23419-1-clabbe.montjoie@gmail.com> <20170728092818.23419-4-clabbe.montjoie@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1501235239-11145-1-git-send-email-rf@opensource.wolfsonmicro.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net
-Cc: linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBW4R5TFQKGQEGO4XDAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170728092818.23419-4-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the binding description of the pinctrl driver for Cirru Logic
-Madera codecs. The binding uses the generic pinctrl binding so  the main
-purpose here is to describe the device-specific names for groups and
-functions.
+On Fri, Jul 28, 2017 at 5:28 PM, Corentin Labbe
+<clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> The current way to find if the phy is internal is to compare DT phy-mode
+> and emac_variant/internal_phy.
+> But it will negate a possible future SoC where an external PHY use the
+> same phy mode than the internal one.
+>
+> This patch adds a new way to find if the PHY is internal, via its
+> compatible.
+>
+> Since the phy_mode of the internal PHY does need to be know, the
+> variant internal_phy member is converted to a boolean.
+>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> index fffd6d5fc907..04f7ddd802b0 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
+> @@ -48,7 +48,7 @@
+>   */
+>  struct emac_variant {
+>         u32 default_syscon_value;
+> -       int internal_phy;
+> +       bool internal_phy;
 
-Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-No changes since V3
- .../bindings/pinctrl/cirrus,madera-pinctrl.txt     | 99 ++++++++++++++++++++++
- 1 file changed, 99 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
+Nit: please add a verb to the name, like "has_internal_phy",
+or even "soc_has_internal_phy". This makes it clear what this
+property represents.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
-new file mode 100644
-index 0000000..b0e36cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cirrus,madera-pinctrl.txt
-@@ -0,0 +1,99 @@
-+Cirrus Logic Madera class audio codecs pinctrl driver
-+
-+The Cirrus Logic Madera codecs provide a number of GPIO functions for
-+interfacing to external hardware and to provide logic outputs to other devices.
-+Certain groups of GPIO pins also have an alternate function, normally as an
-+audio interface.
-+
-+The set of available GPIOs, functions and alternate function groups differs
-+between codecs so refer to the datasheet for the codec for further information
-+on what is supported on that device.
-+
-+The properties for this driver exist within the parent MFD driver node.
-+
-+See also
-+  the core bindings for the parent MFD driver:
-+    Documentation/devicetree/bindings/mfd/madera.txt
-+
-+  the generic pinmix bindings:
-+    Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+
-+Required properties of parent mfd node:
-+  - pinctrl-names : must be "default"
-+  - pinctrl-0 : a phandle to the node containing the subnodes containing default
-+      configurations
-+
-+Required subnodes:
-+  One subnode is required to contain the default settings. It contains an
-+  arbitrary number of configuration subnodes, one for each group or pin
-+  configuration you want to apply as a default.
-+
-+Required properties of configuration subnodes:
-+  - groups : name of one pin group to configure. One of:
-+	aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1, pdmspk2,
-+	dmic4, dmic5, dmic6,
-+	gpio1, gpio2, ..., gpio40
-+    The gpioN groups select the single pin of this name for configuration
-+
-+Optional properties of configuration subnodes:
-+  Any configuration option not explicitly listed in the dts will be left at
-+  chip default setting.
-+
-+  - function : name of function to assign to this group. One of:
-+	aif1, aif2, aif3, aif4, mif1, mif2, mif3, pdmspk1, pdmspk2,
-+	dmic3, dmic4, dmic5, dmic6,
-+	io, dsp-gpio, irq1, irq2,
-+	fll1-clk, fll1-lock, fll2-clk, fll2-lock, fll3-clk, fll3-lock,
-+	fllao-clk, fllao-lock,
-+	opclk, opclk-async, pwm1, pwm2, spdif,
-+	asrc1-in1-lock, asrc1-in2-lock, asrc2-in1-lock, asrc2-in2-lock,
-+	spkl-short-circuit, spkr-short-circuit, spk-shutdown,
-+	spk-overheat-shutdown, spk-overheat-warn,
-+	timer1-sts, timer2-sts, timer3-sts, timer4-sts, timer5-sts, timer6-sts,
-+	timer7-sts, timer8-sts,
-+	log1-fifo-ne, log2-fifo-ne, log3-fifo-ne, log4-fifo-ne, log5-fifo-ne,
-+	log6-fifo-ne, log7-fifo-ne, log8-fifo-ne,
-+
-+  - bias-disable : disable pull-up and pull-down
-+  - bias-bus-hold : enable buskeeper
-+  - bias-pull-up : output is pulled-up
-+  - bias-pull-down : output is pulled-down
-+  - drive-push-pull : CMOS output
-+  - drive-open-drain : open-drain output
-+  - drive-strength : drive strength in mA. Valid values are 4 or 8
-+  - input-schmitt-enable : enable schmitt-trigger mode
-+  - input-schmitt-disable : disable schmitt-trigger mode
-+  - input-debounce : A value of 0 disables debounce, a value !=0 enables
-+	debounce
-+  - output-low : set the pin to output mode with low level
-+  - output-high : set the pin to output mode with high level
-+
-+Example:
-+
-+cs47l85@0 {
-+	compatible = "cirrus,cs47l85";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&cs47l85_defaults>;
-+
-+	cs47l85_defaults: cs47l85-gpio-defaults {
-+		aif1 {
-+			groups = "aif1";
-+			function = "aif1";
-+			bias-bus-hold;
-+		};
-+
-+		aif2 {
-+			groups = "aif2";
-+			function = "aif2";
-+			bias-bus-hold;
-+		};
-+
-+		opclk {
-+			groups = "gpio1";
-+			function = "opclk";
-+			bias-pull-up;
-+			drive-strength = <8>;
-+		};
-+	};
-+};
--- 
-1.9.1
+ChenYu
