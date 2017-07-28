@@ -1,47 +1,80 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
- fixed transceiver bindings
-Date: Fri, 28 Jul 2017 10:41:40 +0200
-Message-ID: <b6ee18fa-a72b-9596-00d8-f6bd4a993293@hartkopp.net>
-References: <20170724230521.1436-1-fcooper@ti.com>
- <20170724230521.1436-3-fcooper@ti.com> <20170726164124.GL12049@lunn.ch>
- <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
- <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
- <fe99189e-d077-ba65-4dfc-a4d8beee62b3@hartkopp.net>
- <932602fe-d06a-7a17-5a0c-24265cf2e643@ti.com>
- <20170728045724.GA27903@airbook.vandijck-laurijssen.be>
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH 1/3] serial: mctrl_gpio: restrict MCTRL initialization
+Date: Fri, 28 Jul 2017 10:42:22 +0200
+Message-ID: <CAGm1_ktkN6_7jD_mdcC=No=pNTW_aGrKE7D+U8av5b2R7BFqSA@mail.gmail.com>
+References: <1501161456-13367-1-git-send-email-yegorslists@googlemail.com>
+ <1501161456-13367-2-git-send-email-yegorslists@googlemail.com> <1501164092.29303.270.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20170728045724.GA27903@airbook.vandijck-laurijssen.be>
-Sender: linux-can-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501164092.29303.270.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/2017 06:57 AM, Kurt Van Dijck wrote:
+On Thu, Jul 27, 2017 at 4:01 PM, Andy Shevchenko
+<andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> On Thu, 2017-07-27 at 15:17 +0200, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
+>> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>
+>> GPIOs specified for serial port can be used either as GPIO driven
+>> MCTRL
+>> or as a wakeup-source. Use the latter property to abort the MCTRL
+>> initialization.
+>
+> Please, elaborate on a choice of error code for this (-ENOSYS).
 
-> So while _a_ transceiver may be spec'd to 1MBit during arbitration,
-> CAN FD packets may IMHO exceed that speed during data phase.
+Something like this:
 
-When the bitrate is limited to 1Mbit/s you are ONLY allowed to use 
-1Mbit/s in the data section too (either with CAN or CAN FD).
+Return -ENOSYS as this would just skip mctrl initialization in the
+case of wakeup source usage and not disable the port completely due to
+failed serial8250_register_8250_port().
 
-> That was the whole point of CAN FD: exceed the limits required for
-> correct arbitration on transceiver & wire.
+Yegor
 
-No. CAN FD is about a different frame format with up to 64 bytes AND the 
-possibility to increase the bitrate in the data section of the frame.
-
-> So I do not agree on the single bandwidth limitation.
-
-The transceiver provides a single maximum bandwidth. It's an ISO Layer 1 
-device.
-
-> The word 'max-arbitration-bitrate' makes the difference very clear.
-
-I think you are mixing up ISO layer 1 and ISO layer 2.
-
-Regards,
-Oliver
-
+>>
+>> Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>
+> Suggested-by: I suppose.
+>
+> I dunno about documentation part for this property, I leave it for DT
+> people to decide. Below part looks good to me.
+>
+>> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> ---
+>>  drivers/tty/serial/serial_mctrl_gpio.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/tty/serial/serial_mctrl_gpio.c
+>> b/drivers/tty/serial/serial_mctrl_gpio.c
+>> index d2da6aa..dce661c 100644
+>> --- a/drivers/tty/serial/serial_mctrl_gpio.c
+>> +++ b/drivers/tty/serial/serial_mctrl_gpio.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/irq.h>
+>>  #include <linux/gpio/consumer.h>
+>>  #include <linux/termios.h>
+>> +#include <linux/property.h>
+>>  #include <linux/serial_core.h>
+>>  #include <linux/module.h>
+>>
+>> @@ -118,6 +119,9 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct
+>> device *dev, unsigned int idx)
+>>       struct mctrl_gpios *gpios;
+>>       enum mctrl_gpio_idx i;
+>>
+>> +     if (device_property_present(dev, "wakeup-source"))
+>> +             return ERR_PTR(-ENOSYS);
+>> +
+>>       gpios = devm_kzalloc(dev, sizeof(*gpios), GFP_KERNEL);
+>>       if (!gpios)
+>>               return ERR_PTR(-ENOMEM);
+>
+> --
+> Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Intel Finland Oy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
