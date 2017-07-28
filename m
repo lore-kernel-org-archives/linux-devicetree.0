@@ -1,36 +1,53 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
-Date: Fri, 28 Jul 2017 14:56:03 +0800
-Message-ID: <69ad9443-ff65-8e49-df68-7e5e6c812d45@rock-chips.com>
-References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
- <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
- <20170727134834.GD18666@lunn.ch>
- <65ae1747-4dff-b1d8-8aa3-684fc8c7809a@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v6 04/14] spi: qup: Place the QUP in run mode before DMA
+Date: Fri, 28 Jul 2017 12:22:51 +0530
+Message-ID: <1501224781-19519-5-git-send-email-varada@codeaurora.org>
+References: <1501224781-19519-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <65ae1747-4dff-b1d8-8aa3-684fc8c7809a@gmail.com>
+In-Reply-To: <1501224781-19519-1-git-send-email-varada@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ drivers/spi/spi-qup.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-在 2017/7/28 0:54, Florian Fainelli 写道:
-> - if you need knowledge about this PHY connection type prior to binding
-> the PHY device and its driver (that is, before of_phy_connect()) we
-> could add a boolean property e.g: "phy-is-internal" that allows us to
-> know that, or we can have a new phy-mode value, e.g: "internal-rmii"
-> which describes that, either way would probably be fine, but the former
-> scales better
-> 
-
-Using "phy-is-internal" is very helpful, but it is easy to confuse with 
-the real internal PHY, may we use the other words like phy is inlined🙂.
-
-> Then again, using phy-mode = "internal" even though this is Reduced MII
-> is not big of a deal IMHO as long as there is no loss of information and
-> that internal de-facto means internal reduced MII for instance.
-> -- 
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index fdd34c3..f1aa5c1 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -343,6 +343,14 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
+ 	else if (xfer->tx_buf)
+ 		tx_done = spi_qup_dma_done;
+ 
++	/* before issuing the descriptors, set the QUP to run */
++	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++	if (ret) {
++		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
++				__func__, __LINE__);
++		return ret;
++	}
++
+ 	if (xfer->rx_buf) {
+ 		ret = spi_qup_prep_sg(master, xfer, DMA_DEV_TO_MEM, rx_done);
+ 		if (ret)
+@@ -385,6 +393,13 @@ static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer,
+ 
+ 	spi_qup_fifo_write(qup, xfer);
+ 
++	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++	if (ret) {
++		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
++				__func__, __LINE__);
++		return ret;
++	}
++
+ 	if (!wait_for_completion_timeout(&qup->done, timeout))
+ 		return -ETIMEDOUT;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
