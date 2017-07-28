@@ -1,76 +1,99 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/3] add the reset controller to the Meson8b clkc
-Date: Fri, 28 Jul 2017 23:13:10 +0200
-Message-ID: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 1/3] dt-bindings: clock: meson8b: describe the embedded reset controller
+Date: Fri, 28 Jul 2017 23:13:11 +0200
+Message-ID: <20170728211313.10603-2-martin.blumenstingl@googlemail.com>
+References: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170728211313.10603-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This registers the known (soft) reset lines provided by the clock
-controller's registers.
+The Amlogic Meson8/Meson8b/Meson8m2 clock controller provides some reset
+lines. These are used for example to boot the secondary CPU cores.
 
-This is the first preparation step for SMP and CPU hotplug support on
-Meson8/Meson8b/Meson8m2. Booting the secondary cores on these SoCs
-requires asserting and de-asserting a reset line (one for each CPU
-core). These reset lines are provided by the clock controller.
+This patch describes the reset controller which is embedded into the
+clock controller on these SoCs.
+A header file is provided which provides preprocessor macros for each
+reset line (to make the .dts files easier to read).
 
-The reset controller part of the meson8b clock controller has to be
-registered early (which I did through CLK_OF_DECLARE_DRIVER), because
-the secondary cores are started *very* early in the boot process (and
-meson8b_clkc_probe is invoked long after we need the reset controller
-to be available for booting the secondary CPU cores).
-
-The user of the reset-controller (= the patches which enable SMP and
-CPU hotplug support) will follow in the next days. I decided to split
-this because the SMP series will probably consist of 6 patches alone
-(and may need to go through two separate trees).
-
-Changes since v2 at [3]:
-- move the reset line preprocessor defines into a separate file
-  (affects patch #1 as this header file is part of the dt-binding)
-- rename the reset line preprocessor macros from RESETID_ to
-  CLKC_RESET_ to clearly indicate that these are provided by the
-  clock controller (unlike the preprocessor macros for the reset
-  lines in the standlone reset controller, which start with RESET_)
-- updated patch #2 due to the changes mentioned above
-- added Neil's Reviewed-by to all patches
-
-Changes since v1 at [0]:
-- updated cover letter description as we are now registering more than
-  four reset lines
-- split patch #1 into a dt-binding and clk driver patch
-- slightly reworded the dt-binding documentation so it's now clear that
-  the reset identifiers are preprocessor macros in
-  dt-bindings/clock/meson8b-clkc.h (v1 of this series didn't have these
-  macros at all)
-- patch #2 (previously part of patch #1) now registers all known reset
-  lines (see [1] and [2] for the results of my detective work)
-- patch #3 is untouched
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004283.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004330.html
-[2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004347.html
-[3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004352.html
-
-
-Martin Blumenstingl (3):
-  dt-bindings: clock: meson8b: describe the embedded reset controller
-  clk: meson: meson8b: register the built-in reset controller
-  ARM: dts: meson: mark the clock controller also as reset controller
-
- .../bindings/clock/amlogic,meson8b-clkc.txt        |   9 +-
- arch/arm/boot/dts/meson8.dtsi                      |   1 +
- arch/arm/boot/dts/meson8b.dtsi                     |   1 +
- drivers/clk/meson/Kconfig                          |   1 +
- drivers/clk/meson/meson8b.c                        | 159 +++++++++++++++++++--
- drivers/clk/meson/meson8b.h                        |   9 +-
- .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h |  27 ++++
- 7 files changed, 193 insertions(+), 14 deletions(-)
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ .../bindings/clock/amlogic,meson8b-clkc.txt        |  9 +++++++-
+ .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h | 27 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+), 1 deletion(-)
  create mode 100644 include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
 
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+index 606da38c0959..c858fd64f680 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+@@ -16,18 +16,25 @@ Required Properties:
+ 	   mapped region.
+ 
+ - #clock-cells: should be 1.
++- #reset-cells: should be 1.
+ 
+ Each clock is assigned an identifier and client nodes can use this identifier
+ to specify the clock which they consume. All available clocks are defined as
+ preprocessor macros in the dt-bindings/clock/meson8b-clkc.h header and can be
+ used in device tree sources.
+ 
++Similarly a preprocessor macro for each reset line is defined in
++dt-bindings/reset/amlogic,meson8b-clkc-reset.h (which can be used from the
++device tree sources).
++
++
+ Example: Clock controller node:
+ 
+ 	clkc: clock-controller@c1104000 {
+-		#clock-cells = <1>;
+ 		compatible = "amlogic,meson8b-clkc";
+ 		reg = <0xc1108000 0x4>, <0xc1104000 0x460>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
+ 	};
+ 
+ 
+diff --git a/include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h b/include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
+new file mode 100644
+index 000000000000..1f1b56e57346
+--- /dev/null
++++ b/include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (c) 2017 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>.
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#ifndef _DT_BINDINGS_AMLOGIC_MESON8B_CLKC_RESET_H
++#define _DT_BINDINGS_AMLOGIC_MESON8B_CLKC_RESET_H
++
++#define CLKC_RESET_L2_CACHE_SOFT_RESET				0
++#define CLKC_RESET_AXI_64_TO_128_BRIDGE_A5_SOFT_RESET		1
++#define CLKC_RESET_SCU_SOFT_RESET				2
++#define CLKC_RESET_CPU0_SOFT_RESET				3
++#define CLKC_RESET_CPU1_SOFT_RESET				4
++#define CLKC_RESET_CPU2_SOFT_RESET				5
++#define CLKC_RESET_CPU3_SOFT_RESET				6
++#define CLKC_RESET_A5_GLOBAL_RESET				7
++#define CLKC_RESET_A5_AXI_SOFT_RESET				8
++#define CLKC_RESET_A5_ABP_SOFT_RESET				9
++#define CLKC_RESET_AXI_64_TO_128_BRIDGE_MMC_SOFT_RESET		10
++#define CLKC_RESET_VID_CLK_CNTL_SOFT_RESET			11
++#define CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_POST		12
++#define CLKC_RESET_VID_DIVIDER_CNTL_SOFT_RESET_PRE		13
++#define CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_POST		14
++#define CLKC_RESET_VID_DIVIDER_CNTL_RESET_N_PRE			15
++
++#endif /* _DT_BINDINGS_AMLOGIC_MESON8B_CLKC_RESET_H */
 -- 
 2.13.3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
