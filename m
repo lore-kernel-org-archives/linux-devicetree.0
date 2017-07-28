@@ -1,66 +1,92 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] net-next: stmmac: support future possible different
- internal phy mode
-Date: Fri, 28 Jul 2017 10:54:30 -0700
-Message-ID: <f8fe754c-8b46-a9f6-4020-f7db6c985773@gmail.com>
-References: <20170728092818.23419-1-clabbe.montjoie@gmail.com>
- <20170728135544.GD32230@lunn.ch> <20170728142508.GA7221@Red>
- <20170728143600.GB2132@lunn.ch> <20170728144424.GB7221@Red>
+From: Oliver Hartkopp <socketcan@hartkopp.net>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Fri, 28 Jul 2017 20:33:28 +0200
+Message-ID: <c7d4c364-1ed9-ca73-2571-d04297ac3788@hartkopp.net>
+References: <20170728130231.GA10680@airbook.vandijck-laurijssen.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728144424.GB7221@Red>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20170728130231.GA10680@airbook.vandijck-laurijssen.be>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
+Sender: linux-can-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, sergei.shtylyov@cogentembedded.com, dev.kurt@vandijck-laurijssen.be
 List-Id: devicetree@vger.kernel.org
 
-On 07/28/2017 07:44 AM, Corentin Labbe wrote:
-> On Fri, Jul 28, 2017 at 04:36:00PM +0200, Andrew Lunn wrote:
->>>> I've probably asked this before: Does the internal PHY use a different
->>>> PHY ID in registers 2 and 3?
->>>>
->>>
->>> yes
->>>
->>> reg2: 0x0044
->>> reg3: 0X1500
-> 
-> Copy/paste error, its 1400
-> 
+Hi Kurt,
+
+On 07/28/2017 03:02 PM, Kurt Van Dijck wrote:
+
+>>> The word 'max-arbitration-bitrate' makes the difference very clear.
 >>
->> So this is not about loading the correct PHY driver. You can already
->> do this based on the PHY IDs...
->>
->> This is about selecting which PHY to use. Internal or External?	
->>
->>      Andrew
+>> I think you are mixing up ISO layer 1 and ISO layer 2.
 > 
-> It is too late when we know the PHY ID.
+> In order to provide higher data throughput without putting extra limits
+> on transceiver & wire, the requirement for the round-trip delay to be
+> within 1 bittime has been eliminated, but only for the data phase when
+> arbitration is over.
+> So layer 2 (CAN FD) has been adapted to circumvent the layer 1
+> (transceiver + wire) limitations.
+> 
+> In fact, the round-trip delay requirement never actually did matter for
+> plain CAN during data bits either. CAN FD just makes use of that,
+> but is therefore incompatible on the wire.
+> 
+> I forgot the precise wording, but this is the principle that Bosch
+> explained on the CAN conference in Nurnberg several years ago, or at
+> least this is how I remembered it :-)
 
-> We need to set a syscon for choosing external/internal PHY.
-> So we can rely only on DT.
+I just checked an example for a CAN FD qualified transceiver
 
-Since the Device Tree needs to be correct to identify which PHY to use
-(internal or external), if you use the standard compatible string for
-the PHY that contains its OUI, e.g:
+http://www.nxp.com/products/automotive-products/energy-power-management/can-transceivers/high-speed-can-transceiver-with-standby-mode:TJA1044
 
-compatible = "ethernet-phy-id0044.1400", "ethernet-phy-ieee802.3-c22"
+where it states:
 
-then you can have your Ethernet MAC identify whether this is an internal
-PHY by having a list of compatible strings to match against.
+The TJA1044T is specified for data rates up to 1 Mbit/s. Pending the 
+release of ISO11898-2:2016 including CAN FD and SAE-J2284-4/5, 
+additional timing parameters defining loop delay symmetry are specified 
+for the TJA1044GT and TJA1044GTK. This implementation enables reliable 
+communication in the CAN FD fast phase at data rates up to 5 Mbit/s.
 
-Corentin, can you make sure you copy netdev, Andrew and myself on the
-next submissions so we don't have to keep track of seemingly identical
-threads (this one + the rockchip dwmac changes) and we can work towards
-one solution?
+and
 
-Thanks
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TJA1044GT/TJA1044GTK
+
+- Timing guaranteed for data rates up to 5 Mbit/s
+- Improved TXD to RXD propagation delay of 210 ns
+
+> I haven't followed the developments of transceivers, but with the above
+> principle in mind, it's obvious that any transceiver allows higher
+> bitrates during the data segment because the TX-to-RX line delay must
+> not scale with the bitrate.
+> In reality, maybe not all transceivers will mention this in their
+> datasheet.
+> 
+> So whether you call it 'max-arbitration-bitrate' & 'max-data-bitrate'
+> or 'max-bitrate' & 'max-data-bitrate' does not really matter (I prefer
+> 1st) but you will one day need 2 bitrates.
+
+The question to me is whether it is right option to specify two bitrates 
+OR to specify one maximum bitrate and provide a property that a CAN FD 
+capable propagation delay is available.
+
+E.g.
+
+	max-bitrate
+	max-data-bitrate
+
+or
+
+	max-bitrate
+	canfd-capable	// CAN FD capable propagation delay available
+
+
+I assume the optimized propagation delay is 'always on' as the 
+transceiver is not able to detect which kind of bits it is processing.
+That's why I think providing two bitrates leads to a wrong view on the 
+transceiver.
+
+Regards,
+Oliver
+
