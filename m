@@ -1,100 +1,82 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/3] usb: gadget: udc: renesas_usb3: add support for R-Car H3 ES2.0
-Date: Fri, 28 Jul 2017 21:16:58 +0900
-Message-ID: <1501244219-11840-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 3/3] usb: gadget: udc: renesas_usb3: add support for R-Car M3-W
+Date: Fri, 28 Jul 2017 21:16:59 +0900
+Message-ID: <1501244219-11840-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1501244219-11840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501244219-11840-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1501244219-11840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for R-Car H3 ES2.0. Since this SoC revision
-doesn't need workaround for vbus detection and number of ramif is
-increased. So, this driver uses soc_device_match() to detect it.
+This patch adds support for R-Car M3-W. This patch also adds R-Car
+Gen3 generic version's compatible.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/usb/gadget/udc/renesas_usb3.c | 27 ++++++++++++++++++++++++---
- 1 file changed, 24 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/usb/renesas_usb3.txt | 16 +++++++++++++---
+ drivers/usb/gadget/udc/renesas_usb3.c                  |  8 ++++++++
+ 2 files changed, 21 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+index 8d52766..e280258 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+@@ -3,20 +3,30 @@ Renesas Electronics USB3.0 Peripheral driver
+ Required properties:
+   - compatible: Must contain one of the following:
+ 	- "renesas,r8a7795-usb3-peri"
++	- "renesas,r8a7796-usb3-peri"
++	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 compatible
++	  device
++
++    When compatible with the generic version, nodes must list the
++    SoC-specific version corresponding to the platform first
++    followed by the generic version.
++
+   - reg: Base address and length of the register for the USB3.0 Peripheral
+   - interrupts: Interrupt specifier for the USB3.0 Peripheral
+   - clocks: clock phandle and specifier pair
+ 
+-Example:
++Example of R-Car H3 ES1.x:
+ 	usb3_peri0: usb@ee020000 {
+-		compatible = "renesas,r8a7795-usb3-peri";
++		compatible = "renesas,r8a7795-usb3-peri",
++			     "renesas,rcar-gen3-usb3-peri";
+ 		reg = <0 0xee020000 0 0x400>;
+ 		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg CPG_MOD 328>;
+ 	};
+ 
+ 	usb3_peri1: usb@ee060000 {
+-		compatible = "renesas,r8a7795-usb3-peri";
++		compatible = "renesas,r8a7795-usb3-peri",
++			     "renesas,rcar-gen3-usb3-peri";
+ 		reg = <0 0xee060000 0 0x400>;
+ 		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&cpg CPG_MOD 327>;
 diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index 3415d32..aa2b185 100644
+index aa2b185..45410f3 100644
 --- a/drivers/usb/gadget/udc/renesas_usb3.c
 +++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -21,6 +21,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <linux/sys_soc.h>
- #include <linux/uaccess.h>
- #include <linux/usb/ch9.h>
- #include <linux/usb/gadget.h>
-@@ -2487,22 +2488,36 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
- 	}
- }
- 
--static const struct renesas_usb3_priv renesas_usb3_priv_r8a7795 = {
-+static const struct renesas_usb3_priv renesas_usb3_priv_r8a7795_es1 = {
- 	.ramsize_per_ramif = SZ_16K,
- 	.num_ramif = 2,
- 	.ramsize_per_pipe = SZ_4K,
- 	.workaround_for_vbus = true,
- };
- 
-+static const struct renesas_usb3_priv renesas_usb3_priv_gen3 = {
-+	.ramsize_per_ramif = SZ_16K,
-+	.num_ramif = 4,
-+	.ramsize_per_pipe = SZ_4K,
-+};
-+
- static const struct of_device_id usb3_of_match[] = {
- 	{
+@@ -2506,6 +2506,14 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
  		.compatible = "renesas,r8a7795-usb3-peri",
--		.data = &renesas_usb3_priv_r8a7795,
-+		.data = &renesas_usb3_priv_gen3,
+ 		.data = &renesas_usb3_priv_gen3,
  	},
++	{
++		.compatible = "renesas,r8a7796-usb3-peri",
++		.data = &renesas_usb3_priv_gen3,
++	},
++	{
++		.compatible = "renesas,rcar-gen3-usb3-peri",
++		.data = &renesas_usb3_priv_gen3,
++	},
  	{ },
  };
  MODULE_DEVICE_TABLE(of, usb3_of_match);
- 
-+static const struct soc_device_attribute renesas_usb3_quirks_match[] = {
-+	{
-+		.soc_id = "r8a7795", .revision = "ES1.*",
-+		.data = &renesas_usb3_priv_r8a7795_es1,
-+	},
-+	{ /* sentinel */ },
-+};
-+
- static const unsigned int renesas_usb3_cable[] = {
- 	EXTCON_USB,
- 	EXTCON_USB_HOST,
-@@ -2516,11 +2531,17 @@ static int renesas_usb3_probe(struct platform_device *pdev)
- 	const struct of_device_id *match;
- 	int irq, ret;
- 	const struct renesas_usb3_priv *priv;
-+	const struct soc_device_attribute *attr;
- 
- 	match = of_match_node(usb3_of_match, pdev->dev.of_node);
- 	if (!match)
- 		return -ENODEV;
--	priv = match->data;
-+
-+	attr = soc_device_match(renesas_usb3_quirks_match);
-+	if (attr)
-+		priv = attr->data;
-+	else
-+		priv = match->data;
- 
- 	irq = platform_get_irq(pdev, 0);
- 	if (irq < 0)
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
