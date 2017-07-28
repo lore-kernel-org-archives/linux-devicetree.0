@@ -1,30 +1,82 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
-Date: Fri, 28 Jul 2017 14:46:25 +0800
-Message-ID: <7764adcf-02c5-5ae1-1735-7f7e36790c30@rock-chips.com>
-References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
- <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
- <20170727134834.GD18666@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v6 00/14] spi: qup: Fixes and add support for >64k transfers
+Date: Fri, 28 Jul 2017 12:22:47 +0530
+Message-ID: <1501224781-19519-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170727134834.GD18666@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, heiko@sntech.de, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+v6:
+	Fix git bisect-ability issues in
+		spi: qup: Add completion timeout
+		spi: qup: call io_config in mode specific function
+		spi: qup: allow multiple DMA transactions per spi xfer
 
-ÔÚ 2017/7/27 21:48, Andrew Lunn Ð´µÀ:
-> I think we need to discuss this. This PHY appears to be on an MDIO
-> bus, it uses a standard PHY driver, and it appears to be using an RMII
-> interface. So it is just an ordinary PHY.
-> 
-> Internal is supposed to be something which is not ordinary, does not
-> use one of the standard phy modes, needs something special to make it
-> work.
+v5:
+	Incorporate feedback from Mark Brown and Geert Uytterhoeven
 
-Yes, it is a ordinary PHY in fact, using MDIO bus, but it is a internal 
-phy inside Soc, so the "internal" is not the internal as Florain said.
+	spi: qup: Enable chip select support
+		Update commit log. Include the commit's description
+
+	Removed "spi: qup: Add completion structures for DMA". This
+	introduced separate completion structures for DMA based rx/tx
+	and FIFO based i/os. This was not needed.
+
+	Added "spi: qup: Fix QUP version identify method" to identify
+	qup version using of_device_get_match_data instead of
+	of_device_is_compatible.
+
+v4:
+	Discard patch #15, 'spi: qup: support for qup v1 dma'.
+	This depends on ADM driver, which is not upstreamed yet.
+
+v3:
+	Fix git bisect-ability issues in
+		spi: qup: Add completion structures for DMA
+		spi: qup: Add completion timeout
+		spi: qup: Place the QUP in run mode before DMA
+		spi: qup: Fix transaction done signaling
+
+v2:
+	Incorporate feedback from Andy Gross, Sricharan, Stanimir Varbanov
+
+	Modified the QUP-v1 dma completion sequence to QUP-v2 as per feedback.
+
+	Removed code that used controller->xfer to identify extra interrupts,
+	since with the fixes done to handle i/o completion we don't see
+	extra interrupts.
+
+v1:
+	This series fixes some existing issues in the code for both
+	interrupt and dma mode. Patches 1 - 11 are the fixes.
+	Random failures/timeout are observed without these fixes.
+	Also, the current driver does not support block transfers > 64K
+	and the driver quietly fails. Patches 12 - 18 add support for this
+	in both interrupt and dma mode.
+
+	The entire series has been tested on ipq4019 with
+	SPI-NOR flash for block sizes > 64k.
+
+Varadarajan Narayanan (14):
+  spi: qup: Enable chip select support
+  spi: qup: Setup DMA mode correctly
+  spi: qup: Add completion timeout
+  spi: qup: Place the QUP in run mode before DMA
+  spi: qup: Fix error handling in spi_qup_prep_sg
+  spi: qup: Fix transaction done signaling
+  spi: qup: Do block sized read/write in block mode
+  spi: qup: refactor spi_qup_io_config into two functions
+  spi: qup: call io_config in mode specific function
+  spi: qup: allow block mode to generate multiple transactions
+  spi: qup: refactor spi_qup_prep_sg
+  spi: qup: allow multiple DMA transactions per spi xfer
+  spi: qup: Ensure done detection
+  spi: qup: Fix QUP version identify method
+
+ drivers/spi/spi-qup.c | 566 ++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 392 insertions(+), 174 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
