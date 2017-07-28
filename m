@@ -1,114 +1,38 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
-Date: Fri, 28 Jul 2017 17:32:48 +0100
-Message-ID: <20170728163248.GG970@e110455-lin.cambridge.arm.com>
-References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
- <20170726102748.GM31807@n2100.armlinux.org.uk>
- <20170728152311.GA970@e110455-lin.cambridge.arm.com>
- <20170728155827.GV31807@n2100.armlinux.org.uk>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add PWM support for Meson8
+Date: Fri, 28 Jul 2017 09:43:44 -0700
+Message-ID: <7hziboqzpb.fsf@baylibre.com>
+References: <20170711222015.10401-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170728155827.GV31807-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <20170711222015.10401-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Wed, 12 Jul 2017 00:20:13 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 04:58:27PM +0100, Russell King - ARM Linux wrote:
-> On Fri, Jul 28, 2017 at 04:23:11PM +0100, Liviu Dudau wrote:
-> > On Wed, Jul 26, 2017 at 11:27:48AM +0100, Russell King - ARM Linux wrote:
-> > > On Wed, Jul 26, 2017 at 11:05:39AM +0100, Russell King wrote:
-> > > > Some ARM platforms do not wire the HDLCD interrupt.  Allow hdlcd to
-> > > > initialise without an interrupt present.
-> > > > 
-> > > > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> > > 
-> > 
-> > Hi Russell,
-> > 
-> > Sorry for my silence, I was on holiday this week and just came back
-> > today.
-> > 
-> > > This isn't fully functional on ARM MPS platforms yet, but at least
-> > > gets us further.  Without any display connected:
-> > > 
-> > > [   14.315986] [drm] found ARM HDLCD version r0p0
-> > > [   14.557038] tda998x 2-0070: found TDA19988
-> > > [   14.622232] hdlcd 40205000.hdlcd: bound 2-0070 (ops 0x213534)
-> > > [   14.630406] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > > [   14.639335] [drm] No driver support for vblank timestamp query.
-> > > [   14.653210] [drm] Cannot find any crtc or sizes - going 1024x768
-> > > [   15.232556] hdlcd 40205000.hdlcd: fb0:  frame buffer device
-> > > [   15.284076] [drm] Initialized hdlcd 1.0.0 20151021 for 40205000.hdlcd on minor 0
-> > > 
-> > > With a TV connected, the driver doesn't initialise:
-> > > 
-> > > [   14.422810] [drm] found ARM HDLCD version r0p0
-> > > [   14.657227] tda998x 2-0070: found TDA19988
-> > > [   14.722439] hdlcd 40205000.hdlcd: bound 2-0070 (ops 0x213534)
-> > > [   14.730613] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-> > > [   14.739538] [drm] No driver support for vblank timestamp query.
-> > > [   15.311977] hdlcd 40205000.hdlcd: Failed to set initial hw configuration.
-> > > [   15.357402] hdlcd 40205000.hdlcd: master bind failed: -12
-> > > [   15.365082] tda998x: probe of 2-0070 failed with error -12
-> > > 
-> > > I don't think this is correct behaviour - if we fail to set an initial
-> > > configuration (which will be based on the resolution of the connected
-> > > display) why should the driver fail to probe - it's not that there is
-> > > no device, it's (in this case) that there aren't the resources for the
-> > > chosen mode.  Userspace could always try setting a different mode.
-> > > 
-> > > I suspect the above failure is down to either (a) not having enough
-> > > memory available to allocate a 1920x1080 frame buffer, or (b) not
-> > > (yet) being able to program the hdlcd pixel clock for this platform,
-> > > which is currently hard-coded in DT at 23.75MHz.
-> > 
-> > I don't think it is the clock, if that fails then you would not see the
-> > r0p0 version number being printed. Due to the fact that until now HDLCD
-> > has run mostly on platforms that have SCP, which takes care of actual
-> > setup of the clocks, it is pretty lax on errors on pixel clock setup.
-> 
-> Note, however, that in this case, the clock is a fixed frequency clock.
-> I wasn't meaning a failure to obtain the clock, I was meaning a failure
-> to set the appropriate rate.
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-Yeah, we both meant the same thing. :) HDLCD is not checking that
-strictly that the appropriate rate was set, although looking into
-hdlcd_crtc_atomic_check() we do return -EINVAL if the set rate differs
-from what the mode wants. Maybe add a printk there to see if you hit
-that case?
+> This series moves the pwm_ab and pwm_cd nodes to the common meson.dtsi.
+> According to Amlogic's GPL kernel sources Meson6 contains the same PWM
+> IP blocks for pwm_ab and pwm_cd (at the same register offsets) as Meson8
+> and Meson8b.
+>
+> pwm_ef on the other hand does not exist on Meson6, so it stays in
+> meson8b.dtsi (and is added to meson8b.dtsi).
+>
+> Known usages of the PWM controllers:
+> - controlling the brightness of the system LED
+> - generating the 32.768kHz wifi LPO clock
+> - controlling the VDDEE (CPU) voltage
 
-> 
-> > Also, may I ask what MPS platform you are trying to use? I might be able
-> > to source one internally and try to reproduce your problems.
-> 
-> I'll point you in the direction of Ian Rickards in ARM for that
-> information.  (I'm not sure if I can mention the board publically
-> yet as its early days...)
+Applied to v4.14/dt,
 
-Thanks, I'll get in touch with Ian.
+Thanks,
 
-Best regards,
-Liviu
-
-> 
-> -- 
-> RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-> FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-> according to speedtest.net.
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
