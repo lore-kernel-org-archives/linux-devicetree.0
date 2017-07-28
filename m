@@ -1,7 +1,7 @@
 From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/6] ARM: dts: keystone-k2e: Add DSP node
-Date: Fri, 28 Jul 2017 18:19:15 -0500
-Message-ID: <20170728231918.16778-4-s-anna@ti.com>
+Subject: [PATCH 6/6] ARM: dts: keystone-k2e-evm: Add and enable DSP CMA memory pool
+Date: Fri, 28 Jul 2017 18:19:18 -0500
+Message-ID: <20170728231918.16778-7-s-anna@ti.com>
 References: <20170728231918.16778-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,60 +12,58 @@ To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Keystone 2 66AK2E SoC has one TMS320C66x DSP Core Subsystem
-(C66x CorePac), with a 1.4 GHz C66x Fixed or Floating-Point DSP
-Core, and 32 KB of L1P & L1D SRAMs and a 1 MB L2 SRAM. Add the
-DT node for this DSP processor sub-system. The processor does
-not have a MMU, and uses various IPC Generation registers and
-shared memory for inter-processor communication. The alias with
-a stem 'rproc' has also been added for the DSP, it provides a
-fixed remoteproc id for the DSP processor.
+From: Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
 
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+A CMA memory pool reserved memory node is added, and is attached to
+the DSP node through the 'memory-region' property on the K2E EVM board.
+This area will be used for allocating virtio rings and buffers. This
+node allows the DSP Memory Protection and Address Extension (MPAX)
+module to be configured properly for the DSP processor, and matches
+the values used on the other Keystone 2 boards for software
+compatibility.
+
+The reserved memory node and the user DSP node are also marked okay
+to enable the DSP on the 66AK2E EVM board.
+
 Signed-off-by: Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2e.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/keystone-k2e-evm.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 0dd4cdd6d40c..819ab8345916 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -45,6 +45,10 @@
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
+index ae1ebe7ee021..f1f32c54e72f 100644
+--- a/arch/arm/boot/dts/keystone-k2e-evm.dts
++++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
+@@ -16,6 +16,19 @@
+ 	compatible = "ti,k2e-evm", "ti,k2e", "ti,keystone";
+ 	model = "Texas Instruments Keystone 2 Edison EVM";
  
-+	aliases {
-+		rproc0 = &dsp0;
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		dsp_common_memory: dsp-common-memory@81f800000 {
++			compatible = "shared-dma-pool";
++			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
++			reusable;
++			status = "okay";
++		};
 +	};
 +
  	soc {
- 		/include/ "keystone-k2e-clocks.dtsi"
  
-@@ -114,6 +118,22 @@
- 			gpio,syscon-dev = <&devctrl 0x240>;
- 		};
- 
-+		dsp0: dsp@10800000 {
-+			compatible = "ti,k2e-dsp";
-+			reg = <0x10800000 0x00080000>,
-+			      <0x10e00000 0x00008000>,
-+			      <0x10f00000 0x00008000>;
-+			reg-names = "l2sram", "l1pram", "l1dram";
-+			clocks = <&clkgem0>;
-+			ti,syscon-dev = <&devctrl 0x844>;
-+			resets = <&pscrst 0>;
-+			interrupt-parent = <&kirq0>;
-+			interrupts = <0 8>;
-+			interrupt-names = "vring", "exception";
-+			kick-gpios = <&dspgpio0 27 0>;
-+			status = "disabled";
-+		};
+ 		clocks {
+@@ -160,3 +173,8 @@
+ 		reg = <1>;
+ 	};
+ };
 +
- 		pcie1: pcie@21020000 {
- 			compatible = "ti,keystone-pcie","snps,dw-pcie";
- 			clocks = <&clkpcie1>;
++&dsp0 {
++	memory-region = <&dsp_common_memory>;
++	status = "okay";
++};
 -- 
 2.13.1
 
