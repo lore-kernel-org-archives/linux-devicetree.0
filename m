@@ -1,27 +1,43 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
-Date: Fri, 28 Jul 2017 16:30:54 -0700
-Message-ID: <20170728233054.GB30604@kroah.com>
-References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: bcm283x: Move the BCM2837 DT contents from
+ arm64 to arm.
+Date: Fri, 28 Jul 2017 16:55:06 -0700
+Message-ID: <18c414ac-c58e-bf99-1d04-8fed2c4a0300@gmail.com>
+References: <20170726200156.30161-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170728142704.11156-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel@vger.kernel.org, cphealy@gmail.com, Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170726200156.30161-1-eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
-> Greg,
+On 07/26/2017 01:01 PM, Eric Anholt wrote:
+> BCM2837 is somewhat unusual in that we build its DT on both arm32 and
+> arm64.  Most devices are being run in arm32 mode.
 > 
-> I am not sure if you are the right person to send these to, if you are
-> not, please let me know who would be the appropriate recepient and sorry for the noise.
+> Having the body of the DT for 2837 separate from 2835/6 has been a
+> source of pain, as we often need to make changes that span both
+> directories simultaneously (for example, the thermal changes for 4.13,
+> or anything that changes the name of a node referenced by '&' from
+> board files).  Other changes are made more complicated than they need
+> to be, such as the SDHOST enabling, because we have to split a single
+> logical change into a 283[56] half and a 2837 half.
+> 
+> To fix this, make the stub board include file live in arm64 instead of
+> arm32, and keep all of BCM283x's contents in arm32.  From here on, our
+> changes to DT contents can be submitted through a single tree.
+> 
+> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 
-Why not the platform driver maintainer(s)?  Doesn't
-scripts/get_maintainer.pl give you an idea for who to send them to?
+Applied to devicetree/next (arm64), thanks Eric!
 
-thanks,
-
-greg k-h
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
