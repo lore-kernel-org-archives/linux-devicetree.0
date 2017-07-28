@@ -1,114 +1,74 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] device property: Fix usecount for of_graph_get_port_parent()
-Date: Fri, 28 Jul 2017 17:58:17 -0500
-Message-ID: <CAL_Jsq+1Gnq_BC=CkxhgGk1zOS12w4jde3R48t0Df1N0+W5JvQ@mail.gmail.com>
-References: <20170727094405.19778-1-tony@atomide.com> <CAL_JsqJ9Xmbws8gBRCxn2Nt=tj1HLnF-MGvnW+oOourvgbm9Nw@mail.gmail.com>
- <20170728060127.GH10026@atomide.com> <20170728082315.GL10026@atomide.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 3/6] ARM: dts: keystone-k2e: Add DSP node
+Date: Fri, 28 Jul 2017 18:19:15 -0500
+Message-ID: <20170728231918.16778-4-s-anna@ti.com>
+References: <20170728231918.16778-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728082315.GL10026-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20170728231918.16778-1-s-anna-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 3:23 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [170727 23:02]:
->> * Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170727 15:19]:
->> > On Thu, Jul 27, 2017 at 4:44 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> > > --- a/drivers/of/property.c
->> > > +++ b/drivers/of/property.c
->> > > @@ -708,6 +708,15 @@ struct device_node *of_graph_get_port_parent(struct device_node *node)
->> > >  {
->> > >         unsigned int depth;
->> > >
->> > > +       if (!node)
->> > > +               return NULL;
->> > > +
->> > > +       /*
->> > > +        * Preserve usecount for passed in node as of_get_next_parent()
->> > > +        * will do of_node_put() on it.
->> > > +        */
->> > > +       of_node_get(node);
->> >
->> > I think this messes up of_graph_get_remote_port_parent(). First it
->> > calls of_graph_get_remote_endpoint which returns the endpoint node
->> > with ref count incremented. Then you are incrementing it again here.
->>
->> Hmm OK looks like I missed that one. If we want to have
->> of_graph_get_port_parent not trash the node passed to it, we should
->> just change things there too:
->
-> Found few more things to fix with git grep -C20 of_graph_get_port_parent,
-> below is v2.
->
-> Can you all prese review again and do some testing. I also fixed up
-> audio-graph-scu-card but can't test that one.
->
-> Regards,
->
-> Tony
->
-> 8< ------
-> From tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Date: Thu, 27 Jul 2017 01:30:16 -0700
-> Subject: [PATCHv2] device property: Fix usecount for
->  of_graph_get_port_parent()
->
-> Fix inconsistent use of of_graph_get_port_parent() where
-> asoc_simple_card_parse_graph_dai() does of_node_get() before
-> calling it while other callers do not. We can fix this by
-> not trashing the node passed to of_graph_get_port_parent().
->
-> Let's also make sure the callers have correct refcounts and remove
-> related incorrect of_node_put() calls for of_for_each_phandle
-> as that's done by of_phandle_iterator_next() except when
-> we break out of the loop early.
->
-> Let's fix both issues with a single patch to avoid kobject
-> refcounts getting messed up more if two patches are merged
-> separately.
->
-> Otherwise strange issues can happen caused by memory corruption
-> caused by too many kobject_del() calls such as:
->
-> BUG: sleeping function called from invalid context at
-> kernel/locking/mutex.c:747
-> ...
-> (___might_sleep)
-> (__mutex_lock)
-> (mutex_lock_nested)
-> (kernfs_remove)
-> (kobject_del)
-> (kobject_put)
-> (of_get_next_parent)
-> (of_graph_get_port_parent)
-> (asoc_simple_card_parse_graph_dai [snd_soc_simple_card_utils])
-> (asoc_graph_card_probe [snd_soc_audio_graph_card])
->
-> Fixes: 0ef472a973eb ("of_graph: add of_graph_get_port_parent()")
-> Fixes: 2692c1c63c29 ("ASoC: add audio-graph-card support")
-> Fixes: 1689333f8311 ("ASoC: simple-card-utils: add asoc_simple_card_parse_graph_dai()")
-> Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
-> Cc: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/of/property.c                    | 17 +++++++++++++++--
->  sound/soc/generic/audio-graph-card.c     | 10 +++++-----
->  sound/soc/generic/audio-graph-scu-card.c | 15 +++++++++------
->  sound/soc/generic/simple-card-utils.c    |  8 +++-----
->  sound/soc/soc-core.c                     |  2 ++
->  5 files changed, 34 insertions(+), 18 deletions(-)
+The Keystone 2 66AK2E SoC has one TMS320C66x DSP Core Subsystem
+(C66x CorePac), with a 1.4 GHz C66x Fixed or Floating-Point DSP
+Core, and 32 KB of L1P & L1D SRAMs and a 1 MB L2 SRAM. Add the
+DT node for this DSP processor sub-system. The processor does
+not have a MMU, and uses various IPC Generation registers and
+shared memory for inter-processor communication. The alias with
+a stem 'rproc' has also been added for the DSP, it provides a
+fixed remoteproc id for the DSP processor.
 
-LGTM. I'm assuming this will go thru ALSA tree.
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/keystone-k2e.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
+index 0dd4cdd6d40c..819ab8345916 100644
+--- a/arch/arm/boot/dts/keystone-k2e.dtsi
++++ b/arch/arm/boot/dts/keystone-k2e.dtsi
+@@ -45,6 +45,10 @@
+ 		};
+ 	};
+ 
++	aliases {
++		rproc0 = &dsp0;
++	};
++
+ 	soc {
+ 		/include/ "keystone-k2e-clocks.dtsi"
+ 
+@@ -114,6 +118,22 @@
+ 			gpio,syscon-dev = <&devctrl 0x240>;
+ 		};
+ 
++		dsp0: dsp@10800000 {
++			compatible = "ti,k2e-dsp";
++			reg = <0x10800000 0x00080000>,
++			      <0x10e00000 0x00008000>,
++			      <0x10f00000 0x00008000>;
++			reg-names = "l2sram", "l1pram", "l1dram";
++			clocks = <&clkgem0>;
++			ti,syscon-dev = <&devctrl 0x844>;
++			resets = <&pscrst 0>;
++			interrupt-parent = <&kirq0>;
++			interrupts = <0 8>;
++			interrupt-names = "vring", "exception";
++			kick-gpios = <&dspgpio0 27 0>;
++			status = "disabled";
++		};
++
+ 		pcie1: pcie@21020000 {
+ 			compatible = "ti,keystone-pcie","snps,dw-pcie";
+ 			clocks = <&clkpcie1>;
+-- 
+2.13.1
 
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
