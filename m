@@ -1,93 +1,65 @@
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] memory: mtk-smi: add larbid init routine
-Date: Fri, 28 Jul 2017 09:15:05 +0800
-Message-ID: <1501204505.29316.9.camel@mtksdaap41>
-References: <1501120872-19652-1-git-send-email-honghui.zhang@mediatek.com>
-	<1501120872-19652-2-git-send-email-honghui.zhang@mediatek.com>
-	<f7dac4d6-4ef8-e10d-e483-088120392ab2@gmail.com>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] arm64: dts: cavium: fix PCI bus dtc warnings
+Date: Fri, 28 Jul 2017 01:43:05 +0000
+Message-ID: <20170728014304.GA6857@localhost>
+References: <20170726210943.6875-1-robh@kernel.org>
+ <20170726210943.6875-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <f7dac4d6-4ef8-e10d-e483-088120392ab2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170726210943.6875-7-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-07-27 at 17:42 +0200, Matthias Brugger wrote:
+On Wed, Jul 26, 2017 at 04:09:43PM -0500, Rob Herring wrote:
+> dtc recently added PCI bus checks. Fix these warnings:
 > 
-> On 07/27/2017 04:01 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > In the commit 3c8f4ad85c4b ("memory/mediatek: add support for mt2701"),
-> > the larb->larbid was added but not initialized.
-> > Mediatek's gen1 smi need this hardware larbid information to get the
-> > register offset which controls whether enable iommu for this larb.
-> > This patch add the initialize routine for larbid.
-> > 
-> > Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   drivers/memory/mtk-smi.c | 9 +++++++++
-> >   1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> > index 2b798bb4..fe36b3e 100644
-> > --- a/drivers/memory/mtk-smi.c
-> > +++ b/drivers/memory/mtk-smi.c
-> > @@ -240,6 +240,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
-> >   	struct device *dev = &pdev->dev;
-> >   	struct device_node *smi_node;
-> >   	struct platform_device *smi_pdev;
-> > +	int err;
-> >   
-> >   	if (!dev->pm_domain)
-> >   		return -EPROBE_DEFER;
-> > @@ -263,6 +264,14 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
-> >   		return PTR_ERR(larb->smi.clk_smi);
-> >   	larb->smi.dev = dev;
-> >   
-> > +	err = of_property_read_u32(dev->of_node, "mediatek,larbid",
-> > +				   &larb->larbid);
-> > +	if (err && of_device_is_compatible(dev->of_node,
-> > +					   "mediatek,mt2701-smi-larb")) {
+> arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (pci_bridge): Node /pci missing bus-range for PCI bridge
+> arch/arm64/boot/dts/cavium/thunder2-99xx.dtb: Warning (unit_address_vs_reg): Node /pci has a reg or ranges property, but no unit name
 > 
-> Instead of checking hard-coded bindings you should be able to determine the 
-> generation using the smi_pdev.
-> Apart I think it would be better to check for mediatek,larbid only on 
-> MTK_SIM_GEN1, or do I miss something?
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+> v2:
+> - Reapply broadcom vulkan changes to thunder2.
 > 
+>  arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> index 4220fbdcb24a..ea50c1320bf7 100644
+> --- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> @@ -98,7 +98,7 @@
+>  		clock-output-names = "clk125mhz";
+>  	};
+>  
+> -	pci {
+> +	pci@30000000 {
+>  		compatible = "pci-host-ecam-generic";
+>  		device_type = "pci";
+>  		#interrupt-cells = <1>;
+> @@ -118,6 +118,7 @@
+>  		ranges =
+>  		  <0x02000000    0 0x40000000    0 0x40000000    0 0x20000000
+>  		   0x43000000 0x40 0x00000000 0x40 0x00000000 0x20 0x00000000>;
+> +		bus-range = <0 0xff>;
+>  		interrupt-map-mask = <0 0 0 7>;
+>  		interrupt-map =
+>  		      /* addr  pin  ic   icaddr  icintr */
 
-Hi, Matthias,
-	There's a new SoC of mediatek which use MTK_SMI_GEN2 hardware, but it
-has 2 iommus and 2 smi_common, and we are intend to send it's driver
-soon. It need the mediatek,larbid to identify which iommu should be
-binding to.
+Thanks for fixing this up.
 
-This patch use the hard-code bindings will make the future work easier.
+Acked-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 
-thanks.
-> Regards,
-> Matthias
-> 
-> > +		dev_err(dev, "missing larbid property\n");
-> > +		return err;
-> > +	}
-> > +
-> >   	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
-> >   	if (!smi_node)
-> >   		return -EINVAL;
-> > 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+The unit name issue is there with memory node on thunder2-99xx.dts as well, I can fix
+this up if you are not planning to.
+
+JC
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
