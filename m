@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] usb: gadget: udc: renesas_usb3: add debugfs to set the b-device mode
-Date: Fri, 28 Jul 2017 21:16:57 +0900
-Message-ID: <1501244219-11840-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/3] usb: gadget: udc: renesas_usb3: add support for R-Car H3 ES2.0
+Date: Fri, 28 Jul 2017 21:16:58 +0900
+Message-ID: <1501244219-11840-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1501244219-11840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,159 +12,85 @@ To: balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0
 Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds debugfs to set the "b-device" mode for using a board
-which is not connected to the ID pin (e.g. CN11 on Salvator-X).
-If we want to use peripheral mode on such a board, we have to disable
-VBUS output first. So, this patch can set such a mode as the following:
-
- # mount -t debugfs none /sys/kernel/debug
- # modprobe renesas_usb3
- # modprobe g_mass_storage file=/dev/shm/test.bin
- # echo 1 > /sys/kernel/debug/ee020000.usb/b_device
+This patch adds support for R-Car H3 ES2.0. Since this SoC revision
+doesn't need workaround for vbus detection and number of ramif is
+increased. So, this driver uses soc_device_match() to detect it.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/usb/gadget/udc/renesas_usb3.c | 78 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 76 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/renesas_usb3.c | 27 ++++++++++++++++++++++++---
+ 1 file changed, 24 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-index d827832..3415d32 100644
+index 3415d32..aa2b185 100644
 --- a/drivers/usb/gadget/udc/renesas_usb3.c
 +++ b/drivers/usb/gadget/udc/renesas_usb3.c
-@@ -8,6 +8,7 @@
-  * the Free Software Foundation; version 2 of the License.
-  */
- 
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
-@@ -20,6 +21,7 @@
+@@ -21,6 +21,7 @@
  #include <linux/pm_runtime.h>
  #include <linux/sizes.h>
  #include <linux/slab.h>
-+#include <linux/uaccess.h>
++#include <linux/sys_soc.h>
+ #include <linux/uaccess.h>
  #include <linux/usb/ch9.h>
  #include <linux/usb/gadget.h>
+@@ -2487,22 +2488,36 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
+ 	}
+ }
  
-@@ -344,6 +346,7 @@ struct renesas_usb3 {
- 	bool workaround_for_vbus;
- 	bool extcon_host;		/* check id and set EXTCON_USB_HOST */
- 	bool extcon_usb;		/* check vbus and set EXTCON_USB */
-+	bool forced_b_device;
+-static const struct renesas_usb3_priv renesas_usb3_priv_r8a7795 = {
++static const struct renesas_usb3_priv renesas_usb3_priv_r8a7795_es1 = {
+ 	.ramsize_per_ramif = SZ_16K,
+ 	.num_ramif = 2,
+ 	.ramsize_per_pipe = SZ_4K,
+ 	.workaround_for_vbus = true,
  };
  
- #define gadget_to_renesas_usb3(_gadget)	\
-@@ -660,7 +663,9 @@ static void usb3_mode_config(struct renesas_usb3 *usb3, bool host, bool a_dev)
- 	spin_lock_irqsave(&usb3->lock, flags);
- 	usb3_set_mode(usb3, host);
- 	usb3_vbus_out(usb3, a_dev);
--	if (!host && a_dev)		/* for A-Peripheral */
-+	/* for A-Peripheral or forced B-device mode */
-+	if ((!host && a_dev) ||
-+	    (usb3->workaround_for_vbus && usb3->forced_b_device))
- 		usb3_connect(usb3);
- 	spin_unlock_irqrestore(&usb3->lock, flags);
- }
-@@ -674,7 +679,7 @@ static void usb3_check_id(struct renesas_usb3 *usb3)
- {
- 	usb3->extcon_host = usb3_is_a_device(usb3);
- 
--	if (usb3->extcon_host)
-+	if (usb3->extcon_host && !usb3->forced_b_device)
- 		usb3_mode_config(usb3, true, true);
- 	else
- 		usb3_mode_config(usb3, false, false);
-@@ -2266,6 +2271,9 @@ static ssize_t role_store(struct device *dev, struct device_attribute *attr,
- 	if (!usb3->driver)
- 		return -ENODEV;
- 
-+	if (usb3->forced_b_device)
-+		return -EBUSY;
-+
- 	if (!strncmp(buf, "host", strlen("host")))
- 		new_mode_is_host = true;
- 	else if (!strncmp(buf, "peripheral", strlen("peripheral")))
-@@ -2293,6 +2301,70 @@ static ssize_t role_show(struct device *dev, struct device_attribute *attr,
- }
- static DEVICE_ATTR_RW(role);
- 
-+static int renesas_usb3_b_device_show(struct seq_file *s, void *unused)
-+{
-+	struct renesas_usb3 *usb3 = s->private;
-+
-+	seq_printf(s, "%d\n", usb3->forced_b_device);
-+
-+	return 0;
-+}
-+
-+static int renesas_usb3_b_device_open(struct inode *inode, struct file *file)
-+{
-+	return single_open(file, renesas_usb3_b_device_show, inode->i_private);
-+}
-+
-+static ssize_t renesas_usb3_b_device_write(struct file *file,
-+					   const char __user *ubuf,
-+					   size_t count, loff_t *ppos)
-+{
-+	struct seq_file *s = file->private_data;
-+	struct renesas_usb3 *usb3 = s->private;
-+	char buf[32];
-+
-+	if (!usb3->driver)
-+		return -ENODEV;
-+
-+	if (copy_from_user(&buf, ubuf, min_t(size_t, sizeof(buf) - 1, count)))
-+		return -EFAULT;
-+
-+	if (!strncmp(buf, "1", 1))
-+		usb3->forced_b_device = true;
-+	else
-+		usb3->forced_b_device = false;
-+
-+	/* Let this driver call usb3_connect() anyway */
-+	usb3_check_id(usb3);
-+
-+	return count;
-+}
-+
-+static const struct file_operations renesas_usb3_b_device_fops = {
-+	.open = renesas_usb3_b_device_open,
-+	.write = renesas_usb3_b_device_write,
-+	.read = seq_read,
-+	.llseek = seq_lseek,
-+	.release = single_release,
++static const struct renesas_usb3_priv renesas_usb3_priv_gen3 = {
++	.ramsize_per_ramif = SZ_16K,
++	.num_ramif = 4,
++	.ramsize_per_pipe = SZ_4K,
 +};
 +
-+static void renesas_usb3_debugfs_init(struct renesas_usb3 *usb3,
-+				      struct device *dev)
-+{
-+	struct dentry *root, *file;
-+
-+	root = debugfs_create_dir(dev_name(dev), NULL);
-+	if (IS_ERR_OR_NULL(root)) {
-+		dev_info(dev, "%s: Can't create the root\n", __func__);
-+		return;
-+	}
-+
-+	file = debugfs_create_file("b_device", 0644, root, usb3,
-+				   &renesas_usb3_b_device_fops);
-+	if (!file)
-+		dev_info(dev, "%s: Can't create debugfs mode\n", __func__);
-+}
-+
- /*------- platform_driver ------------------------------------------------*/
- static int renesas_usb3_remove(struct platform_device *pdev)
- {
-@@ -2510,6 +2582,8 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ static const struct of_device_id usb3_of_match[] = {
+ 	{
+ 		.compatible = "renesas,r8a7795-usb3-peri",
+-		.data = &renesas_usb3_priv_r8a7795,
++		.data = &renesas_usb3_priv_gen3,
+ 	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, usb3_of_match);
  
- 	usb3->workaround_for_vbus = priv->workaround_for_vbus;
- 
-+	renesas_usb3_debugfs_init(usb3, &pdev->dev);
++static const struct soc_device_attribute renesas_usb3_quirks_match[] = {
++	{
++		.soc_id = "r8a7795", .revision = "ES1.*",
++		.data = &renesas_usb3_priv_r8a7795_es1,
++	},
++	{ /* sentinel */ },
++};
 +
- 	dev_info(&pdev->dev, "probed\n");
+ static const unsigned int renesas_usb3_cable[] = {
+ 	EXTCON_USB,
+ 	EXTCON_USB_HOST,
+@@ -2516,11 +2531,17 @@ static int renesas_usb3_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	int irq, ret;
+ 	const struct renesas_usb3_priv *priv;
++	const struct soc_device_attribute *attr;
  
- 	return 0;
+ 	match = of_match_node(usb3_of_match, pdev->dev.of_node);
+ 	if (!match)
+ 		return -ENODEV;
+-	priv = match->data;
++
++	attr = soc_device_match(renesas_usb3_quirks_match);
++	if (attr)
++		priv = attr->data;
++	else
++		priv = match->data;
+ 
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (irq < 0)
 -- 
 1.9.1
 
