@@ -1,84 +1,108 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 0/3] tty: serial: 8250 introduce mctrl_gpio helpers
-Date: Fri, 28 Jul 2017 13:36:46 +0300
-Message-ID: <1501238206.29303.277.camel@linux.intel.com>
-References: <1501161456-13367-1-git-send-email-yegorslists@googlemail.com>
-         <20170728064004.GI10026@atomide.com>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] memory: mtk-smi: add larbid init routine
+Date: Fri, 28 Jul 2017 18:38:21 +0800
+Message-ID: <1501238301.29316.12.camel@mtksdaap41>
+References: <1501120872-19652-1-git-send-email-honghui.zhang@mediatek.com>
+         <1501120872-19652-2-git-send-email-honghui.zhang@mediatek.com>
+         <f7dac4d6-4ef8-e10d-e483-088120392ab2@gmail.com>
+         <1501204505.29316.9.camel@mtksdaap41>
+         <a4a00e4b-175c-88d3-d2b4-9f4f1c41a935@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728064004.GI10026-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <a4a00e4b-175c-88d3-d2b4-9f4f1c41a935-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-07-27 at 23:40 -0700, Tony Lindgren wrote:
-> * yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170727
-> 06:18]:
-> > From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Fri, 2017-07-28 at 10:59 +0100, Robin Murphy wrote:
+> On 28/07/17 02:15, Honghui Zhang wrote:
+> > On Thu, 2017-07-27 at 17:42 +0200, Matthias Brugger wrote:
+> >>
+> >> On 07/27/2017 04:01 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> >>> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>
+> >>> In the commit 3c8f4ad85c4b ("memory/mediatek: add support for mt2701"),
+> >>> the larb->larbid was added but not initialized.
+> >>> Mediatek's gen1 smi need this hardware larbid information to get the
+> >>> register offset which controls whether enable iommu for this larb.
+> >>> This patch add the initialize routine for larbid.
+> >>>
+> >>> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>> ---
+> >>>   drivers/memory/mtk-smi.c | 9 +++++++++
+> >>>   1 file changed, 9 insertions(+)
+> >>>
+> >>> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> >>> index 2b798bb4..fe36b3e 100644
+> >>> --- a/drivers/memory/mtk-smi.c
+> >>> +++ b/drivers/memory/mtk-smi.c
+> >>> @@ -240,6 +240,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+> >>>   	struct device *dev = &pdev->dev;
+> >>>   	struct device_node *smi_node;
+> >>>   	struct platform_device *smi_pdev;
+> >>> +	int err;
+> >>>   
+> >>>   	if (!dev->pm_domain)
+> >>>   		return -EPROBE_DEFER;
+> >>> @@ -263,6 +264,14 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+> >>>   		return PTR_ERR(larb->smi.clk_smi);
+> >>>   	larb->smi.dev = dev;
+> >>>   
+> >>> +	err = of_property_read_u32(dev->of_node, "mediatek,larbid",
+> >>> +				   &larb->larbid);
+> >>> +	if (err && of_device_is_compatible(dev->of_node,
+> >>> +					   "mediatek,mt2701-smi-larb")) {
+> >>
+> >> Instead of checking hard-coded bindings you should be able to determine the 
+> >> generation using the smi_pdev.
+> >> Apart I think it would be better to check for mediatek,larbid only on 
+> >> MTK_SIM_GEN1, or do I miss something?
+> >>
 > > 
-> > This patch series aims to reintroduce the  mctrl_gpio helpers for
-> > 8250
-> > UARTs.
+> > Hi, Matthias,
+> > 	There's a new SoC of mediatek which use MTK_SMI_GEN2 hardware, but it
+> > has 2 iommus and 2 smi_common, and we are intend to send it's driver
+> > soon. It need the mediatek,larbid to identify which iommu should be
+> > binding to.
 > > 
-> > There are some UARTs that use GPIO signals as a wakeup-sourse.
-> > The first patch addresses this issue and tries to destinguish GPIO
-> > usage
-> > via searching for "wakeup-sourse" property. Though it must be
-> > decided whether
-> > this property is secure to use for this purpose.
+> > This patch use the hard-code bindings will make the future work easier.
 > 
-> The wakeup-source part you should be able to handle pretty much
-> out of box with Linux generic wakeirqs if configured. See for example
-> drivers/i2c/i2c-core.c for the dev_pm_set_dedicated_wake_irq() part.
+> In that case, might it make sense to add some indicator like "bool
+> need_larb_id" to struct mtk_smi_larb_gen?
+> 
+> Robin.
+> 
 
-Here are 3 cases:
-1) out-of-band interrupt (usually GPIO) which can be wake source;
-2) in-band interrupt (have not seen this for UART, though it's supported
-by tty framework for a long time AFAIU);
-3) special case when Out-of-band interrupt uses the pin in UART pool of
-pins.
+Hi, Robin, thanks for your advise, I will send another version later.
 
-We are talking here about case 3).
+Thanks.
 
-> As long as the 8250 driver has runtime PM implemented
+> > 
+> > thanks.
+> >> Regards,
+> >> Matthias
+> >>
+> >>> +		dev_err(dev, "missing larbid property\n");
+> >>> +		return err;
+> >>> +	}
+> >>> +
+> >>>   	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
+> >>>   	if (!smi_node)
+> >>>   		return -EINVAL;
+> >>>
+> >>
+> >> _______________________________________________
+> >> Linux-mediatek mailing list
+> >> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> > 
+> > 
+> 
 
-As you remember it has not (the ugly hack which is used right now is not
-correct implementation of RPM).
 
->  it will wake
-> up the 8250 device.
-
-See above, in case 3) we would be able to achieve that when pin mode is
-switched to GPIO and back. I don't remember if OMAP uses this approach.
-
-> This should work just fine also with am335x gpios, just configure the
-> secondary wakeup gpio interrupt using interrupts-extended in device
-> tree. Typically the interrupts are named "irq" and "wakeup". And if
-> the
-> pin is used as gpio, you can just dev_pm_clear_wake_irq() during
-> runtime.
-
-I think this one is not related to case 3).
-
-> If having issues, we're still missing the wakeirq level configuration,
-> the patch below should do the trick there.
-
->  	err = request_threaded_irq(irq, NULL,
-> handle_threaded_wake_irq,
-> -				   IRQF_ONESHOT, dev_name(dev),
-> wirq);
-> +				   irq_get_trigger_type(irq) |
-> IRQF_ONESHOT,
-
-This is not needed if you use DT or ACPI and framework (serial in this
-case) checks for interrupt correctly.
-
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
