@@ -1,37 +1,43 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH 0/2] STM32 HASH crypto driver
-Date: Fri, 28 Jul 2017 21:50:18 +0800
-Message-ID: <20170728135018.GD21401@gondor.apana.org.au>
-References: <1499952747-16423-1-git-send-email-lionel.debieve@st.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 0/3] net-next: stmmac: support future
+ possible different internal phy mode
+Date: Fri, 28 Jul 2017 15:55:44 +0200
+Message-ID: <20170728135544.GD32230@lunn.ch>
+References: <20170728092818.23419-1-clabbe.montjoie@gmail.com>
+Reply-To: andrew-g2DYL2Zd6BY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJNHL5JSEOBBZ4E5XFQKGQER7KD7TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1499952747-16423-1-git-send-email-lionel.debieve@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lionel Debieve <lionel.debieve@st.com>
-Cc: "David S . Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, Ludovic Barre <ludovic.barre@st.com>
+In-Reply-To: <20170728092818.23419-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 03:32:25PM +0200, Lionel Debieve wrote:
-> This set of patches adds a new crypto driver for STMicroelectronics stm32 HW.
-> This drivers uses the crypto API and provides with HW-enabled md5, sha1,
-> sha224, sha256 hash based algorithms.
-> It makes use of the crypto engine to support ahash requests.
+On Fri, Jul 28, 2017 at 11:28:15AM +0200, Corentin Labbe wrote:
+> Hello
 > 
-> This driver was successfully tested with tcrypt / testmgr.
+> The current way to find if the phy is internal is to compare DT phy-mode
+> and emac_variant/internal_phy.
+> But it will negate a possible future SoC where an external PHY use the
+> same phy mode than the internal one.
 > 
-> Note:
-> Since two other set of patches (update of STM32 CRC32 and addition of STM32
-> CRYP) are being proposed, it may happen that there are some minor conflicts in
-> 'Kconfig' and 'Makefile'. In that case, I will fix the issue in due course.
-> 
-> Lionel Debieve (2):
->   dt-bindings: Document STM32 HASH bindings
->   crypto: stm32 - Support for STM32 HASH module
+> This patchs series adds a new way to find if the PHY is internal, via its
+> compatible.
 
-All patches applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+http://elixir.free-electrons.com/linux/latest/source/drivers/of/of_mdio.c#L144
+
+Since you also have "ethernet-phy-ieee802.3-c22", you won't get the
+warning. But still, your device tree gives the wrong idea.
+
+I've probably asked this before: Does the internal PHY use a different
+PHY ID in registers 2 and 3?
+
+    Andrew
