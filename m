@@ -1,108 +1,36 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v6 09/14] spi: qup: call io_config in mode specific function
-Date: Fri, 28 Jul 2017 12:22:56 +0530
-Message-ID: <1501224781-19519-10-git-send-email-varada@codeaurora.org>
-References: <1501224781-19519-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1501224781-19519-1-git-send-email-varada@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v2 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Fri, 28 Jul 2017 14:56:03 +0800
+Message-ID: <69ad9443-ff65-8e49-df68-7e5e6c812d45@rock-chips.com>
+References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
+ <1501160540-30662-1-git-send-email-david.wu@rock-chips.com>
+ <20170727134834.GD18666@lunn.ch>
+ <65ae1747-4dff-b1d8-8aa3-684fc8c7809a@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <65ae1747-4dff-b1d8-8aa3-684fc8c7809a@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DMA transactions should only only need to call io_config only once, but
-block mode might call it several times to setup several transactions so
-it can handle reads/writes larger than the max size per transaction, so
-we move the call to the do_ functions.
+Hi Florian,
 
-This is just refactoring, there should be no functional change
+在 2017/7/28 0:54, Florian Fainelli 写道:
+> - if you need knowledge about this PHY connection type prior to binding
+> the PHY device and its driver (that is, before of_phy_connect()) we
+> could add a boolean property e.g: "phy-is-internal" that allows us to
+> know that, or we can have a new phy-mode value, e.g: "internal-rmii"
+> which describes that, either way would probably be fine, but the former
+> scales better
+> 
 
-Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/spi/spi-qup.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
+Using "phy-is-internal" is very helpful, but it is easy to confuse with 
+the real internal PHY, may we use the other words like phy is inlined🙂.
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index ff5aa08..1aa6078 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -156,6 +156,8 @@ struct spi_qup {
- 	struct dma_slave_config	tx_conf;
- };
- 
-+static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer);
-+
- static inline bool spi_qup_is_flag_set(struct spi_qup *controller, u32 flag)
- {
- 	u32 opflag = readl_relaxed(controller->base + QUP_OPERATIONAL);
-@@ -417,11 +419,12 @@ static void spi_qup_dma_terminate(struct spi_master *master,
- 		dmaengine_terminate_all(master->dma_rx);
- }
- 
--static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
-+static int spi_qup_do_dma(struct spi_device *spi, struct spi_transfer *xfer,
- 			  unsigned long timeout)
- {
--	struct spi_qup *qup = spi_master_get_devdata(master);
- 	dma_async_tx_callback rx_done = NULL, tx_done = NULL;
-+	struct spi_master *master = spi->master;
-+	struct spi_qup *qup = spi_master_get_devdata(master);
- 	int ret;
- 
- 	if (xfer->rx_buf)
-@@ -429,6 +432,10 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
- 	else if (xfer->tx_buf)
- 		tx_done = spi_qup_dma_done;
- 
-+	ret = spi_qup_io_config(spi, xfer);
-+	if (ret)
-+		return ret;
-+
- 	/* before issuing the descriptors, set the QUP to run */
- 	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
- 	if (ret) {
-@@ -459,12 +466,17 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
- 	return 0;
- }
- 
--static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer,
-+static int spi_qup_do_pio(struct spi_device *spi, struct spi_transfer *xfer,
- 			  unsigned long timeout)
- {
-+	struct spi_master *master = spi->master;
- 	struct spi_qup *qup = spi_master_get_devdata(master);
- 	int ret;
- 
-+	ret = spi_qup_io_config(spi, xfer);
-+	if (ret)
-+		return ret;
-+
- 	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
- 	if (ret) {
- 		dev_warn(qup->dev, "cannot set RUN state\n");
-@@ -742,10 +754,6 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	if (ret)
- 		return ret;
- 
--	ret = spi_qup_io_config(spi, xfer);
--	if (ret)
--		return ret;
--
- 	timeout = DIV_ROUND_UP(xfer->speed_hz, MSEC_PER_SEC);
- 	timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
- 	timeout = 100 * msecs_to_jiffies(timeout);
-@@ -760,9 +768,9 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	spin_unlock_irqrestore(&controller->lock, flags);
- 
- 	if (spi_qup_is_dma_xfer(controller->mode))
--		ret = spi_qup_do_dma(master, xfer, timeout);
-+		ret = spi_qup_do_dma(spi, xfer, timeout);
- 	else
--		ret = spi_qup_do_pio(master, xfer, timeout);
-+		ret = spi_qup_do_pio(spi, xfer, timeout);
- 
- 	if (ret)
- 		goto exit;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> Then again, using phy-mode = "internal" even though this is Reduced MII
+> is not big of a deal IMHO as long as there is no loss of information and
+> that internal de-facto means internal reduced MII for instance.
+> -- 
