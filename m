@@ -1,61 +1,51 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gx: consistently use the GIC_SPI and
- IRQ type macros
-Date: Fri, 28 Jul 2017 15:58:48 +0200
-Message-ID: <4643e311-36d8-a694-78b3-6a4e2033d7d6@baylibre.com>
-References: <20170716141145.30295-1-martin.blumenstingl@googlemail.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] net-next: stmmac: support future
+ possible different internal phy mode
+Date: Fri, 28 Jul 2017 16:25:08 +0200
+Message-ID: <20170728142508.GA7221@Red>
+References: <20170728092818.23419-1-clabbe.montjoie@gmail.com>
+ <20170728135544.GD32230@lunn.ch>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170716141145.30295-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBTES5XFQKGQENG6DXHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170728135544.GD32230-g2DYL2Zd6BY@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/16/2017 04:11 PM, Martin Blumenstingl wrote:
-> the mailbox and ethmac nodes used the magic number "0" instead of the
-> GIC_SPI preprocessor macro. Additionally the ethmac used the magic
-> number "1" instead of IRQ_TYPE_EDGE_RISING.
-> Fix this to make the .dtsi easier to read.
+On Fri, Jul 28, 2017 at 03:55:44PM +0200, Andrew Lunn wrote:
+> On Fri, Jul 28, 2017 at 11:28:15AM +0200, Corentin Labbe wrote:
+> > Hello
+> > 
+> > The current way to find if the phy is internal is to compare DT phy-mode
+> > and emac_variant/internal_phy.
+> > But it will negate a possible future SoC where an external PHY use the
+> > same phy mode than the internal one.
+> > 
+> > This patchs series adds a new way to find if the PHY is internal, via its
+> > compatible.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> http://elixir.free-electrons.com/linux/latest/source/drivers/of/of_mdio.c#L144
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index 35b8c88c3220..492e6a24349a 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -437,9 +437,9 @@
->  			mailbox: mailbox@404 {
->  				compatible = "amlogic,meson-gx-mhu", "amlogic,meson-gxbb-mhu";
->  				reg = <0 0x404 0 0x4c>;
-> -				interrupts = <0 208 IRQ_TYPE_EDGE_RISING>,
-> -					     <0 209 IRQ_TYPE_EDGE_RISING>,
-> -					     <0 210 IRQ_TYPE_EDGE_RISING>;
-> +				interrupts = <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
-> +					     <GIC_SPI 209 IRQ_TYPE_EDGE_RISING>,
-> +					     <GIC_SPI 210 IRQ_TYPE_EDGE_RISING>;
->  				#mbox-cells = <1>;
->  			};
->  		};
-> @@ -448,7 +448,7 @@
->  			compatible = "amlogic,meson-gx-dwmac", "amlogic,meson-gxbb-dwmac", "snps,dwmac";
->  			reg = <0x0 0xc9410000 0x0 0x10000
->  			       0x0 0xc8834540 0x0 0x4>;
-> -			interrupts = <0 8 1>;
-> +			interrupts = <GIC_SPI 8 IRQ_TYPE_EDGE_RISING>;
->  			interrupt-names = "macirq";
->  			status = "disabled";
->  		};
+> Since you also have "ethernet-phy-ieee802.3-c22", you won't get the
+> warning. But still, your device tree gives the wrong idea.
+> 
+> I've probably asked this before: Does the internal PHY use a different
+> PHY ID in registers 2 and 3?
 > 
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+yes
+
+reg2: 0x0044
+reg3: 0X1500
+
+Regards
