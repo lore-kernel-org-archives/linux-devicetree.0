@@ -1,64 +1,104 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] net-next: stmmac: dwmac-sun8i: choose
- internal PHY via compatible
-Date: Fri, 28 Jul 2017 11:54:27 +0200
-Message-ID: <20170728095427.GA31579@Red>
-References: <20170728092818.23419-1-clabbe.montjoie@gmail.com>
- <20170728092818.23419-4-clabbe.montjoie@gmail.com>
- <CAGb2v64w-KCmYExN7OqvuLj42-pHN-BN5iKpxA+KW84v+RfCDQ@mail.gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 1/3] memory: mtk-smi: add larbid init routine
+Date: Fri, 28 Jul 2017 10:59:35 +0100
+Message-ID: <a4a00e4b-175c-88d3-d2b4-9f4f1c41a935@arm.com>
+References: <1501120872-19652-1-git-send-email-honghui.zhang@mediatek.com>
+	<1501120872-19652-2-git-send-email-honghui.zhang@mediatek.com>
+	<f7dac4d6-4ef8-e10d-e483-088120392ab2@gmail.com>
+	<1501204505.29316.9.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBYET5TFQKGQEBPCM36Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64w-KCmYExN7OqvuLj42-pHN-BN5iKpxA+KW84v+RfCDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1501204505.29316.9.camel@mtksdaap41>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 05:49:55PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Jul 28, 2017 at 5:28 PM, Corentin Labbe
-> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > The current way to find if the phy is internal is to compare DT phy-mode
-> > and emac_variant/internal_phy.
-> > But it will negate a possible future SoC where an external PHY use the
-> > same phy mode than the internal one.
-> >
-> > This patch adds a new way to find if the PHY is internal, via its
-> > compatible.
-> >
-> > Since the phy_mode of the internal PHY does need to be know, the
-> > variant internal_phy member is converted to a boolean.
-> >
-> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 16 ++++++++++------
-> >  1 file changed, 10 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> > index fffd6d5fc907..04f7ddd802b0 100644
-> > --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> > +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> > @@ -48,7 +48,7 @@
-> >   */
-> >  struct emac_variant {
-> >         u32 default_syscon_value;
-> > -       int internal_phy;
-> > +       bool internal_phy;
+On 28/07/17 02:15, Honghui Zhang wrote:
+> On Thu, 2017-07-27 at 17:42 +0200, Matthias Brugger wrote:
+>>
+>> On 07/27/2017 04:01 AM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>>> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>
+>>> In the commit 3c8f4ad85c4b ("memory/mediatek: add support for mt2701"),
+>>> the larb->larbid was added but not initialized.
+>>> Mediatek's gen1 smi need this hardware larbid information to get the
+>>> register offset which controls whether enable iommu for this larb.
+>>> This patch add the initialize routine for larbid.
+>>>
+>>> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>   drivers/memory/mtk-smi.c | 9 +++++++++
+>>>   1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+>>> index 2b798bb4..fe36b3e 100644
+>>> --- a/drivers/memory/mtk-smi.c
+>>> +++ b/drivers/memory/mtk-smi.c
+>>> @@ -240,6 +240,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>>>   	struct device *dev = &pdev->dev;
+>>>   	struct device_node *smi_node;
+>>>   	struct platform_device *smi_pdev;
+>>> +	int err;
+>>>   
+>>>   	if (!dev->pm_domain)
+>>>   		return -EPROBE_DEFER;
+>>> @@ -263,6 +264,14 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>>>   		return PTR_ERR(larb->smi.clk_smi);
+>>>   	larb->smi.dev = dev;
+>>>   
+>>> +	err = of_property_read_u32(dev->of_node, "mediatek,larbid",
+>>> +				   &larb->larbid);
+>>> +	if (err && of_device_is_compatible(dev->of_node,
+>>> +					   "mediatek,mt2701-smi-larb")) {
+>>
+>> Instead of checking hard-coded bindings you should be able to determine the 
+>> generation using the smi_pdev.
+>> Apart I think it would be better to check for mediatek,larbid only on 
+>> MTK_SIM_GEN1, or do I miss something?
+>>
 > 
-> Nit: please add a verb to the name, like "has_internal_phy",
-> or even "soc_has_internal_phy". This makes it clear what this
-> property represents.
+> Hi, Matthias,
+> 	There's a new SoC of mediatek which use MTK_SMI_GEN2 hardware, but it
+> has 2 iommus and 2 smi_common, and we are intend to send it's driver
+> soon. It need the mediatek,larbid to identify which iommu should be
+> binding to.
 > 
-> ChenYu
+> This patch use the hard-code bindings will make the future work easier.
 
-I will use soc_has_internal_phy
+In that case, might it make sense to add some indicator like "bool
+need_larb_id" to struct mtk_smi_larb_gen?
 
-Thanks
+Robin.
+
+> 
+> thanks.
+>> Regards,
+>> Matthias
+>>
+>>> +		dev_err(dev, "missing larbid property\n");
+>>> +		return err;
+>>> +	}
+>>> +
+>>>   	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
+>>>   	if (!smi_node)
+>>>   		return -EINVAL;
+>>>
+>>
+>> _______________________________________________
+>> Linux-mediatek mailing list
+>> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> 
