@@ -1,53 +1,42 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v6 6/7] dt-bindings: display: rockchip: fill Documents for
- vop series
-Date: Fri, 28 Jul 2017 11:25:36 +0200
-Message-ID: <2981514.6HN6ClsfAP@phil>
-References: <1501049930-5794-1-git-send-email-mark.yao@rock-chips.com>
- <1501049975-6185-1-git-send-email-mark.yao@rock-chips.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/3] net-next: stmmac: support future possible
+ different internal phy mode
+Date: Fri, 28 Jul 2017 11:28:15 +0200
+Message-ID: <20170728092818.23419-1-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501049975-6185-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBTMI5TFQKGQEOXHPMJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: icenowy-h8G6r0blFSE@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCkFtIE1pdHR3b2NoLCAyNi4gSnVsaSAyMDE3LCAxNDoxOTozNSBDRVNUIHNjaHJp
-ZWIgTWFyayBZYW86Cj4gU2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hp
-cHMuY29tPgo+IEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+
-IENoYW5nZXMgaW4gdjU6Cj4gLSBjbGVhbiBkb2N1bWVudCBjb21taXQgdGl0bGUKPiAtIG1vdmUg
-Y2hhbmdlcyBkZXNjcmlwdGlvbiBvdXQgb2YgZG9jdW1taXQgY29tbWl0IG1zZwo+IAo+IENoYW5n
-ZXMgaW4gdjI6Cj4gLSByZW5hbWUgcmszMjJ4IHRvIHJrMzIyOAo+IC0gY29ycmVjdCBzb21lIHZv
-cCByZWdpc3RlcnMgZGVmaW5lCj4gCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLXZvcC50eHQgfCA0ICsrKysKPiAgMSBmaWxlIGNo
-YW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAt
-dm9wLnR4dAo+IGluZGV4IDllYjNmMGEuLjVkODM1ZDkgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvcm9ja2NoaXAtdm9wLnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tj
-aGlwL3JvY2tjaGlwLXZvcC50eHQKPiBAQCAtOCw4ICs4LDEyIEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6Cj4gIC0gY29tcGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5n
-Cj4gIAkJInJvY2tjaGlwLHJrMzAzNi12b3AiOwo+ICAJCSJyb2NrY2hpcCxyazMyODgtdm9wIjsK
-PiArCQkicm9ja2NoaXAscmszMzY4LXZvcCI7Cj4gKwkJInJvY2tjaGlwLHJrMzM2Ni12b3AiOwo+
-ICAJCSJyb2NrY2hpcCxyazMzOTktdm9wLWJpZyI7Cj4gIAkJInJvY2tjaGlwLHJrMzM5OS12b3At
-bGl0IjsKPiArCQkicm9ja2NoaXAscmszMjI4LXZvcCI7Cj4gKwkJInJvY2tjaGlwLHJrMzMyOC12
-b3AiOwoKd2hhdCBpcyB5b3VyIG9yZGVyaW5nIHNjaGVtZSBoZXJlPwpBcyB0aGUgbnVtYmVyIG9m
-IHJrWFhYWCBzb2NzIHdpbGwgdmVyeSBsaWtlbHkgaW5jcmVhc2UgaW4gdGhlIGZ1dHVyZQpvcmRl
-cmluZyBhbHBoYW51bWVyaWNhbCBtaWdodCBtYWtlIGV2ZXJ5dGhpbmcgbW9yZSBtYW5hZ2VhYmxl
-IHdoZW4KdGhlIGxpc3QgZ3Jvd3MuCgpTbyBtYXliZSBzd2FwIHJrMzM2OCBhbmQgcmszMzY2IGFu
-ZCBtb3ZlIHJrMzIyOCtyazMzMjggdG8gc29ydGVkCnBvc2l0aW9ucz8KCgpIZWlrbwpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello
+
+The current way to find if the phy is internal is to compare DT phy-mode
+and emac_variant/internal_phy.
+But it will negate a possible future SoC where an external PHY use the
+same phy mode than the internal one.
+
+This patchs series adds a new way to find if the PHY is internal, via its
+compatible.
+
+Corentin Labbe (3):
+  dt-bindings: net: add compatible for internal sun8i-h3/sun8i-v3s PHYs
+  ARM: sunxi: h3/h5: Add sun8i-h3-ephy compatible
+  net-next: stmmac: dwmac-sun8i: choose internal PHY via compatible
+
+ Documentation/devicetree/bindings/net/dwmac-sun8i.txt |  4 ++--
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                    |  3 ++-
+ drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c     | 16 ++++++++++------
+ 3 files changed, 14 insertions(+), 9 deletions(-)
+
+-- 
+2.13.0
