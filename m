@@ -1,186 +1,280 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 0/5] STM32 DCMI camera interface crop support
-Date: Fri, 28 Jul 2017 12:04:57 +0200
-Message-ID: <1501236302-18097-1-git-send-email-hugues.fruchet@st.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 6/7] mailbox: bcm-flexrm-mailbox: Set msg_queue_len for
+ each channel
+Date: Fri, 28 Jul 2017 15:50:01 +0530
+Message-ID: <CABb+yY0rYaMdDgDkBZ+J62YnFRRRRRCw9FqyQ3kCHhno9CJTSQ@mail.gmail.com>
+References: <1500620142-910-1-git-send-email-anup.patel@broadcom.com>
+ <1500620142-910-7-git-send-email-anup.patel@broadcom.com> <CABb+yY1Pxhgvvit=0eZr66DpLJ3MDEvRPx9dwDPJM8PwiKXiew@mail.gmail.com>
+ <CAALAos_yh0bCMZFrSmf-c92pNMBGhLT05YFF0duhmpxgYec+_w@mail.gmail.com>
+ <CABb+yY3d1FvfB-NBVHLNfoFXGn9-8nFEdKBhXt4sBTr1vodhYw@mail.gmail.com>
+ <CAALAos9T0YtCvgjGCMVPn=dw2JKY=jTxz-v431NgpBCKFo1vVQ@mail.gmail.com>
+ <CABb+yY2x1Wb=RZhq+eUnM0wkcih4YkFDrKRgqhs1erGQGH3tdw@mail.gmail.com>
+ <CAALAos-aKDw8p2_BFausm+VC4teoAW22239+gnkPfFUaiZxB6w@mail.gmail.com>
+ <CABb+yY3fwPTSc0PKh44uvgdbvQJhu-X3O_L5EtumB6ovsaOdSw@mail.gmail.com>
+ <CAALAos9RoAbZcsyQV_U_aUeVSO9SMYNqNpqOdCF0ytNXK8SrnA@mail.gmail.com>
+ <CABb+yY2gj3SBTCzcGim0=c1G9SzAiQ0HxA1F24kjs-jS42Z+dg@mail.gmail.com>
+ <CAALAos-VXg9XcNOr6OyiefdnL=oajEi3JGjoFSf74HEJgBiWBA@mail.gmail.com>
+ <CABb+yY3=yOKfRP=JEuBNG+ssx6rqjuVSYFCLOJJxvTEkAh7H2w@mail.gmail.com> <CAALAos-vY+Cf226eQrRYQ+o0xfbSQOcWpSVzDeu_aZgxE+VQtg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAALAos-vY+Cf226eQrRYQ+o0xfbSQOcWpSVzDeu_aZgxE+VQtg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Devicetree List <devicetree@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset implements crop feature of Digital Camera Memory Interface
-(DCMI) of STMicroelectronics STM32 SoC series, allowing user to crop
-at pixel level inside sensor captured frame.
-
-This patchset follows discussions initiated from a first submission of DCMI
-crop support, see [1].
-
-First part of patches brings few fixes and cleanup in DCMI driver
-to prepare support of crop through g_/s_selection interface in latest
-commit.
-
-This has been tested on STM32F746G-DISCO + STM32F4DIS-CAM extension
-running OV9655 sensor, using a modified version of yavta [2] utility
-to support crop through S_SELECTION(V4L2_SEL_TGT_CROP) ioctl:
- yavta -s 480x272 -n 1 --capture=2 /dev/video0 --crop=0,0,480,272
-
-v4l2-compliance cropping test is failed due to OV9655 sensor supporting
-several discrete frame sizes and crop support added by DCMI interface [3]:
-  fail: v4l2-test-formats.cpp(1266): node->frmsizes_count[pixfmt] > 1
-    test Cropping: FAIL
-If sensor is restricted to only a single supported resolution, test is OK.
-Compliance test should be adapted to support this case.
-
-
-[1] http://www.mail-archive.com/linux-media@vger.kernel.org/msg114652.html
-[2] http://git.ideasonboard.org/?p=yavta.git;a=summary
-[3] see v4l2-compliance test report below
-
-===========
-= history =
-===========
-version 1:
-  - Initial version
-
-===================
-= v4l2-compliance =
-===================
-Below is the v4l2-compliance report for this current version of the DCMI camera interface.
-v4l2-compliance has been built from v4l-utils-1.12.5.
-
-~ # v4l2-compliance -s -f -d /dev/video0
-v4l2-compliance SHA   : f5f45e17ee98a0ebad7836ade2b34ceec909d751
-
-Driver Info:
-        Driver name   : stm32-dcmi
-        Card type     : STM32 Camera Memory Interface
-        Bus info      : platform:dcmi
-        Driver version: 4.12.0
-        Capabilities  : 0x85200001
-                Video Capture
-                Read/Write
-                Streaming
-                Extended Pix Format
-                Device Capabilities
-        Device Caps   : 0x05200001
-                Video Capture
-                Read/Write
-                Streaming
-                Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-        test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-        test second video open: OK
-        test VIDIOC_QUERYCAP: OK
-        test VIDIOC_G/S_PRIORITY: OK
-        test for unlimited opens: OK
-
-Debug ioctls:
-        test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-        test VIDIOC_LOG_STATUS: OK
-
-Input ioctls:
-        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-        test VIDIOC_ENUMAUDIO: OK (Not Supported)
-        test VIDIOC_G/S/ENUMINPUT: OK
-        test VIDIOC_G/S_AUDIO: OK (Not Supported)
-        Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-        test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-        Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-        test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Test input 0:
-
-        Control ioctls:
-                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-                test VIDIOC_QUERYCTRL: OK
-                test VIDIOC_G/S_CTRL: OK
-                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-                Standard Controls: 2 Private Controls: 0
-
-        Format ioctls:
-                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-                test VIDIOC_G/S_PARM: OK (Not Supported)
-                test VIDIOC_G_FBUF: OK (Not Supported)
-                test VIDIOC_G_FMT: OK
-                test VIDIOC_TRY_FMT: OK
-                test VIDIOC_S_FMT: OK
-                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-                fail: v4l2-test-formats.cpp(1266): node->frmsizes_count[pixfmt] > 1
-                test Cropping: FAIL
-                test Composing: OK (Not Supported)
-                fail: v4l2-test-formats.cpp(1633): node->can_scale && node->frmsizes_count[v4l_format_g_pixelformat(&cur)]
-                test Scaling: OK
-
-        Codec ioctls:
-                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-        Buffer ioctls:
-                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-                test VIDIOC_EXPBUF: OK
-
-Test input 0:
-
-Streaming ioctls:
-        test read/write: OK
-        test MMAP: OK
-        test USERPTR: OK (Not Supported)
-        test DMABUF: Cannot test, specify --expbuf-device
-
-Stream using all formats:
-        test MMAP for Format RGBP, Frame Size 160x120:
-                Crop 160x120@0x0, Stride 320, Field None: OK
-                Crop 0x0@0x0, Stride 320, Field None, SelTest: OK
-                Crop 160x120@0x0, Stride 320, Field None, SelTest: OK
-        test MMAP for Format RGBP, Frame Size 160x120:
-                Crop 160x120@0x0, Stride 320, Field None: OK
-        test MMAP for Format RGBP, Frame Size 160x120:
-                Crop 160x120@0x0, Stride 320, Field None: OK
-
-Total: 51, Succeeded: 50, Failed: 1, Warnings: 0
+On Fri, Jul 28, 2017 at 3:18 PM, Anup Patel <anup.patel@broadcom.com> wrote:
+> On Fri, Jul 28, 2017 at 2:34 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>> On Fri, Jul 28, 2017 at 2:19 PM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>> On Thu, Jul 27, 2017 at 5:23 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>>>> On Thu, Jul 27, 2017 at 11:20 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>>>> On Thu, Jul 27, 2017 at 10:29 AM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>>>>
+>>>>>>>>>>> Sorry for the delayed response...
+>>>>>>>>>>>
+>>>>>>>>>>> On Fri, Jul 21, 2017 at 9:16 PM, Jassi Brar <jassisinghbrar@gmail.com> wrote:
+>>>>>>>>>>>> Hi Anup,
+>>>>>>>>>>>>
+>>>>>>>>>>>> On Fri, Jul 21, 2017 at 12:25 PM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>>>>>>>>>>>> The Broadcom FlexRM ring (i.e. mailbox channel) can handle
+>>>>>>>>>>>>> larger number of messages queued in one FlexRM ring hence
+>>>>>>>>>>>>> this patch sets msg_queue_len for each mailbox channel to
+>>>>>>>>>>>>> be same as RING_MAX_REQ_COUNT.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>>>>>>>>>>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>  drivers/mailbox/bcm-flexrm-mailbox.c | 5 ++++-
+>>>>>>>>>>>>>  1 file changed, 4 insertions(+), 1 deletion(-)
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>>>>>> index 9873818..20055a0 100644
+>>>>>>>>>>>>> --- a/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>>>>>> +++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+>>>>>>>>>>>>> @@ -1683,8 +1683,11 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+>>>>>>>>>>>>>                 ret = -ENOMEM;
+>>>>>>>>>>>>>                 goto fail_free_debugfs_root;
+>>>>>>>>>>>>>         }
+>>>>>>>>>>>>> -       for (index = 0; index < mbox->num_rings; index++)
+>>>>>>>>>>>>> +       for (index = 0; index < mbox->num_rings; index++) {
+>>>>>>>>>>>>> +               mbox->controller.chans[index].msg_queue_len =
+>>>>>>>>>>>>> +                                               RING_MAX_REQ_COUNT;
+>>>>>>>>>>>>>                 mbox->controller.chans[index].con_priv = &mbox->rings[index];
+>>>>>>>>>>>>> +       }
+>>>>>>>>>>>>>
+>>>>>>>>>>>> While writing mailbox.c I wasn't unaware that there is the option to
+>>>>>>>>>>>> choose the queue length at runtime.
+>>>>>>>>>>>> The idea was to keep the code as simple as possible. I am open to
+>>>>>>>>>>>> making it a runtime thing, but first, please help me understand how
+>>>>>>>>>>>> that is useful here.
+>>>>>>>>>>>>
+>>>>>>>>>>>> I understand FlexRm has a ring buffer of RING_MAX_REQ_COUNT(1024)
+>>>>>>>>>>>> elements. Any message submitted to mailbox api can be immediately
+>>>>>>>>>>>> written onto the ringbuffer if there is some space.
+>>>>>>>>>>>> Is there any mechanism to report back to a client driver, if its
+>>>>>>>>>>>> message in ringbuffer failed "to be sent"?
+>>>>>>>>>>>> If there isn't any, then I think, in flexrm_last_tx_done() you should
+>>>>>>>>>>>> simply return true if there is some space left in the rung-buffer,
+>>>>>>>>>>>> false otherwise.
+>>>>>>>>>>>
+>>>>>>>>>>> Yes, we have error code in "struct brcm_message" to report back
+>>>>>>>>>>> errors from send_message. In our mailbox clients, we check
+>>>>>>>>>>> return value of mbox_send_message() and also the error code
+>>>>>>>>>>> in "struct brcm_message".
+>>>>>>>>>>>
+>>>>>>>>>> I meant after the message has been accepted in the ringbuffer but the
+>>>>>>>>>> remote failed to receive it.
+>>>>>>>>>
+>>>>>>>>> Yes, even this case is handled.
+>>>>>>>>>
+>>>>>>>>> In case of IO errors after message has been put in ring buffer, we get
+>>>>>>>>> completion message with error code and mailbox client drivers will
+>>>>>>>>> receive back "struct brcm_message" with error set.
+>>>>>>>>>
+>>>>>>>>> You can refer flexrm_process_completions() for more details.
+>>>>>>>>>
+>>>>>> It doesn't seem to be what I suggest. I see two issues in
+>>>>>> flexrm_process_completions()
+>>>>>> 1) It calls mbox_send_message(), which is a big NO for a controller
+>>>>>> driver. Why should you have one more message stored outside of
+>>>>>> ringbuffer?
+>>>>>
+>>>>> The "last_pending_msg" in each FlexRM ring was added to fit FlexRM
+>>>>> in Mailbox framework.
+>>>>>
+>>>>> We don't have any IRQ for TX done so "txdone_irq" out of the question for
+>>>>> FlexRM. We only have completions for both success or failures (IO errors).
+>>>>>
+>>>>> This means we have to use "txdone_poll" for FlexRM. For "txdone_poll",
+>>>>> we have to provide last_tx_done() callback. The last_tx_done() callback
+>>>>> is supposed to return true if last send_data() call succeeded.
+>>>>>
+>>>>> To implement last_tx_done() in FlexRM driver, we added "last_pending_msg".
+>>>>>
+>>>>> When "last_pending_msg" is NULL it means last call to send_data() succeeded
+>>>>> and when "last_pending_msg" is != NULL it means last call to send_data()
+>>>>> did not go through due to lack of space in FlexRM ring.
+>>>>>
+>>>> It could be simpler.
+>>>> Since flexrm_send_data() is essentially about putting the message in
+>>>> the ring-buffer (and not about _transmission_ failures), the
+>>>> last_tx_done() should simply return true if requests_ida has not all
+>>>> ids allocated. False otherwise.
+>>>
+>>> It's not that simple because we have two cases in-which
+>>> send_data() will fail:
+>>> 1. It run-out of IDs in requests_ida
+>>> 2. There is no room in BD queue of FlexRM ring. This because each
+>>> brcm_message can be translated into variable number of descriptors.
+>>> In fact, using SPU2 crypto client we have one brcm_message translating
+>>> into 100's of descriptors. All-in-all few messages (< 1024) can also
+>>> fill-up the BD queue of FlexRM ring.
+>>>
+>> OK let me put it abstractly... return false if "there is no space for
+>> another message in the ringbuffer", true otherwise.
+>
+> Let say at time T, there was no space in BD queue. Now at
+> time T+X when last_tx_done() it is possible that BD queue
+> has space because FlexRM has processed some more
+> descriptor.
+>
+> I think last_tx_done() for "txdone_poll" method will require
+> some information passing from send_data() callback to
+> last_tx_done() which is last_pending_msg for FlexRM driver.
+>
+The problem is flexrm_send_data() accepts single as well as batched
+messages, so each send_data() can require different spaces. If you
+make flexrm_send_data() accept fixed size messages then you can simply
+set a flag (say, last_tx_busy) when max possible messages are queued
+and unset that flag in flexrm_process_completions().
 
 
-Hugues Fruchet (5):
-  [media] stm32-dcmi: catch dma submission error
-  [media] stm32-dcmi: revisit control register handling
-  [media] stm32-dcmi: cleanup variable/fields namings
-  [media] stm32-dcmi: set default format at open()
-  [media] stm32-dcmi: g_/s_selection crop support
+> Anyways, I plan to try "txdone_ack" method so I will
+> remove last_tx_done() and last_pending_msg both.
+> What do you think?
+>
+Sounds good.
 
- drivers/media/platform/stm32/stm32-dcmi.c | 527 +++++++++++++++++++++++++-----
- 1 file changed, 448 insertions(+), 79 deletions(-)
 
--- 
-1.9.1
+>>
+>>>>>>
+>>>>>> 2) It calls mbox_chan_received_data()  which is for messages received
+>>>>>> from the remote. And not the way to report failed _transmission_, for
+>>>>>> which the api calls back mbox_client.tx_done() .  In your client
+>>>>>> driver please populate mbox_client.tx_done() and see which message is
+>>>>>> reported "sent fine" when.
+>>>>>>
+>>>>>>
+>>>>>>>>>> There seems no such provision. IIANW, then you should be able to
+>>>>>>>>>> consider every message as "sent successfully" once it is in the ring
+>>>>>>>>>> buffer i.e, immediately after mbox_send_message() returns 0.
+>>>>>>>>>> In that case I would think you don't need more than a couple of
+>>>>>>>>>> entries out of MBOX_TX_QUEUE_LEN ?
+>>>>>>>>>
+>>>>>>>>> What I am trying to suggest is that we can take upto 1024 messages
+>>>>>>>>> in a FlexRM ring but the MBOX_TX_QUEUE_LEN limits us queuing
+>>>>>>>>> more messages. This issue manifest easily when multiple CPUs
+>>>>>>>>> queues to same FlexRM ring (i.e. same mailbox channel).
+>>>>>>>>>
+>>>>>>>> OK then, I guess we have to make the queue length a runtime decision.
+>>>>>>>
+>>>>>>> Do you agree with approach taken by PATCH5 and PATCH6 to
+>>>>>>> make queue length runtime?
+>>>>>>>
+>>>>>> I agree that we may have to get the queue length from platform, if
+>>>>>> MBOX_TX_QUEUE_LEN is limiting performance. That will be easier on both
+>>>>>> of us. However I suspect the right fix for _this_ situation is in
+>>>>>> flexrm driver. See above.
+>>>>>
+>>>>> The current implementation is trying to model FlexRM using "txdone_poll"
+>>>>> method and that's why we have dependency on MBOX_TX_QUEUE_LEN
+>>>>>
+>>>>> I think what we really need is new method for "txdone" to model ring
+>>>>> manager HW (such as FlexRM). Let's call it "txdone_none".
+>>>>>
+>>>>> For "txdone_none", it means there is no "txdone" reporting in HW
+>>>>> and mbox_send_data() should simply return value returned by
+>>>>> send_data() callback. The last_tx_done() callback is not required
+>>>>> for "txdone_none" and MBOX_TX_QUEUE_LEN also has no
+>>>>> effect on "txdone_none". Both blocking and non-blocking clients
+>>>>> are treated same for "txdone_none".
+>>>>>
+>>>> That is already supported :)
+>>>
+>>> If you are referring to "txdone_ack" then this cannot be used here
+>>> because for "txdone_ack" we have to call mbox_chan_txdon() API
+>>> after writing descriptors in send_data() callback which will cause
+>>> dead-lock in tx_tick() called by mbox_chan_txdone().
+>>>
+>> Did you read my code snippet below?
+>>
+>> It's not mbox_chan_txdone(), but mbox_client_txdone() which is called
+>> by the client.
+>>
+>>>>
+>>>> In drivers/dma/bcm-sba-raid.c
+>>>>
+>>>> sba_send_mbox_request(...)
+>>>> {
+>>>>            ......
+>>>>         req->msg.error = 0;
+>>>>         ret = mbox_send_message(sba->mchans[mchans_idx], &req->msg);
+>>>>         if (ret < 0) {
+>>>>                 dev_err(sba->dev, "send message failed with error %d", ret);
+>>>>                 return ret;
+>>>>         }
+>>>>         ret = req->msg.error;
+>>>>         if (ret < 0) {
+>>>>                 dev_err(sba->dev, "message error %d", ret);
+>>>>                 return ret;
+>>>>         }
+>>>>           .....
+>>>> }
+>>>>
+>>>> Here you _do_ assume that as soon as the mbox_send_message() returns,
+>>>> the last_tx_done() is true. In other words, this is a case of client
+>>>> 'knows_txdone'.
+>>>>
+>>>> So ideally you should specify cl->knows_txdone = true during
+>>>> mbox_request_channel() and have ...
+>>>>
+>>>> sba_send_mbox_request(...)
+>>>> {
+>>>>         ret = mbox_send_message(sba->mchans[mchans_idx], &req->msg);
+>>>>         if (ret < 0) {
+>>>>                 dev_err(sba->dev, "send message failed with error %d", ret);
+>>>>                 return ret;
+>>>>         }
+>>>>
+>>>>         ret = req->msg.error;
+>>>>
+>>>>        /* Message successfully placed in the ringbuffer, i.e, done */
+>>>>        mbox_client_txdone(sba->mchans[mchans_idx], ret);
+>>>>
+>>>>        if (ret < 0) {
+>>>>                 dev_err(sba->dev, "message error %d", ret);
+>>>>                 return ret;
+>>>>         }
+>>>>
+>>>>         .....
+>>>> }
+>>>>
+>>>
+>>> I think we need to improve mailbox.c so that
+>>> mbox_chan_txdone() can be called from
+>>> send_data() callback.
+>>>
+>> No please. Other clients call mbox_send_message() followed by
+>> mbox_client_txdone(), and they are right. For example,
+>> drivers/firmware/tegra/bpmp.c
+>
+> OK so I got confused between mbox_chan_txdone() and
+> mbox_client_txdone().
+>
+> We should do mbox_client_txdone() from mailbox client
+> when mbox_chan txmethod is ACK.
+>
+Yes.
+
+Thanks.
