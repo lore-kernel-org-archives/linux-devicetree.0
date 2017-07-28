@@ -1,47 +1,46 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 2/6] dma: bcm-sba-raid: Peek mbox when we are left with
- no free requests
-Date: Fri, 28 Jul 2017 08:45:01 +0530
-Message-ID: <20170728031500.GS3053@localhost>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/6] dma: bcm-sba-raid: Peek mbox when we are left with no
+ free requests
+Date: Fri, 28 Jul 2017 09:09:45 +0530
+Message-ID: <CAALAos-9mNg+pkj+F40ByRZWT5U_y7OeW19RxD_cR+8eq-_wdA@mail.gmail.com>
 References: <1501047404-14456-1-git-send-email-anup.patel@broadcom.com>
  <1501047404-14456-3-git-send-email-anup.patel@broadcom.com>
- <20170726171028.GJ3053@localhost>
- <CAALAos_+ba+fg8wiqtgzWdf3L554G_jW83-J7jFoDNni5_yS9w@mail.gmail.com>
+ <20170726171028.GJ3053@localhost> <CAALAos_+ba+fg8wiqtgzWdf3L554G_jW83-J7jFoDNni5_yS9w@mail.gmail.com>
+ <20170728031500.GS3053@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAALAos_+ba+fg8wiqtgzWdf3L554G_jW83-J7jFoDNni5_yS9w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dan Williams <dan.j.williams@intel.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Device Tree <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170728031500.GS3053@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 10:25:25AM +0530, Anup Patel wrote:
-> On Wed, Jul 26, 2017 at 10:40 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> > On Wed, Jul 26, 2017 at 11:06:40AM +0530, Anup Patel wrote:
-> >> We should peek mbox channels when we are left with no free
-> >> sba_requests in sba_alloc_request()
-> >
-> > and why is the world should we do that, how does that help??
-> 
-> When setting up RAID array on several NVMe disk we observed
-> that sba_alloc_request() start failing (due to no free requests left)
-> and RAID array setup becomes very slow.
-> 
-> Doing mbox channel peek when we have no free requests left,
-> improves performance of RAID array setup.
+On Fri, Jul 28, 2017 at 8:45 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Jul 27, 2017 at 10:25:25AM +0530, Anup Patel wrote:
+>> On Wed, Jul 26, 2017 at 10:40 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Wed, Jul 26, 2017 at 11:06:40AM +0530, Anup Patel wrote:
+>> >> We should peek mbox channels when we are left with no free
+>> >> sba_requests in sba_alloc_request()
+>> >
+>> > and why is the world should we do that, how does that help??
+>>
+>> When setting up RAID array on several NVMe disk we observed
+>> that sba_alloc_request() start failing (due to no free requests left)
+>> and RAID array setup becomes very slow.
+>>
+>> Doing mbox channel peek when we have no free requests left,
+>> improves performance of RAID array setup.
+>
+> How about documenting this tribal knowledge in the changelog. Changelogs are
+> very useful, 6 months down the line, you will struggle to remember why this
+> was changed..
 
-How about documenting this tribal knowledge in the changelog. Changelogs are
-very useful, 6 months down the line, you will struggle to remember why this
-was changed..
+Sure, I will have detailed commit description for this.
 
-> 
-> This change is inspired from mv_chan_alloc_slot() implemented
-> in drivers/dma/mv_xor.c
-> 
-> Regards,
-> Anup
-
--- 
-~Vinod
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
