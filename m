@@ -1,42 +1,38 @@
-From: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: "David.Wu" <david.wu@rock-chips.com>
 Subject: Re: [PATCH v2 01/11] net: phy: Add rockchip phy driver support
-Date: Fri, 28 Jul 2017 15:48:10 +0800
-Message-ID: <71a83db0-61e1-5852-30af-526d8a5d2c60@rock-chips.com>
+Date: Fri, 28 Jul 2017 16:19:52 +0800
+Message-ID: <c92ffbe9-dfb0-0fd7-680d-699c31902534@rock-chips.com>
 References: <1501160156-30328-1-git-send-email-david.wu@rock-chips.com>
  <1501160156-30328-2-git-send-email-david.wu@rock-chips.com>
- <20170727133800.GC18666@lunn.ch>
+ <807c43ee-8421-c0b3-8aea-6091bef07a4c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170727133800.GC18666-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <807c43ee-8421-c0b3-8aea-6091bef07a4c@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
+Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Florian,
 
-ÔÚ 2017/7/27 21:38, Andrew Lunn Ð´µÀ:
+åœ¨ 2017/7/28 0:51, Florian Fainelli å†™é“:
+>> +}
+>> +
+>> +static int rockchip_internal_phy_config_init(struct phy_device *phydev)
+>> +{
+>> +	int val;
+>> +
 >> +	/*
->> +	 * If mode switch happens from 10BT to 100BT, all DSP/AFE
->> +	 * registers are set to default values. So any AFE/DSP
->> +	 * registers have to be re-initialized in this case.
+>> +	 * The auto MIDX has linked problem on some board,
+>> +	 * workround to disable auto MDIX.
 >> +	 */
-> 
-> Hi David
-> 
-> Are they also lost on suspend and resume?
+> If this a board-specific problem you may consider register a PHY fixup
+> for the affected boards, or introduce a specific property to illustrate
+> that MDI-X is broken.
 
-Yes, i will add the re-initialized on suspend and resume£¬and thank you£¡
+You mean is that if I need disable Auto-mdix, then I'm going to add a 
+property to DTS, from here to decide whether or not to close Auto-mdix?
 
 > 
->      Andrew
-> 
-> 
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
