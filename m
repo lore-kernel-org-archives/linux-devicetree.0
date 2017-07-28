@@ -1,111 +1,114 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/6] dma: bcm-sba-raid: Improve memory allocation in SBA
- RAID driver
-Date: Fri, 28 Jul 2017 09:16:35 +0530
-Message-ID: <CAALAos9LvXH_hxeTP7VFGKD+=G5ynkCkOJ=+i4gs+qRJko5dRA@mail.gmail.com>
-References: <1501047404-14456-1-git-send-email-anup.patel@broadcom.com>
- <1501047404-14456-2-git-send-email-anup.patel@broadcom.com>
- <20170726170932.GI3053@localhost> <CAALAos_xYyvTBZB2C+tt7NvWz-4TX-mXDVJwGqhvN0FTy8QA-Q@mail.gmail.com>
- <20170728031342.GR3053@localhost>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Fri, 28 Jul 2017 06:57:24 +0200
+Message-ID: <20170728045724.GA27903@airbook.vandijck-laurijssen.be>
+References: <20170724230521.1436-1-fcooper@ti.com>
+ <20170724230521.1436-3-fcooper@ti.com>
+ <20170726164124.GL12049@lunn.ch>
+ <355b90b3-97ce-1057-6617-d5d709449c48@hartkopp.net>
+ <a77fe395-33c7-9405-b51a-5d3372e5c58b@ti.com>
+ <fe99189e-d077-ba65-4dfc-a4d8beee62b3@hartkopp.net>
+ <932602fe-d06a-7a17-5a0c-24265cf2e643@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728031342.GR3053@localhost>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <932602fe-d06a-7a17-5a0c-24265cf2e643@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 8:43 AM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jul 27, 2017 at 09:42:33AM +0530, Anup Patel wrote:
->> On Wed, Jul 26, 2017 at 10:39 PM, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->> > On Wed, Jul 26, 2017 at 11:06:39AM +0530, Anup Patel wrote:
->
->> >>  drivers/dma/bcm-sba-raid.c | 439 +++++++++++++++++++++++----------------------
->> >>  1 file changed, 226 insertions(+), 213 deletions(-)
->> >>
->> >> diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
->> >> index e41bbc7..6d15fed 100644
->> >> --- a/drivers/dma/bcm-sba-raid.c
->> >> +++ b/drivers/dma/bcm-sba-raid.c
->> >> @@ -48,7 +48,8 @@
->> >>
->> >>  #include "dmaengine.h"
->> >>
->> >> -/* SBA command related defines */
->> >> +/* ====== Driver macros and defines ===== */
->> >
->> > why this noise, seems unrelated to the change!
->>
->> This is just minor beautification. Again, I will put this
->> in separate patch.
->
-> Well you can't shove garlands under an unrelated change. By all means throw
-> the whole garden out there, but please as a separate patch
 
-Sure, I will have separate patch for this beautification.
+> 
+> On 07/27/2017 01:47 PM, Oliver Hartkopp wrote:
+> > On 07/26/2017 08:29 PM, Franklin S Cooper Jr wrote:
+> >>
+> > 
+> >> I'm fine with switching to using bitrate instead of speed. Kurk was
+> >> originally the one that suggested to use the term arbitration and data
+> >> since thats how the spec refers to it. Which I do agree with. But your
+> >> right that in the drivers (struct can_priv) we just use bittiming and
+> >> data_bittiming (CAN-FD timings). I don't think adding "fd" into the
+> >> property name makes sense unless we are calling it something like
+> >> "max-canfd-bitrate" which I would agree is the easiest to understand.
+> >>
+> >> So what is the preference if we end up sticking with two properties?
+> >> Option 1 or 2?
+> >>
+> >> 1)
+> >> max-bitrate
+> >> max-data-bitrate
+> >>
+> >> 2)
+> >> max-bitrate
+> >> max-canfd-bitrate
+> >>
+> >>
+> > 
+> > 1
+> > 
+> >>> A CAN transceiver is limited in bandwidth. But you only have one RX and
+> >>> one TX line between the CAN controller and the CAN transceiver. The
+> >>> transceiver does not know about CAN FD - it has just a physical(!) layer
+> >>> with a limited bandwidth. This is ONE limitation.
+> >>>
+> >>> So I tend to specify only ONE 'max-bitrate' property for the
+> >>> fixed-transceiver binding.
+> >>>
+> >>> The fact whether the CAN controller is CAN FD capable or not is provided
+> >>> by the netlink configuration interface for CAN controllers.
+> >>
+> >> Part of the reasoning to have two properties is to indicate that you
+> >> don't support CAN FD while limiting the "arbitration" bit rate.
+> > 
+> > ??
+> > 
+> > It's a physical layer device which only has a bandwidth limitation.
+> > The transceiver does not know about CAN FD.
+> > 
+> >> With one
+> >> property you can not determine this and end up having to make some
+> >> assumptions that can quickly end up biting people.
+> > 
+> > Despite the fact that the transceiver does not know anything about ISO
+> > layer 2 (CAN/CAN FD) the properties should look like
+> > 
+> >     max-bitrate
+> >     canfd-capable
+> > 
+> > then.
+> > 
+> > But when the tranceiver is 'canfd-capable' agnostic, why provide a
+> > property for it?
+> > 
+> > Maybe I'm wrong but I still can't follow your argumentation ideas.
+> 
 
->
->>
->> >
->> >> +
->> >>  #define SBA_TYPE_SHIFT                                       48
->> >>  #define SBA_TYPE_MASK                                        GENMASK(1, 0)
->> >>  #define SBA_TYPE_A                                   0x0
->> >> @@ -82,39 +83,41 @@
->> >>  #define SBA_CMD_WRITE_BUFFER                         0xc
->> >>  #define SBA_CMD_GALOIS                                       0xe
->> >>
->> >> -/* Driver helper macros */
->> >> +#define SBA_MAX_REQ_PER_MBOX_CHANNEL                 8192
->> >> +
->> >>  #define to_sba_request(tx)           \
->> >>       container_of(tx, struct sba_request, tx)
->> >>  #define to_sba_device(dchan)         \
->> >>       container_of(dchan, struct sba_device, dma_chan)
->> >>
->> >> -enum sba_request_state {
->> >> -     SBA_REQUEST_STATE_FREE = 1,
->> >> -     SBA_REQUEST_STATE_ALLOCED = 2,
->> >> -     SBA_REQUEST_STATE_PENDING = 3,
->> >> -     SBA_REQUEST_STATE_ACTIVE = 4,
->> >> -     SBA_REQUEST_STATE_RECEIVED = 5,
->> >> -     SBA_REQUEST_STATE_COMPLETED = 6,
->> >> -     SBA_REQUEST_STATE_ABORTED = 7,
->> >> +/* ===== Driver data structures ===== */
->> >> +
->> >> +enum sba_request_flags {
->> >> +     SBA_REQUEST_STATE_FREE          = 0x001,
->> >> +     SBA_REQUEST_STATE_ALLOCED       = 0x002,
->> >> +     SBA_REQUEST_STATE_PENDING       = 0x004,
->> >> +     SBA_REQUEST_STATE_ACTIVE        = 0x008,
->> >> +     SBA_REQUEST_STATE_RECEIVED      = 0x010,
->> >> +     SBA_REQUEST_STATE_COMPLETED     = 0x020,
->> >> +     SBA_REQUEST_STATE_ABORTED       = 0x040,
->> >> +     SBA_REQUEST_STATE_MASK          = 0x0ff,
->> >> +     SBA_REQUEST_FENCE               = 0x100,
->> >
->> > how does this help in mem alloctn?
->
-> ??
+The transceiver does not know about CAN FD, but CAN FD uses
+the different restrictions of the arbitration & data phase in the CAN
+frame, i.e. during arbitration, the RX must indicate the wire
+(dominant/recessive) within 1 bit time, during data in CAN FD, this is
+not necessary.
 
-Ahh, I missed to address this comment.
+So while _a_ transceiver may be spec'd to 1MBit during arbitration,
+CAN FD packets may IMHO exceed that speed during data phase.
+That was the whole point of CAN FD: exceed the limits required for
+correct arbitration on transceiver & wire.
 
-Currently, we have separate "bool" flag for fenced
-sba_request and separate "state" variable in
-sba_request. We are have merged this two things
-in common "u32 flags" in sba_request. In future,
-we can use more bits in "u32 flags" as required
-without disturbing the sba_request.
+So I do not agree on the single bandwidth limitation.
 
-I will make this separate patch.
+The word 'max-arbitration-bitrate' makes the difference very clear.
 
-I agree, I have covered many changes in PATCH1
-which makes it hard for you to review.
+> Your right. I spoke to our CAN transceiver team and I finally get your
+> points.
+> 
+> So yes using "max-bitrate" alone is all we need. Sorry for the confusion
+> and I'll create a new rev using this approach.
+> > 
+> > Regards,
+> > Oliver
 
-Thanks,
-Anup
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards,
+Kurt
