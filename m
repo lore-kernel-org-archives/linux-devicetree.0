@@ -1,37 +1,170 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/1] staging: pi433: fix problem with division in
- rf69_set_deviation
-Date: Fri, 28 Jul 2017 17:01:18 -0700
-Message-ID: <20170729000118.GA28861@kroah.com>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
- <201707172156.DCyTyWc2%fengguang.wu@intel.com>
- <652336354.3806.1500549785404@ox.hosteurope.de>
- <20170720113705.d65hxm3jbki2ynqd@mwanda>
- <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
- <255867683.7064.1500566196444@ox.hosteurope.de>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT
+ entries
+Date: Fri, 28 Jul 2017 17:03:39 -0700
+Message-ID: <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
+References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
+ <1501020372-19607-2-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <255867683.7064.1500566196444-mPx3TeDXVI9fnkZfMEZNjw@public.gmane.org>
+In-Reply-To: <1501020372-19607-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
-Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, driverdevel <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 20, 2017 at 05:56:36PM +0200, Marcus Wolf wrote:
-> Fixes problem with division in rf69_set_deviation
+On 07/25/2017 03:06 PM, Jon Mason wrote:
+> Cache related issues with DMA rings and performance issues related to
+> caching are being caused by not properly setting the "dma-coherent" flag
+> in the device tree entries.  Adding it here to correct the issue.
 > 
-> Fixes: 874bcba65f9a ("staging: pi433: New driver")
-> Signed-off-by: Marcus Wolf <linux-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
-> 
-> diff --git a/drivers/staging/pi433/rf69.c b/drivers/staging/pi433/rf69.c
-> --- a/drivers/staging/pi433/rf69.c
-> +++ b/drivers/staging/pi433/rf69.c
-> @@ -221,7 +221,7 @@ int rf69_set_frequency(struct spi_device *spi, u32
-> frequency)
+> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
+> Fixes: 3107fa5bcfb2 ("ARM: dts: NSP: Add SD/MMC support")
+> Fixes: 13d04f20935c ("ARM: dts: NSP: Add AMAC entries")
+> Fixes: 5aeda7bf8a1e ("ARM: dts: NSP: Add and enable amac2")
+> Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+> Fixes: 1d8ece6639e1 ("ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree")
+> Fixes: bf2289bedef4 ("ARM: dts: NSP: Add Switch Register Access Block node")
 
-Patch is line-wrapped and does not apply :(
+The SRAB block is not DMA capable, so this seems a bit superfluous here.
+
+Do you want to submit a patch that omits PL330 for now and adds it
+eventually later so I can proceed with applying patches 2 & 3 for this
+cycle?
+
+
+> Fixes: 0f9f27a36d09 ("ARM: dts: NSP: Add I2C support to the DT")
+> Fixes: 8dbcad020f2e ("ARM: dts: nsp: Add sata device tree entry")
+> Fixes: 522199029fdc ("ARM: dts: NSP: Fix PCIE DT issue")
+> ---
+>  arch/arm/boot/dts/bcm-nsp.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+> index 7204d1def23d..c8d734d9f5fc 100644
+> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+> @@ -207,6 +207,7 @@
+>  			clocks = <&iprocslow>;
+>  			clock-names = "apb_pclk";
+>  			#dma-cells = <1>;
+> +			dma-coherent;
+>  		};
+>  
+>  		sdio: sdhci@21000 {
+> @@ -215,6 +216,7 @@
+>  			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+>  			sdhci,auto-cmd12;
+>  			clocks = <&lcpll0 BCM_NSP_LCPLL0_SDIO_CLK>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -224,6 +226,7 @@
+>  			      <0x110000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -233,6 +236,7 @@
+>  			      <0x111000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -242,6 +246,7 @@
+>  			      <0x112000 0x1000>;
+>  			reg-names = "amac_base", "idm_base";
+>  			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -252,6 +257,7 @@
+>  			#mbox-cells = <1>;
+>  			brcm,rx-status-len = <32>;
+>  			brcm,use-bcm-hdr;
+> +			dma-coherent;
+>  		};
+>  
+>  		nand: nand@26000 {
+> @@ -325,6 +331,7 @@
+>  			compatible = "generic-ehci";
+>  			reg = <0x2a000 0x100>;
+>  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -332,6 +339,7 @@
+>  			compatible = "generic-ohci";
+>  			reg = <0x2b000 0x100>;
+>  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -364,6 +372,7 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  
+> +			dma-coherent;
+>  			status = "disabled";
+>  
+>  			/* ports are defined in board DTS */
+> @@ -376,6 +385,7 @@
+>  			#size-cells = <0>;
+>  			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
+>  			clock-frequency = <100000>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  		};
+>  
+> @@ -446,6 +456,7 @@
+>  			interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> +			dma-coherent;
+>  			status = "disabled";
+>  
+>  			sata0: sata-port@0 {
+> @@ -483,6 +494,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi0>;
+> @@ -519,6 +531,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi1>;
+> @@ -555,6 +568,7 @@
+>  		 */
+>  		ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
+>  
+> +		dma-coherent;
+>  		status = "disabled";
+>  
+>  		msi-parent = <&msi2>;
+> 
+
+
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
