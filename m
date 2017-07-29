@@ -1,41 +1,58 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 3/5] net: stmmac: Add Adaptrum Anarion GMAC glue layer
-Date: Fri, 28 Jul 2017 19:01:55 -0700 (PDT)
-Message-ID: <20170728.190155.457209566729295513.davem@davemloft.net>
-References: <20170728220707.13960-1-alex.g@adaptrum.com>
-        <20170728220707.13960-4-alex.g@adaptrum.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: ata: add DT bindings for MediaTek SATA
+ controller
+Date: Sat, 29 Jul 2017 11:41:11 +0800
+Message-ID: <1501299671.12447.4.camel@mtkswgap22>
+References: <cover.1501134896.git.ryder.lee@mediatek.com>
+         <45c7b2abc65b0d7b5b945763837811296e56835f.1501134896.git.ryder.lee@mediatek.com>
+         <7adf5e2c-4678-3e91-1036-f5e82d23329f@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728220707.13960-4-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <7adf5e2c-4678-3e91-1036-f5e82d23329f@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Date: Fri, 28 Jul 2017 15:07:03 -0700
-
-> Before the GMAC on the Anarion chip can be used, the PHY interface
-> selection must be configured with the DWMAC block in reset.
+On Fri, 2017-07-28 at 12:20 +0300, Sergei Shtylyov wrote:
+> > +Required properties:
+> > + - compatible	   : Must be "mediatek,ahci".
+> > + - reg		   : Physical base addresses and length of register sets.
+> > + - interrupts	   : Interrupt associated with the SATA device.
+> > + - interrupt-names : Associated name must be: "hostc".
+> > + - clocks	   : The phandle for the clock.
 > 
-> This layer covers a block containing only two registers. Although it
-> is possible to model this as a reset controller and use the "resets"
-> property of stmmac, it's much more intuitive to include this in the
-> glue layer instead.
+>     Your example shows that you need both phandle and specifier (afetr phandle).
 > 
-> At this time only RGMII is supported, because it is the only mode
-> which has been validated hardware-wise.
+> > + - clock-names	   : Associated name must be: "ahb", "axi", "asic", "rbc", "pm"
+> > + - phys		   : The phandle for the PHY port.
 > 
-> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+>      Likewise.
 
-I don't see how this fits into any patch series at all.  If this is
-part of a series you posted elsewhere, you should keep netdev@ on
-all such postings so people there can review the change in-context.
+Oh yeah, I forgot about that.
 
-Thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > + - phy-names	   : Associated name must be: "sata-phy".
+> > + - ports-implemented : Mask that indicates which ports that the HBA supports
+> > +		       are available for software to use. Useful if PORTS_IMPL
+> > +		       is not programmed by the BIOS, which is true with some
+> > +		       embedded SOC's.
+> 
+>     An empty line wouldn't hurt here...
+
+Okay.
+
+> > +Optional properties:
+> > + - power-domains   : A phandle and power domain specifier pair to the power
+> > +		     domain which is responsible for collapsing and restoring
+> > +		     power to the peripheral.
+> > + - resets	   : Must contain an entry for each entry in reset-names.
+> > +		     See ../reset/reset.txt for details.
+> > + - reset-names	   : Associated names must be: "axi-rst", "sw-rst", "reg-rst".
+> > + - mediatek,phy-mode : A phandle to the system controller, used to enable
+> > +		       SATA function.
+
+Thanks!
+Ryder.
+
