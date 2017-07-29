@@ -1,35 +1,44 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Sat, 29 Jul 2017 14:40:04 -0500
-Message-ID: <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
-References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] arm64: dts: cavium: fix memory node dtc warnings
+Date: Sat, 29 Jul 2017 20:35:25 +0000
+Message-ID: <1501360525-78484-1-git-send-email-jnair@caviumnetworks.com>
+References: <CAL_JsqLgPRQqWu=Fh-6EroHs64_M9Q8jWa20Hv=dGro62oR=XA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501355870-13960-1-git-send-email-david@lechnology.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLgPRQqWu=Fh-6EroHs64_M9Q8jWa20Hv=dGro62oR=XA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/29/2017 02:17 PM, David Lechner wrote:
-> The goal of this series is to get the built-in LCD of the LEGO MINDSTORMS EV3
-> working. But, most of the content here is building up the infrastructure to do
-> that.
-> 
+Newer dtc versions generate a warning for thunder2-99xx.dts of the form:
+  Warning (unit_address_vs_reg): Node /memory has a reg or ranges property, but no unit name
 
-Some general comments/questions:
+Fixup the memory node name to avoid this.
 
-I have noticed that DRM doesn't really have support for monochrome 
-displays. I'm guessing that is because no one really uses them anymore?
+Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm64/boot/dts/cavium/thunder2-99xx.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-The LEGO EV3 display is just an LCD (not the backlit kind). It has two 
-modes of operation. It can to 2bbp grayscale or it can do 1bpp 
-monochrome. The grayscale isn't the best (looks splotchy in places), so 
-it would be nice to be able to choose between these two modes. How would 
-I implement something like that?
+diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dts b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
+index 6c6fb86..fc7c9dd 100644
+--- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
++++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dts
+@@ -18,7 +18,7 @@
+ 	model = "Cavium ThunderX2 CN99XX";
+ 	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
+ 
+-	memory {
++	memory@80000000 {
+ 		device_type = "memory";
+ 		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
+ 		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
+-- 
+2.7.4
 
-Also, how can I indicate to userspace that this display really is 
-monochrome/grayscale since the reported color depth 16bpp?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
