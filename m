@@ -1,59 +1,51 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v1 2/2] arm64: dts: rockchip: add rk3328 spdif node
-Date: Sat, 29 Jul 2017 23:12:00 +0200
-Message-ID: <2919371.Go0PDiTJp1@phil>
-References: <1501143365-76104-1-git-send-email-sugar.zhang@rock-chips.com> <1501143365-76104-3-git-send-email-sugar.zhang@rock-chips.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/1] staging: pi433: fix problem with division in
+ rf69_set_deviation
+Date: Sat, 29 Jul 2017 15:21:27 -0700
+Message-ID: <20170729222127.GB16460@kroah.com>
+References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
+ <201707172156.DCyTyWc2%fengguang.wu@intel.com>
+ <652336354.3806.1500549785404@ox.hosteurope.de>
+ <20170720113705.d65hxm3jbki2ynqd@mwanda>
+ <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
+ <255867683.7064.1500566196444@ox.hosteurope.de>
+ <20170729000118.GA28861@kroah.com>
+ <1812078351.11080.1501318275697@ox.hosteurope.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501143365-76104-3-git-send-email-sugar.zhang@rock-chips.com>
+Content-Disposition: inline
+In-Reply-To: <1812078351.11080.1501318275697@ox.hosteurope.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: broonie@kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liang Chen <cl@rock-chips.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>
+Cc: driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "kbuild-all@01.org" <kbuild-all@01.org>, Grant Likely <grant.likely@linaro.org>, Dan Carpenter <dan.carpenter@oracle.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 27. Juli 2017, 16:16:04 CEST schrieb Sugar Zhang:
-> This patch add the spdif dt node for rk3328.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> 
-> ---
-> 
->  arch/arm64/boot/dts/rockchip/rk3328.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> index f1a284b..d278670 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-> @@ -189,6 +189,19 @@
->  		status = "disabled";
->  	};
+On Sat, Jul 29, 2017 at 10:51:15AM +0200, Marcus Wolf wrote:
+> Hi Greg,
 >  
+> already had a discussion concerning that patch with Dan yesterday.
+> I really don't know what's going on there. I detached the patch once more from
+> my outbox and had a very close look in an editor and looked at it with a
+> difftool. In my outbox the patch is fine. I really don't knwo why it reaches you
+> crapped.
+>  
+> Since there are contsant problems with my patches, I will stop sending patches
+> for a while. As soon as I can find time to deeply confess with the tooling, I
+> will start over with trying.
 
-I've adapted the patch so that it can exist without the previous one
-and applied it for 4.14.
+Just use 'git send-email' for patches if you are having problems with
+your email client.  And get a better email client the kernel
+Documentation has a whole file just about that topic and how to do it
+correctly.
 
+> Concerning this patch: You can use Arnds Patch from yesterday instead:
+> [PATCH] staging: pi433: use div_u64 for 64-bit division
+> It's a bit different to my patch, but according to yesterdays discussion, it
+> should also fix the problem.
 
-Thanks
-Heiko
+I already took it into my tree.
 
+thanks,
 
-> +	spdif: spdif@ff030000 {
-> +		compatible = "rockchip,rk3328-spdif";
-> +		reg = <0x0 0xff030000 0x0 0x1000>;
-> +		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF_8CH>;
-> +		clock-names = "mclk", "hclk";
-> +		dmas = <&dmac 10>;
-> +		dma-names = "tx";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spdifm2_tx>;
-> +		status = "disabled";
-> +	};
-> +
->  	grf: syscon@ff100000 {
->  		compatible = "rockchip,rk3328-grf", "syscon", "simple-mfd";
->  		reg = <0x0 0xff100000 0x0 0x1000>;
-> 
+greg k-h
