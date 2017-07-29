@@ -1,101 +1,33 @@
-From: Abhishek Shah <abhishek.shah@broadcom.com>
-Subject: [PATCH 7/7] arm64: dts: Add SBA-RAID DT nodes for Stingray SoC
-Date: Sat, 29 Jul 2017 10:12:29 +0530
-Message-ID: <1501303349-30007-8-git-send-email-abhishek.shah@broadcom.com>
-References: <1501303349-30007-1-git-send-email-abhishek.shah@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501303349-30007-1-git-send-email-abhishek.shah@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH 0/2] Add ZTE zx-irdec remote control driver
+Date: Sat, 29 Jul 2017 14:31:40 +0800
+Message-ID: <1501309902-7559-1-git-send-email-shawnguo@kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Baoyou Xie <xie.baoyou@sanechips.com.cn>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Anup Patel <anup.patel@broadcom.com>
+From: Shawn Guo <shawn.guo@linaro.org>
 
-This patch adds Broadcom SBA-RAID DT nodes for Stingray SoC.
+The series adds dt-bindings and remote control driver for IRDEC block
+found on ZTE ZX family SoCs.
 
-The Stingray SoC has total 32 SBA-RAID FlexRM rings and it has
-8 CPUs so we create 8 SBA-RAID instances (one for each CPU).
-This way Linux DMAENGINE will have one SBA-RAID DMA device for
-each CPU.
+Shawn Guo (2):
+  dt-bindings: add bindings document for zx-irdec
+  rc: add zx-irdec remote control driver
 
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
----
- .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   | 64 ++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ .../devicetree/bindings/media/zx-irdec.txt         |  14 ++
+ drivers/media/rc/Kconfig                           |  11 ++
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/keymaps/Makefile                  |   3 +-
+ drivers/media/rc/keymaps/rc-zx-irdec.c             |  79 ++++++++
+ drivers/media/rc/zx-irdec.c                        | 198 +++++++++++++++++++++
+ include/media/rc-map.h                             |   1 +
+ 7 files changed, 306 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/zx-irdec.txt
+ create mode 100644 drivers/media/rc/keymaps/rc-zx-irdec.c
+ create mode 100644 drivers/media/rc/zx-irdec.c
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-index 1f927c4..8bf1dc6 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
-@@ -51,4 +51,68 @@
- 			msi-parent = <&gic_its 0x4300>;
- 			#mbox-cells = <3>;
- 		};
-+
-+		raid0: raid@0 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 0 0x1 0xff00>,
-+				 <&raid_mbox 1 0x1 0xff00>,
-+				 <&raid_mbox 2 0x1 0xff00>,
-+				 <&raid_mbox 3 0x1 0xff00>;
-+		};
-+
-+		raid1: raid@1 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 4 0x1 0xff00>,
-+				 <&raid_mbox 5 0x1 0xff00>,
-+				 <&raid_mbox 6 0x1 0xff00>,
-+				 <&raid_mbox 7 0x1 0xff00>;
-+		};
-+
-+		raid2: raid@2 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 8 0x1 0xff00>,
-+				 <&raid_mbox 9 0x1 0xff00>,
-+				 <&raid_mbox 10 0x1 0xff00>,
-+				 <&raid_mbox 11 0x1 0xff00>;
-+		};
-+
-+		raid3: raid@3 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 12 0x1 0xff00>,
-+				 <&raid_mbox 13 0x1 0xff00>,
-+				 <&raid_mbox 14 0x1 0xff00>,
-+				 <&raid_mbox 15 0x1 0xff00>;
-+		};
-+
-+		raid4: raid@4 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 16 0x1 0xff00>,
-+				 <&raid_mbox 17 0x1 0xff00>,
-+				 <&raid_mbox 18 0x1 0xff00>,
-+				 <&raid_mbox 19 0x1 0xff00>;
-+		};
-+
-+		raid5: raid@5 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 20 0x1 0xff00>,
-+				 <&raid_mbox 21 0x1 0xff00>,
-+				 <&raid_mbox 22 0x1 0xff00>,
-+				 <&raid_mbox 23 0x1 0xff00>;
-+		};
-+
-+		raid6: raid@6 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 24 0x1 0xff00>,
-+				 <&raid_mbox 25 0x1 0xff00>,
-+				 <&raid_mbox 26 0x1 0xff00>,
-+				 <&raid_mbox 27 0x1 0xff00>;
-+		};
-+
-+		raid7: raid@7 {
-+			compatible = "brcm,iproc-sba-v2";
-+			mboxes = <&raid_mbox 28 0x1 0xff00>,
-+				 <&raid_mbox 29 0x1 0xff00>,
-+				 <&raid_mbox 30 0x1 0xff00>,
-+				 <&raid_mbox 31 0x1 0xff00>;
-+		};
- 	};
 -- 
-2.7.4
+1.9.1
