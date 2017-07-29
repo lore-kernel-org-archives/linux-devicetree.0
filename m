@@ -1,42 +1,40 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
-Date: Fri, 28 Jul 2017 17:07:54 -0700
-Message-ID: <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
-References: <20170728142704.11156-1-andrew.smirnov@gmail.com> <20170728233054.GB30604@kroah.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 3/5] net: stmmac: Add Adaptrum Anarion GMAC glue layer
+Date: Fri, 28 Jul 2017 19:01:55 -0700 (PDT)
+Message-ID: <20170728.190155.457209566729295513.davem@davemloft.net>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+        <20170728220707.13960-4-alex.g@adaptrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728233054.GB30604-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170728220707.13960-4-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
-<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
->> Greg,
->>
->> I am not sure if you are the right person to send these to, if you are
->> not, please let me know who would be the appropriate recepient and sorry for the noise.
->
-> Why not the platform driver maintainer(s)?  Doesn't
-> scripts/get_maintainer.pl give you an idea for who to send them to?
+From: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Date: Fri, 28 Jul 2017 15:07:03 -0700
 
-Unfortunately I wasn't able to find anyone in MAINTAINERS and running
-scripts/get_maintainer.pl on the patch returns only:
+> Before the GMAC on the Anarion chip can be used, the PHY interface
+> selection must be configured with the DWMAC block in reset.
+> 
+> This layer covers a block containing only two registers. Although it
+> is possible to model this as a reset controller and use the "resets"
+> property of stmmac, it's much more intuitive to include this in the
+> glue layer instead.
+> 
+> At this time only RGMII is supported, because it is the only mode
+> which has been validated hardware-wise.
+> 
+> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
 
-scripts/get_maintainer.pl
-v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
-Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-(commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
-Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (commit_signer:1/1=100%)
-linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+I don't see how this fits into any patch series at all.  If this is
+part of a series you posted elsewhere, you should keep netdev@ on
+all such postings so people there can review the change in-context.
 
-hence me reaching out to you.
-
-Thanks,
-Andrey Smirnov
+Thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
