@@ -1,170 +1,42 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT
- entries
-Date: Fri, 28 Jul 2017 17:03:39 -0700
-Message-ID: <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
-References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
- <1501020372-19607-2-git-send-email-jon.mason@broadcom.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
+Date: Fri, 28 Jul 2017 17:07:54 -0700
+Message-ID: <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
+References: <20170728142704.11156-1-andrew.smirnov@gmail.com> <20170728233054.GB30604@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501020372-19607-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170728233054.GB30604-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/25/2017 03:06 PM, Jon Mason wrote:
-> Cache related issues with DMA rings and performance issues related to
-> caching are being caused by not properly setting the "dma-coherent" flag
-> in the device tree entries.  Adding it here to correct the issue.
-> 
-> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
-> Fixes: 3107fa5bcfb2 ("ARM: dts: NSP: Add SD/MMC support")
-> Fixes: 13d04f20935c ("ARM: dts: NSP: Add AMAC entries")
-> Fixes: 5aeda7bf8a1e ("ARM: dts: NSP: Add and enable amac2")
-> Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
-> Fixes: 1d8ece6639e1 ("ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree")
-> Fixes: bf2289bedef4 ("ARM: dts: NSP: Add Switch Register Access Block node")
+On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
+<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
+>> Greg,
+>>
+>> I am not sure if you are the right person to send these to, if you are
+>> not, please let me know who would be the appropriate recepient and sorry for the noise.
+>
+> Why not the platform driver maintainer(s)?  Doesn't
+> scripts/get_maintainer.pl give you an idea for who to send them to?
 
-The SRAB block is not DMA capable, so this seems a bit superfluous here.
+Unfortunately I wasn't able to find anyone in MAINTAINERS and running
+scripts/get_maintainer.pl on the patch returns only:
 
-Do you want to submit a patch that omits PL330 for now and adds it
-eventually later so I can proceed with applying patches 2 & 3 for this
-cycle?
+scripts/get_maintainer.pl
+v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
+Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+(commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
+Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (commit_signer:1/1=100%)
+linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
 
+hence me reaching out to you.
 
-> Fixes: 0f9f27a36d09 ("ARM: dts: NSP: Add I2C support to the DT")
-> Fixes: 8dbcad020f2e ("ARM: dts: nsp: Add sata device tree entry")
-> Fixes: 522199029fdc ("ARM: dts: NSP: Fix PCIE DT issue")
-> ---
->  arch/arm/boot/dts/bcm-nsp.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-> index 7204d1def23d..c8d734d9f5fc 100644
-> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
-> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-> @@ -207,6 +207,7 @@
->  			clocks = <&iprocslow>;
->  			clock-names = "apb_pclk";
->  			#dma-cells = <1>;
-> +			dma-coherent;
->  		};
->  
->  		sdio: sdhci@21000 {
-> @@ -215,6 +216,7 @@
->  			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
->  			sdhci,auto-cmd12;
->  			clocks = <&lcpll0 BCM_NSP_LCPLL0_SDIO_CLK>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -224,6 +226,7 @@
->  			      <0x110000 0x1000>;
->  			reg-names = "amac_base", "idm_base";
->  			interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -233,6 +236,7 @@
->  			      <0x111000 0x1000>;
->  			reg-names = "amac_base", "idm_base";
->  			interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -242,6 +246,7 @@
->  			      <0x112000 0x1000>;
->  			reg-names = "amac_base", "idm_base";
->  			interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -252,6 +257,7 @@
->  			#mbox-cells = <1>;
->  			brcm,rx-status-len = <32>;
->  			brcm,use-bcm-hdr;
-> +			dma-coherent;
->  		};
->  
->  		nand: nand@26000 {
-> @@ -325,6 +331,7 @@
->  			compatible = "generic-ehci";
->  			reg = <0x2a000 0x100>;
->  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -332,6 +339,7 @@
->  			compatible = "generic-ohci";
->  			reg = <0x2b000 0x100>;
->  			interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -364,6 +372,7 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  
-> +			dma-coherent;
->  			status = "disabled";
->  
->  			/* ports are defined in board DTS */
-> @@ -376,6 +385,7 @@
->  			#size-cells = <0>;
->  			interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
->  			clock-frequency = <100000>;
-> +			dma-coherent;
->  			status = "disabled";
->  		};
->  
-> @@ -446,6 +456,7 @@
->  			interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> +			dma-coherent;
->  			status = "disabled";
->  
->  			sata0: sata-port@0 {
-> @@ -483,6 +494,7 @@
->  		 */
->  		ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
->  
-> +		dma-coherent;
->  		status = "disabled";
->  
->  		msi-parent = <&msi0>;
-> @@ -519,6 +531,7 @@
->  		 */
->  		ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
->  
-> +		dma-coherent;
->  		status = "disabled";
->  
->  		msi-parent = <&msi1>;
-> @@ -555,6 +568,7 @@
->  		 */
->  		ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
->  
-> +		dma-coherent;
->  		status = "disabled";
->  
->  		msi-parent = <&msi2>;
-> 
-
-
--- 
-Florian
+Thanks,
+Andrey Smirnov
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
