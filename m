@@ -1,89 +1,42 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/7] drm/stm: ltdc: Fix leak of px clk enable in some
- error paths
-Date: Sat, 29 Jul 2017 20:02:50 +0530
-Message-ID: <bd6aeb5d-8f39-3e5e-0f72-a1d50e4438ef@codeaurora.org>
-References: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
- <1500277223-29553-2-git-send-email-philippe.cornu@st.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 1/5] of: Add vendor prefix for Adaptrum, Inc.
+Date: Sat, 29 Jul 2017 16:48:28 +0200
+Message-ID: <af822347-635d-a073-56e5-8eae403a729e@suse.de>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+ <20170728220707.13960-2-alex.g@adaptrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500277223-29553-2-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170728220707.13960-2-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Yao <mark.yao@rock-chip>
-Cc: Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
+To: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philippe,
+Hi Alexandru,
 
-On 07/17/2017 01:10 PM, Philippe CORNU wrote:
-> The pixel clock gets enabled early during init, since it's required
-> in order to read registers. This pixel clock must be disabled if
-> errors during this init phase.
-> 
-
-This patch was pulled in to drm-misc-next, but it lacks your Sign-off.
-It looks like the Ack and the Sign-off got accidentally mixed up
-
-Can you please reply to this mail with your "Signed-off-by" so that
-we have proof of it on dri-devel?
-
-Thanks,
-Archit
-
-> Signed-off-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-> Acked-by: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Am 29.07.2017 um 00:07 schrieb Alexandru Gagniuc:
+> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
 > ---
->   drivers/gpu/drm/stm/ltdc.c | 10 ++++++----
->   1 file changed, 6 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> index 5331760..7f64d5a 100644
-> --- a/drivers/gpu/drm/stm/ltdc.c
-> +++ b/drivers/gpu/drm/stm/ltdc.c
-> @@ -1045,13 +1045,15 @@ int ltdc_load(struct drm_device *ddev)
->   
->   	if (of_address_to_resource(np, 0, &res)) {
->   		DRM_ERROR("Unable to get resource\n");
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto err;
->   	}
->   
->   	ldev->regs = devm_ioremap_resource(dev, &res);
->   	if (IS_ERR(ldev->regs)) {
->   		DRM_ERROR("Unable to get ltdc registers\n");
-> -		return PTR_ERR(ldev->regs);
-> +		ret = PTR_ERR(ldev->regs);
-> +		goto err;
->   	}
->   
->   	for (i = 0; i < MAX_IRQ; i++) {
-> @@ -1064,7 +1066,7 @@ int ltdc_load(struct drm_device *ddev)
->   						dev_name(dev), ddev);
->   		if (ret) {
->   			DRM_ERROR("Failed to register LTDC interrupt\n");
-> -			return ret;
-> +			goto err;
->   		}
->   	}
->   
-> @@ -1079,7 +1081,7 @@ int ltdc_load(struct drm_device *ddev)
->   	if (ret) {
->   		DRM_ERROR("hardware identifier (0x%08x) not supported!\n",
->   			  ldev->caps.hw_version);
-> -		return ret;
-> +		goto err;
->   	}
->   
->   	DRM_INFO("ltdc hw version 0x%08x - ready\n", ldev->caps.hw_version);
-> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Not sure why I'm CC'ed here, but it looks sane, so
+
+Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+
+If this patch gets respun, please add a sentence about your company to
+the commit message. I also think "dt-bindings:" is a more common prefix?
+
+Cheers,
+Andreas
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
