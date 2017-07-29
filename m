@@ -1,36 +1,38 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/4] Broadcom STB S2/S3/S5 support for ARM and MIPS
-Date: Fri, 28 Jul 2017 16:59:52 -0700
-Message-ID: <4bebae92-5ae3-8b89-a85a-c06f9d70d658@gmail.com>
-References: <20170706222225.9758-1-f.fainelli@gmail.com>
- <72d54e9c-6a50-2eac-52db-b1e8c234c552@broadcom.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/1] staging: pi433: fix problem with division in
+ rf69_set_deviation
+Date: Fri, 28 Jul 2017 17:01:18 -0700
+Message-ID: <20170729000118.GA28861@kroah.com>
+References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
+ <201707172156.DCyTyWc2%fengguang.wu@intel.com>
+ <652336354.3806.1500549785404@ox.hosteurope.de>
+ <20170720113705.d65hxm3jbki2ynqd@mwanda>
+ <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
+ <255867683.7064.1500566196444@ox.hosteurope.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72d54e9c-6a50-2eac-52db-b1e8c234c552@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Markus Mayer <mmayer@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Eric Anholt <eric@anholt.net>, Justin Chen <justinpopo6@gmail.com>, Doug Berger <opendmb@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <255867683.7064.1500566196444-mPx3TeDXVI9fnkZfMEZNjw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
+Cc: Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, driverdevel <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 12:52 PM, Florian Fainelli wrote:
-> On 07/06/2017 03:22 PM, Florian Fainelli wrote:
->> Hi,
->>
->> This patch series adds support for S2/S3/S5 suspend/resume states on
->> ARM and MIPS based Broadcom STB SoCs.
->>
->> This was submitted a long time ago by Brian, and I am now picking this
->> up and trying to get this included with support for our latest chips.
->>
->> Provided that I can collect the necessary Acks from Rob (DT) and other
->> people (Rafael?) I would probably take this via the Broadcom ARM SoC
->> pull requests.
+On Thu, Jul 20, 2017 at 05:56:36PM +0200, Marcus Wolf wrote:
+> Fixes problem with division in rf69_set_deviation
 > 
-> Rafael, any feedback on this?
+> Fixes: 874bcba65f9a ("staging: pi433: New driver")
+> Signed-off-by: Marcus Wolf <linux-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
+> 
+> diff --git a/drivers/staging/pi433/rf69.c b/drivers/staging/pi433/rf69.c
+> --- a/drivers/staging/pi433/rf69.c
+> +++ b/drivers/staging/pi433/rf69.c
+> @@ -221,7 +221,7 @@ int rf69_set_frequency(struct spi_device *spi, u32
+> frequency)
 
-Applied these 4 patches to drivers/next now.
--- 
-Florian
+Patch is line-wrapped and does not apply :(
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
