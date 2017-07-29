@@ -1,58 +1,41 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH 2/2] dt-bindings: ata: add DT bindings for MediaTek SATA
- controller
-Date: Sat, 29 Jul 2017 11:41:11 +0800
-Message-ID: <1501299671.12447.4.camel@mtkswgap22>
-References: <cover.1501134896.git.ryder.lee@mediatek.com>
-         <45c7b2abc65b0d7b5b945763837811296e56835f.1501134896.git.ryder.lee@mediatek.com>
-         <7adf5e2c-4678-3e91-1036-f5e82d23329f@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <7adf5e2c-4678-3e91-1036-f5e82d23329f@cogentembedded.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>
+From: Abhishek Shah <abhishek.shah@broadcom.com>
+Subject: [PATCH 0/7] Add more DT nodes for Stingray SoC
+Date: Sat, 29 Jul 2017 10:12:22 +0530
+Message-ID: <1501303349-30007-1-git-send-email-abhishek.shah@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Jon Mason <jon.mason@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Abhishek Shah <abhishek.shah@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-07-28 at 12:20 +0300, Sergei Shtylyov wrote:
-> > +Required properties:
-> > + - compatible	   : Must be "mediatek,ahci".
-> > + - reg		   : Physical base addresses and length of register sets.
-> > + - interrupts	   : Interrupt associated with the SATA device.
-> > + - interrupt-names : Associated name must be: "hostc".
-> > + - clocks	   : The phandle for the clock.
-> 
->     Your example shows that you need both phandle and specifier (afetr phandle).
-> 
-> > + - clock-names	   : Associated name must be: "ahb", "axi", "asic", "rbc", "pm"
-> > + - phys		   : The phandle for the PHY port.
-> 
->      Likewise.
+This is round two of adding DT nodes for Stingray SoC.
+Corresponding drivers and dt binding documents are already
+checked in the kernel and will be present in v4.14.
 
-Oh yeah, I forgot about that.
+Abhishek Shah (1):
+  arm64: dts: Add DT node to enable BGMAC driver on Stingray
 
-> > + - phy-names	   : Associated name must be: "sata-phy".
-> > + - ports-implemented : Mask that indicates which ports that the HBA supports
-> > +		       are available for software to use. Useful if PORTS_IMPL
-> > +		       is not programmed by the BIOS, which is true with some
-> > +		       embedded SOC's.
-> 
->     An empty line wouldn't hurt here...
+Anup Patel (3):
+  arm64: dts: Add sp804 DT nodes for Stingray SoC
+  arm64: dts: Add FlexRM DT nodes for Stingray
+  arm64: dts: Add SBA-RAID DT nodes for Stingray SoC
 
-Okay.
+Srinath Mannam (2):
+  arm64: dts: Add MDIO multiplexer DT node for Stingray
+  arm64: dts: Add SATA DT nodes for Stingray SoC
 
-> > +Optional properties:
-> > + - power-domains   : A phandle and power domain specifier pair to the power
-> > +		     domain which is responsible for collapsing and restoring
-> > +		     power to the peripheral.
-> > + - resets	   : Must contain an entry for each entry in reset-names.
-> > +		     See ../reset/reset.txt for details.
-> > + - reset-names	   : Associated names must be: "axi-rst", "sw-rst", "reg-rst".
-> > + - mediatek,phy-mode : A phandle to the system controller, used to enable
-> > +		       SATA function.
+Velibor Markovski (1):
+  arm64: dts: Enable stats for CCN-502 interconnect on Stingray
 
-Thanks!
-Ryder.
+ .../boot/dts/broadcom/stingray/bcm958742-base.dtsi |  78 ++++++
+ .../boot/dts/broadcom/stingray/bcm958742k.dts      |   4 +
+ .../boot/dts/broadcom/stingray/bcm958742t.dts      |   4 +
+ .../boot/dts/broadcom/stingray/stingray-fs4.dtsi   | 118 +++++++++
+ .../boot/dts/broadcom/stingray/stingray-sata.dtsi  | 278 +++++++++++++++++++++
+ .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 136 ++++++++++
+ 6 files changed, 618 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-fs4.dtsi
+ create mode 100644 arch/arm64/boot/dts/broadcom/stingray/stingray-sata.dtsi
 
+-- 
+2.7.4
