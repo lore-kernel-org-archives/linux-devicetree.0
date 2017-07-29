@@ -1,179 +1,142 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH 1/6] drm/tinydrm: Add parameter for MIPI DCS pixel format
-Date: Sat, 29 Jul 2017 14:17:45 -0500
-Message-ID: <1501355870-13960-2-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH 4/6] drm/tinydrm: mipi-panel: refactor to use driver id
+Date: Sat, 29 Jul 2017 14:17:48 -0500
+Message-ID: <1501355870-13960-5-git-send-email-david@lechnology.com>
 References: <1501355870-13960-1-git-send-email-david@lechnology.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501355870-13960-1-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501355870-13960-1-git-send-email-david@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: David Lechner <david@lechnology.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a parameter for MIPI DCS pixel format to mipi_dbi_init().
-This is in preparation for supporting displays that don't use a 16bpp
-memory layout.
+This refactors the mipi-panel module to use the driver id for panel-specific
+data. This is in preparation for adding additional panels.
 
-Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Signed-off-by: David Lechner <david@lechnology.com>
 ---
- drivers/gpu/drm/tinydrm/mi0283qt.c |  3 ++-
- drivers/gpu/drm/tinydrm/mipi-dbi.c | 21 ++++++++++++++++++---
- include/drm/tinydrm/mipi-dbi.h     |  7 ++++++-
- include/video/mipi_display.h       | 14 ++++++++------
- 4 files changed, 34 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/tinydrm/mipi-panel.c | 40 ++++++++++++++++++++++++++++--------
+ include/drm/tinydrm/mipi-dbi.h       |  2 ++
+ 2 files changed, 34 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/tinydrm/mi0283qt.c b/drivers/gpu/drm/tinydrm/mi0283qt.c
-index 482ff1c3..2680dab 100644
---- a/drivers/gpu/drm/tinydrm/mi0283qt.c
-+++ b/drivers/gpu/drm/tinydrm/mi0283qt.c
-@@ -196,7 +196,8 @@ static int mi0283qt_probe(struct spi_device *spi)
+diff --git a/drivers/gpu/drm/tinydrm/mipi-panel.c b/drivers/gpu/drm/tinydrm/mipi-panel.c
+index 64344f0..8aa1d8e 100644
+--- a/drivers/gpu/drm/tinydrm/mipi-panel.c
++++ b/drivers/gpu/drm/tinydrm/mipi-panel.c
+@@ -21,7 +21,18 @@
+ #include <linux/spi/spi.h>
+ #include <video/mipi_display.h>
+ 
+-static int mipi_panel_init(struct mipi_dbi *mipi)
++enum mipi_panel_type {
++	MIPI_PANEL_TYPE_UNKNOWN,
++	MIPI_PANEL_TYPE_MULTI_INNO_MI0283QT,
++};
++
++struct mipi_panel_info {
++	int (*init)(struct mipi_dbi *mipi);
++	const struct drm_display_mode mode;
++	enum mipi_dcs_pixel_format pixel_fmt;
++};
++
++static int mipi_panel_init_ili9341(struct mipi_dbi *mipi)
+ {
+ 	struct tinydrm_device *tdev = &mipi->tinydrm;
+ 	struct device *dev = tdev->drm->dev;
+@@ -129,8 +140,12 @@ static const struct drm_simple_display_pipe_funcs mipi_panel_pipe_funcs = {
+ 	.prepare_fb = tinydrm_display_pipe_prepare_fb,
+ };
+ 
+-static const struct drm_display_mode mipi_panel_mode = {
+-	TINYDRM_MODE(320, 240, 58, 43),
++static const struct mipi_panel_info mipi_panel_infos[] = {
++	[MIPI_PANEL_TYPE_MULTI_INNO_MI0283QT] = {
++		.init		= mipi_panel_init_ili9341,
++		.mode		= { TINYDRM_MODE(320, 240, 58, 43) },
++		.pixel_fmt	= MIPI_DCS_PIXEL_FMT_16BIT,
++	},
+ };
+ 
+ DEFINE_DRM_GEM_CMA_FOPS(mipi_panel_fops);
+@@ -156,13 +171,15 @@ static const struct of_device_id mipi_panel_of_match[] = {
+ MODULE_DEVICE_TABLE(of, mipi_panel_of_match);
+ 
+ static const struct spi_device_id mipi_panel_id[] = {
+-	{ "mi0283qt", 0 },
++	{ "mi0283qt", MIPI_PANEL_TYPE_MULTI_INNO_MI0283QT },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(spi, mipi_panel_id);
+ 
+ static int mipi_panel_probe(struct spi_device *spi)
+ {
++	const struct spi_device_id *id = spi_get_device_id(spi);
++	enum mipi_panel_type type = id->driver_data;
+ 	struct device *dev = &spi->dev;
+ 	struct tinydrm_device *tdev;
+ 	struct mipi_dbi *mipi;
+@@ -170,10 +187,17 @@ static int mipi_panel_probe(struct spi_device *spi)
+ 	u32 rotation = 0;
+ 	int ret;
+ 
++	if (type == MIPI_PANEL_TYPE_UNKNOWN) {
++		dev_err(dev, "Unknown panel type\n");
++		return -EINVAL;
++	}
++
+ 	mipi = devm_kzalloc(dev, sizeof(*mipi), GFP_KERNEL);
+ 	if (!mipi)
+ 		return -ENOMEM;
+ 
++	mipi->init = mipi_panel_infos[type].init;
++
+ 	mipi->reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+ 	if (IS_ERR(mipi->reset)) {
+ 		dev_err(dev, "Failed to get gpio 'reset'\n");
+@@ -197,12 +221,12 @@ static int mipi_panel_probe(struct spi_device *spi)
  	device_property_read_u32(dev, "rotation", &rotation);
  
- 	ret = mipi_dbi_spi_init(spi, mipi, dc, &mi0283qt_pipe_funcs,
--				&mi0283qt_driver, &mi0283qt_mode, rotation);
-+				&mi0283qt_driver, &mi0283qt_mode,
-+				MIPI_DCS_PIXEL_FMT_16BIT, rotation);
+ 	ret = mipi_dbi_spi_init(spi, mipi, dc, &mipi_panel_pipe_funcs,
+-				&mipi_panel_driver, &mipi_panel_mode,
+-				MIPI_DCS_PIXEL_FMT_16BIT, rotation);
++				&mipi_panel_driver, &mipi_panel_infos[type].mode,
++				mipi_panel_infos[type].pixel_fmt, rotation);
  	if (ret)
  		return ret;
  
-diff --git a/drivers/gpu/drm/tinydrm/mipi-dbi.c b/drivers/gpu/drm/tinydrm/mipi-dbi.c
-index c83eeb7..7d49366 100644
---- a/drivers/gpu/drm/tinydrm/mipi-dbi.c
-+++ b/drivers/gpu/drm/tinydrm/mipi-dbi.c
-@@ -336,6 +336,7 @@ static const uint32_t mipi_dbi_formats[] = {
-  * @pipe_funcs: Display pipe functions
-  * @driver: DRM driver
-  * @mode: Display mode
-+ * @pixel_fmt: The display memory's pixel format
-  * @rotation: Initial rotation in degrees Counter Clock Wise
-  *
-  * This function initializes a &mipi_dbi structure and it's underlying
-@@ -352,15 +353,26 @@ static const uint32_t mipi_dbi_formats[] = {
- int mipi_dbi_init(struct device *dev, struct mipi_dbi *mipi,
- 		  const struct drm_simple_display_pipe_funcs *pipe_funcs,
- 		  struct drm_driver *driver,
--		  const struct drm_display_mode *mode, unsigned int rotation)
-+		  const struct drm_display_mode *mode,
-+		  enum mipi_dcs_pixel_format pixel_fmt, unsigned int rotation)
- {
--	size_t bufsize = mode->vdisplay * mode->hdisplay * sizeof(u16);
- 	struct tinydrm_device *tdev = &mipi->tinydrm;
-+	size_t bufsize;
+-	ret = mipi_panel_init(mipi);
++	ret = mipi->init(mipi);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -255,7 +279,7 @@ static int __maybe_unused mipi_panel_pm_resume(struct device *dev)
+ 	struct mipi_dbi *mipi = dev_get_drvdata(dev);
  	int ret;
  
- 	if (!mipi->command)
- 		return -EINVAL;
- 
-+	switch (pixel_fmt) {
-+	case MIPI_DCS_PIXEL_FMT_16BIT:
-+		bufsize = mode->vdisplay * mode->hdisplay * sizeof(u16);
-+		break;
-+	default:
-+		DRM_ERROR("Pixel format is not supported\n");
-+		return -EINVAL;
-+	}
-+	mipi->pixel_fmt = pixel_fmt;
-+
- 	mutex_init(&mipi->cmdlock);
- 
- 	mipi->tx_buf = devm_kmalloc(dev, bufsize, GFP_KERNEL);
-@@ -781,6 +793,7 @@ static int mipi_dbi_typec3_command(struct mipi_dbi *mipi, u8 cmd,
-  * @pipe_funcs: Display pipe functions
-  * @driver: DRM driver
-  * @mode: Display mode
-+ * @pixel_fmt: The display memory's pixel format
-  * @rotation: Initial rotation in degrees Counter Clock Wise
-  *
-  * This function sets &mipi_dbi->command, enables &mipi->read_commands for the
-@@ -803,6 +816,7 @@ int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
- 		      const struct drm_simple_display_pipe_funcs *pipe_funcs,
- 		      struct drm_driver *driver,
- 		      const struct drm_display_mode *mode,
-+		      enum mipi_dcs_pixel_format pixel_fmt,
- 		      unsigned int rotation)
- {
- 	size_t tx_size = tinydrm_spi_max_transfer_size(spi, 0);
-@@ -849,7 +863,8 @@ int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
- 			return -ENOMEM;
- 	}
- 
--	return mipi_dbi_init(dev, mipi, pipe_funcs, driver, mode, rotation);
-+	return mipi_dbi_init(dev, mipi, pipe_funcs, driver, mode, pixel_fmt,
-+			     rotation);
- }
- EXPORT_SYMBOL(mipi_dbi_spi_init);
+-	ret = mipi_panel_init(mipi);
++	ret = mipi->init(mipi);
+ 	if (ret)
+ 		return ret;
  
 diff --git a/include/drm/tinydrm/mipi-dbi.h b/include/drm/tinydrm/mipi-dbi.h
-index d137b16..dda100c 100644
+index dda100c..f7ae5ae 100644
 --- a/include/drm/tinydrm/mipi-dbi.h
 +++ b/include/drm/tinydrm/mipi-dbi.h
-@@ -13,6 +13,7 @@
- #define __LINUX_MIPI_DBI_H
- 
- #include <drm/tinydrm/tinydrm.h>
-+#include <video/mipi_display.h>
- 
- struct spi_device;
- struct gpio_desc;
-@@ -33,6 +34,7 @@ struct regulator;
-  * @tx_buf9_len: Size of tx_buf9.
-  * @swap_bytes: Swap bytes in buffer before transfer
-  * @reset: Optional reset gpio
-+ * @pixel_fmt: The display memory's pixel format
-  * @rotation: initial rotation in degrees Counter Clock Wise
-  * @backlight: backlight device (optional)
-  * @regulator: power regulator (optional)
-@@ -50,6 +52,7 @@ struct mipi_dbi {
- 	size_t tx_buf9_len;
- 	bool swap_bytes;
- 	struct gpio_desc *reset;
-+	enum mipi_dcs_pixel_format pixel_fmt;
- 	unsigned int rotation;
- 	struct backlight_device *backlight;
- 	struct regulator *regulator;
-@@ -66,11 +69,13 @@ int mipi_dbi_spi_init(struct spi_device *spi, struct mipi_dbi *mipi,
- 		      const struct drm_simple_display_pipe_funcs *pipe_funcs,
- 		      struct drm_driver *driver,
- 		      const struct drm_display_mode *mode,
-+		      enum mipi_dcs_pixel_format pixel_fmt,
- 		      unsigned int rotation);
- int mipi_dbi_init(struct device *dev, struct mipi_dbi *mipi,
- 		  const struct drm_simple_display_pipe_funcs *pipe_funcs,
- 		  struct drm_driver *driver,
--		  const struct drm_display_mode *mode, unsigned int rotation);
-+		  const struct drm_display_mode *mode,
-+		  enum mipi_dcs_pixel_format pixel_fmt, unsigned int rotation);
- void mipi_dbi_pipe_enable(struct drm_simple_display_pipe *pipe,
- 			  struct drm_crtc_state *crtc_state);
- void mipi_dbi_pipe_disable(struct drm_simple_display_pipe *pipe);
-diff --git a/include/video/mipi_display.h b/include/video/mipi_display.h
-index 19aa65a..84b70cd 100644
---- a/include/video/mipi_display.h
-+++ b/include/video/mipi_display.h
-@@ -128,11 +128,13 @@ enum {
- };
- 
- /* MIPI DCS pixel formats */
--#define MIPI_DCS_PIXEL_FMT_24BIT	7
--#define MIPI_DCS_PIXEL_FMT_18BIT	6
--#define MIPI_DCS_PIXEL_FMT_16BIT	5
--#define MIPI_DCS_PIXEL_FMT_12BIT	3
--#define MIPI_DCS_PIXEL_FMT_8BIT		2
--#define MIPI_DCS_PIXEL_FMT_3BIT		1
-+enum mipi_dcs_pixel_format {
-+	MIPI_DCS_PIXEL_FMT_24BIT	= 7,
-+	MIPI_DCS_PIXEL_FMT_18BIT	= 6,
-+	MIPI_DCS_PIXEL_FMT_16BIT	= 5,
-+	MIPI_DCS_PIXEL_FMT_12BIT	= 3,
-+	MIPI_DCS_PIXEL_FMT_8BIT		= 2,
-+	MIPI_DCS_PIXEL_FMT_3BIT		= 1,
-+};
- 
- #endif
+@@ -25,6 +25,7 @@ struct regulator;
+  * @spi: SPI device
+  * @enabled: Pipeline is enabled
+  * @cmdlock: Command lock
++ * @init: Panel specific callback executing initialization command sequence.
+  * @command: Bus specific callback executing commands.
+  * @read_commands: Array of read commands terminated by a zero entry.
+  *                 Reading is disabled if this is NULL.
+@@ -44,6 +45,7 @@ struct mipi_dbi {
+ 	struct spi_device *spi;
+ 	bool enabled;
+ 	struct mutex cmdlock;
++	int (*init)(struct mipi_dbi *mipi);
+ 	int (*command)(struct mipi_dbi *mipi, u8 cmd, u8 *param, size_t num);
+ 	const u8 *read_commands;
+ 	struct gpio_desc *dc;
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
