@@ -1,42 +1,20 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH 1/5] of: Add vendor prefix for Adaptrum, Inc.
-Date: Sat, 29 Jul 2017 16:48:28 +0200
-Message-ID: <af822347-635d-a073-56e5-8eae403a729e@suse.de>
-References: <20170728220707.13960-1-alex.g@adaptrum.com>
- <20170728220707.13960-2-alex.g@adaptrum.com>
+From: Jack <osmar-5nG64iKLwiQ@public.gmane.org>
+Subject: Hello Beautiful,
+Date: Sat, 29 Jul 2017 10:55:01 -0300 (BRT)
+Message-ID: <594479743.6902031.1501336501208.JavaMail.zimbra__36536.9650222876$1501341525$gmane$org@itep.br>
+Reply-To: Jack <jack_realife-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170728220707.13960-2-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rask Ingemann Lambertsen <ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandru,
+Good day dear, i hope this mail meets you well? my name is Jack, from the U.S. I know this may seem inappropriate so i ask for your forgiveness but i wish to get to know you better, if I may be so bold. I consider myself an easy-going man, adventurous, honest and fun loving person but I am currently looking for a relationship in which I will feel loved. I promise to answer any question that you may want to ask me...all i need is just your attention and the chance to know you more.
 
-Am 29.07.2017 um 00:07 schrieb Alexandru Gagniuc:
-> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+Please tell me more about yourself, if you do not mind. Hope to hear back from you soon.
 
-Not sure why I'm CC'ed here, but it looks sane, so
-
-Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-
-If this patch gets respun, please add a sentence about your company to
-the commit message. I also think "dt-bindings:" is a more common prefix?
-
-Cheers,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Jack.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
