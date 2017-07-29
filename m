@@ -1,51 +1,60 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/1] staging: pi433: fix problem with division in
- rf69_set_deviation
-Date: Sat, 29 Jul 2017 15:21:27 -0700
-Message-ID: <20170729222127.GB16460@kroah.com>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
- <201707172156.DCyTyWc2%fengguang.wu@intel.com>
- <652336354.3806.1500549785404@ox.hosteurope.de>
- <20170720113705.d65hxm3jbki2ynqd@mwanda>
- <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
- <255867683.7064.1500566196444@ox.hosteurope.de>
- <20170729000118.GA28861@kroah.com>
- <1812078351.11080.1501318275697@ox.hosteurope.de>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] mfd: ds1374: Add Dallas/Maxim DS1374 Multi Function
+ Device
+Date: Sun, 30 Jul 2017 00:26:08 +0200
+Message-ID: <20170729222608.awlcjefi7wzfnahj@piout.net>
+References: <1499975665-14581-1-git-send-email-mdf@kernel.org>
+ <1499975665-14581-2-git-send-email-mdf@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1812078351.11080.1501318275697@ox.hosteurope.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marcus Wolf <marcus.wolf@wolf-entwicklungen.de>
-Cc: driverdevel <devel@driverdev.osuosl.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "kbuild-all@01.org" <kbuild-all@01.org>, Grant Likely <grant.likely@linaro.org>, Dan Carpenter <dan.carpenter@oracle.com>
+In-Reply-To: <1499975665-14581-2-git-send-email-mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 29, 2017 at 10:51:15AM +0200, Marcus Wolf wrote:
-> Hi Greg,
+On 13/07/2017 at 12:54:25 -0700, Moritz Fischer wrote:
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 52a70ee..1703611 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -120,6 +120,16 @@ config DA9062_WATCHDOG
 >  
-> already had a discussion concerning that patch with Dan yesterday.
-> I really don't know what's going on there. I detached the patch once more from
-> my outbox and had a very close look in an editor and looked at it with a
-> difftool. In my outbox the patch is fine. I really don't knwo why it reaches you
-> crapped.
+>  	  This driver can be built as a module. The module name is da9062_wdt.
 >  
-> Since there are contsant problems with my patches, I will stop sending patches
-> for a while. As soon as I can find time to deeply confess with the tooling, I
-> will start over with trying.
+> +config DS1374_WATCHDOG
+> +	tristate "Maxim/Dallas 1374 Watchdog"
 
-Just use 'git send-email' for patches if you are having problems with
-your email client.  And get a better email client the kernel
-Documentation has a whole file just about that topic and how to do it
-correctly.
+If you want to keep the backward compatibility, this probably needs to
+be defaulting to RTC_DRV_DS1374 when RTC_DRV_DS1374_WDT is selected.
 
-> Concerning this patch: You can use Arnds Patch from yesterday instead:
-> [PATCH] staging: pi433: use div_u64 for 64-bit division
-> It's a bit different to my patch, but according to yesterdays discussion, it
-> should also fix the problem.
+Also, maybe we need to make RTC_DRV_DS1374_WDT not user selectable.
 
-I already took it into my tree.
+If you don't think backward compatibility can be achieved, then we can
+drop everything.
 
-thanks,
+Else, the RTC part seems fine to me but the driver may be cleaned up a
+bit further afterwards.
 
-greg k-h
+> +	depends on MFD_DS1374
+> +	depends on REGMAP_I2C
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Support for the watchdog in the Maxim/Dallas DS1374 MFD.
+> +
+> +	  This driver can be built as a module. The module name is ds1374-wdt.
+> +
+>  config GPIO_WATCHDOG
+>  	tristate "Watchdog device controlled through GPIO-line"
+>  	depends on OF_GPIO
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
