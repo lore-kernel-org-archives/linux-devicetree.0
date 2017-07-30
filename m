@@ -1,71 +1,33 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH 2/6] drm/tinydrm: add helpers for ST7586 controllers
-Date: Sun, 30 Jul 2017 21:19:06 +0300
-Message-ID: <CAHp75VdwMbe4g_xAtm3EgK4TiF3mubCWKykFA6Pn=iVk53XMRQ@mail.gmail.com>
-References: <1501355870-13960-1-git-send-email-david@lechnology.com>
- <1501355870-13960-3-git-send-email-david@lechnology.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/6] drm/tinydrm: mipi-panel: refactor to use driver id
+Date: Sun, 30 Jul 2017 21:24:03 +0300
+Message-ID: <CAHp75VcdGi=TkB_7fPHROYoKJFUPZPGi=HvUAHuAvgZy-1_Epw@mail.gmail.com>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com> <1501355870-13960-5-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501355870-13960-3-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501355870-13960-5-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKdWwgMjksIDIwMTcgYXQgMTA6MTcgUE0sIERhdmlkIExlY2huZXIgPGRhdmlkQGxl
-Y2hub2xvZ3kuY29tPiB3cm90ZToKPiBUaGlzIGFkZHMgaGVscGVyIGZ1bmN0aW9ucyBhbmQgc3Vw
-cG9ydCBmb3IgU1Q3NTg2IGNvbnRyb2xsZXJzLiBUaGVzZQo+IGNvbnRyb2xsZXJzIGhhdmUgYW4g
-dW51c3VhbCBtZW1vcnkgbGF5b3V0IHdoZXJlIDMgcGl4ZWxzIGFyZSBwYWNrZWQgaW50bwo+IDEg
-Ynl0ZS4KPgo+ICstLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tKwo+IHwgYml0ICAgfCA3IDYgNSA0
-IDMgMiAxIDAgfAo+ICstLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tKwo+IHwgcGl4ZWwgfCAwIDAg
-MCAxIDEgMSAyIDIgfAo+ICstLS0tLS0tKy0tLS0tLS0tLS0tLS0tLS0tKwo+Cj4gU28sIHRoZXJl
-IGFyZSBhIG51YmVyIG9mIHBsYWNlcyBpbiB0aGUgdGlueWRybSBwaXBsaW5lIHdoZXJlIHRoaXMg
-Zm9ybWF0CgpudW1iZXIKCj4gbmVlZHMgdG8gYmUgdGFrZW4gaW50byBjb25zaWRlcmF0aW9uLgoK
-PiArICogdGlueWRybV9yZ2I1NjVfdG9fc3Q3NTg2IC0gQ29udmVydCBSR0I1NjUgdG8gU1Q3NTg2
-IGNsaXAgYnVmZmVyCgpIb3cgdGhpcyBjYW4gYmUgZ2VuZXJpYyB0aW55ZHJtIGhlbHBlcj8KV2h5
-IGRyaXZlciBjYW4ndCBoYW5kbGUgaXQgYnkgaXRzIG93biBhbmQgYXZvaWQgc3ByZWFkaW5nIHN0
-dWZmIGludG8KZ2VuZXJpYyBoZWFkZXI/Cgo+ICt2b2lkIHRpbnlkcm1fcmdiNTY1X3RvX3N0NzU4
-Nih1OCAqZHN0LCB2b2lkICp2YWRkciwKCj4gKyAqIHRpbnlkcm1feHJnYjg4ODhfdG9fc3Q3NTg2
-IC0gQ29udmVydCBYUkdCODg4OCB0byBTVDc1ODYgY2xpcCBidWZmZXIKCj4gK3ZvaWQgdGlueWRy
-bV94cmdiODg4OF90b19zdDc1ODYodTggKmRzdCwgdm9pZCAqdmFkZHIsCgpEaXR0by4KCj4gLSAg
-ICAgICBzd2l0Y2ggKGZiLT5mb3JtYXQtPmZvcm1hdCkgewo+IC0gICAgICAgY2FzZSBEUk1fRk9S
-TUFUX1JHQjU2NToKPiAtICAgICAgICAgICAgICAgaWYgKHN3YXApCj4gLSAgICAgICAgICAgICAg
-ICAgICAgICAgdGlueWRybV9zd2FiMTYoZHN0LCBzcmMsIGZiLCBjbGlwKTsKPiAtICAgICAgICAg
-ICAgICAgZWxzZQo+IC0gICAgICAgICAgICAgICAgICAgICAgIHRpbnlkcm1fbWVtY3B5KGRzdCwg
-c3JjLCBmYiwgY2xpcCk7Cj4gKyAgICAgICBzd2l0Y2ggKHBpeGVsX2ZtdCkgewo+ICsgICAgICAg
-Y2FzZSBNSVBJX0RDU19QSVhFTF9GTVRfMTZCSVQ6Cj4gKyAgICAgICAgICAgICAgIHN3aXRjaCAo
-ZmItPmZvcm1hdC0+Zm9ybWF0KSB7Cj4gKyAgICAgICAgICAgICAgIGNhc2UgRFJNX0ZPUk1BVF9S
-R0I1NjU6Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgaWYgKHN3YXApCj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB0aW55ZHJtX3N3YWIxNihkc3QsIHNyYywgZmIsIGNsaXApOwo+
-ICsgICAgICAgICAgICAgICAgICAgICAgIGVsc2UKPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIHRpbnlkcm1fbWVtY3B5KGRzdCwgc3JjLCBmYiwgY2xpcCk7Cj4gKyAgICAgICAgICAg
-ICAgICAgICAgICAgYnJlYWs7CgpDYW4ndCB5b3UgdXNlIHNvbWUgb3RoZXIgYXBwcm9hY2g/IENh
-bGxiYWNrcz8gUGx1Z2lucz8KCj4gKyAgICAgICBzd2l0Y2ggKG1pcGktPnBpeGVsX2ZtdCkgewo+
-ICsgICAgICAgY2FzZSBNSVBJX0RDU19QSVhFTF9GTVRfMTZCSVQ6Cj4gKyAgICAgICAgICAgICAg
-IGxlbiA9IHdpZHRoICogaGVpZ2h0ICogc2l6ZW9mKHUxNik7Cj4gKyAgICAgICAgICAgICAgIGJy
-ZWFrOwo+ICsgICAgICAgY2FzZSBNSVBJX0RDU19QSVhFTF9GTVRfU1Q3NTg2XzMzMjoKPiArICAg
-ICAgICAgICAgICAgd2lkdGggPSAod2lkdGggKyAyKSAvIDM7Cj4gKyAgICAgICAgICAgICAgIGxl
-biA9IHdpZHRoICogaGVpZ2h0Owo+ICsgICAgICAgICAgICAgICBicmVhazsKCkRpdHRvLgoKPiAr
-ICAgICAgIGNhc2UgTUlQSV9EQ1NfUElYRUxfRk1UX1NUNzU4Nl8zMzI6Cj4gKyAgICAgICAgICAg
-ICAgIC8qIDMgcGl4ZWxzIHBlciBieXRlICovCj4gKyAgICAgICAgICAgICAgIGJ1ZnNpemUgPSAo
-bW9kZS0+dmRpc3BsYXkgKyAyKSAvIDMgKiBtb2RlLT5oZGlzcGxheTsKPiArICAgICAgICAgICAg
-ICAgYnJlYWs7CgpEaXR0by4KCj4gLSAgICAgICBpZiAoY21kID09IE1JUElfRENTX1dSSVRFX01F
-TU9SWV9TVEFSVCAmJiAhbWlwaS0+c3dhcF9ieXRlcykKPiArICAgICAgIGlmIChjbWQgPT0gTUlQ
-SV9EQ1NfV1JJVEVfTUVNT1JZX1NUQVJUICYmICFtaXBpLT5zd2FwX2J5dGVzICYmCj4gKyAgICAg
-ICAgICAgbWlwaS0+cGl4ZWxfZm10ICE9IE1JUElfRENTX1BJWEVMX0ZNVF9TVDc1ODZfMzMyKQoK
-RGl0dG8uCgpJZiB3ZSBhbGxvdyB0aGlzIHdlIGVuZCB1cCB0byBoYXZlIDEwMDUwMCBMT0NzIGlu
-IHRpbnlkcm0taGVscGVycy5jCndoaWNoIHdpbGwgaGF2ZSBub3RoaW5nIHRvIGRvIHdpdGggdGhl
-IGZyYW1ld29yayBpdHNlbGYuCgoKCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2Y2hl
-bmtvCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sat, Jul 29, 2017 at 10:17 PM, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org> wrote:
+> This refactors the mipi-panel module to use the driver id for panel-specific
+> data. This is in preparation for adding additional panels.
+>
+
+Wouldn't be better to split glue driver from what looks like more
+generic in the first place? Then you will not need to spread some
+stuff
+over generic files.
+
+Are we going to disrupt genericy of the framework already with second driver?!
+
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
