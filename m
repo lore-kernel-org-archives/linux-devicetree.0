@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH V2 3/3] ARM: dts: bcm2835: Add Raspberry Pi Zero W
-Date: Sun, 30 Jul 2017 19:10:34 +0200
-Message-ID: <1501434634-2325-4-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V2 1/3] ARM: bcm283x: Define UART pinmuxing on board level
+Date: Sun, 30 Jul 2017 19:10:32 +0200
+Message-ID: <1501434634-2325-2-git-send-email-stefan.wahren@i2se.com>
 References: <1501434634-2325-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1501434634-2325-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
@@ -10,179 +10,160 @@ To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <rob
 Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Raspberry Pi Zero W has the same components like the Zero plus
-a Cypress CYW43438 wireless chip (wifi + bl).
+Until RPI 3 and Zero W the pl011 (uart0) was always on pin 14/15. So in
+order to take care of them and other boards in the future,
+we need to define UART pinmuxing on board level.
+
+This work based on Eric Anholt's patch "ARM: bcm2385: Don't force pl011
+onto pins 14/15." and Fabian Vogt's patch "ARM64: dts: bcm2837: assign
+uart0 to BT and uart1 to pin headers".
 
 Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile               |   3 +-
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 139 +++++++++++++++++++++++++++++++
- 2 files changed, 141 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-a.dts      |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-b.dts      |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts   |  6 ++++++
+ arch/arm/boot/dts/bcm2835-rpi.dtsi       |  2 +-
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts    |  6 ++++++
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts    | 10 ++++++++++
+ 9 files changed, 53 insertions(+), 1 deletion(-)
 
-I'm not sure that GPIO34 to GPIO39 are really "not connected".
-They are listed in dt-blob.dts, but only declared as input.
-Still no full schematics available.
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35..6e632a3 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -73,7 +73,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2836-rpi-2-b.dtb \
- 	bcm2837-rpi-3-b.dtb \
--	bcm2835-rpi-zero.dtb
-+	bcm2835-rpi-zero.dtb \
-+	bcm2835-rpi-zero-w.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-new file mode 100644
-index 0000000..82651c3
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -0,0 +1,139 @@
-+/*
-+ * Copyright (C) 2017 Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include "bcm2835.dtsi"
-+#include "bcm2835-rpi.dtsi"
-+#include "bcm283x-rpi-usb-host.dtsi"
-+
-+/ {
-+	compatible = "raspberrypi,model-zero-w", "brcm,bcm2835";
-+	model = "Raspberry Pi Zero W";
-+
-+	/* Needed by firmware to properly init UARTs */
-+	aliases {
-+		uart0 = "/soc/serial@7e201000";
-+		uart1 = "/soc/serial@7e215040";
-+		serial0 = "/soc/serial@7e201000";
-+		serial1 = "/soc/serial@7e215040";
-+	};
-+
-+	leds {
-+		act {
-+			gpios = <&gpio 47 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&wl_on>;
-+		reset-gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
-+	};
-+};
-+
-+&gpio {
-+	/*
-+	 * This is based on the official GPU firmware DT blob.
-+	 *
-+	 * Legend:
-+	 * "NC" = not connected (no rail from the SoC)
-+	 * "FOO" = GPIO line named "FOO" on the schematic
-+	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
-+	 */
-+	gpio-line-names = "GPIO0",
-+			  "GPIO1",
-+			  "SDA1",
-+			  "SCL1",
-+			  "GPIO_GCLK",
-+			  "GPIO5",
-+			  "GPIO6",
-+			  "SPI_CE1_N",
-+			  "SPI_CE0_N",
-+			  "SPI_MISO",
-+			  "SPI_MOSI",
-+			  "SPI_SCLK",
-+			  "GPIO12",
-+			  "GPIO13",
-+			  /* Serial port */
-+			  "TXD0",
-+			  "RXD0",
-+			  "GPIO16",
-+			  "GPIO17",
-+			  "GPIO18",
-+			  "GPIO19",
-+			  "GPIO20",
-+			  "GPIO21",
-+			  "GPIO22",
-+			  "GPIO23",
-+			  "GPIO24",
-+			  "GPIO25",
-+			  "GPIO26",
-+			  "GPIO27",
-+			  "SDA0",
-+			  "SCL0",
-+			  "NC", /* GPIO30 */
-+			  "NC", /* GPIO31 */
-+			  "NC", /* GPIO32 */
-+			  "NC", /* GPIO33 */
-+			  "NC", /* GPIO34 */
-+			  "NC", /* GPIO35 */
-+			  "NC", /* GPIO36 */
-+			  "NC", /* GPIO37 */
-+			  "NC", /* GPIO38 */
-+			  "NC", /* GPIO39 */
-+			  "CAM_GPIO1", /* GPIO40 */
-+			  "WL_ON", /* GPIO41 */
-+			  "NC", /* GPIO42 */
-+			  "WIFI_CLK", /* GPIO43 */
-+			  "CAM_GPIO0", /* GPIO44 */
-+			  "BT_ON", /* GPIO45 */
-+			  "HDMI_HPD_N",
-+			  "STATUS_LED_N",
-+			  /* Used by SD Card */
-+			  "SD_CLK_R",
-+			  "SD_CMD_R",
-+			  "SD_DATA0_R",
-+			  "SD_DATA1_R",
-+			  "SD_DATA2_R",
-+			  "SD_DATA3_R";
-+
-+	pinctrl-0 = <&gpioout &alt0>;
-+
-+	wl_on: wl-on {
-+		brcm,pins = <41>;
-+		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
-+	};
-+};
-+
-+&hdmi {
-+	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
-+};
-+
-+&sdhci {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	pinctrl-0 = <&emmc_gpio34 &gpclk2_gpio43>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		reg = <1>;
-+		compatible = "brcm,bcm4329-fmac";
-+	};
-+};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index d070454..9f86649 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -99,3 +99,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
 +
 +&uart0 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&uart0_gpio14>;
 +	status = "okay";
 +};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a.dts b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+index 46d078e..4b1af06 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a.dts
+@@ -94,3 +94,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index 432088e..a846f1e 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -101,3 +101,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+index 4133bc2..e860964 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-rev2.dts
+@@ -94,3 +94,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b.dts b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+index 4d56fe3..5d77f3f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b.dts
+@@ -89,3 +89,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_HIGH>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+index 79a20d5..7036240 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+@@ -103,3 +103,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index e55b362..e36c392 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -39,7 +39,7 @@
+ 	};
+ 
+ 	alt0: alt0 {
+-		brcm,pins = <4 5 7 8 9 10 11 14 15>;
++		brcm,pins = <4 5 7 8 9 10 11>;
+ 		brcm,function = <BCM2835_FSEL_ALT0>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+index bf19e8c..e8de414 100644
+--- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
++++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+@@ -39,3 +39,9 @@
+ &hdmi {
+ 	hpd-gpios = <&gpio 46 GPIO_ACTIVE_LOW>;
+ };
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio14>;
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+index 972f14d..20725ca 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -19,7 +19,17 @@
+ 	};
+ };
+ 
++/* uart0 communicates with the BT module */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
++	status = "okay";
++};
++
++/* uart1 is mapped to the pin header */
+ &uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_gpio14>;
+ 	status = "okay";
+ };
+ 
 -- 
 2.7.4
 
