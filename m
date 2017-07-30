@@ -1,79 +1,148 @@
-From: Philippe CORNU <philippe.cornu@st.com>
-Subject: Re: [PATCH v6 1/7] drm/stm: ltdc: Fix leak of px clk enable in some
- error paths
-Date: Sun, 30 Jul 2017 09:10:29 +0000
-Message-ID: <99a961b3-8549-1612-15e8-08f150cc8989@st.com>
-References: <1500277223-29553-1-git-send-email-philippe.cornu@st.com>
- <1500277223-29553-2-git-send-email-philippe.cornu@st.com>
- <bd6aeb5d-8f39-3e5e-0f72-a1d50e4438ef@codeaurora.org>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv2 4/4] drm/tegra: add cec-notifier support
+Date: Sun, 30 Jul 2017 13:08:30 +0200
+Message-ID: <cd7fa62b-83b9-e94d-66a3-fafae70de1ba@xs4all.nl>
+References: <20170715124753.43714-1-hverkuil@xs4all.nl>
+ <20170715124753.43714-5-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <bd6aeb5d-8f39-3e5e-0f72-a1d50e4438ef@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170715124753.43714-5-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Content-Language: en-US
-Content-ID: <117A8706E37227498A3AC78278FA2A8A@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin
- Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Neil Armstrong <narmstrong@baylibre.com>, Eric
- Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puck.chen@hisilicon.com>, Mark
- Yao <mark.yao@rock-chips.com>
-Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>, Daniel Vetter <daniel.vetter@ffwll.ch>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>, Fabien DESSENNE <fabien.dessenne@st.com>, Mickael REULIER <mickael.reulier@st.com>, Vincent ABRIOU <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Ludovic BARRE <ludovic.barre@st.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA3LzI5LzIwMTcgMDQ6MzIgUE0sIEFyY2hpdCBUYW5lamEgd3JvdGU6DQo+IEhpIFBo
-aWxpcHBlLA0KPiANCj4gT24gMDcvMTcvMjAxNyAwMToxMCBQTSwgUGhpbGlwcGUgQ09STlUgd3Jv
-dGU6DQo+PiBUaGUgcGl4ZWwgY2xvY2sgZ2V0cyBlbmFibGVkIGVhcmx5IGR1cmluZyBpbml0LCBz
-aW5jZSBpdCdzIHJlcXVpcmVkDQo+PiBpbiBvcmRlciB0byByZWFkIHJlZ2lzdGVycy4gVGhpcyBw
-aXhlbCBjbG9jayBtdXN0IGJlIGRpc2FibGVkIGlmDQo+PiBlcnJvcnMgZHVyaW5nIHRoaXMgaW5p
-dCBwaGFzZS4NCj4+DQo+IA0KPiBUaGlzIHBhdGNoIHdhcyBwdWxsZWQgaW4gdG8gZHJtLW1pc2Mt
-bmV4dCwgYnV0IGl0IGxhY2tzIHlvdXIgU2lnbi1vZmYuDQo+IEl0IGxvb2tzIGxpa2UgdGhlIEFj
-ayBhbmQgdGhlIFNpZ24tb2ZmIGdvdCBhY2NpZGVudGFsbHkgbWl4ZWQgdXANCj4gDQoNCkhpIEFy
-Y2hpdCwNClRoaXMgcGF0Y2ggaXMgZnJvbSBFcmljIHRoYXQgaXMgd2h5IEkgcHV0IGhpcyAic2ln
-bmVkLW9mZi1ieSIgYW5kIEkgDQoiYWNrZWQiIGl0IHRvIGNvbmZpcm0gdGhhdCB0aGUgcGF0Y2gg
-aXMgZmluZSB0byBtZSA6LSkNCg0KTmV2ZXJ0aGVsZXNzLCBhcyBJIGFtIHRoZSBwYXRjaCAiYXV0
-aG9yIiBpbiB0aGUgZ2l0IHRyZWUsIEkgY29uZmlybSB3aXRoIA0KbXkgbXkgYmVsb3cgc2lnbmVk
-LW9mZi1ieToNCg0KU2lnbmVkLW9mZi1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51
-QHN0LmNvbT4NCg0KTWFueSB0aGFua3MNClBoaWxpcHBlIDotKQ0KDQo+IENhbiB5b3UgcGxlYXNl
-IHJlcGx5IHRvIHRoaXMgbWFpbCB3aXRoIHlvdXIgIlNpZ25lZC1vZmYtYnkiIHNvIHRoYXQNCj4g
-d2UgaGF2ZSBwcm9vZiBvZiBpdCBvbiBkcmktZGV2ZWw/DQo+IA0KPiBUaGFua3MsDQo+IEFyY2hp
-dA0KPiANCj4+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+DQo+
-PiBBY2tlZC1ieTogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4NCj4+IC0t
-LQ0KPj4gICBkcml2ZXJzL2dwdS9kcm0vc3RtL2x0ZGMuYyB8IDEwICsrKysrKy0tLS0NCj4+ICAg
-MSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4+DQo+PiBk
-aWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9sdGRjLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-c3RtL2x0ZGMuYw0KPj4gaW5kZXggNTMzMTc2MC4uN2Y2NGQ1YSAxMDA2NDQNCj4+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9zdG0vbHRkYy5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL2x0
-ZGMuYw0KPj4gQEAgLTEwNDUsMTMgKzEwNDUsMTUgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3QgZHJt
-X2RldmljZSAqZGRldikNCj4+ICAgICAgIGlmIChvZl9hZGRyZXNzX3RvX3Jlc291cmNlKG5wLCAw
-LCAmcmVzKSkgew0KPj4gICAgICAgICAgIERSTV9FUlJPUigiVW5hYmxlIHRvIGdldCByZXNvdXJj
-ZVxuIik7DQo+PiAtICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4+ICsgICAgICAgIHJldCA9IC1F
-Tk9ERVY7DQo+PiArICAgICAgICBnb3RvIGVycjsNCj4+ICAgICAgIH0NCj4+ICAgICAgIGxkZXYt
-PnJlZ3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoZGV2LCAmcmVzKTsNCj4+ICAgICAgIGlmIChJ
-U19FUlIobGRldi0+cmVncykpIHsNCj4+ICAgICAgICAgICBEUk1fRVJST1IoIlVuYWJsZSB0byBn
-ZXQgbHRkYyByZWdpc3RlcnNcbiIpOw0KPj4gLSAgICAgICAgcmV0dXJuIFBUUl9FUlIobGRldi0+
-cmVncyk7DQo+PiArICAgICAgICByZXQgPSBQVFJfRVJSKGxkZXYtPnJlZ3MpOw0KPj4gKyAgICAg
-ICAgZ290byBlcnI7DQo+PiAgICAgICB9DQo+PiAgICAgICBmb3IgKGkgPSAwOyBpIDwgTUFYX0lS
-UTsgaSsrKSB7DQo+PiBAQCAtMTA2NCw3ICsxMDY2LDcgQEAgaW50IGx0ZGNfbG9hZChzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGRldikNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZGV2X25hbWUo
-ZGV2KSwgZGRldik7DQo+PiAgICAgICAgICAgaWYgKHJldCkgew0KPj4gICAgICAgICAgICAgICBE
-Uk1fRVJST1IoIkZhaWxlZCB0byByZWdpc3RlciBMVERDIGludGVycnVwdFxuIik7DQo+PiAtICAg
-ICAgICAgICAgcmV0dXJuIHJldDsNCj4+ICsgICAgICAgICAgICBnb3RvIGVycjsNCj4+ICAgICAg
-ICAgICB9DQo+PiAgICAgICB9DQo+PiBAQCAtMTA3OSw3ICsxMDgxLDcgQEAgaW50IGx0ZGNfbG9h
-ZChzdHJ1Y3QgZHJtX2RldmljZSAqZGRldikNCj4+ICAgICAgIGlmIChyZXQpIHsNCj4+ICAgICAg
-ICAgICBEUk1fRVJST1IoImhhcmR3YXJlIGlkZW50aWZpZXIgKDB4JTA4eCkgbm90IHN1cHBvcnRl
-ZCFcbiIsDQo+PiAgICAgICAgICAgICAgICAgbGRldi0+Y2Fwcy5od192ZXJzaW9uKTsNCj4+IC0g
-ICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgICAgICBnb3RvIGVycjsNCj4+ICAgICAgIH0NCj4+
-ICAgICAgIERSTV9JTkZPKCJsdGRjIGh3IHZlcnNpb24gMHglMDh4IC0gcmVhZHlcbiIsIA0KPj4g
-bGRldi0+Y2Fwcy5od192ZXJzaW9uKTsNCj4+DQo+IApfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+In order to support CEC the HDMI driver has to inform the CEC driver
+whenever the physical address changes. So when the EDID is read the
+CEC driver has to be informed and whenever the hotplug detect goes
+away.
+
+This is done through the cec-notifier framework.
+
+The link between the HDMI driver and the CEC driver is done through
+the hdmi_phandle in the tegra-cec node in the device tree.
+
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+---
+Changes since v1:
+
+Add 'select CEC_CORE if CEC_NOTIFIER' to Kconfig. If the tegra-cec driver
+is a module and the drm tegra driver is built-in, then the CEC core
+will be a module also, causing the CEC notifier to fail (will be
+compiled as empty functions). This select forces the correct dependency.
+---
+ drivers/gpu/drm/tegra/Kconfig  | 1 +
+ drivers/gpu/drm/tegra/drm.h    | 3 +++
+ drivers/gpu/drm/tegra/hdmi.c   | 9 +++++++++
+ drivers/gpu/drm/tegra/output.c | 6 ++++++
+ 4 files changed, 19 insertions(+)
+
+diff --git a/drivers/gpu/drm/tegra/Kconfig b/drivers/gpu/drm/tegra/Kconfig
+index 2db29d67193d..c882918c2024 100644
+--- a/drivers/gpu/drm/tegra/Kconfig
++++ b/drivers/gpu/drm/tegra/Kconfig
+@@ -8,6 +8,7 @@ config DRM_TEGRA
+ 	select DRM_PANEL
+ 	select TEGRA_HOST1X
+ 	select IOMMU_IOVA if IOMMU_SUPPORT
++	select CEC_CORE if CEC_NOTIFIER
+ 	help
+ 	  Choose this option if you have an NVIDIA Tegra SoC.
+
+diff --git a/drivers/gpu/drm/tegra/drm.h b/drivers/gpu/drm/tegra/drm.h
+index 6d6da01282f3..c0a18b60caf1 100644
+--- a/drivers/gpu/drm/tegra/drm.h
++++ b/drivers/gpu/drm/tegra/drm.h
+@@ -212,6 +212,8 @@ int tegra_dc_state_setup_clock(struct tegra_dc *dc,
+ 			       struct clk *clk, unsigned long pclk,
+ 			       unsigned int div);
+
++struct cec_notifier;
++
+ struct tegra_output {
+ 	struct device_node *of_node;
+ 	struct device *dev;
+@@ -219,6 +221,7 @@ struct tegra_output {
+ 	struct drm_panel *panel;
+ 	struct i2c_adapter *ddc;
+ 	const struct edid *edid;
++	struct cec_notifier *notifier;
+ 	unsigned int hpd_irq;
+ 	int hpd_gpio;
+ 	enum of_gpio_flags hpd_gpio_flags;
+diff --git a/drivers/gpu/drm/tegra/hdmi.c b/drivers/gpu/drm/tegra/hdmi.c
+index cda0491ed6bf..fbf14e1efd0e 100644
+--- a/drivers/gpu/drm/tegra/hdmi.c
++++ b/drivers/gpu/drm/tegra/hdmi.c
+@@ -21,6 +21,8 @@
+
+ #include <sound/hda_verbs.h>
+
++#include <media/cec-notifier.h>
++
+ #include "hdmi.h"
+ #include "drm.h"
+ #include "dc.h"
+@@ -1720,6 +1722,10 @@ static int tegra_hdmi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(hdmi->vdd);
+ 	}
+
++	hdmi->output.notifier = cec_notifier_get(&pdev->dev);
++	if (hdmi->output.notifier == NULL)
++		return -ENOMEM;
++
+ 	hdmi->output.dev = &pdev->dev;
+
+ 	err = tegra_output_probe(&hdmi->output);
+@@ -1778,6 +1784,9 @@ static int tegra_hdmi_remove(struct platform_device *pdev)
+
+ 	tegra_output_remove(&hdmi->output);
+
++	if (hdmi->output.notifier)
++		cec_notifier_put(hdmi->output.notifier);
++
+ 	return 0;
+ }
+
+diff --git a/drivers/gpu/drm/tegra/output.c b/drivers/gpu/drm/tegra/output.c
+index 595d1ec3e02e..57c052521a44 100644
+--- a/drivers/gpu/drm/tegra/output.c
++++ b/drivers/gpu/drm/tegra/output.c
+@@ -11,6 +11,8 @@
+ #include <drm/drm_panel.h>
+ #include "drm.h"
+
++#include <media/cec-notifier.h>
++
+ int tegra_output_connector_get_modes(struct drm_connector *connector)
+ {
+ 	struct tegra_output *output = connector_to_output(connector);
+@@ -33,6 +35,7 @@ int tegra_output_connector_get_modes(struct drm_connector *connector)
+ 		edid = drm_get_edid(connector, output->ddc);
+
+ 	drm_mode_connector_update_edid_property(connector, edid);
++	cec_notifier_set_phys_addr_from_edid(output->notifier, edid);
+
+ 	if (edid) {
+ 		err = drm_add_edid_modes(connector, edid);
+@@ -68,6 +71,9 @@ tegra_output_connector_detect(struct drm_connector *connector, bool force)
+ 			status = connector_status_connected;
+ 	}
+
++	if (status != connector_status_connected)
++		cec_notifier_phys_addr_invalidate(output->notifier);
++
+ 	return status;
+ }
+
+-- 
+2.13.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
