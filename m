@@ -1,32 +1,42 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] rc: add zx-irdec remote control driver
-Date: Sun, 30 Jul 2017 21:16:25 +0800
-Message-ID: <20170730131624.GK29754@dragon>
-References: <1501309902-7559-1-git-send-email-shawnguo@kernel.org>
- <1501309902-7559-3-git-send-email-shawnguo@kernel.org>
- <20170729095113.g6hrb3qffi7qcaxx@gofer.mess.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170729095113.g6hrb3qffi7qcaxx-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH v2 0/3] Add ZTE zx-irdec remote control driver
+Date: Sun, 30 Jul 2017 21:23:10 +0800
+Message-ID: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sean Young <sean@mess.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Baoyou Xie <xie.baoyou@sanechips.com.cn>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
+From: Shawn Guo <shawn.guo@linaro.org>
 
-On Sat, Jul 29, 2017 at 10:51:13AM +0100, Sean Young wrote:
-> Hi Shawn,
-> 
-> The driver looks great! Just a minor point, see below.
+The series adds dt-bindings and remote control driver for IRDEC block
+found on ZTE ZX family SoCs.
 
-Thanks for taking time to look at the patch.  I appreciate your review
-comments, and will post v2 that addressed them shortly.  Thanks.
+Changes for v2:
+ - Add one patch to move generic NEC scancode composing and protocol
+   type detection code from ir_nec_decode() into an inline shared
+   function, which can be reused by zx-irdec driver.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn Guo (3):
+  rc: ir-nec-decoder: move scancode composing code into a shared
+    function
+  dt-bindings: add bindings document for zx-irdec
+  rc: add zx-irdec remote control driver
+
+ .../devicetree/bindings/media/zx-irdec.txt         |  14 ++
+ drivers/media/rc/Kconfig                           |  11 ++
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/ir-nec-decoder.c                  |  32 +---
+ drivers/media/rc/keymaps/Makefile                  |   3 +-
+ drivers/media/rc/keymaps/rc-zx-irdec.c             |  79 +++++++++
+ drivers/media/rc/zx-irdec.c                        | 183 +++++++++++++++++++++
+ include/media/rc-core.h                            |  31 ++++
+ include/media/rc-map.h                             |   1 +
+ 9 files changed, 325 insertions(+), 30 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/zx-irdec.txt
+ create mode 100644 drivers/media/rc/keymaps/rc-zx-irdec.c
+ create mode 100644 drivers/media/rc/zx-irdec.c
+
+-- 
+1.9.1
