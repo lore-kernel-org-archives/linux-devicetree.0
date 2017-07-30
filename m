@@ -1,87 +1,92 @@
-From: Marcus Wolf <marcus.wolf-hymvNObv7Fheq5RAq1AYSxS11BummzK+@public.gmane.org>
-Subject: Re: [PATCH 1/1] staging: pi433: fix problem with division in
- rf69_set_deviation
-Date: Sun, 30 Jul 2017 17:21:44 +0200 (CEST)
-Message-ID: <1603596658.13802.1501428104756@ox.hosteurope.de>
-References: <39f4e59cae6d241235f8f2cc6eebb33c-EhVcX1pHQwdXWkQFBhENSgEKLlwACzJXX19HAVhEWENbS1kLMF52CEtUX1pBSEwcXlJRL1lQWAheVn4GUFc=-webmailer1@server05.webmailer.hosteurope.de>
- <201707172156.DCyTyWc2%fengguang.wu@intel.com>
- <652336354.3806.1500549785404@ox.hosteurope.de>
- <20170720113705.d65hxm3jbki2ynqd@mwanda>
- <CAMuHMdVgw=V6f8wzcXvS3gk8GK0bOpdgs_jxL6Y_X9idJD_x3Q@mail.gmail.com>
- <255867683.7064.1500566196444@ox.hosteurope.de>
- <20170729000118.GA28861@kroah.com>
- <1812078351.11080.1501318275697@ox.hosteurope.de>
- <20170729222127.GB16460@kroah.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] iio: adc: stm32: fix common clock rate
+Date: Sun, 30 Jul 2017 17:19:35 +0100
+Message-ID: <20170730171935.7b6adfca@kernel.org>
+References: <1500912640-23927-1-git-send-email-fabrice.gasnier@st.com>
+        <1500912640-23927-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170729222127.GB16460-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Cc: "kbuild-all-JC7UmRfGjtg@public.gmane.org" <kbuild-all-JC7UmRfGjtg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, driverdevel <devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500912640-23927-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg, hi Dan
+On Mon, 24 Jul 2017 18:10:38 +0200
+Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
 
-the toolingproblem is a little bit more complicated. Since a mainline kernel
-isn't directly able to boot on the RasPi, for testing I work with a Raspbian
-kernel. Since at the beginning, I never thought of submitting the driver, I
-started with a side-build project with SVN - that's stil my master... In
-addition, disk is full :-( 
+> Fixes: 95e339b6e85d ("iio: adc: stm32: add support for STM32H7")
+> 
+> ADC clock input is provided to internal prescaler (that decreases its
+> frequency). It's then used as reference clock for conversions.
+> 
+> - Fix common clock rate used then by stm32-adc sub-devices. Take common
+>   prescaler into account. Currently, rate is used to set "boost" mode.
+>   It may unnecessarily be set. This impacts power consumption.
+> - Fix ADC max clock rate on STM32H7 (fADC from datasheet). Currently,
+>   prescaler may be set too low. This can result in ADC reference
+>   clock used for conversion to exceed max allowed clock frequency.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+I've applied this one to the fixes togreg branch of iio.git.
 
-So in principle nothing is really adequate to meet the need of easy
-participating in kernel development.
-I will revise my tooling, as soon as I find the time and quietness - most
-probably I need to setup from scratch.
+Thanks,
 
-For the announced change in rf69.c I will try to equip an SVN-diff with
-apropriate headers next week, so Dan can crosscheck with his work - I hope, I
-will make it without errors...
-
-Have a nice weekend,
-
-Marcus
-
-
-> Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> hat am 30. Juli 2017 um 00:21
-> geschrieben:
->
->
-> On Sat, Jul 29, 2017 at 10:51:15AM +0200, Marcus Wolf wrote:
-> > Hi Greg,
-> >
-> > already had a discussion concerning that patch with Dan yesterday.
-> > I really don't know what's going on there. I detached the patch once more
-> > from
-> > my outbox and had a very close look in an editor and looked at it with a
-> > difftool. In my outbox the patch is fine. I really don't knwo why it reaches
-> > you
-> > crapped.
-> >
-> > Since there are contsant problems with my patches, I will stop sending
-> > patches
-> > for a while. As soon as I can find time to deeply confess with the tooling,
-> > I
-> > will start over with trying.
->
-> Just use 'git send-email' for patches if you are having problems with
-> your email client. And get a better email client the kernel
-> Documentation has a whole file just about that topic and how to do it
-> correctly.
->
-> > Concerning this patch: You can use Arnds Patch from yesterday instead:
-> > [PATCH] staging: pi433: use div_u64 for 64-bit division
-> > It's a bit different to my patch, but according to yesterdays discussion, it
-> > should also fix the problem.
->
-> I already took it into my tree.
->
-> thanks,
->
-> greg k-h
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jonathan
+> ---
+> Changes in v2:
+> - Better description of wrong things being fixed.
+> ---
+>  drivers/iio/adc/stm32-adc-core.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
+> index e09233b..6096763 100644
+> --- a/drivers/iio/adc/stm32-adc-core.c
+> +++ b/drivers/iio/adc/stm32-adc-core.c
+> @@ -64,7 +64,7 @@
+>  #define STM32H7_CKMODE_MASK		GENMASK(17, 16)
+>  
+>  /* STM32 H7 maximum analog clock rate (from datasheet) */
+> -#define STM32H7_ADC_MAX_CLK_RATE	72000000
+> +#define STM32H7_ADC_MAX_CLK_RATE	36000000
+>  
+>  /**
+>   * stm32_adc_common_regs - stm32 common registers, compatible dependent data
+> @@ -148,14 +148,14 @@ static int stm32f4_adc_clk_sel(struct platform_device *pdev,
+>  		return -EINVAL;
+>  	}
+>  
+> -	priv->common.rate = rate;
+> +	priv->common.rate = rate / stm32f4_pclk_div[i];
+>  	val = readl_relaxed(priv->common.base + STM32F4_ADC_CCR);
+>  	val &= ~STM32F4_ADC_ADCPRE_MASK;
+>  	val |= i << STM32F4_ADC_ADCPRE_SHIFT;
+>  	writel_relaxed(val, priv->common.base + STM32F4_ADC_CCR);
+>  
+>  	dev_dbg(&pdev->dev, "Using analog clock source at %ld kHz\n",
+> -		rate / (stm32f4_pclk_div[i] * 1000));
+> +		priv->common.rate / 1000);
+>  
+>  	return 0;
+>  }
+> @@ -250,7 +250,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  
+>  out:
+>  	/* rate used later by each ADC instance to control BOOST mode */
+> -	priv->common.rate = rate;
+> +	priv->common.rate = rate / div;
+>  
+>  	/* Set common clock mode and prescaler */
+>  	val = readl_relaxed(priv->common.base + STM32H7_ADC_CCR);
+> @@ -260,7 +260,7 @@ static int stm32h7_adc_clk_sel(struct platform_device *pdev,
+>  	writel_relaxed(val, priv->common.base + STM32H7_ADC_CCR);
+>  
+>  	dev_dbg(&pdev->dev, "Using %s clock/%d source at %ld kHz\n",
+> -		ckmode ? "bus" : "adc", div, rate / (div * 1000));
+> +		ckmode ? "bus" : "adc", div, priv->common.rate / 1000);
+>  
+>  	return 0;
+>  }
