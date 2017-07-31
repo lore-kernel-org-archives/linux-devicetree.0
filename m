@@ -1,88 +1,80 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v3 0/3] add the reset controller to the Meson8b clkc
-Date: Mon, 31 Jul 2017 10:27:47 +0200
-Message-ID: <1501489667.6834.1.camel@baylibre.com>
-References: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
+From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
+Date: Mon, 31 Jul 2017 18:38:34 +1000
+Message-ID: <CAOSf1CFQU4qni6Lm7N4_TMCBEndq8b_t9xgEt5q+rymLEzSOeg@mail.gmail.com>
+References: <1501174151.1055.8.camel@hp800z> <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
+ <1501181931.1055.18.camel@hp800z> <597A4B80.7000106@gmail.com>
+ <1501191985.1055.50.camel@hp800z> <CAL_Jsq+NBEXyOmRx3Ar0OTpyaLeT0hEKw45R0PrVEdmOcd9czw@mail.gmail.com>
+ <20170728005140.GF26163@bill-the-cat> <CAL_Jsq+eJNG66D22bNButg6=jj9WQ7Nw4PpxLsPBmGxN9KBnaw@mail.gmail.com>
+ <20170731055316.GG2652@umbus.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, linux-clk@vger.kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170731055316.GG2652-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-07-28 at 23:13 +0200, Martin Blumenstingl wrote:
-> This registers the known (soft) reset lines provided by the clock
-> controller's registers.
-> 
-> This is the first preparation step for SMP and CPU hotplug support on
-> Meson8/Meson8b/Meson8m2. Booting the secondary cores on these SoCs
-> requires asserting and de-asserting a reset line (one for each CPU
-> core). These reset lines are provided by the clock controller.
-> 
-> The reset controller part of the meson8b clock controller has to be
-> registered early (which I did through CLK_OF_DECLARE_DRIVER), because
-> the secondary cores are started *very* early in the boot process (and
-> meson8b_clkc_probe is invoked long after we need the reset controller
-> to be available for booting the secondary CPU cores).
-> 
-> The user of the reset-controller (= the patches which enable SMP and
-> CPU hotplug support) will follow in the next days. I decided to split
-> this because the SMP series will probably consist of 6 patches alone
-> (and may need to go through two separate trees).
-> 
-> Changes since v2 at [3]:
-> - move the reset line preprocessor defines into a separate file
->   (affects patch #1 as this header file is part of the dt-binding)
-> - rename the reset line preprocessor macros from RESETID_ to
->   CLKC_RESET_ to clearly indicate that these are provided by the
->   clock controller (unlike the preprocessor macros for the reset
->   lines in the standlone reset controller, which start with RESET_)
-> - updated patch #2 due to the changes mentioned above
-> - added Neil's Reviewed-by to all patches
-> 
-> Changes since v1 at [0]:
-> - updated cover letter description as we are now registering more than
->   four reset lines
-> - split patch #1 into a dt-binding and clk driver patch
-> - slightly reworded the dt-binding documentation so it's now clear that
->   the reset identifiers are preprocessor macros in
->   dt-bindings/clock/meson8b-clkc.h (v1 of this series didn't have these
->   macros at all)
-> - patch #2 (previously part of patch #1) now registers all known reset
->   lines (see [1] and [2] for the results of my detective work)
-> - patch #3 is untouched
-> 
-> 
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004283.html
-> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004330.html
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004347.html
-> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004352.html
-> 
-> 
-> Martin Blumenstingl (3):
->   dt-bindings: clock: meson8b: describe the embedded reset controller
->   clk: meson: meson8b: register the built-in reset controller
->   ARM: dts: meson: mark the clock controller also as reset controller
-> 
->  .../bindings/clock/amlogic,meson8b-clkc.txt        |   9 +-
->  arch/arm/boot/dts/meson8.dtsi                      |   1 +
->  arch/arm/boot/dts/meson8b.dtsi                     |   1 +
->  drivers/clk/meson/Kconfig                          |   1 +
->  drivers/clk/meson/meson8b.c                        | 159 +++++++++++++++++++-
-> -
->  drivers/clk/meson/meson8b.h                        |   9 +-
->  .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h |  27 ++++
->  7 files changed, 193 insertions(+), 14 deletions(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
-> 
+On Mon, Jul 31, 2017 at 3:53 PM, David Gibson
+<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> On Thu, Jul 27, 2017 at 09:12:40PM -0500, Rob Herring wrote:
+>> On Thu, Jul 27, 2017 at 7:51 PM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> > On Thu, Jul 27, 2017 at 06:00:00PM -0500, Rob Herring wrote:
+>> >> On Thu, Jul 27, 2017 at 4:46 PM, Pantelis Antoniou
+>> >> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> >> > Hi Frank,
+>> >> >
+>> >> > On Thu, 2017-07-27 at 13:22 -0700, Frank Rowand wrote:
+>> >> >> Hi Pantelis,
+>> >> >>
+>> >> >> Keep in mind one of the reasons Linus says he is very direct is to
+>> >> >> avoid leading a developer on, so that they don't waste a lot of time
+>> >> >> trying to resolve the maintainer's issues instead of realizing that
+>> >> >> the maintainer is saying "no". Please read my current answer as being
+>> >> >> "no, not likely to ever be accepted", not "no, not in the current form".
+>> >> >>
+>> >> >> My first reaction is: no, this is not a good idea for the Linux kernel.
+>> >> >>
+>> >> >
+>> >> > This has nothing to do with the kernel. It spits out valid DTBs that the
+>> >> > kernel (or anything else) may use.
+>> >>
+>> >> Let me rephrase Frank's statement: this is not a good idea for the
+>> >> main repository of dts files.
+>> >>
+>> >> But sure, DTS is already not the only source of DTBs. It comes from
+>> >> firmware on Power systems.
+>> >
+>> > Yes, but unless they're generated from something other than a (at the
+>> > time) normal DTS, that's not a good example, IMHO.
+>>
+>> They aren't. I'm talking about IBM systems. The firmware has its own
+>> representation and flattens that to a DTB is how I understand it.
+>
+> That's correct.  To elaborate a bit, for a partition under PowerVM,
+> there's a real IEEE1275 Open Firmware which generates a "live" device
+> tree.  Early boot code in the kernel flattens that to dtb to pass it
+> to later boot (this was actually the very first use of dtb, before
+> anyone thought about directly creating them).
+>
+> Under KVM it's a bit more complicated, there's still an IEEE1275
+> implementation (SLOF) and a "live" tree, but it builds that tree based
+> largely on a dtb supplied by qemu.  qemu does build that directly
+> using libfdt and it's own knowledge of the virtual hardware; there's
+> no dts.
 
-Series looks good to me overall.
+> For bare metal boots the firmware (OPAL) supplies a dtb to the kernel,
+> I believe.  I suspect that's essentially built from scratch (probably
+> using libfdt), although it's possible it has some core piece that's
+> precompiled from dts.
 
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+Depending on the boot environment we can either get a hand-crafted DTB
+(lab) or a DTB that was generated by the low-level firmware that
+handles system initialisation (production). In either case OPAL
+converts that DTB into it's own internal representation, probes and
+populates PCI devices, then generates a new DTB to pass to the kernel.
+As you can imagine there are a lot of moving parts here so extra
+tooling to validate the output tree would be nice to have
 
-Just one thing, which is not an issue really, I wonder if the dt-bindings
-documentation and the bindings them-self should be in separate patches ? 
-
+Oliver
