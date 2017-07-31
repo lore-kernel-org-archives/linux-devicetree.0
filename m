@@ -1,46 +1,49 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH 00/14] Support more devices on rockchip rv1108
-Date: Mon, 31 Jul 2017 18:04:09 +0800
-Message-ID: <1501495449-21290-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, mturquette@baylibre.com, linux-gpio@vger.kernel.org, sboyd@codeaurora.org, broonie@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, shawn.lin@rock-chips.com, linux-spi@vger.kernel.org, zhangqing@rock-chips.com, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH] dt-bindings: display: imx: fix parallel display
+ interface-pix-fmt property
+Date: Mon, 31 Jul 2017 12:04:35 +0200
+Message-ID: <20170731100435.11109-1-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-
-This series try to support i2c/spi/pwm/saradc/pmic/watchdog and
-the full clk tree on rockchip rv1108 soc.
-
-
-Andy Yan (12):
-  pinctrl: rockchip: add input schmitt support for rv1108
-  dt-bindings: i2c: rk3x: add support for rv1108
-  i2c: rk3x: add support for rv1108
-  ARM: dts: rockchip: add i2c dt node for rv1108
-  spi: rockchip: add compatible string for rv1108 spi
-  ARM: dts: rockchip: add spi dt node for rv1108
-  ARM: dts: rockchip: add pwm dt node for rv1108
-  ARM: dts: rockchip: add watchdog dt node for rv1108
-  ARM: dts: rockchip: add saradc support for rv1108
-  ARM: dts: rockchip: add pwm backlight for rv1108 evb
-  ARM: dts: rockchip: add pmic rk805 dt node for rv1108 evb
-  ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
-
-Elaine Zhang (2):
-  clk: rockchip: add more clk ids for rv1108
-  clk: rockchip: support more clks for rv1108
-
- Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |   1 +
- .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
- arch/arm/boot/dts/rv1108-evb.dts                   | 158 +++++++
- arch/arm/boot/dts/rv1108.dtsi                      | 249 ++++++++++
- drivers/clk/rockchip/clk-rv1108.c                  | 513 ++++++++++++++++-----
- drivers/i2c/busses/i2c-rk3x.c                      |   9 +
- drivers/pinctrl/pinctrl-rockchip.c                 |  31 ++
- drivers/spi/spi-rockchip.c                         |   1 +
- include/dt-bindings/clock/rv1108-cru.h             | 128 ++++-
- 9 files changed, 964 insertions(+), 127 deletions(-)
-
--- 
-2.7.4
+VGhlIHBhcmFsbGVsIGRpc3BsYXkgZGV2aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIGlu
+Y29ycmVjdGx5IGxpc3RzCnRoZSBpbnRlcmZhY2UtcGl4LWZtdCBwcm9wZXJ0eSB3aXRoIHVuZGVy
+c2NvcmVzICgiaW50ZXJmYWNlX3BpeF9mbXQiKS4KVGhpcyB3YXMgbmV2ZXIgc3VwcG9ydGVkIGJ5
+IGFueSBkcml2ZXIsIGFuZCB0aGUgRFQgZXhhbXBsZSBpbiB0aGUgc2FtZQpmaWxlIGFsd2F5cyBj
+b250YWluZWQgdGhlIGNvcnJlY3Qgc3BlbGxpbmcgKCJpbnRlcmZhY2UtcGl4LWZtdCIpLgoKU2Vl
+IGNvbW1pdCAxOTAyMmFhYWU2NzcgKCJzdGFnaW5nOiBkcm0vaW14OiBBZGQgcGFyYWxsZWwgZGlz
+cGxheQpzdXBwb3J0IikgYW5kIGNvbW1pdCAyZDYyZGE4ZWJkMzIgKCJzdGFnaW5nOiBkcm0vaW14
+OiBBZGQgZGV2aWNldHJlZQpiaW5kaW5nIGRvY3VtZW50YXRpb24iKSBmb3IgcmVmZXJlbmNlLgoK
+U2lnbmVkLW9mZi1ieTogUGhpbGlwcCBaYWJlbCA8cC56YWJlbEBwZW5ndXRyb25peC5kZT4KLS0t
+CiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1k
+cm0udHh0IHwgMiArLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9u
+KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvaW14L2ZzbC1pbXgtZHJtLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2lteC9mc2wtaW14LWRybS50eHQKaW5kZXggZmEwMWRiN2ViNjZjNS4uZjc5ODU0
+NzgzYzJjMyAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvaW14L2ZzbC1pbXgtZHJtLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9pbXgvZnNsLWlteC1kcm0udHh0CkBAIC0xMTYsNyArMTE2LDcgQEAg
+UGFyYWxsZWwgZGlzcGxheSBzdXBwb3J0CiBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSBjb21wYXRp
+YmxlOiBTaG91bGQgYmUgImZzbCxpbXgtcGFyYWxsZWwtZGlzcGxheSIKIE9wdGlvbmFsIHByb3Bl
+cnRpZXM6Ci0tIGludGVyZmFjZV9waXhfZm10OiBIb3cgdGhpcyBkaXNwbGF5IGlzIGNvbm5lY3Rl
+ZCB0byB0aGUKKy0gaW50ZXJmYWNlLXBpeC1mbXQ6IEhvdyB0aGlzIGRpc3BsYXkgaXMgY29ubmVj
+dGVkIHRvIHRoZQogICBkaXNwbGF5IGludGVyZmFjZS4gQ3VycmVudGx5IHN1cHBvcnRlZCB0eXBl
+czogInJnYjI0IiwgInJnYjU2NSIsICJiZ3I2NjYiCiAgIGFuZCAibHZkczY2NiIuCiAtIGVkaWQ6
+IHZlcmJhdGltIEVESUQgZGF0YSBibG9jayBkZXNjcmliaW5nIGF0dGFjaGVkIGRpc3BsYXkuCi0t
+IAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
