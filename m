@@ -1,195 +1,126 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v10 05/10] i2c: mux: pca954x: Call request irq after
- adding mux segments
-Date: Mon, 31 Jul 2017 10:09:49 +0200
-Message-ID: <612a8d32-77e8-a1d3-94e8-700a9e6a2184@axentia.se>
-References: <1500954024-6860-1-git-send-email-preid@electromag.com.au>
- <1500954024-6860-6-git-send-email-preid@electromag.com.au>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 1/5] [media] v4l: add porter duff blend controls
+Date: Mon, 31 Jul 2017 10:12:36 +0200
+Message-ID: <c6d4997f-30c6-9583-6cf5-32b374e4de29@xs4all.nl>
+References: <1501470460-12014-1-git-send-email-jacob-chen@iotwrt.com>
+ <1501470460-12014-2-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1500954024-6860-6-git-send-email-preid@electromag.com.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501470460-12014-2-git-send-email-jacob-chen@iotwrt.com>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Chen <jacob-chen@iotwrt.com>, linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
-
-Nice to get rid of the mask/unmask! One small nit though, the
-'fail_del_adapters' label no longer describes what's going on.
-Please change it to 'fail_cleanup' or something like that.
-
-With that,
-Acked-by: Peter Rosin <peda@axentia.se>
-
-And also, for the future, please use subjects according to
-submitting-patches, i.e., in this case
-
-i2c: mux: pca954x: call request irq after adding mux segments
-
-(lower-case 'c' in call)
-
-Cheers,
-Peter
-
-On 2017-07-25 05:40, Phil Reid wrote:
-> The pca954x device do not have the ability to mask interrupts. For
-> i2c slave devices that also don't have masking ability (eg ltc1760
-> smbalert output) delay registering the irq until after the mux
-> segments have been configured. During the mux add_adaptor call the
-> core i2c system can register an smbalert handler which would then
-> be called immediately when the irq is registered. This smbalert
-> handler will then clear the pending irq.
+On 07/31/2017 05:07 AM, Jacob Chen wrote:
+> At peresent, we don't have a control for Compositing and Blend.
+> All drivers are just doing copies while actually many hardwares
+> supports more functions.
 > 
-> This removes the need for the irq_mask / irq_unmask calls that were
-> original used to do this.
+> So Adding V4L2 controls for Compositing and Blend, used for for
+> composting streams.
 > 
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> The values are based on porter duff operations.
+> Defined in below links.
+> https://developer.xamarin.com/api/type/Android.Graphics.PorterDuff+Mode/
+> 
+> Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+> Suggested-by: Nicolas Dufresne <nicolas@ndufresne.ca>
 > ---
->  drivers/i2c/muxes/i2c-mux-pca954x.c | 85 +++++++++++--------------------------
->  1 file changed, 25 insertions(+), 60 deletions(-)
+>  drivers/media/v4l2-core/v4l2-ctrls.c | 20 +++++++++++++++++++-
+>  include/uapi/linux/v4l2-controls.h   | 16 +++++++++++++++-
+>  2 files changed, 34 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index f1751c2..ac0f083 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -246,36 +246,6 @@ static irqreturn_t pca954x_irq_handler(int irq, void *dev_id)
->  	return handled ? IRQ_HANDLED : IRQ_NONE;
->  }
->  
-> -static void pca954x_irq_mask(struct irq_data *idata)
-> -{
-> -	struct pca954x *data = irq_data_get_irq_chip_data(idata);
-> -	unsigned int pos = idata->hwirq;
-> -	unsigned long flags;
+> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+> index b9e08e3..561d7d5 100644
+> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
+> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+> @@ -478,7 +478,21 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  		"Region Grid",
+>  		NULL,
+>  	};
 > -
-> -	raw_spin_lock_irqsave(&data->lock, flags);
+> +	static const char * const porter_duff_modes[] = {
+> +		"Source",
+> +		"Source Top",
+> +		"Source In",
+> +		"Source Out",
+> +		"Source Over",
+> +		"Destination",
+> +		"Destination Top",
+> +		"Destination In",
+> +		"Destination Out",
+> +		"Destination Over",
+> +		"Add",
+> +		"Clear",
+> +		NULL
+> +	};
+>  
+>  	switch (id) {
+>  	case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
+> @@ -564,6 +578,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
+>  		return vpx_golden_frame_sel;
+>  	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
+>  		return jpeg_chroma_subsampling;
+> +	case V4L2_CID_PORTER_DUFF_MODE:
+> +		return porter_duff_modes;
+>  	case V4L2_CID_DV_TX_MODE:
+>  		return dv_tx_mode;
+>  	case V4L2_CID_DV_TX_RGB_RANGE:
+> @@ -886,6 +902,7 @@ const char *v4l2_ctrl_get_name(u32 id)
+>  	case V4L2_CID_PIXEL_RATE:		return "Pixel Rate";
+>  	case V4L2_CID_TEST_PATTERN:		return "Test Pattern";
+>  	case V4L2_CID_DEINTERLACING_MODE:	return "Deinterlacing Mode";
+> +	case V4L2_CID_PORTER_DUFF_MODE:		return "PorterDuff Blend Modes";
+>  
+>  	/* DV controls */
+>  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
+> @@ -1060,6 +1077,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
+>  	case V4L2_CID_DV_RX_IT_CONTENT_TYPE:
+>  	case V4L2_CID_TEST_PATTERN:
+>  	case V4L2_CID_DEINTERLACING_MODE:
+> +	case V4L2_CID_PORTER_DUFF_MODE:
+>  	case V4L2_CID_TUNE_DEEMPHASIS:
+>  	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
+>  	case V4L2_CID_DETECT_MD_MODE:
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 0d2e1e0..9543b4b 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -893,7 +893,21 @@ enum v4l2_jpeg_chroma_subsampling {
+>  #define V4L2_CID_PIXEL_RATE			(V4L2_CID_IMAGE_PROC_CLASS_BASE + 2)
+>  #define V4L2_CID_TEST_PATTERN			(V4L2_CID_IMAGE_PROC_CLASS_BASE + 3)
+>  #define V4L2_CID_DEINTERLACING_MODE		(V4L2_CID_IMAGE_PROC_CLASS_BASE + 4)
 > -
-> -	data->irq_mask &= ~BIT(pos);
-> -	if (!data->irq_mask)
-> -		disable_irq(data->client->irq);
-> -
-> -	raw_spin_unlock_irqrestore(&data->lock, flags);
-> -}
-> -
-> -static void pca954x_irq_unmask(struct irq_data *idata)
-> -{
-> -	struct pca954x *data = irq_data_get_irq_chip_data(idata);
-> -	unsigned int pos = idata->hwirq;
-> -	unsigned long flags;
-> -
-> -	raw_spin_lock_irqsave(&data->lock, flags);
-> -
-> -	if (!data->irq_mask)
-> -		enable_irq(data->client->irq);
-> -	data->irq_mask |= BIT(pos);
-> -
-> -	raw_spin_unlock_irqrestore(&data->lock, flags);
-> -}
-> -
->  static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
->  {
->  	if ((type & IRQ_TYPE_SENSE_MASK) != IRQ_TYPE_LEVEL_LOW)
-> @@ -285,8 +255,6 @@ static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
+> +#define V4L2_CID_PORTER_DUFF_MODE		(V4L2_CID_IMAGE_PROC_CLASS_BASE + 5)
+
+I recommend that you add a link to e.g. https://en.wikipedia.org/wiki/Alpha_compositing
+as a comment here.
+
+> +enum v4l2_porter_duff_mode {
+> +	V4L2_PORTER_DUFF_SRC			= 0,
+> +	V4L2_PORTER_DUFF_SRCATOP		= 1,
+> +	V4L2_PORTER_DUFF_SRCIN			= 2,
+> +	V4L2_PORTER_DUFF_SRCOUT			= 3,
+> +	V4L2_PORTER_DUFF_SRCOVER		= 4,
+> +	V4L2_PORTER_DUFF_DST			= 5,
+> +	V4L2_PORTER_DUFF_DSTATOP		= 6,
+> +	V4L2_PORTER_DUFF_DSTIN			= 7,
+> +	V4L2_PORTER_DUFF_DSTOUT			= 8,
+> +	V4L2_PORTER_DUFF_DSTOVER		= 9,
+> +	V4L2_PORTER_DUFF_ADD			= 10,
+> +	V4L2_PORTER_DUFF_CLEAR			= 11,
+> +};
 >  
->  static struct irq_chip pca954x_irq_chip = {
->  	.name = "i2c-mux-pca954x",
-> -	.irq_mask = pca954x_irq_mask,
-> -	.irq_unmask = pca954x_irq_unmask,
->  	.irq_set_type = pca954x_irq_set_type,
->  };
->  
-> @@ -294,7 +262,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->  {
->  	struct pca954x *data = i2c_mux_priv(muxc);
->  	struct i2c_client *client = data->client;
-> -	int c, err, irq;
-> +	int c, irq;
->  
->  	if (!data->chip->has_irq || client->irq <= 0)
->  		return 0;
-> @@ -314,24 +282,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
->  			handle_simple_irq);
->  	}
->  
-> -	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
-> -					pca954x_irq_handler,
-> -					IRQF_ONESHOT | IRQF_SHARED,
-> -					"pca954x", data);
-> -	if (err)
-> -		goto err_req_irq;
-> +	return 0;
-> +}
->  
-> -	disable_irq(data->client->irq);
-> +static void pca954x_cleanup(struct i2c_mux_core *muxc)
-> +{
-> +	struct pca954x *data = i2c_mux_priv(muxc);
-> +	int c, irq;
->  
-> -	return 0;
-> -err_req_irq:
-> -	for (c = 0; c < data->chip->nchans; c++) {
-> -		irq = irq_find_mapping(data->irq, c);
-> -		irq_dispose_mapping(irq);
-> +	if (data->irq) {
-> +		for (c = 0; c < data->chip->nchans; c++) {
-> +			irq = irq_find_mapping(data->irq, c);
-> +			irq_dispose_mapping(irq);
-> +		}
-> +		irq_domain_remove(data->irq);
->  	}
-> -	irq_domain_remove(data->irq);
-> -
-> -	return err;
-> +	i2c_mux_del_adapters(muxc);
->  }
->  
->  /*
-> @@ -417,6 +383,15 @@ static int pca954x_probe(struct i2c_client *client,
->  			goto fail_del_adapters;
->  	}
->  
-> +	if (data->irq) {
-> +		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
-> +						NULL, pca954x_irq_handler,
-> +						IRQF_ONESHOT | IRQF_SHARED,
-> +						"pca954x", data);
-> +		if (ret)
-> +			goto fail_del_adapters;
-> +	}
-> +
->  	dev_info(&client->dev,
->  		 "registered %d multiplexed busses for I2C %s %s\n",
->  		 num, data->chip->muxtype == pca954x_ismux
-> @@ -425,25 +400,15 @@ static int pca954x_probe(struct i2c_client *client,
->  	return 0;
->  
->  fail_del_adapters:
-> -	i2c_mux_del_adapters(muxc);
-> +	pca954x_cleanup(muxc);
->  	return ret;
->  }
->  
->  static int pca954x_remove(struct i2c_client *client)
->  {
->  	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
-> -	struct pca954x *data = i2c_mux_priv(muxc);
-> -	int c, irq;
->  
-> -	if (data->irq) {
-> -		for (c = 0; c < data->chip->nchans; c++) {
-> -			irq = irq_find_mapping(data->irq, c);
-> -			irq_dispose_mapping(irq);
-> -		}
-> -		irq_domain_remove(data->irq);
-> -	}
-> -
-> -	i2c_mux_del_adapters(muxc);
-> +	pca954x_cleanup(muxc);
->  	return 0;
->  }
->  
+>  /*  DV-class control IDs defined by V4L2 */
+>  #define V4L2_CID_DV_CLASS_BASE			(V4L2_CTRL_CLASS_DV | 0x900)
 > 
+
+This control also has to be documented in Documentation/media/uapi/v4l/extended-controls.rst.
+
+Regards,
+
+	Hans
