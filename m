@@ -1,44 +1,223 @@
-From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 14/14] ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
-Date: Mon, 31 Jul 2017 18:21:07 +0800
-Message-ID: <1501496467-22173-1-git-send-email-andy.yan@rock-chips.com>
-References: <1501495449-21290-1-git-send-email-andy.yan@rock-chips.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle
+ usb switch
+Date: Mon, 31 Jul 2017 12:33:22 +0200
+Message-ID: <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
+References: <20170714214005.14967-1-stephen.boyd@linaro.org>
+ <20170714214005.14967-3-stephen.boyd@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501495449-21290-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170714214005.14967-3-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-1bcDf/t0825pWr+L1FloEB2eb7JE58TQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add dt node of bosch accelerometer bma250e on rv1108 evb.
+On 2017-07-14 23:40, Stephen Boyd wrote:
+> On the db410c 96boards platform we have a TC7USB40MU on the board
+> to mux the D+/D- lines coming from the controller between a micro
+> usb "device" port and a USB hub for "host" roles[1]. During a
+> role switch, we need to toggle this mux to forward the D+/D-
+> lines to either the port or the hub. Add the necessary code to do
+> the role switch in chipidea core via the generic mux framework.
+> Board configurations like on db410c are expected to change roles
+> via the sysfs API described in
+> Documentation/ABI/testing/sysfs-platform-chipidea-usb2.
+> 
+> [1] https://github.com/96boards/documentation/raw/master/ConsumerEdition/DragonBoard-410c/HardwareDocs/Schematics_DragonBoard.pdf
+> 
+> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt |  6 ++++++
+>  drivers/usb/chipidea/Kconfig                           |  1 +
+>  drivers/usb/chipidea/core.c                            |  5 +++++
+>  drivers/usb/chipidea/host.c                            |  7 +++++++
+>  drivers/usb/chipidea/udc.c                             | 13 ++++++++++++-
+>  include/linux/usb/chipidea.h                           |  2 ++
+>  6 files changed, 33 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> index 0e03344e2e8b..2e9318151df7 100644
+> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+> @@ -76,6 +76,10 @@ Optional properties:
+>    needs to make sure it does not send more than 90%
+>    maximum_periodic_data_per_frame. The use case is multiple transactions, but
+>    less frame rate.
+> +- mux-controls: The mux control for toggling host/device output of this
+> +  controller. It's expected that a mux state of 0 indicates device mode and a
+> +  mux state of 1 indicates host mode.
+> +- mux-control-names: Shall be "usb_switch" if mux-controls is specified.
+>  
+>  i.mx specific properties
+>  - fsl,usbmisc: phandler of non-core register device, with one
+> @@ -102,4 +106,6 @@ Example:
+>  		rx-burst-size-dword = <0x10>;
+>  		extcon = <0>, <&usb_id>;
+>  		phy-clkgate-delay-us = <400>;
+> +		mux-controls = <&usb_switch>;
+> +		mux-control-names = "usb_switch";
+>  	};
+> diff --git a/drivers/usb/chipidea/Kconfig b/drivers/usb/chipidea/Kconfig
+> index 51f4157bbecf..3798e0e69d57 100644
+> --- a/drivers/usb/chipidea/Kconfig
+> +++ b/drivers/usb/chipidea/Kconfig
+> @@ -3,6 +3,7 @@ config USB_CHIPIDEA
+>  	depends on ((USB_EHCI_HCD && USB_GADGET) || (USB_EHCI_HCD && !USB_GADGET) || (!USB_EHCI_HCD && USB_GADGET)) && HAS_DMA
+>  	select EXTCON
+>  	select RESET_CONTROLLER
+> +	select MULTIPLEXER
+>  	help
+>  	  Say Y here if your system has a dual role high speed USB
+>  	  controller based on ChipIdea silicon IP. It supports:
+> diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> index b17ed3a9a304..d088c262ebb8 100644
+> --- a/drivers/usb/chipidea/core.c
+> +++ b/drivers/usb/chipidea/core.c
+> @@ -64,6 +64,7 @@
+>  #include <linux/of.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/usb/ehci_def.h>
+> +#include <linux/mux/consumer.h>
+>  
+>  #include "ci.h"
+>  #include "udc.h"
+> @@ -690,6 +691,10 @@ static int ci_get_platdata(struct device *dev,
+>  	if (of_find_property(dev->of_node, "non-zero-ttctrl-ttha", NULL))
+>  		platdata->flags |= CI_HDRC_SET_NON_ZERO_TTHA;
+>  
+> +	platdata->usb_switch = devm_mux_control_get_optional(dev, "usb_switch");
+> +	if (IS_ERR(platdata->usb_switch))
+> +		return PTR_ERR(platdata->usb_switch);
+> +
+>  	ext_id = ERR_PTR(-ENODEV);
+>  	ext_vbus = ERR_PTR(-ENODEV);
+>  	if (of_property_read_bool(dev->of_node, "extcon")) {
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index 18cb8e46262d..9ef3ecf27ad3 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/usb/hcd.h>
+>  #include <linux/usb/chipidea.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/mux/consumer.h>
+>  
+>  #include "../host/ehci.h"
+>  
+> @@ -175,6 +176,10 @@ static int host_start(struct ci_hdrc *ci)
+>  		if (ci_otg_is_fsm_mode(ci)) {
+>  			otg->host = &hcd->self;
+>  			hcd->self.otg_port = 1;
+> +		} else {
+> +			ret = mux_control_select(ci->platdata->usb_switch, 1);
+> +			if (ret)
+> +				goto disable_reg;
+>  		}
+>  	}
+>  
+> @@ -195,6 +200,8 @@ static void host_stop(struct ci_hdrc *ci)
+>  	struct usb_hcd *hcd = ci->hcd;
+>  
+>  	if (hcd) {
+> +		if (!ci_otg_is_fsm_mode(ci))
+> +			mux_control_deselect(ci->platdata->usb_switch);
+>  		if (ci->platdata->notify_event)
+>  			ci->platdata->notify_event(ci,
+>  				CI_HDRC_CONTROLLER_STOPPED_EVENT);
+> diff --git a/drivers/usb/chipidea/udc.c b/drivers/usb/chipidea/udc.c
+> index d68b125796f9..deb18099e168 100644
+> --- a/drivers/usb/chipidea/udc.c
+> +++ b/drivers/usb/chipidea/udc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/usb/gadget.h>
+>  #include <linux/usb/otg-fsm.h>
+>  #include <linux/usb/chipidea.h>
+> +#include <linux/mux/consumer.h>
+>  
+>  #include "ci.h"
+>  #include "udc.h"
+> @@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
+>  
+>  static int udc_id_switch_for_device(struct ci_hdrc *ci)
+>  {
+> +	int ret = 0;
+> +
+>  	if (ci->is_otg)
+>  		/* Clear and enable BSV irq */
+>  		hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
+>  					OTGSC_BSVIS | OTGSC_BSVIE);
+>  
+> -	return 0;
+> +	if (!ci_otg_is_fsm_mode(ci))
+> +		ret = mux_control_select(ci->platdata->usb_switch, 0);
+> +
+> +	if (ci->is_otg && ret)
+> +		hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
+> +
+> +	return ret;
+>  }
+>  
+>  static void udc_id_switch_for_host(struct ci_hdrc *ci)
+>  {
+> +	mux_control_deselect(ci->platdata->usb_switch);
+> +
 
-Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+This looks broken. You conditionally lock the mux and you unconditionally
+unlock it. Quoting the mux_control_deselect doc:
 
- arch/arm/boot/dts/rv1108-evb.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ * It is required that a single call is made to mux_control_deselect() for
+ * each and every successful call made to either of mux_control_select() or
+ * mux_control_try_select().
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index 5675975..60bb501 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -109,6 +109,13 @@
- 	i2c-scl-falling-time-ns = <16>;
- 	clock-frequency = <400000>;
- 
-+	bma250: accelerometer@19 {
-+		compatible = "bosch,bma250e";
-+		reg = <0x19>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB3 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	rk805: pmic@18 {
- 		compatible = "rockchip,rk805";
- 		reg = <0x18>;
--- 
-2.7.4
+Think of the mux as a semaphore with a max count of one. If you lock it,
+you have to unlock it when you're done. If you didn't lock it, you have
+zero business unlocking it. If you try to lock it but fail, you also have
+no business unlocking it. Just like a semaphore.
 
+Another point: I do not know if udc_id_switch_for_host is *only* called
+when there has been a prior call to udc_id_switch_for_device that
+succeeded or how this works exactly. But this all looks fragile. Using
+mux_control_select and mux_control_deselect *must* be done in pairs.
+If you want a mux to be locked for "a while", such as in this case, you
+have to make sure you stay within the rules. There is no room for half
+measures, or you will likely cause a deadlock when something unexpected
+happens.
+
+Cheers,
+Peter
+
+>  	/*
+>  	 * host doesn't care B_SESSION_VALID event
+>  	 * so clear and disbale BSV irq
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> index c5fdfcf99828..3b27e333de1d 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -9,6 +9,7 @@
+>  #include <linux/usb/otg.h>
+>  
+>  struct ci_hdrc;
+> +struct mux_control;
+>  
+>  /**
+>   * struct ci_hdrc_cable - structure for external connector cable state tracking
+> @@ -74,6 +75,7 @@ struct ci_hdrc_platform_data {
+>  	/* VBUS and ID signal state tracking, using extcon framework */
+>  	struct ci_hdrc_cable		vbus_extcon;
+>  	struct ci_hdrc_cable		id_extcon;
+> +	struct mux_control		*usb_switch;
+>  	u32			phy_clkgate_delay_us;
+>  };
+>  
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
