@@ -1,112 +1,90 @@
 From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 04/10] arm: dts: mt7623: rename mt7623-evb.dts to arch/arm/boot/dts/mt7623n-rfb.dtsi
-Date: Mon, 31 Jul 2017 15:36:37 +0800
-Message-ID: <0b28cd1badefb581d84a50ea664772bb113eb0f0.1501486190.git.sean.wang@mediatek.com>
-References: <cover.1501486190.git.sean.wang@mediatek.com>
+Subject: [PATCH v5 00/10] arm: dts: extend mt7623 support
+Date: Mon, 31 Jul 2017 15:36:33 +0800
+Message-ID: <cover.1501486190.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1501486190.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: john@phrozen.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, john@phrozen.org
 List-Id: devicetree@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-There are 2 versions of the MT7623 SoC, the one is MT7623N and the other
-is MT7623A.  MT7623N is almost identical to MT7623A but has some
-additional multimedia features. The reference boards are available as
-NAND or MMC and might have a different ethernet setup. In order to reduce
-the duplication of devicetree code we add an intermediate dtsi file for
-these reference boards. Additionally MediaTek pointed out, that the EVB
-is yet another board and the board in question is infact the RFB. Take
-this into account while renaming the files.
+Change since v4:
+- split mt6323 nodes as the independent item which tends to integration with
+  other MediaTek SoCs
+- enhanced commit log
+- fixed up building warning shown in make dtsb
+- added clock-frequency to CPU nodes to avoid warning in boot time
+- added more nodes into the SoC-level file mt7623.dtsi such as CPU OPP table
+  and thermal zone treating CPU as one of cooling devices
+- cleaned up the file mt7623n-bananapi-bpi-r2.dts such as listing nodes in
+  alphabetical order
 
-Signed-off-by: John Crispin <john@phrozen.org>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- arch/arm/boot/dts/Makefile                          |  2 +-
- arch/arm/boot/dts/mt7623n-rfb-nand.dts              | 21 +++++++++++++++++++++
- .../boot/dts/{mt7623-evb.dts => mt7623n-rfb.dtsi}   |  8 +++-----
- 3 files changed, 25 insertions(+), 6 deletions(-)
+Changes since v3:
+- explain in the commit message why this binding is changed
+- patches for dt-binding is reordered at the beginning of patch list
+- be concise wigh using SPDX-License-Identifier in new dts file
+
+Changes since v2:
+- exclude those patch are already queued into v4.11-next/dts32
+- exclude those patches already sent in separation
+- add mt7623a SoC basic support
+- update binding SoC for mt7623n and relevant boards
+
+Changes since v1:
+Continue the upstream journey based on the previous John Crispin's good work.
+- add fixes for the v1 suggestion
+- fix typo in the commit log
+- add missing pinctrl bindings for mt7623
+- reuse pinctrl driver for mt7623
+- enhance existing nodes since the way for binding is changed e.g USB
+- add more nodes which already gets support from the latest tree e.g MT7530 DSA
+- add the dts file for Bananapi R2 (BPI-R2) board
+
+John Crispin (4):
+  arm: dts: mt7623: add mt6323.dtsi file
+  arm: dts: mt7623: cleanup the mt7623n rfb uart nodes
+  arm: dts: mt7623: enable the usb device on the mt7623n rfb
+  arm: dts: mt7623: enable the nand device on the mt7623n nand rfb
+
+Sean Wang (6):
+  dt-bindings: arm: mediatek: update for MT7623n SoC and relevant boards
+  dt-bindings: arm: mediatek: add bindings for mediatek MT7623a SoC
+    Platform
+  arm: dts: mt7623: rename mt7623-evb.dts to
+    arch/arm/boot/dts/mt7623n-rfb.dtsi
+  ARM: mediatek: add MT7623a smp bringup code
+  arm: dts: mt7623: add support for Bananapi R2 (BPI-R2) board
+  arm: dts: mt7623: add clock-frequency to CPU nodes
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |  14 +-
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/mt6323.dtsi                      | 241 +++++++++++
+ arch/arm/boot/dts/mt7623-evb.dts                   |  33 --
+ arch/arm/boot/dts/mt7623.dtsi                      | 132 +++++-
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts      | 443 +++++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts             | 109 +++++
+ arch/arm/boot/dts/mt7623n-rfb.dtsi                 |  92 +++++
+ arch/arm/mach-mediatek/mediatek.c                  |   2 +
+ arch/arm/mach-mediatek/platsmp.c                   |   1 +
+ 10 files changed, 1021 insertions(+), 49 deletions(-)
+ create mode 100644 arch/arm/boot/dts/mt6323.dtsi
+ delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
+ create mode 100644 arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
  create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
- rename arch/arm/boot/dts/{mt7623-evb.dts => mt7623n-rfb.dtsi} (87%)
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 4b17f35..f3a2442 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1049,7 +1049,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt6580-evbp1.dtb \
- 	mt6589-aquaris5.dtb \
- 	mt6592-evb.dtb \
--	mt7623-evb.dtb \
-+	mt7623n-rfb-nand.dtb \
- 	mt8127-moose.dtb \
- 	mt8135-evbp1.dtb
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-new file mode 100644
-index 0000000..ba7d1ab
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: John Crispin <john@phrozen.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt7623n-rfb.dtsi"
-+
-+/ {
-+	model = "MediaTek MT7623N NAND reference board";
-+	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
-+};
-diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-similarity index 87%
-rename from arch/arm/boot/dts/mt7623-evb.dts
-rename to arch/arm/boot/dts/mt7623n-rfb.dtsi
-index 0686ad7..805ba69 100644
---- a/arch/arm/boot/dts/mt7623-evb.dts
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -1,6 +1,7 @@
- /*
-- * Copyright (c) 2016 MediaTek Inc.
-+ * Copyright (c) 2017 MediaTek Inc.
-  * Author: John Crispin <john@phrozen.org>
-+ *	   Sean Wang <sean.wang@mediatek.com>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -17,9 +18,6 @@
- #include "mt6323.dtsi"
- 
- / {
--	model = "MediaTek MT7623 evaluation board";
--	compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
--
- 	chosen {
- 		stdout-path = &uart2;
- 	};
-@@ -42,7 +40,7 @@
- 		};
- 	};
- 
--	memory {
-+	memory@80000000 {
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
- };
 -- 
 2.7.4
