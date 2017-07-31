@@ -1,7 +1,7 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v6 2/7] dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
-Date: Mon, 31 Jul 2017 12:04:12 +0530
-Message-ID: <1501482857-14100-3-git-send-email-varada@codeaurora.org>
+Subject: [PATCH v6 6/7] dt-bindings: pci: qcom: Add support for IPQ8074
+Date: Mon, 31 Jul 2017 12:04:16 +0530
+Message-ID: <1501482857-14100-7-git-send-email-varada@codeaurora.org>
 References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
@@ -10,47 +10,62 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-
 Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-IPQ8074 uses QMP phy controller that provides support to PCIe and
-USB. Adding dt binding information for the same.
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports Gen 1/2, one
+lane, two PCIe root complex with support for MSI and legacy interrupts, and
+it conforms to PCI Express Base 2.1 specification.
 
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../devicetree/bindings/pci/qcom,pcie.txt          | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 5d7a51f..802af1b 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -6,6 +6,7 @@ controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 9d418b7..b3e36ef 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -9,6 +9,7 @@
+ 			- "qcom,pcie-apq8084" for apq8084
+ 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+ 			- "qcom,pcie-ipq4019" for ipq4019
++			- "qcom,pcie-ipq8074" for ipq8074
  
- Required properties:
-  - compatible: compatible list, contains:
-+	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
+ - reg:
+ 	Usage: required
+@@ -105,6 +106,16 @@
+ 			- "bus_master"	Master AXI clock
+ 			- "bus_slave"	Slave AXI clock
  
-@@ -38,6 +39,8 @@ Required properties:
- 		 "phy", "common", "cfg".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain
- 		 "phy", "common".
-+		For "qcom,ipq8074-qmp-pcie-phy" must contain:
-+		 "phy", "common".
- 
-  - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-  - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-@@ -63,6 +66,11 @@ Required properties for child node:
-  - clock-output-names: Name of the phy clock that will be the parent for
- 		       the above pipe clock.
- 
-+	For "qcom,ipq8074-qmp-pcie-phy":
-+		- "pcie20_phy0_pipe_clk"	Pipe Clock parent
-+			(or)
-+		  "pcie20_phy1_pipe_clk"
++- clock-names:
++	Usage: required for ipq8074
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "iface"	PCIe to SysNOC BIU clock
++			- "axi_m"	AXI Master clock
++			- "axi_s"	AXI Slave clock
++			- "ahb"		AHB clock
++			- "aux"		Auxiliary clock
 +
-  - resets: a list of phandles and reset controller specifier pairs,
- 	   one for each entry in reset-names.
-  - reset-names: Must contain following for pcie qmp phys:
+ - resets:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -144,6 +155,18 @@
+ 			- "ahb"			AHB reset
+ 			- "phy_ahb"		PHY AHB reset
+ 
++- reset-names:
++	Usage: required for ipq8074
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "pipe"		PIPE reset
++			- "sleep"		Sleep reset
++			- "sticky"		Core Sticky reset
++			- "axi_m"		AXI Master reset
++			- "axi_s"		AXI Slave reset
++			- "ahb"			AHB Reset
++			- "axi_m_sticky"	AXI Master Sticky reset
++
+ - power-domains:
+ 	Usage: required for apq8084 and msm8996/apq8096
+ 	Value type: <prop-encoded-array>
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
