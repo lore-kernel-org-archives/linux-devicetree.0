@@ -1,95 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/5 v2] pinctrl: Add DT bindings for Cortina Gemini
-Date: Mon, 31 Jul 2017 23:30:50 +0200
-Message-ID: <20170731213050.4794-1-linus.walleij@linaro.org>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Mon, 31 Jul 2017 23:32:11 +0200
+Message-ID: <0f26770f-804a-2730-a893-b63dc7e7c221@axentia.se>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+ <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
+ <20170731231509.77d1fba4@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170731231509.77d1fba4@bbrezillon>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ku
 List-Id: devicetree@vger.kernel.org
 
-The Cortina Gemini pin controller uses the standard pin control
-bindings for muxing functions with groups so these bindings
-should be entirely uncontroversial.
+On 2017-07-31 23:15, Boris Brezillon wrote:
+> [1]https://www.mipi.org/MIPI_I3C_device_characteristics_register
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v1->v2:
-- State that the pin controller must be a subnode of the
-  system controller.
-- Drop the phandle to the system controller: we can simply
-  look up the parent.
----
- .../bindings/pinctrl/cortina,gemini-pinctrl.txt    | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
+Stupid non-programmers...
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-new file mode 100644
-index 000000000000..61466c58faae
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-@@ -0,0 +1,59 @@
-+Cortina Systems Gemini pin controller
-+
-+This pin controller is found in the Cortina Systems Gemini SoC family,
-+see further arm/gemini.txt. It is a purely group-based multiplexing pin
-+controller.
-+
-+The pin controller node must be a subnode of the system controller node.
-+
-+Required properties:
-+- compatible: "cortina,gemini-pinctrl"
-+
-+Subnodes of the pin controller contain pin control multiplexing set-up.
-+Please refer to pinctrl-bindings.txt for generic pin multiplexing nodes.
-+
-+Example:
-+
-+
-+syscon {
-+	compatible = "cortina,gemini-syscon";
-+	...
-+	pinctrl {
-+		compatible = "cortina,gemini-pinctrl";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&dram_default_pins>, <&system_default_pins>,
-+		    <&vcontrol_default_pins>;
-+
-+		dram_default_pins: pinctrl-dram {
-+			mux {
-+				function = "dram";
-+				groups = "dramgrp";
-+			};
-+		};
-+		rtc_default_pins: pinctrl-rtc {
-+			mux {
-+				function = "rtc";
-+				groups = "rtcgrp";
-+			};
-+		};
-+		power_default_pins: pinctrl-power {
-+			mux {
-+				function = "power";
-+				groups = "powergrp";
-+			};
-+		};
-+		system_default_pins: pinctrl-system {
-+			mux {
-+				function = "system";
-+				groups = "systemgrp";
-+			};
-+		};
-+		(...)
-+		uart_default_pins: pinctrl-uart {
-+			mux {
-+				function = "uart";
-+				groups = "uartrxtxgrp";
-+			};
-+		};
-+	};
-+};
--- 
-2.9.4
+This part
 
+65 41 01000001	Accelerometer
+66 42 01000010	Gyroscope
+67 43 01000011	Magnetometer
+68 44 01000100	Accel/Gyro Combo
+69 45 01000101	Accel/Mag Combo
+70 46 01000110	Accel/Gyro/Mag Combo
+
+should *obviously* have been something like
+
+65 41 01000001	Accelerometer
+66 42 01000010	Gyroscope
+67 43 01000011	Accel/Gyro Combo
+68 44 01000100	Magnetometer
+69 45 01000101	Accel/Mag Combo
+71 47 01000111	Accel/Gyro/Mag Combo
+
+Cheers,
+peda
