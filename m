@@ -1,51 +1,98 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v2 1/3] media: V3s: Add support for Allwinner CSI.
-Date: Mon, 31 Jul 2017 08:13:10 +0300
-Message-ID: <20170731051310.jp45cj7lugcueztc@tarshish>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-2-git-send-email-yong.deng@magewell.com>
- <20170728160233.xooevio4hoqkgfaq@flea.lan>
- <20170730060801.bkc2kvm72ktixy74@tarshish>
- <20170731094806.88c3188576d7e2c14b5e3e33@magewell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170731094806.88c3188576d7e2c14b5e3e33@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong <yong.deng@magewell.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Hans Verkuil <hverkuil@xs4all.nl>, Arnd Bergmann <arnd@arndb.de>, Hugues Fruchet <hugues.fruchet@st.com>, Yannick Fertre <yannick.fertre@st.com>, Philipp Zabel <p.zabel@pengutronix.de>, Benoit Parrot <bparrot@ti.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Krzysztof Kozlowski <krzk@kernel.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v5 0/7] Add support for IPQ8074 PCIe phy and controller
+Date: Mon, 31 Jul 2017 11:09:47 +0530
+Message-ID: <1501479594-18285-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
+v5:
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+        Renamed phy_phy clock as common clock
 
-On Mon, Jul 31, 2017 at 09:48:06AM +0800, Yong wrote:
-> On Sun, 30 Jul 2017 09:08:01 +0300
-> Baruch Siach <baruch@tkos.co.il> wrote:
-> > On Fri, Jul 28, 2017 at 06:02:33PM +0200, Maxime Ripard wrote:
-> > > On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
-> > > > +	regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
-> > > > +		     (bus_addr + sdev->planar_offset[0]) >> 2);
-> > 
-> > Why do you need the bit shift? Does that work for you?
-> > 
-> > The User Manuals of both the V3s and the and the A33 (AKA R16) state that the 
-> > BUFA field size in this register is 31:00, that is 32bit. I have found no 
-> > indication of this bit shift in the Olimex provided sunxi-vfe[1] driver. On 
-> > the A33 I have found that only after removing the bit-shift, (some sort of) 
-> > data started to appear in the buffer.
-> > 
-> > [1] https://github.com/hehopmajieh/a33_linux/tree/master/drivers/media/video/sunxi-vfe
-> 
-> The Users Manuals do not document this bit shift. You should see line 10 to
-> 32 in https://github.com/hehopmajieh/a33_linux/blob/master/drivers/media/video/sunxi-vfe/csi/csi_reg.c
+  phy: qcom-qmp: Fix phy pipe clock name
+        Moved the DT get into the registering function
 
-Thanks. So for my reference, the SoCs that don't need bit shift are A31, A23, 
-and A33. SoCs that need bit shift are A80, A83, H3, and V3s (AKA V30).
+  phy: qcom-qmp: Add support for IPQ8074
+        Place the IPQ8074 related structs similar to existing SoC.
+        Renamed phy_phy clock as common clock
+v4:
+  phy: qcom-qmp: Fix phy pipe clock name
+	Based on Vivek's comments, return failure only for
+	PCI/USB type of phys.
+	Removed Ack.
 
-baruch
+  phy: qcom-qmp: Handle unavailable registers
+	Removed this patch.
+	Incorrectly used a block of code that is not applicable
+	to IPQ8074, hence had to avoid an "unavailable" register.
+	Since that is addressed using 'has_phy_com_ctrl' this
+	patch is not needed.
+
+  phy: qcom-qmp: Add support for IPQ8074
+	Set 'has_phy_com_ctrl' to false
+	Remove ipq8074_pciephy_regs_layout
+
+v3:
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incoporate Stan's feedback:-
+	 - Add SoC Wrapper and Synopsys Core IP versions
+
+v2:
+  dt-bindings: phy: qmp: Add output-clock-names
+	Added Rob H's Ack
+
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  phy: qcom-qmp: Fix phy pipe clock name
+	Added Vivek's Ack
+
+  phy: qcom-qmp: Handle unavailable registers
+	No changes
+
+  phy: qcom-qmp: Add support for IPQ8074
+	No changes
+
+  PCI: dwc: qcom: Use block IP version for operations
+	Added new patch to use block IP version instead of v1, v2...
+
+  dt-bindings: pci: qcom: Add support for IPQ8074
+	Removed example
+	Added IPQ8074 specific details
+
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+	Incorporated Bjorn's feedback:-
+	 - Removed reset names, helper function to assert/deassert, helper
+	   function to R/M/W register.
+	 - Renamed sys_noc clock as iface clock
+	 - Added deinit if phy power on fails
+
+v1:
+Add definitions required to enable QMP phy support for IPQ8074.
+
+Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
+Gen 1/2, one lane, two PCIe root complex with support for MSI and
+legacy interrupts, and it conforms to PCI Express Base 2.1
+specification.
+
+Varadarajan Narayanan (7):
+  dt-bindings: phy: qmp: Add output-clock-names
+  dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+  phy: qcom-qmp: Fix phy pipe clock name
+  phy: qcom-qmp: Add support for IPQ8074
+  PCI: dwc: qcom: Use block IP version for operations
+  dt-bindings: pci: qcom: Add support for IPQ8074
+  PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
+
+ .../devicetree/bindings/pci/qcom,pcie.txt          |  23 ++
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |  11 +
+ drivers/pci/dwc/pcie-qcom.c                        | 378 +++++++++++++++++----
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 152 ++++++++-
+ 4 files changed, 488 insertions(+), 76 deletions(-)
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
