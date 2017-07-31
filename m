@@ -1,69 +1,395 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
- fixed transceiver bindings
-Date: Mon, 31 Jul 2017 19:03:38 +0200
-Message-ID: <91879489-87de-21b9-0227-650c0001e6a3@hartkopp.net>
-References: <20170728130231.GA10680@airbook.vandijck-laurijssen.be>
- <c7d4c364-1ed9-ca73-2571-d04297ac3788@hartkopp.net>
- <80c167a2-7eb5-8076-04fc-0989981a523d@ti.com>
- <20170728194143.GA10599@airbook.vandijck-laurijssen.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20170728194143.GA10599@airbook.vandijck-laurijssen.be>
-Content-Language: en-US
-Sender: linux-can-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, sergei.shtylyov@cogentembedded.com
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] fdt: Allow stacked overlays phandle references
+Date: Mon, 31 Jul 2017 20:09:56 +0300
+Message-ID: <1501520996-3366-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kurt,
+This patch enables an overlay to refer to a previous overlay's
+labels by performing a merge of symbol information at application
+time.
 
-On 07/28/2017 09:41 PM, Kurt Van Dijck wrote:
+In a nutshell it allows an overlay to refer to a symbol that a previous
+overlay has defined. It requires both the base and all the overlays
+to be compiled with the -@ command line switch so that symbol
+information is included.
 
->> The transceiver is an analog device that needs to support faster
->> switching frequency (FETs) including minimizing delay to support CAN-FD
->> ie higher bitrate. From the transceiver perspective the bits for
->> "arbitration" and "data" look exactly the same. Since it can't
->> differentiate between the two (at the physical layer) then the actual
->> limit isn't specific to which part/type of the CAN message is being
->> sent. Rather its just a single overall max bitrate limit.
-> 
-> I must disagree here.
-> The transceiver is an analog device that performs 2 functions:
-> propagate tx bits to CAN wire, and propagate CAN wire state
-> (dominant/recesive) to rx bits.
-> 
-> I'll rephrase the above explanation to fit your argument:
-> During arbitration, both directions are required, and needs to propagate
-> within 1 bit time. The transceiver doesn't know, it just performs to
-> best effort.
-> During data, the round-trip timing requirement of layer2 is relaxed.
-> The transceiver still doesn't know, it still performs to best effort.
-> Due to the relaxed round-trip timing requirement, the same transceiver
-> can suddenly allow higher bitrates. The transceiver didn't change, the
-> requirement did change.
-> This is what I meant earlier with "layer2 has been adapted to circumvent
-> layer1 limitations"
-> 
-> Was I successfull in transcoding my thoughts onto email :-) ?
+base.dts
+--------
 
-Yes. But it's not relevant.
+	/dts-v1/;
+	/ {
+		foo: foonode {
+			foo-property;
+		};
+	};
 
-I talked to our CAN transceiver & CAN physical layer specialist who was 
-involved in the ISO activities too.
+	$ dtc -@ -I dts -O dtb -o base.dtb base.dts
 
-We just need ONE value: max-bitrate
+bar.dts
+-------
 
-The CAN transceiver is qualified to provide this bitrate. That's it.
-There's nothing special with the arbitration bitrate - we don't even 
-need to outline any CAN FD capability.
+	/dts-v1/;
+	/plugin/;
+	/ {
+		fragment@1 {
+			target = <&foo>;
+			__overlay__ {
+				overlay-1-property;
+				bar: barnode {
+					bar-property;
+				};
+			};
+		};
+	};
 
-The other things like 'loop delay compensation' are done in the CAN 
-controller. The better the transceiver get's the bits 'in shape' the 
-higher it can be qualified. But from the SoC/Controller/Linux view we 
-only need the max-bitrate value to double check with the CAN controllers 
-bitrate configuration request (which was Franklins intention).
+	$ dtc -@ -I dts -O dtb -o bar.dtb bar.dts
 
-Best regards,
-Oliver
+baz.dts
+-------
+
+	/dts-v1/;
+	/plugin/;
+	/ {
+		fragment@1 {
+			target = <&bar>;
+			__overlay__ {
+				overlay-2-property;
+				baz: baznode {
+					baz-property;
+				};
+			};
+		};
+	};
+
+	$ dtc -@ -I dts -O dtb -o baz.dtb baz.dts
+
+Applying the overlays:
+
+	$ fdtoverlay -i base.dtb -o target.dtb bar.dtb baz.dtb
+
+Dumping:
+
+	$ fdtdump target.dtb
+	/ {
+            foonode {
+                overlay-1-property;
+                foo-property;
+                linux,phandle = <0x00000001>;
+                phandle = <0x00000001>;
+                barnode {
+                    overlay-2-property;
+                    phandle = <0x00000002>;
+                    linux,phandle = <0x00000002>;
+                    bar-property;
+                    baznode {
+                        phandle = <0x00000003>;
+                        linux,phandle = <0x00000003>;
+                        baz-property;
+                    };
+                };
+            };
+            __symbols__ {
+                baz = "/foonode/barnode/baznode";
+                bar = "/foonode/barnode";
+                foo = "/foonode";
+            };
+	};
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ libfdt/fdt_overlay.c | 225 ++++++++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 203 insertions(+), 22 deletions(-)
+
+diff --git a/libfdt/fdt_overlay.c b/libfdt/fdt_overlay.c
+index ceb9687..a4f81f0 100644
+--- a/libfdt/fdt_overlay.c
++++ b/libfdt/fdt_overlay.c
+@@ -39,6 +39,7 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
+  * @fdt: Base device tree blob
+  * @fdto: Device tree overlay blob
+  * @fragment: node offset of the fragment in the overlay
++ * @pathp: pointer which receives the path of the target (or NULL)
+  *
+  * overlay_get_target() retrieves the target offset in the base
+  * device tree of a fragment, no matter how the actual targetting is
+@@ -49,37 +50,47 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
+  *      Negative error code on error
+  */
+ static int overlay_get_target(const void *fdt, const void *fdto,
+-			      int fragment)
++			      int fragment, char const **pathp)
+ {
+ 	uint32_t phandle;
+-	const char *path;
+-	int path_len;
++	const char *path = NULL;
++	int path_len = 0, ret;
+ 
+ 	/* Try first to do a phandle based lookup */
+ 	phandle = overlay_get_target_phandle(fdto, fragment);
+ 	if (phandle == (uint32_t)-1)
+ 		return -FDT_ERR_BADPHANDLE;
+ 
+-	if (phandle)
+-		return fdt_node_offset_by_phandle(fdt, phandle);
++	/* no phandle, try path */
++	if (!phandle) {
++		/* And then a path based lookup */
++		path = fdt_getprop(fdto, fragment, "target-path", &path_len);
++		if (path)
++			ret = fdt_path_offset(fdt, path);
++		else
++			ret = path_len;
++	} else
++		ret = fdt_node_offset_by_phandle(fdt, phandle);
+ 
+-	/* And then a path based lookup */
+-	path = fdt_getprop(fdto, fragment, "target-path", &path_len);
+-	if (!path) {
+-		/*
+-		 * If we haven't found either a target or a
+-		 * target-path property in a node that contains a
+-		 * __overlay__ subnode (we wouldn't be called
+-		 * otherwise), consider it a improperly written
+-		 * overlay
+-		 */
+-		if (path_len == -FDT_ERR_NOTFOUND)
+-			return -FDT_ERR_BADOVERLAY;
++	/*
++	* If we haven't found either a target or a
++	* target-path property in a node that contains a
++	* __overlay__ subnode (we wouldn't be called
++	* otherwise), consider it a improperly written
++	* overlay
++	*/
++	if (ret < 0 && path_len == -FDT_ERR_NOTFOUND)
++		ret = -FDT_ERR_BADOVERLAY;
++
++	/* return on error */
++	if (ret < 0)
++		return ret;
+ 
+-		return path_len;
+-	}
++	/* return pointer to path (if available) */
++	if (pathp)
++		*pathp = path ? path : NULL;
+ 
+-	return fdt_path_offset(fdt, path);
++	return ret;
+ }
+ 
+ /**
+@@ -590,7 +601,7 @@ static int overlay_apply_node(void *fdt, int target,
+  *
+  * overlay_merge() merges an overlay into its base device tree.
+  *
+- * This is the final step in the device tree overlay application
++ * This is the next to last step in the device tree overlay application
+  * process, when all the phandles have been adjusted and resolved and
+  * you just have to merge overlay into the base device tree.
+  *
+@@ -618,7 +629,7 @@ static int overlay_merge(void *fdt, void *fdto)
+ 		if (overlay < 0)
+ 			return overlay;
+ 
+-		target = overlay_get_target(fdt, fdto, fragment);
++		target = overlay_get_target(fdt, fdto, fragment, NULL);
+ 		if (target < 0)
+ 			return target;
+ 
+@@ -630,6 +641,172 @@ static int overlay_merge(void *fdt, void *fdto)
+ 	return 0;
+ }
+ 
++static int get_path_len(const void *fdt, int nodeoffset)
++{
++	int len = 0, namelen;
++	const char *name;
++
++	FDT_CHECK_HEADER(fdt);
++
++	for (;;) {
++		name = fdt_get_name(fdt, nodeoffset, &namelen);
++		if (!name)
++			return namelen;
++
++		/* root? we're done */
++		if (namelen == 0)
++			break;
++
++		nodeoffset = fdt_parent_offset(fdt, nodeoffset);
++		if (nodeoffset < 0)
++			return nodeoffset;
++		len += namelen + 1;
++	}
++
++	/* in case of root pretend it's "/" */
++	if (len == 0)
++		len++;
++	return len;
++}
++
++/**
++ * overlay_symbol_update - Update the symbols of base tree after a merge
++ * @fdt: Base Device Tree blob
++ * @fdto: Device tree overlay blob
++ *
++ * overlay_symbol_update() updates the symbols of the base tree with the
++ * symbols of the applied overlay
++ *
++ * This is the last step in the device tree overlay application
++ * process, allowing the reference of overlay symbols by subsequent
++ * overlay operations.
++ *
++ * returns:
++ *      0 on success
++ *      Negative error code on failure
++ */
++static int overlay_symbol_update(void *fdt, void *fdto)
++{
++	int root_sym, ov_sym, prop, path_len, fragment, target;
++	int len, frag_name_len, ret, rel_path_len;
++	const char *s;
++	const char *path;
++	const char *name;
++	const char *frag_name;
++	const char *rel_path;
++	const char *target_path;
++	char *buf;
++	void *p;
++
++	ov_sym = fdt_subnode_offset(fdto, 0, "__symbols__");
++
++	/* if no overlay symbols exist no problem */
++	if (ov_sym < 0)
++		return 0;
++
++	root_sym = fdt_subnode_offset(fdt, 0, "__symbols__");
++
++	/* it no root symbols exist we should create them */
++	if (root_sym < 0) {
++		root_sym = fdt_add_subnode(fdt, 0, "__symbols__");
++		if (root_sym < 0)
++			return root_sym;
++	}
++
++	/* iterate over each overlay symbol */
++	fdt_for_each_property_offset(prop, fdto, ov_sym) {
++		path = fdt_getprop_by_offset(fdto, prop, &name, &path_len);
++		if (!path)
++			return path_len;
++
++		/* verify it's a string property (terminated by a single \0) */
++		if (path_len < 1 || memchr(path, '\0', path_len) != &path[path_len - 1])
++			return -FDT_ERR_BADVALUE;
++
++		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
++
++		if (*path != '/')
++			return -FDT_ERR_BADVALUE;
++
++		/* verify that no stray \0 exist in the property */
++		if (strlen(path) != path_len - 1)
++			return -FDT_ERR_BADOVERLAY;
++
++		/* get fragment name first */
++		s = strchr(path + 1, '/');
++		if (!s)
++			return -FDT_ERR_BADOVERLAY;
++
++		frag_name = path + 1;
++		frag_name_len = s - path - 1;
++
++		/* verify format; safe since "s" lies in \0 terminated prop */
++		len = strlen("/__overlay__/");
++		if (strlen(s) < len || memcmp(s, "/__overlay__/", len))
++			return -FDT_ERR_NOTFOUND;
++
++		rel_path = s + len;
++		rel_path_len = strlen(rel_path);
++
++		/* find the fragment index in which the symbol lies */
++		ret = fdt_subnode_offset_namelen(fdto, 0, frag_name,
++					       frag_name_len);
++		/* not found? */
++		if (ret < 0)
++			return ret;
++		fragment = ret;
++
++		/* an __overlay__ subnode must exist */
++		ret = fdt_subnode_offset(fdto, fragment, "__overlay__");
++		if (ret < 0)
++			return ret;
++
++		/* get the target of the fragment */
++		ret = overlay_get_target(fdt, fdto, fragment, &target_path);
++		if (ret < 0)
++			return ret;
++		target = ret;
++
++		/* if we have a target path use */
++		if (!target_path) {
++			ret = get_path_len(fdt, target);
++			if (ret < 0)
++				return ret;
++			len = ret;
++		} else
++			len = strlen(target_path);
++
++		ret = fdt_setprop_placeholder(fdt, root_sym, name,
++				len + (len > 1) + rel_path_len + 1, &p);
++		if (ret < 0)
++			return ret;
++
++		/* again in case setprop_placeholder changed it */
++		ret = overlay_get_target(fdt, fdto, fragment, &target_path);
++		if (ret < 0)
++			return ret;
++		target = ret;
++
++		buf = p;
++		if (len > 1) { /* target is not root */
++			if (!target_path) {
++				ret = fdt_get_path(fdt, target, buf, len + 1);
++				if (ret < 0)
++					return ret;
++			} else
++				memcpy(buf, target_path, len + 1);
++
++		} else
++			len--;
++
++		buf[len] = '/';
++		memcpy(buf + len + 1, rel_path, rel_path_len);
++		buf[len + 1 + rel_path_len] = '\0';
++	}
++
++	return 0;
++}
++
+ int fdt_overlay_apply(void *fdt, void *fdto)
+ {
+ 	uint32_t delta = fdt_get_max_phandle(fdt);
+@@ -654,6 +831,10 @@ int fdt_overlay_apply(void *fdt, void *fdto)
+ 	if (ret)
+ 		goto err;
+ 
++	ret = overlay_symbol_update(fdt, fdto);
++	if (ret)
++		goto err;
++
+ 	/*
+ 	 * The overlay has been damaged, erase its magic.
+ 	 */
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
