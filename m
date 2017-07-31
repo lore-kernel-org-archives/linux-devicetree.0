@@ -1,38 +1,66 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v5 02/10] dt-bindings: arm: mediatek: add bindings for mediatek MT7623a SoC Platform
-Date: Mon, 31 Jul 2017 15:36:35 +0800
-Message-ID: <61b96a69cf5a76932fe1e8cbe0d0fce32f11dca2.1501486190.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 07/10] arm: dts: mt7623: enable the usb device on the mt7623n rfb
+Date: Mon, 31 Jul 2017 15:36:40 +0800
+Message-ID: <5261c71db40e8b9006aada1fdd2b4698b19630fb.1501486190.git.sean.wang@mediatek.com>
 References: <cover.1501486190.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1501486190.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: john@phrozen.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1501486190.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 
-This adds DT binding documentation for Mediatek MT7623a
+All versions of the mt7623n RFB have an USB port so enable the device.
+There is a gpio that gets used to power up the port supply. Add support
+for this gpio using the fixed-regulator driver.
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/mediatek.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/mt7623n-rfb.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index cab2074..ae011b2 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -14,6 +14,7 @@ compatible: Must contain one of
-    "mediatek,mt6797"
-    "mediatek,mt7622"
-    "mediatek,mt7623" which is referred to MT7623N SoC
-+   "mediatek,mt7623a"
-    "mediatek,mt8127"
-    "mediatek,mt8135"
-    "mediatek,mt8173"
+diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+index 5e0dd79..1e95790 100644
+--- a/arch/arm/boot/dts/mt7623n-rfb.dtsi
++++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+@@ -49,6 +49,15 @@
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
+ 	};
++
++	usb_p1_vbus: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 135 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &uart0 {
+@@ -72,3 +81,12 @@
+ 	vmmc-supply = <&mt6323_vmch_reg>;
+ 	vqmmc-supply = <&mt6323_vmc_reg>;
+ };
++
++&usb1 {
++	vbus-supply = <&usb_p1_vbus>;
++	status = "okay";
++};
++
++&u3phy1 {
++	status = "okay";
++};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
