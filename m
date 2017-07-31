@@ -1,84 +1,338 @@
-From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v6 3/7] phy: qcom-qmp: Fix phy pipe clock name
-Date: Mon, 31 Jul 2017 12:04:13 +0530
-Message-ID: <1501482857-14100-4-git-send-email-varada@codeaurora.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v6 5/7] PCI: dwc: qcom: Use block IP version for operations
+Date: Mon, 31 Jul 2017 12:04:15 +0530
+Message-ID: <1501482857-14100-6-git-send-email-varada@codeaurora.org>
 References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501482857-14100-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Presently, the phy pipe clock's name is assumed to be either
-usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
-phy lane's number). However, this will not work if an SoC has
-more than one instance of the phy. Hence, instead of assuming
-the name of the clock, fetch it from the DT.
+Presently, when support for a new SoC is added, the driver ops
+structures and functions are versioned with plain 1, 2, 3 etc.
+Instead use the block IP version number.
 
-Reviewed-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- drivers/phy/qualcomm/phy-qcom-qmp.c | 23 +++++++++++------------
- 1 file changed, 11 insertions(+), 12 deletions(-)
+ drivers/pci/dwc/pcie-qcom.c | 133 +++++++++++++++++++++++---------------------
+ 1 file changed, 71 insertions(+), 62 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-index 78ca628..3dd7891 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-@@ -925,29 +925,28 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
-  *    clk  |   +-------+   |                   +-----+
-  *         +---------------+
-  */
--static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
-+static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
+index d15657d..6525f2f 100644
+--- a/drivers/pci/dwc/pcie-qcom.c
++++ b/drivers/pci/dwc/pcie-qcom.c
+@@ -61,7 +61,7 @@
+ 
+ #define PERST_DELAY_US				1000
+ 
+-struct qcom_pcie_resources_v0 {
++struct qcom_pcie_resources_2_1_0 {
+ 	struct clk *iface_clk;
+ 	struct clk *core_clk;
+ 	struct clk *phy_clk;
+@@ -75,7 +75,7 @@ struct qcom_pcie_resources_v0 {
+ 	struct regulator *vdda_refclk;
+ };
+ 
+-struct qcom_pcie_resources_v1 {
++struct qcom_pcie_resources_1_0_0 {
+ 	struct clk *iface;
+ 	struct clk *aux;
+ 	struct clk *master_bus;
+@@ -84,7 +84,7 @@ struct qcom_pcie_resources_v1 {
+ 	struct regulator *vdda;
+ };
+ 
+-struct qcom_pcie_resources_v2 {
++struct qcom_pcie_resources_2_3_2 {
+ 	struct clk *aux_clk;
+ 	struct clk *master_clk;
+ 	struct clk *slave_clk;
+@@ -92,7 +92,7 @@ struct qcom_pcie_resources_v2 {
+ 	struct clk *pipe_clk;
+ };
+ 
+-struct qcom_pcie_resources_v3 {
++struct qcom_pcie_resources_2_4_0 {
+ 	struct clk *aux_clk;
+ 	struct clk *master_clk;
+ 	struct clk *slave_clk;
+@@ -111,10 +111,10 @@ struct qcom_pcie_resources_v3 {
+ };
+ 
+ union qcom_pcie_resources {
+-	struct qcom_pcie_resources_v0 v0;
+-	struct qcom_pcie_resources_v1 v1;
+-	struct qcom_pcie_resources_v2 v2;
+-	struct qcom_pcie_resources_v3 v3;
++	struct qcom_pcie_resources_1_0_0 v1_0_0;
++	struct qcom_pcie_resources_2_1_0 v2_1_0;
++	struct qcom_pcie_resources_2_3_2 v2_3_2;
++	struct qcom_pcie_resources_2_4_0 v2_4_0;
+ };
+ 
+ struct qcom_pcie;
+@@ -172,7 +172,7 @@ static int qcom_pcie_establish_link(struct qcom_pcie *pcie)
+ 	return dw_pcie_wait_for_link(pci);
+ }
+ 
+-static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
++static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
  {
--	char name[24];
- 	struct clk_fixed_rate *fixed;
- 	struct clk_init_data init = { };
-+	int ret;
+ 	u32 val;
  
--	switch (qmp->cfg->type) {
--	case PHY_TYPE_USB3:
--		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
--		break;
--	case PHY_TYPE_PCIE:
--		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
--		break;
--	default:
-+	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
-+	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
- 		/* not all phys register pipe clocks, so return success */
- 		return 0;
- 	}
+@@ -182,9 +182,9 @@ static void qcom_pcie_v0_v1_ltssm_enable(struct qcom_pcie *pcie)
+ 	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+ }
  
-+	ret = of_property_read_string(np, "clock-output-names", &init.name);
-+	if (ret) {
-+		dev_err(qmp->dev, "%s: No clock-output-names\n", np->name);
-+		return ret;
-+	}
+-static int qcom_pcie_get_resources_v0(struct qcom_pcie *pcie)
++static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
++	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 
+@@ -232,9 +232,9 @@ static int qcom_pcie_get_resources_v0(struct qcom_pcie *pcie)
+ 	return PTR_ERR_OR_ZERO(res->phy_reset);
+ }
+ 
+-static void qcom_pcie_deinit_v0(struct qcom_pcie *pcie)
++static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
++	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 
+ 	reset_control_assert(res->pci_reset);
+ 	reset_control_assert(res->axi_reset);
+@@ -249,9 +249,9 @@ static void qcom_pcie_deinit_v0(struct qcom_pcie *pcie)
+ 	regulator_disable(res->vdda_refclk);
+ }
+ 
+-static int qcom_pcie_init_v0(struct qcom_pcie *pcie)
++static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v0 *res = &pcie->res.v0;
++	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	u32 val;
+@@ -367,9 +367,9 @@ static int qcom_pcie_init_v0(struct qcom_pcie *pcie)
+ 	return ret;
+ }
+ 
+-static int qcom_pcie_get_resources_v1(struct qcom_pcie *pcie)
++static int qcom_pcie_get_resources_1_0_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
++	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 
+@@ -397,9 +397,9 @@ static int qcom_pcie_get_resources_v1(struct qcom_pcie *pcie)
+ 	return PTR_ERR_OR_ZERO(res->core);
+ }
+ 
+-static void qcom_pcie_deinit_v1(struct qcom_pcie *pcie)
++static void qcom_pcie_deinit_1_0_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
++	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
+ 
+ 	reset_control_assert(res->core);
+ 	clk_disable_unprepare(res->slave_bus);
+@@ -409,9 +409,9 @@ static void qcom_pcie_deinit_v1(struct qcom_pcie *pcie)
+ 	regulator_disable(res->vdda);
+ }
+ 
+-static int qcom_pcie_init_v1(struct qcom_pcie *pcie)
++static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v1 *res = &pcie->res.v1;
++	struct qcom_pcie_resources_1_0_0 *res = &pcie->res.v1_0_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	int ret;
+@@ -477,7 +477,7 @@ static int qcom_pcie_init_v1(struct qcom_pcie *pcie)
+ 	return ret;
+ }
+ 
+-static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
++static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+ {
+ 	u32 val;
+ 
+@@ -487,9 +487,9 @@ static void qcom_pcie_v2_ltssm_enable(struct qcom_pcie *pcie)
+ 	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
+ }
+ 
+-static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
++static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
++	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 
+@@ -513,9 +513,9 @@ static int qcom_pcie_get_resources_v2(struct qcom_pcie *pcie)
+ 	return PTR_ERR_OR_ZERO(res->pipe_clk);
+ }
+ 
+-static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
++static void qcom_pcie_deinit_2_3_2(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
++	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+ 
+ 	clk_disable_unprepare(res->pipe_clk);
+ 	clk_disable_unprepare(res->slave_clk);
+@@ -524,9 +524,9 @@ static void qcom_pcie_deinit_v2(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->aux_clk);
+ }
+ 
+-static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
++static int qcom_pcie_init_2_3_2(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
++	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	u32 val;
+@@ -589,9 +589,9 @@ static int qcom_pcie_init_v2(struct qcom_pcie *pcie)
+ 	return ret;
+ }
+ 
+-static int qcom_pcie_post_init_v2(struct qcom_pcie *pcie)
++static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v2 *res = &pcie->res.v2;
++	struct qcom_pcie_resources_2_3_2 *res = &pcie->res.v2_3_2;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	int ret;
+@@ -605,9 +605,9 @@ static int qcom_pcie_post_init_v2(struct qcom_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static int qcom_pcie_get_resources_v3(struct qcom_pcie *pcie)
++static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v3 *res = &pcie->res.v3;
++	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 
+@@ -674,9 +674,9 @@ static int qcom_pcie_get_resources_v3(struct qcom_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static void qcom_pcie_deinit_v3(struct qcom_pcie *pcie)
++static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v3 *res = &pcie->res.v3;
++	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+ 
+ 	reset_control_assert(res->axi_m_reset);
+ 	reset_control_assert(res->axi_s_reset);
+@@ -692,9 +692,9 @@ static void qcom_pcie_deinit_v3(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->slave_clk);
+ }
+ 
+-static int qcom_pcie_init_v3(struct qcom_pcie *pcie)
++static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+ {
+-	struct qcom_pcie_resources_v3 *res = &pcie->res.v3;
++	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
+ 	struct dw_pcie *pci = pcie->pci;
+ 	struct device *dev = pci->dev;
+ 	u32 val;
+@@ -952,37 +952,37 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
+ 	.rd_own_conf = qcom_pcie_rd_own_conf,
+ };
+ 
+-static const struct qcom_pcie_ops ops_v0 = {
+-	.get_resources = qcom_pcie_get_resources_v0,
+-	.init = qcom_pcie_init_v0,
+-	.deinit = qcom_pcie_deinit_v0,
+-	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
++static const struct qcom_pcie_ops ops_2_1_0 = {
++	.get_resources = qcom_pcie_get_resources_2_1_0,
++	.init = qcom_pcie_init_2_1_0,
++	.deinit = qcom_pcie_deinit_2_1_0,
++	.ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+ };
+ 
+-static const struct qcom_pcie_ops ops_v1 = {
+-	.get_resources = qcom_pcie_get_resources_v1,
+-	.init = qcom_pcie_init_v1,
+-	.deinit = qcom_pcie_deinit_v1,
+-	.ltssm_enable = qcom_pcie_v0_v1_ltssm_enable,
++static const struct qcom_pcie_ops ops_1_0_0 = {
++	.get_resources = qcom_pcie_get_resources_1_0_0,
++	.init = qcom_pcie_init_1_0_0,
++	.deinit = qcom_pcie_deinit_1_0_0,
++	.ltssm_enable = qcom_pcie_2_1_0_ltssm_enable,
+ };
+ 
+-static const struct qcom_pcie_ops ops_v2 = {
+-	.get_resources = qcom_pcie_get_resources_v2,
+-	.init = qcom_pcie_init_v2,
+-	.post_init = qcom_pcie_post_init_v2,
+-	.deinit = qcom_pcie_deinit_v2,
+-	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
++static const struct qcom_pcie_ops ops_2_3_2 = {
++	.get_resources = qcom_pcie_get_resources_2_3_2,
++	.init = qcom_pcie_init_2_3_2,
++	.post_init = qcom_pcie_post_init_2_3_2,
++	.deinit = qcom_pcie_deinit_2_3_2,
++	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ };
+ 
+ static const struct dw_pcie_ops dw_pcie_ops = {
+ 	.link_up = qcom_pcie_link_up,
+ };
+ 
+-static const struct qcom_pcie_ops ops_v3 = {
+-	.get_resources = qcom_pcie_get_resources_v3,
+-	.init = qcom_pcie_init_v3,
+-	.deinit = qcom_pcie_deinit_v3,
+-	.ltssm_enable = qcom_pcie_v2_ltssm_enable,
++static const struct qcom_pcie_ops ops_2_4_0 = {
++	.get_resources = qcom_pcie_get_resources_2_4_0,
++	.init = qcom_pcie_init_2_4_0,
++	.deinit = qcom_pcie_deinit_2_4_0,
++	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+ };
+ 
+ static int qcom_pcie_probe(struct platform_device *pdev)
+@@ -1070,12 +1070,21 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++/*
++ * Declare one of_device_id entry
++ * c - Compatible string
++ * d - Associated data
++ * w - SoC wrapper version (ignored)
++ * s - Synopsys core version (ignored)
++ */
++#define QCOM_DECL(c, d, w, s) { .compatible = c, .data = &d }
 +
- 	fixed = devm_kzalloc(qmp->dev, sizeof(*fixed), GFP_KERNEL);
- 	if (!fixed)
- 		return -ENOMEM;
+ static const struct of_device_id qcom_pcie_match[] = {
+-	{ .compatible = "qcom,pcie-ipq8064", .data = &ops_v0 },
+-	{ .compatible = "qcom,pcie-apq8064", .data = &ops_v0 },
+-	{ .compatible = "qcom,pcie-apq8084", .data = &ops_v1 },
+-	{ .compatible = "qcom,pcie-msm8996", .data = &ops_v2 },
+-	{ .compatible = "qcom,pcie-ipq4019", .data = &ops_v3 },
++	QCOM_DECL("qcom,pcie-apq8084", ops_1_0_0, 1.0.0, 4.11a),
++	QCOM_DECL("qcom,pcie-ipq8064", ops_2_1_0, 2.1.0, 4.01a),
++	QCOM_DECL("qcom,pcie-apq8064", ops_2_1_0, 2.1.0, 4.01a),
++	QCOM_DECL("qcom,pcie-msm8996", ops_2_3_2, 2.3.2, 4.21a),
++	QCOM_DECL("qcom,pcie-ipq4019", ops_2_4_0, 2.4.0, 4.20a),
+ 	{ }
+ };
  
--	init.name = name;
- 	init.ops = &clk_fixed_rate_ops;
- 
- 	/* controllers using QMP phys use 125MHz pipe clock interface */
-@@ -1122,7 +1121,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
- 		 * Register the pipe clock provided by phy.
- 		 * See function description to see details of this pipe clock.
- 		 */
--		ret = phy_pipe_clk_register(qmp, id);
-+		ret = phy_pipe_clk_register(qmp, child);
- 		if (ret) {
- 			dev_err(qmp->dev,
- 				"failed to register pipe clock source\n");
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
