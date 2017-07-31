@@ -1,85 +1,38 @@
-From: Jacob Chen <jacobchen110-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/5] Add Rockchip RGA V4l2 support
-Date: Mon, 31 Jul 2017 15:21:27 +0800
-Message-ID: <CAFLEztRRq5Eep+c20h_=a+uf30egAYfPmX75=K+F6XnQ2N1+zg@mail.gmail.com>
-References: <1501470460-12014-1-git-send-email-jacob-chen@iotwrt.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v5 02/10] dt-bindings: arm: mediatek: add bindings for mediatek MT7623a SoC Platform
+Date: Mon, 31 Jul 2017 15:36:35 +0800
+Message-ID: <61b96a69cf5a76932fe1e8cbe0d0fce32f11dca2.1501486190.git.sean.wang@mediatek.com>
+References: <cover.1501486190.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501470460-12014-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Nicolas Dufresne <nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1501486190.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: john@phrozen.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Sean Wang <sean.wang@mediatek.com>
 
+This adds DT binding documentation for Mediatek MT7623a
 
-2017-07-31 11:07 GMT+08:00 Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>:
-> This patch series add a v4l2 m2m drvier for rockchip RGA direct rendering based 2d graphics acceleration module.
->
-> Before, my colleague yakir have write a drm RGA drvier and send it to the lists.
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2016-March/416769.html
-> I have been asked to find a userspace user("compositor") for it, but after some studys, my conclusion is that unlike exynos g2d,
-> rockchip rga are not suitable for compositor. Rockchip RGA have a limited MMU, which means it can only hold several buffers in the same time.
-> When it was used in compositor, it will waste a lot of time to import/export/flush buffer, resulting in a bad performance.
->
-> A few months ago, i saw a discussion in dri-devel-PD4FTy7X32lNgt0PjOBp9xlNPtJONSTn@public.gmane.org
-> It remind that we could write a v4l2 m2m RGA driver, since we usually use RGA for streaming purpose.
-> https://patches.linaro.org/cover/97727/
->
-> I have test this driver with gstreamer v4l2transform plugin and it seems work well.
->
-> change in V3:
-> - rename the controls.
-> - add pm_runtime support.
-> - enable node by default.
-> - correct spelling in documents.
->
-> change in V2:
-> - generalize the controls.
-> - map buffers (10-50 us) in every cmd-run rather than in buffer-import to avoid get_free_pages failed on
-> actively used systems.
-> - remove status in dt-bindings examples.
->
-> Jacob Chen (5):
->   [media] v4l: add blend modes controls
->   [media]: rockchip/rga: v4l2 m2m support
->   ARM: dts: rockchip: add RGA device node for RK3288
->   ARM: dts: rockchip: add RGA device node for RK3399
->   dt-bindings: Document the Rockchip RGA bindings
->
->  .../devicetree/bindings/media/rockchip-rga.txt     |  33 +
->  arch/arm/boot/dts/rk3288.dtsi                      |  11 +
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  11 +
->  drivers/media/platform/Kconfig                     |  11 +
->  drivers/media/platform/Makefile                    |   2 +
->  drivers/media/platform/rockchip-rga/Makefile       |   3 +
->  drivers/media/platform/rockchip-rga/rga-buf.c      | 141 +++
->  drivers/media/platform/rockchip-rga/rga-hw.c       | 650 ++++++++++++++
->  drivers/media/platform/rockchip-rga/rga-hw.h       | 437 +++++++++
->  drivers/media/platform/rockchip-rga/rga.c          | 987 +++++++++++++++++++++
->  drivers/media/platform/rockchip-rga/rga.h          | 110 +++
->  drivers/media/v4l2-core/v4l2-ctrls.c               |  20 +-
->  include/uapi/linux/v4l2-controls.h                 |  16 +-
->  13 files changed, 2430 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
->  create mode 100644 drivers/media/platform/rockchip-rga/Makefile
->  create mode 100644 drivers/media/platform/rockchip-rga/rga-buf.c
->  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.c
->  create mode 100644 drivers/media/platform/rockchip-rga/rga-hw.h
->  create mode 100644 drivers/media/platform/rockchip-rga/rga.c
->  create mode 100644 drivers/media/platform/rockchip-rga/rga.h
->
-> --
-> 2.7.4
->
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/mediatek.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-We are going to use this driver in our BSP, and write userspace for it.
-Though there are some work needed be done for better use, i'm
-satisfied with it at present.
-It could be improved through usage.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index cab2074..ae011b2 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -14,6 +14,7 @@ compatible: Must contain one of
+    "mediatek,mt6797"
+    "mediatek,mt7622"
+    "mediatek,mt7623" which is referred to MT7623N SoC
++   "mediatek,mt7623a"
+    "mediatek,mt8127"
+    "mediatek,mt8135"
+    "mediatek,mt8173"
+-- 
+2.7.4
