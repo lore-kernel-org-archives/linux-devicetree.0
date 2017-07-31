@@ -1,52 +1,81 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 00/06] clocksource: sh_cmt: DT binding rework V4
-Date: Mon, 31 Jul 2017 10:59:59 +0200
-Message-ID: <00d220a0-8d19-78c8-cd36-ef9ac35f0e37@linaro.org>
-References: <20160314142342.17180.21352.sendpatchset@little-apple>
- <20161124105843.GA26737@verge.net.au> <20170711115646.GL4517@verge.net.au>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: Re: [PATCH] mux: Convert to using %pOF instead of full_name
+Date: Mon, 31 Jul 2017 11:12:01 +0200
+Message-ID: <334b45ae-b4a6-12a8-66cd-6aadba07de2c@axentia.se>
+References: <20170718214339.7774-38-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170711115646.GL4517@verge.net.au>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718214339.7774-38-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, robh@kernel.org, linux-renesas-soc@vger.kernel.org, tglx@linutronix.de
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/07/2017 13:56, Simon Horman wrote:
-> On Thu, Nov 24, 2016 at 11:58:43AM +0100, Simon Horman wrote:
->> Hi Magnus,
->>
->> On Mon, Mar 14, 2016 at 11:23:42PM +0900, Magnus Damm wrote:
->>> clocksource: sh_cmt: DT binding rework V4
->>>
->>> [PATCH v4 01/06] devicetree: bindings: Remove sh7372 CMT binding
->>> [PATCH v4 02/06] devicetree: bindings: R-Car Gen2 CMT0 and CMT1 bindings
->>> [PATCH v4 03/06] devicetree: bindings: r8a73a4 and R-Car Gen2 CMT bindings
->>> [PATCH v4 04/06] devicetree: bindings: Deprecate property, update example
->>> [PATCH v4 05/06] devicetree: bindings: Remove unused 32-bit CMT bindings
->>> [PATCH v4 06/06] devicetree: bindings: Remove deprecated properties
->>>
->>> Here is the latest and hopefully final take on updating the CMT DT
->>> bindings for R-Car Gen2. In total there are 6 patches that have acks
->>> and are ready to be picked up and merged. Other earlier posted changes
->>> such as driver modification and SoC DTS bits depend on this series.
->>
->> I am wondering what the state of this work is.
->> I see only one minor review comment for this series.
->> It would be great to see it merged.
+Hi Rob,
+
+Works for me. I'll pass it on with the following subject nit fixed:
+
+s/mux: Convert/mux: convert/
+
+Cheers,
+Peter
+
+On 2017-07-18 23:43, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
 > 
-> Ping
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> ---
+>  drivers/mux/mux-core.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+> index 90b8995f07cb..bef3fe1df670 100644
+> --- a/drivers/mux/mux-core.c
+> +++ b/drivers/mux/mux-core.c
+> @@ -452,8 +452,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>  					 "mux-controls", "#mux-control-cells",
+>  					 index, &args);
+>  	if (ret) {
+> -		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+> -			np->full_name, mux_name ?: "", index);
+> +		dev_err(dev, "%pOF: failed to get mux-control %s(%i)\n",
+> +			np, mux_name ?: "", index);
+>  		return ERR_PTR(ret);
+>  	}
+> 
+> @@ -464,8 +464,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+> 
+>  	if (args.args_count > 1 ||
+>  	    (!args.args_count && (mux_chip->controllers > 1))) {
+> -		dev_err(dev, "%s: wrong #mux-control-cells for %s\n",
+> -			np->full_name, args.np->full_name);
+> +		dev_err(dev, "%pOF: wrong #mux-control-cells for %pOF\n",
+> +			np, args.np);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+> 
+> @@ -474,8 +474,8 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>  		controller = args.args[0];
+> 
+>  	if (controller >= mux_chip->controllers) {
+> -		dev_err(dev, "%s: bad mux controller %u specified in %s\n",
+> -			np->full_name, controller, args.np->full_name);
+> +		dev_err(dev, "%pOF: bad mux controller %u specified in %pOF\n",
+> +			np, controller, args.np);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+> 
+> --
+> 2.11.0
+> 
 
-Up.
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
