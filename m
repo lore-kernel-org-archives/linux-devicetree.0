@@ -1,42 +1,89 @@
-From: Bich HEMON <bich.hemon@st.com>
-Subject: Re: [PATCH 4/9] serial: stm32: fix pio transmit timeout
-Date: Mon, 31 Jul 2017 09:30:54 +0000
-Message-ID: <b1eb499b-4099-6109-7516-3b872175b8f9@st.com>
-References: <1499958494-19354-1-git-send-email-bich.hemon@st.com>
- <1499958494-19354-5-git-send-email-bich.hemon@st.com>
- <20170730143256.GA30584@kroah.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] memory: mtk-smi: add larbid handle routine
+Date: Mon, 31 Jul 2017 11:32:01 +0200
+Message-ID: <18e1c24a-529d-85ef-0027-90c491927d6b@gmail.com>
+References: <1501239343-9190-1-git-send-email-honghui.zhang@mediatek.com>
+	<1501239343-9190-2-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170730143256.GA30584@kroah.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1501239343-9190-2-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
-Content-ID: <2A1036DA48DA924FA0CF497889C3FE53@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Jiri Slaby <jslaby@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JlZywNCg0KT24gMDcvMzAvMjAxNyAwNDozMiBQTSwgR3JlZyBLcm9haC1IYXJ0bWFuIHdy
-b3RlOg0KPiBPbiBUaHUsIEp1bCAxMywgMjAxNyBhdCAwMzowODoyOFBNICswMDAwLCBCaWNoIEhF
-TU9OIHdyb3RlOg0KPj4gRnJvbTogR2VyYWxkIEJhZXphIDxnZXJhbGQuYmFlemFAc3QuY29tPg0K
-Pj4NCj4+IDEwMMK1cyB3YXMgdG9vIHNob3J0IGZvciBsb3cgc3BlZWQgdHJhbnNtaXNzaW9uDQo+
-PiAoOTYwMGJwcykNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBHZXJhbGQgQmFlemEgPGdlcmFsZC5i
-YWV6YUBzdC5jb20+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCaWNoIEhlbW9uIDxiaWNoLmhlbW9uQHN0
-LmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2ZXJzL3R0eS9zZXJpYWwvc3RtMzItdXNhcnQuYyB8IDIg
-Ky0NCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
-IA0KPiBUaGlzIHBhdGNoIGRpZCBub3QgYXBwbHkgOigNCj4gDQoNCkkgaGF2ZSByZWJhc2VkIHRo
-ZSBwYXRjaCBvbiB0b3Agb2YgeW91ciB0dHktbmV4dCBicmFuY2ggLiBQbGVhc2UgZHJvcCANCnRo
-aXMgcGF0Y2ggYXMgSSB3aWxsIHNlbmQgeW91IGEgbmV3IHZlcnNpb24uDQoNClRoeCwNCg0KQmlj
-aApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+
+
+On 07/28/2017 12:55 PM, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> In the commit 3c8f4ad85c4b ("memory/mediatek: add support for mt2701"),
+> the larb->larbid was added but not initialized.
+> Mediatek's gen1 smi need this hardware larbid information to get the
+> register offset which controls whether enable iommu for this larb.
+> This patch add the initialize routine for larbid.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> ---
+>   drivers/memory/mtk-smi.c | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> index 2b798bb4..8f75aaa 100644
+> --- a/drivers/memory/mtk-smi.c
+> +++ b/drivers/memory/mtk-smi.c
+> @@ -42,6 +42,7 @@
+>   #define SMI_SECUR_CON_VAL_DOMAIN(id)	(0x3 << ((((id) & 0x7) << 2) + 1))
+>   
+>   struct mtk_smi_larb_gen {
+> +	bool need_larbid;
+>   	int port_in_larb[MTK_LARB_NR_MAX + 1];
+>   	void (*config_port)(struct device *);
+>   };
+> @@ -214,6 +215,7 @@ static const struct mtk_smi_larb_gen mtk_smi_larb_mt8173 = {
+>   };
+>   
+>   static const struct mtk_smi_larb_gen mtk_smi_larb_mt2701 = {
+> +	.need_larbid = true,
+>   	.port_in_larb = {
+>   		LARB0_PORT_OFFSET, LARB1_PORT_OFFSET,
+>   		LARB2_PORT_OFFSET, LARB3_PORT_OFFSET
+> @@ -240,6 +242,7 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>   	struct device *dev = &pdev->dev;
+>   	struct device_node *smi_node;
+>   	struct platform_device *smi_pdev;
+> +	int err;
+>   
+>   	if (!dev->pm_domain)
+>   		return -EPROBE_DEFER;
+> @@ -263,6 +266,15 @@ static int mtk_smi_larb_probe(struct platform_device *pdev)
+>   		return PTR_ERR(larb->smi.clk_smi);
+>   	larb->smi.dev = dev;
+>   
+> +	if (larb->larb_gen->need_larbid) {
+> +		err = of_property_read_u32(dev->of_node, "mediatek,larbid",
+> +					   &larb->larbid);
+> +		if (err) {
+> +			dev_err(dev, "missing larbid property\n");
+> +			return err;
+> +		}
+> +	}
+> +
+>   	smi_node = of_parse_phandle(dev->of_node, "mediatek,smi", 0);
+>   	if (!smi_node)
+>   		return -EINVAL;
+> 
