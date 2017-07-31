@@ -1,42 +1,36 @@
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: Re: [PATCH] ARM: dts: BCM53573: Add Broadcom BCM947189ACDBMR board
- support
-Date: Mon, 31 Jul 2017 15:46:14 +0200
-Message-ID: <247dcd4e1becdaa5f947f59f525c9d90@milecki.pl>
-References: <20170718193740.8610-1-f.fainelli@gmail.com>
- <bb5387cf-5d31-3a03-1bb9-1327768271ec@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/2] clk: meson: expose clk ids
+Date: Mon, 31 Jul 2017 16:05:02 +0200
+Message-ID: <CAK8P3a28nb8QsJC8V4+SJM0gz70BDOv8jAczRWoCF+HfvkwJfA@mail.gmail.com>
+References: <20170731113832.26490-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bb5387cf-5d31-3a03-1bb9-1327768271ec@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170731113832.26490-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Olof Johansson <olof@lixom.net>, linux-clk <linux-clk@vger.kernel.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-07-24 19:39, Florian Fainelli wrote:
-> On 07/18/2017 12:37 PM, Florian Fainelli wrote:
->> Adds support for the Broadcom reference board BCM947189ACDMBR which
->> features the following:
->> 
->> * 128MB of DRAM
->> * External MoCA support through a Broadcom BCM6802 chip
->> * 1x external Gigabit PHY through the external BCM6802
->> * 1x USB 2.0 port
->> * 1x PCIE slot
->> * Few configurable buttons and LEDs
->> 
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> 
-> Rafal, any feedback on this?
+On Mon, Jul 31, 2017 at 1:38 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> In previous cycles, concerns have been raised about the way clocks are
+> exposed for the meson clock controller, only when validated and required
+> in DT.
+>
+> Instead, this patchset expose all the known clocks which may be needed in
+> DT later on. The clocks left out are internal clocks which should never be
+> used directly in DT. These are mostly internal muxes and dividers of
+> composite clocks.
+>
+> While this should reduce the patch flow on the related header files, It
+> won't stop it completely. There are still many clocks we don't know about
+> yet. We tend discover a few in every cycle.
+>
+> This patchset depends on these fixes [0] to avoid issues when adding new
+> clk ids.
+>
+> [0]: https://lkml.kernel.org/r/20170727161755.10393-1-jbrunet@baylibre.com
 
-Looks good :)
+Thanks a lot!
+
+ Acked-by: Arnd Bergmann <arnd@arndb.de>
