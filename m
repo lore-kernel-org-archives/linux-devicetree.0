@@ -1,395 +1,101 @@
 From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] fdt: Allow stacked overlays phandle references
-Date: Mon, 31 Jul 2017 20:09:56 +0300
-Message-ID: <1501520996-3366-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH] tests: Add stacked overlay tests on fdtoverlay
+Date: Mon, 31 Jul 2017 20:10:08 +0300
+Message-ID: <1501521008-3423-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables an overlay to refer to a previous overlay's
-labels by performing a merge of symbol information at application
-time.
-
-In a nutshell it allows an overlay to refer to a symbol that a previous
-overlay has defined. It requires both the base and all the overlays
-to be compiled with the -@ command line switch so that symbol
-information is included.
-
-base.dts
---------
-
-	/dts-v1/;
-	/ {
-		foo: foonode {
-			foo-property;
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o base.dtb base.dts
-
-bar.dts
--------
-
-	/dts-v1/;
-	/plugin/;
-	/ {
-		fragment@1 {
-			target = <&foo>;
-			__overlay__ {
-				overlay-1-property;
-				bar: barnode {
-					bar-property;
-				};
-			};
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o bar.dtb bar.dts
-
-baz.dts
--------
-
-	/dts-v1/;
-	/plugin/;
-	/ {
-		fragment@1 {
-			target = <&bar>;
-			__overlay__ {
-				overlay-2-property;
-				baz: baznode {
-					baz-property;
-				};
-			};
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o baz.dtb baz.dts
-
-Applying the overlays:
-
-	$ fdtoverlay -i base.dtb -o target.dtb bar.dtb baz.dtb
-
-Dumping:
-
-	$ fdtdump target.dtb
-	/ {
-            foonode {
-                overlay-1-property;
-                foo-property;
-                linux,phandle = <0x00000001>;
-                phandle = <0x00000001>;
-                barnode {
-                    overlay-2-property;
-                    phandle = <0x00000002>;
-                    linux,phandle = <0x00000002>;
-                    bar-property;
-                    baznode {
-                        phandle = <0x00000003>;
-                        linux,phandle = <0x00000003>;
-                        baz-property;
-                    };
-                };
-            };
-            __symbols__ {
-                baz = "/foonode/barnode/baznode";
-                bar = "/foonode/barnode";
-                foo = "/foonode";
-            };
-	};
+Add a stacked overlay unit test, piggybacking on fdtoverlay.
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 ---
- libfdt/fdt_overlay.c | 225 ++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 203 insertions(+), 22 deletions(-)
+ tests/run_tests.sh             | 15 +++++++++++++++
+ tests/stacked_overlay_bar.dts  | 13 +++++++++++++
+ tests/stacked_overlay_base.dts |  6 ++++++
+ tests/stacked_overlay_baz.dts  | 13 +++++++++++++
+ 4 files changed, 47 insertions(+)
+ create mode 100644 tests/stacked_overlay_bar.dts
+ create mode 100644 tests/stacked_overlay_base.dts
+ create mode 100644 tests/stacked_overlay_baz.dts
 
-diff --git a/libfdt/fdt_overlay.c b/libfdt/fdt_overlay.c
-index ceb9687..a4f81f0 100644
---- a/libfdt/fdt_overlay.c
-+++ b/libfdt/fdt_overlay.c
-@@ -39,6 +39,7 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
-  * @fdt: Base device tree blob
-  * @fdto: Device tree overlay blob
-  * @fragment: node offset of the fragment in the overlay
-+ * @pathp: pointer which receives the path of the target (or NULL)
-  *
-  * overlay_get_target() retrieves the target offset in the base
-  * device tree of a fragment, no matter how the actual targetting is
-@@ -49,37 +50,47 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
-  *      Negative error code on error
-  */
- static int overlay_get_target(const void *fdt, const void *fdto,
--			      int fragment)
-+			      int fragment, char const **pathp)
- {
- 	uint32_t phandle;
--	const char *path;
--	int path_len;
-+	const char *path = NULL;
-+	int path_len = 0, ret;
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index b8a2825..3bc5b41 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -791,6 +791,21 @@ fdtoverlay_tests() {
  
- 	/* Try first to do a phandle based lookup */
- 	phandle = overlay_get_target_phandle(fdto, fragment);
- 	if (phandle == (uint32_t)-1)
- 		return -FDT_ERR_BADPHANDLE;
- 
--	if (phandle)
--		return fdt_node_offset_by_phandle(fdt, phandle);
-+	/* no phandle, try path */
-+	if (!phandle) {
-+		/* And then a path based lookup */
-+		path = fdt_getprop(fdto, fragment, "target-path", &path_len);
-+		if (path)
-+			ret = fdt_path_offset(fdt, path);
-+		else
-+			ret = path_len;
-+	} else
-+		ret = fdt_node_offset_by_phandle(fdt, phandle);
- 
--	/* And then a path based lookup */
--	path = fdt_getprop(fdto, fragment, "target-path", &path_len);
--	if (!path) {
--		/*
--		 * If we haven't found either a target or a
--		 * target-path property in a node that contains a
--		 * __overlay__ subnode (we wouldn't be called
--		 * otherwise), consider it a improperly written
--		 * overlay
--		 */
--		if (path_len == -FDT_ERR_NOTFOUND)
--			return -FDT_ERR_BADOVERLAY;
-+	/*
-+	* If we haven't found either a target or a
-+	* target-path property in a node that contains a
-+	* __overlay__ subnode (we wouldn't be called
-+	* otherwise), consider it a improperly written
-+	* overlay
-+	*/
-+	if (ret < 0 && path_len == -FDT_ERR_NOTFOUND)
-+		ret = -FDT_ERR_BADOVERLAY;
+     # test that the new property is installed
+     run_fdtoverlay_test foobar "/test-node" "test-str-property" "-ts" ${basedtb} ${targetdtb} ${overlaydtb}
 +
-+	/* return on error */
-+	if (ret < 0)
-+		return ret;
- 
--		return path_len;
--	}
-+	/* return pointer to path (if available) */
-+	if (pathp)
-+		*pathp = path ? path : NULL;
- 
--	return fdt_path_offset(fdt, path);
-+	return ret;
++    stacked_base=stacked_overlay_base.dts
++    stacked_basedtb=stacked_overlay_base.fdtoverlay.test.dtb
++    stacked_bar=stacked_overlay_bar.dts
++    stacked_bardtb=stacked_overlay_bar.fdtoverlay.test.dtb
++    stacked_baz=stacked_overlay_baz.dts
++    stacked_bazdtb=stacked_overlay_baz.fdtoverlay.test.dtb
++    stacked_targetdtb=stacked_overlay_target.fdtoverlay.test.dtb
++
++    run_dtc_test -@ -I dts -O dtb -o $stacked_basedtb $stacked_base
++    run_dtc_test -@ -I dts -O dtb -o $stacked_bardtb $stacked_bar
++    run_dtc_test -@ -I dts -O dtb -o $stacked_bazdtb $stacked_baz
++
++    # test that baz correctly inserted the property
++    run_fdtoverlay_test baz "/foonode/barnode/baznode" "baz-property" "-ts" ${stacked_basedtb} ${stacked_targetdtb} ${stacked_bardtb} ${stacked_bazdtb}
  }
  
- /**
-@@ -590,7 +601,7 @@ static int overlay_apply_node(void *fdt, int target,
-  *
-  * overlay_merge() merges an overlay into its base device tree.
-  *
-- * This is the final step in the device tree overlay application
-+ * This is the next to last step in the device tree overlay application
-  * process, when all the phandles have been adjusted and resolved and
-  * you just have to merge overlay into the base device tree.
-  *
-@@ -618,7 +629,7 @@ static int overlay_merge(void *fdt, void *fdto)
- 		if (overlay < 0)
- 			return overlay;
- 
--		target = overlay_get_target(fdt, fdto, fragment);
-+		target = overlay_get_target(fdt, fdto, fragment, NULL);
- 		if (target < 0)
- 			return target;
- 
-@@ -630,6 +641,172 @@ static int overlay_merge(void *fdt, void *fdto)
- 	return 0;
- }
- 
-+static int get_path_len(const void *fdt, int nodeoffset)
-+{
-+	int len = 0, namelen;
-+	const char *name;
-+
-+	FDT_CHECK_HEADER(fdt);
-+
-+	for (;;) {
-+		name = fdt_get_name(fdt, nodeoffset, &namelen);
-+		if (!name)
-+			return namelen;
-+
-+		/* root? we're done */
-+		if (namelen == 0)
-+			break;
-+
-+		nodeoffset = fdt_parent_offset(fdt, nodeoffset);
-+		if (nodeoffset < 0)
-+			return nodeoffset;
-+		len += namelen + 1;
-+	}
-+
-+	/* in case of root pretend it's "/" */
-+	if (len == 0)
-+		len++;
-+	return len;
-+}
-+
-+/**
-+ * overlay_symbol_update - Update the symbols of base tree after a merge
-+ * @fdt: Base Device Tree blob
-+ * @fdto: Device tree overlay blob
-+ *
-+ * overlay_symbol_update() updates the symbols of the base tree with the
-+ * symbols of the applied overlay
-+ *
-+ * This is the last step in the device tree overlay application
-+ * process, allowing the reference of overlay symbols by subsequent
-+ * overlay operations.
-+ *
-+ * returns:
-+ *      0 on success
-+ *      Negative error code on failure
-+ */
-+static int overlay_symbol_update(void *fdt, void *fdto)
-+{
-+	int root_sym, ov_sym, prop, path_len, fragment, target;
-+	int len, frag_name_len, ret, rel_path_len;
-+	const char *s;
-+	const char *path;
-+	const char *name;
-+	const char *frag_name;
-+	const char *rel_path;
-+	const char *target_path;
-+	char *buf;
-+	void *p;
-+
-+	ov_sym = fdt_subnode_offset(fdto, 0, "__symbols__");
-+
-+	/* if no overlay symbols exist no problem */
-+	if (ov_sym < 0)
-+		return 0;
-+
-+	root_sym = fdt_subnode_offset(fdt, 0, "__symbols__");
-+
-+	/* it no root symbols exist we should create them */
-+	if (root_sym < 0) {
-+		root_sym = fdt_add_subnode(fdt, 0, "__symbols__");
-+		if (root_sym < 0)
-+			return root_sym;
-+	}
-+
-+	/* iterate over each overlay symbol */
-+	fdt_for_each_property_offset(prop, fdto, ov_sym) {
-+		path = fdt_getprop_by_offset(fdto, prop, &name, &path_len);
-+		if (!path)
-+			return path_len;
-+
-+		/* verify it's a string property (terminated by a single \0) */
-+		if (path_len < 1 || memchr(path, '\0', path_len) != &path[path_len - 1])
-+			return -FDT_ERR_BADVALUE;
-+
-+		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
-+
-+		if (*path != '/')
-+			return -FDT_ERR_BADVALUE;
-+
-+		/* verify that no stray \0 exist in the property */
-+		if (strlen(path) != path_len - 1)
-+			return -FDT_ERR_BADOVERLAY;
-+
-+		/* get fragment name first */
-+		s = strchr(path + 1, '/');
-+		if (!s)
-+			return -FDT_ERR_BADOVERLAY;
-+
-+		frag_name = path + 1;
-+		frag_name_len = s - path - 1;
-+
-+		/* verify format; safe since "s" lies in \0 terminated prop */
-+		len = strlen("/__overlay__/");
-+		if (strlen(s) < len || memcmp(s, "/__overlay__/", len))
-+			return -FDT_ERR_NOTFOUND;
-+
-+		rel_path = s + len;
-+		rel_path_len = strlen(rel_path);
-+
-+		/* find the fragment index in which the symbol lies */
-+		ret = fdt_subnode_offset_namelen(fdto, 0, frag_name,
-+					       frag_name_len);
-+		/* not found? */
-+		if (ret < 0)
-+			return ret;
-+		fragment = ret;
-+
-+		/* an __overlay__ subnode must exist */
-+		ret = fdt_subnode_offset(fdto, fragment, "__overlay__");
-+		if (ret < 0)
-+			return ret;
-+
-+		/* get the target of the fragment */
-+		ret = overlay_get_target(fdt, fdto, fragment, &target_path);
-+		if (ret < 0)
-+			return ret;
-+		target = ret;
-+
-+		/* if we have a target path use */
-+		if (!target_path) {
-+			ret = get_path_len(fdt, target);
-+			if (ret < 0)
-+				return ret;
-+			len = ret;
-+		} else
-+			len = strlen(target_path);
-+
-+		ret = fdt_setprop_placeholder(fdt, root_sym, name,
-+				len + (len > 1) + rel_path_len + 1, &p);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* again in case setprop_placeholder changed it */
-+		ret = overlay_get_target(fdt, fdto, fragment, &target_path);
-+		if (ret < 0)
-+			return ret;
-+		target = ret;
-+
-+		buf = p;
-+		if (len > 1) { /* target is not root */
-+			if (!target_path) {
-+				ret = fdt_get_path(fdt, target, buf, len + 1);
-+				if (ret < 0)
-+					return ret;
-+			} else
-+				memcpy(buf, target_path, len + 1);
-+
-+		} else
-+			len--;
-+
-+		buf[len] = '/';
-+		memcpy(buf + len + 1, rel_path, rel_path_len);
-+		buf[len + 1 + rel_path_len] = '\0';
-+	}
-+
-+	return 0;
-+}
-+
- int fdt_overlay_apply(void *fdt, void *fdto)
- {
- 	uint32_t delta = fdt_get_max_phandle(fdt);
-@@ -654,6 +831,10 @@ int fdt_overlay_apply(void *fdt, void *fdto)
- 	if (ret)
- 		goto err;
- 
-+	ret = overlay_symbol_update(fdt, fdto);
-+	if (ret)
-+		goto err;
-+
- 	/*
- 	 * The overlay has been damaged, erase its magic.
- 	 */
+ pylibfdt_tests () {
+diff --git a/tests/stacked_overlay_bar.dts b/tests/stacked_overlay_bar.dts
+new file mode 100644
+index 0000000..c646399
+--- /dev/null
++++ b/tests/stacked_overlay_bar.dts
+@@ -0,0 +1,13 @@
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@1 {
++		target = <&foo>;
++		__overlay__ {
++			overlay-1-property;
++			bar: barnode {
++				bar-property = "bar";
++			};
++		};
++	};
++};
+diff --git a/tests/stacked_overlay_base.dts b/tests/stacked_overlay_base.dts
+new file mode 100644
+index 0000000..2916423
+--- /dev/null
++++ b/tests/stacked_overlay_base.dts
+@@ -0,0 +1,6 @@
++/dts-v1/;
++/ {
++	foo: foonode {
++		foo-property = "foo";
++	};
++};
+diff --git a/tests/stacked_overlay_baz.dts b/tests/stacked_overlay_baz.dts
+new file mode 100644
+index 0000000..a52f0cc
+--- /dev/null
++++ b/tests/stacked_overlay_baz.dts
+@@ -0,0 +1,13 @@
++/dts-v1/;
++/plugin/;
++/ {
++	fragment@1 {
++		target = <&bar>;
++		__overlay__ {
++			overlay-2-property;
++			baz: baznode {
++				baz-property = "baz";
++			};
++		};
++	};
++};
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
