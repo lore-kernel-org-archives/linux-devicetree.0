@@ -1,64 +1,172 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: Convert to using %pOF instead of full_name
-Date: Mon, 31 Jul 2017 17:19:57 +0200
-Message-ID: <20170731151957.jjq43coqlsql3v2x@ninjato>
-References: <20170718214339.7774-26-robh@kernel.org>
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT entries
+Date: Mon, 31 Jul 2017 11:21:40 -0400
+Message-ID: <CAC3K-4p9tpkr5_rAP4K5XKMZympehS8Dh-3XBURc-Mk9+YseYQ@mail.gmail.com>
+References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
+ <1501020372-19607-2-git-send-email-jon.mason@broadcom.com> <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="djgytsdz3wtc2dzp"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-26-robh@kernel.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Haavard Skinnemoen <hskinnemoen@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Peter Rosin <peda@axentia.se>, linux-i2c@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jul 28, 2017 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 07/25/2017 03:06 PM, Jon Mason wrote:
+>> Cache related issues with DMA rings and performance issues related to
+>> caching are being caused by not properly setting the "dma-coherent" flag
+>> in the device tree entries.  Adding it here to correct the issue.
+>>
+>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+>> Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
+>> Fixes: 3107fa5bcfb2 ("ARM: dts: NSP: Add SD/MMC support")
+>> Fixes: 13d04f20935c ("ARM: dts: NSP: Add AMAC entries")
+>> Fixes: 5aeda7bf8a1e ("ARM: dts: NSP: Add and enable amac2")
+>> Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+>> Fixes: 1d8ece6639e1 ("ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree")
+>> Fixes: bf2289bedef4 ("ARM: dts: NSP: Add Switch Register Access Block node")
+>
+> The SRAB block is not DMA capable, so this seems a bit superfluous here.
 
---djgytsdz3wtc2dzp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I'll double check on that part as well.
 
-On Tue, Jul 18, 2017 at 04:43:06PM -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Haavard Skinnemoen <hskinnemoen@gmail.com>
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Maxime Ripard <maxime.ripard@free-electrons.com>
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: linux-i2c@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-arm-kernel@lists.infradead.org
+> Do you want to submit a patch that omits PL330 for now and adds it
+> eventually later so I can proceed with applying patches 2 & 3 for this
+> cycle?
 
-Applied to for-next, thanks!
+Yes, I'll do a  v2 with those 2 portions removed, and double back to
+add (if necessary) once I've bottomed out internally.
 
+Thanks,
+Jon
 
---djgytsdz3wtc2dzp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAll/Sp0ACgkQFA3kzBSg
-KbYJJQ/+K+iyWbEUv/vHUQ1Yvs8XlbdXptbUdySw1CnyAWEFbl3BqWFUwELLX4mL
-W07E53al1sfRi1XfhSgdbeQiEOueoDKg+Gmc2qSvpqaCwplh6Z6HNcH0iYr0aVqJ
-OFKXXfjU0X2uF37LnXJ50nUJdlPaofNSW3ldLo8SB7NO+ptxDMdiHwuor/YU0HH6
-voNvszqQP/4XE2degPMpzxNdU3YLmAkSiHjKCoJRv4nnAoKWBgX2HPvTJLCimYnQ
-ipzpalDUEWqMHyySXnlbVN6YamzC54RrUy87iA84D0ynPm3Opo0um03k8XMEk0Wx
-yA19e0s6npr50yuFLMO4icHcGd+Pt/54DZEfQnkwnxYSTp4WHZ7c++WKx5bRS9Jd
-+YZ8g/wuG3tKUUYujPi56NijN2g9TtUeS2DX1BuDM/isJNuH1L0/CK1vTz/KKmoM
-R65u9UKRmhXXewKpG5yEeL+zhyt7xRvNWqEnOdsggrPC7+CGnsPN5y0hoGglcSbW
-4R0Vactq0icSBPmwnHp4HotDRQm4cNyxPqC+rUTzDsuFjUchk4Abdv6AH0oL3Ln5
-WmGdhWPDqxoyftL6zwuoEkOXnch4lmJPMJHk1dInK7OtB9E/GjuMVEeqHOCCFxm2
-6iRCVjiiTpjXfQjqcI7ualreNc/W4sOI7XVdH9ibzUPuWxKzgA4=
-=bf8t
------END PGP SIGNATURE-----
-
---djgytsdz3wtc2dzp--
+>> Fixes: 0f9f27a36d09 ("ARM: dts: NSP: Add I2C support to the DT")
+>> Fixes: 8dbcad020f2e ("ARM: dts: nsp: Add sata device tree entry")
+>> Fixes: 522199029fdc ("ARM: dts: NSP: Fix PCIE DT issue")
+>> ---
+>>  arch/arm/boot/dts/bcm-nsp.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+>> index 7204d1def23d..c8d734d9f5fc 100644
+>> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
+>> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+>> @@ -207,6 +207,7 @@
+>>                       clocks = <&iprocslow>;
+>>                       clock-names = "apb_pclk";
+>>                       #dma-cells = <1>;
+>> +                     dma-coherent;
+>>               };
+>>
+>>               sdio: sdhci@21000 {
+>> @@ -215,6 +216,7 @@
+>>                       interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+>>                       sdhci,auto-cmd12;
+>>                       clocks = <&lcpll0 BCM_NSP_LCPLL0_SDIO_CLK>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -224,6 +226,7 @@
+>>                             <0x110000 0x1000>;
+>>                       reg-names = "amac_base", "idm_base";
+>>                       interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -233,6 +236,7 @@
+>>                             <0x111000 0x1000>;
+>>                       reg-names = "amac_base", "idm_base";
+>>                       interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -242,6 +246,7 @@
+>>                             <0x112000 0x1000>;
+>>                       reg-names = "amac_base", "idm_base";
+>>                       interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -252,6 +257,7 @@
+>>                       #mbox-cells = <1>;
+>>                       brcm,rx-status-len = <32>;
+>>                       brcm,use-bcm-hdr;
+>> +                     dma-coherent;
+>>               };
+>>
+>>               nand: nand@26000 {
+>> @@ -325,6 +331,7 @@
+>>                       compatible = "generic-ehci";
+>>                       reg = <0x2a000 0x100>;
+>>                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -332,6 +339,7 @@
+>>                       compatible = "generic-ohci";
+>>                       reg = <0x2b000 0x100>;
+>>                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -364,6 +372,7 @@
+>>                       #address-cells = <1>;
+>>                       #size-cells = <0>;
+>>
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>
+>>                       /* ports are defined in board DTS */
+>> @@ -376,6 +385,7 @@
+>>                       #size-cells = <0>;
+>>                       interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
+>>                       clock-frequency = <100000>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>               };
+>>
+>> @@ -446,6 +456,7 @@
+>>                       interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
+>>                       #address-cells = <1>;
+>>                       #size-cells = <0>;
+>> +                     dma-coherent;
+>>                       status = "disabled";
+>>
+>>                       sata0: sata-port@0 {
+>> @@ -483,6 +494,7 @@
+>>                */
+>>               ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
+>>
+>> +             dma-coherent;
+>>               status = "disabled";
+>>
+>>               msi-parent = <&msi0>;
+>> @@ -519,6 +531,7 @@
+>>                */
+>>               ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
+>>
+>> +             dma-coherent;
+>>               status = "disabled";
+>>
+>>               msi-parent = <&msi1>;
+>> @@ -555,6 +568,7 @@
+>>                */
+>>               ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
+>>
+>> +             dma-coherent;
+>>               status = "disabled";
+>>
+>>               msi-parent = <&msi2>;
+>>
+>
+>
+> --
+> Florian
