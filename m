@@ -1,103 +1,50 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] add the reset controller to the Meson8b clkc
-Date: Mon, 31 Jul 2017 13:59:36 +0200
-Message-ID: <655f0326-df03-a810-9010-13148aee2db5@baylibre.com>
-References: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
- <1501489667.6834.1.camel@baylibre.com>
+Subject: Re: [PATCH 0/2] clk: meson: expose clk ids
+Date: Mon, 31 Jul 2017 14:00:12 +0200
+Message-ID: <203231e0-1d9b-ecca-bc04-d5133fb2ec87@baylibre.com>
+References: <20170731113832.26490-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501489667.6834.1.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170731113832.26490-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2017 10:27 AM, Jerome Brunet wrote:
-> On Fri, 2017-07-28 at 23:13 +0200, Martin Blumenstingl wrote:
->> This registers the known (soft) reset lines provided by the clock
->> controller's registers.
->>
->> This is the first preparation step for SMP and CPU hotplug support on
->> Meson8/Meson8b/Meson8m2. Booting the secondary cores on these SoCs
->> requires asserting and de-asserting a reset line (one for each CPU
->> core). These reset lines are provided by the clock controller.
->>
->> The reset controller part of the meson8b clock controller has to be
->> registered early (which I did through CLK_OF_DECLARE_DRIVER), because
->> the secondary cores are started *very* early in the boot process (and
->> meson8b_clkc_probe is invoked long after we need the reset controller
->> to be available for booting the secondary CPU cores).
->>
->> The user of the reset-controller (= the patches which enable SMP and
->> CPU hotplug support) will follow in the next days. I decided to split
->> this because the SMP series will probably consist of 6 patches alone
->> (and may need to go through two separate trees).
->>
->> Changes since v2 at [3]:
->> - move the reset line preprocessor defines into a separate file
->>   (affects patch #1 as this header file is part of the dt-binding)
->> - rename the reset line preprocessor macros from RESETID_ to
->>   CLKC_RESET_ to clearly indicate that these are provided by the
->>   clock controller (unlike the preprocessor macros for the reset
->>   lines in the standlone reset controller, which start with RESET_)
->> - updated patch #2 due to the changes mentioned above
->> - added Neil's Reviewed-by to all patches
->>
->> Changes since v1 at [0]:
->> - updated cover letter description as we are now registering more than
->>   four reset lines
->> - split patch #1 into a dt-binding and clk driver patch
->> - slightly reworded the dt-binding documentation so it's now clear that
->>   the reset identifiers are preprocessor macros in
->>   dt-bindings/clock/meson8b-clkc.h (v1 of this series didn't have these
->>   macros at all)
->> - patch #2 (previously part of patch #1) now registers all known reset
->>   lines (see [1] and [2] for the results of my detective work)
->> - patch #3 is untouched
->>
->>
->> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004283.html
->> [1] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004330.html
->> [2] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004347.html
->> [3] http://lists.infradead.org/pipermail/linux-amlogic/2017-July/004352.html
->>
->>
->> Martin Blumenstingl (3):
->>   dt-bindings: clock: meson8b: describe the embedded reset controller
->>   clk: meson: meson8b: register the built-in reset controller
->>   ARM: dts: meson: mark the clock controller also as reset controller
->>
->>  .../bindings/clock/amlogic,meson8b-clkc.txt        |   9 +-
->>  arch/arm/boot/dts/meson8.dtsi                      |   1 +
->>  arch/arm/boot/dts/meson8b.dtsi                     |   1 +
->>  drivers/clk/meson/Kconfig                          |   1 +
->>  drivers/clk/meson/meson8b.c                        | 159 +++++++++++++++++++-
->> -
->>  drivers/clk/meson/meson8b.h                        |   9 +-
->>  .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h |  27 ++++
->>  7 files changed, 193 insertions(+), 14 deletions(-)
->>  create mode 100644 include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
->>
+On 07/31/2017 01:38 PM, Jerome Brunet wrote:
+> In previous cycles, concerns have been raised about the way clocks are
+> exposed for the meson clock controller, only when validated and required
+> in DT.
 > 
-> Series looks good to me overall.
+> Instead, this patchset expose all the known clocks which may be needed in
+> DT later on. The clocks left out are internal clocks which should never be
+> used directly in DT. These are mostly internal muxes and dividers of
+> composite clocks.
 > 
-> Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> While this should reduce the patch flow on the related header files, It
+> won't stop it completely. There are still many clocks we don't know about
+> yet. We tend discover a few in every cycle.
 > 
-> Just one thing, which is not an issue really, I wonder if the dt-bindings
-> documentation and the bindings them-self should be in separate patches ? 
+> This patchset depends on these fixes [0] to avoid issues when adding new
+> clk ids.
+> 
+> [0]: https://lkml.kernel.org/r/20170727161755.10393-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> 
+> Jerome Brunet (2):
+>   clk: meson8b: expose every clock in the bindings
+>   clk: meson-gxbb: expose almost every clock in the bindings
+> 
+>  drivers/clk/meson/gxbb.h                 | 117 ++-----------------------------
+>  drivers/clk/meson/meson8b.h              | 103 ++-------------------------
+>  include/dt-bindings/clock/gxbb-clkc.h    |  60 ++++++++++++++++
+>  include/dt-bindings/clock/meson8b-clkc.h |  70 ++++++++++++++++++
+>  4 files changed, 141 insertions(+), 209 deletions(-)
 > 
 
-Hi Martin,
-
-Anyway it's OK for me, I've applied patches 1 & 2 on the clk-meson's next branches.
-
-Kevin, patch 3 is all yours !
-
-Thanks,
-Neil
+Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
