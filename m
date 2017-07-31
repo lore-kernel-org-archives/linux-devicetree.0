@@ -1,115 +1,79 @@
-From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 02/22] fpga: add FPGA device framework
-Date: Mon, 31 Jul 2017 16:40:16 -0500
-Message-ID: <CANk1AXTsBQgX+0hYZA6mMhESApB-MkG9CETWExSPOpf7MXeKFw@mail.gmail.com>
-References: <1498441938-14046-1-git-send-email-hao.wu@intel.com>
- <1498441938-14046-3-git-send-email-hao.wu@intel.com> <CANk1AXRoxz7nOY--UYfBtg-3kGFy0gqCz0cbF9mOvzU2+EdzpA@mail.gmail.com>
- <CAL_JsqJfGJwDcXtpBs73TsSKTCwfAPywgyTPwzy1GQotJ7DTzw@mail.gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Mon, 31 Jul 2017 23:42:11 +0200
+Message-ID: <20170731214211.GA11776@tetsubishi>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+ <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
+ <20170731231509.77d1fba4@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJfGJwDcXtpBs73TsSKTCwfAPywgyTPwzy1GQotJ7DTzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-api-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Kang, Luwei" <luwei.kang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Zhang, Yi Z" <yi.z.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tim Whisonant <tim.whisonant-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Enno Luebbers <enno.luebbers-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shiva Rao <shiva.rao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Christopher Rauer <christopher.rauer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170731231509.77d1fba4@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 2:10 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jul 27, 2017 at 11:35 AM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Sun, Jun 25, 2017 at 8:51 PM, Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
->>
->> Hi Rob,
->>
->> I was hoping to pick your brain a bit on a DT question.
->>
->>> During FPGA device (e.g PCI-based) discovery, platform devices are
->>> registered for different FPGA function units. But the device node path
->>> isn't quite friendly to applications.
->>>
->>> Consider this case, applications want to access child device's sysfs file
->>> for some information.
->>>
->>> 1) Access using bus-based path (e.g PCI)
->>>
->>>   /sys/bus/pci/devices/xxxxx/fpga_func_a.0/sysfs_file
->>>
->>>   From the path, it's clear which PCI device is the parent, but not perfect
->>>   solution for applications. PCI device BDF is not fixed, application may
->>>   need to search all PCI device to find the actual FPGA Device.
->>>
->>> 2) Or access using platform device path
->>>
->>>   /sys/bus/platform/devices/fpga_func_a.0/sysfs_file
->>>
->>>   Applications find the actual function by name easily, but no information
->>>   about which fpga device it belongs to. It's quite confusing if multiple
->>>   FPGA devices are in one system.
->>
->> There's a proposal for adding sysfs nodes that correspond to each FPGA
->> device., with the devices located on each FPGA under them.  It makes
->> it easier to see which device is on which FPGA.
->
-> Makes sense.
->
->>> 'FPGA Device' class is introduced to resolve this problem. Each node under
->>> this class represents a fpga device, which may have one or more child
->>> devices. Applications only need to search under this FPGA Device class
->>> folder to find the child device node it needs.
->>>
->>> For example, for the platform has 2 fpga devices, each fpga device has
->>> 3 child devices, the hierarchy looks like this.
->>>
->>> Two nodes are under /sys/class/fpga/:
->>> /sys/class/fpga/fpga.0
->>> /sys/class/fpga/fpga.1
->>>
->>> Each node has 1 function A device and 2 function B devices:
->>> /sys/class/fpga/fpga.0/func_a.0
->>> /sys/class/fpga/fpga.0/func_b.0
->>> /sys/class/fpga/fpga.0/func_b.1
->>>
->>> /sys/class/fpga/fpga.1/func_a.1
->>> /sys/class/fpga/fpga.1/func_b.2
->>> /sys/class/fpga/fpga.1/func_b.3
->
-> A class is generally what is the function of the device, not how it is
-> attached. Seems like what you want here is a new bus type if the
-> existing PCI and platform bus types don't work.
->
->>
->> I can see the value of having sysfs nodes that correspond to fpga
->> devices and being able to find devices under them.  I'm thinking what
->> that would mean for Device Tree when fpga-dev is used on DT enabled
->> systems.  In Device Tree, what is a fpga-dev?
->
-> Just properly setting the parent struct device on the functions should
-> be enough to figure out which function is in which fpga. I don't see
-> why a new class is needed.
->
->> Currently the DT would have a FPGA bridge corresponding to each FPGA's
->> hardware bridge and a heirarchy of bridges, regions and devices under
->> it.  On systems that don't support partial reconfiguration under the
->> OS (so not main bridge that was controlled by the OS), there would be
->> a FPGA region, then its child regions, bridges, and devices.
->
-> The FPGA bridges could instantiate fpga bus type devices instead of
-> platform devices.
 
-Yes
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Some FPGA use cases already have a base bridge per FPGA that could
-serve as this bus.  But this use case has a static FPGA image +
-reprogrammable child fpga regions.  There's no base bridge under Linux
-since the FPGA was programmed and the bridge enabled before Linux
-boots.   An added base bridge that doesn't touch hardware will be
-required for this type of use.
 
-> That's really up to Linux and outside the scope of
-> the bindings.
+> Actually, that's the first option I considered, but I3C and I2C are
+> really different. I'm not talking about the physical layer here, but
+> the way the bus has to be handled by the software layer. Actually, I
+> thing the I3C bus is philosophically closer to auto-discoverable busses
+> like USB than I2C or SPI.
 
-Thanks for the feedback.
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
 
-Alan Tull
+> Of course, I can move all the code in drivers/i2c/, but that won't
+> change the fact that I3C and I2C busses are completely different
+> with little to share between them.
 
->
-> Rob
+That wouldn't make sense.
+
+> To me, the I2C backward compatibility is just a nice feature that was
+> added to help people smoothly transition from mixed I3C busses with
+> both I2C and I3C devices connected to it (I2C devices being here
+> when no (affordable) equivalent exist in the I3C world) to pure I3C
+> busses with only I3C devices connected to it.
+
+Yeah, and it is still to be seen how good this really works. Devices
+which do clock stretching are out of the question. Probably everything
+which needs an interrupt as well?
+
+> This being said, I'd be happy if you prove me wrong and propose a
+> solution that allows us to extend the I2C framework to support I3C
+> without to much pain ;-).
+
+=46rom all I know, I don't see that coming.
+
+
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJZf6QyAAoJEBQN5MwUoCm2W+AQAKTyNdS0YU2kbP1thGl2b6Vo
+ye4IIrpYYduB4NhTI/oy45faAlTF9EvSzboN31T2npYNT6LjBPoPT33X8for7qQv
+aMmEoZxiOdgqtwpQEOO8Gi/u6OiA6kX1cUCBU5GIzlnLH2BM788tbC5NONxRL8NN
+A34Utk78jxuLssP09e4UKlfJVFkWy4ZpI/MV3mlpl/rzAIek3TlfrT9akmSYEh4V
+e38OG0pfupzcLl+QXL4HpkBeZjN/9a87iNvkyaaoirL5rrLmvuHAOnsV7BVlgDVh
+2yHAmMHfZcGNOPSEqouGiY0juOHQ1g9zYXEdPSFz84/mVLIxd17/4bV7f5lX0+s4
+hDwE7vMtEmn0bKuTFmeFCWlG6YhiRp5Vf3P8hOjQq69ZgyaXPCANpLxbFV1h1Mim
+ycl2BkVEkb942W3OSFvkS0eloQzFHrl/tKUV0aeo/rDdBp+LL1MhPg0IMxwNH9Ik
+kKSiHSCuw7gsKZfNZbvBLUfCRO26V7PvB9dyVH/rN1igVjDJDDVLvZfSKaxdzvBF
+EoybDHvC4zCiuKmgiSIlSh1Y968H7KdIq1p2yKtvTiEonh6AH61uLtByZpPxGDIM
+vaVLHpu0naXtBd3qLCw4owiFx6AEq/pAakcWwd7/sgYA8MvNoBx1IBpRbqU89WG3
+xXIMLXqiVafPsTSxd0/Q
+=pqBS
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
