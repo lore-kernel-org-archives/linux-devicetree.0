@@ -1,51 +1,83 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Mon, 31 Jul 2017 18:01:57 +0530
-Message-ID: <20170731123157.GJ3053@localhost>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v3 1/4] dt-bindings: clock: amlogic,
+ gxbb-aoclkc: Update bindings
+Date: Mon, 31 Jul 2017 14:42:34 +0200
+Message-ID: <1501504957-19476-2-git-send-email-narmstrong@baylibre.com>
+References: <1501504957-19476-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f2908e38-dc4d-3886-4058-52a7ad845415-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pierre Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabrice GASNIER <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1501504957-19476-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jbrunet@baylibre.com, narmstrong@baylibre.com
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 07:38:02AM +0000, Pierre Yves MORDRET wrote:
-> >>>> +
-> >>>> +#ifndef __DMA_STM32_DMAMUX_H
-> >>>> +#define __DMA_STM32_DMAMUX_H
-> >>>> +
-> >>>> +#if defined(CONFIG_STM32_DMAMUX)
-> >>>> +int stm32_dmamux_set_config(struct device *dev, void *route_data, u32 chan_id);
-> >>>
-> >>> Why do we need a custom API in this case?
-> >>>
-> >>
-> >> This API is called by DMA when a slave is requested by client. DMA can work
-> >> without DMAMUX this API has been put in place to configure DMAMUX whether client
-> >> is requesting a DMAMUX Channel instead of a DMA one.
-> > 
-> > You mean the dmaengine driver right?
-> > 
-> 
-> Yes. The API is mainly called by "device_config" through out STM32 DMA Driver
-> when a router is in place for client.
-> Please refer to Patch 4/5 on this set.
+On the first revision of the bindings, only the gates + resets were known
+in the AO Clock HW, but more registers used to configures AO clock are known
+to be spread among the AO register space.
+This patch adds a parent node for the entire system control zone for the AO
+domain then moves the clock controller as a subnode of the system control
+node.
 
-Okay am thinking on why this can't be generic..? An optional router config
-callback?
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ .../bindings/clock/amlogic,gxbb-aoclkc.txt         | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+index a55d31b..64884ed 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
++++ b/Documentation/devicetree/bindings/clock/amlogic,gxbb-aoclkc.txt
+@@ -5,9 +5,11 @@ controllers within the Always-On part of the SoC.
+ 
+ Required Properties:
+ 
+-- compatible: should be "amlogic,gxbb-aoclkc"
+-- reg: physical base address of the clock controller and length of memory
+-       mapped region.
++- compatible: value should be different for each SoC family as :
++	- GXBB (S905) : "amlogic,meson-gxbb-aoclkc"
++	- GXL (S905X, S905D) : "amlogic,meson-gxl-aoclkc"
++	- GXM (S912) : "amlogic,meson-gxm-aoclkc"
++	followed by the common "amlogic,meson-gx-aoclkc"
+ 
+ - #clock-cells: should be 1.
+ 
+@@ -23,14 +25,22 @@ to specify the reset which they consume. All available resets are defined as
+ preprocessor macros in the dt-bindings/reset/gxbb-aoclkc.h header and can be
+ used in device tree sources.
+ 
++Parent node should have the following properties :
++- compatible: "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd"
++- reg: base address and size of the AO system control register space.
++
+ Example: AO Clock controller node:
+ 
+-	clkc_AO: clock-controller@040 {
+-		compatible = "amlogic,gxbb-aoclkc";
+-		reg = <0x0 0x040 0x0 0x4>;
++ao_sysctrl: sys-ctrl@0 {
++	compatible = "amlogic,meson-gx-ao-sysctrl", "syscon", "simple-mfd";
++	reg =  <0x0 0x0 0x0 0x100>;
++
++	clkc_AO: clock-controller {
++		compatible = "amlogic,meson-gxbb-aoclkc", "amlogic,meson-gx-aoclkc";
+ 		#clock-cells = <1>;
+ 		#reset-cells = <1>;
+ 	};
++};
+ 
+ Example: UART controller node that consumes the clock and reset generated
+   by the clock controller:
 -- 
-~Vinod
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
