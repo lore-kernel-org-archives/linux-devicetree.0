@@ -1,151 +1,208 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Mon, 31 Jul 2017 15:40:10 +1000
-Message-ID: <20170731054010.GF2652@umbus.fritz.box>
-References: <1501174151.1055.8.camel@hp800z>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH 5/5] ARC: DTS: Add device-tree for Anarion-based
+ development board
+Date: Mon, 31 Jul 2017 12:02:58 +0530
+Message-ID: <8576ceb3-036f-6357-fb52-b062dfe5fa57@synopsys.com>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+ <20170728220707.13960-6-alex.g@adaptrum.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="9l24NVCWtSuIVIod"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501174151.1055.8.camel@hp800z>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170728220707.13960-6-alex.g@adaptrum.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandru Gagniuc <alex.g@adaptrum.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 07/29/2017 03:37 AM, Alexandru Gagniuc wrote:
+> Signed-off-by: Alexandru Gagniuc <alex.g@adaptrum.com>
+> ---
+>   arch/arc/boot/dts/adaptrum_anarion.dtsi     | 107 ++++++++++++++++++++++++++++
+>   arch/arc/boot/dts/adaptrum_anarion_fpga.dts |  49 +++++++++++++
+>   2 files changed, 156 insertions(+)
+>   create mode 100644 arch/arc/boot/dts/adaptrum_anarion.dtsi
+>   create mode 100644 arch/arc/boot/dts/adaptrum_anarion_fpga.dts
 
---9l24NVCWtSuIVIod
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So you really need to upstream the fpga dts - if this just for initial bringup and 
+you will eventually switch to silicon.
+The reason I say is every additional file is a maintenance burden so better to 
+avoid things which are only temporary.
+But if you plan to support this config in long run I'm fine !
 
-On Thu, Jul 27, 2017 at 07:49:11PM +0300, Pantelis Antoniou wrote:
-> Hi all,
->=20
-> This is a project I've been working on lately and it's finally in a
-> usuable form.
->=20
-> I'm introducing yamldt.
->=20
-> A YAML to DT blob generator/compiler, utilizing a YAML schema that is
-> functionaly equivalent to DTS and supports all DTS features.
->=20
-> yamldl parses a device tree description (source) file in YAML format and
-> outputs a (bit-exact if the -C option is used) device tree blob.
->=20
-> A DT aware YAML schema is a good fit as a DTS syntax alternative.
->=20
-> YAML is a human-readable data serialization language, and is expressive
-> enough to cover all DTS source features.
->=20
-> Simple YAML files are just key value pairs that are very easy to parse,
-> even without using a formal YAML parser. For instance YAML in restricted
-> environments may simple be appending a few lines of text in a given YAML
-> file.
->=20
-> The parsers of YAML are very mature, as it has been released in 2001. It
-> is in wide-spread use and schema validation tools are available. YAML
-> support is available for every major programming language.
->=20
-> Data in YAML can easily be converted to/form other format that a
-> particular tool that we may use in the future understands.
->=20
-> More importantly YAML offers (an optional) type information for each
-> data, which is IMHO crucial for thorough validation and checking against
-> device tree bindings (when they will be converted to a machine readable
-> format, preferably YAML).
->=20
-> For more take a look here.
->=20
-> https://github.com/pantoniou/yamldt
->=20
-> I am eagerly awaiting for your comments.
+Looking further it seems first one is a "common" include style dts while fpga is 
+for actual platform and the SoC one will follow once you get it running ?
 
-Ok, technical comments here only; I addressthe procedural questions
-brought up in the thread elsewhere.
+>
+> diff --git a/arch/arc/boot/dts/adaptrum_anarion.dtsi b/arch/arc/boot/dts/adaptrum_anarion.dtsi
+> new file mode 100644
+> index 0000000..f50958f
+> --- /dev/null
+> +++ b/arch/arc/boot/dts/adaptrum_anarion.dtsi
+> @@ -0,0 +1,107 @@
+> +/*
+> + * (C) Copyright 2017 Adaptrum, Inc.
+> + * Written by Alexandru Gagniuc <alex.g@adaptrum.com> for Adaptrum, Inc.
+> + * Licensed under the GPLv2 or (at your option) any later version
+> + */
+> +
+> +#include "skeleton.dtsi"
 
-First, there's a lot to like about YAML - if it had been as well known
-when I wrote dtc, maybe we'd already be using it.  It was also the
-frontrunner for a schema language in the various inconclusive threads
-there have been on the topic.  It's been a little while since I read
-up on YAML, so I may have forgotten some things about it.
+Perhaps put a one liner that this is based on SNPS ARC700 cpu !
 
-I do have some doubts about this approach.
-
-(1)
-
-dts has its semantic model built closely around what dtb can
-represent.  YAML (and JSON) have a different semantic model - in many
-ways a better one than dtb (and IEEE1275), but that's not really the
-point.  I wonder if having a source language which suggests the
-possibility of things that can't actually be done in dtb will be
-confusing.  The most obvious example is that any explicit type tags
-will be stripped, of course, but there are others: nested list
-structure can't be preserved in dtb, nor even what basic scalars are
-in a list.  i.e. dtb couldn't tell the difference between:
-	foo: [0, "\0\0\0\0"];
-and
-	foo: ["\0\0\0\0", 0];
-=09
-There's also the fact that using YAML implicitly puts nodes and
-properties into the namespace, which isn't the case in the dtb model.
-Obviously you can simply ban having a property and subnode with the
-same name (since that's good practice anyway), but it could be an
-issue for decompiling or manipulating existing trees. I know there
-have been device trees in the wild which had a property and subnode
-with the same name in the same place (some old PowerPC based
-Macintoshes, I think).
-
-(2)
-
-In the other direction there are several features of the dts format
-I don't think you'll get for free with YAML - and it's not clear how
-you would represent them there.  Obviously you *can* represent them -
-it's a key value tree, so it can represent anything; whether it's
-natural and readable is a different question.
-
-YAML might have an equivalent of /incbin/, I'm not sure.  I'm pretty
-sure it doesn't have integer expression evaluation, which is quite
-useful in dts when combined with includes.  Likewise, how would you
-tell a YAML based compiler what size to use when encoding a list of
-integers - the equivalent of dtc's /bits/ directive.
-
-(3)
-
-It's not clear to me that preserving type information helps all that
-much with validation.  You still have to validate against something,
-so you need a schema.  And if you have a schema, you can get type and
-structure information from there which will let you interpret the
-untyped dt information.  That has the additional advantage that you
-can also validate dtbs, which is a nice debugging feature when working
-with some dtb that you've got from firmware or somewhere without any
-dts/yaml/whatever.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---9l24NVCWtSuIVIod
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIyBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAll+wrgACgkQbDjKyiDZ
-s5JKZw/3Tlp65W3an9qp0xe+eLLT2Zl1v/u9mEmJobzr9d1E7SmR5QQTLeZ6cqDS
-TgwiE6JL60iVo43bq2Hs6VM+gANNeSTsctkxE8lI5ahuOu3330I3IvB4MKTQJU7O
-aHAhZVgooSfPdb6Fjwm6R80W+Bc9u4PgLIvhUh/fXPMhc1WicaDE/Zj1ixsSWqtm
-oMwK9PzP+WPOfmYstVj/HCNZMJmHarbxMvUdxdnjBR3fnLCmt2HhhO4jIHjMtH/N
-MAQoReiZkn/KeXcbTd4kS4a7S2E9gnbYu7B2JaKFZL1Dwb9HzlRodEP7SNzpkVmJ
-gJYmugk7xuuDxYlRSZXuIMoGVFm6KD32tCp6Mis9NmgEvhvOEjob7fIMaUBUSrPo
-Et0fmzS21K7//PVeWAJLVa1Kjhu29Nz6p3WFqg8+yqBQXDl5rcEtzRVX1PluxNui
-xLIhBSB6ScTPhInnD6YPfxSxHT2qFqi6pHhb819WK+0RQofoqKXx8tVZIW5lDLXC
-EyovjqjeMAVDCyUyU3VFdTdA4r4maEzmE7W2607R6WehyMfKaQ100O6aEjzkRjMs
-6sUZOD+FSEgQsTyLBuctK9N+Vu5BUvuobVK2T1YaE7gyh1zHFhxxpJ/U4tFX5Q2X
-2weXhDex48w76Z0uC2xa7kH5pZPfSYpgMM5kcRwMrUamPVIeiQ==
-=64np
------END PGP SIGNATURE-----
-
---9l24NVCWtSuIVIod--
+> +
+> +/ {
+> +	compatible = "adaptrum,anarion";
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		device_type = "soc";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +		interrupt-parent = <&core_intc>;
+> +
+> +		core_intc: interrupt-controller {
+> +			compatible = "snps,arc700-intc";
+> +			interrupt-controller;
+> +			#interrupt-cells = <1>;
+> +		};
+> +
+> +		uart0: serial@f2202100 {
+> +			compatible = "ns16550";
+> +			reg = <0xf2202100 0x20>;
+> +			interrupts = <8>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <192000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@f2202200 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0xf2202200 0x20>;
+> +			interrupts = <8>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <192000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@f2202300 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0xf2202300 0x20>;
+> +			interrupts = <8>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <192000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		uart3: serial@f2202400 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0xf2202400 0x20>;
+> +			interrupts = <8>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clock-frequency = <192000000>;
+> +			status = "disabled";
+> +		};
+> +
+> +		qspi: qspi@f200f000 {
+> +			compatible = "adaptrum,anarion-qspi";
+> +			reg = <0xf200f000 0x1000>,
+> +			      <0x20000000 0x08000000>;
+> +
+> +			interrupts = <10>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gmac0: ethernet@f2010000 {
+> +			compatible = "snps,dwmac";
+> +			reg = <0xf2010000 0x4000>;
+> +
+> +			interrupt-parent = <&core_intc>;
+> +			interrupts = <20>;
+> +			interrupt-names = "macirq";
+> +
+> +			clocks = <&core_clk>;
+> +			clock-names = "stmmaceth";
+> +
+> +			snps,pbl = <32>;
+> +			status = "disabled";
+> +		};
+> +
+> +		gmac1: ethernet@f2014000 {
+> +			compatible = "adaptrum,anarion-gmac", "snps,dwmac";
+> +			reg = <0xf2014000 0x4000>, <0xf2018100 8>;
+> +
+> +			interrupt-parent = <&core_intc>;
+> +			interrupts = <21>;
+> +			interrupt-names = "macirq";
+> +
+> +			clocks = <&core_clk>;
+> +			clock-names = "stmmaceth";
+> +
+> +			snps,pbl = <32>;
+> +			status = "disabled";
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arc/boot/dts/adaptrum_anarion_fpga.dts b/arch/arc/boot/dts/adaptrum_anarion_fpga.dts
+> new file mode 100644
+> index 0000000..36173b2
+> --- /dev/null
+> +++ b/arch/arc/boot/dts/adaptrum_anarion_fpga.dts
+> @@ -0,0 +1,49 @@
+> +/*
+> + * (C) Copyright 2017 Adaptrum, Inc.
+> + * Written by Alexandru Gagniuc <alex.g@adaptrum.com> for Adaptrum, Inc.
+> + * Licensed under the GPLv2 or (at your option) any later version
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "adaptrum_anarion.dtsi"
+> +
+> +/ {
+> +	model = "adaptrum,anarion";
+> +	compatible = "adaptrum,anarion";
+> +
+> +	chosen {
+> +		bootargs = "earlycon console=ttyS0,115200n8";
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	core_clk: core_clk {
+> +		#clock-cells = <0>;
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <12000000>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&qspi {
+> +	status = "okay";
+> +	flash0: w25q128fvn@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "winbond,w25q128", "jedec,spi-nor";
+> +		spi-max-frequency = <70000000>;
+> +		m25p,fast-read;
+> +	};
+> +};
+> +
+> +&gmac1 {
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +};
