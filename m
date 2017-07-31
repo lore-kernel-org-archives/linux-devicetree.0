@@ -1,41 +1,97 @@
-From: Bich HEMON <bich.hemon@st.com>
-Subject: [PATCH] serial: stm32: fix pio transmit timeout
-Date: Mon, 31 Jul 2017 09:31:52 +0000
-Message-ID: <1501493505-27933-1-git-send-email-bich.hemon@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-Content-ID: <1B00007B14299642A25194DAEE2F7969@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Jiri Slaby <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Bich HEMON <bich.hemon@st.com>
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] ARM64: dts: bcm2837-rpi-3-b: Add bcm43438 as serial slave device
+Date: Mon, 31 Jul 2017 12:03:33 +0200
+Message-ID: <1501495414-17103-1-git-send-email-loic.poulain@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogR2VyYWxkIEJhZXphIDxnZXJhbGQuYmFlemFAc3QuY29tPg0KDQoxMDDCtXMgd2FzIHRv
-byBzaG9ydCBmb3IgbG93IHNwZWVkIHRyYW5zbWlzc2lvbg0KKDk2MDBicHMpDQoNClNpZ25lZC1v
-ZmYtYnk6IEdlcmFsZCBCYWV6YSA8Z2VyYWxkLmJhZXphQHN0LmNvbT4NClNpZ25lZC1vZmYtYnk6
-IEJpY2ggSGVtb24gPGJpY2guaGVtb25Ac3QuY29tPg0KLS0tDQogZHJpdmVycy90dHkvc2VyaWFs
-L3N0bTMyLXVzYXJ0LmMgfCAyICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAx
-IGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL3R0eS9zZXJpYWwvc3RtMzItdXNh
-cnQuYyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9zdG0zMi11c2FydC5jDQppbmRleCA3MmMwZWMxLi5i
-MTZlN2U3IDEwMDY0NA0KLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsL3N0bTMyLXVzYXJ0LmMNCisr
-KyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9zdG0zMi11c2FydC5jDQpAQCAtMjAzLDcgKzIwMyw3IEBA
-IHN0YXRpYyB2b2lkIHN0bTMyX3RyYW5zbWl0X2NoYXJzX3BpbyhzdHJ1Y3QgdWFydF9wb3J0ICpw
-b3J0KQ0KIAlyZXQgPSByZWFkbF9yZWxheGVkX3BvbGxfdGltZW91dF9hdG9taWMocG9ydC0+bWVt
-YmFzZSArIG9mcy0+aXNyLA0KIAkJCQkJCWlzciwNCiAJCQkJCQkoaXNyICYgVVNBUlRfU1JfVFhF
-KSwNCi0JCQkJCQkxMCwgMTAwKTsNCisJCQkJCQkxMCwgMTAwMDAwKTsNCiANCiAJaWYgKHJldCkN
-CiAJCWRldl9lcnIocG9ydC0+ZGV2LCAidHggZW1wdHkgbm90IHNldFxuIik7DQotLSANCjEuOS4x
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1h
-cm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCg==
+Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
+This allows to automatically insert the bcm43438 to the bluetooth
+subsystem instead of relying on userspace helpers (hciattach).
+
+Overwrite bootargs to use aux uart (ttyS0) instead of ttyAMA0.
+
+Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/net/broadcom-bluetooth.txt | 29 ++++++++++++++++++++++
+ arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 17 +++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+new file mode 100644
+index 0000000..c51ea1b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -0,0 +1,29 @@
++Broadcom Bluetooth Chips
++---------------------
++
++This documents the binding structure and common properties for serial
++attached Broadcom devices.
++
++Serial attached Broadcom devices shall be a child node of the host UART
++device the slave device is attached to.
++
++Required properties:
++
++ - compatible: should contain one of the following:
++   * "brcm,bcm43438-bt"
++
++Optional properties:
++
++ - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
++
++Example:
++
++&uart2 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&uart2_pins>;
++
++       bluetooth {
++               compatible = "brcm,bcm43438-bt";
++               max-speed = <921600>;
++       };
++};
+diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+index 972f14d..d0c669a 100644
+--- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
++++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
+@@ -8,6 +8,11 @@
+ 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+ 	model = "Raspberry Pi 3 Model B";
+ 
++	chosen {
++		/* BCM2835 8250 auxiliar UART instead of pl011 */
++		bootargs = "console=ttyS0,115200 earlycon";
++	};
++
+ 	memory {
+ 		reg = <0 0x40000000>;
+ 	};
+@@ -39,3 +44,15 @@
+ 	status = "okay";
+ 	bus-width = <4>;
+ };
++
++/* UART0 is used to drive bcm43438 bluetooth controller */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <921600>;
++	};
++};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
