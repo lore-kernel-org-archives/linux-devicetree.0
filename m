@@ -1,189 +1,46 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] Bluetooth: hci_bcm: Add serdev support
-Date: Mon, 31 Jul 2017 12:03:34 +0200
-Message-ID: <1501495414-17103-2-git-send-email-loic.poulain@gmail.com>
-References: <1501495414-17103-1-git-send-email-loic.poulain@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501495414-17103-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Andy Yan <andy.yan@rock-chips.com>
+Subject: [PATCH 00/14] Support more devices on rockchip rv1108
+Date: Mon, 31 Jul 2017 18:04:09 +0800
+Message-ID: <1501495449-21290-1-git-send-email-andy.yan@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de
+Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, mturquette@baylibre.com, linux-gpio@vger.kernel.org, sboyd@codeaurora.org, broonie@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, linux-i2c@vger.kernel.org, shawn.lin@rock-chips.com, linux-spi@vger.kernel.org, zhangqing@rock-chips.com, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for Broadcom serial slave devices.
-Probe the serial device, retrieve its maximum speed and
-register a new hci uart device.
 
-Tested/compatible with bcm43438 (RPi3).
+This series try to support i2c/spi/pwm/saradc/pmic/watchdog and
+the full clk tree on rockchip rv1108 soc.
 
-Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/bluetooth/hci_bcm.c | 82 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 78 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 6b42372..f824738 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -27,6 +27,7 @@
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/gpio/consumer.h>
-@@ -34,6 +35,7 @@
- #include <linux/interrupt.h>
- #include <linux/dmi.h>
- #include <linux/pm_runtime.h>
-+#include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -46,6 +48,7 @@
- 
- #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
- 
-+/* platform device driver resources */
- struct bcm_device {
- 	struct list_head	list;
- 
-@@ -68,6 +71,12 @@ struct bcm_device {
- #endif
- };
- 
-+/* serdev driver resources */
-+struct bcm_bt_device {
-+	struct hci_uart hu;
-+};
-+
-+/* generic bcm uart resources */
- struct bcm_data {
- 	struct sk_buff		*rx_skb;
- 	struct sk_buff_head	txq;
-@@ -289,6 +298,11 @@ static int bcm_open(struct hci_uart *hu)
- 
- 	hu->priv = bcm;
- 
-+	if (hu->serdev) {
-+		serdev_device_open(hu->serdev);
-+		goto out;
-+	}
-+
- 	if (!hu->tty->dev)
- 		goto out;
- 
-@@ -323,6 +337,9 @@ static int bcm_close(struct hci_uart *hu)
- 
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
- 
-+	if (hu->serdev)
-+		serdev_device_close(hu->serdev);
-+
- 	/* Protect bcm->dev against removal of the device or driver */
- 	mutex_lock(&bcm_device_lock);
- 	if (bcm_device_exists(bdev)) {
-@@ -397,8 +414,12 @@ static int bcm_setup(struct hci_uart *hu)
- 	else
- 		speed = 0;
- 
--	if (speed)
--		hci_uart_set_baudrate(hu, speed);
-+	if (speed) {
-+		if (hu->serdev)
-+			serdev_device_set_baudrate(hu->serdev, speed);
-+		else
-+			hci_uart_set_baudrate(hu, speed);
-+	}
- 
- 	/* Operational speed if any */
- 	if (hu->oper_speed)
-@@ -410,8 +431,12 @@ static int bcm_setup(struct hci_uart *hu)
- 
- 	if (speed) {
- 		err = bcm_set_baudrate(hu, speed);
--		if (!err)
--			hci_uart_set_baudrate(hu, speed);
-+		if (!err) {
-+			if (hu->serdev)
-+				serdev_device_set_baudrate(hu->serdev, speed);
-+			else
-+				hci_uart_set_baudrate(hu, speed);
-+		}
- 	}
- 
- finalize:
-@@ -903,9 +928,57 @@ static int bcm_remove(struct platform_device *pdev)
- 	},
- };
- 
-+static int bcm_serdev_probe(struct serdev_device *serdev)
-+{
-+	struct bcm_bt_device *bcmdev;
-+	u32 speed;
-+	int err;
-+
-+	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-+	if (!bcmdev)
-+		return -ENOMEM;
-+
-+	bcmdev->hu.serdev = serdev;
-+	serdev_device_set_drvdata(serdev, bcmdev);
-+
-+	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
-+	if (!err)
-+		bcmdev->hu.oper_speed = speed;
-+
-+	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
-+}
-+
-+static void bcm_serdev_remove(struct serdev_device *serdev)
-+{
-+	struct bcm_bt_device *bcmdev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&bcmdev->hu);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id bcm_bluetooth_of_match[] = {
-+	{ .compatible = "brcm,bcm43438-bt" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
-+#endif
-+
-+static struct serdev_device_driver bcm_serdev_driver = {
-+	.probe = bcm_serdev_probe,
-+	.remove = bcm_serdev_remove,
-+	.driver = {
-+		.name = "hci_uart_bcm",
-+		.of_match_table = of_match_ptr(bcm_bluetooth_of_match),
-+	},
-+};
-+
- int __init bcm_init(void)
- {
-+	/* For now, we need to keep both platform device
-+	 * driver (ACPI generated) and serdev driver (DT).
-+	 */
- 	platform_driver_register(&bcm_driver);
-+	serdev_device_driver_register(&bcm_serdev_driver);
- 
- 	return hci_uart_register_proto(&bcm_proto);
- }
-@@ -913,6 +986,7 @@ int __init bcm_init(void)
- int __exit bcm_deinit(void)
- {
- 	platform_driver_unregister(&bcm_driver);
-+	serdev_device_driver_unregister(&bcm_serdev_driver);
- 
- 	return hci_uart_unregister_proto(&bcm_proto);
- }
+Andy Yan (12):
+  pinctrl: rockchip: add input schmitt support for rv1108
+  dt-bindings: i2c: rk3x: add support for rv1108
+  i2c: rk3x: add support for rv1108
+  ARM: dts: rockchip: add i2c dt node for rv1108
+  spi: rockchip: add compatible string for rv1108 spi
+  ARM: dts: rockchip: add spi dt node for rv1108
+  ARM: dts: rockchip: add pwm dt node for rv1108
+  ARM: dts: rockchip: add watchdog dt node for rv1108
+  ARM: dts: rockchip: add saradc support for rv1108
+  ARM: dts: rockchip: add pwm backlight for rv1108 evb
+  ARM: dts: rockchip: add pmic rk805 dt node for rv1108 evb
+  ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
+
+Elaine Zhang (2):
+  clk: rockchip: add more clk ids for rv1108
+  clk: rockchip: support more clks for rv1108
+
+ Documentation/devicetree/bindings/i2c/i2c-rk3x.txt |   1 +
+ .../devicetree/bindings/spi/spi-rockchip.txt       |   1 +
+ arch/arm/boot/dts/rv1108-evb.dts                   | 158 +++++++
+ arch/arm/boot/dts/rv1108.dtsi                      | 249 ++++++++++
+ drivers/clk/rockchip/clk-rv1108.c                  | 513 ++++++++++++++++-----
+ drivers/i2c/busses/i2c-rk3x.c                      |   9 +
+ drivers/pinctrl/pinctrl-rockchip.c                 |  31 ++
+ drivers/spi/spi-rockchip.c                         |   1 +
+ include/dt-bindings/clock/rv1108-cru.h             | 128 ++++-
+ 9 files changed, 964 insertions(+), 127 deletions(-)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
