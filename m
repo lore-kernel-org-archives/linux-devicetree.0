@@ -1,172 +1,52 @@
-From: Jon Mason <jon.mason@broadcom.com>
-Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT entries
-Date: Mon, 31 Jul 2017 11:21:40 -0400
-Message-ID: <CAC3K-4p9tpkr5_rAP4K5XKMZympehS8Dh-3XBURc-Mk9+YseYQ@mail.gmail.com>
-References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
- <1501020372-19607-2-git-send-email-jon.mason@broadcom.com> <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RESEND PATCH v5 00/16] eeprom: at24: Add OF device ID table
+Date: Mon, 31 Jul 2017 17:30:09 +0200
+Message-ID: <20170731153009.xkjknygpmckv2pfp@ninjato>
+References: <20170615185418.13980-1-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3df223b6-8ac5-b52f-f276-96c4a0dc7f23@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tmgaaihqw6wuchny"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>, Florian Larysch <fl@n621.de>, David Lechner <david@lechnology.com>, Rob Herring <robh+dt@kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, Simon Horman <horms@verge.net.au>, Michal Simek <michal.simek@xilinx.com>, Dinh Nguyen <dinguyen@kernel.org>, Russell King <linux@armlinux.org.uk>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joachim Eastwood <manabian@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, Masahiro
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 8:03 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 07/25/2017 03:06 PM, Jon Mason wrote:
->> Cache related issues with DMA rings and performance issues related to
->> caching are being caused by not properly setting the "dma-coherent" flag
->> in the device tree entries.  Adding it here to correct the issue.
->>
->> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->> Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
->> Fixes: 3107fa5bcfb2 ("ARM: dts: NSP: Add SD/MMC support")
->> Fixes: 13d04f20935c ("ARM: dts: NSP: Add AMAC entries")
->> Fixes: 5aeda7bf8a1e ("ARM: dts: NSP: Add and enable amac2")
->> Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
->> Fixes: 1d8ece6639e1 ("ARM: dts: NSP: Add EHCI/OHCI USB nodes to device tree")
->> Fixes: bf2289bedef4 ("ARM: dts: NSP: Add Switch Register Access Block node")
->
-> The SRAB block is not DMA capable, so this seems a bit superfluous here.
 
-I'll double check on that part as well.
+--tmgaaihqw6wuchny
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Do you want to submit a patch that omits PL330 for now and adds it
-> eventually later so I can proceed with applying patches 2 & 3 for this
-> cycle?
 
-Yes, I'll do a  v2 with those 2 portions removed, and double back to
-add (if necessary) once I've bottomed out internally.
+> Patches can be applied independently since the DTS changes without driver
+> changes are no-op and the OF table won't be used without the DTS changes.
 
-Thanks,
-Jon
+But there is a dependency, no? If I apply the driver patch,
+non-converted device trees will not find their eeproms anymore. So, I
+need to wait until all DTS patches are upstream, right? I can pick patch
+1, though. We can already document it.
 
->> Fixes: 0f9f27a36d09 ("ARM: dts: NSP: Add I2C support to the DT")
->> Fixes: 8dbcad020f2e ("ARM: dts: nsp: Add sata device tree entry")
->> Fixes: 522199029fdc ("ARM: dts: NSP: Fix PCIE DT issue")
->> ---
->>  arch/arm/boot/dts/bcm-nsp.dtsi | 14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
->> index 7204d1def23d..c8d734d9f5fc 100644
->> --- a/arch/arm/boot/dts/bcm-nsp.dtsi
->> +++ b/arch/arm/boot/dts/bcm-nsp.dtsi
->> @@ -207,6 +207,7 @@
->>                       clocks = <&iprocslow>;
->>                       clock-names = "apb_pclk";
->>                       #dma-cells = <1>;
->> +                     dma-coherent;
->>               };
->>
->>               sdio: sdhci@21000 {
->> @@ -215,6 +216,7 @@
->>                       interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
->>                       sdhci,auto-cmd12;
->>                       clocks = <&lcpll0 BCM_NSP_LCPLL0_SDIO_CLK>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -224,6 +226,7 @@
->>                             <0x110000 0x1000>;
->>                       reg-names = "amac_base", "idm_base";
->>                       interrupts = <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -233,6 +236,7 @@
->>                             <0x111000 0x1000>;
->>                       reg-names = "amac_base", "idm_base";
->>                       interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -242,6 +246,7 @@
->>                             <0x112000 0x1000>;
->>                       reg-names = "amac_base", "idm_base";
->>                       interrupts = <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -252,6 +257,7 @@
->>                       #mbox-cells = <1>;
->>                       brcm,rx-status-len = <32>;
->>                       brcm,use-bcm-hdr;
->> +                     dma-coherent;
->>               };
->>
->>               nand: nand@26000 {
->> @@ -325,6 +331,7 @@
->>                       compatible = "generic-ehci";
->>                       reg = <0x2a000 0x100>;
->>                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -332,6 +339,7 @@
->>                       compatible = "generic-ohci";
->>                       reg = <0x2b000 0x100>;
->>                       interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -364,6 +372,7 @@
->>                       #address-cells = <1>;
->>                       #size-cells = <0>;
->>
->> +                     dma-coherent;
->>                       status = "disabled";
->>
->>                       /* ports are defined in board DTS */
->> @@ -376,6 +385,7 @@
->>                       #size-cells = <0>;
->>                       interrupts = <GIC_SPI 89 IRQ_TYPE_NONE>;
->>                       clock-frequency = <100000>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>               };
->>
->> @@ -446,6 +456,7 @@
->>                       interrupts = <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>;
->>                       #address-cells = <1>;
->>                       #size-cells = <0>;
->> +                     dma-coherent;
->>                       status = "disabled";
->>
->>                       sata0: sata-port@0 {
->> @@ -483,6 +494,7 @@
->>                */
->>               ranges = <0x82000000 0 0x08000000 0x08000000 0 0x8000000>;
->>
->> +             dma-coherent;
->>               status = "disabled";
->>
->>               msi-parent = <&msi0>;
->> @@ -519,6 +531,7 @@
->>                */
->>               ranges = <0x82000000 0 0x40000000 0x40000000 0 0x8000000>;
->>
->> +             dma-coherent;
->>               status = "disabled";
->>
->>               msi-parent = <&msi1>;
->> @@ -555,6 +568,7 @@
->>                */
->>               ranges = <0x82000000 0 0x48000000 0x48000000 0 0x8000000>;
->>
->> +             dma-coherent;
->>               status = "disabled";
->>
->>               msi-parent = <&msi2>;
->>
->
->
-> --
-> Florian
+
+--tmgaaihqw6wuchny
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAll/TQEACgkQFA3kzBSg
+Kba4yg//e6f7nkiP0EUFnWwlCuI3vv/wOK8dnxuRAdk7CXiK5V+4M+FQD/vPm+/G
+2tJtL+nrpJnBO1pm8bqFElzwnmFBUOFCqMBz0Zmk+q3iKGndilyu7BgNDcaL6W81
+ILWxtkYEt+tI/lfwUsXfRtbAhJCVrZUDdvGSY3VCbEFmhiPNsIa8UttGG1jR6OWk
+PWvMF6ec4Vrpl8WPwVglsH6VynHm2C9D3DoP2pRqngozLFN3Q8rD3WZSXXnYh5Mp
+zCAkeroEEUhZVtrL1SAi1a5fwa+nRAJOHpA7vgNG7RAIRx1hIj0KIWl5BJZ2zfDN
+8+ndLIWWn7OHT6glOSUz4otPnhHnwd9YsyvdLOzh6MysUwz+LwV9+e74iX1iFbpT
+z/CX0hhTZyGnCh0zSp5FIEKnS3PUWwSAxFVAQ4SJtXyj32QVEtbKGocA1UJHMKl7
+XovixRc9nJcbr9RgRnQWBZL1bZDcfPRmtOg+02wMRppwXjaKlafIVe60KRYhEr7B
+tHKATSU7et2Qwzi+8jdQZfry4q+Yb3Ri7EAU8WwdkgTgw15i+Hg5UNOyQugJnxtF
+rEBquXpHSh1rd1Z4vmFHmg5Rh8J8uptSwbEcyprLqEPT8irfcYwPkS7MmyN9vFlW
+2p4Gty8FvoZH4w4drSWctN/hTBusdjQiSv9pXw7xt9Nr6rvYkW4=
+=T9r7
+-----END PGP SIGNATURE-----
+
+--tmgaaihqw6wuchny--
