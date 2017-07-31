@@ -1,7 +1,7 @@
 From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 09/14] ARM: dts: rockchip: add pwm dt node for rv1108
-Date: Mon, 31 Jul 2017 18:17:45 +0800
-Message-ID: <1501496265-21910-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH 10/14] ARM: dts: rockchip: add watchdog dt node for rv1108
+Date: Mon, 31 Jul 2017 18:18:30 +0800
+Message-ID: <1501496310-21961-1-git-send-email-andy.yan@rock-chips.com>
 References: <1501495449-21290-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1501495449-21290-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
@@ -10,182 +10,34 @@ To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pwm device tree node for rv1108
+Add watchdog device tree node for rv1108
 
 Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
- arch/arm/boot/dts/rv1108.dtsi | 143 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 143 insertions(+)
+ arch/arm/boot/dts/rv1108.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 6ae83a8..7fcc6de 100644
+index 7fcc6de..1fc467e 100644
 --- a/arch/arm/boot/dts/rv1108.dtsi
 +++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -213,6 +213,54 @@
- 		status = "disabled";
- 	};
- 
-+	pwm4: pwm@10280000 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x10280000 0x10>;
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm4_pin>;
-+		clocks = <&cru SCLK_PWM1>, <&cru PCLK_PWM1>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
-+	pwm5: pwm@10280010 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x10280010 0x10>;
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm5_pin>;
-+		clocks = <&cru SCLK_PWM1>, <&cru PCLK_PWM1>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
-+	pwm6: pwm@10280020 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x10280020 0x10>;
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm6_pin>;
-+		clocks = <&cru SCLK_PWM1>, <&cru PCLK_PWM1>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
-+	pwm7: pwm@10280030 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x10280030 0x10>;
-+		interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm7_pin>;
-+		clocks = <&cru SCLK_PWM1>, <&cru PCLK_PWM1>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
- 	grf: syscon@10300000 {
- 		compatible = "rockchip,rv1108-grf", "syscon";
+@@ -266,6 +266,15 @@
  		reg = <0x10300000 0x1000>;
-@@ -232,6 +280,53 @@
- 		status = "disabled";
  	};
  
-+	pwm0: pwm@20040000 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x20040000 0x10>;
-+		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pin>;
-+		clocks = <&cru SCLK_PWM0_PMU>, <&cru PCLK_PWM0_PMU>;
-+		clock-names = "pwm", "pclk";
++	watchdog: wdt@10360000 {
++		compatible = "snps,dw-wdt";
++		reg = <0x10360000 0x100>;
++		clocks = <&cru PCLK_WDT>;
++		clock-names = "pclk_wdt";
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
 +		status = "disabled";
 +	};
 +
-+	pwm1: pwm@20040010 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x20040010 0x10>;
-+		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm1_pin>;
-+		clocks = <&cru SCLK_PWM0_PMU>, <&cru PCLK_PWM0_PMU>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
-+	pwm2: pwm@20040020 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x20040020 0x10>;
-+		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm2_pin>;
-+		clocks = <&cru SCLK_PWM0_PMU>, <&cru PCLK_PWM0_PMU>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
-+
-+	pwm3: pwm@20040030 {
-+		compatible = "rockchip,rk3288-pwm";
-+		reg = <0x20040030 0x10>;
-+		interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+		#pwm-cells = <3>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm3_pin>;
-+		clocks = <&cru SCLK_PWM0_PMU>, <&cru PCLK_PWM0_PMU>;
-+		clock-names = "pwm", "pclk";
-+		status = "disabled";
-+	};
- 	pmugrf: syscon@20060000 {
- 		compatible = "rockchip,rv1108-pmugrf", "syscon";
- 		reg = <0x20060000 0x1000>;
-@@ -453,6 +548,54 @@
- 			};
- 		};
- 
-+		pwm0 {
-+			pwm0_pin: pwm0-pin {
-+				rockchip,pins = <0 RK_PC5 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm1 {
-+			pwm1_pin: pwm1-pin {
-+				rockchip,pins = <0 RK_PC4 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm2 {
-+			pwm2_pin: pwm2-pin {
-+				rockchip,pins = <0 RK_PC6 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm3 {
-+			pwm3_pin: pwm3-pin {
-+				rockchip,pins = <0 RK_PC0 RK_FUNC_1 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm4 {
-+			pwm4_pin: pwm4-pin {
-+				rockchip,pins = <1 RK_PC1 RK_FUNC_3 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm5 {
-+			pwm5_pin: pwm5-pin {
-+				rockchip,pins = <1 RK_PA7 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm6 {
-+			pwm6_pin: pwm6-pin {
-+				rockchip,pins = <1 RK_PB0 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
-+		pwm7 {
-+			pwm7_pin: pwm7-pin {
-+				rockchip,pins = <1 RK_PB1 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		sdmmc {
- 			sdmmc_clk: sdmmc-clk {
- 				rockchip,pins = <3 RK_PC4 RK_FUNC_1 &pcfg_pull_none_drv_4ma>;
+ 	i2c0: i2c@20000000 {
+ 		compatible = "rockchip,rv1108-i2c";
+ 		reg = <0x20000000 0x1000>;
 -- 
 2.7.4
 
