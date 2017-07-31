@@ -1,92 +1,56 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [RFC 0/5] Add I3C subsystem
-Date: Mon, 31 Jul 2017 21:17:45 +0200
-Message-ID: <20170731191745.GB1542@katana>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GID0FwUMdk1T2AWN"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Subject: [PATCH v3 0/4] thermal: add brcmstb AVS TMON driver
+Date: Mon, 31 Jul 2017 12:26:29 -0700
+Message-ID: <20170731192633.58747-1-code@mmayer.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
---GID0FwUMdk1T2AWN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series adds the brcmstb AVS TMON driver.
 
-Hi Boris,
+The driver was originally written by Brian Norris.
 
-> This patch series is a proposal for a new I3C [1] subsystem.
+v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
+v2 of this series can be found at https://lkml.org/lkml/2017/7/21/585
 
-Nice. Good luck with that!
+Changes since v2:
+- replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4 only]
+- all other patches are unchanged from v2
 
-Some hi-level comments from me related to I2C. I can't say a lot more
-because the specs are not public :(
+Changes since v1:
+- Fixed wording in binding document
+- Fixed lincensing to consistently mention GPL v2
+- Use thermal_zone_get_slope() and thermal_zone_get_offset()
+- Some minor clean-ups
 
-> - the bus element is a separate object and is not implicitly described
->   by the master (as done in I2C). The reason is that I want to be able
->   to handle multiple master connected to the same bus and visible to
->   Linux.
->   In this situation, we should only have one instance of the device and
->   not one per master, and sharing the bus object would be part of the
->   solution to gracefully handle this case.
->   I'm not sure if we will ever need to deal with multiple masters
->   controlling the same bus and exposed under Linux, but separating the
->   bus and master concept is pretty easy, hence the decision to do it
->   now, just in case we need it some day.
+Brian Norris (2):
+  Documentation: devicetree: add binding for Broadcom STB AVS TMON
+  thermal: add brcmstb AVS TMON driver
 
-=46rom my experience, it is a good thing to have this separation.
+Markus Mayer (2):
+  ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
+  arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
 
-> - I2C backward compatibility has been designed to be transparent to I2C
->   drivers and the I2C subsystem. The I3C master just registers an I2C
->   adapter which creates a new I2C bus. I'd say that, from a
->   representation PoV it's not ideal because what should appear as a
->   single I3C bus exposing I3C and I2C devices here appears as 2
->   different busses connected to each other through the parenting (the
->   I3C master is the parent of the I2C and I3C busses).
->   On the other hand, I don't see a better solution if we want something
->   that is not invasive.
+ .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |   2 +-
+ drivers/thermal/broadcom/Kconfig                   |   7 +
+ drivers/thermal/broadcom/Makefile                  |   1 +
+ drivers/thermal/broadcom/brcmstb_thermal.c         | 386 +++++++++++++++++++++
+ 8 files changed, 425 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+ create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
 
-I agree this is the least invasive and also the most compatible
-approach. The other solution would probably be to have some kind of
-emulation layer?
+-- 
+2.7.4
 
-> I'd also like to get feedback on the doc. Should I detail a bit more
-> the protocol or the framework API? Is this the kind of things you
-> expect in a subsystem doc?
-
-Since the spec is not public, details about the protocol will be
-especially useful, I'd say.
-
-Regards,
-
-   Wolfram
-
-
---GID0FwUMdk1T2AWN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAll/glkACgkQFA3kzBSg
-KbYGHw//QFS0oTDqM12ZTuoAO/xtfHjX/nIjzR+WOLy2B4FLSqhdXtENwYmqAB2V
-IRGrVyMn5e5ou7Tvww1UsBSq/+E+osI9Uhe8n5kkhZ3fsJB/LlqYyfoeb+aVSF2L
-nFp+S3HuBfWWHrv9SexdF4gV+lN+aoGBO9sOprVZl0ithhE+IiFrIZEybGpfSIS1
-2sdoXuQ5IlxBoGEndqV17WZOSLG3NfxCwytj3jVagu+rs9ERovR/1N9Psu6dXewz
-SgjE+6D/K2sxpdZthwu2R/aFf39t2nNeqzUSzM57aOnQbFxejcFZIrnLgH8AGK9M
-25Xai1Vip18+Z9VKh5Jre4XZkjbVWdNHpNZCeAt/NZX6ta2YyxdxoLkzxtBDVUCP
-PidNYTHC05J6h8PsASYPuWFdV4QEFrtNyG9oOrmE7v0N4uNvP6F7Xs4al5M/+mqo
-EZYKYittzrYmiFsjIUkZQ6RBWSFtSdkEc6CkuZNePKd5fmWEjYl27gqQjnlMqt4N
-FoCvFtKogOFv5BJONWH7tz11hoU92pi+wSAid2nmKzrS+N0zahq5j0vW/dXKCesU
-wa/UATCXbAdlJ/oDHzGM5fs/QHTyPx2Qor5hVXdBSz4vnCxozW2YgIBVwtTLxDIj
-6329BeG+D1PBMD/q7omei9h6mKXa+Z3zQncn377STKqHCeMeMOM=
-=6Idd
------END PGP SIGNATURE-----
-
---GID0FwUMdk1T2AWN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
