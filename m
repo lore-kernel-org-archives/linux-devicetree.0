@@ -1,167 +1,311 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Mon, 31 Jul 2017 12:15:14 -0500
-Message-ID: <CAL_Jsq+HjOpaLcVJzS-mskzHLTS+J=WHdqCVmpc_qJ7da2faHw@mail.gmail.com>
-References: <1501174151.1055.8.camel@hp800z> <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
- <1501181931.1055.18.camel@hp800z> <597A4B80.7000106@gmail.com>
- <1501191985.1055.50.camel@hp800z> <CAL_Jsq+NBEXyOmRx3Ar0OTpyaLeT0hEKw45R0PrVEdmOcd9czw@mail.gmail.com>
- <20170728005140.GF26163@bill-the-cat> <CAL_Jsq+eJNG66D22bNButg6=jj9WQ7Nw4PpxLsPBmGxN9KBnaw@mail.gmail.com>
- <1501244631.1055.103.camel@hp800z> <CAL_JsqLRDy_uG1eeNsjbhs29L5DF-4z2Oa_npGrYVgoMiR=YpQ@mail.gmail.com>
- <20170731131118.GJ2652@umbus.fritz.box>
+From: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] mtd: spi-nor: Add driver for Adaptrum Anarion QSPI
+ controller
+Date: Mon, 31 Jul 2017 10:17:17 -0700
+Message-ID: <83a4e27a-b96c-0558-fbb5-10e64f9bf59b@adaptrum.com>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+ <20170728220707.13960-5-alex.g@adaptrum.com>
+ <135fdf95-1029-2d34-2802-1283a73588e5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170731131118.GJ2652-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+In-Reply-To: <135fdf95-1029-2d34-2802-1283a73588e5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 8:11 AM, David Gibson
-<david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
-> On Fri, Jul 28, 2017 at 10:07:10AM -0500, Rob Herring wrote:
->> On Fri, Jul 28, 2017 at 7:23 AM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> > Hi Rob,
->> >
->> > On Thu, 2017-07-27 at 21:12 -0500, Rob Herring wrote:
->> >> On Thu, Jul 27, 2017 at 7:51 PM, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> >> > On Thu, Jul 27, 2017 at 06:00:00PM -0500, Rob Herring wrote:
->> >> >> On Thu, Jul 27, 2017 at 4:46 PM, Pantelis Antoniou
->> >> >> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> >> >> > Hi Frank,
->> >> >> >
->> >> >> > On Thu, 2017-07-27 at 13:22 -0700, Frank Rowand wrote:
->> >> >> >> Hi Pantelis,
->> >> >> >>
->> >> >> >> Keep in mind one of the reasons Linus says he is very direct is to
->> >> >> >> avoid leading a developer on, so that they don't waste a lot of time
->> >> >> >> trying to resolve the maintainer's issues instead of realizing that
->> >> >> >> the maintainer is saying "no". Please read my current answer as being
->> >> >> >> "no, not likely to ever be accepted", not "no, not in the current form".
->> >> >> >>
->> >> >> >> My first reaction is: no, this is not a good idea for the Linux kernel.
->> >> >> >>
->> >> >> >
->> >> >> > This has nothing to do with the kernel. It spits out valid DTBs that the
->> >> >> > kernel (or anything else) may use.
->> >> >>
->> >> >> Let me rephrase Frank's statement: this is not a good idea for the
->> >> >> main repository of dts files.
->> >> >>
->> >> >> But sure, DTS is already not the only source of DTBs. It comes from
->> >> >> firmware on Power systems.
->> >> >
->> >> > Yes, but unless they're generated from something other than a (at the
->> >> > time) normal DTS, that's not a good example, IMHO.
->> >>
->> >> They aren't. I'm talking about IBM systems. The firmware has its own
->> >> representation and flattens that to a DTB is how I understand it.
->> >>
->> >> >> If you want to create and maintain your own
->> >> >> source format, then that is perfectly fine. But based on the current
->> >> >> understanding, I'm not seeing a reason we'd convert DTS files to YAML.
->> >> >
->> >> > Can I propose one?  To borrow a phrase, Validation, Validation,
->> >> > Validation.  Let me point to fe496e23b748 in the kernel for a moment.  I
->> >> > found that as part of helping a new engineer come up to speed on doing
->> >> > device tree work.  What I found was a case where:
->> >> > - The binding doc gives one value for compatible as the required value.
->> >> > - The code accepts only a single, different value.
->> >> > - A few in-kernel dts files have different still values.
->> >> >
->> >> > If the common dts source file was in yaml, binding docs would be written
->> >> > so that we could use them as validation and hey, the above wouldn't ever
->> >> > have happened.  And I'm sure this is not the only example that's in-tree
->> >> > right now.  These kind of problems create an artificially high barrier
->> >> > to entry in a rather important area of the kernel (you can't trust the
->> >> > docs, you have to check around the code too, and of course the code
->> >> > might have moved since the docs were written).
->> >>
->> >> I'm all for validation, but the binding doc or schema and files that
->> >> describe platforms (aka DTS files) are not the same thing. The schema
->> >> is what are the constraints for a binding. Maybe some bindings are
->> >> fixed where there's only one valid binding implementation, but that's
->> >> the easy case (we could use DTS for that). I'll take YAML for binding
->> >> docs yesterday. Believe me, I'm tired of reviewing free form binding
->> >> docs. If that's where you want to go, reply to my reply that went
->> >> unanswered on Matt Porter's YAML proposal from 2 years ago (or maybe 3
->> >> now). I had the whole binding doc tree converted over to an initial
->> >> YAML schema. We just need to agree on the schema. Or we can keep
->> >> waiting for Grant to publish what he started on...
->> >>
->> >
->> > The way I see it there's a validation hierarchy.
->> >
->> > There are the bindings that describe the schema of the resulting source
->> > files. The bindings must be validated against a binding schema.
->> >
->> > For the source files, at first they must be valid against the core
->> > language (i.e. DTS or DT YAML variant) schema.
->> >
->> > Next for each node that a binding exists in a valid format, it must be
->> > validated against it. I.e. if an interrupt property exist it must point
->> > to valid interrupt node etc.
->> >
->> > Up next a number of per-platform/configuration validation passes.
->> > I.e. for a complete source file which is using a specific SoC family
->> > i.e. "ti,am33xx" the pass may verify that for the given peripherals
->> > their configuration is correct, i.e. that the interrupt numbers for a
->> > given peripheral are the correct ones for the target board etc.
->> > This may be possible by having a golden master configuration when those
->> > number can be retrieved and compared against.
->> >
->> > Finally you could have a per-application/vendor/end-user final rule
->> > check, i.e. the regulators may be configured in a manner that the power
->> > consumption is under some specified threshold, etc. This is something
->> > that is completely out of the kernel scope, but may have have to
->> > vendors.
->> >
->> > Why don't you share what you've been working on and see what we can do
->> > using it as a base?
+On 07/29/2017 02:34 AM, Marek Vasut wrote:
+> On 07/29/2017 12:07 AM, Alexandru Gagniuc wrote:
+>> Add support for the QSPI controller found in Adaptrum Anarion SOCs.
+>> This controller is designed specifically to handle SPI NOR chips, and
+>> the driver is modeled as such.
 >>
->> I did. 2 years ago:
+>> Because the system is emulated on an FPGA, we don't have a way to test
+>> all the hardware adjustemts, so only basic features are implemented at
+>> this time.
 >>
->> https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/log/?h=dt-yaml-v2
->>
->> It's very rough, but I was at the point of wanting feedback on the
->> schema format. Only the crickets gave me any.
->>
->> It doesn't validate anything, but is purely binding docs mass
->> converted to YAML using DTS files as input.
+Hi Marek,
+
+Thank you very much for the comments. I am going to fix most issues you 
+pointed out in v2. I do have some follow-up question on some of your 
+comments, so please bear with me. I hope I have responded to all your 
+comments, but feel free to nudge me if I missed any.
+
+[snip]
+
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/anarion-quadspi.txt
+>> @@ -0,0 +1,22 @@
+>> +* Adaptrum Anarion Quad SPI controller
+>> +
+>> +Required properties:
+>> +- compatible : Should be "adaptrum,anarion-qspi".
+>> +- reg : Contains two entries, each of which is a tuple consisting of a
+>> +	physical address and length. The first entry is the address and
+>> +	length of the controller register set. The second entry is the
+>> +	address and length of the memory-mapped flash. This second region is
+>> +	the region where the controller responds to XIP requests, and may be
+>> +	larger than the size of the attached flash.
 >
-> Efforts on schemas have started and petered out several times :(.
+> You want to split the bindings into separate patch and CC Rob to review
+> them.
+
+Yes, I do want that now!
+
+[snip]
+
+>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+>> index 293c8a4..98dc012 100644
+>> --- a/drivers/mtd/spi-nor/Kconfig
+>> +++ b/drivers/mtd/spi-nor/Kconfig
+>> @@ -48,6 +48,13 @@ config SPI_ATMEL_QUADSPI
+>>  	  This driver does not support generic SPI. The implementation only
+>>  	  supports SPI NOR.
+>>
+>> +config SPI_ANARION_QUADSPI
+>> +	tristate "Adaptrum Anarion Quad SPI Controller"
+>> +	depends on OF && HAS_IOMEM
+>> +	help
+>> +	  Enable support for the Adaptrum Anarion Quad SPI controller.
+>> +	  This driver does not support generic SPI. It only supports SPI NOR.
 >
-> I think the fundamental problem is that there just isn't critical mass
-> of people with the time to work on it.  Lots of people want better
-> validation, but not enough to put significant time and effort into
-> it.  I hope someone proves me wrong about that.
+> Keep the list sorted.
 
-I would say part of the problem is the validation plans are always
-just too grand. We need to start small. Just having a machine
-parseable documentation format alone would be a win. The validation
-can come later IMO. It's going to come later anyway if we do nothing.
+Staged for [PATCH v2].
 
-> Can I suggest (again) that one approach might be to add more pieces to
-> dtc's "checks" system to at least look for the more common errors.
-> It's not nearly a complete solution, but it gets you something with
-> much less difficulty than defining a whole schema system.  Some
-> rudimentary checking of unit addresses has been added relatively
-> recently, but not a lot else in the way of semantic checks.
+>>  config SPI_CADENCE_QUADSPI
+>>  	tristate "Cadence Quad SPI controller"
+>>  	depends on OF && (ARM || COMPILE_TEST)
+>> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+>> index 285aab8..53635f6 100644
+>> --- a/drivers/mtd/spi-nor/Makefile
+>> +++ b/drivers/mtd/spi-nor/Makefile
+>> @@ -1,6 +1,7 @@
+>>  obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
+>>  obj-$(CONFIG_SPI_ASPEED_SMC)	+= aspeed-smc.o
+>>  obj-$(CONFIG_SPI_ATMEL_QUADSPI)	+= atmel-quadspi.o
+>> +obj-$(CONFIG_SPI_ANARION_QUADSPI)	+= anarion-quadspi.o
+>
+> DTTO, N is before S and T .
 
-Yes, I obviously agree. And at least for me, it's in a language I
-already know. I've thought of a few more checks to add in the course
-of this thread. Perhaps we should start a todo list if you have any
-specific ideas. I've focused on things I repeatedly catch in binding
-reviews (if only I could have a check for needing more specific
-compatible strings :) ). Where we hit limits with the checks is when
-we need specific compatible(s) to key checks on. This is any binding
-that lacks a "class" property like gpio-controller or
-interrupt-controller. For example I2C or SPI controllers and buses.
-Certainly every common binding with a #*-cells property could have
-some level of checks.
+Staged for [PATCH v2].
 
-Rob
+>>  obj-$(CONFIG_SPI_CADENCE_QUADSPI)	+= cadence-quadspi.o
+>>  obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
+>>  obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
+>> diff --git a/drivers/mtd/spi-nor/anarion-quadspi.c b/drivers/mtd/spi-nor/anarion-quadspi.c
+>> new file mode 100644
+>> index 0000000..d981356
+>> --- /dev/null
+>> +++ b/drivers/mtd/spi-nor/anarion-quadspi.c
+>> @@ -0,0 +1,490 @@
+>> +/*
+>> + * Adaptrum Anarion Quad SPI controller driver
+>> + *
+>> + * Copyright (C) 2017, Adaptrum, Inc.
+>> + * (Written by Alexandru Gagniuc <alex.g at adaptrum.com> for Adaptrum, Inc.)
+>> + * Licensed under the GPLv2 or (at your option) any later version.
+>
+> The GPL boilerplate should be here.
+
+I chose this form of the boilerplate because it seems to be quite used 
+in other places. I am assuming the fatter boilerplate the requirement 
+for drivers/mtd, correct?
+
+[snip]
+
+>> +#define ASPI_CLK_SW_RESET		(1 << 0)
+>
+> BIT(0) , fix globally
+
+Staged for [PATCH v2].
+
+>> +#define ASPI_CLK_RESET_BUF		(1 << 1)
+>> +#define ASPI_CLK_RESET_ALL		(ASPI_CLK_SW_RESET | ASPI_CLK_RESET_BUF)
+>> +#define ASPI_CLK_SPI_MODE3		(1 << 2)
+>> +#define ASPI_CLOCK_DIV_MASK		(0xff << 8)
+>> +#define ASPI_CLOCK_DIV(d)		(((d) << 8) & ASPI_CLOCK_DIV_MASK)
+>> +
+>> +#define ASPI_TIMEOUT_US		100000
+>> +
+>> +#define ASPI_DATA_LEN_MASK		0x3fff
+>> +#define ASPI_MAX_XFER_LEN		(size_t)(ASPI_DATA_LEN_MASK + 1)
+>> +
+>> +#define MODE_IO_X1			(0 << 16)
+>> +#define MODE_IO_X2			(1 << 16)
+>> +#define MODE_IO_X4			(2 << 16)
+>> +#define MODE_IO_SDR_POS_SKEW		(0 << 20)
+>> +#define MODE_IO_SDR_NEG_SKEW		(1 << 20)
+>> +#define MODE_IO_DDR_34_SKEW		(2 << 20)
+>> +#define MODE_IO_DDR_PN_SKEW		(3 << 20)
+>> +#define MODE_IO_DDR_DQS			(5 << 20)
+>> +
+>> +#define ASPI_STATUS_BUSY			(1 << 2)
+>> +
+>> +/*
+>> + * This mask does not match reality. Get over it:
+>
+> What is this about ?
+
+Each stage of the QSPI chain has two registers. The second register has 
+a bitfield which takes in the length of the stage. For example, for 
+DATA2, we can set the length up to 0x4000, but for ADDR2, we can only 
+set a max of 4 bytes. I wrote this comment as a reminder to myself to be 
+careful about using this mask. I'll rephrase the comment for [v2]
+
+>> + * DATA2:	0x3fff
+>> + * CMD2:	0x0003
+>> + * ADDR2:	0x0007
+>> + * PERF2:	0x0000
+>> + * HI_Z:	0x003f
+>> + * BCNT:	0x0007
+>> + */
+>> +#define CHAIN_LEN(x)		((x - 1) & ASPI_DATA_LEN_MASK)
+>> +
+>> +struct anarion_qspi {
+>> +	struct		spi_nor nor;
+>> +	struct		device *dev;
+>> +	uintptr_t	regbase;
+>
+> Should be void __iomem * I guess ?
+
+I chose uintptr_t as opposed to void *, because arithmetic on void * is 
+not valid in C. What is the right answer hen, without risking undefined 
+behavior?
+
+>
+>> +	uintptr_t	xipbase;
+>> +	uint32_t	xfer_mode_cmd;
+>
+> u32 etc, fix globally, this is not userspace.
+
+ From coding-style, section 5.(d), my understanding is that 
+"Linux-specific u8/u16/u32/u64 types [...] are not mandatory in new 
+code". Most of the code in this driver is shared between Linux, u-boot, 
+openocd, ASIC validation tests, and manufacturing tests. Unlike, 
+shortint types, stdint types are available in all cases.
+
+Therefore, having to use a different set of primitive types makes code 
+sharing much more difficult, and increases the maintenance burden, hence 
+the strong preference for standard types. Is this reasonable?
+
+[snip]
+
+>> +static void aspi_drain_fifo(struct anarion_qspi *aspi, uint8_t *buf, size_t len)
+>> +{
+>> +	uint32_t data;
+>
+> Is this stuff below something like ioread32_rep() ?
+>
+>> +	aspi_write_reg(aspi, ASPI_REG_BYTE_COUNT, sizeof(uint32_t));
+>> +	while (len >= 4) {
+>> +		data = aspi_read_reg(aspi, ASPI_REG_DATA1);
+>> +		memcpy(buf, &data, sizeof(data));
+>> +		buf += 4;
+>> +		len -= 4;
+>> +	}
+
+That is very similar to ioread32_rep, yes. I kept this as for the 
+reasons outlined above, but changing this to _rep() seems innocent enough.
+
+>> +	if (len) {
+>> +		aspi_write_reg(aspi, ASPI_REG_BYTE_COUNT, len);
+>> +		data = aspi_read_reg(aspi, ASPI_REG_DATA1);
+>> +		memcpy(buf, &data, len);
+>> +	}
+>> +}
+>> +
+>> +static void aspi_seed_fifo(struct anarion_qspi *spi,
+>> +			   const uint8_t *buf, size_t len)
+>> +{
+>> +	uint32_t data;
+>> +
+>> +	aspi_write_reg(spi, ASPI_REG_BYTE_COUNT, sizeof(uint32_t));
+>> +	while (len >= 4) {
+>> +		memcpy(&data, buf, sizeof(data));
+>> +		aspi_write_reg(spi, ASPI_REG_DATA1, data);
+>
+> iowrite32_rep ?
+>
+
+[snip]
+>> +/* While we could send read commands manually to the flash chip, we'd have to
+>> + * get data back through the DATA2 register. That is on the AHB bus, whereas
+>> + * XIP reads go over AXI. Hence, we use the memory-mapped flash space for read.
+>> + * TODO: Look at using DMA instead of memcpy().
+>> + */
+>
+> Multiline comment looks like this,
+> /*
+>  * foo
+>  * bar
+>  */
+>
+
+Staged for [PATCH v2].
+
+[snip]
+>> +static ssize_t anarion_spi_nor_write(struct spi_nor *nor, loff_t to,
+>> +				     size_t len, const uint8_t *src)
+>> +{
+>> +	int ret;
+>> +	struct anarion_qspi *aspi = nor->priv;
+>> +
+>> +	dev_err(aspi->dev, "%s, @0x%llx + %zu\n", __func__, to, len);
+>
+> Drop this.
+>
+OOPS! That wasn't supposed to be there.
+Staged for [PATCH v2].
+
+[snip]
+
+>> +	switch (nor->flash_read) {
+>> +	default:		/* Fall through */
+>
+> This will break once we add OSPI support ...
+
+Ooh, I see the API here has changed significantly from the 4.9 LTS 
+branch where we originally developed the driver. I will add and test 
+normal and FAST_READ support, but I won't have the bandwidth to test 
+other modes yet. Those will have to remain as a TODO.
+
+>> +	case SPI_NOR_NORMAL:
+>> +		aspi->num_hi_z_clocks = nor->read_dummy;
+>> +		aspi->xfer_mode_cmd = MODE_IO_X1;
+>> +		aspi->xfer_mode_addr = MODE_IO_X1;
+>> +		aspi->xfer_mode_data = MODE_IO_X1;
+>> +		break;
+>> +	case SPI_NOR_FAST:
+>> +		aspi->num_hi_z_clocks = nor->read_dummy;
+>> +		aspi->xfer_mode_cmd = MODE_IO_X1;
+>> +		aspi->xfer_mode_addr = MODE_IO_X1;
+>> +		aspi->xfer_mode_data = MODE_IO_X1;
+>> +		break;
+>> +	case SPI_NOR_DUAL:
+>> +		aspi->num_hi_z_clocks = nor->read_dummy;
+>> +		aspi->xfer_mode_cmd = MODE_IO_X1;
+>> +		aspi->xfer_mode_addr = MODE_IO_X1;
+>> +		aspi->xfer_mode_data = MODE_IO_X2;
+>> +		break;
+>> +	case SPI_NOR_QUAD:
+>> +		aspi->num_hi_z_clocks = nor->read_dummy;
+>> +		aspi->xfer_mode_cmd = MODE_IO_X1;
+>> +		aspi->xfer_mode_addr = MODE_IO_X1;
+>> +		aspi->xfer_mode_data = MODE_IO_X4;
+>> +		break;
+>> +	}
+>> +
+>> +	aspi_setup_xip_read_chain(aspi, nor);
+>> +
+>> +	mtd_device_register(&aspi->nor.mtd, NULL, 0);
+>> +
+>> +	return 0;
+>> +}
+
+[snip]
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
