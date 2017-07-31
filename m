@@ -1,46 +1,96 @@
-MIME-Version: 1.0
-In-Reply-To: <20170705193254.ulpoduoqlqf4ttkj@flea>
-References: <20170628145343.25443-1-khilman@baylibre.com>
-	<20170705142015.tmlmes5lobadndsy@rob-hp-laptop>
-	<20170705193254.ulpoduoqlqf4ttkj@flea>
-Date: Fri, 7 Jul 2017 08:24:03 -0500
-Message-ID: <CAL_JsqJ7P2ehaL4wZjBsk-DRjpSiCVRNmmxT7w9xuC2PYiUKFQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: amlogic: add unstable statement
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org
-List-ID: <devicetree@vger.kernel.org>
+From: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 4/5] mtd: spi-nor: Add driver for Adaptrum Anarion QSPI
+ controller
+Date: Mon, 31 Jul 2017 15:20:23 -0700
+Message-ID: <e1390c36-086b-aeba-848c-f45dcb88b5ce@adaptrum.com>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+ <20170728220707.13960-5-alex.g@adaptrum.com>
+ <135fdf95-1029-2d34-2802-1283a73588e5@gmail.com>
+ <83a4e27a-b96c-0558-fbb5-10e64f9bf59b@adaptrum.com>
+ <e7c916c4-7b0a-1f76-b91f-5befeb24faf5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e7c916c4-7b0a-1f76-b91f-5befeb24faf5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Id: devicetree@vger.kernel.org
 
+On 07/31/2017 02:33 PM, Marek Vasut wrote:
+> On 07/31/2017 07:17 PM, Alexandru Gagniuc wrote:
 
+Hi Marek,
 
-On Wed, Jul 5, 2017 at 2:32 PM, Maxime Ripard <maxime.ripard@free-electrons.com> wrote:
-> On Wed, Jul 05, 2017 at 09:20:15AM -0500, Rob Herring wrote:
->> On Wed, Jun 28, 2017 at 07:53:43AM -0700, Kevin Hilman wrote:
->> > Due to the lack of documentation on this SoC family, discovery of new
->> > features, and correcting of previous misunderstandings is expected, so
->> > it's unrealistic to expect any form of stable bindings for this SoC
->> > family.  Make that clear inthe binding documentation.
+Thank you again for your feedback. I've applied a majority of your 
+suggestions, and I am very happy with the result. I should have v2 
+posted within a day or so.
+
+[snip]
+>>>> +/*
+>>>> + * This mask does not match reality. Get over it:
+>>>
+>>> What is this about ?
 >>
->> s/inthe/in the/
->>
->> >
->> > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
->> > ---
->> >  Documentation/devicetree/bindings/arm/amlogic.txt | 12 ++++++++++++
->> >  1 file changed, 12 insertions(+)
->>
->> I've yet to see anyone remove an unstable tag and I'd rather see these
->> for individual bindings than for the platform as a whole. In the end,
->> it's a platform maintainers decision whether to accept compatibility
->> breakage regardless of some text that probably no one reads.
+>> Each stage of the QSPI chain has two registers. The second register has
+>> a bitfield which takes in the length of the stage. For example, for
+>> DATA2, we can set the length up to 0x4000, but for ADDR2, we can only
+>> set a max of 4 bytes. I wrote this comment as a reminder to myself to be
+>> careful about using this mask. I'll rephrase the comment for [v2]
 >
-> So what is the policy exactly to decide whether this statement can be
-> merged or not?
+> Please do.
+>
+Staged for [PATCH v2]
 
-I acked it, didn't I?
+>>>> + * DATA2:    0x3fff
+>>>> + * CMD2:    0x0003
+>>>> + * ADDR2:    0x0007
+>>>> + * PERF2:    0x0000
+>>>> + * HI_Z:    0x003f
+>>>> + * BCNT:    0x0007
+>>>> + */
+>>>> +#define CHAIN_LEN(x)        ((x - 1) & ASPI_DATA_LEN_MASK)
+>>>> +
+>>>> +struct anarion_qspi {
+>>>> +    struct        spi_nor nor;
+>>>> +    struct        device *dev;
+>>>> +    uintptr_t    regbase;
+>>>
+>>> Should be void __iomem * I guess ?
+>>
+>> I chose uintptr_t as opposed to void *, because arithmetic on void * is
+>> not valid in C. What is the right answer hen, without risking undefined
+>> behavior?
+>
+> What sort of arithmetic ? It's perfectly valid in general ...
 
-> We have all the issues mentionned above, no backing from the vendor,
-> and yet, we were forced last year to bow down to one single "user"
-> without a clear usage into supporting a stable ABI that we never
-> really anticipated. How does that work exactly?
+ISO/IEC 9899:201x, Section 6.5.6, constraint(2) is not met when the one 
+of the operands to addition is a void pointer.
+Section 6.2.5 (19) defines void to be an incomplete type.
+
+[snip]
+
+>>> Is this stuff below something like ioread32_rep() ?
+>>>
+>>>> +    aspi_write_reg(aspi, ASPI_REG_BYTE_COUNT, sizeof(uint32_t));
+>>>> +    while (len >= 4) {
+>>>> +        data = aspi_read_reg(aspi, ASPI_REG_DATA1);
+>>>> +        memcpy(buf, &data, sizeof(data));
+>>>> +        buf += 4;
+>>>> +        len -= 4;
+>>>> +    }
+>>
+>> That is very similar to ioread32_rep, yes. I kept this as for the
+>> reasons outlined above, but changing this to _rep() seems innocent enough.
+>
+> What reason ?
+
+Being able to share the code between the different codebases where it is 
+used.
+
+Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
