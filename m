@@ -1,7 +1,7 @@
 From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v6 1/7] dt-bindings: phy: qmp: Add output-clock-names
-Date: Mon, 31 Jul 2017 12:04:11 +0530
-Message-ID: <1501482857-14100-2-git-send-email-varada@codeaurora.org>
+Subject: [PATCH v6 3/7] phy: qcom-qmp: Fix phy pipe clock name
+Date: Mon, 31 Jul 2017 12:04:13 +0530
+Message-ID: <1501482857-14100-4-git-send-email-varada@codeaurora.org>
 References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1501482857-14100-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
@@ -10,37 +10,71 @@ To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yRO
 Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The phy outputs a clock that will act as the parent for
-the phy's pipe clock. Add the name of this clock to the
-lane's DT node.
+Presently, the phy pipe clock's name is assumed to be either
+usb3_phy_pipe_clk_src or pcie_XX_pipe_clk_src (where XX is the
+phy lane's number). However, this will not work if an SoC has
+more than one instance of the phy. Hence, instead of assuming
+the name of the clock, fetch it from the DT.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index e11c563..5d7a51f 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -60,6 +60,8 @@ Required properties for child node:
- 	   one for each entry in clock-names.
-  - clock-names: Must contain following for pcie and usb qmp phys:
- 		 "pipe<lane-number>" for pipe clock specific to each lane.
-+ - clock-output-names: Name of the phy clock that will be the parent for
-+		       the above pipe clock.
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 78ca628..3dd7891 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -925,29 +925,28 @@ static int qcom_qmp_phy_clk_init(struct device *dev)
+  *    clk  |   +-------+   |                   +-----+
+  *         +---------------+
+  */
+-static int phy_pipe_clk_register(struct qcom_qmp *qmp, int id)
++static int phy_pipe_clk_register(struct qcom_qmp *qmp, struct device_node *np)
+ {
+-	char name[24];
+ 	struct clk_fixed_rate *fixed;
+ 	struct clk_init_data init = { };
++	int ret;
  
-  - resets: a list of phandles and reset controller specifier pairs,
- 	   one for each entry in reset-names.
-@@ -96,6 +98,7 @@ Example:
+-	switch (qmp->cfg->type) {
+-	case PHY_TYPE_USB3:
+-		snprintf(name, sizeof(name), "usb3_phy_pipe_clk_src");
+-		break;
+-	case PHY_TYPE_PCIE:
+-		snprintf(name, sizeof(name), "pcie_%d_pipe_clk_src", id);
+-		break;
+-	default:
++	if ((qmp->cfg->type != PHY_TYPE_USB3) &&
++	    (qmp->cfg->type != PHY_TYPE_PCIE)) {
+ 		/* not all phys register pipe clocks, so return success */
+ 		return 0;
+ 	}
  
- 			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
- 			clock-names = "pipe0";
-+			clock-output-names = "pcie_0_pipe_clk_src";
- 			resets = <&gcc GCC_PCIE_0_PHY_BCR>;
- 			reset-names = "lane0";
- 		};
++	ret = of_property_read_string(np, "clock-output-names", &init.name);
++	if (ret) {
++		dev_err(qmp->dev, "%s: No clock-output-names\n", np->name);
++		return ret;
++	}
++
+ 	fixed = devm_kzalloc(qmp->dev, sizeof(*fixed), GFP_KERNEL);
+ 	if (!fixed)
+ 		return -ENOMEM;
+ 
+-	init.name = name;
+ 	init.ops = &clk_fixed_rate_ops;
+ 
+ 	/* controllers using QMP phys use 125MHz pipe clock interface */
+@@ -1122,7 +1121,7 @@ static int qcom_qmp_phy_probe(struct platform_device *pdev)
+ 		 * Register the pipe clock provided by phy.
+ 		 * See function description to see details of this pipe clock.
+ 		 */
+-		ret = phy_pipe_clk_register(qmp, id);
++		ret = phy_pipe_clk_register(qmp, child);
+ 		if (ret) {
+ 			dev_err(qmp->dev,
+ 				"failed to register pipe clock source\n");
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
