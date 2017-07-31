@@ -1,127 +1,177 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM64: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave device
-Date: Mon, 31 Jul 2017 21:56:13 +0200 (CEST)
-Message-ID: <1992177380.228440.1501530973443@email.1und1.de>
-References: <1501495414-17103-1-git-send-email-loic.poulain@gmail.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] remoteproc/keystone: Add support for Keystone 66AK2G SOCs
+Date: Mon, 31 Jul 2017 15:05:02 -0500
+Message-ID: <20170731200502.30479-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1501495414-17103-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+Add support to the keystone remoteproc driver for managing the
+DSP present in the Keystone 2 66AK2G SoC. The 66AK2G SoC has
+a Power Management Micro Controller (PMMC) that manages the
+individual device's power, clock and reset functionalities.
 
-> Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> hat am 31. Juli 2017 um 12:03 geschrieben:
-> 
-> 
-> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite bootargs to use aux uart (ttyS0) instead of ttyAMA0.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+The keystone remoteproc driver already uses standard frameworks
+for reset and clock control, so it doesn't require any significant
+modifications other than a new compatible suitable for 66AK2G DSP.
 
-i'm very happy to see this patch series and i can't wait to adapt it for RPI Zero W.
+The binding document is also updated to reflect the modified
+property values used by the 66AK2G DSP node as compared to the
+values used by existing Keystone 2 DSPs.
 
-> ---
->  .../devicetree/bindings/net/broadcom-bluetooth.txt | 29 ++++++++++++++++++++++
->  arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts   | 17 +++++++++++++
->  2 files changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> new file mode 100644
-> index 0000000..c51ea1b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-> @@ -0,0 +1,29 @@
-> +Broadcom Bluetooth Chips
-> +---------------------
-> +
-> +This documents the binding structure and common properties for serial
-> +attached Broadcom devices.
-> +
-> +Serial attached Broadcom devices shall be a child node of the host UART
-> +device the slave device is attached to.
-> +
-> +Required properties:
-> +
-> + - compatible: should contain one of the following:
-> +   * "brcm,bcm43438-bt"
-> +
-> +Optional properties:
-> +
-> + - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
-> +
-> +Example:
-> +
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart2_pins>;
-> +
-> +       bluetooth {
-> +               compatible = "brcm,bcm43438-bt";
-> +               max-speed = <921600>;
-> +       };
-> +};
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+---
+Hi Bjorn,
 
-This binding looks good to me, but please send it as a separate patch at first.
+This patch adds the support to the last remaining family of Keystone2 SoCs.
+The SoC integration is slightly different for this family, and all the
+dependent drivers were finally merged in 4.13-rc1. The patch is mainly
+updating the binding, so didn't split the patch into two.
 
-> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> index 972f14d..d0c669a 100644
-> --- a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-> @@ -8,6 +8,11 @@
->  	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
->  	model = "Raspberry Pi 3 Model B";
->  
-> +	chosen {
-> +		/* BCM2835 8250 auxiliar UART instead of pl011 */
-> +		bootargs = "console=ttyS0,115200 earlycon";
-> +	};
-> +
->  	memory {
->  		reg = <0 0x40000000>;
->  	};
-> @@ -39,3 +44,15 @@
->  	status = "okay";
->  	bus-width = <4>;
->  };
-> +
-> +/* UART0 is used to drive bcm43438 bluetooth controller */
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <921600>;
-> +	};
-> +};
-> -- 
-> 1.9.1
+regards
+Suman
 
-This also looks good, but this conflicts with the recent changes (which will be applied soon):
+ .../bindings/remoteproc/ti,keystone-rproc.txt      | 73 +++++++++++++++++++---
+ drivers/remoteproc/keystone_remoteproc.c           |  1 +
+ 2 files changed, 65 insertions(+), 9 deletions(-)
 
-[PATCH v2] ARM: dts: bcm283x: Move the BCM2837 DT contents from arm64 to arm.
-[PATCH V2 0/3] ARM: bcm283x: Raspberry Pi Zero W support
+diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+index 2aac1aa4123d..1eb72874130b 100644
+--- a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
++++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+@@ -26,6 +26,7 @@ The following are the mandatory properties:
+ 			    "ti,k2hk-dsp" for DSPs on Keystone 2 66AK2H/K SoCs
+ 			    "ti,k2l-dsp" for DSPs on Keystone 2 66AK2L SoCs
+ 			    "ti,k2e-dsp" for DSPs on Keystone 2 66AK2E SoCs
++			    "ti,k2g-dsp" for DSPs on Keystone 2 66AK2G SoCs
+ 
+ - reg:			Should contain an entry for each value in 'reg-names'.
+ 			Each entry should have the memory region's start address
+@@ -37,20 +38,18 @@ The following are the mandatory properties:
+ 			should be defined in this order,
+ 			     "l2sram", "l1pram", "l1dram"
+ 
+-- clocks: 		Should contain the device's input clock, and should be
+-			defined as per the bindings in,
+-			Documentation/devicetree/bindings/clock/keystone-gate.txt
+-
+ - ti,syscon-dev:	Should be a pair of the phandle to the Keystone Device
+ 			State Control node, and the register offset of the DSP
+ 			boot address register within that node's address space.
+ 
+ - resets:		Should contain the phandle to the reset controller node
+ 			managing the resets for this device, and a reset
+-			specifier. Please refer to the following reset bindings
+-			for the reset argument specifier as per SoC,
++			specifier. Please refer to either of the following reset
++			bindings for the reset argument specifier as per SoC,
+ 			Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+-			    for 66AK2HK/66AK2L/66AK2E SoCs
++			    for 66AK2HK/66AK2L/66AK2E SoCs or,
++			Documentation/devicetree/bindings/reset/ti,sci-reset.txt
++			    for 66AK2G SoCs
+ 
+ - interrupt-parent:	Should contain a phandle to the Keystone 2 IRQ controller
+ 			IP node that is used by the ARM CorePac processor to
+@@ -75,6 +74,22 @@ The following are the mandatory properties:
+ 			The gpio device to be used is as per the bindings in,
+ 			Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
+ 
++SoC-specific Required properties:
++---------------------------------
++The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
++SoCs only:
++
++- clocks: 		Should contain the device's input clock, and should be
++			defined as per the bindings in,
++			Documentation/devicetree/bindings/clock/keystone-gate.txt
++
++The following are mandatory properties for Keystone 2 66AK2G SoCs only:
++
++- power-domains:	Should contain a phandle to a PM domain provider node
++			and an args specifier containing the DSP device id
++			value. This property is as per the binding,
++			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
++
+ Optional properties:
+ --------------------
+ 
+@@ -85,8 +100,10 @@ Optional properties:
+ 			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+ 
+ 
+-Example:
+---------
++Examples:
++---------
++
++1.
+ 	/* 66AK2H/K DSP aliases */
+ 	aliases {
+ 		rproc0 = &dsp0;
+@@ -131,3 +148,41 @@ Example:
+ 		};
+ 
+ 	};
++
++2.
++	/* 66AK2G DSP alias */
++	aliases {
++		rproc0 = &dsp0;
++	};
++
++	/* 66AK2G DSP memory node */
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		dsp_common_memory: dsp-common-memory@81f800000 {
++			compatible = "shared-dma-pool";
++			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
++			reusable;
++		};
++	};
++
++	/* 66AK2G DSP node */
++	soc {
++		dsp0: dsp@10800000 {
++			compatible = "ti,k2g-dsp";
++			reg = <0x10800000 0x00100000>,
++			      <0x10e00000 0x00008000>,
++			      <0x10f00000 0x00008000>;
++			reg-names = "l2sram", "l1pram", "l1dram";
++			power-domains = <&k2g_pds 0x0046>;
++			ti,syscon-dev = <&devctrl 0x40>;
++			resets = <&k2g_reset 0x0046 0x1>;
++			interrupt-parent = <&kirq0>;
++			interrupts = <0 8>;
++			interrupt-names = "vring", "exception";
++			kick-gpios = <&dspgpio0 27 0>;
++			memory-region = <&dsp_common_memory>;
++		};
++	};
+diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
+index 5f776bfd674a..97abb0c8ad65 100644
+--- a/drivers/remoteproc/keystone_remoteproc.c
++++ b/drivers/remoteproc/keystone_remoteproc.c
+@@ -505,6 +505,7 @@ static const struct of_device_id keystone_rproc_of_match[] = {
+ 	{ .compatible = "ti,k2hk-dsp", },
+ 	{ .compatible = "ti,k2l-dsp", },
+ 	{ .compatible = "ti,k2e-dsp", },
++	{ .compatible = "ti,k2g-dsp", },
+ 	{ /* sentinel */ },
+ };
+ MODULE_DEVICE_TABLE(of, keystone_rproc_of_match);
+-- 
+2.13.1
 
-Last question: how about another patch to enable serdev support as module for arm64/defconfig?
-
-Best regards
-Stefan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
