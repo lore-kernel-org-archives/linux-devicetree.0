@@ -1,67 +1,211 @@
-From: Mark yao <mark.yao@rock-chips.com>
-Subject: Re: [PATCH v6 0/7] drm/rockchip: add all full framework vop support
-Date: Mon, 31 Jul 2017 09:02:49 +0800
-Message-ID: <597E81B9.20408@rock-chips.com>
-References: <1501049930-5794-1-git-send-email-mark.yao@rock-chips.com>
+From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] media: V3s: Add support for
+ Allwinner CSI.
+Date: Mon, 31 Jul 2017 09:48:06 +0800
+Message-ID: <20170731094806.88c3188576d7e2c14b5e3e33@magewell.com>
+References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
+	<1501131697-1359-2-git-send-email-yong.deng@magewell.com>
+	<20170728160233.xooevio4hoqkgfaq@flea.lan>
+	<20170730060801.bkc2kvm72ktixy74@tarshish>
+Reply-To: yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501049930-5794-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD2JNYHK4MEBB2UY7LFQKGQE6BRIC6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170730060801.bkc2kvm72ktixy74@tarshish>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWMMKQXVYFwzLw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkKClB1c2hlZCB0byBkcm0tbWlzYy1uZXh0LgoKVGhhbmtzIFNlYW4gUGF1bCwgSmVmZnkgQ2hl
-bidzIHJldmlldywgSGVpa28ncyB0ZXN0IGFuZCBSb2IncyBhY2suCgpCZXN0IHJlZ2FyZHMuCgpP
-biAyMDE35bm0MDfmnIgyNuaXpSAxNDoxOCwgTWFyayBZYW8gd3JvdGU6Cj4gVGhlc2UgcGF0Y2hl
-cyB0cnkgdG8gbWFrZSBhbGwgY3VycmVudCByb2NrY2hpcCBmdWxsIGZyYW1ld29yayB2b3Agd29y
-a3MKPiBvbiBkcm0sIGZpbGwgbWlzc2luZyB2b3Agb24gZnVsbCBmcmFtZXdvcmsuCj4gVm9wIEZ1
-bGwgZnJhbWV3b3JrIG5vdyBoYXMgZm9sbG93aW5nIHZvcHM6Cj4gSVAgdmVyc2lvbiAgICBjaGlw
-bmFtZQo+ICAgICAgICAzLjEgICAgICAgICAgIHJrMzI4OAo+ICAgICAgICAzLjIgICAgICAgICAg
-IHJrMzM2OAo+ICAgICAgICAzLjQgICAgICAgICAgIHJrMzM2Ngo+ICAgICAgICAzLjUgICAgICAg
-ICAgIHJrMzM5OSBiaWcKPiAgICAgICAgMy42ICAgICAgICAgICByazMzOTkgbGl0Cj4gICAgICAg
-IDMuNyAgICAgICAgICAgcmszMjI4Cj4gICAgICAgIDMuOCAgICAgICAgICAgcmszMzI4Cj4KPiBH
-cm91cCB0aGUgdm9wIHJlZ2lzdGVyLCBpdCB3b3VsZCBtYWtlIHJlZ2lzdGVyICBkZWZpbml0aW9u
-IGNsZWFyZXIgYW5kCj4gbW9yZSBlYXNpbHkgdG8gcmV1c2Ugc2FtZSBncm91cCByZWdpc3RlciBk
-ZWZpbmUgZm9yIGRpZmZlcmVuY2Ugdm9wcy4KPgo+IFRlc3RlZCBvbiByazMzOTkgZXhjYXZhdG9y
-IGJvYXJkIHdpdGgga2VybmVsIDQuMTMtcmMxLgo+Cj4gQW5kIG90aGVyIGNoaXBzIHRlc3RlZCBv
-biByb2NrY2hpcCBrZXJuZWwgNC40Ogo+ICAgICBodHRwczovL2dpdGh1Yi5jb20vcm9ja2NoaXAt
-bGludXgva2VybmVsL3RyZWUvcmVsZWFzZS00LjQvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwCj4K
-PiBDaGFuZ2VzIGluIHY2Ogo+IC0gZml4IHNvbWUgcGF0Y2hlcyBjb21wbGllIGVycm9yCj4gLSBm
-aXggcmszMDM2IGRpc3BsYXkgYmxhbmsKPgo+IENoYW5nZXMgaW4gdjU6Cj4gLSBjbGVhbiBkb2N1
-bWVudCBjb21taXQgdGl0bGUKPiAtIG1vdmUgY2hhbmdlcyBkZXNjcmlwdGlvbiBvdXQgb2YgZG9j
-dW1taXQgY29tbWl0IG1zZwo+Cj4gQ2hhbmdlcyBpbiB2NDoKPiAtIHJlYmFzZSB0byBuZXdlc3Qg
-dG9ydmFsZHMga2VybmVsLCBmaXggbWVyZ2UgY29uZmxpY3QKPgo+IENoYW5nZXMgaW4gdjM6Cj4g
-LSBncm91cCB2b3AgcmVnaXN0ZXIgaW5zdGVhZCB1c2luZyBWT1BfUkVHX1ZFUiBtZWNoYW5pc20K
-PiAtIEV4cGxhaW4gbW9yZSBvbiBwYXRjaCBjb21taXQgbWVzc2FnZQo+IC0gbW92ZSB3cml0ZV9y
-ZWxheGVkIGZsYWdzIHRvIHZvcCByZWdpc3RlcnMKPiAtIGZpeCByazMzMjggb3ZlcmxheSBhYm5v
-cm1hbAo+Cj4gQ2hhbmdlcyBpbiB2MjoKPiAtIHJlbmFtZSByazMyMnggdG8gcmszMjI4Cj4gLSBj
-b3JyZWN0IHNvbWUgdm9wIHJlZ2lzdGVycyBkZWZpbmUKPgo+IE1hcmsgWWFvICg3KToKPiAgICBk
-cm0vcm9ja2NoaXA6IHZvcDogaW5pdGlhbGl6ZSByZWdpc3RlcnMgZGlyZWN0bHkKPiAgICBkcm0v
-cm9ja2NoaXA6IHZvcDogbW92ZSB3cml0ZV9yZWxheGVkIGZsYWdzIHRvIHZvcCByZWdpc3Rlcgo+
-ICAgIGRybS9yb2NrY2hpcDogdm9wOiBtb3ZlIGxpbmVfZmxhZ19udW0gdG8gaW50ZXJydXB0IHJl
-Z2lzdGVycwo+ICAgIGRybS9yb2NrY2hpcDogdm9wOiBncm91cCB2b3AgcmVnaXN0ZXJzCj4gICAg
-ZHJtL3JvY2tjaGlwOiB2b3A6IGFkZCBhIHNlcmllcyBvZiB2b3Agc3VwcG9ydAo+ICAgIGR0LWJp
-bmRpbmdzOiBkaXNwbGF5OiByb2NrY2hpcDogZmlsbCBEb2N1bWVudHMgZm9yIHZvcCBzZXJpZXMK
-PiAgICBkcm0vcm9ja2NoaXA6IHZvcDogcmszMzI4OiBmaXggb3ZlcmxheSBhYm5vcm1hbAo+Cj4g
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC12b3AudHh0ICAgICB8ICAg
-NCArCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfZHJtX3ZvcC5jICAgICAg
-ICB8IDEwOSArKy0KPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1fdm9w
-LmggICAgICAgIHwgIDgxICstCj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
-dm9wX3JlZy5jICAgICAgICB8IDM3NSArKysrKystLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9yb2NrY2hpcF92b3BfcmVnLmggICAgICAgIHwgOTA1ICsrKysrKysrKysrKysrKystLS0t
-LQo+ICAgNSBmaWxlcyBjaGFuZ2VkLCAxMDc1IGluc2VydGlvbnMoKyksIDM5OSBkZWxldGlvbnMo
-LSkKPgoKCi0tIArvvK1hcmsgWWFvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Hi,
+
+On Sun, 30 Jul 2017 09:08:01 +0300
+Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org> wrote:
+
+> Hi Maxime, Yong,
+> 
+> On Fri, Jul 28, 2017 at 06:02:33PM +0200, Maxime Ripard wrote:
+> > Hi, 
+> > 
+> > Thanks for the second iteration!
+> > 
+> > On Thu, Jul 27, 2017 at 01:01:35PM +0800, Yong Deng wrote:
+> > > Allwinner V3s SoC have two CSI module. CSI0 is used for MIPI interface
+> > > and CSI1 is used for parallel interface. This is not documented in
+> > > datasheet but by testing and guess.
+> > > 
+> > > This patch implement a v4l2 framework driver for it.
+> > > 
+> > > Currently, the driver only support the parallel interface. MIPI-CSI2,
+> > > ISP's support are not included in this patch.
+> > > 
+> > > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> 
+> [...]
+> 
+> > > +#ifdef DEBUG
+> > > +static void sun6i_csi_dump_regs(struct sun6i_csi_dev *sdev)
+> > > +{
+> > > +	struct regmap *regmap = sdev->regmap;
+> > > +	u32 val;
+> > > +
+> > > +	regmap_read(regmap, CSI_EN_REG, &val);
+> > > +	printk("CSI_EN_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_IF_CFG_REG, &val);
+> > > +	printk("CSI_IF_CFG_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_CAP_REG, &val);
+> > > +	printk("CSI_CAP_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_SYNC_CNT_REG, &val);
+> > > +	printk("CSI_SYNC_CNT_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_FIFO_THRS_REG, &val);
+> > > +	printk("CSI_FIFO_THRS_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_PTN_LEN_REG, &val);
+> > > +	printk("CSI_PTN_LEN_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_PTN_ADDR_REG, &val);
+> > > +	printk("CSI_PTN_ADDR_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_VER_REG, &val);
+> > > +	printk("CSI_VER_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_CH_CFG_REG, &val);
+> > > +	printk("CSI_CH_CFG_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_CH_SCALE_REG, &val);
+> > > +	printk("CSI_CH_SCALE_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_F0_BUFA_REG, &val);
+> > > +	printk("CSI_CH_F0_BUFA_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_F1_BUFA_REG, &val);
+> > > +	printk("CSI_CH_F1_BUFA_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_F2_BUFA_REG, &val);
+> > > +	printk("CSI_CH_F2_BUFA_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_STA_REG, &val);
+> > > +	printk("CSI_CH_STA_REG=0x%x\n",		val);
+> > > +	regmap_read(regmap, CSI_CH_INT_EN_REG, &val);
+> > > +	printk("CSI_CH_INT_EN_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_INT_STA_REG, &val);
+> > > +	printk("CSI_CH_INT_STA_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_FLD1_VSIZE_REG, &val);
+> > > +	printk("CSI_CH_FLD1_VSIZE_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_HSIZE_REG, &val);
+> > > +	printk("CSI_CH_HSIZE_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_VSIZE_REG, &val);
+> > > +	printk("CSI_CH_VSIZE_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_BUF_LEN_REG, &val);
+> > > +	printk("CSI_CH_BUF_LEN_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_FLIP_SIZE_REG, &val);
+> > > +	printk("CSI_CH_FLIP_SIZE_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_FRM_CLK_CNT_REG, &val);
+> > > +	printk("CSI_CH_FRM_CLK_CNT_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_ACC_ITNL_CLK_CNT_REG, &val);
+> > > +	printk("CSI_CH_ACC_ITNL_CLK_CNT_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_FIFO_STAT_REG, &val);
+> > > +	printk("CSI_CH_FIFO_STAT_REG=0x%x\n",	val);
+> > > +	regmap_read(regmap, CSI_CH_PCLK_STAT_REG, &val);
+> > > +	printk("CSI_CH_PCLK_STAT_REG=0x%x\n",	val);
+> > > +}
+> > > +#endif
+> > 
+> > You can already dump a regmap through debugfs, that's redundant.
+> 
+> The advantage of in-code registers dump routine is the ability to synchronize 
+> the snapshot with the driver code execution. This is particularly important 
+> for the capture statistics registers. I have found it useful here.
+
+Agree. It is not used to expose the registers value to user space. If you
+think it is redundant, I will delete it.
+
+> 
+> [...]
+> 
+> > > +static int update_buf_addr(struct sun6i_csi *csi, dma_addr_t addr)
+> > > +{
+> > > +	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
+> > > +	/* transform physical address to bus address */
+> > > +	dma_addr_t bus_addr = addr - 0x40000000;
+> > 
+> > Like Baruch noticed, you should use PHYS_OFFSET here. The A80 for
+> > example has a different RAM base address.
+> > 
+> > > +
+> > > +	regmap_write(sdev->regmap, CSI_CH_F0_BUFA_REG,
+> > > +		     (bus_addr + sdev->planar_offset[0]) >> 2);
+> 
+> Why do you need the bit shift? Does that work for you?
+> 
+> The User Manuals of both the V3s and the and the A33 (AKA R16) state that the 
+> BUFA field size in this register is 31:00, that is 32bit. I have found no 
+> indication of this bit shift in the Olimex provided sunxi-vfe[1] driver. On 
+> the A33 I have found that only after removing the bit-shift, (some sort of) 
+> data started to appear in the buffer.
+> 
+> [1] https://github.com/hehopmajieh/a33_linux/tree/master/drivers/media/video/sunxi-vfe
+> 
+
+The Users Manuals do not document this bit shift. You should see line 10 to
+32 in https://github.com/hehopmajieh/a33_linux/blob/master/drivers/media/video/sunxi-vfe/csi/csi_reg.c
+
+> [...]
+> 
+> > > +static irqreturn_t sun6i_csi_isr(int irq, void *dev_id)
+> > > +{
+> > > +	struct sun6i_csi_dev *sdev = (struct sun6i_csi_dev *)dev_id;
+> > > +	struct regmap *regmap = sdev->regmap;
+> > > +	u32 status;
+> > > +
+> > > +	regmap_read(regmap, CSI_CH_INT_STA_REG, &status);
+> > > +
+> > > +	if ((status & CSI_CH_INT_STA_FIFO0_OF_PD) ||
+> > > +	    (status & CSI_CH_INT_STA_FIFO1_OF_PD) ||
+> > > +	    (status & CSI_CH_INT_STA_FIFO2_OF_PD) ||
+> > > +	    (status & CSI_CH_INT_STA_HB_OF_PD)) {
+> > > +		regmap_write(regmap, CSI_CH_INT_STA_REG, status);
+> > > +		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
+> > > +		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN,
+> > > +				   CSI_EN_CSI_EN);
+> > 
+> > You need to enable / disable it at every frame? How do you deal with
+> > double buffering? (or did you choose to ignore it for now?)
+> 
+> These *_OF_PD status bits indicate an overflow error condition.
+
+Right.
+
+> 
+> > > +		return IRQ_HANDLED;
+> > > +	}
+> > > +
+> > > +	if (status & CSI_CH_INT_STA_FD_PD) {
+> > > +		sun6i_video_frame_done(&sdev->csi.video);
+> > > +	}
+> > > +
+> > > +	regmap_write(regmap, CSI_CH_INT_STA_REG, status);
+> > 
+> > Isn't it redundant with the one you did in the condition a bit above?
+> > 
+> > You should also check that your device indeed generated an
+> > interrupt. In the occurence of a spourious interrupt, your code will
+> > return IRQ_HANDLED, which is the wrong thing to do.
+> > 
+> > I think you should reverse your logic a bit here to make this
+> > easier. You should just check that your status flags are indeed set,
+> > and if not just bail out and return IRQ_NONE.
+> > 
+> > And if they are, go on with treating your interrupt.
+> > 
+> > > +
+> > > +	return IRQ_HANDLED;
+> > > +}
+> 
+> baruch
+> 
+> -- 
+>      http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+> =}------------------------------------------------ooO--U--Ooo------------{=
+>    - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.52.368.4656, http://www.tkos.co.il -
+
+
+Thanks,
+Yong
