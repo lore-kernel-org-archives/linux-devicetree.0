@@ -1,7 +1,7 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v5 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe controller
-Date: Mon, 31 Jul 2017 11:09:54 +0530
-Message-ID: <1501479594-18285-8-git-send-email-varada@codeaurora.org>
+Subject: [PATCH v5 4/7] phy: qcom-qmp: Add support for IPQ8074
+Date: Mon, 31 Jul 2017 11:09:51 +0530
+Message-ID: <1501479594-18285-5-git-send-email-varada@codeaurora.org>
 References: <1501479594-18285-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501479594-18285-1-git-send-email-varada@codeaurora.org>
@@ -10,318 +10,176 @@ To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-
 Cc: Varadarajan Narayanan <varada@codeaurora.org>, smuthayy <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-Gen 1/2, one lane, two PCIe root complex with support for MSI and
-legacy interrupts, and it conforms to PCI Express Base 2.1
-specification.
-
-The core init is the similar to the existing SoC, however the
-clocks and reset lines differ.
+Add definitions required to enable QMP phy support for IPQ8074.
 
 Signed-off-by: smuthayy <smuthayy@codeaurora.org>
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- drivers/pci/dwc/pcie-qcom.c | 245 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 245 insertions(+)
+ drivers/phy/qualcomm/phy-qcom-qmp.c | 124 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 124 insertions(+)
 
-diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-index 6525f2f..b2ea953 100644
---- a/drivers/pci/dwc/pcie-qcom.c
-+++ b/drivers/pci/dwc/pcie-qcom.c
-@@ -37,6 +37,20 @@
- #include "pcie-designware.h"
+diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
+index 464049c..136d236 100644
+--- a/drivers/phy/qualcomm/phy-qcom-qmp.c
++++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
+@@ -59,6 +59,7 @@
+ #define QSERDES_COM_PLL_RCTRL_MODE1			0x088
+ #define QSERDES_COM_PLL_CCTRL_MODE0			0x090
+ #define QSERDES_COM_PLL_CCTRL_MODE1			0x094
++#define QSERDES_COM_BIAS_EN_CTRL_BY_PSM			0x0a8
+ #define QSERDES_COM_SYSCLK_EN_SEL			0x0ac
+ #define QSERDES_COM_RESETSM_CNTRL			0x0b4
+ #define QSERDES_COM_RESTRIM_CTRL			0x0bc
+@@ -143,6 +144,11 @@
+ #define QPHY_LOCK_DETECT_CONFIG3			0x88
+ #define QPHY_PWRUP_RESET_DLY_TIME_AUXCLK		0xa0
+ #define QPHY_LP_WAKEUP_DLY_TIME_AUXCLK			0xa4
++#define QPHY_PLL_LOCK_CHK_DLY_TIME_AUXCLK_LSB		0x1A8
++#define QPHY_OSC_DTCT_ACTIONS				0x1AC
++#define QPHY_RX_SIGDET_LVL				0x1D8
++#define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB		0x1DC
++#define QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB		0x1E0
  
- #define PCIE20_PARF_SYS_CTRL			0x00
-+#define MST_WAKEUP_EN				BIT(13)
-+#define SLV_WAKEUP_EN				BIT(12)
-+#define MSTR_ACLK_CGC_DIS			BIT(10)
-+#define SLV_ACLK_CGC_DIS			BIT(9)
-+#define CORE_CLK_CGC_DIS			BIT(6)
-+#define AUX_PWR_DET				BIT(4)
-+#define L23_CLK_RMV_DIS				BIT(2)
-+#define L1_CLK_RMV_DIS				BIT(1)
-+
-+#define PCIE20_COMMAND_STATUS			0x04
-+#define CMD_BME_VAL				0x4
-+#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
-+#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-+
- #define PCIE20_PARF_PHY_CTRL			0x40
- #define PCIE20_PARF_PHY_REFCLK			0x4C
- #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-@@ -58,9 +72,22 @@
- #define CFG_BRIDGE_SB_INIT			BIT(0)
- 
- #define PCIE20_CAP				0x70
-+#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
-+#define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
-+#define PCIE_CAP_LINK1_VAL			0x2fd7f
-+
-+#define PCIE20_PARF_Q2A_FLUSH			0x1AC
-+
-+#define PCIE20_MISC_CONTROL_1_REG		0x8BC
-+#define DBI_RO_WR_EN				1
- 
- #define PERST_DELAY_US				1000
- 
-+#define AXI_CLK_RATE				200000000
-+
-+#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-+#define SLV_ADDR_SPACE_SZ                       0x10000000
-+
- struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
-@@ -110,11 +137,21 @@ struct qcom_pcie_resources_2_4_0 {
- 	struct reset_control *phy_ahb_reset;
+ /* QPHY_SW_RESET bit */
+ #define SW_RESET				BIT(0)
+@@ -382,6 +388,85 @@ enum qphy_reg_layout {
+ 	QMP_PHY_INIT_CFG(QPHY_POWER_STATE_CONFIG2, 0x08),
  };
  
-+struct qcom_pcie_resources_2_3_3 {
-+	struct clk *iface;
-+	struct clk *axi_m_clk;
-+	struct clk *axi_s_clk;
-+	struct clk *ahb_clk;
-+	struct clk *aux_clk;
-+	struct reset_control *rst[7];
++static const struct qmp_phy_init_tbl ipq8074_pcie_serdes_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CLKBUFLR_EN, 0x18),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_ENABLE1, 0x10),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TRIM, 0xf),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP_EN, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_MAP, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER1, 0x1f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_TIMER2, 0x3f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CMN_CONFIG, 0x6),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_IVCO, 0xf),
++	QMP_PHY_INIT_CFG(QSERDES_COM_HSCLK_SEL, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SVS_MODE_CLK_SEL, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CORE_CLK_EN, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CORECLK_DIV, 0xa),
++	QMP_PHY_INIT_CFG(QSERDES_COM_RESETSM_CNTRL, 0x20),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BG_TIMER, 0xa),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_EN_SEL, 0xa),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DEC_START_MODE0, 0x82),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START3_MODE0, 0x3),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START2_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_COM_DIV_FRAC_START1_MODE0, 0x55),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP3_MODE0, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP2_MODE0, 0xD),
++	QMP_PHY_INIT_CFG(QSERDES_COM_LOCK_CMP1_MODE0, 0xD04),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_SELECT, 0x33),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SYS_CLK_CTRL, 0x2),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SYSCLK_BUF_ENABLE, 0x1f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CP_CTRL_MODE0, 0xb),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_RCTRL_MODE0, 0x16),
++	QMP_PHY_INIT_CFG(QSERDES_COM_PLL_CCTRL_MODE0, 0x28),
++	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN1_MODE0, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_COM_INTEGLOOP_GAIN0_MODE0, 0x80),
++	QMP_PHY_INIT_CFG(QSERDES_COM_BIAS_EN_CTRL_BY_PSM, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_COM_VCO_TUNE_CTRL, 0xa),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_EN_CENTER, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER1, 0x31),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_PER2, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER1, 0x2),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_ADJ_PER2, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE1, 0x2f),
++	QMP_PHY_INIT_CFG(QSERDES_COM_SSC_STEP_SIZE2, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_COM_CLK_EP_DIV, 0x19),
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_CNTRL, 0x7),
 +};
 +
- union qcom_pcie_resources {
- 	struct qcom_pcie_resources_1_0_0 v1_0_0;
- 	struct qcom_pcie_resources_2_1_0 v2_1_0;
- 	struct qcom_pcie_resources_2_3_2 v2_3_2;
- 	struct qcom_pcie_resources_2_4_0 v2_4_0;
-+	struct qcom_pcie_resources_2_3_3 v2_3_3;
- };
- 
- struct qcom_pcie;
-@@ -884,6 +921,206 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 	return ret;
- }
- 
-+static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int i;
-+	const char *rst_names[] = {
-+					"axi_m", "axi_s", "pipe",
-+					"axi_m_sticky", "sticky",
-+					"ahb", "sleep",
-+				};
-+
-+	res->iface = devm_clk_get(dev, "iface");
-+	if (IS_ERR(res->iface))
-+		return PTR_ERR(res->iface);
-+
-+	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-+	if (IS_ERR(res->axi_m_clk))
-+		return PTR_ERR(res->axi_m_clk);
-+
-+	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-+	if (IS_ERR(res->axi_s_clk))
-+		return PTR_ERR(res->axi_s_clk);
-+
-+	res->ahb_clk = devm_clk_get(dev, "ahb");
-+	if (IS_ERR(res->ahb_clk))
-+		return PTR_ERR(res->ahb_clk);
-+
-+	res->aux_clk = devm_clk_get(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
-+		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
-+		if (IS_ERR(res->rst[i]))
-+			return PTR_ERR(res->rst[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+
-+	clk_disable_unprepare(res->iface);
-+	clk_disable_unprepare(res->axi_m_clk);
-+	clk_disable_unprepare(res->axi_s_clk);
-+	clk_disable_unprepare(res->ahb_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+}
-+
-+static int qcom_pcie_enable_resources_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	int ret;
-+
-+	ret = clk_prepare_enable(res->iface);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_m_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_set_rate(res->axi_m_clk, AXI_CLK_RATE);
-+	if (ret) {
-+		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-+		goto err_clk_axi_m;
-+	}
-+
-+	ret = clk_prepare_enable(res->axi_s_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_set_rate(res->axi_s_clk, AXI_CLK_RATE);
-+	if (ret) {
-+		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-+		goto err_clk_axi_s;
-+	}
-+
-+	ret = clk_prepare_enable(res->ahb_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ahb clock\n");
-+		goto err_clk_ahb;
-+	}
-+
-+	ret = clk_prepare_enable(res->aux_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	udelay(1);
-+
-+	return 0;
-+
-+err_clk_aux:
-+	clk_disable_unprepare(res->ahb_clk);
-+err_clk_ahb:
-+	clk_disable_unprepare(res->axi_s_clk);
-+err_clk_axi_s:
-+	clk_disable_unprepare(res->axi_m_clk);
-+err_clk_axi_m:
-+	clk_disable_unprepare(res->iface);
-+
-+	return ret;
-+}
-+
-+static int qcom_pcie_2_3_3_reset(struct qcom_pcie *pcie)
-+{
-+	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-+	int i, ret;
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_assert(res->rst[i]);
-+		if (ret) {
-+			dev_err(pcie->pci->dev,
-+				"%s: reset assert failed for %d\n",
-+				__func__, i);
-+			return ret;
-+		}
-+	}
-+
-+	msleep(20);
-+
-+	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-+		ret = reset_control_deassert(res->rst[i]);
-+		if (ret) {
-+			dev_err(pcie->pci->dev,
-+				"%s: reset deassert failed for %d\n",
-+				__func__, i);
-+			return ret;
-+		}
-+	}
-+
-+	msleep(20);
-+
-+	return 0;
-+}
-+
-+static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	int ret;
-+	u32 val;
-+
-+	ret = qcom_pcie_2_3_3_reset(pcie);
-+	if (ret)
-+		return ret;
-+
-+	qcom_ep_reset_assert(pcie);
-+
-+	ret = qcom_pcie_enable_resources_2_3_3(pcie);
-+	if (ret)
-+		return ret;
-+
-+	writel(SLV_ADDR_SPACE_SZ, pcie->parf +
-+					PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	ret = phy_power_on(pcie->phy);
-+	if (ret) {
-+		pcie->ops->deinit(pcie);
-+		return ret;
-+	}
-+
-+	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-+	val &= ~BIT(0);
-+	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-+
-+	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-+
-+	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-+		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-+		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-+		pcie->parf + PCIE20_PARF_SYS_CTRL);
-+	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-+
-+	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
-+	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
-+	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
-+
-+	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
-+	val &= ~(BIT(10) | BIT(11));
-+	writel(val, pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
-+
-+	writel(PCIE_CAP_CPL_TIMEOUT_DISABLE, pci->dbi_base +
-+		PCIE20_DEVICE_CONTROL2_STATUS2);
-+
-+	return 0;
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 val = readw(pci->dbi_base + PCIE20_CAP + PCI_EXP_LNKSTA);
-@@ -985,6 +1222,13 @@ static int qcom_pcie_rd_own_conf(struct pcie_port *pp, int where, int size,
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+static const struct qcom_pcie_ops ops_2_3_3 = {
-+	.get_resources = qcom_pcie_get_resources_2_3_3,
-+	.init = qcom_pcie_init_2_3_3,
-+	.deinit = qcom_pcie_deinit_2_3_3,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
++static const struct qmp_phy_init_tbl ipq8074_pcie_tx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_TX_HIGHZ_TRANSCEIVEREN_BIAS_DRVR_EN, 0x45),
++	QMP_PHY_INIT_CFG(QSERDES_TX_LANE_MODE, 0x6),
++	QMP_PHY_INIT_CFG(QSERDES_TX_RES_CODE_LANE_OFFSET, 0x2),
++	QMP_PHY_INIT_CFG(QSERDES_TX_RCV_DETECT_LVL_2, 0x12),
 +};
 +
- static int qcom_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1085,6 +1329,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
- 	QCOM_DECL("qcom,pcie-apq8064", ops_2_1_0, 2.1.0, 4.01a),
- 	QCOM_DECL("qcom,pcie-msm8996", ops_2_3_2, 2.3.2, 4.21a),
- 	QCOM_DECL("qcom,pcie-ipq4019", ops_2_4_0, 2.4.0, 4.20a),
-+	QCOM_DECL("qcom,pcie-ipq8074", ops_2_3_3, 2.3.3, 4.30a),
- 	{ }
++static const struct qmp_phy_init_tbl ipq8074_pcie_rx_tbl[] = {
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_ENABLES, 0x1c),
++	QMP_PHY_INIT_CFG(QSERDES_RX_SIGDET_DEGLITCH_CNTRL, 0x14),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL2, 0x1),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL3, 0x0),
++	QMP_PHY_INIT_CFG(QSERDES_RX_RX_EQU_ADAPTOR_CNTRL4, 0xdb),
++	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_SATURATION_AND_ENABLE, 0x4b),
++	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN, 0x4),
++	QMP_PHY_INIT_CFG(QSERDES_RX_UCDR_SO_GAIN_HALF, 0x4),
++};
++
++static const struct qmp_phy_init_tbl ipq8074_pcie_pcs_tbl[] = {
++	QMP_PHY_INIT_CFG(QPHY_ENDPOINT_REFCLK_DRIVE, 0x4),
++	QMP_PHY_INIT_CFG(QPHY_OSC_DTCT_ACTIONS, 0x0),
++	QMP_PHY_INIT_CFG(QPHY_PWRUP_RESET_DLY_TIME_AUXCLK, 0x40),
++	QMP_PHY_INIT_CFG(QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_MSB, 0x0),
++	QMP_PHY_INIT_CFG(QPHY_L1SS_WAKEUP_DLY_TIME_AUXCLK_LSB, 0x40),
++	QMP_PHY_INIT_CFG(QPHY_PLL_LOCK_CHK_DLY_TIME_AUXCLK_LSB, 0x0),
++	QMP_PHY_INIT_CFG(QPHY_LP_WAKEUP_DLY_TIME_AUXCLK, 0x40),
++	QMP_PHY_INIT_CFG_L(QPHY_PLL_LOCK_CHK_DLY_TIME, 0x73),
++	QMP_PHY_INIT_CFG(QPHY_RX_SIGDET_LVL, 0x99),
++	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M6DB_V0, 0x15),
++	QMP_PHY_INIT_CFG(QPHY_TXDEEMPH_M3P5DB_V0, 0xe),
++	QMP_PHY_INIT_CFG_L(QPHY_SW_RESET, 0x0),
++	QMP_PHY_INIT_CFG_L(QPHY_START_CTRL, 0x3),
++};
++
+ /* struct qmp_phy_cfg - per-PHY initialization config */
+ struct qmp_phy_cfg {
+ 	/* phy-type - PCIE/UFS/USB */
+@@ -580,6 +665,42 @@ static inline void qphy_clrbits(void __iomem *base, u32 offset, u32 val)
+ 	.mask_pcs_ready		= PHYSTATUS,
  };
  
++/* list of resets */
++static const char * const ipq8074_pciephy_reset_l[] = {
++	"phy", "common",
++};
++
++static const struct qmp_phy_cfg ipq8074_pciephy_cfg = {
++	.type			= PHY_TYPE_PCIE,
++	.nlanes			= 1,
++
++	.serdes_tbl		= ipq8074_pcie_serdes_tbl,
++	.serdes_tbl_num		= ARRAY_SIZE(ipq8074_pcie_serdes_tbl),
++	.tx_tbl			= ipq8074_pcie_tx_tbl,
++	.tx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_tx_tbl),
++	.rx_tbl			= ipq8074_pcie_rx_tbl,
++	.rx_tbl_num		= ARRAY_SIZE(ipq8074_pcie_rx_tbl),
++	.pcs_tbl		= ipq8074_pcie_pcs_tbl,
++	.pcs_tbl_num		= ARRAY_SIZE(ipq8074_pcie_pcs_tbl),
++	.clk_list		= NULL,
++	.num_clks		= 0,
++	.reset_list		= ipq8074_pciephy_reset_l,
++	.num_resets		= ARRAY_SIZE(ipq8074_pciephy_reset_l),
++	.vreg_list		= NULL,
++	.num_vregs		= 0,
++	.regs			= pciephy_regs_layout,
++
++	.start_ctrl		= SERDES_START | PCS_START,
++	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
++	.mask_pcs_ready		= PHYSTATUS,
++
++	.has_phy_com_ctrl	= false,
++	.has_lane_rst		= false,
++	.has_pwrdn_delay	= true,
++	.pwrdn_delay_min	= 995,		/* us */
++	.pwrdn_delay_max	= 1005,		/* us */
++};
++
+ static void qcom_qmp_phy_configure(void __iomem *base,
+ 				   const unsigned int *regs,
+ 				   const struct qmp_phy_init_tbl tbl[],
+@@ -1048,6 +1169,9 @@ int qcom_qmp_phy_create(struct device *dev, struct device_node *np, int id)
+ 	}, {
+ 		.compatible = "qcom,msm8996-qmp-usb3-phy",
+ 		.data = &msm8996_usb3phy_cfg,
++	}, {
++		.compatible = "qcom,ipq8074-qmp-pcie-phy",
++		.data = &ipq8074_pciephy_cfg,
+ 	},
+ 	{ },
+ };
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
