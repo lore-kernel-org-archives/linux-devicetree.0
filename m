@@ -1,111 +1,62 @@
 From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v3 1/5] [media] v4l: add porter duff blend controls
-Date: Mon, 31 Jul 2017 11:07:36 +0800
-Message-ID: <1501470460-12014-2-git-send-email-jacob-chen@iotwrt.com>
+Subject: [PATCH v3 5/5] dt-bindings: Document the Rockchip RGA bindings
+Date: Mon, 31 Jul 2017 11:07:40 +0800
+Message-ID: <1501470460-12014-6-git-send-email-jacob-chen@iotwrt.com>
 References: <1501470460-12014-1-git-send-email-jacob-chen@iotwrt.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501470460-12014-1-git-send-email-jacob-chen@iotwrt.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, s.nawrocki@samsung.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-At peresent, we don't have a control for Compositing and Blend.
-All drivers are just doing copies while actually many hardwares
-supports more functions.
-
-So Adding V4L2 controls for Compositing and Blend, used for for
-composting streams.
-
-The values are based on porter duff operations.
-Defined in below links.
-https://developer.xamarin.com/api/type/Android.Graphics.PorterDuff+Mode/
+Add DT bindings documentation for Rockchip RGA
 
 Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-Suggested-by: Nicolas Dufresne <nicolas@ndufresne.ca>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 ---
- drivers/media/v4l2-core/v4l2-ctrls.c | 20 +++++++++++++++++++-
- include/uapi/linux/v4l2-controls.h   | 16 +++++++++++++++-
- 2 files changed, 34 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/media/rockchip-rga.txt     | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
 
-diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-index b9e08e3..561d7d5 100644
---- a/drivers/media/v4l2-core/v4l2-ctrls.c
-+++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-@@ -478,7 +478,21 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		"Region Grid",
- 		NULL,
- 	};
--
-+	static const char * const porter_duff_modes[] = {
-+		"Source",
-+		"Source Top",
-+		"Source In",
-+		"Source Out",
-+		"Source Over",
-+		"Destination",
-+		"Destination Top",
-+		"Destination In",
-+		"Destination Out",
-+		"Destination Over",
-+		"Add",
-+		"Clear",
-+		NULL
+diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+new file mode 100644
+index 0000000..fd5276a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
+@@ -0,0 +1,33 @@
++device-tree bindings for rockchip 2D raster graphic acceleration controller (RGA)
++
++RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
++graphics operations, such as point/line drawing, image scaling, rotation,
++BitBLT, alpha blending and image blur/sharpness.
++
++Required properties:
++- compatible: value should be one of the following
++		"rockchip,rk3288-rga";
++		"rockchip,rk3399-rga";
++
++- interrupts: RGA interrupt specifier.
++
++- clocks: phandle to RGA sclk/hclk/aclk clocks
++
++- clock-names: should be "aclk", "hclk" and "sclk"
++
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: should be "core", "axi" and "ahb"
++
++Example:
++SoC-specific DT entry:
++	rga: rga@ff680000 {
++		compatible = "rockchip,rk3399-rga";
++		reg = <0xff680000 0x10000>;
++		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
++		clock-names = "aclk", "hclk", "sclk";
++
++		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
++		reset-names = "core, "axi", "ahb";
 +	};
- 
- 	switch (id) {
- 	case V4L2_CID_MPEG_AUDIO_SAMPLING_FREQ:
-@@ -564,6 +578,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
- 		return vpx_golden_frame_sel;
- 	case V4L2_CID_JPEG_CHROMA_SUBSAMPLING:
- 		return jpeg_chroma_subsampling;
-+	case V4L2_CID_PORTER_DUFF_MODE:
-+		return porter_duff_modes;
- 	case V4L2_CID_DV_TX_MODE:
- 		return dv_tx_mode;
- 	case V4L2_CID_DV_TX_RGB_RANGE:
-@@ -886,6 +902,7 @@ const char *v4l2_ctrl_get_name(u32 id)
- 	case V4L2_CID_PIXEL_RATE:		return "Pixel Rate";
- 	case V4L2_CID_TEST_PATTERN:		return "Test Pattern";
- 	case V4L2_CID_DEINTERLACING_MODE:	return "Deinterlacing Mode";
-+	case V4L2_CID_PORTER_DUFF_MODE:		return "PorterDuff Blend Modes";
- 
- 	/* DV controls */
- 	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-@@ -1060,6 +1077,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
- 	case V4L2_CID_DV_RX_IT_CONTENT_TYPE:
- 	case V4L2_CID_TEST_PATTERN:
- 	case V4L2_CID_DEINTERLACING_MODE:
-+	case V4L2_CID_PORTER_DUFF_MODE:
- 	case V4L2_CID_TUNE_DEEMPHASIS:
- 	case V4L2_CID_MPEG_VIDEO_VPX_GOLDEN_FRAME_SEL:
- 	case V4L2_CID_DETECT_MD_MODE:
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 0d2e1e0..9543b4b 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -893,7 +893,21 @@ enum v4l2_jpeg_chroma_subsampling {
- #define V4L2_CID_PIXEL_RATE			(V4L2_CID_IMAGE_PROC_CLASS_BASE + 2)
- #define V4L2_CID_TEST_PATTERN			(V4L2_CID_IMAGE_PROC_CLASS_BASE + 3)
- #define V4L2_CID_DEINTERLACING_MODE		(V4L2_CID_IMAGE_PROC_CLASS_BASE + 4)
--
-+#define V4L2_CID_PORTER_DUFF_MODE		(V4L2_CID_IMAGE_PROC_CLASS_BASE + 5)
-+enum v4l2_porter_duff_mode {
-+	V4L2_PORTER_DUFF_SRC			= 0,
-+	V4L2_PORTER_DUFF_SRCATOP		= 1,
-+	V4L2_PORTER_DUFF_SRCIN			= 2,
-+	V4L2_PORTER_DUFF_SRCOUT			= 3,
-+	V4L2_PORTER_DUFF_SRCOVER		= 4,
-+	V4L2_PORTER_DUFF_DST			= 5,
-+	V4L2_PORTER_DUFF_DSTATOP		= 6,
-+	V4L2_PORTER_DUFF_DSTIN			= 7,
-+	V4L2_PORTER_DUFF_DSTOUT			= 8,
-+	V4L2_PORTER_DUFF_DSTOVER		= 9,
-+	V4L2_PORTER_DUFF_ADD			= 10,
-+	V4L2_PORTER_DUFF_CLEAR			= 11,
-+};
- 
- /*  DV-class control IDs defined by V4L2 */
- #define V4L2_CID_DV_CLASS_BASE			(V4L2_CTRL_CLASS_DV | 0x900)
 -- 
 2.7.4
