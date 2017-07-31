@@ -1,167 +1,195 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/9] serial: Add common rs485 device tree parsing
- function
-Date: Mon, 31 Jul 2017 09:42:57 +0200
-Message-ID: <20170731074257.2pjptqmflmflj2mf@pengutronix.de>
-References: <20170718105948.21986-1-u.kleine-koenig@pengutronix.de>
- <20170718105948.21986-4-u.kleine-koenig@pengutronix.de>
- <20170730144947.GA18707@kroah.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v10 05/10] i2c: mux: pca954x: Call request irq after
+ adding mux segments
+Date: Mon, 31 Jul 2017 10:09:49 +0200
+Message-ID: <612a8d32-77e8-a1d3-94e8-700a9e6a2184@axentia.se>
+References: <1500954024-6860-1-git-send-email-preid@electromag.com.au>
+ <1500954024-6860-6-git-send-email-preid@electromag.com.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170730144947.GA18707-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <greg-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1500954024-6860-6-git-send-email-preid@electromag.com.au>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Phil Reid <preid@electromag.com.au>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, benjamin.tissoires@redhat.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 30, 2017 at 07:49:47AM -0700, Greg KH wrote:
-> On Tue, Jul 18, 2017 at 12:59:42PM +0200, Uwe Kleine-König wrote:
-> > From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > 
-> > Several drivers have the same device tree parsing code. Create
-> > a common helper function for it.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > [ukl: implement default <0 0> for rts-delay, unset unspecified flags]
-> > Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/tty/serial/Kconfig  |  4 ++++
-> >  drivers/tty/serial/Makefile |  2 ++
-> >  drivers/tty/serial/of.c     | 47 +++++++++++++++++++++++++++++++++++++++++++++
+Hi Phil,
+
+Nice to get rid of the mask/unmask! One small nit though, the
+'fail_del_adapters' label no longer describes what's going on.
+Please change it to 'fail_cleanup' or something like that.
+
+With that,
+Acked-by: Peter Rosin <peda@axentia.se>
+
+And also, for the future, please use subjects according to
+submitting-patches, i.e., in this case
+
+i2c: mux: pca954x: call request irq after adding mux segments
+
+(lower-case 'c' in call)
+
+Cheers,
+Peter
+
+On 2017-07-25 05:40, Phil Reid wrote:
+> The pca954x device do not have the ability to mask interrupts. For
+> i2c slave devices that also don't have masking ability (eg ltc1760
+> smbalert output) delay registering the irq until after the mux
+> segments have been configured. During the mux add_adaptor call the
+> core i2c system can register an smbalert handler which would then
+> be called immediately when the irq is registered. This smbalert
+> handler will then clear the pending irq.
 > 
-> Why is this a separate file, with a Kconfig option that is always
-> enabled?  Why not just add the single function to the serial core?
-
-Probably just a matter of taste. If you prefer I can put it into
-drivers/tty/serial/serial_core.c
- 
-> > +/**
-> > + * of_get_rs485_mode() - Implement parsing rs485 properties
-> > + * @np: uart node
-> > + * @rs485conf: output parameter
-> > + *
-> > + * This function implements the device tree binding described in
-> > + * Documentation/devicetree/bindings/serial/rs485.txt.
-> > + *
-> > + * Return: 0 on success, 1 if the node doesn't contain rs485 stuff.
+> This removes the need for the irq_mask / irq_unmask calls that were
+> original used to do this.
 > 
-> 1 is not an error code :(
+> Signed-off-by: Phil Reid <preid@electromag.com.au>
+> ---
+>  drivers/i2c/muxes/i2c-mux-pca954x.c | 85 +++++++++++--------------------------
+>  1 file changed, 25 insertions(+), 60 deletions(-)
 > 
-> Return a proper error please.
-
-Well, it's not an error. These properties are optional and if I return
-(say) -ENOENT in this case, a caller looks as follows:
-
-	ret = of_get_rs485_mode(...);
-	if (ret == -ENOENT) {
-		/*
-		 * hmm, does this mean there are no rs485 properties, or
-		 * is this a different error that I should propagate
-		 * because there is a problem with the device tree?
-		 * I'm optimistic and assume the former.
-		 * As of_get_rs485_mode already did everything
-		 * necessary, there is no need to do anything else.
-		 */
-	} else if (ret < 0) {
-		return ret;
-	}
-
-With the semantic I chose it is just:
-
-	ret = of_get_rs485_mode(...);
-	if (ret < 0)
-		return ret;
-
-without any guessing.
-
-> > + */
-> > +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
-> > +{
-> > +	u32 rs485_delay[2];
-> > +	int ret;
-> > +
-> > +	if (!IS_ENABLED(CONFIG_OF) || !np)
-> > +		return 1;
-> > +
-> > +	ret = of_property_read_u32_array(np, "rs485-rts-delay", rs485_delay, 2);
-> > +	if (!ret) {
-> > +		rs485conf->delay_rts_before_send = rs485_delay[0];
-> > +		rs485conf->delay_rts_after_send = rs485_delay[1];
-> > +	} else {
-> > +		rs485conf->delay_rts_before_send = 0;
-> > +		rs485conf->delay_rts_after_send = 0;
-> > +	}
-> > +
-> > +	/*
-> > +	 * clear full-duplex and enabled flags to get to a defined state with
-> > +	 * the two following properties.
-> > +	 */
-> > +	rs485conf->flags &= ~(SER_RS485_RX_DURING_TX | SER_RS485_ENABLED);
-> > +
-> > +	if (of_property_read_bool(np, "rs485-rx-during-tx"))
-> > +		rs485conf->flags |= SER_RS485_RX_DURING_TX;
-> > +
-> > +	if (of_property_read_bool(np, "linux,rs485-enabled-at-boot-time"))
-> > +		rs485conf->flags |= SER_RS485_ENABLED;
-> > +
-> > +	return 0;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_get_rs485_mode);
-> > diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-> > index 1775500294bb..3a89e8925722 100644
-> > --- a/include/linux/serial_core.h
-> > +++ b/include/linux/serial_core.h
-> > @@ -501,4 +501,17 @@ static inline int uart_handle_break(struct uart_port *port)
-> >  					 (cflag) & CRTSCTS || \
-> >  					 !((cflag) & CLOCAL))
-> >  
-> > +/*
-> > + * Common device tree parsing helpers
-> > + */
-> > +#ifdef CONFIG_OF_SERIAL
-> > +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf);
-> > +#else
-> > +static inline int of_get_rs485_mode(struct device_node *np,
-> > +				    struct serial_rs485 *rs485conf)
-> > +{
-> > +	return 1;
+> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> index f1751c2..ac0f083 100644
+> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
+> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
+> @@ -246,36 +246,6 @@ static irqreturn_t pca954x_irq_handler(int irq, void *dev_id)
+>  	return handled ? IRQ_HANDLED : IRQ_NONE;
+>  }
+>  
+> -static void pca954x_irq_mask(struct irq_data *idata)
+> -{
+> -	struct pca954x *data = irq_data_get_irq_chip_data(idata);
+> -	unsigned int pos = idata->hwirq;
+> -	unsigned long flags;
+> -
+> -	raw_spin_lock_irqsave(&data->lock, flags);
+> -
+> -	data->irq_mask &= ~BIT(pos);
+> -	if (!data->irq_mask)
+> -		disable_irq(data->client->irq);
+> -
+> -	raw_spin_unlock_irqrestore(&data->lock, flags);
+> -}
+> -
+> -static void pca954x_irq_unmask(struct irq_data *idata)
+> -{
+> -	struct pca954x *data = irq_data_get_irq_chip_data(idata);
+> -	unsigned int pos = idata->hwirq;
+> -	unsigned long flags;
+> -
+> -	raw_spin_lock_irqsave(&data->lock, flags);
+> -
+> -	if (!data->irq_mask)
+> -		enable_irq(data->client->irq);
+> -	data->irq_mask |= BIT(pos);
+> -
+> -	raw_spin_unlock_irqrestore(&data->lock, flags);
+> -}
+> -
+>  static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
+>  {
+>  	if ((type & IRQ_TYPE_SENSE_MASK) != IRQ_TYPE_LEVEL_LOW)
+> @@ -285,8 +255,6 @@ static int pca954x_irq_set_type(struct irq_data *idata, unsigned int type)
+>  
+>  static struct irq_chip pca954x_irq_chip = {
+>  	.name = "i2c-mux-pca954x",
+> -	.irq_mask = pca954x_irq_mask,
+> -	.irq_unmask = pca954x_irq_unmask,
+>  	.irq_set_type = pca954x_irq_set_type,
+>  };
+>  
+> @@ -294,7 +262,7 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
+>  {
+>  	struct pca954x *data = i2c_mux_priv(muxc);
+>  	struct i2c_client *client = data->client;
+> -	int c, err, irq;
+> +	int c, irq;
+>  
+>  	if (!data->chip->has_irq || client->irq <= 0)
+>  		return 0;
+> @@ -314,24 +282,22 @@ static int pca954x_irq_setup(struct i2c_mux_core *muxc)
+>  			handle_simple_irq);
+>  	}
+>  
+> -	err = devm_request_threaded_irq(&client->dev, data->client->irq, NULL,
+> -					pca954x_irq_handler,
+> -					IRQF_ONESHOT | IRQF_SHARED,
+> -					"pca954x", data);
+> -	if (err)
+> -		goto err_req_irq;
+> +	return 0;
+> +}
+>  
+> -	disable_irq(data->client->irq);
+> +static void pca954x_cleanup(struct i2c_mux_core *muxc)
+> +{
+> +	struct pca954x *data = i2c_mux_priv(muxc);
+> +	int c, irq;
+>  
+> -	return 0;
+> -err_req_irq:
+> -	for (c = 0; c < data->chip->nchans; c++) {
+> -		irq = irq_find_mapping(data->irq, c);
+> -		irq_dispose_mapping(irq);
+> +	if (data->irq) {
+> +		for (c = 0; c < data->chip->nchans; c++) {
+> +			irq = irq_find_mapping(data->irq, c);
+> +			irq_dispose_mapping(irq);
+> +		}
+> +		irq_domain_remove(data->irq);
+>  	}
+> -	irq_domain_remove(data->irq);
+> -
+> -	return err;
+> +	i2c_mux_del_adapters(muxc);
+>  }
+>  
+>  /*
+> @@ -417,6 +383,15 @@ static int pca954x_probe(struct i2c_client *client,
+>  			goto fail_del_adapters;
+>  	}
+>  
+> +	if (data->irq) {
+> +		ret = devm_request_threaded_irq(&client->dev, data->client->irq,
+> +						NULL, pca954x_irq_handler,
+> +						IRQF_ONESHOT | IRQF_SHARED,
+> +						"pca954x", data);
+> +		if (ret)
+> +			goto fail_del_adapters;
+> +	}
+> +
+>  	dev_info(&client->dev,
+>  		 "registered %d multiplexed busses for I2C %s %s\n",
+>  		 num, data->chip->muxtype == pca954x_ismux
+> @@ -425,25 +400,15 @@ static int pca954x_probe(struct i2c_client *client,
+>  	return 0;
+>  
+>  fail_del_adapters:
+> -	i2c_mux_del_adapters(muxc);
+> +	pca954x_cleanup(muxc);
+>  	return ret;
+>  }
+>  
+>  static int pca954x_remove(struct i2c_client *client)
+>  {
+>  	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+> -	struct pca954x *data = i2c_mux_priv(muxc);
+> -	int c, irq;
+>  
+> -	if (data->irq) {
+> -		for (c = 0; c < data->chip->nchans; c++) {
+> -			irq = irq_find_mapping(data->irq, c);
+> -			irq_dispose_mapping(irq);
+> -		}
+> -		irq_domain_remove(data->irq);
+> -	}
+> -
+> -	i2c_mux_del_adapters(muxc);
+> +	pca954x_cleanup(muxc);
+>  	return 0;
+>  }
+>  
 > 
-> Again, a real error.
-
-OK, I could agree to return -ENOSYS here. I predict I get complaints
-about this though and people will do:
-
-	ret = of_get_rs485_mode(...);
-	if (ret == -ENOSYS) {
-		/* ignore */
-	} else if (ret < 0) {
-		return ret;
-	}
-
-which one might consider troublesome or even wrong. (See the same
-discussions about 22c403676dbbb7c6f186099527af7f065498ef45 where I
-wanted to keep -ENOSYS.)
- 
-> And why not have a "generic" firmware function for this that defaults to
-> the of_ for that platform type if present?  What's the odds that acpi
-> will need/want this soon anyway?
-
-I don't know about ACPI and all systems I care about are using dt. So
-I'd suggest we stick to dt and switch to "generic" if and when the need
-arises?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
