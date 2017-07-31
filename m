@@ -1,36 +1,229 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Devicetree at Linux Plumbers Conference 2017
-Date: Mon, 31 Jul 2017 18:29:17 +0100
-Message-ID: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
+From: Alexey Klimov <alexey.klimov@arm.com>
+Subject: Re: [PATCH v2 2/3] mailbox: introduce ARM SMC based mailbox
+Date: Mon, 31 Jul 2017 18:34:26 +0100
+Message-ID: <20170731173426.GA2134@arm.com>
+References: <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alex Graf <agraf@suse.de>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org, alexey.klimov@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi folks,
+Hi Andre,
 
-For anyone attending Linux Plumbers Conference this year, I'm trying
-to put together an agenda for a Devicetree miniconference, and I need
-topics. If you have anything you want to discuss or present, please
-add it to the following wiki page and/or email me:
+On Mon, Jul 24, 2017 at 12:23 AM, Andre Przywara <andre.przywara@arm.com> wrote:
+> 
+> This mailbox driver implements a mailbox which signals transmitted data
+> via an ARM smc (secure monitor call) instruction. The mailbox receiver
 
-http://wiki.linuxplumbersconf.org/2017:device_tree
+As far as I can see, this driver also supports transmission via hvc.
+However, almost everywhere here only smc instruction is mentioned.
+Is it okay from your point of view?
 
-I=E2=80=99m interested primarily DT topics, but I=E2=80=99ll also consider =
-topics
-related to embedded platform-support and firmware.
+> is implemented in firmware and can synchronously return data when it
+> returns execution to the non-secure world again.
+> An asynchronous receive path is not implemented.
+> This allows the usage of a mailbox to trigger firmware actions on SoCs
+> which either don't have a separate management processor or on which such
+> a core is not available. A user of this mailbox could be the SCP
+> interface.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
+>  drivers/mailbox/Kconfig           |   8 ++
+>  drivers/mailbox/Makefile          |   2 +
+>  drivers/mailbox/arm-smc-mailbox.c | 155 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 165 insertions(+)
+>  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+> 
+> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> index c5731e5..5664b7f 100644
+> --- a/drivers/mailbox/Kconfig
+> +++ b/drivers/mailbox/Kconfig
+> @@ -170,4 +170,12 @@ config BCM_FLEXRM_MBOX
+>           Mailbox implementation of the Broadcom FlexRM ring manager,
+>           which provides access to various offload engines on Broadcom
+>           SoCs. Say Y here if you want to use the Broadcom FlexRM.
+> +
+> +config ARM_SMC_MBOX
+> +       tristate "Generic ARM smc mailbox"
+> +       depends on OF && HAVE_ARM_SMCCC
+> +       help
+> +         Generic mailbox driver which uses ARM smc calls to call into
+> +         firmware for triggering mailboxes.
+> +
+>  endif
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index d54e412..8ec6869 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -35,3 +35,5 @@ obj-$(CONFIG_BCM_FLEXRM_MBOX) += bcm-flexrm-mailbox.o
+>  obj-$(CONFIG_QCOM_APCS_IPC)    += qcom-apcs-ipc-mailbox.o
+> 
+>  obj-$(CONFIG_TEGRA_HSP_MBOX)   += tegra-hsp.o
+> +
+> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
+> diff --git a/drivers/mailbox/arm-smc-mailbox.c
+> b/drivers/mailbox/arm-smc-mailbox.c
+> new file mode 100644
+> index 0000000..d7b61a7
+> --- /dev/null
+> +++ b/drivers/mailbox/arm-smc-mailbox.c
+> @@ -0,0 +1,155 @@
+> +/*
+> + *  Copyright (C) 2016,2017 ARM Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This device provides a mechanism for emulating a mailbox by using
+> + * smc calls, allowing a "mailbox" consumer to sit in firmware running
+> + * on the same core.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mailbox_controller.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/arm-smccc.h>
+> +
+> +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
+> +
+> +struct arm_smc_chan_data {
+> +       u32 function_id;
+> +       u32 flags;
+> +};
+> +
+> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
+> +{
+> +       struct arm_smc_chan_data *chan_data = link->con_priv;
+> +       u32 function_id = chan_data->function_id;
+> +       struct arm_smccc_res res;
+> +       u32 msg = *(u32 *)data;
+> +
+> +       if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+> +               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
+> +       else
+> +               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
+> +
+> +       mbox_chan_received_data(link, (void *)res.a0);
+> +
+> +       return 0;
+> +}
+> +
+> +/* This mailbox is synchronous, so we are always done. */
+> +static bool arm_smc_last_tx_done(struct mbox_chan *link)
+> +{
+> +       return true;
+> +}
+> +
+> +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
+> +       .send_data      = arm_smc_send_data,
+> +       .last_tx_done   = arm_smc_last_tx_done
+> +};
 
-Topic proposals don=E2=80=99t need to be fully flushed out, but I do need t=
-hem
-quickly. I need to show progress on topics by Thursday this week if it
-is going to be accepted.
+How the usage of timer-based polling tx_done method is justified (since it
+always returns 'true')?
 
-Thanks in advance,
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+At the first glance, will it be more efficient to use TXDONE_BY_ACK here?
+For instance, a controller will say:
+
+	mbox->txdone_poll = false;
+	mbox->txdone_irq = false;
+
+and a client will say:
+
+	cl->tx_block = true;
+	cl->knows_txdone = true,
+
+and the client will tick tx machinery with its mbox_client_txdone() immediately
+after sending of message (since 'This mailbox is synchronous'). Otherwise,
+why framework and client should wait >=1 ms before sending next message?
+
+
+
+> +static int arm_smc_mbox_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       struct mbox_controller *mbox;
+> +       struct arm_smc_chan_data *chan_data;
+> +       const char *method;
+> +       bool use_hvc = false;
+> +       int ret, i;
+> +
+> +       ret = of_property_count_elems_of_size(dev->of_node, "arm,func-ids",
+> +                                             sizeof(u32));
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       if (!of_property_read_string(dev->of_node, "method", &method)) {
+> +               if (!strcmp("hvc", method)) {
+> +                       use_hvc = true;
+> +               } else if (!strcmp("smc", method)) {
+> +                       use_hvc = false;
+> +               } else {
+> +                       dev_warn(dev, "invalid \"method\" property: %s\n",
+> +                                method);
+> +
+> +                       return -EINVAL;
+> +               }
+> +       }
+> +
+> +       mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
+> +       if (!mbox)
+> +               return -ENOMEM;
+> +
+> +       mbox->num_chans = ret;
+> +       mbox->chans = devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
+> +                                  GFP_KERNEL);
+> +       if (!mbox->chans)
+> +               return -ENOMEM;
+> +
+> +       chan_data = devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
+> +                                GFP_KERNEL);
+> +       if (!chan_data)
+> +               return -ENOMEM;
+> +
+> +       for (i = 0; i < mbox->num_chans; i++) {
+> +               u32 function_id;
+> +
+> +               ret = of_property_read_u32_index(dev->of_node,
+> +                                                "arm,func-ids", i,
+> +                                                &function_id);
+> +               if (ret)
+> +                       return ret;
+> +
+> +               chan_data[i].function_id = function_id;
+> +               if (use_hvc)
+> +                       chan_data[i].flags |= ARM_SMC_MBOX_USE_HVC;
+> +               mbox->chans[i].con_priv = &chan_data[i];
+> +       }
+> +
+> +       mbox->txdone_poll = true;
+> +       mbox->txdone_irq = false;
+> +       mbox->txpoll_period = 1;
+> +       mbox->ops = &arm_smc_mbox_chan_ops;
+> +       mbox->dev = dev;
+> +
+> +       ret = mbox_controller_register(mbox);
+> +       if (ret)
+> +               return ret;
+> +
+> +       platform_set_drvdata(pdev, mbox);
+> +       dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
+> +                mbox->num_chans, mbox->num_chans == 1 ? "" : "s");
+
+
+Out of curiosity, did you try to use more than one channel with this driver?
+
+
+[..]
+
+Best regards,
+Alexey
