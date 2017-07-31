@@ -1,229 +1,71 @@
-From: Alexey Klimov <alexey.klimov@arm.com>
-Subject: Re: [PATCH v2 2/3] mailbox: introduce ARM SMC based mailbox
-Date: Mon, 31 Jul 2017 18:34:26 +0100
-Message-ID: <20170731173426.GA2134@arm.com>
-References: <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Mon, 31 Jul 2017 21:17:21 +0200
+Message-ID: <20170731191721.GA1542@katana>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alex Graf <agraf@suse.de>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, maxime.ripard@free-electrons.com, linux-arm-kernel@lists.infradead.org, alexey.klimov@arm.com
+In-Reply-To: <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andre,
 
-On Mon, Jul 24, 2017 at 12:23 AM, Andre Przywara <andre.przywara@arm.com> wrote:
-> 
-> This mailbox driver implements a mailbox which signals transmitted data
-> via an ARM smc (secure monitor call) instruction. The mailbox receiver
-
-As far as I can see, this driver also supports transmission via hvc.
-However, almost everywhere here only smc instruction is mentioned.
-Is it okay from your point of view?
-
-> is implemented in firmware and can synchronously return data when it
-> returns execution to the non-secure world again.
-> An asynchronous receive path is not implemented.
-> This allows the usage of a mailbox to trigger firmware actions on SoCs
-> which either don't have a separate management processor or on which such
-> a core is not available. A user of this mailbox could be the SCP
-> interface.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/mailbox/Kconfig           |   8 ++
->  drivers/mailbox/Makefile          |   2 +
->  drivers/mailbox/arm-smc-mailbox.c | 155 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 165 insertions(+)
->  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
-> 
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index c5731e5..5664b7f 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -170,4 +170,12 @@ config BCM_FLEXRM_MBOX
->           Mailbox implementation of the Broadcom FlexRM ring manager,
->           which provides access to various offload engines on Broadcom
->           SoCs. Say Y here if you want to use the Broadcom FlexRM.
-> +
-> +config ARM_SMC_MBOX
-> +       tristate "Generic ARM smc mailbox"
-> +       depends on OF && HAVE_ARM_SMCCC
-> +       help
-> +         Generic mailbox driver which uses ARM smc calls to call into
-> +         firmware for triggering mailboxes.
-> +
->  endif
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index d54e412..8ec6869 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -35,3 +35,5 @@ obj-$(CONFIG_BCM_FLEXRM_MBOX) += bcm-flexrm-mailbox.o
->  obj-$(CONFIG_QCOM_APCS_IPC)    += qcom-apcs-ipc-mailbox.o
-> 
->  obj-$(CONFIG_TEGRA_HSP_MBOX)   += tegra-hsp.o
-> +
-> +obj-$(CONFIG_ARM_SMC_MBOX)     += arm-smc-mailbox.o
-> diff --git a/drivers/mailbox/arm-smc-mailbox.c
-> b/drivers/mailbox/arm-smc-mailbox.c
-> new file mode 100644
-> index 0000000..d7b61a7
-> --- /dev/null
-> +++ b/drivers/mailbox/arm-smc-mailbox.c
-> @@ -0,0 +1,155 @@
-> +/*
-> + *  Copyright (C) 2016,2017 ARM Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This device provides a mechanism for emulating a mailbox by using
-> + * smc calls, allowing a "mailbox" consumer to sit in firmware running
-> + * on the same core.
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/arm-smccc.h>
-> +
-> +#define ARM_SMC_MBOX_USE_HVC   BIT(0)
-> +
-> +struct arm_smc_chan_data {
-> +       u32 function_id;
-> +       u32 flags;
-> +};
-> +
-> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
-> +{
-> +       struct arm_smc_chan_data *chan_data = link->con_priv;
-> +       u32 function_id = chan_data->function_id;
-> +       struct arm_smccc_res res;
-> +       u32 msg = *(u32 *)data;
-> +
-> +       if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> +               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-> +       else
-> +               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-> +
-> +       mbox_chan_received_data(link, (void *)res.a0);
-> +
-> +       return 0;
-> +}
-> +
-> +/* This mailbox is synchronous, so we are always done. */
-> +static bool arm_smc_last_tx_done(struct mbox_chan *link)
-> +{
-> +       return true;
-> +}
-> +
-> +static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
-> +       .send_data      = arm_smc_send_data,
-> +       .last_tx_done   = arm_smc_last_tx_done
-> +};
-
-How the usage of timer-based polling tx_done method is justified (since it
-always returns 'true')?
-
-At the first glance, will it be more efficient to use TXDONE_BY_ACK here?
-For instance, a controller will say:
-
-	mbox->txdone_poll = false;
-	mbox->txdone_irq = false;
-
-and a client will say:
-
-	cl->tx_block = true;
-	cl->knows_txdone = true,
-
-and the client will tick tx machinery with its mbox_client_txdone() immediately
-after sending of message (since 'This mailbox is synchronous'). Otherwise,
-why framework and client should wait >=1 ms before sending next message?
+--xHFwDpU9dbj6ez1V
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 
+> +This document is just a brief introduction to the I3C protocol and the concepts
+> +it brings on the table. If you need more information, please refer to the MIPI
+> +I3C specification.
 
-> +static int arm_smc_mbox_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
-> +       struct mbox_controller *mbox;
-> +       struct arm_smc_chan_data *chan_data;
-> +       const char *method;
-> +       bool use_hvc = false;
-> +       int ret, i;
+I wish I could.
+
 > +
-> +       ret = of_property_count_elems_of_size(dev->of_node, "arm,func-ids",
-> +                                             sizeof(u32));
-> +       if (ret < 0)
-> +               return ret;
+> +Introduction
+> +============
 > +
-> +       if (!of_property_read_string(dev->of_node, "method", &method)) {
-> +               if (!strcmp("hvc", method)) {
-> +                       use_hvc = true;
-> +               } else if (!strcmp("smc", method)) {
-> +                       use_hvc = false;
-> +               } else {
-> +                       dev_warn(dev, "invalid \"method\" property: %s\n",
-> +                                method);
+> +The I3C (I-Cube-C) is a MIPI standardized protocol designed to overcome I2C
+
+"Eye-three-See", according to:
+http://eecatalog.com/sensors/2017/07/05/after-35-years-of-i2c-i3c-improves-capability-and-performance/
+
+> +Backward compatibility with I2C devices
+> +=======================================
 > +
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-> +       if (!mbox)
-> +               return -ENOMEM;
-> +
-> +       mbox->num_chans = ret;
-> +       mbox->chans = devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
-> +                                  GFP_KERNEL);
-> +       if (!mbox->chans)
-> +               return -ENOMEM;
-> +
-> +       chan_data = devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
-> +                                GFP_KERNEL);
-> +       if (!chan_data)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < mbox->num_chans; i++) {
-> +               u32 function_id;
-> +
-> +               ret = of_property_read_u32_index(dev->of_node,
-> +                                                "arm,func-ids", i,
-> +                                                &function_id);
-> +               if (ret)
-> +                       return ret;
-> +
-> +               chan_data[i].function_id = function_id;
-> +               if (use_hvc)
-> +                       chan_data[i].flags |= ARM_SMC_MBOX_USE_HVC;
-> +               mbox->chans[i].con_priv = &chan_data[i];
-> +       }
-> +
-> +       mbox->txdone_poll = true;
-> +       mbox->txdone_irq = false;
-> +       mbox->txpoll_period = 1;
-> +       mbox->ops = &arm_smc_mbox_chan_ops;
-> +       mbox->dev = dev;
-> +
-> +       ret = mbox_controller_register(mbox);
-> +       if (ret)
-> +               return ret;
-> +
-> +       platform_set_drvdata(pdev, mbox);
-> +       dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
-> +                mbox->num_chans, mbox->num_chans == 1 ? "" : "s");
+> +The I3C protocol has been designed to be backward compatible with I2C devices.
+> +This backward compatibility allows one to connect a mix of I2C and I3C devices
+> +on the same bus, though, in order to be really efficient, I2C devices should
+> +be equipped with 50 ns spike filters.
+
+I just found a slide which says I3C does not support clock stretching.
+That should be mentioned here, too.
 
 
-Out of curiosity, did you try to use more than one channel with this driver?
+--xHFwDpU9dbj6ez1V
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-[..]
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAll/gj0ACgkQFA3kzBSg
+KbZJzRAAldnFRC1tvImhgxmo3kHYW0c/2ICSWaj1rJd7sbypvsSY99wI5RtRwi1J
+odmdukQQvdbfKMhIDv+XmV/cIlffSL9iQR+8/EUbjR0gnvFEM7JMZdmR+70qiUaT
+h7hgfi+okPXmDr80ZBLTGsAje2cG5u7iiAFsvL1BOMrCc7ldNnY4o2L1f8rgL8OM
+79dRV8MBGkBpyvs0H0ZiYtuOIoxYTL4X4zzl6RKlBmO9+n9pRMjjRD2oI2nlB7ZR
+dFnHP7HRxykQAWoh9PJ62guyf1i2BH4ea990v/+3U5ugowZRWvtkrE7AQSa1V0To
+F2AeApIBFaA1kszTZdqQc0Of8P0DYypPK+ko6qKYbpN1bX83ast1976NA27gOJ9i
+ZdblFygMG2GZ7eTYD6pjPBHC6uZCyVl7jfXP5tFivpOkZA7RqzfeZidD+3l/4m/B
+noC4XAznWSikUqpiRdJRUzX225/JV08K10EK4HRof58veQL4kgPCstFXoElp42PG
+wFQwTYvqJJtELpcMSnjJPLfuCcHq6HQvuoCHqtTktpg/xXDvPb9vNyYupU5EA/C4
+Q8QllvzUL1cEOoGCNtzYdNPuk9KfGfzRO4cdiSy6hNDWGgmt0xUdyD7lrzAOHk9V
+pIk88FzLUixTuNYRqMkmRybw187dkCiEdl0aVQNQyiJESikqX0I=
+=Ll99
+-----END PGP SIGNATURE-----
 
-Best regards,
-Alexey
+--xHFwDpU9dbj6ez1V--
