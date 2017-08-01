@@ -1,39 +1,55 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] ARM64: dts: meson-gxbb: p20x: add card regulator settle times
-Date: Tue,  1 Aug 2017 17:22:24 +0200
-Message-ID: <20170801152224.15754-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 1/4] remoteproc/davinci: Switch to platform_get_resource_byname()
+Date: Tue, 1 Aug 2017 10:48:41 -0500
+Message-ID: <20170801154844.24662-2-s-anna@ti.com>
+References: <20170801154844.24662-1-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170801154844.24662-1-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Robert Tivy <rtivy-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Changing the card voltage on the p200 is not instantaneous, especially
-when switching from 3.3v to 1.8v.
+The davinci remoteproc driver currently uses the platform_get_resource()
+API for retrieving the IOMEM resources. Switch this function to use the
+platform_get_resource_byname() API instead in preparation for adding the
+DT support so that the binding can be agnostic of the IOMEM resource
+order.
 
-I take at least 70ms for the regulator to go from 3.3v to 1.8v. Add
-margin to that to make sure we don't upset the sdcard during the voltage
-switch
-
-Fixes: ef8d2ffedf18 ("ARM64: dts: meson-gxbb: add MMC support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+v2: No changes
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 9603a635c7af..d3b194c20b72 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -84,6 +84,9 @@
- 		/* Based on P200 schematics, signal CARD_1.8V/3.3V_CTR */
- 		states = <1800000 0
- 			  3300000 1>;
-+
-+		regulator-settling-time-up-us = <10000>;
-+		regulator-settling-time-down-us = <150000>;
- 	};
+ drivers/remoteproc/da8xx_remoteproc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/remoteproc/da8xx_remoteproc.c b/drivers/remoteproc/da8xx_remoteproc.c
+index 99539cec1329..280b66d4f622 100644
+--- a/drivers/remoteproc/da8xx_remoteproc.c
++++ b/drivers/remoteproc/da8xx_remoteproc.c
+@@ -184,12 +184,14 @@ static int da8xx_rproc_probe(struct platform_device *pdev)
+ 		return -EINVAL;
+ 	}
  
- 	vddio_boot: regulator-vddio_boot {
+-	bootreg_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	bootreg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   "host1cfg");
+ 	bootreg = devm_ioremap_resource(dev, bootreg_res);
+ 	if (IS_ERR(bootreg))
+ 		return PTR_ERR(bootreg);
+ 
+-	chipsig_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	chipsig_res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						   "chipsig");
+ 	chipsig = devm_ioremap_resource(dev, chipsig_res);
+ 	if (IS_ERR(chipsig))
+ 		return PTR_ERR(chipsig);
 -- 
-2.9.4
+2.13.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
