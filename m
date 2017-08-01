@@ -1,188 +1,69 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 1/6] dt-bindings: ti, edma: Add 66AK2G specific information
-Date: Tue, 1 Aug 2017 15:50:03 +0300
-Message-ID: <31fe2206-675b-5425-412f-0033017f6511@ti.com>
-References: <20170801044119.16201-1-lokeshvutla@ti.com>
- <20170801044119.16201-2-lokeshvutla@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Tue, 1 Aug 2017 15:11:44 +0200
+Message-ID: <CAK8P3a0SH4kWcvXK+_iPt9LWuNnpjr+omp+ZpyTLjT=H602n+w@mail.gmail.com>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+ <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
+ <20170731231509.77d1fba4@bbrezillon> <CAK8P3a0p=m-8U7TN8usG8HO-QNu_S7rSfykNzu4gm+MOaM2Kzg@mail.gmail.com>
+ <20170801142936.5df48702@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170801044119.16201-2-lokeshvutla@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170801142936.5df48702@bbrezillon>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ku
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Aug 1, 2017 at 2:29 PM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
+> On Tue, 1 Aug 2017 14:00:05 +0200
+> Arnd Bergmann <arnd@arndb.de> wrote:
 
+>> Another argument for a combined bus would be devices that
+>> can be attached to either i2c and i3c, depending on the host
+>> capabilities.
+>
+> Hm, that's already the case, isn't it? And you'll anyway need to
+> develop specific code for both cases in the I2C/I3C device driver
+> because I2C and I3C transfers are different. So I don't see how it
+> would help to have a single bus here.
+>
+>> We have discussed whether i2c and spi should be
+>> merged into a single bus_type in the past, as a lot of devices
+>> can be attached to either of them.
+>
+> Oh, really? What's the rational behind that? I mean, I2C and SPI are
+> quite different, and even if some devices provide both interfaces, I
+> don't see why we should merge them. But you probably had good reasons
+> to do so.
 
-On 2017-08-01 07:41, Lokesh Vutla wrote:
-> Update ti,edma binding documentation to reflect 66AK2G specific
-> properties.
->
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  Documentation/devicetree/bindings/dma/ti-edma.txt | 95 +++++++++++++++++=
-++++--
->  1 file changed, 90 insertions(+), 5 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Document=
-ation/devicetree/bindings/dma/ti-edma.txt
-> index 18090e7226b4..05fe2931d025 100644
-> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
-> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
-> @@ -9,7 +9,12 @@ execute the actual DMA tansfer.
->  eDMA3 Channel Controller
->
->  Required properties:
-> -- compatible:	"ti,edma3-tpcc" for the channel controller(s)
-> +--------------------
-> +- compatible:	Should be:
-> +		- "ti,edma3-tpcc" for the channel controller(s) on OMAP,
-> +		  AM33xx and AM43xx SoCs.
-> +		- "ti,k2g-edma3-tpcc", "ti,edma3-tpcc" for the
-> +		  channel controller(s) on 66AK2G.
->  - #dma-cells:	Should be set to <2>. The first number is the DMA request
->  		number and the second is the TC the channel is serviced on.
->  - reg:		Memory map of eDMA CC
-> @@ -19,8 +24,19 @@ Required properties:
->  - ti,tptcs:	List of TPTCs associated with the eDMA in the following form:
->  		<&tptc_phandle TC_priority_number>. The highest priority is 0.
->
-> +SoC-specific Required properties:
-> +--------------------------------
-> +The following are mandatory properties for OMAP, AM33xx and AM43xx SoCs =
-only:
-> +- ti,hwmods:	Name of the hwmods associated to the eDMA CC.
-> +
-> +The following are mandatory properties for 66AK2G SoCs only:
-> +- power-domains:Should contain a phandle to a PM domain provider node
-> +		and an args specifier containing the device id
-> +		value. This property is as per the binding,
-> +		Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +
->  Optional properties:
-> -- ti,hwmods:	Name of the hwmods associated to the eDMA CC
-> +-------------------
->  - ti,edma-memcpy-channels: List of channels allocated to be used for mem=
-cpy, iow
->  		these channels will be SW triggered channels. See example.
->  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be us=
-ed by
-> @@ -31,17 +47,34 @@ Optional properties:
->  eDMA3 Transfer Controller
->
->  Required properties:
-> -- compatible:	"ti,edma3-tptc" for the transfer controller(s)
-> +--------------------
-> +- compatible:	Should be:
-> +		- "ti,edma3-tptc" for the transfer controller(s) on OMAP,
-> +		  AM33xx and AM43xx SoCs.
-> +		- "ti,k2g-edma3-tptc", "ti,edma3-tptc" for the
-> +		  transfer controller(s) on 66AK2G.
->  - reg:		Memory map of eDMA TC
->  - interrupts:	Interrupt number for TCerrint.
->
-> +SoC-specific Required properties:
-> +--------------------------------
-> +The following are mandatory properties for OMAP, AM33xx and AM43xx SoCs =
-only:
-> +- ti,hwmods:	Name of the hwmods associated to the eDMA TC.
-> +
-> +The following are mandatory properties for 66AK2G SoCs only:
-> +- power-domains:Should contain a phandle to a PM domain provider node
-> +		and an args specifier containing the device id
-> +		value. This property is as per the binding,
-> +		Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-> +
->  Optional properties:
-> -- ti,hwmods:	Name of the hwmods associated to the given eDMA TC
-> +-------------------
->  - interrupt-names: "edma3_tcerrint"
->
->  ------------------------------------------------------------------------=
-------
-> -Example:
-> +Examples:
+Well, we never changed it, so at least the work required to merge
+the two was considered too much to justify any advantages.
 
-Do we really need to expand the examples to have identical set, but with =
+The main problem with having one driver that can operate on
+different bus types (i2c plus either spi or i3c) is the handling for
+the various combinations in configurations (e.g. I2C=m, SPI=y).
 
-power-domains?
+The easy case is having a module_init function that registers two
+device drivers, but that requires having a Kconfig dependency
+on both subsystems, and you can't use the module_i2c_driver()
+helper.
 
->
-> +1.
->  edma: edma@49000000 {
->  	compatible =3D "ti,edma3-tpcc";
->  	ti,hwmods =3D "tpcc";
-> @@ -109,6 +142,58 @@ mcasp0: mcasp@48038000 {
->  	dma-names =3D "tx", "rx";
->  };
->
-> +2.
-> +edma1: edma@02728000 {
-> +	compatible =3D "ti,k2g-edma3-tpcc", "ti,edma3-tpcc";
-> +	reg =3D	<0x02728000 0x8000>;
-> +	reg-names =3D "edma3_cc";
-> +	interrupts =3D <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
-> +			<GIC_SPI 219 IRQ_TYPE_EDGE_RISING>,
-> +			<GIC_SPI 220 IRQ_TYPE_EDGE_RISING>;
-> +	interrupt-names =3D "edma3_ccint", "emda3_mperr",
-> +			  "edma3_ccerrint";
-> +	dma-requests =3D <64>;
-> +	#dma-cells =3D <2>;
-> +
-> +	ti,tptcs =3D <&edma1_tptc0 7>, <&edma1_tptc1 0>;
-> +
-> +	/*
-> +	 * memcpy is disabled, can be enabled with:
-> +	 * ti,edma-memcpy-channels =3D <12 13 14 15>;
-> +	 * for example.
-> +	 */
-> +
-> +	power-domains =3D <&k2g_pds 0x4f>;
-> +};
-> +
-> +edma1_tptc0: tptc@027b0000 {
-> +	compatible =3D "ti,k2g-edma3-tptc", "ti,edma3-tptc";
-> +	reg =3D	<0x027b0000 0x400>;
-> +	power-domains =3D <&k2g_pds 0x4f>;
-> +};
-> +
-> +edma1_tptc1: tptc@027b8000 {
-> +	compatible =3D "ti, k2g-edma3-tptc", "ti,edma3-tptc";
-> +	reg =3D	<0x027b8000 0x400>;
-> +	power-domains =3D <&k2g_pds 0x4f>;
-> +};
-> +
-> +mmc0: mmc@23000000 {
-> +	compatible =3D "ti,k2g-hsmmc", "ti,omap4-hsmmc";
-> +	reg =3D <0x23000000 0x400>;
-> +	interrupts =3D <GIC_SPI 96 IRQ_TYPE_EDGE_RISING>;
-> +	dmas =3D <&edma1 24 0>, <&edma1 25 0>;
-> +	dma-names =3D "tx", "rx";
-> +	bus-width =3D <4>;
-> +	ti,needs-special-reset;
-> +	no-1-8-v;
-> +	max-frequency =3D <96000000>;
-> +	power-domains =3D <&k2g_pds 0xb>;
-> +	clocks =3D <&k2g_clks 0xb 1>, <&k2g_clks 0xb 2>;
-> +	clock-names =3D "fck", "mmchsdb_fck";
-> +	status =3D "disabled";
-> +};
-> +
->  ------------------------------------------------------------------------=
-------
->  DEPRECATED binding, new DTS files must use the ti,edma3-tpcc/ti,edma3-tp=
-tc
->  binding.
->
+The second way is to have a number of #ifdef and complex
+Kconfig dependencies for the driver to only register the
+device_driver objects for the buses that are enabled. This
+is also doable, but everyone gets the logic wrong the first time.
 
-- P=E9ter
+What we end up doing to work around this for other drivers is
+to have the base driver in one library module, and separate
+modules for the bus-specific portions, which can then
+use module_i2c_driver again. There are many instances
+for combined i2c/spi drivers in the kernel, and it works fine,
+but it adds a fair bit of overhead compared to having one
+driver that would e.g. use regmap to abstract the differences
+in the probe() function and otherwise keeps everything in
+one place.
+
+       Arnd
