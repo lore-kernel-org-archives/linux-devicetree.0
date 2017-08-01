@@ -1,101 +1,31 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Tue, 1 Aug 2017 20:08:49 +0200
-Message-ID: <bfb3d541-856b-0233-dd85-72512788939f@tronnes.org>
-References: <1501355870-13960-1-git-send-email-david@lechnology.com>
- <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
- <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
- <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: dts: keystone-k2g: Add support for eDMA and MMC
+Date: Tue, 1 Aug 2017 11:10:15 -0700
+Message-ID: <adb66c80-3a33-3fcf-b50e-555df2c62eb7@oracle.com>
+References: <20170801044119.16201-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170801044119.16201-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-KGNjOiBEYW5pZWwgVmV0dGVyKQoKCkRlbiAwMS4wOC4yMDE3IDE4LjUxLCBza3JldiBEYXZpZCBM
-ZWNobmVyOgo+IE9uIDA3LzMwLzIwMTcgMTI6MTQgUE0sIE5vcmFsZiBUcsO4bm5lcyB3cm90ZToK
-Pj4KPj4gRGVuIDI5LjA3LjIwMTcgMjEuNDAsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4+PiBPbiAw
-Ny8yOS8yMDE3IDAyOjE3IFBNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+Pj4+IFRoZSBnb2FsIG9m
-IHRoaXMgc2VyaWVzIGlzIHRvIGdldCB0aGUgYnVpbHQtaW4gTENEIG9mIHRoZSBMRUdPIAo+Pj4+
-IE1JTkRTVE9STVMgRVYzCj4+Pj4gd29ya2luZy4gQnV0LCBtb3N0IG9mIHRoZSBjb250ZW50IGhl
-cmUgaXMgYnVpbGRpbmcgdXAgdGhlIAo+Pj4+IGluZnJhc3RydWN0dXJlIHRvIGRvCj4+Pj4gdGhh
-dC4KPj4+Pgo+Pj4KPj4+IFNvbWUgZ2VuZXJhbCBjb21tZW50cy9xdWVzdGlvbnM6Cj4+Pgo+Pj4g
-SSBoYXZlIG5vdGljZWQgdGhhdCBEUk0gZG9lc24ndCByZWFsbHkgaGF2ZSBzdXBwb3J0IGZvciBt
-b25vY2hyb21lIAo+Pj4gZGlzcGxheXMuIEknbSBndWVzc2luZyB0aGF0IGlzIGJlY2F1c2Ugbm8g
-b25lIHJlYWxseSB1c2VzIHRoZW0gYW55bW9yZT8KPj4+Cj4+Cj4+IFRoZSByZXBhcGVyIGRyaXZl
-ciB3YXMgdGhlIGZpcnN0IG1vbm9jaHJvbWUgZHJtIGRyaXZlciBhbmQgSSBjaG9zZSB0bwo+PiBw
-cmVzZW50IGl0IHRvIHVzZXJzcGFjZSBhcyBYUkdCODg4OCBhbmQgY29udmVydCBpdCB0byBtb25v
-Y2hyb21lLgo+PiBUaGUgcmVhc29uIGZvciB0aGlzIGlzIHRoYXQgZXZlcnl0aGluZywgbGlicmFy
-aWVzLCBhcHBzLCBwbHltb3V0aCAoYm9vdAo+PiBzcGxhc2gsIG5vIHJnYjU2NSkgc3VwcG9ydHMg
-aXQuIEkgZGlkbid0IHNlZSBhbnkgcG9pbnQgaW4gYWRkaW5nIGEgbmV3Cj4+IG1vbm9jaHJvbWUg
-ZHJtIGZvcm1hdCB0aGF0IGRpZG4ndCBoYXZlLCBvciBwcm9iYWJseSB3b3VsZG4ndCBnZXQKPj4g
-dXNlcnNwYWNlIHN1cHBvcnQgKGJ5IGxpYnJhcmllcyBhdCBsZWFzdCkuIFRoZSBhcHBsaWNhdGlv
-biBvZiBjb3Vyc2UKPj4gbmVlZHMgdG8ga25vdyB0aGlzIHRvIGdldCBhIGdvb2QgcmVzdWx0Lgo+
-Pgo+PiB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KCkgZG9lcyB0aGUgY29udmVyc2lvbjoKPj4g
-aHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0vZHJtLW1pc2MvY29tbWl0L2RyaXZlcnMv
-Z3B1L2RybS90aW55ZHJtP2lkPTM3OWVhOWExYTU5YTVhMzJjOGRiNmYxNjRlODBhM2ZkMDBjYjM3
-ODEgCj4+Cj4+Cj4+PiBUaGUgTEVHTyBFVjMgZGlzcGxheSBpcyBqdXN0IGFuIExDRCAobm90IHRo
-ZSBiYWNrbGl0IGtpbmQpLiBJdCBoYXMgCj4+PiB0d28gbW9kZXMgb2Ygb3BlcmF0aW9uLiBJdCBj
-YW4gdG8gMmJicCBncmF5c2NhbGUgb3IgaXQgY2FuIGRvIDFicHAgCj4+PiBtb25vY2hyb21lLiBU
-aGUgZ3JheXNjYWxlIGlzbid0IHRoZSBiZXN0IChsb29rcyBzcGxvdGNoeSBpbiBwbGFjZXMpLCAK
-Pj4+IHNvIGl0IHdvdWxkIGJlIG5pY2UgdG8gYmUgYWJsZSB0byBjaG9vc2UgYmV0d2VlbiB0aGVz
-ZSB0d28gbW9kZXMuIAo+Pj4gSG93IHdvdWxkIEkgaW1wbGVtZW50IHNvbWV0aGluZyBsaWtlIHRo
-YXQ/Cj4+Pgo+Pgo+PiBEbyB5b3UgZXhwZWN0IGFueW9uZSB0byB1c2UgZ3JheXNjYWxlIGlmIGl0
-IGRvZXNuJ3QgbG9vayBnb29kPwo+PiBNYXliZSBiZXR0ZXIgdG8gYWRkIGl0IGxhdGVyIGlmIHRo
-ZXJlJ3MgYSBkZW1hbmQgZm9yIGl0Lgo+Cj4gSSBkb24ndCBleHBlY3QgbWFueSBwZW9wbGUgdG8g
-dXNlIGl0IGF0IGFsbC4gVGhlIHBlb3BsZSB0aGF0IGRvIHdpbGwgCj4gYmUgaGFja2VycyBsaWtl
-IG1lIHRoYXQgd2FudCB0byBzZWUgd2hhdCBpdCBpcyBjYXBhYmxlIG9mLCBzbyBJIHRoaW5rIAo+
-IEkgd2lsbCBrZWVwIGl0IGdyYXlzY2FsZSBieSBkZWZhdWx0Lgo+CgpJdCBsb29rcyBsaWtlIHRo
-ZSBiZXN0IHdheSB0byBzYXRpc2Z5IHlvdXIgbmVlZHMgaXMgdG8gYWRkIHNwZWNpZmljIGZvcm1h
-dHMuCgpWaWRlbyBmb3IgTGludXggaGF2ZSB0aGVzZToKCmluY2x1ZGUvdWFwaS9saW51eC92aWRl
-b2RldjIuaAoKLyogR3JleSBmb3JtYXRzICovCiNkZWZpbmUgVjRMMl9QSVhfRk1UX0dSRVkgICAg
-djRsMl9mb3VyY2MoJ0cnLCAnUicsICdFJywgJ1knKSAvKiAgOCAKR3JleXNjYWxlICAgICAqLwoj
-ZGVmaW5lIFY0TDJfUElYX0ZNVF9ZNCAgICAgIHY0bDJfZm91cmNjKCdZJywgJzAnLCAnNCcsICcg
-JykgLyogIDQgCkdyZXlzY2FsZSAgICAgKi8KI2RlZmluZSBWNEwyX1BJWF9GTVRfWTYgICAgICB2
-NGwyX2ZvdXJjYygnWScsICcwJywgJzYnLCAnICcpIC8qICA2IApHcmV5c2NhbGUgICAgICovCiNk
-ZWZpbmUgVjRMMl9QSVhfRk1UX1kxMCAgICAgdjRsMl9mb3VyY2MoJ1knLCAnMScsICcwJywgJyAn
-KSAvKiAxMCAKR3JleXNjYWxlICAgICAqLwojZGVmaW5lIFY0TDJfUElYX0ZNVF9ZMTIgICAgIHY0
-bDJfZm91cmNjKCdZJywgJzEnLCAnMicsICcgJykgLyogMTIgCkdyZXlzY2FsZSAgICAgKi8KI2Rl
-ZmluZSBWNEwyX1BJWF9GTVRfWTE2ICAgICB2NGwyX2ZvdXJjYygnWScsICcxJywgJzYnLCAnICcp
-IC8qIDE2IApHcmV5c2NhbGUgICAgICovCiNkZWZpbmUgVjRMMl9QSVhfRk1UX1kxNl9CRSAgdjRs
-Ml9mb3VyY2NfYmUoJ1knLCAnMScsICc2JywgJyAnKSAvKiAxNiAgCkdyZXlzY2FsZSBCRSAgKi8K
-CgpNYXliZSB3ZSBjYW4gYWRkIGZvcm1hdHMgbGlrZSB0aGVzZToKCmluY2x1ZGUvdWFwaS9kcm0v
-ZHJtX2ZvdXJjYy5oCgojZGVmaW5lIERSTV9GT1JNQVRfTU9OTyAgICAgICAgZm91cmNjX2NvZGUo
-J1knLCAnMCcsICcxJywgJyAnKSAvKiBbMF0gCk1vbm9jaHJvbWUgKi8Kb3IKI2RlZmluZSBEUk1f
-Rk9STUFUX1kxICAgICAgICBmb3VyY2NfY29kZSgnWScsICcwJywgJzEnLCAnICcpIC8qIFswXSAK
-TW9ub2Nocm9tZSAqLwoKI2RlZmluZSBEUk1fRk9STUFUX1kyICAgICAgICBmb3VyY2NfY29kZSgn
-WScsICcwJywgJzInLCAnICcpIC8qIFsxOjBdIApHcmV5c2NhbGUgKi8KCkRhbmllbCwgd2hhdCBk
-byB5b3UgdGhpbms/Cgo+Pgo+Pj4gQWxzbywgaG93IGNhbiBJIGluZGljYXRlIHRvIHVzZXJzcGFj
-ZSB0aGF0IHRoaXMgZGlzcGxheSByZWFsbHkgaXMgCj4+PiBtb25vY2hyb21lL2dyYXlzY2FsZSBz
-aW5jZSB0aGUgcmVwb3J0ZWQgY29sb3IgZGVwdGggMTZicHA/Cj4+Pgo+Pgo+PiBUaGVyZSBpc24n
-dCB1bmxlc3Mgd2UgYWRkIGZvcm1hdHMgZm9yIGl0Lgo+PiBTaW5jZSB0aGlzIGRpc3BsYXkgaXMg
-aW4gYSBMZWdvIHBpZWNlLCBkb2Vzbid0IGl0IGhhdmUgY3VzdG9tIHVzZXJzcGFjZQo+PiB0aGF0
-IGFscmVhZHkga25vdyBpdCdzIG1vbm9jaHJvbWU/Cj4KPiBUaGUgb2ZmaWNpYWwgTEVHTyBzb2Z0
-d2FyZSBpcyBsaWtlIHRoaXMsIHllcy4gQnV0IEkgYW0gd29ya2luZyBvbiBhIAo+IHByb2plY3Qg
-dGhhdCBzdXBwb3J0cyBvdGhlciBMRUdPIGNvbXBhdGlibGUgZGV2aWNlcyB0aGF0IGhhdmUgY29s
-b3IgCj4gc2NyZWVucywgc28gdGhlIHNhbWUgc29mdHdhcmUgbmVlZHMgdG8gYmUgYWJsZSB0byBk
-ZXRlY3QgYXQgcnVudGltZSAKPiB3aGljaCB0eXBlIG9mIHNjcmVlbiBpdCBpcyB1c2luZy4gQ3Vy
-cmVudGx5IEkgaGF2ZSBhIHBsYWluIGZiZGV2IAo+IGRyaXZlciB0aGF0IHByb3ZpZGVzIEZCX1ZJ
-U1VBTF9NT05PMTAgZm9yIHRoZSBFVjMgZGlzcGxheSBhbmQgc28gdGhlIAo+IHNvZnR3YXJlIGtu
-b3dzIHdoZW4gaXQgaGFzIGEgbW9ub2Nocm9tZSBzY3JlZW4gYW5kIHdoZW4gaXQgZG9lc24ndC4g
-Cj4gQnV0IHNpbmNlIHBsYWluIGZiZGV2IGRyaXZlcnMgY2FuJ3QgYmUgYWNjZXB0ZWQgaW50byBt
-YWlubGluZSwgSSBuZWVkIAo+IHRvIGZpbmQgYSBkaWZmZXJlbnQgd2F5IHRvIGRldGVjdCB3aGF0
-IHR5cGUgb2Ygc2NyZWVuIHRoaXMgaXMgc28gdGhhdCAKPiBteSBncmFwaGljcyBsaWJyYXJ5IGNh
-biB0cmVhdCBpdCBkaWZmZXJlbnRseS4KPgo+CgpZb3UgY2FuIHRlbGwgdXNlcnNwYWNlIGFib3V0
-IHRoZSBwcmVmZXJyZWQgYml0ZGVwdGg6CmRybS0+bW9kZV9jb25maWcucHJlZmVycmVkX2RlcHRo
-CgoKTm9yYWxmLgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+
+On 7/31/2017 9:41 PM, Lokesh Vutla wrote:
+> This series adds DT nodes and documentation for eDMA and MMC IPs on
+> Keystone 66AK2G SoC. Also enable the required configs in keystone_defconfig.
+> 
+> This series depends on Keerthy's gpio node patches on 66AK2G:
+Am waiting for Keerthy to send refresh series. Thanks for
+note about the deps.
+
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
