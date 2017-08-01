@@ -1,88 +1,63 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: h3: Enable EMAC with external PHY on
- NanoPi M1 Plus
-Date: Tue, 1 Aug 2017 15:55:08 +0800
-Message-ID: <CAGb2v66r1kpbzKN8uE5pb9mqzWMwTjn-N2ufZGdUU2LJ7FvbeA@mail.gmail.com>
-References: <20170801050115.21497-1-luaraneda@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 1/3] dt-bindings: net: bluetooth: Add broadcom-bluetooth
+Date: Tue,  1 Aug 2017 10:38:22 +0200
+Message-ID: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170801050115.21497-1-luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 1, 2017 at 1:01 PM, Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> The Nanopi M1 Plus uses an external Realtek RTL8211E PHY in RGMII mode,
-> enabled by a GPIO-based regulator.
->
-> Signed-off-by: Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 31 +++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> index 8ddd1b2cc..54727990c 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> @@ -45,6 +45,20 @@
->  / {
->         model = "FriendlyArm NanoPi M1 Plus";
->         compatible = "friendlyarm,nanopi-m1-plus", "allwinner,sun8i-h3";
-> +
-> +       aliases {
-> +               ethernet0 = &emac;
-> +       };
-> +
-> +       reg_gmac_3v3: gmac-3v3 {
-> +               compatible = "regulator-fixed";
-> +               regulator-name = "gmac-3v3";
-> +               regulator-min-microvolt = <3300000>;
-> +               regulator-max-microvolt = <3300000>;
-> +               startup-delay-us = <100000>;
-> +               enable-active-high;
-> +               gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-> +       };
->  };
->
->  &ehci1 {
-> @@ -55,6 +69,23 @@
->         status = "okay";
->  };
->
-> +&emac {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&emac_rgmii_pins>;
-> +       phy-supply = <&reg_gmac_3v3>;
-> +       phy-handle = <&ext_rgmii_phy>;
-> +       phy-mode = "rgmii";
-> +       allwinner,leds-active-low;
+Add binding document for serial bluetooth chips using
+Broadcom protocol.
 
-This property is for the internal PHY. You should not be using it
-with an external PHY.
+Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+v2: dt-bindings as separate patch
+    rebase on upcoming pi3 dts changes
 
-> +       status = "okay";
-> +};
-> +
-> +&mdio {
-> +       ext_rgmii_phy: ethernet-phy@1 {
-> +               compatible = "ethernet-phy-ieee802.3-c22";
-> +               reg = <0>;
+ .../devicetree/bindings/net/broadcom-bluetooth.txt | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
 
-Value in reg should match the address part of the node name.
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+new file mode 100644
+index 0000000..c51ea1b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -0,0 +1,29 @@
++Broadcom Bluetooth Chips
++---------------------
++
++This documents the binding structure and common properties for serial
++attached Broadcom devices.
++
++Serial attached Broadcom devices shall be a child node of the host UART
++device the slave device is attached to.
++
++Required properties:
++
++ - compatible: should contain one of the following:
++   * "brcm,bcm43438-bt"
++
++Optional properties:
++
++ - max-speed: see Documentation/devicetree/bindings/serial/slave-device.txt
++
++Example:
++
++&uart2 {
++       pinctrl-names = "default";
++       pinctrl-0 = <&uart2_pins>;
++
++       bluetooth {
++               compatible = "brcm,bcm43438-bt";
++               max-speed = <921600>;
++       };
++};
+-- 
+1.9.1
 
-ChenYu
-
-> +       };
-> +};
-> +
->  &ohci1 {
->         status = "okay";
->  };
-> --
-> 2.13.3
->
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
