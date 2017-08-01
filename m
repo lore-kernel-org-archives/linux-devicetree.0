@@ -1,86 +1,98 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v3 1/2] gpio: davinci: Add keystone-k2g compatible
-Date: Tue, 1 Aug 2017 09:30:33 -0500
-Message-ID: <20799238-a72b-c6e7-5898-3de23f91a9ed@ti.com>
-References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
- <5aa0d273-8e05-a5ff-7931-b9a94acade36@ti.com>
- <8021c424-460c-def4-3a67-ed760997193d@ti.com>
- <2eeaeea5-9476-8631-8680-7db3322151bf@ti.com>
- <da92fe60-d70b-6a37-6b88-2ac95dd67b6a@ti.com>
- <90337754-8670-6df7-5421-7100e31755b1@ti.com>
- <65ab0098-ef1b-3bec-1d2a-768e478fa413@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCHv4 1/3] ARM:dt-bindings Intel FPGA Video and Image Processing Suite
+Date: Tue, 01 Aug 2017 17:32:54 +0300
+Message-ID: <13319407.idzLhy4OWn@avalon>
+References: <1501554694-3378-1-git-send-email-hean.loong.ong@intel.com> <1501554694-3378-2-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <65ab0098-ef1b-3bec-1d2a-768e478fa413@ti.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>, Keerthy <j-keerthy@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, ssantosh@kernel.org, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, nsekhar@ti.com, t-kristo@ti.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501554694-3378-2-git-send-email-hean.loong.ong@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org
+Cc: "Hean Loong, Ong" <hean.loong.ong@intel.com>, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ong@freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2017 01:12 AM, Vignesh R wrote:
-> 
-> 
-> On Monday 31 July 2017 07:14 PM, Keerthy wrote:
->>
->>
->> On Wednesday 26 July 2017 07:50 PM, Suman Anna wrote:
->>> On 07/26/2017 08:36 AM, Keerthy wrote:
->>>>
->>>> On Wednesday 26 July 2017 06:57 PM, Franklin S Cooper Jr wrote:
->>>>>
->>>>>
->>>>> On 07/26/2017 08:00 AM, Suman Anna wrote:
->>>>>> Hi Keerthy,
->>>>>>
->>>>>> On 07/26/2017 01:45 AM, Keerthy wrote:
->>>>>>> The patch adds keystone-k2g compatible, specific properties and
->>>>>>> an example.
->>>>>
-> [...]
->>>>>>
->>>>>
->>>>> What about power-domain property?
->>>
->>> The correct name is "power-domains".
->>>
->>>> Driver has no pm_runtime implemented yet.
->>>
->>> True, not yet, but this is in general a required property on K2G SoCs to
->>> automatically enable clocks through runtime_pm. Clock properties on K2G
->>> nodes should only be truly required if a driver is using clk API
->>> (ideally to control optional clocks or for adjusting clock frequencies).
->>> When the gpio-davinci driver gets updated to use pm_runtime, the clock
->>> properties will be rendered obsolete for K2G.
->>>
->>> Rob,
->>> Any suggestions on how we need to handle this? Should we be adding the
->>> property now or later when we adapt the driver for runtime_pm? This
->>> would be a common theme for K2G nodes that are reusing Davinci drivers.
->>>
->>> My take on this would be to add the property now, and mark the clock
->>> properties obsolete when the driver gets converted.
->>
-> 
-> I don't think SoC wide properties are put into device specific binding
-> documentation, for example pinctrl bindings are not put into device
-> documentation.
+Hi Hean Loong,
 
-I wouldn't compare this to pinctrl bindings exactly but more similar to
-clocks or the ti,hwmods on OMAP/AM platforms. I see lot of other
-bindings documenting the power-domains property just as well.
+Thank you for the patch.
 
-regards
-Suman
+On Tuesday 01 Aug 2017 10:31:32 Hean Loong, Ong wrote:
+> From: Ong Hean Loong <hean.loong.ong@intel.com>
+> 
+> Device tree binding for Intel FPGA Video and Image
+> Processing Suite. The binding involved would be generated
+> from the Altera (Intel) Qsys system. The bindings would
+> set the max width, max height, buts per pixel and memory
+> port width. The device tree binding only supports the Intel
+> Arria10 devkit and its variants. Vendor name retained as
+> altr.
+> 
+> Signed-off-by: Ong, Hean Loong <hean.loong.ong@intel.com>
+> ---
+>  .../devicetree/bindings/display/altr,vip-fb2.txt   | 39 ++++++++++++++++++
+>  1 file changed, 39 insertions(+
+>  create mode 100644
+>  Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt new file mode
+> 100644
+> index 0000000..c4338d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/altr,vip-fb2.txt
+> @@ -0,0 +1,39 @@
+> +Intel Video and Image Processing(VIP) Frame Buffer II bindings
+> +
+> +Supported hardware: Arria 10 and above with display port IP
+> +
+> +The hardware associated with this device tree is a SoC FPGA. Where there is
+> an ARM controller +and a FPGA device. The ARM controller would host the
+> Linux OS while the FPGA device runs on its +individual IP firmware.
 
-> 
->> Rob,
->>
->> Any comments on this?
->>
-> 
-> [...]
-> 
+DT bindings should not be OS-specific, you shouldn't mention Linux here.
 
+> In the
+> Intel VIP Frame Buffer II the ARM controller would be +driving data from
+> the Linux OS to the FPGA device programmed with the Frame Buffer II IP +to
+> render pixels to be streamed to the Display Port connector.
+> +
+> +The Frame Buffer II device is a simple frame buffer device. The device
+> contains the display +properties and the bridge or connector register. The
+> output for this device currently +is a dedicated to a single Display Port.
+> Currently the max resolution supported is 1280 x 720 at +60Hz.
+> +
+> +More information the FPGA video IP component can be acquired from
+> +https://www.altera.com/content/dam/altera-www/global/en_US/pdfs/literature/
+> ug/ug_vip.pdf +
+> +
+> +New bindings:
+> +=============
+> +Required properties:
+> +----------------------------
+> +- compatible: "altr,vip-frame-buffer-2.0"
+> +- reg: Physical base address and length of the framebuffer controller's
+> +  registers.
+> +- altr,max-width: The width of the framebuffer in pixels.
+> +- altr,max-height: The height of the framebuffer in pixels.
+
+The properties hint that those are the maximum values, but the descriptions 
+don't match. One of the two needs to be fixed.
+
+> +- altr,mem-port-width = the bus width of the avalon master port on the
+> frame reader
+> +
+> +Example:
+> +----------------------------
+> +       dp_0_frame_buf: display-controller@100000280 {
+> +                       compatible = "altr,vip-frame-buffer-2.0";
+> +                       reg = <0x00000001 0x00000280 0x00000040>;
+> +                       altr,max-width = <1280>;
+> +                       altr,max-height = <720>;
+> +                       altr,mem-port-width = <128>;
+> +       };
+
+-- 
+Regards,
+
+Laurent Pinchart
