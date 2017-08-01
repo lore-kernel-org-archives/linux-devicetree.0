@@ -1,47 +1,32 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/2] clk: meson: expose clk ids
-Date: Tue, 1 Aug 2017 14:00:22 +0200
-Message-ID: <6494a76f-7282-cc39-c02a-0f1b2a8d83ff@baylibre.com>
-References: <20170731113832.26490-1-jbrunet@baylibre.com>
- <CAK8P3a28nb8QsJC8V4+SJM0gz70BDOv8jAczRWoCF+HfvkwJfA@mail.gmail.com>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH 3/3][resend] omapfb: use of_graph_get_remote_endpoint()
+Date: Tue, 01 Aug 2017 14:05:19 +0200
+Message-ID: <1579920.LhMhG7WMmK@amdc3058>
+References: <87eft6y6hm.wl%kuninori.morimoto.gx@renesas.com>
+        <CGME20170724012941epcas3p36aa84fa7eb60b9d190a6aa828a1aa549@epcas3p3.samsung.com>
+        <87a83uy6es.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a28nb8QsJC8V4+SJM0gz70BDOv8jAczRWoCF+HfvkwJfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Amlogic Meson SoC support" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <87a83uy6es.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2017 04:05 PM, Arnd Bergmann wrote:
-> On Mon, Jul 31, 2017 at 1:38 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
->> In previous cycles, concerns have been raised about the way clocks are
->> exposed for the meson clock controller, only when validated and required
->> in DT.
->>
->> Instead, this patchset expose all the known clocks which may be needed in
->> DT later on. The clocks left out are internal clocks which should never be
->> used directly in DT. These are mostly internal muxes and dividers of
->> composite clocks.
->>
->> While this should reduce the patch flow on the related header files, It
->> won't stop it completely. There are still many clocks we don't know about
->> yet. We tend discover a few in every cycle.
->>
->> This patchset depends on these fixes [0] to avoid issues when adding new
->> clk ids.
->>
->> [0]: https://lkml.kernel.org/r/20170727161755.10393-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+On Monday, July 24, 2017 01:29:37 AM Kuninori Morimoto wrote:
 > 
-> Thanks a lot!
+> From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 > 
->  Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Now, we can use of_graph_get_remote_endpoint(). Let's use it.
 > 
+> Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-Applied to clk-meson's next/headers with arnd's ack.
+Patch queued for 4.14, thanks.
+
+Best regards,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
