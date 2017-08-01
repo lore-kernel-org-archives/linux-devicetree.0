@@ -1,7 +1,7 @@
 From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v2 06/16] dmaengine: bcm-sba-raid: Remove reqs_free_count from sba_device
-Date: Tue,  1 Aug 2017 16:07:50 +0530
-Message-ID: <1501583880-32072-7-git-send-email-anup.patel@broadcom.com>
+Subject: [PATCH v2 08/16] dmaengine: bcm-sba-raid: Increase number of free sba_request
+Date: Tue,  1 Aug 2017 16:07:52 +0530
+Message-ID: <1501583880-32072-9-git-send-email-anup.patel@broadcom.com>
 References: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501583880-32072-1-git-send-email-anup.patel@broadcom.com>
@@ -10,54 +10,106 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The reqs_free_count member of sba_device is not used anywhere
-hence no point in tracking number of free sba_request.
+Currently, we have only 1024 free sba_request created
+by sba_prealloc_channel_resources(). This is too low
+and the prep_xxx() callbacks start failing more often
+at time of RAID array setup over NVMe disks.
+
+This patch sets number of free sba_request created by
+sba_prealloc_channel_resources() to be:
+<number_of_mailbox_channels> x 8192
+
+Due to above, we will have sufficient number of free
+sba_request and prep_xxx() callbacks failing is very
+unlikely.
 
 Signed-off-by: Anup Patel <anup.patel@broadcom.com>
 ---
- drivers/dma/bcm-sba-raid.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ drivers/dma/bcm-sba-raid.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/dma/bcm-sba-raid.c b/drivers/dma/bcm-sba-raid.c
-index 7d08d4e..59ef443 100644
+index cd6e3cd..af6cc8e 100644
 --- a/drivers/dma/bcm-sba-raid.c
 +++ b/drivers/dma/bcm-sba-raid.c
-@@ -162,7 +162,6 @@ struct sba_device {
- 	struct list_head reqs_completed_list;
- 	struct list_head reqs_aborted_list;
- 	struct list_head reqs_free_list;
--	int reqs_free_count;
- };
+@@ -83,6 +83,8 @@
+ #define SBA_CMD_WRITE_BUFFER				0xc
+ #define SBA_CMD_GALOIS					0xe
  
- /* ====== Command helper routines ===== */
-@@ -207,10 +206,8 @@ static struct sba_request *sba_alloc_request(struct sba_device *sba)
- 	spin_lock_irqsave(&sba->reqs_lock, flags);
- 	req = list_first_entry_or_null(&sba->reqs_free_list,
- 				       struct sba_request, node);
--	if (req) {
-+	if (req)
- 		list_move_tail(&req->node, &sba->reqs_alloc_list);
--		sba->reqs_free_count--;
--	}
- 	spin_unlock_irqrestore(&sba->reqs_lock, flags);
- 	if (!req)
- 		return NULL;
-@@ -276,7 +273,6 @@ static void _sba_free_request(struct sba_device *sba,
- 	list_move_tail(&req->node, &sba->reqs_free_list);
- 	if (list_empty(&sba->reqs_active_list))
- 		sba->reqs_fence = false;
--	sba->reqs_free_count++;
- }
++#define SBA_MAX_REQ_PER_MBOX_CHANNEL			8192
++
+ /* Driver helper macros */
+ #define to_sba_request(tx)		\
+ 	container_of(tx, struct sba_request, tx)
+@@ -1622,6 +1624,13 @@ static int sba_probe(struct platform_device *pdev)
+ 	sba->dev = &pdev->dev;
+ 	platform_set_drvdata(pdev, sba);
  
- static void sba_received_request(struct sba_request *req)
-@@ -1523,8 +1519,6 @@ static int sba_prealloc_channel_resources(struct sba_device *sba)
- 		list_add_tail(&req->node, &sba->reqs_free_list);
++	/* Number of channels equals number of mailbox channels */
++	ret = of_count_phandle_with_args(pdev->dev.of_node,
++					 "mboxes", "#mbox-cells");
++	if (ret <= 0)
++		return -ENODEV;
++	mchans_count = ret;
++
+ 	/* Determine SBA version from DT compatible string */
+ 	if (of_device_is_compatible(sba->dev->of_node, "brcm,iproc-sba"))
+ 		sba->ver = SBA_VER_1;
+@@ -1634,14 +1643,12 @@ static int sba_probe(struct platform_device *pdev)
+ 	/* Derived Configuration parameters */
+ 	switch (sba->ver) {
+ 	case SBA_VER_1:
+-		sba->max_req = 1024;
+ 		sba->hw_buf_size = 4096;
+ 		sba->hw_resp_size = 8;
+ 		sba->max_pq_coefs = 6;
+ 		sba->max_pq_srcs = 6;
+ 		break;
+ 	case SBA_VER_2:
+-		sba->max_req = 1024;
+ 		sba->hw_buf_size = 4096;
+ 		sba->hw_resp_size = 8;
+ 		sba->max_pq_coefs = 30;
+@@ -1655,6 +1662,7 @@ static int sba_probe(struct platform_device *pdev)
+ 	default:
+ 		return -EINVAL;
  	}
++	sba->max_req = SBA_MAX_REQ_PER_MBOX_CHANNEL * mchans_count;
+ 	sba->max_cmd_per_req = sba->max_pq_srcs + 3;
+ 	sba->max_xor_srcs = sba->max_cmd_per_req - 1;
+ 	sba->max_resp_pool_size = sba->max_req * sba->hw_resp_size;
+@@ -1668,22 +1676,14 @@ static int sba_probe(struct platform_device *pdev)
+ 	sba->client.knows_txdone	= false;
+ 	sba->client.tx_tout		= 0;
  
--	sba->reqs_free_count = sba->max_req;
+-	/* Number of channels equals number of mailbox channels */
+-	ret = of_count_phandle_with_args(pdev->dev.of_node,
+-					 "mboxes", "#mbox-cells");
+-	if (ret <= 0)
+-		return -ENODEV;
+-	mchans_count = ret;
+-	sba->mchans_count = 0;
+-	atomic_set(&sba->mchans_current, 0);
 -
- 	return 0;
+ 	/* Allocate mailbox channel array */
+-	sba->mchans = devm_kcalloc(&pdev->dev, sba->mchans_count,
++	sba->mchans = devm_kcalloc(&pdev->dev, mchans_count,
+ 				   sizeof(*sba->mchans), GFP_KERNEL);
+ 	if (!sba->mchans)
+ 		return -ENOMEM;
  
- fail_free_cmds_pool:
+ 	/* Request mailbox channels */
++	sba->mchans_count = 0;
+ 	for (i = 0; i < mchans_count; i++) {
+ 		sba->mchans[i] = mbox_request_channel(&sba->client, i);
+ 		if (IS_ERR(sba->mchans[i])) {
+@@ -1692,6 +1692,7 @@ static int sba_probe(struct platform_device *pdev)
+ 		}
+ 		sba->mchans_count++;
+ 	}
++	atomic_set(&sba->mchans_current, 0);
+ 
+ 	/* Find-out underlying mailbox device */
+ 	ret = of_parse_phandle_with_args(pdev->dev.of_node,
 -- 
 2.7.4
