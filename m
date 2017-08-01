@@ -1,62 +1,32 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v4 0/3] Add support for the s6e63j0x03 panel on Rinato
- board
-Date: Tue, 01 Aug 2017 09:26:05 +0900
-Message-ID: <90041545-2bce-52cc-d926-606f76d81f0f@samsung.com>
-References: <CGME20170713022056epcas5p21ece2860cb2cce0b4381cf98988496f9@epcas5p2.samsung.com>
- <1499912443-3671-1-git-send-email-hoegeun.kwon@samsung.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] net-next: stmmac: dwmac-sun8i: fix of_table.cocci
+ warnings
+Date: Mon, 31 Jul 2017 17:56:17 -0700 (PDT)
+Message-ID: <20170731.175617.874012707589855041.davem@davemloft.net>
+References: <alpine.DEB.2.20.1707291752210.2069@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1499912443-3671-1-git-send-email-hoegeun.kwon@samsung.com>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1707291752210.2069@hadrien>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: julia.lawall-L2FTfq7BK8M@public.gmane.org
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RGVhciBUaGllcnJ5LAoKQ291bGQgeW91IHBsZWFzZSBjaGVjayB0aGVzZSBwYXRjaGVzLgoKQmVz
-dCByZWdhcmRzLApIb2VnZXVuCgoKT24gMDcvMTMvMjAxNyAxMToyMCBBTSwgSG9lZ2V1biBLd29u
-IHdyb3RlOgo+IEhpIEFuZHJ6ZWosCj4KPiBUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3Lgo+Cj4g
-VGhlIHB1cnBvc2Ugb2YgdGhpcyBwYXRjaCBpcyBhZGQgc3VwcG9ydCBmb3IgczZlNjNqMHgwMyBB
-TU9MRUQgcGFuZWwKPiBvbiB0aGUgcmluYXRvIGJvYXJkKFNhbXN1bmcgR2FsYXh5IEdlYXIgMiku
-Cj4KPiBDaGFuZ2VzIGZvciBWNDoKPiAtIEFkZGVkIFJldmlld2VkLWJ5OiBBbmRyemVqIEhhamRh
-IDxhLmhhamRhQHNhbXN1bmcuY29tPiAoMi8zIHBhdGNoKS4KPiAtIEZpeGVkIHRoZSBzdHlsZSBv
-ZiBtYWNybyBmdW5jdGlvbi4KPgo+IENoYW5nZXMgZm9yIFYzOgo+IC0gQXBwbGllZCBwYXRjaCAn
-QVJNOiBkdHM6IGV4eW5vczogRml4IHRoZSBhY3RpdmUgb2YgcmVzZXQgZ3Bpb3MgZnJvbSByaW5h
-dG8gZHRzJyAodjIgMy80KQo+IC0gUmVtb3ZlIHRoZSB1bm5lY2Vzc2FyeSBkZWZpbmUgKCdNSU5f
-QlJJR0hUTkVTUycpCj4gLSBSZW1vdmVkIGV4cGxpY2l0IGNhc3RpbmcuCj4gLSBSZW1vdmVkIHZp
-b2xhdGlvbiBvZiBrZXJuZWwgY29kaW5nIHN0eWxlLgo+Cj4gQ2hhbmdlcyBmb3IgVjI6Cj4gLSBB
-ZGRlZCB0aGUgaW50ZXJmYWNlIGluZm8gaW4gYmluZGluZyBkb2N1bWVudC4KPiAtIEFkZGVkIFJl
-dmlld2VkLWJ5OiBBbmRyemVqIEhhamRhIDxhLmhhamRhQHNhbXN1bmcuY29tPiAoMS8zIHBhdGNo
-KS4KPiAtIEFkZGVkIEFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiAoMS8z
-IHBhdGNoKS4KPiAtIEZpeGVkIHRoZSB0cmlzdGF0ZSBvZiBjb25maWcgZnJvbSB2aWRlbyBtb2Rl
-IHRvIGNvbW1hbmQgbW9kZS4KPiAtIEZpeGVkIHRoZSByZXNldCBncGlvcyBmcm9tIGFjdGl2ZSBo
-aWdoIHRvIGxvdyBmcm9tIHJpbmF0byBkdHMuCj4gLSBGaXhlZCBhIGxvdCBvZiB0aGluZ3MgaW4g
-cGFuZWwgZHJpdmVyLCByZWZsZWN0IEFuZHJ6ZWoncyByZXZpZXcuCj4KPiBCZXN0IHJlZ2FyZHMs
-Cj4gSG9lZ2V1bgo+Cj4gSG9lZ2V1biBLd29uICgzKToKPiAgICBkdC1iaW5kaW5nczogQWRkIHN1
-cHBvcnQgZm9yIHNhbXN1bmcgczZlNjNqMHgwMyBwYW5lbCBiaW5kaW5nCj4gICAgZHJtL3BhbmVs
-OiBBZGQgc3VwcG9ydCBmb3IgczZlNjNqMHgwMyBwYW5lbCBkcml2ZXIKPiAgICBBUk06IGR0czog
-ZXh5bm9zOiBSZW1vdmUgdGhlIGRpc3BsYXktdGltaW5nIGFuZCBkZWxheSBmcm9tIHJpbmF0byBk
-dHMKPgo+ICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M2oweDAzLnR4
-dCAgfCAgMjQgKwo+ICAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zMzI1MC1yaW5hdG8uZHRzICAg
-ICAgICAgICAgfCAgMjIgLQo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAg
-ICAgICAgICAgICAgICAgfCAgIDcgKwo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxl
-ICAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3Bh
-bmVsLXNhbXN1bmctczZlNjNqMHgwMy5jICAgfCA1MzIgKysrKysrKysrKysrKysrKysrKysrCj4g
-ICA1IGZpbGVzIGNoYW5nZWQsIDU2NCBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlvbnMoLSkKPiAg
-IGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0Cj4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
-ZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNhbXN1bmctczZlNjNqMHgwMy5jCj4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Date: Sat, 29 Jul 2017 17:54:10 +0200 (CEST)
+
+> Make sure (of/i2c/platform)_device_id tables are NULL terminated
+> 
+> Generated by: scripts/coccinelle/misc/of_table.cocci
+> 
+> Fixes: d5dbe1976d52 ("net-next: stmmac: dwmac-sun8i: choose internal PHY via compatible")
+> CC: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Fengguang Wu <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+
+This change seems to be no longer relevant.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
