@@ -1,12 +1,15 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 00/13] Allwinner H3 DE2 basical support
-Date: Tue,  1 Aug 2017 21:12:51 +0800
-Message-ID: <20170801131304.7741-1-icenowy@aosc.io>
+Subject: [PATCH 01/13] dt-bindings: update the binding for
+ Allwinner H3 DE2 support
+Date: Tue,  1 Aug 2017 21:12:52 +0800
+Message-ID: <20170801131304.7741-2-icenowy@aosc.io>
+References: <20170801131304.7741-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB4H4QHGAKGQEQ3ENIKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB5P4QHGAKGQEOEJVKLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170801131304.7741-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,55 +20,91 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner H3 features a "Display Engine 2.0", which needs some support
-to be present in the DRM driver.
+Allwinner H3 features a "Display Engine 2.0".
 
-This patchset is now a basical version, which dropped some features I
-used to submitted:
-- TVE support (not so high priority now)
-- Multi-pipeline support (also not so high priority now due to no TVE)
+Add device tree bindings for the following parts:
+- H3 TCONs
+- H3 Mixers
+- H3 Display engine
 
-The last 6 patches are only used for testing this patchset, and they're
-going to be sent by Jernej Skrabec after this patchset is applied.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ .../bindings/display/sunxi/sun4i-drm.txt           | 25 ++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
-Icenowy Zheng (9):
-  dt-bindings: update the binding for Allwinner H3 DE2 support
-  drm: sun4i: add support for H3 mixers
-  drm: sun4i: add support for H3's TCON
-  drm: sun4i: add compatible for H3 display engine
-  clk: sunxi-ng: allow CLK_DE to set CLK_PLL_DE for H3
-  clk: sunxi-ng: export CLK_PLL_DE for H3
-  ARM: sun8i: h3: add display engine pipeline barebone
-  [NOT FOR REVIEW NOW] ARM: sun8i: h3: enable DesignWare HDMI controller
-  [NOT FOR REVIEW NOW] ARM: sun8i: h3: enable HDMI output on Orange Pi
-    PC
-
-Jernej Skrabec (4):
-  [NOT FOR REVIEW NOW] drm: bridge: Enable polling hpd event in dw_hdmi
-  [NOT FOR REVIEW NOW] drm: bridge: Add a pre_init function for the
-    dw_hdmi driver
-  [NOT FOR REVIEW NOW] clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3
-    HDMI clock
-  [NOT FOR REVIEW NOW] drm: sun4i: Add a glue for the DesignWare HDMI
-    controller in H3
-
- .../bindings/display/sunxi/sun4i-drm.txt           |  25 +-
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  16 +
- arch/arm/boot/dts/sun8i-h3.dtsi                    | 205 +++++++++
- drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   4 +-
- drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |   9 +-
- drivers/gpu/drm/sun4i/Kconfig                      |   9 +
- drivers/gpu/drm/sun4i/Makefile                     |   1 +
- drivers/gpu/drm/sun4i/sun4i_drv.c                  |   2 +
- drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  43 +-
- drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   1 +
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 462 +++++++++++++++++++++
- drivers/gpu/drm/sun4i/sun8i_mixer.c                |  18 +
- include/drm/bridge/dw_hdmi.h                       |   2 +
- include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
- 15 files changed, 781 insertions(+), 21 deletions(-)
- create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index 2ee6ff0ef98e..92512953943e 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -87,18 +87,17 @@ Required properties:
+    * allwinner,sun6i-a31-tcon
+    * allwinner,sun6i-a31s-tcon
+    * allwinner,sun8i-a33-tcon
++   * allwinner,sun8i-h3-tcon
+    * allwinner,sun8i-v3s-tcon
+  - reg: base address and size of memory-mapped region
+  - interrupts: interrupt associated to this IP
+  - clocks: phandles to the clocks feeding the TCON. Three are needed:
+    - 'ahb': the interface clocks
+-   - 'tcon-ch0': The clock driving the TCON channel 0
+  - resets: phandles to the reset controllers driving the encoder
+    - "lcd": the reset line for the TCON channel 0
+ 
+  - clock-names: the clock names mentioned above
+  - reset-names: the reset names mentioned above
+- - clock-output-names: Name of the pixel clock created
+ 
+ - ports: A ports node with endpoint definitions as defined in
+   Documentation/devicetree/bindings/media/video-interfaces.txt. The
+@@ -112,7 +111,23 @@ Required properties:
+   channel the endpoint is associated to. If that property is not
+   present, the endpoint number will be used as the channel number.
+ 
+-On SoCs other than the A33 and V3s, there is one more clock required:
++For the following compatibles:
++   * allwinner,sun5i-a13-tcon
++   * allwinner,sun6i-a31-tcon
++   * allwinner,sun6i-a31s-tcon
++   * allwinner,sun8i-a33-tcon
++   * allwinner,sun8i-v3s-tcon
++there is one more clock and one more property required:
++ - clocks:
++   - 'tcon-ch0': The clock driving the TCON channel 0
++ - clock-output-names: Name of the pixel clock created
++
++For the following compatibles:
++   * allwinner,sun5i-a13-tcon
++   * allwinner,sun6i-a31-tcon
++   * allwinner,sun6i-a31s-tcon
++   * allwinner,sun8i-h3-tcon
++there is one more clock required:
+    - 'tcon-ch1': The clock driving the TCON channel 1
+ 
+ DRC
+@@ -207,6 +222,8 @@ supported.
+ Required properties:
+   - compatible: value must be one of:
+     * allwinner,sun8i-v3s-de2-mixer
++    * allwinner,sun8i-h3-de2-mixer0
++    * allwinner,sun8i-h3-de2-mixer1
+   - reg: base address and size of the memory-mapped region.
+   - clocks: phandles to the clocks feeding the mixer
+     * bus: the mixer interface clock
+@@ -218,7 +235,6 @@ Required properties:
+   Documentation/devicetree/bindings/media/video-interfaces.txt. The
+   first port should be the input endpoints, the second one the output
+ 
+-
+ Display Engine Pipeline
+ -----------------------
+ 
+@@ -233,6 +249,7 @@ Required properties:
+     * allwinner,sun6i-a31-display-engine
+     * allwinner,sun6i-a31s-display-engine
+     * allwinner,sun8i-a33-display-engine
++    * allwinner,sun8i-h3-display-engine
+     * allwinner,sun8i-v3s-display-engine
+ 
+   - allwinner,pipelines: list of phandle to the display engine
 -- 
 2.13.0
