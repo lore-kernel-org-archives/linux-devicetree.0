@@ -1,46 +1,73 @@
-From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH 6/6] ARM: configs: keystone: Enable MMC and regulators
-Date: Tue, 1 Aug 2017 10:11:19 +0530
-Message-ID: <20170801044119.16201-7-lokeshvutla@ti.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 4/6] ARM: dts: keystone-k2g: add MMC0 and MMC1 nodes
+Date: Tue, 1 Aug 2017 10:11:17 +0530
+Message-ID: <20170801044119.16201-5-lokeshvutla@ti.com>
 References: <20170801044119.16201-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170801044119.16201-1-lokeshvutla@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Device Tree Mailing List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Keerthy <j-keerthy@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170801044119.16201-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the TI OMAP HSMMC and fixed regulator support
-for keystone platforms.
+Add device tree nodes for MMC0 and MMC1 pesent
+on 66AK2G device.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+[nsekhar-l0cyMroinI0@public.gmane.org: fix clock-names for mmc1 node]
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/configs/keystone_defconfig | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/keystone-k2g.dtsi | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm/configs/keystone_defconfig b/arch/arm/configs/keystone_defconfig
-index d47ea43d097e..3397e91a5db1 100644
---- a/arch/arm/configs/keystone_defconfig
-+++ b/arch/arm/configs/keystone_defconfig
-@@ -156,6 +156,8 @@ CONFIG_POWER_RESET_KEYSTONE=y
- # CONFIG_HWMON is not set
- CONFIG_WATCHDOG=y
- CONFIG_DAVINCI_WATCHDOG=y
-+CONFIG_REGULATOR=y
-+CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_USB=y
- CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
- CONFIG_USB_MON=y
-@@ -164,6 +166,8 @@ CONFIG_USB_STORAGE=y
- CONFIG_USB_DWC3=y
- CONFIG_NOP_USB_XCEIV=y
- CONFIG_KEYSTONE_USB_PHY=y
-+CONFIG_MMC=y
-+CONFIG_MMC_OMAP_HS=y
- CONFIG_NEW_LEDS=y
- CONFIG_LEDS_CLASS=y
- CONFIG_LEDS_GPIO=y
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 3f1fd3df76d5..9ecea2c27d76 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -276,5 +276,37 @@
+ 			reg =	<0x027b8000 0x400>;
+ 			power-domains = <&k2g_pds 0x4f>;
+ 		};
++
++		mmc0: mmc@23000000 {
++			compatible = "ti,k2g-hsmmc", "ti,omap4-hsmmc";
++			reg = <0x23000000 0x400>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_EDGE_RISING>;
++			dmas = <&edma1 24 0>, <&edma1 25 0>;
++			dma-names = "tx", "rx";
++			bus-width = <4>;
++			ti,needs-special-reset;
++			no-1-8-v;
++			max-frequency = <96000000>;
++			power-domains = <&k2g_pds 0xb>;
++			clocks = <&k2g_clks 0xb 1>, <&k2g_clks 0xb 2>;
++			clock-names = "fck", "mmchsdb_fck";
++			status = "disabled";
++		};
++
++		mmc1: mmc@23100000 {
++			compatible = "ti,k2g-hsmmc", "ti,omap4-hsmmc";
++			reg = <0x23100000 0x400>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_EDGE_RISING>;
++			dmas = <&edma1 26 0>, <&edma1 27 0>;
++			dma-names = "tx", "rx";
++			bus-width = <8>;
++			ti,needs-special-reset;
++			ti,non-removable;
++			max-frequency = <96000000>;
++			power-domains = <&k2g_pds 0xc>;
++			clocks = <&k2g_clks 0xc 1>, <&k2g_clks 0xc 2>;
++			clock-names = "fck", "mmchsdb_fck";
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
