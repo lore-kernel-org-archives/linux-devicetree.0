@@ -1,208 +1,133 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [PATCH 3/3] pinctrl: add mt2712 pinctrl driver
-Date: Tue, 1 Aug 2017 17:14:05 +0800
-Message-ID: <1501578845.32089.18.camel@mtksdaap41>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1501489333-23145-4-git-send-email-zhiyong.tao@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1501489333-23145-4-git-send-email-zhiyong.tao@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: robh+dt@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+From: s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH 5/5] Documentation: bindings: Add ti,lmp92001
+Date: Tue,  1 Aug 2017 16:17:53 +0700
+Message-ID: <1501579073-4764-1-git-send-email-s.abhisit@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Abhisit Sangjan <s.abhisit-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
+---
+ .../devicetree/bindings/gpio/gpio-lmp92001.txt     | 29 ++++++++++++++++++
+ .../bindings/iio/adc/ti-lmp92001-adc.txt           | 21 +++++++++++++
+ .../bindings/iio/dac/ti-lmp92001-dac.txt           | 35 ++++++++++++++++++++++
+ 3 files changed, 85 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
 
-Hi Zhiyong,
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+new file mode 100644
+index 0000000..62267ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-lmp92001.txt
+@@ -0,0 +1,29 @@
++* Texas Instruments' LMP92001 GPIOs
++
++Required properties:
++ - compatible: Must be set to "ti,lmp92001-gpio".
++ - reg: i2c chip address for the device.
++ - gpio-controller: Marks the device node as a gpio controller.
++ - #gpio-cells : Should be two.  The first cell is the pin number and the
++  second cell is used to specify the gpio polarity:
++        0 = Active high
++        1 = Active low
++- ti,lmp92001-gpio-dir: bit mask for direction and drive logic default. Since
++  the direction and the internal pull-down are shared register and similar to
++  open-collector drive:
++        0 = [O]utput and also meaning drive it to low
++        1 = [I]nput and also meaning open, to drive it to high is required to
++        have an external resistor
++
++Example:
++lmp92001@20 {
++        compatible = "ti,lmp92001";
++        reg = <0x20>;
++
++        lmp92001_gpio: lmp92001-gpio {
++                compatible = "ti,lmp92001-gpio";
++                gpio-controller;
++                #gpio-cells = <2>;
++                ti,lmp92001-gpio-dir = /bits/ 8 <0xff>;
++        };
++};
+\ No newline at end of file
+diff --git a/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+new file mode 100644
+index 0000000..34d7809
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ti-lmp92001-adc.txt
+@@ -0,0 +1,21 @@
++* Texas Instruments' LMP92001 ADCs
++
++Required properties:
++ - compatible: Must be set to "ti,lmp92001-adc".
++ - reg: i2c chip address for the device.
++ - ti,lmp92001-adc-mode: adc operation, either continuous or single-shot.
++ - ti,lmp92001-adc-mask: bit mask for which channel is enable.
++        0 = Off
++        1 = On
++
++Example:
++lmp92001@20 {
++        compatible = "ti,lmp92001";
++        reg = <0x20>;
++
++        lmp92001-adc {
++                compatible = "ti,lmp92001-adc";
++                ti,lmp92001-adc-mode = "continuous";
++                ti,lmp92001-adc-mask = <0x00000079>;
++        };
++};
+\ No newline at end of file
+diff --git a/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
+new file mode 100644
+index 0000000..f058cc0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/dac/ti-lmp92001-dac.txt
+@@ -0,0 +1,35 @@
++* Texas Instruments' LMP92001 DACs
++
++Required properties:
++ - compatible: Must be set to "ti,lmp92001-dac".
++ - reg: i2c chip address for the device.
++ - ti,lmp92001-dac-hiz: hi-impedance control,
++        1 = Forces all OUT[1:12] outputs to hi-z, 0 = normal
++ - ti,lmp92001-dac-outx: 
++        Cy = 0, 1 = will force associated OUTx outputs to VDD
++        Cy = 0, 0 = will force associated OUTx outputs to GND
++ - ti,lmp92001-dac-gang: What group of Cy is governed to.
++        -----------------------------------------
++        |  Cy   | CDAC:GANG = 0 | CDAC:GANG = 1 |
++        -----------------------------------------
++        |  C1   |   OUT[1:4]    |    OUT[1:3]   |
++        -----------------------------------------
++        |  C2   |   OUT[5:6]    |    OUT[4:6]   |
++        -----------------------------------------
++        |  C3   |   OUT[7:8]    |    OUT[7:9]   |
++        -----------------------------------------
++        |  C4   |   OUT[9:12]   |    OUT[10:12] |
++        ----------------------------------------- 
++
++Example:
++lmp92001@20 {
++        compatible = "ti,lmp92001";
++        reg = <0x20>;
++
++        lmp92001-dac {
++                compatible = "ti,lmp92001-dac";
++                ti,lmp92001-dac-hiz  = /bits/ 8 <0>;
++                ti,lmp92001-dac-outx = /bits/ 8 <0>;
++                ti,lmp92001-dac-gang = /bits/ 8 <0>;
++        };
++};
+-- 
+2.7.4
 
-
-
-On Mon, 2017-07-31 at 16:22 +0800, Zhiyong Tao wrote:
-<...>
-> 3)Add "spec_dir_set" and "spec_dir_get" in "mtk_pinctrl_devdata".
-> 4)Change "spec_dir_set" and add "spec_dir_get" in "pinctrl-mt2701.c"
->   and "pinctrl-mtk-common.c".
-
-I think these deserve another patch.
-Please also explain why we need this.
-
-
-> 5)Change "port_mask" from "7" to "6" for EINT.
-
-I'm assuming this is a bug fix for mt2701?
-If yes, this should be a separate patch.
-
-> 6)Remove generic pull config condition in "mtk_pconf_set_pull_select".
-> 7)Change "arg" to "MTK_PUPD_SET_R1R0_00" of "mtk_pconf_set_pull_select".
-
-Why we need to change arg?
-
-
-> 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> ---
->  drivers/pinctrl/mediatek/Kconfig              |    8 +
->  drivers/pinctrl/mediatek/Makefile             |    1 +
->  drivers/pinctrl/mediatek/pinctrl-mt2701.c     |   21 +-
->  drivers/pinctrl/mediatek/pinctrl-mt2712.c     |  670 +++++++++
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.c |   16 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-common.h |   44 +-
->  drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h | 1858 +++++++++++++++++++++++++
->  7 files changed, 2586 insertions(+), 32 deletions(-)
->  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2712.c
->  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
-> 
-
-<...>
-
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2701.c b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> index f86f3b3..4a43f5c 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> @@ -503,10 +503,26 @@ static void mt2701_spec_pinmux_set(struct regmap *reg, unsigned int pin,
->  	regmap_update_bits(reg, mt2701_spec_pinmux[i].offset, mask, value);
->  }
->  
-> -static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
-> +static int mt2701_spec_dir_set(struct mtk_pinctrl *pctl,
-> +				unsigned int *reg_addr,
-> +				unsigned int pin,
-> +				bool input)
->  {
->  	if (pin > 175)
->  		*reg_addr += 0x10;
-> +
-> +	return 0;
-> +}
-> +
-> +static int mt2701_spec_dir_get(struct mtk_pinctrl *pctl,
-> +				unsigned int *reg_addr,
-> +				unsigned int pin,
-> +				bool input)
-
-incorrect prototype?
-
-> +{
-> +	if (pin > 175)
-> +		*reg_addr += 0x10;
-> +
-> +	return 0;
->  }
->  
->  static const struct mtk_pinctrl_devdata mt2701_pinctrl_data = {
-> @@ -520,6 +536,7 @@ static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
->  	.spec_ies_smt_set = mt2701_ies_smt_set,
->  	.spec_pinmux_set = mt2701_spec_pinmux_set,
->  	.spec_dir_set = mt2701_spec_dir_set,
-> +	.spec_dir_get = mt2701_spec_dir_get,
->  	.dir_offset = 0x0000,
->  	.pullen_offset = 0x0150,
->  	.pullsel_offset = 0x0280,
-> @@ -551,7 +568,7 @@ static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
->  		.dbnc_ctrl = 0x500,
->  		.dbnc_set  = 0x600,
->  		.dbnc_clr  = 0x700,
-> -		.port_mask = 6,
-> +		.port_mask = 7,
->  		.ports     = 6,
->  	},
->  	.ap_num = 169,
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2712.c b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-> new file mode 100644
-> index 0000000..c933b75
-> --- /dev/null
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-
-<...>
-
-> +
-> +static int mt2712_spec_dir_set(struct mtk_pinctrl *pctl,
-> +				unsigned int *reg_addr,
-> +				unsigned int pin,
-> +				bool input)
-> +{
-> +	u32 reg_val;
-> +
-> +	if (pin == 16) {
-> +		regmap_read(pctl->regmap2, 0x940, &reg_val);
-> +		reg_val |= BIT(15);
-> +		if (input == true)
-> +			reg_val &= ~BIT(14);
-> +		else
-> +			reg_val |= BIT(14);
-> +		regmap_write(pctl->regmap2, 0x940, reg_val);
-> +	}
-> +
-> +	if (pin == 17) {
-> +		regmap_read(pctl->regmap2, 0x940, &reg_val);
-> +		reg_val |= BIT(7);
-> +		if (input == true)
-> +			reg_val &= ~BIT(6);
-> +		else
-> +			reg_val |= BIT(6);
-> +		regmap_write(pctl->regmap2, 0x940, reg_val);
-> +	}
-> +
-> +	return 0;
-> +}
-
-Does this means pin 16, 17 is in different/special reg/bit location?
-I didn't see spec_dir_get in your patch, does this means they are in
-standard location or you just forgot it?
-
-The original idea of spec_dir_set is to get the register offset for the
-pin, so both set_direction and get_direction are using the same
-extension function. Instead of adding a new spec_dir_get, can we just
-extend the function to also include bit location?
-
-
-
-<...>
-
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> index 3cf384f..aeec87e 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> @@ -84,7 +84,7 @@ static int mtk_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
->  	bit = BIT(offset & 0xf);
->  
->  	if (pctl->devdata->spec_dir_set)
-> -		pctl->devdata->spec_dir_set(&reg_addr, offset);
-> +		pctl->devdata->spec_dir_set(pctl, &reg_addr, offset, input);
->  
->  	if (input)
->  		/* Different SoC has different alignment offset. */
-> @@ -307,13 +307,6 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
->  			return 0;
->  	}
->  
-> -	/* For generic pull config, default arg value should be 0 or 1. */
-> -	if (arg != 0 && arg != 1) {
-> -		dev_err(pctl->dev, "invalid pull-up argument %d on pin %d .\n",
-> -			arg, pin);
-> -		return -EINVAL;
-> -	}
-> -
-
-
-Why we need to remove this?
-
->  	bit = BIT(pin & 0xf);
->  	if (enable)
->  		reg_pullen = SET_ADDR(mtk_get_port(pctl, pin) +
-> @@ -343,7 +336,8 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
->  
->  	switch (param) {
->  	case PIN_CONFIG_BIAS_DISABLE:
-> -		ret = mtk_pconf_set_pull_select(pctl, pin, false, false, arg);
-> +		ret = mtk_pconf_set_pull_select(pctl, pin, false, false,
-> +						MTK_PUPD_SET_R1R0_00);
-
-Why we need to change this?
-
-Joe.C
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
