@@ -1,260 +1,165 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3 2/2] clk: meson: gxbb: Add sd_emmc clk0 clocks
-Date: Tue, 1 Aug 2017 14:19:38 +0200
-Message-ID: <127b2dd8-72bf-1e44-9244-a539a0414c75@baylibre.com>
-References: <20170731115603.29720-1-jbrunet@baylibre.com>
- <20170731115603.29720-3-jbrunet@baylibre.com>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
+Subject: [PATCH v2 1/4] leds: pca955x: add device tree support
+Date: Tue,  1 Aug 2017 14:09:06 +0200
+Message-ID: <1501589349-5681-2-git-send-email-clg@kaod.org>
+References: <1501589349-5681-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170731115603.29720-3-jbrunet@baylibre.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
-Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1501589349-5681-1-git-send-email-clg@kaod.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: linux-leds@vger.kernel.org
+Cc: Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2017 01:56 PM, Jerome Brunet wrote:
-> Input source 0 of the mmc controllers is not directly xtal, as currently
-> described in DT. Each controller is fed by a composite clock (the usual
-> mux, divider and gate). The muxes inputs are the xtal (default) and the
-> fclk_div clocks. These parents, along with the divider, should be able to
-> provide the necessary rates for mmc and nand operation.
-> 
-> The input muxes should also be able to take mpll2, mpll3 and gp0_pll but
-> these are precious clocks, needed for other usage. It is better if the
-> mmc does not use these them. For this reason, mpll2, mpll3 and gp0_pll is
-> not listed among the possible parents.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/clk/meson/gxbb.c | 177 +++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 177 insertions(+)
-> 
-> diff --git a/drivers/clk/meson/gxbb.c b/drivers/clk/meson/gxbb.c
-> index 8409d86cda24..dd78c5a1ce4b 100644
-> --- a/drivers/clk/meson/gxbb.c
-> +++ b/drivers/clk/meson/gxbb.c
-> @@ -974,6 +974,156 @@ static struct clk_mux gxbb_32k_clk_sel = {
->  	},
->  };
->  
-> +static const char * const gxbb_sd_emmc_clk0_parent_names[] = {
-> +	"xtal", "fclk_div2", "fclk_div3", "fclk_div5", "fclk_div7",
-> +
-> +	/*
-> +	 * Following these parent clocks, we should also have had mpll2, mpll3
-> +	 * and gp0_pll but these clocks are too precious to be used here. All
-> +	 * the necessary rates for MMC and NAND operation can be acheived using
-> +	 * xtal or fclk_div clocks
-> +	 */
-> +};
-> +
-> +/* SDIO clock */
-> +static struct clk_mux gxbb_sd_emmc_a_clk0_sel = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.mask = 0x7,
-> +	.shift = 9,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_a_clk0_sel",
-> +		.ops = &clk_mux_ops,
-> +		.parent_names = gxbb_sd_emmc_clk0_parent_names,
-> +		.num_parents = ARRAY_SIZE(gxbb_sd_emmc_clk0_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_divider gxbb_sd_emmc_a_clk0_div = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.shift = 0,
-> +	.width = 7,
-> +	.lock = &clk_lock,
-> +	.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_a_clk0_div",
-> +		.ops = &clk_divider_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_a_clk0_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_gate gxbb_sd_emmc_a_clk0 = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.bit_idx = 7,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sd_emmc_a_clk0",
-> +		.ops = &clk_gate_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_a_clk0_div" },
-> +		.num_parents = 1,
-> +
-> +		/*
-> +		 * FIXME:
-> +		 * We need CLK_IGNORE_UNUSED because mmc DT node point to xtal
-> +		 * instead of this clock. CCF would gate this on boot, killing
-> +		 * the mmc controller. Please remove this flag once DT properly
-> +		 * point to this clock instead of xtal
-> +		 *
-> +		 * Same goes for emmc B and C clocks
-> +		 */
-> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
-> +	},
-> +};
-> +
-> +/* SDcard clock */
-> +static struct clk_mux gxbb_sd_emmc_b_clk0_sel = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.mask = 0x7,
-> +	.shift = 25,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_b_clk0_sel",
-> +		.ops = &clk_mux_ops,
-> +		.parent_names = gxbb_sd_emmc_clk0_parent_names,
-> +		.num_parents = ARRAY_SIZE(gxbb_sd_emmc_clk0_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_divider gxbb_sd_emmc_b_clk0_div = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.shift = 16,
-> +	.width = 7,
-> +	.lock = &clk_lock,
-> +	.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_b_clk0_div",
-> +		.ops = &clk_divider_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_b_clk0_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_gate gxbb_sd_emmc_b_clk0 = {
-> +	.reg = (void *)HHI_SD_EMMC_CLK_CNTL,
-> +	.bit_idx = 23,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sd_emmc_b_clk0",
-> +		.ops = &clk_gate_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_b_clk0_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
-> +	},
-> +};
-> +
-> +/* EMMC/NAND clock */
-> +static struct clk_mux gxbb_sd_emmc_c_clk0_sel = {
-> +	.reg = (void *)HHI_NAND_CLK_CNTL,
-> +	.mask = 0x7,
-> +	.shift = 9,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_c_clk0_sel",
-> +		.ops = &clk_mux_ops,
-> +		.parent_names = gxbb_sd_emmc_clk0_parent_names,
-> +		.num_parents = ARRAY_SIZE(gxbb_sd_emmc_clk0_parent_names),
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_divider gxbb_sd_emmc_c_clk0_div = {
-> +	.reg = (void *)HHI_NAND_CLK_CNTL,
-> +	.shift = 0,
-> +	.width = 7,
-> +	.lock = &clk_lock,
-> +	.flags = CLK_DIVIDER_ROUND_CLOSEST,
-> +	.hw.init = &(struct clk_init_data) {
-> +		.name = "sd_emmc_c_clk0_div",
-> +		.ops = &clk_divider_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_c_clk0_sel" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT,
-> +	},
-> +};
-> +
-> +static struct clk_gate gxbb_sd_emmc_c_clk0 = {
-> +	.reg = (void *)HHI_NAND_CLK_CNTL,
-> +	.bit_idx = 7,
-> +	.lock = &clk_lock,
-> +	.hw.init = &(struct clk_init_data){
-> +		.name = "sd_emmc_c_clk0",
-> +		.ops = &clk_gate_ops,
-> +		.parent_names = (const char *[]){ "sd_emmc_c_clk0_div" },
-> +		.num_parents = 1,
-> +		.flags = CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED,
-> +	},
-> +};
-> +
->  /* Everything Else (EE) domain gates */
->  static MESON_GATE(gxbb_ddr, HHI_GCLK_MPEG0, 0);
->  static MESON_GATE(gxbb_dos, HHI_GCLK_MPEG0, 1);
-> @@ -1183,6 +1333,15 @@ static struct clk_hw_onecell_data gxbb_hw_onecell_data = {
->  		[CLKID_32K_CLK]		    = &gxbb_32k_clk.hw,
->  		[CLKID_32K_CLK_SEL]	    = &gxbb_32k_clk_sel.hw,
->  		[CLKID_32K_CLK_DIV]	    = &gxbb_32k_clk_div.hw,
-> +		[CLKID_SD_EMMC_A_CLK0_SEL]  = &gxbb_sd_emmc_a_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_A_CLK0_DIV]  = &gxbb_sd_emmc_a_clk0_div.hw,
-> +		[CLKID_SD_EMMC_A_CLK0]	    = &gxbb_sd_emmc_a_clk0.hw,
-> +		[CLKID_SD_EMMC_B_CLK0_SEL]  = &gxbb_sd_emmc_b_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_B_CLK0_DIV]  = &gxbb_sd_emmc_b_clk0_div.hw,
-> +		[CLKID_SD_EMMC_B_CLK0]	    = &gxbb_sd_emmc_b_clk0.hw,
-> +		[CLKID_SD_EMMC_C_CLK0_SEL]  = &gxbb_sd_emmc_c_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_C_CLK0_DIV]  = &gxbb_sd_emmc_c_clk0_div.hw,
-> +		[CLKID_SD_EMMC_C_CLK0]	    = &gxbb_sd_emmc_c_clk0.hw,
->  		[NR_CLKS]		    = NULL,
->  	},
->  	.num = NR_CLKS,
-> @@ -1306,6 +1465,15 @@ static struct clk_hw_onecell_data gxl_hw_onecell_data = {
->  		[CLKID_32K_CLK]		    = &gxbb_32k_clk.hw,
->  		[CLKID_32K_CLK_SEL]	    = &gxbb_32k_clk_sel.hw,
->  		[CLKID_32K_CLK_DIV]	    = &gxbb_32k_clk_div.hw,
-> +		[CLKID_SD_EMMC_A_CLK0_SEL]  = &gxbb_sd_emmc_a_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_A_CLK0_DIV]  = &gxbb_sd_emmc_a_clk0_div.hw,
-> +		[CLKID_SD_EMMC_A_CLK0]	    = &gxbb_sd_emmc_a_clk0.hw,
-> +		[CLKID_SD_EMMC_B_CLK0_SEL]  = &gxbb_sd_emmc_b_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_B_CLK0_DIV]  = &gxbb_sd_emmc_b_clk0_div.hw,
-> +		[CLKID_SD_EMMC_B_CLK0]	    = &gxbb_sd_emmc_b_clk0.hw,
-> +		[CLKID_SD_EMMC_C_CLK0_SEL]  = &gxbb_sd_emmc_c_clk0_sel.hw,
-> +		[CLKID_SD_EMMC_C_CLK0_DIV]  = &gxbb_sd_emmc_c_clk0_div.hw,
-> +		[CLKID_SD_EMMC_C_CLK0]	    = &gxbb_sd_emmc_c_clk0.hw,
->  		[NR_CLKS]		    = NULL,
->  	},
->  	.num = NR_CLKS,
-> @@ -1422,6 +1590,9 @@ static struct clk_gate *const gxbb_clk_gates[] = {
->  	&gxbb_cts_amclk,
->  	&gxbb_cts_mclk_i958,
->  	&gxbb_32k_clk,
-> +	&gxbb_sd_emmc_a_clk0,
-> +	&gxbb_sd_emmc_b_clk0,
-> +	&gxbb_sd_emmc_c_clk0,
->  };
->  
->  static struct clk_mux *const gxbb_clk_muxes[] = {
-> @@ -1434,6 +1605,9 @@ static struct clk_mux *const gxbb_clk_muxes[] = {
->  	&gxbb_cts_mclk_i958_sel,
->  	&gxbb_cts_i958,
->  	&gxbb_32k_clk_sel,
-> +	&gxbb_sd_emmc_a_clk0_sel,
-> +	&gxbb_sd_emmc_b_clk0_sel,
-> +	&gxbb_sd_emmc_c_clk0_sel,
->  };
->  
->  static struct clk_divider *const gxbb_clk_dividers[] = {
-> @@ -1443,6 +1617,9 @@ static struct clk_divider *const gxbb_clk_dividers[] = {
->  	&gxbb_mali_1_div,
->  	&gxbb_cts_mclk_i958_div,
->  	&gxbb_32k_clk_div,
-> +	&gxbb_sd_emmc_a_clk0_div,
-> +	&gxbb_sd_emmc_b_clk0_div,
-> +	&gxbb_sd_emmc_c_clk0_div,
->  };
->  
->  static struct meson_clk_audio_divider *const gxbb_audio_dividers[] = {
-> 
+It will be used in a following patch to define different operation
+modes for each pin.
 
-Applied to clk-meson's next/drivers.
+Signed-off-by: Cédric Le Goater <clg@kaod.org>
+---
+ drivers/leds/leds-pca955x.c | 89 ++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 84 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
+index 9a873118ea5f..3afd481a760f 100644
+--- a/drivers/leds/leds-pca955x.c
++++ b/drivers/leds/leds-pca955x.c
+@@ -41,14 +41,17 @@
+  */
+ 
+ #include <linux/acpi.h>
+-#include <linux/module.h>
+-#include <linux/delay.h>
+-#include <linux/string.h>
+ #include <linux/ctype.h>
+-#include <linux/leds.h>
++#include <linux/delay.h>
+ #include <linux/err.h>
++#include <linux/gpio.h>
+ #include <linux/i2c.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
++#include <linux/string.h>
+ 
+ /* LED select registers determine the source that drives LED outputs */
+ #define PCA955X_LS_LED_ON	0x0	/* Output LOW */
+@@ -122,6 +125,12 @@ struct pca955x_led {
+ 	struct led_classdev	led_cdev;
+ 	int			led_num;	/* 0 .. 15 potentially */
+ 	char			name[32];
++	const char		*default_trigger;
++};
++
++struct pca955x_platform_data {
++	struct pca955x_led	*leds;
++	int			num_leds;
+ };
+ 
+ /* 8 bits per input register */
+@@ -250,6 +259,70 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_OF)
++static struct pca955x_platform_data *
++pca955x_pdata_of_init(struct i2c_client *client, struct pca955x_chipdef *chip)
++{
++	struct device_node *np = client->dev.of_node;
++	struct device_node *child;
++	struct pca955x_platform_data *pdata;
++	int count;
++
++	count = of_get_child_count(np);
++	if (!count || count > chip->bits)
++		return ERR_PTR(-ENODEV);
++
++	pdata = devm_kzalloc(&client->dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->leds = devm_kzalloc(&client->dev,
++				   sizeof(struct pca955x_led) * chip->bits,
++				   GFP_KERNEL);
++	if (!pdata->leds)
++		return ERR_PTR(-ENOMEM);
++
++	for_each_child_of_node(np, child) {
++		const char *name;
++		u32 reg;
++		int res;
++
++		res = of_property_read_u32(child, "reg", &reg);
++		if ((res != 0) || (reg >= chip->bits))
++			continue;
++
++		if (of_property_read_string(child, "label", &name))
++			name = child->name;
++
++		snprintf(pdata->leds[reg].name, sizeof(pdata->leds[reg].name),
++			 "%s", name);
++
++		of_property_read_string(child, "linux,default-trigger",
++					&pdata->leds[reg].default_trigger);
++	}
++
++	pdata->num_leds = chip->bits;
++
++	return pdata;
++}
++
++static const struct of_device_id of_pca955x_match[] = {
++	{ .compatible = "nxp,pca9550", .data = (void *)pca9550 },
++	{ .compatible = "nxp,pca9551", .data = (void *)pca9551 },
++	{ .compatible = "nxp,pca9552", .data = (void *)pca9552 },
++	{ .compatible = "nxp,pca9553", .data = (void *)pca9553 },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, of_pca955x_match);
++#else
++static struct pca955x_platform_data *
++pca955x_pdata_of_init(struct i2c_client *client, struct pca955x_chipdef *chip)
++{
++	return ERR_PTR(-ENODEV);
++}
++#endif
++
+ static int pca955x_probe(struct i2c_client *client,
+ 					const struct i2c_device_id *id)
+ {
+@@ -257,8 +330,8 @@ static int pca955x_probe(struct i2c_client *client,
+ 	struct pca955x_led *pca955x_led;
+ 	struct pca955x_chipdef *chip;
+ 	struct i2c_adapter *adapter;
+-	struct led_platform_data *pdata;
+ 	int i, err;
++	struct pca955x_platform_data *pdata;
+ 
+ 	if (id) {
+ 		chip = &pca955x_chipdefs[id->driver_data];
+@@ -272,6 +345,11 @@ static int pca955x_probe(struct i2c_client *client,
+ 	}
+ 	adapter = to_i2c_adapter(client->dev.parent);
+ 	pdata = dev_get_platdata(&client->dev);
++	if (!pdata) {
++		pdata =	pca955x_pdata_of_init(client, chip);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
+ 
+ 	/* Make sure the slave address / chip type combo given is possible */
+ 	if ((client->addr & ~((1 << chip->slv_addr_shift) - 1)) !=
+@@ -378,6 +456,7 @@ static struct i2c_driver pca955x_driver = {
+ 	.driver = {
+ 		.name	= "leds-pca955x",
+ 		.acpi_match_table = ACPI_PTR(pca955x_acpi_ids),
++		.of_match_table = of_match_ptr(of_pca955x_match),
+ 	},
+ 	.probe	= pca955x_probe,
+ 	.remove	= pca955x_remove,
+-- 
+2.7.5
