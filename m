@@ -1,187 +1,71 @@
-From: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
-Date: Tue,  1 Aug 2017 10:38:24 +0200
-Message-ID: <1501576704-26423-3-git-send-email-loic.poulain@gmail.com>
-References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501576704-26423-1-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org
-Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V5 1/2] dt-bindings: timer: add nxp tpm timer binding doc
+Date: Tue, 1 Aug 2017 16:40:16 +0800
+Message-ID: <1501576817-18681-2-git-send-email-aisheng.dong@nxp.com>
+References: <1501576817-18681-1-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501576817-18681-1-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, shawnguo@kernel.org, ping.bai@nxp.com, anson.huang@nxp.com, dongas86@gmail.com, aisheng.dong@nxp.com, kernel@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for Broadcom serial slave devices.
-Probe the serial device, retrieve its maximum speed and
-register a new hci uart device.
+Adding NXP Low Power Timer/Pulse Width Modulation Module (TPM)
+binding doc.
 
-Tested/compatible with bcm43438 (RPi3).
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Bai Ping <ping.bai@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
-v2: dt-bindings as separate patch
-    rebase on upcoming pi3 dts changes
+ChangeLog:
+ v1->v5:
+ * No changes
+---
+ .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
 
- drivers/bluetooth/hci_bcm.c | 82 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 78 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 6b42372..f824738 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -27,6 +27,7 @@
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/acpi.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/clk.h>
- #include <linux/gpio/consumer.h>
-@@ -34,6 +35,7 @@
- #include <linux/interrupt.h>
- #include <linux/dmi.h>
- #include <linux/pm_runtime.h>
-+#include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -46,6 +48,7 @@
- 
- #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
- 
-+/* platform device driver resources */
- struct bcm_device {
- 	struct list_head	list;
- 
-@@ -68,6 +71,12 @@ struct bcm_device {
- #endif
- };
- 
-+/* serdev driver resources */
-+struct bcm_bt_device {
-+	struct hci_uart hu;
+diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+new file mode 100644
+index 0000000..b4aa7dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+@@ -0,0 +1,28 @@
++NXP Low Power Timer/Pulse Width Modulation Module (TPM)
++
++The Timer/PWM Module (TPM) supports input capture, output compare,
++and the generation of PWM signals to control electric motor and power
++management applications. The counter, compare and capture registers
++are clocked by an asynchronous clock that can remain enabled in low
++power modes. TPM can support global counter bus where one TPM drives
++the counter bus for the others, provided bit width is the same.
++
++Required properties:
++
++- compatible :	should be "fsl,imx7ulp-tpm"
++- reg :		Specifies base physical address and size of the register sets
++		for the clock event device and clock source device.
++- interrupts :	Should be the clock event device interrupt.
++- clocks :	The clocks provided by the SoC to drive the timer, must contain
++		an entry for each entry in clock-names.
++- clock-names : Must include the following entries: "igp" and "per".
++
++Example:
++tpm5: tpm@40260000 {
++	compatible = "fsl,imx7ulp-tpm";
++	reg = <0x40260000 0x1000>;
++	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
++		 <&clks IMX7ULP_CLK_LPTPM5>;
++	clock-names = "ipg", "per";
 +};
-+
-+/* generic bcm uart resources */
- struct bcm_data {
- 	struct sk_buff		*rx_skb;
- 	struct sk_buff_head	txq;
-@@ -289,6 +298,11 @@ static int bcm_open(struct hci_uart *hu)
- 
- 	hu->priv = bcm;
- 
-+	if (hu->serdev) {
-+		serdev_device_open(hu->serdev);
-+		goto out;
-+	}
-+
- 	if (!hu->tty->dev)
- 		goto out;
- 
-@@ -323,6 +337,9 @@ static int bcm_close(struct hci_uart *hu)
- 
- 	bt_dev_dbg(hu->hdev, "hu %p", hu);
- 
-+	if (hu->serdev)
-+		serdev_device_close(hu->serdev);
-+
- 	/* Protect bcm->dev against removal of the device or driver */
- 	mutex_lock(&bcm_device_lock);
- 	if (bcm_device_exists(bdev)) {
-@@ -397,8 +414,12 @@ static int bcm_setup(struct hci_uart *hu)
- 	else
- 		speed = 0;
- 
--	if (speed)
--		hci_uart_set_baudrate(hu, speed);
-+	if (speed) {
-+		if (hu->serdev)
-+			serdev_device_set_baudrate(hu->serdev, speed);
-+		else
-+			hci_uart_set_baudrate(hu, speed);
-+	}
- 
- 	/* Operational speed if any */
- 	if (hu->oper_speed)
-@@ -410,8 +431,12 @@ static int bcm_setup(struct hci_uart *hu)
- 
- 	if (speed) {
- 		err = bcm_set_baudrate(hu, speed);
--		if (!err)
--			hci_uart_set_baudrate(hu, speed);
-+		if (!err) {
-+			if (hu->serdev)
-+				serdev_device_set_baudrate(hu->serdev, speed);
-+			else
-+				hci_uart_set_baudrate(hu, speed);
-+		}
- 	}
- 
- finalize:
-@@ -903,9 +928,57 @@ static int bcm_remove(struct platform_device *pdev)
- 	},
- };
- 
-+static int bcm_serdev_probe(struct serdev_device *serdev)
-+{
-+	struct bcm_bt_device *bcmdev;
-+	u32 speed;
-+	int err;
-+
-+	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-+	if (!bcmdev)
-+		return -ENOMEM;
-+
-+	bcmdev->hu.serdev = serdev;
-+	serdev_device_set_drvdata(serdev, bcmdev);
-+
-+	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
-+	if (!err)
-+		bcmdev->hu.oper_speed = speed;
-+
-+	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
-+}
-+
-+static void bcm_serdev_remove(struct serdev_device *serdev)
-+{
-+	struct bcm_bt_device *bcmdev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&bcmdev->hu);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id bcm_bluetooth_of_match[] = {
-+	{ .compatible = "brcm,bcm43438-bt" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
-+#endif
-+
-+static struct serdev_device_driver bcm_serdev_driver = {
-+	.probe = bcm_serdev_probe,
-+	.remove = bcm_serdev_remove,
-+	.driver = {
-+		.name = "hci_uart_bcm",
-+		.of_match_table = of_match_ptr(bcm_bluetooth_of_match),
-+	},
-+};
-+
- int __init bcm_init(void)
- {
-+	/* For now, we need to keep both platform device
-+	 * driver (ACPI generated) and serdev driver (DT).
-+	 */
- 	platform_driver_register(&bcm_driver);
-+	serdev_device_driver_register(&bcm_serdev_driver);
- 
- 	return hci_uart_register_proto(&bcm_proto);
- }
-@@ -913,6 +986,7 @@ int __init bcm_init(void)
- int __exit bcm_deinit(void)
- {
- 	platform_driver_unregister(&bcm_driver);
-+	serdev_device_driver_unregister(&bcm_serdev_driver);
- 
- 	return hci_uart_unregister_proto(&bcm_proto);
- }
 -- 
-1.9.1
+2.7.4
