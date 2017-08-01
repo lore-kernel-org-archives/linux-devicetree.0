@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 07/13] ARM: sun8i: h3: add display engine
- pipeline barebone
-Date: Tue,  1 Aug 2017 21:12:58 +0800
-Message-ID: <20170801131304.7741-8-icenowy@aosc.io>
+Subject: [PATCH 08/13] [NOT FOR REVIEW NOW] drm: bridge: Enable
+ polling hpd event in dw_hdmi
+Date: Tue,  1 Aug 2017 21:12:59 +0800
+Message-ID: <20170801131304.7741-9-icenowy@aosc.io>
 References: <20170801131304.7741-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBIX5QHGAKGQEYATFC5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBNH5QHGAKGQEIFILNLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170801131304.7741-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -17,206 +17,35 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-As we have already the support for the DE2 on Allwinner H3, add the
-display engine pipeline device tree nodes to its DTSI file.
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-The H5 pipeline has some differences and will be enabled later.
+Some custom phys don't support hpd interrupts. Add support for polling
+such events.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-h3.dtsi | 170 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 170 insertions(+)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index b36f9f423c39..75ad7b65a7fc 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -41,6 +41,8 @@
-  */
+diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+index 60faf2d2bc6b..6c6466c6297c 100644
+--- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
++++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+@@ -1942,7 +1942,11 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+ 	struct drm_connector *connector = &hdmi->connector;
  
- #include "sunxi-h3-h5.dtsi"
-+#include <dt-bindings/clock/sun8i-de2.h>
-+#include <dt-bindings/reset/sun8i-de2.h>
+ 	connector->interlace_allowed = 1;
+-	connector->polled = DRM_CONNECTOR_POLL_HPD;
++	if (hdmi->phy.ops->setup_hpd)
++		connector->polled = DRM_CONNECTOR_POLL_HPD;
++	else
++		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
++				    DRM_CONNECTOR_POLL_DISCONNECT;
  
- / {
- 	cpus {
-@@ -72,6 +74,174 @@
- 		};
- 	};
+ 	drm_connector_helper_add(connector, &dw_hdmi_connector_helper_funcs);
  
-+	de: display-engine {
-+		compatible = "allwinner,sun8i-h3-display-engine";
-+		allwinner,pipelines = <&mixer0>,
-+				      <&mixer1>;
-+		status = "disabled";
-+	};
-+
-+	soc {
-+		display_clocks: clock@1000000 {
-+			compatible = "allwinner,sun8i-a83t-de2-clk";
-+			reg = <0x01000000 0x100000>;
-+			clocks = <&ccu CLK_BUS_DE>,
-+				 <&ccu CLK_DE>;
-+			clock-names = "bus",
-+				      "mod";
-+			resets = <&ccu RST_BUS_DE>;
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			assigned-clocks = <&ccu CLK_DE>;
-+			assigned-clock-parents = <&ccu CLK_PLL_DE>;
-+			assigned-clock-rates = <432000000>;
-+		};
-+
-+		mixer0: mixer@1100000 {
-+			compatible = "allwinner,sun8i-h3-de2-mixer0";
-+			reg = <0x01100000 0x100000>;
-+			clocks = <&display_clocks CLK_BUS_MIXER0>,
-+				 <&display_clocks CLK_MIXER0>;
-+			clock-names = "bus",
-+				      "mod";
-+			resets = <&display_clocks RST_MIXER0>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				mixer0_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+
-+					mixer0_out_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_in_mixer0>;
-+					};
-+
-+					mixer0_out_tcon1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&tcon1_in_mixer0>;
-+					};
-+				};
-+			};
-+		};
-+
-+		mixer1: mixer@1200000 {
-+			compatible = "allwinner,sun8i-h3-de2-mixer1";
-+			reg = <0x01200000 0x100000>;
-+			clocks = <&display_clocks CLK_BUS_MIXER1>,
-+				 <&display_clocks CLK_MIXER1>;
-+			clock-names = "bus",
-+				      "mod";
-+			resets = <&display_clocks RST_WB>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				mixer1_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+
-+					mixer1_out_tcon0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&tcon0_in_mixer1>;
-+					};
-+
-+					mixer1_out_tcon1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&tcon1_in_mixer1>;
-+					};
-+				};
-+			};
-+		};
-+
-+		tcon0: lcd-controller@1c0c000 {
-+			compatible = "allwinner,sun8i-h3-tcon";
-+			reg = <0x01c0c000 0x1000>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_TCON0>,
-+				 <&ccu CLK_TCON0>;
-+			clock-names = "ahb",
-+				      "tcon-ch1";
-+			resets = <&ccu RST_BUS_TCON0>;
-+			reset-names = "lcd";
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				tcon0_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					tcon0_in_mixer0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&mixer0_out_tcon0>;
-+					};
-+
-+					tcon0_in_mixer1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&mixer1_out_tcon0>;
-+					};
-+				};
-+
-+				tcon0_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+				};
-+			};
-+		};
-+
-+		tcon1: lcd-controller@1c0d000 {
-+			compatible = "allwinner,sun8i-h3-tcon";
-+			reg = <0x01c0d000 0x1000>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_TCON1>,
-+				 <&ccu CLK_TVE>;
-+			clock-names = "ahb",
-+				      "tcon-ch1";
-+			resets = <&ccu RST_BUS_TCON1>;
-+			reset-names = "lcd";
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				tcon1_in: port@0 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <0>;
-+
-+					tcon1_in_mixer0: endpoint@0 {
-+						reg = <0>;
-+						remote-endpoint = <&mixer0_out_tcon1>;
-+					};
-+
-+					tcon1_in_mixer1: endpoint@1 {
-+						reg = <1>;
-+						remote-endpoint = <&mixer1_out_tcon1>;
-+					};
-+				};
-+
-+				tcon1_out: port@1 {
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					reg = <1>;
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
 -- 
 2.13.0
