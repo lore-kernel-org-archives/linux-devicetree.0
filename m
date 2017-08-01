@@ -1,34 +1,32 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gx: Use correct mmc clock source 0
-Date: Tue, 01 Aug 2017 12:48:48 -0700
-Message-ID: <7h60e7yspr.fsf@baylibre.com>
-References: <20170731120552.31606-1-jbrunet@baylibre.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb: p20x: add card regulator settle times
+Date: Tue, 01 Aug 2017 12:49:09 -0700
+Message-ID: <7h1sovysp6.fsf@baylibre.com>
+References: <20170801152224.15754-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170731120552.31606-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's
-        message of "Mon, 31 Jul 2017 14:05:52 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170801152224.15754-1-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Tue, 1 Aug 2017 17:22:24 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> Now that the clock source 0 is properly described in the CCF, use it
-> instead of assuming the default value (xtal)
+> Changing the card voltage on the p200 is not instantaneous, especially
+> when switching from 3.3v to 1.8v.
 >
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
+> I take at least 70ms for the regulator to go from 3.3v to 1.8v. Add
+> margin to that to make sure we don't upset the sdcard during the voltage
+> switch
 >
-> This patchset depends on clock patchset adding the related clocks:
-> * https://lkml.kernel.org/r/20170731115603.29720-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+> Fixes: ef8d2ffedf18 ("ARM64: dts: meson-gxbb: add MMC support")
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-I'll need a stable tag/commit in clk-meson/next/drivers to use in order
-to apply this one.
+Applied to v4.14/dt64,
+
+Thanks,
 
 Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
