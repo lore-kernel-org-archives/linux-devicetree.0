@@ -1,28 +1,43 @@
 From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v4 0/2] clk: rockchip: support clk drivers for RK3126 SoC.
-Date: Tue,  1 Aug 2017 09:17:02 +0800
-Message-ID: <1501550224-6875-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH v4 2/2] dt-bindings: add documentation for rk3126 clock
+Date: Tue,  1 Aug 2017 09:17:04 +0800
+Message-ID: <1501550224-6875-3-git-send-email-zhangqing@rock-chips.com>
+References: <1501550224-6875-1-git-send-email-zhangqing@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501550224-6875-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@baylibre.com, sboyd@codeaurora.org, heiko@sntech.de
 Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, cl@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-changed in V4:
-modify the document description for rk3126 clock.
+This add bindings documentation for rk3126 SoCs.
 
-changed in V3:
-add documentation for rk3126 clock
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+---
+ Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-Elaine Zhang (2):
-  clk: rockchip: rk3128: modify rk3128 clk driver to support rk3126
-  dt-bindings: add documentation for rk3126 clock
-
- .../bindings/clock/rockchip,rk3128-cru.txt         |  8 ++-
- drivers/clk/rockchip/clk-rk3128.c                  | 69 +++++++++++++++++-----
- 2 files changed, 60 insertions(+), 17 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+index 455a9a00a623..6f8744fd301b 100644
+--- a/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+@@ -1,12 +1,14 @@
+-* Rockchip RK3128 Clock and Reset Unit
++* Rockchip RK3126/RK3128 Clock and Reset Unit
+ 
+-The RK3128 clock controller generates and supplies clock to various
++The RK3126/RK3128 clock controller generates and supplies clock to various
+ controllers within the SoC and also implements a reset controller for SoC
+ peripherals.
+ 
+ Required Properties:
+ 
+-- compatible: should be "rockchip,rk3128-cru"
++- compatible: should be "rockchip,rk3126-cru" or "rockchip,rk3128-cru"
++  "rockchip,rk3126-cru" - controller compatible with RK3126 SoC.
++  "rockchip,rk3128-cru" - controller compatible with RK3128 SoC.
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - #clock-cells: should be 1.
 -- 
 1.9.1
-
-
