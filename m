@@ -1,13 +1,13 @@
 From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 08/13] [NOT FOR REVIEW NOW] drm: bridge: Enable
- polling hpd event in dw_hdmi
-Date: Tue,  1 Aug 2017 21:12:59 +0800
-Message-ID: <20170801131304.7741-9-icenowy@aosc.io>
+Subject: [PATCH 09/13] [NOT FOR REVIEW NOW] drm: bridge: Add a
+ pre_init function for the dw_hdmi driver
+Date: Tue,  1 Aug 2017 21:13:00 +0800
+Message-ID: <20170801131304.7741-10-icenowy@aosc.io>
 References: <20170801131304.7741-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBNH5QHGAKGQEIFILNLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBPH5QHGAKGQEXVMAGNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170801131304.7741-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -22,30 +22,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-Some custom phys don't support hpd interrupts. Add support for polling
-such events.
+Some platform glues of DesignWare HDMI controller require some
+initialization to be performed before probing the main HDMI controller.
+
+Add a pre_init function for this kind of work.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 3 +++
+ include/drm/bridge/dw_hdmi.h              | 2 ++
+ 2 files changed, 5 insertions(+)
 
 diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index 60faf2d2bc6b..6c6466c6297c 100644
+index 6c6466c6297c..1e69b7631cae 100644
 --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
 +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -1942,7 +1942,11 @@ static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
- 	struct drm_connector *connector = &hdmi->connector;
+@@ -2343,6 +2343,9 @@ __dw_hdmi_probe(struct platform_device *pdev,
+ 		goto err_isfr;
+ 	}
  
- 	connector->interlace_allowed = 1;
--	connector->polled = DRM_CONNECTOR_POLL_HPD;
-+	if (hdmi->phy.ops->setup_hpd)
-+		connector->polled = DRM_CONNECTOR_POLL_HPD;
-+	else
-+		connector->polled = DRM_CONNECTOR_POLL_CONNECT |
-+				    DRM_CONNECTOR_POLL_DISCONNECT;
++	if (plat_data->pre_init)
++		plat_data->pre_init(plat_data->pre_init_data);
++
+ 	/* Product and revision IDs */
+ 	hdmi->version = (hdmi_readb(hdmi, HDMI_DESIGN_ID) << 8)
+ 		      | (hdmi_readb(hdmi, HDMI_REVISION_ID) << 0);
+diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
+index 182f83283e24..6e109c336ca1 100644
+--- a/include/drm/bridge/dw_hdmi.h
++++ b/include/drm/bridge/dw_hdmi.h
+@@ -128,6 +128,8 @@ struct dw_hdmi_plat_data {
+ 					   const struct drm_display_mode *mode);
+ 	unsigned long input_bus_format;
+ 	unsigned long input_bus_encoding;
++	void (*pre_init)(void *data);
++	void *pre_init_data;
  
- 	drm_connector_helper_add(connector, &dw_hdmi_connector_helper_funcs);
- 
+ 	/* Vendor PHY support */
+ 	const struct dw_hdmi_phy_ops *phy_ops;
 -- 
 2.13.0
