@@ -1,64 +1,123 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
- board dts and Makefile
-Date: Tue, 1 Aug 2017 14:46:28 +0200
-Message-ID: <85f5d713-a599-e4cc-f1b4-2e0dedf2797f@gmail.com>
-References: <1501241835-47849-1-git-send-email-yt.shen@mediatek.com>
- <1501241835-47849-3-git-send-email-yt.shen@mediatek.com>
- <1501577481.32089.3.camel@mtksdaap41>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: [PATCH v2 4/4] dt-bindings leds: add pca955x
+Date: Tue,  1 Aug 2017 14:09:09 +0200
+Message-ID: <1501589349-5681-5-git-send-email-clg@kaod.org>
+References: <1501589349-5681-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501577481.32089.3.camel@mtksdaap41>
-Content-Language: en-US
+In-Reply-To: <1501589349-5681-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds the devicetree bindings for the PCA955x I2C LED blinkers.
 
+Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+---
+ .../devicetree/bindings/leds/leds-pca955x.txt      | 88 ++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pca955x.txt
 
-On 08/01/2017 10:51 AM, Yingjoe Chen wrote:
-> On Fri, 2017-07-28 at 19:37 +0800, YT Shen wrote:
->> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
->> new file mode 100644
->> index 0000000..1e135af
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> 
-> <...>
-> 
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <GIC_PPI 13
->> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 14
->> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 11
->> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 10
->> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>;
->> +	};
->> +
->> +	soc {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		compatible = "simple-bus";
->> +		ranges;
-> 
-> Matthias,
-> 
-> I notice this have soc node.
-> Do we need to get rid of it?
-> 
+diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+new file mode 100644
+index 000000000000..7984efb767b4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
+@@ -0,0 +1,88 @@
++* NXP - pca955x LED driver
++
++The PCA955x family of chips are I2C LED blinkers whose pins not used
++to control LEDs can be used as general purpose I/Os. The GPIO pins can
++be input or output, and output pins can also be pulse-width controlled.
++
++Required properties:
++- compatible : should be one of :
++	"nxp,pca9550"
++	"nxp,pca9551"
++	"nxp,pca9552"
++	"nxp,pca9553"
++- #address-cells: must be 1
++- #size-cells: must be 0
++- reg: I2C slave address. depends on the model.
++
++Optional properties:
++- gpio-controller: allows pins to be used as GPIOs.
++- #gpio-cells: must be 2.
++- gpio-line-names: define the names of the GPIO lines
++
++LED sub-node properties:
++- reg : number of LED line.
++		from 0 to  1 for the pca9550
++		from 0 to  7 for the pca9551
++		from 0 to 15 for the pca9552
++		from 0 to  3 for the pca9553
++- type: (optional) either
++	PCA9532_TYPE_NONE
++	PCA9532_TYPE_LED
++	PCA9532_TYPE_GPIO
++	see dt-bindings/leds/leds-pca955x.h (default to LED)
++- label : (optional)
++	see Documentation/devicetree/bindings/leds/common.txt
++- linux,default-trigger : (optional)
++	see Documentation/devicetree/bindings/leds/common.txt
++
++Examples:
++
++pca9552: pca9552@60 {
++	compatible = "nxp,pca9552";
++	#address-cells = <1>;
++        #size-cells = <0>;
++	reg = <0x60>;
++
++	gpio-controller;
++	#gpio-cells = <2>;
++	gpio-line-names = "GPIO12", "GPIO13", "GPIO14", "GPIO15";
++
++	gpio@12 {
++		reg = <12>;
++		type = <PCA955X_TYPE_GPIO>;
++	};
++	gpio@13 {
++		reg = <13>;
++		type = <PCA955X_TYPE_GPIO>;
++	};
++	gpio@14 {
++		reg = <14>;
++		type = <PCA955X_TYPE_GPIO>;
++	};
++	gpio@15 {
++		reg = <15>;
++		type = <PCA955X_TYPE_GPIO>;
++	};
++
++	led@0 {
++		label = "red:power";
++		linux,default-trigger = "default-on";
++		reg = <0>;
++		type = <PCA955X_TYPE_LED>;
++	};
++	led@1 {
++		label = "green:power";
++		reg = <1>;
++		type = <PCA955X_TYPE_LED>;
++	};
++	led@2 {
++		label = "pca9552:yellow";
++		reg = <2>;
++		type = <PCA955X_TYPE_LED>;
++	};
++	led@3 {
++		label = "pca9552:white";
++		reg = <3>;
++		type = <PCA955X_TYPE_LED>;
++	};
++};
+-- 
+2.7.5
 
-Good catch. Yes please get rid of it. We should avoid artificial bus nodes. As 
-soc is no real bus, we should get rid of it.
-
-Thanks,
-Matthias
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
