@@ -1,31 +1,37 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] gpio-exar: Use correct property prefix and document bindings
-Date: Tue, 1 Aug 2017 13:44:47 +0200
-Message-ID: <CACRpkdZ6CVMM9dUspCgubBvKcRLJwxi2PRo3SCk=OKT2zXzqhg@mail.gmail.com>
-References: <dd5bb6b5-a6a7-a799-581f-b5fb83aa677b@siemens.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 RESEND 1/6] dt-bindings: pinctrl: add imx7ulp pinctrl
+ binding doc
+Date: Tue, 1 Aug 2017 13:50:48 +0200
+Message-ID: <CACRpkdZ8Jt5AvGZe9oKBy2ug9PU7GDHUsY03cnAAnxktmSr0=w@mail.gmail.com>
+References: <1500990116-3620-1-git-send-email-aisheng.dong@nxp.com> <1500990116-3620-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <dd5bb6b5-a6a7-a799-581f-b5fb83aa677b@siemens.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jan Kiszka <jan.kiszka@siemens.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500990116-3620-2-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dong Aisheng <dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 19, 2017 at 7:31 AM, Jan Kiszka <jan.kiszka@siemens.com> wrote:
+On Tue, Jul 25, 2017 at 3:41 PM, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org> wrote:
 
-> The device-specific property should be prefixed with the vendor name,
-> not "linux,", as Linus Walleij pointed out. Change this and document the
-> bindings of this platform device.
+> i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
+> IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
 >
-> We didn't ship the old binding in a release yet. So we can still change
-> it without breaking an official API.
+> This patch adds the IOMUXC1 support for A7.
 >
-> Fixes: 380b1e2f3a2f ("gpio-exar/8250-exar: Make set of exported GPIOs configurable")
->
-> Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 
-Patch applied for fixes with Rob's ACK, nice fixup!
+Patch applied.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
