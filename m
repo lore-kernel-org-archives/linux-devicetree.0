@@ -1,33 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Devicetree at Linux Plumbers Conference 2017
-Date: Tue, 1 Aug 2017 17:37:25 +0100
-Message-ID: <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
+From: "Andrew F. Davis" <afd@ti.com>
+Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
+Date: Tue, 1 Aug 2017 11:47:15 -0500
+Message-ID: <1538596b-80ed-7800-db97-70e73b90b9e2@ti.com>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
+ <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
+ <20170731231509.77d1fba4@bbrezillon> <20170731214211.GA11776@tetsubishi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170731214211.GA11776@tetsubishi>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>K
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 6:29 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> Hi folks,
->
-> For anyone attending Linux Plumbers Conference this year, I'm trying
-> to put together an agenda for a Devicetree miniconference, and I need
-> topics. If you have anything you want to discuss or present, please
-> add it to the following wiki page and/or email me:
->
-> http://wiki.linuxplumbersconf.org/2017:device_tree
+On 07/31/2017 04:42 PM, Wolfram Sang wrote:
+> 
+>> Actually, that's the first option I considered, but I3C and I2C are
+>> really different. I'm not talking about the physical layer here, but
+>> the way the bus has to be handled by the software layer. Actually, I
+>> thing the I3C bus is philosophically closer to auto-discoverable busses
+>> like USB than I2C or SPI.
+> 
+> Acked-by: Wolfram Sang <wsa@the-dreams.de>
+> 
+>> Of course, I can move all the code in drivers/i2c/, but that won't
+>> change the fact that I3C and I2C busses are completely different
+>> with little to share between them.
+> 
+> That wouldn't make sense.
+> 
+>> To me, the I2C backward compatibility is just a nice feature that was
+>> added to help people smoothly transition from mixed I3C busses with
+>> both I2C and I3C devices connected to it (I2C devices being here
+>> when no (affordable) equivalent exist in the I3C world) to pure I3C
+>> busses with only I3C devices connected to it.
+> 
+> Yeah, and it is still to be seen how good this really works. Devices
+> which do clock stretching are out of the question. Probably everything
+> which needs an interrupt as well?
+> 
 
-A number of people have asked about holding this at ELCE instead of
-Linux Plumbers, so I'd like some feedback. Here's a quick survey.
-Please reply ASAP if your interested in a Devicetree miniconference
-this year:
+I'm surprised they didn't allow for slave clock stretching when
+communicating with a legacy i2c device, it will prohibit use of a rather
+large class of devices. :(
 
-https://docs.google.com/forms/d/e/1FAIpQLSe0k9L597egFfOwZoDwq0Og-hRt8IAEPtp-JpvoH9nw2njx0g/viewform?usp=sf_link
+As for interrupts you are always free to wire up an out-of-band
+interrupt like before. :)
 
-Thanks,
-g.
+>> This being said, I'd be happy if you prove me wrong and propose a
+>> solution that allows us to extend the I2C framework to support I3C
+>> without to much pain ;-).
+> 
+> From all I know, I don't see that coming.
+> 
