@@ -1,73 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: update OpenFirmware document links to devicetree.org
-Date: Tue,  1 Aug 2017 11:03:34 -0500
-Message-ID: <20170801160334.15697-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Harvey Hunt <harvey.hunt@imgtec.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v2 2/3] mailbox: introduce ARM SMC based mailbox
+Date: Tue, 1 Aug 2017 21:36:57 +0530
+Message-ID: <CABb+yY0H3yKJeGLxnaYVrd=XVnRTU4z0eZj2yGGWRmYo0hoN8w@mail.gmail.com>
+References: <1500852206-28771-1-git-send-email-andre.przywara@arm.com>
+ <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1500852206-28771-3-git-send-email-andre.przywara@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Alex Graf <agraf@suse.de>, Chen-Yu Tsai <wens@csie.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Sudeep Holla <sudeep.holla@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The mirrors for old, but still referenced OF documents have disappeared.
-A new mirror has been setup on devicetree.org at:
+On Mon, Jul 24, 2017 at 4:53 AM, Andre Przywara <andre.przywara@arm.com> wrote:
 
-http://devicetree.org/open-firmware/home.html
+> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
+> +{
+> +       struct arm_smc_chan_data *chan_data = link->con_priv;
+> +       u32 function_id = chan_data->function_id;
+> +       struct arm_smccc_res res;
+> +       u32 msg = *(u32 *)data;
+> +
+> +       if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+> +               arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
+> +       else
+> +               arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
+> +
+Sorry, I didn't notice earlier that you cull parameters [R2, R7] to
+SMC/HVC call by making them all 0s ...
+        arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
 
-Update the URLs in the binding documents with the new mirror.
+I see you have SCMI/SCPI on your mind, however we need to make
+controller drivers independent of users.
 
-Cc: Brian Norris <briannorris@chromium.org>
-Cc: Harvey Hunt <harvey.hunt@imgtec.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/pci.txt        | 4 ++--
- Documentation/devicetree/bindings/usb/usb-device.txt | 2 +-
- Documentation/devicetree/booting-without-of.txt      | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+I think this driver should simply emulate mailbox over the SMC/HVC
+calls. That is, respect all parameters.
+So maybe we should define a
+   struct arm_smccc_mbox_cmd {
+         unsigned long a0, a1, a2, a3, a4, a5, a6, a7;
+   }
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index 50f9e2ca5b13..c77981c5dd18 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -1,12 +1,12 @@
- PCI bus bridges have standardized Device Tree bindings:
- 
- PCI Bus Binding to: IEEE Std 1275-1994
--http://www.firmware.org/1275/bindings/pci/pci2_1.pdf
-+http://www.devicetree.org/open-firmware/bindings/pci/pci2_1.pdf
- 
- And for the interrupt mapping part:
- 
- Open Firmware Recommended Practice: Interrupt Mapping
--http://www.firmware.org/1275/practice/imap/imap0_9d.pdf
-+http://www.devicetree.org/open-firmware/practice/imap/imap0_9d.pdf
- 
- Additionally to the properties specified in the above standards a host bridge
- driver implementation may support the following properties:
-diff --git a/Documentation/devicetree/bindings/usb/usb-device.txt b/Documentation/devicetree/bindings/usb/usb-device.txt
-index 1c35e7b665e1..d5f1992b797c 100644
---- a/Documentation/devicetree/bindings/usb/usb-device.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-device.txt
-@@ -2,7 +2,7 @@ Generic USB Device Properties
- 
- Usually, we only use device tree for hard wired USB device.
- The reference binding doc is from:
--http://www.firmware.org/1275/bindings/usb/usb-1_0.ps
-+http://www.devicetree.org/open-firmware/bindings/usb/usb-1_0.ps
- 
- Required properties:
- - compatible: usbVID,PID. The textual representation of VID, PID shall
-diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-index fb740445199f..417f91110010 100644
---- a/Documentation/devicetree/booting-without-of.txt
-+++ b/Documentation/devicetree/booting-without-of.txt
-@@ -1282,7 +1282,7 @@ hierarchy and routing of interrupts in the hardware.
- The interrupt tree model is fully described in the
- document "Open Firmware Recommended Practice: Interrupt
- Mapping Version 0.9".  The document is available at:
--<http://www.openfirmware.org/ofwg/practice/>
-+<http://www.devicetree.org/open-firmware/practice/>
- 
- 1) interrupts property
- ----------------------
--- 
-2.11.0
+and have
+static int arm_smc_send_data(struct mbox_chan *link, void *data)
+{
+       struct arm_smc_chan_data *chan_data = link->con_priv;
+       struct arm_smccc_res res;
+       struct arm_smccc_mbox_cmd *cmd = data;
+       u32 function_id = cmd->a0;
+
+       ..... and pass cmd.{a1, a2, a3, a4, a5, a6, a7} to the SMC/HVC call.
+          ....
+}
+
+And BTW, instead of specifying 'func-ids' in DT, we can have
+'num-chans' which will tell how many identical channels to populate.
+Also because the Function-Identifier seems like belong to the client
+driver more than controller.
+
+Cheers!
