@@ -1,50 +1,86 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
-Date: Tue, 1 Aug 2017 16:22:21 +0200
-Message-ID: <CAK8P3a10oJwsE8vQmPoX4Xf2zg17ZFqypMHMiPR_xOWUAMSB-w@mail.gmail.com>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
- <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
- <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
- <20170731231509.77d1fba4@bbrezillon> <CAK8P3a0p=m-8U7TN8usG8HO-QNu_S7rSfykNzu4gm+MOaM2Kzg@mail.gmail.com>
- <20170801142936.5df48702@bbrezillon> <CAK8P3a0SH4kWcvXK+_iPt9LWuNnpjr+omp+ZpyTLjT=H602n+w@mail.gmail.com>
- <20170801153414.6ce34ee8@bbrezillon> <20170801155813.4b811a4d@bbrezillon>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Tue, 1 Aug 2017 09:30:33 -0500
+Message-ID: <20799238-a72b-c6e7-5898-3de23f91a9ed@ti.com>
+References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
+ <5aa0d273-8e05-a5ff-7931-b9a94acade36@ti.com>
+ <8021c424-460c-def4-3a67-ed760997193d@ti.com>
+ <2eeaeea5-9476-8631-8680-7db3322151bf@ti.com>
+ <da92fe60-d70b-6a37-6b88-2ac95dd67b6a@ti.com>
+ <90337754-8670-6df7-5421-7100e31755b1@ti.com>
+ <65ab0098-ef1b-3bec-1d2a-768e478fa413@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170801155813.4b811a4d@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ku
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <65ab0098-ef1b-3bec-1d2a-768e478fa413@ti.com>
+Content-Language: en-US
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Keerthy <j-keerthy@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>, ssantosh@kernel.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linus.walleij@linaro.org, nsekhar@ti.com, t-kristo@ti.com, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 1, 2017 at 3:58 PM, Boris Brezillon
-<boris.brezillon@free-electrons.com> wrote:
-> On Tue, 1 Aug 2017 15:34:14 +0200
-> Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
->> On Tue, 1 Aug 2017 15:11:44 +0200
->> Arnd Bergmann <arnd@arndb.de> wrote:
->> > On Tue, Aug 1, 2017 at 2:29 PM, Boris Brezillon
->> > <boris.brezillon@free-electrons.com> wrote:
-> I just realized I forgot to add a "depends on I2C" in the I3C Kconfig
-> entry. Indeed, I'm unconditionally calling functions provided by the
-> I2C framework which have no dummy wrapper when I2C support is disabled.
-> I could of course conditionally compile some portion of the I3C
-> framework so that it still builds when I2C is disabled but I'm not sure
-> it's worth the trouble.
->
-> This "depends on I2C" should also solve the I2C+I3C driver issue, since
-> I2C is necessarily enabled when I3C is.
->
-> Am I missing something?
+On 08/01/2017 01:12 AM, Vignesh R wrote:
+> 
+> 
+> On Monday 31 July 2017 07:14 PM, Keerthy wrote:
+>>
+>>
+>> On Wednesday 26 July 2017 07:50 PM, Suman Anna wrote:
+>>> On 07/26/2017 08:36 AM, Keerthy wrote:
+>>>>
+>>>> On Wednesday 26 July 2017 06:57 PM, Franklin S Cooper Jr wrote:
+>>>>>
+>>>>>
+>>>>> On 07/26/2017 08:00 AM, Suman Anna wrote:
+>>>>>> Hi Keerthy,
+>>>>>>
+>>>>>> On 07/26/2017 01:45 AM, Keerthy wrote:
+>>>>>>> The patch adds keystone-k2g compatible, specific properties and
+>>>>>>> an example.
+>>>>>
+> [...]
+>>>>>>
+>>>>>
+>>>>> What about power-domain property?
+>>>
+>>> The correct name is "power-domains".
+>>>
+>>>> Driver has no pm_runtime implemented yet.
+>>>
+>>> True, not yet, but this is in general a required property on K2G SoCs to
+>>> automatically enable clocks through runtime_pm. Clock properties on K2G
+>>> nodes should only be truly required if a driver is using clk API
+>>> (ideally to control optional clocks or for adjusting clock frequencies).
+>>> When the gpio-davinci driver gets updated to use pm_runtime, the clock
+>>> properties will be rendered obsolete for K2G.
+>>>
+>>> Rob,
+>>> Any suggestions on how we need to handle this? Should we be adding the
+>>> property now or later when we adapt the driver for runtime_pm? This
+>>> would be a common theme for K2G nodes that are reusing Davinci drivers.
+>>>
+>>> My take on this would be to add the property now, and mark the clock
+>>> properties obsolete when the driver gets converted.
+>>
+> 
+> I don't think SoC wide properties are put into device specific binding
+> documentation, for example pinctrl bindings are not put into device
+> documentation.
 
-That should solve another part of the problem, as a combined driver then
-just needs 'depends on I3C'.
+I wouldn't compare this to pinctrl bindings exactly but more similar to
+clocks or the ti,hwmods on OMAP/AM platforms. I see lot of other
+bindings documenting the power-domains property just as well.
 
-On top of that, the i3c_driver structure could also contain callback
-pointers for the i2c subsystem, e.g. i2c_probe(), i2c_remove() etc.
-When the i2c_probe() callback exists, the i3c layer could construct
-a 'struct i2c_driver' with those callbacks and register that under the
-cover. This would mean that combined drivers no longer need to
-register two driver objects.
+regards
+Suman
 
-         Arnd
+> 
+>> Rob,
+>>
+>> Any comments on this?
+>>
+> 
+> [...]
+> 
+
