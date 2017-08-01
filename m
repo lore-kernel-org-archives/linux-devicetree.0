@@ -1,46 +1,73 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH 2/5] arm: dts: mt2701: Add display bls related nodes for MT2701
-Date: Tue, 1 Aug 2017 15:03:30 +0800
-Message-ID: <1501571013-22327-3-git-send-email-erin.lo@mediatek.com>
-References: <1501571013-22327-1-git-send-email-erin.lo@mediatek.com>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Subject: Re: [PATCH v2 2/4] can: fixed-transceiver: Add documentation for CAN
+ fixed transceiver bindings
+Date: Tue, 1 Aug 2017 09:12:43 +0200
+Message-ID: <20170801071243.GA21203@airbook.vandijck-laurijssen.be>
+References: <20170728130231.GA10680@airbook.vandijck-laurijssen.be>
+ <c7d4c364-1ed9-ca73-2571-d04297ac3788@hartkopp.net>
+ <80c167a2-7eb5-8076-04fc-0989981a523d@ti.com>
+ <20170728194143.GA10599@airbook.vandijck-laurijssen.be>
+ <91879489-87de-21b9-0227-650c0001e6a3@hartkopp.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501571013-22327-1-git-send-email-erin.lo@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Weiqing Kong <weiqing.kong@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-can-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <91879489-87de-21b9-0227-650c0001e6a3@hartkopp.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Franklin S Cooper Jr <fcooper@ti.com>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-From: Weiqing Kong <weiqing.kong@mediatek.com>
+> Hi Kurt,
+> 
+> On 07/28/2017 09:41 PM, Kurt Van Dijck wrote:
+> 
+> >>The transceiver is an analog device that needs to support faster
+> >>switching frequency (FETs) including minimizing delay to support CAN-FD
+> >>ie higher bitrate. From the transceiver perspective the bits for
+> >>"arbitration" and "data" look exactly the same. Since it can't
+> >>differentiate between the two (at the physical layer) then the actual
+> >>limit isn't specific to which part/type of the CAN message is being
+> >>sent. Rather its just a single overall max bitrate limit.
+> >
+> >I must disagree here.
+> >The transceiver is an analog device that performs 2 functions:
+> >propagate tx bits to CAN wire, and propagate CAN wire state
+> >(dominant/recesive) to rx bits.
+> >
+> >I'll rephrase the above explanation to fit your argument:
+> >During arbitration, both directions are required, and needs to propagate
+> >within 1 bit time. The transceiver doesn't know, it just performs to
+> >best effort.
+> >During data, the round-trip timing requirement of layer2 is relaxed.
+> >The transceiver still doesn't know, it still performs to best effort.
+> >Due to the relaxed round-trip timing requirement, the same transceiver
+> >can suddenly allow higher bitrates. The transceiver didn't change, the
+> >requirement did change.
+> >This is what I meant earlier with "layer2 has been adapted to circumvent
+> >layer1 limitations"
+> >
 
-This patch adds the device node of display backlight for MT2701
+> I talked to our CAN transceiver & CAN physical layer specialist who was
+> involved in the ISO activities too.
+> 
+> We just need ONE value: max-bitrate
+> 
+> The CAN transceiver is qualified to provide this bitrate. That's it.
+> There's nothing special with the arbitration bitrate - we don't even need to
+> outline any CAN FD capability.
+> 
+> The other things like 'loop delay compensation' are done in the CAN
+> controller. The better the transceiver get's the bits 'in shape' the higher
+> it can be qualified. But from the SoC/Controller/Linux view we only need the
+> max-bitrate value to double check with the CAN controllers bitrate
+> configuration request (which was Franklins intention).
 
-Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
- arch/arm/boot/dts/mt2701.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+I bet your physical layer specialist understands the details way better
+than I do :-)
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 0619b86..2bcf739 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -529,6 +529,15 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	bls: bls@1400a000 {
-+		compatible = "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-+		clock-names = "main", "mm";
-+		status = "disabled";
-+	};
-+
- 	larb0: larb@14010000 {
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x14010000 0 0x1000>;
--- 
-1.9.1
+1 value it is then.
+
+Kind regards,
+Kurt
+
