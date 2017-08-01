@@ -1,7 +1,7 @@
 From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH 1/5] arm: dts: mt2701: Add ethernet device node
-Date: Tue, 1 Aug 2017 15:03:29 +0800
-Message-ID: <1501571013-22327-2-git-send-email-erin.lo@mediatek.com>
+Subject: [PATCH 4/5] arm: dts: mt2701: Add display subsystem related nodes for MT2701
+Date: Tue, 1 Aug 2017 15:03:32 +0800
+Message-ID: <1501571013-22327-5-git-send-email-erin.lo@mediatek.com>
 References: <1501571013-22327-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,53 +9,134 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501571013-22327-1-git-send-email-erin.lo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Sean Wang <sean.wang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YT Shen <yt.shen@mediatek.com>, Erin Lo <erin.lo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: YT Shen <yt.shen@mediatek.com>
 
-Add ethernet device node for MT2701
+This patch adds the device nodes for the DISP function blocks for MT2701
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: YT Shen <yt.shen@mediatek.com>
 Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 ---
- arch/arm/boot/dts/mt2701.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ arch/arm/boot/dts/mt2701.dtsi | 77 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 77 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index f1efdc6..0619b86 100644
+index 2bcf739..efb5118 100644
 --- a/arch/arm/boot/dts/mt2701.dtsi
 +++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -597,6 +597,30 @@
- 		#clock-cells = <1>;
+@@ -25,6 +25,11 @@
+ 	compatible = "mediatek,mt2701";
+ 	interrupt-parent = <&cirq>;
+ 
++	aliases {
++		rdma0 = &rdma0;
++		rdma1 = &rdma1;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -202,6 +207,16 @@
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
  	};
  
-+	eth: ethernet@1b100000 {
-+		compatible = "mediatek,mt2701-eth", "syscon";
-+		reg = <0 0x1b100000 0 0x20000>;
-+		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 199 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-+			 <&ethsys CLK_ETHSYS_ESW>,
-+			 <&ethsys CLK_ETHSYS_GP1>,
-+			 <&ethsys CLK_ETHSYS_GP2>,
-+			 <&apmixedsys CLK_APMIXED_TRGPLL>;
-+		clock-names = "ethif", "esw", "gp1", "gp2", "trgpll";
-+		resets = <&ethsys MT2701_ETHSYS_FE_RST>,
-+			 <&ethsys MT2701_ETHSYS_GMAC_RST>,
-+			 <&ethsys MT2701_ETHSYS_PPE_RST>;
-+		reset-names = "fe", "gmac", "ppe";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-+		mediatek,ethsys = <&ethsys>;
-+		mediatek,pctl = <&syscfg_pctl_a>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++	mipi_tx0: mipi-dphy@10010000 {
++		compatible = "mediatek,mt2701-mipi-tx";
++		reg = <0 0x10010000 0 0x90>;
++		clocks = <&clk26m>;
++		clock-output-names = "mipi_tx0_pll";
++		#clock-cells = <0>;
++		#phy-cells = <0>;
 +		status = "disabled";
 +	};
 +
- 	bdpsys: syscon@1c000000 {
- 		compatible = "mediatek,mt2701-bdpsys", "syscon";
- 		reg = <0 0x1c000000 0 0x1000>;
+ 	sysirq: interrupt-controller@10200100 {
+ 		compatible = "mediatek,mt2701-sysirq",
+ 			     "mediatek,mt6577-sysirq";
+@@ -529,6 +544,33 @@
+ 		#clock-cells = <1>;
+ 	};
+ 
++	ovl@14007000 {
++		compatible = "mediatek,mt2701-disp-ovl";
++		reg = <0 0x14007000 0 0x1000>;
++		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_OVL>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
++		mediatek,larb = <&larb0>;
++	};
++
++	rdma0: rdma@14008000 {
++		compatible = "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14008000 0 0x1000>;
++		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
++	wdma@14009000 {
++		compatible = "mediatek,mt2701-disp-wdma";
++		reg = <0 0x14009000 0 0x1000>;
++		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_WDMA>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
++		mediatek,larb = <&larb0>;
++	};
++
+ 	bls: bls@1400a000 {
+ 		compatible = "mediatek,mt2701-disp-pwm";
+ 		reg = <0 0x1400a000 0 0x1000>;
+@@ -538,6 +580,32 @@
+ 		status = "disabled";
+ 	};
+ 
++	color@1400b000 {
++		compatible = "mediatek,mt2701-disp-color";
++		reg = <0 0x1400b000 0 0x1000>;
++		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_COLOR>;
++	};
++
++	dsi: dsi@1400c000 {
++		compatible = "mediatek,mt2701-dsi";
++		reg = <0 0x1400c000 0 0x1000>;
++		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DSI_ENGINE>, <&mmsys CLK_MM_DSI_DIG>,
++			 <&mipi_tx0>;
++		clock-names = "engine", "digital", "hs";
++		phys = <&mipi_tx0>;
++		phy-names = "dphy";
++		status = "disabled";
++	};
++
++	mutex: mutex@1400e000 {
++		compatible = "mediatek,mt2701-disp-mutex";
++		reg = <0 0x1400e000 0 0x1000>;
++		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_MUTEX_32K>;
++	};
++
+ 	larb0: larb@14010000 {
+ 		compatible = "mediatek,mt2701-smi-larb";
+ 		reg = <0 0x14010000 0 0x1000>;
+@@ -548,6 +616,15 @@
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+ 	};
+ 
++	rdma1: rdma@14012000 {
++		compatible = "mediatek,mt2701-disp-rdma";
++		reg = <0 0x14012000 0 0x1000>;
++		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
++		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
++		mediatek,larb = <&larb0>;
++	};
++
+ 	imgsys: syscon@15000000 {
+ 		compatible = "mediatek,mt2701-imgsys", "syscon";
+ 		reg = <0 0x15000000 0 0x1000>;
 -- 
 1.9.1
