@@ -1,77 +1,73 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Tue, 1 Aug 2017 11:51:23 -0500
-Message-ID: <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
-References: <1501355870-13960-1-git-send-email-david@lechnology.com>
- <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
- <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 0/9] Add PMIC support to MediaTek MT7622 SoC
+Date: Wed, 2 Aug 2017 00:53:06 +0800
+Message-ID: <1501606386.17690.17.camel@mtkswgap22>
+References: <cover.1500368529.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1500368529.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthias.bgg@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcvMzAvMjAxNyAxMjoxNCBQTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAy
-OS4wNy4yMDE3IDIxLjQwLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiBPbiAwNy8yOS8yMDE3IDAy
-OjE3IFBNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+Pj4gVGhlIGdvYWwgb2YgdGhpcyBzZXJpZXMg
-aXMgdG8gZ2V0IHRoZSBidWlsdC1pbiBMQ0Qgb2YgdGhlIExFR08gCj4+PiBNSU5EU1RPUk1TIEVW
-Mwo+Pj4gd29ya2luZy4gQnV0LCBtb3N0IG9mIHRoZSBjb250ZW50IGhlcmUgaXMgYnVpbGRpbmcg
-dXAgdGhlIAo+Pj4gaW5mcmFzdHJ1Y3R1cmUgdG8gZG8KPj4+IHRoYXQuCj4+Pgo+Pgo+PiBTb21l
-IGdlbmVyYWwgY29tbWVudHMvcXVlc3Rpb25zOgo+Pgo+PiBJIGhhdmUgbm90aWNlZCB0aGF0IERS
-TSBkb2Vzbid0IHJlYWxseSBoYXZlIHN1cHBvcnQgZm9yIG1vbm9jaHJvbWUgCj4+IGRpc3BsYXlz
-LiBJJ20gZ3Vlc3NpbmcgdGhhdCBpcyBiZWNhdXNlIG5vIG9uZSByZWFsbHkgdXNlcyB0aGVtIGFu
-eW1vcmU/Cj4+Cj4gCj4gVGhlIHJlcGFwZXIgZHJpdmVyIHdhcyB0aGUgZmlyc3QgbW9ub2Nocm9t
-ZSBkcm0gZHJpdmVyIGFuZCBJIGNob3NlIHRvCj4gcHJlc2VudCBpdCB0byB1c2Vyc3BhY2UgYXMg
-WFJHQjg4ODggYW5kIGNvbnZlcnQgaXQgdG8gbW9ub2Nocm9tZS4KPiBUaGUgcmVhc29uIGZvciB0
-aGlzIGlzIHRoYXQgZXZlcnl0aGluZywgbGlicmFyaWVzLCBhcHBzLCBwbHltb3V0aCAoYm9vdAo+
-IHNwbGFzaCwgbm8gcmdiNTY1KSBzdXBwb3J0cyBpdC4gSSBkaWRuJ3Qgc2VlIGFueSBwb2ludCBp
-biBhZGRpbmcgYSBuZXcKPiBtb25vY2hyb21lIGRybSBmb3JtYXQgdGhhdCBkaWRuJ3QgaGF2ZSwg
-b3IgcHJvYmFibHkgd291bGRuJ3QgZ2V0Cj4gdXNlcnNwYWNlIHN1cHBvcnQgKGJ5IGxpYnJhcmll
-cyBhdCBsZWFzdCkuIFRoZSBhcHBsaWNhdGlvbiBvZiBjb3Vyc2UKPiBuZWVkcyB0byBrbm93IHRo
-aXMgdG8gZ2V0IGEgZ29vZCByZXN1bHQuCj4gCj4gdGlueWRybV94cmdiODg4OF90b19ncmF5OCgp
-IGRvZXMgdGhlIGNvbnZlcnNpb246Cj4gaHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0v
-ZHJtLW1pc2MvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtP2lkPTM3OWVhOWExYTU5YTVh
-MzJjOGRiNmYxNjRlODBhM2ZkMDBjYjM3ODEgCj4gCj4gCj4+IFRoZSBMRUdPIEVWMyBkaXNwbGF5
-IGlzIGp1c3QgYW4gTENEIChub3QgdGhlIGJhY2tsaXQga2luZCkuIEl0IGhhcyB0d28gCj4+IG1v
-ZGVzIG9mIG9wZXJhdGlvbi4gSXQgY2FuIHRvIDJiYnAgZ3JheXNjYWxlIG9yIGl0IGNhbiBkbyAx
-YnBwIAo+PiBtb25vY2hyb21lLiBUaGUgZ3JheXNjYWxlIGlzbid0IHRoZSBiZXN0IChsb29rcyBz
-cGxvdGNoeSBpbiBwbGFjZXMpLCAKPj4gc28gaXQgd291bGQgYmUgbmljZSB0byBiZSBhYmxlIHRv
-IGNob29zZSBiZXR3ZWVuIHRoZXNlIHR3byBtb2Rlcy4gSG93IAo+PiB3b3VsZCBJIGltcGxlbWVu
-dCBzb21ldGhpbmcgbGlrZSB0aGF0Pwo+Pgo+IAo+IERvIHlvdSBleHBlY3QgYW55b25lIHRvIHVz
-ZSBncmF5c2NhbGUgaWYgaXQgZG9lc24ndCBsb29rIGdvb2Q/Cj4gTWF5YmUgYmV0dGVyIHRvIGFk
-ZCBpdCBsYXRlciBpZiB0aGVyZSdzIGEgZGVtYW5kIGZvciBpdC4KCkkgZG9uJ3QgZXhwZWN0IG1h
-bnkgcGVvcGxlIHRvIHVzZSBpdCBhdCBhbGwuIFRoZSBwZW9wbGUgdGhhdCBkbyB3aWxsIGJlIApo
-YWNrZXJzIGxpa2UgbWUgdGhhdCB3YW50IHRvIHNlZSB3aGF0IGl0IGlzIGNhcGFibGUgb2YsIHNv
-IEkgdGhpbmsgSSAKd2lsbCBrZWVwIGl0IGdyYXlzY2FsZSBieSBkZWZhdWx0LgoKPiAKPj4gQWxz
-bywgaG93IGNhbiBJIGluZGljYXRlIHRvIHVzZXJzcGFjZSB0aGF0IHRoaXMgZGlzcGxheSByZWFs
-bHkgaXMgCj4+IG1vbm9jaHJvbWUvZ3JheXNjYWxlIHNpbmNlIHRoZSByZXBvcnRlZCBjb2xvciBk
-ZXB0aCAxNmJwcD8KPj4KPiAKPiBUaGVyZSBpc24ndCB1bmxlc3Mgd2UgYWRkIGZvcm1hdHMgZm9y
-IGl0Lgo+IFNpbmNlIHRoaXMgZGlzcGxheSBpcyBpbiBhIExlZ28gcGllY2UsIGRvZXNuJ3QgaXQg
-aGF2ZSBjdXN0b20gdXNlcnNwYWNlCj4gdGhhdCBhbHJlYWR5IGtub3cgaXQncyBtb25vY2hyb21l
-PwoKVGhlIG9mZmljaWFsIExFR08gc29mdHdhcmUgaXMgbGlrZSB0aGlzLCB5ZXMuIEJ1dCBJIGFt
-IHdvcmtpbmcgb24gYSAKcHJvamVjdCB0aGF0IHN1cHBvcnRzIG90aGVyIExFR08gY29tcGF0aWJs
-ZSBkZXZpY2VzIHRoYXQgaGF2ZSBjb2xvciAKc2NyZWVucywgc28gdGhlIHNhbWUgc29mdHdhcmUg
-bmVlZHMgdG8gYmUgYWJsZSB0byBkZXRlY3QgYXQgcnVudGltZSAKd2hpY2ggdHlwZSBvZiBzY3Jl
-ZW4gaXQgaXMgdXNpbmcuIEN1cnJlbnRseSBJIGhhdmUgYSBwbGFpbiBmYmRldiBkcml2ZXIgCnRo
-YXQgcHJvdmlkZXMgRkJfVklTVUFMX01PTk8xMCBmb3IgdGhlIEVWMyBkaXNwbGF5IGFuZCBzbyB0
-aGUgc29mdHdhcmUgCmtub3dzIHdoZW4gaXQgaGFzIGEgbW9ub2Nocm9tZSBzY3JlZW4gYW5kIHdo
-ZW4gaXQgZG9lc24ndC4gQnV0IHNpbmNlIApwbGFpbiBmYmRldiBkcml2ZXJzIGNhbid0IGJlIGFj
-Y2VwdGVkIGludG8gbWFpbmxpbmUsIEkgbmVlZCB0byBmaW5kIGEgCmRpZmZlcmVudCB3YXkgdG8g
-ZGV0ZWN0IHdoYXQgdHlwZSBvZiBzY3JlZW4gdGhpcyBpcyBzbyB0aGF0IG15IGdyYXBoaWNzIAps
-aWJyYXJ5IGNhbiB0cmVhdCBpdCBkaWZmZXJlbnRseS4KCgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+Hi, Matthias
+
+Except for patch 1, 2 and 3; the others are entirely related to
+pmic-wrapper driver all belonged to mtk soc code and 
+
+are they all good enough to be ready going through your tree? 
+
+	Sean
+
+On Tue, 2017-07-18 at 17:49 +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
+> 
+> Changes since v1:
+> - enhnace MT6380 regulator dt-binding document following suggestions in the v1.
+> - revise pwrap_init with slave programing options
+> - remove mt6380_get_status() and relevant accessed members
+> - remove debug code in mt6380_regulator_set_mode()
+> - make regulator driver should never modify constraints
+> - revise mode mapping between REGULATOR_MODE_NORMAL and
+> MT6380_REGULATOR_MODE
+> 
+> By default, the relevant board with MediaTek MT7622 SoC is equipped with
+> MediaTek MT6380 PMIC. So the series enables related driver allows the
+> MT6380 can be accessed and controlled through MediaTek PMIC wrapper by
+> those function drivers on MT7622 SoC.
+> 
+> Patch 1-2: Update dt-binding document for PMIC Wrapper and MT6380 regulator.
+> Patch 3:   Add a new driver for MT6380 regulator.
+> Patch 4-7: Update operations in PMIC Wrapper in order to adapt into MT6380.
+> Patch 8:   Add support of MT7622 platform for PMIC Wrapper
+> Patch 9:   Fix warning complained from checkpatch.pl.
+> 
+> Chenglin Xu (2):
+>   regulator: mt6380: Add support for MT6380
+>   soc: mediatek: pwrap: add support for MT7622 SoC
+> 
+> Sean Wang (7):
+>   dt-bindings: arm: mediatek: add MT7622 string to the PMIC wrapper doc
+>   dt-bindings: regulator: Add document for MediaTek MT6380 regulator
+>   soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
+>   soc: mediatek: pwrap: add pwrap_write32 for writing in 32-bit mode
+>   soc: mediatek: pwrap: update pwrap_init without slave programming
+>   soc: mediatek: pwrap: add MediaTek MT6380 as one slave of pwrap
+>   soc: mediatek: pwrap: fixup warnings from coding style
+> 
+>  .../bindings/regulator/mt6380-regulator.txt        |  90 +++++
+>  .../devicetree/bindings/soc/mediatek/pwrap.txt     |   4 +
+>  drivers/regulator/Kconfig                          |   9 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/mt6380-regulator.c               | 359 ++++++++++++++++++
+>  drivers/soc/mediatek/mtk-pmic-wrap.c               | 416 ++++++++++++++++++---
+>  include/linux/regulator/mt6380-regulator.h         |  32 ++
+>  7 files changed, 856 insertions(+), 55 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+>  create mode 100644 drivers/regulator/mt6380-regulator.c
+>  create mode 100644 include/linux/regulator/mt6380-regulator.h
+> 
