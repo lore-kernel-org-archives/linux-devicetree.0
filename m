@@ -1,59 +1,77 @@
-From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [RFC 2/5] i3c: Add core I3C infrastructure
-Date: Tue, 1 Aug 2017 11:47:15 -0500
-Message-ID: <1538596b-80ed-7800-db97-70e73b90b9e2@ti.com>
-References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
- <1501518290-5723-3-git-send-email-boris.brezillon@free-electrons.com>
- <CAK8P3a06GoMdKdn=3Cq0FUwYnjGX0oG+FQLjxfiasVDpbonWRw@mail.gmail.com>
- <20170731231509.77d1fba4@bbrezillon> <20170731214211.GA11776@tetsubishi>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Tue, 1 Aug 2017 11:51:23 -0500
+Message-ID: <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+ <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
+ <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170731214211.GA11776@tetsubishi>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>K
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2017 04:42 PM, Wolfram Sang wrote:
-> 
->> Actually, that's the first option I considered, but I3C and I2C are
->> really different. I'm not talking about the physical layer here, but
->> the way the bus has to be handled by the software layer. Actually, I
->> thing the I3C bus is philosophically closer to auto-discoverable busses
->> like USB than I2C or SPI.
-> 
-> Acked-by: Wolfram Sang <wsa@the-dreams.de>
-> 
->> Of course, I can move all the code in drivers/i2c/, but that won't
->> change the fact that I3C and I2C busses are completely different
->> with little to share between them.
-> 
-> That wouldn't make sense.
-> 
->> To me, the I2C backward compatibility is just a nice feature that was
->> added to help people smoothly transition from mixed I3C busses with
->> both I2C and I3C devices connected to it (I2C devices being here
->> when no (affordable) equivalent exist in the I3C world) to pure I3C
->> busses with only I3C devices connected to it.
-> 
-> Yeah, and it is still to be seen how good this really works. Devices
-> which do clock stretching are out of the question. Probably everything
-> which needs an interrupt as well?
-> 
-
-I'm surprised they didn't allow for slave clock stretching when
-communicating with a legacy i2c device, it will prohibit use of a rather
-large class of devices. :(
-
-As for interrupts you are always free to wire up an out-of-band
-interrupt like before. :)
-
->> This being said, I'd be happy if you prove me wrong and propose a
->> solution that allows us to extend the I2C framework to support I3C
->> without to much pain ;-).
-> 
-> From all I know, I don't see that coming.
-> 
+T24gMDcvMzAvMjAxNyAxMjoxNCBQTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAy
+OS4wNy4yMDE3IDIxLjQwLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiBPbiAwNy8yOS8yMDE3IDAy
+OjE3IFBNLCBEYXZpZCBMZWNobmVyIHdyb3RlOgo+Pj4gVGhlIGdvYWwgb2YgdGhpcyBzZXJpZXMg
+aXMgdG8gZ2V0IHRoZSBidWlsdC1pbiBMQ0Qgb2YgdGhlIExFR08gCj4+PiBNSU5EU1RPUk1TIEVW
+Mwo+Pj4gd29ya2luZy4gQnV0LCBtb3N0IG9mIHRoZSBjb250ZW50IGhlcmUgaXMgYnVpbGRpbmcg
+dXAgdGhlIAo+Pj4gaW5mcmFzdHJ1Y3R1cmUgdG8gZG8KPj4+IHRoYXQuCj4+Pgo+Pgo+PiBTb21l
+IGdlbmVyYWwgY29tbWVudHMvcXVlc3Rpb25zOgo+Pgo+PiBJIGhhdmUgbm90aWNlZCB0aGF0IERS
+TSBkb2Vzbid0IHJlYWxseSBoYXZlIHN1cHBvcnQgZm9yIG1vbm9jaHJvbWUgCj4+IGRpc3BsYXlz
+LiBJJ20gZ3Vlc3NpbmcgdGhhdCBpcyBiZWNhdXNlIG5vIG9uZSByZWFsbHkgdXNlcyB0aGVtIGFu
+eW1vcmU/Cj4+Cj4gCj4gVGhlIHJlcGFwZXIgZHJpdmVyIHdhcyB0aGUgZmlyc3QgbW9ub2Nocm9t
+ZSBkcm0gZHJpdmVyIGFuZCBJIGNob3NlIHRvCj4gcHJlc2VudCBpdCB0byB1c2Vyc3BhY2UgYXMg
+WFJHQjg4ODggYW5kIGNvbnZlcnQgaXQgdG8gbW9ub2Nocm9tZS4KPiBUaGUgcmVhc29uIGZvciB0
+aGlzIGlzIHRoYXQgZXZlcnl0aGluZywgbGlicmFyaWVzLCBhcHBzLCBwbHltb3V0aCAoYm9vdAo+
+IHNwbGFzaCwgbm8gcmdiNTY1KSBzdXBwb3J0cyBpdC4gSSBkaWRuJ3Qgc2VlIGFueSBwb2ludCBp
+biBhZGRpbmcgYSBuZXcKPiBtb25vY2hyb21lIGRybSBmb3JtYXQgdGhhdCBkaWRuJ3QgaGF2ZSwg
+b3IgcHJvYmFibHkgd291bGRuJ3QgZ2V0Cj4gdXNlcnNwYWNlIHN1cHBvcnQgKGJ5IGxpYnJhcmll
+cyBhdCBsZWFzdCkuIFRoZSBhcHBsaWNhdGlvbiBvZiBjb3Vyc2UKPiBuZWVkcyB0byBrbm93IHRo
+aXMgdG8gZ2V0IGEgZ29vZCByZXN1bHQuCj4gCj4gdGlueWRybV94cmdiODg4OF90b19ncmF5OCgp
+IGRvZXMgdGhlIGNvbnZlcnNpb246Cj4gaHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy9kcm0v
+ZHJtLW1pc2MvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtP2lkPTM3OWVhOWExYTU5YTVh
+MzJjOGRiNmYxNjRlODBhM2ZkMDBjYjM3ODEgCj4gCj4gCj4+IFRoZSBMRUdPIEVWMyBkaXNwbGF5
+IGlzIGp1c3QgYW4gTENEIChub3QgdGhlIGJhY2tsaXQga2luZCkuIEl0IGhhcyB0d28gCj4+IG1v
+ZGVzIG9mIG9wZXJhdGlvbi4gSXQgY2FuIHRvIDJiYnAgZ3JheXNjYWxlIG9yIGl0IGNhbiBkbyAx
+YnBwIAo+PiBtb25vY2hyb21lLiBUaGUgZ3JheXNjYWxlIGlzbid0IHRoZSBiZXN0IChsb29rcyBz
+cGxvdGNoeSBpbiBwbGFjZXMpLCAKPj4gc28gaXQgd291bGQgYmUgbmljZSB0byBiZSBhYmxlIHRv
+IGNob29zZSBiZXR3ZWVuIHRoZXNlIHR3byBtb2Rlcy4gSG93IAo+PiB3b3VsZCBJIGltcGxlbWVu
+dCBzb21ldGhpbmcgbGlrZSB0aGF0Pwo+Pgo+IAo+IERvIHlvdSBleHBlY3QgYW55b25lIHRvIHVz
+ZSBncmF5c2NhbGUgaWYgaXQgZG9lc24ndCBsb29rIGdvb2Q/Cj4gTWF5YmUgYmV0dGVyIHRvIGFk
+ZCBpdCBsYXRlciBpZiB0aGVyZSdzIGEgZGVtYW5kIGZvciBpdC4KCkkgZG9uJ3QgZXhwZWN0IG1h
+bnkgcGVvcGxlIHRvIHVzZSBpdCBhdCBhbGwuIFRoZSBwZW9wbGUgdGhhdCBkbyB3aWxsIGJlIApo
+YWNrZXJzIGxpa2UgbWUgdGhhdCB3YW50IHRvIHNlZSB3aGF0IGl0IGlzIGNhcGFibGUgb2YsIHNv
+IEkgdGhpbmsgSSAKd2lsbCBrZWVwIGl0IGdyYXlzY2FsZSBieSBkZWZhdWx0LgoKPiAKPj4gQWxz
+bywgaG93IGNhbiBJIGluZGljYXRlIHRvIHVzZXJzcGFjZSB0aGF0IHRoaXMgZGlzcGxheSByZWFs
+bHkgaXMgCj4+IG1vbm9jaHJvbWUvZ3JheXNjYWxlIHNpbmNlIHRoZSByZXBvcnRlZCBjb2xvciBk
+ZXB0aCAxNmJwcD8KPj4KPiAKPiBUaGVyZSBpc24ndCB1bmxlc3Mgd2UgYWRkIGZvcm1hdHMgZm9y
+IGl0Lgo+IFNpbmNlIHRoaXMgZGlzcGxheSBpcyBpbiBhIExlZ28gcGllY2UsIGRvZXNuJ3QgaXQg
+aGF2ZSBjdXN0b20gdXNlcnNwYWNlCj4gdGhhdCBhbHJlYWR5IGtub3cgaXQncyBtb25vY2hyb21l
+PwoKVGhlIG9mZmljaWFsIExFR08gc29mdHdhcmUgaXMgbGlrZSB0aGlzLCB5ZXMuIEJ1dCBJIGFt
+IHdvcmtpbmcgb24gYSAKcHJvamVjdCB0aGF0IHN1cHBvcnRzIG90aGVyIExFR08gY29tcGF0aWJs
+ZSBkZXZpY2VzIHRoYXQgaGF2ZSBjb2xvciAKc2NyZWVucywgc28gdGhlIHNhbWUgc29mdHdhcmUg
+bmVlZHMgdG8gYmUgYWJsZSB0byBkZXRlY3QgYXQgcnVudGltZSAKd2hpY2ggdHlwZSBvZiBzY3Jl
+ZW4gaXQgaXMgdXNpbmcuIEN1cnJlbnRseSBJIGhhdmUgYSBwbGFpbiBmYmRldiBkcml2ZXIgCnRo
+YXQgcHJvdmlkZXMgRkJfVklTVUFMX01PTk8xMCBmb3IgdGhlIEVWMyBkaXNwbGF5IGFuZCBzbyB0
+aGUgc29mdHdhcmUgCmtub3dzIHdoZW4gaXQgaGFzIGEgbW9ub2Nocm9tZSBzY3JlZW4gYW5kIHdo
+ZW4gaXQgZG9lc24ndC4gQnV0IHNpbmNlIApwbGFpbiBmYmRldiBkcml2ZXJzIGNhbid0IGJlIGFj
+Y2VwdGVkIGludG8gbWFpbmxpbmUsIEkgbmVlZCB0byBmaW5kIGEgCmRpZmZlcmVudCB3YXkgdG8g
+ZGV0ZWN0IHdoYXQgdHlwZSBvZiBzY3JlZW4gdGhpcyBpcyBzbyB0aGF0IG15IGdyYXBoaWNzIAps
+aWJyYXJ5IGNhbiB0cmVhdCBpdCBkaWZmZXJlbnRseS4KCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
