@@ -1,71 +1,40 @@
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH V5 1/2] dt-bindings: timer: add nxp tpm timer binding doc
-Date: Tue, 1 Aug 2017 16:40:16 +0800
-Message-ID: <1501576817-18681-2-git-send-email-aisheng.dong@nxp.com>
-References: <1501576817-18681-1-git-send-email-aisheng.dong@nxp.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/3] PINCTRL: Mediatek pinctrl driver for mt2712
+Date: Tue, 1 Aug 2017 16:44:29 +0800
+Message-ID: <1501577069.32089.0.camel@mtksdaap41>
+References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501576817-18681-1-git-send-email-aisheng.dong@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, shawnguo@kernel.org, ping.bai@nxp.com, anson.huang@nxp.com, dongas86@gmail.com, aisheng.dong@nxp.com, kernel@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501489333-23145-1-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding NXP Low Power Timer/Pulse Width Modulation Module (TPM)
-binding doc.
+On Mon, 2017-07-31 at 16:22 +0800, Zhiyong Tao wrote:
+> This series includes three patches:
+> 1.Add mt2712 compatible node in binding document.
+> 2.Add mt2712 pinctrl device node.
+> 3.Add mt2712 pinctrl driver.
+> 
+> Zhiyong Tao (3):
+>   dt-bindings: pinctrl: mt2712: add binding document
+>   arm64: dts: mt2712: add pintcrl device node.
+>   pinctrl: add mt2712 pinctrl driver
+> 
+>  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 +
+>  arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h      | 1014 +++++++++++
+>  arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |   18 +
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Bai Ping <ping.bai@nxp.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+mt2712e.dtsi doesn't exists in v4.13-rc1.
+What's the base for this series?
 
----
-ChangeLog:
- v1->v5:
- * No changes
----
- .../devicetree/bindings/timer/nxp,tpm-timer.txt    | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
+Joe.C
 
-diff --git a/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-new file mode 100644
-index 0000000..b4aa7dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nxp,tpm-timer.txt
-@@ -0,0 +1,28 @@
-+NXP Low Power Timer/Pulse Width Modulation Module (TPM)
-+
-+The Timer/PWM Module (TPM) supports input capture, output compare,
-+and the generation of PWM signals to control electric motor and power
-+management applications. The counter, compare and capture registers
-+are clocked by an asynchronous clock that can remain enabled in low
-+power modes. TPM can support global counter bus where one TPM drives
-+the counter bus for the others, provided bit width is the same.
-+
-+Required properties:
-+
-+- compatible :	should be "fsl,imx7ulp-tpm"
-+- reg :		Specifies base physical address and size of the register sets
-+		for the clock event device and clock source device.
-+- interrupts :	Should be the clock event device interrupt.
-+- clocks :	The clocks provided by the SoC to drive the timer, must contain
-+		an entry for each entry in clock-names.
-+- clock-names : Must include the following entries: "igp" and "per".
-+
-+Example:
-+tpm5: tpm@40260000 {
-+	compatible = "fsl,imx7ulp-tpm";
-+	reg = <0x40260000 0x1000>;
-+	interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks IMX7ULP_CLK_NIC1_BUS_DIV>,
-+		 <&clks IMX7ULP_CLK_LPTPM5>;
-+	clock-names = "ipg", "per";
-+};
--- 
-2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
