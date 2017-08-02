@@ -1,127 +1,50 @@
 From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 13/23] ARM: dts: rockchip: add i2c dt node for rv1108
-Date: Wed,  2 Aug 2017 16:44:44 +0800
-Message-ID: <1501663484-12418-1-git-send-email-andy.yan@rock-chips.com>
+Subject: [PATCH v2 14/23] spi: rockchip: add compatible string for rv1108 spi
+Date: Wed,  2 Aug 2017 16:46:03 +0800
+Message-ID: <1501663563-12482-1-git-send-email-andy.yan@rock-chips.com>
 References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Andy Yan <andy.yan@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-spi@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-There are four i2c controllers on rv1108, add
-device tree node for them.
+The spi on rv1108 is the same as other rockchip based
+socs, add compatible string for it.
 
 Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
 ---
 
 Changes in v2: None
 
- arch/arm/boot/dts/rv1108.dtsi | 72 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
+ drivers/spi/spi-rockchip.c                             | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 452e397..124ed97 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -52,6 +52,10 @@
- 	interrupt-parent = <&gic>;
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+index 83da493..6e3ffac 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+@@ -6,6 +6,7 @@ and display controllers using the SPI communication interface.
+ Required Properties:
  
- 	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
-+		i2c3 = &i2c3;
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-@@ -154,11 +158,67 @@
- 		status = "disabled";
- 	};
+ - compatible: should be one of the following.
++    "rockchip,rv1108-spi" for rv1108 SoCs.
+     "rockchip,rk3036-spi" for rk3036 SoCS.
+     "rockchip,rk3066-spi" for rk3066 SoCs.
+     "rockchip,rk3188-spi" for rk3188 SoCs.
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index 0b4a52b..27b4db2 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -919,6 +919,7 @@ static const struct dev_pm_ops rockchip_spi_pm = {
+ };
  
-+	i2c1: i2c@10240000 {
-+		compatible = "rockchip,rv1108-i2c";
-+		reg = <0x10240000 0x1000>;
-+		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_I2C1>, <&cru PCLK_I2C1>;
-+		clock-names = "i2c", "pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c1_xfer>;
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@10250000 {
-+		compatible = "rockchip,rv1108-i2c";
-+		reg = <0x10250000 0x1000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_I2C2>, <&cru PCLK_I2C2>;
-+		clock-names = "i2c", "pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2m1_xfer>;
-+		status = "disabled";
-+	};
-+
-+	i2c3: i2c@10260000 {
-+		compatible = "rockchip,rv1108-i2c";
-+		reg = <0x10260000 0x1000>;
-+		interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_I2C3>, <&cru PCLK_I2C3>;
-+		clock-names = "i2c", "pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c3_xfer>;
-+		status = "disabled";
-+	};
-+
- 	grf: syscon@10300000 {
- 		compatible = "rockchip,rv1108-grf", "syscon";
- 		reg = <0x10300000 0x1000>;
- 	};
- 
-+	i2c0: i2c@20000000 {
-+		compatible = "rockchip,rv1108-i2c";
-+		reg = <0x20000000 0x1000>;
-+		interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+		rockchip,grf = <&grf>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&cru SCLK_I2C0_PMU>, <&cru PCLK_I2C0_PMU>;
-+		clock-names = "i2c", "pclk";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c0_xfer>;
-+		status = "disabled";
-+	};
-+
- 	pmugrf: syscon@20060000 {
- 		compatible = "rockchip,rv1108-pmugrf", "syscon";
- 		reg = <0x20060000 0x1000>;
-@@ -343,6 +403,18 @@
- 			input-enable;
- 		};
- 
-+		pcfg_pull_none_smt: pcfg-pull-none-smt {
-+			bias-disable;
-+			input-schmitt-enable;
-+		};
-+
-+		i2c0 {
-+			i2c0_xfer: i2c0-xfer {
-+				rockchip,pins = <0 RK_PB1 RK_FUNC_1 &pcfg_pull_none_smt>,
-+						<0 RK_PB2 RK_FUNC_1 &pcfg_pull_none_smt>;
-+			};
-+		};
-+
- 		i2c1 {
- 			i2c1_xfer: i2c1-xfer {
- 				rockchip,pins = <2 RK_PD3 RK_FUNC_1 &pcfg_pull_up>,
+ static const struct of_device_id rockchip_spi_dt_match[] = {
++	{ .compatible = "rockchip,rv1108-spi", },
+ 	{ .compatible = "rockchip,rk3036-spi", },
+ 	{ .compatible = "rockchip,rk3066-spi", },
+ 	{ .compatible = "rockchip,rk3188-spi", },
 -- 
 2.7.4
