@@ -1,497 +1,56 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v8 14/16] phy: Add an USB PHY driver for the Lantiq SoCs using the RCU module
-Date: Thu,  3 Aug 2017 00:57:15 +0200
-Message-ID: <20170802225717.24408-15-hauke@hauke-m.de>
-References: <20170802225717.24408-1-hauke@hauke-m.de>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170802225717.24408-1-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
+Date: Wed, 2 Aug 2017 16:03:34 -0700
+Message-ID: <20170802230334.GA23728@kroah.com>
+References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
+ <20170728233054.GB30604@kroah.com>
+ <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
+ <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
-the PHY interfaces for each core. The phy instances can be passed to the
-dwc2 driver, which already supports the generic phy interface.
+On Wed, Aug 02, 2017 at 01:31:51PM -0700, Andrey Smirnov wrote:
+> On Fri, Jul 28, 2017 at 5:07 PM, Andrey Smirnov
+> <andrew.smirnov@gmail.com> wrote:
+> > On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> >> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
+> >>> Greg,
+> >>>
+> >>> I am not sure if you are the right person to send these to, if you are
+> >>> not, please let me know who would be the appropriate recepient and sorry for the noise.
+> >>
+> >> Why not the platform driver maintainer(s)?  Doesn't
+> >> scripts/get_maintainer.pl give you an idea for who to send them to?
+> >
+> > Unfortunately I wasn't able to find anyone in MAINTAINERS and running
+> > scripts/get_maintainer.pl on the patch returns only:
+> >
+> > scripts/get_maintainer.pl
+> > v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
+> > Andrey Smirnov <andrew.smirnov@gmail.com>
+> > (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
+> > Andy Shevchenko <andy.shevchenko@gmail.com> (commit_signer:1/1=100%)
+> > linux-kernel@vger.kernel.org (open list)
+> >
+> > hence me reaching out to you.
+> 
+> Greg, did you have any chance to consider this? I have a v6 with a fix
+> for build break reported by kbuild test robot, and I want to avoid
+> spamming the mailing list too much and send it to an appropriate
+> person.
 
-Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- .../bindings/phy/phy-lantiq-rcu-usb2.txt           |  43 +++
- arch/mips/lantiq/xway/sysctrl.c                    |  24 +-
- drivers/phy/Kconfig                                |   1 +
- drivers/phy/Makefile                               |   2 +-
- drivers/phy/lantiq/Kconfig                         |  10 +
- drivers/phy/lantiq/Makefile                        |   1 +
- drivers/phy/lantiq/phy-lantiq-rcu-usb2.c           | 290 +++++++++++++++++++++
- 7 files changed, 358 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
- create mode 100644 drivers/phy/lantiq/Kconfig
- create mode 100644 drivers/phy/lantiq/Makefile
- create mode 100644 drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
+$ mdfrm -c ~/mail/todo/
+944 messages in /home/gregkh/mail/todo/
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
-new file mode 100644
-index 000000000000..76036c5c5d11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-lantiq-rcu-usb2.txt
-@@ -0,0 +1,43 @@
-+Lantiq XWAY SoC RCU USB 1.1/2.0 PHY binding
-+===========================================
-+
-+This binding describes the USB PHY hardware provided by the RCU module on the
-+Lantiq XWAY SoCs.
-+
-+This driver has to be a sub node of the Lantiq RCU block.
-+
-+-------------------------------------------------------------------------------
-+Required properties (controller (parent) node):
-+- compatible	: Should be one of
-+			"lantiq,ase-usb2-phy"
-+			"lantiq,danube-usb2-phy"
-+			"lantiq,xrx100-usb2-phy"
-+			"lantiq,xrx200-usb2-phy"
-+			"lantiq,xrx300-usb2-phy"
-+- reg		: Defines the following sets of registers in the parent
-+		  syscon device
-+			- Offset of the USB PHY configuration register
-+			- Offset of the USB Analog configuration
-+			  register (only for xrx200 and xrx200)
-+- clocks	: References to the (PMU) "ctrl" and "phy" clk gates.
-+- clock-names	: Must be one of the following:
-+			"ctrl"
-+			"phy"
-+- resets	: References to the RCU USB configuration reset bits.
-+- reset-names	: Must be one of the following:
-+			"phy" (optional)
-+			"ctrl" (shared)
-+
-+-------------------------------------------------------------------------------
-+Example for the USB PHYs on an xRX200 SoC:
-+	usb_phy0: usb2-phy@18 {
-+		compatible = "lantiq,xrx200-usb2-phy";
-+		reg = <0x18 4>, <0x38 4>;
-+
-+		clocks = <&pmu PMU_GATE_USB0_CTRL>,
-+			 <&pmu PMU_GATE_USB0_PHY>;
-+		clock-names = "ctrl", "phy";
-+		resets = <&reset1 4 4>, <&reset0 4 4>;
-+		reset-names = "phy", "ctrl";
-+		#phy-cells = <0>;
-+	};
-diff --git a/arch/mips/lantiq/xway/sysctrl.c b/arch/mips/lantiq/xway/sysctrl.c
-index 87eab4d288e5..f76978e4da32 100644
---- a/arch/mips/lantiq/xway/sysctrl.c
-+++ b/arch/mips/lantiq/xway/sysctrl.c
-@@ -469,8 +469,8 @@ void __init ltq_soc_init(void)
- 
- 	if (of_machine_is_compatible("lantiq,grx390") ||
- 	    of_machine_is_compatible("lantiq,ar10")) {
--		clkdev_add_pmu("1e101000.usb", "phy", 1, 2, PMU_ANALOG_USB0_P);
--		clkdev_add_pmu("1e106000.usb", "phy", 1, 2, PMU_ANALOG_USB1_P);
-+		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB0_P);
-+		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 2, PMU_ANALOG_USB1_P);
- 		/* rc 0 */
- 		clkdev_add_pmu("1d900000.pcie", "phy", 1, 2, PMU_ANALOG_PCIE0_P);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
-@@ -490,8 +490,8 @@ void __init ltq_soc_init(void)
- 		else
- 			clkdev_add_static(CLOCK_133M, CLOCK_133M,
- 						CLOCK_133M, CLOCK_133M);
--		clkdev_add_pmu("1e101000.usb", "ctl", 1, 0, PMU_USB0);
--		clkdev_add_pmu("1e101000.usb", "phy", 1, 0, PMU_USB0_P);
-+		clkdev_add_pmu("1f203018.usb2-phy", "ctrl", 1, 0, PMU_USB0);
-+		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 0, PMU_USB0_P);
- 		clkdev_add_pmu("1e180000.etop", "ppe", 1, 0, PMU_PPE);
- 		clkdev_add_cgu("1e180000.etop", "ephycgu", CGU_EPHY);
- 		clkdev_add_pmu("1e180000.etop", "ephy", 1, 0, PMU_EPHY);
-@@ -526,10 +526,10 @@ void __init ltq_soc_init(void)
- 	} else if (of_machine_is_compatible("lantiq,vr9")) {
- 		clkdev_add_static(ltq_vr9_cpu_hz(), ltq_vr9_fpi_hz(),
- 				ltq_vr9_fpi_hz(), ltq_vr9_pp32_hz());
--		clkdev_add_pmu("1e101000.usb", "phy", 1, 0, PMU_USB0_P);
--		clkdev_add_pmu("1e101000.usb", "ctl", 1, 0, PMU_USB0 | PMU_AHBM);
--		clkdev_add_pmu("1e106000.usb", "phy", 1, 0, PMU_USB1_P);
--		clkdev_add_pmu("1e106000.usb", "ctl", 1, 0, PMU_USB1 | PMU_AHBM);
-+		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 0, PMU_USB0_P);
-+		clkdev_add_pmu("1f203018.usb2-phy", "ctrl", 1, 0, PMU_USB0 | PMU_AHBM);
-+		clkdev_add_pmu("1f203034.usb2-phy", "phy", 1, 0, PMU_USB1_P);
-+		clkdev_add_pmu("1f203034.usb2-phy", "ctrl", 1, 0, PMU_USB1 | PMU_AHBM);
- 		clkdev_add_pmu("1d900000.pcie", "phy", 1, 1, PMU1_PCIE_PHY);
- 		clkdev_add_pmu("1d900000.pcie", "bus", 1, 0, PMU_PCIE_CLK);
- 		clkdev_add_pmu("1d900000.pcie", "msi", 1, 1, PMU1_PCIE_MSI);
-@@ -550,8 +550,8 @@ void __init ltq_soc_init(void)
- 	} else if (of_machine_is_compatible("lantiq,ar9")) {
- 		clkdev_add_static(ltq_ar9_cpu_hz(), ltq_ar9_fpi_hz(),
- 				ltq_ar9_fpi_hz(), CLOCK_250M);
--		clkdev_add_pmu("1e101000.usb", "ctl", 1, 0, PMU_USB0);
--		clkdev_add_pmu("1e101000.usb", "phy", 1, 0, PMU_USB0_P);
-+		clkdev_add_pmu("1f203018.usb2-phy", "ctrl", 1, 0, PMU_USB0);
-+		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 0, PMU_USB0_P);
- 		clkdev_add_pmu("1e106000.usb", "ctl", 1, 0, PMU_USB1);
- 		clkdev_add_pmu("1e106000.usb", "phy", 1, 0, PMU_USB1_P);
- 		clkdev_add_pmu("1e180000.etop", "switch", 1, 0, PMU_SWITCH);
-@@ -562,8 +562,8 @@ void __init ltq_soc_init(void)
- 	} else {
- 		clkdev_add_static(ltq_danube_cpu_hz(), ltq_danube_fpi_hz(),
- 				ltq_danube_fpi_hz(), ltq_danube_pp32_hz());
--		clkdev_add_pmu("1e101000.usb", "ctl", 1, 0, PMU_USB0);
--		clkdev_add_pmu("1e101000.usb", "phy", 1, 0, PMU_USB0_P);
-+		clkdev_add_pmu("1f203018.usb2-phy", "ctrl", 1, 0, PMU_USB0);
-+		clkdev_add_pmu("1f203018.usb2-phy", "phy", 1, 0, PMU_USB0_P);
- 		clkdev_add_pmu("1e103000.sdio", NULL, 1, 0, PMU_SDIO);
- 		clkdev_add_pmu("1e103100.deu", NULL, 1, 0, PMU_DEU);
- 		clkdev_add_pmu("1e116000.mei", "dfe", 1, 0, PMU_DFE);
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index c1807d4a0079..968088ceaeb3 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -52,6 +52,7 @@ source "drivers/phy/allwinner/Kconfig"
- source "drivers/phy/amlogic/Kconfig"
- source "drivers/phy/broadcom/Kconfig"
- source "drivers/phy/hisilicon/Kconfig"
-+source "drivers/phy/lantiq/Kconfig"
- source "drivers/phy/marvell/Kconfig"
- source "drivers/phy/motorola/Kconfig"
- source "drivers/phy/qualcomm/Kconfig"
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index f252201e0ec9..a8b9439a5d8e 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -7,9 +7,9 @@ obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_MT65XX_USB3)		+= phy-mt65xx-usb3.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
--
- obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
- obj-$(CONFIG_ARCH_MESON)		+= amlogic/
-+obj-$(CONFIG_LANTIQ)			+= lantiq/
- obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
- obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
- obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
-diff --git a/drivers/phy/lantiq/Kconfig b/drivers/phy/lantiq/Kconfig
-new file mode 100644
-index 000000000000..a2d5006b3dc7
---- /dev/null
-+++ b/drivers/phy/lantiq/Kconfig
-@@ -0,0 +1,10 @@
-+#
-+# Phy drivers for Lantiq / Intel platforms
-+#
-+config PHY_LANTIQ_RCU_USB2
-+	tristate "Lantiq XWAY SoC RCU based USB PHY"
-+	depends on SOC_TYPE_XWAY
-+	depends on OF
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB PHY(s) on the Lantiq / Intel XWAY family SoCs.
-diff --git a/drivers/phy/lantiq/Makefile b/drivers/phy/lantiq/Makefile
-new file mode 100644
-index 000000000000..f73eb56a5416
---- /dev/null
-+++ b/drivers/phy/lantiq/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_PHY_LANTIQ_RCU_USB2)	+= phy-lantiq-rcu-usb2.o
-diff --git a/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
-new file mode 100644
-index 000000000000..8f5687737b50
---- /dev/null
-+++ b/drivers/phy/lantiq/phy-lantiq-rcu-usb2.c
-@@ -0,0 +1,290 @@
-+/*
-+ * Lantiq XWAY SoC RCU module based USB 1.1/2.0 PHY driver
-+ *
-+ * Copyright (C) 2016 Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-+ * Copyright (C) 2017 Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+/* Transmitter HS Pre-Emphasis Enable */
-+#define RCU_CFG1_TX_PEE		BIT(0)
-+/* Disconnect Threshold */
-+#define RCU_CFG1_DIS_THR_MASK	0x00038000
-+#define RCU_CFG1_DIS_THR_SHIFT	15
-+
-+struct ltq_rcu_usb2_bits {
-+	u8 hostmode;
-+	u8 slave_endianness;
-+	u8 host_endianness;
-+	bool have_ana_cfg;
-+};
-+
-+struct ltq_rcu_usb2_priv {
-+	struct regmap			*regmap;
-+	unsigned int			phy_reg_offset;
-+	unsigned int			ana_cfg1_reg_offset;
-+	const struct ltq_rcu_usb2_bits	*reg_bits;
-+	struct device			*dev;
-+	struct phy			*phy;
-+	struct clk			*ctrl_gate_clk;
-+	struct clk			*phy_gate_clk;
-+	struct reset_control		*ctrl_reset;
-+	struct reset_control		*phy_reset;
-+};
-+
-+static const struct ltq_rcu_usb2_bits xway_rcu_usb2_reg_bits = {
-+	.hostmode = 11,
-+	.slave_endianness = 9,
-+	.host_endianness = 10,
-+	.have_ana_cfg = false,
-+};
-+
-+static const struct ltq_rcu_usb2_bits xrx100_rcu_usb2_reg_bits = {
-+	.hostmode = 11,
-+	.slave_endianness = 17,
-+	.host_endianness = 10,
-+	.have_ana_cfg = false,
-+};
-+
-+static const struct ltq_rcu_usb2_bits xrx200_rcu_usb2_reg_bits = {
-+	.hostmode = 11,
-+	.slave_endianness = 9,
-+	.host_endianness = 10,
-+	.have_ana_cfg = true,
-+};
-+
-+static const struct of_device_id ltq_rcu_usb2_phy_of_match[] = {
-+	{
-+		.compatible = "lantiq,ase-usb2-phy",
-+		.data = &xway_rcu_usb2_reg_bits,
-+	},
-+	{
-+		.compatible = "lantiq,danube-usb2-phy",
-+		.data = &xway_rcu_usb2_reg_bits,
-+	},
-+	{
-+		.compatible = "lantiq,xrx100-usb2-phy",
-+		.data = &xrx100_rcu_usb2_reg_bits,
-+	},
-+	{
-+		.compatible = "lantiq,xrx200-usb2-phy",
-+		.data = &xrx200_rcu_usb2_reg_bits,
-+	},
-+	{
-+		.compatible = "lantiq,xrx300-usb2-phy",
-+		.data = &xrx200_rcu_usb2_reg_bits,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ltq_rcu_usb2_phy_of_match);
-+
-+
-+static int ltq_rcu_usb2_phy_power_on(struct phy *phy)
-+{
-+	struct ltq_rcu_usb2_priv *priv = phy_get_drvdata(phy);
-+
-+	reset_control_deassert(priv->phy_reset);
-+
-+	return 0;
-+}
-+
-+static int ltq_rcu_usb2_phy_power_off(struct phy *phy)
-+{
-+	struct ltq_rcu_usb2_priv *priv = phy_get_drvdata(phy);
-+
-+	reset_control_assert(priv->phy_reset);
-+
-+	return 0;
-+}
-+
-+static struct phy_ops ltq_rcu_usb2_phy_ops = {
-+	.power_on	= ltq_rcu_usb2_phy_power_on,
-+	.power_off	= ltq_rcu_usb2_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int ltq_rcu_usb2_start_cores(struct ltq_rcu_usb2_priv *priv)
-+{
-+	struct device *dev = priv->dev;
-+	int ret;
-+
-+	/* Power on the USB core. */
-+	ret = clk_prepare_enable(priv->ctrl_gate_clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable CTRL gate\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * Power on the USB PHY. We have to do it early because
-+	 * otherwise the second core won't turn on properly.
-+	 */
-+	ret = clk_prepare_enable(priv->phy_gate_clk);
-+	if (ret) {
-+		clk_disable_unprepare(priv->ctrl_gate_clk);
-+		dev_err(dev, "failed to enable PHY gate\n");
-+		return ret;
-+	}
-+
-+	if (priv->reg_bits->have_ana_cfg) {
-+		regmap_update_bits(priv->regmap, priv->ana_cfg1_reg_offset,
-+			RCU_CFG1_TX_PEE, RCU_CFG1_TX_PEE);
-+		regmap_update_bits(priv->regmap, priv->ana_cfg1_reg_offset,
-+			RCU_CFG1_DIS_THR_MASK, 7 << RCU_CFG1_DIS_THR_SHIFT);
-+	}
-+
-+	/* Configure core to host mode */
-+	regmap_update_bits(priv->regmap, priv->phy_reg_offset,
-+			   BIT(priv->reg_bits->hostmode), 0);
-+
-+	/* Select DMA endianness (Host-endian: big-endian) */
-+	regmap_update_bits(priv->regmap, priv->phy_reg_offset,
-+		BIT(priv->reg_bits->slave_endianness), 0);
-+	regmap_update_bits(priv->regmap, priv->phy_reg_offset,
-+		BIT(priv->reg_bits->host_endianness),
-+		BIT(priv->reg_bits->host_endianness));
-+
-+	/* Reset USB core throgh reset controller */
-+	reset_control_deassert(priv->ctrl_reset);
-+
-+	reset_control_assert(priv->phy_reset);
-+
-+	return 0;
-+}
-+
-+static int ltq_rcu_usb2_of_probe(struct ltq_rcu_usb2_priv *priv,
-+				 struct platform_device *pdev)
-+{
-+	struct device *dev = priv->dev;
-+	struct resource *res;
-+	struct resource res_parent;
-+	int ret;
-+
-+	priv->reg_bits = of_device_get_match_data(dev);
-+
-+	priv->regmap = syscon_node_to_regmap(dev->of_node->parent);
-+	if (IS_ERR(priv->regmap)) {
-+		dev_err(dev, "Failed to lookup RCU regmap\n");
-+		return PTR_ERR(priv->regmap);
-+	}
-+
-+	ret = of_address_to_resource(dev->of_node->parent, 0, &res_parent);
-+	if (ret)
-+		return ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(dev, "Failed to get RCU PHY reg offset\n");
-+		return ret;
-+	}
-+
-+	if (res->start < res_parent.start)
-+		return -ENOENT;
-+	priv->phy_reg_offset = res->start - res_parent.start;
-+
-+	if (priv->reg_bits->have_ana_cfg) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		if (!res) {
-+			dev_err(dev, "Failed to get RCU ANA CFG1 reg offset\n");
-+			return ret;
-+		}
-+
-+		if (res->start < res_parent.start)
-+			return -ENOENT;
-+		priv->ana_cfg1_reg_offset = res->start - res_parent.start;
-+	}
-+
-+	priv->ctrl_gate_clk = devm_clk_get(dev, "ctrl");
-+	if (IS_ERR(priv->ctrl_gate_clk)) {
-+		dev_err(dev, "Unable to get USB ctrl gate clk\n");
-+		return PTR_ERR(priv->ctrl_gate_clk);
-+	}
-+
-+	priv->phy_gate_clk = devm_clk_get(dev, "phy");
-+	if (IS_ERR(priv->phy_gate_clk)) {
-+		dev_err(dev, "Unable to get USB phy gate clk\n");
-+		return PTR_ERR(priv->phy_gate_clk);
-+	}
-+
-+	priv->ctrl_reset = devm_reset_control_get_shared(dev, "ctrl");
-+	if (IS_ERR(priv->ctrl_reset)) {
-+		if (PTR_ERR(priv->ctrl_reset) != -EPROBE_DEFER)
-+			dev_err(dev, "failed to get 'ctrl' reset\n");
-+		return PTR_ERR(priv->ctrl_reset);
-+	}
-+
-+	priv->phy_reset = devm_reset_control_get_optional(dev, "phy");
-+	if (IS_ERR(priv->phy_reset))
-+		return PTR_ERR(priv->phy_reset);
-+
-+	return 0;
-+}
-+
-+static int ltq_rcu_usb2_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ltq_rcu_usb2_priv *priv;
-+	struct phy_provider *provider;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+
-+	ret = ltq_rcu_usb2_of_probe(priv, pdev);
-+	if (ret)
-+		return ret;
-+
-+	priv->phy = devm_phy_create(dev, dev->of_node, &ltq_rcu_usb2_phy_ops);
-+	if (IS_ERR(priv->phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(priv->phy);
-+	}
-+
-+	phy_set_drvdata(priv->phy, priv);
-+
-+	ret = ltq_rcu_usb2_start_cores(priv);
-+	if (ret)
-+		return ret;
-+
-+	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		clk_disable_unprepare(priv->phy_gate_clk);
-+		clk_disable_unprepare(priv->ctrl_gate_clk);
-+		return PTR_ERR(provider);
-+	}
-+
-+	dev_set_drvdata(priv->dev, priv);
-+	return 0;
-+}
-+
-+static struct platform_driver ltq_rcu_usb2_phy_driver = {
-+	.probe	= ltq_rcu_usb2_phy_probe,
-+	.driver = {
-+		.name	= "lantiq-rcu-usb2-phy",
-+		.of_match_table	= ltq_rcu_usb2_phy_of_match,
-+	}
-+};
-+module_platform_driver(ltq_rcu_usb2_phy_driver);
-+
-+MODULE_AUTHOR("Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>");
-+MODULE_DESCRIPTION("Lantiq XWAY USB2 PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Please be patient if you are waiting for a review from me, my queue is
+kind of big...
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
