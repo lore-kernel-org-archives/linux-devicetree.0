@@ -1,42 +1,133 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 23/23] ARM: dts: rockchip: add accelerometer bma250e dt node for rv1108 evb
-Date: Wed,  2 Aug 2017 17:00:38 +0800
-Message-ID: <1501664438-13046-1-git-send-email-andy.yan@rock-chips.com>
-References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, robh+dt@kernel.org, Andy Yan <andy.yan@rock-chips.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Wed, 2 Aug 2017 12:19:06 +0300
+Message-ID: <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
+ <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+ <20170731123157.GJ3053@localhost>
+ <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+ <20170802045522.GU3053@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170802045522.GU3053@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vinod.koul@intel.com>, Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-Add dt node of bosch accelerometer bma250e on rv1108 evb.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
 
-Changes in v2: None
+On 2017-08-02 07:55, Vinod Koul wrote:
+> On Tue, Aug 01, 2017 at 09:32:50AM +0000, Pierre Yves MORDRET wrote:
+>>
+>>
+>> On 07/31/2017 02:31 PM, Vinod Koul wrote:
+>>> On Wed, Jul 26, 2017 at 07:38:02AM +0000, Pierre Yves MORDRET wrote:
+>>>>>>>> +
+>>>>>>>> +#ifndef __DMA_STM32_DMAMUX_H
+>>>>>>>> +#define __DMA_STM32_DMAMUX_H
+>>>>>>>> +
+>>>>>>>> +#if defined(CONFIG_STM32_DMAMUX)
+>>>>>>>> +int stm32_dmamux_set_config(struct device *dev, void *route_data,=
+ u32 chan_id);
+>>>>>>>
+>>>>>>> Why do we need a custom API in this case?
+>>>>>>>
+>>>>>>
+>>>>>> This API is called by DMA when a slave is requested by client. DMA c=
+an work
+>>>>>> without DMAMUX this API has been put in place to configure DMAMUX wh=
+ether client
+>>>>>> is requesting a DMAMUX Channel instead of a DMA one.
+>>>>>
+>>>>> You mean the dmaengine driver right?
+>>>>>
+>>>>
+>>>> Yes. The API is mainly called by "device_config" through out STM32 DMA=
+ Driver
+>>>> when a router is in place for client.
+>>>> Please refer to Patch 4/5 on this set.
+>>>
+>>> Okay am thinking on why this can't be generic..? An optional router con=
+fig
+>>> callback?
+>>>
+>>
+>> I would have liked to answer there is a callback within engine but unfor=
+tunately
+>> I didn't figure out one when I did my router's development. I've looked =
+once
+>> more but again I can't find how to map chanID and request line without c=
+ustom API.
+>
+> Yes there is no callback for routers but we can add a generic callback
+> here to be used. I added Peter for his comments, isn't that something they
+> need too?
 
- arch/arm/boot/dts/rv1108-evb.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+The event router via of_dma_router_register() should be capable of =
 
-diff --git a/arch/arm/boot/dts/rv1108-evb.dts b/arch/arm/boot/dts/rv1108-evb.dts
-index a1bd95e..6690083 100644
---- a/arch/arm/boot/dts/rv1108-evb.dts
-+++ b/arch/arm/boot/dts/rv1108-evb.dts
-@@ -110,6 +110,13 @@
- 	i2c-scl-falling-time-ns = <16>;
- 	clock-frequency = <400000>;
- 
-+	bma250: accelerometer@19 {
-+		compatible = "bosch,bma250e";
-+		reg = <0x19>;
-+		interrupt-parent = <&gpio0>;
-+		interrupts = <RK_PB3 IRQ_TYPE_LEVEL_LOW>;
-+	};
-+
- 	rk805: pmic@18 {
- 		compatible = "rockchip,rk805";
- 		reg = <0x18>;
--- 
-2.7.4
+handling different type of muxers, like the ti-dma-crossbar.c is doing =
+
+for two different type of event crossbars.
+
+Basically with the of_dma_route_allocate you craft a dma_spec which can =
+
+be understood by the dma-master pointed form the router's node.
+You do the configuration of the mux in this function, craft the dma_spec =
+
+and that's it. In DT the peripherals are using the router's node for DMA =
+
+binding and everything is transparent for them.
+
+Note: The use of am335x xbar in the ti-dma-crossbar is optional and only =
+
+needed when we need to have different event than the default for a =
+
+specific dma request line.
+
+If you normally use the DMA like this:
+dmas =3D <&edma 129 1>, <&ddma_xbar 128 1>;
+dma-names =3D "tx", "rx";
+
+If you have DMA event router/mux, then depending on how it works you =
+
+might have different number of parameters. In my case the DRA7 crossbar =
+
+does not need extra parameter, so to get it in use:
+dmas =3D <&edma_xbar 129 1>, <&edma_xbar 128 1>;
+dma-names =3D "tx", "rx";
+
+The router driver will rewrite the dma_spec and replace the 129/128 and =
+
+pass something different to the dma-master (dynamic event mapping).
+
+On am335x we have different xbar type so there:
+
+dmas =3D <&edma_xbar 12 0 1>, <&edma_xbar 13 0 2>;
+
+Out from this the router driver will create a spec equivalent to
+dmas =3D <&edma_xbar 12 0>, <&edma_xbar 13 0>;
+
+But it will change the xbar that DMA request 12/13 will not have the =
+
+default event routed to.
+
+I believe that the dma_router infra we have in dmaengine can cover most =
+
+if not all use cases...
+
+- P=E9ter
