@@ -1,48 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: Convert to using %pOF instead of full_name
-Date: Wed, 2 Aug 2017 13:51:47 +0200
-Message-ID: <CACRpkdauP1T9bpp8C68wt6oK7gosAHt3pR7i=2+zRvPwXHo3ZA@mail.gmail.com>
-References: <20170718214339.7774-43-robh@kernel.org>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
+Subject: Re: [PATCH v2 0/4] leds: pca955x: add GPIO support
+Date: Wed, 2 Aug 2017 13:57:29 +0200
+Message-ID: <dad22552-3314-c315-a3c5-89e6718230b0@kaod.org>
+References: <1501589349-5681-1-git-send-email-clg@kaod.org>
+ <20170802113351.GA2528@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170718214339.7774-43-robh@kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Jones <lee@kernel.org>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, Patrice Chotard <patrice.chotard@st.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Barry Song <baohua@kernel.org>, linux-gpio@vger.kernel.
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170802113351.GA2528@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 11:43 PM, Rob Herring <robh@kernel.org> wrote:
+On 08/02/2017 01:33 PM, Pavel Machek wrote:
+> Hi!
+> 
+>> The PCA955x family of chips are I2C LED blinkers whose pins not used
+>> to control LEDs can be used as general purpose I/Os (GPIOs).
+>>
+>> The following adds support for device tree and Open Firmware to be
+>> able do define different operation modes for each pin. See bindings
+>> documentation for more details. The pca955x driver is then extended
+>> with a gpio_chip when pins are operating in GPIO mode.
+>>
+>> The driver follows the scheme of the leds-pca9532 driver which behaves
+>> quite similarly.
+> 
+> Is there reason not to treat pca955x chip as a GPIO extender, and then
+> use leds-gpio on top?
 
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
->
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Lee Jones <lee@kernel.org>
-> Cc: Eric Anholt <eric@anholt.net>
-> Cc: Stefan Wahren <stefan.wahren@i2se.com>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: Ludovic Desroches <ludovic.desroches@microchip.com>
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: Krzysztof Kozlowski <krzk@kernel.org>
-> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Barry Song <baohua@kernel.org>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: linux-rpi-kernel@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: kernel@stlinux.com
-> Cc: linux-samsung-soc@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
+I would say mostly because there is already a leds-pca955x driver and
+that the primary nature of the chip is being a LED blinker. It also 
+supports different blinking rates.
 
-Patch applied with the recieved ACKs.
+If all pins are defined as GPIOs, the device then behaves as a GPIO 
+extender on which we can use leds-gpio. It might be a bit awkward
+that way but it should work.
 
-Yours,
-Linus Walleij
+Thanks,
+
+C.
