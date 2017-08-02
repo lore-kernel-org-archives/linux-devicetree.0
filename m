@@ -1,238 +1,56 @@
-From: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: add mt2712 pinctrl driver
-Date: Wed, 2 Aug 2017 14:03:57 +0800
-Message-ID: <1501653837.844.39.camel@mhfsdcap03>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1501489333-23145-4-git-send-email-zhiyong.tao@mediatek.com>
-         <1501578845.32089.18.camel@mtksdaap41>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 09/25] mtd: nand: qcom: remove memset for clearing read
+ register buffer
+Date: Wed, 2 Aug 2017 11:36:12 +0530
+Message-ID: <3804c0db-940d-24d6-dae0-7965bfb3f259@codeaurora.org>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-10-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501578845.32089.18.camel@mtksdaap41>
+In-Reply-To: <1500464893-11352-10-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-01 at 17:14 +0800, Yingjoe Chen wrote:
-> 
-> Hi Zhiyong,
-> 
-> 
-> 
-> On Mon, 2017-07-31 at 16:22 +0800, Zhiyong Tao wrote:
-> <...>
-> > 3)Add "spec_dir_set" and "spec_dir_get" in "mtk_pinctrl_devdata".
-> > 4)Change "spec_dir_set" and add "spec_dir_get" in "pinctrl-mt2701.c"
-> >   and "pinctrl-mtk-common.c".
-> 
-> I think these deserve another patch.
-> Please also explain why we need this.
-
-==> ok, I will separate it in another patch in the next version.
-Because we should control another gpio base register for gpio16 and 17
-in mt2712 E1. It is special for the direction control in gpio16 and
-gpio17.
-> 
-> 
-> > 5)Change "port_mask" from "7" to "6" for EINT.
-> 
-> I'm assuming this is a bug fix for mt2701?
-> If yes, this should be a separate patch.
-
-==> yes, it is a bug fix for mt2701. When I use EINT bothe edge triggle,
-offset can't get the offset address which offset address is 1/3/5/7.
-I will separate it in another patch in the next version.
-> 
-> > 6)Remove generic pull config condition in "mtk_pconf_set_pull_select".
-> > 7)Change "arg" to "MTK_PUPD_SET_R1R0_00" of "mtk_pconf_set_pull_select".
-> 
-> Why we need to change arg?
-
-==> to parse the "bias-disable" property in dts for special pins.
-
-> 
-> 
-> > 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/pinctrl/mediatek/Kconfig              |    8 +
-> >  drivers/pinctrl/mediatek/Makefile             |    1 +
-> >  drivers/pinctrl/mediatek/pinctrl-mt2701.c     |   21 +-
-> >  drivers/pinctrl/mediatek/pinctrl-mt2712.c     |  670 +++++++++
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-common.c |   16 +-
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-common.h |   44 +-
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h | 1858 +++++++++++++++++++++++++
-> >  7 files changed, 2586 insertions(+), 32 deletions(-)
-> >  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mt2712.c
-> >  create mode 100644 drivers/pinctrl/mediatek/pinctrl-mtk-mt2712.h
-> > 
-> 
-> <...>
-> 
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2701.c b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> > index f86f3b3..4a43f5c 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mt2701.c
-> > @@ -503,10 +503,26 @@ static void mt2701_spec_pinmux_set(struct regmap *reg, unsigned int pin,
-> >  	regmap_update_bits(reg, mt2701_spec_pinmux[i].offset, mask, value);
-> >  }
-> >  
-> > -static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
-> > +static int mt2701_spec_dir_set(struct mtk_pinctrl *pctl,
-> > +				unsigned int *reg_addr,
-> > +				unsigned int pin,
-> > +				bool input)
-> >  {
-> >  	if (pin > 175)
-> >  		*reg_addr += 0x10;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int mt2701_spec_dir_get(struct mtk_pinctrl *pctl,
-> > +				unsigned int *reg_addr,
-> > +				unsigned int pin,
-> > +				bool input)
-> 
-> incorrect prototype?
-> 
-> > +{
-> > +	if (pin > 175)
-> > +		*reg_addr += 0x10;
-> > +
-> > +	return 0;
-> >  }
-> >  
-> >  static const struct mtk_pinctrl_devdata mt2701_pinctrl_data = {
-> > @@ -520,6 +536,7 @@ static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
-> >  	.spec_ies_smt_set = mt2701_ies_smt_set,
-> >  	.spec_pinmux_set = mt2701_spec_pinmux_set,
-> >  	.spec_dir_set = mt2701_spec_dir_set,
-> > +	.spec_dir_get = mt2701_spec_dir_get,
-> >  	.dir_offset = 0x0000,
-> >  	.pullen_offset = 0x0150,
-> >  	.pullsel_offset = 0x0280,
-> > @@ -551,7 +568,7 @@ static void mt2701_spec_dir_set(unsigned int *reg_addr, unsigned int pin)
-> >  		.dbnc_ctrl = 0x500,
-> >  		.dbnc_set  = 0x600,
-> >  		.dbnc_clr  = 0x700,
-> > -		.port_mask = 6,
-> > +		.port_mask = 7,
-> >  		.ports     = 6,
-> >  	},
-> >  	.ap_num = 169,
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mt2712.c b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-> > new file mode 100644
-> > index 0000000..c933b75
-> > --- /dev/null
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mt2712.c
-> 
-> <...>
-> 
-> > +
-> > +static int mt2712_spec_dir_set(struct mtk_pinctrl *pctl,
-> > +				unsigned int *reg_addr,
-> > +				unsigned int pin,
-> > +				bool input)
-> > +{
-> > +	u32 reg_val;
-> > +
-> > +	if (pin == 16) {
-> > +		regmap_read(pctl->regmap2, 0x940, &reg_val);
-> > +		reg_val |= BIT(15);
-> > +		if (input == true)
-> > +			reg_val &= ~BIT(14);
-> > +		else
-> > +			reg_val |= BIT(14);
-> > +		regmap_write(pctl->regmap2, 0x940, reg_val);
-> > +	}
-> > +
-> > +	if (pin == 17) {
-> > +		regmap_read(pctl->regmap2, 0x940, &reg_val);
-> > +		reg_val |= BIT(7);
-> > +		if (input == true)
-> > +			reg_val &= ~BIT(6);
-> > +		else
-> > +			reg_val |= BIT(6);
-> > +		regmap_write(pctl->regmap2, 0x940, reg_val);
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> Does this means pin 16, 17 is in different/special reg/bit location?
-> I didn't see spec_dir_get in your patch, does this means they are in
-> standard location or you just forgot it?
-> 
-> The original idea of spec_dir_set is to get the register offset for the
-> pin, so both set_direction and get_direction are using the same
-> extension function. Instead of adding a new spec_dir_get, can we just
-> extend the function to also include bit location?
-
-==> In mt2712 E1 gpi16 and gpio17 direction control is special. The
-based register is different. so we add "struct mtk_pinctrl *pctl"
-parameter to get the regmap2. The direction status is also different.
-we forgot to add spec_dir_get, we will add it in the next version.
-> 
-> 
-> 
-> <...>
-> 
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > index 3cf384f..aeec87e 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common.c
-> > @@ -84,7 +84,7 @@ static int mtk_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
-> >  	bit = BIT(offset & 0xf);
-> >  
-> >  	if (pctl->devdata->spec_dir_set)
-> > -		pctl->devdata->spec_dir_set(&reg_addr, offset);
-> > +		pctl->devdata->spec_dir_set(pctl, &reg_addr, offset, input);
-> >  
-> >  	if (input)
-> >  		/* Different SoC has different alignment offset. */
-> > @@ -307,13 +307,6 @@ static int mtk_pconf_set_pull_select(struct mtk_pinctrl *pctl,
-> >  			return 0;
-> >  	}
-> >  
-> > -	/* For generic pull config, default arg value should be 0 or 1. */
-> > -	if (arg != 0 && arg != 1) {
-> > -		dev_err(pctl->dev, "invalid pull-up argument %d on pin %d .\n",
-> > -			arg, pin);
-> > -		return -EINVAL;
-> > -	}
-> > -
-> 
-> 
-> Why we need to remove this?
-==> In order to parse "bias-disable" property. we change "arg" to
-"MTK_PUPD_SET_R1R0_00". for normal pins, If we don't remove it.
-It will return here.
-> 
-> >  	bit = BIT(pin & 0xf);
-> >  	if (enable)
-> >  		reg_pullen = SET_ADDR(mtk_get_port(pctl, pin) +
-> > @@ -343,7 +336,8 @@ static int mtk_pconf_parse_conf(struct pinctrl_dev *pctldev,
-> >  
-> >  	switch (param) {
-> >  	case PIN_CONFIG_BIAS_DISABLE:
-> > -		ret = mtk_pconf_set_pull_select(pctl, pin, false, false, arg);
-> > +		ret = mtk_pconf_set_pull_select(pctl, pin, false, false,
-> > +						MTK_PUPD_SET_R1R0_00);
-> 
-> Why we need to change this?
-> 
-==> if only just add "bias-disable" property in dts. "arg" is 0 or 1,
-It can't to parse the "bias-disable" property. so we change it to
-"MTK_PUPD_SET_R1R0_00".
-
-> Joe.C
-> 
-> 
 
 
+On 07/19/2017 05:17 PM, Abhishek Sahu wrote:
+> The memset in clear_read_regs is overhead. All the register data
+> will be filled by DMA during NAND operation so making these
+> register variables zero is not required.
+
+Yeah, that's a good point.
+
+Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+> 
+> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>   drivers/mtd/nand/qcom_nandc.c | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+> index 5b71478..7ecd0f8 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -826,8 +826,6 @@ static void free_descs(struct qcom_nand_controller *nandc)
+>   static void clear_read_regs(struct qcom_nand_controller *nandc)
+>   {
+>   	nandc->reg_read_pos = 0;
+> -	memset(nandc->reg_read_buf, 0,
+> -	       MAX_REG_RD * sizeof(*nandc->reg_read_buf));
+>   }
+>   
+>   static void pre_command(struct qcom_nand_host *host, int command)
+> 
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
