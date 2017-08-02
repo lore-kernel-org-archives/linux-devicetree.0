@@ -1,58 +1,51 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 2/3] ARM: dts: k2g: Add DCAN nodes
-Date: Wed, 2 Aug 2017 15:18:21 -0500
-Message-ID: <20170802201822.11532-3-fcooper@ti.com>
-References: <20170802201822.11532-1-fcooper@ti.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
+Date: Wed, 2 Aug 2017 13:31:51 -0700
+Message-ID: <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
+References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
+ <20170728233054.GB30604@kroah.com> <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170802201822.11532-1-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Franklin S Cooper Jr <fcooper@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lokesh Vutla <lokeshvutla@ti.com>
+On Fri, Jul 28, 2017 at 5:07 PM, Andrey Smirnov
+<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
+> <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+>> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
+>>> Greg,
+>>>
+>>> I am not sure if you are the right person to send these to, if you are
+>>> not, please let me know who would be the appropriate recepient and sorry for the noise.
+>>
+>> Why not the platform driver maintainer(s)?  Doesn't
+>> scripts/get_maintainer.pl give you an idea for who to send them to?
+>
+> Unfortunately I wasn't able to find anyone in MAINTAINERS and running
+> scripts/get_maintainer.pl on the patch returns only:
+>
+> scripts/get_maintainer.pl
+> v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
+> Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
+> Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> (commit_signer:1/1=100%)
+> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+>
+> hence me reaching out to you.
 
-Add nodes for the two DCAN instances included in 66AK2G
+Greg, did you have any chance to consider this? I have a v6 with a fix
+for build break reported by kbuild test robot, and I want to avoid
+spamming the mailing list too much and send it to an appropriate
+person.
 
-Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-[d-gerlach@ti.com: add power-domains and clock information]
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-[fcooper@ti.com: update subject and commit message. Misc minor updates]
-Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
----
- arch/arm/boot/dts/keystone-k2g.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index bf4d1fa..bebc857 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -113,6 +113,24 @@
- 			status = "disabled";
- 		};
- 
-+		dcan0: can@0260B200 {
-+			compatible = "ti,am4372-d_can", "ti,am3352-d_can";
-+			reg = <0x0260B200 0x200>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_EDGE_RISING>;
-+			status = "disabled";
-+			power-domains = <&k2g_pds 0x0008>;
-+			clocks = <&k2g_clks 0x0008 1>;
-+		};
-+
-+		dcan1: can@0260B400 {
-+			compatible = "ti,am4372-d_can", "ti,am3352-d_can";
-+			reg = <0x0260B400 0x200>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-+			status = "disabled";
-+			power-domains = <&k2g_pds 0x0009>;
-+			clocks = <&k2g_clks 0x0009 1>;
-+		};
-+
- 		kirq0: keystone_irq@026202a0 {
- 			compatible = "ti,keystone-irq";
- 			interrupts = <GIC_SPI 1 IRQ_TYPE_EDGE_RISING>;
--- 
-2.9.4.dirty
+Thanks,
+Andrey Smirnov
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
