@@ -1,41 +1,41 @@
-From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: i.MX25: add ranges to tscadc
-Date: Wed,  2 Aug 2017 22:06:11 +0200
-Message-ID: <1501704371-28151-1-git-send-email-martin@kaiser.cx>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Denis Carikli <denis-fO0SIAKYzcbQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH 0/3] ARM: dts: k2g: Add support for USB instances on 66AK2G
+Date: Wed, 2 Aug 2017 15:17:21 -0500
+Message-ID: <20170802201724.11439-1-fcooper@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a ranges; line to the tscadc node. This creates a 1:1 mapping between
-the addresses used by tscadc and those in its child nodes (adc, tsc).
+Add support for 66AK2G usb instances. However, the driver needs to be updated
+to support PM_RUNTIME. This update has been validated to work on K2L and boot
+tested on K2HK and K2E.
 
-Without such a mapping, the reg = ... lines in the tsc and adc nodes do
-not create a resource. Probing the fsl-imx25-tcq and fsl-imx25-tsadc
-drivers will then fail since there's no IORESOURCE_MEM.
+Franklin S Cooper Jr (2):
+  usb: dwc3: keystone: Add PM_RUNTIME Support to DWC3 Keystone USB
+    driver
+  dt-bindings: usb: keystone-usb: Update bindings pm and clocks
+    properties
 
-Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
----
- arch/arm/boot/dts/imx25.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Vitaly Andrianov (1):
+  ARM: dts: k2g: Add USB instances
 
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index 0d2f3a1..1e37bd3 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -297,6 +297,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 				status = "disabled";
-+				ranges;
- 
- 				adc: adc@50030800 {
- 					compatible = "fsl,imx25-gcq";
+ .../devicetree/bindings/usb/keystone-usb.txt       | 18 ++++++-
+ arch/arm/boot/dts/keystone-k2g.dtsi                | 56 ++++++++++++++++++++++
+ drivers/usb/dwc3/dwc3-keystone.c                   | 22 ++++-----
+ 3 files changed, 82 insertions(+), 14 deletions(-)
+
 -- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.4.dirty
