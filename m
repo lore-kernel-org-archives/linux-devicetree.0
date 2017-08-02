@@ -1,49 +1,44 @@
-From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v5 2/6] extended-controls.rst: add PorterDuff mode control
-Date: Wed,  2 Aug 2017 11:19:43 +0800
-Message-ID: <1501643987-27847-3-git-send-email-jacob-chen@iotwrt.com>
+From: Jacob Chen <jacob-chen@iotwrt.com>
+Subject: [PATCH v5 4/6] ARM: dts: rockchip: add RGA device node for RK3288
+Date: Wed,  2 Aug 2017 11:19:45 +0800
+Message-ID: <1501643987-27847-5-git-send-email-jacob-chen@iotwrt.com>
 References: <1501643987-27847-1-git-send-email-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1501643987-27847-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1501643987-27847-1-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-PorterDuff mode control are used to determine
-how two images are combined.
+This patch add the RGA dt config of rk3288 SoC.
 
-Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
+Signed-off-by: Yakir Yang <ykk@rock-chips.com>
 ---
- Documentation/media/uapi/v4l/extended-controls.rst | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/rk3288.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-index abb1057..b713581 100644
---- a/Documentation/media/uapi/v4l/extended-controls.rst
-+++ b/Documentation/media/uapi/v4l/extended-controls.rst
-@@ -3021,6 +3021,11 @@ Image Process Control IDs
-     The video deinterlacing mode (such as Bob, Weave, ...). The menu items are
-     driver specific and are documented in :ref:`v4l-drivers`.
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 1efc2f2..cea41b7 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -945,6 +945,17 @@
+ 		status = "okay";
+ 	};
  
-+``V4L2_CID_PORTER_DUFF_MODE (menu)``
-+    The PorterDuff blend modes. PorterDuff is a method to overlay, combine and
-+    trim images as if they were pieces of cardboard. The device uses this to
-+    determine how two images are combined. For more information see
-+    `PorterDuff.Mode <https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html>`__.
- 
- .. _dv-controls:
- 
++	rga: rga@ff920000 {
++		compatible = "rockchip,rk3288-rga";
++		reg = <0xff920000 0x180>;
++		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA>;
++		clock-names = "aclk", "hclk", "sclk";
++		power-domains = <&power RK3288_PD_VIO>;
++		resets = <&cru SRST_RGA_CORE>, <&cru SRST_RGA_AXI>, <&cru SRST_RGA_AHB>;
++		reset-names = "core", "axi", "ahb";
++	};
++
+ 	vopb: vop@ff930000 {
+ 		compatible = "rockchip,rk3288-vop";
+ 		reg = <0xff930000 0x19c>;
 -- 
 2.7.4
