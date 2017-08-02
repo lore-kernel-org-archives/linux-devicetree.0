@@ -1,183 +1,89 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [PATCH 2/2] watchdog: aspeed: Support configuration of external signal properties
-Date: Wed,  2 Aug 2017 14:15:29 +0930
-Message-ID: <20170802044529.30032-3-andrew@aj.id.au>
-References: <20170802044529.30032-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170802044529.30032-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 00/13] Allwinner H3 DE2 basical support
+Date: Wed, 2 Aug 2017 12:46:12 +0800
+Message-ID: <CAGb2v64giQbwJK+Yp=EN0jVDN3eHA_Yf_X3gR-hfC6j_u3z9PA@mail.gmail.com>
+References: <20170801131304.7741-1-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLFSQXGAKGQE7QH6D6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170801131304.7741-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for configuring the drive strength and polarity on the
-AST2500, and the pulse duration on both the AST2400 and AST2500.
+On Tue, Aug 1, 2017 at 9:12 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> Allwinner H3 features a "Display Engine 2.0", which needs some support
+> to be present in the DRM driver.
+>
+> This patchset is now a basical version, which dropped some features I
+> used to submitted:
+> - TVE support (not so high priority now)
+> - Multi-pipeline support (also not so high priority now due to no TVE)
 
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Tested-by: Matt Spinler <mspinler-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
----
- drivers/watchdog/aspeed_wdt.c | 105 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 102 insertions(+), 3 deletions(-)
+Even though you dropped some patches, this is still v3.
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index c707ab647922..79cc766cd30f 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -23,9 +23,21 @@ struct aspeed_wdt {
- 	u32			ctrl;
- };
- 
-+struct aspeed_wdt_config {
-+	u32 ext_pulse_width_mask;
-+};
-+
-+static const struct aspeed_wdt_config ast2400_config = {
-+	.ext_pulse_width_mask = 0xff,
-+};
-+
-+static const struct aspeed_wdt_config ast2500_config = {
-+	.ext_pulse_width_mask = 0xfffff,
-+};
-+
- static const struct of_device_id aspeed_wdt_of_table[] = {
--	{ .compatible = "aspeed,ast2400-wdt" },
--	{ .compatible = "aspeed,ast2500-wdt" },
-+	{ .compatible = "aspeed,ast2400-wdt", .data = &ast2400_config },
-+	{ .compatible = "aspeed,ast2500-wdt", .data = &ast2500_config },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
-@@ -43,6 +55,38 @@ MODULE_DEVICE_TABLE(of, aspeed_wdt_of_table);
- #define   WDT_CTRL_RESET_SYSTEM		BIT(1)
- #define   WDT_CTRL_ENABLE		BIT(0)
- 
-+/*
-+ * WDT_RESET_WIDTH controls the characteristics of the external pulse (if
-+ * enabled), specifically:
-+ *
-+ * * Pulse duration
-+ * * Drive mode: push-pull vs open-drain
-+ * * Polarity: Active high or active low
-+ *
-+ * Pulse duration configuration is available on both the AST2400 and AST2500,
-+ * though the field changes between SoCs:
-+ *
-+ * AST2400: Bits 7:0
-+ * AST2500: Bits 19:0
-+ *
-+ * This difference is captured in struct aspeed_wdt_config.
-+ *
-+ * The AST2500 exposes the drive mode and polarity options, but not in a
-+ * regular fashion. For read purposes, bit 31 represents active high or low,
-+ * and bit 30 represents push-pull or open-drain. With respect to write, magic
-+ * values need to be written to the top byte to change the state of the drive
-+ * mode and polarity bits. Any other value written to the top byte has no
-+ * effect on the state of the drive mode or polarity bits. However, the pulse
-+ * width value must be preserved (as desired) if written.
-+ */
-+#define WDT_RESET_WIDTH		0x18
-+#define   WDT_RESET_WIDTH_ACTIVE_HIGH	BIT(31)
-+#define     WDT_ACTIVE_HIGH_MAGIC	(0xA5 << 24)
-+#define     WDT_ACTIVE_LOW_MAGIC	(0x5A << 24)
-+#define   WDT_RESET_WIDTH_PUSH_PULL	BIT(30)
-+#define     WDT_PUSH_PULL_MAGIC		(0xA8 << 24)
-+#define     WDT_OPEN_DRAIN_MAGIC	(0x8A << 24)
-+
- #define WDT_RESTART_MAGIC	0x4755
- 
- /* 32 bits at 1MHz, in milliseconds */
-@@ -139,10 +183,13 @@ static const struct watchdog_info aspeed_wdt_info = {
- 
- static int aspeed_wdt_probe(struct platform_device *pdev)
- {
-+	const struct aspeed_wdt_config *config;
-+	const struct of_device_id *ofdid;
- 	struct aspeed_wdt *wdt;
- 	struct resource *res;
- 	struct device_node *np;
- 	const char *reset_type;
-+	u32 duration;
- 	int ret;
- 
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-@@ -167,13 +214,19 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 	wdt->wdd.timeout = WDT_DEFAULT_TIMEOUT;
- 	watchdog_init_timeout(&wdt->wdd, 0, &pdev->dev);
- 
-+	np = pdev->dev.of_node;
-+
-+	ofdid = of_match_node(aspeed_wdt_of_table, np);
-+	if (!ofdid)
-+		return -EINVAL;
-+	config = ofdid->data;
-+
- 	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
- 
- 	/*
- 	 * Control reset on a per-device basis to ensure the
- 	 * host is not affected by a BMC reboot
- 	 */
--	np = pdev->dev.of_node;
- 	ret = of_property_read_string(np, "aspeed,reset-type", &reset_type);
- 	if (ret) {
- 		wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC | WDT_CTRL_RESET_SYSTEM;
-@@ -197,6 +250,52 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 		set_bit(WDOG_HW_RUNNING, &wdt->wdd.status);
- 	}
- 
-+	if (of_device_is_compatible(np, "aspeed,ast2500-wdt")) {
-+		u32 reg = readl(wdt->base + WDT_RESET_WIDTH);
-+
-+		reg &= config->ext_pulse_width_mask;
-+		if (of_property_read_bool(np, "aspeed,ext-push-pull"))
-+			reg |= WDT_PUSH_PULL_MAGIC;
-+		else
-+			reg |= WDT_OPEN_DRAIN_MAGIC;
-+
-+		writel(reg, wdt->base + WDT_RESET_WIDTH);
-+
-+		reg &= config->ext_pulse_width_mask;
-+		if (of_property_read_bool(np, "aspeed,ext-active-high"))
-+			reg |= WDT_ACTIVE_HIGH_MAGIC;
-+		else
-+			reg |= WDT_ACTIVE_LOW_MAGIC;
-+
-+		writel(reg, wdt->base + WDT_RESET_WIDTH);
-+	}
-+
-+	if (!of_property_read_u32(np, "aspeed,ext-pulse-duration", &duration)) {
-+		u32 max_duration = config->ext_pulse_width_mask + 1;
-+
-+		if (duration == 0 || duration > max_duration) {
-+			dev_err(&pdev->dev, "Invalid pulse duration: %uus\n",
-+					duration);
-+			duration = max(1U, min(max_duration, duration));
-+			dev_info(&pdev->dev, "Pulse duration set to %uus\n",
-+					duration);
-+		}
-+
-+		/*
-+		 * The watchdog is always configured with a 1MHz source, so
-+		 * there is no need to scale the microsecond value. However we
-+		 * need to offset it - from the datasheet:
-+		 *
-+		 * "This register decides the asserting duration of wdt_ext and
-+		 * wdt_rstarm signal. The default value is 0xFF. It means the
-+		 * default asserting duration of wdt_ext and wdt_rstarm is
-+		 * 256us."
-+		 *
-+		 * This implies a value of 0 gives a 1us pulse.
-+		 */
-+		writel(duration - 1, wdt->base + WDT_RESET_WIDTH);
-+	}
-+
- 	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdd);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register\n");
--- 
-2.11.0
+What has changed since v2?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> The last 6 patches are only used for testing this patchset, and they're
+> going to be sent by Jernej Skrabec after this patchset is applied.
+>
+> Icenowy Zheng (9):
+>   dt-bindings: update the binding for Allwinner H3 DE2 support
+>   drm: sun4i: add support for H3 mixers
+>   drm: sun4i: add support for H3's TCON
+>   drm: sun4i: add compatible for H3 display engine
+>   clk: sunxi-ng: allow CLK_DE to set CLK_PLL_DE for H3
+>   clk: sunxi-ng: export CLK_PLL_DE for H3
+>   ARM: sun8i: h3: add display engine pipeline barebone
+>   [NOT FOR REVIEW NOW] ARM: sun8i: h3: enable DesignWare HDMI controller
+>   [NOT FOR REVIEW NOW] ARM: sun8i: h3: enable HDMI output on Orange Pi
+>     PC
+>
+> Jernej Skrabec (4):
+>   [NOT FOR REVIEW NOW] drm: bridge: Enable polling hpd event in dw_hdmi
+>   [NOT FOR REVIEW NOW] drm: bridge: Add a pre_init function for the
+>     dw_hdmi driver
+>   [NOT FOR REVIEW NOW] clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3
+>     HDMI clock
+
+This one looks trivial enough that I can pick it up regardless of the tag.
+
+ChenYu
+
+>   [NOT FOR REVIEW NOW] drm: sun4i: Add a glue for the DesignWare HDMI
+>     controller in H3
+>
+>  .../bindings/display/sunxi/sun4i-drm.txt           |  25 +-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  16 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    | 205 +++++++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   4 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c          |   9 +-
+>  drivers/gpu/drm/sun4i/Kconfig                      |   9 +
+>  drivers/gpu/drm/sun4i/Makefile                     |   1 +
+>  drivers/gpu/drm/sun4i/sun4i_drv.c                  |   2 +
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c                 |  43 +-
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   1 +
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c              | 462 +++++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c                |  18 +
+>  include/drm/bridge/dw_hdmi.h                       |   2 +
+>  include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
+>  15 files changed, 781 insertions(+), 21 deletions(-)
+>  create mode 100644 drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+>
+> --
+> 2.13.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
