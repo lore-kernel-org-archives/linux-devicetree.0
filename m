@@ -1,147 +1,199 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Thu, 3 Aug 2017 01:09:33 +1000
-Message-ID: <20170802150933.GG394@umbus.fritz.box>
-References: <1501174151.1055.8.camel@hp800z>
- <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
- <1501181931.1055.18.camel@hp800z>
- <597A4B80.7000106@gmail.com>
- <1501191985.1055.50.camel@hp800z>
- <CAL_Jsq+NBEXyOmRx3Ar0OTpyaLeT0hEKw45R0PrVEdmOcd9czw@mail.gmail.com>
- <20170728005140.GF26163@bill-the-cat>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Wed, 2 Aug 2017 11:05:58 -0500
+Message-ID: <abbd75ac-67f6-e189-5093-ee4a8f44ba6e@lechnology.com>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+ <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
+ <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
+ <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+ <bfb3d541-856b-0233-dd85-72512788939f@tronnes.org>
+ <bbec0574-311a-e1b4-d7fd-f6fb15b078d2@lechnology.com>
+ <937aa71c-1415-4645-7e04-6be43dd33174@tronnes.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2E/hm+v6kSLEYT3h"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170728005140.GF26163@bill-the-cat>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <937aa71c-1415-4645-7e04-6be43dd33174@tronnes.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/02/2017 03:05 AM, Noralf Trønnes wrote:
+> 
+> Den 02.08.2017 00.26, skrev David Lechner:
+>> On 08/01/2017 01:08 PM, Noralf Trønnes wrote:
+>>> (cc: Daniel Vetter)
+>>>
+>>>
+>>> Den 01.08.2017 18.51, skrev David Lechner:
+>>>> On 07/30/2017 12:14 PM, Noralf Trønnes wrote:
+>>>>>
+>>>>> Den 29.07.2017 21.40, skrev David Lechner:
+>>>>>> On 07/29/2017 02:17 PM, David Lechner wrote:
+>>>>>>> The goal of this series is to get the built-in LCD of the LEGO 
+>>>>>>> MINDSTORMS EV3
+>>>>>>> working. But, most of the content here is building up the 
+>>>>>>> infrastructure to do
+>>>>>>> that.
+>>>>>>>
+>>>>>>
+>>>>>> Some general comments/questions:
+>>>>>>
+>>>>>> I have noticed that DRM doesn't really have support for monochrome 
+>>>>>> displays. I'm guessing that is because no one really uses them 
+>>>>>> anymore?
+>>>>>>
+>>>>>
+>>>>> The repaper driver was the first monochrome drm driver and I chose to
+>>>>> present it to userspace as XRGB8888 and convert it to monochrome.
+>>>>> The reason for this is that everything, libraries, apps, plymouth 
+>>>>> (boot
+>>>>> splash, no rgb565) supports it. I didn't see any point in adding a new
+>>>>> monochrome drm format that didn't have, or probably wouldn't get
+>>>>> userspace support (by libraries at least). The application of course
+>>>>> needs to know this to get a good result.
+>>>>>
+>>>>> tinydrm_xrgb8888_to_gray8() does the conversion:
+>>>>> https://cgit.freedesktop.org/drm/drm-misc/commit/drivers/gpu/drm/tinydrm?id=379ea9a1a59a5a32c8db6f164e80a3fd00cb3781 
+>>>>>
+>>>>>
+>>>>>> The LEGO EV3 display is just an LCD (not the backlit kind). It has 
+>>>>>> two modes of operation. It can to 2bbp grayscale or it can do 1bpp 
+>>>>>> monochrome. The grayscale isn't the best (looks splotchy in 
+>>>>>> places), so it would be nice to be able to choose between these 
+>>>>>> two modes. How would I implement something like that?
+>>>>>>
+>>>>>
+>>>>> Do you expect anyone to use grayscale if it doesn't look good?
+>>>>> Maybe better to add it later if there's a demand for it.
+>>>>
+>>>> I don't expect many people to use it at all. The people that do will 
+>>>> be hackers like me that want to see what it is capable of, so I 
+>>>> think I will keep it grayscale by default.
+>>>>
+>>>
+>>> It looks like the best way to satisfy your needs is to add specific 
+>>> formats.
+>>>
+>>> Video for Linux have these:
+>>>
+>>> include/uapi/linux/videodev2.h
+>>>
+>>> /* Grey formats */
+>>> #define V4L2_PIX_FMT_GREY    v4l2_fourcc('G', 'R', 'E', 'Y') /* 8 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y4      v4l2_fourcc('Y', '0', '4', ' ') /* 4 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y6      v4l2_fourcc('Y', '0', '6', ' ') /* 6 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y10     v4l2_fourcc('Y', '1', '0', ' ') /* 10 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y12     v4l2_fourcc('Y', '1', '2', ' ') /* 12 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y16     v4l2_fourcc('Y', '1', '6', ' ') /* 16 
+>>> Greyscale     */
+>>> #define V4L2_PIX_FMT_Y16_BE  v4l2_fourcc_be('Y', '1', '6', ' ') /* 16 
+>>> Greyscale BE  */
+>>>
+>>>
+>>> Maybe we can add formats like these:
+>>>
+>>> include/uapi/drm/drm_fourcc.h
+>>>
+>>> #define DRM_FORMAT_MONO        fourcc_code('Y', '0', '1', ' ') /* [0] 
+>>> Monochrome */
+>>> or
+>>> #define DRM_FORMAT_Y1        fourcc_code('Y', '0', '1', ' ') /* [0] 
+>>> Monochrome */
+>>>
+>>> #define DRM_FORMAT_Y2        fourcc_code('Y', '0', '2', ' ') /* [1:0] 
+>>> Greyscale */
+>>>
+>>> Daniel, what do you think?
+>>
+>> 2 of the first 3 tinydrm drivers are monochrome (and I would like to 
+>> write a driver for the Seeed/Grove I2C OLED displays which are also 
+>> monochrome), so I think the 1bpp modes would definitely be useful. I 
+>> think there is enough userspace code still around that knows about 
+>> FB_VISUAL_MONO01 and FB_VISUAL_MONO10 that could use these.
+>>
+> 
+> Can you elaborate, would you use the display trough monochrome fbdev
+> or through drm?
 
---2E/hm+v6kSLEYT3h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jul 27, 2017 at 08:51:40PM -0400, Tom Rini wrote:
-> On Thu, Jul 27, 2017 at 06:00:00PM -0500, Rob Herring wrote:
-> > On Thu, Jul 27, 2017 at 4:46 PM, Pantelis Antoniou
-> > <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > > Hi Frank,
-> > >
-> > > On Thu, 2017-07-27 at 13:22 -0700, Frank Rowand wrote:
-> > >> Hi Pantelis,
-> > >>
-> > >> Keep in mind one of the reasons Linus says he is very direct is to
-> > >> avoid leading a developer on, so that they don't waste a lot of time
-> > >> trying to resolve the maintainer's issues instead of realizing that
-> > >> the maintainer is saying "no". Please read my current answer as being
-> > >> "no, not likely to ever be accepted", not "no, not in the current fo=
-rm".
-> > >>
-> > >> My first reaction is: no, this is not a good idea for the Linux kern=
-el.
-> > >>
-> > >
-> > > This has nothing to do with the kernel. It spits out valid DTBs that =
-the
-> > > kernel (or anything else) may use.
-> >=20
-> > Let me rephrase Frank's statement: this is not a good idea for the
-> > main repository of dts files.
-> >=20
-> > But sure, DTS is already not the only source of DTBs. It comes from
-> > firmware on Power systems.
->=20
-> Yes, but unless they're generated from something other than a (at the
-> time) normal DTS, that's not a good example, IMHO.
->=20
->=20
-> > If you want to create and maintain your own
-> > source format, then that is perfectly fine. But based on the current
-> > understanding, I'm not seeing a reason we'd convert DTS files to YAML.
->=20
-> Can I propose one?  To borrow a phrase, Validation, Validation,
-> Validation.  Let me point to fe496e23b748 in the kernel for a moment.  I
-> found that as part of helping a new engineer come up to speed on doing
-> device tree work.  What I found was a case where:
-> - The binding doc gives one value for compatible as the required value.
-> - The code accepts only a single, different value.
-> - A few in-kernel dts files have different still values.
->=20
-> If the common dts source file was in yaml, binding docs would be written
-> so that we could use them as validation and hey, the above wouldn't ever
-> have happened.  And I'm sure this is not the only example that's in-tree
-> right now.  These kind of problems create an artificially high barrier
-> to entry in a rather important area of the kernel (you can't trust the
-> docs, you have to check around the code too, and of course the code
-> might have moved since the docs were written).
-
-Yeah, problems like that suck.  But I don't see that going to YAML
-helps avoid them.  It may have a number of neat things it can do, but
-yaml won't magically give you a way to match against bindings.  You'd
-still need to define a way of describing bindings (on top of yaml or
-otherwise) and implement the matching of DTs against bindings.
-
-> > Maybe you're not proposing that now, but if that is not the end goal I
-> > don't see the point of a new format. If YAML solves a bunch of
-> > problems, then of course we'd want to convert DTS files at some point.
->=20
-> To borrow that same phrase again, Tooling, Tooling, Tooling.  The
-> current dts format is a niche format.  That's great, our community
-> is basically responsible for all tooling, we can do what we want.
-> That's also awful, we're the only people that care about tooling and we
-> all have lots of other itches to scratch.  There are so so so many
-> editors that just know YAML and will work it into the rest of the
-> development environment someone is using.
-
-Up to a point.  YAML isn't so much a format as a framework for making
-formats based on the JSON data model.  Some yaml tools will be usable,
-but only if they're flexible enough to cope with the particular way
-that DTs use yaml.
-
-> None of that exists for our
-> dts format.  Who cares about that?  Engineers that aren't primarily
-> writing dts files.  I'm pretty sure every engineer that's written /
-> extended a dts file has made an "invisible" mistake that would have been
-> caught with a different source format that had validation already.
->=20
-> And we've been talking about validation for ages now.  We'll probably
-> still be talking about it for ages more (as it's hard
-> thanked-at-conferences-and-such work!), until it reaches the point where
-> anyone can pick up a current binding and re-format it into yaml for
-> validation.
->=20
+I have a small collection of programs and libraries that work using 
+monochrome fbdev. I would like to just keep using them without having to 
+convert everything to drm.
 
 
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---2E/hm+v6kSLEYT3h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmB6yoACgkQbDjKyiDZ
-s5L4iBAAmz06Mx2FWy9q+wjKGUcneU0puBgtQ0f8BAwHIexQdVtyDyK1RHXH5XSZ
-S6Yq28UvOqQMgJZ0B1nlh5P8w18GuMkm7+G4Ens0aZPnPBB2D+3DxRGwy8gN1u1L
-qt1zUctrWxstVeXBHQLJFaUYLyX3qMpQDSt/PLAfpNYxSfEfS7Ddt+jcTvNfjBDq
-K0melrIsuCi2L02Rf91IXumQOkaPoN1yGHlg7B/RPos2j3linVW5RMg5iDtDyoLa
-7JKAju9CPXtQIj7vqwgefMDZs6vJQe5+kqNhXd54RtLAFtEA02TCPtyDZQSwEH9B
-b3p49K1gE3uNfPf1VnivQat7eGCf462qTdJmCHV+RDSWAsRpI+CLkNhH8q5K/YVQ
-13Vy6qrjOeDhF+1shxD2nNxqSsHprr7qk/znKP5zwD+fQXvSenaC+0h0G8DnMOLe
-mKcy1MAWExNvWF80Uz9+joZcA6+1VJmvx2nLCL2AnCTLxa9qWRorF6U9DjCXa/zT
-j6B/eEL8G8YFojgccCNY4qlykTHW69bHitCqOUPXzibG7bqQmXfI0+V9bPBaSHLe
-PO5gxWTxMN4EtSYEhSnSCCAlrH6xav9wsSJpvizMZ0HErQhXcsqgi/9mBJk5gSVr
-pyBVHgFla8xDnmHKQ0BSvj9h39ha4E8HBYsvcEiU0pKk1j6deW8=
-=qsJ1
------END PGP SIGNATURE-----
-
---2E/hm+v6kSLEYT3h--
+>> I don't think a Y02 mode would be useful though. There is pretty much 
+>> nothing out there (that I could find) that uses such a mode.
+>>
+>> A Y08 mode for 8bpp grayscale would be useful though. This is another 
+>> more commonly used format.
+>>
+> 
+> Another source of fourcc's is FFmpeg which has these:
+> 
+>      { AV_PIX_FMT_GRAY8,    MKTAG('Y', '8', '0', '0') },
+>      { AV_PIX_FMT_GRAY8,    MKTAG('Y', '8', ' ', ' ') },
+>      { AV_PIX_FMT_GRAY8,   MKTAG('G', 'R', 'E', 'Y') },
+> 
+>      { AV_PIX_FMT_MONOWHITE,MKTAG('B', '1', 'W', '0') },
+>      { AV_PIX_FMT_MONOBLACK,MKTAG('B', '0', 'W', '1') },
+> 
+> AV_PIX_FMT_GRAY8
+> Y , 8bpp.
+> AV_PIX_FMT_MONOWHITE
+> Y , 1bpp, 0 is white, 1 is black,
+>      in each byte pixels are ordered from the msb to the lsb.
+> AV_PIX_FMT_MONOBLACK
+> Y , 1bpp, 0 is black, 1 is white,
+>      in each byte pixels are ordered from the msb to the lsb.
+> 
+> 
+> __drm_format_info() provides details about formats:
+>      { .format = DRM_FORMAT_MONO,    .depth = 1,  .num_planes = 1, .cpp 
+> = { 0, 0, 0 }, .hsub = 1, .vsub = 1 },
+>      { .format = DRM_FORMAT_GREY,    .depth = 8,  .num_planes = 1, .cpp 
+> = { 1, 0, 0 }, .hsub = 1, .vsub = 1 },
+> 
+> framebuffer_check() and drm_fb_cma_create_with_funcs() use cpp for
+> validation and they don't expect it to be zero.
+> 
+> 
+> Noralf.
+> 
+>>>
+>>>>>
+>>>>>> Also, how can I indicate to userspace that this display really is 
+>>>>>> monochrome/grayscale since the reported color depth 16bpp?
+>>>>>>
+>>>>>
+>>>>> There isn't unless we add formats for it.
+>>>>> Since this display is in a Lego piece, doesn't it have custom 
+>>>>> userspace
+>>>>> that already know it's monochrome?
+>>>>
+>>>> The official LEGO software is like this, yes. But I am working on a 
+>>>> project that supports other LEGO compatible devices that have color 
+>>>> screens, so the same software needs to be able to detect at runtime 
+>>>> which type of screen it is using. Currently I have a plain fbdev 
+>>>> driver that provides FB_VISUAL_MONO10 for the EV3 display and so the 
+>>>> software knows when it has a monochrome screen and when it doesn't. 
+>>>> But since plain fbdev drivers can't be accepted into mainline, I 
+>>>> need to find a different way to detect what type of screen this is 
+>>>> so that my graphics library can treat it differently.
+>>>>
+>>>>
+>>>
+>>> You can tell userspace about the preferred bitdepth:
+>>> drm->mode_config.preferred_depth
+>>>
+>>>
+>>> Noralf.
+>>>
+>>
+> 
