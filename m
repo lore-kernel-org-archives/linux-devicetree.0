@@ -1,38 +1,57 @@
-From: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] pwm: rockchip: Remove the dumplicate
- rockchip_pwm_ops ops
-Date: Wed, 2 Aug 2017 19:31:57 +0800
-Message-ID: <af056420-5c33-e6c8-62cb-bcd3456000a7@rock-chips.com>
-References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com>
- <1499486629-9659-4-git-send-email-david.wu@rock-chips.com>
- <20170802105902.2d137072@bbrezillon>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v2 0/4] leds: pca955x: add GPIO support
+Date: Wed, 2 Aug 2017 13:33:51 +0200
+Message-ID: <20170802113351.GA2528@amd>
+References: <1501589349-5681-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170802105902.2d137072@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501589349-5681-1-git-send-email-clg@kaod.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc: linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
-ÔÚ 2017/8/2 16:59, Boris Brezillon Ð´µÀ:
-> Actually, when I suggested to just implement ->apply_state() and be
-> done with all other fields I was thinking that you could get rid of
-> this rockchip_pwm_data struct entirely and just have 3 different
-> pwm_ops. You seem to take the other direction here: you're removing
-> rockchip_pwm_ops_v1 and renaming rockchip_pwm_ops_v2 into
-> rockchip_pwm_ops.
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yes, i really didn't understand exactly what you mean.
-Your mean is that remove the set_enable, get_state and other hooks,
-then use the pwm_ops instead of them, which has 3 different version, and 
-implement the pwm_ops's functions like apply(), enable(), get_state() 
-and others...?
+Hi!
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> The PCA955x family of chips are I2C LED blinkers whose pins not used
+> to control LEDs can be used as general purpose I/Os (GPIOs).
+>=20
+> The following adds support for device tree and Open Firmware to be
+> able do define different operation modes for each pin. See bindings
+> documentation for more details. The pca955x driver is then extended
+> with a gpio_chip when pins are operating in GPIO mode.
+>=20
+> The driver follows the scheme of the leds-pca9532 driver which behaves
+> quite similarly.
+
+Is there reason not to treat pca955x chip as a GPIO extender, and then
+use leds-gpio on top?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlmBuJ8ACgkQMOfwapXb+vKZ1QCguQfBP/wRRWye2ZrEYS7JlV5q
+U7QAoIXZcTddJdKZZfVpnOL2+0G+qW7S
+=SrYk
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
