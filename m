@@ -1,56 +1,37 @@
-From: Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: h3: Enable EMAC with external PHY on
- NanoPi M1 Plus
-Date: Tue, 1 Aug 2017 22:39:41 -0400
-Message-ID: <CAHbBuxon0L-TPOYpzYEVtFf4pEGsLLFxNPSGgh6t3mooWFXgDg@mail.gmail.com>
-References: <20170801050115.21497-1-luaraneda@gmail.com> <CAGb2v66r1kpbzKN8uE5pb9mqzWMwTjn-N2ufZGdUU2LJ7FvbeA@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v6 0/3] ARM: dts: imx7: add NAND support
+Date: Tue, 01 Aug 2017 19:41:41 -0700
+Message-ID: <c05aff108433c9ced4c85efcf3ba65e8@agner.ch>
+References: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
+ <20170614151146.GC30112@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v66r1kpbzKN8uE5pb9mqzWMwTjn-N2ufZGdUU2LJ7FvbeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170614151146.GC30112@dragon>
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: kernel@pengutronix.de, sboyd@codeaurora.org, aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@karo-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Shawn,
 
-On Tue, Aug 1, 2017 at 3:55 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Tue, Aug 1, 2017 at 1:01 PM, Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> +&emac {
->> +       pinctrl-names = "default";
->> +       pinctrl-0 = <&emac_rgmii_pins>;
->> +       phy-supply = <&reg_gmac_3v3>;
->> +       phy-handle = <&ext_rgmii_phy>;
->> +       phy-mode = "rgmii";
->> +       allwinner,leds-active-low;
->
-> This property is for the internal PHY. You should not be using it
-> with an external PHY.
+On 2017-06-14 08:11, Shawn Guo wrote:
+> On Thu, Jun 08, 2017 at 03:34:46PM -0700, Stefan Agner wrote:
+>> Stefan Agner (3):
+>>   clk: imx7d: create clocks behind rawnand clock gate
+>>   ARM: dts: imx7: add GPMI NAND and APBH DMA
+>>   ARM: dts: imx7-colibri: add NAND support
+> 
+> Both dts patches look good to me.  Please ping me after the clk patch
+> lands on mainline.
 
-You're right. When reading the file "dwmac-sun8i.txt" I thought EPHY meant
-External PHY, but it means Ethernet PHY (integrated).
-I've tested the board without the property and the LEDs are working fine.
+The clk patch landed in mainline. These two patches seem to apply fine
+still. Can you queue them for -next?
 
->
->> +       status = "okay";
->> +};
->> +
->> +&mdio {
->> +       ext_rgmii_phy: ethernet-phy@1 {
->> +               compatible = "ethernet-phy-ieee802.3-c22";
->> +               reg = <0>;
->
-> Value in reg should match the address part of the node name.
+FWIW, tested it on a Colibri iMX7 using v3.13-rc3, works fine after
+reverting the GPC changes (see my other email with subject "i.MX 7 boot
+freeze with 4.13-rc3").
 
-Ok.
-
-I'll be sending a v2 with the suggested changes.
-
-Cheers,
-
-Luis Araneda.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
