@@ -1,96 +1,114 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Wed, 2 Aug 2017 13:11:41 +0000
-Message-ID: <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
- <20170731123157.GJ3053@localhost>
- <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
- <20170802045522.GU3053@localhost>
- <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
-Content-Language: en-US
-Content-ID: <FA59BF3E6F3B0F4B8BF0805CC3623F4F@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v1 0/2] JTAG driver introduction
+Date: Wed,  2 Aug 2017 16:18:36 +0300
+Message-ID: <1501679918-20486-1-git-send-email-oleksandrs@mellanox.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA4LzAyLzIwMTcgMTE6MTkgQU0sIFBldGVyIFVqZmFsdXNpIHdyb3RlOg0KPiANCj4g
-DQo+IE9uIDIwMTctMDgtMDIgMDc6NTUsIFZpbm9kIEtvdWwgd3JvdGU6DQo+PiBPbiBUdWUsIEF1
-ZyAwMSwgMjAxNyBhdCAwOTozMjo1MEFNICswMDAwLCBQaWVycmUgWXZlcyBNT1JEUkVUIHdyb3Rl
-Og0KPj4+DQo+Pj4NCj4+PiBPbiAwNy8zMS8yMDE3IDAyOjMxIFBNLCBWaW5vZCBLb3VsIHdyb3Rl
-Og0KPj4+PiBPbiBXZWQsIEp1bCAyNiwgMjAxNyBhdCAwNzozODowMkFNICswMDAwLCBQaWVycmUg
-WXZlcyBNT1JEUkVUIHdyb3RlOg0KPj4+Pj4+Pj4+ICsNCj4+Pj4+Pj4+PiArI2lmbmRlZiBfX0RN
-QV9TVE0zMl9ETUFNVVhfSA0KPj4+Pj4+Pj4+ICsjZGVmaW5lIF9fRE1BX1NUTTMyX0RNQU1VWF9I
-DQo+Pj4+Pj4+Pj4gKw0KPj4+Pj4+Pj4+ICsjaWYgZGVmaW5lZChDT05GSUdfU1RNMzJfRE1BTVVY
-KQ0KPj4+Pj4+Pj4+ICtpbnQgc3RtMzJfZG1hbXV4X3NldF9jb25maWcoc3RydWN0IGRldmljZSAq
-ZGV2LCB2b2lkICpyb3V0ZV9kYXRhLCB1MzIgY2hhbl9pZCk7DQo+Pj4+Pj4+Pg0KPj4+Pj4+Pj4g
-V2h5IGRvIHdlIG5lZWQgYSBjdXN0b20gQVBJIGluIHRoaXMgY2FzZT8NCj4+Pj4+Pj4+DQo+Pj4+
-Pj4+DQo+Pj4+Pj4+IFRoaXMgQVBJIGlzIGNhbGxlZCBieSBETUEgd2hlbiBhIHNsYXZlIGlzIHJl
-cXVlc3RlZCBieSBjbGllbnQuIERNQSBjYW4gd29yaw0KPj4+Pj4+PiB3aXRob3V0IERNQU1VWCB0
-aGlzIEFQSSBoYXMgYmVlbiBwdXQgaW4gcGxhY2UgdG8gY29uZmlndXJlIERNQU1VWCB3aGV0aGVy
-IGNsaWVudA0KPj4+Pj4+PiBpcyByZXF1ZXN0aW5nIGEgRE1BTVVYIENoYW5uZWwgaW5zdGVhZCBv
-ZiBhIERNQSBvbmUuDQo+Pj4+Pj4NCj4+Pj4+PiBZb3UgbWVhbiB0aGUgZG1hZW5naW5lIGRyaXZl
-ciByaWdodD8NCj4+Pj4+Pg0KPj4+Pj4NCj4+Pj4+IFllcy4gVGhlIEFQSSBpcyBtYWlubHkgY2Fs
-bGVkIGJ5ICJkZXZpY2VfY29uZmlnIiB0aHJvdWdoIG91dCBTVE0zMiBETUEgRHJpdmVyDQo+Pj4+
-PiB3aGVuIGEgcm91dGVyIGlzIGluIHBsYWNlIGZvciBjbGllbnQuDQo+Pj4+PiBQbGVhc2UgcmVm
-ZXIgdG8gUGF0Y2ggNC81IG9uIHRoaXMgc2V0Lg0KPj4+Pg0KPj4+PiBPa2F5IGFtIHRoaW5raW5n
-IG9uIHdoeSB0aGlzIGNhbid0IGJlIGdlbmVyaWMuLj8gQW4gb3B0aW9uYWwgcm91dGVyIGNvbmZp
-Zw0KPj4+PiBjYWxsYmFjaz8NCj4+Pj4NCj4+Pg0KPj4+IEkgd291bGQgaGF2ZSBsaWtlZCB0byBh
-bnN3ZXIgdGhlcmUgaXMgYSBjYWxsYmFjayB3aXRoaW4gZW5naW5lIGJ1dCB1bmZvcnR1bmF0ZWx5
-DQo+Pj4gSSBkaWRuJ3QgZmlndXJlIG91dCBvbmUgd2hlbiBJIGRpZCBteSByb3V0ZXIncyBkZXZl
-bG9wbWVudC4gSSd2ZSBsb29rZWQgb25jZQ0KPj4+IG1vcmUgYnV0IGFnYWluIEkgY2FuJ3QgZmlu
-ZCBob3cgdG8gbWFwIGNoYW5JRCBhbmQgcmVxdWVzdCBsaW5lIHdpdGhvdXQgY3VzdG9tIEFQSS4N
-Cj4+DQo+PiBZZXMgdGhlcmUgaXMgbm8gY2FsbGJhY2sgZm9yIHJvdXRlcnMgYnV0IHdlIGNhbiBh
-ZGQgYSBnZW5lcmljIGNhbGxiYWNrDQo+PiBoZXJlIHRvIGJlIHVzZWQuIEkgYWRkZWQgUGV0ZXIg
-Zm9yIGhpcyBjb21tZW50cywgaXNuJ3QgdGhhdCBzb21ldGhpbmcgdGhleQ0KPj4gbmVlZCB0b28/
-DQo+IA0KPiBUaGUgZXZlbnQgcm91dGVyIHZpYSBvZl9kbWFfcm91dGVyX3JlZ2lzdGVyKCkgc2hv
-dWxkIGJlIGNhcGFibGUgb2YgDQo+IGhhbmRsaW5nIGRpZmZlcmVudCB0eXBlIG9mIG11eGVycywg
-bGlrZSB0aGUgdGktZG1hLWNyb3NzYmFyLmMgaXMgZG9pbmcgDQo+IGZvciB0d28gZGlmZmVyZW50
-IHR5cGUgb2YgZXZlbnQgY3Jvc3NiYXJzLg0KPiANCj4gQmFzaWNhbGx5IHdpdGggdGhlIG9mX2Rt
-YV9yb3V0ZV9hbGxvY2F0ZSB5b3UgY3JhZnQgYSBkbWFfc3BlYyB3aGljaCBjYW4gDQo+IGJlIHVu
-ZGVyc3Rvb2QgYnkgdGhlIGRtYS1tYXN0ZXIgcG9pbnRlZCBmb3JtIHRoZSByb3V0ZXIncyBub2Rl
-Lg0KPiBZb3UgZG8gdGhlIGNvbmZpZ3VyYXRpb24gb2YgdGhlIG11eCBpbiB0aGlzIGZ1bmN0aW9u
-LCBjcmFmdCB0aGUgZG1hX3NwZWMgDQo+IGFuZCB0aGF0J3MgaXQuIEluIERUIHRoZSBwZXJpcGhl
-cmFscyBhcmUgdXNpbmcgdGhlIHJvdXRlcidzIG5vZGUgZm9yIERNQSANCj4gYmluZGluZyBhbmQg
-ZXZlcnl0aGluZyBpcyB0cmFuc3BhcmVudCBmb3IgdGhlbS4NCj4gDQo+IE5vdGU6IFRoZSB1c2Ug
-b2YgYW0zMzV4IHhiYXIgaW4gdGhlIHRpLWRtYS1jcm9zc2JhciBpcyBvcHRpb25hbCBhbmQgb25s
-eSANCj4gbmVlZGVkIHdoZW4gd2UgbmVlZCB0byBoYXZlIGRpZmZlcmVudCBldmVudCB0aGFuIHRo
-ZSBkZWZhdWx0IGZvciBhIA0KPiBzcGVjaWZpYyBkbWEgcmVxdWVzdCBsaW5lLg0KPiANCj4gSWYg
-eW91IG5vcm1hbGx5IHVzZSB0aGUgRE1BIGxpa2UgdGhpczoNCj4gZG1hcyA9IDwmZWRtYSAxMjkg
-MT4sIDwmZGRtYV94YmFyIDEyOCAxPjsNCj4gZG1hLW5hbWVzID0gInR4IiwgInJ4IjsNCj4gDQo+
-IElmIHlvdSBoYXZlIERNQSBldmVudCByb3V0ZXIvbXV4LCB0aGVuIGRlcGVuZGluZyBvbiBob3cg
-aXQgd29ya3MgeW91IA0KPiBtaWdodCBoYXZlIGRpZmZlcmVudCBudW1iZXIgb2YgcGFyYW1ldGVy
-cy4gSW4gbXkgY2FzZSB0aGUgRFJBNyBjcm9zc2JhciANCj4gZG9lcyBub3QgbmVlZCBleHRyYSBw
-YXJhbWV0ZXIsIHNvIHRvIGdldCBpdCBpbiB1c2U6DQo+IGRtYXMgPSA8JmVkbWFfeGJhciAxMjkg
-MT4sIDwmZWRtYV94YmFyIDEyOCAxPjsNCj4gZG1hLW5hbWVzID0gInR4IiwgInJ4IjsNCj4gDQo+
-IFRoZSByb3V0ZXIgZHJpdmVyIHdpbGwgcmV3cml0ZSB0aGUgZG1hX3NwZWMgYW5kIHJlcGxhY2Ug
-dGhlIDEyOS8xMjggYW5kIA0KPiBwYXNzIHNvbWV0aGluZyBkaWZmZXJlbnQgdG8gdGhlIGRtYS1t
-YXN0ZXIgKGR5bmFtaWMgZXZlbnQgbWFwcGluZykuDQo+IA0KPiBPbiBhbTMzNXggd2UgaGF2ZSBk
-aWZmZXJlbnQgeGJhciB0eXBlIHNvIHRoZXJlOg0KPiANCj4gZG1hcyA9IDwmZWRtYV94YmFyIDEy
-IDAgMT4sIDwmZWRtYV94YmFyIDEzIDAgMj47DQo+IA0KPiBPdXQgZnJvbSB0aGlzIHRoZSByb3V0
-ZXIgZHJpdmVyIHdpbGwgY3JlYXRlIGEgc3BlYyBlcXVpdmFsZW50IHRvDQo+IGRtYXMgPSA8JmVk
-bWFfeGJhciAxMiAwPiwgPCZlZG1hX3hiYXIgMTMgMD47DQo+IA0KPiBCdXQgaXQgd2lsbCBjaGFu
-Z2UgdGhlIHhiYXIgdGhhdCBETUEgcmVxdWVzdCAxMi8xMyB3aWxsIG5vdCBoYXZlIHRoZSANCj4g
-ZGVmYXVsdCBldmVudCByb3V0ZWQgdG8uDQo+IA0KPiBJIGJlbGlldmUgdGhhdCB0aGUgZG1hX3Jv
-dXRlciBpbmZyYSB3ZSBoYXZlIGluIGRtYWVuZ2luZSBjYW4gY292ZXIgbW9zdCANCj4gaWYgbm90
-IGFsbCB1c2UgY2FzZXMuLi4NCj4gDQo+IC0gUMOpdGVyDQo+IA0KDQpPdXIgU29DIHdvcmtzIHdp
-dGggb3Igd2l0aG91dCBETUFNVVguIEJvdGggYmluZGluZyBpcyBhbGxvd2VkLiBVc2luZyBvbmx5
-IERNQSBhDQpDaGFubmVsSWQgYW5kIHJlcXVlc3QgbGluZSBpcyBwYXJ0IG9mIHRoZSBiaW5kaW5n
-LiBVc2luZyBETUFNVXggbm93IHRoZSByZXF1ZXN0DQpsaW5lIGlzIGNvbWluZyBmcm9tIGRtYV9z
-cGVjIGZvcndhcmRzIHRvIGRtYS1tYXN0ZXIgYXMgd2VsbCBleHBsYWluZWQgYnkgUGV0ZXIuDQpI
-b3dldmVyIENoYW5uZWxJRCBpcyBub3cgZ2l2ZW4gYnkgZG1hX2dldF9hbnlfc2xhdmVfY2hhbm5l
-bCBpbnN0ZWFkIG9mIGJpbmRpbmdzLg0KRE1BTVVYIGRyaXZlciBoYXMgdG8gYmUgYXdhcmUgb2Yg
-dGhpcyBJRCB0byByb3V0ZSByZXF1ZXN0IGxpbmUgdG8gb3V0IERNQQ0KY2hhbm5lbC4gVGhpcyBj
-aGFubmVsIGlkIGluZm9ybWF0aW9uIGlzIGNhcnJpZWQgb24gdW50aWwgRE1BTVVYIHRocm91Z2gN
-CmRtYWVuZ2luZV9zbGF2ZV9jb25maWcgd2l0aCBhIGN1c3RvbSBBUEkuDQpIb3BlIGl0IGNsYXJp
-ZmllcyB0aGUgbmVlZC4NCg==
+When a need raise up to use JTAG interface for system's devices
+programming or CPU debugging, it could be done from the external
+JTAG master controller.
+ 
+For such purpose, usually the user layer
+application implements jtag protocol or using a proprietary
+connection to vendor hardware.
+This method is slow and not generic.
+ 
+We propose to implement general JTAG interface and infrastructure
+to communicate with user layer application. In such way, we can
+have the standard JTAG interface core part and separation from
+specific HW implementation.
+This allow new capability to debug the CPU or program system's 
+device via BMC without additional devices nor cost. 
+
+This patch purpose is to add JTAG master core infrastructure by 
+defining new JTAG class and provide generic JTAG interface
+to allow hardware specific drivers to connect this interface.
+This will enable all JTAG drivers to use the common interface
+part and will have separate for hardware implementation.
+
+The JTAG (Joint Test Action Group) core driver provides minimal generic
+JTAG interface, which can be used by hardware specific JTAG master
+controllers. By providing common interface for the JTAG controllers,
+user space device programing is hardware independent.
+ 
+Modern SoC which in use for embedded system' equipped with
+internal JTAG master interface.
+This interface is used for programming and debugging system's
+hardware components, like CPLD, FPGA, CPU, voltage and
+industrial controllers.
+Firmware for such devices can be upgraded through JTAG interface during
+Runtime. The JTAG standard support for multiple devices programming,
+is in case their lines are daisy-chained together.
+
+For example, systems which equipped with host CPU, BMC SoC or/and 
+number of programmable devices are capable to connect a pin and
+select system components dynamically for programming and debugging,
+This is using by the BMC which is equipped with internal SoC master
+controller.
+For example:
+
+BMC JTAG master --> pin selected to CPLDs chain for programming (filed
+upgrade, production) 
+BMC JTAG master --> pin selected to voltage monitors for programming 
+(field upgrade, production) 
+BMC JTAG master --> pin selected to host CPU (on-site debugging 
+and developers debugging)
+
+For example, we can have application in user space which using calls
+to JTAG driver executes CPLD programming directly from SVF file
+ 
+The JTAG standard (IEEE 1149.1) defines the next connector pins:
+- TDI (Test Data In);
+- TDO (Test Data Out);
+- TCK (Test Clock);
+- TMS (Test Mode Select);
+- TRST (Test Reset) (Optional);
+
+The SoC equipped with JTAG master controller, performs
+device programming on command or vector level. For example
+a file in a standard SVF (Serial Vector Format) that contains
+boundary scan vectors, can be used by sending each vector
+to the JTAG interface and the JTAG controller will execute
+the programming.
+
+Initial version provides the system calls set for:
+- SIR (Scan Instruction Register, IEEE 1149.1 Data Register scan);
+- SDR (Scan Data Register, IEEE 1149.1 Instruction Register scan);
+- RUNTEST (Forces the IEEE 1149.1 bus to a run state for a specified
+  number of clocks.
+
+SoC which are not equipped with JTAG master interface, can be built
+on top of JTAG core driver infrastructure, by applying bit-banging of
+TDI, TDO, TCK and TMS pins within the hardware specific driver.
+
+Oleksandr Shamray (2):
+  drivers: jtag: Add JTAG core driver
+  drivers: jtag: Add Aspeed SoC 24xx and 25xx families JTAG master
+    driver
+
+ Documentation/ioctl/ioctl-number.txt |    2 +
+ MAINTAINERS                          |    8 +
+ drivers/Kconfig                      |    2 +
+ drivers/Makefile                     |    1 +
+ drivers/jtag/Kconfig                 |   31 ++
+ drivers/jtag/Makefile                |    3 +
+ drivers/jtag/jtag-aspeed.c           |  802 ++++++++++++++++++++++++++++++++++
+ drivers/jtag/jtag.c                  |  347 +++++++++++++++
+ include/linux/jtag.h                 |   63 +++
+ include/uapi/linux/jtag.h            |  133 ++++++
+ 10 files changed, 1392 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/jtag/Kconfig
+ create mode 100644 drivers/jtag/Makefile
+ create mode 100644 drivers/jtag/jtag-aspeed.c
+ create mode 100644 drivers/jtag/jtag.c
+ create mode 100644 include/linux/jtag.h
+ create mode 100644 include/uapi/linux/jtag.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
