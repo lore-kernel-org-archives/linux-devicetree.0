@@ -1,201 +1,54 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH v2 4/4] pmbus: max31785: Work around back-to-back writes with FAN_CONFIG_1_2
-Date: Wed,  2 Aug 2017 16:45:41 +0930
-Message-ID: <20170802071541.3121-5-andrew@aj.id.au>
-References: <20170802071541.3121-1-andrew@aj.id.au>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170802071541.3121-1-andrew@aj.id.au>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux@roeck-us.net, linux-hwmon@vger.kernel.org
-Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, mspinler@linux.vnet.ibm.com, msbarth@linux.vnet.ibm.com, openbmc@lists.ozlabs.org
+From: Zhi Mao <zhi.mao@mediatek.com>
+Subject: Re: [PATCH v3 0/6] mediatek: pwm driver add MT2712/MT7622 support
+Date: Wed, 2 Aug 2017 15:19:54 +0800
+Message-ID: <1501658394.22478.36.camel@mhfsdcap03>
+References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
+         <1500261364.22478.32.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1500261364.22478.32.camel@mhfsdcap03>
+Sender: linux-pwm-owner@vger.kernel.org
+To: "john@phrozen.org" <john@phrozen.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Yingjoe Chen =?UTF-8?Q?=28=E9=99=B3=E8=8B=B1=E6=B4=B2=29?= <Yingjoe.Chen@mediatek.com>, YT Shen =?UTF-8?Q?=28=E6=B2=88=E5=B2=B3=E9=9C=86=29?= <Yt.Shen@mediatek.com>, Sean Wang =?UTF-8?Q?=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?=
 List-Id: devicetree@vger.kernel.org
 
-Testing of the pmbus max31785 driver implementation revealed occasional
-NACKs from the device. Attempting the same transaction immediately after
-the failure appears to always succeed. The NACK has consistently been
-observed to happen on the second write of back-to-back writes to the
-device, where the first write is to FAN_CONFIG_1_2. The NACK occurs
-against the first data byte transmitted by the master on the second
-write. The behaviour has the hallmarks of a PMBus Device Busy response,
-but the busy bit is not set in the status byte.
+Hi John, Matthais & Thierry,
+> 
+> Just a gentle ping on this issue again.
+> Do you have any update?
+> 
+> Regards,
+> Zhi
 
-Work around this undocumented behaviour by retrying any back-to-back
-writes that occur after first writing FAN_CONFIG_1_2.
 
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- drivers/hwmon/pmbus/max31785.c | 105 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 97 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/hwmon/pmbus/max31785.c b/drivers/hwmon/pmbus/max31785.c
-index c2b693badcea..509b1a5a49b9 100644
---- a/drivers/hwmon/pmbus/max31785.c
-+++ b/drivers/hwmon/pmbus/max31785.c
-@@ -48,6 +48,55 @@ enum max31785_regs {
- 
- #define MAX31785_NR_PAGES		23
- 
-+/*
-+ * MAX31785 dragons ahead
-+ *
-+ * It seems there's an undocumented timing constraint when performing
-+ * back-to-back writes where the first write is to FAN_CONFIG_1_2. The device
-+ * provides no indication of this besides NACK'ing master Txs; no bits are set
-+ * in STATUS_BYTE to suggest anything has gone wrong.
-+ *
-+ * Given that, do a one-shot retry of the write.
-+ *
-+ * The max31785_*_write_*_data() functions should be used at any point where
-+ * the prior write is to FAN_CONFIG_1_2.
-+ */
-+static int max31785_i2c_smbus_write_byte_data(struct i2c_client *client,
-+					      int command, u16 data)
-+{
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte_data(client, command, data);
-+	if (ret == -EIO)
-+		ret = i2c_smbus_write_byte_data(client, command, data);
-+
-+	return ret;
-+}
-+
-+static int max31785_i2c_smbus_write_word_data(struct i2c_client *client,
-+					      int command, u16 data)
-+{
-+	int ret;
-+
-+	ret = i2c_smbus_write_word_data(client, command, data);
-+	if (ret == -EIO)
-+		ret = i2c_smbus_write_word_data(client, command, data);
-+
-+	return ret;
-+}
-+
-+static int max31785_pmbus_write_word_data(struct i2c_client *client, int page,
-+					  int command, u16 data)
-+{
-+	int ret;
-+
-+	ret = pmbus_write_word_data(client, page, command, data);
-+	if (ret == -EIO)
-+		ret = pmbus_write_word_data(client, page, command, data);
-+
-+	return ret;
-+}
-+
- static int max31785_read_byte_data(struct i2c_client *client, int page,
- 				   int reg)
- {
-@@ -210,6 +259,31 @@ static int max31785_read_word_data(struct i2c_client *client, int page,
- 	return rv;
- }
- 
-+static int max31785_update_fan(struct i2c_client *client, int page,
-+			       u8 config, u8 mask, u16 command)
-+{
-+	int from, rv;
-+	u8 to;
-+
-+	from = pmbus_read_byte_data(client, page, PMBUS_FAN_CONFIG_12);
-+	if (from < 0)
-+		return from;
-+
-+	to = (from & ~mask) | (config & mask);
-+
-+	if (to != from) {
-+		rv = pmbus_write_byte_data(client, page, PMBUS_FAN_CONFIG_12,
-+					   to);
-+		if (rv < 0)
-+			return rv;
-+	}
-+
-+	rv = max31785_pmbus_write_word_data(client, page, PMBUS_FAN_COMMAND_1,
-+					    command);
-+
-+	return rv;
-+}
-+
- static const int max31785_pwm_modes[] = { 0x7fff, 0x2710, 0xffff };
- 
- static int max31785_write_word_data(struct i2c_client *client, int page,
-@@ -219,12 +293,24 @@ static int max31785_write_word_data(struct i2c_client *client, int page,
- 		return -ENXIO;
- 
- 	switch (reg) {
-+	case PMBUS_VIRT_FAN_TARGET_1:
-+		return max31785_update_fan(client, page, PB_FAN_1_RPM,
-+					   PB_FAN_1_RPM, word);
-+	case PMBUS_VIRT_PWM_1:
-+	{
-+		u32 command = word;
-+
-+		command *= 100;
-+		command /= 255;
-+		return max31785_update_fan(client, page, 0, PB_FAN_1_RPM,
-+					   command);
-+	}
- 	case PMBUS_VIRT_PWM_ENABLE_1:
- 		if (word >= ARRAY_SIZE(max31785_pwm_modes))
- 			return -EINVAL;
- 
--		return pmbus_update_fan(client, page, 0, 0, PB_FAN_1_RPM,
--					max31785_pwm_modes[word]);
-+		return max31785_update_fan(client, page, 0, PB_FAN_1_RPM,
-+					   max31785_pwm_modes[word]);
- 	default:
- 		break;
- 	}
-@@ -262,7 +348,7 @@ static int max31785_of_fan_config(struct i2c_client *client,
- 		return -ENXIO;
- 	}
- 
--	ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
-+	ret = max31785_i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -419,7 +505,8 @@ static int max31785_of_fan_config(struct i2c_client *client,
- 	if (ret < 0)
- 		return ret;
- 
--	ret = i2c_smbus_write_word_data(client, MFR_FAN_CONFIG, mfr_cfg);
-+	ret = max31785_i2c_smbus_write_word_data(client, MFR_FAN_CONFIG,
-+						 mfr_cfg);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -473,7 +560,7 @@ static int max31785_of_tmp_config(struct i2c_client *client,
- 		return -ENXIO;
- 	}
- 
--	ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
-+	ret = max31785_i2c_smbus_write_byte_data(client, PMBUS_PAGE, page);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -631,7 +718,8 @@ static int max31785_probe(struct i2c_client *client,
- 		if (!have_fan || fan_configured)
- 			continue;
- 
--		ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, i);
-+		ret = max31785_i2c_smbus_write_byte_data(client, PMBUS_PAGE,
-+							 i);
- 		if (ret < 0)
- 			return ret;
- 
-@@ -640,8 +728,9 @@ static int max31785_probe(struct i2c_client *client,
- 			return ret;
- 
- 		ret &= ~PB_FAN_1_INSTALLED;
--		ret = i2c_smbus_write_word_data(client, PMBUS_FAN_CONFIG_12,
--						ret);
-+		ret = max31785_i2c_smbus_write_word_data(client,
-+							 PMBUS_FAN_CONFIG_12,
-+							 ret);
- 		if (ret < 0)
- 			return ret;
- 	}
--- 
-2.11.0
-
+On Mon, 2017-07-17 at 11:16 +0800, Zhi Mao wrote:
+> Hi John, Matthais & PWM Maintainers
+> 
+> Just a Gentle ping on this issue :)
+> Is there anything should be modified?
+> 
+> Regards,
+> Zhi
+> 
+> 
+> On Fri, 2017-06-30 at 14:05 +0800, Zhi Mao wrote:
+> > change in v3:
+> > 1. add pwm clk disable in function:mtk_pwm_config()
+> >    for error parameter checking case
+> > 
+> > Zhi Mao (6):
+> >   pwm: kconfig: modify mediatek information
+> >   pwm: mediatek: fix pwm source clock selection
+> >   pwm: mediatek: fix clock control issue
+> >   pwm: bindings: add MT2712/MT7622 information
+> >   pwm: mediatek: add PWM_CLK_DIV_MAX
+> >   pwm: mediatek: add MT2712/MT7622 support
+> > 
+> >  .../devicetree/bindings/pwm/pwm-mediatek.txt       |    6 +-
+> >  drivers/pwm/Kconfig                                |    2 +-
+> >  drivers/pwm/pwm-mediatek.c                         |  133 ++++++++++++++------
+> >  3 files changed, 104 insertions(+), 37 deletions(-)
+> > 
+> 
