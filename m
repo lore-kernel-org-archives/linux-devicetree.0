@@ -1,56 +1,48 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 09/25] mtd: nand: qcom: remove memset for clearing read
- register buffer
-Date: Wed, 2 Aug 2017 11:36:12 +0530
-Message-ID: <3804c0db-940d-24d6-dae0-7965bfb3f259@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-10-git-send-email-absahu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 00/11] Add the internal phy support
+Date: Wed,  2 Aug 2017 14:15:35 +0800
+Message-ID: <1501654546-17292-1-git-send-email-david.wu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500464893-11352-10-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The rk3228 and rk3328 support internal phy inside, let's enable
+it to work. And the internal phy need to do some special setting, so
+register the rockchip internal phy driver.
 
+David Wu (11):
+  net: phy: Add rockchip phy driver support
+  multi_v7_defconfig: Make rockchip phy built-in
+  arm64: defconfig: Enable CONFIG_ROCKCHIP_PHY
+  net: stmmac: dwmac-rk: Remove unwanted code for rk3328_set_to_rmii()
+  net: stmmac: dwmac-rk: Add internal phy support
+  net: stmmac: dwmac-rk: Add internal phy support for rk3228
+  net: stmmac: dwmac-rk: Add internal phy supprot for rk3328
+  ARM: dts: rk322x: Add support internal phy for gmac
+  ARM: dts: rk3228-evb: Enable the internal phy for gmac
+  ARM64: dts: rockchip: Add gmac2phy node support for rk3328
+  ARM64: dts: rockchip: Enable gmac2phy for rk3328-evb
 
-On 07/19/2017 05:17 PM, Abhishek Sahu wrote:
-> The memset in clear_read_regs is overhead. All the register data
-> will be filled by DMA during NAND operation so making these
-> register variables zero is not required.
-
-Yeah, that's a good point.
-
-Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-> 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->   drivers/mtd/nand/qcom_nandc.c | 2 --
->   1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 5b71478..7ecd0f8 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -826,8 +826,6 @@ static void free_descs(struct qcom_nand_controller *nandc)
->   static void clear_read_regs(struct qcom_nand_controller *nandc)
->   {
->   	nandc->reg_read_pos = 0;
-> -	memset(nandc->reg_read_buf, 0,
-> -	       MAX_REG_RD * sizeof(*nandc->reg_read_buf));
->   }
->   
->   static void pre_command(struct qcom_nand_host *host, int command)
-> 
+ .../devicetree/bindings/net/rockchip-dwmac.txt     |   6 +-
+ arch/arm/boot/dts/rk3228-evb.dts                   |  20 ++
+ arch/arm/boot/dts/rk322x.dtsi                      |   8 +-
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  17 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           |  25 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 122 ++++++++++-
+ drivers/net/phy/Kconfig                            |   5 +
+ drivers/net/phy/Makefile                           |   1 +
+ drivers/net/phy/rockchip.c                         | 229 +++++++++++++++++++++
+ 11 files changed, 424 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/net/phy/rockchip.c
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.9.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
