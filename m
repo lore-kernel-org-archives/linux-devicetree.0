@@ -1,60 +1,50 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 0/2] serial: 8250: add support for MediaTek BTIF
- controller
-Date: Wed, 02 Aug 2017 20:14:23 +0300
-Message-ID: <1501694063.29303.361.camel@linux.intel.com>
-References: <cover.1501692369.git.sean.wang@mediatek.com>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/7] K2G: Add QSPI support
+Date: Wed, 2 Aug 2017 10:19:49 -0700
+Message-ID: <ff8e0f4f-eb26-85dc-b5b2-8f6ddd39145b@oracle.com>
+References: <20170801045434.8733-1-vigneshr@ti.com>
+ <29c0e8ec-1f9f-cfc9-2d0e-e4d31890b699@oracle.com>
+ <00b2b8b8-3f3d-d563-bebc-f37f67362aa0@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1501692369.git.sean.wang@mediatek.com>
+In-Reply-To: <00b2b8b8-3f3d-d563-bebc-f37f67362aa0@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, jan.kiszka@siemens.com, heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com, matthias.bgg@gmail.com
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-08-03 at 01:05 +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+8/1/2017 10:52 PM, Vignesh R wrote:
+> Hi,
 > 
-> This patchset introduces the support for MediaTek BTIF controller.
+> On Tuesday 01 August 2017 11:31 PM, Santosh Shilimkar wrote:
+>> On 7/31/2017 9:54 PM, Vignesh R wrote:
+>>> This series adds support for Cadence QSPI for 66AK2G SoC. The first
+>>> three patches enhance the cadence-quadspi driver to support loopback
+>>> clock and pm_runtime and tweaks for 66AK2G SoC. Remaining patches add
+>>> DT nodes and enable the driver in defconfig.
+>>>
+>>> Tested on 66AK2G GP and ICE boards.
+>>>
+>>> Vignesh R (7):
+>>>     mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+>>>     mtd: spi-nor: cadence-quadspi: Add support to enable loopback clock
+>>>       circuit
+>>>     mtd: spi-nor: cadence-quadspi: Add runtime PM support
+>>>     ARM: dts: keystone-k2g: Add QSPI DT entry
+>>>     ARM: dts: keystone-k2g-evm: Add QSPI node
+>>>     ARM: dts: keystone-k2g-ice: Add QSPI node
+>>>     ARM: configs: keystone: Enable Cadence QSPI driver
+>>>
+>> Please separate dts and driver patches in its own series
+>> while posting next time since they go throgh different
+>> subsystem trees. Get your driver patch queed
+>> first before adding DTS and enabling config option.
 > 
-> MediaTek BTIF controller is the serial interface similar to UART but
-> it
-> works only as the digital device which is mainly used to communicate
-> with
-> the connectivity module also called CONNSYS inside the SoC which could
-> be
-> mostly found on those MediaTek SoCs with Bluetooth feature.
+> Okay. I thought it would be easy for you to know when driver patches are
+> queued, if DTS changes are part of the same series. Will post DT nodes
+> separately from next time or if I need to do a v2 of this series.
 > 
-> And the controller is made as being compatible with the 8250 register
-> layout so it tends to be integrated with existing 8250 core driver and
-> have no requirement for the modem configuration additionally such as
-> the
-> baud rate calculation and assignment.
-
-
-Why it requires a separate driver?
-
-8250_of is for DT enabled drivers.
-
-> 
-> Sean Wang (2):
->   dt-bindings: serial: Add MediaTek BTIF controller bindings
->   tty: serial: 8250: Add MediaTek BTIF controller on MT7622 and MT7623
->     SoC
-> 
->  .../devicetree/bindings/serial/mtk-btif.txt        |  26 +++
->  drivers/tty/serial/8250/8250_btif.c                | 224
-> +++++++++++++++++++++
->  drivers/tty/serial/8250/Kconfig                    |   9 +
->  drivers/tty/serial/8250/Makefile                   |   1 +
->  4 files changed, 260 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/mtk-
-> btif.txt
->  create mode 100644 drivers/tty/serial/8250/8250_btif.c
-> 
-
--- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+Thanks !!
