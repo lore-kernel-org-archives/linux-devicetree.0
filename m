@@ -1,51 +1,72 @@
-From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v6 5/7] PCI: dwc: qcom: Use block IP version for
- operations
-Date: Wed, 2 Aug 2017 21:34:22 +0300
-Message-ID: <285396b4-cadb-6f4a-8cca-d781503b9d49@mm-sol.com>
-References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
- <1501482857-14100-6-git-send-email-varada@codeaurora.org>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v2 2/4] drm/tinydrm: add support for LEGO MINDSTORMS EV3
+ LCD
+Date: Wed, 2 Aug 2017 20:49:52 +0200
+Message-ID: <0d20a6da-5c61-2a75-c372-29fea1b6872e@tronnes.org>
+References: <1501625510-16727-1-git-send-email-david@lechnology.com>
+ <1501625510-16727-3-git-send-email-david@lechnology.com>
+ <32b134d1-84f3-8e3d-1d57-05c8b7c384bc@tronnes.org>
+ <3244660b-64f6-8202-b505-a9796b888db5@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501482857-14100-6-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3244660b-64f6-8202-b505-a9796b888db5@lechnology.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 31.07.2017 09:34, Varadarajan Narayanan wrote:
-> Presently, when support for a new SoC is added, the driver ops
-> structures and functions are versioned with plain 1, 2, 3 etc.
-> Instead use the block IP version number.
-> 
-> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->   drivers/pci/dwc/pcie-qcom.c | 133 +++++++++++++++++++++++---------------------
->   1 file changed, 71 insertions(+), 62 deletions(-)
-> 
-> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
+Den 02.08.2017 18.24, skrev David Lechner:
+> On 08/02/2017 08:03 AM, Noralf Trønnes wrote:
+>>
+>>
+>> Please use tinydrm_xrgb8888_to_gray8().
+>
+> I considered this, but is seems excessive to loop through the entire 
+> fb twice just to make a 4x6 cursor blink.
+>
 
-<cut>
+Yes, you're right about that.
 
-> +/*
-> + * Declare one of_device_id entry
-> + * c - Compatible string
-> + * d - Associated data
-> + * w - SoC wrapper version (ignored)
-> + * s - Synopsys core version (ignored)
-> + */
-> +#define QCOM_DECL(c, d, w, s) { .compatible = c, .data = &d }
+Can you change tinydrm_xrgb8888_to_gray8 to match the other
+copy/conversion functions so we can pass it a clip rectangle:
 
-Please don't introduce this macro, just add a comment with qcom version 
-and corresponding synopsys version.
+int tinydrm_xrgb8888_to_gray8(u8 *dst, void *vaddr,
+                 struct drm_framebuffer *fb,
+                 struct drm_clip_rect *clip)
 
-regards,
-Stan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And move the import_attach part to the driver (repaper).
+repaper doesn't do partial updates, so pass a full clip.
+
+>> You should use this function to enable the regulator and init the
+>> controller. Don't look at mi0283qt it should have been fixed.
+>
+> ACK. But this is why I was not keen on writing a standalone driver. I 
+> know some things about kernel development, but not everything. How am 
+> I supposed to know what is OK to copy from other drivers and what is not? 
+
+You can't know, and it's part of the review process to sort that out.
+That being said, I really should have fixed mi0283qt, because it will
+be copied...
+
+> And if I am going to be put down as the maintainer of this driver, it 
+> bothers me that I don't know so much about how it all works.
+>
+
+You don't need to know all the details. If I make a change, you can
+assume that I know what I'm doing and ack it, but I need someone to
+look at my patches, I can't apply my own patches without anyone looking
+at it, we all make mistakes. And if someone else sends a patch and you
+don't know if it is good or not, just ping me and I'll look at it.
+Either way I have to look at all tinydrm patches before applying them.
+I'm not keen on being default maintainer on drivers that I can't test.
+The upside of being a maintainer is that you control the future of the
+driver, what changes goes in.
+
+And I'm kind of in the same boat as you, I know tinydrm, but drm is
+very complex and I don't know half of what's going on. If I'm stuck or
+out of my league, I have to ask for help. Like with adding drm formats.
+
+Noralf.
