@@ -1,50 +1,70 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] serial: mctrl_gpio: restrict MCTRL initialization
-Date: Wed, 2 Aug 2017 08:19:54 +0200
-Message-ID: <20170802061954.mhd3hkmmm4wukhu3@pengutronix.de>
-References: <1501485203-13185-1-git-send-email-yegorslists@googlemail.com>
- <1501485203-13185-2-git-send-email-yegorslists@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v3 10/11] ARM64: dts: rockchip: Add gmac2phy node support for rk3328
+Date: Wed,  2 Aug 2017 14:24:57 +0800
+Message-ID: <1501655097-21054-1-git-send-email-david.wu@rock-chips.com>
+References: <1501654546-17292-1-git-send-email-david.wu@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501485203-13185-2-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1501654546-17292-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, julia.lawall-L2FTfq7BK8M@public.gmane.org, peter-WaGBZJeGNqdsbIuE7sb01tBPR1lH4CV8@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yegor,
+The gmac2phy controller of rk3328 is connected to internal phy
+directly inside, add the node for the internal phy support.
 
-On Mon, Jul 31, 2017 at 09:13:21AM +0200, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
-> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> 
-> GPIOs specified for serial port can be used either as GPIO driven MCTRL
-> or as a wakeup-source. Use the latter property to abort the MCTRL
-> initialization.
-> 
-> Return -ENOSYS as this would just skip mctrl initialization in the
-> case of wakeup source usage and not disable the port completely due to
-> failed serial8250_register_8250_port().
-> 
-> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Did I miss the explanation in the last round why this is necessary? You
-write "can be used either as GPIO driven MCTRL or as a wakeup-source",
-I wonder why there is a conflict.
-
-Can you show a dt that makes problems and describe it. I would guess
-either your dt being broken or you want to extend mctrl-gpio instead of
-restrict it.
-
-Best regards
-Uwe
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index 0be96ce..51c8c66 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -63,6 +63,8 @@
+ 		i2c1 = &i2c1;
+ 		i2c2 = &i2c2;
+ 		i2c3 = &i2c3;
++		ethernet0 = &gmac2io;
++		ethernet1 = &gmac2phy;
+ 	};
+ 
+ 	cpus {
+@@ -424,6 +426,29 @@
+ 		status = "disabled";
+ 	};
+ 
++	gmac2phy: eth@ff550000 {
++		compatible = "rockchip,rk3328-gmac";
++		reg = <0x0 0xff550000 0x0 0x10000>;
++		rockchip,grf = <&grf>;
++		interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "macirq";
++		clocks = <&cru SCLK_MAC2PHY_SRC>, <&cru SCLK_MAC2PHY_RXTX>,
++			 <&cru SCLK_MAC2PHY_RXTX>, <&cru SCLK_MAC2PHY_REF>,
++			 <&cru ACLK_MAC2PHY>, <&cru PCLK_MAC2PHY>,
++			 <&cru SCLK_MAC2PHY_OUT>;
++		clock-names = "stmmaceth", "mac_clk_rx",
++			      "mac_clk_tx", "clk_mac_ref",
++			      "aclk_mac", "pclk_mac",
++			      "clk_macphy";
++		resets = <&cru SRST_GMAC2PHY_A>, <&cru SRST_MACPHY>;
++		reset-names = "stmmaceth", "mac-phy";
++		phy-mode = "rmii";
++		phy-is-internal;
++		pinctrl-names = "default";
++		pinctrl-0 = <&fephyled_rxm1 &fephyled_linkm1>;
++		status = "disabled";
++	};
++
+ 	gic: interrupt-controller@ff811000 {
+ 		compatible = "arm,gic-400";
+ 		#interrupt-cells = <3>;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+1.9.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
