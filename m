@@ -1,110 +1,116 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 03/23] clk: rockchip: fix up the indentation stuff for RV1108 SoC
-Date: Wed,  2 Aug 2017 16:30:33 +0800
-Message-ID: <1501662633-11863-1-git-send-email-andy.yan@rock-chips.com>
-References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, shawn.lin@rock-chips.com, zhangqing@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Yan <andy.yan@rock-chips.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v2 11/25] mtd: nand: qcom: support for NAND controller
+ properties
+Date: Wed, 2 Aug 2017 14:01:51 +0530
+Message-ID: <758cc93e-e6e3-acab-479f-63288eb88b2a@codeaurora.org>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
+Content-Language: en-US
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
 
-Make the code look better.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+On 07/19/2017 05:17 PM, Abhishek Sahu wrote:
+> Currently driver data is being assigned directly with ECC modes.
+> Now, the plan is to add more NAND controller versions, so
+> reorganized the current driver data assignment by creating NAND
+> controller properties structure.  This will contain all
+> properties specific to NAND controller.
+> 
 
-Changes in v2: None
+Reviewed-by: Archit Taneja <architt@codeaurora.org>
 
- include/dt-bindings/clock/rv1108-cru.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+>   drivers/mtd/nand/qcom_nandc.c | 23 +++++++++++++++++------
+>   1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+> index 8f9e86c..3b0ae91 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -235,7 +235,7 @@ struct nandc_regs {
+>    *				writes. contains the register values to be
+>    *				written to controller
+>    * @cmd1/vld:			some fixed controller register values
+> - * @ecc_modes:			supported ECC modes by the current controller,
+> + * @props:			properties of current NAND controller IP,
+>    *				initialized via DT match data
+>    */
+>   struct qcom_nand_controller {
+> @@ -266,7 +266,7 @@ struct qcom_nand_controller {
+>   	struct nandc_regs *regs;
+>   
+>   	u32 cmd1, vld;
+> -	u32 ecc_modes;
+> +	const struct qcom_props *props;
+>   };
+>   
+>   /*
+> @@ -319,6 +319,15 @@ struct qcom_nand_host {
+>   	u32 clrreadstatus;
+>   };
+>   
+> +/*
+> + * This data type corresponds to the nand controller properties which varies
+> + * among different NAND controller IP's.
+> + * @ecc_modes - ecc mode for NAND
+> + */
+> +struct qcom_props {
+> +	u32 ecc_modes;
+> +};
+> +
+>   static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
+>   {
+>   	return container_of(chip, struct qcom_nand_host, chip);
+> @@ -1820,7 +1829,7 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
+>   		 * uses lesser bytes for ECC. If RS is used, the ECC bytes is
+>   		 * always 10 bytes
+>   		 */
+> -		if (nandc->ecc_modes & ECC_BCH_4BIT) {
+> +		if (nandc->props->ecc_modes & ECC_BCH_4BIT) {
+>   			/* BCH */
+>   			host->bch_enabled = true;
+>   			ecc_mode = 0;
+> @@ -2165,7 +2174,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+>   		return -ENODEV;
+>   	}
+>   
+> -	nandc->ecc_modes = (unsigned long)dev_data;
+> +	nandc->props = dev_data;
+>   
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	nandc->base = devm_ioremap_resource(dev, res);
+> @@ -2234,7 +2243,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>   	return 0;
+>   }
+>   
+> -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
+> +static const struct qcom_props ebi2_nandc_data = {
+> +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+> +};
+>   
+>   /*
+>    * data will hold a struct pointer containing more differences once we support
+> @@ -2242,7 +2253,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>    */
+>   static const struct of_device_id qcom_nandc_of_match[] = {
+>   	{	.compatible = "qcom,ebi2-nandc",
+> -		.data = (void *)EBI2_NANDC_ECC_MODES,
+> +		.data = &ebi2_nandc_data,
+>   	},
+>   	{}
+>   };
+> 
 
-diff --git a/include/dt-bindings/clock/rv1108-cru.h b/include/dt-bindings/clock/rv1108-cru.h
-index e8aa6d5..f269d83 100644
---- a/include/dt-bindings/clock/rv1108-cru.h
-+++ b/include/dt-bindings/clock/rv1108-cru.h
-@@ -173,16 +173,16 @@
- #define CLK_NR_CLKS			(HCLK_VPU + 1)
- 
- /* reset id */
--#define SRST_CORE_PO_AD		0
-+#define SRST_CORE_PO_AD			0
- #define SRST_CORE_AD			1
- #define SRST_L2_AD			2
--#define SRST_CPU_NIU_AD		3
-+#define SRST_CPU_NIU_AD			3
- #define SRST_CORE_PO			4
- #define SRST_CORE			5
--#define SRST_L2			6
-+#define SRST_L2				6
- #define SRST_CORE_DBG			8
- #define PRST_DBG			9
--#define RST_DAP			10
-+#define RST_DAP				10
- #define PRST_DBG_NIU			11
- #define ARST_STRC_SYS_AD		15
- 
-@@ -249,9 +249,9 @@
- #define HRST_SYSBUS			75
- #define PRST_USBGRF			76
- 
--#define ARST_PERIPH_NIU		80
--#define HRST_PERIPH_NIU		81
--#define PRST_PERIPH_NIU		82
-+#define ARST_PERIPH_NIU			80
-+#define HRST_PERIPH_NIU			81
-+#define PRST_PERIPH_NIU			82
- #define HRST_PERIPH			83
- #define HRST_SDMMC			84
- #define HRST_SDIO			85
-@@ -269,7 +269,7 @@
- #define HRST_HOST0_AUX			96
- #define HRST_HOST0_ARB			97
- #define SRST_HOST0_EHCIPHY		98
--#define SRST_HOST0_UTMI		99
-+#define SRST_HOST0_UTMI			99
- #define SRST_USBPOR			100
- #define SRST_UTMI0			101
- #define SRST_UTMI1			102
-@@ -316,21 +316,21 @@
- #define HRST_VPU_NIU			141
- #define ARST_VPU			142
- #define HRST_VPU			143
--#define ARST_RKVDEC_NIU		144
--#define HRST_RKVDEC_NIU		145
-+#define ARST_RKVDEC_NIU			144
-+#define HRST_RKVDEC_NIU			145
- #define ARST_RKVDEC			146
- #define HRST_RKVDEC			147
- #define SRST_RKVDEC_CABAC		148
- #define SRST_RKVDEC_CORE		149
--#define ARST_RKVENC_NIU		150
--#define HRST_RKVENC_NIU		151
-+#define ARST_RKVENC_NIU			150
-+#define HRST_RKVENC_NIU			151
- #define ARST_RKVENC			152
- #define HRST_RKVENC			153
- #define SRST_RKVENC_CORE		154
- 
- #define SRST_DSP_CORE			156
- #define SRST_DSP_SYS			157
--#define SRST_DSP_GLOBAL		158
-+#define SRST_DSP_GLOBAL			158
- #define SRST_DSP_OECM			159
- #define PRST_DSP_IOP_NIU		160
- #define ARST_DSP_EPP_NIU		161
-@@ -348,7 +348,7 @@
- #define SRST_PMU_I2C0			173
- #define PRST_PMU_I2C0			174
- #define PRST_PMU_GPIO0			175
--#define PRST_PMU_INTMEM		176
-+#define PRST_PMU_INTMEM			176
- #define PRST_PMU_PWM0			177
- #define SRST_PMU_PWM0			178
- #define PRST_PMU_GRF			179
 -- 
-2.7.4
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
