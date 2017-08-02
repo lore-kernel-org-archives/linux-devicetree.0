@@ -1,97 +1,193 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 5/5] phy: rockchip-inno-usb2: add support of usb2-phy for rv1108 SoCs
-Date: Wed,  2 Aug 2017 15:54:49 +0800
-Message-ID: <1501660489-6030-1-git-send-email-frank.wang@rock-chips.com>
-References: <1501660390-5956-1-git-send-email-frank.wang@rock-chips.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Wed, 2 Aug 2017 10:05:06 +0200
+Message-ID: <937aa71c-1415-4645-7e04-6be43dd33174@tronnes.org>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+ <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
+ <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
+ <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+ <bfb3d541-856b-0233-dd85-72512788939f@tronnes.org>
+ <bbec0574-311a-e1b4-d7fd-f6fb15b078d2@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501660390-5956-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <bbec0574-311a-e1b4-d7fd-f6fb15b078d2-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support usb2-phy for rv1108 SoCs and amend phy Documentation.
 
-Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  1 +
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 43 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+Den 02.08.2017 00.26, skrev David Lechner:
+> On 08/01/2017 01:08 PM, Noralf Trønnes wrote:
+>> (cc: Daniel Vetter)
+>>
+>>
+>> Den 01.08.2017 18.51, skrev David Lechner:
+>>> On 07/30/2017 12:14 PM, Noralf Trønnes wrote:
+>>>>
+>>>> Den 29.07.2017 21.40, skrev David Lechner:
+>>>>> On 07/29/2017 02:17 PM, David Lechner wrote:
+>>>>>> The goal of this series is to get the built-in LCD of the LEGO 
+>>>>>> MINDSTORMS EV3
+>>>>>> working. But, most of the content here is building up the 
+>>>>>> infrastructure to do
+>>>>>> that.
+>>>>>>
+>>>>>
+>>>>> Some general comments/questions:
+>>>>>
+>>>>> I have noticed that DRM doesn't really have support for monochrome 
+>>>>> displays. I'm guessing that is because no one really uses them 
+>>>>> anymore?
+>>>>>
+>>>>
+>>>> The repaper driver was the first monochrome drm driver and I chose to
+>>>> present it to userspace as XRGB8888 and convert it to monochrome.
+>>>> The reason for this is that everything, libraries, apps, plymouth 
+>>>> (boot
+>>>> splash, no rgb565) supports it. I didn't see any point in adding a new
+>>>> monochrome drm format that didn't have, or probably wouldn't get
+>>>> userspace support (by libraries at least). The application of course
+>>>> needs to know this to get a good result.
+>>>>
+>>>> tinydrm_xrgb8888_to_gray8() does the conversion:
+>>>> https://cgit.freedesktop.org/drm/drm-misc/commit/drivers/gpu/drm/tinydrm?id=379ea9a1a59a5a32c8db6f164e80a3fd00cb3781 
+>>>>
+>>>>
+>>>>> The LEGO EV3 display is just an LCD (not the backlit kind). It has 
+>>>>> two modes of operation. It can to 2bbp grayscale or it can do 1bpp 
+>>>>> monochrome. The grayscale isn't the best (looks splotchy in 
+>>>>> places), so it would be nice to be able to choose between these 
+>>>>> two modes. How would I implement something like that?
+>>>>>
+>>>>
+>>>> Do you expect anyone to use grayscale if it doesn't look good?
+>>>> Maybe better to add it later if there's a demand for it.
+>>>
+>>> I don't expect many people to use it at all. The people that do will 
+>>> be hackers like me that want to see what it is capable of, so I 
+>>> think I will keep it grayscale by default.
+>>>
+>>
+>> It looks like the best way to satisfy your needs is to add specific 
+>> formats.
+>>
+>> Video for Linux have these:
+>>
+>> include/uapi/linux/videodev2.h
+>>
+>> /* Grey formats */
+>> #define V4L2_PIX_FMT_GREY    v4l2_fourcc('G', 'R', 'E', 'Y') /* 8 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y4      v4l2_fourcc('Y', '0', '4', ' ') /* 4 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y6      v4l2_fourcc('Y', '0', '6', ' ') /* 6 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y10     v4l2_fourcc('Y', '1', '0', ' ') /* 10 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y12     v4l2_fourcc('Y', '1', '2', ' ') /* 12 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y16     v4l2_fourcc('Y', '1', '6', ' ') /* 16 
+>> Greyscale     */
+>> #define V4L2_PIX_FMT_Y16_BE  v4l2_fourcc_be('Y', '1', '6', ' ') /* 16 
+>> Greyscale BE  */
+>>
+>>
+>> Maybe we can add formats like these:
+>>
+>> include/uapi/drm/drm_fourcc.h
+>>
+>> #define DRM_FORMAT_MONO        fourcc_code('Y', '0', '1', ' ') /* [0] 
+>> Monochrome */
+>> or
+>> #define DRM_FORMAT_Y1        fourcc_code('Y', '0', '1', ' ') /* [0] 
+>> Monochrome */
+>>
+>> #define DRM_FORMAT_Y2        fourcc_code('Y', '0', '2', ' ') /* [1:0] 
+>> Greyscale */
+>>
+>> Daniel, what do you think?
+>
+> 2 of the first 3 tinydrm drivers are monochrome (and I would like to 
+> write a driver for the Seeed/Grove I2C OLED displays which are also 
+> monochrome), so I think the 1bpp modes would definitely be useful. I 
+> think there is enough userspace code still around that knows about 
+> FB_VISUAL_MONO01 and FB_VISUAL_MONO10 that could use these.
+>
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-index d49572b..1479dda 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -6,6 +6,7 @@ Required properties (phy (parent) node):
- 	* "rockchip,rk3328-usb2phy"
- 	* "rockchip,rk3366-usb2phy"
- 	* "rockchip,rk3399-usb2phy"
-+	* "rockchip,rv1108-usb2phy"
-  - reg : the address offset of grf for usb-phy configuration.
-  - #clock-cells : should be 0.
-  - clock-output-names : specify the 480m output clock name.
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index bebf23f..bd405f9 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -1405,11 +1405,54 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
- 	{ /* sentinel */ }
- };
- 
-+static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
-+	{
-+		.reg = 0x100,
-+		.num_ports	= 2,
-+		.clkout_ctl	= { 0x108, 4, 4, 1, 0 },
-+		.port_cfgs	= {
-+			[USB2PHY_PORT_OTG] = {
-+				.phy_sus	= { 0x0100, 15, 0, 0, 0x1d1 },
-+				.bvalid_det_en	= { 0x0680, 3, 3, 0, 1 },
-+				.bvalid_det_st	= { 0x0690, 3, 3, 0, 1 },
-+				.bvalid_det_clr = { 0x06a0, 3, 3, 0, 1 },
-+				.ls_det_en	= { 0x0680, 2, 2, 0, 1 },
-+				.ls_det_st	= { 0x0690, 2, 2, 0, 1 },
-+				.ls_det_clr	= { 0x06a0, 2, 2, 0, 1 },
-+				.utmi_bvalid	= { 0x0804, 10, 10, 0, 1 },
-+				.utmi_ls	= { 0x0804, 13, 12, 0, 1 },
-+			},
-+			[USB2PHY_PORT_HOST] = {
-+				.phy_sus	= { 0x0104, 15, 0, 0, 0x1d1 },
-+				.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
-+				.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
-+				.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
-+				.utmi_ls	= { 0x0804, 9, 8, 0, 1 },
-+				.utmi_hstdet	= { 0x0804, 7, 7, 0, 1 }
-+			}
-+		},
-+		.chg_det = {
-+			.opmode		= { 0x0100, 3, 0, 5, 1 },
-+			.cp_det		= { 0x0804, 1, 1, 0, 1 },
-+			.dcp_det	= { 0x0804, 0, 0, 0, 1 },
-+			.dp_det		= { 0x0804, 2, 2, 0, 1 },
-+			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
-+			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
-+			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
-+			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
-+			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
-+			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
-+		},
-+	},
-+	{ /* sentinel */ }
-+};
-+
- static const struct of_device_id rockchip_usb2phy_dt_match[] = {
- 	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
- 	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
- 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
-+	{ .compatible = "rockchip,rv1108-usb2phy", .data = &rv1108_phy_cfgs },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rockchip_usb2phy_dt_match);
--- 
-2.0.0
+Can you elaborate, would you use the display trough monochrome fbdev
+or through drm?
 
+> I don't think a Y02 mode would be useful though. There is pretty much 
+> nothing out there (that I could find) that uses such a mode.
+>
+> A Y08 mode for 8bpp grayscale would be useful though. This is another 
+> more commonly used format.
+>
+
+Another source of fourcc's is FFmpeg which has these:
+
+     { AV_PIX_FMT_GRAY8,    MKTAG('Y', '8', '0', '0') },
+     { AV_PIX_FMT_GRAY8,    MKTAG('Y', '8', ' ', ' ') },
+     { AV_PIX_FMT_GRAY8,   MKTAG('G', 'R', 'E', 'Y') },
+
+     { AV_PIX_FMT_MONOWHITE,MKTAG('B', '1', 'W', '0') },
+     { AV_PIX_FMT_MONOBLACK,MKTAG('B', '0', 'W', '1') },
+
+AV_PIX_FMT_GRAY8
+Y , 8bpp.
+AV_PIX_FMT_MONOWHITE
+Y , 1bpp, 0 is white, 1 is black,
+     in each byte pixels are ordered from the msb to the lsb.
+AV_PIX_FMT_MONOBLACK
+Y , 1bpp, 0 is black, 1 is white,
+     in each byte pixels are ordered from the msb to the lsb.
+
+
+__drm_format_info() provides details about formats:
+     { .format = DRM_FORMAT_MONO,    .depth = 1,  .num_planes = 1, .cpp 
+= { 0, 0, 0 }, .hsub = 1, .vsub = 1 },
+     { .format = DRM_FORMAT_GREY,    .depth = 8,  .num_planes = 1, .cpp 
+= { 1, 0, 0 }, .hsub = 1, .vsub = 1 },
+
+framebuffer_check() and drm_fb_cma_create_with_funcs() use cpp for
+validation and they don't expect it to be zero.
+
+
+Noralf.
+
+>>
+>>>>
+>>>>> Also, how can I indicate to userspace that this display really is 
+>>>>> monochrome/grayscale since the reported color depth 16bpp?
+>>>>>
+>>>>
+>>>> There isn't unless we add formats for it.
+>>>> Since this display is in a Lego piece, doesn't it have custom 
+>>>> userspace
+>>>> that already know it's monochrome?
+>>>
+>>> The official LEGO software is like this, yes. But I am working on a 
+>>> project that supports other LEGO compatible devices that have color 
+>>> screens, so the same software needs to be able to detect at runtime 
+>>> which type of screen it is using. Currently I have a plain fbdev 
+>>> driver that provides FB_VISUAL_MONO10 for the EV3 display and so the 
+>>> software knows when it has a monochrome screen and when it doesn't. 
+>>> But since plain fbdev drivers can't be accepted into mainline, I 
+>>> need to find a different way to detect what type of screen this is 
+>>> so that my graphics library can treat it differently.
+>>>
+>>>
+>>
+>> You can tell userspace about the preferred bitdepth:
+>> drm->mode_config.preferred_depth
+>>
+>>
+>> Noralf.
+>>
+>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
