@@ -1,53 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: pinctrl: aspeed: Add g4 USB functions
-Date: Wed, 2 Aug 2017 10:36:00 +0200
-Message-ID: <CACRpkda3gjXZnYAQUmH-tc_GXWLS_ymwrTpUb-ZQ1KQDadWCGg@mail.gmail.com>
-References: <20170718052453.14316-1-andrew@aj.id.au> <20170718052453.14316-2-andrew@aj.id.au>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mtd: add new compatible strings for mtk
+ nor controller
+Date: Wed, 2 Aug 2017 10:36:37 +0200
+Message-ID: <20170802103637.16cd6548@bbrezillon>
+References: <1500948617-19627-1-git-send-email-guochun.mao@mediatek.com>
+        <1500948617-19627-2-git-send-email-guochun.mao@mediatek.com>
+        <03016ea3-51ad-0b2d-e824-0a20913bd7c1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170718052453.14316-2-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <03016ea3-51ad-0b2d-e824-0a20913bd7c1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 7:24 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+Hi Matthias,
 
-> The AST2400 contains several USB controllers:
->
-> * USB 1.1 Host Controller
-> * USB 2.0 Host Controller
-> * USB 2.0 Virtual Hub
-> * USB 1.1 HID Controller
->
-> Pins for three ports are routed to the three controllers such that:
->
-> * Port 1 is a dedicated USB 1.1 host port
-> * Port 2 is shared between the USB 1.1 host and HID controllers
-> * Port 3 is shared between the USB 2.0 host and Hub controllers
->
-> As the pins for port 1 are fixed function there is no associated mux
-> function or group described in the bindings. Ports 2 and 3 are muxed as
-> above, and the table below describes the mapping between pinmux function
-> names and ports:
->
-> Port  | USB Version  | USB Mode  | Mux Function
-> ------|--------------|-----------|-------------
-> 1     | 1.1          | Host      | -
-> 2     | 1.1          | Host      | USB11H2
-> 2     | 1.1          | HID       | USB11D1
-> 3     | 2.0          | Host      | USB2H1
-> 3     | 2.0          | Device    | USB2D1
->
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> v1 -> v2:
->
-> * Updated the commit message to clarify HID details
+On Tue, 1 Aug 2017 14:33:22 +0200
+Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Patch applied.
+> On 07/25/2017 04:10 AM, Guochun Mao wrote:
+> > Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
+> > for nor flash node's compatible strings.
+> > 
+> > Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   .../devicetree/bindings/mtd/mtk-quadspi.txt        |    2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > index 5ded66a..9845ff4 100644
+> > --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > @@ -3,6 +3,8 @@
+> >   Required properties:
+> >   - compatible: 	  The possible values are:
+> >   		  "mediatek,mt2701-nor"
+> > +		  "mediatek,mt2712-nor"
+> > +		  "mediatek,mt7622-nor"
+> >   		  "mediatek,mt7623-nor"
+> >   		  "mediatek,mt8173-nor"
+> >   		  For mt8173, compatible should be "mediatek,mt8173-nor".
+> >   
+> 
+> Boris, will you take this through your tree, or do you prefer that I take it?
 
-Yours,
-Linus Walleij
+I'm not the spi-nor maintainer, you should ask Cyrille or Marek.
+
+Regards,
+
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
