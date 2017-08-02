@@ -1,71 +1,53 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 04/23] clk: rockchip: support more rates for cpuclk
-Date: Wed,  2 Aug 2017 16:32:23 +0800
-Message-ID: <1501662743-11920-1-git-send-email-andy.yan@rock-chips.com>
+From: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 05/23] clk: rockchip: fix up the pll clks error for rv1108 SoC
+Date: Wed,  2 Aug 2017 16:33:04 +0800
+Message-ID: <1501662784-11973-1-git-send-email-andy.yan@rock-chips.com>
 References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, shawn.lin@rock-chips.com, zhangqing@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
+From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-fix up the cpuclk rates table for support more freqs.
-fix up the mux_core_mask describe error.
+fix up the lock_shift describe error.
+remove the ROCKCHIP_PLL_SYNC_RATE flag for gpll.
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
-
+Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
 
-Changes in v2:
-- split the new added clks and rename.
+Changes in v2: None
 
- drivers/clk/rockchip/clk-rv1108.c | 23 +++++++++++++++++++----
- 1 file changed, 19 insertions(+), 4 deletions(-)
+ drivers/clk/rockchip/clk-rv1108.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/clk/rockchip/clk-rv1108.c b/drivers/clk/rockchip/clk-rv1108.c
-index 7c05ab3..3c670db 100644
+index 3c670db..9c6bad0 100644
 --- a/drivers/clk/rockchip/clk-rv1108.c
 +++ b/drivers/clk/rockchip/clk-rv1108.c
-@@ -93,9 +93,24 @@ static struct rockchip_pll_rate_table rv1108_pll_rates[] = {
- 	}
+@@ -148,11 +148,11 @@ PNAME(mux_i2s2_p)		= { "i2s2_src", "i2s2_frac", "xin12m" };
  
- static struct rockchip_cpuclk_rate_table rv1108_cpuclk_rates[] __initdata = {
--	RV1108_CPUCLK_RATE(816000000, 4),
--	RV1108_CPUCLK_RATE(600000000, 4),
--	RV1108_CPUCLK_RATE(312000000, 4),
-+	RV1108_CPUCLK_RATE(1608000000, 7),
-+	RV1108_CPUCLK_RATE(1512000000, 7),
-+	RV1108_CPUCLK_RATE(1488000000, 5),
-+	RV1108_CPUCLK_RATE(1416000000, 5),
-+	RV1108_CPUCLK_RATE(1392000000, 5),
-+	RV1108_CPUCLK_RATE(1296000000, 5),
-+	RV1108_CPUCLK_RATE(1200000000, 5),
-+	RV1108_CPUCLK_RATE(1104000000, 5),
-+	RV1108_CPUCLK_RATE(1008000000, 5),
-+	RV1108_CPUCLK_RATE(912000000, 5),
-+	RV1108_CPUCLK_RATE(816000000, 3),
-+	RV1108_CPUCLK_RATE(696000000, 3),
-+	RV1108_CPUCLK_RATE(600000000, 3),
-+	RV1108_CPUCLK_RATE(500000000, 3),
-+	RV1108_CPUCLK_RATE(408000000, 1),
-+	RV1108_CPUCLK_RATE(312000000, 1),
-+	RV1108_CPUCLK_RATE(216000000, 1),
-+	RV1108_CPUCLK_RATE(96000000, 1),
+ static struct rockchip_pll_clock rv1108_pll_clks[] __initdata = {
+ 	[apll] = PLL(pll_rk3399, PLL_APLL, "apll", mux_pll_p, 0, RV1108_PLL_CON(0),
+-		     RV1108_PLL_CON(3), 8, 31, 0, rv1108_pll_rates),
++		     RV1108_PLL_CON(3), 8, 0, 0, rv1108_pll_rates),
+ 	[dpll] = PLL(pll_rk3399, PLL_DPLL, "dpll", mux_pll_p, 0, RV1108_PLL_CON(8),
+-		     RV1108_PLL_CON(11), 8, 31, 0, NULL),
++		     RV1108_PLL_CON(11), 8, 1, 0, NULL),
+ 	[gpll] = PLL(pll_rk3399, PLL_GPLL, "gpll", mux_pll_p, 0, RV1108_PLL_CON(16),
+-		     RV1108_PLL_CON(19), 8, 31, ROCKCHIP_PLL_SYNC_RATE, rv1108_pll_rates),
++		     RV1108_PLL_CON(19), 8, 2, 0, rv1108_pll_rates),
  };
  
- static const struct rockchip_cpuclk_reg_data rv1108_cpuclk_data = {
-@@ -105,7 +120,7 @@ static const struct rockchip_cpuclk_reg_data rv1108_cpuclk_data = {
- 	.mux_core_alt = 1,
- 	.mux_core_main = 0,
- 	.mux_core_shift = 8,
--	.mux_core_mask = 0x1,
-+	.mux_core_mask = 0x3,
- };
- 
- PNAME(mux_pll_p)		= { "xin24m", "xin24m"};
+ #define MFLAGS CLK_MUX_HIWORD_MASK
 -- 
 2.7.4
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
