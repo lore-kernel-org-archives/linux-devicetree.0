@@ -1,83 +1,45 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 13/25] mtd: nand: qcom: add QPIC NAND compatible string
-Date: Wed, 2 Aug 2017 14:06:18 +0530
-Message-ID: <973705c0-7915-3239-c150-92dc938e52e6@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-14-git-send-email-absahu@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: aspeed: Add g5 USB functions
+Date: Wed, 2 Aug 2017 10:36:58 +0200
+Message-ID: <CACRpkdYEqM36pGpRSiAVeV92TgQUP4nYgadPNm-Sf-so9+t+rw@mail.gmail.com>
+References: <20170718052453.14316-1-andrew@aj.id.au> <20170718052453.14316-3-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1500464893-11352-14-git-send-email-absahu@codeaurora.org>
-Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170718052453.14316-3-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jul 18, 2017 at 7:24 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-
-On 07/19/2017 05:18 PM, Abhishek Sahu wrote:
-> The current driver only support EBI2 NAND which uses ADM DMA. The
-
-s/support/supports
-
-> latest QCOM controller supports QPIC NAND which uses BAM DMA. NAND
-> registers and programming sequence are same for EBI2 and QPIC
-> NAND so the same driver can support QPIC NAND also by adding the
-> BAM DMA support. This patch adds the QPIC NAND support in current
-> NAND driver with compatible string "qcom,qpic-nandc-v1.4.0" and
-> maps it with different configuration parameter in driver data.
-> 
-
-Reviewed-by: Archit Taneja <architt@codeaurora.org>
-
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> The Aspeed AST2500 SoC contains a number of USB controllers:
+>
+> * USB 1.1 Host Controller
+> * USB 2.0 Host Controller (x2)
+> * USB 2.0 Virtual Hub
+> * USB 2.0 Device Controller
+> * USB 1.1 HID Controller
+>
+> The controllers are exposed via two USB ports with functionality muxed
+> as required. The following table illustrates the relationships between
+> the ports and the controllers via the mux function names:
+>
+> Port  | USB Version  | USB Mode     | Mux Function
+> ------|--------------|--------------|-------------
+> A     | 2.0          | Virtual Hub  | USB2AD
+> A     | 2.0          | Host         | USB2AH
+> B     | 1.1          | HID          | USB11BHID
+> B     | 2.0          | Device       | USB2BD
+> B     | 2.0          | Host         | USB2BH
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Acked-by: Rob Herring <robh@kernel.org>
 > ---
->   drivers/mtd/nand/qcom_nandc.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 3b0ae91..6d24630 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -323,9 +323,11 @@ struct qcom_nand_host {
->    * This data type corresponds to the nand controller properties which varies
->    * among different NAND controller IP's.
->    * @ecc_modes - ecc mode for NAND
-> + * @is_bam - whether NAND controller is using bam
->    */
->   struct qcom_props {
->   	u32 ecc_modes;
-> +	bool is_bam;
->   };
->   
->   static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
-> @@ -2245,6 +2247,12 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->   
->   static const struct qcom_props ebi2_nandc_data = {
->   	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
-> +	.is_bam = false,
-> +};
-> +
-> +static const struct qcom_props qpic_nandc_v1_4_0_data = {
-> +	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
-> +	.is_bam = true,
->   };
->   
->   /*
-> @@ -2255,6 +2263,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->   	{	.compatible = "qcom,ebi2-nandc",
->   		.data = &ebi2_nandc_data,
->   	},
-> +	{	.compatible = "qcom,qpic-nandc-v1.4.0",
-> +		.data = &qpic_nandc_v1_4_0_data,
-> +	},
->   	{}
->   };
->   MODULE_DEVICE_TABLE(of, qcom_nandc_of_match);
-> 
+> v1 -> v2:
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Patch applied.
+
+Yours,
+Linus Walleij
