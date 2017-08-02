@@ -1,62 +1,49 @@
-From: Jacob Chen <jacob-chen@iotwrt.com>
-Subject: [PATCH v5 6/6] dt-bindings: Document the Rockchip RGA bindings
-Date: Wed,  2 Aug 2017 11:19:47 +0800
-Message-ID: <1501643987-27847-7-git-send-email-jacob-chen@iotwrt.com>
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v5 2/6] extended-controls.rst: add PorterDuff mode control
+Date: Wed,  2 Aug 2017 11:19:43 +0800
+Message-ID: <1501643987-27847-3-git-send-email-jacob-chen@iotwrt.com>
 References: <1501643987-27847-1-git-send-email-jacob-chen@iotwrt.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501643987-27847-1-git-send-email-jacob-chen@iotwrt.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rockchip@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, hans.verkuil@cisco.com, tfiga@chromium.org, nicolas@ndufresne.ca, Jacob Chen <jacob-chen@iotwrt.com>, Yakir Yang <ykk@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1501643987-27847-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, nicolas-dDhyB4GVkw9AFePFGvp55w@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for Rockchip RGA
+PorterDuff mode control are used to determine
+how two images are combined.
 
-Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
-Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/media/rockchip-rga.txt     | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/rockchip-rga.txt
+ Documentation/media/uapi/v4l/extended-controls.rst | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/rockchip-rga.txt b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-new file mode 100644
-index 0000000..fd5276a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/rockchip-rga.txt
-@@ -0,0 +1,33 @@
-+device-tree bindings for rockchip 2D raster graphic acceleration controller (RGA)
-+
-+RGA is a standalone 2D raster graphic acceleration unit. It accelerates 2D
-+graphics operations, such as point/line drawing, image scaling, rotation,
-+BitBLT, alpha blending and image blur/sharpness.
-+
-+Required properties:
-+- compatible: value should be one of the following
-+		"rockchip,rk3288-rga";
-+		"rockchip,rk3399-rga";
-+
-+- interrupts: RGA interrupt specifier.
-+
-+- clocks: phandle to RGA sclk/hclk/aclk clocks
-+
-+- clock-names: should be "aclk", "hclk" and "sclk"
-+
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: should be "core", "axi" and "ahb"
-+
-+Example:
-+SoC-specific DT entry:
-+	rga: rga@ff680000 {
-+		compatible = "rockchip,rk3399-rga";
-+		reg = <0xff680000 0x10000>;
-+		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru ACLK_RGA>, <&cru HCLK_RGA>, <&cru SCLK_RGA_CORE>;
-+		clock-names = "aclk", "hclk", "sclk";
-+
-+		resets = <&cru SRST_RGA_CORE>, <&cru SRST_A_RGA>, <&cru SRST_H_RGA>;
-+		reset-names = "core, "axi", "ahb";
-+	};
+diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+index abb1057..b713581 100644
+--- a/Documentation/media/uapi/v4l/extended-controls.rst
++++ b/Documentation/media/uapi/v4l/extended-controls.rst
+@@ -3021,6 +3021,11 @@ Image Process Control IDs
+     The video deinterlacing mode (such as Bob, Weave, ...). The menu items are
+     driver specific and are documented in :ref:`v4l-drivers`.
+ 
++``V4L2_CID_PORTER_DUFF_MODE (menu)``
++    The PorterDuff blend modes. PorterDuff is a method to overlay, combine and
++    trim images as if they were pieces of cardboard. The device uses this to
++    determine how two images are combined. For more information see
++    `PorterDuff.Mode <https://developer.android.com/reference/android/graphics/PorterDuff.Mode.html>`__.
+ 
+ .. _dv-controls:
+ 
 -- 
 2.7.4
