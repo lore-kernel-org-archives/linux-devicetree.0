@@ -1,202 +1,188 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] PCI: Convert to using %pOF instead of full_name
-Date: Wed, 2 Aug 2017 17:39:28 -0500
-Message-ID: <20170802223928.GQ20308@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170718214339.7774-41-robh@kernel.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 01/13] dt-bindings: update the binding for
+ Allwinner H3 DE2 support
+Date: Thu, 03 Aug 2017 06:49:38 +0800
+Message-ID: <712DBBDE-0C7F-4333-A73C-29504FD9352C@aosc.io>
+References: <20170801131304.7741-1-icenowy@aosc.io> <79034825.lnfmIyYlWl@jernej-laptop> <d6c7c6de29be2674ad6b37b184d1df7f@aosc.io> <48442573.082BymFnMM@jernej-laptop>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170718214339.7774-41-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBEFORHGAKGQESADF2FA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <48442573.082BymFnMM@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 18, 2017 at 04:43:21PM -0500, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 
-Applied to pci/misc for v4.14, thanks!
 
-> ---
->  drivers/pci/host/pci-mvebu.c        | 8 ++++----
->  drivers/pci/host/pci-tegra.c        | 3 +--
->  drivers/pci/hotplug/pnv_php.c       | 4 ++--
->  drivers/pci/hotplug/rpadlpar_core.c | 4 ++--
->  drivers/pci/hotplug/rpaphp_core.c   | 2 +-
->  drivers/pci/hotplug/rpaphp_pci.c    | 4 ++--
->  drivers/pci/hotplug/rpaphp_slot.c   | 4 ++--
->  drivers/pci/pci-sysfs.c             | 4 ++--
->  drivers/pci/pci.c                   | 4 ++--
->  9 files changed, 18 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pci-mvebu.c b/drivers/pci/host/pci-mvebu.c
-> index f353a6eb2f01..424982997eb9 100644
-> --- a/drivers/pci/host/pci-mvebu.c
-> +++ b/drivers/pci/host/pci-mvebu.c
-> @@ -1054,8 +1054,8 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
->  	port->pcie = pcie;
-> 
->  	if (of_property_read_u32(child, "marvell,pcie-port", &port->port)) {
-> -		dev_warn(dev, "ignoring %s, missing pcie-port property\n",
-> -			 of_node_full_name(child));
-> +		dev_warn(dev, "ignoring %pOF, missing pcie-port property\n",
-> +			 child);
->  		goto skip;
->  	}
-> 
-> @@ -1106,8 +1106,8 @@ static int mvebu_pcie_parse_port(struct mvebu_pcie *pcie,
->  		}
-> 
->  		if (flags & OF_GPIO_ACTIVE_LOW) {
-> -			dev_info(dev, "%s: reset gpio is active low\n",
-> -				 of_node_full_name(child));
-> +			dev_info(dev, "%pOF: reset gpio is active low\n",
-> +				 child);
->  			gpio_flags = GPIOF_ACTIVE_LOW |
->  				     GPIOF_OUT_INIT_LOW;
->  		} else {
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-> index b3722b7709df..7eb9be5ae357 100644
-> --- a/drivers/pci/host/pci-tegra.c
-> +++ b/drivers/pci/host/pci-tegra.c
-> @@ -1703,8 +1703,7 @@ static int tegra_pcie_get_legacy_regulators(struct tegra_pcie *pcie)
->  		pcie->num_supplies = 2;
-> 
->  	if (pcie->num_supplies == 0) {
-> -		dev_err(dev, "device %s not supported in legacy mode\n",
-> -			np->full_name);
-> +		dev_err(dev, "device %pOF not supported in legacy mode\n", np);
->  		return -ENODEV;
->  	}
-> 
-> diff --git a/drivers/pci/hotplug/pnv_php.c b/drivers/pci/hotplug/pnv_php.c
-> index 7c203198b582..74f6a17e4614 100644
-> --- a/drivers/pci/hotplug/pnv_php.c
-> +++ b/drivers/pci/hotplug/pnv_php.c
-> @@ -163,8 +163,8 @@ static void pnv_php_detach_device_nodes(struct device_node *parent)
->  		of_node_put(dn);
->  		refcount = kref_read(&dn->kobj.kref);
->  		if (refcount != 1)
-> -			pr_warn("Invalid refcount %d on <%s>\n",
-> -				refcount, of_node_full_name(dn));
-> +			pr_warn("Invalid refcount %d on <%pOF>\n",
-> +				refcount, dn);
-> 
->  		of_detach_node(dn);
->  	}
-> diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-> index 3f93a4e79595..a3449d717a99 100644
-> --- a/drivers/pci/hotplug/rpadlpar_core.c
-> +++ b/drivers/pci/hotplug/rpadlpar_core.c
-> @@ -150,8 +150,8 @@ static void dlpar_pci_add_bus(struct device_node *dn)
->  	/* Add EADS device to PHB bus, adding new entry to bus->devices */
->  	dev = of_create_pci_dev(dn, phb->bus, pdn->devfn);
->  	if (!dev) {
-> -		printk(KERN_ERR "%s: failed to create pci dev for %s\n",
-> -				__func__, dn->full_name);
-> +		printk(KERN_ERR "%s: failed to create pci dev for %pOF\n",
-> +				__func__, dn);
->  		return;
->  	}
-> 
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index 8d132024f06e..1e29abaaea08 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -318,7 +318,7 @@ int rpaphp_add_slot(struct device_node *dn)
->  	if (!is_php_dn(dn, &indexes, &names, &types, &power_domains))
->  		return 0;
-> 
-> -	dbg("Entry %s: dn->full_name=%s\n", __func__, dn->full_name);
-> +	dbg("Entry %s: dn=%pOF\n", __func__, dn);
-> 
->  	/* register PCI devices */
->  	name = (char *) &names[1];
-> diff --git a/drivers/pci/hotplug/rpaphp_pci.c b/drivers/pci/hotplug/rpaphp_pci.c
-> index ea41ea1d3c00..32aabc533be8 100644
-> --- a/drivers/pci/hotplug/rpaphp_pci.c
-> +++ b/drivers/pci/hotplug/rpaphp_pci.c
-> @@ -95,7 +95,7 @@ int rpaphp_enable_slot(struct slot *slot)
-> 
->  	bus = pci_find_bus_by_node(slot->dn);
->  	if (!bus) {
-> -		err("%s: no pci_bus for dn %s\n", __func__, slot->dn->full_name);
-> +		err("%s: no pci_bus for dn %pOF\n", __func__, slot->dn);
->  		return -EINVAL;
->  	}
-> 
-> @@ -125,7 +125,7 @@ int rpaphp_enable_slot(struct slot *slot)
-> 
->  		if (rpaphp_debug) {
->  			struct pci_dev *dev;
-> -			dbg("%s: pci_devs of slot[%s]\n", __func__, slot->dn->full_name);
-> +			dbg("%s: pci_devs of slot[%pOF]\n", __func__, slot->dn);
->  			list_for_each_entry(dev, &bus->devices, bus_list)
->  				dbg("\t%s\n", pci_name(dev));
->  		}
-> diff --git a/drivers/pci/hotplug/rpaphp_slot.c b/drivers/pci/hotplug/rpaphp_slot.c
-> index 388c4d8fcdd1..489862360f2c 100644
-> --- a/drivers/pci/hotplug/rpaphp_slot.c
-> +++ b/drivers/pci/hotplug/rpaphp_slot.c
-> @@ -122,8 +122,8 @@ int rpaphp_register_slot(struct slot *slot)
->  	int retval;
->  	int slotno = -1;
-> 
-> -	dbg("%s registering slot:path[%s] index[%x], name[%s] pdomain[%x] type[%d]\n",
-> -		__func__, slot->dn->full_name, slot->index, slot->name,
-> +	dbg("%s registering slot:path[%pOF] index[%x], name[%s] pdomain[%x] type[%d]\n",
-> +		__func__, slot->dn, slot->index, slot->name,
->  		slot->power_domain, slot->type);
-> 
->  	/* should not try to register the same slot twice */
-> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-> index 2f3780b50723..33d4df7ed591 100644
-> --- a/drivers/pci/pci-sysfs.c
-> +++ b/drivers/pci/pci-sysfs.c
-> @@ -556,9 +556,9 @@ static ssize_t devspec_show(struct device *dev,
->  	struct pci_dev *pdev = to_pci_dev(dev);
->  	struct device_node *np = pci_device_to_OF_node(pdev);
-> 
-> -	if (np == NULL || np->full_name == NULL)
-> +	if (np == NULL)
->  		return 0;
-> -	return sprintf(buf, "%s", np->full_name);
-> +	return sprintf(buf, "%pOF", np);
->  }
->  static DEVICE_ATTR_RO(devspec);
->  #endif
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index af0cc3456dc1..e8e40dea2842 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -5363,8 +5363,8 @@ static int of_pci_bus_find_domain_nr(struct device *parent)
->  		use_dt_domains = 0;
->  		domain = pci_get_new_domain_nr();
->  	} else {
-> -		dev_err(parent, "Node %s has inconsistent \"linux,pci-domain\" property in DT\n",
-> -			parent->of_node->full_name);
-> +		dev_err(parent, "Node %pOF has inconsistent \"linux,pci-domain\" property in DT\n",
-> +			parent->of_node);
->  		domain = -1;
->  	}
-> 
-> --
-> 2.11.0
-> 
+=E4=BA=8E 2017=E5=B9=B48=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=883:0=
+6:26, "Jernej =C5=A0krabec" <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> =E5=86=99=E5=88=B0:
+>Hi,
+>
+>Dne sreda, 02. avgust 2017 ob 07:02:39 CEST je icenowy-h8G6r0blFSE@public.gmane.org
+>napisal(a):
+>> =E5=9C=A8 2017-08-02 12:53=EF=BC=8CJernej =C5=A0krabec =E5=86=99=E9=81=
+=93=EF=BC=9A
+>>=20
+>> > Hi Icenowy,
+>> >=20
+>> > Dne torek, 01. avgust 2017 ob 15:12:52 CEST je Icenowy Zheng
+>> >=20
+>> > napisal(a):
+>> >> Allwinner H3 features a "Display Engine 2.0".
+>> >>=20
+>> >> Add device tree bindings for the following parts:
+>> >> - H3 TCONs
+>> >> - H3 Mixers
+>> >> - H3 Display engine
+>> >>=20
+>> >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> >> ---
+>> >>=20
+>> >>  .../bindings/display/sunxi/sun4i-drm.txt           | 25
+>> >>=20
+>> >> ++++++++++++++++++---- 1 file changed, 21 insertions(+), 4
+>> >> deletions(-)
+>> >>=20
+>> >> diff --git
+>> >> a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >> b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>index
+>> >> 2ee6ff0ef98e..92512953943e 100644
+>> >> ---
+>a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >> +++
+>b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+>> >>=20
+>> >> @@ -87,18 +87,17 @@ Required properties:
+>> >>     * allwinner,sun6i-a31-tcon
+>> >>     * allwinner,sun6i-a31s-tcon
+>> >>     * allwinner,sun8i-a33-tcon
+>> >>=20
+>> >> +   * allwinner,sun8i-h3-tcon
+>> >>=20
+>> >>     * allwinner,sun8i-v3s-tcon
+>> >>  =20
+>> >>   - reg: base address and size of memory-mapped region
+>> >>   - interrupts: interrupt associated to this IP
+>> >>  =20
+>> >>   - clocks: phandles to the clocks feeding the TCON. Three are
+>needed:
+>> >>     - 'ahb': the interface clocks
+>> >>=20
+>> >> -   - 'tcon-ch0': The clock driving the TCON channel 0
+>> >>=20
+>> >>   - resets: phandles to the reset controllers driving the encoder
+>> >>  =20
+>> >>     - "lcd": the reset line for the TCON channel 0
+>> >>  =20
+>> >>   - clock-names: the clock names mentioned above
+>> >>   - reset-names: the reset names mentioned above
+>> >>=20
+>> >> - - clock-output-names: Name of the pixel clock created
+>> >>=20
+>> >>  - ports: A ports node with endpoint definitions as defined in
+>> >> =20
+>> >>    Documentation/devicetree/bindings/media/video-interfaces.txt.
+>The
+>> >>=20
+>> >> @@ -112,7 +111,23 @@ Required properties:
+>> >>    channel the endpoint is associated to. If that property is not
+>> >>    present, the endpoint number will be used as the channel
+>number.
+>> >>=20
+>> >> -On SoCs other than the A33 and V3s, there is one more clock
+>required:
+>> >> +For the following compatibles:
+>> >> +   * allwinner,sun5i-a13-tcon
+>> >> +   * allwinner,sun6i-a31-tcon
+>> >> +   * allwinner,sun6i-a31s-tcon
+>> >> +   * allwinner,sun8i-a33-tcon
+>> >> +   * allwinner,sun8i-v3s-tcon
+>> >> +there is one more clock and one more property required:
+>> >> + - clocks:
+>> >> +   - 'tcon-ch0': The clock driving the TCON channel 0
+>> >> + - clock-output-names: Name of the pixel clock created
+>> >> +
+>> >> +For the following compatibles:
+>> >> +   * allwinner,sun5i-a13-tcon
+>> >> +   * allwinner,sun6i-a31-tcon
+>> >> +   * allwinner,sun6i-a31s-tcon
+>> >> +   * allwinner,sun8i-h3-tcon
+>> >>=20
+>> >> +there is one more clock required:
+>> >>     - 'tcon-ch1': The clock driving the TCON channel 1
+>> >> =20
+>> >>  DRC
+>> >>=20
+>> >> @@ -207,6 +222,8 @@ supported.
+>> >>=20
+>> >>  Required properties:
+>> >>    - compatible: value must be one of:
+>> >>      * allwinner,sun8i-v3s-de2-mixer
+>> >>=20
+>> >> +    * allwinner,sun8i-h3-de2-mixer0
+>> >> +    * allwinner,sun8i-h3-de2-mixer1
+>> >=20
+>> > About that, I concur with Maxime here, plane number properties
+>would be
+>> > better. If we don't do this now, we will never have it.
+>>=20
+>> But I still prefer different compatibles, as the capabilities are
+>> already
+>> proven to be different between mixer0 and mixer1, and furtherly we
+>> cannot
+>> promise Allwinner won't add more functions only available at mixer0.
+>>=20
+>> Then we will be trapped into a situation that we describe more and
+>more
+>> functions via properties, but they should be encoded into the
+>> compatible.
+>
+>It is either multiple compatibles or multiple properties. I prefer the
+>later,=20
+>but it is up to maintainers to decide.
+>
+>Anyway, I think DE2 will not evolve much since DE3 is almost ready
+>(H6). At=20
+>least basics seems to be similar according to a BSP code drop.
+
+According to what I heard from TL Lim, DE3 is just an evolution
+to DE2.
+
+>
+>Regards,
+>Jernej
+>
+>>=20
+>> > Reference:
+>> >
+>http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/512902.htm
+>> > l
+>> >=20
+>> > Regards,
+>> > Jernej
+>>=20
+>> --
+>> You received this message because you are subscribed to the Google
+>Groups
+>> "linux-sunxi" group. To unsubscribe from this group and stop
+>receiving
+>> emails from it, send an email to
+>linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+>> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
