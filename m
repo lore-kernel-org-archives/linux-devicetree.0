@@ -1,17 +1,17 @@
 From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 02/25] mtd: nand: qcom: program NAND_DEV_CMD_VLD
- register
-Date: Wed, 2 Aug 2017 11:19:52 +0530
-Message-ID: <1eaa3317-5dcf-d212-c6fa-f6922bd40441@codeaurora.org>
+Subject: Re: [PATCH v2 05/25] mtd: nand: qcom: remove redundant chip select
+ compatible string
+Date: Wed, 2 Aug 2017 11:21:50 +0530
+Message-ID: <248e1459-5cec-32c6-1de8-8f5478a8f5da@codeaurora.org>
 References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-3-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-6-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500464893-11352-3-git-send-email-absahu@codeaurora.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1500464893-11352-6-git-send-email-absahu@codeaurora.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
@@ -19,39 +19,63 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 07/19/2017 05:17 PM, Abhishek Sahu wrote:
-> The current driver is failing without complete bootchain since
-> NAND_DEV_CMD_VLD value is not valid.
+> Currently the compatible “qcom,nandcs” is being used for each
+> connected NAND device to support for multiple NAND devices in the
+> same bus. The same thing can be achieved by looking reg property
+> for each sub nodes which contains the chip select number so this
+> patch removes the use of “qcom,nandcs” for specifying NAND device
+> sub nodes.
 > 
+> Since there is no user for this driver currently in so
+> changing compatible string is safe.
 
 Reviewed-by: Archit Taneja <architt@codeaurora.org>
 
+> 
 > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > ---
->   drivers/mtd/nand/qcom_nandc.c | 4 ++++
->   1 file changed, 4 insertions(+)
+>   drivers/mtd/nand/qcom_nandc.c | 26 ++++++++++++--------------
+>   1 file changed, 12 insertions(+), 14 deletions(-)
 > 
 > diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index bc0408c..f3b995d 100644
+> index 8fa2f0c..110a26a 100644
 > --- a/drivers/mtd/nand/qcom_nandc.c
 > +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -148,6 +148,9 @@
->   #define	FETCH_ID			0xb
->   #define	RESET_DEVICE			0xd
+> @@ -2129,22 +2129,20 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+>   		goto err_setup;
 >   
-> +/* Value for NAND_DEV_CMD_VLD */
-> +#define NAND_DEV_CMD_VLD_VAL		0x1d
+>   	for_each_available_child_of_node(dn, child) {
+> -		if (of_device_is_compatible(child, "qcom,nandcs")) {
+> -			host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+> -			if (!host) {
+> -				of_node_put(child);
+> -				ret = -ENOMEM;
+> -				goto err_cs_init;
+> -			}
+> -
+> -			ret = qcom_nand_host_init(nandc, host, child);
+> -			if (ret) {
+> -				devm_kfree(dev, host);
+> -				continue;
+> -			}
+> +		host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
+> +		if (!host) {
+> +			of_node_put(child);
+> +			ret = -ENOMEM;
+> +			goto err_cs_init;
+> +		}
+>   
+> -			list_add_tail(&host->node, &nandc->host_list);
+> +		ret = qcom_nand_host_init(nandc, host, child);
+> +		if (ret) {
+> +			devm_kfree(dev, host);
+> +			continue;
+>   		}
 > +
->   /*
->    * the NAND controller performs reads/writes with ECC in 516 byte chunks.
->    * the driver calls the chunks 'step' or 'codeword' interchangeably
-> @@ -1972,6 +1975,7 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
->   {
->   	/* kill onenand */
->   	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-> +	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
+> +		list_add_tail(&host->node, &nandc->host_list);
+>   	}
 >   
->   	/* enable ADM DMA */
->   	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+>   	if (list_empty(&nandc->host_list)) {
 > 
 
 -- 
