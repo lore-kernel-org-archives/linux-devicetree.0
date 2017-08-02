@@ -1,83 +1,54 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 05/25] mtd: nand: qcom: remove redundant chip select
- compatible string
-Date: Wed, 2 Aug 2017 11:21:50 +0530
-Message-ID: <248e1459-5cec-32c6-1de8-8f5478a8f5da@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-6-git-send-email-absahu@codeaurora.org>
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/7] K2G: Add QSPI support
+Date: Wed, 2 Aug 2017 11:22:07 +0530
+Message-ID: <00b2b8b8-3f3d-d563-bebc-f37f67362aa0@ti.com>
+References: <20170801045434.8733-1-vigneshr@ti.com>
+ <29c0e8ec-1f9f-cfc9-2d0e-e4d31890b699@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1500464893-11352-6-git-send-email-absahu@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <29c0e8ec-1f9f-cfc9-2d0e-e4d31890b699-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Tuesday 01 August 2017 11:31 PM, Santosh Shilimkar wrote:
+> On 7/31/2017 9:54 PM, Vignesh R wrote:
+>> This series adds support for Cadence QSPI for 66AK2G SoC. The first
+>> three patches enhance the cadence-quadspi driver to support loopback
+>> clock and pm_runtime and tweaks for 66AK2G SoC. Remaining patches add
+>> DT nodes and enable the driver in defconfig.
+>>
+>> Tested on 66AK2G GP and ICE boards.
+>>
+>> Vignesh R (7):
+>>    mtd: spi-nor: cadence-quadspi: add a delay in write sequence
+>>    mtd: spi-nor: cadence-quadspi: Add support to enable loopback clock
+>>      circuit
+>>    mtd: spi-nor: cadence-quadspi: Add runtime PM support
+>>    ARM: dts: keystone-k2g: Add QSPI DT entry
+>>    ARM: dts: keystone-k2g-evm: Add QSPI node
+>>    ARM: dts: keystone-k2g-ice: Add QSPI node
+>>    ARM: configs: keystone: Enable Cadence QSPI driver
+>>
+> Please separate dts and driver patches in its own series
+> while posting next time since they go throgh different
+> subsystem trees. Get your driver patch queed
+> first before adding DTS and enabling config option.
 
-On 07/19/2017 05:17 PM, Abhishek Sahu wrote:
-> Currently the compatible “qcom,nandcs” is being used for each
-> connected NAND device to support for multiple NAND devices in the
-> same bus. The same thing can be achieved by looking reg property
-> for each sub nodes which contains the chip select number so this
-> patch removes the use of “qcom,nandcs” for specifying NAND device
-> sub nodes.
-> 
-> Since there is no user for this driver currently in so
-> changing compatible string is safe.
-
-Reviewed-by: Archit Taneja <architt@codeaurora.org>
-
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
->   drivers/mtd/nand/qcom_nandc.c | 26 ++++++++++++--------------
->   1 file changed, 12 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 8fa2f0c..110a26a 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -2129,22 +2129,20 @@ static int qcom_nandc_probe(struct platform_device *pdev)
->   		goto err_setup;
->   
->   	for_each_available_child_of_node(dn, child) {
-> -		if (of_device_is_compatible(child, "qcom,nandcs")) {
-> -			host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> -			if (!host) {
-> -				of_node_put(child);
-> -				ret = -ENOMEM;
-> -				goto err_cs_init;
-> -			}
-> -
-> -			ret = qcom_nand_host_init(nandc, host, child);
-> -			if (ret) {
-> -				devm_kfree(dev, host);
-> -				continue;
-> -			}
-> +		host = devm_kzalloc(dev, sizeof(*host), GFP_KERNEL);
-> +		if (!host) {
-> +			of_node_put(child);
-> +			ret = -ENOMEM;
-> +			goto err_cs_init;
-> +		}
->   
-> -			list_add_tail(&host->node, &nandc->host_list);
-> +		ret = qcom_nand_host_init(nandc, host, child);
-> +		if (ret) {
-> +			devm_kfree(dev, host);
-> +			continue;
->   		}
-> +
-> +		list_add_tail(&host->node, &nandc->host_list);
->   	}
->   
->   	if (list_empty(&nandc->host_list)) {
-> 
+Okay. I thought it would be easy for you to know when driver patches are
+queued, if DTS changes are part of the same series. Will post DT nodes
+separately from next time or if I need to do a v2 of this series.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards
+Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
