@@ -1,166 +1,166 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] drivers/watchdog: Add optional ASPEED device
- tree properties
-Date: Wed, 02 Aug 2017 13:58:25 +0930
-Message-ID: <1501648105.29409.1.camel@aj.id.au>
-References: <20170717192539.7950-1-cbostic@linux.vnet.ibm.com>
-         <20170717192539.7950-2-cbostic@linux.vnet.ibm.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: BCM5301X: Specify USB ports for USB LEDs of few devices
+Date: Wed,  2 Aug 2017 06:40:41 +0200
+Message-ID: <20170802044041.3626-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-Dr2FYtSncrw5R+vjynQB"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170717192539.7950-2-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
---=-Dr2FYtSncrw5R+vjynQB
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+This uses trigger-sources documented in commit 80dc6e1cd85fc ("dt-bindings:
+leds: document new trigger-sources property") to specify USB ports. Such an
+information can be used by operating system to setup LEDs behavior.
 
-On Mon, 2017-07-17 at 14:25 -0500, Christopher Bostic wrote:
-> Describe device tree optional properties:
->=20
-> =C2=A0 * aspeed,reset-type =3D "cpu|soc|system|none"
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0One of three different, mutually exclusive,=
- values
->=20
-> 	"cpu" : ARM CPU reset on signal
-> 	"soc" : 'System on chip' reset
-> 	"system" : Full system reset
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0The value can also be set to "none" which i=
-ndicates that no
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reset of any kind is to be done via this wa=
-tchdog.=C2=A0=C2=A0This assumes
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0another watchdog on the chip is to take car=
-e of resets.
->=20
-> =C2=A0 * aspeed,external-signal - Generate external signal (WDT1 and WDT2=
- only)
-> =C2=A0 * aspeed,alt-boot - Boot from alternate block on signal
->=20
-> > Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
-> v5 - Removed aspeed,interrupt property - no plans at this point to
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0need this functionality in the driver.
-> v4 - Add aspeed-reset-type and assign one of four values,
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0cpu, soc, system, none.
-> v3 - Invert soc and sys reset to 'no' to preserve backwards
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatibility.=C2=A0=C2=A0SOC and SYS reset=
- will be set by default
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0without any optional parameters set
-> v2 - Add 'aspeed,' prefix to all optional properties
-> =C2=A0=C2=A0=C2=A0- Add arm-reset, soc-reset, interrupt, alt-boot propert=
-ies
-> ---
-> =C2=A0.../devicetree/bindings/watchdog/aspeed-wdt.txt=C2=A0=C2=A0=C2=A0=
-=C2=A0| 32 ++++++++++++++++++++++
-> =C2=A01 file changed, 32 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/=
-Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5e74d7..2b34ce9 100644
-> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -8,9 +8,41 @@ Required properties:
-> =C2=A0 - reg: physical base address of the controller and length of memor=
-y mapped
-> =C2=A0=C2=A0=C2=A0=C2=A0region
-> =C2=A0
-> +Optional properties:
-> +
-> + - aspeed,reset-type =3D "cpu|soc|system|none"
-> +
-> +=C2=A0=C2=A0=C2=A0Reset behavior - Whenever a timeout occurs the watchdo=
-g can be programmed
-> +=C2=A0=C2=A0=C2=A0to generate one of three different, mutually exclusive=
-, types of resets.
-> +
-> +=C2=A0=C2=A0=C2=A0Type "none" can be specified to indicate that no reset=
-s are to be done.
-> +=C2=A0=C2=A0=C2=A0This is useful in situations where another watchdog en=
-gine on chip is
-> +=C2=A0=C2=A0=C2=A0to perform the reset.
-> +
-> +=C2=A0=C2=A0=C2=A0If 'aspeed,reset-type=3D' is not specfied the default =
-is to enable system
-> +=C2=A0=C2=A0=C2=A0reset.
-> +
-> +=C2=A0=C2=A0=C2=A0Reset types:
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- cpu: Reset CPU on watc=
-hdog timeout
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- soc: Reset 'System on =
-Chip' on watchdog timeout
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- system: Reset system o=
-n watchdog timeout
-> +
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0- none: No reset is perf=
-ormed on timeout. Assumes another watchdog
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0engine is responsible for this.
-> +
-> + - aspeed,external-signal: If property is present then signal is sent to
-> > +			external reset counter (only WDT1 and WDT2). If not
-> +			specified no external signal is sent.
+I updated dts files for 7 devices I own and I was able to test.
 
-Sorry I'm a little late on this one, but we should probably also add
-some words to the effect that if you specify aspeed,external-signal,
-then you also need to ensure the pinmux is configured for this to work.
-For example in the devicetree we need to add:
+Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+---
+ arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts  | 4 ++++
+ arch/arm/boot/dts/bcm4708-netgear-r6250.dts        | 3 +++
+ arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts      | 6 ++++++
+ arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts | 4 ++++
+ arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts  | 5 +++++
+ arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts      | 3 +++
+ arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts      | 3 +++
+ 7 files changed, 28 insertions(+)
 
-    pinctrl-names =3D "default";
-    pinctrl-0 =3D <&pinctrl_wdtrst1_default>;
-
-Now the name of the pinctrl node isn't set in stone, so I don't think
-we should mention it directly. However this is the essence of what we
-want to describe.
-
-Cheers,
-
-Andrew
-
-> + - aspeed,alt-boot:=C2=A0=C2=A0=C2=A0=C2=A0If property is present then b=
-oot from alternate block.
-> +
-> =C2=A0Example:
-> =C2=A0
-> > > =C2=A0	wdt1: watchdog@1e785000 {
-> > =C2=A0		compatible =3D "aspeed,ast2400-wdt";
-> > =C2=A0		reg =3D <0x1e785000 0x1c>;
-> > +		aspeed,reset-type =3D "system";
-> > +		aspeed,external-signal;
-> > =C2=A0	};
---=-Dr2FYtSncrw5R+vjynQB
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAABCgAGBQJZgVTpAAoJEJ0dnzgO5LT5eSYP+gLHNgL+aMLX2ZWeGtRUnd/M
-WkX2ML7G1MQgwk6mRcIx+CJcKCCrN2JcS2Um60K3d60xeYvRSS3eOWRt1uEqsbez
-/C5dKwmxTiZl+vwbKCt4z+tWoAhL3LTk+7AZYmrbDC24EXIFSRfYeFNfHRkYab3Y
-VxkbSeLNQzXpfYRXijQ1Tuq1+rCN7adOVLfeQ3M+2HmHi/v8sHl2FZ0ggoDi5Gdp
-uQJdeSpa3cXSh+E3CLB/6OBuH1oLkFzutmLiV3nKz6oW7gT6YMGBDZiZnMD1urCy
-duBMgnimuasyA4ufZ7lNfpZj656K7KD6dXjiXMNqc4MnZAycNh1U3hZpEQNcczqH
-uExNVYl0SU3HqLEaFPEZVWI6zY0M+uf9Dw+4M8p79c8na3hLNx8xcaIjBekBbpBp
-b2iUenYAT3Zac2fyagQyNGCx5UHqFWhcS9aDxOxcKL+OopUK/vXFLu0nJMbjub4n
-kHKswwAHwuMEOO4VOPrQh2c7rXFxvgV0M6uP/PZGXlkkpxSsVNYq25zA+HvkIlDy
-q2hziRuD2nLvDisCGUN6kzB42TfGN+kyamKadFP+6+3kQzN1wvieG262kDb/pfRr
-PKBkWlgcWh88MA8dLFWBpSU6eXYeWiS4sC2GRveSNrdz2lx/BMBAUnmZK48Ei2Wh
-aVA/SOcEQN+gMoFHKiGI
-=hPce
------END PGP SIGNATURE-----
-
---=-Dr2FYtSncrw5R+vjynQB--
+diff --git a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+index 62e1427b3f10..8b64caabaad8 100644
+--- a/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
++++ b/arch/arm/boot/dts/bcm4708-buffalo-wzr-1750dhp.dts
+@@ -52,6 +52,10 @@
+ 		usb {
+ 			label = "bcm53xx:blue:usb";
+ 			gpios = <&hc595 0 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>, <&ohci_port2>,
++					  <&ehci_port2>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		power0 {
+diff --git a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+index a5647efe4118..d7c34fa72b4b 100644
+--- a/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
++++ b/arch/arm/boot/dts/bcm4708-netgear-r6250.dts
+@@ -48,6 +48,9 @@
+ 		usb {
+ 			label = "bcm53xx:blue:usb";
+ 			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		wireless {
+diff --git a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+index 19ee924d7d53..83a4c60bb431 100644
+--- a/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
++++ b/arch/arm/boot/dts/bcm4708-smartrg-sr400ac.dts
+@@ -42,16 +42,22 @@
+ 		usb2 {
+ 			label = "bcm53xx:white:usb2";
+ 			gpios = <&chipcommon 3 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port2>, <&ehci_port2>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		usb3-white {
+ 			label = "bcm53xx:white:usb3";
+ 			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&xhci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		usb3-green {
+ 			label = "bcm53xx:green:usb3";
+ 			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		wps {
+diff --git a/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts b/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
+index a854a5174b7f..3ed8de42cb48 100644
+--- a/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
++++ b/arch/arm/boot/dts/bcm47081-tplink-archer-c5-v2.dts
+@@ -36,6 +36,8 @@
+ 		usb2-port1 {
+ 			label = "bcm53xx:green:usb2-port1";
+ 			gpios = <&chipcommon 2 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		power {
+@@ -67,6 +69,8 @@
+ 		usb2-port2 {
+ 			label = "bcm53xx:green:usb2-port2";
+ 			gpios = <&chipcommon 13 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port2>, <&ehci_port2>;
++			linux,default-trigger = "usbport";
+ 		};
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+index 97aa5d59a1d8..ec4a50e440f6 100644
+--- a/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
++++ b/arch/arm/boot/dts/bcm4709-tplink-archer-c9-v1.dts
+@@ -46,11 +46,16 @@
+ 		usb3 {
+ 			label = "bcm53xx:blue:usb3";
+ 			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		usb2 {
+ 			label = "bcm53xx:blue:usb2";
+ 			gpios = <&chipcommon 7 GPIO_ACTIVE_HIGH>;
++			trigger-sources = <&ohci_port2>, <&ehci_port2>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		wan-blue {
+diff --git a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+index 51b0641b5f79..7cc7d344fe5b 100644
+--- a/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
++++ b/arch/arm/boot/dts/bcm47094-dlink-dir-885l.dts
+@@ -71,6 +71,9 @@
+ 		usb3-white {
+ 			label = "bcm53xx:white:usb3";
+ 			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		2ghz {
+diff --git a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+index 5f8621d00c50..bc1d1e10d4ac 100644
+--- a/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
++++ b/arch/arm/boot/dts/bcm47094-luxul-xwr-3100.dts
+@@ -59,6 +59,9 @@
+ 		usb3	{
+ 			label = "bcm53xx:green:usb3";
+ 			gpios = <&chipcommon 8 GPIO_ACTIVE_LOW>;
++			trigger-sources = <&ohci_port1>, <&ehci_port1>,
++					  <&xhci_port1>;
++			linux,default-trigger = "usbport";
+ 		};
+ 
+ 		status	{
+-- 
+2.11.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
