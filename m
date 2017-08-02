@@ -1,310 +1,201 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH v6 7/7] PCI: dwc: qcom: Add support for IPQ8074 PCIe
- controller
-Date: Wed, 2 Aug 2017 23:40:00 +0300
-Message-ID: <710f8933-df3a-7666-f5c5-861dd9761dba@mm-sol.com>
-References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
- <1501482857-14100-8-git-send-email-varada@codeaurora.org>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/22] fpga: add FPGA device framework
+Date: Wed, 2 Aug 2017 16:01:14 -0500
+Message-ID: <CANk1AXS5k+yoRcqC-aWzH-u-o6QQBjxsJ+ET1gak+C63U-swgw@mail.gmail.com>
+References: <1498441938-14046-1-git-send-email-hao.wu@intel.com>
+ <1498441938-14046-3-git-send-email-hao.wu@intel.com> <CANk1AXRoxz7nOY--UYfBtg-3kGFy0gqCz0cbF9mOvzU2+EdzpA@mail.gmail.com>
+ <CAL_JsqJfGJwDcXtpBs73TsSKTCwfAPywgyTPwzy1GQotJ7DTzw@mail.gmail.com>
+ <CANk1AXTsBQgX+0hYZA6mMhESApB-MkG9CETWExSPOpf7MXeKFw@mail.gmail.com>
+ <20170801084326.GB26227@hao-dev> <CANk1AXRnz350xJ9vVeiy5n-yjHwa-ow5xBMsmMzj0JbEoRJTaA@mail.gmail.com>
+ <20170802140728.GB31045@hao-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501482857-14100-8-git-send-email-varada@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: smuthayy <smuthayy@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170802140728.GB31045@hao-dev>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Kang, Luwei" <luwei.kang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Zhang, Yi Z" <yi.z.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tim Whisonant <tim.whisonant-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Enno Luebbers <enno.luebbers-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shiva Rao <shiva.rao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Christopher Rauer <christopher.rauer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, Aug 2, 2017 at 9:07 AM, Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Aug 01, 2017 at 04:04:44PM -0500, Alan Tull wrote:
+>> On Tue, Aug 1, 2017 at 3:43 AM, Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Mon, Jul 31, 2017 at 04:40:16PM -0500, Alan Tull wrote:
+>> >> On Thu, Jul 27, 2017 at 2:10 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> >> > On Thu, Jul 27, 2017 at 11:35 AM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> >> >> On Sun, Jun 25, 2017 at 8:51 PM, Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>> >> >>
+>> >> >> Hi Rob,
+>> >> >>
+>> >> >> I was hoping to pick your brain a bit on a DT question.
+>> >> >>
+>> >> >>> During FPGA device (e.g PCI-based) discovery, platform devices are
+>> >> >>> registered for different FPGA function units. But the device node path
+>> >> >>> isn't quite friendly to applications.
+>> >> >>>
+>> >> >>> Consider this case, applications want to access child device's sysfs file
+>> >> >>> for some information.
+>> >> >>>
+>> >> >>> 1) Access using bus-based path (e.g PCI)
+>> >> >>>
+>> >> >>>   /sys/bus/pci/devices/xxxxx/fpga_func_a.0/sysfs_file
+>> >> >>>
+>> >> >>>   From the path, it's clear which PCI device is the parent, but not perfect
+>> >> >>>   solution for applications. PCI device BDF is not fixed, application may
+>> >> >>>   need to search all PCI device to find the actual FPGA Device.
+>> >> >>>
+>> >> >>> 2) Or access using platform device path
+>> >> >>>
+>> >> >>>   /sys/bus/platform/devices/fpga_func_a.0/sysfs_file
+>> >> >>>
+>> >> >>>   Applications find the actual function by name easily, but no information
+>> >> >>>   about which fpga device it belongs to. It's quite confusing if multiple
+>> >> >>>   FPGA devices are in one system.
+>> >> >>
+>> >> >> There's a proposal for adding sysfs nodes that correspond to each FPGA
+>> >> >> device., with the devices located on each FPGA under them.  It makes
+>> >> >> it easier to see which device is on which FPGA.
+>> >> >
+>> >> > Makes sense.
+>> >> >
+>> >> >>> 'FPGA Device' class is introduced to resolve this problem. Each node under
+>> >> >>> this class represents a fpga device, which may have one or more child
+>> >> >>> devices. Applications only need to search under this FPGA Device class
+>> >> >>> folder to find the child device node it needs.
+>> >> >>>
+>> >> >>> For example, for the platform has 2 fpga devices, each fpga device has
+>> >> >>> 3 child devices, the hierarchy looks like this.
+>> >> >>>
+>> >> >>> Two nodes are under /sys/class/fpga/:
+>> >> >>> /sys/class/fpga/fpga.0
+>> >> >>> /sys/class/fpga/fpga.1
+>> >> >>>
+>> >> >>> Each node has 1 function A device and 2 function B devices:
+>> >> >>> /sys/class/fpga/fpga.0/func_a.0
+>> >> >>> /sys/class/fpga/fpga.0/func_b.0
+>> >> >>> /sys/class/fpga/fpga.0/func_b.1
+>> >> >>>
+>> >> >>> /sys/class/fpga/fpga.1/func_a.1
+>> >> >>> /sys/class/fpga/fpga.1/func_b.2
+>> >> >>> /sys/class/fpga/fpga.1/func_b.3
+>> >> >
+>> >> > A class is generally what is the function of the device, not how it is
+>> >> > attached. Seems like what you want here is a new bus type if the
+>> >> > existing PCI and platform bus types don't work.
+>> >> >
+>> >> >>
+>> >> >> I can see the value of having sysfs nodes that correspond to fpga
+>> >> >> devices and being able to find devices under them.  I'm thinking what
+>> >> >> that would mean for Device Tree when fpga-dev is used on DT enabled
+>> >> >> systems.  In Device Tree, what is a fpga-dev?
+>> >> >
+>> >> > Just properly setting the parent struct device on the functions should
+>> >> > be enough to figure out which function is in which fpga. I don't see
+>> >> > why a new class is needed.
+>> >> >
+>> >> >> Currently the DT would have a FPGA bridge corresponding to each FPGA's
+>> >> >> hardware bridge and a heirarchy of bridges, regions and devices under
+>> >> >> it.  On systems that don't support partial reconfiguration under the
+>> >> >> OS (so not main bridge that was controlled by the OS), there would be
+>> >> >> a FPGA region, then its child regions, bridges, and devices.
+>> >> >
+>> >> > The FPGA bridges could instantiate fpga bus type devices instead of
+>> >> > platform devices.
+>> >>
+>> >> Yes
+>> >>
+>> >> Some FPGA use cases already have a base bridge per FPGA that could
+>> >> serve as this bus.  But this use case has a static FPGA image +
+>> >> reprogrammable child fpga regions.  There's no base bridge under Linux
+>> >> since the FPGA was programmed and the bridge enabled before Linux
+>> >> boots.   An added base bridge that doesn't touch hardware will be
+>> >> required for this type of use.
+>> >
+>> > Hi Alan
+>> >
+>> > Does 'base bridge' mentioned above mean a hardware bridge just like
+>> > PCIe or USB?
+>>
+>> Whatever connects each FPGA to the CPU.  One base bridge per FPGA
+>> device to create the fpga bus type devices.  Each PR region's bridge
+>> would also be a bus.
 
-Thanks for the patch.
+device.h [1] says it better than me:
 
-On 31.07.2017 09:34, Varadarajan Narayanan wrote:
-> Add support for the IPQ8074 PCIe controller.  IPQ8074 supports
-> Gen 1/2, one lane, two PCIe root complex with support for MSI and
-> legacy interrupts, and it conforms to PCI Express Base 2.1
-> specification.
-> 
-> The core init is the similar to the existing SoC, however the
-> clocks and reset lines differ.
-> 
-> Signed-off-by: smuthayy <smuthayy@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
-> ---
->   drivers/pci/dwc/pcie-qcom.c | 245 ++++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 245 insertions(+)
-> 
-> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
-> index 6525f2f..b2ea953 100644
-> --- a/drivers/pci/dwc/pcie-qcom.c
-> +++ b/drivers/pci/dwc/pcie-qcom.c
-> @@ -37,6 +37,20 @@
->   #include "pcie-designware.h"
->   
->   #define PCIE20_PARF_SYS_CTRL			0x00
-> +#define MST_WAKEUP_EN				BIT(13)
-> +#define SLV_WAKEUP_EN				BIT(12)
-> +#define MSTR_ACLK_CGC_DIS			BIT(10)
-> +#define SLV_ACLK_CGC_DIS			BIT(9)
-> +#define CORE_CLK_CGC_DIS			BIT(6)
-> +#define AUX_PWR_DET				BIT(4)
-> +#define L23_CLK_RMV_DIS				BIT(2)
-> +#define L1_CLK_RMV_DIS				BIT(1)
-> +
-> +#define PCIE20_COMMAND_STATUS			0x04
-> +#define CMD_BME_VAL				0x4
-> +#define PCIE20_DEVICE_CONTROL2_STATUS2		0x98
-> +#define PCIE_CAP_CPL_TIMEOUT_DISABLE		0x10
-> +
->   #define PCIE20_PARF_PHY_CTRL			0x40
->   #define PCIE20_PARF_PHY_REFCLK			0x4C
->   #define PCIE20_PARF_DBI_BASE_ADDR		0x168
-> @@ -58,9 +72,22 @@
->   #define CFG_BRIDGE_SB_INIT			BIT(0)
->   
->   #define PCIE20_CAP				0x70
-> +#define PCIE20_CAP_LINK_CAPABILITIES		(PCIE20_CAP + 0xC)
-> +#define PCIE20_CAP_LINK_1			(PCIE20_CAP + 0x14)
-> +#define PCIE_CAP_LINK1_VAL			0x2fd7f
-> +
-> +#define PCIE20_PARF_Q2A_FLUSH			0x1AC
+ * A bus is a channel between the processor and one or more devices.
+For the
+ * purposes of the device model, all devices are connected via a bus,
+even if
+ * it is an internal, virtual, "platform" bus. Buses can plug into
+each other.
+ * A USB controller is usually a PCI device, for example. The device
+model
+ * represents the actual connections between buses and the devices
+they control.
 
-Could you use lower-case for hex numbers, please.
+A fpga-bridge could be the bus even if the FPGA is on PCIe.  The
+advantage of doing it that way is that this bus will be usable for
+both embedded and PCIe FPGAs.
 
-> +
-> +#define PCIE20_MISC_CONTROL_1_REG		0x8BC
-> +#define DBI_RO_WR_EN				1
->   
->   #define PERST_DELAY_US				1000
->   
-> +#define AXI_CLK_RATE				200000000
-> +
-> +#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
-> +#define SLV_ADDR_SPACE_SZ                       0x10000000
-> +
->   struct qcom_pcie_resources_2_1_0 {
->   	struct clk *iface_clk;
->   	struct clk *core_clk;
-> @@ -110,11 +137,21 @@ struct qcom_pcie_resources_2_4_0 {
->   	struct reset_control *phy_ahb_reset;
->   };
->   
-> +struct qcom_pcie_resources_2_3_3 {
-> +	struct clk *iface;
-> +	struct clk *axi_m_clk;
-> +	struct clk *axi_s_clk;
-> +	struct clk *ahb_clk;
-> +	struct clk *aux_clk;
-> +	struct reset_control *rst[7];
-> +};
-> +
->   union qcom_pcie_resources {
->   	struct qcom_pcie_resources_1_0_0 v1_0_0;
->   	struct qcom_pcie_resources_2_1_0 v2_1_0;
->   	struct qcom_pcie_resources_2_3_2 v2_3_2;
->   	struct qcom_pcie_resources_2_4_0 v2_4_0;
-> +	struct qcom_pcie_resources_2_3_3 v2_3_3;
->   };
->   
->   struct qcom_pcie;
-> @@ -884,6 +921,206 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
->   	return ret;
->   }
->   
-> +static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int i;
-> +	const char *rst_names[] = {
-> +					"axi_m", "axi_s", "pipe",
-> +					"axi_m_sticky", "sticky",
-> +					"ahb", "sleep",
-> +				};
+Alan
 
-Could you indent this properly, i.e
+[1] https://github.com/torvalds/linux/blob/master/include/linux/device.h
 
-const char *rst_names[] = { "axi_m", "axi_s", "pipe",
-			   ... };
-
-> +
-> +	res->iface = devm_clk_get(dev, "iface");
-> +	if (IS_ERR(res->iface))
-> +		return PTR_ERR(res->iface);
-> +
-> +	res->axi_m_clk = devm_clk_get(dev, "axi_m");
-> +	if (IS_ERR(res->axi_m_clk))
-> +		return PTR_ERR(res->axi_m_clk);
-> +
-> +	res->axi_s_clk = devm_clk_get(dev, "axi_s");
-> +	if (IS_ERR(res->axi_s_clk))
-> +		return PTR_ERR(res->axi_s_clk);
-> +
-> +	res->ahb_clk = devm_clk_get(dev, "ahb");
-> +	if (IS_ERR(res->ahb_clk))
-> +		return PTR_ERR(res->ahb_clk);
-> +
-> +	res->aux_clk = devm_clk_get(dev, "aux");
-> +	if (IS_ERR(res->aux_clk))
-> +		return PTR_ERR(res->aux_clk);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
-> +		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
-> +		if (IS_ERR(res->rst[i]))
-> +			return PTR_ERR(res->rst[i]);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_pcie_deinit_2_3_3(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-> +
-> +	clk_disable_unprepare(res->iface);
-> +	clk_disable_unprepare(res->axi_m_clk);
-> +	clk_disable_unprepare(res->axi_s_clk);
-> +	clk_disable_unprepare(res->ahb_clk);
-> +	clk_disable_unprepare(res->aux_clk);
-> +}
-> +
-> +static int qcom_pcie_enable_resources_2_3_3(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(res->iface);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable core clock\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->axi_m_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable core clock\n");
-> +		goto err_clk_axi_m;
-> +	}
-> +
-> +	ret = clk_set_rate(res->axi_m_clk, AXI_CLK_RATE);
-> +	if (ret) {
-> +		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-> +		goto err_clk_axi_m;
-> +	}
-
-Why you need to set the rate here, what is the default rate for this clock?
-
-> +
-> +	ret = clk_prepare_enable(res->axi_s_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable axi slave clock\n");
-> +		goto err_clk_axi_s;
-> +	}
-> +
-> +	ret = clk_set_rate(res->axi_s_clk, AXI_CLK_RATE);
-> +	if (ret) {
-> +		dev_err(dev, "MClk rate set failed (%d)\n", ret);
-> +		goto err_clk_axi_s;
-> +	}
-
-Same comment as above one.
-
-> +
-> +	ret = clk_prepare_enable(res->ahb_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable ahb clock\n");
-> +		goto err_clk_ahb;
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->aux_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable aux clock\n");
-> +		goto err_clk_aux;
-> +	}
-> +
-> +	udelay(1);
-
- From where comes 1us? Please add a comment.
-
-> +
-> +	return 0;
-> +
-> +err_clk_aux:
-> +	clk_disable_unprepare(res->ahb_clk);
-> +err_clk_ahb:
-> +	clk_disable_unprepare(res->axi_s_clk);
-> +err_clk_axi_s:
-> +	clk_disable_unprepare(res->axi_m_clk);
-> +err_clk_axi_m:
-> +	clk_disable_unprepare(res->iface);
-> +
-> +	return ret;
-> +}
-> +
-> +static int qcom_pcie_2_3_3_reset(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-> +		ret = reset_control_assert(res->rst[i]);
-> +		if (ret) {
-> +			dev_err(pcie->pci->dev,
-> +				"%s: reset assert failed for %d\n",
-> +				__func__, i);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	msleep(20);
-
-Could you explain why we need to wait for 20ms.
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
-> +		ret = reset_control_deassert(res->rst[i]);
-> +		if (ret) {
-> +			dev_err(pcie->pci->dev,
-> +				"%s: reset deassert failed for %d\n",
-> +				__func__, i);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	msleep(20);
-
-Same comment as above.
-
-> +
-> +	ret = phy_power_on(pcie->phy);
-> +	if (ret) {
-> +		pcie->ops->deinit(pcie);
-> +		return ret;
-> +	}
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
-> +		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
-> +		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
-> +		pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
-> +
-> +	writel(CMD_BME_VAL, pci->dbi_base + PCIE20_COMMAND_STATUS);
-> +	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
-> +	writel(PCIE_CAP_LINK1_VAL, pci->dbi_base + PCIE20_CAP_LINK_1);
-> +
-> +	val = readl(pci->dbi_base + PCIE20_CAP_LINK_CAPABILITIES);
-> +	val &= ~(BIT(10) | BIT(11));
-
-Could you add defines for those two bits?
-
-regards,
-Stan
+>>
+>> >
+>> > I tried to use fpga bus type device instead of fpga-dev class today,
+>> > it works for me, e.g Intel FPGA device PCIe driver could create a
+>> > fpga bus type dev as a child of PCIe device and its sysfs path will be
+>> > changed to /sys/bus/fpga/devices/fpga.x/ from /sys/class/fpga/fpga.x/.
+>> > For now, this fpga bus type device is only used as container device,
+>> > so no driver needed for it.
+>>
+>> That's great!  I'd like to see the code to try it out with device
+>> tree.  Is it part of fpga-bridge or something separate for now?
+>>
+>
+> Hi Alan
+>
+> I just sent the patch I did as a RFC Patch[1] to the mailing list. Please
+> take a look. I only replaced the original fpga-dev class with new 'fpga'
+> bus type, and keep the original interface not changed.
+>
+> [1] http://marc.info/?l=linux-fpga&m=150167682312708&w=2
+>
+>> >
+>> > Do you have any concern on this? I see fpga bus type works fine, but
+>> > I didn't see other advantages for this case, as we only use it as a
+>> > container device to represent a FPGA device in sysfs hierarchy. :)
+>>
+>> I could not see a way to make the fpga-dev class compatible with the
+>> FPGA Device Tree bindings.  This was a red flag. That's why I asked
+>> Rob's opinion.  Sysfs classes collect devices of a specific type
+>> together; busses describe topology.  I think the goal of fpga-dev was
+>> to describe topology.  It's more correct to define this as a bus, not
+>> a class.  If it's done right, it can work for device tree also.
+>
+> Got it. Thanks. :)
+>
+> Hao
+>
+>>
+>> Alan
+>>
+>> >
+>> > Thanks
+>> > Hao
+>> >
+>> >>
+>> >> > That's really up to Linux and outside the scope of
+>> >> > the bindings.
+>> >>
+>> >> Thanks for the feedback.
+>> >>
+>> >> Alan Tull
+>> >>
+>> >> >
+>> >> > Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
