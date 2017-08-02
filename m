@@ -1,155 +1,51 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v6 1/4] of: remove *phandle properties from expanded
- device tree
-Date: Wed, 2 Aug 2017 11:16:05 -0700
-Message-ID: <598216E5.8050907@gmail.com>
-References: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
- <1497996172-821-2-git-send-email-frowand.list@gmail.com>
- <87mv92szsw.fsf@concordia.ellerman.id.au>
+From: Stanimir Varbanov <svarbanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 5/7] PCI: dwc: qcom: Use block IP version for
+ operations
+Date: Wed, 2 Aug 2017 21:34:22 +0300
+Message-ID: <285396b4-cadb-6f4a-8cca-d781503b9d49@mm-sol.com>
+References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+ <1501482857-14100-6-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87mv92szsw.fsf@concordia.ellerman.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501482857-14100-6-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+Hi,
 
-In Rob's reply to you email, he said:
-
-   I'd like to move towards dropping 'linux,phandle' including changing 
-   dtc to stop generating both properties by default. Perhaps we should 
-   just be more explicit that we are doing that. Stop exposing it first and 
-   then change how phandles are stored/managed a cycle later. Then we can 
-   easily revert it if needed.
-
-My current plan is to follow that suggestion.  So fixing my patches that
-started this thread will wait for a later cycle.  But I would like to
-try to address the issues with property "ibm,phandle" that you raised
-below _before_ fixing my patches.  Those fixes should help me understand
-"ibm,phandle" better, and hopefully when I update my patches I will not
-cause further "ibm,phandle" issues.
-
-More comments from me, embedded below.
-
-
-On 06/20/17 21:57, Michael Ellerman wrote:
-> Hi Frank,
+On 31.07.2017 09:34, Varadarajan Narayanan wrote:
+> Presently, when support for a new SoC is added, the driver ops
+> structures and functions are versioned with plain 1, 2, 3 etc.
+> Instead use the block IP version number.
 > 
-> frowand.list@gmail.com writes:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
->> the internal device tree.  The phandle will still be in the struct
->> device_node phandle field and will still be displayed as if it is
->> a property in /proc/device_tree.
->>
->> This is to resolve the issue found by Stephen Boyd [1] when he changed
->> the type of struct property.value from void * to const void *.  As
->> a result of the type change, the overlay code had compile errors
->> where the resolver updates phandle values.
->>
->>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
->>
->> - Add sysfs infrastructure to report np->phandle, as if it was a property.
->> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
->>   in the expanded device tree.
->> - Remove phandle properties in of_attach_node(), for nodes dynamically
->>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
->> - When creating an overlay changeset, duplicate the node phandle in
->>   __of_node_dup().
->> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
->>   properties in several locations.
->> - A side effect of these changes is that the obsolete "linux,phandle" and
->>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
->>   will appear as "phandle").
+> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>   drivers/pci/dwc/pcie-qcom.c | 133 +++++++++++++++++++++++---------------------
+>   1 file changed, 71 insertions(+), 62 deletions(-)
 > 
-> Sorry but I don't think that can work for us.
-> 
-> Our DLPAR (ie. CPU/memory/device hotplug) stuff on PowerVM uses
-> "ibm,phandle", and it's not the same thing as "phandle" /
-> "linux,phandle".
-> 
-> I don't know the code well myself, but the spec (PAPR) says:
-> 
->   Note: If the “ibm,phandle” property exists, there are two “phandle”
->   namespaces which must be kept separate. One is that actually used by
->   the OF client interface, the other is properties in the device tree
->   making reference to device tree nodes. These requirements are written
->   to maintain backward compatibility with older FW versions predating
->   these requirements; if the “ibm,phandle” property is not present, the
->   OS may assume that any device tree properties which refer to this node
->   will have a phandle value matching that returned by client interface
->   services.
-> 
-> I have systems here that still use "ibm,phandle". I also see at least
-> some of the userspace code that looks for "ibm,phandle", and nothing
-> else.
-> 
-> The note above actually implies that the current Linux code is wrong,
-> when it uses "ibm,phandle" as the value of np->phandle.
+> diff --git a/drivers/pci/dwc/pcie-qcom.c b/drivers/pci/dwc/pcie-qcom.c
 
-This is where I get lost, and need your help and expertise.
+<cut>
 
-If I do the naive search:
+> +/*
+> + * Declare one of_device_id entry
+> + * c - Compatible string
+> + * d - Associated data
+> + * w - SoC wrapper version (ignored)
+> + * s - Synopsys core version (ignored)
+> + */
+> +#define QCOM_DECL(c, d, w, s) { .compatible = c, .data = &d }
 
-   git grep '"ibm,phandle"'
+Please don't introduce this macro, just add a comment with qcom version 
+and corresponding synopsys version.
 
-
-I find it used in three files.
-
-(1) drivers/of/fdt.c, which is part of what my patches modified.
-
-(2) drivers/misc/cxl/of.c reads (and optionally reports the value of)
-"ibm,phandle", but does not use the value for anything else.
-
-(3) drivers/of/dynamic.c gets and uses the value of "ibm,phandle"
-only if properties "phandle" and "linux,phandle" do not exist.
-If either of those two properties exist, their value is used
-preferentially to the value of "ibm,phandle".  So in this case
-it seems that folding the value of "ibm,phandle" into "phandle"
-would work properly.
-
-Is the "ibm,phandle" property used elsewhere in a way that my
-naive search missed it?  Should it be used in a place that is
-not using it?
-
-
-> So sorry that's a big mess, but we can't just rip out those properties.
-
-You provide some useful references and information above, but I do not
-understand what I am reading.  :-)
-
-
-> I think the minimal change would be to treat "ibm,phandle" like a normal
-> property, I think that would allow our tools to keep working?
-
-This sounds reasonable.  Since userspace is using the "ibm,phandle"
-property we need to continue to expose that property to userspace.
-
-If userspace needs to differentiate between "phandle" and "ibm,phandle"
-then we will need to keep "ibm,phandle" for as long as userspace needs
-it.  Otherwise, there is a possibility that we could update userspace,
-wait a long time, then remove "ibm,phandle".
-
-
-> The other thing that worries me is that by renaming (effectively)
-> "linux,phandle" to "phandle", we lose the ability to accurately
-> regenerate the device tree from /proc/device-tree. In theory it
-> shouldn't matter, but I worry that in practice something will break.
-
-Hopefully we will flush any such problem out with Rob's suggestion of doing
-the easily reversible removal of generating the "linux,phandle" property
-when we compile device trees.  Then wait a while before removing it from
-the kernel.
-
-
-> What if we just kept a single bit flag somewhere indicating if the name of
-> the phandle property we found was "phandle" or "linux,phandle", and
-> create the sysfs phandle using that name?
-> 
-> cheers
-> 
+regards,
+Stan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
