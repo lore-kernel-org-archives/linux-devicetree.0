@@ -1,57 +1,63 @@
 From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: [PATCH 1/3] dt-bindings: net: c_can: Update binding for clock and power-domains property
-Date: Wed, 2 Aug 2017 15:18:20 -0500
-Message-ID: <20170802201822.11532-2-fcooper@ti.com>
-References: <20170802201822.11532-1-fcooper@ti.com>
+Subject: [PATCH 2/3] dt-bindings: usb: keystone-usb: Update bindings pm and
+ clocks properties
+Date: Wed, 2 Aug 2017 15:17:23 -0500
+Message-ID: <20170802201724.11439-3-fcooper@ti.com>
+References: <20170802201724.11439-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170802201822.11532-1-fcooper@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170802201724.11439-1-fcooper@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-CAN driver uses the clk_get_rate call to determine the frequency of the
-functional clock. OMAP based SoCs do not require the clock property since
-hwmod already handles creating a "fck" clock thats accessible to drivers.
-However, this isn't the case for 66AK2G which makes the clocks property
-require for that SoC.
-
-66AK2G requires a new property. Therefore, update the binding to also make
-this property requirement clear. Also clarify that for OMAP based SoCs
-ti,hwmod is a required property.
+Update varous properties to properly indicate their requirement depending
+on the SoC.
 
 Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 ---
- Documentation/devicetree/bindings/net/can/c_can.txt | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/usb/keystone-usb.txt | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/c_can.txt b/Documentation/devicetree/bindings/net/can/c_can.txt
-index 5a1d8b0..2d50425 100644
---- a/Documentation/devicetree/bindings/net/can/c_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/c_can.txt
-@@ -11,9 +11,20 @@ Required properties:
- - interrupts		: property with a value describing the interrupt
- 			  number
- 
--Optional properties:
-+The following are mandatory properties for DRA7x, AM33xx and AM43xx SoCs only:
- - ti,hwmods		: Must be "d_can<n>" or "c_can<n>", n being the
- 			  instance number
+diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+index 60527d3..307531b 100644
+--- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
++++ b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+@@ -12,8 +12,22 @@ Required properties:
+    MPU.
+  - ranges: allows valid 1:1 translation between child's address space and
+    parent's address space.
+- - clocks: Clock IDs array as required by the controller.
+- - clock-names: names of clocks correseponding to IDs in the clock property.
++
++SoC-specific Required Properties:
++The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
++SoCs only:
++
++- clocks:		Clock IDs array as required by the controller.
++- clock-names:		names of clocks correseponding to IDs in the clock
++			property.
++
 +
 +The following are mandatory properties for Keystone 2 66AK2G SoCs only:
-+- power-domains		: Should contain a phandle to a PM domain provider node
-+			  and an args specifier containing the DCAN device id
-+			  value. This property is as per the binding,
-+			  Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-+- clocks		: CAN functional clock phandle. This property is as per the
-+			  binding,
-+			  Documentation/devicetree/bindings/clock/ti,sci-clk.txt
 +
-+Optional properties:
- - syscon-raminit	: Handle to system control region that contains the
- 			  RAMINIT register, register offset to the RAMINIT
- 			  register and the CAN instance number (0 offset).
++- power-domains:	Should contain a phandle to a PM domain provider node
++			and an args specifier containing the USB device id
++			value. This property is as per the binding,
++			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+ 
+ Sub-nodes:
+ The dwc3 core should be added as subnode to Keystone DWC3 glue.
 -- 
 2.9.4.dirty
