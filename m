@@ -1,42 +1,40 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Devicetree at Linux Plumbers Conference 2017
-Date: Wed, 2 Aug 2017 14:19:47 +0100
-Message-ID: <CACxGe6vX4tz9QiCvSyaf9kqHXk+ubpGx0+2w608b7NBY0yNnyQ@mail.gmail.com>
-References: <CACxGe6v0hm_YC+JdatGpNcYtaeSiUgm58Gnj1ZWndLHCPcA1tQ@mail.gmail.com>
- <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA@mail.gmail.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 01/11] net: phy: Add rockchip phy driver support
+Date: Wed, 2 Aug 2017 15:21:21 +0200
+Message-ID: <20170802132121.GA24708@lunn.ch>
+References: <1501654546-17292-1-git-send-email-david.wu@rock-chips.com>
+ <1501654546-17292-2-git-send-email-david.wu@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6vz65ZhVRNCUYE91LAOJu7eQQRHkFOm5BS22Jvac=UaYA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-spec-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Pawe=C5=82_Moll?= <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Warren <SWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Kumar Gala <kumar.gala-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Olof Johansson <olof.johansson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501654546-17292-2-git-send-email-david.wu@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>
+Cc: davem@davemloft.net, heiko@sntech.de, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 1, 2017 at 5:37 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Mon, Jul 31, 2017 at 6:29 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> Hi folks,
->>
->> For anyone attending Linux Plumbers Conference this year, I'm trying
->> to put together an agenda for a Devicetree miniconference, and I need
->> topics. If you have anything you want to discuss or present, please
->> add it to the following wiki page and/or email me:
->>
->> http://wiki.linuxplumbersconf.org/2017:device_tree
->
-> A number of people have asked about holding this at ELCE instead of
-> Linux Plumbers, so I'd like some feedback. Here's a quick survey.
-> Please reply ASAP if your interested in a Devicetree miniconference
-> this year:
->
-> https://docs.google.com/forms/d/e/1FAIpQLSe0k9L597egFfOwZoDwq0Og-hRt8IAEPtp-JpvoH9nw2njx0g/viewform?usp=sf_link
+> +static struct phy_driver rockchip_phy_driver[] = {
+> +{
+> +	.phy_id			= 0x1234d400,
+> +	.phy_id_mask		= 0xfffffff0,
+> +	.name			= "Rockchip internal EPHY",
+> +	.features		= (PHY_BASIC_FEATURES | SUPPORTED_Pause
+> +				   | SUPPORTED_Asym_Pause),
 
-Last call for survey responses.
+Please take a look at Documentation/networking/phy.txt and
+Fixes: 529ed1275263 ("net: phy: phy drivers should not set SUPPORTED_[Asym_]Pause")
 
-I've had 10 responses so far, and the concensus it to hold it at ELCE.
-Ted thinks he'd be able to give us a 1/2 day on Thursday 26 October
-(ELCE runs 23-25, and KSummit 24-26). Unless someone makes a strong
-argument otherwise, I'm going to choose locating with ELCE/Ksummit.
+Pause frames / flow control
 
-Cheers,
-g.
+ The PHY does not participate directly in flow control/pause frames except by
+ making sure that the SUPPORTED_Pause and SUPPORTED_AsymPause bits are set in
+ MII_ADVERTISE to indicate towards the link partner that the Ethernet MAC
+ controller supports such a thing. Since flow control/pause frames generation
+ involves the Ethernet MAC driver, it is recommended that this driver takes care
+ of properly indicating advertisement and support for such features by setting
+ the SUPPORTED_Pause and SUPPORTED_AsymPause bits accordingly. This can be done
+ either before or after phy_connect() and/or as a result of implementing the
+ ethtool::set_pauseparam feature.
+
+	Andrew
