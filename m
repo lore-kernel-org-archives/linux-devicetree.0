@@ -1,77 +1,155 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 0/2] serial: 8250: add support for MediaTek BTIF
- controller
-Date: Wed, 02 Aug 2017 21:02:15 +0300
-Message-ID: <1501696935.29303.367.camel@linux.intel.com>
-References: <cover.1501692369.git.sean.wang@mediatek.com>
-         <1501694063.29303.361.camel@linux.intel.com>
-         <1501695470.25246.7.camel@mtkswgap22>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 1/4] of: remove *phandle properties from expanded
+ device tree
+Date: Wed, 2 Aug 2017 11:16:05 -0700
+Message-ID: <598216E5.8050907@gmail.com>
+References: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
+ <1497996172-821-2-git-send-email-frowand.list@gmail.com>
+ <87mv92szsw.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501695470.25246.7.camel@mtkswgap22>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "arnd.bergmann" <arnd.bergmann-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, jan.kiszka-kv7WeFo6aLtBDgjK7y7TUQ@public.gmane.org, heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, hpeter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vigneshr-l0cyMroinI0@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87mv92szsw.fsf@concordia.ellerman.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-08-03 at 01:37 +0800, Sean Wang wrote:
-> On Wed, 2017-08-02 at 20:14 +0300, Andy Shevchenko wrote:
-> > On Thu, 2017-08-03 at 01:05 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > > 
-> > > This patchset introduces the support for MediaTek BTIF controller.
-> > > 
-> > > MediaTek BTIF controller is the serial interface similar to UART
-> > > but
-> > > it
-> > > works only as the digital device which is mainly used to
-> > > communicate
-> > > with
-> > > the connectivity module also called CONNSYS inside the SoC which
-> > > could
-> > > be
-> > > mostly found on those MediaTek SoCs with Bluetooth feature.
-> > > 
-> > > And the controller is made as being compatible with the 8250
-> > > register
-> > > layout so it tends to be integrated with existing 8250 core driver
-> > > and
-> > > have no requirement for the modem configuration additionally such
-> > > as
-> > > the
-> > > baud rate calculation and assignment.
+Hi Michael,
 
-+Cc: Arnd.
+In Rob's reply to you email, he said:
 
-> > Why it requires a separate driver?
-> > 
-> > 8250_of is for DT enabled drivers.
-> > 
+   I'd like to move towards dropping 'linux,phandle' including changing 
+   dtc to stop generating both properties by default. Perhaps we should 
+   just be more explicit that we are doing that. Stop exposing it first and 
+   then change how phandles are stored/managed a cycle later. Then we can 
+   easily revert it if needed.
+
+My current plan is to follow that suggestion.  So fixing my patches that
+started this thread will wait for a later cycle.  But I would like to
+try to address the issues with property "ibm,phandle" that you raised
+below _before_ fixing my patches.  Those fixes should help me understand
+"ibm,phandle" better, and hopefully when I update my patches I will not
+cause further "ibm,phandle" issues.
+
+More comments from me, embedded below.
+
+
+On 06/20/17 21:57, Michael Ellerman wrote:
+> Hi Frank,
 > 
-> Hi, Andy
+> frowand.list@gmail.com writes:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
+>> the internal device tree.  The phandle will still be in the struct
+>> device_node phandle field and will still be displayed as if it is
+>> a property in /proc/device_tree.
+>>
+>> This is to resolve the issue found by Stephen Boyd [1] when he changed
+>> the type of struct property.value from void * to const void *.  As
+>> a result of the type change, the overlay code had compile errors
+>> where the resolver updates phandle values.
+>>
+>>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>>
+>> - Add sysfs infrastructure to report np->phandle, as if it was a property.
+>> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
+>>   in the expanded device tree.
+>> - Remove phandle properties in of_attach_node(), for nodes dynamically
+>>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
+>> - When creating an overlay changeset, duplicate the node phandle in
+>>   __of_node_dup().
+>> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
+>>   properties in several locations.
+>> - A side effect of these changes is that the obsolete "linux,phandle" and
+>>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
+>>   will appear as "phandle").
 > 
-> thanks for your information
+> Sorry but I don't think that can work for us.
 > 
-> the hardware is not completely identical to 8250 device, 
-> it has extra registers belonged to platform control such as internal
-> loopback, dma disable/enable, sleep/wakeup setup and so on, so I
-> create
-> it as a separate driver.
+> Our DLPAR (ie. CPU/memory/device hotplug) stuff on PowerVM uses
+> "ibm,phandle", and it's not the same thing as "phandle" /
+> "linux,phandle".
+> 
+> I don't know the code well myself, but the spec (PAPR) says:
+> 
+>   Note: If the “ibm,phandle” property exists, there are two “phandle”
+>   namespaces which must be kept separate. One is that actually used by
+>   the OF client interface, the other is properties in the device tree
+>   making reference to device tree nodes. These requirements are written
+>   to maintain backward compatibility with older FW versions predating
+>   these requirements; if the “ibm,phandle” property is not present, the
+>   OS may assume that any device tree properties which refer to this node
+>   will have a phandle value matching that returned by client interface
+>   services.
+> 
+> I have systems here that still use "ibm,phandle". I also see at least
+> some of the userspace code that looks for "ibm,phandle", and nothing
+> else.
+> 
+> The note above actually implies that the current Linux code is wrong,
+> when it uses "ibm,phandle" as the value of np->phandle.
 
-Over all 200+ LOCs I didn't see any of the above except loopback, which
-is one property that can be easily added to 8250_of.c.
+This is where I get lost, and need your help and expertise.
 
-Moreover, if you have more code coming I would suggest you to split
-8250_of to library and driver parts and re-use stuff from there.
+If I do the naive search:
 
-Arnd, what is your opinion about new 8250 OF based drivers?
+   git grep '"ibm,phandle"'
 
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+I find it used in three files.
+
+(1) drivers/of/fdt.c, which is part of what my patches modified.
+
+(2) drivers/misc/cxl/of.c reads (and optionally reports the value of)
+"ibm,phandle", but does not use the value for anything else.
+
+(3) drivers/of/dynamic.c gets and uses the value of "ibm,phandle"
+only if properties "phandle" and "linux,phandle" do not exist.
+If either of those two properties exist, their value is used
+preferentially to the value of "ibm,phandle".  So in this case
+it seems that folding the value of "ibm,phandle" into "phandle"
+would work properly.
+
+Is the "ibm,phandle" property used elsewhere in a way that my
+naive search missed it?  Should it be used in a place that is
+not using it?
+
+
+> So sorry that's a big mess, but we can't just rip out those properties.
+
+You provide some useful references and information above, but I do not
+understand what I am reading.  :-)
+
+
+> I think the minimal change would be to treat "ibm,phandle" like a normal
+> property, I think that would allow our tools to keep working?
+
+This sounds reasonable.  Since userspace is using the "ibm,phandle"
+property we need to continue to expose that property to userspace.
+
+If userspace needs to differentiate between "phandle" and "ibm,phandle"
+then we will need to keep "ibm,phandle" for as long as userspace needs
+it.  Otherwise, there is a possibility that we could update userspace,
+wait a long time, then remove "ibm,phandle".
+
+
+> The other thing that worries me is that by renaming (effectively)
+> "linux,phandle" to "phandle", we lose the ability to accurately
+> regenerate the device tree from /proc/device-tree. In theory it
+> shouldn't matter, but I worry that in practice something will break.
+
+Hopefully we will flush any such problem out with Rob's suggestion of doing
+the easily reversible removal of generating the "linux,phandle" property
+when we compile device trees.  Then wait a while before removing it from
+the kernel.
+
+
+> What if we just kept a single bit flag somewhere indicating if the name of
+> the phandle property we found was "phandle" or "linux,phandle", and
+> create the sysfs phandle using that name?
+> 
+> cheers
+> 
