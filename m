@@ -1,51 +1,33 @@
-From: Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH v2 09/23] clk: rockchip: add some critical clocks for rv1108 SoC
-Date: Wed,  2 Aug 2017 16:36:54 +0800
-Message-ID: <1501663014-12192-1-git-send-email-andy.yan@rock-chips.com>
-References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: robh+dt@kernel.org, shawn.lin@rock-chips.com, zhangqing@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 3/4] pinctrl: aspeed: g4: Add USB device and host support
+Date: Wed, 2 Aug 2017 10:38:03 +0200
+Message-ID: <CACRpkdZxx3-1XyZhnZoxaRtOvDgZP9_as8ceoz0_M9KvW-AoKg@mail.gmail.com>
+References: <20170718052453.14316-1-andrew@aj.id.au> <20170718052453.14316-4-andrew@aj.id.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170718052453.14316-4-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
+On Tue, Jul 18, 2017 at 7:24 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
 
-the bus/periph/nclk_ddrupctl/pclk_ddrmon/pclk_acodecphy/pclk_pmu
-no driver to handle them,
-chip design requirements for these clock to always on.
+> Implement the AST2400 USB functions as described by the devicetree
+> bindings. Three ports are fully documented in the datasheet and exposed
+> through the bindings and pinctrl, though there are remnants of
+> documentation for a fourth port muxed with GPIO pins GPIOQ6 and GPIOQ7.
+> The implementation is updated to reflect this but the function and
+> group are not exposed.
+>
+> Disregarding the mostly undocumented fourth port, the USB functions are
+> an outlier with respect to the rest of the muxed functionality on the
+> AST2400 as GPIO is not supported on these pins.
+>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+Patch applied.
 
-Changes in v2: None
-
- drivers/clk/rockchip/clk-rv1108.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/clk/rockchip/clk-rv1108.c b/drivers/clk/rockchip/clk-rv1108.c
-index dca9c37..e60d83a 100644
---- a/drivers/clk/rockchip/clk-rv1108.c
-+++ b/drivers/clk/rockchip/clk-rv1108.c
-@@ -774,10 +774,16 @@ static struct rockchip_clk_branch rv1108_clk_branches[] __initdata = {
- 
- static const char *const rv1108_critical_clocks[] __initconst = {
- 	"aclk_core",
--	"aclk_bus_src_gpll",
-+	"aclk_bus",
-+	"hclk_bus",
-+	"pclk_bus",
- 	"aclk_periph",
- 	"hclk_periph",
- 	"pclk_periph",
-+	"nclk_ddrupctl",
-+	"pclk_ddrmon",
-+	"pclk_acodecphy",
-+	"pclk_pmu",
- };
- 
- static void __init rv1108_clk_init(struct device_node *np)
--- 
-2.7.4
+Yours,
+Linus Walleij
