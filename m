@@ -1,37 +1,78 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v6 0/3] ARM: dts: imx7: add NAND support
-Date: Tue, 01 Aug 2017 19:41:41 -0700
-Message-ID: <c05aff108433c9ced4c85efcf3ba65e8@agner.ch>
-References: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
- <20170614151146.GC30112@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170614151146.GC30112@dragon>
-Sender: linux-clk-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: kernel@pengutronix.de, sboyd@codeaurora.org, aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@karo-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: sun8i: h3: Enable EMAC with external PHY on NanoPi M1 Plus
+Date: Tue,  1 Aug 2017 22:50:26 -0400
+Message-ID: <20170802025026.24232-1-luaraneda@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+The Nanopi M1 Plus uses an external Realtek RTL8211E PHY in RGMII mode,
+enabled by a GPIO-based regulator.
 
-On 2017-06-14 08:11, Shawn Guo wrote:
-> On Thu, Jun 08, 2017 at 03:34:46PM -0700, Stefan Agner wrote:
->> Stefan Agner (3):
->>   clk: imx7d: create clocks behind rawnand clock gate
->>   ARM: dts: imx7: add GPMI NAND and APBH DMA
->>   ARM: dts: imx7-colibri: add NAND support
-> 
-> Both dts patches look good to me.  Please ping me after the clk patch
-> lands on mainline.
+Signed-off-by: Luis Araneda <luaraneda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The clk patch landed in mainline. These two patches seem to apply fine
-still. Can you queue them for -next?
+---
+Changes v1 -> v2:
+- Removed unnecessary property
+- Corrected part address to match reg value
 
-FWIW, tested it on a Colibri iMX7 using v3.13-rc3, works fine after
-reverting the GPC changes (see my other email with subject "i.MX 7 boot
-freeze with 4.13-rc3").
+ arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 30 +++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+index 8ddd1b2cc..1273a5e45 100644
+--- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
++++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
+@@ -45,6 +45,20 @@
+ / {
+ 	model = "FriendlyArm NanoPi M1 Plus";
+ 	compatible = "friendlyarm,nanopi-m1-plus", "allwinner,sun8i-h3";
++
++	aliases {
++		ethernet0 = &emac;
++	};
++
++	reg_gmac_3v3: gmac-3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++	};
+ };
+ 
+ &ehci1 {
+@@ -55,6 +69,22 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&emac_rgmii_pins>;
++	phy-supply = <&reg_gmac_3v3>;
++	phy-handle = <&ext_rgmii_phy>;
++	phy-mode = "rgmii";
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@0 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++	};
++};
++
+ &ohci1 {
+ 	status = "okay";
+ };
+-- 
+2.13.3
 
 --
-Stefan
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
