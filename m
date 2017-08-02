@@ -1,62 +1,130 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Wed, 2 Aug 2017 10:25:22 +0530
-Message-ID: <20170802045522.GU3053@localhost>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
- <20170731123157.GJ3053@localhost>
- <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 01/13] dt-bindings: update the binding for
+ Allwinner H3 DE2 support
+Date: Wed, 02 Aug 2017 06:53:56 +0200
+Message-ID: <79034825.lnfmIyYlWl@jernej-laptop>
+References: <20170801131304.7741-1-icenowy@aosc.io> <20170801131304.7741-2-icenowy@aosc.io>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBZ5VQXGAKGQENDTAYEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170801131304.7741-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 01, 2017 at 09:32:50AM +0000, Pierre Yves MORDRET wrote:
-> 
-> 
-> On 07/31/2017 02:31 PM, Vinod Koul wrote:
-> > On Wed, Jul 26, 2017 at 07:38:02AM +0000, Pierre Yves MORDRET wrote:
-> >>>>>> +
-> >>>>>> +#ifndef __DMA_STM32_DMAMUX_H
-> >>>>>> +#define __DMA_STM32_DMAMUX_H
-> >>>>>> +
-> >>>>>> +#if defined(CONFIG_STM32_DMAMUX)
-> >>>>>> +int stm32_dmamux_set_config(struct device *dev, void *route_data, u32 chan_id);
-> >>>>>
-> >>>>> Why do we need a custom API in this case?
-> >>>>>
-> >>>>
-> >>>> This API is called by DMA when a slave is requested by client. DMA can work
-> >>>> without DMAMUX this API has been put in place to configure DMAMUX whether client
-> >>>> is requesting a DMAMUX Channel instead of a DMA one.
-> >>>
-> >>> You mean the dmaengine driver right?
-> >>>
-> >>
-> >> Yes. The API is mainly called by "device_config" through out STM32 DMA Driver
-> >> when a router is in place for client.
-> >> Please refer to Patch 4/5 on this set.
-> > 
-> > Okay am thinking on why this can't be generic..? An optional router config
-> > callback?
-> > 
-> 
-> I would have liked to answer there is a callback within engine but unfortunately
-> I didn't figure out one when I did my router's development. I've looked once
-> more but again I can't find how to map chanID and request line without custom API.
+Hi Icenowy,
 
-Yes there is no callback for routers but we can add a generic callback
-here to be used. I added Peter for his comments, isn't that something they
-need too?
+Dne torek, 01. avgust 2017 ob 15:12:52 CEST je Icenowy Zheng napisal(a):
+> Allwinner H3 features a "Display Engine 2.0".
+> 
+> Add device tree bindings for the following parts:
+> - H3 TCONs
+> - H3 Mixers
+> - H3 Display engine
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+>  .../bindings/display/sunxi/sun4i-drm.txt           | 25
+> ++++++++++++++++++---- 1 file changed, 21 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt index
+> 2ee6ff0ef98e..92512953943e 100644
+> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> @@ -87,18 +87,17 @@ Required properties:
+>     * allwinner,sun6i-a31-tcon
+>     * allwinner,sun6i-a31s-tcon
+>     * allwinner,sun8i-a33-tcon
+> +   * allwinner,sun8i-h3-tcon
+>     * allwinner,sun8i-v3s-tcon
+>   - reg: base address and size of memory-mapped region
+>   - interrupts: interrupt associated to this IP
+>   - clocks: phandles to the clocks feeding the TCON. Three are needed:
+>     - 'ahb': the interface clocks
+> -   - 'tcon-ch0': The clock driving the TCON channel 0
+>   - resets: phandles to the reset controllers driving the encoder
+>     - "lcd": the reset line for the TCON channel 0
+> 
+>   - clock-names: the clock names mentioned above
+>   - reset-names: the reset names mentioned above
+> - - clock-output-names: Name of the pixel clock created
+> 
+>  - ports: A ports node with endpoint definitions as defined in
+>    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> @@ -112,7 +111,23 @@ Required properties:
+>    channel the endpoint is associated to. If that property is not
+>    present, the endpoint number will be used as the channel number.
+> 
+> -On SoCs other than the A33 and V3s, there is one more clock required:
+> +For the following compatibles:
+> +   * allwinner,sun5i-a13-tcon
+> +   * allwinner,sun6i-a31-tcon
+> +   * allwinner,sun6i-a31s-tcon
+> +   * allwinner,sun8i-a33-tcon
+> +   * allwinner,sun8i-v3s-tcon
+> +there is one more clock and one more property required:
+> + - clocks:
+> +   - 'tcon-ch0': The clock driving the TCON channel 0
+> + - clock-output-names: Name of the pixel clock created
+> +
+> +For the following compatibles:
+> +   * allwinner,sun5i-a13-tcon
+> +   * allwinner,sun6i-a31-tcon
+> +   * allwinner,sun6i-a31s-tcon
+> +   * allwinner,sun8i-h3-tcon
+> +there is one more clock required:
+>     - 'tcon-ch1': The clock driving the TCON channel 1
+> 
+>  DRC
+> @@ -207,6 +222,8 @@ supported.
+>  Required properties:
+>    - compatible: value must be one of:
+>      * allwinner,sun8i-v3s-de2-mixer
+> +    * allwinner,sun8i-h3-de2-mixer0
+> +    * allwinner,sun8i-h3-de2-mixer1
 
--- 
-~Vinod
+About that, I concur with Maxime here, plane number properties would be 
+better. If we don't do this now, we will never have it.
+
+Reference:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/512902.html
+
+Regards,
+Jernej
+
+>    - reg: base address and size of the memory-mapped region.
+>    - clocks: phandles to the clocks feeding the mixer
+>      * bus: the mixer interface clock
+> @@ -218,7 +235,6 @@ Required properties:
+>    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+>    first port should be the input endpoints, the second one the output
+> 
+> -
+>  Display Engine Pipeline
+>  -----------------------
+> 
+> @@ -233,6 +249,7 @@ Required properties:
+>      * allwinner,sun6i-a31-display-engine
+>      * allwinner,sun6i-a31s-display-engine
+>      * allwinner,sun8i-a33-display-engine
+> +    * allwinner,sun8i-h3-display-engine
+>      * allwinner,sun8i-v3s-display-engine
+> 
+>    - allwinner,pipelines: list of phandle to the display engine
+> --
+> 2.13.0
+> 
+> --
+> You received this message because you are subscribed to the Google Groups
+> "linux-sunxi" group. To unsubscribe from this group and stop receiving
+> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
