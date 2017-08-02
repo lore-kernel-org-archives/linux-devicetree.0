@@ -1,111 +1,80 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] arm64: dts: juno: replace underscores with hyphen in device node names
-Date: Wed,  2 Aug 2017 16:24:07 +0100
-Message-ID: <1501687447-28075-1-git-send-email-sudeep.holla@arm.com>
+From: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mtd: add new compatible strings for mtk nor
+ controller
+Date: Wed, 2 Aug 2017 17:31:01 +0200
+Message-ID: <535cc2d5-7bc9-2cb7-42cf-9d7058e64226@wedev4u.fr>
+References: <1500948617-19627-1-git-send-email-guochun.mao@mediatek.com>
+ <1500948617-19627-2-git-send-email-guochun.mao@mediatek.com>
+ <03016ea3-51ad-0b2d-e824-0a20913bd7c1@gmail.com>
+ <20170802103637.16cd6548@bbrezillon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170802103637.16cd6548@bbrezillon>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Since underscores('_') are not allowed in the device tree nodes names,
-replace all of them with hyphen('-') in device node names. Note that
-underscores are however allowed in labels.
+Hi Guochun,
 
-Reported-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm64/boot/dts/arm/foundation-v8.dtsi       |  2 +-
- arch/arm64/boot/dts/arm/juno-base.dtsi           | 12 ++++++------
- arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
+Le 02/08/2017 à 10:36, Boris Brezillon a écrit :
+> Hi Matthias,
+> 
+> On Tue, 1 Aug 2017 14:33:22 +0200
+> Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+>> On 07/25/2017 04:10 AM, Guochun Mao wrote:
+>>> Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
+>>> for nor flash node's compatible strings.
+>>>
+>>> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/mtd/mtk-quadspi.txt        |    2 ++
+>>>   1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+>>> index 5ded66a..9845ff4 100644
+>>> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+>>> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+>>> @@ -3,6 +3,8 @@
+>>>   Required properties:
+>>>   - compatible: 	  The possible values are:
+>>>   		  "mediatek,mt2701-nor"
+>>> +		  "mediatek,mt2712-nor"
+>>> +		  "mediatek,mt7622-nor"
+>>>   		  "mediatek,mt7623-nor"
+>>>   		  "mediatek,mt8173-nor"
+>>>   		  For mt8173, compatible should be "mediatek,mt8173-nor".
+>>>
 
-diff --git a/arch/arm64/boot/dts/arm/foundation-v8.dtsi b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-index 7cfa8e414e7f..8ecdd4331980 100644
---- a/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-+++ b/arch/arm64/boot/dts/arm/foundation-v8.dtsi
-@@ -226,7 +226,7 @@
- 				clock-names = "uartclk", "apb_pclk";
- 			};
- 
--			virtio_block@0130000 {
-+			virtio-block@0130000 {
- 				compatible = "virtio,mmio";
- 				reg = <0x130000 0x200>;
- 				interrupts = <42>;
-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-index 56f7ac20ae5e..fbafe62d6b22 100644
---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-@@ -201,7 +201,7 @@
- 		};
- 	};
- 
--	cpu_debug0: cpu_debug@22010000 {
-+	cpu_debug0: cpu-debug@22010000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x22010000 0x0 0x1000>;
- 
-@@ -260,7 +260,7 @@
- 		};
- 	};
- 
--	cpu_debug1: cpu_debug@22110000 {
-+	cpu_debug1: cpu-debug@22110000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x22110000 0x0 0x1000>;
- 
-@@ -283,7 +283,7 @@
- 		};
- 	};
- 
--	cpu_debug2: cpu_debug@23010000 {
-+	cpu_debug2: cpu-debug@23010000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23010000 0x0 0x1000>;
- 
-@@ -356,7 +356,7 @@
- 		};
- 	};
- 
--	cpu_debug3: cpu_debug@23110000 {
-+	cpu_debug3: cpu-debug@23110000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23110000 0x0 0x1000>;
- 
-@@ -379,7 +379,7 @@
- 		};
- 	};
- 
--	cpu_debug4: cpu_debug@23210000 {
-+	cpu_debug4: cpu-debug@23210000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23210000 0x0 0x1000>;
- 
-@@ -402,7 +402,7 @@
- 		};
- 	};
- 
--	cpu_debug5: cpu_debug@23310000 {
-+	cpu_debug5: cpu-debug@23310000 {
- 		compatible = "arm,coresight-cpu-debug", "arm,primecell";
- 		reg = <0x0 0x23310000 0x0 0x1000>;
- 
-diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-index 161ac98418a3..528875c75598 100644
---- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-+++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard.dtsi
-@@ -219,7 +219,7 @@
- 				};
- 			};
- 
--			virtio_block@0130000 {
-+			virtio-block@0130000 {
- 				compatible = "virtio,mmio";
- 				reg = <0x130000 0x200>;
- 				interrupts = <42>;
--- 
-2.7.4
+There should be another patch to update the mtk_nor_of_ids[] array in
+the mtk-quadspi.c driver, shouldn't it?
+
+Currently, I only see the "mediatek,mt8173-nor" compatible string at the
+driver side. The driver and its documentation should be aligned and both
+patches should be applied at the same time.
+
+Best regards,
+
+Cyrille
+
+>>
+>> Boris, will you take this through your tree, or do you prefer that I take it?
+> 
+> I'm not the spi-nor maintainer, you should ask Cyrille or Marek.
+> 
+> Regards,
+> 
+> Boris
+> 
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
