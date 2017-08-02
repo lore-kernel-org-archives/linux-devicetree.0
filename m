@@ -1,56 +1,40 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v5 0/2] ZII RAVE platform driver
-Date: Wed, 2 Aug 2017 16:03:34 -0700
-Message-ID: <20170802230334.GA23728@kroah.com>
-References: <20170728142704.11156-1-andrew.smirnov@gmail.com>
- <20170728233054.GB30604@kroah.com>
- <CAHQ1cqFxgK-j3AtKD186L+M8SFWS02cv2fVSrJHToMPtr41hAw@mail.gmail.com>
- <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: [PATCH 0/7] iio: srf08: add support for similar devices and
+ triggered buffers
+Date: Thu, 3 Aug 2017 01:22:59 +0200
+Message-ID: <20170802232259.GA15210@arbeit>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHQ1cqEjA39DXhpBR0JUpEiC1P_7aaku3P823Wh2En6KARF3aA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, Chris Healy <cphealy@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Lee Jones <lee.jones@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 01:31:51PM -0700, Andrey Smirnov wrote:
-> On Fri, Jul 28, 2017 at 5:07 PM, Andrey Smirnov
-> <andrew.smirnov@gmail.com> wrote:
-> > On Fri, Jul 28, 2017 at 4:30 PM, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> >> On Fri, Jul 28, 2017 at 07:27:02AM -0700, Andrey Smirnov wrote:
-> >>> Greg,
-> >>>
-> >>> I am not sure if you are the right person to send these to, if you are
-> >>> not, please let me know who would be the appropriate recepient and sorry for the noise.
-> >>
-> >> Why not the platform driver maintainer(s)?  Doesn't
-> >> scripts/get_maintainer.pl give you an idea for who to send them to?
-> >
-> > Unfortunately I wasn't able to find anyone in MAINTAINERS and running
-> > scripts/get_maintainer.pl on the patch returns only:
-> >
-> > scripts/get_maintainer.pl
-> > v5-0001-platform-Add-driver-for-RAVE-Supervisory-Processo.patch
-> > Andrey Smirnov <andrew.smirnov@gmail.com>
-> > (commit_signer:1/1=100%,authored:1/1=100%,added_lines:2/2=100%,added_lines:1/1=100%,added_lines:26/26=100%,added_lines:1127/1127=100%,added_lines:54/54=100%)
-> > Andy Shevchenko <andy.shevchenko@gmail.com> (commit_signer:1/1=100%)
-> > linux-kernel@vger.kernel.org (open list)
-> >
-> > hence me reaching out to you.
-> 
-> Greg, did you have any chance to consider this? I have a v6 with a fix
-> for build break reported by kbuild test robot, and I want to avoid
-> spamming the mailing list too much and send it to an appropriate
-> person.
+This patch series adds support for the ultrasonic devices srf02 and srf10.
 
-$ mdfrm -c ~/mail/todo/
-944 messages in /home/gregkh/mail/todo/
+Triggered buffer support is added
 
-Please be patient if you are waiting for a review from me, my queue is
-kind of big...
+Andreas Klinger (7):
+  iio: srf08: add device tree binding for srf02 and srf10
+  iio: srf08: add sensor type srf10
+  iio: srf08: add triggered buffer support
+  iio: srf08: add device tree table
+  iio: srf08: add support for srf02 in i2c mode
+  iio: srf08: add buffered to device mode
+  iio: srf08: change text in Kconfig
 
-greg k-h
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   2 +
+ drivers/iio/proximity/Kconfig                      |  12 +-
+ drivers/iio/proximity/srf08.c                      | 163 +++++++++++++++++----
+ 3 files changed, 145 insertions(+), 32 deletions(-)
+
+-- 
+2.1.4
+
+
+-- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
