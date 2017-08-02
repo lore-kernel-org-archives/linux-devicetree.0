@@ -1,84 +1,64 @@
-From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 2/6] clk: sunxi-ng: Add sun4i/sun7i CCU driver
-Date: Wed, 2 Aug 2017 17:05:04 +1000
-Message-ID: <CANwerB2En3q6XkUDwMo1CpCraCzpNi42WQYuAFb3yACT2j1FYw@mail.gmail.com>
-References: <cover.ba2aaaa405a7ec685034e34926b8855fd6c9ab86.1500043741.git-series.plaes@plaes.org>
- <f03e50040dc2d3dc3edd6be071510feeb953161d.1500043741.git-series.plaes@plaes.org>
-Reply-To: net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCVMZKEXYEFBBIPTQXGAKGQE5WKXSSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <f03e50040dc2d3dc3edd6be071510feeb953161d.1500043741.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH v2 0/4] pmbus: Expand fan support and add MAX31785 driver
+Date: Wed,  2 Aug 2017 16:45:37 +0930
+Message-ID: <20170802071541.3121-1-andrew@aj.id.au>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux@roeck-us.net, linux-hwmon@vger.kernel.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, jdelvare@suse.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, joel@jms.id.au, mspinler@linux.vnet.ibm.com, msbarth@linux.vnet.ibm.com, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Priit,
+Hello,
 
-On 15 July 2017 at 00:49, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
-> Introduce a clock controller driver for sun4i A10 and sun7i A20
-> series SoCs.
->
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> ---
->  drivers/clk/sunxi-ng/Kconfig              |   13 +-
->  drivers/clk/sunxi-ng/Makefile             |    1 +-
->  drivers/clk/sunxi-ng/ccu-sun4i-a10.c      | 1454 ++++++++++++++++++++++-
->  drivers/clk/sunxi-ng/ccu-sun4i-a10.h      |   61 +-
->  include/dt-bindings/clock/sun4i-a10-ccu.h |  200 +++-
->  include/dt-bindings/clock/sun7i-a20-ccu.h |   53 +-
->  include/dt-bindings/reset/sun4i-a10-ccu.h |   69 +-
->  7 files changed, 1851 insertions(+)
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.c
->  create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.h
->  create mode 100644 include/dt-bindings/clock/sun4i-a10-ccu.h
->  create mode 100644 include/dt-bindings/clock/sun7i-a20-ccu.h
->  create mode 100644 include/dt-bindings/reset/sun4i-a10-ccu.h
+v1[1] spent some time in the OpenBMC kernel tree and it shook out a few issues:
 
-<snip>
+1. The machines I was testing against had pre-prammed the installed-bit in
+   FAN_CONFIG_1_2
+2. There appears to be a hardware issue with some back-to-back writes to the
+   MAX31785
 
-> diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
-> new file mode 100644
-> index 0000000..09e97d7
-> --- /dev/null
-> +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+Point 1. is a policy issue so we should have the ability to specify behaviour
+in the devicetree. As such the bindings documentation has been updated to suit.
 
-<snip>
+Point 2, well, it's a little ugly. We're in contact with Maxim to better
+understand the nature of the issue. Patch 4 introduces a work-around. I've kept
+this separate from the introduction of the driver so it's implementation and
+the demonstration of new pmbus core features isn't obscured. The work-around
+has proved reliable so-far, across a number of machines.
 
-> +static void __init sun4i_ccu_init(struct device_node *node,
-> +                                 const struct sunxi_ccu_desc *desc)
-> +{
-> +       void __iomem *reg;
-> +       u32 val;
-> +
-> +       reg = of_io_request_and_map(node, 0, of_node_full_name(node));
-> +       if (IS_ERR(reg)) {
-> +               pr_err("%s: Could not map the clock registers\n",
-> +                      of_node_full_name(node));
-> +               return;
-> +       }
-> +
-> +       /* Force the PLL-Audio-1x divider to 4 */
-> +       val = readl(reg + SUN4I_PLL_AUDIO_REG);
+[1] https://lkml.org/lkml/2017/7/27/116
 
-> +       val &= ~GENMASK(19, 16);
-> +       writel(val | (3 << 16), reg + SUN4I_PLL_AUDIO_REG);
+Changes from v1 to v2:
 
-This doesn't work for me on A20 (440 Hz tone outputs at 880 Hz tone)
-and I need to use the following instead:
-       val &= ~GENMASK(29, 26);
-       writel(val | (4 << 26), reg + SUN4I_PLL_AUDIO_REG);
+* Add the use-stored-presence devicetree property describing the hardware as
+  canonical in terms of fan presence.
+* Small optimsation in pmbus_update_fans(): Don't write FAN_CONFIG_x_y unless
+  the new value is different to the current value
+* Update the MAX31785 driver to consume use-stored-presence from the devicetree
+* Add the back-to-back write work-around
 
-Toggling bits 16-19 doesn't seem to have any effect on the audio for me.
+Changes between RFC v2 to (non-RFC) v1
 
-Thanks.
+* Clean up issues identified in comments on the pmbus core changes 
+* Define and implement bindings for the MAX31785
+* Clean up issues identified in comments on the max31785 driver
 
-Regards,
-Jonathan
+Andrew Jeffery (4):
+  dt-bindings: hwmon: pmbus: Add Maxim MAX31785 documentation
+  hwmon: pmbus: Add fan control support
+  pmbus: Add driver for Maxim MAX31785 Intelligent Fan Controller
+  pmbus: max31785: Work around back-to-back writes with FAN_CONFIG_1_2
+
+ .../devicetree/bindings/hwmon/pmbus/max31785.txt   | 126 ++++
+ drivers/hwmon/pmbus/Kconfig                        |  10 +
+ drivers/hwmon/pmbus/Makefile                       |   1 +
+ drivers/hwmon/pmbus/max31785.c                     | 762 +++++++++++++++++++++
+ drivers/hwmon/pmbus/pmbus.h                        |  29 +
+ drivers/hwmon/pmbus/pmbus_core.c                   | 224 +++++-
+ 6 files changed, 1137 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/pmbus/max31785.txt
+ create mode 100644 drivers/hwmon/pmbus/max31785.c
+
+-- 
+2.11.0
+
