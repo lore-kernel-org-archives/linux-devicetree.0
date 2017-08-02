@@ -1,16 +1,16 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 0/3] mailbox: arm: introduce smc triggered mailbox
-Date: Wed, 2 Aug 2017 17:54:51 +0100
-Message-ID: <e17ef686-b222-98d9-3cd1-c4632caccc59@arm.com>
-References: <1500852206-28771-1-git-send-email-andre.przywara@arm.com>
- <ffabbe33-5edd-4642-6038-5b48c87ad372@suse.de>
- <CABb+yY04O+XQ5Dy=dEBYTcHEUwES_sFi1_3409qnUgV0r1y_bQ@mail.gmail.com>
+From: Lokesh Vutla <lokeshvutla@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: ti, edma: Add 66AK2G specific information
+Date: Wed, 2 Aug 2017 22:33:15 +0530
+Message-ID: <f1d0ec82-6b93-9eff-9a7f-08994ffebcb4@ti.com>
+References: <20170801044119.16201-1-lokeshvutla@ti.com>
+ <20170801044119.16201-2-lokeshvutla@ti.com>
+ <31fe2206-675b-5425-412f-0033017f6511@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABb+yY04O+XQ5Dy=dEBYTcHEUwES_sFi1_3409qnUgV0r1y_bQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <31fe2206-675b-5425-412f-0033017f6511@ti.com>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,65 +20,190 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>, Alexander Graf <agraf@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Devicetree List <devicetree@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <michal.simek@xilinx.com>, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Sudeep Holla <sudeep.holla@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-(sorry for SCPI/SCMI discussion in this thread)
 
-On 01/08/17 16:50, Jassi Brar wrote:
-> On Tue, Aug 1, 2017 at 4:20 PM, Alexander Graf <agraf@suse.de> wrote:
->> Hi Andre,
+
+On 8/1/2017 6:20 PM, Peter Ujfalusi wrote:
+> =
+
+> =
+
+> On 2017-08-01 07:41, Lokesh Vutla wrote:
+>> Update ti,edma binding documentation to reflect 66AK2G specific
+>> properties.
 >>
->> On 24.07.17 01:23, Andre Przywara wrote:
->>>
->>> This is a reworked version of my previous post. It addresses Jassi's
->>> comments on the driver and also tries to cover Rob's and Mark's comments
->>> on the binding documentation.
->>> I dropped the more example-like DT changes from v1, as they are actually
->>> not meant to be merged into the Linux tree, but instead are provided as
->>> part of some firmware actually implementing this functionality.
->>>
->>> Please let me know what you think.
+>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/dma/ti-edma.txt | 95
+>> +++++++++++++++++++++--
+>>  1 file changed, 90 insertions(+), 5 deletions(-)
 >>
+>> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> index 18090e7226b4..05fe2931d025 100644
+>> --- a/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
+>> @@ -9,7 +9,12 @@ execute the actual DMA tansfer.
+>>  eDMA3 Channel Controller
 >>
->> Could you please quickly explain what it would take to provide SCMI on top
->> of this instead of SCPI?
+>>  Required properties:
+>> -- compatible:    "ti,edma3-tpcc" for the channel controller(s)
+>> +--------------------
+>> +- compatible:    Should be:
+>> +        - "ti,edma3-tpcc" for the channel controller(s) on OMAP,
+>> +          AM33xx and AM43xx SoCs.
+>> +        - "ti,k2g-edma3-tpcc", "ti,edma3-tpcc" for the
+>> +          channel controller(s) on 66AK2G.
+>>  - #dma-cells:    Should be set to <2>. The first number is the DMA
+>> request
+>>          number and the second is the TC the channel is serviced on.
+>>  - reg:        Memory map of eDMA CC
+>> @@ -19,8 +24,19 @@ Required properties:
+>>  - ti,tptcs:    List of TPTCs associated with the eDMA in the
+>> following form:
+>>          <&tptc_phandle TC_priority_number>. The highest priority is 0.
 >>
->> https://lkml.org/lkml/2017/6/7/624
+>> +SoC-specific Required properties:
+>> +--------------------------------
+>> +The following are mandatory properties for OMAP, AM33xx and AM43xx
+>> SoCs only:
+>> +- ti,hwmods:    Name of the hwmods associated to the eDMA CC.
+>> +
+>> +The following are mandatory properties for 66AK2G SoCs only:
+>> +- power-domains:Should contain a phandle to a PM domain provider node
+>> +        and an args specifier containing the device id
+>> +        value. This property is as per the binding,
+>> +        Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>> +
+>>  Optional properties:
+>> -- ti,hwmods:    Name of the hwmods associated to the eDMA CC
+>> +-------------------
+>>  - ti,edma-memcpy-channels: List of channels allocated to be used for
+>> memcpy, iow
+>>          these channels will be SW triggered channels. See example.
+>>  - ti,edma-reserved-slot-ranges: PaRAM slot ranges which should not be
+>> used by
+>> @@ -31,17 +47,34 @@ Optional properties:
+>>  eDMA3 Transfer Controller
 >>
-> The SCMI (and SCPI) code is broken, that is, unless the firmware/SM is
-> trained to ignore the random value (pointer to a structure) passed via
-> R1. Which may be possible to do, but is surely a sign of poor
-> implementation. And may not be possible if some protocol other than
-> SCMI runs in parallel.
-> 
+>>  Required properties:
+>> -- compatible:    "ti,edma3-tptc" for the transfer controller(s)
+>> +--------------------
+>> +- compatible:    Should be:
+>> +        - "ti,edma3-tptc" for the transfer controller(s) on OMAP,
+>> +          AM33xx and AM43xx SoCs.
+>> +        - "ti,k2g-edma3-tptc", "ti,edma3-tptc" for the
+>> +          transfer controller(s) on 66AK2G.
+>>  - reg:        Memory map of eDMA TC
+>>  - interrupts:    Interrupt number for TCerrint.
+>>
+>> +SoC-specific Required properties:
+>> +--------------------------------
+>> +The following are mandatory properties for OMAP, AM33xx and AM43xx
+>> SoCs only:
+>> +- ti,hwmods:    Name of the hwmods associated to the eDMA TC.
+>> +
+>> +The following are mandatory properties for 66AK2G SoCs only:
+>> +- power-domains:Should contain a phandle to a PM domain provider node
+>> +        and an args specifier containing the device id
+>> +        value. This property is as per the binding,
+>> +        Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>> +
+>>  Optional properties:
+>> -- ti,hwmods:    Name of the hwmods associated to the given eDMA TC
+>> +-------------------
+>>  - interrupt-names: "edma3_tcerrint"
+>>
+>>  -----------------------------------------------------------------------=
+-------
+>>
+>> -Example:
+>> +Examples:
+> =
 
-Since SCPI and SCMI are based on doorbell designs like ACPI PCC, they
-can't send any data as all the data are part of shared memory.
+> Do we really need to expand the examples to have identical set, but with
+> power-domains?
 
-What data needs to be sent from SCPI/SCMI as part of mbox_send_message
-in your opinion ? I can't think of any generic way to form this data.
+IIRC, there was a feedback to add an example(not able to fine that
+specific email). If you strongly disagree with this, I can drop it and
+resend it.
 
-It's not possible to generalize that and SCPI/SCMI's transport is
-specifically designed in that way to avoid any kind of dependency
-on the mailbox hardware so that the protocol can be generic exactly like
-ACPI PCC.
+Thanks and regards,
+Lokesh
 
-I understand your concern on how existing mailbox controllers work with
-it. They can't as they stand today as they expect some specific data
-based on the hardware or the protocol they support on it.
+> =
 
-One option to deal with this is to have a generic DT based doorbell kind
-of controller driver but I am not sure if we can define register level
-bindings like ACPI PCC.
+>>
+>> +1.
+>>  edma: edma@49000000 {
+>>      compatible =3D "ti,edma3-tpcc";
+>>      ti,hwmods =3D "tpcc";
+>> @@ -109,6 +142,58 @@ mcasp0: mcasp@48038000 {
+>>      dma-names =3D "tx", "rx";
+>>  };
+>>
+>> +2.
+>> +edma1: edma@02728000 {
+>> +    compatible =3D "ti,k2g-edma3-tpcc", "ti,edma3-tpcc";
+>> +    reg =3D    <0x02728000 0x8000>;
+>> +    reg-names =3D "edma3_cc";
+>> +    interrupts =3D <GIC_SPI 208 IRQ_TYPE_EDGE_RISING>,
+>> +            <GIC_SPI 219 IRQ_TYPE_EDGE_RISING>,
+>> +            <GIC_SPI 220 IRQ_TYPE_EDGE_RISING>;
+>> +    interrupt-names =3D "edma3_ccint", "emda3_mperr",
+>> +              "edma3_ccerrint";
+>> +    dma-requests =3D <64>;
+>> +    #dma-cells =3D <2>;
+>> +
+>> +    ti,tptcs =3D <&edma1_tptc0 7>, <&edma1_tptc1 0>;
+>> +
+>> +    /*
+>> +     * memcpy is disabled, can be enabled with:
+>> +     * ti,edma-memcpy-channels =3D <12 13 14 15>;
+>> +     * for example.
+>> +     */
+>> +
+>> +    power-domains =3D <&k2g_pds 0x4f>;
+>> +};
+>> +
+>> +edma1_tptc0: tptc@027b0000 {
+>> +    compatible =3D "ti,k2g-edma3-tptc", "ti,edma3-tptc";
+>> +    reg =3D    <0x027b0000 0x400>;
+>> +    power-domains =3D <&k2g_pds 0x4f>;
+>> +};
+>> +
+>> +edma1_tptc1: tptc@027b8000 {
+>> +    compatible =3D "ti, k2g-edma3-tptc", "ti,edma3-tptc";
+>> +    reg =3D    <0x027b8000 0x400>;
+>> +    power-domains =3D <&k2g_pds 0x4f>;
+>> +};
+>> +
+>> +mmc0: mmc@23000000 {
+>> +    compatible =3D "ti,k2g-hsmmc", "ti,omap4-hsmmc";
+>> +    reg =3D <0x23000000 0x400>;
+>> +    interrupts =3D <GIC_SPI 96 IRQ_TYPE_EDGE_RISING>;
+>> +    dmas =3D <&edma1 24 0>, <&edma1 25 0>;
+>> +    dma-names =3D "tx", "rx";
+>> +    bus-width =3D <4>;
+>> +    ti,needs-special-reset;
+>> +    no-1-8-v;
+>> +    max-frequency =3D <96000000>;
+>> +    power-domains =3D <&k2g_pds 0xb>;
+>> +    clocks =3D <&k2g_clks 0xb 1>, <&k2g_clks 0xb 2>;
+>> +    clock-names =3D "fck", "mmchsdb_fck";
+>> +    status =3D "disabled";
+>> +};
+>> +
+>>  -----------------------------------------------------------------------=
+-------
+>>
+>>  DEPRECATED binding, new DTS files must use the
+>> ti,edma3-tpcc/ti,edma3-tptc
+>>  binding.
+>>
+> =
 
-Or we teach them to ignore the data if it's not present. I don't like
-the idea of adding shim layer for each of the controller as each one
-expect different format and more over SCPI/SCMI doesn't even require it
-to support SCMI on those mailbox controllers. That may end up with 2x
-drivers(one actual driver and and another shim layer for it)
-
--- 
-Regards,
-Sudeep
+> - P=E9ter
