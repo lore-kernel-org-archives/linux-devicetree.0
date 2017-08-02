@@ -1,37 +1,78 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Specify USB ports for each controller
-Date: Tue, 1 Aug 2017 18:08:50 -0700
-Message-ID: <7d0b069e-dbde-b601-e51e-ebef98f79847@gmail.com>
-References: <20170627173527.16682-1-zajec5@gmail.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 03/10] arm: dts: mt7623: add mt6323.dtsi file
+Date: Wed, 2 Aug 2017 09:47:57 +0800
+Message-ID: <1501638477.32089.20.camel@mtksdaap41>
+References: <cover.1501486190.git.sean.wang@mediatek.com>
+         <f92864cf04cc3ddde20f25d402d8e5d3d915b2a8.1501486190.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627173527.16682-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <f92864cf04cc3ddde20f25d402d8e5d3d915b2a8.1501486190.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2017 10:35 AM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> Northstar has 3 controllers: OHCI and EHCI (each with 2 ports) and XHCI
-> (with just 1 port). Describe them in the DT. In future this will allow
-> to reference them as trigger sources.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Mon, 2017-07-31 at 15:36 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+<...>
+> diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623-evb.dts
+> index b60b41c..0686ad7 100644
+> --- a/arch/arm/boot/dts/mt7623-evb.dts
+> +++ b/arch/arm/boot/dts/mt7623-evb.dts
+> @@ -14,6 +14,7 @@
+>  
+>  /dts-v1/;
+>  #include "mt7623.dtsi"
+> +#include "mt6323.dtsi"
+>  
+>  / {
+>  	model = "MediaTek MT7623 evaluation board";
+> @@ -23,6 +24,24 @@
+>  		stdout-path = &uart2;
+>  	};
+>  
+> +	cpus {
+> +		cpu0 {
+> +			proc-supply = <&mt6323_vproc_reg>;
+> +		};
+> +
+> +		cpu1 {
+> +			proc-supply = <&mt6323_vproc_reg>;
+> +		};
+> +
+> +		cpu2 {
+> +			proc-supply = <&mt6323_vproc_reg>;
+> +		};
+> +
+> +		cpu3 {
+> +			proc-supply = <&mt6323_vproc_reg>;
+> +		};
+> +	};
+> +
+>  	memory {
+>  		reg = <0 0x80000000 0 0x40000000>;
+>  	};
+> @@ -31,3 +50,13 @@
+>  &uart2 {
+>  	status = "okay";
+>  };
+> +
+> +&mmc0 {
+> +	vmmc-supply = <&mt6323_vemc3v3_reg>;
+> +	vqmmc-supply = <&mt6323_vio18_reg>;
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&mt6323_vmch_reg>;
+> +	vqmmc-supply = <&mt6323_vmc_reg>;
+> +};
 
-Applied, thanks! There must have been some kind of problem with your
-email address as it appeared to have been banned from
-bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org (now fixed) which was not making
-our internal patchwork pick up your patch.
+Please keep nodes sorted.
 
-Let me know if there are other submissions from you that I should apply.
-Thanks!
--- 
-Florian
+Joe.C
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
