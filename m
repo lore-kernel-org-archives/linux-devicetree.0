@@ -1,234 +1,62 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-Subject: Re: [linux-sunxi] [PATCH 07/13] ARM: sun8i: h3: add display engine pipeline barebone
-Date: Wed, 02 Aug 2017 06:47:31 +0200
-Message-ID: <1773537.vAqre0jhCE@jernej-laptop>
-References: <20170801131304.7741-1-icenowy@aosc.io> <20170801131304.7741-8-icenowy@aosc.io>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Wed, 2 Aug 2017 10:25:22 +0530
+Message-ID: <20170802045522.GU3053@localhost>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
+ <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+ <20170731123157.GJ3053@localhost>
+ <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170801131304.7741-8-icenowy@aosc.io>
-Sender: linux-clk-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, icenowy@aosc.io
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Dan Williams <dan.j.williams@intel.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, Herbert Xu <herbert@gondor.apana.org.au>, Fabien DESSENNE <fabien.dessenne@st.com>, Amelie DELAUNAY <amelie.delaunay@st.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Icenowy,
+On Tue, Aug 01, 2017 at 09:32:50AM +0000, Pierre Yves MORDRET wrote:
+> 
+> 
+> On 07/31/2017 02:31 PM, Vinod Koul wrote:
+> > On Wed, Jul 26, 2017 at 07:38:02AM +0000, Pierre Yves MORDRET wrote:
+> >>>>>> +
+> >>>>>> +#ifndef __DMA_STM32_DMAMUX_H
+> >>>>>> +#define __DMA_STM32_DMAMUX_H
+> >>>>>> +
+> >>>>>> +#if defined(CONFIG_STM32_DMAMUX)
+> >>>>>> +int stm32_dmamux_set_config(struct device *dev, void *route_data, u32 chan_id);
+> >>>>>
+> >>>>> Why do we need a custom API in this case?
+> >>>>>
+> >>>>
+> >>>> This API is called by DMA when a slave is requested by client. DMA can work
+> >>>> without DMAMUX this API has been put in place to configure DMAMUX whether client
+> >>>> is requesting a DMAMUX Channel instead of a DMA one.
+> >>>
+> >>> You mean the dmaengine driver right?
+> >>>
+> >>
+> >> Yes. The API is mainly called by "device_config" through out STM32 DMA Driver
+> >> when a router is in place for client.
+> >> Please refer to Patch 4/5 on this set.
+> > 
+> > Okay am thinking on why this can't be generic..? An optional router config
+> > callback?
+> > 
+> 
+> I would have liked to answer there is a callback within engine but unfortunately
+> I didn't figure out one when I did my router's development. I've looked once
+> more but again I can't find how to map chanID and request line without custom API.
 
-Dne torek, 01. avgust 2017 ob 15:12:58 CEST je Icenowy Zheng napisal(a):
-> As we have already the support for the DE2 on Allwinner H3, add the
-> display engine pipeline device tree nodes to its DTSI file.
-> 
-> The H5 pipeline has some differences and will be enabled later.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> ---
->  arch/arm/boot/dts/sun8i-h3.dtsi | 170
-> ++++++++++++++++++++++++++++++++++++++++ 1 file changed, 170 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi
-> b/arch/arm/boot/dts/sun8i-h3.dtsi index b36f9f423c39..75ad7b65a7fc 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -41,6 +41,8 @@
->   */
-> 
->  #include "sunxi-h3-h5.dtsi"
-> +#include <dt-bindings/clock/sun8i-de2.h>
-> +#include <dt-bindings/reset/sun8i-de2.h>
-> 
->  / {
->  	cpus {
-> @@ -72,6 +74,174 @@
->  		};
->  	};
-> 
-> +	de: display-engine {
-> +		compatible = "allwinner,sun8i-h3-display-engine";
-> +		allwinner,pipelines = <&mixer0>,
-> +				      <&mixer1>;
-> +		status = "disabled";
-> +	};
-> +
-> +	soc {
-> +		display_clocks: clock@1000000 {
-> +			compatible = "allwinner,sun8i-a83t-de2-clk";
-> +			reg = <0x01000000 0x100000>;
-> +			clocks = <&ccu CLK_BUS_DE>,
-> +				 <&ccu CLK_DE>;
-> +			clock-names = "bus",
-> +				      "mod";
-> +			resets = <&ccu RST_BUS_DE>;
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			assigned-clocks = <&ccu CLK_DE>;
-> +			assigned-clock-parents = <&ccu CLK_PLL_DE>;
-> +			assigned-clock-rates = <432000000>;
-> +		};
+Yes there is no callback for routers but we can add a generic callback
+here to be used. I added Peter for his comments, isn't that something they
+need too?
 
-I believe Maxime ask you to use clk_set_rate() in the past:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/512909.html
-
-Regards,
-Jernej
-
-> +
-> +		mixer0: mixer@1100000 {
-> +			compatible = "allwinner,sun8i-h3-de2-mixer0";
-> +			reg = <0x01100000 0x100000>;
-> +			clocks = <&display_clocks CLK_BUS_MIXER0>,
-> +				 <&display_clocks CLK_MIXER0>;
-> +			clock-names = "bus",
-> +				      "mod";
-> +			resets = <&display_clocks RST_MIXER0>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				mixer0_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +
-> +					mixer0_out_tcon0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&tcon0_in_mixer0>;
-> +					};
-> +
-> +					mixer0_out_tcon1: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&tcon1_in_mixer0>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		mixer1: mixer@1200000 {
-> +			compatible = "allwinner,sun8i-h3-de2-mixer1";
-> +			reg = <0x01200000 0x100000>;
-> +			clocks = <&display_clocks CLK_BUS_MIXER1>,
-> +				 <&display_clocks CLK_MIXER1>;
-> +			clock-names = "bus",
-> +				      "mod";
-> +			resets = <&display_clocks RST_WB>;
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				mixer1_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +
-> +					mixer1_out_tcon0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&tcon0_in_mixer1>;
-> +					};
-> +
-> +					mixer1_out_tcon1: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&tcon1_in_mixer1>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		tcon0: lcd-controller@1c0c000 {
-> +			compatible = "allwinner,sun8i-h3-tcon";
-> +			reg = <0x01c0c000 0x1000>;
-> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_TCON0>,
-> +				 <&ccu CLK_TCON0>;
-> +			clock-names = "ahb",
-> +				      "tcon-ch1";
-> +			resets = <&ccu RST_BUS_TCON0>;
-> +			reset-names = "lcd";
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				tcon0_in: port@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <0>;
-> +
-> +					tcon0_in_mixer0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&mixer0_out_tcon0>;
-> +					};
-> +
-> +					tcon0_in_mixer1: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&mixer1_out_tcon0>;
-> +					};
-> +				};
-> +
-> +				tcon0_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +				};
-> +			};
-> +		};
-> +
-> +		tcon1: lcd-controller@1c0d000 {
-> +			compatible = "allwinner,sun8i-h3-tcon";
-> +			reg = <0x01c0d000 0x1000>;
-> +			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&ccu CLK_BUS_TCON1>,
-> +				 <&ccu CLK_TVE>;
-> +			clock-names = "ahb",
-> +				      "tcon-ch1";
-> +			resets = <&ccu RST_BUS_TCON1>;
-> +			reset-names = "lcd";
-> +			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				tcon1_in: port@0 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <0>;
-> +
-> +					tcon1_in_mixer0: endpoint@0 {
-> +						reg = <0>;
-> +						remote-endpoint = <&mixer0_out_tcon1>;
-> +					};
-> +
-> +					tcon1_in_mixer1: endpoint@1 {
-> +						reg = <1>;
-> +						remote-endpoint = <&mixer1_out_tcon1>;
-> +					};
-> +				};
-> +
-> +				tcon1_out: port@1 {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +					reg = <1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | 
-IRQ_TYPE_LEVEL_LOW)>,
-> --
-> 2.13.0
-> 
-> --
-> You received this message because you are subscribed to the Google Groups
-> "linux-sunxi" group. To unsubscribe from this group and stop receiving
-> emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> For more options, visit https://groups.google.com/d/optout.
-
-
+-- 
+~Vinod
