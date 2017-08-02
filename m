@@ -1,50 +1,78 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/7] K2G: Add QSPI support
-Date: Wed, 2 Aug 2017 10:19:49 -0700
-Message-ID: <ff8e0f4f-eb26-85dc-b5b2-8f6ddd39145b@oracle.com>
-References: <20170801045434.8733-1-vigneshr@ti.com>
- <29c0e8ec-1f9f-cfc9-2d0e-e4d31890b699@oracle.com>
- <00b2b8b8-3f3d-d563-bebc-f37f67362aa0@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <00b2b8b8-3f3d-d563-bebc-f37f67362aa0@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: Add bindings for DMIC codec driver" to the asoc tree
+Date: Wed, 02 Aug 2017 18:30:20 +0100
+Message-ID: <E1dcxTQ-0003pQ-53@debutante>
+References: <1500972494-10696-2-git-send-email-arnaud.pouliquen@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500972494-10696-2-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.orgbroonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-8/1/2017 10:52 PM, Vignesh R wrote:
-> Hi,
-> 
-> On Tuesday 01 August 2017 11:31 PM, Santosh Shilimkar wrote:
->> On 7/31/2017 9:54 PM, Vignesh R wrote:
->>> This series adds support for Cadence QSPI for 66AK2G SoC. The first
->>> three patches enhance the cadence-quadspi driver to support loopback
->>> clock and pm_runtime and tweaks for 66AK2G SoC. Remaining patches add
->>> DT nodes and enable the driver in defconfig.
->>>
->>> Tested on 66AK2G GP and ICE boards.
->>>
->>> Vignesh R (7):
->>>     mtd: spi-nor: cadence-quadspi: add a delay in write sequence
->>>     mtd: spi-nor: cadence-quadspi: Add support to enable loopback clock
->>>       circuit
->>>     mtd: spi-nor: cadence-quadspi: Add runtime PM support
->>>     ARM: dts: keystone-k2g: Add QSPI DT entry
->>>     ARM: dts: keystone-k2g-evm: Add QSPI node
->>>     ARM: dts: keystone-k2g-ice: Add QSPI node
->>>     ARM: configs: keystone: Enable Cadence QSPI driver
->>>
->> Please separate dts and driver patches in its own series
->> while posting next time since they go throgh different
->> subsystem trees. Get your driver patch queed
->> first before adding DTS and enabling config option.
-> 
-> Okay. I thought it would be easy for you to know when driver patches are
-> queued, if DTS changes are part of the same series. Will post DT nodes
-> separately from next time or if I need to do a v2 of this series.
-> 
-Thanks !!
+The patch
+
+   ASoC: Add bindings for DMIC codec driver
+
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 5863e57c22b0e201a88679cd534f95f4338e7769 Mon Sep 17 00:00:00 2001
+From: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Date: Tue, 25 Jul 2017 10:48:13 +0200
+Subject: [PATCH] ASoC: Add bindings for DMIC codec driver
+
+This patch adds documentation of device tree bindings for audio DMIC codec.
+
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/dmic.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/dmic.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/dmic.txt b/Documentation/devicetree/bindings/sound/dmic.txt
+new file mode 100644
+index 000000000000..a0c58f2a162a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/dmic.txt
+@@ -0,0 +1,12 @@
++Device-Tree bindings for Digital microphone (DMIC) codec
++
++This device support generic PDM digital microphone.
++
++Required properties:
++	- compatible: should be "dmic-codec".
++
++Example node:
++
++	dmic_codec: dmic@0 {
++		compatible = "dmic-codec";
++	};
+-- 
+2.13.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
