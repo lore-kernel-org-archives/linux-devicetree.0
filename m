@@ -1,30 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v4 5/8] ARM: dts: TS-4600: add NBUS support
-Date: Wed, 2 Aug 2017 10:19:56 +0200
-Message-ID: <CACRpkdbYibgBPFQJGSX0YaewheXzqQfLQ_h7J=bQ_wZeKF+WWA@mail.gmail.com>
-References: <20170714200853.10362-1-sebastien.bourdelin@savoirfairelinux.com> <20170714200853.10362-6-sebastien.bourdelin@savoirfairelinux.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 4/8] bus: add driver for the Technologic Systems NBUS
+Date: Wed, 2 Aug 2017 10:20:54 +0200
+Message-ID: <CACRpkdazo22+xLkyjM5w9K-SmRSm4Hr1GfC5LN2s3M7wrYJ+RA@mail.gmail.com>
+References: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com> <20170714203218.14409-5-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170714200853.10362-6-sebastien.bourdelin@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUXWATCHDOG <linux-watchdog@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel <kernel@savoirfairelinux.com>, Rob Herring <robh@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Featherston <mark@embeddedarm.com>, kris@embeddedarm.com
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170714203218.14409-5-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LINUXWATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel <kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Featherston <mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org>, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 14, 2017 at 10:08 PM, Sebastien Bourdelin
-<sebastien.bourdelin@savoirfairelinux.com> wrote:
+On Fri, Jul 14, 2017 at 10:32 PM, Sebastien Bourdelin
+<sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org> wrote:
 
-> This commit enables the NBUS on the TS-4600, using the ts-nbus driver.
+> This driver implements a GPIOs bit-banged bus, called the NBUS by
+> Technologic Systems. It is used to communicate with the peripherals in
+> the FPGA on the TS-4600 SoM.
 >
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 > ---
-> Changes v3 -> v4:
->   - rebase on master
->   - fix vendor prefixes for dts properties (suggested by Rob Herring)
->   - v3 was acked by Linus Walleij
+> Changes v4 -> v5:
+>   - fix missing signed off
 
-I ACK this too.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
