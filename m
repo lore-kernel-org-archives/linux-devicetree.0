@@ -1,82 +1,47 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 01/25] mtd: nand: qcom: fix config error for BCH
-Date: Thu, 3 Aug 2017 20:47:26 +0200
-Message-ID: <20170803204726.74f75aaa@bbrezillon>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
-        <1500464893-11352-2-git-send-email-absahu@codeaurora.org>
-        <20170803175602.3e0a4c18@bbrezillon>
-        <a48aafe1d5d0623f2cc7cd5c29fc1410@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: phy-hisi-inno-usb2: add support for
+ hisi-inno-usb2 phy
+Date: Thu, 3 Aug 2017 13:54:28 -0500
+Message-ID: <20170803185428.a7h2k5u5ux6rebvc@rob-hp-laptop>
+References: <1501049163-18892-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1501049163-18892-2-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <a48aafe1d5d0623f2cc7cd5c29fc1410@codeaurora.org>
-Sender: stable-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, sricharan@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501049163-18892-2-git-send-email-xuejiancheng@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hermit.wangheming@hisilicon.com, project-aspen-dev@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 03 Aug 2017 23:22:37 +0530
-Abhishek Sahu <absahu@codeaurora.org> wrote:
-
-> On 2017-08-03 21:26, Boris Brezillon wrote:
-> > On Wed, 19 Jul 2017 17:17:49 +0530
-> > Abhishek Sahu <absahu@codeaurora.org> wrote:
-> >   
-> >> The configuration for BCH is not correct in the current driver.
-> >> The ECC_CFG_ECC_DISABLE bit defines whether to enable or disable the
-> >> BCH ECC in which
-> >> 
-> >> 	0x1 : BCH_DISABLED
-> >> 	0x0 : BCH_ENABLED
-> >> 
-> >> But currently host->bch_enabled is being assined to BCH_DISABLED.
-> >> 
-> >> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
-> >> Cc: stable@vger.kernel.org
-> >> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> >> ---
-> >>  drivers/mtd/nand/qcom_nandc.c | 4 ++--
-> >>  1 file changed, 2 insertions(+), 2 deletions(-)
-> >> 
-> >> diff --git a/drivers/mtd/nand/qcom_nandc.c 
-> >> b/drivers/mtd/nand/qcom_nandc.c
-> >> index 57d483a..bc0408c 100644
-> >> --- a/drivers/mtd/nand/qcom_nandc.c
-> >> +++ b/drivers/mtd/nand/qcom_nandc.c
-> >> @@ -1,5 +1,5 @@
-> >>  /*
-> >> - * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> >> + * Copyright (c) 2016-2017, The Linux Foundation. All rights 
-> >> reserved.  
-> > 
-> > Hm, this copyright update is not really related to the changes you're
-> > describing in the commit message. I'll drop this line from the commit
-> > (no need to resend it) and ask you to send a separate patch updating 
-> > the
-> > copyright. Is that ok?
-> >   
+On Wed, Jul 26, 2017 at 02:06:00PM +0800, Jiancheng Xue wrote:
+> Add support for hisi-inno-usb2 phy.
 > 
->   The idea was to change the copyright year since we are making
->   the changes in this file. If it requires separate patch, then I
->   will do the same.
-
-Yes, I'd prefer a separate patch.
-
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> ---
+>  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
 > 
->   Also I need to change 'assined' -> assigned in commit text.
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> new file mode 100644
+> index 0000000..417eeaa
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> @@ -0,0 +1,31 @@
+> +HiSilicon INNO USB2 PHY
+> +-----------------------
+> +Required properties:
+> +- compatible: Should be one of the following strings:
+> +		"hisilicon,inno-usb2-phy",
+> +		"hisilicon,hi3798cv200-usb2-phy",
+> +- #phy-cells: Shall be 0.
+> +- hisilicon,peripheral-syscon: Phandle of syscon used to control phy.
+> +- hisilicon,phycon-reg: Offset of the phy control register in the syscon.
 
-Yep, already fixed that one.
+Just make this a cell of hisilicon,peripheral-syscon: <&syscon 0x120>
 
-> I can
->   update the patch and fix this. I am planning to send the v3 patches
->   tomorrow which incorporates all the review comments.
+With that,
 
-Can you wait a bit. I already applied some of your patches [1] and would
-like to finish my review.
-
-Thanks,
-
-Boris
-
-[1]https://github.com/bbrezillon/linux-0day/commits/nand/next
+Acked-by: Rob Herring <robh@kernel.org>
