@@ -1,66 +1,286 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
- controller documentation
-Date: Thu, 3 Aug 2017 10:26:52 +0200
-Message-ID: <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
-References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
- <20170724065146.GA22330@spreadtrum.com>
- <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
- <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3] arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2
+Date: Thu, 3 Aug 2017 16:29:41 +0800
+Message-ID: <687af2dc98feffc678945f130c03ca020d9ca7b5.1501748754.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>, wsa@the-dreams.de, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, wsa+renesas@sang-engineering.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-03 09:29, Baolin Wang wrote:
-> Hi Wolfram,
-> 
-> On 27 July 2017 at 17:29, Baolin Wang <baolin.wang@linaro.org> wrote:
->> Hi Wolfram,
->>
->> On 24 July 2017 at 14:51, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
->>> Hi Wolfram,
->>>
->>> On 五,  7月 14, 2017 at 05:01:10下午 +0800, Baolin Wang wrote:
->>>> This patch adds the binding documentation for Spreadtrum I2C
->>>> controller device.
->>>>
->>>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
->>>> Acked-by: Rob Herring <robh@kernel.org>
->>>> ---
->>>> Changes since v3:
->>>>  - Add Ack from RobH.
->>>>
->>>> Changes since v2:
->>>>  - Change compatible strings to be SoC specific.
->>>>
->>>> Changes since v1:
->>>>  - No updates.
->>>> ---
->>>
->>> Could you apply this patchset if there are no other comments?
->>> It is a long time since the v4 was send out. Thanks.
->>
->> Ping?
-> 
-> Since this patchset has waited for a long time, could you pick up this
-> patchset into your branch? Thanks.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Please calm down. You first sent v4 4 weeks ago in the beginning of the
-merge window when everybody are supposedly looking at the integration of
-the work from the previous cycle. You have managed to send remainders
-four times in those few weeks.
+The bananapi-r2 board has an SD-card controller and built-in
+EMMC storage so enables those devices in the devicetree. Also
+cleanup nodes in alphabetical order in the patch.
 
-Four weeks is not a "long time", and it's not like you didn't get any
-feedback. Part of that feedback was that there was room for improvement.
-Have you looked into that? Or have you been busy sending pings? I'm sure
-Wolfram will pick the series in time for the next merge window if he's
-happy with it, there was that thing about room for improvement...
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/mt7623.dtsi                 | 73 ++++++++++++++-------------
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 73 ++++++++++++++++++++-------
+ 2 files changed, 94 insertions(+), 52 deletions(-)
 
-Cheers,
-Peter
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 2a877ed..ec8a074 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -91,6 +91,7 @@
+ 			cooling-max-level = <7>;
+ 			clock-frequency = <1300000000>;
+ 		};
++
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+@@ -98,6 +99,7 @@
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			clock-frequency = <1300000000>;
+ 		};
++
+ 		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+@@ -105,6 +107,7 @@
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			clock-frequency = <1300000000>;
+ 		};
++
+ 		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a7";
+@@ -172,10 +175,12 @@
+ 					trip = <&cpu_passive>;
+ 					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++
+ 				map1 {
+ 					trip = <&cpu_active>;
+ 					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ 				};
++
+ 				map2 {
+ 					trip = <&cpu_hot>;
+ 					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+@@ -481,6 +486,31 @@
+ 		nvmem-cell-names = "calibration-data";
+ 	};
+ 
++	nandc: nfi@1100d000 {
++		compatible = "mediatek,mt7623-nfc",
++			     "mediatek,mt2701-nfc";
++		reg = <0 0x1100d000 0 0x1000>;
++		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
++		clocks = <&pericfg CLK_PERI_NFI>,
++			 <&pericfg CLK_PERI_NFI_PAD>;
++		clock-names = "nfi_clk", "pad_clk";
++		status = "disabled";
++		ecc-engine = <&bch>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++	};
++
++	bch: ecc@1100e000 {
++		compatible = "mediatek,mt7623-ecc",
++			     "mediatek,mt2701-ecc";
++		reg = <0 0x1100e000 0 0x1000>;
++		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_NFI_ECC>;
++		clock-names = "nfiecc_clk";
++		status = "disabled";
++	};
++
+ 	spi1: spi@11016000 {
+ 		compatible = "mediatek,mt7623-spi",
+ 			     "mediatek,mt2701-spi";
+@@ -509,31 +539,6 @@
+ 		status = "disabled";
+ 	};
+ 
+-	nandc: nfi@1100d000 {
+-		compatible = "mediatek,mt7623-nfc",
+-			     "mediatek,mt2701-nfc";
+-		reg = <0 0x1100d000 0 0x1000>;
+-		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+-		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+-		clocks = <&pericfg CLK_PERI_NFI>,
+-			 <&pericfg CLK_PERI_NFI_PAD>;
+-		clock-names = "nfi_clk", "pad_clk";
+-		status = "disabled";
+-		ecc-engine = <&bch>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-	};
+-
+-	bch: ecc@1100e000 {
+-		compatible = "mediatek,mt7623-ecc",
+-			     "mediatek,mt2701-ecc";
+-		reg = <0 0x1100e000 0 0x1000>;
+-		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+-		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+-		clock-names = "nfiecc_clk";
+-		status = "disabled";
+-	};
+-
+ 	afe: audio-controller@11220000 {
+ 		compatible = "mediatek,mt7623-audio",
+ 			     "mediatek,mt2701-audio";
+@@ -655,6 +660,15 @@
+ 		status = "disabled";
+ 	};
+ 
++	hifsys: syscon@1a000000 {
++		compatible = "mediatek,mt7623-hifsys",
++			     "mediatek,mt2701-hifsys",
++			     "syscon";
++		reg = <0 0x1a000000 0 0x1000>;
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
+ 	usb1: usb@1a1c0000 {
+ 		compatible = "mediatek,mt7623-xhci",
+ 			     "mediatek,mt8173-xhci";
+@@ -733,15 +747,6 @@
+ 		};
+ 	};
+ 
+-	hifsys: syscon@1a000000 {
+-		compatible = "mediatek,mt7623-hifsys",
+-			     "mediatek,mt2701-hifsys",
+-			     "syscon";
+-		reg = <0 0x1a000000 0 0x1000>;
+-		#clock-cells = <1>;
+-		#reset-cells = <1>;
+-	};
+-
+ 	ethsys: syscon@1b000000 {
+ 		compatible = "mediatek,mt7623-ethsys",
+ 			     "mediatek,mt2701-ethsys",
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 9f3e6dd..0aa1c69 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -179,6 +179,32 @@
+ 	status = "okay";
+ };
+ 
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++	status = "okay";
++	bus-width = <8>;
++	max-frequency = <50000000>;
++	cap-mmc-highspeed;
++	vmmc-supply = <&mt6323_vemc3v3_reg>;
++	vqmmc-supply = <&mt6323_vio18_reg>;
++	non-removable;
++};
++
++&mmc1 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc1_pins_default>;
++	pinctrl-1 = <&mmc1_pins_uhs>;
++	status = "okay";
++	bus-width = <4>;
++	max-frequency = <50000000>;
++	cap-sd-highspeed;
++	cd-gpios = <&pio 261 0>;
++	vmmc-supply = <&mt6323_vmch_reg>;
++	vqmmc-supply = <&mt6323_vio18_reg>;
++};
++
+ &pio {
+ 	cir_pins_a:cir@0 {
+ 		pins_cir {
+@@ -314,6 +340,17 @@
+ 			bias-pull-down;
+ 			drive-strength = <MTK_DRIVE_4mA>;
+ 		};
++
++		pins_wp {
++			pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_insert {
++			pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
++			bias-pull-up;
++		};
+ 	};
+ 
+ 	mmc1_pins_uhs: mmc1 {
+@@ -335,16 +372,6 @@
+ 		};
+ 	};
+ 
+-	spi0_pins_a: spi@0 {
+-		pins_spi {
+-			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+-				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+-				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
+-				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
+-			bias-disable;
+-		};
+-	};
+-
+ 	pwm_pins_a: pwm@0 {
+ 		pins_pwm {
+ 			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
+@@ -355,6 +382,16 @@
+ 		};
+ 	};
+ 
++	spi0_pins_a: spi@0 {
++		pins_spi {
++			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
++				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
++				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
++				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
++			bias-disable;
++		};
++	};
++
+ 	uart0_pins_a: uart@0 {
+ 		pins_dat {
+ 			pinmux = <MT7623_PIN_79_URXD0_FUNC_URXD0>,
+@@ -414,14 +451,6 @@
+ 	status = "disabled";
+ };
+ 
+-&u3phy1 {
+-	status = "okay";
+-};
+-
+-&u3phy2 {
+-	status = "okay";
+-};
+-
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins_a>;
+@@ -441,3 +470,11 @@
+ 	vusb33-supply = <&mt6323_vusb_reg>;
+ 	status = "okay";
+ };
++
++&u3phy1 {
++	status = "okay";
++};
++
++&u3phy2 {
++	status = "okay";
++};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
