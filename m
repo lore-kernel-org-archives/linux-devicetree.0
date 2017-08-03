@@ -1,73 +1,222 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/4] dt-bindings: phy-mt65xx-usb: supports PCIe, SATA and rename file
-Date: Thu, 3 Aug 2017 18:01:03 +0800
-Message-ID: <b6d9a64f328356fb726845a7c7903683eb496c01.1501753328.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/4] phy: phy-mt65xx-usb3: add SATA PHY support
+Date: Thu, 3 Aug 2017 18:01:05 +0800
+Message-ID: <1501754483-10392-2-git-send-email-chunfeng.yun@mediatek.com>
 References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-add support for PCIe and SATA, also add some new compatibles.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-due to phy-mt65xx-usb.txt holds the bindings for all mediatek SoCs
-with T-PHY controller, change the name to phy-mtk-tphy.txt to
-reflect that.
+This patch adds SATA setting part.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Change-Id: Icb1fc15ebe9f6172c56a46d40c359c7cff922976
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../phy/{phy-mt65xx-usb.txt => phy-mtk-tphy.txt}   |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
- rename Documentation/devicetree/bindings/phy/{phy-mt65xx-usb.txt => phy-mtk-tphy.txt} (88%)
+ drivers/phy/phy-mt65xx-usb3.c |  133 +++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 129 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-similarity index 88%
-rename from Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-rename to Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-index 0acc5a9..faf1808 100644
---- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
-@@ -1,13 +1,18 @@
--mt65xx USB3.0 PHY binding
-+MediaTek T-PHY binding
- --------------------------
+diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+index 8ba6905..45291c1 100644
+--- a/drivers/phy/phy-mt65xx-usb3.c
++++ b/drivers/phy/phy-mt65xx-usb3.c
+@@ -29,7 +29,7 @@
+ #define SSUSB_SIFSLV_V1_U2FREQ		0x100	/* shared by u2 phys */
+ /* u2 phy bank */
+ #define SSUSB_SIFSLV_V1_U2PHY_COM	0x000
+-/* u3/pcie phy banks */
++/* u3/pcie/sata phy banks */
+ #define SSUSB_SIFSLV_V1_U3PHYD		0x000
+ #define SSUSB_SIFSLV_V1_U3PHYA		0x200
  
--This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
-+T-phy controller supports physical layer functionality for a number of
-+controllers on MediaTek SoCs, such as, USB2.0, USB3.0, PCIe, and SATA.
+@@ -199,6 +199,65 @@
+ #define U3P_SR_COEF_DIVISOR	1000
+ #define U3P_FM_DET_CYCLE_CNT	1024
  
- Required properties (controller (parent) node):
-  - compatible	: should be one of
--		  "mediatek,mt2701-u3phy"
--		  "mediatek,mt2712-u3phy"
--		  "mediatek,mt8173-u3phy"
-+		  "mediatek,generic-tphy-v1"
-+		  "mediatek,generic-tphy-v2"
-+		  "mediatek,mt2701-u3phy" (deprecated)
-+		  "mediatek,mt2712-u3phy" (deprecated)
-+		  "mediatek,mt8173-u3phy";
-+		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
-+		  "mediatek,generic-tphy-v2" on mt2712 instead.
-  - clocks	: (deprecated, use port's clocks instead) a list of phandle +
- 		  clock-specifier pairs, one for each entry in clock-names
-  - clock-names	: (deprecated, use port's one instead) must contain
-@@ -35,6 +40,8 @@ Required properties (port (child) node):
- 		  cell after port phandle is phy type from:
- 			- PHY_TYPE_USB2
- 			- PHY_TYPE_USB3
-+			- PHY_TYPE_PCIE
-+			- PHY_TYPE_SATA
++/* SATA register setting */
++#define PHYD_CTRL_SIGNAL_MODE4		0x1c
++/* CDR Charge Pump P-path current adjustment */
++#define RG_CDR_BICLTD1_GEN1_MSK		GENMASK(23, 20)
++#define RG_CDR_BICLTD1_GEN1_VAL(x)	((0xf & (x)) << 20)
++#define RG_CDR_BICLTD0_GEN1_MSK		GENMASK(11, 8)
++#define RG_CDR_BICLTD0_GEN1_VAL(x)	((0xf & (x)) << 8)
++
++#define PHYD_DESIGN_OPTION2		0x24
++/* Symbol lock count selection */
++#define RG_LOCK_CNT_SEL_MSK		GENMASK(5, 4)
++#define RG_LOCK_CNT_SEL_VAL(x)		((0x3 & (x)) << 4)
++
++#define PHYD_DESIGN_OPTION9	0x40
++/* COMWAK GAP width window */
++#define RG_TG_MAX_MSK		GENMASK(20, 16)
++#define RG_TG_MAX_VAL(x)	((0x1f & (x)) << 16)
++/* COMINIT GAP width window */
++#define RG_T2_MAX_MSK		GENMASK(13, 8)
++#define RG_T2_MAX_VAL(x)	((0x3f & (x)) << 8)
++/* COMWAK GAP width window */
++#define RG_TG_MIN_MSK		GENMASK(7, 5)
++#define RG_TG_MIN_VAL(x)	((0x7 & (x)) << 5)
++/* COMINIT GAP width window */
++#define RG_T2_MIN_MSK		GENMASK(4, 0)
++#define RG_T2_MIN_VAL(x)	(0x1f & (x))
++
++#define ANA_RG_CTRL_SIGNAL1		0x4c
++/* TX driver tail current control for 0dB de-empahsis mdoe for Gen1 speed */
++#define RG_IDRV_0DB_GEN1_MSK		GENMASK(13, 8)
++#define RG_IDRV_0DB_GEN1_VAL(x)		((0x3f & (x)) << 8)
++
++#define ANA_RG_CTRL_SIGNAL4		0x58
++#define RG_CDR_BICLTR_GEN1_MSK		GENMASK(23, 20)
++#define RG_CDR_BICLTR_GEN1_VAL(x)	((0xf & (x)) << 20)
++/* Loop filter R1 resistance adjustment for Gen1 speed */
++#define RG_CDR_BR_GEN2_MSK		GENMASK(10, 8)
++#define RG_CDR_BR_GEN2_VAL(x)		((0x7 & (x)) << 8)
++
++#define ANA_RG_CTRL_SIGNAL6		0x60
++/* I-path capacitance adjustment for Gen1 */
++#define RG_CDR_BC_GEN1_MSK		GENMASK(28, 24)
++#define RG_CDR_BC_GEN1_VAL(x)		((0x1f & (x)) << 24)
++#define RG_CDR_BIRLTR_GEN1_MSK		GENMASK(4, 0)
++#define RG_CDR_BIRLTR_GEN1_VAL(x)	(0x1f & (x))
++
++#define ANA_EQ_EYE_CTRL_SIGNAL1		0x6c
++/* RX Gen1 LEQ tuning step */
++#define RG_EQ_DLEQ_LFI_GEN1_MSK		GENMASK(11, 8)
++#define RG_EQ_DLEQ_LFI_GEN1_VAL(x)	((0xf & (x)) << 8)
++
++#define ANA_EQ_EYE_CTRL_SIGNAL4		0xd8
++#define RG_CDR_BIRLTD0_GEN1_MSK		GENMASK(20, 16)
++#define RG_CDR_BIRLTD0_GEN1_VAL(x)	((0x1f & (x)) << 16)
++
++#define ANA_EQ_EYE_CTRL_SIGNAL5		0xdc
++#define RG_CDR_BIRLTD0_GEN3_MSK		GENMASK(4, 0)
++#define RG_CDR_BIRLTD0_GEN3_VAL(x)	(0x1f & (x))
++
+ enum mt_phy_version {
+ 	MT_PHY_V1 = 1,
+ 	MT_PHY_V2,
+@@ -630,6 +689,64 @@ static void pcie_phy_instance_power_off(struct mt65xx_u3phy *u3phy,
+ 	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLE);
+ }
  
- Example:
++static void sata_phy_instance_init(struct mt65xx_u3phy *u3phy,
++	struct mt65xx_phy_instance *instance)
++{
++	struct u3phy_banks *u3_banks = &instance->u3_banks;
++	void __iomem *phyd = u3_banks->phyd;
++	u32 tmp;
++
++	/* charge current adjustment */
++	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL6);
++	tmp &= ~(RG_CDR_BIRLTR_GEN1_MSK | RG_CDR_BC_GEN1_MSK);
++	tmp |= RG_CDR_BIRLTR_GEN1_VAL(0x6) | RG_CDR_BC_GEN1_VAL(0x1a);
++	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL6);
++
++	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL4);
++	tmp &= ~RG_CDR_BIRLTD0_GEN1_MSK;
++	tmp |= RG_CDR_BIRLTD0_GEN1_VAL(0x18);
++	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL4);
++
++	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL5);
++	tmp &= ~RG_CDR_BIRLTD0_GEN3_MSK;
++	tmp |= RG_CDR_BIRLTD0_GEN3_VAL(0x06);
++	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL5);
++
++	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL4);
++	tmp &= ~(RG_CDR_BICLTR_GEN1_MSK | RG_CDR_BR_GEN2_MSK);
++	tmp |= RG_CDR_BICLTR_GEN1_VAL(0x0c) | RG_CDR_BR_GEN2_VAL(0x07);
++	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL4);
++
++	tmp = readl(phyd + PHYD_CTRL_SIGNAL_MODE4);
++	tmp &= ~(RG_CDR_BICLTD0_GEN1_MSK | RG_CDR_BICLTD1_GEN1_MSK);
++	tmp |= RG_CDR_BICLTD0_GEN1_VAL(0x08) | RG_CDR_BICLTD1_GEN1_VAL(0x02);
++	writel(tmp, phyd + PHYD_CTRL_SIGNAL_MODE4);
++
++	tmp = readl(phyd + PHYD_DESIGN_OPTION2);
++	tmp &= ~RG_LOCK_CNT_SEL_MSK;
++	tmp |= RG_LOCK_CNT_SEL_VAL(0x02);
++	writel(tmp, phyd + PHYD_DESIGN_OPTION2);
++
++	tmp = readl(phyd + PHYD_DESIGN_OPTION9);
++	tmp &= ~(RG_T2_MIN_MSK | RG_TG_MIN_MSK |
++		 RG_T2_MAX_MSK | RG_TG_MAX_MSK);
++	tmp |= RG_T2_MIN_VAL(0x12) | RG_TG_MIN_VAL(0x04) |
++	       RG_T2_MAX_VAL(0x31) | RG_TG_MAX_VAL(0x0e);
++	writel(tmp, phyd + PHYD_DESIGN_OPTION9);
++
++	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL1);
++	tmp &= ~RG_IDRV_0DB_GEN1_MSK;
++	tmp |= RG_IDRV_0DB_GEN1_VAL(0x20);
++	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL1);
++
++	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL1);
++	tmp &= ~RG_EQ_DLEQ_LFI_GEN1_MSK;
++	tmp |= RG_EQ_DLEQ_LFI_GEN1_VAL(0x03);
++	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL1);
++
++	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, instance->index);
++}
++
+ static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
+ 			      struct mt65xx_phy_instance *instance)
+ {
+@@ -649,6 +766,9 @@ static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
+ 		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
+ 		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V1_U3PHYA;
+ 		break;
++	case PHY_TYPE_SATA:
++		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
++		break;
+ 	default:
+ 		dev_err(u3phy->dev, "incompatible PHY type\n");
+ 		return;
+@@ -708,6 +828,9 @@ static int mt65xx_phy_init(struct phy *phy)
+ 	case PHY_TYPE_PCIE:
+ 		pcie_phy_instance_init(u3phy, instance);
+ 		break;
++	case PHY_TYPE_SATA:
++		sata_phy_instance_init(u3phy, instance);
++		break;
+ 	default:
+ 		dev_err(u3phy->dev, "incompatible PHY type\n");
+ 		return -EINVAL;
+@@ -784,7 +907,8 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
+ 	instance->type = args->args[0];
+ 	if (!(instance->type == PHY_TYPE_USB2 ||
+ 	      instance->type == PHY_TYPE_USB3 ||
+-	      instance->type == PHY_TYPE_PCIE)) {
++	      instance->type == PHY_TYPE_PCIE ||
++	      instance->type == PHY_TYPE_SATA)) {
+ 		dev_err(dev, "unsupported device type: %d\n", instance->type);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -814,7 +938,7 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
+ 	.version = MT_PHY_V1,
+ };
  
+-static const struct mt65xx_phy_pdata mt2712_pdata = {
++static const struct mt65xx_phy_pdata tphy_v2_pdata = {
+ 	.avoid_rx_sen_degradation = false,
+ 	.version = MT_PHY_V2,
+ };
+@@ -826,9 +950,10 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
+ 
+ static const struct of_device_id mt65xx_u3phy_id_table[] = {
+ 	{ .compatible = "mediatek,mt2701-u3phy", .data = &tphy_v1_pdata },
+-	{ .compatible = "mediatek,mt2712-u3phy", .data = &mt2712_pdata },
++	{ .compatible = "mediatek,mt2712-u3phy", .data = &tphy_v2_pdata },
+ 	{ .compatible = "mediatek,mt8173-u3phy", .data = &mt8173_pdata },
+ 	{ .compatible = "mediatek,generic-tphy-v1", .data = &tphy_v1_pdata },
++	{ .compatible = "mediatek,generic-tphy-v2", .data = &tphy_v2_pdata },
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, mt65xx_u3phy_id_table);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
