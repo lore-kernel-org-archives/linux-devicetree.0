@@ -1,64 +1,118 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: [PATCH v3 0/6] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Thu,  3 Aug 2017 17:33:44 -0500
-Message-ID: <1501799630-1650-1-git-send-email-david@lechnology.com>
+From: David Lechner <david@lechnology.com>
+Subject: [PATCH v3 2/6] drm/tinydrm: generalize tinydrm_xrgb8888_to_gray8()
+Date: Thu,  3 Aug 2017 17:33:46 -0500
+Message-ID: <1501799630-1650-3-git-send-email-david@lechnology.com>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1501799630-1650-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The goal of this series is to get the built-in LCD of the LEGO MINDSTORMS EV3
-working.
-
-v2 changes:
-* Wrote a new driver for ST7586 instead of combining it with existing drivers
-* Don't touch MIPI DBI code (other than the patch suggested by Noralf)
-* New defconfig patch
-
-v3 changes:
-* New patch to generalize tinydrm_xrgb8888_to_gray8() so that it can be reused.
-* Device tree bindings in separate patch.
-* Fixed incorrect device tree binding pin descriptions.
-* Added MAINTAINERS entry for drivers/gpu/drm/tinydrm/st7586.c.
-* Removed "mipi_dbi_" from function names in st7586.c.
-* Moved init and fini to pipe_enable and pipe_disable ops.
-* Dropped RGB565 format.
-* Made adjustments for the fact the controller cannot be read via SPI.
-* Dropped st7586.h - values moved into st7586.c.
-
-David Lechner (6):
-  drm/tinydrm: remove call to mipi_dbi_init() from mipi_dbi_spi_init()
-  drm/tinydrm: generalize tinydrm_xrgb8888_to_gray8()
-  dt-bindings: add binding for Sitronix ST7586 display panels
-  drm/tinydrm: add support for LEGO MINDSTORMS EV3 LCD
-  ARM: dts: da850-lego-ev3: Add node for LCD display
-  ARM: davinci_all_defconfig: enable tinydrm and ST7586
-
- .../bindings/display/sitronix,st7586.txt           |  26 ++
- MAINTAINERS                                        |   6 +
- arch/arm/boot/dts/da850-lego-ev3.dts               |  24 ++
- arch/arm/configs/davinci_all_defconfig             |   2 +
- drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
- drivers/gpu/drm/tinydrm/Makefile                   |   1 +
- drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c     |  35 +-
- drivers/gpu/drm/tinydrm/mi0283qt.c                 |   8 +-
- drivers/gpu/drm/tinydrm/mipi-dbi.c                 |  17 +-
- drivers/gpu/drm/tinydrm/repaper.c                  |  21 +-
- drivers/gpu/drm/tinydrm/st7586.c                   | 466 +++++++++++++++++++++
- include/drm/tinydrm/mipi-dbi.h                     |   6 +-
- include/drm/tinydrm/tinydrm-helpers.h              |   3 +-
- 13 files changed, 582 insertions(+), 43 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7586.txt
- create mode 100644 drivers/gpu/drm/tinydrm/st7586.c
-
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIHBhcmFtZXRlcnMgZm9yIHZhZGRyIGFuZCBjbGlwIHRvIHRpbnlkcm1feHJnYjg4
+ODhfdG9fZ3JheTgoKSB0bwptYWtlIGl0IG1vcmUgZ2VuZXJpYy4KCmRtYV9idWZfe2JlZ2luLGVu
+ZH1fY3B1X2FjY2VzcygpIGFyZSBtb3ZlZCBvdXQgdG8gdGhlIHJlcGFwZXIgZHJpdmVyLgoKU2ln
+bmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Ci0tLQogZHJp
+dmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS90aW55ZHJtLWhlbHBlcnMuYyB8IDM1ICsrKysrKysr
+KystLS0tLS0tLS0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVyLmMgICAg
+ICAgICAgICAgIHwgMjEgKysrKysrKysrKysrKysrLQogaW5jbHVkZS9kcm0vdGlueWRybS90aW55
+ZHJtLWhlbHBlcnMuaCAgICAgICAgICB8ICAzICsrLQogMyBmaWxlcyBjaGFuZ2VkLCAzNSBpbnNl
+cnRpb25zKCspLCAyNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+dGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0v
+Y29yZS90aW55ZHJtLWhlbHBlcnMuYwppbmRleCA3NTgwOGJiLi41OTE1YmE4IDEwMDY0NAotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jCisrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1oZWxwZXJzLmMKQEAgLTE4NSw3ICsx
+ODUsOSBAQCBFWFBPUlRfU1lNQk9MKHRpbnlkcm1feHJnYjg4ODhfdG9fcmdiNTY1KTsKIC8qKgog
+ICogdGlueWRybV94cmdiODg4OF90b19ncmF5OCAtIENvbnZlcnQgWFJHQjg4ODggdG8gZ3JheXNj
+YWxlCiAgKiBAZHN0OiA4LWJpdCBncmF5c2NhbGUgZGVzdGluYXRpb24gYnVmZmVyCisgKiBAdmFk
+ZHI6IFhSR0I4ODg4IHNvdXJjZSBidWZmZXIKICAqIEBmYjogRFJNIGZyYW1lYnVmZmVyCisgKiBA
+Y2xpcDogQ2xpcCByZWN0YW5nbGUgYXJlYSB0byBjb3B5CiAgKgogICogRHJtIGRvZXNuJ3QgaGF2
+ZSBuYXRpdmUgbW9ub2Nocm9tZSBvciBncmF5c2NhbGUgc3VwcG9ydC4KICAqIFN1Y2ggZHJpdmVy
+cyBjYW4gYW5ub3VuY2UgdGhlIGNvbW1vbmx5IHN1cHBvcnRlZCBYUjI0IGZvcm1hdCB0byB1c2Vy
+c3BhY2UKQEAgLTE5OSwxMiArMjAxLDExIEBAIEVYUE9SVF9TWU1CT0wodGlueWRybV94cmdiODg4
+OF90b19yZ2I1NjUpOwogICogUmV0dXJuczoKICAqIFplcm8gb24gc3VjY2VzcywgbmVnYXRpdmUg
+ZXJyb3IgY29kZSBvbiBmYWlsdXJlLgogICovCi1pbnQgdGlueWRybV94cmdiODg4OF90b19ncmF5
+OCh1OCAqZHN0LCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYikKK2ludCB0aW55ZHJtX3hyZ2I4
+ODg4X3RvX2dyYXk4KHU4ICpkc3QsIHZvaWQgKnZhZGRyLCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVy
+ICpmYiwKKwkJCSAgICAgIHN0cnVjdCBkcm1fY2xpcF9yZWN0ICpjbGlwKQogewotCXN0cnVjdCBk
+cm1fZ2VtX2NtYV9vYmplY3QgKmNtYV9vYmogPSBkcm1fZmJfY21hX2dldF9nZW1fb2JqKGZiLCAw
+KTsKLQlzdHJ1Y3QgZG1hX2J1Zl9hdHRhY2htZW50ICppbXBvcnRfYXR0YWNoID0gY21hX29iai0+
+YmFzZS5pbXBvcnRfYXR0YWNoOwotCXVuc2lnbmVkIGludCB4LCB5LCBwaXRjaCA9IGZiLT5waXRj
+aGVzWzBdOwotCWludCByZXQgPSAwOworCXVuc2lnbmVkIGludCBsZW4gPSAoY2xpcC0+eDIgLSBj
+bGlwLT54MSkgKiBzaXplb2YodTMyKTsKKwl1bnNpZ25lZCBpbnQgeCwgeTsKIAl2b2lkICpidWY7
+CiAJdTMyICpzcmM7CiAKQEAgLTIxNCwyMiArMjE1LDE2IEBAIGludCB0aW55ZHJtX3hyZ2I4ODg4
+X3RvX2dyYXk4KHU4ICpkc3QsIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiKQogCSAqIFRoZSBj
+bWEgbWVtb3J5IGlzIHdyaXRlLWNvbWJpbmVkIHNvIHJlYWRzIGFyZSB1bmNhY2hlZC4KIAkgKiBT
+cGVlZCB1cCBieSBmZXRjaGluZyBvbmUgbGluZSBhdCBhIHRpbWUuCiAJICovCi0JYnVmID0ga21h
+bGxvYyhwaXRjaCwgR0ZQX0tFUk5FTCk7CisJYnVmID0ga21hbGxvYyhsZW4sIEdGUF9LRVJORUwp
+OwogCWlmICghYnVmKQogCQlyZXR1cm4gLUVOT01FTTsKIAotCWlmIChpbXBvcnRfYXR0YWNoKSB7
+Ci0JCXJldCA9IGRtYV9idWZfYmVnaW5fY3B1X2FjY2VzcyhpbXBvcnRfYXR0YWNoLT5kbWFidWYs
+Ci0JCQkJCSAgICAgICBETUFfRlJPTV9ERVZJQ0UpOwotCQlpZiAocmV0KQotCQkJZ290byBlcnJf
+ZnJlZTsKLQl9Ci0KLQlmb3IgKHkgPSAwOyB5IDwgZmItPmhlaWdodDsgeSsrKSB7Ci0JCXNyYyA9
+IGNtYV9vYmotPnZhZGRyICsgKHkgKiBwaXRjaCk7Ci0JCW1lbWNweShidWYsIHNyYywgcGl0Y2gp
+OworCWZvciAoeSA9IGNsaXAtPnkxOyB5IDwgY2xpcC0+eTI7IHkrKykgeworCQlzcmMgPSB2YWRk
+ciArICh5ICogZmItPnBpdGNoZXNbMF0pOworCQlzcmMgKz0gY2xpcC0+eDE7CisJCW1lbWNweShi
+dWYsIHNyYywgbGVuKTsKIAkJc3JjID0gYnVmOwotCQlmb3IgKHggPSAwOyB4IDwgZmItPndpZHRo
+OyB4KyspIHsKKwkJZm9yICh4ID0gY2xpcC0+eDE7IHggPCBjbGlwLT54MjsgeCsrKSB7CiAJCQl1
+OCByID0gKCpzcmMgJiAweDAwZmYwMDAwKSA+PiAxNjsKIAkJCXU4IGcgPSAoKnNyYyAmIDB4MDAw
+MGZmMDApID4+IDg7CiAJCQl1OCBiID0gICpzcmMgJiAweDAwMDAwMGZmOwpAQCAtMjQwLDEzICsy
+MzUsOSBAQCBpbnQgdGlueWRybV94cmdiODg4OF90b19ncmF5OCh1OCAqZHN0LCBzdHJ1Y3QgZHJt
+X2ZyYW1lYnVmZmVyICpmYikKIAkJfQogCX0KIAotCWlmIChpbXBvcnRfYXR0YWNoKQotCQlyZXQg
+PSBkbWFfYnVmX2VuZF9jcHVfYWNjZXNzKGltcG9ydF9hdHRhY2gtPmRtYWJ1ZiwKLQkJCQkJICAg
+ICBETUFfRlJPTV9ERVZJQ0UpOwotZXJyX2ZyZWU6CiAJa2ZyZWUoYnVmKTsKIAotCXJldHVybiBy
+ZXQ7CisJcmV0dXJuIDA7CiB9CiBFWFBPUlRfU1lNQk9MKHRpbnlkcm1feHJnYjg4ODhfdG9fZ3Jh
+eTgpOwogCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVyLmMgYi9k
+cml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVyLmMKaW5kZXggMzM0M2QzZi4uZDM0Y2Q5YiAx
+MDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vcmVwYXBlci5jCisrKyBiL2RyaXZl
+cnMvZ3B1L2RybS90aW55ZHJtL3JlcGFwZXIuYwpAQCAtMTgsNiArMTgsNyBAQAogICovCiAKICNp
+bmNsdWRlIDxsaW51eC9kZWxheS5oPgorI2luY2x1ZGUgPGxpbnV4L2RtYS1idWYuaD4KICNpbmNs
+dWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAj
+aW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+CkBAIC01MjUsMTEgKzUyNiwyMCBAQCBzdGF0aWMg
+aW50IHJlcGFwZXJfZmJfZGlydHkoc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCiAJCQkgICAg
+c3RydWN0IGRybV9jbGlwX3JlY3QgKmNsaXBzLAogCQkJICAgIHVuc2lnbmVkIGludCBudW1fY2xp
+cHMpCiB7CisJc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqY21hX29iaiA9IGRybV9mYl9jbWFf
+Z2V0X2dlbV9vYmooZmIsIDApOworCXN0cnVjdCBkbWFfYnVmX2F0dGFjaG1lbnQgKmltcG9ydF9h
+dHRhY2ggPSBjbWFfb2JqLT5iYXNlLmltcG9ydF9hdHRhY2g7CiAJc3RydWN0IHRpbnlkcm1fZGV2
+aWNlICp0ZGV2ID0gZmItPmRldi0+ZGV2X3ByaXZhdGU7CiAJc3RydWN0IHJlcGFwZXJfZXBkICpl
+cGQgPSBlcGRfZnJvbV90aW55ZHJtKHRkZXYpOworCXN0cnVjdCBkcm1fY2xpcF9yZWN0IGNsaXA7
+CiAJdTggKmJ1ZiA9IE5VTEw7CiAJaW50IHJldCA9IDA7CiAKKwkvKiByZXBhcGVyIGNhbid0IGRv
+IHBhcnRpYWwgdXBkYXRlcyAqLworCWNsaXAueDEgPSAwOworCWNsaXAueDIgPSBmYi0+d2lkdGg7
+CisJY2xpcC55MSA9IDA7CisJY2xpcC55MiA9IGZiLT5oZWlnaHQ7CisKIAltdXRleF9sb2NrKCZ0
+ZGV2LT5kaXJ0eV9sb2NrKTsKIAogCWlmICghZXBkLT5lbmFibGVkKQpAQCAtNTUwLDcgKzU2MCwx
+NiBAQCBzdGF0aWMgaW50IHJlcGFwZXJfZmJfZGlydHkoc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAq
+ZmIsCiAJCWdvdG8gb3V0X3VubG9jazsKIAl9CiAKLQlyZXQgPSB0aW55ZHJtX3hyZ2I4ODg4X3Rv
+X2dyYXk4KGJ1ZiwgZmIpOworCWlmIChpbXBvcnRfYXR0YWNoKSB7CisJCXJldCA9IGRtYV9idWZf
+YmVnaW5fY3B1X2FjY2VzcyhpbXBvcnRfYXR0YWNoLT5kbWFidWYsCisJCQkJCSAgICAgICBETUFf
+RlJPTV9ERVZJQ0UpOworCQlpZiAocmV0KQorCQkJZ290byBvdXRfdW5sb2NrOworCX0KKworCXJl
+dCA9IHRpbnlkcm1feHJnYjg4ODhfdG9fZ3JheTgoYnVmLCBjbWFfb2JqLT52YWRkciwgZmIsICZj
+bGlwKTsKKwlpZiAoaW1wb3J0X2F0dGFjaCkKKwkJZG1hX2J1Zl9lbmRfY3B1X2FjY2VzcyhpbXBv
+cnRfYXR0YWNoLT5kbWFidWYsIERNQV9GUk9NX0RFVklDRSk7CiAJaWYgKHJldCkKIAkJZ290byBv
+dXRfdW5sb2NrOwogCmRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS90aW55ZHJtL3Rpbnlkcm0taGVs
+cGVycy5oIGIvaW5jbHVkZS9kcm0vdGlueWRybS90aW55ZHJtLWhlbHBlcnMuaAppbmRleCBhNmMz
+ODdmLi45ZTEzZWY1IDEwMDY0NAotLS0gYS9pbmNsdWRlL2RybS90aW55ZHJtL3Rpbnlkcm0taGVs
+cGVycy5oCisrKyBiL2luY2x1ZGUvZHJtL3Rpbnlkcm0vdGlueWRybS1oZWxwZXJzLmgKQEAgLTQz
+LDcgKzQzLDggQEAgdm9pZCB0aW55ZHJtX3N3YWIxNih1MTYgKmRzdCwgdm9pZCAqdmFkZHIsIHN0
+cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAogdm9pZCB0aW55ZHJtX3hyZ2I4ODg4X3RvX3JnYjU2
+NSh1MTYgKmRzdCwgdm9pZCAqdmFkZHIsCiAJCQkJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIs
+CiAJCQkJc3RydWN0IGRybV9jbGlwX3JlY3QgKmNsaXAsIGJvb2wgc3dhcCk7Ci1pbnQgdGlueWRy
+bV94cmdiODg4OF90b19ncmF5OCh1OCAqZHN0LCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYik7
+CitpbnQgdGlueWRybV94cmdiODg4OF90b19ncmF5OCh1OCAqZHN0LCB2b2lkICp2YWRkciwgc3Ry
+dWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCisJCQkgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAq
+Y2xpcCk7CiAKIHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICp0aW55ZHJtX29mX2ZpbmRfYmFja2xp
+Z2h0KHN0cnVjdCBkZXZpY2UgKmRldik7CiBpbnQgdGlueWRybV9lbmFibGVfYmFja2xpZ2h0KHN0
+cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiYWNrbGlnaHQpOwotLSAKMi43LjQKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
