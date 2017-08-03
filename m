@@ -1,62 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] can: m_can: Update documentation to mention new
- fixed transceiver binding
-Date: Thu, 3 Aug 2017 12:07:35 -0500
-Message-ID: <20170803170735.qntnxpx5olghzmbu@rob-hp-laptop>
-References: <20170724230521.1436-1-fcooper@ti.com>
- <20170724230521.1436-4-fcooper@ti.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Thu, 3 Aug 2017 20:09:05 +0300
+Message-ID: <CAHp75Vdaq0ersEa2_XneUQtsJMj2GCRZL4Wi=1HQorLkb4SaVg@mail.gmail.com>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+ <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
+ <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
+ <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+ <bfb3d541-856b-0233-dd85-72512788939f@tronnes.org>
+ <bbec0574-311a-e1b4-d7fd-f6fb15b078d2@lechnology.com>
+ <b8ec0511-afd1-2a1b-6ffe-dfe951d79bf7@tronnes.org>
+ <cf740449-c952-08d4-d63c-d92e71fa3092@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-can-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170724230521.1436-4-fcooper@ti.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cf740449-c952-08d4-d63c-d92e71fa3092@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 06:05:20PM -0500, Franklin S Cooper Jr wrote:
-> Add information regarding fixed transceiver binding. This is especially
-> important for MCAN since the IP allows CAN FD mode to run significantly
-> faster than what most transceivers are capable of.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> ---
-> Version 2 changes:
-> Drop unit address
-> 
->  Documentation/devicetree/bindings/net/can/m_can.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> index 9e33177..e4abd2c 100644
-> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -43,6 +43,11 @@ Required properties:
->  			  Please refer to 2.4.1 Message RAM Configuration in
->  			  Bosch M_CAN user manual for details.
->  
-> +Optional properties:
-> +- fixed-transceiver	: Fixed-transceiver subnode describing maximum speed
-
-This is a node, not a property. Sub nodes should have their own section.
-
-> +			  that can be used for CAN and/or CAN-FD modes.  See
-> +			  Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
-> +			  for details.
->  Example:
->  SoC dtsi:
->  m_can1: can@020e8000 {
-> @@ -64,4 +69,9 @@ Board dts:
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_m_can1>;
->  	status = "enabled";
-> +
-> +	fixed-transceiver {
-> +		max-arbitration-speed = <1000000>;
-> +		max-data-speed = <5000000>;
-> +	};
->  };
-> -- 
-> 2.10.0
-> 
+T24gVGh1LCBBdWcgMywgMjAxNyBhdCA2OjE4IFBNLCBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNo
+bm9sb2d5LmNvbT4gd3JvdGU6Cgo+IFRoZSBwYXJ0aWN1bGFyIGRpc3BsYXkgSSBoYXZlIGlzIHRo
+aXMgb25lOgo+IGh0dHA6Ly93aWtpLnNlZWVkLmNjL0dyb3ZlLU9MRURfRGlzcGxheV8xLjEyaW5j
+aC8KPgo+IEl0IGxvb2tzIGxpa2UgaXQgdXNlcyBhIGNvbW1hbmQvZGF0YSBzY2hlbWUgbGlrZSB0
+aGUgTUlQSSBkaXNwbGF5cywgYnV0Cj4gZG9lc24ndCB1c2UgYW55IG9mIHRoZSBzdGFuZGFyZCB2
+YWx1ZXMgZm9yIHRoZSBjb21tYW5kcy4gVGhlIGNvbnRyb2xsZXIgY2FuCj4gZG8gcGFyYWxsZWws
+IFNQSSBhbmQgSTJDLCBidXQgdGhlIGRpc3BsYXkgSSBoYXZlIGlzIHdpcmVkIGZvciBJMkMuCgpJ
+dCBsb29rcyB2ZXJ5IHNpbWlsYXIgdG8gc3NkMTMwNi4gU29tZSBkZXNjcmlwdGlvbiByZWZlcnMg
+dG8gc3NkMTMwOC4KCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2Y2hlbmtvCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
