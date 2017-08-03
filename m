@@ -1,35 +1,57 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [patch v1 0/2] JTAG driver introduction
-Date: Thu, 3 Aug 2017 19:48:22 +0200
-Message-ID: <20170803174822.GI15018@lunn.ch>
-References: <1501679918-20486-1-git-send-email-oleksandrs@mellanox.com>
- <20170802141209.GB25781@lunn.ch>
- <AM4PR0501MB2194E6B8D14EC15356C1C0BFB1B10@AM4PR0501MB2194.eurprd05.prod.outlook.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
+Date: Thu, 3 Aug 2017 12:50:13 -0500
+Message-ID: <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
+References: <1500510154-6661-1-git-send-email-anthony.kim@hideep.com>
+ <1500965607-2446-1-git-send-email-anthony.kim@hideep.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <AM4PR0501MB2194E6B8D14EC15356C1C0BFB1B10@AM4PR0501MB2194.eurprd05.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksandr Shamray <oleksandrs@mellanox.com>
-Cc: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "arnd@arndb.de" <arnd@arndb.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, system-sw-low-level <system-sw-low-level@mellanox.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mec@shout.net" <mec@shout.net>, "joel@jms.id.au" <joel@jms.id.au>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "vadimp@maellanox.com" <vadimp@maellanox.com>, "tklauser@distanz.ch" <tklauser@distanz.ch>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1500965607-2446-1-git-send-email-anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anthony Kim <ktyrun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Hi Andrew
+On Tue, Jul 25, 2017 at 03:53:27PM +0900, Anthony Kim wrote:
+> The HiDeep touchscreen device is a capacitive multi-touch controller
+> mainly for multi-touch supported devices use. It use I2C interface for
+> communication to IC and provide axis X, Y, Z locations for ten finger
+> touch through input event interface to userspace.
 > 
-> Thanks a lot for review.
+> It support the Crimson and the Lime two type IC. They are different
+> the number of channel supported and FW size. But the working protocol
+> is same.
 > 
+> Signed-off-by: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/hideep.txt          |  35 +
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
 
-> We used user space tool for that, which is an adaptation of some
-> Lattice tools, which allows programming of SVF files. We are using
-> it for Lattice CPLD burning, since we have for such devices on our
-> system, but this tool could be used for programming other devices
-> from other vendors as well.
- 
-> https://github.com/mellanoxbmc/mellanox-bmc-tools
+For the binding,
 
-Since you are defining a new Kernel ABI here, it would be good to get
-some buy-in from potential users for the ABI. Maybe for the next
-version of the patchset you can cross post to the OpenOCD-devel list?
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-	Andrew
+>  drivers/input/touchscreen/Kconfig                  |  11 +
+>  drivers/input/touchscreen/Makefile                 |   2 +
+>  drivers/input/touchscreen/hideep.h                 | 318 +++++++
+>  drivers/input/touchscreen/hideep_core.c            | 916 +++++++++++++++++++++
+>  drivers/input/touchscreen/hideep_dbg.c             | 405 +++++++++
+>  drivers/input/touchscreen/hideep_dbg.h             |  24 +
+>  drivers/input/touchscreen/hideep_isp.c             | 592 +++++++++++++
+>  drivers/input/touchscreen/hideep_isp.h             |  96 +++
+>  drivers/input/touchscreen/hideep_sysfs.c           | 245 ++++++
+>  11 files changed, 2645 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+>  create mode 100644 drivers/input/touchscreen/hideep.h
+>  create mode 100644 drivers/input/touchscreen/hideep_core.c
+>  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
+>  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
+>  create mode 100644 drivers/input/touchscreen/hideep_isp.c
+>  create mode 100644 drivers/input/touchscreen/hideep_isp.h
+>  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
