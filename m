@@ -1,39 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] of: Add vendor prefix for Adaptrum, Inc.
-Date: Thu, 3 Aug 2017 18:25:24 -0500
-Message-ID: <20170803232524.x7a7buzpkniaxg43@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] net: stmmac: Add Adaptrum Anarion GMAC glue layer
+Date: Thu, 3 Aug 2017 18:26:43 -0500
+Message-ID: <20170803232643.oqvdgvp6xqwgk6mh@rob-hp-laptop>
 References: <20170728220707.13960-1-alex.g@adaptrum.com>
- <20170728220707.13960-2-alex.g@adaptrum.com>
- <af822347-635d-a073-56e5-8eae403a729e@suse.de>
+ <20170728220707.13960-4-alex.g@adaptrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <af822347-635d-a073-56e5-8eae403a729e@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Alexandru Gagniuc <alex.g@adaptrum.com>, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thierry Reding <treding@nvidia.com>, Marek Vasut <marek.vasut@gmail.com>, Rask Ingemann Lambertsen <ccc94453@vip.cybercity.dk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
+In-Reply-To: <20170728220707.13960-4-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jul 29, 2017 at 04:48:28PM +0200, Andreas Färber wrote:
-> Hi Alexandru,
+On Fri, Jul 28, 2017 at 03:07:03PM -0700, Alexandru Gagniuc wrote:
+> Before the GMAC on the Anarion chip can be used, the PHY interface
+> selection must be configured with the DWMAC block in reset.
 > 
-> Am 29.07.2017 um 00:07 schrieb Alexandru Gagniuc:
-> > Signed-off-by: Alexandru Gagniuc <alex.g@adaptrum.com>
-> > ---
-> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
-> >  1 file changed, 1 insertion(+)
+> This layer covers a block containing only two registers. Although it
+> is possible to model this as a reset controller and use the "resets"
+> property of stmmac, it's much more intuitive to include this in the
+> glue layer instead.
 > 
-> Not sure why I'm CC'ed here, but it looks sane, so
+> At this time only RGMII is supported, because it is the only mode
+> which has been validated hardware-wise.
 > 
-> Reviewed-by: Andreas Färber <afaerber@suse.de>
-> 
-> If this patch gets respun, please add a sentence about your company to
-> the commit message. I also think "dt-bindings:" is a more common prefix?
+> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/net/anarion-gmac.txt       |  25 ++++
 
-Please respin with the above and just send by itself. This can go 
-separately as there's no need to merge via the same tree just in the 
-name of satisfying checkpatch.
+The binding looks fine, but please split to separate patch.
 
-Rob
+>  drivers/net/ethernet/stmicro/stmmac/Kconfig        |   9 ++
+>  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
+>  .../net/ethernet/stmicro/stmmac/dwmac-anarion.c    | 151 +++++++++++++++++++++
+>  4 files changed, 186 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/anarion-gmac.txt
+>  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-anarion.c
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
