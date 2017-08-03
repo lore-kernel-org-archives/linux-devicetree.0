@@ -1,119 +1,57 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Thu, 3 Aug 2017 12:48:31 +0300
-Message-ID: <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
- <20170731123157.GJ3053@localhost>
- <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
- <20170802045522.GU3053@localhost>
- <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
- <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
- <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
- <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
- <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
- <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Compatibles for i2c muxes nxp,pca954x and ti,tca954x
+Date: Thu, 3 Aug 2017 12:00:27 +0200
+Message-ID: <62519d0b-0b7b-9124-8481-9ef8de24eaf6@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-77u/ClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgw
-IEhlbHNpbmtpLiBZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0Rv
-bWljaWxlOiBIZWxzaW5raQoKT24gMjAxNy0wOC0wMyAxMjowMCwgUGllcnJlIFl2ZXMgTU9SRFJF
-VCB3cm90ZToKPj4gV2hhdCBJIGFjdHVhbGx5IG1lYW4gaXMgdGhhdCB5b3Ugc2hvdWxkIG5vdCBu
-ZWVkIHRvIG1vZGlmeSB0aGUgRE1BIAo+PiBkcml2ZXIgYXQgYWxsLgo+PiBBY2NvcmRpbmcgdG8g
-c3RtMzItZG1hLnR4dDoKPj4gI2RtYS1jZWxscyA9IDw0PjsKPj4gMS4gY2hhbm5lbElECj4+IDIu
-IHJlcXVlc3QgbGluZSBudW1iZXIKPj4gMy4gLSA0LiBzb21lIHBhcmFtZXRlcnMKPj4KPj4gSSBi
-ZWxpZXZlIGlmIHlvdSBkb24ndCBoYXZlIHRoZSBldmVudCByb3V0ZXIgKGRpcmVjdGx5IHVzaW5n
-IHRoZSBETUEgCj4+IG5vZGUpIHlvdSBhbHdheXMgbmVlZCB0byBwcm92aWRlIHRoZXNlLCByaWdo
-dD8KPiAKPiBDb3JyZWN0Cj4gCj4+IElmIEknbSBub3QgbWlzdGFrZW4sIHdoZW4geW91IHVzZSB0
-aGUgZXZlbnQgcm91dGVyIHlvdSB3YW50IHRvIG9taXQgdGhlIAo+PiBDaGFubmVsSUQgYW5kIGdl
-dCBhIHJhbmRvbSBjaGFubmVsIHZpYSBkbWFfZ2V0X2FueV9zbGF2ZV9jaGFubmVsIGluIHRoZSAK
-Pj4gRE1BIGRyaXZlciBhbmQgZmVlZCBiYWNrIHRoZSBjaGFubmVsSUQgdG8gdGhlIGV2ZW50IHJv
-dXRlciBkcml2ZXI/Cj4gCj4gQWdhaW4gY29ycmVjdC4KPiAKPj4gSSBiZWxpZXZlIHRoZSByZWFz
-b24gZm9yIHRoaXMgaXMgdGhhdCB5b3Ugd2FudCB0byBrZWVwIG1peGVkIGJpbmRpbmcgCj4+IHVz
-ZSwgdG8gaGF2ZSBkaXJlY3QgRE1BIGJpbmRpbmdzIGFuZCBiaW5kaW5ncyB2aWEgZXZlbnQgcm91
-dGVyLgo+Pgo+IAo+IFdlbGwgbm8uIHBlcmlwaGVyYWwgaGFzIHRvIHVzZSBETUFNVVggYW5kIG1p
-eGluZyB1cCBpcyB0byBiZSBhdm9pZGVkLiBUaGlzIGlzCj4gbW9yZSBmb3IgYmFja3dhcmQgY29t
-cGF0aWJpbGl0eSB3aXRoIFNvQyB3aGljaCBkb2Vzbid0IGhhdmUgYSBETUFNVVguCj4gCj4+IE5v
-dyB3aGF0IGhhcHBlbnMgaWYgeW91IGhhdmUgZGlyZWN0IGJpbmRpbmc6Cj4+IGRldmljZTEgewo+
-PiAJZG1hcyA9IDwmZG1hMiAxIDQgMHgxMDQwMCAweDM+Owo+PiB9Owo+Pgo+PiBhbmQgdmlhIGV2
-ZW50IHJvdXRlcjoKPj4gZGV2aWNlMiB7Cj4+IAlkbWFzID0JPCZkbWFfcm91dGVyIDEwIDB4MTA0
-MDAgMHgzPiwKPj4gCQk8JmRtYV9yb3V0ZXIgMTEgMHgxMDQwMCAweDM+Owo+PiB9Owo+Pgo+PiBk
-ZXZpY2UyIHByb2JlcyBmaXJzdCwgd2lsbCBnZXQgY2hhbm5lbElEIDAgYW5kIDEgdmlhIAo+PiBk
-bWFfZ2V0X2FueV9zbGF2ZV9jaGFubmVsLgo+Pgo+PiBXaGVuIGRldmljZTEgdHJpZXMgdG8gcHJv
-YmUsIHRoZSBjaGFubmVsSUQgMSBpcyBhbHJlYWR5IHRha2VuLi4KPiAKPiBZZXMgdGhpcyBpcyBh
-IGZsYXcgaWYgd2UgbWl4IHVwIGJpbmRpbmdzLgo+IAo+Pgo+PiBZb3UgbmVlZCB0byBjb252ZXJ0
-IGFsbCBwZXJpcGhlcmFscyB0byB1c2UgdGhlIGV2ZW50IHJvdXRlciB0byBhdm9pZCAKPj4gc3Vj
-aCBhIHJhY2VzLiBJIGhhdmUgZG9uZSB0aGUgc2FtZSBmb3IgdGhlIGRyYTcuCj4+IEFkZCB0aGUg
-ZXZlbnQgcm91dGVyIGRyaXZlciwKPj4gYWRkIHRoZSBldmVudCByb3V0ZXIgbm9kZSBhbmQgY29u
-dmVydCBleGlzdGluZyB1c2VycyB0byB1c2UgdGhhdAo+PiB3aGVuIGFkZGluZyBuZXcgZGV2aWNl
-cywgdXNlIHRoZSBldmVudCByb3V0ZXIgbm9kZS4KPj4KPj4gVGhlIGV2ZW50IHJvdXRlcidzIGJp
-bmRpbmcgd291bGQgaGF2ZSAzIHBhcmFtZXRlcnMsIGl0IG1hbmFnZXMgdGhlIAo+PiBhdmFpbGFi
-bGUgY2hhbm5lbElEcywgbGlrZSB0aGUgdGktZG1hLWNyb3NzYmFyIGRvZXMgZm9yIGRyYTcuIEF0
-IAo+PiBhbGxvY2F0ZSB0aW1lIGl0IHdvdWxkIHBpY2sgYW4gdW51c2VkIGNoYW5uZWxJRCBhbmQg
-Y3JhZnQgdGhlIGRtYS1zcGVjIAo+PiB3aXRoIHRoZSBmb3VyIHBhcmFtZXRlcnMgYXMgZG9jdW1l
-bnRlZC4KPj4gVGhlIG1haW4gRE1BIGRyaXZlciB3aWxsIG5vdCBuZWVkIGFueSBtb2RpZmljYXRp
-b24gYXMgZXZlcnl0aGluZyB3aWxsIGJlIAo+PiB0YWtlbiBjYXJlIG9mIGJ5IHRoZSBldmVudCBy
-b3V0ZXIuCj4+Cj4gCj4gSSBsb29rIHVwIHdoYXQgaGFzIGJlZW4gZG9uZSBpbiB0aS1kbWEtY3Jv
-c3NiYXIgYW5kIGFjdHVhbGx5IHRoaXMgRE1BTVVYIGRyaXZlcgo+IGhhcyBiZWVuIHdlbGwgaW5z
-cGlyZWQgZnJvbSB0aS1kbWEtY3Jvc3NiYXIuCj4gTm9uZXRoZWxlc3MgSSB1bmRlcnN0YW5kIHdo
-YXQgeW91IG1lYW50LiBUaGUgY2hhbm5lbElEIGRvZXNuJ3QgY29tZSBmcm9tIHRoZQo+IGRtYWVu
-Z2luZSBhbmQgYSBwaWVjZSBhIGNvZGUgaXMgZGV2aXNlZCB0byBhbGxvY2F0ZSB0aG9zZS4gSSBj
-b3VsZCBjb3B5L3Bhc3RlCj4gc3VjaCBjb2RlIGluIG15IHNpZGUgYnV0IEkgZG8gYmVsaWV2ZSB0
-aGlzIHdvdWxkIGJlIGJldHRlciBpZiBzdWNoIGluZm9ybWF0aW9uCj4gd291bGQgY29tZSBmcm9t
-IGRtYWVuZ2luZSBpbnN0ZWFkIDogdGhpcyBpcyB3aGF0IEkgZGlkIGJ1dCBhIGxpbmsvY2FsbGJh
-Y2sgaXMKPiBtaXNzaW5nIHRvIGNyYWZ0IHRoaXMgaW5mbyB1bnRpbCBETUEuIENoYW5uZWxJRCBp
-cyBjb21wdXRlZCBpbiB0d28gcGxhY2VzIGluCj4gZG1hZW1naW5lIGFuZCBpbiB5b3VyIGRyaXZl
-ci4gTW9yZW92ZXIgYW55IHJvdXRlciBpcyBnb2luZyB0byBkZXZlbG9wIGl0cyBvd24KPiBjaGFu
-bmVsSUQgYWxsb2NhdG9yLCBpbmZvIHdoaWNoIG5vcm1hbGx5IGNvbWVzIGZyb20gZG1hZW5naW5l
-LgoKeWVzIGFuZCBuby4KSW4gbXkgY2FzZSBvbiBkcjcgd2UgaGF2ZSBETUEgcmVxdWVzdCBjcm9z
-c2JhciB0byBzdXBwb3J0IG1vcmUgZXZlbnRzCnRoYW4gZWl0aGVyIGVETUEgb3Igc0RNQSBjb3Vs
-ZCBwb3NzaWJsZSBoYW5kbGUuIGVETUEgYW5kIHNETUEgd29ya3MgaW4KZGlmZmVyZW50IHdheXMs
-IGJ1dCB0aGUgc2FtZSBldmVudCByb3V0ZXIgZHJpdmVyIGZhY2lsaXRhdGVzIHRoZW0gZmluZS4K
-SW4gc0RNQSBhbnkgY2hhbm5lbCBjYW4gc2VydmljZSBhbnkgRE1BIHJlcXVlc3RzLCB3aGlsZSBp
-biBlRE1BIHRoZQpjaGFubmVsIG51bWJlciBhbmQgdGhlIGV2ZW50IG51bWJlcnMgYXJlIG1hdGNo
-ZWQgKGNoMTAgY2FuIHNlcnZpY2Ugb25seQpldmVudDEwKS4KCk91ciBldmVudCByb3V0ZXIgZHJp
-dmVyJ3MgdGFzayBpcyB0byBtYXAgdGhlIGluY29taW5nIGV2ZW50IG51bWJlciB0byBhbgpvdXRn
-b2luZyBldmVudCBudW1iZXIsIHdoaWNoIGlzIHRoZW4gZ29pbmcgdG8gYmUgdXNlZCBieSB0aGUg
-RE1BIGRyaXZlcgphcyBpbmNvbWluZyBldmVudC4gU28gaW4gdGhlIGNyb3NzYmFyIHdlIGFueXdh
-eXMgbmVlZCB0byBwaWNrIGFuIGV2ZW50CmZyb20gdGhlIGF2YWlsYWJsZSBsaXN0IG9mIHVudXNl
-ZCBvbmVzLiBUaGUgRE1BIGRyaXZlcnMgKGVETUEgb3Igc0RNQSkKd291bGQganVzdCB0aGluayB0
-aGF0IHRoZSByZXF1ZXN0IGNvbWVzIHZpYSBub3JtYWwgYmluZGluZyBhbmQgZG9lcyB3aGF0Cml0
-IG5vcm1hbGx5IGRvZXMgb24gU29DIHdoZXJlIHdlIGRvbid0IGhhdmUgdGhlIGNyb3NzYmFyIChP
-TUFQcyBmb3IKc0RNQSwgZGFWaW5jaSwgYW0zMy9hbTQzLCBrMmcsIGV0YyBmb3IgZURNQSkuCgpJ
-J20gbm90IHN1cmUgd2hhdCB5b3VyIERNQU1VWCBtdXhlcywgaXMgaXQgdGhlIGNoYW5uZWxzIG9y
-IHRoZSBldmVudHMsCmJ1dCBpdCBvbmx5IG5lZWQgdG8gbWFuYWdlIHRoZSBuZWVkZWQsIG1vdmlu
-ZyBwYXJ0cy4KCj4gVmlub2QsIEkgY2FuIHVwZGF0ZSBteSBkcml2ZXIgdG8gbWltaWMgd2hhdCB0
-aS1kbWEtY3Jvc3NiYXIgZGlkIHRvIGF2b2lkIHRoZQo+IGN1c3RvbSBBUEkuIFRoaXMgaXMgcyBy
-YXRoZXIgYmlnIGNoYW5nZSB0byBldmFsdWF0ZSBpbiBteSBzaWRlIHRob3VnaC4KPiBIb3dldmVy
-IGl0IHNlZW1zIHRvIG1lIHN1Y2ggaW5mbyBzaG91bGQgaGF2ZSBjb21lIGZyb20gZG1hZW5naW5l
-IGFuZCBub3QgZnJvbQo+IGRyaXZlci4KPiBMZXQgbWUga25vdyB5b3VyIHRob3VnaHQgYWJvdXQg
-dGhpcwo+IAo+PiBUaGUgb25seSBnb3RjaGEgaXMgd2l0aCBtZW1jcHkgdHlwZSBvZiB0cmFuc2Zl
-cnMgYXMgdGhleSBtaWdodCBhbHNvIG5lZWQgCj4+IHVuaXF1ZSBjaGFubmVsSUQsIGJ1dCBub3Qg
-cmVxdWVzdGVkIHZpYSB0aGUgc2xhdmUgYmluZGluZy4gRm9yIHRoYXQgSSAKPj4gaGF2ZSBhZGRl
-ZCBwcm9wZXJ0aWVzIHRvIHRoZSBldmVudCByb3V0ZXIgdG8gbWFzayBvdXQgY2VydGFpbiBjaGFu
-bmVscyAKPj4gKGFuZCBJIG5lZWRlZCB0byBkbyB0aGUgc2FtZSBmb3IgdGhlIGVETUEsIGJ1dCBp
-dCBpcyB1bnJlbGF0ZWQgdG8gdGhlIAo+PiByb3V0ZXIgaXRzZWxmKS4KPj4KPj4KPj4gLSBQw6l0
-ZXIKPj4KPiAKPiBQeQo+IAoKLSBQw6l0ZXIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi!
+
+Texas has apparently made copies for some of the NXP devices
+handled by the drivers/i2c/muxes/i2c-mux-pca954x.c driver.
+
+How is that best handled?
+
+I see e.g. that arch/arm/boot/dts/vf610-zii-dev-rev-{b,c}.dts has
+this snippet:
+
+&i2c2 {
+	tca9548@70 {
+		compatible = "nxp,pca9548";
+
+Which indicates that it really is a Texas chip sitting there, but that
+someone did not bother to state that explicitly.
+
+As I see it, there are two levels to this.
+
+1. Update the above to be
+
+		compatible = "ti,tca9548a", "nxp,pca9548";
+
+   and rely on the secondary compatible to be matched with the driver.
+
+2. Also update the driver to recognize the "ti,tca9548a" compatible.
+
+There are also "ti,tca9543a", "ti,tca9544a", "ti,tca9545a" and
+"ti,tca9546a" to consider (but no "ti,tca9542a" or "ti,tca9547a").
+
+AFAIU, the Texas chips are completely compatible from the driver
+point of view.
+
+Step 1 above is probably a bugfix, should someone find some
+unexpected incompatibility in the future. Without differentiating
+the compatibles now, there's just no way to handle that in a future
+driver.
+
+But is step 2 needed/desired until such a time that differences between
+the chips are found? How is this situation handled elsewhere?
+
+Cheers,
+peda
