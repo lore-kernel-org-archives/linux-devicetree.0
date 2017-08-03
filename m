@@ -1,35 +1,55 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: meson8b: describe the
- embedded reset controller
-Date: Thu, 3 Aug 2017 18:08:22 -0500
-Message-ID: <20170803230822.5kd6y46pqnpxezms@rob-hp-laptop>
-References: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
- <20170728211313.10603-2-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 3/5] net: stmmac: Add Adaptrum Anarion GMAC glue layer
+Date: Thu, 3 Aug 2017 18:22:47 -0500
+Message-ID: <20170803232247.rixl3yhpww5woihg@rob-hp-laptop>
+References: <20170728220707.13960-1-alex.g@adaptrum.com>
+ <20170728220707.13960-4-alex.g@adaptrum.com>
+ <20170728.190155.457209566729295513.davem@davemloft.net>
+ <b3a51afc-1eae-66ea-f20e-a09cd8289c1b@adaptrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170728211313.10603-2-martin.blumenstingl@googlemail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org
+In-Reply-To: <b3a51afc-1eae-66ea-f20e-a09cd8289c1b@adaptrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex <alex.g@adaptrum.com>
+Cc: David Miller <davem@davemloft.net>, linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 11:13:11PM +0200, Martin Blumenstingl wrote:
-> The Amlogic Meson8/Meson8b/Meson8m2 clock controller provides some reset
-> lines. These are used for example to boot the secondary CPU cores.
+On Mon, Jul 31, 2017 at 08:11:00AM -0700, Alex wrote:
+> Hi David,
 > 
-> This patch describes the reset controller which is embedded into the
-> clock controller on these SoCs.
-> A header file is provided which provides preprocessor macros for each
-> reset line (to make the .dts files easier to read).
+> On 07/28/2017 07:01 PM, David Miller wrote:
+> > From: Alexandru Gagniuc <alex.g@adaptrum.com>
+> > Date: Fri, 28 Jul 2017 15:07:03 -0700
+> > 
+> > > Before the GMAC on the Anarion chip can be used, the PHY interface
+> > > selection must be configured with the DWMAC block in reset.
+> > > 
+> > > This layer covers a block containing only two registers. Although it
+> > > is possible to model this as a reset controller and use the "resets"
+> > > property of stmmac, it's much more intuitive to include this in the
+> > > glue layer instead.
+> > > 
+> > > At this time only RGMII is supported, because it is the only mode
+> > > which has been validated hardware-wise.
+> > > 
+> > > Signed-off-by: Alexandru Gagniuc <alex.g@adaptrum.com>
+> > 
+> > I don't see how this fits into any patch series at all.  If this is
+> > part of a series you posted elsewhere, you should keep netdev@ on
+> > all such postings so people there can review the change in-context.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/clock/amlogic,meson8b-clkc.txt        |  9 +++++++-
->  .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h | 27 ++++++++++++++++++++++
->  2 files changed, 35 insertions(+), 1 deletion(-)
->  create mode 100644 include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
+> I used the --cc-cmd option to send-email. I'll be sure to CC netdev@ on
+> [PATCH v2].
 
-Acked-by: Rob Herring <robh@kernel.org>
+The problem is your series spans several subsystems and it's not 
+clear who you intend to apply these. There aren't really any hard 
+dependencies between the patches, so they could all go thru different 
+trees. But you need to state that at least implicitly by sending the 
+patches TO who should apply them and CC the rest (and get_maintainers.pl 
+doesn't really help with that aspect). Or just don't send them in a 
+series if there's not an inter-dependency of the patches. Normally 
+bindings and a driver do go together and I'll ack the binding.
+
+Rob
