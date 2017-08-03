@@ -1,397 +1,45 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/4] phy: phy-mt65xx-usb3: add PCIe PHY support
-Date: Thu, 3 Aug 2017 18:01:00 +0800
-Message-ID: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Vadim Pasternak <vadimp@mellanox.com>
+Subject: [patch v3 0/2] Introduce support for mlxreg mfd core and I2C drivers
+Date: Thu,  3 Aug 2017 12:02:11 +0000
+Message-ID: <1501761733-21885-1-git-send-email-vadimp@mellanox.com>
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, jiri@resnulli.us, jacek.anaszewski@gmail.com, Vadim Pasternak <vadimp@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patchset adds support for the Mellanox BMC card equipped with the
+programmable devices controlling hardware.
+The support includes:
+- signal handling for chassis, ASIC, CPU events;
+- LED control;
+- exposing sysfs interface for reset control, reset monitoring and mux
+  selection for the access to remote devices at the host side.
 
-This patch adds PCIe PHY setting part.
+It contains:
+ - Introduction of Mellanox mlxreg-core drivers, which is bus independent
+   and could work over register map of the programmable device (for
+   example CPLD) attached to different buses, supported by register
+   mapping.
+ - I2C driver mlxreg-i2c, which creates register mapping for I2C access
+   to the programmable devices with I2C interface. It allows control for
+   devices with one and two bytes address space.
 
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- drivers/phy/phy-mt65xx-usb3.c |  220 +++++++++++++++++++++++++++++++++++++----
- 1 file changed, 202 insertions(+), 18 deletions(-)
+Vadim Pasternak (2):
+  mfd: Add Mellanox regmap core driver
+  mfd: Add Mellanox regmap I2C driver
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index 59b110f..8ba6905 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -29,7 +29,7 @@
- #define SSUSB_SIFSLV_V1_U2FREQ		0x100	/* shared by u2 phys */
- /* u2 phy bank */
- #define SSUSB_SIFSLV_V1_U2PHY_COM	0x000
--/* u3 phy banks */
-+/* u3/pcie phy banks */
- #define SSUSB_SIFSLV_V1_U3PHYD		0x000
- #define SSUSB_SIFSLV_V1_U3PHYA		0x200
- 
-@@ -99,6 +99,23 @@
- #define P2C_RG_SESSEND			BIT(4)
- #define P2C_RG_AVALID			BIT(2)
- 
-+#define U3P_U3_CHIP_GPIO_CTLD		0x0c
-+#define P3C_REG_IP_SW_RST		BIT(31)
-+#define P3C_MCU_BUS_CK_GATE_EN		BIT(30)
-+#define P3C_FORCE_IP_SW_RST		BIT(29)
-+
-+#define U3P_U3_CHIP_GPIO_CTLE		0x10
-+#define P3C_RG_SWRST_U3_PHYD		BIT(25)
-+#define P3C_RG_SWRST_U3_PHYD_FORCE_EN	BIT(24)
-+
-+#define U3P_U3_PHYA_REG0	0x000
-+#define P3A_RG_CLKDRV_OFF		GENMASK(3, 2)
-+#define P3A_RG_CLKDRV_OFF_VAL(x)	((0x3 & (x)) << 2)
-+
-+#define U3P_U3_PHYA_REG1	0x004
-+#define P3A_RG_CLKDRV_AMP		GENMASK(31, 29)
-+#define P3A_RG_CLKDRV_AMP_VAL(x)	((0x7 & (x)) << 29)
-+
- #define U3P_U3_PHYA_REG6	0x018
- #define P3A_RG_TX_EIDLE_CM		GENMASK(31, 28)
- #define P3A_RG_TX_EIDLE_CM_VAL(x)	((0xf & (x)) << 28)
-@@ -108,9 +125,40 @@
- #define P3A_RG_RX_DAC_MUX_VAL(x)	((0x1f & (x)) << 1)
- 
- #define U3P_U3_PHYA_DA_REG0	0x100
-+#define P3A_RG_XTAL_EXT_PE2H		GENMASK(17, 16)
-+#define P3A_RG_XTAL_EXT_PE2H_VAL(x)	((0x3 & (x)) << 16)
-+#define P3A_RG_XTAL_EXT_PE1H		GENMASK(13, 12)
-+#define P3A_RG_XTAL_EXT_PE1H_VAL(x)	((0x3 & (x)) << 12)
- #define P3A_RG_XTAL_EXT_EN_U3		GENMASK(11, 10)
- #define P3A_RG_XTAL_EXT_EN_U3_VAL(x)	((0x3 & (x)) << 10)
- 
-+#define U3P_U3_PHYA_DA_REG4	0x108
-+#define P3A_RG_PLL_DIVEN_PE2H		GENMASK(21, 19)
-+#define P3A_RG_PLL_BC_PE2H		GENMASK(7, 6)
-+#define P3A_RG_PLL_BC_PE2H_VAL(x)	((0x3 & (x)) << 6)
-+
-+#define U3P_U3_PHYA_DA_REG5	0x10c
-+#define P3A_RG_PLL_BR_PE2H		GENMASK(29, 28)
-+#define P3A_RG_PLL_BR_PE2H_VAL(x)	((0x3 & (x)) << 28)
-+#define P3A_RG_PLL_IC_PE2H		GENMASK(15, 12)
-+#define P3A_RG_PLL_IC_PE2H_VAL(x)	((0xf & (x)) << 12)
-+
-+#define U3P_U3_PHYA_DA_REG6	0x110
-+#define P3A_RG_PLL_IR_PE2H		GENMASK(19, 16)
-+#define P3A_RG_PLL_IR_PE2H_VAL(x)	((0xf & (x)) << 16)
-+
-+#define U3P_U3_PHYA_DA_REG7	0x114
-+#define P3A_RG_PLL_BP_PE2H		GENMASK(19, 16)
-+#define P3A_RG_PLL_BP_PE2H_VAL(x)	((0xf & (x)) << 16)
-+
-+#define U3P_U3_PHYA_DA_REG20	0x13c
-+#define P3A_RG_PLL_DELTA1_PE2H		GENMASK(31, 16)
-+#define P3A_RG_PLL_DELTA1_PE2H_VAL(x)	((0xffff & (x)) << 16)
-+
-+#define U3P_U3_PHYA_DA_REG25	0x148
-+#define P3A_RG_PLL_DELTA_PE2H		GENMASK(15, 0)
-+#define P3A_RG_PLL_DELTA_PE2H_VAL(x)	(0xffff & (x))
-+
- #define U3P_U3_PHYD_LFPS1		0x00c
- #define P3D_RG_FWAKE_TH		GENMASK(21, 16)
- #define P3D_RG_FWAKE_TH_VAL(x)	((0x3f & (x)) << 16)
-@@ -322,7 +370,7 @@ static void u3_phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, instance->index);
- }
- 
--static void phy_instance_init(struct mt65xx_u3phy *u3phy,
-+static void u2_phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
-@@ -384,7 +432,7 @@ static void phy_instance_init(struct mt65xx_u3phy *u3phy,
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
- 
--static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
-+static void u2_phy_instance_power_on(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
-@@ -420,7 +468,7 @@ static void phy_instance_power_on(struct mt65xx_u3phy *u3phy,
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
- 
--static void phy_instance_power_off(struct mt65xx_u3phy *u3phy,
-+static void u2_phy_instance_power_off(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
-@@ -458,7 +506,7 @@ static void phy_instance_power_off(struct mt65xx_u3phy *u3phy,
- 	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, index);
- }
- 
--static void phy_instance_exit(struct mt65xx_u3phy *u3phy,
-+static void u2_phy_instance_exit(struct mt65xx_u3phy *u3phy,
- 	struct mt65xx_phy_instance *instance)
- {
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
-@@ -477,21 +525,133 @@ static void phy_instance_exit(struct mt65xx_u3phy *u3phy,
- 	}
- }
- 
-+static void pcie_phy_instance_init(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+{
-+	struct u3phy_banks *u3_banks = &instance->u3_banks;
-+	u32 tmp;
-+
-+	if (u3phy->pdata->version != MT_PHY_V1)
-+		return;
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG0);
-+	tmp &= ~(P3A_RG_XTAL_EXT_PE1H | P3A_RG_XTAL_EXT_PE2H);
-+	tmp |= P3A_RG_XTAL_EXT_PE1H_VAL(0x2) | P3A_RG_XTAL_EXT_PE2H_VAL(0x2);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG0);
-+
-+	/* ref clk drive */
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_REG1);
-+	tmp &= ~P3A_RG_CLKDRV_AMP;
-+	tmp |= P3A_RG_CLKDRV_AMP_VAL(0x4);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_REG1);
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_REG0);
-+	tmp &= ~P3A_RG_CLKDRV_OFF;
-+	tmp |= P3A_RG_CLKDRV_OFF_VAL(0x1);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_REG0);
-+
-+	/* SSC delta -5000ppm */
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG20);
-+	tmp &= ~P3A_RG_PLL_DELTA1_PE2H;
-+	tmp |= P3A_RG_PLL_DELTA1_PE2H_VAL(0x3c);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG20);
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG25);
-+	tmp &= ~P3A_RG_PLL_DELTA_PE2H;
-+	tmp |= P3A_RG_PLL_DELTA_PE2H_VAL(0x36);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG25);
-+
-+	/* change pll BW 0.6M */
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG5);
-+	tmp &= ~(P3A_RG_PLL_BR_PE2H | P3A_RG_PLL_IC_PE2H);
-+	tmp |= P3A_RG_PLL_BR_PE2H_VAL(0x1) | P3A_RG_PLL_IC_PE2H_VAL(0x1);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG5);
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG4);
-+	tmp &= ~(P3A_RG_PLL_DIVEN_PE2H | P3A_RG_PLL_BC_PE2H);
-+	tmp |= P3A_RG_PLL_BC_PE2H_VAL(0x3);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG4);
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG6);
-+	tmp &= ~P3A_RG_PLL_IR_PE2H;
-+	tmp |= P3A_RG_PLL_IR_PE2H_VAL(0x2);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG6);
-+
-+	tmp = readl(u3_banks->phya + U3P_U3_PHYA_DA_REG7);
-+	tmp &= ~P3A_RG_PLL_BP_PE2H;
-+	tmp |= P3A_RG_PLL_BP_PE2H_VAL(0xa);
-+	writel(tmp, u3_banks->phya + U3P_U3_PHYA_DA_REG7);
-+
-+	/* Tx Detect Rx Timing: 10us -> 5us */
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_RXDET1);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET;
-+	tmp |= P3D_RG_RXDET_STB2_SET_VAL(0x10);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_RXDET1);
-+
-+	tmp = readl(u3_banks->phyd + U3P_U3_PHYD_RXDET2);
-+	tmp &= ~P3D_RG_RXDET_STB2_SET_P3;
-+	tmp |= P3D_RG_RXDET_STB2_SET_P3_VAL(0x10);
-+	writel(tmp, u3_banks->phyd + U3P_U3_PHYD_RXDET2);
-+
-+	/* wait for PCIe subsys register to active */
-+	usleep_range(2500, 3000);
-+	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, instance->index);
-+}
-+
-+static void pcie_phy_instance_power_on(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+{
-+	struct u3phy_banks *bank = &instance->u3_banks;
-+	u32 tmp;
-+
-+	tmp = readl(bank->chip + U3P_U3_CHIP_GPIO_CTLD);
-+	tmp &= ~(P3C_FORCE_IP_SW_RST | P3C_MCU_BUS_CK_GATE_EN |
-+		P3C_REG_IP_SW_RST);
-+	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLD);
-+
-+	tmp = readl(bank->chip + U3P_U3_CHIP_GPIO_CTLE);
-+	tmp &= ~(P3C_RG_SWRST_U3_PHYD_FORCE_EN | P3C_RG_SWRST_U3_PHYD);
-+	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLE);
-+}
-+
-+static void pcie_phy_instance_power_off(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+
-+{
-+	struct u3phy_banks *bank = &instance->u3_banks;
-+	u32 tmp;
-+
-+	tmp = readl(bank->chip + U3P_U3_CHIP_GPIO_CTLD);
-+	tmp |= P3C_FORCE_IP_SW_RST | P3C_REG_IP_SW_RST;
-+	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLD);
-+
-+	tmp = readl(bank->chip + U3P_U3_CHIP_GPIO_CTLE);
-+	tmp |= P3C_RG_SWRST_U3_PHYD_FORCE_EN | P3C_RG_SWRST_U3_PHYD;
-+	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLE);
-+}
-+
- static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
- 			      struct mt65xx_phy_instance *instance)
- {
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
- 	struct u3phy_banks *u3_banks = &instance->u3_banks;
- 
--	if (instance->type == PHY_TYPE_USB2) {
-+	switch (instance->type) {
-+	case PHY_TYPE_USB2:
- 		u2_banks->misc = NULL;
- 		u2_banks->fmreg = u3phy->sif_base + SSUSB_SIFSLV_V1_U2FREQ;
- 		u2_banks->com = instance->port_base + SSUSB_SIFSLV_V1_U2PHY_COM;
--	} else if (instance->type == PHY_TYPE_USB3) {
-+		break;
-+	case PHY_TYPE_USB3:
-+	case PHY_TYPE_PCIE:
- 		u3_banks->spllc = u3phy->sif_base + SSUSB_SIFSLV_V1_SPLLC;
- 		u3_banks->chip = NULL;
- 		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
- 		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V1_U3PHYA;
-+		break;
-+	default:
-+		dev_err(u3phy->dev, "incompatible PHY type\n");
-+		return;
- 	}
- }
- 
-@@ -501,15 +661,22 @@ static void phy_v2_banks_init(struct mt65xx_u3phy *u3phy,
- 	struct u2phy_banks *u2_banks = &instance->u2_banks;
- 	struct u3phy_banks *u3_banks = &instance->u3_banks;
- 
--	if (instance->type == PHY_TYPE_USB2) {
-+	switch (instance->type) {
-+	case PHY_TYPE_USB2:
- 		u2_banks->misc = instance->port_base + SSUSB_SIFSLV_V2_MISC;
- 		u2_banks->fmreg = instance->port_base + SSUSB_SIFSLV_V2_U2FREQ;
- 		u2_banks->com = instance->port_base + SSUSB_SIFSLV_V2_U2PHY_COM;
--	} else if (instance->type == PHY_TYPE_USB3) {
-+		break;
-+	case PHY_TYPE_USB3:
-+	case PHY_TYPE_PCIE:
- 		u3_banks->spllc = instance->port_base + SSUSB_SIFSLV_V2_SPLLC;
- 		u3_banks->chip = instance->port_base + SSUSB_SIFSLV_V2_CHIP;
- 		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V2_U3PHYD;
- 		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V2_U3PHYA;
-+		break;
-+	default:
-+		dev_err(u3phy->dev, "incompatible PHY type\n");
-+		return;
- 	}
- }
- 
-@@ -531,10 +698,20 @@ static int mt65xx_phy_init(struct phy *phy)
- 		return ret;
- 	}
- 
--	if (instance->type == PHY_TYPE_USB2)
--		phy_instance_init(u3phy, instance);
--	else
-+	switch (instance->type) {
-+	case PHY_TYPE_USB2:
-+		u2_phy_instance_init(u3phy, instance);
-+		break;
-+	case PHY_TYPE_USB3:
- 		u3_phy_instance_init(u3phy, instance);
-+		break;
-+	case PHY_TYPE_PCIE:
-+		pcie_phy_instance_init(u3phy, instance);
-+		break;
-+	default:
-+		dev_err(u3phy->dev, "incompatible PHY type\n");
-+		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-@@ -545,9 +722,12 @@ static int mt65xx_phy_power_on(struct phy *phy)
- 	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
- 
- 	if (instance->type == PHY_TYPE_USB2) {
--		phy_instance_power_on(u3phy, instance);
-+		u2_phy_instance_power_on(u3phy, instance);
- 		hs_slew_rate_calibrate(u3phy, instance);
-+	} else if (instance->type == PHY_TYPE_PCIE) {
-+		pcie_phy_instance_power_on(u3phy, instance);
- 	}
-+
- 	return 0;
- }
- 
-@@ -557,7 +737,9 @@ static int mt65xx_phy_power_off(struct phy *phy)
- 	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
- 
- 	if (instance->type == PHY_TYPE_USB2)
--		phy_instance_power_off(u3phy, instance);
-+		u2_phy_instance_power_off(u3phy, instance);
-+	else if (instance->type == PHY_TYPE_PCIE)
-+		pcie_phy_instance_power_off(u3phy, instance);
- 
- 	return 0;
- }
-@@ -568,7 +750,7 @@ static int mt65xx_phy_exit(struct phy *phy)
- 	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
- 
- 	if (instance->type == PHY_TYPE_USB2)
--		phy_instance_exit(u3phy, instance);
-+		u2_phy_instance_exit(u3phy, instance);
- 
- 	clk_disable_unprepare(instance->ref_clk);
- 	clk_disable_unprepare(u3phy->u3phya_ref);
-@@ -601,7 +783,8 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 
- 	instance->type = args->args[0];
- 	if (!(instance->type == PHY_TYPE_USB2 ||
--	      instance->type == PHY_TYPE_USB3)) {
-+	      instance->type == PHY_TYPE_USB3 ||
-+	      instance->type == PHY_TYPE_PCIE)) {
- 		dev_err(dev, "unsupported device type: %d\n", instance->type);
- 		return ERR_PTR(-EINVAL);
- 	}
-@@ -626,7 +809,7 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 	.owner		= THIS_MODULE,
- };
- 
--static const struct mt65xx_phy_pdata mt2701_pdata = {
-+static const struct mt65xx_phy_pdata tphy_v1_pdata = {
- 	.avoid_rx_sen_degradation = false,
- 	.version = MT_PHY_V1,
- };
-@@ -642,9 +825,10 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- };
- 
- static const struct of_device_id mt65xx_u3phy_id_table[] = {
--	{ .compatible = "mediatek,mt2701-u3phy", .data = &mt2701_pdata },
-+	{ .compatible = "mediatek,mt2701-u3phy", .data = &tphy_v1_pdata },
- 	{ .compatible = "mediatek,mt2712-u3phy", .data = &mt2712_pdata },
- 	{ .compatible = "mediatek,mt8173-u3phy", .data = &mt8173_pdata },
-+	{ .compatible = "mediatek,generic-tphy-v1", .data = &tphy_v1_pdata },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, mt65xx_u3phy_id_table);
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ MAINTAINERS                                        |    8 +
+ drivers/mfd/Kconfig                                |   28 +
+ drivers/mfd/Makefile                               |    2 +
+ drivers/mfd/mlxreg-core.c                          | 1263 ++++++++++++++++++++
+ drivers/mfd/mlxreg-i2c.c                           |  183 +++
+ include/linux/platform_data/mlxreg.h               |   87 ++
+ 7 files changed, 1572 insertions(+)
+ create mode 100644 drivers/mfd/mlxreg-core.c
+ create mode 100644 drivers/mfd/mlxreg-i2c.c
+ create mode 100644 include/linux/platform_data/mlxreg.h
+
 -- 
-1.7.9.5
+2.1.4
