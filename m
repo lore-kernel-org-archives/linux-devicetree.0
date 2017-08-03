@@ -1,110 +1,161 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 00/16] omap_hsmmc: Add ADMA support and UHS/HS200/DDR support
-Date: Thu, 3 Aug 2017 12:40:10 +0200
-Message-ID: <CAPDyKFp1oenb0Kq-SCf-ezG9p3gY9xUSq6-S_SQ4DpoRiKiOdA@mail.gmail.com>
-References: <20170616124544.15046-1-kishon@ti.com> <CAPDyKFo+ORA=OpdikiUZWj3gpx+ssuqbC5MtqiFJneyJhu84dA@mail.gmail.com>
- <fc9c1576-7419-b174-ea42-97ccf4666cee@ti.com> <27776609-2425-9423-3eaa-dc128c4b07f0@ti.com>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/4] Docs: dt: document qcom iommu bindings
+Date: Thu,  3 Aug 2017 06:47:49 -0400
+Message-ID: <20170803104800.18624-2-robdclark@gmail.com>
+References: <20170803104800.18624-1-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <27776609-2425-9423-3eaa-dc128c4b07f0@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, Ravikumar Kattekola <rk@ti.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20170803104800.18624-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Adrian
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Tested-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 
-On 20 July 2017 at 15:36, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi Ulf,
->
-> On Tuesday 11 July 2017 07:27 PM, Kishon Vijay Abraham I wrote:
->> Hi Ulf,
->>
->> On Tuesday 11 July 2017 06:40 PM, Ulf Hansson wrote:
->>> On 16 June 2017 at 14:45, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>> This is the final part of the series originally sent as
->>>> part of [2].
->>>>
->>>> This series adds UHS, HS200, DDR mode and ADMA support to
->>>> omap_hsmmc driver used to improve the throughput of MMC/SD in dra7
->>>> SoCs.
->>>>
->>>> Changes from [2]:
->>>> *) No more updating omap2plus_defconfig or multi_v7_defconfig is
->>>>    required, so those patches are removed.
->>>> *) Addressed Rob Herring's comment on implementing a function
->>>>    instead of having a macro while getting pinctrl state.
->>>>
->>>> This series is created on top of [3], [4], [5] AND [6]
->>>> (i.e after
->>>>   ARM: dts: omap3-overo: Remove "vqmmc-supply" property from MMC dt node
->>>>   omap_hsmmc: use mmc_regulator_get_supply() to get regulators
->>>>   omap*: Fixes/Cleanups for MMC devicetree node
->>>>   ARM: dts: Add iodelay data for MMC)
->>>>
->>>> The functionality implemented in this series was sent before ([1]) but
->>>> was never followed up since supporting high speed modes in dra7 required
->>>> IODelay values to be configured. With IODelay driver being merged into
->>>> kernel, sending it as a fresh series with support for configuring IODelay
->>>> values.
->>>
->>> Is it safe to queue this via mmc tree for 4.14 or is there a
->>> dependency I must consider? The above didn't quite tell me that, could
->>> you please elaborate.
->>
->> There is a dependency with https://www.spinics.net/lists/arm-kernel/msg586215.html.
->>
->> I'll resend the series after all the platform data specific stuff is merged.
->>>
->>>>
->>>> Suggestions of migrating to sdhci driver (from omap_hsmmc driver) is not
->>>> addressed since
->>>> *) tuning ratio of MMC in dra7 is different from sdhci
->>>> *) IOdelay is required for dra7
->>>> *) GPIO based card detect is not supported in sdhci
->>>
->>> Lots of sdhci drivers calls mmc_of_parse(), and uses the mmc slot gpio
->>> APIs, so I don't this this is correct statement.
->>>
->>>> *) Some of the registers don't always have correct values as in sdhci
->>>>    (like PSTATE).
->>>> Supporting all of these in sdhci will result in adding lot of quirks in
->>>> sdhci driver.
->>>
->>> Is it really that much different? It would be nice if some really took
->>> on the challenge of converting omap_hsmmc into an sdhci variant.
->>
->> Okay. I'll give that a shot and see how far I can get.
->
-> I created a sdhci variant and was able to get it working with high speed mode
-> in dra7.
-
-That's very nice!
-
->
-> I have a query on sdhci_set_power_noreg() in sdhci.c. sdhci_set_power_noreg
-> sets SDHCI_POWER_CONTROL based on *vdd* value. However SDHCI_POWER_CONTROL is
-> for setting bus voltage and need not be based on *vdd*. IMHO
-> SDHCI_POWER_CONTROL should be set based on "ios->signal_voltage".
-
-According to the implementation in sdhci_set_power_noreg(), I
-understand it as the SDHCI_POWER_CONTROL register actually controls
-the power to the card (VDD) and the not the I/O voltage level
-(ios->signal_voltage).
-
-However, if I read the SDHCI spec, it seems to be mentioning the "SD
-bus voltage", which to me is about the I/O voltage level. So either
-the spec is unclear or the code is wrong. :-)
-
-Are you saying that the omap_hsmmc variant is using the
-SDHCI_POWER_CONTROL to control the I/O voltage level?
-
-I am wondering how other variants use it. Perhaps most variants
-actually have an external regulator and thus calls
-sdhci_set_power_reg() instead.
-
-Looping in Adrian, to see if he has some thoughts on this.
-
-Kind regards
-Uffe
+diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+new file mode 100644
+index 000000000000..b2641ceb2b40
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+@@ -0,0 +1,121 @@
++* QCOM IOMMU v1 Implementation
++
++Qualcomm "B" family devices which are not compatible with arm-smmu have
++a similar looking IOMMU but without access to the global register space,
++and optionally requiring additional configuration to route context irqs
++to non-secure vs secure interrupt line.
++
++** Required properties:
++
++- compatible       : Should be one of:
++
++                        "qcom,msm8916-iommu"
++
++                     Followed by "qcom,msm-iommu-v1".
++
++- clock-names      : Should be a pair of "iface" (required for IOMMUs
++                     register group access) and "bus" (required for
++                     the IOMMUs underlying bus access).
++
++- clocks           : Phandles for respective clocks described by
++                     clock-names.
++
++- #address-cells   : must be 1.
++
++- #size-cells      : must be 1.
++
++- #iommu-cells     : Must be 1.  Index identifies the context-bank #.
++
++- ranges           : Base address and size of the iommu context banks.
++
++- qcom,iommu-secure-id  : secure-id.
++
++- List of sub-nodes, one per translation context bank.  Each sub-node
++  has the following required properties:
++
++  - compatible     : Should be one of:
++        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
++        - "qcom,msm-iommu-v1-sec" : secure context bank
++  - reg            : Base address and size of context bank within the iommu
++  - interrupts     : The context fault irq.
++
++** Optional properties:
++
++- reg              : Base address and size of the SMMU local base, should
++                     be only specified if the iommu requires configuration
++                     for routing of context bank irq's to secure vs non-
++                     secure lines.  (Ie. if the iommu contains secure
++                     context banks)
++
++
++** Examples:
++
++	apps_iommu: iommu@1e20000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1e20000 0x40000>;
++		reg = <0x1ef0000 0x3000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_APSS_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <17>;
++
++		// mdp_0:
++		iommu-ctx@4000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x4000 0x1000>;
++			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		// venus_ns:
++		iommu-ctx@5000 {
++			compatible = "qcom,msm-iommu-v1-sec";
++			reg = <0x5000 0x1000>;
++			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	gpu_iommu: iommu@1f08000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1f08000 0x10000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_GFX_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <18>;
++
++		// gfx3d_user:
++		iommu-ctx@1000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x1000 0x1000>;
++			interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		// gfx3d_priv:
++		iommu-ctx@2000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x2000 0x1000>;
++			interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	...
++
++	venus: video-codec@1d00000 {
++		...
++		iommus = <&apps_iommu 5>;
++	};
++
++	mdp: mdp@1a01000 {
++		...
++		iommus = <&apps_iommu 4>;
++	};
++
++	gpu@01c00000 {
++		...
++		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
++	};
+-- 
+2.13.0
