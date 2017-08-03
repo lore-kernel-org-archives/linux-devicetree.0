@@ -1,110 +1,68 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: stm32: change pinctrl bindings definition
-Date: Thu, 3 Aug 2017 15:21:34 -0500
-Message-ID: <20170803202134.ne3wkzremxf5mbuw@rob-hp-laptop>
-References: <1501163393-28884-1-git-send-email-alexandre.torgue@st.com>
- <1501163393-28884-2-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH v2 10/10] dt-bindings: i2c: Add P8 OCC hwmon driver
+ documentation
+Date: Thu, 3 Aug 2017 15:24:29 -0500
+Message-ID: <20170803202429.nicolqv6xdls26wp@rob-hp-laptop>
+References: <1501165829-12395-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1501165829-12395-11-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501163393-28884-2-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1501165829-12395-11-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vikas.manocha-qxv4g6HH51o@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 03:49:53PM +0200, Alexandre Torgue wrote:
-> Initially each pin was declared in "include/dt-bindings/stm32<SOC>-pinfunc.h"
-> and each definition contained SOC names (ex: STM32F429_PA9_FUNC_USART1_TX).
-> Since this approach was approved, the number of supported MCU has
-> increased (STM32F429/STM32F469/STM32f746/STM32H743). To avoid to add a new
-> file in "include/dt-bindings" each time a new STM32 SOC arrives I propose
-> a new approach which consist to use a macro to define pin muxing in device
-> tree. All STM32 will use the common macro to define pinmux. Furthermore, it
-> will make STM32 maintenance and integration of new SOC easier .
+On Thu, Jul 27, 2017 at 09:30:29AM -0500, Eddie James wrote:
+> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 > 
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Vikas MANOCHA <vikas.manocha-qxv4g6HH51o@public.gmane.org>
-> Reviewed-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Document the bindings for I2C-based OCC hwmon driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> index d907a74..567aa72 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> @@ -126,22 +126,27 @@ configuration, pullups, drive, output high/low and output speed.
->      };
->  
->  Required properties:
-> -- pinmux: integer array, represents gpio pin number and mux setting.
-> -  Supported pin number and mux varies for different SoCs, and are defined in
-> -  dt-bindings/pinctrl/<soc>-pinfunc.h directly.
-> -  These defines are calculated as:
-> -    ((port * 16 + line) << 8) | function
-> +- pinmux: integer array, represents gpio pin number and mux setting. Use
-> +  following macro: STM32_PINMUX(PIN_NO(port_name, line), mode) to declare it.
+> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+> new file mode 100644
+> index 0000000..8c765d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+> @@ -0,0 +1,25 @@
+> +Device-tree bindings for I2C-based On-Chip Controller hwmon driver
+> +------------------------------------------------------------------
 
-I would keep the above formula. It can't change because that is the ABI. 
-The macro is just convenience.
-
-Is there any reason to have 2 macros? I'd just do STM32_PINMUX(port, 
-line, mode) and make port names defines (PA, PB, PC, etc.).
+Bindings describe hardware, not Linux subsystems or drivers. 
 
 > +
->    With:
-> -    - port: The gpio port index (PA = 0, PB = 1, ..., PK = 11)
-> -    - line: The line offset within the port (PA0 = 0, PA1 = 1, ..., PA15 = 15)
-> -    - function: The function number, can be:
-> -      * 0 : GPIO
-> -      * 1 : Alternate Function 0
-> -      * 2 : Alternate Function 1
-> -      * 3 : Alternate Function 2
-> +    - port_name: The gpio port name ('A', 'B', ..., 'K')
-> +    - line: The line offset within the port (0, 1, ..., 15)
-> +    - mode: The mode can be:
-> +      * GPIO
-> +      * AF0 : Alternate Function 0
-> +      * AF1 : Alternate Function 1
-> +      * AF2 : Alternate Function 2
->        * ...
-> -      * 16 : Alternate Function 15
-> -      * 17 : Analog
-> +      * AF15 : Alternate Function 15
-> +      * ANALOG
-
-Here too, keeping the numbers is important.
-
-Perhaps the macro description should either be its own additional 
-section or document it inline with the macro definition.
-
-Overall, it does seem like a nice shrinking of the header files.
-
+> +Required properties:
+> + - compatible = "ibm,p8-occ-hwmon";
+> + - reg = <I2C address>;			: I2C bus address
 > +
-> +  Example:
-> +    To declare pin PA7 in mode "alternate function 7" you have to
-> +    declare:
-> +      pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>;
+> +Examples:
 > +
-> +  This macro is defined in dt-bindings/pinctrl/stm32-pinfunc.h
->  
->  Optional properties:
->  - GENERIC_PINCONFIG: is the generic pinconfig options to use.
-> @@ -165,13 +170,13 @@ pin-controller {
->  ...
->  	usart1_pins_a: usart1@0 {
->  		pins1 {
-> -			pinmux = <STM32F429_PA9_FUNC_USART1_TX>;
-> +			pinmux = <STM32_PINMUX(PIN_NO('A', 9), AF7)>; /* USART1_TX */
->  			bias-disable;
->  			drive-push-pull;
->  			slew-rate = <0>;
->  		};
->  		pins2 {
-> -			pinmux = <STM32F429_PA10_FUNC_USART1_RX>;
-> +			pinmux = <STM32_PINMUX(PIN_NO('A', 10), AF7)>; /* USART1_RX */
->  			bias-disable;
->  		};
->  	};
+> +    i2c-bus@100 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        clock-frequency = <100000>;
+> +        < more properties >
+> +
+> +        occ-hwmon@1 {
+> +            compatible = "ibm,p8-occ-hwmon";
+> +            reg = <0x50>;
+> +        };
+> +
+> +        occ-hwmon@2 {
+> +            compatible = "ibm,p8-occ-hwmon";
+> +            reg = <0x51>;
+> +        };
+> +    };
+> -- 
+> 1.8.3.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
