@@ -1,25 +1,44 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: Compatibles for i2c muxes nxp,pca954x and ti,tca954x
-Date: Thu, 3 Aug 2017 15:44:01 +0200
-Message-ID: <20170803134401.GG15018@lunn.ch>
-References: <62519d0b-0b7b-9124-8481-9ef8de24eaf6@axentia.se>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v3 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Thu, 3 Aug 2017 22:02:53 +0800
+Message-ID: <6cf4697e-7e94-0e14-a059-c80053492da3@rock-chips.com>
+References: <1501654546-17292-1-git-send-email-david.wu@rock-chips.com>
+ <1501654888-19514-1-git-send-email-david.wu@rock-chips.com>
+ <6b1ebf64-6903-6d35-b1fc-92ec47334425@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <62519d0b-0b7b-9124-8481-9ef8de24eaf6@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Agner <stefan@agner.ch>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <6b1ebf64-6903-6d35-b1fc-92ec47334425@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
+Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wens@csie.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 12:00:27PM +0200, Peter Rosin wrote:
-> Hi!
+Hi Florian & ChenYu
+
+在 2017/8/3 1:38, Florian Fainelli 写道:
+> This is incorrect in two ways:
 > 
-> Texas has apparently made copies for some of the NXP devices
-> handled by the drivers/i2c/muxes/i2c-mux-pca954x.c driver.
+> - this is a property of the PHY, so it should be documented as such in
+> Documentation/devicetree/bindings/net/phy.txt so other bindings can
+> re-use it
+> 
+> - if it was specific to your MAC you would expect a vendor prefix to
+> this property, which is not there
+> 
+> An alternative way to implement the external/internal logic selection
+> would be mandate that your Ethernet PHY node have a compatible string
+> like this:
+> 
+> phy@0 {
+> 	compatible = "ethernet-phy-id1234.d400", "ethernet-phy-802.3-c22";
+> };
+> 
+> Then you don't need this phy-is-internal property, because you can
+> locate the PHY node by the phy-handle (see more about that in a reply to
+> patch 10) and you can determine ahead of time whether this PHY is
+> internal or not based on its compatible string.
 
-This happens a lot in the i2c space. Look at all the at24 EEPROM
-clones. Yet they all use the same compatible string.
-
-	Andrew
+We may implement a read_bool_property after parsed phy phandle at 
+stmmac_platform.c, which would make MAC driver know it is a internal phy.
