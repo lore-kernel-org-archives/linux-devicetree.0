@@ -1,33 +1,58 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Fri, 4 Aug 2017 03:36:12 +0800
-Message-ID: <201708040313.sZE4uytJ%fengguang.wu@intel.com>
-References: <1501746323-5254-2-git-send-email-m.purski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501746323-5254-2-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-Cc: kbuild-all@01.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, krzk@kernel.org, Maciej Purski <m.purski@samsung.com>, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com
+From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 1/2] of: documentation: add bindings documentation for TS-4600
+Date: Thu,  3 Aug 2017 15:38:14 -0400
+Message-ID: <20170803193815.4127-1-sebastien.bourdelin@savoirfairelinux.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Maciej,
+This adds the documentation for the TS-4600 by Technologic Systems.
 
-[auto build test WARNING on drm/drm-next]
-[also build test WARNING on v4.13-rc3 next-20170803]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Maciej-Purski/add-Silicon-Image-SiI9234-driver/20170803-200255
-base:   git://people.freedesktop.org/~airlied/linux.git drm-next
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/gpu/drm/bridge/sii9234.c:1010:3-8: No need to set .owner here. The core will do it.
-
-Please review and possibly fold the followup patch.
-
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Changes v5 -> v6:
+  - rebase on master
+  - split the previous patch series into series by subsystem
+
+Changes v4 -> v5:
+  - fix missing signed off
+
+Changes v3 -> v4:
+  - rebase on master
+
+Changes v2 -> v3:
+  - rebase on master
+
+Changes v1 -> v2:
+  - rebase on master
+  - add ack by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/technologic.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/technologic.txt b/Documentation/devicetree/bindings/arm/technologic.txt
+index 33797acad846..e9d6d6575566 100644
+--- a/Documentation/devicetree/bindings/arm/technologic.txt
++++ b/Documentation/devicetree/bindings/arm/technologic.txt
+@@ -1,6 +1,11 @@
+ Technologic Systems Platforms Device Tree Bindings
+ --------------------------------------------------
+ 
++TS-4600 is a System-on-Module based on the Freescale i.MX28 System-on-Chip.
++It can be mounted on a carrier board providing additional peripheral connectors.
++Required root node properties:
++	- compatible = "technologic,imx28-ts4600", "fsl,imx28"
++
+ TS-4800 board
+ Required root node properties:
+ 	- compatible = "technologic,imx51-ts4800", "fsl,imx51";
+-- 
+2.13.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
