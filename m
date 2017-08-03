@@ -1,86 +1,109 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/5] of/platform: Generalize /reserved-memory handling
-Date: Thu, 3 Aug 2017 12:40:28 -0500
-Message-ID: <CAL_JsqKBre5yPJHG3s+8Y7_hgj0_r35nNZc3QiL4HbWLuFx=Bg@mail.gmail.com>
-References: <20170803025754.19101-1-bjorn.andersson@linaro.org> <20170803025754.19101-2-bjorn.andersson@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] of: reserved_mem: Accessor for acquiring reserved_mem
+Date: Thu, 3 Aug 2017 12:45:11 -0500
+Message-ID: <CAL_JsqL1Jh2AnWSWfau3LGhvuS1giTg6_r7gPGrHyZ6KRocSYg@mail.gmail.com>
+References: <20170803025754.19101-1-bjorn.andersson@linaro.org> <20170803025754.19101-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170803025754.19101-2-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803025754.19101-3-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Aug 2, 2017 at 9:57 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> By iterating over all /reserved-memory child nodes and match each one to
-> a list of compatibles that we want to treat specially, we can easily
-> extend the list of compatibles to handle - without having to resort to
-> of_platform_populate() that would create unnecessary platform_devices.
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> In some cases drivers referencing a reserved-memory region might want to
+> remap the entire region, but when defining the reserved-memory by "size"
+> the client driver has no means to know the associated base address of
+> the reserved memory region.
 >
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> This patch adds an accessor for such drivers to acquire a handle to
+> their associated reserved-memory for this purpose.
+>
+> A complicating factor for the implementation is that the reserved_mem
+> objects are created from the flattened DeviceTree, as such we can't
+> use the device_node address for comparison. Fortunately the name of the
+> node will be used as "name" of the reserved_mem and will be used when
+> building the full_name, so we can compare the "name" with the basename
+> of the full_name to find the match.
+
+Maybe we should add the device_node pointer when we unflatten?
+
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
 >
 > Changes since v1:
-> - New patch
+> - Previous patch provided interface to resolve memory-region reference, instead
+>   of direct lookup by device_node
 >
->  drivers/of/platform.c | 21 +++++++++++++++------
->  1 file changed, 15 insertions(+), 6 deletions(-)
+>  drivers/of/of_reserved_mem.c    | 26 ++++++++++++++++++++++++++
+>  include/linux/of_reserved_mem.h |  5 +++++
+>  2 files changed, 31 insertions(+)
 >
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b19524623498..8c241a116b08 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -497,23 +497,32 @@ int of_platform_default_populate(struct device_node *root,
->  EXPORT_SYMBOL_GPL(of_platform_default_populate);
->
->  #ifndef CONFIG_PPC
-> +static const char *rmem_compats[] = {
-> +       "ramoops",
-> +       NULL
-> +};
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index d507c3569a88..b40cfce68fd4 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -397,3 +397,29 @@ void of_reserved_mem_device_release(struct device *dev)
+>         rmem->ops->device_release(rmem, dev);
+>  }
+>  EXPORT_SYMBOL_GPL(of_reserved_mem_device_release);
 > +
->  static int __init of_platform_default_populate_init(void)
->  {
-> +       struct device_node *rmem_nodes;
->         struct device_node *node;
-> +       int ret;
+> +/**
+> + * of_reserved_mem_get() - acquire reserved_mem from a device node
+> + * @np:                node pointer of the desired reserved-memory region
+> + *
+> + * This function allows drivers to acquire a reference to the reserved_mem
+> + * struct based on a device node handle.
+> + *
+> + * Returns a reserved_mem reference, or NULL on error.
+> + */
+> +struct reserved_mem *of_reserved_mem_get(struct device_node *np)
+> +{
+> +       const char *name;
+> +       int i;
+> +
+> +       if (!np->full_name)
+> +               return NULL;
+> +
+> +       name = kbasename(np->full_name);
+> +       for (i = 0; i < reserved_mem_count; i++)
+> +               if (!strcmp(reserved_mem[i].name, name))
+> +                       return &reserved_mem[i];
+> +
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_reserved_mem_get);
+> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+> index f8e1992d6423..91b1eb5076e4 100644
+> --- a/include/linux/of_reserved_mem.h
+> +++ b/include/linux/of_reserved_mem.h
+> @@ -44,6 +44,7 @@ int early_init_dt_alloc_reserved_memory_arch(phys_addr_t size,
+>  void fdt_init_reserved_mem(void);
+>  void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+>                                phys_addr_t base, phys_addr_t size);
+> +struct reserved_mem *of_reserved_mem_get(struct device_node *np);
+>  #else
+>  static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
+>                                         struct device_node *np, int idx)
+> @@ -55,6 +56,10 @@ static inline void of_reserved_mem_device_release(struct device *pdev) { }
+>  static inline void fdt_init_reserved_mem(void) { }
+>  static inline void fdt_reserved_mem_save_node(unsigned long node,
+>                 const char *uname, phys_addr_t base, phys_addr_t size) { }
+> +static inline struct reserved_mem *of_reserved_mem_get(struct device_node *np)
+> +{
+> +       return NULL;
+> +}
+>  #endif
 >
->         if (!of_have_populated_dt())
->                 return -ENODEV;
->
->         /*
-> -        * Handle ramoops explicitly, since it is inside /reserved-memory,
-> -        * which lacks a "compatible" property.
-> +        * Handle certain compatibles explicitly, since we don't want to create
-> +        * platform_devices for every node in /reserved-memory with a
-> +        * "compatible",
->          */
-> -       node = of_find_node_by_path("/reserved-memory");
-> -       if (node) {
-> -               node = of_find_compatible_node(node, NULL, "ramoops");
-> -               if (node)
-> +       rmem_nodes = of_find_node_by_path("/reserved-memory");
-> +       for_each_available_child_of_node(rmem_nodes, node) {
-> +               ret = of_device_compatible_match(node, rmem_compats);
-> +               if (ret)
-
-I would just do:
-
-for_each_matching_node(node, ...)
-    of_platform_device_create(node, NULL, NULL);
-
-I don't think the kernel has to validate that ramoops and any others
-we add are children of /reserved-memory. We should only have those
-compatibles located there and any other location would be an error.
-
->                         of_platform_device_create(node, NULL, NULL);
->         }
-> +       of_node_put(rmem_nodes);
->
->         /* Populate everything else. */
->         of_platform_default_populate(NULL, NULL, NULL);
+>  /**
 > --
 > 2.12.0
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
