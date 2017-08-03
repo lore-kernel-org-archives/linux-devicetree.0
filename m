@@ -1,173 +1,78 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH 2/2] arm64: dts: ls2088a: add cpu idle support
-Date: Thu, 3 Aug 2017 08:39:16 +0000
-Message-ID: <AM5PR0402MB2818861202D11C4255689532F3B10@AM5PR0402MB2818.eurprd04.prod.outlook.com>
-References: <1501053893-20897-1-git-send-email-andy.tang@nxp.com>
- <1501053893-20897-2-git-send-email-andy.tang@nxp.com>
- <20170803014007.GC31819@dragon>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
+ controller documentation
+Date: Thu, 3 Aug 2017 16:45:47 +0800
+Message-ID: <CAMz4ku+aPYP8j+Y6cu0azmD2TFGZ428rCaPof15kdmEKRVp6EA@mail.gmail.com>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
+ <20170724065146.GA22330@spreadtrum.com> <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
+ <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com> <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170803014007.GC31819@dragon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: wsa@the-dreams.de, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, wsa+renesas@sang-engineering.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On 3 August 2017 at 16:26, Peter Rosin <peda@axentia.se> wrote:
+> On 2017-08-03 09:29, Baolin Wang wrote:
+>> Hi Wolfram,
+>>
+>> On 27 July 2017 at 17:29, Baolin Wang <baolin.wang@linaro.org> wrote:
+>>> Hi Wolfram,
+>>>
+>>> On 24 July 2017 at 14:51, Baolin Wang <baolin.wang@spreadtrum.com> wrot=
+e:
+>>>> Hi Wolfram,
+>>>>
+>>>> On =E4=BA=94,  7=E6=9C=88 14, 2017 at 05:01:10=E4=B8=8B=E5=8D=88 +0800=
+, Baolin Wang wrote:
+>>>>> This patch adds the binding documentation for Spreadtrum I2C
+>>>>> controller device.
+>>>>>
+>>>>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+>>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>>> ---
+>>>>> Changes since v3:
+>>>>>  - Add Ack from RobH.
+>>>>>
+>>>>> Changes since v2:
+>>>>>  - Change compatible strings to be SoC specific.
+>>>>>
+>>>>> Changes since v1:
+>>>>>  - No updates.
+>>>>> ---
+>>>>
+>>>> Could you apply this patchset if there are no other comments?
+>>>> It is a long time since the v4 was send out. Thanks.
+>>>
+>>> Ping?
+>>
+>> Since this patchset has waited for a long time, could you pick up this
+>> patchset into your branch? Thanks.
+>
+> Please calm down. You first sent v4 4 weeks ago in the beginning of the
+> merge window when everybody are supposedly looking at the integration of
+> the work from the previous cycle. You have managed to send remainders
+> four times in those few weeks.
+>
+> Four weeks is not a "long time", and it's not like you didn't get any
+> feedback. Part of that feedback was that there was room for improvement.
+> Have you looked into that? Or have you been busy sending pings? I'm sure
+> Wolfram will pick the series in time for the next merge window if he's
+> happy with it, there was that thing about room for improvement...
 
-Please see my explanation inline.
+Sorry for noise. I just afraid Wolfram missed this patchset since I
+did not get any comments from V4.
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Thursday, August 03, 2017 9:40 AM
-> To: Andy Tang <andy.tang@nxp.com>
-> Cc: mark.rutland@arm.com; devicetree@vger.kernel.org;
-> catalin.marinas@arm.com; will.deacon@arm.com; linux-
-> kernel@vger.kernel.org; robh+dt@kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH 2/2] arm64: dts: ls2088a: add cpu idle support
->=20
-> On Wed, Jul 26, 2017 at 03:24:53PM +0800, andy.tang@nxp.com wrote:
-> > From: Yuantian Tang <andy.tang@nxp.com>
-> >
-> > ls2088a supports another cpu idle state which is pw20 which saves more
-> > power when cpu is idle.
-> > It was implemented through psci firmware.
-> >
-> > Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
->=20
-> Can you explain a bit in the commit log why psci node is being added in f=
-sl-
-> ls208xa.dtsi while you are only adding idle state for ls2088a?  Does that=
- mean
-> ls2088a and ls2080a gets different idle implementation?
->=20
-IDLE implementation is same on both ls2080a and ls2088a.  it is just there =
-is no=20
-Requirement for ls2080a though. Still it is better to update both.
+Yes, I've looked at  how to improve, one thing is we can change
+readb/writeb to readsb/writesb. I will submit one patch to fix this
+after Andy's patches which fixing the readsb/writesb issue on x86
+platform were merged. Anyway I will be keep patient and wait for
+comments. Thanks.
 
-I will resend the patch adding ls2080a supports.
-
-Regards,
-Andy
-
-> Shawn
->=20
-> > ---
-> >  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi | 17 +++++++++++++++++
-> > arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |  5 +++++
-> >  2 files changed, 22 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > index 5c695c6..6aa319d 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> > @@ -53,6 +53,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x0>;
-> >  		clocks =3D <&clockgen 1 0>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster0_l2>;
-> >  		#cooling-cells =3D <2>;
-> >  	};
-> > @@ -62,6 +63,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x1>;
-> >  		clocks =3D <&clockgen 1 0>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster0_l2>;
-> >  	};
-> >
-> > @@ -70,6 +72,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x100>;
-> >  		clocks =3D <&clockgen 1 1>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster1_l2>;
-> >  		#cooling-cells =3D <2>;
-> >  	};
-> > @@ -79,6 +82,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x101>;
-> >  		clocks =3D <&clockgen 1 1>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster1_l2>;
-> >  	};
-> >
-> > @@ -88,6 +92,7 @@
-> >  		reg =3D <0x200>;
-> >  		clocks =3D <&clockgen 1 2>;
-> >  		next-level-cache =3D <&cluster2_l2>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		#cooling-cells =3D <2>;
-> >  	};
-> >
-> > @@ -96,6 +101,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x201>;
-> >  		clocks =3D <&clockgen 1 2>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster2_l2>;
-> >  	};
-> >
-> > @@ -104,6 +110,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x300>;
-> >  		clocks =3D <&clockgen 1 3>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster3_l2>;
-> >  		#cooling-cells =3D <2>;
-> >  	};
-> > @@ -113,6 +120,7 @@
-> >  		compatible =3D "arm,cortex-a72";
-> >  		reg =3D <0x301>;
-> >  		clocks =3D <&clockgen 1 3>;
-> > +		cpu-idle-states =3D <&CPU_PW20>;
-> >  		next-level-cache =3D <&cluster3_l2>;
-> >  	};
-> >
-> > @@ -131,6 +139,15 @@
-> >  	cluster3_l2: l2-cache3 {
-> >  		compatible =3D "cache";
-> >  	};
-> > +
-> > +	CPU_PW20: cpu-pw20 {
-> > +		compatible =3D "arm,idle-state";
-> > +		idle-state-name =3D "PW20";
-> > +		arm,psci-suspend-param =3D <0x00010000>;
-> > +		entry-latency-us =3D <2000>;
-> > +		exit-latency-us =3D <2000>;
-> > +		min-residency-us =3D <6000>;
-> > +	};
-> >  };
-> >
-> >  &pcie1 {
-> > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> > b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> > index 94cdd30..205b7f7 100644
-> > --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> > +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> > @@ -118,6 +118,11 @@
-> >  		interrupts =3D <1 7 0x8>; /* PMU PPI, Level low type */
-> >  	};
-> >
-> > +	psci {
-> > +		compatible =3D "arm,psci-0.2";
-> > +		method =3D "smc";
-> > +	};
-> > +
-> >  	soc {
-> >  		compatible =3D "simple-bus";
-> >  		#address-cells =3D <2>;
-> > --
-> > 2.1.0.27.g96db324
-> >
-> >
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--=20
+Baolin.wang
+Best Regards
