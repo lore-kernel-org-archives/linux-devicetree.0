@@ -1,99 +1,293 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v8 10/16] reset: Add a reset controller driver for the
- Lantiq XWAY based SoCs
-Date: Thu, 03 Aug 2017 10:33:42 +0200
-Message-ID: <1501749222.23911.4.camel@pengutronix.de>
-References: <20170802225717.24408-1-hauke@hauke-m.de>
-         <20170802225717.24408-11-hauke@hauke-m.de>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v3] arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2
+Date: Thu, 3 Aug 2017 16:38:58 +0800
+Message-ID: <1501749538.4398.6.camel@mtkswgap22>
+References: <687af2dc98feffc678945f130c03ca020d9ca7b5.1501748754.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170802225717.24408-11-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <687af2dc98feffc678945f130c03ca020d9ca7b5.1501748754.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthias.bgg@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hauke,
+Hi, Matthias,
 
-On Thu, 2017-08-03 at 00:57 +0200, Hauke Mehrtens wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Ryder and me tried to make the patch better, so the delivery is made in
+v3,  including add missing pin  state for mmc1 and remove wp-gpio
+because the board only has micro-sd slot that can't be adjusted for the
+lock manually. And also some cleanups are made for nodes sorted in
+alphabetical order. Thanks for Ryder to catch.
+
+	Sean
+
+On Thu, 2017-08-03 at 16:29 +0800, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> The reset controllers (on xRX200 and newer SoCs have two of them) are
-> provided by the RCU module. This was initially implemented as a simple
-> reset controller. However, the RCU module provides more functionality
-> (ethernet GPHYs, USB PHY, etc.), which makes it a MFD device.
-> The old reset controller driver implementation from
-> arch/mips/lantiq/xway/reset.c did not honor this fact.
+> The bananapi-r2 board has an SD-card controller and built-in
+> EMMC storage so enables those devices in the devicetree. Also
+> cleanup nodes in alphabetical order in the patch.
 > 
-> For some devices the request and the status bits are different.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  .../devicetree/bindings/reset/lantiq,reset.txt     |  30 +++
->  drivers/reset/Kconfig                              |   6 +
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-lantiq.c                       | 224 +++++++++++++++++++++
->  4 files changed, 261 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/lantiq,reset.txt
->  create mode 100644 drivers/reset/reset-lantiq.c
+>  arch/arm/boot/dts/mt7623.dtsi                 | 73 ++++++++++++++-------------
+>  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 73 ++++++++++++++++++++-------
+>  2 files changed, 94 insertions(+), 52 deletions(-)
 > 
-[...]
-> diff --git a/drivers/reset/reset-lantiq.c b/drivers/reset/reset-lantiq.c
-> new file mode 100644
-> index 000000000000..b84c45e7e6b8
-> --- /dev/null
-> +++ b/drivers/reset/reset-lantiq.c
-> @@ -0,0 +1,224 @@
-[...]
-> +static int lantiq_rcu_reset_of_probe(struct platform_device *pdev,
-> +			       struct lantiq_rcu_reset_priv *priv)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct resource res_parent;
-> +	int ret;
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index 2a877ed..ec8a074 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -91,6 +91,7 @@
+>  			cooling-max-level = <7>;
+>  			clock-frequency = <1300000000>;
+>  		};
 > +
-> +	priv->regmap = syscon_node_to_regmap(dev->of_node->parent);
-> +	if (IS_ERR(priv->regmap)) {
-> +		dev_err(&pdev->dev, "Failed to lookup RCU regmap\n");
-> +		return PTR_ERR(priv->regmap);
-> +	}
+>  		cpu1: cpu@1 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+> @@ -98,6 +99,7 @@
+>  			operating-points-v2 = <&cpu_opp_table>;
+>  			clock-frequency = <1300000000>;
+>  		};
 > +
-> +	ret = of_address_to_resource(dev->of_node->parent, 0, &res_parent);
-> +	if (ret)
-> +		return ret;
+>  		cpu2: cpu@2 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+> @@ -105,6 +107,7 @@
+>  			operating-points-v2 = <&cpu_opp_table>;
+>  			clock-frequency = <1300000000>;
+>  		};
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Failed to get RCU reset offset\n");
-> +		return ret;
-
-This should return -EINVAL instead of 0.
-
-> +	}
+>  		cpu3: cpu@3 {
+>  			device_type = "cpu";
+>  			compatible = "arm,cortex-a7";
+> @@ -172,10 +175,12 @@
+>  					trip = <&cpu_passive>;
+>  					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>  				};
 > +
-> +	if (res->start < res_parent.start)
-> +		return -ENOENT;
-> +	priv->reset_offset = res->start - res_parent.start;
+>  				map1 {
+>  					trip = <&cpu_active>;
+>  					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>  				};
 > +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> +	if (!res) {
-> +		dev_err(&pdev->dev, "Failed to get RCU status offset\n");
-> +		return ret;
-
-Same here.
-
-With this fixed,
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  				map2 {
+>  					trip = <&cpu_hot>;
+>  					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> @@ -481,6 +486,31 @@
+>  		nvmem-cell-names = "calibration-data";
+>  	};
+>  
+> +	nandc: nfi@1100d000 {
+> +		compatible = "mediatek,mt7623-nfc",
+> +			     "mediatek,mt2701-nfc";
+> +		reg = <0 0x1100d000 0 0x1000>;
+> +		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> +		clocks = <&pericfg CLK_PERI_NFI>,
+> +			 <&pericfg CLK_PERI_NFI_PAD>;
+> +		clock-names = "nfi_clk", "pad_clk";
+> +		status = "disabled";
+> +		ecc-engine = <&bch>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +	};
+> +
+> +	bch: ecc@1100e000 {
+> +		compatible = "mediatek,mt7623-ecc",
+> +			     "mediatek,mt2701-ecc";
+> +		reg = <0 0x1100e000 0 0x1000>;
+> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+> +		clock-names = "nfiecc_clk";
+> +		status = "disabled";
+> +	};
+> +
+>  	spi1: spi@11016000 {
+>  		compatible = "mediatek,mt7623-spi",
+>  			     "mediatek,mt2701-spi";
+> @@ -509,31 +539,6 @@
+>  		status = "disabled";
+>  	};
+>  
+> -	nandc: nfi@1100d000 {
+> -		compatible = "mediatek,mt7623-nfc",
+> -			     "mediatek,mt2701-nfc";
+> -		reg = <0 0x1100d000 0 0x1000>;
+> -		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+> -		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> -		clocks = <&pericfg CLK_PERI_NFI>,
+> -			 <&pericfg CLK_PERI_NFI_PAD>;
+> -		clock-names = "nfi_clk", "pad_clk";
+> -		status = "disabled";
+> -		ecc-engine = <&bch>;
+> -		#address-cells = <1>;
+> -		#size-cells = <0>;
+> -	};
+> -
+> -	bch: ecc@1100e000 {
+> -		compatible = "mediatek,mt7623-ecc",
+> -			     "mediatek,mt2701-ecc";
+> -		reg = <0 0x1100e000 0 0x1000>;
+> -		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+> -		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+> -		clock-names = "nfiecc_clk";
+> -		status = "disabled";
+> -	};
+> -
+>  	afe: audio-controller@11220000 {
+>  		compatible = "mediatek,mt7623-audio",
+>  			     "mediatek,mt2701-audio";
+> @@ -655,6 +660,15 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	hifsys: syscon@1a000000 {
+> +		compatible = "mediatek,mt7623-hifsys",
+> +			     "mediatek,mt2701-hifsys",
+> +			     "syscon";
+> +		reg = <0 0x1a000000 0 0x1000>;
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+>  	usb1: usb@1a1c0000 {
+>  		compatible = "mediatek,mt7623-xhci",
+>  			     "mediatek,mt8173-xhci";
+> @@ -733,15 +747,6 @@
+>  		};
+>  	};
+>  
+> -	hifsys: syscon@1a000000 {
+> -		compatible = "mediatek,mt7623-hifsys",
+> -			     "mediatek,mt2701-hifsys",
+> -			     "syscon";
+> -		reg = <0 0x1a000000 0 0x1000>;
+> -		#clock-cells = <1>;
+> -		#reset-cells = <1>;
+> -	};
+> -
+>  	ethsys: syscon@1b000000 {
+>  		compatible = "mediatek,mt7623-ethsys",
+>  			     "mediatek,mt2701-ethsys",
+> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> index 9f3e6dd..0aa1c69 100644
+> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+> @@ -179,6 +179,32 @@
+>  	status = "okay";
+>  };
+>  
+> +&mmc0 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc0_pins_default>;
+> +	pinctrl-1 = <&mmc0_pins_uhs>;
+> +	status = "okay";
+> +	bus-width = <8>;
+> +	max-frequency = <50000000>;
+> +	cap-mmc-highspeed;
+> +	vmmc-supply = <&mt6323_vemc3v3_reg>;
+> +	vqmmc-supply = <&mt6323_vio18_reg>;
+> +	non-removable;
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default", "state_uhs";
+> +	pinctrl-0 = <&mmc1_pins_default>;
+> +	pinctrl-1 = <&mmc1_pins_uhs>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +	max-frequency = <50000000>;
+> +	cap-sd-highspeed;
+> +	cd-gpios = <&pio 261 0>;
+> +	vmmc-supply = <&mt6323_vmch_reg>;
+> +	vqmmc-supply = <&mt6323_vio18_reg>;
+> +};
+> +
+>  &pio {
+>  	cir_pins_a:cir@0 {
+>  		pins_cir {
+> @@ -314,6 +340,17 @@
+>  			bias-pull-down;
+>  			drive-strength = <MTK_DRIVE_4mA>;
+>  		};
+> +
+> +		pins_wp {
+> +			pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
+> +			input-enable;
+> +			bias-pull-up;
+> +		};
+> +
+> +		pins_insert {
+> +			pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
+> +			bias-pull-up;
+> +		};
+>  	};
+>  
+>  	mmc1_pins_uhs: mmc1 {
+> @@ -335,16 +372,6 @@
+>  		};
+>  	};
+>  
+> -	spi0_pins_a: spi@0 {
+> -		pins_spi {
+> -			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+> -				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+> -				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
+> -				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
+> -			bias-disable;
+> -		};
+> -	};
+> -
+>  	pwm_pins_a: pwm@0 {
+>  		pins_pwm {
+>  			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
+> @@ -355,6 +382,16 @@
+>  		};
+>  	};
+>  
+> +	spi0_pins_a: spi@0 {
+> +		pins_spi {
+> +			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+> +				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+> +				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
+> +				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>  	uart0_pins_a: uart@0 {
+>  		pins_dat {
+>  			pinmux = <MT7623_PIN_79_URXD0_FUNC_URXD0>,
+> @@ -414,14 +451,6 @@
+>  	status = "disabled";
+>  };
+>  
+> -&u3phy1 {
+> -	status = "okay";
+> -};
+> -
+> -&u3phy2 {
+> -	status = "okay";
+> -};
+> -
+>  &uart1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart1_pins_a>;
+> @@ -441,3 +470,11 @@
+>  	vusb33-supply = <&mt6323_vusb_reg>;
+>  	status = "okay";
+>  };
+> +
+> +&u3phy1 {
+> +	status = "okay";
+> +};
+> +
+> +&u3phy2 {
+> +	status = "okay";
+> +};
