@@ -1,46 +1,30 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: r8a7795: Add USB3.0 host device node
-Date: Thu,  3 Aug 2017 21:28:44 +0900
-Message-ID: <1501763324-26028-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1501763324-26028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/3] arm64: dts: r8a7796: add usb host device nodes
+Date: Thu,  3 Aug 2017 21:28:41 +0900
+Message-ID: <1501763324-26028-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501763324-26028-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+This patch is based on the renesas.git / renesas-devel-20170731v2-v4.13-rc3 tag.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 5301bfc..882a556 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -1228,7 +1228,14 @@
- 		};
- 
- 		xhci0: usb@ee000000 {
--			/* placeholder */
-+			compatible = "renesas,xhci-r8a7796",
-+				     "renesas,rcar-gen3-xhci";
-+			reg = <0 0xee000000 0 0xc00>;
-+			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 328>;
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 328>;
-+			status = "disabled";
- 		};
- 
- 		ohci0: usb@ee080000 {
+For usb2.0 host, we need the following patch:
+ https://patchwork.kernel.org/patch/9864583/
+
+For usb3.0 host, we need the following patch:
+ https://patchwork.kernel.org/patch/9864579/
+
+Yoshihiro Shimoda (3):
+  arm64: dts: r8a7796: add usb2_phy device nodes
+  arm64: dts: r8a7796: add USB2.0 Host (EHCI/OHCI) device nodes
+  arm64: dts: r8a7795: Add USB3.0 host device node
+
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 70 ++++++++++++++++++++++++++++----
+ 1 file changed, 63 insertions(+), 7 deletions(-)
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
