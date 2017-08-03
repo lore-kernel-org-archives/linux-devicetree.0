@@ -1,161 +1,126 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/4] Docs: dt: document qcom iommu bindings
-Date: Thu,  3 Aug 2017 06:47:49 -0400
-Message-ID: <20170803104800.18624-2-robdclark@gmail.com>
-References: <20170803104800.18624-1-robdclark@gmail.com>
+From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] This patch adds support for Sinovoip BPI-M3
+ A83T based board.
+Date: Thu, 3 Aug 2017 12:50:45 +0200
+Message-ID: <CAPPFs5EUegzHVGOP6iwaa8bdCtkVR1KM_VYGdnCDNQdV0yUdEA@mail.gmail.com>
+References: <1501716302-1009-1-git-send-email-embed3d@gmail.com> <CAGb2v65-jo4ejgrWOtWE1-yJMYOP=CXHux2Os-a99GRrXa3o=g@mail.gmail.com>
+Reply-To: embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170803104800.18624-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/alternative; boundary="001a11430c7a1d76240555d72756"
+Return-path: <linux-sunxi+bncBD257DPK24NRBBUARTGAKGQEHHPIFCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65-jo4ejgrWOtWE1-yJMYOP=CXHux2Os-a99GRrXa3o=g@mail.gmail.com>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Tested-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+--001a11430c7a1d76240555d72756
+Content-Type: text/plain; charset="UTF-8"
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-new file mode 100644
-index 000000000000..b2641ceb2b40
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-@@ -0,0 +1,121 @@
-+* QCOM IOMMU v1 Implementation
-+
-+Qualcomm "B" family devices which are not compatible with arm-smmu have
-+a similar looking IOMMU but without access to the global register space,
-+and optionally requiring additional configuration to route context irqs
-+to non-secure vs secure interrupt line.
-+
-+** Required properties:
-+
-+- compatible       : Should be one of:
-+
-+                        "qcom,msm8916-iommu"
-+
-+                     Followed by "qcom,msm-iommu-v1".
-+
-+- clock-names      : Should be a pair of "iface" (required for IOMMUs
-+                     register group access) and "bus" (required for
-+                     the IOMMUs underlying bus access).
-+
-+- clocks           : Phandles for respective clocks described by
-+                     clock-names.
-+
-+- #address-cells   : must be 1.
-+
-+- #size-cells      : must be 1.
-+
-+- #iommu-cells     : Must be 1.  Index identifies the context-bank #.
-+
-+- ranges           : Base address and size of the iommu context banks.
-+
-+- qcom,iommu-secure-id  : secure-id.
-+
-+- List of sub-nodes, one per translation context bank.  Each sub-node
-+  has the following required properties:
-+
-+  - compatible     : Should be one of:
-+        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-+        - "qcom,msm-iommu-v1-sec" : secure context bank
-+  - reg            : Base address and size of context bank within the iommu
-+  - interrupts     : The context fault irq.
-+
-+** Optional properties:
-+
-+- reg              : Base address and size of the SMMU local base, should
-+                     be only specified if the iommu requires configuration
-+                     for routing of context bank irq's to secure vs non-
-+                     secure lines.  (Ie. if the iommu contains secure
-+                     context banks)
-+
-+
-+** Examples:
-+
-+	apps_iommu: iommu@1e20000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1e20000 0x40000>;
-+		reg = <0x1ef0000 0x3000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_APSS_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <17>;
-+
-+		// mdp_0:
-+		iommu-ctx@4000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x4000 0x1000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		// venus_ns:
-+		iommu-ctx@5000 {
-+			compatible = "qcom,msm-iommu-v1-sec";
-+			reg = <0x5000 0x1000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	gpu_iommu: iommu@1f08000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1f08000 0x10000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_GFX_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <18>;
-+
-+		// gfx3d_user:
-+		iommu-ctx@1000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
-+		// gfx3d_priv:
-+		iommu-ctx@2000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x2000 0x1000>;
-+			interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	...
-+
-+	venus: video-codec@1d00000 {
-+		...
-+		iommus = <&apps_iommu 5>;
-+	};
-+
-+	mdp: mdp@1a01000 {
-+		...
-+		iommus = <&apps_iommu 4>;
-+	};
-+
-+	gpu@01c00000 {
-+		...
-+		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-+	};
+Thanks for the infos!
+
+I didn't know that someone is working on some patches for that board.
+
+Philipp Rossak
+
+On Aug 3, 2017 06:31, "Chen-Yu Tsai" <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+
+On Thu, Aug 3, 2017 at 7:25 AM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> It has 2G LPDDR3, UART, ethernet, USB, HDMI, USB Sata, MIPI DSI,
+> mic, AP6212 Wifi, etc on it.
+> It is paired with AXP813 PMIC which is almost same as AXP818.
+>
+> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> This Patch got somehow lost. This is a resubmit! The original patch
+> could be found here: https://patchwork.ozlabs.org/patch/598497/
+
+This didn't get merged because the original patch sets dealt with
+a lot of stuff that wasn't settled.
+
+Also, you should keep the author when resending patches.
+
+Finally, I have a more complete version that I plan to send soon:
+
+https://github.com/wens/linux/commit/240a2492b3379646e2f497d5ade701
+4ff955f818
+
+Note that the dts file name is changed to bananapi-m3, to match
+what we have for most of the other bananapi boards.
+
+ChenYu
+
 -- 
-2.13.0
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--001a11430c7a1d76240555d72756
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"auto">Thanks for the infos!<div dir=3D"auto"><br></div><div dir=
+=3D"auto">I didn&#39;t know that someone is working on some patches for tha=
+t board.=C2=A0</div><div dir=3D"auto"><br></div><div dir=3D"auto">Philipp R=
+ossak</div><div class=3D"gmail_extra" dir=3D"auto"><br><div class=3D"gmail_=
+quote">On Aug 3, 2017 06:31, &quot;Chen-Yu Tsai&quot; &lt;<a href=3D"mailto=
+:wens-jdAy2FN1RRM@public.gmane.org">wens-jdAy2FN1RRM@public.gmane.org</a>&gt; wrote:<br type=3D"attribution"><block=
+quote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid=
+;padding-left:1ex"><div class=3D"quoted-text">On Thu, Aug 3, 2017 at 7:25 A=
+M, Philipp Rossak &lt;<a href=3D"mailto:embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">embed3d-Re5JQEeQqe8@public.gmane.org=
+m</a>&gt; wrote:<br>
+&gt; From: Philipp Rossak &lt;<a href=3D"mailto:embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">embed3d@=
+gmail.com</a>&gt;<br>
+&gt;<br>
+&gt; It has 2G LPDDR3, UART, ethernet, USB, HDMI, USB Sata, MIPI DSI,<br>
+&gt; mic, AP6212 Wifi, etc on it.<br>
+&gt; It is paired with AXP813 PMIC which is almost same as AXP818.<br>
+&gt;<br>
+&gt; Signed-off-by: Vishnu Patekar &lt;<a href=3D"mailto:vishnupatekar0510@=
+gmail.com">vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
+&gt;<br>
+&gt; This Patch got somehow lost. This is a resubmit! The original patch<br=
+>
+&gt; could be found here: <a href=3D"https://patchwork.ozlabs.org/patch/598=
+497/" rel=3D"noreferrer" target=3D"_blank">https://patchwork.ozlabs.org/<wb=
+r>patch/598497/</a><br>
+<br>
+</div>This didn&#39;t get merged because the original patch sets dealt with=
+<br>
+a lot of stuff that wasn&#39;t settled.<br>
+<br>
+Also, you should keep the author when resending patches.<br>
+<br>
+Finally, I have a more complete version that I plan to send soon:<br>
+<br>
+<a href=3D"https://github.com/wens/linux/commit/240a2492b3379646e2f497d5ade=
+7014ff955f818" rel=3D"noreferrer" target=3D"_blank">https://github.com/wens=
+/linux/<wbr>commit/<wbr>240a2492b3379646e2f497d5ade701<wbr>4ff955f818</a><b=
+r>
+<br>
+Note that the dts file name is changed to bananapi-m3, to match<br>
+what we have for most of the other bananapi boards.<br>
+<br>
+ChenYu<br>
+</blockquote></div><br></div></div>
+
+<p></p>
+
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
+
+--001a11430c7a1d76240555d72756--
