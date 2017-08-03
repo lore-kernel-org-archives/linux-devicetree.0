@@ -1,79 +1,41 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 08/12] pinctrl: Add pinctrl driver for the RK805 PMIC
-Date: Thu, 3 Aug 2017 09:40:10 +0200
-Message-ID: <CACRpkdbqNoa3jwLQ0781ZYjW0pBx1aoBYNGqnsJqiOuQ_0ijLg@mail.gmail.com>
-References: <1500635681-12477-1-git-send-email-chenjh@rock-chips.com> <1500635890-12714-1-git-send-email-chenjh@rock-chips.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Add soctype for R-Car M3-W
+Date: Thu, 3 Aug 2017 09:40:13 +0200
+Message-ID: <20170803074012.GA19671@verge.net.au>
+References: <1501673614-6633-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500635890-12714-1-git-send-email-chenjh@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joseph Chen <chenjh@rock-chips.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Tony Xie <tony.xie@rock-chips.com>, zhangqing@rock-chips.com, David Wu <wdc@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, w.egorov@phytec.de, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501673614-6633-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: vinod.koul@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 21, 2017 at 1:18 PM, Joseph Chen <chenjh@rock-chips.com> wrote:
+On Wed, Aug 02, 2017 at 08:33:34PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds R-Car M3-W device tree bindings for usb-dmac driver.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-> RK805 is one of Rockchip PMICs family, it has 2 output only GPIOs.
->
-> This driver is also designed for other Rockchip PMICs to expend.
-> Different PMIC maybe have different pin features, for example,
-> RK816 has one pin which can be used for TS or GPIO(input/out).
-> The mainly difference between PMICs pins are pinmux, direction
-> and output value, that is 'struct rk805_pin_config'.
->
-> Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-OK nice! Some comments:
-
-> +config PINCTRL_RK805
-> +       tristate "Pinctrl and GPIO driver for RK805 PMIC"
-> +       depends on MFD_RK808 && GPIOLIB
-
-Nowadays I would recommend simply:
-
-depends on MFD_RK808
-select GPIOLIB
-
-> +#include <linux/delay.h>
-> +#include <linux/gpio.h>
-
-Just #include <linux/gpio/driver.h>
-
-> +#define FUNCTION_GROUP(fname, mux, gname)                      \
-> +       {                                                       \
-> +               .name = #fname,                                 \
-> +               .groups = gname##_gpio_groups,                  \
-> +               .ngroups = ARRAY_SIZE(gname##_gpio_groups),     \
-> +               .mux_option = RK805_PINMUX_##mux,               \
-> +       }
-> +
-> +#define PINGROUP(pg_name, pin_id)                              \
-> +       {                                                       \
-> +               .name = #pg_name,                               \
-> +               .pins = {RK805_##pin_id},                       \
-> +               .npins = 1,                                     \
-> +       }
-> +
-> +/* RK805: 2 output only GPIOs */
-> +static const struct pinctrl_pin_desc rk805_pins_desc[] = {
-> +       PINCTRL_PIN(RK805_GPIO0, "gpio0"),
-> +       PINCTRL_PIN(RK805_GPIO1, "gpio1"),
-> +};
-> +
-> +static const struct rk805_pin_function rk805_pin_functions[] = {
-> +       FUNCTION_GROUP(gpio, GPIO, rk805),
-> +};
-> +
-> +static const struct rk805_pin_group rk805_pin_groups[] = {
-> +       PINGROUP(gpio0, GPIO0),
-> +       PINGROUP(gpio1, GPIO1),
-> +};
-
-It looks like the macros just obscure things? Why not simply inline the data
-and open code it as it is just two pins?
-
-Apart from this it looks nice and complete.
-
-Yours,
-Linus Walleij
+> ---
+>  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> index e7780a1..1be6941 100644
+> --- a/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> +++ b/Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt
+> @@ -8,6 +8,7 @@ Required Properties:
+>  	  - "renesas,r8a7793-usb-dmac" (R-Car M2-N)
+>  	  - "renesas,r8a7794-usb-dmac" (R-Car E2)
+>  	  - "renesas,r8a7795-usb-dmac" (R-Car H3)
+> +	  - "renesas,r8a7796-usb-dmac" (R-Car M3-W)
+>  - reg: base address and length of the registers block for the DMAC
+>  - interrupts: interrupt specifiers for the DMAC, one for each entry in
+>    interrupt-names.
+> -- 
+> 1.9.1
+> 
