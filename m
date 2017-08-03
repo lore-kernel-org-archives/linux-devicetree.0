@@ -1,42 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: update the Allwinner
- GPADC device tree binding for H3
-Date: Thu, 3 Aug 2017 11:31:57 -0500
-Message-ID: <20170803163157.atqcerzehrihvvtb@rob-hp-laptop>
-References: <20170723141354.42646-1-icenowy@aosc.io>
- <20170723141354.42646-2-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Subject: Re: [PATCHv5 3/3] ARM:drm ivip Intel FPGA Video and Image Processing
+ Suite
+Date: Thu, 3 Aug 2017 09:35:28 -0700
+Message-ID: <b1c48939-c40f-5af9-03c0-e7317ab5a522@infradead.org>
+References: <1501736496-4118-1-git-send-email-hean.loong.ong@intel.com>
+ <1501736496-4118-4-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERB747RXGAKGQEVS65SHY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170723141354.42646-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501736496-4118-4-git-send-email-hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Hean Loong, Ong" <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 23, 2017 at 10:13:50PM +0800, Icenowy Zheng wrote:
-> Allwinner H3 features a thermal sensor like the one in A33, but has its
-> register re-arranged, the clock divider moved to CCU (originally the
-> clock divider is in ADC) and added a pair of bus clock and reset.
+On 08/02/2017 10:01 PM, Hean Loong, Ong wrote:
+> From: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 > 
-> Update the binding document to cover H3.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> Changes in v3:
-> - Clock name changes.
-> - Example node name changes.
-> - Add interupts (not yet used by the driver).
-> 
->  .../devicetree/bindings/mfd/sun4i-gpadc.txt        | 25 ++++++++++++++++++++--
->  1 file changed, 23 insertions(+), 2 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Really needs a short commit description.
+
+> Signed-off-by: Ong Hean Loong <hean.loong.ong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+> V5:
+> *Fix Comments
+> 
+> V4:
+> *Fix Comments
+> 
+> V3:
+> *Changes to fixing drm_simple_pipe
+> *Used drm_fb_cma_get_gem_addr
+> 
+> V2:
+> *Adding drm_simple_display_pipe_init
+> 
+> ---
+> 
+> diff --git a/drivers/gpu/drm/ivip/Kconfig b/drivers/gpu/drm/ivip/Kconfig
+> new file mode 100644
+> index 0000000..9a8c5ce
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ivip/Kconfig
+> @@ -0,0 +1,13 @@
+> +config DRM_IVIP
+> +        tristate "Intel FGPA Video and Image Processing"
+> +        depends on DRM && OF
+> +        select DRM_GEM_CMA_HELPER
+> +        select DRM_KMS_HELPER
+> +        select DRM_KMS_FB_HELPER
+> +        select DRM_KMS_CMA_HELPER
+> +        help
+> +            Choose this option if you have a Intel FPGA Arria 10 system
+
+	                                      an Intel
+
+> +            and above with a Display Port IP. This does not support legacy
+> +            Intel FPGA Cyclone V display port. Currently only single frame
+> +            buffer is supported. Note that ACPI and X_86 architecture is yet
+	                                               ????
+> +            to be supported.If M is selected the module would be called ivip.
+
+	             supoorted. If M                       will
+
+
+> diff --git a/drivers/gpu/drm/ivip/Makefile b/drivers/gpu/drm/ivip/Makefile
+> new file mode 100644
+> index 0000000..95291c6
+> --- /dev/null
+> +++ b/drivers/gpu/drm/ivip/Makefile
+> @@ -0,0 +1,9 @@
+> +#
+> +# Makefile for the drm device driver.  This driver provides support for the
+> +# Direct Rendering Infrastructure (DRI) in XFree86 4.1.0 and higher.
+> +
+> +ccflags-y := -Iinclude/drm
+> +
+> +obj-$(CONFIG_DRM_IVIP) += ivip.o
+> +ivip-objs := intel_vip_of.o intel_vip_core.o \
+> +intel_vip_conn.o
+
+Please indent continuation lines in Makefiles.
+
+
+-- 
+~Randy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
