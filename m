@@ -1,101 +1,123 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 Subject: Re: [RFC] Introducing yamldt, a yaml to dtb compiler
-Date: Thu, 3 Aug 2017 16:13:13 +1000
-Message-ID: <20170803061313.GM394@umbus.fritz.box>
+Date: Thu, 3 Aug 2017 15:49:14 +1000
+Message-ID: <20170803054914.GL394@umbus.fritz.box>
 References: <1501174151.1055.8.camel@hp800z>
  <CAL_Jsq+eFTUsMNQgSHGc5ahE4LE42q=6TR6c3qDvGYAUG=fd=Q@mail.gmail.com>
  <1501181931.1055.18.camel@hp800z>
  <597A4B80.7000106@gmail.com>
  <1501191985.1055.50.camel@hp800z>
+ <CAL_Jsq+NBEXyOmRx3Ar0OTpyaLeT0hEKw45R0PrVEdmOcd9czw@mail.gmail.com>
+ <20170728005140.GF26163@bill-the-cat>
+ <20170802150933.GG394@umbus.fritz.box>
+ <CACxGe6um3TC3URKa8NWbbQT-gc=AV5jgTxbQ3pYnSp4Xmu_Mfg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="I4g3zIzscEHdx6fd"
+        protocol="application/pgp-signature"; boundary="5LiOUhUlsRX0HDkW"
 Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501191985.1055.50.camel@hp800z>
+In-Reply-To: <CACxGe6um3TC3URKa8NWbbQT-gc=AV5jgTxbQ3pYnSp4Xmu_Mfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, Matt Porter <mporter-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Phil Elwell <philip.j.elwell-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---I4g3zIzscEHdx6fd
+--5LiOUhUlsRX0HDkW
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 28, 2017 at 12:46:25AM +0300, Pantelis Antoniou wrote:
-> Hi Frank,
+On Wed, Aug 02, 2017 at 11:04:14PM +0100, Grant Likely wrote:
+> I'll randomly choose this point in the thread to jump in...
 >=20
-> On Thu, 2017-07-27 at 13:22 -0700, Frank Rowand wrote:
-> > Hi Pantelis,
-> >=20
-> > Keep in mind one of the reasons Linus says he is very direct is to
-> > avoid leading a developer on, so that they don't waste a lot of time
-> > trying to resolve the maintainer's issues instead of realizing that
-> > the maintainer is saying "no". Please read my current answer as being
-> > "no, not likely to ever be accepted", not "no, not in the current form".
-> >=20
-> > My first reaction is: no, this is not a good idea for the Linux kernel.
+> On Wed, Aug 2, 2017 at 4:09 PM, David Gibson
+> <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
+> > On Thu, Jul 27, 2017 at 08:51:40PM -0400, Tom Rini wrote:
+> >> If the common dts source file was in yaml, binding docs would be writt=
+en
+> >> so that we could use them as validation and hey, the above wouldn't ev=
+er
+> >> have happened.  And I'm sure this is not the only example that's in-tr=
+ee
+> >> right now.  These kind of problems create an artificially high barrier
+> >> to entry in a rather important area of the kernel (you can't trust the
+> >> docs, you have to check around the code too, and of course the code
+> >> might have moved since the docs were written).
+> >
+> > Yeah, problems like that suck.  But I don't see that going to YAML
+> > helps avoid them.  It may have a number of neat things it can do, but
+> > yaml won't magically give you a way to match against bindings.  You'd
+> > still need to define a way of describing bindings (on top of yaml or
+> > otherwise) and implement the matching of DTs against bindings.
 >=20
-> This has nothing to do with the kernel. It spits out valid DTBs that the
-> kernel (or anything else) may use.
+> I'm going to try and apply a few constraints. I'm using the following
+> assumptions for my reply.
+> 1) DTS files exist, will continue to exist, and new ones will be
+> created for the foreseeable future.
+> 2) DTB is the format that the kernel and U-Boot consume
 
-[snip]
-> >   - experiment with changes to DTB format for overlays?
+Right.  Regardless of (1), (2) is absolutely the case.  Contrary to
+the initial description, the proposal in this thread really seems to
+be about completely reworking the device tree data model.  While in
+isolation the JSON/yaml data model is, I think, superior to the dtb
+one, attempting to change over now lies somewhere between hopelessly
+ambitious and completely bonkers, IMO.
+
+> 3) Therefore the DTS->DTB workflow is the important one. Anything that
+> falls outside of that may be interesting, but it distracts from the
+> immediate problem and I don't want to talk about it here.
 >=20
-> The DTB format never had to change. It's a simple key/value store with a
-> few funny bits.
+> For schema documentation and checking, I've been investigating how to
+> use JSON Schema to enforce DT bindings. Specifically, I've been using
+> the JSONSchema Python library which strictly speaking doesn't operate
+> on JSON or YAML, but instead operates directly on Python data
+> structures. If that data happens to be imported from a DTS or DTB, the
+> JSON Schema engine doesn't care.
 
-Except you are proposing changing it by adding type information.
+So, inspired by this thread, I've had a little bit of a look at some
+of these json/python schema systems, and thought about how they'd
+apply to dtb.  It certainly seems worthwhile to exploit those schema
+systems if we can, since they seem pretty close to what's wanted at
+least flavour-wise.  But I see some difficulties that don't have
+obvious (to me) solutions.
 
->=20
-> >   - get patches to dtc accepted?
-> >=20
->=20
-> Bingo.
+The main one is that they're based around the thing checked knowing
+its own types (at least in terms of basic scalar/sequence/map
+structure).  I guess that's the motivation behind Pantelis yamldt
+notion, but that doesn't address the problem of validating dtbs in the
+absence of source.
 
-Ok.  So I've made a number of snide remarks in this thread about the
-design of the overlay format.  For that, I apologise - I try not to be
-passive aggressive, but I frequently fail, and I've had various
-unrelated reasons to be grumpy lately.
+In a dtb you just have bytestrings, which means your bottom level
+types in a suitable schema need to know how to extract themselves from
+a bytestream - and in the DT that often means getting an element
+length from a different property or even a different node (#*-cells
+etc.).  AFAICT the json schema languages I looked at didn't really
+have a notion like that.
 
-Let me instead be bluntly rude:  if you want patches accepted into dtc
-faster, write better patches.
+The other is that because we don't have explicit sequences, a schema
+matching a sequence either needs to have a explicit number of entries
+(either from another property or preceding the sequence), or it has to
+be the last thing in the property's pattern (for basically the same
+reason that C99 doesn't allow flexible array members anywhere except
+the end of a structure).
 
-I'm aware that I tend to be overly nitpicky.  That's another habit I
-try to avoid, but often fail (doesn't help I'm a qemu developer and
-the qemu community is also very nitpicky about patches).  But that's
-not the only problem.
+Or to look at it in a more JSONSchema specific way, before you examine
+the schema, you can't pull the info in the dtb into Python structures
+any more specific than "bytestring".
 
-Your patches have frequently had sloppy errors: not being careful
-about buffer limits, inaccurate comments, not matching existing
-similar code when it makes sense to do so.  That's in addition to the
-harder to quantify problems of showing insufficient thought on "is
-this the best/simplest way to solve this problem" at each level.
+Have I missed some features in JSONSchema that help with this, or do
+you have a clever solution already?
 
-Errors in internal implementation can be fixed or cleaned up later,
-but best to avoid as many as possible first time round.  Errors in
-interfaces cause much more pain, and nearly everything about dts and
-dtb is an interface.  It's worth trying hard to avoid mistakes.
+> The work Pantelis has done here is important because it defines a
+> specific data model for DT data. That data model must be defined
+> before schema files can be written, otherwise they'll be testing for
+> the wrong things. However, rather than defining a language specific
+> data model (ie. Python), specifying it in YAML means it doesn't depend
+> on any particular language.
 
-When I make suggestions about changes you frequently just re-iterate
-why you want the feature you're trying to implement.  That's not at
-issue, what I need is either to make the suggested change, or to make
-a case as to *why* your original approach is a better way of achieving
-the goal.
-
-All the above means the patches tend to go through many iterations
-befoire merge.  But, it's more than that.
-
-  1. Because of the above, I'm inclined to review your patches in
-     detail, which takes longer
-  2. Because of (1), reviewing your patches is more work, which makes
-     me procrastinate about it longer.
-  3. Because of all the above, I'm less willing to ignore minor errors
-     (or correct them myself).
-
-Well, there it is.  I may well regret sending this later.
+Urgh.. except that dtb already defines a data model, and it's not the
+same as the JSON/yaml data model.
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -103,24 +125,24 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---I4g3zIzscEHdx6fd
+--5LiOUhUlsRX0HDkW
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmCvvcACgkQbDjKyiDZ
-s5L/Mw/+PA7SRNCsLwiejsgqDWHFPSfvZskQUYa0kNcek5riTxGTBwChRaxf/U7B
-I1/cZGmHP2Tnbc4B1dpxVknvge1A+CXF8pl0dVEL7S/OxgSxyong9+OAD0ES7U4K
-lJwAXctlPxVALZShm+RY8N5IgbEPCgk+x8gtdMiwVUM4lp0LN7OFU8iuySX3twBN
-HCwmLH4k6+Lvt6f0UbNNaKVH/bxqahBCBALuYvzG30Gr0dWvDS+k3xt84iWB1zzX
-jc6uYJgCAuPZPkhVWSQUw43FVQckzKbAK77dmW5H2enzSgM7Yi+cyJlZlRcB1qgy
-uWReGLRe3nvwKghOth5VoLcU4q57modsw5N4MUB7YHCOUsl1oaSJnlIGSEOpBmfN
-ygDz6zqGNjipf88bdttMV+SCRdsY6fKAYe6QwgOU01rxqIQQCB7SXeRN2Ih2/wFI
-GdqIa8Rtptu/E8JfhLKPUMbOPMN9tV+WHAFcz2ENCOky2JeL5sjMFBUHS9NgEFjx
-rz58QgGHf2+AbFO6/9YDGsCdYCMX8BueUhXSJEmt+al+SY2m2q9XIvkFxfPn8PJ2
-kYLSGFDeLakuN29Kb8tFpLnqMnZl5mzC5WfRdUjwp18TLCiDyi2dchIlL2U9uUFc
-k3JF1zfL9vfApom50C04QrttOX6C91HMxx/NhxQJTUPG0r+/mUc=
-=WodE
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmCuVcACgkQbDjKyiDZ
+s5Kh3Q/9E0joAguZb0a4ppwwKpG3wygOxJKff8uA44CdSMdIhs3kiwJFgicffpzJ
+XgH/9NsHOfvQCK1L0zgN84ccWg9KYZy0ca+idTUZ6rssAvljIy2CnvmrBobCFcDD
+7KhubZ6KzjSPIfXON6eP5tSMH1HKfzCZz/y1DIEbQc/om7KT/IJYGiNZpzJs0IJe
+aMqT0c0E2weD6TCzMmqrTzFfyP5RY2k1jiqX1G7VmTIPtY82fWEV1DuDVVquPmr/
+8V+HHAIoIS9IC1tLEfQZauTCcgOF3HNlUw6vKw15qF4SdcfOXoTprpE+rUWsJaMC
+DzQHmsYE8JnyRWiyDKjwZGvlvorVKDz1XIvcATuEWqjF+ibavAJG4/c0FN2TFT+K
+21qT6ObNSdA+DCZCtF4UbdseMTJ+O2p1Nx1BPQPk+s3/U0GlEM/pdCHhYevPcrG/
+uVIETdgCEG3CmGmE0VFJzIckQuhPYNudX2gWb9Hg5dZlRg6ozv5Zsx+6hPu+VJGv
+BX/4djW8Byn+e8eoiZKriR8oOmS04tLXfoASJbWa1VX8hdyc527fEqXlvHiwzISK
+swuh8Hr5KkvRjCZozAYbpgPnzi6rZ2S32SRkUY1xaS2wC8A7pSQP7cGPgkgyjjxR
+Nu/bFW0+UgAVCBSmOWMagiNcvtoO4pyMAUU0ETwA82FoG0RBx88=
+=rPPZ
 -----END PGP SIGNATURE-----
 
---I4g3zIzscEHdx6fd--
+--5LiOUhUlsRX0HDkW--
