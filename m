@@ -1,47 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: phy-hisi-inno-usb2: add support for
- hisi-inno-usb2 phy
-Date: Thu, 3 Aug 2017 13:54:28 -0500
-Message-ID: <20170803185428.a7h2k5u5ux6rebvc@rob-hp-laptop>
-References: <1501049163-18892-1-git-send-email-xuejiancheng@hisilicon.com>
- <1501049163-18892-2-git-send-email-xuejiancheng@hisilicon.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
+Date: Thu, 3 Aug 2017 13:55:47 -0500
+Message-ID: <20170803185547.7k7twxihhwwvlajv@rob-hp-laptop>
+References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501049163-18892-2-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Cc: kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hermit.wangheming@hisilicon.com, project-aspen-dev@linaro.org
+In-Reply-To: <E1daJCF-0003pG-DI-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 02:06:00PM +0800, Jiancheng Xue wrote:
-> Add support for hisi-inno-usb2 phy.
+On Wed, Jul 26, 2017 at 11:05:39AM +0100, Russell King wrote:
+> Some ARM platforms do not wire the HDLCD interrupt.  Allow hdlcd to
+> initialise without an interrupt present.
 > 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 > ---
->  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> new file mode 100644
-> index 0000000..417eeaa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
-> @@ -0,0 +1,31 @@
-> +HiSilicon INNO USB2 PHY
-> +-----------------------
-> +Required properties:
-> +- compatible: Should be one of the following strings:
-> +		"hisilicon,inno-usb2-phy",
-> +		"hisilicon,hi3798cv200-usb2-phy",
-> +- #phy-cells: Shall be 0.
-> +- hisilicon,peripheral-syscon: Phandle of syscon used to control phy.
-> +- hisilicon,phycon-reg: Offset of the phy control register in the syscon.
+>  Documentation/devicetree/bindings/display/arm,hdlcd.txt |  6 +++---
 
-Just make this a cell of hisilicon,peripheral-syscon: <&syscon 0x120>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+>  drivers/gpu/drm/arm/hdlcd_drv.c                         | 13 ++++++++-----
+>  2 files changed, 11 insertions(+), 8 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
