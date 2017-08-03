@@ -1,27 +1,83 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v2 4/4] MAINTAINERS: Add ARTPEC crypto maintainer
-Date: Thu, 3 Aug 2017 14:26:40 +0800
-Message-ID: <20170803062640.GQ12039@gondor.apana.org.au>
-References: <cover.1500879613.git.larper@axis.com>
- <d3a86c7e8137ec82ff350be4796c6b67a1b96d09.1500879613.git.larper@axis.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
+Date: Thu, 3 Aug 2017 09:42:04 +0300
+Message-ID: <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
+References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
+ <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
+ <20170722065133.GT3053@localhost>
+ <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
+ <20170726052930.GF3053@localhost>
+ <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
+ <20170731123157.GJ3053@localhost>
+ <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
+ <20170802045522.GU3053@localhost>
+ <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
+ <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
+ <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
+ <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d3a86c7e8137ec82ff350be4796c6b67a1b96d09.1500879613.git.larper@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lars Persson <lars.persson@axis.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>, Vinod Koul <vinod.koul@intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 09:07:32AM +0200, Lars Persson wrote:
-> Assign the Axis kernel team as maintainer for crypto drivers under
-> drivers/crypto/axis.
-> 
-> Signed-off-by: Lars Persson <larper@axis.com>
-
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+77u/b3VyIG1haWwgc2VydmVyIHN0YXJ0ZWQgdG8gbWFuZ2xlIG91dGdvaW5nIG1haWxzLCBzb3Jy
+eSBmb3IgdGhhdCwgd2UgYXJlIAp0cnlpbmcgdG8gcmVzb2x2ZSB0aGF0Li4uCgoKVGV4YXMgSW5z
+dHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2kuIFkt
+dHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhlbHNp
+bmtpCgpPbiAyMDE3LTA4LTAyIDE3OjI4LCBQaWVycmUgWXZlcyBNT1JEUkVUIHdyb3RlOgo+IENv
+cnJlY3Qgcm91dGVyIG5lZWRzIDMgcGFyYW1ldGVycyBhbmQgYW1vbmcgdGhvc2UgMiBhcmUgZm9y
+d2FyZGVkIHRob3VnaCBvdXQKPiBkbWFfc3BlYy4gQnV0IHdoZW4geW91IHNheSAiQ2hhbm5lbElE
+IGlzIGR5bmFtaWNhbGx5IGFsbG9jYXRlZCIgeW91IG1lYW4KPiBkbWFfZ2V0X2FueV9zbGF2ZV9j
+aGFubmVsID8gSWYgeWVzIEkgY2FuIHVzZSB0aGUgYWxyZWFkeSBleGlzdGluZyBiaW5kaW5ncyB0
+bwo+IGNhcnJ5IHRoZSBjaGFubmVsSUQgdG8gRE1BLiBObyBjaGFuZ2VzIG5lZWQgdG8gcGVyaXBo
+ZXJhbC4uLgoKV2hhdCBJIGFjdHVhbGx5IG1lYW4gaXMgdGhhdCB5b3Ugc2hvdWxkIG5vdCBuZWVk
+IHRvIG1vZGlmeSB0aGUgRE1BIApkcml2ZXIgYXQgYWxsLgpBY2NvcmRpbmcgdG8gc3RtMzItZG1h
+LnR4dDoKI2RtYS1jZWxscyA9IDw0PjsKMS4gY2hhbm5lbElECjIuIHJlcXVlc3QgbGluZSBudW1i
+ZXIKMy4gLSA0LiBzb21lIHBhcmFtZXRlcnMKCkkgYmVsaWV2ZSBpZiB5b3UgZG9uJ3QgaGF2ZSB0
+aGUgZXZlbnQgcm91dGVyIChkaXJlY3RseSB1c2luZyB0aGUgRE1BIApub2RlKSB5b3UgYWx3YXlz
+IG5lZWQgdG8gcHJvdmlkZSB0aGVzZSwgcmlnaHQ/CklmIEknbSBub3QgbWlzdGFrZW4sIHdoZW4g
+eW91IHVzZSB0aGUgZXZlbnQgcm91dGVyIHlvdSB3YW50IHRvIG9taXQgdGhlIApDaGFubmVsSUQg
+YW5kIGdldCBhIHJhbmRvbSBjaGFubmVsIHZpYSBkbWFfZ2V0X2FueV9zbGF2ZV9jaGFubmVsIGlu
+IHRoZSAKRE1BIGRyaXZlciBhbmQgZmVlZCBiYWNrIHRoZSBjaGFubmVsSUQgdG8gdGhlIGV2ZW50
+IHJvdXRlciBkcml2ZXI/CkkgYmVsaWV2ZSB0aGUgcmVhc29uIGZvciB0aGlzIGlzIHRoYXQgeW91
+IHdhbnQgdG8ga2VlcCBtaXhlZCBiaW5kaW5nIAp1c2UsIHRvIGhhdmUgZGlyZWN0IERNQSBiaW5k
+aW5ncyBhbmQgYmluZGluZ3MgdmlhIGV2ZW50IHJvdXRlci4KCk5vdyB3aGF0IGhhcHBlbnMgaWYg
+eW91IGhhdmUgZGlyZWN0IGJpbmRpbmc6CmRldmljZTEgewoJZG1hcyA9IDwmZG1hMiAxIDQgMHgx
+MDQwMCAweDM+Owp9OwoKYW5kIHZpYSBldmVudCByb3V0ZXI6CmRldmljZTIgewoJZG1hcyA9CTwm
+ZG1hX3JvdXRlciAxMCAweDEwNDAwIDB4Mz4sCgkJPCZkbWFfcm91dGVyIDExIDB4MTA0MDAgMHgz
+PjsKfTsKCmRldmljZTIgcHJvYmVzIGZpcnN0LCB3aWxsIGdldCBjaGFubmVsSUQgMCBhbmQgMSB2
+aWEgCmRtYV9nZXRfYW55X3NsYXZlX2NoYW5uZWwuCgpXaGVuIGRldmljZTEgdHJpZXMgdG8gcHJv
+YmUsIHRoZSBjaGFubmVsSUQgMSBpcyBhbHJlYWR5IHRha2VuLi4KCllvdSBuZWVkIHRvIGNvbnZl
+cnQgYWxsIHBlcmlwaGVyYWxzIHRvIHVzZSB0aGUgZXZlbnQgcm91dGVyIHRvIGF2b2lkIApzdWNo
+IGEgcmFjZXMuIEkgaGF2ZSBkb25lIHRoZSBzYW1lIGZvciB0aGUgZHJhNy4KQWRkIHRoZSBldmVu
+dCByb3V0ZXIgZHJpdmVyLAphZGQgdGhlIGV2ZW50IHJvdXRlciBub2RlIGFuZCBjb252ZXJ0IGV4
+aXN0aW5nIHVzZXJzIHRvIHVzZSB0aGF0CndoZW4gYWRkaW5nIG5ldyBkZXZpY2VzLCB1c2UgdGhl
+IGV2ZW50IHJvdXRlciBub2RlLgoKVGhlIGV2ZW50IHJvdXRlcidzIGJpbmRpbmcgd291bGQgaGF2
+ZSAzIHBhcmFtZXRlcnMsIGl0IG1hbmFnZXMgdGhlIAphdmFpbGFibGUgY2hhbm5lbElEcywgbGlr
+ZSB0aGUgdGktZG1hLWNyb3NzYmFyIGRvZXMgZm9yIGRyYTcuIEF0IAphbGxvY2F0ZSB0aW1lIGl0
+IHdvdWxkIHBpY2sgYW4gdW51c2VkIGNoYW5uZWxJRCBhbmQgY3JhZnQgdGhlIGRtYS1zcGVjIAp3
+aXRoIHRoZSBmb3VyIHBhcmFtZXRlcnMgYXMgZG9jdW1lbnRlZC4KVGhlIG1haW4gRE1BIGRyaXZl
+ciB3aWxsIG5vdCBuZWVkIGFueSBtb2RpZmljYXRpb24gYXMgZXZlcnl0aGluZyB3aWxsIGJlIAp0
+YWtlbiBjYXJlIG9mIGJ5IHRoZSBldmVudCByb3V0ZXIuCgpUaGUgb25seSBnb3RjaGEgaXMgd2l0
+aCBtZW1jcHkgdHlwZSBvZiB0cmFuc2ZlcnMgYXMgdGhleSBtaWdodCBhbHNvIG5lZWQgCnVuaXF1
+ZSBjaGFubmVsSUQsIGJ1dCBub3QgcmVxdWVzdGVkIHZpYSB0aGUgc2xhdmUgYmluZGluZy4gRm9y
+IHRoYXQgSSAKaGF2ZSBhZGRlZCBwcm9wZXJ0aWVzIHRvIHRoZSBldmVudCByb3V0ZXIgdG8gbWFz
+ayBvdXQgY2VydGFpbiBjaGFubmVscyAKKGFuZCBJIG5lZWRlZCB0byBkbyB0aGUgc2FtZSBmb3Ig
+dGhlIGVETUEsIGJ1dCBpdCBpcyB1bnJlbGF0ZWQgdG8gdGhlIApyb3V0ZXIgaXRzZWxmKS4KCgot
+IFDDqXRlcgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
