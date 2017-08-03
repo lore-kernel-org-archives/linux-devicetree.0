@@ -1,102 +1,43 @@
-From: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rockchip: rk322x: add spi node and spi pinctrl
-Date: Thu,  3 Aug 2017 10:36:49 +0800
-Message-ID: <1501727810-31761-1-git-send-email-huibin.hong@rock-chips.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 0/5] Qualcomm remote filesystem shared memory driver
+Date: Wed,  2 Aug 2017 19:57:49 -0700
+Message-ID: <20170803025754.19101-1-bjorn.andersson@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sofia-kernel.list-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add spi node and spi pinctrl for rk322x
+Some remote processors (in particular the modem) found in Qualcomm platforms
+stores configuration parameters and other data in a file system. As the remotes
+does not have direct storage access it needs to relay block accesses through a
+service running on the application CPU.
 
-Signed-off-by: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+The memory is described in DeviceTree by a new reserved-memory compatible and
+the implementation provides the user space service a read/write interface to
+this chunk of memory.
 
-Changes in v2:
-- Remove the changeid, and add commit for this patch
+Bjorn Andersson (5):
+  of/platform: Generalize /reserved-memory handling
+  of: reserved_mem: Accessor for acquiring reserved_mem
+  dt-binding: soc: qcom: Add binding for RFSA
+  soc: qcom: Remote FS memory driver
+  arm64: dts: msm8916: Mark rmtfs node as qcom,rfsa compatible
 
- arch/arm/boot/dts/rk322x.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ .../bindings/reserved-memory/qcom,rfsa.txt         |  44 ++++
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |   3 +
+ drivers/of/of_reserved_mem.c                       |  26 ++
+ drivers/of/platform.c                              |  22 +-
+ drivers/soc/qcom/Kconfig                           |   8 +
+ drivers/soc/qcom/Makefile                          |   1 +
+ drivers/soc/qcom/rfsa.c                            | 262 +++++++++++++++++++++
+ include/linux/of_reserved_mem.h                    |   5 +
+ 8 files changed, 365 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt
+ create mode 100644 drivers/soc/qcom/rfsa.c
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 678daf7..b47f58e 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -54,6 +54,7 @@
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-+		spi0 = &spi0;
- 	};
- 
- 	cpus {
-@@ -401,6 +402,19 @@
- 		status = "disabled";
- 	};
- 
-+	spi0: spi@11090000 {
-+		compatible = "rockchip,rk3228-spi";
-+		reg = <0x11090000 0x1000>;
-+		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
-+		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-+		clock-names = "spiclk", "apb_pclk";
-+		status = "disabled";
-+	};
-+
- 	wdt: watchdog@110a0000 {
- 		compatible = "rockchip,rk322x-wdt", "snps,dw-wdt";
- 		reg = <0x110a0000 0x100>;
-@@ -1058,6 +1072,42 @@
- 			};
- 		};
- 
-+		spi-0 {
-+			spi0_clk: spi0-clk {
-+				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs0: spi0-cs0 {
-+				rockchip,pins = <0 14 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_tx: spi0-tx {
-+				rockchip,pins = <0 11 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_rx: spi0-rx {
-+				rockchip,pins = <0 13 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs1: spi0-cs1 {
-+				rockchip,pins = <1 12 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		spi-1 {
-+			spi1_clk: spi1-clk {
-+				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs0: spi1-cs0 {
-+				rockchip,pins = <2 2 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_rx: spi1-rx {
-+				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_tx: spi1-tx {
-+				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs1: spi1-cs1 {
-+				rockchip,pins = <2 3 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+		};
-+
- 		i2s1 {
- 			i2s1_bus: i2s1-bus {
- 				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
 -- 
-1.9.1
-
+2.12.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
