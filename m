@@ -1,93 +1,55 @@
-From: Huibin Hong <huibin.hong@rock-chips.com>
-Subject: [PATCH] ARM: dts: rockchip: rk322x: add spi node and spi pinctrl
-Date: Thu,  3 Aug 2017 09:16:49 +0800
-Message-ID: <1501723009-19367-1-git-send-email-huibin.hong@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
-Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Huibin Hong <huibin.hong@rock-chips.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 0/8] Add board support for TS-4600
+Date: Thu, 3 Aug 2017 09:26:54 +0800
+Message-ID: <20170803012652.GB31819@dragon>
+References: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170714203218.14409-1-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Change-Id: I5bf28e2319ceb90bdc52d732cce2f646b29cae36
-Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
----
- arch/arm/boot/dts/rk322x.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+On Fri, Jul 14, 2017 at 04:32:10PM -0400, Sebastien Bourdelin wrote:
+> This patch serie adds support for the TS-4600 boards rev A and B. These
+> boards, manufactured by Technologic Systems, are based on an i.MX28.
+> 
+> This serie include the support for the watchdog which could be enable
+> at Linux boot time depending on the bootloader.
+> 
+> The watchdog and few peripherals are implemented in a FPGA, and can
+> only be access using a custom GPIOs bit-banged bus which is called the
+> NBUS by Technologic Systems.
+> A driver for this bus is also included and used by the watchdog.
+> 
+> Sebastien Bourdelin (8):
+>   of: documentation: add bindings documentation for TS-4600
+>   ARM: dts: TS-4600: add basic device tree
+>   dt-bindings: bus: Add documentation for the Technologic Systems NBUS
+>   bus: add driver for the Technologic Systems NBUS
+>   ARM: dts: TS-4600: add NBUS support
+>   dt-bindings: watchdog: add documentation for TS4600 watchdog
+>     controller
+>   watchdog: TS-4600: add driver for TS-4600 watchdog controller
+>   ARM: dts: TS-4600: add watchdog support
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 678daf7..b47f58e 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -54,6 +54,7 @@
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-+		spi0 = &spi0;
- 	};
- 
- 	cpus {
-@@ -401,6 +402,19 @@
- 		status = "disabled";
- 	};
- 
-+	spi0: spi@11090000 {
-+		compatible = "rockchip,rk3228-spi";
-+		reg = <0x11090000 0x1000>;
-+		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
-+		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-+		clock-names = "spiclk", "apb_pclk";
-+		status = "disabled";
-+	};
-+
- 	wdt: watchdog@110a0000 {
- 		compatible = "rockchip,rk322x-wdt", "snps,dw-wdt";
- 		reg = <0x110a0000 0x100>;
-@@ -1058,6 +1072,42 @@
- 			};
- 		};
- 
-+		spi-0 {
-+			spi0_clk: spi0-clk {
-+				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs0: spi0-cs0 {
-+				rockchip,pins = <0 14 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_tx: spi0-tx {
-+				rockchip,pins = <0 11 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_rx: spi0-rx {
-+				rockchip,pins = <0 13 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs1: spi0-cs1 {
-+				rockchip,pins = <1 12 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		spi-1 {
-+			spi1_clk: spi1-clk {
-+				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs0: spi1-cs0 {
-+				rockchip,pins = <2 2 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_rx: spi1-rx {
-+				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_tx: spi1-tx {
-+				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs1: spi1-cs1 {
-+				rockchip,pins = <2 3 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+		};
-+
- 		i2s1 {
- 			i2s1_bus: i2s1-bus {
- 				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
--- 
-1.9.1
+You are mixing changes on 3 subsystem in a single patch series.  It
+makes the merge process unnecessarily hard.  I suggest you split the
+series as following:
+
+ - nbus dt-bindings and driver
+ - watchdog dt-bindings and driver
+ - ts-4600 board bindings and dts
+
+You should get the first two into mainline through corresponding
+subsystem tree, and then submit the last one to me.  In that case, NBUS
+and watchdog dts changes do not have to be separate patches.
+
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
