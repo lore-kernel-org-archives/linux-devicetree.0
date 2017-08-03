@@ -1,217 +1,86 @@
-From: Joseph Chen <chenjh@rock-chips.com>
-Subject: [PATCH v8 03/12] regulator: rk808: Add regulator driver for RK805
-Date: Thu,  3 Aug 2017 20:20:32 +0800
-Message-ID: <1501762841-20262-4-git-send-email-chenjh@rock-chips.com>
-References: <1501762841-20262-1-git-send-email-chenjh@rock-chips.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: can: fixed-transceiver: Add new CAN
+ fixed transceiver bindings
+Date: Thu, 3 Aug 2017 15:22:55 +0300
+Message-ID: <86d78a36-04c2-7036-636c-7326a4c1c6b0@cogentembedded.com>
+References: <20170803005150.9286-1-fcooper@ti.com>
+ <20170803005150.9286-3-fcooper@ti.com>
+ <f92513b6-6b2b-e08d-72e2-dedd7e0190f4@cogentembedded.com>
+ <3848fab8-ebcf-5b29-7e4e-eb1a2b03803d@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501762841-20262-1-git-send-email-chenjh@rock-chips.com>
+In-Reply-To: <3848fab8-ebcf-5b29-7e4e-eb1a2b03803d@ti.com>
+Content-Language: en-MW
 Sender: linux-kernel-owner@vger.kernel.org
-To: gnurou@gmail.com, linus.walleij@linaro.org, dmitry.torokhov@gmail.com
-Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, huangtao@rock-chips.com, tony.xie@rock-chips.com, zhangqing@rock-chips.com, wdc@rock-chips.com, devicetree@vger.kernel.org, w.egorov@phytec.de, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, Joseph Chen <chenjh@rock-chips.com>
+To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, socketcan@hartkopp.net
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing@rock-chips.com>
+On 08/03/2017 12:48 PM, Franklin S Cooper Jr wrote:
 
-Add support for the rk805 regulator. The regulator module consists
-of 4 DCDCs, 3 LDOs.
+>>> Add documentation to describe usage of the new fixed transceiver binding.
+>>> This new binding is applicable for any CAN device therefore it exists as
+>>> its own document.
+>>>
+>>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+>>> ---
+>>>    .../bindings/net/can/fixed-transceiver.txt         | 24
+>>> ++++++++++++++++++++++
+>>>    1 file changed, 24 insertions(+)
+>>>    create mode 100644
+>>> Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+>>> b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+>>> new file mode 100644
+>>> index 0000000..2f58838b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+>>> @@ -0,0 +1,24 @@
+>>> +Fixed transceiver Device Tree binding
+>>> +------------------------------
+>>> +
+>>> +CAN transceiver typically limits the max speed in standard CAN and
+>>> CAN FD
+>>> +modes. Typically these limitations are static and the transceivers
+>>> themselves
+>>> +provide no way to detect this limitation at runtime. For this situation,
+>>> +the "fixed-transceiver" node can be used.
+>>> +
+>>> +Required Properties:
+>>> + max-bitrate:    a positive non 0 value that determines the max
+>>> +        speed that CAN/CAN-FD can run. Any other value
+>>> +        will be ignored.
+>>> +
+>>> +Examples:
+>>> +
+>>> +Based on Texas Instrument's TCAN1042HGV CAN Transceiver
+>>> +
+>>> +m_can0 {
+>>> +    ....
+>>> +    fixed-transceiver@0 {
+>>
+>>     The <unit-address> (after @) must only be specified if there's "reg"
+> 
+> Sorry. Fixed this in my v2 and some how it came back. Will fix.
+> 
+>> prop in the device node. Also, please name the node "can-transceiver@"
+>> to be more in line with the DT spec. which requires generic node names.
+> 
+> Its possible for future can transceivers drivers to be created. So I
 
-The output voltages are configurable and are meant to supply power
-to the main processor and other components.
+    So what? Ah, you are using the node name to match in the CAN drivers...
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
-Acked-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/Kconfig           |   4 +-
- drivers/regulator/rk808-regulator.c | 130 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 132 insertions(+), 2 deletions(-)
+> thought including fixed was important to indicate that this is a "dumb"
+> transceiver similar to "fixed-link".
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index be06eb2..285e280 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -650,11 +650,11 @@ config REGULATOR_RC5T583
- 	  outputs which can be controlled by i2c communication.
- 
- config REGULATOR_RK808
--	tristate "Rockchip RK808/RK818 Power regulators"
-+	tristate "Rockchip RK805/RK808/RK818 Power regulators"
- 	depends on MFD_RK808
- 	help
- 	  Select this option to enable the power regulator of ROCKCHIP
--	  PMIC RK808 and RK818.
-+	  PMIC RK805,RK808 and RK818.
- 	  This driver supports the control of different power rails of device
- 	  through regulator interface. The device supports multiple DCDC/LDO
- 	  outputs which can be controlled by i2c communication.
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index fb44d52..128c81e 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -65,6 +65,27 @@
- /* max steps for increase voltage of Buck1/2, equal 100mv*/
- #define MAX_STEPS_ONE_TIME 8
- 
-+#define RK805_DESC(_id, _match, _supply, _min, _max, _step, _vreg,      \
-+	_vmask, _ereg, _emask, _etime)                                  \
-+	[_id] = {                                                       \
-+		.name           = (_match),                             \
-+		.supply_name    = (_supply),                            \
-+		.of_match       = of_match_ptr(_match),                 \
-+		.regulators_node = of_match_ptr("regulators"),          \
-+		.type           = REGULATOR_VOLTAGE,                    \
-+		.id             = (_id),                                \
-+		.n_voltages     = (((_max) - (_min)) / (_step) + 1),    \
-+		.owner          = THIS_MODULE,                          \
-+		.min_uV         = (_min) * 1000,                        \
-+		.uV_step        = (_step) * 1000,                       \
-+		.vsel_reg       = (_vreg),                              \
-+		.vsel_mask      = (_vmask),                             \
-+		.enable_reg     = (_ereg),                              \
-+		.enable_mask    = (_emask),                             \
-+		.enable_time    = (_etime),                             \
-+		.ops            = &rk805_reg_ops,                       \
-+	}
-+
- #define RK8XX_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
- 	_vmask, _ereg, _emask, _etime)					\
- 	[_id] = {							\
-@@ -298,6 +319,28 @@ static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
- 				  sel);
- }
- 
-+static int rk805_set_suspend_enable(struct regulator_dev *rdev)
-+{
-+	unsigned int reg;
-+
-+	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
-+
-+	return regmap_update_bits(rdev->regmap, reg,
-+				  rdev->desc->enable_mask,
-+				  rdev->desc->enable_mask);
-+}
-+
-+static int rk805_set_suspend_disable(struct regulator_dev *rdev)
-+{
-+	unsigned int reg;
-+
-+	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
-+
-+	return regmap_update_bits(rdev->regmap, reg,
-+				  rdev->desc->enable_mask,
-+				  0);
-+}
-+
- static int rk808_set_suspend_enable(struct regulator_dev *rdev)
- {
- 	unsigned int reg;
-@@ -320,6 +363,27 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
- 				  rdev->desc->enable_mask);
- }
- 
-+static struct regulator_ops rk805_reg_ops = {
-+		.list_voltage           = regulator_list_voltage_linear,
-+		.map_voltage            = regulator_map_voltage_linear,
-+		.get_voltage_sel        = regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel        = regulator_set_voltage_sel_regmap,
-+		.enable                 = regulator_enable_regmap,
-+		.disable                = regulator_disable_regmap,
-+		.is_enabled             = regulator_is_enabled_regmap,
-+		.set_suspend_voltage    = rk808_set_suspend_voltage,
-+		.set_suspend_enable     = rk805_set_suspend_enable,
-+		.set_suspend_disable    = rk805_set_suspend_disable,
-+};
-+
-+static struct regulator_ops rk805_switch_ops = {
-+		.enable                 = regulator_enable_regmap,
-+		.disable                = regulator_disable_regmap,
-+		.is_enabled             = regulator_is_enabled_regmap,
-+		.set_suspend_enable     = rk805_set_suspend_enable,
-+		.set_suspend_disable    = rk805_set_suspend_disable,
-+};
-+
- static struct regulator_ops rk808_buck1_2_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -369,6 +433,68 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
- 	.set_suspend_disable	= rk808_set_suspend_disable,
- };
- 
-+static const struct regulator_desc rk805_reg[] = {
-+	{
-+		.name = "DCDC_REG1",
-+		.supply_name = "vcc1",
-+		.of_match = of_match_ptr("DCDC_REG1"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC1,
-+		.ops = &rk805_reg_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.min_uV = 712500,
-+		.uV_step = 12500,
-+		.n_voltages = 64,
-+		.vsel_reg = RK805_BUCK1_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(0),
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "DCDC_REG2",
-+		.supply_name = "vcc2",
-+		.of_match = of_match_ptr("DCDC_REG2"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC2,
-+		.ops = &rk805_reg_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.min_uV = 712500,
-+		.uV_step = 12500,
-+		.n_voltages = 64,
-+		.vsel_reg = RK805_BUCK2_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(1),
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "DCDC_REG3",
-+		.supply_name = "vcc3",
-+		.of_match = of_match_ptr("DCDC_REG3"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC3,
-+		.ops = &rk805_switch_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 1,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(2),
-+		.owner = THIS_MODULE,
-+	},
-+
-+	RK805_DESC(RK805_ID_DCDC4, "DCDC_REG4", "vcc4", 800, 3400, 100,
-+		RK805_BUCK4_ON_VSEL_REG, RK818_BUCK4_VSEL_MASK,
-+		RK805_DCDC_EN_REG, BIT(3), 0),
-+
-+	RK805_DESC(RK805_ID_LDO1, "LDO_REG1", "vcc5", 800, 3400, 100,
-+		RK805_LDO1_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(0), 400),
-+	RK805_DESC(RK805_ID_LDO2, "LDO_REG2", "vcc5", 800, 3400, 100,
-+		RK805_LDO2_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(1), 400),
-+	RK805_DESC(RK805_ID_LDO3, "LDO_REG3", "vcc6", 800, 3400, 100,
-+		RK805_LDO3_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(2), 400),
-+};
-+
- static const struct regulator_desc rk808_reg[] = {
- 	{
- 		.name = "DCDC_REG1",
-@@ -625,6 +751,10 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pdata);
- 
- 	switch (rk808->variant) {
-+	case RK805_ID:
-+		regulators = rk805_reg;
-+		nregulators = RK805_NUM_REGULATORS;
-+		break;
- 	case RK808_ID:
- 		regulators = rk808_reg;
- 		nregulators = RK808_NUM_REGULATORS;
--- 
-1.9.1
+    I'm not sure the "fixed-link" MAC subnode assumed any transceiver at all...
+
+> So would "fixed-can-transceiver" be
+> ok or do you want to go with can-transceiver?
+
+    I'm somewhat perplexed at this point...
+
+MBR, Sergei
