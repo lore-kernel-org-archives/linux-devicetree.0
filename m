@@ -1,40 +1,93 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 0/3] ARM: dts: imx7: add NAND support
-Date: Thu, 3 Aug 2017 09:13:58 +0800
-Message-ID: <20170803011357.GA31819@dragon>
-References: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
- <20170614151146.GC30112@dragon>
- <c05aff108433c9ced4c85efcf3ba65e8@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c05aff108433c9ced4c85efcf3ba65e8-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Huibin Hong <huibin.hong@rock-chips.com>
+Subject: [PATCH] ARM: dts: rockchip: rk322x: add spi node and spi pinctrl
+Date: Thu,  3 Aug 2017 09:16:49 +0800
+Message-ID: <1501723009-19367-1-git-send-email-huibin.hong@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Huibin Hong <huibin.hong@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 01, 2017 at 07:41:41PM -0700, Stefan Agner wrote:
-> Hi Shawn,
-> 
-> On 2017-06-14 08:11, Shawn Guo wrote:
-> > On Thu, Jun 08, 2017 at 03:34:46PM -0700, Stefan Agner wrote:
-> >> Stefan Agner (3):
-> >>   clk: imx7d: create clocks behind rawnand clock gate
-> >>   ARM: dts: imx7: add GPMI NAND and APBH DMA
-> >>   ARM: dts: imx7-colibri: add NAND support
-> > 
-> > Both dts patches look good to me.  Please ping me after the clk patch
-> > lands on mainline.
-> 
-> The clk patch landed in mainline. These two patches seem to apply fine
-> still. Can you queue them for -next?
+Change-Id: I5bf28e2319ceb90bdc52d732cce2f646b29cae36
+Signed-off-by: Huibin Hong <huibin.hong@rock-chips.com>
+---
+ arch/arm/boot/dts/rk322x.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-Just applied.  Thanks for reminding.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 678daf7..b47f58e 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -54,6 +54,7 @@
+ 		serial0 = &uart0;
+ 		serial1 = &uart1;
+ 		serial2 = &uart2;
++		spi0 = &spi0;
+ 	};
+ 
+ 	cpus {
+@@ -401,6 +402,19 @@
+ 		status = "disabled";
+ 	};
+ 
++	spi0: spi@11090000 {
++		compatible = "rockchip,rk3228-spi";
++		reg = <0x11090000 0x1000>;
++		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
++		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
++		clock-names = "spiclk", "apb_pclk";
++		status = "disabled";
++	};
++
+ 	wdt: watchdog@110a0000 {
+ 		compatible = "rockchip,rk322x-wdt", "snps,dw-wdt";
+ 		reg = <0x110a0000 0x100>;
+@@ -1058,6 +1072,42 @@
+ 			};
+ 		};
+ 
++		spi-0 {
++			spi0_clk: spi0-clk {
++				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi0_cs0: spi0-cs0 {
++				rockchip,pins = <0 14 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi0_tx: spi0-tx {
++				rockchip,pins = <0 11 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi0_rx: spi0-rx {
++				rockchip,pins = <0 13 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi0_cs1: spi0-cs1 {
++				rockchip,pins = <1 12 RK_FUNC_1 &pcfg_pull_up>;
++			};
++		};
++
++		spi-1 {
++			spi1_clk: spi1-clk {
++				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_cs0: spi1-cs0 {
++				rockchip,pins = <2 2 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_rx: spi1-rx {
++				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_tx: spi1-tx {
++				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_up>;
++			};
++			spi1_cs1: spi1-cs1 {
++				rockchip,pins = <2 3 RK_FUNC_2 &pcfg_pull_up>;
++			};
++		};
++
+ 		i2s1 {
+ 			i2s1_bus: i2s1-bus {
+ 				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
+-- 
+1.9.1
