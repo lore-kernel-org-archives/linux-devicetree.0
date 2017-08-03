@@ -1,91 +1,47 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/3] usb: gadget: udc: renesas_usb3: add support for
- R-Car M3-W
-Date: Thu, 3 Aug 2017 17:28:08 -0500
-Message-ID: <20170803222808.v24lt5bzvpzmjwcj@rob-hp-laptop>
-References: <1501244219-11840-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1501244219-11840-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 2/2] char: xilinx_hwicap: Fix warnings in the driver
+Date: Thu, 3 Aug 2017 17:32:18 -0500
+Message-ID: <20170803223218.ilryp5spqztsr3cz@rob-hp-laptop>
+References: <6da0afe2afd2c7a21d16da9a9c7acab09385ae2c.1501247838.git.michal.simek@xilinx.com>
+ <79e2e616a8b7dbf38eb72ba0b620230017dcbc65.1501247838.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501244219-11840-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: balbi@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <79e2e616a8b7dbf38eb72ba0b620230017dcbc65.1501247838.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Nava kishore Manne <nava.manne@xilinx.com>, =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 09:16:59PM +0900, Yoshihiro Shimoda wrote:
-> This patch adds support for R-Car M3-W. This patch also adds R-Car
-> Gen3 generic version's compatible.
+On Fri, Jul 28, 2017 at 03:17:26PM +0200, Michal Simek wrote:
+> From: Nava kishore Manne <nava.manne@xilinx.com>
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> This patch fixes the below warning
+>         --> Use #include <linux/io.h> instead of <asm/io.h>
+>         --> Use #include <linux/uaccess.h> instead of <asm/uaccess.h>
+>         --> please, no space before tabs
+>         --> Block comments use a trailing */ on a separate line
+>         --> Possible unnecessary 'out of memory' message
+>         --> Block comments use * on subsequent lines
+>         --> Block comments use a trailing */ on a separate line
+>         --> braces {} are not necessary for any arm of this statement
+>         --> DT compatible string "xlnx,opb-hwicap-1.00.b"
+> 	    appears un-documented
+>         --> DT compatible string "xlnx,xps-hwicap-1.00.a"
+>             appears un-documented
+> 
+> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  Documentation/devicetree/bindings/usb/renesas_usb3.txt | 16 +++++++++++++---
->  drivers/usb/gadget/udc/renesas_usb3.c                  |  8 ++++++++
->  2 files changed, 21 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-> index 8d52766..e280258 100644
-> --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-> +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
-> @@ -3,20 +3,30 @@ Renesas Electronics USB3.0 Peripheral driver
->  Required properties:
->    - compatible: Must contain one of the following:
->  	- "renesas,r8a7795-usb3-peri"
-> +	- "renesas,r8a7796-usb3-peri"
-> +	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 compatible
-> +	  device
-> +
-> +    When compatible with the generic version, nodes must list the
-> +    SoC-specific version corresponding to the platform first
-> +    followed by the generic version.
-> +
->    - reg: Base address and length of the register for the USB3.0 Peripheral
->    - interrupts: Interrupt specifier for the USB3.0 Peripheral
->    - clocks: clock phandle and specifier pair
->  
-> -Example:
-> +Example of R-Car H3 ES1.x:
->  	usb3_peri0: usb@ee020000 {
-> -		compatible = "renesas,r8a7795-usb3-peri";
-> +		compatible = "renesas,r8a7795-usb3-peri",
-> +			     "renesas,rcar-gen3-usb3-peri";
->  		reg = <0 0xee020000 0 0x400>;
->  		interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&cpg CPG_MOD 328>;
->  	};
->  
->  	usb3_peri1: usb@ee060000 {
-> -		compatible = "renesas,r8a7795-usb3-peri";
-> +		compatible = "renesas,r8a7795-usb3-peri",
-> +			     "renesas,rcar-gen3-usb3-peri";
->  		reg = <0 0xee060000 0 0x400>;
->  		interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
->  		clocks = <&cpg CPG_MOD 327>;
-> diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
-> index aa2b185..45410f3 100644
-> --- a/drivers/usb/gadget/udc/renesas_usb3.c
-> +++ b/drivers/usb/gadget/udc/renesas_usb3.c
-> @@ -2506,6 +2506,14 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
->  		.compatible = "renesas,r8a7795-usb3-peri",
->  		.data = &renesas_usb3_priv_gen3,
->  	},
-> +	{
-> +		.compatible = "renesas,r8a7796-usb3-peri",
-> +		.data = &renesas_usb3_priv_gen3,
-> +	},
-> +	{
-> +		.compatible = "renesas,rcar-gen3-usb3-peri",
-> +		.data = &renesas_usb3_priv_gen3,
+>  Documentation/devicetree/bindings/xilinx.txt |  2 ++
 
-What's the point of a common fallback if you list all the compatibles in 
-the driver?
+It's preferred to split bindings to separate patches. No need unless you 
+respin:
 
-> +	},
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, usb3_of_match);
-> -- 
-> 1.9.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/char/xilinx_hwicap/xilinx_hwicap.c   | 35 ++++++++++++++--------------
+>  drivers/char/xilinx_hwicap/xilinx_hwicap.h   |  6 +++--
+>  3 files changed, 23 insertions(+), 20 deletions(-)
