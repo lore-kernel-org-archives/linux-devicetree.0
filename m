@@ -1,44 +1,62 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: iio: adc: stm32: add optional
- st,min-sample-time-nsecs
-Date: Thu, 3 Aug 2017 12:01:54 -0500
-Message-ID: <20170803170154.bizlx2dvdbwtgmoy@rob-hp-laptop>
-References: <1500912640-23927-1-git-send-email-fabrice.gasnier@st.com>
- <1500912640-23927-3-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 3/4] can: m_can: Update documentation to mention new
+ fixed transceiver binding
+Date: Thu, 3 Aug 2017 12:07:35 -0500
+Message-ID: <20170803170735.qntnxpx5olghzmbu@rob-hp-laptop>
+References: <20170724230521.1436-1-fcooper@ti.com>
+ <20170724230521.1436-4-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-can-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1500912640-23927-3-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, jic23@kernel.org
+In-Reply-To: <20170724230521.1436-4-fcooper@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 06:10:39PM +0200, Fabrice Gasnier wrote:
-> STM32 ADC allows each channel to be sampled with a different sampling
-> time. There's an application note that deals with this: 'How to get
-> the best ADC accuracy in STM32...' It basically depends on analog input
-> signal electrical properties (depends on board).
+On Mon, Jul 24, 2017 at 06:05:20PM -0500, Franklin S Cooper Jr wrote:
+> Add information regarding fixed transceiver binding. This is especially
+> important for MCAN since the IP allows CAN FD mode to run significantly
+> faster than what most transceivers are capable of.
 > 
-> Add optional 'st,min-sample-time-nsecs' property so this can be tuned
-> in dt.
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+> Version 2 changes:
+> Drop unit address
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
-> Changes in v2:
-> - Use 'st,min-sample-time-nsecs' instead of 'min-sample-time'.
-> ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+>  Documentation/devicetree/bindings/net/can/m_can.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
+> index 9e33177..e4abd2c 100644
+> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
+> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
+> @@ -43,6 +43,11 @@ Required properties:
+>  			  Please refer to 2.4.1 Message RAM Configuration in
+>  			  Bosch M_CAN user manual for details.
+>  
+> +Optional properties:
+> +- fixed-transceiver	: Fixed-transceiver subnode describing maximum speed
 
-Acked-by: Rob Herring <robh@kernel.org>
+This is a node, not a property. Sub nodes should have their own section.
+
+> +			  that can be used for CAN and/or CAN-FD modes.  See
+> +			  Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+> +			  for details.
+>  Example:
+>  SoC dtsi:
+>  m_can1: can@020e8000 {
+> @@ -64,4 +69,9 @@ Board dts:
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_m_can1>;
+>  	status = "enabled";
+> +
+> +	fixed-transceiver {
+> +		max-arbitration-speed = <1000000>;
+> +		max-data-speed = <5000000>;
+> +	};
+>  };
+> -- 
+> 2.10.0
+> 
