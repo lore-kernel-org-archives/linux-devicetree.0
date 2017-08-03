@@ -1,31 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: adi,adv7511.txt: document cec clock
-Date: Thu, 3 Aug 2017 18:35:53 -0500
-Message-ID: <20170803233553.xazboombv4jpggxg@rob-hp-laptop>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
- <20170730130743.19681-2-hverkuil@xs4all.nl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: add bindings document for zx-irdec
+Date: Thu, 3 Aug 2017 18:36:28 -0500
+Message-ID: <20170803233628.nxkkrohc6idkmags@rob-hp-laptop>
+References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+ <1501420993-21977-3-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170730130743.19681-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1501420993-21977-3-git-send-email-shawnguo@kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Sean Young <sean@mess.org>, Baoyou Xie <xie.baoyou@sanechips.com.cn>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 30, 2017 at 03:07:40PM +0200, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+On Sun, Jul 30, 2017 at 09:23:12PM +0800, Shawn Guo wrote:
+> From: Shawn Guo <shawn.guo@linaro.org>
 > 
-> Document the cec clock binding.
+> It adds the dt-bindings document for ZTE ZX IRDEC remote control
+> block.
 > 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
->  Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/media/zx-irdec.txt | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/zx-irdec.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
