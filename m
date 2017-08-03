@@ -1,29 +1,28 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: rockchip: add bindings for i2s
-Date: Thu, 3 Aug 2017 18:37:09 -0500
-Message-ID: <20170803233709.2g5csaxnngb7d3at@rob-hp-laptop>
-References: <1501465671-22863-1-git-send-email-sugar.zhang@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/7] dt-bindings: phy: qmp: Add support for QMP phy in
+ IPQ8074
+Date: Thu, 3 Aug 2017 18:38:56 -0500
+Message-ID: <20170803233856.zpjuhdbzfafhdtmr@rob-hp-laptop>
+References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+ <1501482857-14100-3-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501465671-22863-1-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1501482857-14100-3-git-send-email-varada@codeaurora.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: bhelgaas@google.com, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 09:47:51AM +0800, Sugar Zhang wrote:
-> This patch add bindings for rk3036/rk3228/rk3328/rk3366 i2s.
+On Mon, Jul 31, 2017 at 12:04:12PM +0530, Varadarajan Narayanan wrote:
+> IPQ8074 uses QMP phy controller that provides support to PCIe and
+> USB. Adding dt binding information for the same.
 > 
-> Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 > ---
-> 
->  Documentation/devicetree/bindings/sound/rockchip-i2s.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
