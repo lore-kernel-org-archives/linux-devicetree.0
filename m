@@ -1,78 +1,80 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
- controller documentation
-Date: Thu, 3 Aug 2017 16:45:47 +0800
-Message-ID: <CAMz4ku+aPYP8j+Y6cu0azmD2TFGZ428rCaPof15kdmEKRVp6EA@mail.gmail.com>
-References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
- <20170724065146.GA22330@spreadtrum.com> <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
- <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com> <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: wsa@the-dreams.de, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, wsa+renesas@sang-engineering.com
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
+Date: Thu,  3 Aug 2017 11:46:50 +0300
+Message-ID: <20170803084650.22298-1-c_mykolak@mellanox.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 August 2017 at 16:26, Peter Rosin <peda@axentia.se> wrote:
-> On 2017-08-03 09:29, Baolin Wang wrote:
->> Hi Wolfram,
->>
->> On 27 July 2017 at 17:29, Baolin Wang <baolin.wang@linaro.org> wrote:
->>> Hi Wolfram,
->>>
->>> On 24 July 2017 at 14:51, Baolin Wang <baolin.wang@spreadtrum.com> wrot=
-e:
->>>> Hi Wolfram,
->>>>
->>>> On =E4=BA=94,  7=E6=9C=88 14, 2017 at 05:01:10=E4=B8=8B=E5=8D=88 +0800=
-, Baolin Wang wrote:
->>>>> This patch adds the binding documentation for Spreadtrum I2C
->>>>> controller device.
->>>>>
->>>>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
->>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>> ---
->>>>> Changes since v3:
->>>>>  - Add Ack from RobH.
->>>>>
->>>>> Changes since v2:
->>>>>  - Change compatible strings to be SoC specific.
->>>>>
->>>>> Changes since v1:
->>>>>  - No updates.
->>>>> ---
->>>>
->>>> Could you apply this patchset if there are no other comments?
->>>> It is a long time since the v4 was send out. Thanks.
->>>
->>> Ping?
->>
->> Since this patchset has waited for a long time, could you pick up this
->> patchset into your branch? Thanks.
->
-> Please calm down. You first sent v4 4 weeks ago in the beginning of the
-> merge window when everybody are supposedly looking at the integration of
-> the work from the previous cycle. You have managed to send remainders
-> four times in those few weeks.
->
-> Four weeks is not a "long time", and it's not like you didn't get any
-> feedback. Part of that feedback was that there was room for improvement.
-> Have you looked into that? Or have you been busy sending pings? I'm sure
-> Wolfram will pick the series in time for the next merge window if he's
-> happy with it, there was that thing about room for improvement...
+It's add support for cooling device creation to
+aspeed-pwm-tacho.
+Cooling device could be bound to a thermal zone
+for the thermal control.
 
-Sorry for noise. I just afraid Wolfram missed this patchset since I
-did not get any comments from V4.
+v1 -> v2:
+ - Fix commit message.
+v2 -> v3:
+ Pointed out by Rob Herring:
+ - Put cooling-levels under fan subnodes.
 
-Yes, I've looked at  how to improve, one thing is we can change
-readb/writeb to readsb/writesb. I will submit one patch to fix this
-after Andy's patches which fixing the readsb/writesb issue on x86
-platform were merged. Anyway I will be keep patient and wait for
-comments. Thanks.
+Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---=20
-Baolin.wang
-Best Regards
+diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+index cf44605..367c820 100644
+--- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
++++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+@@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
+ 
+ - #size-cells : should be 1.
+ 
++- #cooling-cells: should be 2.
++
+ - reg : address and length of the register set for the device.
+ 
+ - pinctrl-names : a pinctrl state named "default" must be defined.
+@@ -28,12 +30,17 @@ fan subnode format:
+ Under fan subnode there can upto 8 child nodes, with each child node
+ representing a fan. If there are 8 fans each fan can have one PWM port and
+ one/two Fan tach inputs.
++For PWM port can be configured cooling-levels to create cooling device.
++Cooling device could be bound to a thermal zone for the thermal control.
+ 
+ Required properties for each child node:
+ - reg : should specify PWM source port.
+ 	integer value in the range 0 to 7 with 0 indicating PWM port A and
+ 	7 indicating PWM port H.
+ 
++- cooling-levels: PWM duty cycle values in a range from 0 to 255
++                  which correspond to thermal cooling states.
++
+ - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+                 integer value in the range 0 through 15, with 0 indicating
+ 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+@@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
+ pwm_tacho: pwmtachocontroller@1e786000 {
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
++	#cooling-cells = <2>;
+ 	reg = <0x1E786000 0x1000>;
+ 	compatible = "aspeed,ast2500-pwm-tacho";
+ 	clocks = <&pwm_tacho_fixed_clk>;
+@@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+ 
+ 	fan@0 {
+ 		reg = <0x00>;
++		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
+ 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+ 	};
+ 
+-- 
+2.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
