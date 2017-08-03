@@ -1,50 +1,56 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: [PATCH 7/7] iio: srf08: change text in Kconfig
-Date: Thu, 3 Aug 2017 01:26:34 +0200
-Message-ID: <20170802232634.GA15420@arbeit>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: [PATCH v3 2/4] dt-bindings: can: fixed-transceiver: Add new CAN fixed transceiver bindings
+Date: Wed, 2 Aug 2017 19:51:48 -0500
+Message-ID: <20170803005150.9286-3-fcooper@ti.com>
+References: <20170803005150.9286-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170803005150.9286-1-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, sergei.shtylyov@cogentembedded.com, socketcan@hartkopp.net
+Cc: Franklin S Cooper Jr <fcooper@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Changed text in menu entry and help text to reflect recent changes
+Add documentation to describe usage of the new fixed transceiver binding.
+This new binding is applicable for any CAN device therefore it exists as
+its own document.
 
-Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
 ---
- drivers/iio/proximity/Kconfig | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../bindings/net/can/fixed-transceiver.txt         | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
 
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index 5b81a8c9d438..7a06ef4ced39 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -57,14 +57,14 @@ config SX9500
- 	  module will be called sx9500.
- 
- config SRF08
--	tristate "Devantech SRF08 ultrasonic ranger sensor"
-+	tristate "Devantech SRF02/SRF08/SRF10 ultrasonic ranger sensor"
- 	depends on I2C
- 	help
--	  Say Y here to build a driver for Devantech SRF08 ultrasonic
--	  ranger sensor. This driver can be used to measure the distance
--	  of objects.
-+	  Say Y here to build a driver for Devantech SRF02/SRF08/SRF10
-+	  ultrasonic ranger sensor with I2C interfaces. This driver can be
-+	  used to measure the distance of objects.
- 
--	  To compile this driver as a module, choose M here: the
--	  module will be called srf08.
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called srf08.
- 
- endmenu
+diff --git a/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+new file mode 100644
+index 0000000..2f58838b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
+@@ -0,0 +1,24 @@
++Fixed transceiver Device Tree binding
++------------------------------
++
++CAN transceiver typically limits the max speed in standard CAN and CAN FD
++modes. Typically these limitations are static and the transceivers themselves
++provide no way to detect this limitation at runtime. For this situation,
++the "fixed-transceiver" node can be used.
++
++Required Properties:
++ max-bitrate:	a positive non 0 value that determines the max
++		speed that CAN/CAN-FD can run. Any other value
++		will be ignored.
++
++Examples:
++
++Based on Texas Instrument's TCAN1042HGV CAN Transceiver
++
++m_can0 {
++	....
++	fixed-transceiver@0 {
++		max-bitrate = <5000000>;
++	};
++	...
++};
 -- 
-2.1.4
-
-
--- 
+2.9.4.dirty
