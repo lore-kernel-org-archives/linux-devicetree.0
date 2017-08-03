@@ -1,25 +1,25 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/2] Documentation: dt: pinctrl: Add pmi8994 gpio support
-Date: Thu, 3 Aug 2017 15:31:29 +0200
-Message-ID: <CACRpkdZuEsiT4vLXACR=gcWw_EZj5g-YCZ7_bKUKNjC4ktaajg@mail.gmail.com>
-References: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: Compatibles for i2c muxes nxp,pca954x and ti,tca954x
+Date: Thu, 3 Aug 2017 15:44:01 +0200
+Message-ID: <20170803134401.GG15018@lunn.ch>
+References: <62519d0b-0b7b-9124-8481-9ef8de24eaf6@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, rnayak@codeaurora.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <62519d0b-0b7b-9124-8481-9ef8de24eaf6@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stefan Agner <stefan@agner.ch>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 3:18 PM, Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
+On Thu, Aug 03, 2017 at 12:00:27PM +0200, Peter Rosin wrote:
+> Hi!
+> 
+> Texas has apparently made copies for some of the NXP devices
+> handled by the drivers/i2c/muxes/i2c-mux-pca954x.c driver.
 
-> Update the binding doc for qcom pmi8994-gpio devices.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+This happens a lot in the i2c space. Look at all the at24 EEPROM
+clones. Yet they all use the same compatible string.
 
-Patch applied with Stephen's review tag.
-
-Yours,
-Linus Walleij
+	Andrew
