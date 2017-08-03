@@ -1,221 +1,311 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH 2/4] phy: phy-mt65xx-usb3: add SATA PHY support
-Date: Thu, 3 Aug 2017 18:01:01 +0800
-Message-ID: <fd56b3edd61f047d161558e74dfb3afd43140797.1501753328.git.chunfeng.yun@mediatek.com>
-References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2
+Date: Thu, 3 Aug 2017 12:03:02 +0200
+Message-ID: <18397c89-e569-c3f7-ce3f-24e91c2770c9@gmail.com>
+References: <687af2dc98feffc678945f130c03ca020d9ca7b5.1501748754.git.sean.wang@mediatek.com>
+ <1501749538.4398.6.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501749538.4398.6.camel@mtkswgap22>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+Hi Sean,
 
-This patch adds SATA setting part.
+On 08/03/2017 10:38 AM, Sean Wang wrote:
+> Hi, Matthias,
+> 
+> Ryder and me tried to make the patch better, so the delivery is made in
+> v3,  including add missing pin  state for mmc1 and remove wp-gpio
+> because the board only has micro-sd slot that can't be adjusted for the
+> lock manually. And also some cleanups are made for nodes sorted in
+> alphabetical order. Thanks for Ryder to catch.
+> 
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/phy/phy-mt65xx-usb3.c |  133 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 129 insertions(+), 4 deletions(-)
+Thanks for that. Would you mind to split the clean-up into another patch?
+We should avoid patches which do cleanup and adding drivers in one go.
 
-diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
-index 8ba6905..45291c1 100644
---- a/drivers/phy/phy-mt65xx-usb3.c
-+++ b/drivers/phy/phy-mt65xx-usb3.c
-@@ -29,7 +29,7 @@
- #define SSUSB_SIFSLV_V1_U2FREQ		0x100	/* shared by u2 phys */
- /* u2 phy bank */
- #define SSUSB_SIFSLV_V1_U2PHY_COM	0x000
--/* u3/pcie phy banks */
-+/* u3/pcie/sata phy banks */
- #define SSUSB_SIFSLV_V1_U3PHYD		0x000
- #define SSUSB_SIFSLV_V1_U3PHYA		0x200
- 
-@@ -199,6 +199,65 @@
- #define U3P_SR_COEF_DIVISOR	1000
- #define U3P_FM_DET_CYCLE_CNT	1024
- 
-+/* SATA register setting */
-+#define PHYD_CTRL_SIGNAL_MODE4		0x1c
-+/* CDR Charge Pump P-path current adjustment */
-+#define RG_CDR_BICLTD1_GEN1_MSK		GENMASK(23, 20)
-+#define RG_CDR_BICLTD1_GEN1_VAL(x)	((0xf & (x)) << 20)
-+#define RG_CDR_BICLTD0_GEN1_MSK		GENMASK(11, 8)
-+#define RG_CDR_BICLTD0_GEN1_VAL(x)	((0xf & (x)) << 8)
-+
-+#define PHYD_DESIGN_OPTION2		0x24
-+/* Symbol lock count selection */
-+#define RG_LOCK_CNT_SEL_MSK		GENMASK(5, 4)
-+#define RG_LOCK_CNT_SEL_VAL(x)		((0x3 & (x)) << 4)
-+
-+#define PHYD_DESIGN_OPTION9	0x40
-+/* COMWAK GAP width window */
-+#define RG_TG_MAX_MSK		GENMASK(20, 16)
-+#define RG_TG_MAX_VAL(x)	((0x1f & (x)) << 16)
-+/* COMINIT GAP width window */
-+#define RG_T2_MAX_MSK		GENMASK(13, 8)
-+#define RG_T2_MAX_VAL(x)	((0x3f & (x)) << 8)
-+/* COMWAK GAP width window */
-+#define RG_TG_MIN_MSK		GENMASK(7, 5)
-+#define RG_TG_MIN_VAL(x)	((0x7 & (x)) << 5)
-+/* COMINIT GAP width window */
-+#define RG_T2_MIN_MSK		GENMASK(4, 0)
-+#define RG_T2_MIN_VAL(x)	(0x1f & (x))
-+
-+#define ANA_RG_CTRL_SIGNAL1		0x4c
-+/* TX driver tail current control for 0dB de-empahsis mdoe for Gen1 speed */
-+#define RG_IDRV_0DB_GEN1_MSK		GENMASK(13, 8)
-+#define RG_IDRV_0DB_GEN1_VAL(x)		((0x3f & (x)) << 8)
-+
-+#define ANA_RG_CTRL_SIGNAL4		0x58
-+#define RG_CDR_BICLTR_GEN1_MSK		GENMASK(23, 20)
-+#define RG_CDR_BICLTR_GEN1_VAL(x)	((0xf & (x)) << 20)
-+/* Loop filter R1 resistance adjustment for Gen1 speed */
-+#define RG_CDR_BR_GEN2_MSK		GENMASK(10, 8)
-+#define RG_CDR_BR_GEN2_VAL(x)		((0x7 & (x)) << 8)
-+
-+#define ANA_RG_CTRL_SIGNAL6		0x60
-+/* I-path capacitance adjustment for Gen1 */
-+#define RG_CDR_BC_GEN1_MSK		GENMASK(28, 24)
-+#define RG_CDR_BC_GEN1_VAL(x)		((0x1f & (x)) << 24)
-+#define RG_CDR_BIRLTR_GEN1_MSK		GENMASK(4, 0)
-+#define RG_CDR_BIRLTR_GEN1_VAL(x)	(0x1f & (x))
-+
-+#define ANA_EQ_EYE_CTRL_SIGNAL1		0x6c
-+/* RX Gen1 LEQ tuning step */
-+#define RG_EQ_DLEQ_LFI_GEN1_MSK		GENMASK(11, 8)
-+#define RG_EQ_DLEQ_LFI_GEN1_VAL(x)	((0xf & (x)) << 8)
-+
-+#define ANA_EQ_EYE_CTRL_SIGNAL4		0xd8
-+#define RG_CDR_BIRLTD0_GEN1_MSK		GENMASK(20, 16)
-+#define RG_CDR_BIRLTD0_GEN1_VAL(x)	((0x1f & (x)) << 16)
-+
-+#define ANA_EQ_EYE_CTRL_SIGNAL5		0xdc
-+#define RG_CDR_BIRLTD0_GEN3_MSK		GENMASK(4, 0)
-+#define RG_CDR_BIRLTD0_GEN3_VAL(x)	(0x1f & (x))
-+
- enum mt_phy_version {
- 	MT_PHY_V1 = 1,
- 	MT_PHY_V2,
-@@ -630,6 +689,64 @@ static void pcie_phy_instance_power_off(struct mt65xx_u3phy *u3phy,
- 	writel(tmp, bank->chip + U3P_U3_CHIP_GPIO_CTLE);
- }
- 
-+static void sata_phy_instance_init(struct mt65xx_u3phy *u3phy,
-+	struct mt65xx_phy_instance *instance)
-+{
-+	struct u3phy_banks *u3_banks = &instance->u3_banks;
-+	void __iomem *phyd = u3_banks->phyd;
-+	u32 tmp;
-+
-+	/* charge current adjustment */
-+	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL6);
-+	tmp &= ~(RG_CDR_BIRLTR_GEN1_MSK | RG_CDR_BC_GEN1_MSK);
-+	tmp |= RG_CDR_BIRLTR_GEN1_VAL(0x6) | RG_CDR_BC_GEN1_VAL(0x1a);
-+	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL6);
-+
-+	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL4);
-+	tmp &= ~RG_CDR_BIRLTD0_GEN1_MSK;
-+	tmp |= RG_CDR_BIRLTD0_GEN1_VAL(0x18);
-+	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL4);
-+
-+	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL5);
-+	tmp &= ~RG_CDR_BIRLTD0_GEN3_MSK;
-+	tmp |= RG_CDR_BIRLTD0_GEN3_VAL(0x06);
-+	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL5);
-+
-+	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL4);
-+	tmp &= ~(RG_CDR_BICLTR_GEN1_MSK | RG_CDR_BR_GEN2_MSK);
-+	tmp |= RG_CDR_BICLTR_GEN1_VAL(0x0c) | RG_CDR_BR_GEN2_VAL(0x07);
-+	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL4);
-+
-+	tmp = readl(phyd + PHYD_CTRL_SIGNAL_MODE4);
-+	tmp &= ~(RG_CDR_BICLTD0_GEN1_MSK | RG_CDR_BICLTD1_GEN1_MSK);
-+	tmp |= RG_CDR_BICLTD0_GEN1_VAL(0x08) | RG_CDR_BICLTD1_GEN1_VAL(0x02);
-+	writel(tmp, phyd + PHYD_CTRL_SIGNAL_MODE4);
-+
-+	tmp = readl(phyd + PHYD_DESIGN_OPTION2);
-+	tmp &= ~RG_LOCK_CNT_SEL_MSK;
-+	tmp |= RG_LOCK_CNT_SEL_VAL(0x02);
-+	writel(tmp, phyd + PHYD_DESIGN_OPTION2);
-+
-+	tmp = readl(phyd + PHYD_DESIGN_OPTION9);
-+	tmp &= ~(RG_T2_MIN_MSK | RG_TG_MIN_MSK |
-+		 RG_T2_MAX_MSK | RG_TG_MAX_MSK);
-+	tmp |= RG_T2_MIN_VAL(0x12) | RG_TG_MIN_VAL(0x04) |
-+	       RG_T2_MAX_VAL(0x31) | RG_TG_MAX_VAL(0x0e);
-+	writel(tmp, phyd + PHYD_DESIGN_OPTION9);
-+
-+	tmp = readl(phyd + ANA_RG_CTRL_SIGNAL1);
-+	tmp &= ~RG_IDRV_0DB_GEN1_MSK;
-+	tmp |= RG_IDRV_0DB_GEN1_VAL(0x20);
-+	writel(tmp, phyd + ANA_RG_CTRL_SIGNAL1);
-+
-+	tmp = readl(phyd + ANA_EQ_EYE_CTRL_SIGNAL1);
-+	tmp &= ~RG_EQ_DLEQ_LFI_GEN1_MSK;
-+	tmp |= RG_EQ_DLEQ_LFI_GEN1_VAL(0x03);
-+	writel(tmp, phyd + ANA_EQ_EYE_CTRL_SIGNAL1);
-+
-+	dev_dbg(u3phy->dev, "%s(%d)\n", __func__, instance->index);
-+}
-+
- static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
- 			      struct mt65xx_phy_instance *instance)
- {
-@@ -649,6 +766,9 @@ static void phy_v1_banks_init(struct mt65xx_u3phy *u3phy,
- 		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
- 		u3_banks->phya = instance->port_base + SSUSB_SIFSLV_V1_U3PHYA;
- 		break;
-+	case PHY_TYPE_SATA:
-+		u3_banks->phyd = instance->port_base + SSUSB_SIFSLV_V1_U3PHYD;
-+		break;
- 	default:
- 		dev_err(u3phy->dev, "incompatible PHY type\n");
- 		return;
-@@ -708,6 +828,9 @@ static int mt65xx_phy_init(struct phy *phy)
- 	case PHY_TYPE_PCIE:
- 		pcie_phy_instance_init(u3phy, instance);
- 		break;
-+	case PHY_TYPE_SATA:
-+		sata_phy_instance_init(u3phy, instance);
-+		break;
- 	default:
- 		dev_err(u3phy->dev, "incompatible PHY type\n");
- 		return -EINVAL;
-@@ -784,7 +907,8 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 	instance->type = args->args[0];
- 	if (!(instance->type == PHY_TYPE_USB2 ||
- 	      instance->type == PHY_TYPE_USB3 ||
--	      instance->type == PHY_TYPE_PCIE)) {
-+	      instance->type == PHY_TYPE_PCIE ||
-+	      instance->type == PHY_TYPE_SATA)) {
- 		dev_err(dev, "unsupported device type: %d\n", instance->type);
- 		return ERR_PTR(-EINVAL);
- 	}
-@@ -814,7 +938,7 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 	.version = MT_PHY_V1,
- };
- 
--static const struct mt65xx_phy_pdata mt2712_pdata = {
-+static const struct mt65xx_phy_pdata tphy_v2_pdata = {
- 	.avoid_rx_sen_degradation = false,
- 	.version = MT_PHY_V2,
- };
-@@ -826,9 +950,10 @@ static struct phy *mt65xx_phy_xlate(struct device *dev,
- 
- static const struct of_device_id mt65xx_u3phy_id_table[] = {
- 	{ .compatible = "mediatek,mt2701-u3phy", .data = &tphy_v1_pdata },
--	{ .compatible = "mediatek,mt2712-u3phy", .data = &mt2712_pdata },
-+	{ .compatible = "mediatek,mt2712-u3phy", .data = &tphy_v2_pdata },
- 	{ .compatible = "mediatek,mt8173-u3phy", .data = &mt8173_pdata },
- 	{ .compatible = "mediatek,generic-tphy-v1", .data = &tphy_v1_pdata },
-+	{ .compatible = "mediatek,generic-tphy-v2", .data = &tphy_v2_pdata },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, mt65xx_u3phy_id_table);
--- 
-1.7.9.5
+Thanks,
+Matthias
+
+> 	Sean
+> 
+> On Thu, 2017-08-03 at 16:29 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> The bananapi-r2 board has an SD-card controller and built-in
+>> EMMC storage so enables those devices in the devicetree. Also
+>> cleanup nodes in alphabetical order in the patch.
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/mt7623.dtsi                 | 73 ++++++++++++++-------------
+>>   arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 73 ++++++++++++++++++++-------
+>>   2 files changed, 94 insertions(+), 52 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+>> index 2a877ed..ec8a074 100644
+>> --- a/arch/arm/boot/dts/mt7623.dtsi
+>> +++ b/arch/arm/boot/dts/mt7623.dtsi
+>> @@ -91,6 +91,7 @@
+>>   			cooling-max-level = <7>;
+>>   			clock-frequency = <1300000000>;
+>>   		};
+>> +
+>>   		cpu1: cpu@1 {
+>>   			device_type = "cpu";
+>>   			compatible = "arm,cortex-a7";
+>> @@ -98,6 +99,7 @@
+>>   			operating-points-v2 = <&cpu_opp_table>;
+>>   			clock-frequency = <1300000000>;
+>>   		};
+>> +
+>>   		cpu2: cpu@2 {
+>>   			device_type = "cpu";
+>>   			compatible = "arm,cortex-a7";
+>> @@ -105,6 +107,7 @@
+>>   			operating-points-v2 = <&cpu_opp_table>;
+>>   			clock-frequency = <1300000000>;
+>>   		};
+>> +
+>>   		cpu3: cpu@3 {
+>>   			device_type = "cpu";
+>>   			compatible = "arm,cortex-a7";
+>> @@ -172,10 +175,12 @@
+>>   					trip = <&cpu_passive>;
+>>   					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>   				};
+>> +
+>>   				map1 {
+>>   					trip = <&cpu_active>;
+>>   					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>>   				};
+>> +
+>>   				map2 {
+>>   					trip = <&cpu_hot>;
+>>   					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+>> @@ -481,6 +486,31 @@
+>>   		nvmem-cell-names = "calibration-data";
+>>   	};
+>>   
+>> +	nandc: nfi@1100d000 {
+>> +		compatible = "mediatek,mt7623-nfc",
+>> +			     "mediatek,mt2701-nfc";
+>> +		reg = <0 0x1100d000 0 0x1000>;
+>> +		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+>> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+>> +		clocks = <&pericfg CLK_PERI_NFI>,
+>> +			 <&pericfg CLK_PERI_NFI_PAD>;
+>> +		clock-names = "nfi_clk", "pad_clk";
+>> +		status = "disabled";
+>> +		ecc-engine = <&bch>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +	};
+>> +
+>> +	bch: ecc@1100e000 {
+>> +		compatible = "mediatek,mt7623-ecc",
+>> +			     "mediatek,mt2701-ecc";
+>> +		reg = <0 0x1100e000 0 0x1000>;
+>> +		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+>> +		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+>> +		clock-names = "nfiecc_clk";
+>> +		status = "disabled";
+>> +	};
+>> +
+>>   	spi1: spi@11016000 {
+>>   		compatible = "mediatek,mt7623-spi",
+>>   			     "mediatek,mt2701-spi";
+>> @@ -509,31 +539,6 @@
+>>   		status = "disabled";
+>>   	};
+>>   
+>> -	nandc: nfi@1100d000 {
+>> -		compatible = "mediatek,mt7623-nfc",
+>> -			     "mediatek,mt2701-nfc";
+>> -		reg = <0 0x1100d000 0 0x1000>;
+>> -		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_LOW>;
+>> -		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+>> -		clocks = <&pericfg CLK_PERI_NFI>,
+>> -			 <&pericfg CLK_PERI_NFI_PAD>;
+>> -		clock-names = "nfi_clk", "pad_clk";
+>> -		status = "disabled";
+>> -		ecc-engine = <&bch>;
+>> -		#address-cells = <1>;
+>> -		#size-cells = <0>;
+>> -	};
+>> -
+>> -	bch: ecc@1100e000 {
+>> -		compatible = "mediatek,mt7623-ecc",
+>> -			     "mediatek,mt2701-ecc";
+>> -		reg = <0 0x1100e000 0 0x1000>;
+>> -		interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_LOW>;
+>> -		clocks = <&pericfg CLK_PERI_NFI_ECC>;
+>> -		clock-names = "nfiecc_clk";
+>> -		status = "disabled";
+>> -	};
+>> -
+>>   	afe: audio-controller@11220000 {
+>>   		compatible = "mediatek,mt7623-audio",
+>>   			     "mediatek,mt2701-audio";
+>> @@ -655,6 +660,15 @@
+>>   		status = "disabled";
+>>   	};
+>>   
+>> +	hifsys: syscon@1a000000 {
+>> +		compatible = "mediatek,mt7623-hifsys",
+>> +			     "mediatek,mt2701-hifsys",
+>> +			     "syscon";
+>> +		reg = <0 0x1a000000 0 0x1000>;
+>> +		#clock-cells = <1>;
+>> +		#reset-cells = <1>;
+>> +	};
+>> +
+>>   	usb1: usb@1a1c0000 {
+>>   		compatible = "mediatek,mt7623-xhci",
+>>   			     "mediatek,mt8173-xhci";
+>> @@ -733,15 +747,6 @@
+>>   		};
+>>   	};
+>>   
+>> -	hifsys: syscon@1a000000 {
+>> -		compatible = "mediatek,mt7623-hifsys",
+>> -			     "mediatek,mt2701-hifsys",
+>> -			     "syscon";
+>> -		reg = <0 0x1a000000 0 0x1000>;
+>> -		#clock-cells = <1>;
+>> -		#reset-cells = <1>;
+>> -	};
+>> -
+>>   	ethsys: syscon@1b000000 {
+>>   		compatible = "mediatek,mt7623-ethsys",
+>>   			     "mediatek,mt2701-ethsys",
+>> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>> index 9f3e6dd..0aa1c69 100644
+>> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+>> @@ -179,6 +179,32 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&mmc0 {
+>> +	pinctrl-names = "default", "state_uhs";
+>> +	pinctrl-0 = <&mmc0_pins_default>;
+>> +	pinctrl-1 = <&mmc0_pins_uhs>;
+>> +	status = "okay";
+>> +	bus-width = <8>;
+>> +	max-frequency = <50000000>;
+>> +	cap-mmc-highspeed;
+>> +	vmmc-supply = <&mt6323_vemc3v3_reg>;
+>> +	vqmmc-supply = <&mt6323_vio18_reg>;
+>> +	non-removable;
+>> +};
+>> +
+>> +&mmc1 {
+>> +	pinctrl-names = "default", "state_uhs";
+>> +	pinctrl-0 = <&mmc1_pins_default>;
+>> +	pinctrl-1 = <&mmc1_pins_uhs>;
+>> +	status = "okay";
+>> +	bus-width = <4>;
+>> +	max-frequency = <50000000>;
+>> +	cap-sd-highspeed;
+>> +	cd-gpios = <&pio 261 0>;
+>> +	vmmc-supply = <&mt6323_vmch_reg>;
+>> +	vqmmc-supply = <&mt6323_vio18_reg>;
+>> +};
+>> +
+>>   &pio {
+>>   	cir_pins_a:cir@0 {
+>>   		pins_cir {
+>> @@ -314,6 +340,17 @@
+>>   			bias-pull-down;
+>>   			drive-strength = <MTK_DRIVE_4mA>;
+>>   		};
+>> +
+>> +		pins_wp {
+>> +			pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
+>> +			input-enable;
+>> +			bias-pull-up;
+>> +		};
+>> +
+>> +		pins_insert {
+>> +			pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
+>> +			bias-pull-up;
+>> +		};
+>>   	};
+>>   
+>>   	mmc1_pins_uhs: mmc1 {
+>> @@ -335,16 +372,6 @@
+>>   		};
+>>   	};
+>>   
+>> -	spi0_pins_a: spi@0 {
+>> -		pins_spi {
+>> -			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+>> -				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+>> -				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
+>> -				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
+>> -			bias-disable;
+>> -		};
+>> -	};
+>> -
+>>   	pwm_pins_a: pwm@0 {
+>>   		pins_pwm {
+>>   			pinmux = <MT7623_PIN_203_PWM0_FUNC_PWM0>,
+>> @@ -355,6 +382,16 @@
+>>   		};
+>>   	};
+>>   
+>> +	spi0_pins_a: spi@0 {
+>> +		pins_spi {
+>> +			pinmux = <MT7623_PIN_53_SPI0_CSN_FUNC_SPI0_CS>,
+>> +				<MT7623_PIN_54_SPI0_CK_FUNC_SPI0_CK>,
+>> +				<MT7623_PIN_55_SPI0_MI_FUNC_SPI0_MI>,
+>> +				<MT7623_PIN_56_SPI0_MO_FUNC_SPI0_MO>;
+>> +			bias-disable;
+>> +		};
+>> +	};
+>> +
+>>   	uart0_pins_a: uart@0 {
+>>   		pins_dat {
+>>   			pinmux = <MT7623_PIN_79_URXD0_FUNC_URXD0>,
+>> @@ -414,14 +451,6 @@
+>>   	status = "disabled";
+>>   };
+>>   
+>> -&u3phy1 {
+>> -	status = "okay";
+>> -};
+>> -
+>> -&u3phy2 {
+>> -	status = "okay";
+>> -};
+>> -
+>>   &uart1 {
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&uart1_pins_a>;
+>> @@ -441,3 +470,11 @@
+>>   	vusb33-supply = <&mt6323_vusb_reg>;
+>>   	status = "okay";
+>>   };
+>> +
+>> +&u3phy1 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&u3phy2 {
+>> +	status = "okay";
+>> +};
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
