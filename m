@@ -1,38 +1,30 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 6/6] ARM: davinci_all_defconfig: enable tinydrm and ST7586
-Date: Thu,  3 Aug 2017 17:33:50 -0500
-Message-ID: <1501799630-1650-7-git-send-email-david@lechnology.com>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] clk: uniphier: remove sLD3 SoC support
+Date: Thu, 3 Aug 2017 15:38:16 -0700
+Message-ID: <20170803223816.GS2146@codeaurora.org>
+References: <1501040075-24279-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501799630-1650-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1501040075-24279-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBlbmFibGVzIHRoZSB0aW55ZHJtIGFuZCBTVDc1ODYgcGFuZWwgbW9kdWxlcyB1c2VkIGJ5
-IHRoZSBkaXNwbGF5Cm9uIExFR08gTUlORFNUT1JNUyBFVjMuCgpTaWduZWQtb2ZmLWJ5OiBEYXZp
-ZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KLS0tCiBhcmNoL2FybS9jb25maWdzL2Rh
-dmluY2lfYWxsX2RlZmNvbmZpZyB8IDIgKysKIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9jb25maWdzL2RhdmluY2lfYWxsX2RlZmNvbmZpZyBi
-L2FyY2gvYXJtL2NvbmZpZ3MvZGF2aW5jaV9hbGxfZGVmY29uZmlnCmluZGV4IDA2ZTJlMmEuLjI3
-ZDk3MjAgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2NvbmZpZ3MvZGF2aW5jaV9hbGxfZGVmY29uZmln
-CisrKyBiL2FyY2gvYXJtL2NvbmZpZ3MvZGF2aW5jaV9hbGxfZGVmY29uZmlnCkBAIC0xNDMsNiAr
-MTQzLDggQEAgQ09ORklHX1ZJREVPX0FEVjczNDM9bQogQ09ORklHX0RSTT1tCiBDT05GSUdfRFJN
-X1RJTENEQz1tCiBDT05GSUdfRFJNX0RVTUJfVkdBX0RBQz1tCitDT05GSUdfRFJNX1RJTllEUk09
-bQorQ09ORklHX1RJTllEUk1fU1Q3NTg2PW0KIENPTkZJR19GQj15CiBDT05GSUdfRklSTVdBUkVf
-RURJRD15CiBDT05GSUdfRkJfREE4WFg9eQotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 07/26, Masahiro Yamada wrote:
+> This SoC is too old.  It is difficult to maintain any longer.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+
+Applied to clk-next
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
