@@ -1,26 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: mt2712: add binding document
-Date: Thu, 3 Aug 2017 18:40:54 -0500
-Message-ID: <20170803234054.wykfqjqhceh5phcv@rob-hp-laptop>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
- <1501489333-23145-2-git-send-email-zhiyong.tao@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] PCI: v3: Update the device tree bindings
+Date: Thu, 3 Aug 2017 18:42:12 -0500
+Message-ID: <20170803234212.fqqvtckrohibqiqa@rob-hp-laptop>
+References: <20170731084451.19736-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501489333-23145-2-git-send-email-zhiyong.tao@mediatek.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
+In-Reply-To: <20170731084451.19736-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 04:22:11PM +0800, Zhiyong Tao wrote:
-> The commit adds mt2712 compatible node in binding document.
+On Mon, Jul 31, 2017 at 10:44:51AM +0200, Linus Walleij wrote:
+> The bindings for the V3 Semiconductor PCI bridge are a tad bit outdated
+> and predates the more formal format we have adopted for the bindings.
+> Update them a bit so it is easier to read, and add the Integrator AP-
+> specific compatible so we can detect that we are running on that specific
+> platform.
 > 
-> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 +
->  1 file changed, 1 insertion(+)
+>  .../devicetree/bindings/pci/v3-v360epc-pci.txt        | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
