@@ -1,67 +1,66 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
- active low/high
-Date: Thu, 3 Aug 2017 10:14:32 +0200
-Message-ID: <CACRpkdYqj68NpqedyPY2P6o_-JcVaw=4xzh7ccw6t-2gcy5sqg@mail.gmail.com>
-References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
- <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
- <20170719131640.GA2533@localhost> <596F73BC.1000305@nvidia.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
+ controller documentation
+Date: Thu, 3 Aug 2017 10:26:52 +0200
+Message-ID: <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
+ <20170724065146.GA22330@spreadtrum.com>
+ <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
+ <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <596F73BC.1000305-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>, wsa@the-dreams.de, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, wsa+renesas@sang-engineering.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 19, 2017 at 4:59 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On Wednesday 19 July 2017 06:55 PM, Johan Hovold wrote:
-
->> I guess the latter is fine, even if it is likely to amount to a fair bit
->> of debugging world wide.
+On 2017-08-03 09:29, Baolin Wang wrote:
+> Hi Wolfram,
+> 
+> On 27 July 2017 at 17:29, Baolin Wang <baolin.wang@linaro.org> wrote:
+>> Hi Wolfram,
 >>
->> Perhaps all this can still be avoided by adding further flags and
->> deprecating others before people start migrating to 4.12 (after all,
->> GPIO_OPEN_DRAIN has been around since 4.4 even if there are no in-kernel
->> users).
+>> On 24 July 2017 at 14:51, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+>>> Hi Wolfram,
+>>>
+>>> On 五,  7月 14, 2017 at 05:01:10下午 +0800, Baolin Wang wrote:
+>>>> This patch adds the binding documentation for Spreadtrum I2C
+>>>> controller device.
+>>>>
+>>>> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+>>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>> ---
+>>>> Changes since v3:
+>>>>  - Add Ack from RobH.
+>>>>
+>>>> Changes since v2:
+>>>>  - Change compatible strings to be SoC specific.
+>>>>
+>>>> Changes since v1:
+>>>>  - No updates.
+>>>> ---
+>>>
+>>> Could you apply this patchset if there are no other comments?
+>>> It is a long time since the v4 was send out. Thanks.
 >>
->> Or we accept the binary interface breakage -- it probably is pretty rare
->> that people update the kernel without updating the dtb. I can just
->> update the dts on the system that broke for me, and hopefully anyone
->> debugging this issue while updating to 4.12 will find this mail quickly.
->
-> Yes, it breaks the older DTS with new kernel. However,  this point was
-> discussed before sending patch. As there was no user in the mainline DTs for
-> these macros, we made change.
+>> Ping?
+> 
+> Since this patchset has waited for a long time, could you pick up this
+> patchset into your branch? Thanks.
 
-My operating assumption is usually "rough consensus and running code".
+Please calm down. You first sent v4 4 weeks ago in the beginning of the
+merge window when everybody are supposedly looking at the integration of
+the work from the previous cycle. You have managed to send remainders
+four times in those few weeks.
 
-If the code doesn't run, i.e. if there are regressions then we need to fix
-them.
+Four weeks is not a "long time", and it's not like you didn't get any
+feedback. Part of that feedback was that there was room for improvement.
+Have you looked into that? Or have you been busy sending pings? I'm sure
+Wolfram will pick the series in time for the next merge window if he's
+happy with it, there was that thing about room for improvement...
 
-I am not aware of any systems having picked up the flags as they were
-set before this patch, but if they exist we need to patch it of course.
-
-On the other hand we don't patch theoretical compatibility issues either,
-only those that occure in practice.
-
-It falls back on when a DT binding is really standardized. When it is
-starting to get discussed? When the final binding is merged to the kernel
-tree? When the devicetree.org people publish it? When a big enough
-vendor ships more than 100 devices using it no matter what happened
-discussion-wise?
-
-All these are a bit fluid concepts, so as a result, the handling of bindings
-is a bit fluid.
-
-If we really want DT bindings to have a point when they are "set in stone"
-then we need to talk to devicetree.org about that. But in reality I think all
-standards ever are a bit fuzzy around the edges.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Peter
