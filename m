@@ -1,32 +1,42 @@
 From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v3 0/5] add some quirks for Rockchip usb2-phy and add rv1108 SoCs' support
-Date: Thu,  3 Aug 2017 16:09:08 +0800
-Message-ID: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
+Subject: [PATCH v3 4/5] dt-bindings: phy-rockchip-inno-usb2: add otg-mux interrupt
+Date: Thu,  3 Aug 2017 16:09:12 +0800
+Message-ID: <1501747753-6983-5-git-send-email-frank.wang@rock-chips.com>
+References: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
 Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, kever.yang@rock-chips.com, andy.yan@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-These series of patches add companion_grf_quirk and otg_mux interrupt for
-rockchip usb2-phy. In addition, this change also add rv1108 usb2-phy support.
+Add otg-mux property to support multiplexed interrupt in otg-port
+on some Rockchip SoC (e.g RV1108).
 
-Changes from v2:
- - Amend otg-mux interrupt to be auto-detectable and update related dt-bindings.
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+---
+ Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes from v1:
- - Send the dt-bindings as a separate patch and cc devicetree list.
-
-Frank Wang (5):
-  phy: rockchip-inno-usb2: add companion grf quirk
-  dt-bindings: phy-rockchip-inno-usb2: add companion grf quirk
-  phy: rockchip-inno-usb2: add support for otg-mux interrupt
-  dt-bindings: phy-rockchip-inno-usb2: add otg-mux interrupt
-  phy: rockchip-inno-usb2: add support of usb2-phy for rv1108 SoCs
-
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  11 +-
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 218 ++++++++++++++++-----
- 2 files changed, 177 insertions(+), 52 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+index ddf868a..ed6aee4 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+@@ -32,10 +32,14 @@ Required nodes : a sub-node is required for each port the phy provides.
+ Required properties (port (child) node):
+  - #phy-cells : must be 0. See ./phy-bindings.txt for details.
+  - interrupts : specify an interrupt for each entry in interrupt-names.
+- - interrupt-names : a list which shall be the following entries:
++ - interrupt-names : a list which should be one of the following cases:
++	Regular case:
+ 	* "otg-id" : for the otg id interrupt.
+ 	* "otg-bvalid" : for the otg vbus interrupt.
+ 	* "linestate" : for the host/otg linestate interrupt.
++	Some SoCs use one interrupt with the obove muxed together, so for these
++	* "otg-mux" : otg-port interrupt, which mux otg-id/otg-bvalid/linestate
++		to one.
+ 
+ Optional properties:
+  - phy-supply : phandle to a regulator that provides power to VBUS.
 -- 
 2.0.0
