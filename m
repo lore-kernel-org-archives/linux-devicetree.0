@@ -1,15 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 6/8] ARM: sun8i: a83t: Add device node for USB
- OTG controller
-Date: Thu,  3 Aug 2017 16:14:09 +0800
-Message-ID: <20170803081411.22389-7-wens@csie.org>
-References: <20170803081411.22389-1-wens@csie.org>
+Subject: [PATCH 0/8] ARM: sun8i: a83t: Add USB host support
+Date: Thu,  3 Aug 2017 16:14:03 +0800
+Message-ID: <20170803081411.22389-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBWFWRPGAKGQEABIFZHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBVVWRPGAKGQEEUVBE5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170803081411.22389-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -20,40 +17,66 @@ To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard 
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The USB OTG controller found on the A83T is compatible with the one
-found on the A33.
+Hi everyone,
 
-Add a device node for it.
+This series enables USB host support for the Allwinner A83T SoC.
+The A83T's USB OTG PHY uses different controls. The USB 2.0 host
+PHYs are the same as previous chips. And the HSIC part is actually
+used on some boards.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+The external bits needed for proper USB OTG support is not there
+yet, namely the regulators and power supplies for VBUS sensing and
+control. This will be enabled later on. However the OTG controller
+is the same as the one found in previous chips. This has been tested
+under U-boot.
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 6039f1ea6810..f996bd343e50 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -242,6 +242,20 @@
- 			#size-cells = <0>;
- 		};
- 
-+		usb_otg: usb@01c19000 {
-+			compatible = "allwinner,sun8i-a83t-musb",
-+				     "allwinner,sun8i-a33-musb";
-+			reg = <0x01c19000 0x0400>;
-+			clocks = <&ccu CLK_BUS_OTG>;
-+			resets = <&ccu RST_BUS_OTG>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "mc";
-+			phys = <&usbphy 0>;
-+			phy-names = "usb";
-+			extcon = <&usbphy 0>;
-+			status = "disabled";
-+		};
-+
- 		usbphy: phy@1c19400 {
- 			compatible = "allwinner,sun8i-a83t-usb-phy";
- 			reg = <0x01c19400 0x10>,
+Patch 1 adds some properties that were missing for the H3. The H3
+has 4 USB host controllers, so there are also 4 USB host PHYs. The
+properies for the last one were missing.
+
+Patch 2 adds a compatible string for the A83T USB PHY block.
+
+Patch 3 adds support for a secondary clock for the HSIC PHY. The
+HSIC block takes a 480MHz clock and a 12MHz clock. All known chips
+only have at most 1 HSIC capable host/PHY.
+
+Patch 4 adds support for the A83T's USB PHYs. The difference is
+mainly how the OTG PHY (PHY0) is configured.
+
+Patch 5 adds the device nodes for the USB PHY and hosts.
+
+Patch 6 adds the device node for the USB OTG controller.
+
+Patch 7 enables the USB hosts and peripherals on the Cubietruck Plus.
+
+Patch 8 enables the USB hosts and peripherals on the H8Homlet v2.
+
+The first four patches would go through linux-phy, while I will
+take the other four through the sunxi tree. For those who want
+to test this, the series is based on my previous "ARM: sun8i: a83t:
+Add support for MMC controllers v3" and "mfd: axp20x: Add basic
+support for AXP813 v2" series.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (8):
+  dt-bindings: phy: sun4i-usb-phy: Add property descriptions for H3
+  dt-bindings: phy: sun4i-usb-phy: Add compatible string for A83T
+  phy: sun4i-usb: Support secondary clock for HSIC PHY
+  phy: sun4i-usb: Support A83T USB PHYs
+  ARM: sun8i: a83t: Add USB PHY and host device nodes
+  ARM: sun8i: a83t: Add device node for USB OTG controller
+  ARM: sun8i: a83t: cubietruck-plus: Enable onboard USB peripherals
+  ARM: sun8i: a83t: h8homlet-v2: Enable USB ports
+
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt      | 10 ++-
+ .../boot/dts/sun8i-a83t-allwinner-h8homlet-v2.dts  | 29 ++++++++
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts   | 49 ++++++++++--
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  | 76 +++++++++++++++++++
+ drivers/phy/allwinner/phy-sun4i-usb.c              | 87 +++++++++++++++++++---
+ 5 files changed, 232 insertions(+), 19 deletions(-)
+
 -- 
 2.13.3
