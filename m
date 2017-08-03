@@ -1,47 +1,30 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] of/platform: Generalize /reserved-memory handling
-Date: Thu, 3 Aug 2017 16:33:34 -0700
-Message-ID: <20170803233334.GC29306@minitux>
-References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
- <20170803025754.19101-2-bjorn.andersson@linaro.org>
- <CAL_JsqKBre5yPJHG3s+8Y7_hgj0_r35nNZc3QiL4HbWLuFx=Bg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: adi,adv7511.txt: document cec clock
+Date: Thu, 3 Aug 2017 18:35:53 -0500
+Message-ID: <20170803233553.xazboombv4jpggxg@rob-hp-laptop>
+References: <20170730130743.19681-1-hverkuil@xs4all.nl>
+ <20170730130743.19681-2-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKBre5yPJHG3s+8Y7_hgj0_r35nNZc3QiL4HbWLuFx=Bg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170730130743.19681-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 03 Aug 10:40 PDT 2017, Rob Herring wrote:
-
-> On Wed, Aug 2, 2017 at 9:57 PM, Bjorn Andersson
-> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-[..]
-> > +       rmem_nodes = of_find_node_by_path("/reserved-memory");
-> > +       for_each_available_child_of_node(rmem_nodes, node) {
-> > +               ret = of_device_compatible_match(node, rmem_compats);
-> > +               if (ret)
+On Sun, Jul 30, 2017 at 03:07:40PM +0200, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> I would just do:
+> Document the cec clock binding.
 > 
-> for_each_matching_node(node, ...)
->     of_platform_device_create(node, NULL, NULL);
-> 
-> I don't think the kernel has to validate that ramoops and any others
-> we add are children of /reserved-memory. We should only have those
-> compatibles located there and any other location would be an error.
-> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/adi,adv7511.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Okay, looks reasonable.
-
-Will update and resend once I know your decision on 2/5.
-
-Regards,
-Bjorn
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
