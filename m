@@ -1,41 +1,42 @@
-From: "Hean Loong, Ong" <hean.loong.ong@intel.com>
-Subject: [PATCHv5 2/3] ARM:socfpga-defconfig Intel FPGA Video and Image
- Processing Suite
-Date: Thu,  3 Aug 2017 13:01:35 +0800
-Message-ID: <1501736496-4118-3-git-send-email-hean.loong.ong@intel.com>
-References: <1501736496-4118-1-git-send-email-hean.loong.ong@intel.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/6] dt-bindings: ti,edma: Add 66AK2G specific information
+Date: Thu, 3 Aug 2017 11:04:45 +0530
+Message-ID: <1422a647-2dec-e2ff-f701-c6f0009cef26@ti.com>
+References: <20170801044119.16201-1-lokeshvutla@ti.com>
+ <20170801044119.16201-2-lokeshvutla@ti.com>
+ <31fe2206-675b-5425-412f-0033017f6511@ti.com>
+ <f1d0ec82-6b93-9eff-9a7f-08994ffebcb4@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501736496-4118-1-git-send-email-hean.loong.ong@intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: hean.loong.ong@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Ong@freedesktop.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f1d0ec82-6b93-9eff-9a7f-08994ffebcb4-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogT25nIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KCkludGVsIEZQ
-R0EgVmlkZW8gYW5kIEltYWdlIFByb2Nlc3NpbmcgU3VpdGUgRnJhbWUgQnVmZmVyIElJCmRyaXZl
-ciBjb25maWcgZm9yIEFycmlhIDEwIGRldmtpdCBhbmQgaXRzIHZhcmlhbnRzCgpTaWduZWQtb2Zm
-LWJ5OiBPbmcsIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KLS0tCiBhcmNo
-L2FybS9jb25maWdzL3NvY2ZwZ2FfZGVmY29uZmlnIHwgNiArKysrKysKIDEgZmlsZSBjaGFuZ2Vk
-LCA2IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9jb25maWdzL3NvY2ZwZ2Ff
-ZGVmY29uZmlnIGIvYXJjaC9hcm0vY29uZmlncy9zb2NmcGdhX2RlZmNvbmZpZwppbmRleCAyNjIw
-Y2U3Li4yNTVmNTUzIDEwMDY0NAotLS0gYS9hcmNoL2FybS9jb25maWdzL3NvY2ZwZ2FfZGVmY29u
-ZmlnCisrKyBiL2FyY2gvYXJtL2NvbmZpZ3Mvc29jZnBnYV9kZWZjb25maWcKQEAgLTExMSw2ICsx
-MTEsMTIgQEAgQ09ORklHX01GRF9BTFRFUkFfQTEwU1I9eQogQ09ORklHX01GRF9TVE1QRT15CiBD
-T05GSUdfUkVHVUxBVE9SPXkKIENPTkZJR19SRUdVTEFUT1JfRklYRURfVk9MVEFHRT15CitDT05G
-SUdfRFJNPW0KK0NPTkZJR19EUk1fSVZJUD1tCitDT05GSUdfRFJNX0lWSVBfT0Y9bQorQ09ORklH
-X0ZCPXkKK0NPTkZJR19GQl9TSU1QTEU9eQorQ09ORklHX0ZSQU1FQlVGRkVSX0NPTlNPTEU9bQog
-Q09ORklHX1VTQj15CiBDT05GSUdfVVNCX1NUT1JBR0U9eQogQ09ORklHX1VTQl9EV0MyPXkKLS0g
-CjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wednesday 02 August 2017 10:33 PM, Lokesh Vutla wrote:
+> On 8/1/2017 6:20 PM, Peter Ujfalusi wrote:
+>> On 2017-08-01 07:41, Lokesh Vutla wrote:
+
+>>> -Example:
+>>> +Examples:
+>>
+>> Do we really need to expand the examples to have identical set, but with
+>> power-domains?
+> 
+> IIRC, there was a feedback to add an example(not able to fine that
+> specific email). If you strongly disagree with this, I can drop it and
+> resend it.
+
+This is only an example, not a comprehensive set of possibilities. I
+think it should be kept to one.
+
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
