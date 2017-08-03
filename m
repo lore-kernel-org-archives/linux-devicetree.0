@@ -1,63 +1,57 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v3 5/6] ARM: dts: da850-lego-ev3: Add node for LCD display
-Date: Thu,  3 Aug 2017 17:33:49 -0500
-Message-ID: <1501799630-1650-6-git-send-email-david@lechnology.com>
+Subject: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586 display
+ panels
+Date: Thu,  3 Aug 2017 17:33:47 -0500
+Message-ID: <1501799630-1650-4-git-send-email-david@lechnology.com>
 References: <1501799630-1650-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1501799630-1650-1-git-send-email-david@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a new node for the LEGO MINDSTORMS EV3 LCD display.
-
-Signed-off-by: David Lechner <david@lechnology.com>
----
- arch/arm/boot/dts/da850-lego-ev3.dts | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-index 45983c0..249b317 100644
---- a/arch/arm/boot/dts/da850-lego-ev3.dts
-+++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-@@ -249,6 +249,15 @@
- 			0x4c 0x00000080 0x000000f0
- 		>;
- 	};
-+
-+	ev3_lcd_pins: pinmux_lcd {
-+		pinctrl-single,bits = <
-+			/* SIMO, GP2[11], GP2[12], CLK */
-+			0x14 0x00188100 0x00ffff00
-+			/* GP5[0] */
-+			0x30 0x80000000 0xf0000000
-+		>;
-+	};
- };
- 
- &pinconf {
-@@ -357,6 +366,21 @@
- 	};
- };
- 
-+&spi1 {
-+	status = "okay";
-+	pinctrl-0 = <&ev3_lcd_pins>;
-+	pinctrl-names = "default";
-+	cs-gpios = <&gpio 44 GPIO_ACTIVE_LOW>;
-+
-+	display@0{
-+		compatible = "lego,ev3-lcd";
-+		reg = <0>;
-+		spi-max-frequency = <10000000>;
-+		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
- &ehrpwm0 {
- 	status = "okay";
- };
--- 
-2.7.4
+VGhpcyBhZGRzIGEgbmV3IGJpbmRpbmcgZm9yIFNpdHJvbml4IFNUNzU4NiBkaXNwbGF5IHBhbmVs
+cy4KClVzaW5nIGxlZ28gYXMgdGhlIHZlbmRvciBwcmVmaXggaW4gdGhlIGNvbXBhdGlibGUgc3Ry
+aW5nIGJlY2F1c2UgdGhlIGRpc3BsYXkKcGFuZWwgSSBhbSB3b3JraW5nIHdpdGggaXMgYW4gaW50
+ZWdyYWwgcGFydCBvZiB0aGUgTEVHTyBNSU5EU1RPUk1TIEVWMy4KClNpZ25lZC1vZmYtYnk6IERh
+dmlkIExlY2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgotLS0KIC4uLi9iaW5kaW5ncy9kaXNw
+bGF5L3NpdHJvbml4LHN0NzU4Ni50eHQgICAgICAgICAgIHwgMjYgKysrKysrKysrKysrKysrKysr
+KysrKwogMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1
+ODYudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMC4uZGZiMGI3YgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKQEAgLTAsMCArMSwy
+NiBAQAorU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGll
+czoKKy0gY29tcGF0aWJsZToJImxlZ28sZXYzLWxjZCIuCisKK1RoZSBub2RlIGZvciB0aGlzIGRy
+aXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBhIFNQSSBjb250cm9sbGVyLCBoZW5jZQorYWxs
+IG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAuLi9zcGkvc3BpLWJ1cy50eHQgbXVz
+dCBiZSBzcGVjaWZpZWQuCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGRjLWdwaW9zOglEL0Mg
+cGluLiBUaGUgcHJlc2VuY2UvYWJzZW5jZSBvZiB0aGlzIEdQSU8gZGV0ZXJtaW5lcworCQl0aGUg
+cGFuZWwgaW50ZXJmYWNlIG9wZXJhdGlvbiBtb2RlIChJRlszOjFdIHBpbnMpOgorCQktIHByZXNl
+bnQ6IElGPTAxMSA0LXdpcmUgOC1iaXQgZGF0YSBzZXJpYWwgaW50ZXJmYWNlCisJCS0gYWJzZW50
+OiAgSUY9MDEwIDMtd2lyZSA5LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UKKy0gcmVzZXQtZ3Bp
+b3M6CVJlc2V0IHBpbgorLSBwb3dlci1zdXBwbHk6CUEgcmVndWxhdG9yIG5vZGUgZm9yIHRoZSBz
+dXBwbHkgdm9sdGFnZS4KKy0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBiYWNrbGlnaHQgZGV2
+aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAorLSByb3RhdGlvbjoJcGFuZWwgcm90YXRpb24gaW4g
+ZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQorCitFeGFtcGxlOgorCWRp
+c3BsYXlAMHsKKwkJY29tcGF0aWJsZSA9ICJsZWdvLGV2My1sY2QiOworCQlyZWcgPSA8MD47CisJ
+CXNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAwMDAwPjsKKwkJZGMtZ3Bpb3MgPSA8JmdwaW8gNDMg
+R1BJT19BQ1RJVkVfSElHSD47CisJCXJlc2V0LWdwaW9zID0gPCZncGlvIDgwIEdQSU9fQUNUSVZF
+X0hJR0g+OworCX07Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
