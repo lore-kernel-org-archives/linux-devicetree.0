@@ -1,44 +1,79 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx6ul-liteboard: Support poweroff
-Date: Thu,  3 Aug 2017 09:37:13 +0200
-Message-ID: <20170803073713.14889-1-m.niestroj@grinn-global.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v7 08/12] pinctrl: Add pinctrl driver for the RK805 PMIC
+Date: Thu, 3 Aug 2017 09:40:10 +0200
+Message-ID: <CACRpkdbqNoa3jwLQ0781ZYjW0pBx1aoBYNGqnsJqiOuQ_0ijLg@mail.gmail.com>
+References: <1500635681-12477-1-git-send-email-chenjh@rock-chips.com> <1500635890-12714-1-git-send-email-chenjh@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500635890-12714-1-git-send-email-chenjh@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joseph Chen <chenjh@rock-chips.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Tony Xie <tony.xie@rock-chips.com>, zhangqing@rock-chips.com, David Wu <wdc@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, w.egorov@phytec.de, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Support proper system power-off, which disables main regulator. This
-results in much lower power consumption and support of power-on issued
-by button press.
+On Fri, Jul 21, 2017 at 1:18 PM, Joseph Chen <chenjh@rock-chips.com> wrote:
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
----
-Changes v1 -> v2:
- * Add new node in alphabetical order (suggested by Shawn)
+> RK805 is one of Rockchip PMICs family, it has 2 output only GPIOs.
+>
+> This driver is also designed for other Rockchip PMICs to expend.
+> Different PMIC maybe have different pin features, for example,
+> RK816 has one pin which can be used for TS or GPIO(input/out).
+> The mainly difference between PMICs pins are pinmux, direction
+> and output value, that is 'struct rk805_pin_config'.
+>
+> Signed-off-by: Joseph Chen <chenjh@rock-chips.com>
 
- arch/arm/boot/dts/imx6ul-liteboard.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+OK nice! Some comments:
 
-diff --git a/arch/arm/boot/dts/imx6ul-liteboard.dts b/arch/arm/boot/dts/imx6ul-liteboard.dts
-index ed1d891d6a89..1d863a16bcf0 100644
---- a/arch/arm/boot/dts/imx6ul-liteboard.dts
-+++ b/arch/arm/boot/dts/imx6ul-liteboard.dts
-@@ -124,6 +124,10 @@
- 	};
- };
- 
-+&snvs_poweroff {
-+	status = "okay";
-+};
-+
- &uart1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart1>;
--- 
-2.13.3
+> +config PINCTRL_RK805
+> +       tristate "Pinctrl and GPIO driver for RK805 PMIC"
+> +       depends on MFD_RK808 && GPIOLIB
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Nowadays I would recommend simply:
+
+depends on MFD_RK808
+select GPIOLIB
+
+> +#include <linux/delay.h>
+> +#include <linux/gpio.h>
+
+Just #include <linux/gpio/driver.h>
+
+> +#define FUNCTION_GROUP(fname, mux, gname)                      \
+> +       {                                                       \
+> +               .name = #fname,                                 \
+> +               .groups = gname##_gpio_groups,                  \
+> +               .ngroups = ARRAY_SIZE(gname##_gpio_groups),     \
+> +               .mux_option = RK805_PINMUX_##mux,               \
+> +       }
+> +
+> +#define PINGROUP(pg_name, pin_id)                              \
+> +       {                                                       \
+> +               .name = #pg_name,                               \
+> +               .pins = {RK805_##pin_id},                       \
+> +               .npins = 1,                                     \
+> +       }
+> +
+> +/* RK805: 2 output only GPIOs */
+> +static const struct pinctrl_pin_desc rk805_pins_desc[] = {
+> +       PINCTRL_PIN(RK805_GPIO0, "gpio0"),
+> +       PINCTRL_PIN(RK805_GPIO1, "gpio1"),
+> +};
+> +
+> +static const struct rk805_pin_function rk805_pin_functions[] = {
+> +       FUNCTION_GROUP(gpio, GPIO, rk805),
+> +};
+> +
+> +static const struct rk805_pin_group rk805_pin_groups[] = {
+> +       PINGROUP(gpio0, GPIO0),
+> +       PINGROUP(gpio1, GPIO1),
+> +};
+
+It looks like the macros just obscure things? Why not simply inline the data
+and open code it as it is just two pins?
+
+Apart from this it looks nice and complete.
+
+Yours,
+Linus Walleij
