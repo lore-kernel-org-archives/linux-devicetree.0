@@ -1,45 +1,146 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
- controller documentation
-Date: Thu, 3 Aug 2017 17:05:37 +0800
-Message-ID: <CAMz4kuKdf-1SA_9mi6B2Q8MWBD-35JUs5U_=eQPYXA390=TZpA@mail.gmail.com>
-References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
- <20170724065146.GA22330@spreadtrum.com> <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
- <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
- <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se> <CAMz4ku+aPYP8j+Y6cu0azmD2TFGZ428rCaPof15kdmEKRVp6EA@mail.gmail.com>
- <20170803090041.GB2574@katana>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 3/3] iio: trigger: stm32-timer: add output compare triggers
+Date: Thu, 3 Aug 2017 11:14:14 +0200
+Message-ID: <1501751654-14153-4-git-send-email-fabrice.gasnier@st.com>
+References: <1501751654-14153-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803090041.GB2574@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1501751654-14153-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+Add output compare trigger sources available on some instances.
 
-On 3 August 2017 at 17:00, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
-> Hi,
->
->> Sorry for noise. I just afraid Wolfram missed this patchset since I
->> did not get any comments from V4.
->
-> I use patchwork. Patches don't get lost :)
->
-> Anyway, I nearly finished a document I can point people to when they
-> wonder what happened about their patches.
->
-> I hope this will help because I don't have the bandwidth to reply to
-> ping mails individually and explain the situation.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/iio/trigger/stm32-timer-trigger.c     | 31 +++++++++++++++++----------
+ include/linux/iio/timer/stm32-timer-trigger.h | 12 +++++++++++
+ 2 files changed, 32 insertions(+), 11 deletions(-)
 
-That's great. I can understand and thanks for your feedback. I will
-keep calm down and wit for comments.
-
+diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+index 33890f9..a9bc5b6 100644
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -29,12 +29,14 @@
+ 	{ TIM7_TRGO,},
+ 	{ TIM8_TRGO, TIM8_TRGO2, TIM8_CH1, TIM8_CH2, TIM8_CH3, TIM8_CH4,},
+ 	{ TIM9_TRGO, TIM9_CH1, TIM9_CH2,},
+-	{ }, /* timer 10 */
+-	{ }, /* timer 11 */
++	{ TIM10_OC1,},
++	{ TIM11_OC1,},
+ 	{ TIM12_TRGO, TIM12_CH1, TIM12_CH2,},
+-	{ }, /* timer 13 */
+-	{ }, /* timer 14 */
++	{ TIM13_OC1,},
++	{ TIM14_OC1,},
+ 	{ TIM15_TRGO,},
++	{ TIM16_OC1,},
++	{ TIM17_OC1,},
+ };
+ 
+ /* List the triggers accepted by each timer */
+@@ -47,10 +49,10 @@
+ 	{ }, /* timer 6 */
+ 	{ }, /* timer 7 */
+ 	{ TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO,},
+-	{ TIM2_TRGO, TIM3_TRGO,},
++	{ TIM2_TRGO, TIM3_TRGO, TIM10_OC1, TIM11_OC1,},
+ 	{ }, /* timer 10 */
+ 	{ }, /* timer 11 */
+-	{ TIM4_TRGO, TIM5_TRGO,},
++	{ TIM4_TRGO, TIM5_TRGO, TIM13_OC1, TIM14_OC1,},
+ };
+ 
+ static const void *stm32h7_valids_table[][MAX_VALIDS] = {
+@@ -65,10 +67,12 @@
+ 	{ }, /* timer 9 */
+ 	{ }, /* timer 10 */
+ 	{ }, /* timer 11 */
+-	{ TIM4_TRGO, TIM5_TRGO,},
++	{ TIM4_TRGO, TIM5_TRGO, TIM13_OC1, TIM14_OC1,},
+ 	{ }, /* timer 13 */
+ 	{ }, /* timer 14 */
+-	{ TIM1_TRGO, TIM3_TRGO,},
++	{ TIM1_TRGO, TIM3_TRGO, TIM16_OC1, TIM17_OC1,},
++	{ }, /* timer 16 */
++	{ }, /* timer 17 */
+ };
+ 
+ struct stm32_timer_trigger {
+@@ -91,6 +95,11 @@ static bool stm32_timer_is_trgo2_name(const char *name)
+ 	return !!strstr(name, "trgo2");
+ }
+ 
++static bool stm32_timer_is_trgo_name(const char *name)
++{
++	return (!!strstr(name, "trgo") && !strstr(name, "trgo2"));
++}
++
+ static int stm32_timer_start(struct stm32_timer_trigger *priv,
+ 			     struct iio_trigger *trig,
+ 			     unsigned int frequency)
+@@ -355,6 +364,7 @@ static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+ 
+ 	while (cur && *cur) {
+ 		struct iio_trigger *trig;
++		bool cur_is_trgo = stm32_timer_is_trgo_name(*cur);
+ 		bool cur_is_trgo2 = stm32_timer_is_trgo2_name(*cur);
+ 
+ 		if (cur_is_trgo2 && !priv->has_trgo2) {
+@@ -371,10 +381,9 @@ static int stm32_setup_iio_triggers(struct stm32_timer_trigger *priv)
+ 
+ 		/*
+ 		 * sampling frequency and master mode attributes
+-		 * should only be available on trgo trigger which
+-		 * is always the first in the list.
++		 * should only be available on trgo/trgo2 triggers
+ 		 */
+-		if (cur == priv->triggers || cur_is_trgo2)
++		if (cur_is_trgo || cur_is_trgo2)
+ 			trig->dev.groups = stm32_trigger_attr_groups;
+ 
+ 		iio_trigger_set_drvdata(trig, priv);
+diff --git a/include/linux/iio/timer/stm32-timer-trigger.h b/include/linux/iio/timer/stm32-timer-trigger.h
+index 20f4653..d68add8 100644
+--- a/include/linux/iio/timer/stm32-timer-trigger.h
++++ b/include/linux/iio/timer/stm32-timer-trigger.h
+@@ -55,12 +55,24 @@
+ #define TIM9_CH1	"tim9_ch1"
+ #define TIM9_CH2	"tim9_ch2"
+ 
++#define TIM10_OC1	"tim10_oc1"
++
++#define TIM11_OC1	"tim11_oc1"
++
+ #define TIM12_TRGO	"tim12_trgo"
+ #define TIM12_CH1	"tim12_ch1"
+ #define TIM12_CH2	"tim12_ch2"
+ 
++#define TIM13_OC1	"tim13_oc1"
++
++#define TIM14_OC1	"tim14_oc1"
++
+ #define TIM15_TRGO	"tim15_trgo"
+ 
++#define TIM16_OC1	"tim16_oc1"
++
++#define TIM17_OC1	"tim17_oc1"
++
+ bool is_stm32_timer_trigger(struct iio_trigger *trig);
+ 
+ #endif
 -- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
