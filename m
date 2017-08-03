@@ -1,93 +1,97 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v3 5/5] phy: rockchip-inno-usb2: add support of usb2-phy for rv1108 SoCs
-Date: Thu,  3 Aug 2017 16:10:31 +0800
-Message-ID: <1501747831-13520-1-git-send-email-frank.wang@rock-chips.com>
-References: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, kever.yang@rock-chips.com, andy.yan@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 3/8] phy: sun4i-usb: Support secondary clock for HSIC PHY
+Date: Thu,  3 Aug 2017 16:14:06 +0800
+Message-ID: <20170803081411.22389-4-wens@csie.org>
+References: <20170803081411.22389-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803081411.22389-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support usb2-phy for rv1108 SoCs and amend phy Documentation.
+On the Allwinner A83T SoC, the last USB PHY is an HSIC PHY. It requires
+two clocks instead of one.
 
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+On all Allwinner SoCs that share the common USB PHY design supported by
+the phy-sun4i-usb driver, the first PHY is always tied to OTG, and there
+is at most one HSIC PHY, typically the last.
+
+In this patch we take advantage of these known constraints and store an
+index in the compatible-string-related config structure describing which
+PHY is HSIC, needing the extra hsic_12M clock.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  1 +
- drivers/phy/rockchip/phy-rockchip-inno-usb2.c      | 43 ++++++++++++++++++++++
- 2 files changed, 44 insertions(+)
+ drivers/phy/allwinner/phy-sun4i-usb.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-index ed6aee4..a59798c 100644
---- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
-@@ -6,6 +6,7 @@ Required properties (phy (parent) node):
- 	* "rockchip,rk3328-usb2phy"
- 	* "rockchip,rk3366-usb2phy"
- 	* "rockchip,rk3399-usb2phy"
-+	* "rockchip,rv1108-usb2phy"
-  - reg : the address offset of grf for usb-phy configuration.
-  - #clock-cells : should be 0.
-  - clock-output-names : specify the 480m output clock name.
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-index 3748d8d..9f2510d 100644
---- a/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-usb2.c
-@@ -1400,11 +1400,54 @@ static const struct rockchip_usb2phy_cfg rk3399_phy_cfgs[] = {
- 	{ /* sentinel */ }
- };
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index bbf06cfe5898..79157eced75a 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -107,6 +107,7 @@ enum sun4i_usb_phy_type {
  
-+static const struct rockchip_usb2phy_cfg rv1108_phy_cfgs[] = {
-+	{
-+		.reg = 0x100,
-+		.num_ports	= 2,
-+		.clkout_ctl	= { 0x108, 4, 4, 1, 0 },
-+		.port_cfgs	= {
-+			[USB2PHY_PORT_OTG] = {
-+				.phy_sus	= { 0x0100, 15, 0, 0, 0x1d1 },
-+				.bvalid_det_en	= { 0x0680, 3, 3, 0, 1 },
-+				.bvalid_det_st	= { 0x0690, 3, 3, 0, 1 },
-+				.bvalid_det_clr = { 0x06a0, 3, 3, 0, 1 },
-+				.ls_det_en	= { 0x0680, 2, 2, 0, 1 },
-+				.ls_det_st	= { 0x0690, 2, 2, 0, 1 },
-+				.ls_det_clr	= { 0x06a0, 2, 2, 0, 1 },
-+				.utmi_bvalid	= { 0x0804, 10, 10, 0, 1 },
-+				.utmi_ls	= { 0x0804, 13, 12, 0, 1 },
-+			},
-+			[USB2PHY_PORT_HOST] = {
-+				.phy_sus	= { 0x0104, 15, 0, 0, 0x1d1 },
-+				.ls_det_en	= { 0x0680, 4, 4, 0, 1 },
-+				.ls_det_st	= { 0x0690, 4, 4, 0, 1 },
-+				.ls_det_clr	= { 0x06a0, 4, 4, 0, 1 },
-+				.utmi_ls	= { 0x0804, 9, 8, 0, 1 },
-+				.utmi_hstdet	= { 0x0804, 7, 7, 0, 1 }
-+			}
-+		},
-+		.chg_det = {
-+			.opmode		= { 0x0100, 3, 0, 5, 1 },
-+			.cp_det		= { 0x0804, 1, 1, 0, 1 },
-+			.dcp_det	= { 0x0804, 0, 0, 0, 1 },
-+			.dp_det		= { 0x0804, 2, 2, 0, 1 },
-+			.idm_sink_en	= { 0x0108, 8, 8, 0, 1 },
-+			.idp_sink_en	= { 0x0108, 7, 7, 0, 1 },
-+			.idp_src_en	= { 0x0108, 9, 9, 0, 1 },
-+			.rdm_pdwn_en	= { 0x0108, 10, 10, 0, 1 },
-+			.vdm_src_en	= { 0x0108, 12, 12, 0, 1 },
-+			.vdp_src_en	= { 0x0108, 11, 11, 0, 1 },
-+		},
-+	},
-+	{ /* sentinel */ }
-+};
+ struct sun4i_usb_phy_cfg {
+ 	int num_phys;
++	int hsic_index;
+ 	enum sun4i_usb_phy_type type;
+ 	u32 disc_thresh;
+ 	u8 phyctl_offset;
+@@ -126,6 +127,7 @@ struct sun4i_usb_phy_data {
+ 		struct regulator *vbus;
+ 		struct reset_control *reset;
+ 		struct clk *clk;
++		struct clk *clk2;
+ 		bool regulator_on;
+ 		int index;
+ 	} phys[MAX_PHYS];
+@@ -261,8 +263,15 @@ static int sun4i_usb_phy_init(struct phy *_phy)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = clk_prepare_enable(phy->clk2);
++	if (ret) {
++		clk_disable_unprepare(phy->clk);
++		return ret;
++	}
 +
- static const struct of_device_id rockchip_usb2phy_dt_match[] = {
- 	{ .compatible = "rockchip,rk3228-usb2phy", .data = &rk3228_phy_cfgs },
- 	{ .compatible = "rockchip,rk3328-usb2phy", .data = &rk3328_phy_cfgs },
- 	{ .compatible = "rockchip,rk3366-usb2phy", .data = &rk3366_phy_cfgs },
- 	{ .compatible = "rockchip,rk3399-usb2phy", .data = &rk3399_phy_cfgs },
-+	{ .compatible = "rockchip,rv1108-usb2phy", .data = &rv1108_phy_cfgs },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, rockchip_usb2phy_dt_match);
+ 	ret = reset_control_deassert(phy->reset);
+ 	if (ret) {
++		clk_disable_unprepare(phy->clk2);
+ 		clk_disable_unprepare(phy->clk);
+ 		return ret;
+ 	}
+@@ -315,6 +324,7 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
+ 
+ 	sun4i_usb_phy_passby(phy, 0);
+ 	reset_control_assert(phy->reset);
++	clk_disable_unprepare(phy->clk2);
+ 	clk_disable_unprepare(phy->clk);
+ 
+ 	return 0;
+@@ -706,6 +716,17 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 			return PTR_ERR(phy->clk);
+ 		}
+ 
++		/* The first PHY is always tied to OTG, and never HSIC */
++		if (data->cfg->hsic_index && i == data->cfg->hsic_index) {
++			/* HSIC needs secondary clock */
++			snprintf(name, sizeof(name), "usb%d_hsic_12M", i);
++			phy->clk2 = devm_clk_get(dev, name);
++			if (IS_ERR(phy->clk2)) {
++				dev_err(dev, "failed to get clock %s\n", name);
++				return PTR_ERR(phy->clk2);
++			}
++		}
++
+ 		snprintf(name, sizeof(name), "usb%d_reset", i);
+ 		phy->reset = devm_reset_control_get(dev, name);
+ 		if (IS_ERR(phy->reset)) {
 -- 
-2.0.0
+2.13.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
