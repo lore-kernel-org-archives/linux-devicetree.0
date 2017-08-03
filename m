@@ -1,35 +1,29 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] Documentation: dt: pinctrl: Add pmi8994 gpio
- support
-Date: Thu, 3 Aug 2017 18:06:57 -0500
-Message-ID: <20170803230657.gyufjtiirkf3hzjd@rob-hp-laptop>
-References: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v6 0/7] Add support for IPQ8074 PCIe phy and controller
+Date: Thu, 3 Aug 2017 18:07:58 -0500
+Message-ID: <20170803230758.GS20308@bhelgaas-glaptop.roam.corp.google.com>
+References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
+ <4cce58c3-3fec-db2d-8c97-28beb0e3b3ab@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501247893-30226-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, linus.walleij@linaro.org, andy.gross@linaro.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rnayak@codeaurora.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <4cce58c3-3fec-db2d-8c97-28beb0e3b3ab@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 06:48:12PM +0530, Vivek Gautam wrote:
-> Update the binding doc for qcom pmi8994-gpio devices.
+On Wed, Aug 02, 2017 at 10:38:21AM +0530, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> ---
+> On Monday 31 July 2017 12:04 PM, Varadarajan Narayanan wrote:
+> > v6:
+> >   Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
+> >   white space issues as mentioned by Vivek.
+> > 	phy: qcom-qmp: Fix phy pipe clock name
+> > 	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
 > 
-> - Have been testing this patch-set on db820c for extcon with
->   usb controller. The usb controller uses one of these gpios
->   for usb-id/vbus detection.
-> 
-> Changes since v1:
->  - Dropped "qcom,pmi8994-gpio" compatible addition to the driver
->    since we can use the generic "qcom,spmi-gpio" compatible.
->  - Sorted to add pmi8994-gpio in alphabatical order.
-> 
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
->  1 file changed, 2 insertions(+)
+> merged the 1st four patches (phy patches) of the series to linux-phy -next.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Heh :)  Ignore my nitpicks on them then!
