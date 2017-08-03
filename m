@@ -1,27 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 6/7] dt-bindings: pci: qcom: Add support for IPQ8074
-Date: Thu, 3 Aug 2017 18:39:45 -0500
-Message-ID: <20170803233945.dsgtxv3omx2uyhsf@rob-hp-laptop>
-References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
- <1501482857-14100-7-git-send-email-varada@codeaurora.org>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: mt2712: add binding document
+Date: Thu, 3 Aug 2017 18:40:54 -0500
+Message-ID: <20170803234054.wykfqjqhceh5phcv@rob-hp-laptop>
+References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com>
+ <1501489333-23145-2-git-send-email-zhiyong.tao@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501482857-14100-7-git-send-email-varada@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: bhelgaas@google.com, mark.rutland@arm.com, svarbanov@mm-sol.com, kishon@ti.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1501489333-23145-2-git-send-email-zhiyong.tao@mediatek.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Cc: linus.walleij@linaro.org, mark.rutland@arm.com, matthias.bgg@gmail.com, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, hongkun.cao@mediatek.com, biao.huang@mediatek.com, yt.shen@mediatek.com, hongzhou.yang@mediatek.com, erin.lo@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 12:04:16PM +0530, Varadarajan Narayanan wrote:
-> Add support for the IPQ8074 PCIe controller.  IPQ8074 supports Gen 1/2, one
-> lane, two PCIe root complex with support for MSI and legacy interrupts, and
-> it conforms to PCI Express Base 2.1 specification.
+On Mon, Jul 31, 2017 at 04:22:11PM +0800, Zhiyong Tao wrote:
+> The commit adds mt2712 compatible node in binding document.
 > 
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
 > ---
->  .../devicetree/bindings/pci/qcom,pcie.txt          | 23 ++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
+>  .../devicetree/bindings/pinctrl/pinctrl-mt65xx.txt |    1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
+
