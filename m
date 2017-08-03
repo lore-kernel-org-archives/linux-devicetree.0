@@ -1,198 +1,106 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2
- board
-Date: Thu, 3 Aug 2017 21:20:00 +0200
-Message-ID: <20170803192000.trgfndzj4b3bnisc@kozik-lap>
-References: <1501746323-5254-1-git-send-email-m.purski@samsung.com>
- <CGME20170803074541eucas1p2b054d4853a98819fc42f19f7cae7f419@eucas1p2.samsung.com>
- <1501746323-5254-3-git-send-email-m.purski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1501746323-5254-3-git-send-email-m.purski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Maciej Purski <m.purski@samsung.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, b.zolnierkie@samsung.com
+From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 1/2] dt-bindings: bus: Add documentation for the Technologic Systems NBUS
+Date: Thu,  3 Aug 2017 15:28:18 -0400
+Message-ID: <20170803192819.3279-1-sebastien.bourdelin@savoirfairelinux.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 09:45:23AM +0200, Maciej Purski wrote:
-> This patch adds HDMI and Sil9234 MHL converter to Trats2 board.
+Add binding documentation for the Technologic Systems NBUS that is used
+to interface with peripherals in the FPGA of the TS-4600 SoM.
 
-Just "Add HDMI...", without this patch.
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+Changes v5 -> v6:
+  - rebase on master
+  - split the previous patch series into series by subsystem
+  - add ack by Linus Walleij
 
-Except few minor nitpicks below, looks good. After fixing I will take it
-once bindings got accepted.
+Changes v4 -> v5:
+  - fix missing signed off
 
-> 
-> Based on previous work by:
-> Tomasz Stanislawski <t.stanislaws@samsung.com>
-> 
-> Signed-off-by: Maciej Purski <m.purski@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4412-trats2.dts | 93 +++++++++++++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 35e9b94..39940f6 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -97,6 +97,16 @@
->  			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
->  			enable-active-high;
->  		};
-> +
-> +		vsil: voltage-regulator-vsil {
-> +			compatible = "regulator-fixed";
-> +			regulator-name = "HDMI_5V";
-> +			regulator-min-microvolt = <5000000>;
-> +			regulator-max-microvolt = <5000000>;
-> +			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
-> +			enable-active-high;
-> +			vin-supply = <&buck7_reg>;
+Changes v3 -> v4:
+  - rebase on master
+  - fix vendor prefixes for dts properties (suggested by Rob Herring)
+  - v3 was acked by Linus Walleij
 
-I think the supply is V_BAT, not buck7.
+Changes v2 -> v3:
+  - rebase on master
+  - fix typo (suggested by Rob Herring)
 
-> +		};
->  	};
->  
->  	gpio-keys {
-> @@ -229,6 +239,34 @@
->  		};
->  	};
->  
-> +	i2c-mhl {
-> +		compatible = "i2c-gpio";
-> +		gpios = <&gpf0 4 GPIO_ACTIVE_HIGH &gpf0 6 GPIO_ACTIVE_HIGH>;
-> +		i2c-gpio,delay-us = <100>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pinctrl-0 = <&i2c_mhl_bus>;
-> +		pinctrl-names = "default";
-> +		status = "okay";
-> +
-> +		sii9234: sii9234@39 {
+Changes v1 -> v2:
+  - rebase on master
+  - remove the simple-bus compatibility as the root node will now
+  populate child nodes (suggested by Rob Herring)
+  - use the ts vendor prefix for gpios (suggested by Rob Herring)
+---
+ Documentation/devicetree/bindings/bus/ts-nbus.txt | 50 +++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
 
-The name of node should be rather generic (ePAPR: "The name of a node
-should be somewhat generic, reflecting the function of the device and
-not its precise programming model").
+diff --git a/Documentation/devicetree/bindings/bus/ts-nbus.txt b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+new file mode 100644
+index 000000000000..2a10d065b9fa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/ts-nbus.txt
+@@ -0,0 +1,50 @@
++Technologic Systems NBUS
++
++The NBUS is a bus used to interface with peripherals in the Technologic
++Systems FPGA on the TS-4600 SoM.
++
++Required properties :
++ - compatible		: "technologic,ts-nbus"
++ - #address-cells	: must be 1
++ - #size-cells		: must be 0
++ - pwms			: The PWM bound to the FPGA
++ - ts,data-gpios	: The 8 GPIO pins connected to the data lines on the FPGA
++ - ts,csn-gpios		: The GPIO pin connected to the csn line on the FPGA
++ - ts,txrx-gpios	: The GPIO pin connected to the txrx line on the FPGA
++ - ts,strobe-gpios	: The GPIO pin connected to the stobe line on the FPGA
++ - ts,ale-gpios		: The GPIO pin connected to the ale line on the FPGA
++ - ts,rdy-gpios		: The GPIO pin connected to the rdy line on the FPGA
++
++Child nodes:
++
++The NBUS node can contain zero or more child nodes representing peripherals
++on the bus.
++
++Example:
++
++	nbus {
++		compatible = "technologic,ts-nbus";
++		pinctrl-0 = <&nbus_pins>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pwms = <&pwm 2 83>;
++		ts,data-gpios   = <&gpio0 0 GPIO_ACTIVE_HIGH
++				   &gpio0 1 GPIO_ACTIVE_HIGH
++				   &gpio0 2 GPIO_ACTIVE_HIGH
++				   &gpio0 3 GPIO_ACTIVE_HIGH
++				   &gpio0 4 GPIO_ACTIVE_HIGH
++				   &gpio0 5 GPIO_ACTIVE_HIGH
++				   &gpio0 6 GPIO_ACTIVE_HIGH
++				   &gpio0 7 GPIO_ACTIVE_HIGH>;
++		ts,csn-gpios    = <&gpio0 16 GPIO_ACTIVE_HIGH>;
++		ts,txrx-gpios   = <&gpio0 24 GPIO_ACTIVE_HIGH>;
++		ts,strobe-gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
++		ts,ale-gpios    = <&gpio0 26 GPIO_ACTIVE_HIGH>;
++		ts,rdy-gpios    = <&gpio0 21 GPIO_ACTIVE_HIGH>;
++
++		watchdog@2a {
++			compatible = "...";
++
++			/* ... */
++		};
++	};
+-- 
+2.13.4
 
-So maybe "sii9234: hdmi-bridge@39"?
-
-> +			compatible = "sil,sii9234";
-> +			vcc-supply = <&vsil>;
-> +			reset-gpios = <&gpf3 4 GPIO_ACTIVE_HIGH>;
-> +			interrupt-parent = <&gpf3>;
-> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +			reg = <0x39>;
-> +
-> +
-
-One empty line instead of two.
-
-> +			port {
-> +				mhl_to_hdmi: endpoint {
-> +					remote-endpoint = <&hdmi_to_mhl>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	camera: camera {
->  		pinctrl-0 = <&cam_port_a_clk_active &cam_port_b_clk_active>;
->  		pinctrl-names = "default";
-> @@ -522,6 +560,31 @@
->  	status = "okay";
->  };
->  
-> +&hdmi {
-> +	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&hdmi_hpd>;
-> +	hdmi-en-supply = <&vsil>;
-> +	vdd-supply = <&ldo3_reg>;
-> +	vdd_osc-supply = <&ldo4_reg>;
-> +	vdd_pll-supply = <&ldo3_reg>;
-> +	ddc = <&i2c_5>;
-> +	status = "okay";
-> +
-> +	ports {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +			hdmi_to_mhl: endpoint {
-> +				remote-endpoint = <&mhl_to_hdmi>;
-> +			};
-> +		};
-> +	};
-> +
-
-Unnecessary empty line.
-
-> +};
-> +
->  &hsotg {
->  	vusb_d-supply = <&ldo15_reg>;
->  	vusb_a-supply = <&ldo12_reg>;
-> @@ -600,6 +663,11 @@
->  	};
->  };
->  
-> +
-> +&i2c_5 {
-> +	status = "okay";
-> +};
-
-Could you describe more what is on i2c_5 and i2c_8? Is it relevant to
-this patch?
-
-> +
->  &i2c_7 {
->  	samsung,i2c-sda-delay = <100>;
->  	samsung,i2c-slave-addr = <0x10>;
-> @@ -894,12 +962,20 @@
->  	};
->  };
->  
-> +&i2c_8 {
-> +	status = "okay";
-> +};
-> +
->  &i2s0 {
->  	pinctrl-0 = <&i2s0_bus>;
->  	pinctrl-names = "default";
->  	status = "okay";
->  };
->  
-> +&mixer {
-> +	status = "okay";
-> +};
-> +
->  &mshc_0 {
->  	num-slots = <1>;
->  	broken-cd;
-> @@ -926,6 +1002,18 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&sleep0>;
->  
-> +	mhl_int: mhl-int {
-> +		samsung,pins = "gpf3-5";
-> +		samsung,pin-pud = <0>;
-
-Please use defines from dt-bindings/pinctrl/samsung.h
-
-> +	};
-> +
-> +	i2c_mhl_bus: i2c-mhl-bus {
-> +		samsung,pins = "gpf0-4", "gpf0-6";
-> +		samsung,pin-function = <2>;
-> +		samsung,pin-pud = <1>;
-> +		samsung,pin-drv = <0>;
-
-The same.
-
-Best regards,
-Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
