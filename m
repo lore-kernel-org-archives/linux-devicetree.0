@@ -1,39 +1,168 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: iio: timer: stm32: add support for STM32H7
-Date: Thu, 3 Aug 2017 11:14:12 +0200
-Message-ID: <1501751654-14153-2-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 2/3] iio: trigger: stm32-timer: add support for STM32H7
+Date: Thu, 3 Aug 2017 11:14:13 +0200
+Message-ID: <1501751654-14153-3-git-send-email-fabrice.gasnier@st.com>
 References: <1501751654-14153-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501751654-14153-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1501751654-14153-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-STM32H7 has slightly different triggers than previous versions.
-Introduce st,stm32h7-timer-trigger compatible to handle this new variant.
+Add support for STM32H7 timer triggers:
+- Add new valids_table
+- Introduce compatible, with configuration data
+- Extend up to 15 timers, available on STM32H7
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iio/trigger/stm32-timer-trigger.c     | 55 +++++++++++++++++++++++++--
+ include/linux/iio/timer/stm32-timer-trigger.h |  2 +
+ 2 files changed, 53 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-index 55a653d..b565ced 100644
---- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-+++ b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-@@ -4,7 +4,9 @@ Must be a sub-node of an STM32 Timers device tree node.
- See ../mfd/stm32-timers.txt for details about the parent node.
+diff --git a/drivers/iio/trigger/stm32-timer-trigger.c b/drivers/iio/trigger/stm32-timer-trigger.c
+index d22bc56..33890f9 100644
+--- a/drivers/iio/trigger/stm32-timer-trigger.c
++++ b/drivers/iio/trigger/stm32-timer-trigger.c
+@@ -13,6 +13,7 @@
+ #include <linux/mfd/stm32-timers.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
++#include <linux/of_device.h>
  
- Required parameters:
--- compatible:	Must be "st,stm32-timer-trigger".
-+- compatible:	Must be one of:
-+		"st,stm32-timer-trigger"
-+		"st,stm32h7-timer-trigger"
- - reg:		Identify trigger hardware block.
+ #define MAX_TRIGGERS 7
+ #define MAX_VALIDS 5
+@@ -31,6 +32,9 @@
+ 	{ }, /* timer 10 */
+ 	{ }, /* timer 11 */
+ 	{ TIM12_TRGO, TIM12_CH1, TIM12_CH2,},
++	{ }, /* timer 13 */
++	{ }, /* timer 14 */
++	{ TIM15_TRGO,},
+ };
  
- Example:
+ /* List the triggers accepted by each timer */
+@@ -49,6 +53,24 @@
+ 	{ TIM4_TRGO, TIM5_TRGO,},
+ };
+ 
++static const void *stm32h7_valids_table[][MAX_VALIDS] = {
++	{ TIM15_TRGO, TIM2_TRGO, TIM3_TRGO, TIM4_TRGO,},
++	{ TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO,},
++	{ TIM1_TRGO, TIM2_TRGO, TIM15_TRGO, TIM4_TRGO,},
++	{ TIM1_TRGO, TIM2_TRGO, TIM3_TRGO, TIM8_TRGO,},
++	{ TIM1_TRGO, TIM8_TRGO, TIM3_TRGO, TIM4_TRGO,},
++	{ }, /* timer 6 */
++	{ }, /* timer 7 */
++	{ TIM1_TRGO, TIM2_TRGO, TIM4_TRGO, TIM5_TRGO,},
++	{ }, /* timer 9 */
++	{ }, /* timer 10 */
++	{ }, /* timer 11 */
++	{ TIM4_TRGO, TIM5_TRGO,},
++	{ }, /* timer 13 */
++	{ }, /* timer 14 */
++	{ TIM1_TRGO, TIM3_TRGO,},
++};
++
+ struct stm32_timer_trigger {
+ 	struct device *dev;
+ 	struct regmap *regmap;
+@@ -59,6 +81,11 @@ struct stm32_timer_trigger {
+ 	bool has_trgo2;
+ };
+ 
++struct stm32_timer_trigger_cfg {
++	const void *(*valids_table)[MAX_VALIDS];
++	const unsigned int num_valids_table;
++};
++
+ static bool stm32_timer_is_trgo2_name(const char *name)
+ {
+ 	return !!strstr(name, "trgo2");
+@@ -734,18 +761,22 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct stm32_timer_trigger *priv;
+ 	struct stm32_timers *ddata = dev_get_drvdata(pdev->dev.parent);
++	const struct stm32_timer_trigger_cfg *cfg;
+ 	unsigned int index;
+ 	int ret;
+ 
+ 	if (of_property_read_u32(dev->of_node, "reg", &index))
+ 		return -EINVAL;
+ 
++	cfg = (const struct stm32_timer_trigger_cfg *)
++		of_match_device(dev->driver->of_match_table, dev)->data;
++
+ 	if (index >= ARRAY_SIZE(triggers_table) ||
+-	    index >= ARRAY_SIZE(valids_table))
++	    index >= cfg->num_valids_table)
+ 		return -EINVAL;
+ 
+ 	/* Create an IIO device only if we have triggers to be validated */
+-	if (*valids_table[index])
++	if (*cfg->valids_table[index])
+ 		priv = stm32_setup_counter_device(dev);
+ 	else
+ 		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -758,7 +789,7 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+ 	priv->clk = ddata->clk;
+ 	priv->max_arr = ddata->max_arr;
+ 	priv->triggers = triggers_table[index];
+-	priv->valids = valids_table[index];
++	priv->valids = cfg->valids_table[index];
+ 	stm32_timer_detect_trgo2(priv);
+ 
+ 	ret = stm32_setup_iio_triggers(priv);
+@@ -770,8 +801,24 @@ static int stm32_timer_trigger_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct stm32_timer_trigger_cfg stm32_timer_trg_cfg = {
++	.valids_table = valids_table,
++	.num_valids_table = ARRAY_SIZE(valids_table),
++};
++
++static const struct stm32_timer_trigger_cfg stm32h7_timer_trg_cfg = {
++	.valids_table = stm32h7_valids_table,
++	.num_valids_table = ARRAY_SIZE(stm32h7_valids_table),
++};
++
+ static const struct of_device_id stm32_trig_of_match[] = {
+-	{ .compatible = "st,stm32-timer-trigger", },
++	{
++		.compatible = "st,stm32-timer-trigger",
++		.data = (void *)&stm32_timer_trg_cfg,
++	}, {
++		.compatible = "st,stm32h7-timer-trigger",
++		.data = (void *)&stm32h7_timer_trg_cfg,
++	},
+ 	{ /* end node */ },
+ };
+ MODULE_DEVICE_TABLE(of, stm32_trig_of_match);
+diff --git a/include/linux/iio/timer/stm32-timer-trigger.h b/include/linux/iio/timer/stm32-timer-trigger.h
+index fa7d786..20f4653 100644
+--- a/include/linux/iio/timer/stm32-timer-trigger.h
++++ b/include/linux/iio/timer/stm32-timer-trigger.h
+@@ -59,6 +59,8 @@
+ #define TIM12_CH1	"tim12_ch1"
+ #define TIM12_CH2	"tim12_ch2"
+ 
++#define TIM15_TRGO	"tim15_trgo"
++
+ bool is_stm32_timer_trigger(struct iio_trigger *trig);
+ 
+ #endif
 -- 
 1.9.1
