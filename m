@@ -1,34 +1,26 @@
 From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v6 3/3] hwrng: add a driver for Freescale RNGC
-Date: Thu, 3 Aug 2017 14:26:00 +0800
-Message-ID: <20170803062600.GM12039@gondor.apana.org.au>
-References: <1457705200-16951-1-git-send-email-s.trumtrar@pengutronix.de>
- <1500832146-8660-1-git-send-email-martin@kaiser.cx>
- <1500832146-8660-3-git-send-email-martin@kaiser.cx>
+Subject: Re: [PATCH v2 2/4] crypto: add crypto_(un)register_ahashes()
+Date: Thu, 3 Aug 2017 14:26:26 +0800
+Message-ID: <20170803062626.GO12039@gondor.apana.org.au>
+References: <cover.1500879613.git.larper@axis.com>
+ <5244eea458d4e85d69bc9e44d33873f2cdd086ca.1500879613.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1500832146-8660-3-git-send-email-martin@kaiser.cx>
+In-Reply-To: <5244eea458d4e85d69bc9e44d33873f2cdd086ca.1500879613.git.larper@axis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-crypto@vger.kernel.org, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rabin Vincent <rabinv@axis.com>, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jul 23, 2017 at 07:49:06PM +0200, Martin Kaiser wrote:
-> The driver is ported from Freescale's Linux git and can be
-> found in the
+On Mon, Jul 24, 2017 at 09:07:30AM +0200, Lars Persson wrote:
+> From: Rabin Vincent <rabinv@axis.com>
 > 
-> 	vendor/freescale/imx_2.6.35_maintain
+> There are already helpers to (un)register multiple normal
+> and AEAD algos.  Add one for ahashes too.
 > 
-> branch.
-> 
-> The driver supports both RNG version C that's part of some Freescale
-> i.MX3 SoCs and version B that is available on i.MX2x chipsets.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> Reviewed-by: PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>
+> Signed-off-by: Lars Persson <larper@axis.com>
 
 Patch applied.  Thanks.
 -- 
