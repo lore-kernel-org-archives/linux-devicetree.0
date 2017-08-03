@@ -1,47 +1,60 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH] This patch adds support for Sinovoip BPI-M3
- A83T based board.
-Date: Thu, 3 Aug 2017 12:30:49 +0800
-Message-ID: <CAGb2v65-jo4ejgrWOtWE1-yJMYOP=CXHux2Os-a99GRrXa3o=g@mail.gmail.com>
-References: <1501716302-1009-1-git-send-email-embed3d@gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: "Hean Loong, Ong" <hean.loong.ong@intel.com>
+Subject: [PATCHv5 0/3] Intel FPGA VIP Frame Buffer II drm driver
+Date: Thu,  3 Aug 2017 13:01:33 +0800
+Message-ID: <1501736496-4118-1-git-send-email-hean.loong.ong@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBEOORLGAKGQEN7WWASQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1501716302-1009-1-git-send-email-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Daniel Vetter <daniel.vetter@intel.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: hean.loong.ong@intel.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 3, 2017 at 7:25 AM, Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> It has 2G LPDDR3, UART, ethernet, USB, HDMI, USB Sata, MIPI DSI,
-> mic, AP6212 Wifi, etc on it.
-> It is paired with AXP813 PMIC which is almost same as AXP818.
->
-> Signed-off-by: Vishnu Patekar <vishnupatekar0510-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> This Patch got somehow lost. This is a resubmit! The original patch
-> could be found here: https://patchwork.ozlabs.org/patch/598497/
-
-This didn't get merged because the original patch sets dealt with
-a lot of stuff that wasn't settled.
-
-Also, you should keep the author when resending patches.
-
-Finally, I have a more complete version that I plan to send soon:
-
-https://github.com/wens/linux/commit/240a2492b3379646e2f497d5ade7014ff955f818
-
-Note that the dts file name is changed to bananapi-m3, to match
-what we have for most of the other bananapi boards.
-
-ChenYu
+RnJvbTogT25nIEhlYW4gTG9vbmcgPGhlYW4ubG9vbmcub25nQGludGVsLmNvbT4KClRoZSBGUEdB
+IEZyYW1lQnVmZmVyIFNvZnQgSVAgY291bGQgYmUgc2VlbiAgYXMgdGhlIEdQVSBhbmQgdGhlIERS
+TSBkcml2ZXIgcGF0Y2ggaGVyZSBpcyBhbGxvY2F0aW5nIG1lbW9yeSBmb3IgIGluZm9ybWF0aW9u
+IHRvIGJlIHN0cmVhbWVkIGZyb20gdGhlIEFSTS9MaW51eCB0byB0aGUgZGlzcGxheSBwb3J0LgpC
+YXNpY2FsbHkgdGhlIGRyaXZlciBqdXN0IHdyYXBzIHRoZSBpbmZvcm1hdGlvbiBzdWNoIGFzIHRo
+ZSBwaXhlbHMgdG8gIGJlIGRyYXduIGJ5IHRoZSBGUEdBIEZyYW1lQnVmZmVyIDIuCgpUaGUgcGll
+Y2Ugb2YgaGFyZHdhcmUgaW4gZGlzY3Vzc2lvbiBpcyB0aGUgU29DIEZQR0Egd2hlcmUgTGludXgg
+cnVucyAgb24gdGhlIEFSTSBjaGlwIGFuZCB0aGUgRkdQQSBpcyBkcml2ZW4gYnkgaXRzIE5JT1Mg
+c29mdCBjb3JlIHdpdGggaXRzICBvd24gcHJvcHJpZXRhcnkgZmlybXdhcmUuCgogRm9yIGV4YW1w
+bGUgdGhlIGFwcGxpY2F0aW9uIGZyb20gdGhlIEFSTSBMaW51eCB3b3VsZCBoYXZlIHRvIHdyaXRl
+ICBpbmZvcm1hdGlvbiBvbiB0aGUgL2Rldi9mYjAgd2l0aCB0aGUgaW5mb3JtYXRpb24gc3RvcmVk
+IGluIHRoZSBTRFJBTSAgdG8gYmUgZmV0Y2hlZCBieSB0aGUgRlBHQSBmcmFtZWJ1ZmZlciBJUCBh
+bmQgZGlzcGxheWVkIG9uIHRoZSBEaXNwbGF5ICBQb3J0IE1vbml0b3IuCgpPbmcgSGVhbiBMb29u
+ZyAoMyk6CiAgQVJNOmR0LWJpbmRpbmdzIEludGVsIEZQR0EgVmlkZW8gYW5kIEltYWdlIFByb2Nl
+c3NpbmcgU3VpdGUKICBBUk06c29jZnBnYS1kZWZjb25maWcgSW50ZWwgRlBHQSBWaWRlbyBhbmQg
+SW1hZ2UgUHJvY2Vzc2luZyBTdWl0ZQogIEFSTTpkcm0gaXZpcCBJbnRlbCBGUEdBIFZpZGVvIGFu
+ZCBJbWFnZSBQcm9jZXNzaW5nIFN1aXRlCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9hbHRyLHZpcC1mYjIudHh0ICAgfCAgMzkgKysrKysKIGFyY2gvYXJtL2NvbmZpZ3Mvc29jZnBn
+YV9kZWZjb25maWcgICAgICAgICAgICAgICAgIHwgICA2ICsKIGRyaXZlcnMvZ3B1L2RybS9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRyaXZlcnMvZ3B1L2RybS9N
+YWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9pdmlwL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgIDEzICsrCiBkcml2ZXJzL2dw
+dS9kcm0vaXZpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJz
+L2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfY29ubi5jICAgICAgICAgICAgICB8ICA5NiArKysrKysr
+KysrCiBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfY29yZS5jICAgICAgICAgICAgICB8
+IDE2MiArKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Ry
+di5oICAgICAgICAgICAgICAgfCAgNTIgKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRl
+bF92aXBfb2YuYyAgICAgICAgICAgICAgICB8IDE5NCArKysrKysrKysrKysrKysrKysrKysKIDEw
+IGZpbGVzIGNoYW5nZWQsIDU3NCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYWx0cix2aXAtZmIyLnR4dAog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL0tjb25maWcKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9NYWtlZmlsZQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9pdmlwL2ludGVsX3ZpcF9jb25uLmMKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2dwdS9kcm0vaXZpcC9pbnRlbF92aXBfY29yZS5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX2Rydi5oCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL2l2aXAvaW50ZWxfdmlwX29mLmMKCi0tIAoyLjcuNAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
