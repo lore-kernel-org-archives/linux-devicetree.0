@@ -1,31 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: arm: Add entry for Beckhoff CX9020
-Date: Thu, 3 Aug 2017 11:06:56 -0500
-Message-ID: <20170803160656.2l6nyvm7dglgaj34@rob-hp-laptop>
-References: <20170726120534.5516-1-linux-kernel-dev@beckhoff.com>
- <20170726120534.5516-2-linux-kernel-dev@beckhoff.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: soc: update the binding document for
+ SCPSYS on MediaTek MT7622 SoC
+Date: Thu, 3 Aug 2017 11:09:32 -0500
+Message-ID: <20170803160932.fgn6ia3jgo2ulh5z@rob-hp-laptop>
+References: <cover.1501581552.git.sean.wang@mediatek.com>
+ <978aad669c09316ee6d18f84e2b5ac8b161aa12c.1501581552.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170726120534.5516-2-linux-kernel-dev@beckhoff.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel-dev@beckhoff.com
-Cc: shawnguo@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andrew@lunn.ch, Patrick Bruenn <p.bruenn@beckhoff.com>
+In-Reply-To: <978aad669c09316ee6d18f84e2b5ac8b161aa12c.1501581552.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 02:05:31PM +0200, linux-kernel-dev@beckhoff.com wrote:
-> From: Patrick Bruenn <p.bruenn@beckhoff.com>
+On Tue, Aug 01, 2017 at 06:06:11PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> - add vendor prefix bhf for Beckhoff
-> - add new board binding bhf,cx9020
+> Update the binding document for enabling SCPSYS on MediaTek MT7622 SoC.
 > 
-> Signed-off-by: Patrick Bruenn <p.bruenn@beckhoff.com>
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/bhf.txt         | 6 ++++++
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  MAINTAINERS                                           | 5 +++++
->  3 files changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/bhf.txt
+>  Documentation/devicetree/bindings/soc/mediatek/scpsys.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
