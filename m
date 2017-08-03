@@ -1,60 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] dt-bindings: usb: Add documentation for NS2 CDRU
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/6] dt-bindings: usb: Add documentation for NS2 ICFG
  USB3
-Date: Thu, 3 Aug 2017 14:05:48 -0500
-Message-ID: <20170803190548.k4mccsmpzaql45p3@rob-hp-laptop>
+Date: Thu, 3 Aug 2017 14:06:08 -0500
+Message-ID: <20170803190608.52l4d2vr3twkjyxt@rob-hp-laptop>
 References: <1501109787-15489-1-git-send-email-jon.mason@broadcom.com>
- <1501109787-15489-3-git-send-email-jon.mason@broadcom.com>
+ <1501109787-15489-4-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501109787-15489-3-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1501109787-15489-4-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 06:56:23PM -0400, Jon Mason wrote:
-> Add documentation for CDRU USB3 registers available in NS2 SoC
+On Wed, Jul 26, 2017 at 06:56:24PM -0400, Jon Mason wrote:
+> Add documentation for ICFG USB3 registers available in NS2 SoC
 > 
-> Signed-off-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
 > ---
->  .../devicetree/bindings/usb/brcm,cdru-usb3-ctrl.txt        | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/brcm,cdru-usb3-ctrl.txt
+>  Documentation/devicetree/bindings/usb/brcm,icfg-usb.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/brcm,icfg-usb.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/brcm,cdru-usb3-ctrl.txt b/Documentation/devicetree/bindings/usb/brcm,cdru-usb3-ctrl.txt
+> diff --git a/Documentation/devicetree/bindings/usb/brcm,icfg-usb.txt b/Documentation/devicetree/bindings/usb/brcm,icfg-usb.txt
 > new file mode 100644
-> index 000000000000..30c03bef58fd
+> index 000000000000..72176e25a692
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/brcm,cdru-usb3-ctrl.txt
-> @@ -0,0 +1,14 @@
-> +Broadcom Chip Device Resource Unit USB3 register
+> +++ b/Documentation/devicetree/bindings/usb/brcm,icfg-usb.txt
+> @@ -0,0 +1,13 @@
+> +Broadcom ICFG USB3 registers
 > +
 > +Required properties:
-> +- compatible: "brcm,cdru-usb3-ctrl"
+> +- compatible: "brcm,icfg-usb"
 > +- reg: Base address and length of the USB registers
 > +
 > +
 > +Example:
 > +
-> +cdru_usb3_ctrl: cdru_usb3_ctrl@6501d144 {
+> +icfg_usb3: icfg_usb3@66000900 {
+> +        compatible = "brcm,icfg-usb";
 
 s/_/-/
 
 With that,
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh@kernel.org>
 
-> +        compatible = "brcm,cdru-usb3-ctrl";
-> +        reg = <0x6501d144 0x4>;
+> +        reg = <0x66000900 0x60>;
 > +};
-> +
 > -- 
 > 2.7.4
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
