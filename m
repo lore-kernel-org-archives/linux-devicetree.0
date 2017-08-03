@@ -1,7 +1,7 @@
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Thu, 3 Aug 2017 20:09:05 +0300
-Message-ID: <CAHp75Vdaq0ersEa2_XneUQtsJMj2GCRZL4Wi=1HQorLkb4SaVg@mail.gmail.com>
+Date: Thu, 3 Aug 2017 20:11:32 +0300
+Message-ID: <CAHp75Vf2GVASatG_aJrBPNHR-jQLoYtOPan5ezcoWRDuEsXbNw@mail.gmail.com>
 References: <1501355870-13960-1-git-send-email-david@lechnology.com>
  <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
  <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
@@ -10,11 +10,12 @@ References: <1501355870-13960-1-git-send-email-david@lechnology.com>
  <bbec0574-311a-e1b4-d7fd-f6fb15b078d2@lechnology.com>
  <b8ec0511-afd1-2a1b-6ffe-dfe951d79bf7@tronnes.org>
  <cf740449-c952-08d4-d63c-d92e71fa3092@lechnology.com>
+ <CAHp75Vdaq0ersEa2_XneUQtsJMj2GCRZL4Wi=1HQorLkb4SaVg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cf740449-c952-08d4-d63c-d92e71fa3092@lechnology.com>
+In-Reply-To: <CAHp75Vdaq0ersEa2_XneUQtsJMj2GCRZL4Wi=1HQorLkb4SaVg@mail.gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -28,15 +29,18 @@ To: David Lechner <david@lechnology.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBBdWcgMywgMjAxNyBhdCA2OjE4IFBNLCBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNo
-bm9sb2d5LmNvbT4gd3JvdGU6Cgo+IFRoZSBwYXJ0aWN1bGFyIGRpc3BsYXkgSSBoYXZlIGlzIHRo
-aXMgb25lOgo+IGh0dHA6Ly93aWtpLnNlZWVkLmNjL0dyb3ZlLU9MRURfRGlzcGxheV8xLjEyaW5j
-aC8KPgo+IEl0IGxvb2tzIGxpa2UgaXQgdXNlcyBhIGNvbW1hbmQvZGF0YSBzY2hlbWUgbGlrZSB0
-aGUgTUlQSSBkaXNwbGF5cywgYnV0Cj4gZG9lc24ndCB1c2UgYW55IG9mIHRoZSBzdGFuZGFyZCB2
-YWx1ZXMgZm9yIHRoZSBjb21tYW5kcy4gVGhlIGNvbnRyb2xsZXIgY2FuCj4gZG8gcGFyYWxsZWws
-IFNQSSBhbmQgSTJDLCBidXQgdGhlIGRpc3BsYXkgSSBoYXZlIGlzIHdpcmVkIGZvciBJMkMuCgpJ
-dCBsb29rcyB2ZXJ5IHNpbWlsYXIgdG8gc3NkMTMwNi4gU29tZSBkZXNjcmlwdGlvbiByZWZlcnMg
-dG8gc3NkMTMwOC4KCi0tIApXaXRoIEJlc3QgUmVnYXJkcywKQW5keSBTaGV2Y2hlbmtvCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+T24gVGh1LCBBdWcgMywgMjAxNyBhdCA4OjA5IFBNLCBBbmR5IFNoZXZjaGVua28KPGFuZHkuc2hl
+dmNoZW5rb0BnbWFpbC5jb20+IHdyb3RlOgo+IE9uIFRodSwgQXVnIDMsIDIwMTcgYXQgNjoxOCBQ
+TSwgRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+IHdyb3RlOgo+Cj4+IFRoZSBw
+YXJ0aWN1bGFyIGRpc3BsYXkgSSBoYXZlIGlzIHRoaXMgb25lOgo+PiBodHRwOi8vd2lraS5zZWVl
+ZC5jYy9Hcm92ZS1PTEVEX0Rpc3BsYXlfMS4xMmluY2gvCj4+Cj4+IEl0IGxvb2tzIGxpa2UgaXQg
+dXNlcyBhIGNvbW1hbmQvZGF0YSBzY2hlbWUgbGlrZSB0aGUgTUlQSSBkaXNwbGF5cywgYnV0Cj4+
+IGRvZXNuJ3QgdXNlIGFueSBvZiB0aGUgc3RhbmRhcmQgdmFsdWVzIGZvciB0aGUgY29tbWFuZHMu
+IFRoZSBjb250cm9sbGVyIGNhbgo+PiBkbyBwYXJhbGxlbCwgU1BJIGFuZCBJMkMsIGJ1dCB0aGUg
+ZGlzcGxheSBJIGhhdmUgaXMgd2lyZWQgZm9yIEkyQy4KPgo+IEl0IGxvb2tzIHZlcnkgc2ltaWxh
+ciB0byBzc2QxMzA2LiBTb21lIGRlc2NyaXB0aW9uIHJlZmVycyB0byBzc2QxMzA4LgoKaHR0cDov
+L3d3dy5tb3VzZXIuY29tL2NhdGFsb2cvc3BlY3NoZWV0cy9TZWVlZF8xMDQwMzAwMDgucGRmCgoK
+LS0gCldpdGggQmVzdCBSZWdhcmRzLApBbmR5IFNoZXZjaGVua28KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
