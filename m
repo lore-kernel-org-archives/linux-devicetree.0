@@ -1,157 +1,66 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 4/8] phy: sun4i-usb: Support A83T USB PHYs
-Date: Thu,  3 Aug 2017 16:14:07 +0800
-Message-ID: <20170803081411.22389-5-wens@csie.org>
-References: <20170803081411.22389-1-wens@csie.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] gpio: core: Decouple open drain/source flag with
+ active low/high
+Date: Thu, 3 Aug 2017 10:14:32 +0200
+Message-ID: <CACRpkdYqj68NpqedyPY2P6o_-JcVaw=4xzh7ccw6t-2gcy5sqg@mail.gmail.com>
+References: <1491485752-28030-1-git-send-email-ldewangan@nvidia.com>
+ <CACRpkdaK1ut-1=NtqqL15QuQV+P2n8XidNqVspOfu+7x=XMvog@mail.gmail.com>
+ <20170719131640.GA2533@localhost> <596F73BC.1000305@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803081411.22389-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <596F73BC.1000305-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Johan Hovold <johan-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A83T has 3 USB PHYs, 1 for OTG, 1 for standard USB, 1 for USB HSIC.
-The phy initialization procedure is very different from other SoCs, but
-the PMU bits are the same, with additional bits for HSIC.
+On Wed, Jul 19, 2017 at 4:59 PM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On Wednesday 19 July 2017 06:55 PM, Johan Hovold wrote:
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/phy/allwinner/phy-sun4i-usb.c | 66 ++++++++++++++++++++++++++++-------
- 1 file changed, 54 insertions(+), 12 deletions(-)
+>> I guess the latter is fine, even if it is likely to amount to a fair bit
+>> of debugging world wide.
+>>
+>> Perhaps all this can still be avoided by adding further flags and
+>> deprecating others before people start migrating to 4.12 (after all,
+>> GPIO_OPEN_DRAIN has been around since 4.4 even if there are no in-kernel
+>> users).
+>>
+>> Or we accept the binary interface breakage -- it probably is pretty rare
+>> that people update the kernel without updating the dtb. I can just
+>> update the dts on the system that broke for me, and hopefully anyone
+>> debugging this issue while updating to 4.12 will find this mail quickly.
+>
+> Yes, it breaks the older DTS with new kernel. However,  this point was
+> discussed before sending patch. As there was no user in the mainline DTs for
+> these macros, we made change.
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index 79157eced75a..af16f4fb9707 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -87,6 +87,16 @@
- #define PHY_DISCON_TH_SEL		0x2a
- #define PHY_SQUELCH_DETECT		0x3c
- 
-+/* A83T specific control bits for PHY0 */
-+#define PHY_CTL_VBUSVLDEXT		BIT(5)
-+#define PHY_CTL_SIDDQ			BIT(3)
-+
-+/* A83T specific control bits for PHY2 HSIC */
-+#define SUNXI_EHCI_HS_FORCE		BIT(20)
-+#define SUNXI_HSIC_CONNECT_DET		BIT(17)
-+#define SUNXI_HSIC_CONNECT_INT		BIT(16)
-+#define SUNXI_HSIC			BIT(1)
-+
- #define MAX_PHYS			4
- 
- /*
-@@ -100,6 +110,7 @@ enum sun4i_usb_phy_type {
- 	sun4i_a10_phy,
- 	sun6i_a31_phy,
- 	sun8i_a33_phy,
-+	sun8i_a83t_phy,
- 	sun8i_h3_phy,
- 	sun8i_v3s_phy,
- 	sun50i_a64_phy,
-@@ -234,6 +245,7 @@ static void sun4i_usb_phy_write(struct sun4i_usb_phy *phy, u32 addr, u32 data,
- 
- static void sun4i_usb_phy_passby(struct sun4i_usb_phy *phy, int enable)
- {
-+	struct sun4i_usb_phy_data *phy_data = to_sun4i_usb_phy_data(phy);
- 	u32 bits, reg_value;
- 
- 	if (!phy->pmu)
-@@ -242,6 +254,11 @@ static void sun4i_usb_phy_passby(struct sun4i_usb_phy *phy, int enable)
- 	bits = SUNXI_AHB_ICHR8_EN | SUNXI_AHB_INCR4_BURST_EN |
- 		SUNXI_AHB_INCRX_ALIGN_EN | SUNXI_ULPI_BYPASS_EN;
- 
-+	/* A83T USB2 is HSIC */
-+	if (phy_data->cfg->type == sun8i_a83t_phy && phy->index == 2)
-+		bits |= SUNXI_EHCI_HS_FORCE | SUNXI_HSIC_CONNECT_INT |
-+			SUNXI_HSIC;
-+
- 	reg_value = readl(phy->pmu);
- 
- 	if (enable)
-@@ -276,21 +293,30 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		return ret;
- 	}
- 
--	if (phy->pmu && data->cfg->enable_pmu_unk1) {
--		val = readl(phy->pmu + REG_PMU_UNK1);
--		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
--	}
-+	if (data->cfg->type == sun8i_a83t_phy) {
-+		if (phy->index == 0) {
-+			val = readl(data->base + data->cfg->phyctl_offset);
-+			val |= PHY_CTL_VBUSVLDEXT;
-+			val &= ~PHY_CTL_SIDDQ;
-+			writel(val, data->base + data->cfg->phyctl_offset);
-+		}
-+	} else {
-+		if (phy->pmu && data->cfg->enable_pmu_unk1) {
-+			val = readl(phy->pmu + REG_PMU_UNK1);
-+			writel(val & ~2, phy->pmu + REG_PMU_UNK1);
-+		}
- 
--	/* Enable USB 45 Ohm resistor calibration */
--	if (phy->index == 0)
--		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+		/* Enable USB 45 Ohm resistor calibration */
-+		if (phy->index == 0)
-+			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--	/* Adjust PHY's magnitude and rate */
--	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+		/* Adjust PHY's magnitude and rate */
-+		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
- 
--	/* Disconnect threshold adjustment */
--	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--			    data->cfg->disc_thresh, 2);
-+		/* Disconnect threshold adjustment */
-+		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+				    data->cfg->disc_thresh, 2);
-+	}
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
-@@ -316,6 +342,13 @@ static int sun4i_usb_phy_exit(struct phy *_phy)
- 	struct sun4i_usb_phy_data *data = to_sun4i_usb_phy_data(phy);
- 
- 	if (phy->index == 0) {
-+		if (data->cfg->type == sun8i_a83t_phy) {
-+			void __iomem *phyctl = data->base +
-+				data->cfg->phyctl_offset;
-+
-+			writel(readl(phyctl) | PHY_CTL_SIDDQ, phyctl);
-+		}
-+
- 		/* Disable pull-ups */
- 		sun4i_usb_phy0_update_iscr(_phy, ISCR_DPDM_PULLUP_EN, 0);
- 		sun4i_usb_phy0_update_iscr(_phy, ISCR_ID_PULLUP_EN, 0);
-@@ -853,6 +886,14 @@ static const struct sun4i_usb_phy_cfg sun8i_a33_cfg = {
- 	.enable_pmu_unk1 = false,
- };
- 
-+static const struct sun4i_usb_phy_cfg sun8i_a83t_cfg = {
-+	.num_phys = 3,
-+	.hsic_index = 2,
-+	.type = sun8i_a83t_phy,
-+	.phyctl_offset = REG_PHYCTL_A33,
-+	.dedicated_clocks = true,
-+};
-+
- static const struct sun4i_usb_phy_cfg sun8i_h3_cfg = {
- 	.num_phys = 4,
- 	.type = sun8i_h3_phy,
-@@ -889,6 +930,7 @@ static const struct of_device_id sun4i_usb_phy_of_match[] = {
- 	{ .compatible = "allwinner,sun7i-a20-usb-phy", .data = &sun7i_a20_cfg },
- 	{ .compatible = "allwinner,sun8i-a23-usb-phy", .data = &sun8i_a23_cfg },
- 	{ .compatible = "allwinner,sun8i-a33-usb-phy", .data = &sun8i_a33_cfg },
-+	{ .compatible = "allwinner,sun8i-a83t-usb-phy", .data = &sun8i_a83t_cfg },
- 	{ .compatible = "allwinner,sun8i-h3-usb-phy", .data = &sun8i_h3_cfg },
- 	{ .compatible = "allwinner,sun8i-v3s-usb-phy", .data = &sun8i_v3s_cfg },
- 	{ .compatible = "allwinner,sun50i-a64-usb-phy",
--- 
-2.13.3
+My operating assumption is usually "rough consensus and running code".
 
+If the code doesn't run, i.e. if there are regressions then we need to fix
+them.
+
+I am not aware of any systems having picked up the flags as they were
+set before this patch, but if they exist we need to patch it of course.
+
+On the other hand we don't patch theoretical compatibility issues either,
+only those that occure in practice.
+
+It falls back on when a DT binding is really standardized. When it is
+starting to get discussed? When the final binding is merged to the kernel
+tree? When the devicetree.org people publish it? When a big enough
+vendor ships more than 100 devices using it no matter what happened
+discussion-wise?
+
+All these are a bit fluid concepts, so as a result, the handling of bindings
+is a bit fluid.
+
+If we really want DT bindings to have a point when they are "set in stone"
+then we need to talk to devicetree.org about that. But in reality I think all
+standards ever are a bit fuzzy around the edges.
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
