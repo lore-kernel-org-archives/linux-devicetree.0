@@ -1,45 +1,86 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/5] Qualcomm remote filesystem shared memory driver
-Date: Wed,  2 Aug 2017 19:57:49 -0700
-Message-ID: <20170803025754.19101-1-bjorn.andersson@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 3/5] dt-binding: soc: qcom: Add binding for RFSA
+Date: Wed,  2 Aug 2017 19:57:52 -0700
+Message-ID: <20170803025754.19101-4-bjorn.andersson@linaro.org>
+References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170803025754.19101-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some remote processors (in particular the modem) found in Qualcomm platforms
-stores configuration parameters and other data in a file system. As the remotes
-does not have direct storage access it needs to relay block accesses through a
-service running on the application CPU.
+This adds the binding for describing shared memory used to exchange file
+system blocks between the RMTFS client and service.
 
-The memory is described in DeviceTree by a new reserved-memory compatible and
-the implementation provides the user space service a read/write interface to
-this chunk of memory.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
 
-Bjorn Andersson (5):
-  of/platform: Generalize /reserved-memory handling
-  of: reserved_mem: Accessor for acquiring reserved_mem
-  dt-binding: soc: qcom: Add binding for RFSA
-  soc: qcom: Remote FS memory driver
-  arm64: dts: msm8916: Mark rmtfs node as qcom,rfsa compatible
+Changed since v1:
+- Memory described in a single reserved-memory node, rather than by reference
+  from a "dummy" node
+- qcom,vmdid added
 
- .../bindings/reserved-memory/qcom,rfsa.txt         |  44 ++++
- arch/arm64/boot/dts/qcom/msm8916.dtsi              |   3 +
- drivers/of/of_reserved_mem.c                       |  26 ++
- drivers/of/platform.c                              |  22 +-
- drivers/soc/qcom/Kconfig                           |   8 +
- drivers/soc/qcom/Makefile                          |   1 +
- drivers/soc/qcom/rfsa.c                            | 262 +++++++++++++++++++++
- include/linux/of_reserved_mem.h                    |   5 +
- 8 files changed, 365 insertions(+), 6 deletions(-)
+ .../bindings/reserved-memory/qcom,rfsa.txt         | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt
- create mode 100644 drivers/soc/qcom/rfsa.c
 
+diff --git a/Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt b/Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt
+new file mode 100644
+index 000000000000..d9bec8eec696
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt
+@@ -0,0 +1,51 @@
++Qualcomm Remote File System Access binding
++
++This binding describes the Qualcomm RFSA, which serves the purpose of
++describing the shared memory region used for remote processors to access block
++device data using the Remote Filesystem protocol.
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: must be:
++		    "qcom,rfsa"
++
++- reg:
++	Usage: required for static allocation
++	Value type: <prop-encoded-array>
++	Definition: must specify base address and size of the memory region,
++		    as described in reserved-memory.txt
++
++- size:
++	Usage: required for dynamic allocation
++	Value type: <prop-encoded-array>
++	Definition: must specify a size of the memory region, as described in
++		    reserved-memory.txt
++
++- qcom,client-id:
++	Usage: required
++	Value type: <u32>
++	Definition: identifier of the client to use this region for buffers.
++
++- qcom,vmid:
++	Usage: optional
++	Value type: <u32>
++	Definition: vmid of the remote processor, to set up memory protection.
++
++= EXAMPLE
++The following example shows the RFSA setup for APQ8016, with the RFSA region
++for the Hexagon DSP (id #1) located at 0x86700000.
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		rmtfs@86700000 {
++			compatible = "qcom,rfsa";
++			reg = <0x0 0x86700000 0x0 0xe0000>;
++			no-map;
++
++			qcom,client-id = <1>;
++		};
++	};
 -- 
 2.12.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
