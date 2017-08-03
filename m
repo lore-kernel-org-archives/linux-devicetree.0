@@ -1,59 +1,67 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 3/4] dt-bindings: can: m_can: Include reference to new
- fixed transceiver binding
-Date: Thu, 3 Aug 2017 12:20:20 +0300
-Message-ID: <53a5346e-9c04-738e-432c-16cdcc4c6e60@cogentembedded.com>
-References: <20170803005150.9286-1-fcooper@ti.com>
- <20170803005150.9286-4-fcooper@ti.com>
+From: Tobias Klauser <tklauser@distanz.ch>
+Subject: Re: [patch v1 1/2] drivers: jtag: Add JTAG core driver
+Date: Thu, 3 Aug 2017 11:28:27 +0200
+Message-ID: <20170803092826.GF3546@distanz.ch>
+References: <1501679918-20486-1-git-send-email-oleksandrs@mellanox.com>
+ <1501679918-20486-2-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170803005150.9286-4-fcooper@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1501679918-20486-2-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, socketcan@hartkopp.net
+To: Oleksandr Shamray <oleksandrs@mellanox.com>
+Cc: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, linux-serial@vger.kernel.org, mec@shout.net, vadimp@maellanox.com, system-sw-low-level@mellanox.com, Jiri Pirko <jiri@mellanox.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8/3/2017 3:51 AM, Franklin S Cooper Jr wrote:
+Nice work!
 
-> Add information regarding fixed transceiver binding. This is especially
-> important for MCAN since the IP allows CAN FD mode to run significantly
-> faster than what most transceivers are capable of.
-> 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
-> ---
->   Documentation/devicetree/bindings/net/can/m_can.txt | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/can/m_can.txt b/Documentation/devicetree/bindings/net/can/m_can.txt
-> index 9e33177..0b62f47 100644
-> --- a/Documentation/devicetree/bindings/net/can/m_can.txt
-> +++ b/Documentation/devicetree/bindings/net/can/m_can.txt
-> @@ -43,6 +43,11 @@ Required properties:
->   			  Please refer to 2.4.1 Message RAM Configuration in
->   			  Bosch M_CAN user manual for details.
->   
-> +Optional properties:
-> +- fixed-transceiver	: Fixed-transceiver subnode describing maximum speed
-
-    Subnode is not a property.
-
-> +			  that can be used for CAN/CAN-FD modes. See
-> +			  Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
-> +			  for details.
->   Example:
->   SoC dtsi:
->   m_can1: can@020e8000 {
-> @@ -64,4 +69,8 @@ Board dts:
->   	pinctrl-names = "default";
->   	pinctrl-0 = <&pinctrl_m_can1>;
->   	status = "enabled";
-> +
-> +	fixed-transceiver@0 {
-
-    Same comments here as in previous patch.
-
+On 2017-08-02 at 15:18:37 +0200, Oleksandr Shamray <oleksandrs@mellanox.com> wrote:
+> --- /dev/null
+> +++ b/drivers/jtag/jtag.c
 [...]
+> +static int jtag_run_test_idle(struct jtag *jtag,
+> +			      struct jtag_run_test_idle *idle)
 
-MBR, Sergei
+Both the function and the struct it takes have the same name, which of
+course is perfectly valid C. However, IMO it would be easier to grep for
+the function/struct individually if they had different names.
+
+> +{
+> +	if (jtag->ops->idle)
+> +		return jtag->ops->idle(jtag, idle);
+> +	else
+> +		return -EOPNOTSUPP;
+> +}
+[...]
+> --- /dev/null
+> +++ b/include/uapi/linux/jtag.h
+> @@ -0,0 +1,133 @@
+[...]
+> +/**
+> + * struct jtag_run_test_idle - forces JTAG sm to
+> + * RUN_TEST/IDLE state *
+
+I guess a newline is needed here to make this a valid kerneldoc comment
+(the trailing '*' indicates that one was actually intended here ;)
+
+Also, 'sm' should probably be spelled out as 'state machine'.
+
+> + * @mode: access mode
+> + * @reset: 0 - run IDEL/PAUSE from current state
+> + *         1 - go trough TEST_LOGIC/RESET state before  IDEL/PAUSE
+
+Typos: s/trough/through/ and s/IDEL/IDLE/
+
+> + * @end: completion flag
+> + * @tck: clock counter
+> + *
+> + * Structure represents interface to JTAG device for jtag idle
+> + * execution.
+> + */
+> +struct jtag_run_test_idle {
+> +	enum jtag_xfer_mode	mode;
+> +	unsigned char		reset;
+> +	enum jtag_endstate	endstate;
+> +	unsigned char		tck;
+> +};
