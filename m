@@ -1,80 +1,66 @@
-From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho cooling device.
-Date: Thu,  3 Aug 2017 11:46:50 +0300
-Message-ID: <20170803084650.22298-1-c_mykolak@mellanox.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [RESEND PATCH v4 1/2] dt-bindings: i2c: Add Spreadtrum I2C
+ controller documentation
+Date: Thu, 3 Aug 2017 11:00:41 +0200
+Message-ID: <20170803090041.GB2574@katana>
+References: <eda1f25512db9c6946b303dd43f518ae2f0f3b26.1500021045.git.baolin.wang@spreadtrum.com>
+ <20170724065146.GA22330@spreadtrum.com>
+ <CAMz4kuLcGDxcNwymHDNTEf6Zs3ci11Q=1idsXcD=DJLe1rz0PQ@mail.gmail.com>
+ <CAMz4kuKhJBoQjrzdy0mO+2WUUw+Hnw9dSWv4VEdR1uPBvHuKYQ@mail.gmail.com>
+ <b67d5908-dbac-4dd4-77f5-68d59f71b7fd@axentia.se>
+ <CAMz4ku+aPYP8j+Y6cu0azmD2TFGZ428rCaPof15kdmEKRVp6EA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mojUlQ0s9EVzWg2t"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMz4ku+aPYP8j+Y6cu0azmD2TFGZ428rCaPof15kdmEKRVp6EA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Peter Rosin <peda@axentia.se>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, andriy.shevchenko@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, wsa+renesas@sang-engineering.com
 List-Id: devicetree@vger.kernel.org
 
-It's add support for cooling device creation to
-aspeed-pwm-tacho.
-Cooling device could be bound to a thermal zone
-for the thermal control.
 
-v1 -> v2:
- - Fix commit message.
-v2 -> v3:
- Pointed out by Rob Herring:
- - Put cooling-levels under fan subnodes.
+--mojUlQ0s9EVzWg2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-index cf44605..367c820 100644
---- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
- 
- - #size-cells : should be 1.
- 
-+- #cooling-cells: should be 2.
-+
- - reg : address and length of the register set for the device.
- 
- - pinctrl-names : a pinctrl state named "default" must be defined.
-@@ -28,12 +30,17 @@ fan subnode format:
- Under fan subnode there can upto 8 child nodes, with each child node
- representing a fan. If there are 8 fans each fan can have one PWM port and
- one/two Fan tach inputs.
-+For PWM port can be configured cooling-levels to create cooling device.
-+Cooling device could be bound to a thermal zone for the thermal control.
- 
- Required properties for each child node:
- - reg : should specify PWM source port.
- 	integer value in the range 0 to 7 with 0 indicating PWM port A and
- 	7 indicating PWM port H.
- 
-+- cooling-levels: PWM duty cycle values in a range from 0 to 255
-+                  which correspond to thermal cooling states.
-+
- - aspeed,fan-tach-ch : should specify the Fan tach input channel.
-                 integer value in the range 0 through 15, with 0 indicating
- 		Fan tach channel 0 and 15 indicating Fan tach channel 15.
-@@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
- pwm_tacho: pwmtachocontroller@1e786000 {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	#cooling-cells = <2>;
- 	reg = <0x1E786000 0x1000>;
- 	compatible = "aspeed,ast2500-pwm-tacho";
- 	clocks = <&pwm_tacho_fixed_clk>;
-@@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
- 
- 	fan@0 {
- 		reg = <0x00>;
-+		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
- 		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
- 	};
- 
--- 
-2.8.4
+> Sorry for noise. I just afraid Wolfram missed this patchset since I
+> did not get any comments from V4.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I use patchwork. Patches don't get lost :)
+
+Anyway, I nearly finished a document I can point people to when they
+wonder what happened about their patches.
+
+I hope this will help because I don't have the bandwidth to reply to
+ping mails individually and explain the situation.
+
+Regards,
+
+   Wolfram
+
+
+--mojUlQ0s9EVzWg2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmC5jkACgkQFA3kzBSg
+KbYcqQ//XBe2LwBtRG6nlzSa572pv3V94hckr63oyR8n0jcAH4+aIZoYugBWHnGp
+FGvK7M0fi02Clq+pKM/H4UJBBFWEP0kw7ujZ/MNCHwcX8ahth6ru+zQAeNgc6bNv
+61j/27Orvm4jKS1m+lACuopZjZUIpN2hOQIRSJ3r3mDnmNrVOYR4vsTjYxXfYiBp
+zip7o93prneeKLAvOwPcRwm+STtCxHweMp3aQqZg5+jFoU5Cn5bq5zfjuvjPwXBH
+kuTSf94b/UY6WI5oUKMQwvpqYx/4JYHu3i6E3f4Fn1ZFxYWeKHrqEthyS7YBCLOt
+3ZLdgShKOVUkgzCimgCgoazqfHkrUFhLprePQqvqmozQGKXOHum11TTQIEhl6XTZ
+JAsuMFTRitt1hOuhkXAfR1ZPZmB/oSKvWRdBwDvqtbQyklQMu+hY+D5s/POlXF3J
+erwNZ9TmOzAM4gOT0gO9uNHfFbAil5IzePIOP/UnDjRoMiWb5sV2PjbD9uc/7RCY
+O9Ax6UhajIwn5gsYLgfbHCLkgK220w1Ni2/zJ9WVzAz43NbIcoUXaqeknUOBFSU9
+NdwKgzsQjk/lJHRKpY4LSTy0e7qj61a2sMRY3IEDHWrrtq+stfqiL+tBburFRIGG
+qwzBmSeoq/hNFZzwdCMlutDlmWSzxBUzOKNhRr1EGryjm0vPR/g=
+=RMW/
+-----END PGP SIGNATURE-----
+
+--mojUlQ0s9EVzWg2t--
