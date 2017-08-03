@@ -1,102 +1,330 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH] dt-bindings: mtd: add new compatible strings for mtk nor
- controller
-Date: Thu, 3 Aug 2017 12:09:44 +0200
-Message-ID: <0796f86e-044b-5891-e56e-c96242611608@gmail.com>
-References: <1500948617-19627-1-git-send-email-guochun.mao@mediatek.com>
- <1500948617-19627-2-git-send-email-guochun.mao@mediatek.com>
- <03016ea3-51ad-0b2d-e824-0a20913bd7c1@gmail.com>
- <20170802103637.16cd6548@bbrezillon>
- <535cc2d5-7bc9-2cb7-42cf-9d7058e64226@wedev4u.fr>
- <1501726602.4381.23.camel@mhfsdcap03>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 4/4] dt-bindings: phy-mt65xx-usb: supports PCIe, SATA
+ and rename file
+Date: Thu, 3 Aug 2017 18:20:07 +0800
+Message-ID: <1501755607.25536.109.camel@mhfsdcap03>
+References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
+         <1501754483-10392-4-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501726602.4381.23.camel@mhfsdcap03>
-Content-Language: en-US
+In-Reply-To: <1501754483-10392-4-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guochun Mao <guochun.mao@mediatek.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Ryder Lee <ryder.lee@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+hi,
 
+I made a mistake, please ignore the patches with Change-Id, very sorry
 
-On 08/03/2017 04:16 AM, Guochun Mao wrote:
-> Hi Cyrille,
+On Thu, 2017-08-03 at 18:01 +0800, Chunfeng Yun wrote:
+> add support for PCIe and SATA, also add some new compatibles.
 > 
-> On Wed, 2017-08-02 at 17:31 +0200, Cyrille Pitchen wrote:
->> Hi Guochun,
->>
->> Le 02/08/2017 à 10:36, Boris Brezillon a écrit :
->>> Hi Matthias,
->>>
->>> On Tue, 1 Aug 2017 14:33:22 +0200
->>> Matthias Brugger <matthias.bgg@gmail.com> wrote:
->>>
->>>> On 07/25/2017 04:10 AM, Guochun Mao wrote:
->>>>> Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
->>>>> for nor flash node's compatible strings.
->>>>>
->>>>> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>>> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
->>>>> ---
->>>>>    .../devicetree/bindings/mtd/mtk-quadspi.txt        |    2 ++
->>>>>    1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
->>>>> index 5ded66a..9845ff4 100644
->>>>> --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
->>>>> +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
->>>>> @@ -3,6 +3,8 @@
->>>>>    Required properties:
->>>>>    - compatible: 	  The possible values are:
->>>>>    		  "mediatek,mt2701-nor"
->>>>> +		  "mediatek,mt2712-nor"
->>>>> +		  "mediatek,mt7622-nor"
->>>>>    		  "mediatek,mt7623-nor"
->>>>>    		  "mediatek,mt8173-nor"
->>>>>    		  For mt8173, compatible should be "mediatek,mt8173-nor".
->>>>>
->>
->> There should be another patch to update the mtk_nor_of_ids[] array in
->> the mtk-quadspi.c driver, shouldn't it?
->>
->> Currently, I only see the "mediatek,mt8173-nor" compatible string at the
->> driver side. The driver and its documentation should be aligned and both
->> patches should be applied at the same time.
+> due to phy-mt65xx-usb.txt holds the bindings for all mediatek SoCs
+> with T-PHY controller, change the name to phy-mtk-tphy.txt to
+> reflect that.
 > 
->> Best regards,
->>
->> Cyrille
+> Change-Id: I2d9200d4c8768dc301a4c116fe0e9b8179d5911c
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+>  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |  137 -------------------
+>  .../devicetree/bindings/phy/phy-mtk-tphy.txt       |  144 ++++++++++++++++++++
+>  2 files changed, 144 insertions(+), 137 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
 > 
-> 
->  From my designer's info, these IPs' nor controller could use same
-> driver, and I had verified it. I think there's no need to update
-> mtk_nor_of_ids[], unless we find difference between these IPs(exactly
-> compared with mt8173).
-> How do you think?
->
-
-
-Right, mt8173-nor is the fallback binding which will be used by the driver. As 
-the documentation states, the compatible string should be something like:
-"mediatek,mt7622-nor", "mediatek,mt8173-nor"
-
-So the mt7622-nor binding is not matched in the driver, as the driver is the 
-same on all SoCs. Nonetheless if we realize in the future that mt7622 IP has 
-some special feature/bug, we can use the binding to implement that in the driver.
-
-AFAIK this is the standard way for bindings. Cyrille, is this ok for you, or do 
-want all bindings to be reflected in the driver even though they don't change 
-any functionality?
-
-Regards,
-Matthias
-
-> And, we will add dts patches for new SOCs, are these patches should
-> applied with this documentation?
-> 
-> Best regards,
-> Guochun
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> deleted file mode 100644
+> index 0acc5a9..0000000
+> --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> +++ /dev/null
+> @@ -1,137 +0,0 @@
+> -mt65xx USB3.0 PHY binding
+> ---------------------------
+> -
+> -This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
+> -
+> -Required properties (controller (parent) node):
+> - - compatible	: should be one of
+> -		  "mediatek,mt2701-u3phy"
+> -		  "mediatek,mt2712-u3phy"
+> -		  "mediatek,mt8173-u3phy"
+> - - clocks	: (deprecated, use port's clocks instead) a list of phandle +
+> -		  clock-specifier pairs, one for each entry in clock-names
+> - - clock-names	: (deprecated, use port's one instead) must contain
+> -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
+> -
+> -Required nodes	: a sub-node is required for each port the controller
+> -		  provides. Address range information including the usual
+> -		  'reg' property is used inside these nodes to describe
+> -		  the controller's topology.
+> -
+> -Optional properties (controller (parent) node):
+> - - reg		: offset and length of register shared by multiple ports,
+> -		  exclude port's private register. It is needed on mt2701
+> -		  and mt8173, but not on mt2712.
+> -
+> -Required properties (port (child) node):
+> -- reg		: address and length of the register set for the port.
+> -- clocks	: a list of phandle + clock-specifier pairs, one for each
+> -		  entry in clock-names
+> -- clock-names	: must contain
+> -		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
+> -			reference clock for SuperSpeed analog phy, sometimes is
+> -			24M, 25M or 27M, depended on platform.
+> -- #phy-cells	: should be 1 (See second example)
+> -		  cell after port phandle is phy type from:
+> -			- PHY_TYPE_USB2
+> -			- PHY_TYPE_USB3
+> -
+> -Example:
+> -
+> -u3phy: usb-phy@11290000 {
+> -	compatible = "mediatek,mt8173-u3phy";
+> -	reg = <0 0x11290000 0 0x800>;
+> -	#address-cells = <2>;
+> -	#size-cells = <2>;
+> -	ranges;
+> -	status = "okay";
+> -
+> -	u2port0: usb-phy@11290800 {
+> -		reg = <0 0x11290800 0 0x100>;
+> -		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> -		clock-names = "ref";
+> -		#phy-cells = <1>;
+> -		status = "okay";
+> -	};
+> -
+> -	u3port0: usb-phy@11290900 {
+> -		reg = <0 0x11290800 0 0x700>;
+> -		clocks = <&clk26m>;
+> -		clock-names = "ref";
+> -		#phy-cells = <1>;
+> -		status = "okay";
+> -	};
+> -
+> -	u2port1: usb-phy@11291000 {
+> -		reg = <0 0x11291000 0 0x100>;
+> -		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> -		clock-names = "ref";
+> -		#phy-cells = <1>;
+> -		status = "okay";
+> -	};
+> -};
+> -
+> -Specifying phy control of devices
+> ----------------------------------
+> -
+> -Device nodes should specify the configuration required in their "phys"
+> -property, containing a phandle to the phy port node and a device type;
+> -phy-names for each port are optional.
+> -
+> -Example:
+> -
+> -#include <dt-bindings/phy/phy.h>
+> -
+> -usb30: usb@11270000 {
+> -	...
+> -	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+> -	phy-names = "usb2-0", "usb3-0";
+> -	...
+> -};
+> -
+> -
+> -Layout differences of banks between mt8173/mt2701 and mt2712
+> --------------------------------------------------------------
+> -mt8173 and mt2701:
+> -port        offset    bank
+> -shared      0x0000    SPLLC
+> -            0x0100    FMREG
+> -u2 port0    0x0800    U2PHY_COM
+> -u3 port0    0x0900    U3PHYD
+> -            0x0a00    U3PHYD_BANK2
+> -            0x0b00    U3PHYA
+> -            0x0c00    U3PHYA_DA
+> -u2 port1    0x1000    U2PHY_COM
+> -u3 port1    0x1100    U3PHYD
+> -            0x1200    U3PHYD_BANK2
+> -            0x1300    U3PHYA
+> -            0x1400    U3PHYA_DA
+> -u2 port2    0x1800    U2PHY_COM
+> -            ...
+> -
+> -mt2712:
+> -port        offset    bank
+> -u2 port0    0x0000    MISC
+> -            0x0100    FMREG
+> -            0x0300    U2PHY_COM
+> -u3 port0    0x0700    SPLLC
+> -            0x0800    CHIP
+> -            0x0900    U3PHYD
+> -            0x0a00    U3PHYD_BANK2
+> -            0x0b00    U3PHYA
+> -            0x0c00    U3PHYA_DA
+> -u2 port1    0x1000    MISC
+> -            0x1100    FMREG
+> -            0x1300    U2PHY_COM
+> -u3 port1    0x1700    SPLLC
+> -            0x1800    CHIP
+> -            0x1900    U3PHYD
+> -            0x1a00    U3PHYD_BANK2
+> -            0x1b00    U3PHYA
+> -            0x1c00    U3PHYA_DA
+> -u2 port2    0x2000    MISC
+> -            ...
+> -
+> -    SPLLC shared by u3 ports and FMREG shared by u2 ports on
+> -mt8173/mt2701 are put back into each port; a new bank MISC for
+> -u2 ports and CHIP for u3 ports are added on mt2712.
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> new file mode 100644
+> index 0000000..faf1808
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-mtk-tphy.txt
+> @@ -0,0 +1,144 @@
+> +MediaTek T-PHY binding
+> +--------------------------
+> +
+> +T-phy controller supports physical layer functionality for a number of
+> +controllers on MediaTek SoCs, such as, USB2.0, USB3.0, PCIe, and SATA.
+> +
+> +Required properties (controller (parent) node):
+> + - compatible	: should be one of
+> +		  "mediatek,generic-tphy-v1"
+> +		  "mediatek,generic-tphy-v2"
+> +		  "mediatek,mt2701-u3phy" (deprecated)
+> +		  "mediatek,mt2712-u3phy" (deprecated)
+> +		  "mediatek,mt8173-u3phy";
+> +		  make use of "mediatek,generic-tphy-v1" on mt2701 instead and
+> +		  "mediatek,generic-tphy-v2" on mt2712 instead.
+> + - clocks	: (deprecated, use port's clocks instead) a list of phandle +
+> +		  clock-specifier pairs, one for each entry in clock-names
+> + - clock-names	: (deprecated, use port's one instead) must contain
+> +		  "u3phya_ref": for reference clock of usb3.0 analog phy.
+> +
+> +Required nodes	: a sub-node is required for each port the controller
+> +		  provides. Address range information including the usual
+> +		  'reg' property is used inside these nodes to describe
+> +		  the controller's topology.
+> +
+> +Optional properties (controller (parent) node):
+> + - reg		: offset and length of register shared by multiple ports,
+> +		  exclude port's private register. It is needed on mt2701
+> +		  and mt8173, but not on mt2712.
+> +
+> +Required properties (port (child) node):
+> +- reg		: address and length of the register set for the port.
+> +- clocks	: a list of phandle + clock-specifier pairs, one for each
+> +		  entry in clock-names
+> +- clock-names	: must contain
+> +		  "ref": 48M reference clock for HighSpeed analog phy; and 26M
+> +			reference clock for SuperSpeed analog phy, sometimes is
+> +			24M, 25M or 27M, depended on platform.
+> +- #phy-cells	: should be 1 (See second example)
+> +		  cell after port phandle is phy type from:
+> +			- PHY_TYPE_USB2
+> +			- PHY_TYPE_USB3
+> +			- PHY_TYPE_PCIE
+> +			- PHY_TYPE_SATA
+> +
+> +Example:
+> +
+> +u3phy: usb-phy@11290000 {
+> +	compatible = "mediatek,mt8173-u3phy";
+> +	reg = <0 0x11290000 0 0x800>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	ranges;
+> +	status = "okay";
+> +
+> +	u2port0: usb-phy@11290800 {
+> +		reg = <0 0x11290800 0 0x100>;
+> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> +		clock-names = "ref";
+> +		#phy-cells = <1>;
+> +		status = "okay";
+> +	};
+> +
+> +	u3port0: usb-phy@11290900 {
+> +		reg = <0 0x11290800 0 0x700>;
+> +		clocks = <&clk26m>;
+> +		clock-names = "ref";
+> +		#phy-cells = <1>;
+> +		status = "okay";
+> +	};
+> +
+> +	u2port1: usb-phy@11291000 {
+> +		reg = <0 0x11291000 0 0x100>;
+> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> +		clock-names = "ref";
+> +		#phy-cells = <1>;
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +Specifying phy control of devices
+> +---------------------------------
+> +
+> +Device nodes should specify the configuration required in their "phys"
+> +property, containing a phandle to the phy port node and a device type;
+> +phy-names for each port are optional.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +usb30: usb@11270000 {
+> +	...
+> +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+> +	phy-names = "usb2-0", "usb3-0";
+> +	...
+> +};
+> +
+> +
+> +Layout differences of banks between mt8173/mt2701 and mt2712
+> +-------------------------------------------------------------
+> +mt8173 and mt2701:
+> +port        offset    bank
+> +shared      0x0000    SPLLC
+> +            0x0100    FMREG
+> +u2 port0    0x0800    U2PHY_COM
+> +u3 port0    0x0900    U3PHYD
+> +            0x0a00    U3PHYD_BANK2
+> +            0x0b00    U3PHYA
+> +            0x0c00    U3PHYA_DA
+> +u2 port1    0x1000    U2PHY_COM
+> +u3 port1    0x1100    U3PHYD
+> +            0x1200    U3PHYD_BANK2
+> +            0x1300    U3PHYA
+> +            0x1400    U3PHYA_DA
+> +u2 port2    0x1800    U2PHY_COM
+> +            ...
+> +
+> +mt2712:
+> +port        offset    bank
+> +u2 port0    0x0000    MISC
+> +            0x0100    FMREG
+> +            0x0300    U2PHY_COM
+> +u3 port0    0x0700    SPLLC
+> +            0x0800    CHIP
+> +            0x0900    U3PHYD
+> +            0x0a00    U3PHYD_BANK2
+> +            0x0b00    U3PHYA
+> +            0x0c00    U3PHYA_DA
+> +u2 port1    0x1000    MISC
+> +            0x1100    FMREG
+> +            0x1300    U2PHY_COM
+> +u3 port1    0x1700    SPLLC
+> +            0x1800    CHIP
+> +            0x1900    U3PHYD
+> +            0x1a00    U3PHYD_BANK2
+> +            0x1b00    U3PHYA
+> +            0x1c00    U3PHYA_DA
+> +u2 port2    0x2000    MISC
+> +            ...
+> +
+> +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
+> +mt8173/mt2701 are put back into each port; a new bank MISC for
+> +u2 ports and CHIP for u3 ports are added on mt2712.
