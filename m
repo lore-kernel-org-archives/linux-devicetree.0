@@ -1,57 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
-Date: Thu, 3 Aug 2017 12:50:13 -0500
-Message-ID: <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
-References: <1500510154-6661-1-git-send-email-anthony.kim@hideep.com>
- <1500965607-2446-1-git-send-email-anthony.kim@hideep.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v2 01/25] mtd: nand: qcom: fix config error for BCH
+Date: Thu, 03 Aug 2017 23:22:37 +0530
+Message-ID: <a48aafe1d5d0623f2cc7cd5c29fc1410@codeaurora.org>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+ <1500464893-11352-2-git-send-email-absahu@codeaurora.org>
+ <20170803175602.3e0a4c18@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1500965607-2446-1-git-send-email-anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anthony Kim <ktyrun-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, rydberg-FFUHeuDi6mxAfugRpC6u6w@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20170803175602.3e0a4c18@bbrezillon>
+Sender: stable-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, architt@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 25, 2017 at 03:53:27PM +0900, Anthony Kim wrote:
-> The HiDeep touchscreen device is a capacitive multi-touch controller
-> mainly for multi-touch supported devices use. It use I2C interface for
-> communication to IC and provide axis X, Y, Z locations for ten finger
-> touch through input event interface to userspace.
+On 2017-08-03 21:26, Boris Brezillon wrote:
+> On Wed, 19 Jul 2017 17:17:49 +0530
+> Abhishek Sahu <absahu@codeaurora.org> wrote:
 > 
-> It support the Crimson and the Lime two type IC. They are different
-> the number of channel supported and FW size. But the working protocol
-> is same.
+>> The configuration for BCH is not correct in the current driver.
+>> The ECC_CFG_ECC_DISABLE bit defines whether to enable or disable the
+>> BCH ECC in which
+>> 
+>> 	0x1 : BCH_DISABLED
+>> 	0x0 : BCH_ENABLED
+>> 
+>> But currently host->bch_enabled is being assined to BCH_DISABLED.
+>> 
+>> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>> ---
+>>  drivers/mtd/nand/qcom_nandc.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> 
+>> diff --git a/drivers/mtd/nand/qcom_nandc.c 
+>> b/drivers/mtd/nand/qcom_nandc.c
+>> index 57d483a..bc0408c 100644
+>> --- a/drivers/mtd/nand/qcom_nandc.c
+>> +++ b/drivers/mtd/nand/qcom_nandc.c
+>> @@ -1,5 +1,5 @@
+>>  /*
+>> - * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+>> + * Copyright (c) 2016-2017, The Linux Foundation. All rights 
+>> reserved.
 > 
-> Signed-off-by: Anthony Kim <anthony.kim-7TZDMcjUQMzQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/input/touchscreen/hideep.txt          |  35 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+> Hm, this copyright update is not really related to the changes you're
+> describing in the commit message. I'll drop this line from the commit
+> (no need to resend it) and ask you to send a separate patch updating 
+> the
+> copyright. Is that ok?
+> 
 
-For the binding,
+  The idea was to change the copyright year since we are making
+  the changes in this file. If it requires separate patch, then I
+  will do the same.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+  Also I need to change 'assined' -> assigned in commit text. I can
+  update the patch and fix this. I am planning to send the v3 patches
+  tomorrow which incorporates all the review comments.
 
->  drivers/input/touchscreen/Kconfig                  |  11 +
->  drivers/input/touchscreen/Makefile                 |   2 +
->  drivers/input/touchscreen/hideep.h                 | 318 +++++++
->  drivers/input/touchscreen/hideep_core.c            | 916 +++++++++++++++++++++
->  drivers/input/touchscreen/hideep_dbg.c             | 405 +++++++++
->  drivers/input/touchscreen/hideep_dbg.h             |  24 +
->  drivers/input/touchscreen/hideep_isp.c             | 592 +++++++++++++
->  drivers/input/touchscreen/hideep_isp.h             |  96 +++
->  drivers/input/touchscreen/hideep_sysfs.c           | 245 ++++++
->  11 files changed, 2645 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->  create mode 100644 drivers/input/touchscreen/hideep.h
->  create mode 100644 drivers/input/touchscreen/hideep_core.c
->  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
->  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
->  create mode 100644 drivers/input/touchscreen/hideep_isp.c
->  create mode 100644 drivers/input/touchscreen/hideep_isp.h
->  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   *
+>>   * This software is licensed under the terms of the GNU General 
+>> Public
+>>   * License version 2, as published by the Free Software Foundation, 
+>> and
+>> @@ -1893,7 +1893,7 @@ static int qcom_nand_host_setup(struct 
+>> qcom_nand_host *host)
+>>  				| wide_bus << WIDE_FLASH
+>>  				| 1 << DEV0_CFG1_ECC_DISABLE;
+>> 
+>> -	host->ecc_bch_cfg = host->bch_enabled << ECC_CFG_ECC_DISABLE
+>> +	host->ecc_bch_cfg = !host->bch_enabled << ECC_CFG_ECC_DISABLE
+>>  				| 0 << ECC_SW_RESET
+>>  				| host->cw_data << ECC_NUM_DATA_BYTES
+>>  				| 1 << ECC_FORCE_CLK_OPEN
+
+-- 
+Abhishek Sahu
