@@ -1,52 +1,60 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v2 3/5] dt-bindings: PCI: rename and cleanup MediaTek
- binding text
-Date: Thu, 3 Aug 2017 17:17:28 -0500
-Message-ID: <20170803221728.GM20308@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1501122135.git.honghui.zhang@mediatek.com>
- <309532ded49d3452a609116d1c421d820bea74e4.1501122135.git.honghui.zhang@mediatek.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] tty/serial/8250: add DT bindings description for
+ mctrl_gpio helpers
+Date: Thu, 3 Aug 2017 17:26:04 -0500
+Message-ID: <20170803222604.ec5o756d5hjx2l22@rob-hp-laptop>
+References: <1501161456-13367-1-git-send-email-yegorslists@googlemail.com>
+ <1501161456-13367-4-git-send-email-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <309532ded49d3452a609116d1c421d820bea74e4.1501122135.git.honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
+In-Reply-To: <1501161456-13367-4-git-send-email-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
+Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 10:58:37AM +0800, honghui.zhang@mediatek.com wrote:
-> From: Ryder Lee <ryder.lee@mediatek.com>
+On Thu, Jul 27, 2017 at 03:17:36PM +0200, yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org wrote:
+> From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> In order to accommodate other SoC generations, this patch updates filename
-> to make it more generic, regroups specific properties by SoCs, and removes
-> redundant descriptions.
+> Describe {rts,cts,dtr,dsr,rng,dcd}-gpios usage.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  ...{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} | 29 +++++++++++-----------
->  1 file changed, 14 insertions(+), 15 deletions(-)
->  rename Documentation/devicetree/bindings/pci/{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} (91%)
+>  Documentation/devicetree/bindings/serial/8250.txt | 26 +++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> similarity index 91%
-> rename from Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-> rename to Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> index fe80dda..a968f25 100644
-> --- a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-> @@ -1,18 +1,13 @@
-> -MediaTek Gen2 PCIe controller which is available on MT7623 series SoCs
-> -
-> -PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
-> -ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
-> +MediaTek Gen2 PCIe controller
->  
->  Required properties:
-> -- compatible: Should contain "mediatek,mt7623-pcie".
-> +- compatible: Should contain one of the following string:
+> diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
+> index 419ff6c..1c09db2 100644
+> --- a/Documentation/devicetree/bindings/serial/8250.txt
+> +++ b/Documentation/devicetree/bindings/serial/8250.txt
+> @@ -48,6 +48,16 @@ Optional properties:
+>  - tx-threshold: Specify the TX FIFO low water indication for parts with
+>    programmable TX FIFO thresholds.
+>  - resets : phandle + reset specifier pairs
+> +- rts-gpios:
+> +- cts-gpios:
+> +- dtr-gpios:
+> +- dsr-gpios:
+> +- rng-gpios:
+> +- dcd-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
+> +  line respectively. It will use specified GPIO instead of the peripheral
+> +  function pin for the UART feature. If unsure, don't specify this property.
 
-s/string/strings/
+These are already described in serial.txt.
 
-> +	"mediatek,mt2701-pcie"
-> +	"mediatek,mt7623-pcie"
+> +  If "wakeup-source" property is specified for the device this GPIO
+> +  initialization will be aborted.
+
+Why? Many GPIOs can function as wake-up sources. You would need get the 
+IRQ for the GPIO. Also, some UARTs wake-up from the RX line. Not sure 
+about any 8250 flavors, but is probably implementation specific what is 
+the trigger for wake-up.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
