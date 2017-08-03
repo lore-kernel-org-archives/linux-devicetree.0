@@ -1,86 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: can: fixed-transceiver: Add new CAN
- fixed transceiver bindings
-Date: Thu, 3 Aug 2017 15:22:55 +0300
-Message-ID: <86d78a36-04c2-7036-636c-7326a4c1c6b0@cogentembedded.com>
-References: <20170803005150.9286-1-fcooper@ti.com>
- <20170803005150.9286-3-fcooper@ti.com>
- <f92513b6-6b2b-e08d-72e2-dedd7e0190f4@cogentembedded.com>
- <3848fab8-ebcf-5b29-7e4e-eb1a2b03803d@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3848fab8-ebcf-5b29-7e4e-eb1a2b03803d@ti.com>
-Content-Language: en-MW
-Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, socketcan@hartkopp.net
+From: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v8 05/12] clk: Kconfig: Name RK805 in Kconfig for COMMON_CLK_RK808
+Date: Thu,  3 Aug 2017 20:24:16 +0800
+Message-ID: <1501763056-20338-1-git-send-email-chenjh@rock-chips.com>
+References: <1501762841-20262-1-git-send-email-chenjh@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501762841-20262-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2017 12:48 PM, Franklin S Cooper Jr wrote:
+From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
->>> Add documentation to describe usage of the new fixed transceiver binding.
->>> This new binding is applicable for any CAN device therefore it exists as
->>> its own document.
->>>
->>> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
->>> ---
->>>    .../bindings/net/can/fixed-transceiver.txt         | 24
->>> ++++++++++++++++++++++
->>>    1 file changed, 24 insertions(+)
->>>    create mode 100644
->>> Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
->>> b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
->>> new file mode 100644
->>> index 0000000..2f58838b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/can/fixed-transceiver.txt
->>> @@ -0,0 +1,24 @@
->>> +Fixed transceiver Device Tree binding
->>> +------------------------------
->>> +
->>> +CAN transceiver typically limits the max speed in standard CAN and
->>> CAN FD
->>> +modes. Typically these limitations are static and the transceivers
->>> themselves
->>> +provide no way to detect this limitation at runtime. For this situation,
->>> +the "fixed-transceiver" node can be used.
->>> +
->>> +Required Properties:
->>> + max-bitrate:    a positive non 0 value that determines the max
->>> +        speed that CAN/CAN-FD can run. Any other value
->>> +        will be ignored.
->>> +
->>> +Examples:
->>> +
->>> +Based on Texas Instrument's TCAN1042HGV CAN Transceiver
->>> +
->>> +m_can0 {
->>> +    ....
->>> +    fixed-transceiver@0 {
->>
->>     The <unit-address> (after @) must only be specified if there's "reg"
-> 
-> Sorry. Fixed this in my v2 and some how it came back. Will fix.
-> 
->> prop in the device node. Also, please name the node "can-transceiver@"
->> to be more in line with the DT spec. which requires generic node names.
-> 
-> Its possible for future can transceivers drivers to be created. So I
+The RK808 and RK805 PMICs are using a similar register map.
+We can reuse the clk driver for the RK805 PMIC. So let's add
+the RK805 in the Kconfig description.
 
-    So what? Ah, you are using the node name to match in the CAN drivers...
+Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ drivers/clk/Kconfig | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> thought including fixed was important to indicate that this is a "dumb"
-> transceiver similar to "fixed-link".
+diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+index 9356ab4..7ca8f02 100644
+--- a/drivers/clk/Kconfig
++++ b/drivers/clk/Kconfig
+@@ -39,10 +39,10 @@ config COMMON_CLK_MAX77686
+ 	  clock.
+ 
+ config COMMON_CLK_RK808
+-	tristate "Clock driver for RK808/RK818"
++	tristate "Clock driver for RK805/RK808/RK818"
+ 	depends on MFD_RK808
+ 	---help---
+-	  This driver supports RK808 and RK818 crystal oscillator clock. These
++	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
+ 	  multi-function devices have two fixed-rate oscillators,
+ 	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
+ 	  by control register.
+-- 
+1.9.1
 
-    I'm not sure the "fixed-link" MAC subnode assumed any transceiver at all...
 
-> So would "fixed-can-transceiver" be
-> ok or do you want to go with can-transceiver?
-
-    I'm somewhat perplexed at this point...
-
-MBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
