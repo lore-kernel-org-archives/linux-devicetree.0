@@ -1,147 +1,88 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: ls2088a: add cpu idle support
-Date: Thu, 3 Aug 2017 09:40:08 +0800
-Message-ID: <20170803014007.GC31819@dragon>
-References: <1501053893-20897-1-git-send-email-andy.tang@nxp.com>
- <1501053893-20897-2-git-send-email-andy.tang@nxp.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] dt-bindings: phy-rockchip-inno-usb2: add otg mux
+ irq quirk
+Date: Thu, 3 Aug 2017 09:47:37 +0800
+Message-ID: <0cd69042-5ff5-900a-fe6e-c162452b71bf@rock-chips.com>
+References: <1501660390-5956-1-git-send-email-frank.wang@rock-chips.com>
+ <1501660390-5956-5-git-send-email-frank.wang@rock-chips.com>
+ <2188240.QH672TG27n@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501053893-20897-2-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <2188240.QH672TG27n@diego>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andy.tang-3arQi8VN3Tc@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 26, 2017 at 03:24:53PM +0800, andy.tang-3arQi8VN3Tc@public.gmane.org wrote:
-> From: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
-> 
-> ls2088a supports another cpu idle state which is pw20 which saves
-> more power when cpu is idle.
-> It was implemented through psci firmware.
-> 
-> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+Hi Heiko,
 
-Can you explain a bit in the commit log why psci node is being added in
-fsl-ls208xa.dtsi while you are only adding idle state for ls2088a?  Does
-that mean ls2088a and ls2080a gets different idle implementation?
+On 2017/8/2 19:25, Heiko Stübner wrote:
+> Hi Frank,
+>
+> Am Mittwoch, 2. August 2017, 15:53:09 CEST schrieb Frank Wang:
+>> Add rockchip,otg_mux_irq_quirk property to support the otg-id/
+>> otg-bvalid/linestate irqs that are multiplexed to one irq in
+>> otg-port on some special Rockchip SoCs (e.g RV1108).
+>>
+>> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git
+>> a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt index
+>> ddf868a..d49572b 100644
+>> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+>> @@ -22,6 +22,8 @@ Optional properties:
+>>   		 register files".
+>>    - rockchip,companion_grf_quirk : when set driver will request
+>>   		 "rockchip,usbgrf" phandle as one companion-grf.
+>> + - rockchip,otg_mux_irq_quirk: set if otg-id/otg-bvalid/linestate irqs
+>> +		 are multiplexed to one irq in otg-port on some SoCs.
+>>
+>>   Required nodes : a sub-node is required for each port the phy provides.
+>>   		 The sub-node name is used to identify host or otg port,
+>> @@ -36,6 +38,9 @@ Required properties (port (child) node):
+>>   	* "otg-id" : for the otg id interrupt.
+>>   	* "otg-bvalid" : for the otg vbus interrupt.
+>>   	* "linestate" : for the host/otg linestate interrupt.
+>> +	* "otg-mux" : otg-port interrupt, which multiplex otg-id/otg-bvalid/
+>> +		linestate irqs to one irq. Should specify if
+>> +		rockchip,otg_mux_irq_quirk property is set.
+> I'd think that should be auto-detectable in the driver without the quirk
+> property above?
+>
+> I.e. check for the otg-mux interrupt first on probe and if can be found, you
+> know that this is the case, otherwise look for the regular interrupts.
+>
+>
+> Also I would write that down a bit differently, so that it doesn't confuse
+> people. Something similar to:
+>
+>   - interrupt-names : a list which should
+> +    Regular case:
+> 	* "otg-id" : for the otg id interrupt.
+> 	* "otg-bvalid" : for the otg vbus interrupt.
+> 	* "linestate" : for the host/otg linestate interrupt.
+> +    Some socs use one interrupt with the obove muxed together, so for these
+> +	* "otg-mux" : otg-port interrupt, which multiplex otg-id/otg-bvalid/
+> +		linestate irqs to one irq.
+>
+>
+> Heiko
+>
 
-Shawn
+Thanks for your comments, I will fix it in next version.
 
-> ---
->  arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi | 17 +++++++++++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi |  5 +++++
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> index 5c695c6..6aa319d 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-> @@ -53,6 +53,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x0>;
->  		clocks = <&clockgen 1 0>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster0_l2>;
->  		#cooling-cells = <2>;
->  	};
-> @@ -62,6 +63,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x1>;
->  		clocks = <&clockgen 1 0>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster0_l2>;
->  	};
->  
-> @@ -70,6 +72,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x100>;
->  		clocks = <&clockgen 1 1>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster1_l2>;
->  		#cooling-cells = <2>;
->  	};
-> @@ -79,6 +82,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x101>;
->  		clocks = <&clockgen 1 1>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster1_l2>;
->  	};
->  
-> @@ -88,6 +92,7 @@
->  		reg = <0x200>;
->  		clocks = <&clockgen 1 2>;
->  		next-level-cache = <&cluster2_l2>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		#cooling-cells = <2>;
->  	};
->  
-> @@ -96,6 +101,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x201>;
->  		clocks = <&clockgen 1 2>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster2_l2>;
->  	};
->  
-> @@ -104,6 +110,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x300>;
->  		clocks = <&clockgen 1 3>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster3_l2>;
->  		#cooling-cells = <2>;
->  	};
-> @@ -113,6 +120,7 @@
->  		compatible = "arm,cortex-a72";
->  		reg = <0x301>;
->  		clocks = <&clockgen 1 3>;
-> +		cpu-idle-states = <&CPU_PW20>;
->  		next-level-cache = <&cluster3_l2>;
->  	};
->  
-> @@ -131,6 +139,15 @@
->  	cluster3_l2: l2-cache3 {
->  		compatible = "cache";
->  	};
-> +
-> +	CPU_PW20: cpu-pw20 {
-> +		compatible = "arm,idle-state";
-> +		idle-state-name = "PW20";
-> +		arm,psci-suspend-param = <0x00010000>;
-> +		entry-latency-us = <2000>;
-> +		exit-latency-us = <2000>;
-> +		min-residency-us = <6000>;
-> +	};
->  };
->  
->  &pcie1 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> index 94cdd30..205b7f7 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-> @@ -118,6 +118,11 @@
->  		interrupts = <1 7 0x8>; /* PMU PPI, Level low type */
->  	};
->  
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
->  	soc {
->  		compatible = "simple-bus";
->  		#address-cells = <2>;
-> -- 
-> 2.1.0.27.g96db324
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+BR.
+Frank
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
