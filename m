@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/8] dt-bindings: phy: sun4i-usb-phy: Add compatible string for A83T
-Date: Thu,  3 Aug 2017 16:14:05 +0800
-Message-ID: <20170803081411.22389-3-wens@csie.org>
+Subject: [PATCH 5/8] ARM: sun8i: a83t: Add USB PHY and host device nodes
+Date: Thu,  3 Aug 2017 16:14:08 +0800
+Message-ID: <20170803081411.22389-6-wens@csie.org>
 References: <20170803081411.22389-1-wens@csie.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170803081411.22389-1-wens-jdAy2FN1RRM@public.gmane.org>
@@ -10,52 +10,89 @@ To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard 
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The A83T has 3 USB PHYs, 1 for OTG, 1 for standard USB, 1 for USB HSIC.
-
-Add a compatible string for it, and describe the needed properties.
+The A83T has 3 USB PHYs, 1 for USB OTG, 1 for standard USB 2.0, 1 for
+USB HSIC. EHCI0/OHCI0 are the standard USB host pair, while EHCI1 is
+the host controller for HSIC. OTG is not added yet.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 62 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index 893dd01dfe64..cbc7847dbf6c 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -9,6 +9,7 @@ Required properties:
-   * allwinner,sun7i-a20-usb-phy
-   * allwinner,sun8i-a23-usb-phy
-   * allwinner,sun8i-a33-usb-phy
-+  * allwinner,sun8i-a83t-usb-phy
-   * allwinner,sun8i-h3-usb-phy
-   * allwinner,sun8i-v3s-usb-phy
-   * allwinner,sun50i-a64-usb-phy
-@@ -17,7 +18,7 @@ Required properties:
-   * "phy_ctrl"
-   * "pmu0" for H3, V3s and A64
-   * "pmu1"
--  * "pmu2" for sun4i, sun6i, sun7i or sun8i-h3
-+  * "pmu2" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
-   * "pmu3" for sun8i-h3
- - #phy-cells : from the generic phy bindings, must be 1
- - clocks : phandle + clock specifier for the phy clocks
-@@ -25,12 +26,13 @@ Required properties:
-   * "usb_phy" for sun4i, sun5i or sun7i
-   * "usb0_phy", "usb1_phy" and "usb2_phy" for sun6i
-   * "usb0_phy", "usb1_phy" for sun8i
-+  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb2_hsic_12M" for sun8i-a83t
-   * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
- - resets : a list of phandle + reset specifier pairs
- - reset-names :
-   * "usb0_reset"
-   * "usb1_reset"
--  * "usb2_reset" for sun4i, sun6i, sun7i or sun8i-h3
-+  * "usb2_reset" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
-   * "usb3_reset" for sun8i-h3
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 61304761e8f6..6039f1ea6810 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -242,6 +242,68 @@
+ 			#size-cells = <0>;
+ 		};
  
- Optional properties:
++		usbphy: phy@1c19400 {
++			compatible = "allwinner,sun8i-a83t-usb-phy";
++			reg = <0x01c19400 0x10>,
++			      <0x01c1a800 0x14>,
++			      <0x01c1b800 0x14>;
++			reg-names = "phy_ctrl",
++				    "pmu1",
++				    "pmu2";
++			clocks = <&ccu CLK_USB_PHY0>,
++				 <&ccu CLK_USB_PHY1>,
++				 <&ccu CLK_USB_HSIC>,
++				 <&ccu CLK_USB_HSIC_12M>;
++			clock-names = "usb0_phy",
++				      "usb1_phy",
++				      "usb2_phy",
++				      "usb2_hsic_12M";
++			resets = <&ccu RST_USB_PHY0>,
++				 <&ccu RST_USB_PHY1>,
++				 <&ccu RST_USB_HSIC>;
++			reset-names = "usb0_reset",
++				      "usb1_reset",
++				      "usb2_reset";
++			status = "disabled";
++			#phy-cells = <1>;
++		};
++
++		ehci0: usb@1c1a000 {
++			compatible = "allwinner,sun8i-a83t-ehci",
++				     "generic-ehci";
++			reg = <0x01c1a000 0x100>;
++			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_EHCI0>;
++			resets = <&ccu RST_BUS_EHCI0>;
++			phys = <&usbphy 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ohci0: usb@1c1a400 {
++			compatible = "allwinner,sun8i-a83t-ohci",
++				     "generic-ohci";
++			reg = <0x01c1a400 0x100>;
++			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_OHCI0>, <&ccu CLK_USB_OHCI0>;
++			resets = <&ccu RST_BUS_OHCI0>;
++			phys = <&usbphy 1>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
++		ehci1: usb@1c1b000 {
++			compatible = "allwinner,sun8i-a83t-ehci",
++				     "generic-ehci";
++			reg = <0x01c1b000 0x100>;
++			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_EHCI1>;
++			resets = <&ccu RST_BUS_EHCI1>;
++			phys = <&usbphy 2>;
++			phy-names = "usb";
++			status = "disabled";
++		};
++
+ 		ccu: clock@1c20000 {
+ 			compatible = "allwinner,sun8i-a83t-ccu";
+ 			reg = <0x01c20000 0x400>;
 -- 
 2.13.3
 
