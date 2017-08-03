@@ -1,267 +1,121 @@
-From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: [patch v3 2/2] mfd: Add Mellanox regmap I2C driver
-Date: Thu,  3 Aug 2017 12:02:13 +0000
-Message-ID: <1501761733-21885-3-git-send-email-vadimp@mellanox.com>
-References: <1501761733-21885-1-git-send-email-vadimp@mellanox.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501761733-21885-1-git-send-email-vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 0/6] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Thu, 3 Aug 2017 12:05:24 +0200
+Message-ID: <20170803100524.pisejaxz7wr2sutd@phenom.ffwll.local>
+References: <1501355870-13960-1-git-send-email-david@lechnology.com>
+ <5d8f6518-8d7e-c029-2da4-e3417afb3e40@lechnology.com>
+ <28188f5c-1daf-121b-6daf-1899668c3875@tronnes.org>
+ <1ce36d43-b9dd-807e-23aa-bac4fda70fdc@lechnology.com>
+ <bfb3d541-856b-0233-dd85-72512788939f@tronnes.org>
+ <bbec0574-311a-e1b4-d7fd-f6fb15b078d2@lechnology.com>
+ <937aa71c-1415-4645-7e04-6be43dd33174@tronnes.org>
+ <abbd75ac-67f6-e189-5093-ee4a8f44ba6e@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <abbd75ac-67f6-e189-5093-ee4a8f44ba6e@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds I2C regmap driver for Mellanox BMC cards with the
-programmable devices attached to I2C interface. It allows support
-for CPLD devices with one and two bytes address space.
-
-Signed-off-by: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
----
- MAINTAINERS              |   1 +
- drivers/mfd/Kconfig      |  13 ++++
- drivers/mfd/Makefile     |   1 +
- drivers/mfd/mlxreg-i2c.c | 183 +++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 198 insertions(+)
- create mode 100644 drivers/mfd/mlxreg-i2c.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bcb7f45..86a5f8f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8299,6 +8299,7 @@ M:	Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
- S:	Supported
- F:	Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
- F:	drivers/mfd/mlxreg-core.c
-+F:	drivers/mfd/mlxreg-i2c.c
- F:	include/linux/platform_data/mlxreg.h
- 
- MELLANOX ETHERNET DRIVER (mlx4_en)
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index fa1562f..453afcb 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1709,6 +1709,19 @@ config MFD_MLXREG_CORE
- 	  This driver can also be built as a module. If so the module
- 	  will be called mlxreg-core.
- 
-+config MFD_MLXREG_I2C
-+	bool "Mellanox programmable device with I2C interface"
-+	depends on I2C && REGMAP_I2C
-+	depends on MFD_MLXREG_CORE
-+	help
-+	  Support for the Mellanox BMC card with hardware control by a
-+	  programmable device. This option enables core support for the
-+	  programmable devices with I2C interface. It allows support for
-+	  the devices with address space 1 and 2 bytes.
-+
-+	  This driver can also be built as a module. If so the module
-+	  will be called mlxreg-i2c.
-+
- menu "Multimedia Capabilities Port drivers"
- 	depends on ARCH_SA1100
- 
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9661ee2..b76c5b2 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -222,3 +222,4 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
- obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
- obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
- obj-$(CONFIG_MFD_MLXREG_CORE)	+= mlxreg-core.o
-+obj-$(CONFIG_MFD_MLXREG_I2C)	+= mlxreg-i2c.o
-diff --git a/drivers/mfd/mlxreg-i2c.c b/drivers/mfd/mlxreg-i2c.c
-new file mode 100644
-index 0000000..04823b5
---- /dev/null
-+++ b/drivers/mfd/mlxreg-i2c.c
-@@ -0,0 +1,183 @@
-+/*
-+ * Copyright (c) 2017 Mellanox Technologies. All rights reserved.
-+ * Copyright (c) 2017 Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *
-+ * 1. Redistributions of source code must retain the above copyright
-+ *    notice, this list of conditions and the following disclaimer.
-+ * 2. Redistributions in binary form must reproduce the above copyright
-+ *    notice, this list of conditions and the following disclaimer in the
-+ *    documentation and/or other materials provided with the distribution.
-+ * 3. Neither the names of the copyright holders nor the names of its
-+ *    contributors may be used to endorse or promote products derived from
-+ *    this software without specific prior written permission.
-+ *
-+ * Alternatively, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") version 2 as published by the Free
-+ * Software Foundation.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
-+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-+ * POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/**
-+ * enum mlxreg_i2c_type - driver flavours:
-+ *
-+ * @MLXREG_8BIT: type for I2C CPLD control with 1 byte address space;
-+ * @MLXREG_16BIT: type for I2C CPLD control with 2 bytes address space;
-+ */
-+enum mlxreg_i2c_type {
-+	MLXREG_8BIT,
-+	MLXREG_16BIT,
-+};
-+
-+/**
-+ * Configuration for the register map of a device with 1 byte address space.
-+ */
-+static const struct regmap_config mlxreg_i2c_regmap8_conf = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 255,
-+};
-+
-+/**
-+ * Configuration for the register map of a device with 2 bytes address space.
-+ */
-+static const struct regmap_config mlxreg_i2c_regmap16_conf = {
-+	.reg_bits = 16,
-+	.val_bits = 16,
-+	.max_register = 1023,
-+};
-+
-+static struct resource mlxreg_i2c_resources[] = {
-+	[0] = DEFINE_RES_IRQ_NAMED(-1, "mlxcpld-ctrl-2c"),
-+};
-+
-+static int
-+mlxreg_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
-+{
-+	struct device_node *child, *np = client->dev.of_node;
-+	struct platform_device *pdev;
-+	struct i2c_adapter *adapter;
-+	struct regmap *regmap;
-+	int err = 0;
-+
-+	if (!np)
-+		return -ENODEV;
-+
-+	if (!of_device_is_compatible(np, "mellanox,mlxreg-i2c"))
-+		return -ENODEV;
-+
-+	child = of_parse_phandle(np, "deferred", 0);
-+	if (child) {
-+		adapter = of_find_i2c_adapter_by_node(child);
-+		of_node_put(child);
-+		if (!adapter)
-+			return -EPROBE_DEFER;
-+	}
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_BYTE_DATA |
-+				     I2C_FUNC_SMBUS_WORD_DATA |
-+				     I2C_FUNC_SMBUS_I2C_BLOCK))
-+		return -ENODEV;
-+
-+	switch (id->driver_data) {
-+	case MLXREG_8BIT:
-+		regmap = devm_regmap_init_i2c(client,
-+					      &mlxreg_i2c_regmap8_conf);
-+		break;
-+	case MLXREG_16BIT:
-+		regmap = devm_regmap_init_i2c(client,
-+					      &mlxreg_i2c_regmap16_conf);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	pdev = platform_device_alloc("mlxreg-core", (client->adapter->nr << 8)
-+				     | client->addr);
-+	if (!pdev)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, pdev);
-+	pdev->dev.parent = &client->dev;
-+	pdev->dev.of_node = client->dev.of_node;
-+	pdev->dev.platform_data = regmap;
-+
-+	if (client->irq) {
-+		mlxreg_i2c_resources[0].start = client->irq;
-+		err = platform_device_add_resources(pdev,
-+				mlxreg_i2c_resources,
-+				ARRAY_SIZE(mlxreg_i2c_resources));
-+	}
-+
-+	err = err ? err : platform_device_add(pdev);
-+
-+	if (err)
-+		platform_device_put(pdev);
-+
-+	return err;
-+}
-+
-+static int mlxreg_i2c_remove(struct i2c_client *client)
-+{
-+	struct platform_device *pdev = i2c_get_clientdata(client);
-+
-+	platform_device_unregister(pdev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id mlxreg_i2c_id[] = {
-+	{ "mlxreg-i2c", MLXREG_8BIT },
-+	{ "mlxreg-i2c-16", MLXREG_16BIT },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(i2c, mlxreg_i2c_id);
-+
-+static const struct of_device_id mlxreg_i2c_dt_match[] = {
-+	{ .compatible = "mellanox,mlxreg-i2c" },
-+	{ .compatible = "mellanox,mlxreg-i2c-16" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mlxreg_i2c_dt_match);
-+
-+static struct i2c_driver mlxreg_i2c_driver = {
-+	.class = I2C_CLASS_HWMON,
-+	.driver = {
-+	    .name = "mlxreg-i2c",
-+	    .of_match_table = of_match_ptr(mlxreg_i2c_dt_match),
-+	},
-+	.probe = mlxreg_i2c_probe,
-+	.remove = mlxreg_i2c_remove,
-+	.id_table = mlxreg_i2c_id,
-+};
-+
-+module_i2c_driver(mlxreg_i2c_driver);
-+
-+MODULE_AUTHOR("Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>");
-+MODULE_DESCRIPTION("Mellanox CPLD control I2C driver");
-+MODULE_LICENSE("Dual BSD/GPL");
-+MODULE_ALIAS("mlxreg-i2c");
--- 
-2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCBBdWcgMDIsIDIwMTcgYXQgMTE6MDU6NThBTSAtMDUwMCwgRGF2aWQgTGVjaG5lciB3
+cm90ZToKPiBPbiAwOC8wMi8yMDE3IDAzOjA1IEFNLCBOb3JhbGYgVHLDuG5uZXMgd3JvdGU6Cj4g
+PiAKPiA+IERlbiAwMi4wOC4yMDE3IDAwLjI2LCBza3JldiBEYXZpZCBMZWNobmVyOgo+ID4gPiBP
+biAwOC8wMS8yMDE3IDAxOjA4IFBNLCBOb3JhbGYgVHLDuG5uZXMgd3JvdGU6Cj4gPiA+ID4gKGNj
+OiBEYW5pZWwgVmV0dGVyKQo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IERlbiAwMS4wOC4yMDE3
+IDE4LjUxLCBza3JldiBEYXZpZCBMZWNobmVyOgo+ID4gPiA+ID4gT24gMDcvMzAvMjAxNyAxMjox
+NCBQTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gRGVu
+IDI5LjA3LjIwMTcgMjEuNDAsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4gPiA+ID4gPiA+ID4gT24g
+MDcvMjkvMjAxNyAwMjoxNyBQTSwgRGF2aWQgTGVjaG5lciB3cm90ZToKPiA+ID4gPiA+ID4gPiA+
+IFRoZSBnb2FsIG9mIHRoaXMgc2VyaWVzIGlzIHRvIGdldCB0aGUgYnVpbHQtaW4KPiA+ID4gPiA+
+ID4gPiA+IExDRCBvZiB0aGUgTEVHTyBNSU5EU1RPUk1TIEVWMwo+ID4gPiA+ID4gPiA+ID4gd29y
+a2luZy4gQnV0LCBtb3N0IG9mIHRoZSBjb250ZW50IGhlcmUgaXMKPiA+ID4gPiA+ID4gPiA+IGJ1
+aWxkaW5nIHVwIHRoZSBpbmZyYXN0cnVjdHVyZSB0byBkbwo+ID4gPiA+ID4gPiA+ID4gdGhhdC4K
+PiA+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiA+IFNvbWUgZ2VuZXJh
+bCBjb21tZW50cy9xdWVzdGlvbnM6Cj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+ID4gSSBoYXZl
+IG5vdGljZWQgdGhhdCBEUk0gZG9lc24ndCByZWFsbHkgaGF2ZSBzdXBwb3J0Cj4gPiA+ID4gPiA+
+ID4gZm9yIG1vbm9jaHJvbWUgZGlzcGxheXMuIEknbSBndWVzc2luZyB0aGF0IGlzCj4gPiA+ID4g
+PiA+ID4gYmVjYXVzZSBubyBvbmUgcmVhbGx5IHVzZXMgdGhlbSBhbnltb3JlPwo+ID4gPiA+ID4g
+PiA+IAo+ID4gPiA+ID4gPiAKPiA+ID4gPiA+ID4gVGhlIHJlcGFwZXIgZHJpdmVyIHdhcyB0aGUg
+Zmlyc3QgbW9ub2Nocm9tZSBkcm0gZHJpdmVyIGFuZCBJIGNob3NlIHRvCj4gPiA+ID4gPiA+IHBy
+ZXNlbnQgaXQgdG8gdXNlcnNwYWNlIGFzIFhSR0I4ODg4IGFuZCBjb252ZXJ0IGl0IHRvIG1vbm9j
+aHJvbWUuCj4gPiA+ID4gPiA+IFRoZSByZWFzb24gZm9yIHRoaXMgaXMgdGhhdCBldmVyeXRoaW5n
+LCBsaWJyYXJpZXMsIGFwcHMsCj4gPiA+ID4gPiA+IHBseW1vdXRoIChib290Cj4gPiA+ID4gPiA+
+IHNwbGFzaCwgbm8gcmdiNTY1KSBzdXBwb3J0cyBpdC4gSSBkaWRuJ3Qgc2VlIGFueSBwb2ludCBp
+biBhZGRpbmcgYSBuZXcKPiA+ID4gPiA+ID4gbW9ub2Nocm9tZSBkcm0gZm9ybWF0IHRoYXQgZGlk
+bid0IGhhdmUsIG9yIHByb2JhYmx5IHdvdWxkbid0IGdldAo+ID4gPiA+ID4gPiB1c2Vyc3BhY2Ug
+c3VwcG9ydCAoYnkgbGlicmFyaWVzIGF0IGxlYXN0KS4gVGhlIGFwcGxpY2F0aW9uIG9mIGNvdXJz
+ZQo+ID4gPiA+ID4gPiBuZWVkcyB0byBrbm93IHRoaXMgdG8gZ2V0IGEgZ29vZCByZXN1bHQuCj4g
+PiA+ID4gPiA+IAo+ID4gPiA+ID4gPiB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KCkgZG9lcyB0
+aGUgY29udmVyc2lvbjoKPiA+ID4gPiA+ID4gaHR0cHM6Ly9jZ2l0LmZyZWVkZXNrdG9wLm9yZy9k
+cm0vZHJtLW1pc2MvY29tbWl0L2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtP2lkPTM3OWVhOWExYTU5
+YTVhMzJjOGRiNmYxNjRlODBhM2ZkMDBjYjM3ODEKPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IAo+
+ID4gPiA+ID4gPiA+IFRoZSBMRUdPIEVWMyBkaXNwbGF5IGlzIGp1c3QgYW4gTENEIChub3QgdGhl
+IGJhY2tsaXQKPiA+ID4gPiA+ID4gPiBraW5kKS4gSXQgaGFzIHR3byBtb2RlcyBvZiBvcGVyYXRp
+b24uIEl0IGNhbiB0byAyYmJwCj4gPiA+ID4gPiA+ID4gZ3JheXNjYWxlIG9yIGl0IGNhbiBkbyAx
+YnBwIG1vbm9jaHJvbWUuIFRoZQo+ID4gPiA+ID4gPiA+IGdyYXlzY2FsZSBpc24ndCB0aGUgYmVz
+dCAobG9va3Mgc3Bsb3RjaHkgaW4gcGxhY2VzKSwKPiA+ID4gPiA+ID4gPiBzbyBpdCB3b3VsZCBi
+ZSBuaWNlIHRvIGJlIGFibGUgdG8gY2hvb3NlIGJldHdlZW4KPiA+ID4gPiA+ID4gPiB0aGVzZSB0
+d28gbW9kZXMuIEhvdyB3b3VsZCBJIGltcGxlbWVudCBzb21ldGhpbmcKPiA+ID4gPiA+ID4gPiBs
+aWtlIHRoYXQ/Cj4gPiA+ID4gPiA+ID4gCj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBEbyB5b3Ug
+ZXhwZWN0IGFueW9uZSB0byB1c2UgZ3JheXNjYWxlIGlmIGl0IGRvZXNuJ3QgbG9vayBnb29kPwo+
+ID4gPiA+ID4gPiBNYXliZSBiZXR0ZXIgdG8gYWRkIGl0IGxhdGVyIGlmIHRoZXJlJ3MgYSBkZW1h
+bmQgZm9yIGl0Lgo+ID4gPiA+ID4gCj4gPiA+ID4gPiBJIGRvbid0IGV4cGVjdCBtYW55IHBlb3Bs
+ZSB0byB1c2UgaXQgYXQgYWxsLiBUaGUgcGVvcGxlIHRoYXQKPiA+ID4gPiA+IGRvIHdpbGwgYmUg
+aGFja2VycyBsaWtlIG1lIHRoYXQgd2FudCB0byBzZWUgd2hhdCBpdCBpcwo+ID4gPiA+ID4gY2Fw
+YWJsZSBvZiwgc28gSSB0aGluayBJIHdpbGwga2VlcCBpdCBncmF5c2NhbGUgYnkgZGVmYXVsdC4K
+PiA+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IEl0IGxvb2tzIGxpa2UgdGhlIGJlc3Qgd2F5IHRv
+IHNhdGlzZnkgeW91ciBuZWVkcyBpcyB0byBhZGQKPiA+ID4gPiBzcGVjaWZpYyBmb3JtYXRzLgo+
+ID4gPiA+IAo+ID4gPiA+IFZpZGVvIGZvciBMaW51eCBoYXZlIHRoZXNlOgo+ID4gPiA+IAo+ID4g
+PiA+IGluY2x1ZGUvdWFwaS9saW51eC92aWRlb2RldjIuaAo+ID4gPiA+IAo+ID4gPiA+IC8qIEdy
+ZXkgZm9ybWF0cyAqLwo+ID4gPiA+ICNkZWZpbmUgVjRMMl9QSVhfRk1UX0dSRVkgICAgdjRsMl9m
+b3VyY2MoJ0cnLCAnUicsICdFJywgJ1knKSAvKgo+ID4gPiA+IDggR3JleXNjYWxlICAgICAqLwo+
+ID4gPiA+ICNkZWZpbmUgVjRMMl9QSVhfRk1UX1k0ICAgICAgdjRsMl9mb3VyY2MoJ1knLCAnMCcs
+ICc0JywgJyAnKSAvKgo+ID4gPiA+IDQgR3JleXNjYWxlICAgICAqLwo+ID4gPiA+ICNkZWZpbmUg
+VjRMMl9QSVhfRk1UX1k2ICAgICAgdjRsMl9mb3VyY2MoJ1knLCAnMCcsICc2JywgJyAnKSAvKgo+
+ID4gPiA+IDYgR3JleXNjYWxlICAgICAqLwo+ID4gPiA+ICNkZWZpbmUgVjRMMl9QSVhfRk1UX1kx
+MCAgICAgdjRsMl9mb3VyY2MoJ1knLCAnMScsICcwJywgJyAnKSAvKgo+ID4gPiA+IDEwIEdyZXlz
+Y2FsZSAgICAgKi8KPiA+ID4gPiAjZGVmaW5lIFY0TDJfUElYX0ZNVF9ZMTIgICAgIHY0bDJfZm91
+cmNjKCdZJywgJzEnLCAnMicsICcgJykgLyoKPiA+ID4gPiAxMiBHcmV5c2NhbGUgICAgICovCj4g
+PiA+ID4gI2RlZmluZSBWNEwyX1BJWF9GTVRfWTE2ICAgICB2NGwyX2ZvdXJjYygnWScsICcxJywg
+JzYnLCAnICcpIC8qCj4gPiA+ID4gMTYgR3JleXNjYWxlICAgICAqLwo+ID4gPiA+ICNkZWZpbmUg
+VjRMMl9QSVhfRk1UX1kxNl9CRSAgdjRsMl9mb3VyY2NfYmUoJ1knLCAnMScsICc2JywgJyAnKQo+
+ID4gPiA+IC8qIDE2IEdyZXlzY2FsZSBCRSAgKi8KPiA+ID4gPiAKPiA+ID4gPiAKPiA+ID4gPiBN
+YXliZSB3ZSBjYW4gYWRkIGZvcm1hdHMgbGlrZSB0aGVzZToKPiA+ID4gPiAKPiA+ID4gPiBpbmNs
+dWRlL3VhcGkvZHJtL2RybV9mb3VyY2MuaAo+ID4gPiA+IAo+ID4gPiA+ICNkZWZpbmUgRFJNX0ZP
+Uk1BVF9NT05PICAgICAgICBmb3VyY2NfY29kZSgnWScsICcwJywgJzEnLCAnICcpCj4gPiA+ID4g
+LyogWzBdIE1vbm9jaHJvbWUgKi8KPiA+ID4gPiBvcgo+ID4gPiA+ICNkZWZpbmUgRFJNX0ZPUk1B
+VF9ZMSAgICAgICAgZm91cmNjX2NvZGUoJ1knLCAnMCcsICcxJywgJyAnKSAvKgo+ID4gPiA+IFsw
+XSBNb25vY2hyb21lICovCj4gPiA+ID4gCj4gPiA+ID4gI2RlZmluZSBEUk1fRk9STUFUX1kyICAg
+ICAgICBmb3VyY2NfY29kZSgnWScsICcwJywgJzInLCAnICcpIC8qCj4gPiA+ID4gWzE6MF0gR3Jl
+eXNjYWxlICovCj4gPiA+ID4gCj4gPiA+ID4gRGFuaWVsLCB3aGF0IGRvIHlvdSB0aGluaz8KPiA+
+ID4gCj4gPiA+IDIgb2YgdGhlIGZpcnN0IDMgdGlueWRybSBkcml2ZXJzIGFyZSBtb25vY2hyb21l
+IChhbmQgSSB3b3VsZCBsaWtlIHRvCj4gPiA+IHdyaXRlIGEgZHJpdmVyIGZvciB0aGUgU2VlZWQv
+R3JvdmUgSTJDIE9MRUQgZGlzcGxheXMgd2hpY2ggYXJlIGFsc28KPiA+ID4gbW9ub2Nocm9tZSks
+IHNvIEkgdGhpbmsgdGhlIDFicHAgbW9kZXMgd291bGQgZGVmaW5pdGVseSBiZSB1c2VmdWwuIEkK
+PiA+ID4gdGhpbmsgdGhlcmUgaXMgZW5vdWdoIHVzZXJzcGFjZSBjb2RlIHN0aWxsIGFyb3VuZCB0
+aGF0IGtub3dzIGFib3V0Cj4gPiA+IEZCX1ZJU1VBTF9NT05PMDEgYW5kIEZCX1ZJU1VBTF9NT05P
+MTAgdGhhdCBjb3VsZCB1c2UgdGhlc2UuCj4gPiA+IAo+ID4gCj4gPiBDYW4geW91IGVsYWJvcmF0
+ZSwgd291bGQgeW91IHVzZSB0aGUgZGlzcGxheSB0cm91Z2ggbW9ub2Nocm9tZSBmYmRldgo+ID4g
+b3IgdGhyb3VnaCBkcm0/Cj4gCj4gSSBoYXZlIGEgc21hbGwgY29sbGVjdGlvbiBvZiBwcm9ncmFt
+cyBhbmQgbGlicmFyaWVzIHRoYXQgd29yayB1c2luZwo+IG1vbm9jaHJvbWUgZmJkZXYuIEkgd291
+bGQgbGlrZSB0byBqdXN0IGtlZXAgdXNpbmcgdGhlbSB3aXRob3V0IGhhdmluZyB0bwo+IGNvbnZl
+cnQgZXZlcnl0aGluZyB0byBkcm0uCgpUaGF0IHByb2JhYmx5IG1lYW5zIHdlJ2QgbmVlZCB0byBl
+eHRlbmQgZmJkZXYgZW11bGF0aW9uIGhlbHBlcnMgaW4gZHJtIHRvCnN1cHBvcnQgTW9ub2Nocm9t
+ZSBtb2RlcyBiZXR0ZXIuIFNob3VsZG4ndCBiZSB0aGF0IG11Y2ggd29yayByZWFsbHkuCi1EYW5p
+ZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9u
+Cmh0dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
