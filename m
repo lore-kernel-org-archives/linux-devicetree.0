@@ -1,44 +1,59 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] net: stmmac: Add Adaptrum Anarion GMAC glue layer
-Date: Thu, 3 Aug 2017 18:26:43 -0500
-Message-ID: <20170803232643.oqvdgvp6xqwgk6mh@rob-hp-laptop>
-References: <20170728220707.13960-1-alex.g@adaptrum.com>
- <20170728220707.13960-4-alex.g@adaptrum.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/5] of: reserved_mem: Accessor for acquiring
+ reserved_mem
+Date: Thu, 3 Aug 2017 16:31:46 -0700
+Message-ID: <20170803233146.GB29306@minitux>
+References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
+ <20170803025754.19101-3-bjorn.andersson@linaro.org>
+ <CAL_JsqL1Jh2AnWSWfau3LGhvuS1giTg6_r7gPGrHyZ6KRocSYg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170728220707.13960-4-alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-Cc: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAL_JsqL1Jh2AnWSWfau3LGhvuS1giTg6_r7gPGrHyZ6KRocSYg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 28, 2017 at 03:07:03PM -0700, Alexandru Gagniuc wrote:
-> Before the GMAC on the Anarion chip can be used, the PHY interface
-> selection must be configured with the DWMAC block in reset.
-> 
-> This layer covers a block containing only two registers. Although it
-> is possible to model this as a reset controller and use the "resets"
-> property of stmmac, it's much more intuitive to include this in the
-> glue layer instead.
-> 
-> At this time only RGMII is supported, because it is the only mode
-> which has been validated hardware-wise.
-> 
-> Signed-off-by: Alexandru Gagniuc <alex.g-JVBBi1ABkv5Wk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/anarion-gmac.txt       |  25 ++++
+On Thu 03 Aug 10:45 PDT 2017, Rob Herring wrote:
 
-The binding looks fine, but please split to separate patch.
+> On Wed, Aug 2, 2017 at 9:57 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > In some cases drivers referencing a reserved-memory region might want to
+> > remap the entire region, but when defining the reserved-memory by "size"
+> > the client driver has no means to know the associated base address of
+> > the reserved memory region.
+> >
+> > This patch adds an accessor for such drivers to acquire a handle to
+> > their associated reserved-memory for this purpose.
+> >
+> > A complicating factor for the implementation is that the reserved_mem
+> > objects are created from the flattened DeviceTree, as such we can't
+> > use the device_node address for comparison. Fortunately the name of the
+> > node will be used as "name" of the reserved_mem and will be used when
+> > building the full_name, so we can compare the "name" with the basename
+> > of the full_name to find the match.
+> 
+> Maybe we should add the device_node pointer when we unflatten?
+> 
 
->  drivers/net/ethernet/stmicro/stmmac/Kconfig        |   9 ++
->  drivers/net/ethernet/stmicro/stmmac/Makefile       |   1 +
->  .../net/ethernet/stmicro/stmmac/dwmac-anarion.c    | 151 +++++++++++++++++++++
->  4 files changed, 186 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/anarion-gmac.txt
->  create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-anarion.c
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It did try to figure something sane out in that direction.
+
+The solution I came up with was to amend populate_node() to in a !dryrun
+block check if the "dad" full_name is /reserved-memory and if so
+call call a new accessor in of_reserved_mem.c to add the "np" to the
+reserved_mem object with fdt_node equal offset.
+
+This code path is already cluttered due to the version differences when
+it comes to building full_name and we would end up checking for each
+node in the entire tree if the parent happens to be "/reserved-mem".
+
+So I went for the less intrusive and more straight forward comparison
+with basename(full_name) instead.
+
+
+Do you have any alternative suggestion of how to do this?
+
+Regards,
+Bjorn
