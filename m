@@ -1,29 +1,35 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v6 0/7] Add support for IPQ8074 PCIe phy and controller
-Date: Thu, 3 Aug 2017 18:07:58 -0500
-Message-ID: <20170803230758.GS20308@bhelgaas-glaptop.roam.corp.google.com>
-References: <1501482857-14100-1-git-send-email-varada@codeaurora.org>
- <4cce58c3-3fec-db2d-8c97-28beb0e3b3ab@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: clock: meson8b: describe the
+ embedded reset controller
+Date: Thu, 3 Aug 2017 18:08:22 -0500
+Message-ID: <20170803230822.5kd6y46pqnpxezms@rob-hp-laptop>
+References: <20170728211313.10603-1-martin.blumenstingl@googlemail.com>
+ <20170728211313.10603-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4cce58c3-3fec-db2d-8c97-28beb0e3b3ab@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, svarbanov@mm-sol.com, sboyd@codeaurora.org, vivek.gautam@codeaurora.org, fengguang.wu@intel.com, weiyongjun1@huawei.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <20170728211313.10603-2-martin.blumenstingl@googlemail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org, narmstrong@baylibre.com, jbrunet@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 10:38:21AM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
+On Fri, Jul 28, 2017 at 11:13:11PM +0200, Martin Blumenstingl wrote:
+> The Amlogic Meson8/Meson8b/Meson8m2 clock controller provides some reset
+> lines. These are used for example to boot the secondary CPU cores.
 > 
-> On Monday 31 July 2017 12:04 PM, Varadarajan Narayanan wrote:
-> > v6:
-> >   Added 'Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>' and fixed
-> >   white space issues as mentioned by Vivek.
-> > 	phy: qcom-qmp: Fix phy pipe clock name
-> > 	dt-bindings: phy: qmp: Add support for QMP phy in IPQ8074
+> This patch describes the reset controller which is embedded into the
+> clock controller on these SoCs.
+> A header file is provided which provides preprocessor macros for each
+> reset line (to make the .dts files easier to read).
 > 
-> merged the 1st four patches (phy patches) of the series to linux-phy -next.
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  .../bindings/clock/amlogic,meson8b-clkc.txt        |  9 +++++++-
+>  .../dt-bindings/reset/amlogic,meson8b-clkc-reset.h | 27 ++++++++++++++++++++++
+>  2 files changed, 35 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/reset/amlogic,meson8b-clkc-reset.h
 
-Heh :)  Ignore my nitpicks on them then!
+Acked-by: Rob Herring <robh@kernel.org>
