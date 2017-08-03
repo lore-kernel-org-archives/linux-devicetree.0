@@ -1,54 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 12/12] pinctrl: dt-bindings: add bindings for Rockchip
- RK805 PMIC
-Date: Thu, 3 Aug 2017 09:42:31 +0200
-Message-ID: <CACRpkdYrG1sUcfaP8xVWNKjqWB8jCsZ0yPFjP-DMkT1ni+V37w@mail.gmail.com>
-References: <1500635681-12477-1-git-send-email-chenjh@rock-chips.com> <1500635941-12930-1-git-send-email-chenjh@rock-chips.com>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH 0/2] add Silicon Image SiI9234 driver
+Date: Thu, 03 Aug 2017 09:45:21 +0200
+Message-ID: <1501746323-5254-1-git-send-email-m.purski@samsung.com>
+References: <CGME20170803074535eucas1p107414859fa54647d1f623c73d0fc17f2@eucas1p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1500635941-12930-1-git-send-email-chenjh@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joseph Chen <chenjh@rock-chips.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, Tony Xie <tony.xie@rock-chips.com>, zhangqing@rock-chips.com, David Wu <wdc@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, w.egorov@phytec.de, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: mark.rutland@arm.com, b.zolnierkie@samsung.com, krzk@kernel.org, Maciej Purski <m.purski@samsung.com>, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jul 21, 2017 at 1:19 PM, Joseph Chen <chenjh@rock-chips.com> wrote:
-
-(...)
-
-> +Following are optional properties defined as pinmux DT binding document
-> +<pinctrl-bindings.txt>. Absence of properties will leave the configuration
-> +on default.
-> +       function,
-> +       output-low,
-> +       output-high.
-> +
-> +Valid values for function properties are: gpio.
-> +
-> +Theres is also not customised properties for any GPIO.
-> +
-> +Example:
-> +--------
-> +rk805: rk805@18 {
-> +       compatible = "rockchip,rk805";
-> +       ...
-> +       gpio-controller;
-> +       #gpio-cells = <2>;
-> +
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pmic_int_l>, <&rk805_default>;
-> +
-> +       rk805_default: pinmux {
-> +               gpio01 {
-> +                       pins = "gpio0", "gpio1";
-> +                       function = "gpio";
-> +                       output-high.
-
-That should be a semicolon.
-
-With that fixed:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+SGkgZXZlcnlvbmUsCgpUaGVzZSBwYXRjaGVzIGFyZSBhIGNvbnRpbnVhdGlvbiBvZiB3b3JrIGJ5
+IFRvbWFzeiBTdGFuaXNsYXdza2kgb24gc2lpOTMyNCBkcml2ZXIsIHdoaWNoIHdhcyBkZXNjcmli
+ZWQKaW4gdGggZm9sbG93aW5nIGxldHRlcjoKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+YXJjaGl2ZXMvZHJpLWRldmVsLzIwMTQtQXByaWwvMDU3NDgxLmh0bWwKClRoZSBtYWluIGRpZmZl
+cmVuY2VzIGZyb20gdGhlIHByZXZpb3VzIGNvZGUgYXJlOgoqIGRyaXZlciBtb3ZlZCB0byAvZ3B1
+L2RybS9icmlkZ2UvIGFuZCBpbnRlZ3JhdGVkIHdpdGggZHJtL2JyaWRnZSBzdWJzeXN0ZW0KKiBh
+ZGRlZCBmaWx0ZXJpbmctb3V0IHVuc3VwcG9ydGVkIGRpc3BsYXkgbW9kZXMKKiBjaGFuZ2VkIGdw
+aW8gaW50ZXJmYWNlIHRvIHVwLXRvLWRhdGUKKiBjaGFuZ2VkIGludGVycnVwdCBoYW5kbGluZwoq
+IGltcHJvdmUgY29kZSBzdHlsZQoqIGFkZCBoZG1pIGFuZCBzaWk5MzI0IHRvIGV4eW5vczQ0MTIt
+dHJhdHMyIGRldmljZSB0cmVlCgpBbGwgY29tbWVudHMgYXJlIHdlbGNvbWUuCgpSZWdhcmRzLApN
+YWNpZWogUHVyc2tpCgoKUGF0Y2ggc3VtbWFyeToKCk1hY2llaiBQdXJza2kgKDIpOgogIGRybS9i
+cmlkZ2U6IGFkZCBTaWxpY29uIEltYWdlIFNpSTkyMzQgZHJpdmVyCiAgQVJNOiBkdHM6IGV4eW5v
+czogQWRkIEhETUkgYW5kIFNpbDkyMzQgdG8gVHJhdHMyIGJvYXJkCgogLi4uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgfCAgIDIwICsKIGFyY2gvYXJtL2Jv
+b3QvZHRzL2V4eW5vczQ0MTItdHJhdHMyLmR0cyAgICAgICAgICAgIHwgICA5MyArKwogZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgICA4ICsKIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSAr
+CiBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkyMzQuYyAgICAgICAgICAgICAgICAgICB8IDEw
+MTkgKysrKysrKysrKysrKysrKysrKysKIDUgZmlsZXMgY2hhbmdlZCwgMTE0MSBpbnNlcnRpb25z
+KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL2JyaWRnZS9zaWk5MjM0LmMKCi0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
