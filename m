@@ -1,92 +1,161 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: media: Add Allwinner V3s Camera
- Sensor Interface (CSI)
-Date: Thu, 3 Aug 2017 14:14:15 -0500
-Message-ID: <20170803191415.iyyzjsvlyviftalj@rob-hp-laptop>
-References: <1501131697-1359-1-git-send-email-yong.deng@magewell.com>
- <1501131697-1359-3-git-send-email-yong.deng@magewell.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/3] power: wm831x_power: Support USB charger current
+ limit management
+Date: Thu, 3 Aug 2017 14:16:58 -0500
+Message-ID: <20170803191658.fksnm5iknwxlck7l@rob-hp-laptop>
+References: <cover.1501132171.git.baolin.wang@linaro.org>
+ <b25c3a5e595716c701091d848188585dbd95bb20.1501132173.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501131697-1359-3-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, lin
+In-Reply-To: <b25c3a5e595716c701091d848188585dbd95bb20.1501132173.git.baolin.wang@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: balbi@kernel.org, gregkh@linuxfoundation.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, jun.li@nxp.com, peter.chen@freescale.com, broonie@kernel.org, john.stultz@linaro.org, neilb@suse.com, patches@opensource.wolfsonmicro.com, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, device-mainlining@lists.linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 27, 2017 at 01:01:36PM +0800, Yong Deng wrote:
-> Add binding documentation for Allwinner V3s CSI.
+On Thu, Jul 27, 2017 at 01:14:38PM +0800, Baolin Wang wrote:
+> Integrate with the newly added USB charger interface to limit the current
+> we draw from the USB input based on the input device configuration
+> identified by the USB stack, allowing us to charge more quickly from high
+> current inputs without drawing more current than specified from others.
 > 
-> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 > ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+>  Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
+>  drivers/power/supply/wm831x_power.c              |   72 ++++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> new file mode 100644
-> index 0000000..f8d83f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,49 @@
-> +Allwinner V3s Camera Sensor Interface
-> +------------------------------
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * ahb: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +- ports: A ports node with endpoint definitions as defined in
-> +  Documentation/devicetree/bindings/media/video-interfaces.txt.
+> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> index 9f8b743..4e3bc07 100644
+> --- a/Documentation/devicetree/bindings/mfd/wm831x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+> @@ -31,6 +31,7 @@ Required properties:
+>      ../interrupt-controller/interrupts.txt
+>  
+>  Optional sub-nodes:
+> +  - usb-phy : Contains a phandle to the USB PHY.
 
-Need to be explicit about how many ports and endpoints and what each one 
-represents.
+Use the phy binding ("phys") instead.
 
+>    - regulators : Contains sub-nodes for each of the regulators supplied by
+>      the device. The regulators are bound using their names listed below:
+>  
+> diff --git a/drivers/power/supply/wm831x_power.c b/drivers/power/supply/wm831x_power.c
+> index 7082301..dff6473 100644
+> --- a/drivers/power/supply/wm831x_power.c
+> +++ b/drivers/power/supply/wm831x_power.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/slab.h>
+> +#include <linux/usb/phy.h>
+>  
+>  #include <linux/mfd/wm831x/core.h>
+>  #include <linux/mfd/wm831x/auxadc.h>
+> @@ -31,6 +32,8 @@ struct wm831x_power {
+>  	char usb_name[20];
+>  	char battery_name[20];
+>  	bool have_battery;
+> +	struct usb_phy *usb_phy;
+> +	struct notifier_block usb_notify;
+>  };
+>  
+>  static int wm831x_power_check_online(struct wm831x *wm831x, int supply,
+> @@ -125,6 +128,43 @@ static int wm831x_usb_get_prop(struct power_supply *psy,
+>  	POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>  };
+>  
+> +/* In milliamps */
+> +static const unsigned int wm831x_usb_limits[] = {
+> +	0,
+> +	2,
+> +	100,
+> +	500,
+> +	900,
+> +	1500,
+> +	1800,
+> +	550,
+> +};
 > +
-> +Example:
+> +static int wm831x_usb_limit_change(struct notifier_block *nb,
+> +				   unsigned long limit, void *data)
+> +{
+> +	struct wm831x_power *wm831x_power = container_of(nb,
+> +							 struct wm831x_power,
+> +							 usb_notify);
+> +	unsigned int i, best;
 > +
-> +	csi1: csi@01cb4000 {
-> +		compatible = "allwinner,sun8i-v3s-csi";
-> +		reg = <0x01cb4000 0x1000>;
-> +		interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&ccu CLK_BUS_CSI>,
-> +			 <&ccu CLK_CSI1_SCLK>,
-> +			 <&ccu CLK_DRAM_CSI>;
-> +		clock-names = "ahb", "mod", "ram";
-> +		resets = <&ccu RST_BUS_CSI>;
+> +	/* Find the highest supported limit */
+> +	best = 0;
+> +	for (i = 0; i < ARRAY_SIZE(wm831x_usb_limits); i++) {
+> +		if (limit >= wm831x_usb_limits[i] &&
+> +		    wm831x_usb_limits[best] < wm831x_usb_limits[i])
+> +			best = i;
+> +	}
 > +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +	dev_dbg(wm831x_power->wm831x->dev,
+> +		"Limiting USB current to %umA", wm831x_usb_limits[best]);
 > +
-> +			/* Parallel bus endpoint */
-> +			csi1_ep: endpoint {
-> +				remote-endpoint = <&adv7611_ep>;
-> +				bus-width = <16>;
-> +				data-shift = <0>;
+> +	wm831x_set_bits(wm831x_power->wm831x, WM831X_POWER_STATE,
+> +		        WM831X_USB_ILIM_MASK, best);
 > +
-> +				/* If hsync-active/vsync-active are missing,
-> +				   embedded BT.656 sync is used */
-> +				hsync-active = <0>; /* Active low */
-> +				vsync-active = <0>; /* Active low */
-> +				data-active = <1>;  /* Active high */
-> +				pclk-sample = <1>;  /* Rising */
-> +			};
-> +		};
-> +	};
+> +	return 0;
+> +}
 > +
+>  /*********************************************************************
+>   *		Battery properties
+>   *********************************************************************/
+> @@ -607,6 +647,33 @@ static int wm831x_power_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	power->usb_phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
+> +	ret = PTR_ERR_OR_ZERO(power->usb_phy);
+> +
+> +	switch (ret) {
+> +	case 0:
+> +		power->usb_notify.notifier_call = wm831x_usb_limit_change;
+> +		ret = usb_register_notifier(power->usb_phy, &power->usb_notify);
+> +		if (ret) {
+> +			dev_err(&pdev->dev, "Failed to register notifier: %d\n",
+> +				ret);
+> +			goto err_bat_irq;
+> +		}
+> +		break;
+> +	case -EINVAL:
+> +	case -ENODEV:
+> +		/* ignore missing usb-phy, it's optional */
+> +		power->usb_phy = NULL;
+> +		ret = 0;
+> +		break;
+> +	default:
+> +		dev_err(&pdev->dev, "Failed to find USB phy: %d\n", ret);
+> +		/* fall-through */
+> +	case -EPROBE_DEFER:
+> +		goto err_bat_irq;
+> +		break;
+> +	}
+> +
+>  	return ret;
+>  
+>  err_bat_irq:
+> @@ -637,6 +704,11 @@ static int wm831x_power_remove(struct platform_device *pdev)
+>  	struct wm831x *wm831x = wm831x_power->wm831x;
+>  	int irq, i;
+>  
+> +	if (wm831x_power->usb_phy) {
+> +		usb_unregister_notifier(wm831x_power->usb_phy,
+> +					&wm831x_power->usb_notify);
+> +	}
+> +
+>  	for (i = 0; i < ARRAY_SIZE(wm831x_bat_irqs); i++) {
+>  		irq = wm831x_irq(wm831x, 
+>  				 platform_get_irq_byname(pdev,
 > -- 
-> 1.8.3.1
+> 1.7.9.5
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
