@@ -1,170 +1,64 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v4 3/3] power: wm831x_power: Support USB charger current
- limit management
-Date: Fri, 4 Aug 2017 10:13:01 +0800
-Message-ID: <CAMz4kuLBK7RjnOw8s+jih9xVbSnyGLcV2UzACMcB__c1mcL0Kw@mail.gmail.com>
-References: <cover.1501132171.git.baolin.wang@linaro.org> <b25c3a5e595716c701091d848188585dbd95bb20.1501132173.git.baolin.wang@linaro.org>
- <20170803191658.fksnm5iknwxlck7l@rob-hp-laptop>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 00/10] ARM: sun8i: a83t: Add support for MMC controllers
+Date: Fri, 4 Aug 2017 10:16:48 +0800
+Message-ID: <CAGb2v67O2SECXPeq3Q2rE7wMG54rnXNCq_+pJoeh18CEpae-VA@mail.gmail.com>
+References: <20170724135905.28855-1-wens@csie.org> <CAGb2v66DQ3H2Mta7h+t1P+UzSRLnMABRebeYcopaPkN0gOiwxA@mail.gmail.com>
+ <20170726194522.7d64f7c2danrknfi@flea> <CAPDyKFrssySjKW0E7sB3D-UjVea8_Yxvrkkr7sKf47x6jwgVSQ@mail.gmail.com>
+ <CAGb2v648K1Nguf8nVjfunow7+xwS0MHazzMXJd1xZ3uNM2WesA@mail.gmail.com> <CAPDyKFrBfQ-mNTNitcpgo1FCa1068ZzC_J4efsxmU2X6tOJgzw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170803191658.fksnm5iknwxlck7l@rob-hp-laptop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Felipe Balbi <balbi@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@freescale.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, NeilBrown <neilb@suse.com>, patches@opensource.wolfsonmicro.com, Linux PM list <linux-pm@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, device-mainlining@lists.linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFrBfQ-mNTNitcpgo1FCa1068ZzC_J4efsxmU2X6tOJgzw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On 4 August 2017 at 03:16, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jul 27, 2017 at 01:14:38PM +0800, Baolin Wang wrote:
->> Integrate with the newly added USB charger interface to limit the current
->> we draw from the USB input based on the input device configuration
->> identified by the USB stack, allowing us to charge more quickly from high
->> current inputs without drawing more current than specified from others.
+On Thu, Aug 3, 2017 at 8:02 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> On 3 August 2017 at 13:25, Chen-Yu Tsai <wens@csie.org> wrote:
+>> On Thu, Aug 3, 2017 at 7:19 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>>> On 26 July 2017 at 21:45, Maxime Ripard
+>>> <maxime.ripard@free-electrons.com> wrote:
+>>>> On Wed, Jul 26, 2017 at 10:09:41PM +0800, Chen-Yu Tsai wrote:
+>>>>> On Mon, Jul 24, 2017 at 9:58 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+>>>>> > Hi everyone,
+>>>>> >
+>>>>> > This is v3 of my MMC controller support series.
+>>>>> >
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>> > Chen-Yu Tsai (10):
+>>>>> >   clk: sunxi-ng: Add interface to query or configure MMC timing modes.
+>>>>> >   clk: sunxi-ng: Add MP_MMC clocks that support MMC timing modes
+>>>>> >     switching
+>>>>> >   clk: sunxi-ng: a83t: Support new timing mode for mmc2 clock
+>>>>> >   mmc: sunxi: Support controllers that can use both old and new timings
+>>>>> >   mmc: sunxi: Support MMC DDR52 transfer mode with new timing mode
+>>>>> >   mmc: sunxi: Add support for A83T eMMC (MMC2)
+>>>>>
+>>>>> So this series seems to be ready for inclusion, unless Ulf has further
+>>>>> concerns about the clk usage.
+>>>>>
+>>>>> The first mmc patch have build time dependencies on the first clk patch.
+>>>>> Shall we put the clk patch on a separate immutable branch for both trees
+>>>>> to pull? Or we could just merge everything through the mmc tree? I don't
+>>>>> think we'll touch this part of the sunxi-ng clk driver for the remainder
+>>>>> of this cycle.
+>>>>
+>>>> I guess the easiest would be for it to go through Ulf tree, unless he
+>>>> says otherwise of course :)
+>>>
+>>> Okay, I have picked up the series and applied it for my next branch.
 >>
->> Signed-off-by: Mark Brown <broonie@kernel.org>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> Acked-by: Lee Jones <lee.jones@linaro.org>
->> Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
->> ---
->>  Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
->>  drivers/power/supply/wm831x_power.c              |   72 ++++++++++++++++++++++
->>  2 files changed, 73 insertions(+)
+>> I guess I wasn't very clear. When I meant "everything" I meant the mmc
+>> and clk patches. We will take the dts patches through the sunxi tree.
 >>
->> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
->> index 9f8b743..4e3bc07 100644
->> --- a/Documentation/devicetree/bindings/mfd/wm831x.txt
->> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
->> @@ -31,6 +31,7 @@ Required properties:
->>      ../interrupt-controller/interrupts.txt
->>
->>  Optional sub-nodes:
->> +  - usb-phy : Contains a phandle to the USB PHY.
+>> Can you drop the four dts patches from your tree? That would be the
+>> last four patches on mmc/next at the moment.
 >
-> Use the phy binding ("phys") instead.
+> Done!
 
-OK. Will fix in next version. Thanks.
+Thanks! I applied the remaining dts patches to the sunxi tree.
 
->
->>    - regulators : Contains sub-nodes for each of the regulators supplied by
->>      the device. The regulators are bound using their names listed below:
->>
->> diff --git a/drivers/power/supply/wm831x_power.c b/drivers/power/supply/wm831x_power.c
->> index 7082301..dff6473 100644
->> --- a/drivers/power/supply/wm831x_power.c
->> +++ b/drivers/power/supply/wm831x_power.c
->> @@ -13,6 +13,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/power_supply.h>
->>  #include <linux/slab.h>
->> +#include <linux/usb/phy.h>
->>
->>  #include <linux/mfd/wm831x/core.h>
->>  #include <linux/mfd/wm831x/auxadc.h>
->> @@ -31,6 +32,8 @@ struct wm831x_power {
->>       char usb_name[20];
->>       char battery_name[20];
->>       bool have_battery;
->> +     struct usb_phy *usb_phy;
->> +     struct notifier_block usb_notify;
->>  };
->>
->>  static int wm831x_power_check_online(struct wm831x *wm831x, int supply,
->> @@ -125,6 +128,43 @@ static int wm831x_usb_get_prop(struct power_supply *psy,
->>       POWER_SUPPLY_PROP_VOLTAGE_NOW,
->>  };
->>
->> +/* In milliamps */
->> +static const unsigned int wm831x_usb_limits[] = {
->> +     0,
->> +     2,
->> +     100,
->> +     500,
->> +     900,
->> +     1500,
->> +     1800,
->> +     550,
->> +};
->> +
->> +static int wm831x_usb_limit_change(struct notifier_block *nb,
->> +                                unsigned long limit, void *data)
->> +{
->> +     struct wm831x_power *wm831x_power = container_of(nb,
->> +                                                      struct wm831x_power,
->> +                                                      usb_notify);
->> +     unsigned int i, best;
->> +
->> +     /* Find the highest supported limit */
->> +     best = 0;
->> +     for (i = 0; i < ARRAY_SIZE(wm831x_usb_limits); i++) {
->> +             if (limit >= wm831x_usb_limits[i] &&
->> +                 wm831x_usb_limits[best] < wm831x_usb_limits[i])
->> +                     best = i;
->> +     }
->> +
->> +     dev_dbg(wm831x_power->wm831x->dev,
->> +             "Limiting USB current to %umA", wm831x_usb_limits[best]);
->> +
->> +     wm831x_set_bits(wm831x_power->wm831x, WM831X_POWER_STATE,
->> +                     WM831X_USB_ILIM_MASK, best);
->> +
->> +     return 0;
->> +}
->> +
->>  /*********************************************************************
->>   *           Battery properties
->>   *********************************************************************/
->> @@ -607,6 +647,33 @@ static int wm831x_power_probe(struct platform_device *pdev)
->>               }
->>       }
->>
->> +     power->usb_phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
->> +     ret = PTR_ERR_OR_ZERO(power->usb_phy);
->> +
->> +     switch (ret) {
->> +     case 0:
->> +             power->usb_notify.notifier_call = wm831x_usb_limit_change;
->> +             ret = usb_register_notifier(power->usb_phy, &power->usb_notify);
->> +             if (ret) {
->> +                     dev_err(&pdev->dev, "Failed to register notifier: %d\n",
->> +                             ret);
->> +                     goto err_bat_irq;
->> +             }
->> +             break;
->> +     case -EINVAL:
->> +     case -ENODEV:
->> +             /* ignore missing usb-phy, it's optional */
->> +             power->usb_phy = NULL;
->> +             ret = 0;
->> +             break;
->> +     default:
->> +             dev_err(&pdev->dev, "Failed to find USB phy: %d\n", ret);
->> +             /* fall-through */
->> +     case -EPROBE_DEFER:
->> +             goto err_bat_irq;
->> +             break;
->> +     }
->> +
->>       return ret;
->>
->>  err_bat_irq:
->> @@ -637,6 +704,11 @@ static int wm831x_power_remove(struct platform_device *pdev)
->>       struct wm831x *wm831x = wm831x_power->wm831x;
->>       int irq, i;
->>
->> +     if (wm831x_power->usb_phy) {
->> +             usb_unregister_notifier(wm831x_power->usb_phy,
->> +                                     &wm831x_power->usb_notify);
->> +     }
->> +
->>       for (i = 0; i < ARRAY_SIZE(wm831x_bat_irqs); i++) {
->>               irq = wm831x_irq(wm831x,
->>                                platform_get_irq_byname(pdev,
->> --
->> 1.7.9.5
->>
-
-
-
--- 
-Baolin.wang
-Best Regards
+ChenYu
