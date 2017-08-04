@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v3 4/6] dt-bindings: PCI: rename and cleanup MediaTek binding text
-Date: Fri, 4 Aug 2017 20:06:40 +0800
-Message-ID: <4209148bf2fa9bb981d44e8b0245141ccb25c23a.1501846816.git.honghui.zhang@mediatek.com>
+Subject: [PATCH v3 3/6] PCI: mediatek: switch to use platform_get_resource_byname()
+Date: Fri, 4 Aug 2017 20:06:39 +0800
+Message-ID: <45decb30c1eda6303e2e521a8afe3196763307c3.1501846816.git.honghui.zhang@mediatek.com>
 References: <cover.1501846816.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,87 +14,53 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ryder Lee <ryder.lee@mediatek.com>
 
-In order to accommodate other SoC generations, this patch updates filename
-to make it more generic, regroups specific properties by SoCs, and removes
-redundant descriptions.
+This is a transitional patch. We currently use platfarm_get_resource() for
+retrieving the IOMEM resources, but there might be some chips don't have
+subsys/shared registers part, which depends on platform design, and these
+will be introduced in further patches.
+
+Switch this function to use the platform_get_resource_byname() so that the
+binding can be agnostic of the resource order.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- ...{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} | 32 +++++++++++-----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
- rename Documentation/devicetree/bindings/pci/{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} (90%)
+ drivers/pci/host/pcie-mediatek.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-similarity index 90%
-rename from Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-rename to Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-index fe80dda..0fdcb15 100644
---- a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-@@ -1,18 +1,13 @@
--MediaTek Gen2 PCIe controller which is available on MT7623 series SoCs
--
--PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
--ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
-+MediaTek Gen2 PCIe controller
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index 5d7f62e..63d300f 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -295,7 +295,8 @@ static int mtk_pcie_parse_ports(struct mtk_pcie *pcie,
+ 		return err;
+ 	}
  
- Required properties:
--- compatible: Should contain "mediatek,mt7623-pcie".
-+- compatible: Should contain one of the following strings:
-+	"mediatek,mt2701-pcie"
-+	"mediatek,mt7623-pcie"
- - device_type: Must be "pci"
- - reg: Base addresses and lengths of the PCIe controller.
- - #address-cells: Address representation for root ports (must be 3)
- - #size-cells: Size representation for root ports (must be 2)
--- #interrupt-cells: Size representation for interrupts (must be 1)
--- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
--  Please refer to the standard PCI bus binding document for a more detailed
--  explanation.
- - clocks: Must contain an entry for each entry in clock-names.
-   See ../clocks/clock-bindings.txt for details.
- - clock-names: Must include the following entries:
-@@ -20,12 +15,6 @@ Required properties:
-   - sys_ck0 :for clock of Port0
-   - sys_ck1 :for clock of Port1
-   - sys_ck2 :for clock of Port2
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - pcie-rst0 :port0 reset
--  - pcie-rst1 :port1 reset
--  - pcie-rst2 :port2 reset
- - phys: List of PHY specifiers (used by generic PHY framework).
- - phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
-   number of PHYs as specified in *phys* property.
-@@ -34,6 +23,16 @@ Required properties:
- - bus-range: Range of bus numbers associated with this controller.
- - ranges: Ranges for the PCI memory and I/O regions.
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, index + 1);
++	snprintf(name, sizeof(name), "port%d", index);
++	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+ 	port->base = devm_ioremap_resource(dev, regs);
+ 	if (IS_ERR(port->base)) {
+ 		dev_err(dev, "failed to map port%d base\n", index);
+@@ -336,12 +337,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
+ 	struct resource *regs;
+ 	int err;
  
-+Required properties for MT7623/MT2701:
-+- #interrupt-cells: Size representation for interrupts (must be 1)
-+- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
-+  number of root ports.
-+
- In addition, the device tree node must have sub-nodes describing each
- PCIe port interface, having the following mandatory properties:
+-	/* get shared registers */
+-	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pcie->base = devm_ioremap_resource(dev, regs);
+-	if (IS_ERR(pcie->base)) {
+-		dev_err(dev, "failed to map shared register\n");
+-		return PTR_ERR(pcie->base);
++	/* get shared registers, which are optional */
++	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subsys");
++	if (regs) {
++		pcie->base = devm_ioremap_resource(dev, regs);
++		if (IS_ERR(pcie->base)) {
++			dev_err(dev, "failed to map shared register\n");
++			return PTR_ERR(pcie->base);
++		}
+ 	}
  
-@@ -85,7 +84,8 @@ Examples:
- 			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
- 			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
- 		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
--		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
-+		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>,
-+		       <&pcie2_phy PHY_TYPE_PCIE>;
- 		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
- 		bus-range = <0x00 0xff>;
+ 	pcie->free_ck = devm_clk_get(dev, "free_ck");
 -- 
 2.6.4
