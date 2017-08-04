@@ -1,131 +1,87 @@
-From: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: Re: [PATCH v3 2/5] dmaengine: Add STM32 DMAMUX driver
-Date: Fri, 4 Aug 2017 14:50:01 +0200
-Message-ID: <58bf2f7c-faf1-d1e9-3c87-d7964d1ba3d4@st.com>
-References: <1499343623-5964-1-git-send-email-pierre-yves.mordret@st.com>
- <1499343623-5964-3-git-send-email-pierre-yves.mordret@st.com>
- <20170722065133.GT3053@localhost>
- <2b916330-9b65-f4d5-817f-79b66cc236b3@st.com>
- <20170726052930.GF3053@localhost>
- <f2908e38-dc4d-3886-4058-52a7ad845415@st.com>
- <20170731123157.GJ3053@localhost>
- <e3a76a50-4160-d111-cce9-132b46b66c33@st.com>
- <20170802045522.GU3053@localhost>
- <7d2091fe-a2e5-78bb-b63d-9cb66bdb7e84@ti.com>
- <7bcad698-fa1a-3dc2-e918-4400639ca6d7@st.com>
- <47ceba83-1097-072e-bed6-d1964bce7a25@ti.com>
- <0e16a519-3d60-f683-5517-12a520e0e521@st.com>
- <f0db566e-5613-8914-e070-915c8c4d9b9f@ti.com>
- <71b7ef2a-d745-d16b-4538-567c856cce9a@st.com>
- <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: hisi: add PCIe host controller node for hip07
+ SoC
+Date: Fri, 4 Aug 2017 14:01:46 +0100
+Message-ID: <5984703A.4060302@hisilicon.com>
+References: <1500366820-58555-1-git-send-email-wangzhou1@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <401305f0-15d8-1996-60d6-69c13cbacc06@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Vinod Koul <vinod.koul@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie DELAUNAY <amelie.delaunay@st.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Fabrice GASNIER <fabrice.gasnier@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Herbert Xu <herbert@gondor.apana.org.au>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1500366820-58555-1-git-send-email-wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwOC8wMy8yMDE3IDExOjQ4IEFNLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiAKPiBUZXhh
-cyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5rYXR1IDIyLCAwMDE4MCBIZWxzaW5r
-aS4gWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4gS290aXBhaWtrYS9Eb21pY2lsZTog
-SGVsc2lua2kKPiAKPiBPbiAyMDE3LTA4LTAzIDEyOjAwLCBQaWVycmUgWXZlcyBNT1JEUkVUIHdy
-b3RlOgo+Pj4gV2hhdCBJIGFjdHVhbGx5IG1lYW4gaXMgdGhhdCB5b3Ugc2hvdWxkIG5vdCBuZWVk
-IHRvIG1vZGlmeSB0aGUgRE1BIAo+Pj4gZHJpdmVyIGF0IGFsbC4KPj4+IEFjY29yZGluZyB0byBz
-dG0zMi1kbWEudHh0Ogo+Pj4gI2RtYS1jZWxscyA9IDw0PjsKPj4+IDEuIGNoYW5uZWxJRAo+Pj4g
-Mi4gcmVxdWVzdCBsaW5lIG51bWJlcgo+Pj4gMy4gLSA0LiBzb21lIHBhcmFtZXRlcnMKPj4+Cj4+
-PiBJIGJlbGlldmUgaWYgeW91IGRvbid0IGhhdmUgdGhlIGV2ZW50IHJvdXRlciAoZGlyZWN0bHkg
-dXNpbmcgdGhlIERNQSAKPj4+IG5vZGUpIHlvdSBhbHdheXMgbmVlZCB0byBwcm92aWRlIHRoZXNl
-LCByaWdodD8KPj4KPj4gQ29ycmVjdAo+Pgo+Pj4gSWYgSSdtIG5vdCBtaXN0YWtlbiwgd2hlbiB5
-b3UgdXNlIHRoZSBldmVudCByb3V0ZXIgeW91IHdhbnQgdG8gb21pdCB0aGUgCj4+PiBDaGFubmVs
-SUQgYW5kIGdldCBhIHJhbmRvbSBjaGFubmVsIHZpYSBkbWFfZ2V0X2FueV9zbGF2ZV9jaGFubmVs
-IGluIHRoZSAKPj4+IERNQSBkcml2ZXIgYW5kIGZlZWQgYmFjayB0aGUgY2hhbm5lbElEIHRvIHRo
-ZSBldmVudCByb3V0ZXIgZHJpdmVyPwo+Pgo+PiBBZ2FpbiBjb3JyZWN0Lgo+Pgo+Pj4gSSBiZWxp
-ZXZlIHRoZSByZWFzb24gZm9yIHRoaXMgaXMgdGhhdCB5b3Ugd2FudCB0byBrZWVwIG1peGVkIGJp
-bmRpbmcgCj4+PiB1c2UsIHRvIGhhdmUgZGlyZWN0IERNQSBiaW5kaW5ncyBhbmQgYmluZGluZ3Mg
-dmlhIGV2ZW50IHJvdXRlci4KPj4+Cj4+Cj4+IFdlbGwgbm8uIHBlcmlwaGVyYWwgaGFzIHRvIHVz
-ZSBETUFNVVggYW5kIG1peGluZyB1cCBpcyB0byBiZSBhdm9pZGVkLiBUaGlzIGlzCj4+IG1vcmUg
-Zm9yIGJhY2t3YXJkIGNvbXBhdGliaWxpdHkgd2l0aCBTb0Mgd2hpY2ggZG9lc24ndCBoYXZlIGEg
-RE1BTVVYLgo+Pgo+Pj4gTm93IHdoYXQgaGFwcGVucyBpZiB5b3UgaGF2ZSBkaXJlY3QgYmluZGlu
-ZzoKPj4+IGRldmljZTEgewo+Pj4gCWRtYXMgPSA8JmRtYTIgMSA0IDB4MTA0MDAgMHgzPjsKPj4+
-IH07Cj4+Pgo+Pj4gYW5kIHZpYSBldmVudCByb3V0ZXI6Cj4+PiBkZXZpY2UyIHsKPj4+IAlkbWFz
-ID0JPCZkbWFfcm91dGVyIDEwIDB4MTA0MDAgMHgzPiwKPj4+IAkJPCZkbWFfcm91dGVyIDExIDB4
-MTA0MDAgMHgzPjsKPj4+IH07Cj4+Pgo+Pj4gZGV2aWNlMiBwcm9iZXMgZmlyc3QsIHdpbGwgZ2V0
-IGNoYW5uZWxJRCAwIGFuZCAxIHZpYSAKPj4+IGRtYV9nZXRfYW55X3NsYXZlX2NoYW5uZWwuCj4+
-Pgo+Pj4gV2hlbiBkZXZpY2UxIHRyaWVzIHRvIHByb2JlLCB0aGUgY2hhbm5lbElEIDEgaXMgYWxy
-ZWFkeSB0YWtlbi4uCj4+Cj4+IFllcyB0aGlzIGlzIGEgZmxhdyBpZiB3ZSBtaXggdXAgYmluZGlu
-Z3MuCj4+Cj4+Pgo+Pj4gWW91IG5lZWQgdG8gY29udmVydCBhbGwgcGVyaXBoZXJhbHMgdG8gdXNl
-IHRoZSBldmVudCByb3V0ZXIgdG8gYXZvaWQgCj4+PiBzdWNoIGEgcmFjZXMuIEkgaGF2ZSBkb25l
-IHRoZSBzYW1lIGZvciB0aGUgZHJhNy4KPj4+IEFkZCB0aGUgZXZlbnQgcm91dGVyIGRyaXZlciwK
-Pj4+IGFkZCB0aGUgZXZlbnQgcm91dGVyIG5vZGUgYW5kIGNvbnZlcnQgZXhpc3RpbmcgdXNlcnMg
-dG8gdXNlIHRoYXQKPj4+IHdoZW4gYWRkaW5nIG5ldyBkZXZpY2VzLCB1c2UgdGhlIGV2ZW50IHJv
-dXRlciBub2RlLgo+Pj4KPj4+IFRoZSBldmVudCByb3V0ZXIncyBiaW5kaW5nIHdvdWxkIGhhdmUg
-MyBwYXJhbWV0ZXJzLCBpdCBtYW5hZ2VzIHRoZSAKPj4+IGF2YWlsYWJsZSBjaGFubmVsSURzLCBs
-aWtlIHRoZSB0aS1kbWEtY3Jvc3NiYXIgZG9lcyBmb3IgZHJhNy4gQXQgCj4+PiBhbGxvY2F0ZSB0
-aW1lIGl0IHdvdWxkIHBpY2sgYW4gdW51c2VkIGNoYW5uZWxJRCBhbmQgY3JhZnQgdGhlIGRtYS1z
-cGVjIAo+Pj4gd2l0aCB0aGUgZm91ciBwYXJhbWV0ZXJzIGFzIGRvY3VtZW50ZWQuCj4+PiBUaGUg
-bWFpbiBETUEgZHJpdmVyIHdpbGwgbm90IG5lZWQgYW55IG1vZGlmaWNhdGlvbiBhcyBldmVyeXRo
-aW5nIHdpbGwgYmUgCj4+PiB0YWtlbiBjYXJlIG9mIGJ5IHRoZSBldmVudCByb3V0ZXIuCj4+Pgo+
-Pgo+PiBJIGxvb2sgdXAgd2hhdCBoYXMgYmVlbiBkb25lIGluIHRpLWRtYS1jcm9zc2JhciBhbmQg
-YWN0dWFsbHkgdGhpcyBETUFNVVggZHJpdmVyCj4+IGhhcyBiZWVuIHdlbGwgaW5zcGlyZWQgZnJv
-bSB0aS1kbWEtY3Jvc3NiYXIuCj4+IE5vbmV0aGVsZXNzIEkgdW5kZXJzdGFuZCB3aGF0IHlvdSBt
-ZWFudC4gVGhlIGNoYW5uZWxJRCBkb2Vzbid0IGNvbWUgZnJvbSB0aGUKPj4gZG1hZW5naW5lIGFu
-ZCBhIHBpZWNlIGEgY29kZSBpcyBkZXZpc2VkIHRvIGFsbG9jYXRlIHRob3NlLiBJIGNvdWxkIGNv
-cHkvcGFzdGUKPj4gc3VjaCBjb2RlIGluIG15IHNpZGUgYnV0IEkgZG8gYmVsaWV2ZSB0aGlzIHdv
-dWxkIGJlIGJldHRlciBpZiBzdWNoIGluZm9ybWF0aW9uCj4+IHdvdWxkIGNvbWUgZnJvbSBkbWFl
-bmdpbmUgaW5zdGVhZCA6IHRoaXMgaXMgd2hhdCBJIGRpZCBidXQgYSBsaW5rL2NhbGxiYWNrIGlz
-Cj4+IG1pc3NpbmcgdG8gY3JhZnQgdGhpcyBpbmZvIHVudGlsIERNQS4gQ2hhbm5lbElEIGlzIGNv
-bXB1dGVkIGluIHR3byBwbGFjZXMgaW4KPj4gZG1hZW1naW5lIGFuZCBpbiB5b3VyIGRyaXZlci4g
-TW9yZW92ZXIgYW55IHJvdXRlciBpcyBnb2luZyB0byBkZXZlbG9wIGl0cyBvd24KPj4gY2hhbm5l
-bElEIGFsbG9jYXRvciwgaW5mbyB3aGljaCBub3JtYWxseSBjb21lcyBmcm9tIGRtYWVuZ2luZS4K
-PiAKPiB5ZXMgYW5kIG5vLgo+IEluIG15IGNhc2Ugb24gZHI3IHdlIGhhdmUgRE1BIHJlcXVlc3Qg
-Y3Jvc3NiYXIgdG8gc3VwcG9ydCBtb3JlIGV2ZW50cwo+IHRoYW4gZWl0aGVyIGVETUEgb3Igc0RN
-QSBjb3VsZCBwb3NzaWJsZSBoYW5kbGUuIGVETUEgYW5kIHNETUEgd29ya3MgaW4KPiBkaWZmZXJl
-bnQgd2F5cywgYnV0IHRoZSBzYW1lIGV2ZW50IHJvdXRlciBkcml2ZXIgZmFjaWxpdGF0ZXMgdGhl
-bSBmaW5lLgo+IEluIHNETUEgYW55IGNoYW5uZWwgY2FuIHNlcnZpY2UgYW55IERNQSByZXF1ZXN0
-cywgd2hpbGUgaW4gZURNQSB0aGUKPiBjaGFubmVsIG51bWJlciBhbmQgdGhlIGV2ZW50IG51bWJl
-cnMgYXJlIG1hdGNoZWQgKGNoMTAgY2FuIHNlcnZpY2Ugb25seQo+IGV2ZW50MTApLgo+IAo+IE91
-ciBldmVudCByb3V0ZXIgZHJpdmVyJ3MgdGFzayBpcyB0byBtYXAgdGhlIGluY29taW5nIGV2ZW50
-IG51bWJlciB0byBhbgo+IG91dGdvaW5nIGV2ZW50IG51bWJlciwgd2hpY2ggaXMgdGhlbiBnb2lu
-ZyB0byBiZSB1c2VkIGJ5IHRoZSBETUEgZHJpdmVyCj4gYXMgaW5jb21pbmcgZXZlbnQuIFNvIGlu
-IHRoZSBjcm9zc2JhciB3ZSBhbnl3YXlzIG5lZWQgdG8gcGljayBhbiBldmVudAo+IGZyb20gdGhl
-IGF2YWlsYWJsZSBsaXN0IG9mIHVudXNlZCBvbmVzLiBUaGUgRE1BIGRyaXZlcnMgKGVETUEgb3Ig
-c0RNQSkKPiB3b3VsZCBqdXN0IHRoaW5rIHRoYXQgdGhlIHJlcXVlc3QgY29tZXMgdmlhIG5vcm1h
-bCBiaW5kaW5nIGFuZCBkb2VzIHdoYXQKPiBpdCBub3JtYWxseSBkb2VzIG9uIFNvQyB3aGVyZSB3
-ZSBkb24ndCBoYXZlIHRoZSBjcm9zc2JhciAoT01BUHMgZm9yCj4gc0RNQSwgZGFWaW5jaSwgYW0z
-My9hbTQzLCBrMmcsIGV0YyBmb3IgZURNQSkuCj4gCj4gSSdtIG5vdCBzdXJlIHdoYXQgeW91ciBE
-TUFNVVggbXV4ZXMsIGlzIGl0IHRoZSBjaGFubmVscyBvciB0aGUgZXZlbnRzLAo+IGJ1dCBpdCBv
-bmx5IG5lZWQgdG8gbWFuYWdlIHRoZSBuZWVkZWQsIG1vdmluZyBwYXJ0cy4KPiAKCk91ciBETUFN
-VVggY2FuIG1hbmFnZSB1cCB0byAyNTUgcmVxdWVzdCBsaW5lcyAob25seSAxMjggaXMgZXZlbnR1
-YWxseSBhc3NpZ25lZAp0aG91Z2gpIG9udG8gMTYgZXZlbnRzOiA4IGV2ZW50cyBtYXBwZWQgb24g
-MSBETUEgYW5kIHRoZSA4IG90aGVycyBvbnRvIHRoZQpzZWNvbmQgRE1BLiBSZXF1ZXN0IGxpbmUg
-bnVtYmVyaW5nIGlzIGZpeGVkIChhIHBlcmlwaGVyYWwgRE1BIHJlcXVlc3QgaXMKYXNzaWduZWQg
-dG8gb25lIE1VWCBpbnB1dCkgYW5kIGJ1dCBjYW4gYmUgcm91dGVkIHJhbmRvbWx5IG9udG8gdGhl
-IGFueSAxNgpjaGFubmVscy4gV2UgdXNlIGNoYW5JRCB0byBtdXggaW5wdXQgb24gZXZlbnQuCmNo
-YW5JRCBnaXZlbiBieSBkbWFfZ2V0X2FueV9zbGF2ZV9jaGFubmUgaXMgZW5vdWdoIGluIG91ciBj
-YXNlLgoKUHkKCj4+IFZpbm9kLCBJIGNhbiB1cGRhdGUgbXkgZHJpdmVyIHRvIG1pbWljIHdoYXQg
-dGktZG1hLWNyb3NzYmFyIGRpZCB0byBhdm9pZCB0aGUKPj4gY3VzdG9tIEFQSS4gVGhpcyBpcyBz
-IHJhdGhlciBiaWcgY2hhbmdlIHRvIGV2YWx1YXRlIGluIG15IHNpZGUgdGhvdWdoLgo+PiBIb3dl
-dmVyIGl0IHNlZW1zIHRvIG1lIHN1Y2ggaW5mbyBzaG91bGQgaGF2ZSBjb21lIGZyb20gZG1hZW5n
-aW5lIGFuZCBub3QgZnJvbQo+PiBkcml2ZXIuCj4+IExldCBtZSBrbm93IHlvdXIgdGhvdWdodCBh
-Ym91dCB0aGlzCj4+Cj4+PiBUaGUgb25seSBnb3RjaGEgaXMgd2l0aCBtZW1jcHkgdHlwZSBvZiB0
-cmFuc2ZlcnMgYXMgdGhleSBtaWdodCBhbHNvIG5lZWQgCj4+PiB1bmlxdWUgY2hhbm5lbElELCBi
-dXQgbm90IHJlcXVlc3RlZCB2aWEgdGhlIHNsYXZlIGJpbmRpbmcuIEZvciB0aGF0IEkgCj4+PiBo
-YXZlIGFkZGVkIHByb3BlcnRpZXMgdG8gdGhlIGV2ZW50IHJvdXRlciB0byBtYXNrIG91dCBjZXJ0
-YWluIGNoYW5uZWxzIAo+Pj4gKGFuZCBJIG5lZWRlZCB0byBkbyB0aGUgc2FtZSBmb3IgdGhlIGVE
-TUEsIGJ1dCBpdCBpcyB1bnJlbGF0ZWQgdG8gdGhlIAo+Pj4gcm91dGVyIGl0c2VsZikuCj4+Pgo+
-Pj4KPj4+IC0gUMOpdGVyCj4+Pgo+Pgo+PiBQeQo+Pgo+IAo+IC0gUMOpdGVyCj4gCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Zhou,
+
+On 2017/7/18 9:33, Zhou Wang wrote:
+> Add one PCIe host controller node for HiSilicon Hip07 SoC and enable it in
+> D05 board.
+> 
+> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hip07-d05.dts |  4 ++++
+>  arch/arm64/boot/dts/hisilicon/hip07.dtsi    | 21 +++++++++++++++++++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+> index f5d7f08..fe7c16c 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+> @@ -84,3 +84,7 @@
+>  &sas1 {
+>  	status = "ok";
+>  };
+> +
+> +&p0_pcie2_a {
+> +	status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+> index 283d7b5..077b2d7b 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+> @@ -1534,5 +1534,26 @@
+>  				     <637 1>,<638 1>,<639 1>;
+>  			status = "disabled";
+>  		};
+> +
+> +		p0_pcie2_a: pcie@a00a0000 {
+> +			compatible = "hisilicon,pcie-almost-ecam";
+
+The compatible string should be "hisilicon,hip07-pcie-ecam".
+
+> +			reg = <0 0xa8000000 0 0x800000>,<0 0xa00a0000 0 0x10000>;
+> +			bus-range = <0x80 0x87>;
+> +			msi-map = <0x8000 &p0_its_dsa_a 0x8000 0x800>;
+> +			msi-map-mask = <0xffff>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			dma-coherent;
+> +			ranges = <0x02000000 0 0xa8800000 0 0xa8800000 0 0x77f0000
+> +				  0x01000000 0 0 0 0xafff0000 0 0x10000>;
+
+Can you also check whether the ranges are working or not with current UEFI?
+Thanks!
+
+Best Regards,
+Wei
+
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0xf800 0 0 7>;
+> +			interrupt-map = <0x0 0 0 1 &mbigen_pcie2_a 671 4
+> +					 0x0 0 0 2 &mbigen_pcie2_a 671 4
+> +					 0x0 0 0 3 &mbigen_pcie2_a 671 4
+> +					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
