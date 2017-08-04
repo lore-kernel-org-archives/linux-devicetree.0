@@ -1,73 +1,45 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: Re: [linux-sunxi] [PATCH 10/13] [NOT FOR REVIEW NOW] clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3 HDMI clock
-Date: Fri, 04 Aug 2017 12:16:41 +0800
-Message-ID: <55076172-DD11-4AF5-AEAF-A16C757BF5F0@aosc.io>
-References: <20170801131304.7741-1-icenowy@aosc.io> <20170801131304.7741-11-icenowy@aosc.io> <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH v3 1/2] gpio: davinci: Add keystone-k2g compatible
+Date: Fri, 4 Aug 2017 09:46:13 +0530
+Message-ID: <af4f6eda-9a91-2ed4-ed34-1fa4e90f0d7c@ti.com>
+References: <1501051524-5990-1-git-send-email-j-keerthy@ti.com>
+ <20170803161748.u7ier3kt3xmm25jw@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: wens@csie.orgChen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170803161748.u7ier3kt3xmm25jw@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: ssantosh@kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, fcooper@ti.com, s-anna@ti.com, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-于 2017年8月4日 GMT+08:00 下午12:15:27, Chen-Yu Tsai <wens@csie.org> 写到:
->Hi,
->
->On Tue, Aug 1, 2017 at 9:13 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
->> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Thursday 03 August 2017 09:47 PM, Rob Herring wrote:
+> On Wed, Jul 26, 2017 at 12:15:23PM +0530, Keerthy wrote:
+>> The patch adds keystone-k2g compatible, specific properties and
+>> an example.
 >>
->> When setting the HDMI clock of H3, the PLL_VIDEO clock needs to be
->set.
->>
->> Add CLK_SET_RATE_PARENT flag for H3 HDMI clock.
->>
->> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
 >> ---
->>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
->b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
->> index b1127e8629d9..2ebb3d865b01 100644
->> --- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
->> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
->> @@ -474,7 +474,7 @@ static SUNXI_CCU_GATE(avs_clk,             
->"avs",          "osc24M",
+>> Changes in v3:
 >>
->>  static const char * const hdmi_parents[] = { "pll-video" };
->>  static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hdmi_parents,
->> -                                0x150, 0, 4, 24, 2, BIT(31), 0);
->> +                                0x150, 0, 4, 24, 2, BIT(31),
->CLK_SET_RATE_PARENT);
->
->Line is longer than 80 characters.
->
->This looks independent enough so I've merged this for 4.14 with the
->offending line wrapped and the following tag added:
->
->Fixes: 0577e4853bfb ("clk: sunxi-ng: Add H3 clocks")
+>>   * Added details about family of SoCs corresponding to compatibles.
+>>
+>>  .../devicetree/bindings/gpio/gpio-davinci.txt      | 40 +++++++++++++++++++++-
+>>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Please don't merge this now until Jernej send it.
+Thanks Rob.
 
->
->ChenYu
->
->>
->>  static SUNXI_CCU_GATE(hdmi_ddc_clk,    "hdmi-ddc",     "osc24M",
->>                       0x154, BIT(31), 0);
->> --
->> 2.13.0
->>
->> --
->> You received this message because you are subscribed to the Google
->Groups "linux-sunxi" group.
->> To unsubscribe from this group and stop receiving emails from it,
->send an email to linux-sunxi+unsubscribe@googlegroups.com.
->> For more options, visit https://groups.google.com/d/optout.
+Santosh,
+
+I will post a v4 adding Rob's and Linus's Ack.
+
+Thanks,
+Keerthy
+
+> 
