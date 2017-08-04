@@ -1,35 +1,90 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH 03/13] drm: sun4i: add support for H3's TCON
-Date: Fri, 4 Aug 2017 11:56:22 +0800
-Message-ID: <CAGb2v65gxoQgcdhyZVWFNeKxUJj34FuN7EJx-a6DkquyQhLYRA@mail.gmail.com>
-References: <20170801131304.7741-1-icenowy@aosc.io>
- <20170801131304.7741-4-icenowy@aosc.io>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v4 1/2] arm: dts: mt7623: Add SD-card and EMMC to bananapi-r2
+Date: Fri, 4 Aug 2017 11:59:34 +0800
+Message-ID: <1c83eae1944992f7c5a9af946e03bc2c4e62c874.1501819056.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170801131304.7741-4-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMSwgMjAxNyBhdCA5OjEyIFBNLCBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFv
-c2MuaW8+IHdyb3RlOgo+IEZyb206IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy54eXo+Cj4K
-PiBBbGx3aW5uZXIgSDMgaGFzIHR3byBzcGVjaWFsIFRDT05zIHdpdGhvdXQgY2hhbm5lbCAwLgo+
-Cj4gQWRkIHN1cHBvcnQgZm9yIHRoaXMga2luZCBvZiBUQ09OLgo+Cj4gU2lnbmVkLW9mZi1ieTog
-SWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPgoKSWRlYWxseSB5b3Ugd291bGQgc3BsaXQg
-dGhpcyBpbnRvIHR3byBwYXRjaGVzLiBUaGUgZmlyc3Qgb25lIHdvdWxkIGFkZAp0aGUgcXVpcmtz
-IHN1cHBvcnQgZm9yIFRDT05zIHdpdGhvdXQgY2hhbm5lbCAwLiBJIGNhbiBhbHNvIHVzZSB0aGlz
-IGZvcgp0aGUgQTgwLiBUaGUgc2Vjb25kIHdvdWxkIGFkZCB0aGUgSDMgVENPTi4KCkNoZW5ZdQpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+From: Sean Wang <sean.wang@mediatek.com>
+
+The bananapi-r2 board has an SD-card controller and built-in
+EMMC storage so enables those devices in the devicetree. Also
+cleanup nodes in alphabetical order in the patch.
+
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 37 +++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+index 9f3e6dd..444ed93 100644
+--- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -179,6 +179,32 @@
+ 	status = "okay";
+ };
+ 
++&mmc0 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc0_pins_default>;
++	pinctrl-1 = <&mmc0_pins_uhs>;
++	status = "okay";
++	bus-width = <8>;
++	max-frequency = <50000000>;
++	cap-mmc-highspeed;
++	vmmc-supply = <&mt6323_vemc3v3_reg>;
++	vqmmc-supply = <&mt6323_vio18_reg>;
++	non-removable;
++};
++
++&mmc1 {
++	pinctrl-names = "default", "state_uhs";
++	pinctrl-0 = <&mmc1_pins_default>;
++	pinctrl-1 = <&mmc1_pins_uhs>;
++	status = "okay";
++	bus-width = <4>;
++	max-frequency = <50000000>;
++	cap-sd-highspeed;
++	cd-gpios = <&pio 261 0>;
++	vmmc-supply = <&mt6323_vmch_reg>;
++	vqmmc-supply = <&mt6323_vio18_reg>;
++};
++
+ &pio {
+ 	cir_pins_a:cir@0 {
+ 		pins_cir {
+@@ -314,6 +340,17 @@
+ 			bias-pull-down;
+ 			drive-strength = <MTK_DRIVE_4mA>;
+ 		};
++
++		pins_wp {
++			pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
++			input-enable;
++			bias-pull-up;
++		};
++
++		pins_insert {
++			pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
++			bias-pull-up;
++		};
+ 	};
+ 
+ 	mmc1_pins_uhs: mmc1 {
+-- 
+2.7.4
