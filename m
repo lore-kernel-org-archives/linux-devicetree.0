@@ -1,293 +1,260 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v1 3/5] [media] stm32-dcmi: cleanup variable/fields
- namings
-Date: Fri, 4 Aug 2017 13:51:54 +0200
-Message-ID: <821d2a4f-6b80-8ef5-13b9-9eb9828686a5@xs4all.nl>
-References: <1501236302-18097-1-git-send-email-hugues.fruchet@st.com>
- <1501236302-18097-4-git-send-email-hugues.fruchet@st.com>
+From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
+ Qualcomm Camera subsystem driver
+Date: Fri, 4 Aug 2017 14:54:21 +0300
+Message-ID: <1dc5ab4d-5171-c6df-4300-2abcd0e5483b@linaro.org>
+References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
+ <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+ <20170720101345.eovx5ovuxr7sqpea@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501236302-18097-4-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170720101345.eovx5ovuxr7sqpea-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28/07/17 12:05, Hugues Fruchet wrote:
-> Uniformize "pixfmt" variables to "pix".
-> Change "current_fmt" & "dcmi_fmt" variables to variables
-> with "sd_" prefix to explicitly refer to subdev format.
+Hi Sakari,
+
+Thank you for the review.
+
+On 20.07.2017 13:13, Sakari Ailus wrote:
+> Hi Todor,
 > 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/media/platform/stm32/stm32-dcmi.c | 103 ++++++++++++++++--------------
->  1 file changed, 54 insertions(+), 49 deletions(-)
+> On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
+>> Add DT binding document for Qualcomm Camera subsystem driver.
+>>
+>> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
+>>  1 file changed, 191 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+>> new file mode 100644
+>> index 0000000..f698498
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+>> @@ -0,0 +1,191 @@
+>> +Qualcomm Camera Subsystem
+>> +
+>> +* Properties
+>> +
+>> +- compatible:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain:
+>> +		- "qcom,msm8916-camss"
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: Register ranges as listed in the reg-names property.
+>> +- reg-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain the following entries:
+>> +		- "csiphy0"
+>> +		- "csiphy0_clk_mux"
+>> +		- "csiphy1"
+>> +		- "csiphy1_clk_mux"
+>> +		- "csid0"
+>> +		- "csid1"
+>> +		- "ispif"
+>> +		- "csi_clk_mux"
+>> +		- "vfe0"
+>> +- interrupts:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: Interrupts as listed in the interrupt-names property.
+>> +- interrupt-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain the following entries:
+>> +		- "csiphy0"
+>> +		- "csiphy1"
+>> +		- "csid0"
+>> +		- "csid1"
+>> +		- "ispif"
+>> +		- "vfe0"
+>> +- power-domains:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A phandle and power domain specifier pairs to the
+>> +		    power domain which is responsible for collapsing
+>> +		    and restoring power to the peripheral.
+>> +- clocks:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A list of phandle and clock specifier pairs as listed
+>> +		    in clock-names property.
+>> +- clock-names:
+>> +	Usage: required
+>> +	Value type: <stringlist>
+>> +	Definition: Should contain the following entries:
+>> +                - "camss_top_ahb"
+>> +                - "ispif_ahb"
+>> +                - "csiphy0_timer"
+>> +                - "csiphy1_timer"
+>> +                - "csi0_ahb"
+>> +                - "csi0"
+>> +                - "csi0_phy"
+>> +                - "csi0_pix"
+>> +                - "csi0_rdi"
+>> +                - "csi1_ahb"
+>> +                - "csi1"
+>> +                - "csi1_phy"
+>> +                - "csi1_pix"
+>> +                - "csi1_rdi"
+>> +                - "camss_ahb"
+>> +                - "camss_vfe_vfe"
+>> +                - "camss_csi_vfe"
+>> +                - "iface"
+>> +                - "bus"
+>> +- vdda-supply:
+>> +	Usage: required
+>> +	Value type: <phandle>
+>> +	Definition: A phandle to voltage supply for CSI2.
+>> +- iommus:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: A list of phandle and IOMMU specifier pairs.
+>> +
+>> +* Nodes
+>> +
+>> +- ports:
+>> +	Usage: required
+>> +	Definition: As described in video-interfaces.txt in same directory.
+>> +	Properties:
+>> +		- reg:
+>> +			Usage: required
+>> +			Value type: <u32>
+>> +			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
+>> +	Endpoint node properties:
+>> +		- clock-lanes:
+>> +			Usage: required
+>> +			Value type: <u32>
+>> +			Definition: The clock lane.
+>> +		- data-lanes:
+>> +			Usage: required
+>> +			Value type: <prop-encoded-array>
+>> +			Definition: An array of data lanes.
+>> +
+>> +* An Example
+>> +
+>> +	camss: camss@1b00000 {
+>> +		compatible = "qcom,msm8916-camss";
+>> +		reg = <0x1b0ac00 0x200>,
+>> +			<0x1b00030 0x4>,
+>> +			<0x1b0b000 0x200>,
+>> +			<0x1b00038 0x4>,
+>> +			<0x1b08000 0x100>,
+>> +			<0x1b08400 0x100>,
+>> +			<0x1b0a000 0x500>,
+>> +			<0x1b00020 0x10>,
+>> +			<0x1b10000 0x1000>;
+>> +		reg-names = "csiphy0",
+>> +			"csiphy0_clk_mux",
+>> +			"csiphy1",
+>> +			"csiphy1_clk_mux",
+>> +			"csid0",
+>> +			"csid1",
+>> +			"ispif",
+>> +			"csi_clk_mux",
+>> +			"vfe0";
+>> +		interrupts = <GIC_SPI 78 0>,
+>> +			<GIC_SPI 79 0>,
+>> +			<GIC_SPI 51 0>,
+>> +			<GIC_SPI 52 0>,
+>> +			<GIC_SPI 55 0>,
+>> +			<GIC_SPI 57 0>;
+>> +		interrupt-names = "csiphy0",
+>> +			"csiphy1",
+>> +			"csid0",
+>> +			"csid1",
+>> +			"ispif",
+>> +			"vfe0";
+>> +		power-domains = <&gcc VFE_GDSC>;
+>> +		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
+>> +			<&gcc GCC_CAMSS_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_VFE0_CLK>,
+>> +			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+>> +			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+>> +			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+>> +                clock-names = "camss_top_ahb",
+>> +                        "ispif_ahb",
+>> +                        "csiphy0_timer",
+>> +                        "csiphy1_timer",
+>> +                        "csi0_ahb",
+>> +                        "csi0",
+>> +                        "csi0_phy",
+>> +                        "csi0_pix",
+>> +                        "csi0_rdi",
+>> +                        "csi1_ahb",
+>> +                        "csi1",
+>> +                        "csi1_phy",
+>> +                        "csi1_pix",
+>> +                        "csi1_rdi",
+>> +                        "camss_ahb",
+>> +                        "camss_vfe_vfe",
+>> +                        "camss_csi_vfe",
+>> +                        "iface",
+>> +                        "bus";
+>> +		vdda-supply = <&pm8916_l2>;
+>> +		iommus = <&apps_iommu 3>;
+>> +		ports {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			port@0 {
+>> +				reg = <0>;
+>> +				csiphy0_ep: endpoint {
+>> +					clock-lanes = <1>;
+>> +					data-lanes = <0 2>;
 > 
-> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-> index 526e354..4733d1f 100644
-> --- a/drivers/media/platform/stm32/stm32-dcmi.c
-> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-> @@ -132,9 +132,9 @@ struct stm32_dcmi {
->  	struct dcmi_graph_entity	entity;
->  	struct v4l2_format		fmt;
->  
-> -	const struct dcmi_format	**user_formats;
-> -	unsigned int			num_user_formats;
-> -	const struct dcmi_format	*current_fmt;
-> +	const struct dcmi_format	**sd_formats;
-> +	unsigned int			nb_of_sd_formats;
+> Do you support lane mapping? The values suggest "yes". That's something I
+> could improve in the documentation: if lane mapping isn't supported, then
+> the clock lane should be 0 and the data lanes from 1 to n.
 
-Please rename this to num_of_sd_formats. 'nb' is non-standard and non-obvious.
+Lane mapping is supported only for the data lanes. The clock lane is always
+the physical lane 1. This is why I think it makes sense to keep the value
+of the clock lane to 1 as this is the physical lane 1 really. I'll add
+explanation in the documentation for this and for the data lanes too so
+it is clear.
 
-Other than that this patch looks good and is a nice improvement.
+> 
+> Is the split of the lanes between the ports static and specific to the
+> hardware?
 
-Regards,
+Each port describes a separate CSIPHY so each has its own set of lanes.
 
-	Hans
-
-> +	const struct dcmi_format	*sd_format;
->  
->  	/* Protect this data structure */
->  	struct mutex			lock;
-> @@ -684,12 +684,12 @@ static int dcmi_g_fmt_vid_cap(struct file *file, void *priv,
->  static const struct dcmi_format *find_format_by_fourcc(struct stm32_dcmi *dcmi,
->  						       unsigned int fourcc)
->  {
-> -	unsigned int num_formats = dcmi->num_user_formats;
-> +	unsigned int num_formats = dcmi->nb_of_sd_formats;
->  	const struct dcmi_format *fmt;
->  	unsigned int i;
->  
->  	for (i = 0; i < num_formats; i++) {
-> -		fmt = dcmi->user_formats[i];
-> +		fmt = dcmi->sd_formats[i];
->  		if (fmt->fourcc == fourcc)
->  			return fmt;
->  	}
-> @@ -698,40 +698,42 @@ static const struct dcmi_format *find_format_by_fourcc(struct stm32_dcmi *dcmi,
->  }
->  
->  static int dcmi_try_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f,
-> -			const struct dcmi_format **current_fmt)
-> +			const struct dcmi_format **sd_format)
->  {
-> -	const struct dcmi_format *dcmi_fmt;
-> -	struct v4l2_pix_format *pixfmt = &f->fmt.pix;
-> +	const struct dcmi_format *sd_fmt;
-> +	struct v4l2_pix_format *pix = &f->fmt.pix;
->  	struct v4l2_subdev_pad_config pad_cfg;
->  	struct v4l2_subdev_format format = {
->  		.which = V4L2_SUBDEV_FORMAT_TRY,
->  	};
->  	int ret;
->  
-> -	dcmi_fmt = find_format_by_fourcc(dcmi, pixfmt->pixelformat);
-> -	if (!dcmi_fmt) {
-> -		dcmi_fmt = dcmi->user_formats[dcmi->num_user_formats - 1];
-> -		pixfmt->pixelformat = dcmi_fmt->fourcc;
-> +	sd_fmt = find_format_by_fourcc(dcmi, pix->pixelformat);
-> +	if (!sd_fmt) {
-> +		sd_fmt = dcmi->sd_formats[dcmi->nb_of_sd_formats - 1];
-> +		pix->pixelformat = sd_fmt->fourcc;
->  	}
->  
->  	/* Limit to hardware capabilities */
-> -	pixfmt->width = clamp(pixfmt->width, MIN_WIDTH, MAX_WIDTH);
-> -	pixfmt->height = clamp(pixfmt->height, MIN_HEIGHT, MAX_HEIGHT);
-> +	pix->width = clamp(pix->width, MIN_WIDTH, MAX_WIDTH);
-> +	pix->height = clamp(pix->height, MIN_HEIGHT, MAX_HEIGHT);
->  
-> -	v4l2_fill_mbus_format(&format.format, pixfmt, dcmi_fmt->mbus_code);
-> +	v4l2_fill_mbus_format(&format.format, pix, sd_fmt->mbus_code);
->  	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, set_fmt,
->  			       &pad_cfg, &format);
->  	if (ret < 0)
->  		return ret;
->  
-> -	v4l2_fill_pix_format(pixfmt, &format.format);
-> +	/* Update pix regarding to what sensor can do */
-> +	v4l2_fill_pix_format(pix, &format.format);
->  
-> -	pixfmt->field = V4L2_FIELD_NONE;
-> -	pixfmt->bytesperline = pixfmt->width * dcmi_fmt->bpp;
-> -	pixfmt->sizeimage = pixfmt->bytesperline * pixfmt->height;
->  
-> -	if (current_fmt)
-> -		*current_fmt = dcmi_fmt;
-> +	pix->field = V4L2_FIELD_NONE;
-> +	pix->bytesperline = pix->width * sd_fmt->bpp;
-> +	pix->sizeimage = pix->bytesperline * pix->height;
-> +
-> +	if (sd_format)
-> +		*sd_format = sd_fmt;
->  
->  	return 0;
->  }
-> @@ -741,22 +743,25 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
->  	struct v4l2_subdev_format format = {
->  		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->  	};
-> -	const struct dcmi_format *current_fmt;
-> +	const struct dcmi_format *sd_format;
-> +	struct v4l2_mbus_framefmt *mf = &format.format;
-> +	struct v4l2_pix_format *pix = &f->fmt.pix;
->  	int ret;
->  
-> -	ret = dcmi_try_fmt(dcmi, f, &current_fmt);
-> +	ret = dcmi_try_fmt(dcmi, f, &sd_format);
->  	if (ret)
->  		return ret;
->  
-> -	v4l2_fill_mbus_format(&format.format, &f->fmt.pix,
-> -			      current_fmt->mbus_code);
-> +	/* pix to mbus format */
-> +	v4l2_fill_mbus_format(mf, pix,
-> +			      sd_format->mbus_code);
->  	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
->  			       set_fmt, NULL, &format);
->  	if (ret < 0)
->  		return ret;
->  
->  	dcmi->fmt = *f;
-> -	dcmi->current_fmt = current_fmt;
-> +	dcmi->sd_format = sd_format;
->  
->  	return 0;
->  }
-> @@ -785,10 +790,10 @@ static int dcmi_enum_fmt_vid_cap(struct file *file, void  *priv,
->  {
->  	struct stm32_dcmi *dcmi = video_drvdata(file);
->  
-> -	if (f->index >= dcmi->num_user_formats)
-> +	if (f->index >= dcmi->nb_of_sd_formats)
->  		return -EINVAL;
->  
-> -	f->pixelformat = dcmi->user_formats[f->index]->fourcc;
-> +	f->pixelformat = dcmi->sd_formats[f->index]->fourcc;
->  	return 0;
->  }
->  
-> @@ -830,18 +835,18 @@ static int dcmi_enum_framesizes(struct file *file, void *fh,
->  				struct v4l2_frmsizeenum *fsize)
->  {
->  	struct stm32_dcmi *dcmi = video_drvdata(file);
-> -	const struct dcmi_format *dcmi_fmt;
-> +	const struct dcmi_format *sd_fmt;
->  	struct v4l2_subdev_frame_size_enum fse = {
->  		.index = fsize->index,
->  		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
->  	};
->  	int ret;
->  
-> -	dcmi_fmt = find_format_by_fourcc(dcmi, fsize->pixel_format);
-> -	if (!dcmi_fmt)
-> +	sd_fmt = find_format_by_fourcc(dcmi, fsize->pixel_format);
-> +	if (!sd_fmt)
->  		return -EINVAL;
->  
-> -	fse.code = dcmi_fmt->mbus_code;
-> +	fse.code = sd_fmt->mbus_code;
->  
->  	ret = v4l2_subdev_call(dcmi->entity.subdev, pad, enum_frame_size,
->  			       NULL, &fse);
-> @@ -859,7 +864,7 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
->  				    struct v4l2_frmivalenum *fival)
->  {
->  	struct stm32_dcmi *dcmi = video_drvdata(file);
-> -	const struct dcmi_format *dcmi_fmt;
-> +	const struct dcmi_format *sd_fmt;
->  	struct v4l2_subdev_frame_interval_enum fie = {
->  		.index = fival->index,
->  		.width = fival->width,
-> @@ -868,11 +873,11 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
->  	};
->  	int ret;
->  
-> -	dcmi_fmt = find_format_by_fourcc(dcmi, fival->pixel_format);
-> -	if (!dcmi_fmt)
-> +	sd_fmt = find_format_by_fourcc(dcmi, fival->pixel_format);
-> +	if (!sd_fmt)
->  		return -EINVAL;
->  
-> -	fie.code = dcmi_fmt->mbus_code;
-> +	fie.code = sd_fmt->mbus_code;
->  
->  	ret = v4l2_subdev_call(dcmi->entity.subdev, pad,
->  			       enum_frame_interval, NULL, &fie);
-> @@ -994,7 +999,7 @@ static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
->  			.width		= CIF_WIDTH,
->  			.height		= CIF_HEIGHT,
->  			.field		= V4L2_FIELD_NONE,
-> -			.pixelformat	= dcmi->user_formats[0]->fourcc,
-> +			.pixelformat	= dcmi->sd_formats[0]->fourcc,
->  		},
->  	};
->  	int ret;
-> @@ -1002,7 +1007,7 @@ static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
->  	ret = dcmi_try_fmt(dcmi, &f, NULL);
->  	if (ret)
->  		return ret;
-> -	dcmi->current_fmt = dcmi->user_formats[0];
-> +	dcmi->sd_format = dcmi->sd_formats[0];
->  	dcmi->fmt = f;
->  	return 0;
->  }
-> @@ -1025,7 +1030,7 @@ static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
->  
->  static int dcmi_formats_init(struct stm32_dcmi *dcmi)
->  {
-> -	const struct dcmi_format *dcmi_fmts[ARRAY_SIZE(dcmi_formats)];
-> +	const struct dcmi_format *sd_fmts[ARRAY_SIZE(dcmi_formats)];
->  	unsigned int num_fmts = 0, i, j;
->  	struct v4l2_subdev *subdev = dcmi->entity.subdev;
->  	struct v4l2_subdev_mbus_code_enum mbus_code = {
-> @@ -1040,13 +1045,13 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
->  
->  			/* Code supported, have we got this fourcc yet? */
->  			for (j = 0; j < num_fmts; j++)
-> -				if (dcmi_fmts[j]->fourcc ==
-> +				if (sd_fmts[j]->fourcc ==
->  						dcmi_formats[i].fourcc)
->  					/* Already available */
->  					break;
->  			if (j == num_fmts)
->  				/* New */
-> -				dcmi_fmts[num_fmts++] = dcmi_formats + i;
-> +				sd_fmts[num_fmts++] = dcmi_formats + i;
->  		}
->  		mbus_code.index++;
->  	}
-> @@ -1054,18 +1059,18 @@ static int dcmi_formats_init(struct stm32_dcmi *dcmi)
->  	if (!num_fmts)
->  		return -ENXIO;
->  
-> -	dcmi->num_user_formats = num_fmts;
-> -	dcmi->user_formats = devm_kcalloc(dcmi->dev,
-> -					 num_fmts, sizeof(struct dcmi_format *),
-> -					 GFP_KERNEL);
-> -	if (!dcmi->user_formats) {
-> -		dev_err(dcmi->dev, "could not allocate memory\n");
-> +	dcmi->nb_of_sd_formats = num_fmts;
-> +	dcmi->sd_formats = devm_kcalloc(dcmi->dev,
-> +					num_fmts, sizeof(struct dcmi_format *),
-> +					GFP_KERNEL);
-> +	if (!dcmi->sd_formats) {
-> +		dev_err(dcmi->dev, "Could not allocate memory\n");
->  		return -ENOMEM;
->  	}
->  
-> -	memcpy(dcmi->user_formats, dcmi_fmts,
-> +	memcpy(dcmi->sd_formats, sd_fmts,
->  	       num_fmts * sizeof(struct dcmi_format *));
-> -	dcmi->current_fmt = dcmi->user_formats[0];
-> +	dcmi->sd_format = dcmi->sd_formats[0];
->  
->  	return 0;
->  }
+> 
+>> +					remote-endpoint = <&ov5645_ep>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
 > 
 
+-- 
+Best regards,
+Todor Tomov
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
