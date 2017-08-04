@@ -1,86 +1,33 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH 1/2] drm/bridge: add Silicon Image SiI9234 driver
-Date: Fri, 04 Aug 2017 08:55:55 +0200
-Message-ID: <eea9742d-0180-205b-652e-f9bfbdd21c33@samsung.com>
-References: <1501746323-5254-1-git-send-email-m.purski@samsung.com>
- <CGME20170803074538eucas1p1fec88e4f2c3ebc00054fd362a504c03e@eucas1p1.samsung.com>
- <1501746323-5254-2-git-send-email-m.purski@samsung.com>
- <3612749.1Xj3PQ173Q@avalon>
+From: Zhiqiang Hou <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCHv2 0/3] dts: add ls2088a and 1088a pcie DT nodes
+Date: Fri, 4 Aug 2017 14:44:03 +0800
+Message-ID: <1501829046-3761-1-git-send-email-Zhiqiang.Hou@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <3612749.1Xj3PQ173Q@avalon>
-Content-language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Maciej Purski <m.purski@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, krzk@kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org
+Cc: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGF1cmVudCwKClRoYW5rcyBmb3IgeW91ciBkZXRhaWxlZCBjb21tZW50cy4gTWFjaWVqIHJl
-c3VycmVjdGVkIHNvbWUgb3JwaGFuZWQgY29kZSwKd2hpY2ggaXMgc3RpbGwgdXNlZnVsIHRvZGF5
-IChUb21hc3ogaGFzIGxlZnQgU2Ftc3VuZyBhIGZldyB5ZWFycyBhZ28pLgpJJ20gbm90IHN1cmUg
-d2Ugd2lsbCBiZSBhYmxlIHRvIGFuc3dlciBhbGwgeW91ciBxdWVzdGlvbnMgd2l0aG91dCBkZWVw
-CmludmVzdGlnYXRpb24sIGVzcGVjaWFsbHkgYWJvdXQgdGhlIGRyaXZlciBvcGVyYXRpb24gZGV0
-YWlscywgYnV0IHdlCndpbGwgdHJ5LgoKT24gMjAxNy0wOC0wMyAxMjoyNCwgTGF1cmVudCBQaW5j
-aGFydCB3cm90ZToKPiBIaSBNYWNpZWosCj4KPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPgo+
-IE9uIFRodXJzZGF5IDAzIEF1ZyAyMDE3IDA5OjQ1OjIyIE1hY2llaiBQdXJza2kgd3JvdGU6Cj4+
-IFNpSTkyMzQgdHJhbnNtaXR0ZXIgY29udmVydHMgZVRNRFMvSERNSSBzaWduYWwgdG8gTUhMIDEu
-MC4KPj4gSXQgaXMgY29udHJvbGxlZCB2aWEgSTJDIGJ1cy4gSXRzIGludGVyYWN0aW9uIHdpdGgg
-b3RoZXIKPj4gZGV2aWNlcyBpbiB2aWRlbyBwaXBlbGluZSBpcyBwZXJmb3JtZWQgbWFpbmx5IG9u
-IEhXIGxldmVsLgo+PiBUaGUgb25seSBpbnRlcmFjdGlvbiBpdCBkb2VzIG9uIGRldmljZSBkcml2
-ZXIgbGV2ZWwgaXMKPj4gZmlsdGVyaW5nLW91dCB1bnN1cHBvcnRlZCB2aWRlbyBtb2RlcywgaXQg
-ZXhwb3NlcyBkcm1fYnJpZGdlCj4+IGludGVyZmFjZSB0byBwZXJmb3JtIHRoaXMgb3BlcmF0aW9u
-Lgo+Pgo+PiBUaGlzIHBhdGNoIGlzIGJhc2VkIG9uIHRoZSBjb2RlIHJlZmFjdG9yZWQgYnkgVG9t
-YXN6IFN0YW5pc2xhd3NraQo+PiA8dC5zdGFuaXNsYXdzQHNhbXN1bmcuY29tPiwgd2hpY2ggd2Fz
-IGluaXRpYWxseSBkZXZlbG9wZWQgYnk6Cj4+IEFkYW0gSGFtcHNvbiA8YWhhbXBzb25Ac3RhLnNh
-bXN1bmcuY29tPgo+PiBFcmlrIEdpbGxpbmcgPGtvbmtlcnNAYW5kcm9pZC5jb20+Cj4+IFNoYW5r
-YXIgQmFuZGFsIDxzaGFua2FyLmJAc2Ftc3VuZy5jb20+Cj4+IERoYXJhbSBLdW1hciA8ZGhhcmFt
-LmtyQHNhbXN1bmcuY29tPgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBNYWNpZWogUHVyc2tpIDxtLnB1
-cnNraUBzYW1zdW5nLmNvbT4KPj4gLS0tCj4+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2Uvc2lpOTIzNC50eHQgfCAgIDIwICsKPj4gICBkcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL0tjb25maWcgICAgICAgICAgICAgICAgICAgICB8ICAgIDggKwo+PiAgIGRyaXZlcnMvZ3B1
-L2RybS9icmlkZ2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgIHwgICAgMSArCj4+ICAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9zaWk5MjM0LmMgICAgICAgICAgICAgICAgICAgfCAxMDE5ICsr
-KysrKysrKysrKysrKysrCj4+ICAgNCBmaWxlcyBjaGFuZ2VkLCAxMDQ4IGluc2VydGlvbnMoKykK
-Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0IGNyZWF0ZSBtb2RlCj4+IDEwMDY0NCBkcml2
-ZXJzL2dwdS9kcm0vYnJpZGdlL3NpaTkyMzQuYwo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQudHh0Cj4+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3NpaTkyMzQu
-dHh0IG5ldyBmaWxlCj4+IG1vZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjJjZGYyODYKPj4g
-LS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9icmlkZ2Uvc2lpOTIzNC50eHQKPiBEVCByZXZpZXdlcnMgbWlnaHQgYXNrIHlvdSB0
-byBzdWJtaXQgRFQgYmluZGluZ3MgYXMgYSBzZXBhcmF0ZSBwYXRjaC4KPgo+PiBAQCAtMCwwICsx
-LDIwIEBACj4+ICtTaUk5MjM0IE1vYmlsZSBIRCBMaW5rIFRyYW5zbWl0dGVyCj4+ICsKPj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGUgOiAic2lsLHNpaTkyMzQiLgo+PiAr
-LSByZWcgOiBJMkMgYWRkcmVzcyBmb3IgVFBJIGludGVyZmFjZSwgdXNlIDB4MzkKPj4gKy0gdmNj
-LXN1cHBseSA6IHJlZ3VsYXRvciB0aGF0IHN1cHBsaWVzIHRoZSBjaGlwCj4gSXMgdGhlcmUgYSBz
-aW5nbGUgcG93ZXIgc3VwcGx5IG9ubHkgPyBUcmFuc2NlaXZlcnMgdXN1YWxseSBoYXZlIGF0IGxl
-YXN0IG9uZQo+IGRpZ2l0YWwgYW5kIG9uZSBhbmFsb2cgcG93ZXIgc3VwcGx5LgoKQWNvcmRpbmcg
-dG8gdGhlIHNjaGVtYXRpYyB0aGVyZSBhcmUgZm91ciBwb3dlciBzdXBwbGllcyB1c2VkIGZvciBT
-SUk5MjM0IApNSEwgY2hpcCBpbgpUcmF0czIgYm9hcmQ6IFZTSUxfMS4yQSwgVlNJTF8xLjJDLCBW
-Q0NfMy4zVl9NSEwgYW5kIFZDQ18xLjhWX01ITC4gRmlyc3QgCnR3byBhcmUKZGVyaXZlZCBkaXJl
-Y3RseSBmcm9tIFZTSUxfMS4yIHNpZ25hbCwgd2hpY2ggaXMgbW9kZWxlZCBhcyBhIGZpeGVkIApy
-ZWd1bGF0b3IuIFRoZQpsYXR0ZXIgdHdvIGFyZSBkZXJpdmVkIGRpcmVjdGx5IGZyb20gVkJBVCB1
-c2luZyBzb21lIGxldmVsIGNvbnZlcnRlciwgCndoaWNoIGlzCmNvbnRyb2xsZWQgYnkgdGhlIHNh
-bWUgR1BJTyBwaW4gYXMgVlNJTCBmaXhlZCByZWd1bGF0b3IuIEFueSBpZGVhIGhvdyAKdGhpcyBz
-aG91bGQKYmUgcmVwcmVzZW50ZWQgYmV0dGVyIGluIGRldmljZSB0cmVlIGluc3RlYWQgb2YgaGF2
-aW5nIHNpbmdsZSB2Y2Mtc3VwcGx5PwoKPgo+PiArLSBpbnRlcnJ1cHRzLCBpbnRlcnJ1cHQtcGFy
-ZW50OiBpbnRlcnJ1cHQgc3BlY2lmaWVyIG9mIElOVCBwaW4KPj4gKy0gcmVzZXQtZ3Bpb3M6IGdw
-aW8gc3BlY2lmaWVyIG9mIFJFU0VUIHBpbgo+IElzIHRoaXMgbWFuZGF0b3J5IHRvIGNvbm5lY3Qg
-dGhlIHJlc2V0IHBpbiB0byB0aGUgU29DID8KCklNSE8geWVzLCB0aGUgY2hpcCBoYXMgdG8gYmUg
-cmVzZXQgZHVyaW5nIHRoZSBpbml0aWFsaXphdGlvbiBwcm9jZWR1cmUgCmFuZCBkb2Vzbid0Cndv
-cmsgcHJvcGVybHkgd2l0aG91dCByZXNldC4KCj4gPiBbLi4uXSAKCkJlc3QgcmVnYXJkcwotLSAK
-TWFyZWsgU3p5cHJvd3NraSwgUGhEClNhbXN1bmcgUiZEIEluc3RpdHV0ZSBQb2xhbmQKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
-aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
-ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: Hou Zhiqiang <Zhiqiang.Hou-3arQi8VN3Tc@public.gmane.org>
+
+Add GICv3 ITS DT node for ls1088a, because the PCIe nodes must
+have a msi-parent.
+
+Hou Zhiqiang (3):
+  dts: ls2088a: add pcie support
+  dts: ls1088a: add gicv3 ITS DT node
+  dts: ls1088a: add PCIe controller DT nodes
+
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 81 ++++++++++++++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi |  4 ++
+ 2 files changed, 85 insertions(+)
+
+-- 
+2.1.0.27.g96db324
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
