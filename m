@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 3/6] ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
-Date: Fri,  4 Aug 2017 20:08:13 +0200
-Message-ID: <20170804180816.18737-4-jbrunet@baylibre.com>
+Subject: [PATCH 4/6] ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+Date: Fri,  4 Aug 2017 20:08:14 +0200
+Message-ID: <20170804180816.18737-5-jbrunet@baylibre.com>
 References: <20170804180816.18737-1-jbrunet@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170804180816.18737-1-jbrunet@baylibre.com>
@@ -10,28 +10,26 @@ To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable sdcard Ultra High Speed mode on the p20x. While the s905 should
-support sdr104, the pcb of the p200 does not and is limited to an sdcard
-clock rate of 100Mhz (SDR50)
-
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 58b32f272a0e..900a13cc24ee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -217,6 +217,9 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+index 6b7495dc6014..5d59fd75cae7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+@@ -225,7 +225,10 @@
  
  	bus-width = <4>;
  	cap-sd-highspeed;
+-	max-frequency = <100000000>;
 +	sd-uhs-sdr12;
 +	sd-uhs-sdr25;
 +	sd-uhs-sdr50;
- 	max-frequency = <100000000>;
++	max-frequency = <200000000>;
  	disable-wp;
  
+ 	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
 -- 
 2.9.4
