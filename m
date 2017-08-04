@@ -1,122 +1,36 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 11/25] mtd: nand: qcom: support for NAND controller
- properties
-Date: Fri, 4 Aug 2017 09:56:08 +0200
-Message-ID: <20170804095608.00fc3f56@bbrezillon>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
-        <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
-        <20170804094952.5862e078@bbrezillon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170804094952.5862e078@bbrezillon>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+From: Rocky Hao <rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 0/5] thermal: rockchip: add tsadc support in thermal driver and IPA thermal control for rk3328 in dts
+Date: Fri,  4 Aug 2017 16:06:11 +0800
+Message-ID: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, jay.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, rocky.hao-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 Aug 2017 09:49:52 +0200
-Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+This series patches add the tsadc support in thermal driver and in devicetree for rk3328.
+Also add thermal control with Intelligent Power Allocation (IPA) policy by default.  Please
+refer to https://developer.arm.com/open-source/intelligent-power-allocation for more information
+about IPA.
 
-> On Wed, 19 Jul 2017 17:17:59 +0530
-> Abhishek Sahu <absahu@codeaurora.org> wrote:
-> 
-> > Currently driver data is being assigned directly with ECC modes.
-> > Now, the plan is to add more NAND controller versions, so
-> > reorganized the current driver data assignment by creating NAND
-> > controller properties structure.  This will contain all
-> > properties specific to NAND controller.
-> >   
-> 
-> Applied.
+Rocky Hao (5):
+  dt-bindings: rockchip-thermal: Support the RK3328 SoC compatible
+  thermal: rockchip: Support the RK3328 SOC in thermal driver
+  arm64: dts: rockchip: add tsadc node for rk3328 SoC
+  arm64: dts: rockchip: add thermal nodes for rk3328 SoC
+  arm64: dts: rockchip: Enable tsadc module on RK3328 eavluation board
 
-My bad, this one has not been applied.
+ .../bindings/thermal/rockchip-thermal.txt          |  1 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts        |  4 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi           | 63 +++++++++++++++++++++
+ drivers/thermal/rockchip_thermal.c                 | 65 ++++++++++++++++++++++
+ 4 files changed, 133 insertions(+)
 
-> 
-> Thanks,
-> 
-> Boris
-> 
-> > Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> > ---
-> >  drivers/mtd/nand/qcom_nandc.c | 23 +++++++++++++++++------
-> >  1 file changed, 17 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> > index 8f9e86c..3b0ae91 100644
-> > --- a/drivers/mtd/nand/qcom_nandc.c
-> > +++ b/drivers/mtd/nand/qcom_nandc.c
-> > @@ -235,7 +235,7 @@ struct nandc_regs {
-> >   *				writes. contains the register values to be
-> >   *				written to controller
-> >   * @cmd1/vld:			some fixed controller register values
-> > - * @ecc_modes:			supported ECC modes by the current controller,
-> > + * @props:			properties of current NAND controller IP,
-> >   *				initialized via DT match data
-> >   */
-> >  struct qcom_nand_controller {
-> > @@ -266,7 +266,7 @@ struct qcom_nand_controller {
-> >  	struct nandc_regs *regs;
-> >  
-> >  	u32 cmd1, vld;
-> > -	u32 ecc_modes;
-> > +	const struct qcom_props *props;
-> >  };
-> >  
-> >  /*
-> > @@ -319,6 +319,15 @@ struct qcom_nand_host {
-> >  	u32 clrreadstatus;
-> >  };
-> >  
-> > +/*
-> > + * This data type corresponds to the nand controller properties which varies
-> > + * among different NAND controller IP's.
-> > + * @ecc_modes - ecc mode for NAND
-> > + */
-> > +struct qcom_props {
-> > +	u32 ecc_modes;
-> > +};
-> > +
-> >  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
-> >  {
-> >  	return container_of(chip, struct qcom_nand_host, chip);
-> > @@ -1820,7 +1829,7 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
-> >  		 * uses lesser bytes for ECC. If RS is used, the ECC bytes is
-> >  		 * always 10 bytes
-> >  		 */
-> > -		if (nandc->ecc_modes & ECC_BCH_4BIT) {
-> > +		if (nandc->props->ecc_modes & ECC_BCH_4BIT) {
-> >  			/* BCH */
-> >  			host->bch_enabled = true;
-> >  			ecc_mode = 0;
-> > @@ -2165,7 +2174,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
-> >  		return -ENODEV;
-> >  	}
-> >  
-> > -	nandc->ecc_modes = (unsigned long)dev_data;
-> > +	nandc->props = dev_data;
-> >  
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	nandc->base = devm_ioremap_resource(dev, res);
-> > @@ -2234,7 +2243,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
-> >  	return 0;
-> >  }
-> >  
-> > -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
-> > +static const struct qcom_props ebi2_nandc_data = {
-> > +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
-> > +};
-> >  
-> >  /*
-> >   * data will hold a struct pointer containing more differences once we support
-> > @@ -2242,7 +2253,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
-> >   */
-> >  static const struct of_device_id qcom_nandc_of_match[] = {
-> >  	{	.compatible = "qcom,ebi2-nandc",
-> > -		.data = (void *)EBI2_NANDC_ECC_MODES,
-> > +		.data = &ebi2_nandc_data,
-> >  	},
-> >  	{}
-> >  };  
-> 
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
