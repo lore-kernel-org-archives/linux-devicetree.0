@@ -1,66 +1,136 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v3 3/6] PCI: mediatek: switch to use platform_get_resource_byname()
-Date: Fri, 4 Aug 2017 20:06:39 +0800
-Message-ID: <45decb30c1eda6303e2e521a8afe3196763307c3.1501846816.git.honghui.zhang@mediatek.com>
+Subject: [PATCH v3 1/6] PCI: mediatek: Using readl_poll_timeout to wait Gen2
+ training
+Date: Fri, 4 Aug 2017 20:06:37 +0800
+Message-ID: <0bc1c2217c420277b3eec038d6e7a579e709737a.1501846816.git.honghui.zhang@mediatek.com>
 References: <cover.1501846816.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.1501846816.git.honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Cc: youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, honghui.zhang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 From: Ryder Lee <ryder.lee@mediatek.com>
 
-This is a transitional patch. We currently use platfarm_get_resource() for
-retrieving the IOMEM resources, but there might be some chips don't have
-subsys/shared registers part, which depends on platform design, and these
-will be introduced in further patches.
-
-Switch this function to use the platform_get_resource_byname() so that the
-binding can be agnostic of the resource order.
+Wait Gen2 training by using readl_poll_timeout() calls, and simplify
+the hardware assert logical by merge it into the new interface
+mtk_pcie_startup_ports.
 
 Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/pci/host/pcie-mediatek.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ drivers/pci/host/pcie-mediatek.c | 52 +++++++++++++++++-----------------------
+ 1 file changed, 22 insertions(+), 30 deletions(-)
 
 diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index 5d7f62e..63d300f 100644
+index 9c9f89b..0d46cda 100644
 --- a/drivers/pci/host/pcie-mediatek.c
 +++ b/drivers/pci/host/pcie-mediatek.c
-@@ -295,7 +295,8 @@ static int mtk_pcie_parse_ports(struct mtk_pcie *pcie,
- 		return err;
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -113,11 +114,6 @@ struct mtk_pcie {
+ 	struct list_head ports;
+ };
+ 
+-static inline bool mtk_pcie_link_up(struct mtk_pcie_port *port)
+-{
+-	return !!(readl(port->base + PCIE_LINK_STATUS) & PCIE_PORT_LINKUP);
+-}
+-
+ static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+@@ -171,12 +167,30 @@ static struct pci_ops mtk_pcie_ops = {
+ 	.write = pci_generic_config_write,
+ };
+ 
+-static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
++static int mtk_pcie_startup_ports(struct mtk_pcie_port *port)
+ {
+ 	struct mtk_pcie *pcie = port->pcie;
+ 	u32 func = PCI_FUNC(port->index << 3);
+ 	u32 slot = PCI_SLOT(port->index << 3);
+ 	u32 val;
++	int err;
++
++	/* assert port PERST_N */
++	val = readl(pcie->base + PCIE_SYS_CFG);
++	val |= PCIE_PORT_PERST(port->index);
++	writel(val, pcie->base + PCIE_SYS_CFG);
++
++	/* de-assert port PERST_N */
++	val = readl(pcie->base + PCIE_SYS_CFG);
++	val &= ~PCIE_PORT_PERST(port->index);
++	writel(val, pcie->base + PCIE_SYS_CFG);
++
++	/* 100ms timeout value should be enough for Gen1/2 training */
++	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS, val,
++				 !!(val & PCIE_PORT_LINKUP), 20,
++				 100 * USEC_PER_MSEC);
++	if (err)
++		return -ETIMEDOUT;
+ 
+ 	/* enable interrupt */
+ 	val = readl(pcie->base + PCIE_INT_ENABLE);
+@@ -209,25 +223,8 @@ static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
+ 	writel(PCIE_CONF_ADDR(PCIE_FTS_NUM, func, slot, 0),
+ 	       pcie->base + PCIE_CFG_ADDR);
+ 	writel(val, pcie->base + PCIE_CFG_DATA);
+-}
+ 
+-static void mtk_pcie_assert_ports(struct mtk_pcie_port *port)
+-{
+-	struct mtk_pcie *pcie = port->pcie;
+-	u32 val;
+-
+-	/* assert port PERST_N */
+-	val = readl(pcie->base + PCIE_SYS_CFG);
+-	val |= PCIE_PORT_PERST(port->index);
+-	writel(val, pcie->base + PCIE_SYS_CFG);
+-
+-	/* de-assert port PERST_N */
+-	val = readl(pcie->base + PCIE_SYS_CFG);
+-	val &= ~PCIE_PORT_PERST(port->index);
+-	writel(val, pcie->base + PCIE_SYS_CFG);
+-
+-	/* PCIe v2.0 need at least 100ms delay to train from Gen1 to Gen2 */
+-	msleep(100);
++	return 0;
+ }
+ 
+ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+@@ -250,13 +247,8 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+ 		goto err_phy_on;
  	}
  
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, index + 1);
-+	snprintf(name, sizeof(name), "port%d", index);
-+	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
- 	port->base = devm_ioremap_resource(dev, regs);
- 	if (IS_ERR(port->base)) {
- 		dev_err(dev, "failed to map port%d base\n", index);
-@@ -336,12 +337,14 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 	struct resource *regs;
- 	int err;
+-	mtk_pcie_assert_ports(port);
+-
+-	/* if link up, then setup root port configuration space */
+-	if (mtk_pcie_link_up(port)) {
+-		mtk_pcie_configure_rc(port);
++	if (!mtk_pcie_startup_ports(port))
+ 		return;
+-	}
  
--	/* get shared registers */
--	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	pcie->base = devm_ioremap_resource(dev, regs);
--	if (IS_ERR(pcie->base)) {
--		dev_err(dev, "failed to map shared register\n");
--		return PTR_ERR(pcie->base);
-+	/* get shared registers, which are optional */
-+	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "subsys");
-+	if (regs) {
-+		pcie->base = devm_ioremap_resource(dev, regs);
-+		if (IS_ERR(pcie->base)) {
-+			dev_err(dev, "failed to map shared register\n");
-+			return PTR_ERR(pcie->base);
-+		}
- 	}
+ 	dev_info(dev, "Port%d link down\n", port->index);
  
- 	pcie->free_ck = devm_clk_get(dev, "free_ck");
 -- 
 2.6.4
