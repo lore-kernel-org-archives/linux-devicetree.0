@@ -1,277 +1,79 @@
-From: Marcin Wojtas <mw@semihalf.com>
-Subject: Re: [PATCH 1/2] net: mvneta: remove bogus use of
-Date: Fri, 4 Aug 2017 17:49:59 +0200
-Message-ID: <CAPv3WKfvAfFiDWemV67qyO1maaegi7OYW+EJrFSKn2CWqzRMRQ@mail.gmail.com>
-References: <20170720142711.12847-1-robh@kernel.org> <8760en5es2.fsf@free-electrons.com>
- <CAL_JsqKTwju4=J=X1kvk=77fE1VddPh2N-wCi3A0mCAu+Qg1mA@mail.gmail.com> <87tw1n73r9.fsf@free-electrons.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
+ display panels
+Date: Fri, 4 Aug 2017 10:51:37 -0500
+Message-ID: <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <1501799630-1650-4-git-send-email-david@lechnology.com>
+ <2434051.fAH1OaXNrL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <87tw1n73r9.fsf@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2434051.fAH1OaXNrL@avalon>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gregory,
-
->From my side: +1 to your modification.
-
-Thanks,
-Marcin
-
-2017-08-04 17:26 GMT+02:00 Gregory CLEMENT <gregory.clement@free-electrons.com>:
-> Hi Rob,
->
->  On jeu., juil. 20 2017, Rob Herring <robh@kernel.org> wrote:
->
->> On Thu, Jul 20, 2017 at 10:06 AM, Gregory CLEMENT
->> <gregory.clement@free-electrons.com> wrote:
->>> Hi Rob,
->>>
->>>  On jeu., juil. 20 2017, Rob Herring <robh@kernel.org> wrote:
->>>
->>> (Adding Marcin in CC who wrote this part of code)
->>>
->>>> Nothing sets ever sets data, so it is always NULL. Remove it as this is
->>>> the only user of data ptr in the whole kernel, and it is going to be
->>>> removed from struct device_node.
->>>
->>> Actually the use of device_node.data ptr is not bogus and it is set in
->>> mvneta_bm_probe:
->>> http://elixir.free-electrons.com/linux/latest/source/drivers/net/ethernet/marvell/mvneta_bm.c#L433
->>
->> Indeed. Looks like some complicated kconfig logic, so I'd not been
->> able to trigger a build failure nor did 0-day (so far).
->>
->>> Your patch will break the BM support on this driver. So if you need to
->>> remove this data ptr, then you have to offer an alternative for it.
->>
->> How about something like this (WS damaged) patch:
->
-> I finally took time to test your patch. There was some missing part
-> which prevented it to be build, like including linux/of_platform.h, or
-> providing tub function when CONFIG_MVNETA_BM was not enable.
->
-> Also the fact that you still call mvneta_bm_port_init() even if bm_priv
-> was NULL was not really nice. So I proposed the following patch, that I
-> tested on a clearfog with and without CONFIG_MVNETA_BM enabled.
->
-> From 03c4028bc1f52d3d214e8506d9f0f66660d3985d Mon Sep 17 00:00:00 2001
-> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Date: Fri, 4 Aug 2017 17:18:38 +0200
-> Subject: [PATCH] net: mvneta: remove data pointer usage from device_node
->  structure
->
-> In order to be able to remove the data pointer from the device_node
-> structure. We have to modify the way the BM resources are shared between
-> the mvneta port.
->
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/net/ethernet/marvell/mvneta.c    | 18 ++++++++++++------
->  drivers/net/ethernet/marvell/mvneta_bm.c | 13 +++++++++++++
->  drivers/net/ethernet/marvell/mvneta_bm.h |  8 ++++++--
->  3 files changed, 31 insertions(+), 8 deletions(-)
->
-> diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-> index 63b6147753fe..fd84447582f7 100644
-> --- a/drivers/net/ethernet/marvell/mvneta.c
-> +++ b/drivers/net/ethernet/marvell/mvneta.c
-> @@ -4295,12 +4295,16 @@ static int mvneta_probe(struct platform_device *pdev)
->
->         /* Obtain access to BM resources if enabled and already initialized */
->         bm_node = of_parse_phandle(dn, "buffer-manager", 0);
-> -       if (bm_node && bm_node->data) {
-> -               pp->bm_priv = bm_node->data;
-> -               err = mvneta_bm_port_init(pdev, pp);
-> -               if (err < 0) {
-> -                       dev_info(&pdev->dev, "use SW buffer management\n");
-> -                       pp->bm_priv = NULL;
-> +       if (bm_node) {
-> +               pp->bm_priv = mvneta_bm_get(bm_node);
-> +               if (pp->bm_priv) {
-> +                       err = mvneta_bm_port_init(pdev, pp);
-> +                       if (err < 0) {
-> +                               dev_info(&pdev->dev,
-> +                                        "use SW buffer management\n");
-> +                               mvneta_bm_put(pp->bm_priv);
-> +                               pp->bm_priv = NULL;
-> +                       }
->                 }
->         }
->         of_node_put(bm_node);
-> @@ -4369,6 +4373,7 @@ static int mvneta_probe(struct platform_device *pdev)
->                 mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
->                 mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
->                                        1 << pp->id);
-> +               mvneta_bm_put(pp->bm_priv);
->         }
->  err_free_stats:
->         free_percpu(pp->stats);
-> @@ -4410,6 +4415,7 @@ static int mvneta_remove(struct platform_device *pdev)
->                 mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
->                 mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
->                                        1 << pp->id);
-> +               mvneta_bm_put(pp->bm_priv);
->         }
->
->         return 0;
-> diff --git a/drivers/net/ethernet/marvell/mvneta_bm.c b/drivers/net/ethernet/marvell/mvneta_bm.c
-> index 466939f8f0cf..01e3152e76c8 100644
-> --- a/drivers/net/ethernet/marvell/mvneta_bm.c
-> +++ b/drivers/net/ethernet/marvell/mvneta_bm.c
-> @@ -18,6 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/netdevice.h>
->  #include <linux/of.h>
-> +#include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/skbuff.h>
->  #include <net/hwbm.h>
-> @@ -392,6 +393,18 @@ static void mvneta_bm_put_sram(struct mvneta_bm *priv)
->                       MVNETA_BM_BPPI_SIZE);
->  }
->
-> +struct mvneta_bm *mvneta_bm_get(struct device_node *node)
-> +{
-> +       struct platform_device *pdev = of_find_device_by_node(node);
-> +
-> +       return pdev ? platform_get_drvdata(pdev) : NULL;
-> +}
-> +
-> +void mvneta_bm_put(struct mvneta_bm *priv)
-> +{
-> +       platform_device_put(priv->pdev);
-> +}
-> +
->  static int mvneta_bm_probe(struct platform_device *pdev)
->  {
->         struct device_node *dn = pdev->dev.of_node;
-> diff --git a/drivers/net/ethernet/marvell/mvneta_bm.h b/drivers/net/ethernet/marvell/mvneta_bm.h
-> index a32de432800c..daa9a91d2708 100644
-> --- a/drivers/net/ethernet/marvell/mvneta_bm.h
-> +++ b/drivers/net/ethernet/marvell/mvneta_bm.h
-> @@ -134,6 +134,9 @@ void *mvneta_frag_alloc(unsigned int frag_size);
->  void mvneta_frag_free(unsigned int frag_size, void *data);
->
->  #if IS_ENABLED(CONFIG_MVNETA_BM)
-> +struct mvneta_bm *mvneta_bm_get(struct device_node *node);
-> +void mvneta_bm_put(struct mvneta_bm *priv);
-> +
->  void mvneta_bm_pool_destroy(struct mvneta_bm *priv,
->                             struct mvneta_bm_pool *bm_pool, u8 port_map);
->  void mvneta_bm_bufs_free(struct mvneta_bm *priv, struct mvneta_bm_pool *bm_pool,
-> @@ -176,7 +179,8 @@ static inline void mvneta_bm_pool_put_bp(struct mvneta_bm *priv,
->                                          dma_addr_t buf_phys_addr) {}
->
->  static inline u32 mvneta_bm_pool_get_bp(struct mvneta_bm *priv,
-> -                                       struct mvneta_bm_pool *bm_pool)
-> -{ return 0; }
-> +                               struct mvneta_bm_pool *bm_pool) { return 0; }
-> +struct mvneta_bm *mvneta_bm_get(struct device_node *node) {return NULL; }
-> +void mvneta_bm_put(struct mvneta_bm *priv) {}
->  #endif /* CONFIG_MVNETA_BM */
->  #endif
-> --
-> 2.13.2
->
->
->
->>
->> diff --git a/drivers/net/ethernet/marvell/mvneta.c
->> b/drivers/net/ethernet/marvell/mvneta.c
->> index 0aab74c2a209..3a3021cb93a7 100644
->> --- a/drivers/net/ethernet/marvell/mvneta.c
->> +++ b/drivers/net/ethernet/marvell/mvneta.c
->> @@ -4296,11 +4296,12 @@ static int mvneta_probe(struct platform_device *pdev)
->>
->>   /* Obtain access to BM resources if enabled and already initialized */
->>   bm_node = of_parse_phandle(dn, "buffer-manager", 0);
->> - if (bm_node && bm_node->data) {
->> - pp->bm_priv = bm_node->data;
->> + if (bm_node) {
->> + pp->bm_priv = mvneta_bm_get();
->>   err = mvneta_bm_port_init(pdev, pp);
->>   if (err < 0) {
->>   dev_info(&pdev->dev, "use SW buffer management\n");
->> + mvneta_bm_put(pp->bm_priv);
->>   pp->bm_priv = NULL;
->>   }
->>   }
->> @@ -4370,6 +4371,7 @@ static int mvneta_probe(struct platform_device *pdev)
->>   mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
->>   mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
->>         1 << pp->id);
->> + mvneta_bm_put(pp->bm_priv);
->>   }
->>  err_free_stats:
->>   free_percpu(pp->stats);
->> @@ -4411,6 +4413,7 @@ static int mvneta_remove(struct platform_device *pdev)
->>   mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_long, 1 << pp->id);
->>   mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short,
->>         1 << pp->id);
->> + mvneta_bm_put(pp->bm_priv);
->>   }
->>
->>   return 0;
->> diff --git a/drivers/net/ethernet/marvell/mvneta_bm.c
->> b/drivers/net/ethernet/marvell/mvneta_bm.c
->> index 466939f8f0cf..276af8aff3c7 100644
->> --- a/drivers/net/ethernet/marvell/mvneta_bm.c
->> +++ b/drivers/net/ethernet/marvell/mvneta_bm.c
->> @@ -392,6 +392,17 @@ static void mvneta_bm_put_sram(struct mvneta_bm *priv)
->>        MVNETA_BM_BPPI_SIZE);
->>  }
->>
->> +struct mvneta_bm *mvneta_bm_get(struct device_node *node)
->> +{
->> + struct platform_device *pdev = of_find_device_by_node(node);
->> + return pdev ? platform_get_drvdata(pdev) : NULL;
->> +}
->> +
->> +void mvneta_bm_put(struct mvneta_bm *priv)
->> +{
->> + platform_device_put(priv->pdev);
->> +}
->> +
->>  static int mvneta_bm_probe(struct platform_device *pdev)
->>  {
->>   struct device_node *dn = pdev->dev.of_node;
->> diff --git a/drivers/net/ethernet/marvell/mvneta_bm.h
->> b/drivers/net/ethernet/marvell/mvneta_bm.h
->> index a32de432800c..50b27feab666 100644
->> --- a/drivers/net/ethernet/marvell/mvneta_bm.h
->> +++ b/drivers/net/ethernet/marvell/mvneta_bm.h
->> @@ -134,6 +134,9 @@ void *mvneta_frag_alloc(unsigned int frag_size);
->>  void mvneta_frag_free(unsigned int frag_size, void *data);
->>
->>  #if IS_ENABLED(CONFIG_MVNETA_BM)
->> +struct mvneta_bm *mvneta_bm_get(struct device_node *node);
->> +void mvneta_bm_put(struct mvneta_bm *priv);
->> +
->>  void mvneta_bm_pool_destroy(struct mvneta_bm *priv,
->>      struct mvneta_bm_pool *bm_pool, u8 port_map);
->>  void mvneta_bm_bufs_free(struct mvneta_bm *priv, struct
->> mvneta_bm_pool *bm_pool,
->> @@ -160,6 +163,12 @@ static inline u32 mvneta_bm_pool_get_bp(struct
->> mvneta_bm *priv,
->>       (bm_pool->id << MVNETA_BM_POOL_ACCESS_OFFS));
->>  }
->>  #else
->> +static inline struct mvneta_bm *mvneta_bm_get(struct device_node *node)
->> +{
->> + return NULL;
->> +}
->> +static inline void mvneta_bm_put(struct mvneta_bm *priv) {}
->> +
->>  void mvneta_bm_pool_destroy(struct mvneta_bm *priv,
->>      struct mvneta_bm_pool *bm_pool, u8 port_map) {}
->>  void mvneta_bm_bufs_free(struct mvneta_bm *priv, struct
->> mvneta_bm_pool *bm_pool,
->
-> --
-> Gregory Clement, Free Electrons
-> Kernel, drivers, real-time and embedded Linux
-> development, consulting, training and support.
-> http://free-electrons.com
+T24gMDgvMDQvMjAxNyAwOTo1NCBBTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBEYXZp
+ZCwKPiAKPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiAKPiBPbiBUaHVyc2RheSAwMyBBdWcg
+MjAxNyAxNzozMzo0NyBEYXZpZCBMZWNobmVyIHdyb3RlOgo+PiBUaGlzIGFkZHMgYSBuZXcgYmlu
+ZGluZyBmb3IgU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWxzLgo+Pgo+PiBVc2luZyBsZWdv
+IGFzIHRoZSB2ZW5kb3IgcHJlZml4IGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBiZWNhdXNlIHRo
+ZSBkaXNwbGF5Cj4+IHBhbmVsIEkgYW0gd29ya2luZyB3aXRoIGlzIGFuIGludGVncmFsIHBhcnQg
+b2YgdGhlIExFR08gTUlORFNUT1JNUyBFVjMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIExl
+Y2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgo+PiAtLS0KPj4gICAuLi4vYmluZGluZ3MvZGlz
+cGxheS9zaXRyb25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysr
+KysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2Rl
+IDEwMDY0NAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRy
+b25peCxzdDc1ODYudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0Cj4+IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dCBuZXcgZmls
+ZQo+PiBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5kZmIwYjdiCj4+IC0tLSAvZGV2L251
+bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0
+cm9uaXgsc3Q3NTg2LnR4dAo+PiBAQCAtMCwwICsxLDI2IEBACj4+ICtTaXRyb25peCBTVDc1ODYg
+ZGlzcGxheSBwYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRp
+YmxlOgkibGVnbyxldjMtbGNkIi4KPj4gKwo+PiArVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11
+c3QgYmUgYSBjaGlsZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCj4+ICthbGwgbWFu
+ZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIC4uL3NwaS9zcGktYnVzLnR4dCBtdXN0IGJl
+IHNwZWNpZmllZC4KPj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gZGMtZ3Bpb3M6
+CUQvQyBwaW4uIFRoZSBwcmVzZW5jZS9hYnNlbmNlIG9mIHRoaXMgR1BJTyBkZXRlcm1pbmVzCj4+
+ICsJCXRoZSBwYW5lbCBpbnRlcmZhY2Ugb3BlcmF0aW9uIG1vZGUgKElGWzM6MV0gcGlucyk6Cj4+
+ICsJCS0gcHJlc2VudDogSUY9MDExIDQtd2lyZSA4LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UK
+Pj4gKwkJLSBhYnNlbnQ6ICBJRj0wMTAgMy13aXJlIDktYml0IGRhdGEgc2VyaWFsIGludGVyZmFj
+ZQo+IAo+IEhvdyBkb2VzIHRoaXMgd29yayA/IERvIHlvdSBoYXZlIGEgc2luZ2xlIEdQSU8gb24g
+eW91ciBzeXN0ZW0gY29ubmVjdGVkIHRvCj4gSUZbMV0sIHdpdGggSUZbMzoyXSBoYXJkd2lyZWQg
+dG8gMDEgPwoKTEVHTyBoYXMgbm90IG1hZGUgdGhlIGludGVybmFscyBvZiB0aGUgZGlzcGxheSBw
+dWJsaWNseSBhdmFpbGFibGUsIHNvIEkgCmNhbm5vdCBzYXkgZm9yIHN1cmUuIEJ1dCBJIGFzc3Vt
+ZSB0aGF0IElGWzM6MV0gaXMgaGFyZHdpcmVkIHRvIDAxMS4gVGhpcyAKY2F1c2VzIHBpbiBEMSB0
+byBhc3NpZ25lZCB0byB0aGUgc2lnbmFsIEEwLCB3aGljaCBpcyB3aGF0IHdlIGFyZSBjYWxsaW5n
+IAp0aGUgZGMgZ3BpbyBoZXJlLgoKSWYgSUZbMzoxXSB3ZXJlIGhhcmR3aXJlZCB0byAwMTAsIHRo
+ZW4gcGluIEQxIHdvdWxkIGJlIG5vdCBub3QgdXNlZCBhbmQgCnRoZXJlIHdvdWxkIGJlIG5vIEEw
+IHNpZ25hbC4KClNvLCBiYXNpY2FsbHksIHdlIGNhbiBpbmZlciB0aGUgc3RhdGUgb2YgSUZbMzox
+XSBieSB0aGUgZmFjdCB0aGF0IHdlIApoYXZlIGEgZGMgcGluIG9yIG5vdC4KCj4gCj4+ICstIHJl
+c2V0LWdwaW9zOglSZXNldCBwaW4KPj4gKy0gcG93ZXItc3VwcGx5OglBIHJlZ3VsYXRvciBub2Rl
+IGZvciB0aGUgc3VwcGx5IHZvbHRhZ2UuCj4+ICstIGJhY2tsaWdodDoJcGhhbmRsZSBvZiB0aGUg
+YmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPj4gKy0gcm90YXRpb246CXBh
+bmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2UgKDAsOTAsMTgwLDI3MCkK
+PiAKPiBQbGVhc2UgdXNlIHRoZSBPRiBncmFwaCBEVCBiaW5kaW5ncyAoYS5rLmEuIHBvcnRzKSB0
+byBkZXNjcmliZSB0aGUgY29ubmVjdGlvbgo+IGJldHdlZW4gdGhlIHBhbmVsIGFuZCBpdHMgc291
+cmNlLgoKSSBhbSBhZnJhaWQgdGhhdCBJIGRvIG5vdCB1bmRlcnN0YW5kIHRoaXMgcmVxdWVzdC4g
+V2hhdCB3b3VsZCB0aGUgc291cmNlIApvZiB0aGUgcGFuZWwgYmU/IFRoZXJlIGlzIG5vdGhpbmcg
+bGlrZSBhIFNvQyBMQ0QgY29udHJvbGxlciB0aGF0IGlzIApkcml2aW5nIHRoaXMgcGFuZWwuCgo+
+IAo+PiArRXhhbXBsZToKPj4gKwlkaXNwbGF5QDB7Cj4+ICsJCWNvbXBhdGlibGUgPSAibGVnbyxl
+djMtbGNkIjsKPj4gKwkJcmVnID0gPDA+Owo+PiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAw
+MDAwMD47Cj4+ICsJCWRjLWdwaW9zID0gPCZncGlvIDQzIEdQSU9fQUNUSVZFX0hJR0g+Owo+PiAr
+CQlyZXNldC1ncGlvcyA9IDwmZ3BpbyA4MCBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwl9Owo+IAoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
