@@ -1,43 +1,44 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] dt-bindings: watchdog: mediatek: add support for MediaTek MT7623 and MT7622 SoC
-Date: Fri, 4 Aug 2017 15:14:07 +0800
-Message-ID: <b0058a0a9f948f17edf3c1a476665c715922ebc3.1501830388.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v3 0/4] crypto: add driver for Axis ARTPEC crypto accelerator
+Date: Fri,  4 Aug 2017 09:18:44 +0200
+Message-ID: <cover.1501830919.git.larper@axis.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This series adds a driver for the crypto accelerator in the ARTPEC series of
+SoCs from Axis Communications AB.
 
-This updates dt-binding documentation for MediaTek MT7622 and
-MT7623 SoC. For the both SoCs supported all rely on the fallback
-binding of the case with "mediatek,mt6589-wdt".
+Changelog v3:
+- The patch author added his Signed-off-by on patch 2.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Changelog v2:
+- Use xts_check_key() for xts keys.
+- Use CRYPTO_ALG_TYPE_SKCIPHER instead of CRYPTO_ALG_TYPE_ABLKCIPHER
+  in cra_flags.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-index 6a00939..096bbfb 100644
---- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
-@@ -4,6 +4,8 @@ Required properties:
- 
- - compatible should contain:
- 	* "mediatek,mt2701-wdt" for MT2701 compatible watchdog timers
-+	* "mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
-+	* "mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
- 	* "mediatek,mt6589-wdt" for all compatible watchdog timers (MT2701,
- 		MT6589)
- 
+Lars Persson (3):
+  dt-bindings: crypto: add ARTPEC crypto
+  crypto: axis: add ARTPEC-6/7 crypto accelerator driver
+  MAINTAINERS: Add ARTPEC crypto maintainer
+
+Rabin Vincent (1):
+  crypto: add crypto_(un)register_ahashes()
+
+ .../devicetree/bindings/crypto/artpec6-crypto.txt  |   16 +
+ MAINTAINERS                                        |    1 +
+ crypto/ahash.c                                     |   29 +
+ drivers/crypto/Kconfig                             |   21 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/axis/Makefile                       |    1 +
+ drivers/crypto/axis/artpec6_crypto.c               | 3193 ++++++++++++++++++++
+ include/crypto/internal/hash.h                     |    2 +
+ 8 files changed, 3264 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
+ create mode 100644 drivers/crypto/axis/Makefile
+ create mode 100644 drivers/crypto/axis/artpec6_crypto.c
+
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
