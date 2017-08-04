@@ -1,75 +1,41 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
- display panels
-Date: Fri, 4 Aug 2017 11:51:22 -0500
-Message-ID: <e824aca6-b668-1d63-65a0-c56bfd8bec79@lechnology.com>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-4-git-send-email-david@lechnology.com>
- <66f0b765-928e-1fca-9588-99da747749a5@tronnes.org>
+From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/3] ARM: dts: keystone-k2g: Add DCAN instances to 66AK2G
+Date: Fri, 4 Aug 2017 10:07:57 -0700
+Message-ID: <69995971-2fe7-87f4-a46a-8ef4f729ffc5@oracle.com>
+References: <20170802201822.11532-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <66f0b765-928e-1fca-9588-99da747749a5@tronnes.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170802201822.11532-1-fcooper@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDQvMjAxNyAwNDo0OCBBTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAw
-NC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiBUaGlzIGFkZHMgYSBuZXcg
-YmluZGluZyBmb3IgU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWxzLgo+Pgo+PiBVc2luZyBs
-ZWdvIGFzIHRoZSB2ZW5kb3IgcHJlZml4IGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBiZWNhdXNl
-IHRoZSAKPj4gZGlzcGxheQo+PiBwYW5lbCBJIGFtIHdvcmtpbmcgd2l0aCBpcyBhbiBpbnRlZ3Jh
-bCBwYXJ0IG9mIHRoZSBMRUdPIE1JTkRTVE9STVMgRVYzLgo+IAo+IElzIHRoaXMgZGlzcGxheSBh
-dmFpbGFibGUgb3V0c2lkZSBvZiB0aGlzIExlZ28gcGFydD8KTm8sIGl0IGlzIG5vdC4KCj4gSWYg
-bm90IHlvdSBjYW4gcmVtb3ZlIHRoZSBwcm9wZXJ0aWVzIHlvdSBkb24ndCBuZWVkIGZvciB0aGlz
-IHBhcnRpY3VsYXIKPiBkaXNwbGF5IHNldHVwLiBBbm90aGVyIHN0NzU4NiBkaXNwbGF5IHdpdGgg
-YSBkaWZmZXJlbnQgcGFuZWwgd291bGQgbmVlZAo+IGEgZGlmZmVyZW50IGluaXRpYWxpemF0aW9u
-IHNlcXVlbmNlIGFuZCBjb21wYXRpYmxlIHN0cmluZywgc28gd2UgY2FuCj4gYWRkIHByb3BlcnRp
-ZXMgd2hlbi9pZiB0aGF0IGhhcHBlbnMuCgpPSy4gc28gSSB3aWxsIGRyb3AgcG93ZXItc3VwcGx5
-IGFuZCBiYWNrbGlnaHQuCgpTaG91bGQgSSByZW1vdmUgdGhlc2UgZnJvbSB0aGUgZHJpdmVyIGFz
-IHdlbGw/IFRoZXJlIGFyZSBzb21lIHBhbmVscyBvdXQgCnRoZXJlIHRoYXQgY291bGQgdXNlIHRo
-ZW0uWzFdCgpbMV06IApodHRwOi8vd3d3LmJ1eWRpc3BsYXkuY29tL2Rvd25sb2FkL21hbnVhbC9F
-UkMyNDAxNjAtMV9TZXJpZXNfRGF0YXNoZWV0LnBkZgoKPiAKPiBOb3JhbGYuCj4gCj4+IFNpZ25l
-ZC1vZmYtYnk6IERhdmlkIExlY2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgo+PiAtLS0KPj4g
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDI2
-IAo+PiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2Vy
-dGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+IERvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4KPj4gZGlmZiAtLWdp
-dCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25p
-eCxzdDc1ODYudHh0IAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
-MDAwMDAwMC4uZGZiMGI3Ygo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4gQEAgLTAs
-MCArMSwyNiBAQAo+PiArU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWwKPj4gKwo+PiArUmVx
-dWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogICAgImxlZ28sZXYzLWxjZCIuCj4+
-ICsKPj4gK1RoZSBub2RlIGZvciB0aGlzIGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBh
-IFNQSSBjb250cm9sbGVyLCBoZW5jZQo+PiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2Ny
-aWJlZCBpbiAuLi9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSAKPj4gc3BlY2lmaWVkLgo+PiArCj4+
-ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSBkYy1ncGlvczogICAgRC9DIHBpbi4gVGhlIHBy
-ZXNlbmNlL2Fic2VuY2Ugb2YgdGhpcyBHUElPIGRldGVybWluZXMKPj4gKyAgICAgICAgdGhlIHBh
-bmVsIGludGVyZmFjZSBvcGVyYXRpb24gbW9kZSAoSUZbMzoxXSBwaW5zKToKPj4gKyAgICAgICAg
-LSBwcmVzZW50OiBJRj0wMTEgNC13aXJlIDgtYml0IGRhdGEgc2VyaWFsIGludGVyZmFjZQo+PiAr
-ICAgICAgICAtIGFic2VudDogIElGPTAxMCAzLXdpcmUgOS1iaXQgZGF0YSBzZXJpYWwgaW50ZXJm
-YWNlCj4+ICstIHJlc2V0LWdwaW9zOiAgICBSZXNldCBwaW4KPj4gKy0gcG93ZXItc3VwcGx5OiAg
-ICBBIHJlZ3VsYXRvciBub2RlIGZvciB0aGUgc3VwcGx5IHZvbHRhZ2UuCj4+ICstIGJhY2tsaWdo
-dDogICAgcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFu
-ZWwKPj4gKy0gcm90YXRpb246ICAgIHBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBj
-bG9ja3dpc2UgCj4+ICgwLDkwLDE4MCwyNzApCj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsgICAgZGlz
-cGxheUAwewo+PiArICAgICAgICBjb21wYXRpYmxlID0gImxlZ28sZXYzLWxjZCI7Cj4+ICsgICAg
-ICAgIHJlZyA9IDwwPjsKPj4gKyAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMDA+
-Owo+PiArICAgICAgICBkYy1ncGlvcyA9IDwmZ3BpbyA0MyBHUElPX0FDVElWRV9ISUdIPjsKPj4g
-KyAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsg
-ICAgfTsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Franklin,
+
+On 8/2/2017 1:18 PM, Franklin S Cooper Jr wrote:
+> Add D CAN nodes to 66AK2G based SoC dtsi.
+> 
+> Franklin S Cooper Jr (2):
+>    dt-bindings: net: c_can: Update binding for clock and power-domains
+>      property
+>    ARM: configs: keystone: Enable D_CAN driver
+> 
+> Lokesh Vutla (1):
+>    ARM: dts: k2g: Add DCAN nodes
+> 
+Any DCAN driver dependency with these patchset ? If not, I can
+queue this up so do let me know.
+
+Regards,
+Santosh
