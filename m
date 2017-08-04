@@ -1,79 +1,48 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
- display panels
-Date: Fri, 4 Aug 2017 10:51:37 -0500
-Message-ID: <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-4-git-send-email-david@lechnology.com>
- <2434051.fAH1OaXNrL@avalon>
+From: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] PCI: Convert to using %pOF instead of full_name
+Date: Fri, 4 Aug 2017 09:38:42 -0700
+Message-ID: <dd5a317b-9e72-97bc-0386-8470998421c3@linux.vnet.ibm.com>
+References: <20170718214339.7774-41-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <2434051.fAH1OaXNrL@avalon>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718214339.7774-41-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-GB
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDQvMjAxNyAwOTo1NCBBTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBEYXZp
-ZCwKPiAKPiBUaGFuayB5b3UgZm9yIHRoZSBwYXRjaC4KPiAKPiBPbiBUaHVyc2RheSAwMyBBdWcg
-MjAxNyAxNzozMzo0NyBEYXZpZCBMZWNobmVyIHdyb3RlOgo+PiBUaGlzIGFkZHMgYSBuZXcgYmlu
-ZGluZyBmb3IgU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWxzLgo+Pgo+PiBVc2luZyBsZWdv
-IGFzIHRoZSB2ZW5kb3IgcHJlZml4IGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBiZWNhdXNlIHRo
-ZSBkaXNwbGF5Cj4+IHBhbmVsIEkgYW0gd29ya2luZyB3aXRoIGlzIGFuIGludGVncmFsIHBhcnQg
-b2YgdGhlIExFR08gTUlORFNUT1JNUyBFVjMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IERhdmlkIExl
-Y2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgo+PiAtLS0KPj4gICAuLi4vYmluZGluZ3MvZGlz
-cGxheS9zaXRyb25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDI2ICsrKysrKysrKysrKysrKysr
-KysKPj4gICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0aW9ucygrKQo+PiAgIGNyZWF0ZSBtb2Rl
-IDEwMDY0NAo+PiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRy
-b25peCxzdDc1ODYudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0Cj4+IGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dCBuZXcgZmls
-ZQo+PiBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5kZmIwYjdiCj4+IC0tLSAvZGV2L251
-bGwKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0
-cm9uaXgsc3Q3NTg2LnR4dAo+PiBAQCAtMCwwICsxLDI2IEBACj4+ICtTaXRyb25peCBTVDc1ODYg
-ZGlzcGxheSBwYW5lbAo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRp
-YmxlOgkibGVnbyxldjMtbGNkIi4KPj4gKwo+PiArVGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11
-c3QgYmUgYSBjaGlsZCBub2RlIG9mIGEgU1BJIGNvbnRyb2xsZXIsIGhlbmNlCj4+ICthbGwgbWFu
-ZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIC4uL3NwaS9zcGktYnVzLnR4dCBtdXN0IGJl
-IHNwZWNpZmllZC4KPj4gKwo+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4gKy0gZGMtZ3Bpb3M6
-CUQvQyBwaW4uIFRoZSBwcmVzZW5jZS9hYnNlbmNlIG9mIHRoaXMgR1BJTyBkZXRlcm1pbmVzCj4+
-ICsJCXRoZSBwYW5lbCBpbnRlcmZhY2Ugb3BlcmF0aW9uIG1vZGUgKElGWzM6MV0gcGlucyk6Cj4+
-ICsJCS0gcHJlc2VudDogSUY9MDExIDQtd2lyZSA4LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UK
-Pj4gKwkJLSBhYnNlbnQ6ICBJRj0wMTAgMy13aXJlIDktYml0IGRhdGEgc2VyaWFsIGludGVyZmFj
-ZQo+IAo+IEhvdyBkb2VzIHRoaXMgd29yayA/IERvIHlvdSBoYXZlIGEgc2luZ2xlIEdQSU8gb24g
-eW91ciBzeXN0ZW0gY29ubmVjdGVkIHRvCj4gSUZbMV0sIHdpdGggSUZbMzoyXSBoYXJkd2lyZWQg
-dG8gMDEgPwoKTEVHTyBoYXMgbm90IG1hZGUgdGhlIGludGVybmFscyBvZiB0aGUgZGlzcGxheSBw
-dWJsaWNseSBhdmFpbGFibGUsIHNvIEkgCmNhbm5vdCBzYXkgZm9yIHN1cmUuIEJ1dCBJIGFzc3Vt
-ZSB0aGF0IElGWzM6MV0gaXMgaGFyZHdpcmVkIHRvIDAxMS4gVGhpcyAKY2F1c2VzIHBpbiBEMSB0
-byBhc3NpZ25lZCB0byB0aGUgc2lnbmFsIEEwLCB3aGljaCBpcyB3aGF0IHdlIGFyZSBjYWxsaW5n
-IAp0aGUgZGMgZ3BpbyBoZXJlLgoKSWYgSUZbMzoxXSB3ZXJlIGhhcmR3aXJlZCB0byAwMTAsIHRo
-ZW4gcGluIEQxIHdvdWxkIGJlIG5vdCBub3QgdXNlZCBhbmQgCnRoZXJlIHdvdWxkIGJlIG5vIEEw
-IHNpZ25hbC4KClNvLCBiYXNpY2FsbHksIHdlIGNhbiBpbmZlciB0aGUgc3RhdGUgb2YgSUZbMzox
-XSBieSB0aGUgZmFjdCB0aGF0IHdlIApoYXZlIGEgZGMgcGluIG9yIG5vdC4KCj4gCj4+ICstIHJl
-c2V0LWdwaW9zOglSZXNldCBwaW4KPj4gKy0gcG93ZXItc3VwcGx5OglBIHJlZ3VsYXRvciBub2Rl
-IGZvciB0aGUgc3VwcGx5IHZvbHRhZ2UuCj4+ICstIGJhY2tsaWdodDoJcGhhbmRsZSBvZiB0aGUg
-YmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwKPj4gKy0gcm90YXRpb246CXBh
-bmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2UgKDAsOTAsMTgwLDI3MCkK
-PiAKPiBQbGVhc2UgdXNlIHRoZSBPRiBncmFwaCBEVCBiaW5kaW5ncyAoYS5rLmEuIHBvcnRzKSB0
-byBkZXNjcmliZSB0aGUgY29ubmVjdGlvbgo+IGJldHdlZW4gdGhlIHBhbmVsIGFuZCBpdHMgc291
-cmNlLgoKSSBhbSBhZnJhaWQgdGhhdCBJIGRvIG5vdCB1bmRlcnN0YW5kIHRoaXMgcmVxdWVzdC4g
-V2hhdCB3b3VsZCB0aGUgc291cmNlIApvZiB0aGUgcGFuZWwgYmU/IFRoZXJlIGlzIG5vdGhpbmcg
-bGlrZSBhIFNvQyBMQ0QgY29udHJvbGxlciB0aGF0IGlzIApkcml2aW5nIHRoaXMgcGFuZWwuCgo+
-IAo+PiArRXhhbXBsZToKPj4gKwlkaXNwbGF5QDB7Cj4+ICsJCWNvbXBhdGlibGUgPSAibGVnbyxl
-djMtbGNkIjsKPj4gKwkJcmVnID0gPDA+Owo+PiArCQlzcGktbWF4LWZyZXF1ZW5jeSA9IDwxMDAw
-MDAwMD47Cj4+ICsJCWRjLWdwaW9zID0gPCZncGlvIDQzIEdQSU9fQUNUSVZFX0hJR0g+Owo+PiAr
-CQlyZXNldC1ncGlvcyA9IDwmZ3BpbyA4MCBHUElPX0FDVElWRV9ISUdIPjsKPj4gKwl9Owo+IAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 07/18/2017 02:43 PM, Rob Herring wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
+> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+> Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+>  drivers/pci/host/pci-mvebu.c        | 8 ++++----
+>  drivers/pci/host/pci-tegra.c        | 3 +--
+>  drivers/pci/hotplug/pnv_php.c       | 4 ++--
+>  drivers/pci/hotplug/rpadlpar_core.c | 4 ++--
+>  drivers/pci/hotplug/rpaphp_core.c   | 2 +-
+>  drivers/pci/hotplug/rpaphp_pci.c    | 4 ++--
+>  drivers/pci/hotplug/rpaphp_slot.c   | 4 ++--
+>  drivers/pci/pci-sysfs.c             | 4 ++--
+>  drivers/pci/pci.c                   | 4 ++--
+>  9 files changed, 18 insertions(+), 19 deletions(-)
+> 
+
+Reviewed-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
