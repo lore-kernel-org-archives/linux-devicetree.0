@@ -1,52 +1,114 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 2/2] char: xilinx_hwicap: Fix warnings in the driver
-Date: Fri, 4 Aug 2017 09:49:33 +0200
-Message-ID: <0e40a687-e11b-b5bb-24f0-465144c98929@xilinx.com>
-References: <6da0afe2afd2c7a21d16da9a9c7acab09385ae2c.1501247838.git.michal.simek@xilinx.com>
- <79e2e616a8b7dbf38eb72ba0b620230017dcbc65.1501247838.git.michal.simek@xilinx.com>
- <20170803223218.ilryp5spqztsr3cz@rob-hp-laptop>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 11/25] mtd: nand: qcom: support for NAND controller
+ properties
+Date: Fri, 4 Aug 2017 09:49:52 +0200
+Message-ID: <20170804094952.5862e078@bbrezillon>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+        <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170803223218.ilryp5spqztsr3cz@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Nava kishore Manne <nava.manne@xilinx.com>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 4.8.2017 00:32, Rob Herring wrote:
-> On Fri, Jul 28, 2017 at 03:17:26PM +0200, Michal Simek wrote:
->> From: Nava kishore Manne <nava.manne@xilinx.com>
->>
->> This patch fixes the below warning
->>         --> Use #include <linux/io.h> instead of <asm/io.h>
->>         --> Use #include <linux/uaccess.h> instead of <asm/uaccess.h>
->>         --> please, no space before tabs
->>         --> Block comments use a trailing */ on a separate line
->>         --> Possible unnecessary 'out of memory' message
->>         --> Block comments use * on subsequent lines
->>         --> Block comments use a trailing */ on a separate line
->>         --> braces {} are not necessary for any arm of this statement
->>         --> DT compatible string "xlnx,opb-hwicap-1.00.b"
->> 	    appears un-documented
->>         --> DT compatible string "xlnx,xps-hwicap-1.00.a"
->>             appears un-documented
->>
->> Signed-off-by: Nava kishore Manne <navam@xilinx.com>
->> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->> ---
->>
->>  Documentation/devicetree/bindings/xilinx.txt |  2 ++
-> 
-> It's preferred to split bindings to separate patches. No need unless you 
-> respin:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+On Wed, 19 Jul 2017 17:17:59 +0530
+Abhishek Sahu <absahu@codeaurora.org> wrote:
 
-thanks. Was there any outcome from that discussion to extract binding
-out of kernel source code?
+> Currently driver data is being assigned directly with ECC modes.
+> Now, the plan is to add more NAND controller versions, so
+> reorganized the current driver data assignment by creating NAND
+> controller properties structure.  This will contain all
+> properties specific to NAND controller.
+> 
+
+Applied.
 
 Thanks,
-Michal
+
+Boris
+
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+>  drivers/mtd/nand/qcom_nandc.c | 23 +++++++++++++++++------
+>  1 file changed, 17 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+> index 8f9e86c..3b0ae91 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -235,7 +235,7 @@ struct nandc_regs {
+>   *				writes. contains the register values to be
+>   *				written to controller
+>   * @cmd1/vld:			some fixed controller register values
+> - * @ecc_modes:			supported ECC modes by the current controller,
+> + * @props:			properties of current NAND controller IP,
+>   *				initialized via DT match data
+>   */
+>  struct qcom_nand_controller {
+> @@ -266,7 +266,7 @@ struct qcom_nand_controller {
+>  	struct nandc_regs *regs;
+>  
+>  	u32 cmd1, vld;
+> -	u32 ecc_modes;
+> +	const struct qcom_props *props;
+>  };
+>  
+>  /*
+> @@ -319,6 +319,15 @@ struct qcom_nand_host {
+>  	u32 clrreadstatus;
+>  };
+>  
+> +/*
+> + * This data type corresponds to the nand controller properties which varies
+> + * among different NAND controller IP's.
+> + * @ecc_modes - ecc mode for NAND
+> + */
+> +struct qcom_props {
+> +	u32 ecc_modes;
+> +};
+> +
+>  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
+>  {
+>  	return container_of(chip, struct qcom_nand_host, chip);
+> @@ -1820,7 +1829,7 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
+>  		 * uses lesser bytes for ECC. If RS is used, the ECC bytes is
+>  		 * always 10 bytes
+>  		 */
+> -		if (nandc->ecc_modes & ECC_BCH_4BIT) {
+> +		if (nandc->props->ecc_modes & ECC_BCH_4BIT) {
+>  			/* BCH */
+>  			host->bch_enabled = true;
+>  			ecc_mode = 0;
+> @@ -2165,7 +2174,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	nandc->ecc_modes = (unsigned long)dev_data;
+> +	nandc->props = dev_data;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	nandc->base = devm_ioremap_resource(dev, res);
+> @@ -2234,7 +2243,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
+> +static const struct qcom_props ebi2_nandc_data = {
+> +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+> +};
+>  
+>  /*
+>   * data will hold a struct pointer containing more differences once we support
+> @@ -2242,7 +2253,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>   */
+>  static const struct of_device_id qcom_nandc_of_match[] = {
+>  	{	.compatible = "qcom,ebi2-nandc",
+> -		.data = (void *)EBI2_NANDC_ECC_MODES,
+> +		.data = &ebi2_nandc_data,
+>  	},
+>  	{}
+>  };
