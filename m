@@ -1,39 +1,58 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 06/10] clk: sunxi-ng: allow set parent clock
- (PLL_CPUX) for CPUX clock on H3
-Date: Fri, 4 Aug 2017 12:10:22 +0800
-Message-ID: <CAGb2v65z32ykkn8nw3ez7SrAkxDUofvcpFb+Y18VMZqgGmZ31A@mail.gmail.com>
-References: <20170723102749.17323-1-icenowy@aosc.io> <20170723102749.17323-7-icenowy@aosc.io>
- <CAGb2v66bFjcB6CwNM+QDAqUxETqE6XX1UWKwqM_XAt6dOsjhLA@mail.gmail.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH 10/13] [NOT FOR REVIEW NOW] clk: sunxi: Add
+ CLK_SET_RATE_PARENT flag for H3 HDMI clock
+Date: Fri, 4 Aug 2017 12:15:27 +0800
+Message-ID: <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
+References: <20170801131304.7741-1-icenowy@aosc.io>
+ <20170801131304.7741-11-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBRXHR7GAKGQEEHZDM6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66bFjcB6CwNM+QDAqUxETqE6XX1UWKwqM_XAt6dOsjhLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170801131304.7741-11-icenowy@aosc.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 11:10 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Sun, Jul 23, 2017 at 6:27 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> The CPUX clock, which is the main clock of the ARM core on Allwinner H3,
->> can be adjusted by changing the frequency of the PLL_CPUX clock.
->>
->> Allowing setting parent clock for the CPUX clock, thus the PLL_CPUX
->> clock can be adjusted when adjusting the CPUX clock.
->>
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->
-> Fixes: 0577e4853bfb ("clk: sunxi-ng: Add H3 clocks")
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-Applied for 4.14 with the Fixes tag and Stephen's ack.
-
-ChenYu
+SGksCgpPbiBUdWUsIEF1ZyAxLCAyMDE3IGF0IDk6MTMgUE0sIEljZW5vd3kgWmhlbmcgPGljZW5v
+d3lAYW9zYy5pbz4gd3JvdGU6Cj4gRnJvbTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVj
+QHNpb2wubmV0Pgo+Cj4gV2hlbiBzZXR0aW5nIHRoZSBIRE1JIGNsb2NrIG9mIEgzLCB0aGUgUExM
+X1ZJREVPIGNsb2NrIG5lZWRzIHRvIGJlIHNldC4KPgo+IEFkZCBDTEtfU0VUX1JBVEVfUEFSRU5U
+IGZsYWcgZm9yIEgzIEhETUkgY2xvY2suCj4KPiBTaWduZWQtb2ZmLWJ5OiBKZXJuZWogU2tyYWJl
+YyA8amVybmVqLnNrcmFiZWNAc2lvbC5uZXQ+Cj4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVu
+ZyA8aWNlbm93eUBhb3NjLmlvPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3Vu
+OGktaDMuYyB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
+aW9uKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1LXN1bjhpLWgz
+LmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuOGktaDMuYwo+IGluZGV4IGIxMTI3ZTg2
+MjlkOS4uMmViYjNkODY1YjAxIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
+dS1zdW44aS1oMy5jCj4gKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1LXN1bjhpLWgzLmMK
+PiBAQCAtNDc0LDcgKzQ3NCw3IEBAIHN0YXRpYyBTVU5YSV9DQ1VfR0FURShhdnNfY2xrLCAgICAg
+ICAgICAgICAgImF2cyIsICAgICAgICAgICJvc2MyNE0iLAo+Cj4gIHN0YXRpYyBjb25zdCBjaGFy
+ICogY29uc3QgaGRtaV9wYXJlbnRzW10gPSB7ICJwbGwtdmlkZW8iIH07Cj4gIHN0YXRpYyBTVU5Y
+SV9DQ1VfTV9XSVRIX01VWF9HQVRFKGhkbWlfY2xrLCAiaGRtaSIsIGhkbWlfcGFyZW50cywKPiAt
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDE1MCwgMCwgNCwgMjQsIDIsIEJJVCgz
+MSksIDApOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MTUwLCAwLCA0LCAy
+NCwgMiwgQklUKDMxKSwgQ0xLX1NFVF9SQVRFX1BBUkVOVCk7CgpMaW5lIGlzIGxvbmdlciB0aGFu
+IDgwIGNoYXJhY3RlcnMuCgpUaGlzIGxvb2tzIGluZGVwZW5kZW50IGVub3VnaCBzbyBJJ3ZlIG1l
+cmdlZCB0aGlzIGZvciA0LjE0IHdpdGggdGhlCm9mZmVuZGluZyBsaW5lIHdyYXBwZWQgYW5kIHRo
+ZSBmb2xsb3dpbmcgdGFnIGFkZGVkOgoKRml4ZXM6IDA1NzdlNDg1M2JmYiAoImNsazogc3VueGkt
+bmc6IEFkZCBIMyBjbG9ja3MiKQoKQ2hlbll1Cgo+Cj4gIHN0YXRpYyBTVU5YSV9DQ1VfR0FURSho
+ZG1pX2RkY19jbGssICAgICJoZG1pLWRkYyIsICAgICAib3NjMjRNIiwKPiAgICAgICAgICAgICAg
+ICAgICAgICAgMHgxNTQsIEJJVCgzMSksIDApOwo+IC0tCj4gMi4xMy4wCj4KPiAtLQo+IFlvdSBy
+ZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdv
+b2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRo
+aXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWls
+IHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uCj4gRm9yIG1vcmUg
+b3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
