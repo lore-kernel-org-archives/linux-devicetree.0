@@ -1,44 +1,50 @@
-From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH RESEND v3 1/3] SoC: es8328-i2c: Add compatible for ES8323
-Date: Fri, 4 Aug 2017 08:44:32 +0200
-Message-ID: <0febe9b7-724a-78fa-6ced-ec0874c5488f@collabora.com>
-References: <20170726135526.475-1-romain.perier@collabora.com>
- <20170726135526.475-10-romain.perier@collabora.com>
- <20170803190116.wo6siwstbkzd4ph7@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
+Date: Fri,  4 Aug 2017 12:18:47 +0530
+Message-ID: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803190116.wo6siwstbkzd4ph7@rob-hp-laptop>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Refactoring the qcom-ufs phy and host controller code to move
+further towards the generic phy usage. Right now the qcom-ufs exports
+a bunch of APIs that are used by the host controller to initialize
+the phy.
+With this patch series, we populate the phy_init() which was a no-op
+earlier. The host controller then calls the phy_init() at the designated
+place rather than doing it invariably in ufs_hcd_init().
 
+As part of this series, we introduce phy modes for ufs phy.
+The M-PHY has two data rates defined for each generations (Gears) -
+Rate A and Rate B. These can serve as the two modes of ufs HS phy.
+Host controller can direct the phy to set the respective configurations
+based on the phy modes.
 
-Le 03/08/2017 à 21:01, Rob Herring a écrit :
-> On Wed, Jul 26, 2017 at 03:55:24PM +0200, Romain Perier wrote:
->> This commit adds a compatible string for everest,es8323. This is an
->> audio codec that is compatible with es8328 and can be found for example
->> on the Firefly-RK3288 board.
->>
->> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/sound/es8328.txt | 5 ++++-
->>  sound/soc/codecs/es8328-i2c.c                      | 2 ++
->>  2 files changed, 6 insertions(+), 1 deletion(-)
-> I acked the previous v3 at the end of the discussion. Please add acks 
-> when posting new versions.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> Rob
+The patch-series has been tested with necessary dt patches on db820c.
 
-My bad! Thanks
+Vivek Gautam (5):
+  dt-bindings: phy: Add PHY_TYPE_UFS definition
+  phy: Add UFS PHY modes
+  phy: qcom-ufs: Add support to set phy mode
+  scsi/ufs: qcom: Set phy mode based on the controllers HS MODE
+  ufs/phy: qcom: Refactor to use phy_init call
 
-Romain
+ drivers/phy/qualcomm/phy-qcom-ufs-i.h        |  4 +--
+ drivers/phy/qualcomm/phy-qcom-ufs-qmp-14nm.c | 23 ++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-ufs-qmp-20nm.c | 23 ++++++++++++++--
+ drivers/phy/qualcomm/phy-qcom-ufs.c          | 38 +++++++--------------------
+ drivers/scsi/ufs/ufs-qcom.c                  | 39 ++++++++++++----------------
+ include/dt-bindings/phy/phy.h                |  1 +
+ include/linux/phy/phy-qcom-ufs.h             |  3 ---
+ include/linux/phy/phy.h                      |  2 ++
+ 8 files changed, 74 insertions(+), 59 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
