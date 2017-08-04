@@ -1,196 +1,353 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 13/18] firmware: arm_scmi: add per-protocol channels support using idr objects
-Date: Fri,  4 Aug 2017 15:31:39 +0100
-Message-ID: <1501857104-11279-14-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v2 07/18] firmware: arm_scmi: add initial support for power
+ protocol
+Date: Fri,  4 Aug 2017 15:31:33 +0100
+Message-ID: <1501857104-11279-8-git-send-email-sudeep.holla@arm.com>
 References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Nishanth Menon <nm@ti.com>, Harb Abdulhamid <harba@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Jassi Brar <jassisinghbrar@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Roy Franz <roy.franz@cavium.com>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, Alexey Klimov <alexey.klimov@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to maintain the channel information per protocol, we need
-some sort of list or hashtable to hold all this information. IDR
-provides sparse array mapping of small integer ID numbers onto arbitrary
-pointers. In this case the arbitrary pointers can be pointers to the
-channel information.
+The power protocol is intended for management of power states of various
+power domains. The power domain management protocol provides commands to
+describe the protocol version, discover the implementation specific
+attributes, set and get the power state of a domain.
 
-This patch adds support for per-protocol channels using those idr
-objects.
+This patch adds support for the above mention features of the protocol.
 
 Cc: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+--
+ drivers/firmware/arm_scmi/Makefile |   2 +-
+ drivers/firmware/arm_scmi/power.c  | 242 +++++++++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h      |  28 +++++
+ 3 files changed, 271 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/power.c
 ---
- drivers/firmware/arm_scmi/driver.c | 50 +++++++++++++++++++++++++++++---------
- 1 file changed, 39 insertions(+), 11 deletions(-)
+ drivers/firmware/arm_scmi/Makefile |   2 +-
+ drivers/firmware/arm_scmi/power.c  | 242 +++++++++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h      |  28 +++++
+ 3 files changed, 271 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/power.c
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 3eaf619858bb..b59cbdde0237 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -112,6 +112,8 @@ struct scmi_desc {
-  * @tx_payload: Transmit mailbox channel payload area
-  * @rx_payload: Receive mailbox channel payload area
-  * @info: Reference to SCMI instance corresponding to this channel
-+ * @dev: Reference to device in the SCMI hierarchy corresponding to this
-+ *	 channel
-  */
- struct scmi_chan_info {
- 	struct mbox_client cl;
-@@ -120,6 +122,7 @@ struct scmi_chan_info {
- 	void __iomem *tx_payload;
- 	void __iomem *rx_payload;
- 	struct scmi_info *info;
-+	struct device *dev;
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index 6836b1f38f7f..52ecc08556a2 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -1,2 +1,2 @@
+ obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
+-arm_scmi-y = base.o clock.o driver.o perf.o
++arm_scmi-y = base.o clock.o driver.o perf.o power.o
+diff --git a/drivers/firmware/arm_scmi/power.c b/drivers/firmware/arm_scmi/power.c
+new file mode 100644
+index 000000000000..34c45f101abb
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/power.c
+@@ -0,0 +1,242 @@
++/*
++ * System Control and Management Interface (SCMI) Power Protocol
++ *
++ * Copyright (C) 2017 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program. If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "common.h"
++
++enum scmi_power_protocol_cmd {
++	POWER_DOMAIN_ATTRIBUTES = 0x3,
++	POWER_STATE_SET = 0x4,
++	POWER_STATE_GET = 0x5,
++	POWER_STATE_NOTIFY = 0x6,
++};
++
++struct scmi_msg_resp_power_attributes {
++	__le16 num_domains;
++	__le16 reserved;
++	__le32 stats_addr_low;
++	__le32 stats_addr_high;
++	__le32 stats_size;
++};
++
++struct scmi_msg_resp_power_domain_attributes {
++	__le32 flags;
++#define SUPPORTS_STATE_SET_NOTIFY(x)	((x) & BIT(31))
++#define SUPPORTS_STATE_SET_ASYNC(x)	((x) & BIT(30))
++#define SUPPORTS_STATE_SET_SYNC(x)	((x) & BIT(29))
++	    u8 name[SCMI_MAX_STR_SIZE];
++};
++
++struct scmi_power_set_state {
++	__le32 flags;
++#define STATE_SET_ASYNC		BIT(0)
++	__le32 domain;
++	__le32 state;
++};
++
++struct scmi_power_state_notify {
++	__le32 domain;
++	__le32 notify_enable;
++};
++
++struct power_dom_info {
++	bool state_set_sync;
++	bool state_set_async;
++	bool state_set_notify;
++	char name[SCMI_MAX_STR_SIZE];
++};
++
++struct scmi_power_info {
++	int num_domains;
++	u64 stats_addr;
++	u32 stats_size;
++	struct power_dom_info *dom_info;
++};
++
++static struct scmi_power_info power_info;
++
++static int scmi_power_attributes_get(const struct scmi_handle *handle,
++				     struct scmi_power_info *power_info)
++{
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_msg_resp_power_attributes *attr;
++
++	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
++				 SCMI_PROTOCOL_POWER, 0, sizeof(*attr), &t);
++	if (ret)
++		return ret;
++
++	attr = t->rx.buf;
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		power_info->num_domains = le16_to_cpu(attr->num_domains);
++		power_info->stats_addr = le32_to_cpu(attr->stats_addr_low) |
++				(u64)le32_to_cpu(attr->stats_addr_high) << 32;
++		power_info->stats_size = le32_to_cpu(attr->stats_size);
++	}
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++static int
++scmi_power_domain_attributes_get(const struct scmi_handle *handle, u32 domain,
++				 struct power_dom_info *dom_info)
++{
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_msg_resp_power_domain_attributes *attr;
++
++	ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
++				 SCMI_PROTOCOL_POWER, sizeof(domain),
++				 sizeof(*attr), &t);
++	if (ret)
++		return ret;
++
++	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++	attr = t->rx.buf;
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret) {
++		u32 flags = le32_to_cpu(attr->flags);
++
++		dom_info->state_set_notify = SUPPORTS_STATE_SET_NOTIFY(flags);
++		dom_info->state_set_async = SUPPORTS_STATE_SET_ASYNC(flags);
++		dom_info->state_set_sync = SUPPORTS_STATE_SET_SYNC(flags);
++		memcpy(dom_info->name, attr->name, SCMI_MAX_STR_SIZE);
++	}
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++static int
++scmi_power_state_set(const struct scmi_handle *handle, u32 domain, u32 state)
++{
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_power_set_state *st;
++
++	ret = scmi_one_xfer_init(handle, POWER_STATE_SET, SCMI_PROTOCOL_POWER,
++				 sizeof(*st), 0, &t);
++	if (ret)
++		return ret;
++
++	st = t->tx.buf;
++	st->flags = cpu_to_le32(0);
++	st->domain = cpu_to_le32(domain);
++	st->state = cpu_to_le32(state);
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++static int
++scmi_power_state_get(const struct scmi_handle *handle, u32 domain, u32 *state)
++{
++	int ret;
++	struct scmi_xfer *t;
++
++	ret = scmi_one_xfer_init(handle, POWER_STATE_GET, SCMI_PROTOCOL_POWER,
++				 sizeof(u32), sizeof(u32), &t);
++	if (ret)
++		return ret;
++
++	*(__le32 *)t->tx.buf = cpu_to_le32(domain);
++
++	ret = scmi_do_xfer(handle, t);
++	if (!ret)
++		*state = le32_to_cpu(*(__le32 *)t->rx.buf);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++static int scmi_power_state_notify_enable(const struct scmi_handle *handle,
++					  u32 domain, bool enable)
++{
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_power_state_notify *notify;
++
++	ret = scmi_one_xfer_init(handle, POWER_STATE_NOTIFY,
++				 SCMI_PROTOCOL_POWER, sizeof(*notify), 0, &t);
++	if (ret)
++		return ret;
++
++	notify = t->tx.buf;
++	notify->domain = cpu_to_le32(domain);
++	notify->notify_enable = cpu_to_le32(enable & BIT(0));
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_one_xfer_put(handle, t);
++	return ret;
++}
++
++static int scmi_power_num_domains_get(const struct scmi_handle *handle)
++{
++	return power_info.num_domains;
++}
++
++static char *scmi_power_name_get(const struct scmi_handle *handle, u32 domain)
++{
++	struct power_dom_info *dom = power_info.dom_info + domain;
++
++	return dom->name;
++}
++
++static struct scmi_power_ops power_ops = {
++	.num_domains_get = scmi_power_num_domains_get,
++	.name_get = scmi_power_name_get,
++	.state_set = scmi_power_state_set,
++	.state_get = scmi_power_state_get,
++	.state_notify_enable = scmi_power_state_notify_enable,
++};
++
++int scmi_power_protocol_init(struct scmi_handle *handle)
++{
++	u32 version;
++	int domain;
++
++	scmi_version_get(handle, SCMI_PROTOCOL_POWER, &version);
++
++	dev_dbg(handle->dev, "Power Version %d.%d\n",
++		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
++
++	scmi_power_attributes_get(handle, &power_info);
++
++	power_info.dom_info = devm_kcalloc(handle->dev, power_info.num_domains,
++					   sizeof(struct power_dom_info),
++					   GFP_KERNEL);
++	if (!power_info.dom_info)
++		return -ENOMEM;
++
++	for (domain = 0; domain < power_info.num_domains; domain++) {
++		struct power_dom_info *dom = power_info.dom_info + domain;
++
++		scmi_power_domain_attributes_get(handle, domain, dom);
++	}
++
++	handle->power_ops = &power_ops;
++
++	return 0;
++}
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index c15f37c86025..e5a80511f88c 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -111,16 +111,44 @@ struct scmi_perf_ops {
  };
  
  /**
-@@ -131,7 +134,7 @@ struct scmi_chan_info {
-  * @version: SCMI revision information containing protocol version,
-  *	implementation version and (sub-)vendor identification.
-  * @minfo: Message info
-- * @cinfo: Reference to SCMI channel information
-+ * @idr: IDR object to map protocol id to channel info pointer
-  * @protocols_imp: list of protocols implemented
-  * @node: list head
-  * @users: Number of users of this instance
-@@ -142,7 +145,7 @@ struct scmi_info {
- 	struct scmi_revision_info version;
- 	struct scmi_handle handle;
- 	struct scmi_xfers_info minfo;
--	struct scmi_chan_info *cinfo;
-+	struct idr idr;
- 	u8 *protocols_imp;
- 	struct list_head node;
- 	int users;
-@@ -412,7 +415,11 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	int timeout;
- 	struct scmi_info *info = handle_to_scmi_info(handle);
- 	struct device *dev = info->dev;
--	struct scmi_chan_info *cinfo = info->cinfo;
-+	struct scmi_chan_info *cinfo;
++ * struct scmi_power_ops - represents the various operations provided
++ *	by SCMI Power Protocol
++ *
++ * @num_domains_get: get the count of power domains provided by SCMI
++ * @name_get: gets the name of a power domain
++ * @state_set: sets the power state of a power domain
++ * @state_get: gets the power state of a power domain
++ * @state_notify_enable: request notifications from the platform for
++ *	state changes in a specific power domain
++ */
++struct scmi_power_ops {
++	int (*num_domains_get)(const struct scmi_handle *);
++	char *(*name_get)(const struct scmi_handle *, u32);
++#define SCMI_POWER_STATE_TYPE_SHIFT	30
++#define SCMI_POWER_STATE_ID_MASK	(BIT(28) - 1)
++#define SCMI_POWER_STATE_PARAM(type, id) \
++	((((type) & BIT(0)) << SCMI_POWER_STATE_TYPE_SHIFT) | \
++		((id) & SCMI_POWER_STATE_ID_MASK))
++#define SCMI_POWER_STATE_GENERIC_ON	SCMI_POWER_STATE_PARAM(0, 0)
++#define SCMI_POWER_STATE_GENERIC_OFF	SCMI_POWER_STATE_PARAM(1, 0)
++	int (*state_set)(const struct scmi_handle *, u32, u32);
++	int (*state_get)(const struct scmi_handle *, u32, u32 *);
++	int (*state_notify_enable)(const struct scmi_handle *, u32, bool);
++};
 +
-+	cinfo = idr_find(&info->idr, xfer->hdr.protocol_id);
-+	if (unlikely(!cinfo))
-+		return -EINVAL;
- 
- 	ret = mbox_send_message(cinfo->tx_chan, xfer);
- 	if (ret < 0) {
-@@ -772,8 +779,11 @@ static int scmi_mailbox_check(struct device_node *np)
- 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
- }
- 
--static int scmi_mbox_free_channel(struct scmi_chan_info *cinfo)
-+static int scmi_mbox_free_channel(int id, void *p, void *data)
- {
-+	struct scmi_chan_info *cinfo = p;
-+	struct idr *idr = data;
-+
- 	if (!IS_ERR_OR_NULL(cinfo->tx_chan)) {
- 		mbox_free_channel(cinfo->tx_chan);
- 		cinfo->tx_chan = NULL;
-@@ -783,6 +793,8 @@ static int scmi_mbox_free_channel(struct scmi_chan_info *cinfo)
- 		cinfo->rx_chan = NULL;
- 	}
- 
-+	idr_remove(idr, id);
-+
- 	return 0;
- }
- 
-@@ -790,6 +802,7 @@ static int scmi_remove(struct platform_device *pdev)
- {
- 	int ret = 0;
- 	struct scmi_info *info = platform_get_drvdata(pdev);
-+	struct idr *idr = &info->idr;
- 
- 	of_platform_depopulate(&pdev->dev);
- 
-@@ -800,28 +813,34 @@ static int scmi_remove(struct platform_device *pdev)
- 		list_del(&info->node);
- 	mutex_unlock(&scmi_list_mutex);
- 
--	if (!ret)
-+	if (!ret) {
- 		/* Safe to free channels since no more users */
--		return scmi_mbox_free_channel(info->cinfo);
-+		ret = idr_for_each(idr, scmi_mbox_free_channel, idr);
-+		idr_destroy(&info->idr);
-+	}
- 
- 	return ret;
- }
- 
--static inline int scmi_mbox_chan_setup(struct scmi_info *info)
-+static inline int
-+scmi_mbox_chan_setup(struct scmi_info *info, struct device *dev, int prot_id)
- {
- 	int ret;
- 	struct resource res;
- 	resource_size_t size;
--	struct device *dev = info->dev;
- 	struct device_node *shmem, *np = dev->of_node;
- 	struct scmi_chan_info *cinfo;
- 	struct mbox_client *cl;
- 
-+	if (scmi_mailbox_check(np)) {
-+		cinfo = idr_find(&info->idr, SCMI_PROTOCOL_BASE);
-+		goto idr_alloc;
-+	}
-+
- 	cinfo = devm_kzalloc(info->dev, sizeof(*cinfo), GFP_KERNEL);
- 	if (!cinfo)
- 		return -ENOMEM;
- 
--	info->cinfo = cinfo;
- 	cinfo->info = info;
- 
- 	cl = &cinfo->cl;
-@@ -854,6 +873,13 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
- 		return ret;
- 	}
- 
-+idr_alloc:
-+	ret = idr_alloc(&info->idr, cinfo, prot_id, prot_id + 1, GFP_KERNEL);
-+	if (ret != prot_id) {
-+		dev_err(dev, "unable to allocate SCMI idr slot err %d\n", ret);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -887,19 +913,19 @@ static int scmi_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	platform_set_drvdata(pdev, info);
-+	idr_init(&info->idr);
- 
- 	handle = &info->handle;
- 	handle->dev = info->dev;
- 	handle->version = &info->version;
- 
--	ret = scmi_mbox_chan_setup(info);
-+	ret = scmi_mbox_chan_setup(info, dev, SCMI_PROTOCOL_BASE);
- 	if (ret)
- 		return ret;
- 
- 	ret = scmi_base_protocol_init(handle);
- 	if (ret) {
- 		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
--		scmi_mbox_free_channel(info->cinfo);
- 		return ret;
- 	}
- 
-@@ -931,6 +957,8 @@ static int scmi_probe(struct platform_device *pdev)
- 				continue;
- 			}
- 
-+			scmi_mbox_chan_setup(info, &cdev->dev, prot_id);
-+
- 			init_ret = match->fn(handle);
- 			if (init_ret) {
- 				dev_err(dev, "SCMI protocol %d init error %d\n",
++/**
+  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
+  *
+  * @dev: pointer to the SCMI device
+  * @version: pointer to the structure containing SCMI version information
++ * @power_ops: pointer to set of power protocol operations
+  * @perf_ops: pointer to set of performance protocol operations
+  * @clk_ops: pointer to set of clock protocol operations
+  */
+ struct scmi_handle {
+ 	struct device *dev;
+ 	struct scmi_revision_info *version;
++	struct scmi_power_ops *power_ops;
+ 	struct scmi_perf_ops *perf_ops;
+ 	struct scmi_clk_ops *clk_ops;
+ };
 -- 
 2.7.4
