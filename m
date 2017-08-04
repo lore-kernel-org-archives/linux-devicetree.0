@@ -1,59 +1,119 @@
-From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v6 0/2] Add basic support for Mediatek MT2712 SoC
-Date: Fri, 4 Aug 2017 19:59:35 +0800
-Message-ID: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v1 4/5] [media] stm32-dcmi: set default format at open()
+Date: Fri, 4 Aug 2017 14:00:05 +0200
+Message-ID: <a5a158b3-b502-d220-52bb-8138328c1773@xs4all.nl>
+References: <1501236302-18097-1-git-send-email-hugues.fruchet@st.com>
+ <1501236302-18097-5-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501236302-18097-5-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MT2712 is a SoC based on 64bit ARMv8 architecture.
-MT2712 share many HW IP with MT8173.  This patchset was tested on MT2712 evaluation board, and boot to shell ok.
+On 28/07/17 12:05, Hugues Fruchet wrote:
+> Ensure that we start with default pixel format and resolution
+> when opening a new instance.
 
-This series contains document bindings, device tree including interrupt and uart.
+Why? The format is persistent in V4L2 and (re)opening the video device
+shouldn't change the format.
 
-Changes compared to v5:
-- remove the soc node
+Suppose you use v4l2-ctl to set up a format. E.g. v4l2-ctl -v width=320,height-240.
+Now run v4l2-ctl -V to get the format and with this code it would suddenly be
+back to the default!
 
-Changes compared to v4:
-- rebase to 4.13-rc1
-- use two clocks (baud_clk & sys_clk) instead of one uart_clk to the correct bindings
+You set up the default format in the dcmi_graph_notify_complete, but after that
+it is only changed if userspace explicitly requests it.
 
-Changes compared to v3:
-- use two uart clocks refer to the bindings
+Regards,
 
-Changes compared to v2:
-- remove alias from serial1 to serial5
-- remove initrd-start and initrd-end
-- change GIC_CPU_MASK_SIMPLE(6) to GIC_CPU_MASK_RAW(0x13)
-- change gic-400 reg range
+	Hans
 
-Changes compared to v1:
-- change subject prefix for bindings
-- change device tree license to SPDX tag.
-- change bootargs parameter to DT usage.
-- change intpol-controller to interrupt-controller
-
-YT Shen (2):
-  dt-bindings: arm: Add bindings for Mediatek MT2712 SoC Platform
-  arm64: dts: Add Mediatek SoC MT2712 and evaluation board dts and
-    Makefile
-
- Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
- .../interrupt-controller/mediatek,sysirq.txt       |   1 +
- .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
- arch/arm64/boot/dts/mediatek/Makefile              |   1 +
- arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  32 ++++
- arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 171 +++++++++++++++++++++
- 6 files changed, 210 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-
--- 
-1.9.1
+> 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 49 ++++++++++++++++++-------------
+>  1 file changed, 28 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index 4733d1f..2be56b6 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -890,6 +890,28 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
+>  	return 0;
+>  }
+>  
+> +static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
+> +{
+> +	struct v4l2_format f = {
+> +		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+> +		.fmt.pix = {
+> +			.width		= CIF_WIDTH,
+> +			.height		= CIF_HEIGHT,
+> +			.field		= V4L2_FIELD_NONE,
+> +			.pixelformat	= dcmi->sd_formats[0]->fourcc,
+> +		},
+> +	};
+> +	int ret;
+> +
+> +	ret = dcmi_try_fmt(dcmi, &f, NULL);
+> +	if (ret)
+> +		return ret;
+> +	dcmi->sd_format = dcmi->sd_formats[0];
+> +	dcmi->fmt = f;
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct of_device_id stm32_dcmi_of_match[] = {
+>  	{ .compatible = "st,stm32-dcmi"},
+>  	{ /* end node */ },
+> @@ -916,7 +938,13 @@ static int dcmi_open(struct file *file)
+>  	if (ret < 0 && ret != -ENOIOCTLCMD)
+>  		goto fh_rel;
+>  
+> +	ret = dcmi_set_default_fmt(dcmi);
+> +	if (ret)
+> +		goto power_off;
+> +
+>  	ret = dcmi_set_fmt(dcmi, &dcmi->fmt);
+> +
+> +power_off:
+>  	if (ret)
+>  		v4l2_subdev_call(sd, core, s_power, 0);
+>  fh_rel:
+> @@ -991,27 +1019,6 @@ static int dcmi_release(struct file *file)
+>  	.read		= vb2_fop_read,
+>  };
+>  
+> -static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
+> -{
+> -	struct v4l2_format f = {
+> -		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
+> -		.fmt.pix = {
+> -			.width		= CIF_WIDTH,
+> -			.height		= CIF_HEIGHT,
+> -			.field		= V4L2_FIELD_NONE,
+> -			.pixelformat	= dcmi->sd_formats[0]->fourcc,
+> -		},
+> -	};
+> -	int ret;
+> -
+> -	ret = dcmi_try_fmt(dcmi, &f, NULL);
+> -	if (ret)
+> -		return ret;
+> -	dcmi->sd_format = dcmi->sd_formats[0];
+> -	dcmi->fmt = f;
+> -	return 0;
+> -}
+> -
+>  static const struct dcmi_format dcmi_formats[] = {
+>  	{
+>  		.fourcc = V4L2_PIX_FMT_RGB565,
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
