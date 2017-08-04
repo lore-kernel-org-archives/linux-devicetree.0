@@ -1,8 +1,8 @@
 From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/6] PCI: mediatek: Add a structure to abstract the
- controller generations
-Date: Fri, 4 Aug 2017 20:06:38 +0800
-Message-ID: <d8d42eae0a649b0c944dbc9b2ceebed432a04f32.1501846816.git.honghui.zhang@mediatek.com>
+Subject: [PATCH v3 6/6] dt-bindings: PCI: add support for new generation
+ controller
+Date: Fri, 4 Aug 2017 20:06:42 +0800
+Message-ID: <721a9148b9e80ad52ec0b8fbd5f9fe9b9be0f23e.1501846816.git.honghui.zhang@mediatek.com>
 References: <cover.1501846816.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,110 +22,227 @@ To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh-+zGGX9k9yNkdnm+yROfE0
 Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Introduce a structure "mtk_pcie_soc" to abstract the differences between
-controller generations, and the .startup() hook is used to encapsulate
-some SoC-dependent related setting. In doing so, the common code which
-will be reused by future chips.
+Add support for MediaTek new generation controller and update related
+properities.
 
 Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/pci/host/pcie-mediatek.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/pci/mediatek-pcie.txt      | 168 ++++++++++++++++++++-
+ 1 file changed, 161 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index 0d46cda..5d7f62e 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -64,6 +64,18 @@
- #define PCIE_FC_CREDIT_MASK	(GENMASK(31, 31) | GENMASK(28, 16))
- #define PCIE_FC_CREDIT_VAL(x)	((x) << 16)
+diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+index 0fdcb15..2e81742 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+@@ -3,18 +3,31 @@ MediaTek Gen2 PCIe controller
+ Required properties:
+ - compatible: Should contain one of the following strings:
+ 	"mediatek,mt2701-pcie"
++	"mediatek,mt2712-pcie"
++	"mediatek,mt7622-pcie"
+ 	"mediatek,mt7623-pcie"
+ - device_type: Must be "pci"
+-- reg: Base addresses and lengths of the PCIe controller.
++- reg: Base addresses and lengths of the PCIe subsys and root ports.
++- reg-names: Names of the above areas to use during resource look-up.
+ - #address-cells: Address representation for root ports (must be 3)
+ - #size-cells: Size representation for root ports (must be 2)
+ - clocks: Must contain an entry for each entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+-- clock-names: Must include the following entries:
+-  - free_ck :for reference clock of PCIe subsys
+-  - sys_ck0 :for clock of Port0
+-  - sys_ck1 :for clock of Port1
+-  - sys_ck2 :for clock of Port2
++- clock-names:
++  Mandatory entries:
++   - sys_ckN :transaction layer and data link layer clock
++  Required entries for MT2701/MT7623:
++   - free_ck :for reference clock of PCIe subsys
++  Required entries for MT2712/MT7622:
++   - ahb_ckN :AHB slave interface operating clock for CSR access and RC
++	      initiated MMIO access
++  Required entries for MT7622:
++   - axi_ckN :application layer MMIO channel operating clock
++   - aux_ckN :pe2_mac_bridge and pe2_mac_core operating clock when
++	      pcie_mac_ck/pcie_pipe_ck is turned off
++   - obff_ckN :OBFF functional block operating clock
++   - pipe_ckN :LTSSM and PHY/MAC layer operating clock
++  where N starting from 0 to one less than the number of root ports.
+ - phys: List of PHY specifiers (used by generic PHY framework).
+ - phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+   number of PHYs as specified in *phys* property.
+@@ -33,6 +46,10 @@ Required properties for MT7623/MT2701:
+ - reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
+   number of root ports.
  
-+struct mtk_pcie_port;
++Required properties for MT2712/MT7622:
++-interrupts: A list of interrupt outputs of the controller, must have one
++	     entry for each PCIe port
 +
-+/**
-+ * struct mtk_pcie_soc - differentiate between host generations
-+ * @ops: pointer to configuration access functions
-+ * @startup: pointer to controller setting functions
-+ */
-+struct mtk_pcie_soc {
-+	struct pci_ops *ops;
-+	int (*startup)(struct mtk_pcie_port *port);
-+};
+ In addition, the device tree node must have sub-nodes describing each
+ PCIe port interface, having the following mandatory properties:
+ 
+@@ -50,7 +67,7 @@ Required properties:
+   property is sufficient.
+ - num-lanes: Number of lanes to use for this port.
+ 
+-Examples:
++Examples for MT7623:
+ 
+ 	hifsys: syscon@1a000000 {
+ 		compatible = "mediatek,mt7623-hifsys",
+@@ -68,6 +85,7 @@ Examples:
+ 		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
+ 		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
+ 		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
++		reg-names = "subsys", "port0", "port1", "port2";
+ 		#address-cells = <3>;
+ 		#size-cells = <2>;
+ 		#interrupt-cells = <1>;
+@@ -128,3 +146,139 @@ Examples:
+ 			num-lanes = <1>;
+ 		};
+ 	};
 +
- /**
-  * struct mtk_pcie_port - PCIe port information
-  * @base: IO mapped register base
-@@ -97,6 +109,7 @@ struct mtk_pcie_port {
-  * @busn: bus range
-  * @offset: IO / Memory offset
-  * @ports: pointer to PCIe port information
-+ * @soc: pointer to SoC-dependent operations
-  */
- struct mtk_pcie {
- 	struct device *dev;
-@@ -112,6 +125,7 @@ struct mtk_pcie {
- 		resource_size_t io;
- 	} offset;
- 	struct list_head ports;
-+	const struct mtk_pcie_soc *soc;
- };
- 
- static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
-@@ -229,7 +243,8 @@ static int mtk_pcie_startup_ports(struct mtk_pcie_port *port)
- 
- static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
- {
--	struct device *dev = port->pcie->dev;
-+	struct mtk_pcie *pcie = port->pcie;
-+	struct device *dev = pcie->dev;
- 	int err;
- 
- 	err = clk_prepare_enable(port->sys_ck);
-@@ -247,7 +262,7 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
- 		goto err_phy_on;
- 	}
- 
--	if (!mtk_pcie_startup_ports(port))
-+	if (!pcie->soc->startup(port))
- 		return;
- 
- 	dev_info(dev, "Port%d link down\n", port->index);
-@@ -472,7 +487,7 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
- 
- 	host->busnr = pcie->busn.start;
- 	host->dev.parent = pcie->dev;
--	host->ops = &mtk_pcie_ops;
-+	host->ops = pcie->soc->ops;
- 	host->map_irq = of_irq_parse_and_map_pci;
- 	host->swizzle_irq = pci_common_swizzle;
- 
-@@ -505,6 +520,7 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	pcie = pci_host_bridge_priv(host);
- 
- 	pcie->dev = dev;
-+	pcie->soc = of_device_get_match_data(dev);
- 	platform_set_drvdata(pdev, pcie);
- 	INIT_LIST_HEAD(&pcie->ports);
- 
-@@ -529,9 +545,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
-+	.ops = &mtk_pcie_ops,
-+	.startup = mtk_pcie_startup_ports,
-+};
++Examples for MT2712:
++	pcie: pcie@11700000 {
++		compatible = "mediatek,mt2712-pcie";
++		device_type = "pci";
++		reg = <0 0x11700000 0 0x1000>,
++		      <0 0x112ff000 0 0x1000>;
++		reg-names = "port0", "port1";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
++			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
++			 <&pericfg CLK_PERI_PCIE0>,
++			 <&pericfg CLK_PERI_PCIE1>;
++		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1";
++		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
++		phy-names = "pcie-phy0", "pcie-phy1";
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
 +
- static const struct of_device_id mtk_pcie_ids[] = {
--	{ .compatible = "mediatek,mt7623-pcie"},
--	{ .compatible = "mediatek,mt2701-pcie"},
-+	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-+	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
- 	{},
- };
- 
++		pcie0: pcie@0,0 {
++			device_type = "pci";
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++					<0 0 0 2 &pcie_intc0 1>,
++					<0 0 0 3 &pcie_intc0 2>,
++					<0 0 0 4 &pcie_intc0 3>;
++			pcie_intc0: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
++		pcie1: pcie@1,0 {
++			device_type = "pci";
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
++					<0 0 0 2 &pcie_intc1 1>,
++					<0 0 0 3 &pcie_intc1 2>,
++					<0 0 0 4 &pcie_intc1 3>;
++			pcie_intc1: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++	};
++
++Examples for MT7622:
++	pcie: pcie@1a140000 {
++		compatible = "mediatek,mt7622-pcie";
++		device_type = "pci";
++		reg = <0 0x1a140000 0 0x1000>,
++		      <0 0x1a143000 0 0x1000>,
++		      <0 0x1a145000 0 0x1000>;
++		reg-names = "subsys", "port0", "port1";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
++			 <&pciesys CLK_PCIE_P1_MAC_EN>,
++			 <&pciesys CLK_PCIE_P0_AHB_EN>,
++			 <&pciesys CLK_PCIE_P1_AHB_EN>,
++			 <&pciesys CLK_PCIE_P0_AUX_EN>,
++			 <&pciesys CLK_PCIE_P1_AUX_EN>,
++			 <&pciesys CLK_PCIE_P0_AXI_EN>,
++			 <&pciesys CLK_PCIE_P1_AXI_EN>,
++			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
++			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
++			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
++			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
++		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
++			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
++			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
++		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
++		phy-names = "pcie-phy0", "pcie-phy1";
++		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
++		bus-range = <0x00 0xff>;
++		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
++
++		pcie0: pcie@0,0 {
++			device_type = "pci";
++			reg = <0x0000 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
++					<0 0 0 2 &pcie_intc0 1>,
++					<0 0 0 3 &pcie_intc0 2>,
++					<0 0 0 4 &pcie_intc0 3>;
++			pcie_intc0: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++
++		pcie1: pcie@1,0 {
++			device_type = "pci";
++			reg = <0x0800 0 0 0 0>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			#interrupt-cells = <1>;
++			ranges;
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 7>;
++			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
++					<0 0 0 2 &pcie_intc1 1>,
++					<0 0 0 3 &pcie_intc1 2>,
++					<0 0 0 4 &pcie_intc1 3>;
++			pcie_intc1: interrupt-controller {
++				interrupt-controller;
++				#address-cells = <0>;
++				#interrupt-cells = <1>;
++			};
++		};
++	};
 -- 
 2.6.4
