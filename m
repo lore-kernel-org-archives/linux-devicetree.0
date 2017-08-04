@@ -1,41 +1,79 @@
-From: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH 0/3] ARM: dts: keystone-k2g: Add DCAN instances to 66AK2G
-Date: Fri, 4 Aug 2017 10:07:57 -0700
-Message-ID: <69995971-2fe7-87f4-a46a-8ef4f729ffc5@oracle.com>
-References: <20170802201822.11532-1-fcooper@ti.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
+ display panels
+Date: Fri, 4 Aug 2017 19:36:06 +0200
+Message-ID: <226e7391-2f4f-60ca-f258-ad7b02463359@tronnes.org>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <1501799630-1650-4-git-send-email-david@lechnology.com>
+ <2434051.fAH1OaXNrL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170802201822.11532-1-fcooper@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Franklin S Cooper Jr <fcooper@ti.com>, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2434051.fAH1OaXNrL@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Franklin,
-
-On 8/2/2017 1:18 PM, Franklin S Cooper Jr wrote:
-> Add D CAN nodes to 66AK2G based SoC dtsi.
-> 
-> Franklin S Cooper Jr (2):
->    dt-bindings: net: c_can: Update binding for clock and power-domains
->      property
->    ARM: configs: keystone: Enable D_CAN driver
-> 
-> Lokesh Vutla (1):
->    ARM: dts: k2g: Add DCAN nodes
-> 
-Any DCAN driver dependency with these patchset ? If not, I can
-queue this up so do let me know.
-
-Regards,
-Santosh
+SGkgTGF1cmVudCwKCgpEZW4gMDQuMDguMjAxNyAxNi41NCwgc2tyZXYgTGF1cmVudCBQaW5jaGFy
+dDoKPiBIaSBEYXZpZCwKPgo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+Cj4gT24gVGh1cnNk
+YXkgMDMgQXVnIDIwMTcgMTc6MzM6NDcgRGF2aWQgTGVjaG5lciB3cm90ZToKPj4gVGhpcyBhZGRz
+IGEgbmV3IGJpbmRpbmcgZm9yIFNpdHJvbml4IFNUNzU4NiBkaXNwbGF5IHBhbmVscy4KPj4KPj4g
+VXNpbmcgbGVnbyBhcyB0aGUgdmVuZG9yIHByZWZpeCBpbiB0aGUgY29tcGF0aWJsZSBzdHJpbmcg
+YmVjYXVzZSB0aGUgZGlzcGxheQo+PiBwYW5lbCBJIGFtIHdvcmtpbmcgd2l0aCBpcyBhbiBpbnRl
+Z3JhbCBwYXJ0IG9mIHRoZSBMRUdPIE1JTkRTVE9STVMgRVYzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5
+OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KPj4gLS0tCj4+ICAgLi4uL2Jp
+bmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dCAgICAgICAgICAgfCAyNiArKysrKysr
+KysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKykKPj4gICBj
+cmVhdGUgbW9kZSAxMDA2NDQKPj4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dAo+PiBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50
+eHQgbmV3IGZpbGUKPj4gbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMC4uZGZiMGI3Ygo+PiAt
+LS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4gQEAgLTAsMCArMSwyNiBAQAo+PiArU2l0cm9u
+aXggU1Q3NTg2IGRpc3BsYXkgcGFuZWwKPj4gKwo+PiArUmVxdWlyZWQgcHJvcGVydGllczoKPj4g
+Ky0gY29tcGF0aWJsZToJImxlZ28sZXYzLWxjZCIuCj4+ICsKPj4gK1RoZSBub2RlIGZvciB0aGlz
+IGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBhIFNQSSBjb250cm9sbGVyLCBoZW5jZQo+
+PiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAuLi9zcGkvc3BpLWJ1cy50
+eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4+ICsKPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4+ICst
+IGRjLWdwaW9zOglEL0MgcGluLiBUaGUgcHJlc2VuY2UvYWJzZW5jZSBvZiB0aGlzIEdQSU8gZGV0
+ZXJtaW5lcwo+PiArCQl0aGUgcGFuZWwgaW50ZXJmYWNlIG9wZXJhdGlvbiBtb2RlIChJRlszOjFd
+IHBpbnMpOgo+PiArCQktIHByZXNlbnQ6IElGPTAxMSA0LXdpcmUgOC1iaXQgZGF0YSBzZXJpYWwg
+aW50ZXJmYWNlCj4+ICsJCS0gYWJzZW50OiAgSUY9MDEwIDMtd2lyZSA5LWJpdCBkYXRhIHNlcmlh
+bCBpbnRlcmZhY2UKPiBIb3cgZG9lcyB0aGlzIHdvcmsgPyBEbyB5b3UgaGF2ZSBhIHNpbmdsZSBH
+UElPIG9uIHlvdXIgc3lzdGVtIGNvbm5lY3RlZCB0bwo+IElGWzFdLCB3aXRoIElGWzM6Ml0gaGFy
+ZHdpcmVkIHRvIDAxID8KPgo+PiArLSByZXNldC1ncGlvczoJUmVzZXQgcGluCj4+ICstIHBvd2Vy
+LXN1cHBseToJQSByZWd1bGF0b3Igbm9kZSBmb3IgdGhlIHN1cHBseSB2b2x0YWdlLgo+PiArLSBi
+YWNrbGlnaHQ6CXBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZpY2UgYXR0YWNoZWQgdG8gdGhl
+IHBhbmVsCj4+ICstIHJvdGF0aW9uOglwYW5lbCByb3RhdGlvbiBpbiBkZWdyZWVzIGNvdW50ZXIg
+Y2xvY2t3aXNlICgwLDkwLDE4MCwyNzApCj4gUGxlYXNlIHVzZSB0aGUgT0YgZ3JhcGggRFQgYmlu
+ZGluZ3MgKGEuay5hLiBwb3J0cykgdG8gZGVzY3JpYmUgdGhlIGNvbm5lY3Rpb24KPiBiZXR3ZWVu
+IHRoZSBwYW5lbCBhbmQgaXRzIHNvdXJjZS4KClRoaXMgZGlzcGxheSBoYXMgYSBjb250cm9sbGVy
+IHdpdGggb25ib2FyZCBtZW1vcnkgdGhhdCBpcyBzY2FubmVkIG91dAp0byB0aGUgcGFuZWwuIFRo
+ZSBjb250cm9sbGVyIGlzIGNvbm5lY3RlZCwgaW4gdGhpcyBpbnN0YW5jZSwgdGhyb3VnaCBTUEku
+CkJvdGggaW5pdGlhbGl6YXRpb24gYW5kIHBpeGVsIGRhdGEgaXMgdHJhbnNmZXJyZWQgb3ZlciBT
+UEkuIEl0IHJlc2VtYmxlcwp0aGUgTUlQSSBEQ1MvREJJIHN0YW5kYXJkIGV4Y2VwdCB0aGF0IGl0
+IG1pc3NlcyBzb21lIG9mIHRoZSBjb21tYW5kcyBhbmQKaGFzIG5vbiBzdGFuZGFyZCBmb3JtYXRz
+OiAyLWJpdCBncmV5c2NhbGUgYW5kIG1vbm9jaHJvbWUuIE1JUEkgREJJIG9ubHkKc3VwcG9ydHMg
+cmdiIGZvcm1hdHMgKDMsIDgsIDEyLCAxNiBhbmQgMTgtYml0cykuIFNvIGl0IGlzbid0IGEgZHJt
+IHBhbmVsCmluIHRoZSBzZW5zZSBhcyBvbmUgY29ubmVjdGVkIHRocm91Z2ggTUlQSSBEU0kgb3Ig
+TUlQSSBEUEkuCgpNSVBJIERCSSBoYXMgMyBpbnRlcmZhY2UgdHlwZXM6Ci0gOC85LzE2LzE4IGJp
+dCBwYXJhbGxlbCBidXMgKyBEYXRhL0NvbW1hbmQgc2lnbmFsICg4MDgwIG9yIG1vdG9yb2xhIGJ1
+cykKLSA4LzE2IGJpdCBTUEkgKyBEL0Mgc2lnbmFsCi0gOSBiaXQgU1BJIChEL0MgYXMgZmlyc3Qg
+Yml0KQoKTm9yYWxmLgoKPj4gK0V4YW1wbGU6Cj4+ICsJZGlzcGxheUAwewo+PiArCQljb21wYXRp
+YmxlID0gImxlZ28sZXYzLWxjZCI7Cj4+ICsJCXJlZyA9IDwwPjsKPj4gKwkJc3BpLW1heC1mcmVx
+dWVuY3kgPSA8MTAwMDAwMDA+Owo+PiArCQlkYy1ncGlvcyA9IDwmZ3BpbyA0MyBHUElPX0FDVElW
+RV9ISUdIPjsKPj4gKwkJcmVzZXQtZ3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJVkVfSElHSD47
+Cj4+ICsJfTsKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
