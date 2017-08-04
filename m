@@ -1,84 +1,206 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH] of: platform: Create dummy routines for !CONFIG_OF_ADDRESS
-Date: Fri,  4 Aug 2017 11:39:19 +0530
-Message-ID: <cb52d4dd44d18371efc8c1d6d2d3795ebb29d841.1501826940.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Add HDMI and Sil9234 to Trats2 board
+Date: Fri, 04 Aug 2017 08:32:25 +0200
+Message-ID: <aa50cb82-29be-acfc-32b4-7f2a64266d8a@samsung.com>
+References: <1501746323-5254-1-git-send-email-m.purski@samsung.com>
+ <CGME20170803074541eucas1p2b054d4853a98819fc42f19f7cae7f419@eucas1p2.samsung.com>
+ <1501746323-5254-3-git-send-email-m.purski@samsung.com>
+ <20170803192000.trgfndzj4b3bnisc@kozik-lap>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20170803192000.trgfndzj4b3bnisc@kozik-lap>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Maciej Purski <m.purski@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Few routines don't have their dummy counterparts which results in build
-failures where these routines are used without CONFIG_OF_ADDRESS
-enabled.
+Hi Krzysztof,
 
-Fix those by defining the dummy versions.
+On 2017-08-03 21:20, Krzysztof Kozlowski wrote:
+> On Thu, Aug 03, 2017 at 09:45:23AM +0200, Maciej Purski wrote:
+>> This patch adds HDMI and Sil9234 MHL converter to Trats2 board.
+> Just "Add HDMI...", without this patch.
+>
+> Except few minor nitpicks below, looks good. After fixing I will take it
+> once bindings got accepted.
+>
+>> Based on previous work by:
+>> Tomasz Stanislawski <t.stanislaws@samsung.com>
+>>
+>> Signed-off-by: Maciej Purski <m.purski@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4412-trats2.dts | 93 +++++++++++++++++++++++++++++++++
+>>   1 file changed, 93 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+>> index 35e9b94..39940f6 100644
+>> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+>> @@ -97,6 +97,16 @@
+>>   			gpio = <&gpj0 5 GPIO_ACTIVE_HIGH>;
+>>   			enable-active-high;
+>>   		};
+>> +
+>> +		vsil: voltage-regulator-vsil {
+>> +			compatible = "regulator-fixed";
+>> +			regulator-name = "HDMI_5V";
+>> +			regulator-min-microvolt = <5000000>;
+>> +			regulator-max-microvolt = <5000000>;
+>> +			gpio = <&gpl0 4 GPIO_ACTIVE_HIGH>;
+>> +			enable-active-high;
+>> +			vin-supply = <&buck7_reg>;
+> I think the supply is V_BAT, not buck7.
 
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- include/linux/of_platform.h | 31 +++++++++++++++++++++++++++++--
- 1 file changed, 29 insertions(+), 2 deletions(-)
+Well, according to the the schematic, VSIL is derived from VCC_SUB_2.0V
+(buck7) by the RP114K121D-TR chip, which is controlled by gpl0-4 (HDMI_EN)
+pin.
+The only thing that has to be fixed is the voltage value for that regulator.
+VSIL is 1.2V and regulator-name should be adjusted too. The HDMI_V5 name
+and voltage value seems to be copy/paste error done long time ago...
 
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index e0d1946270f3..e8d93a5e3ddd 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -52,12 +52,13 @@ struct of_dev_auxdata {
- 	  .platform_data = _pdata }
- 
- extern const struct of_device_id of_default_bus_match_table[];
-+extern struct platform_device *of_find_device_by_node(struct device_node *np);
- 
-+#ifdef CONFIG_OF_ADDRESS
- /* Platform drivers register/unregister */
- extern struct platform_device *of_device_alloc(struct device_node *np,
- 					 const char *bus_id,
- 					 struct device *parent);
--extern struct platform_device *of_find_device_by_node(struct device_node *np);
- 
- /* Platform devices and busses creation */
- extern struct platform_device *of_platform_device_create(struct device_node *np,
-@@ -68,7 +69,6 @@ extern int of_platform_device_destroy(struct device *dev, void *data);
- extern int of_platform_bus_probe(struct device_node *root,
- 				 const struct of_device_id *matches,
- 				 struct device *parent);
--#ifdef CONFIG_OF_ADDRESS
- extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
-@@ -82,6 +82,33 @@ extern int devm_of_platform_populate(struct device *dev);
- 
- extern void devm_of_platform_depopulate(struct device *dev);
- #else
-+static inline struct platform_device *
-+of_device_alloc(struct device_node *np, const char *bus_id,
-+		struct device *parent)
-+{
-+	return NULL;
-+}
-+
-+/* Platform devices and busses creation */
-+static inline struct platform_device *
-+of_platform_device_create(struct device_node *np, const char *bus_id,
-+			  struct device *parent)
-+{
-+	return NULL;
-+}
-+
-+static inline int of_platform_device_destroy(struct device *dev, void *data)
-+{
-+	return -ENODEV;
-+}
-+
-+static inline int of_platform_bus_probe(struct device_node *root,
-+					const struct of_device_id *matches,
-+					struct device *parent)
-+{
-+	return -ENODEV;
-+}
-+
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
- 					const struct of_dev_auxdata *lookup,
+>> +		};
+>>   	};
+>>   
+>>   	gpio-keys {
+>> @@ -229,6 +239,34 @@
+>>   		};
+>>   	};
+>>   
+>> +	i2c-mhl {
+>> +		compatible = "i2c-gpio";
+>> +		gpios = <&gpf0 4 GPIO_ACTIVE_HIGH &gpf0 6 GPIO_ACTIVE_HIGH>;
+>> +		i2c-gpio,delay-us = <100>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		pinctrl-0 = <&i2c_mhl_bus>;
+>> +		pinctrl-names = "default";
+>> +		status = "okay";
+>> +
+>> +		sii9234: sii9234@39 {
+> The name of node should be rather generic (ePAPR: "The name of a node
+> should be somewhat generic, reflecting the function of the device and
+> not its precise programming model").
+>
+> So maybe "sii9234: hdmi-bridge@39"?
+>
+>> +			compatible = "sil,sii9234";
+>> +			vcc-supply = <&vsil>;
+>> +			reset-gpios = <&gpf3 4 GPIO_ACTIVE_HIGH>;
+>> +			interrupt-parent = <&gpf3>;
+>> +			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+>> +			reg = <0x39>;
+>> +
+>> +
+> One empty line instead of two.
+>
+>> +			port {
+>> +				mhl_to_hdmi: endpoint {
+>> +					remote-endpoint = <&hdmi_to_mhl>;
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>   	camera: camera {
+>>   		pinctrl-0 = <&cam_port_a_clk_active &cam_port_b_clk_active>;
+>>   		pinctrl-names = "default";
+>> @@ -522,6 +560,31 @@
+>>   	status = "okay";
+>>   };
+>>   
+>> +&hdmi {
+>> +	hpd-gpios = <&gpx3 7 GPIO_ACTIVE_HIGH>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&hdmi_hpd>;
+>> +	hdmi-en-supply = <&vsil>;
+>> +	vdd-supply = <&ldo3_reg>;
+>> +	vdd_osc-supply = <&ldo4_reg>;
+>> +	vdd_pll-supply = <&ldo3_reg>;
+>> +	ddc = <&i2c_5>;
+>> +	status = "okay";
+>> +
+>> +	ports {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		port@1 {
+>> +			reg = <1>;
+>> +			hdmi_to_mhl: endpoint {
+>> +				remote-endpoint = <&mhl_to_hdmi>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+> Unnecessary empty line.
+>
+>> +};
+>> +
+>>   &hsotg {
+>>   	vusb_d-supply = <&ldo15_reg>;
+>>   	vusb_a-supply = <&ldo12_reg>;
+>> @@ -600,6 +663,11 @@
+>>   	};
+>>   };
+>>   
+>> +
+>> +&i2c_5 {
+>> +	status = "okay";
+>> +};
+> Could you describe more what is on i2c_5 and i2c_8? Is it relevant to
+> this patch?
+
+Yes. i2c_5 is used for HDMI DDC and i2c_8 is used for HDMI_PHY. None of
+the other exynos*.dts, which enable HDMI has any comment on them...
+
+>> +
+>>   &i2c_7 {
+>>   	samsung,i2c-sda-delay = <100>;
+>>   	samsung,i2c-slave-addr = <0x10>;
+>> @@ -894,12 +962,20 @@
+>>   	};
+>>   };
+>>   
+>> +&i2c_8 {
+>> +	status = "okay";
+>> +};
+>> +
+>>   &i2s0 {
+>>   	pinctrl-0 = <&i2s0_bus>;
+>>   	pinctrl-names = "default";
+>>   	status = "okay";
+>>   };
+>>   
+>> +&mixer {
+>> +	status = "okay";
+>> +};
+>> +
+>>   &mshc_0 {
+>>   	num-slots = <1>;
+>>   	broken-cd;
+>> @@ -926,6 +1002,18 @@
+>>   	pinctrl-names = "default";
+>>   	pinctrl-0 = <&sleep0>;
+>>   
+>> +	mhl_int: mhl-int {
+>> +		samsung,pins = "gpf3-5";
+>> +		samsung,pin-pud = <0>;
+> Please use defines from dt-bindings/pinctrl/samsung.h
+>
+>> +	};
+>> +
+>> +	i2c_mhl_bus: i2c-mhl-bus {
+>> +		samsung,pins = "gpf0-4", "gpf0-6";
+>> +		samsung,pin-function = <2>;
+>> +		samsung,pin-pud = <1>;
+>> +		samsung,pin-drv = <0>;
+> The same.
+>
+
+Best regards
 -- 
-2.13.0.71.gd7076ec9c9cb
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
