@@ -1,86 +1,52 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
- display panels
-Date: Fri, 4 Aug 2017 20:04:25 +0200
-Message-ID: <20c044a4-cefe-7fed-8c5d-af27829c0648@tronnes.org>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-4-git-send-email-david@lechnology.com>
- <66f0b765-928e-1fca-9588-99da747749a5@tronnes.org>
- <e824aca6-b668-1d63-65a0-c56bfd8bec79@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e824aca6-b668-1d63-65a0-c56bfd8bec79@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/6] ARM64: dts: meson: update around mmc
+Date: Fri,  4 Aug 2017 20:08:10 +0200
+Message-ID: <20170804180816.18737-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAwNC4wOC4yMDE3IDE4LjUxLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IE9uIDA4LzA0LzIw
-MTcgMDQ6NDggQU0sIE5vcmFsZiBUcsO4bm5lcyB3cm90ZToKPj4KPj4gRGVuIDA0LjA4LjIwMTcg
-MDAuMzMsIHNrcmV2IERhdmlkIExlY2huZXI6Cj4+PiBUaGlzIGFkZHMgYSBuZXcgYmluZGluZyBm
-b3IgU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWxzLgo+Pj4KPj4+IFVzaW5nIGxlZ28gYXMg
-dGhlIHZlbmRvciBwcmVmaXggaW4gdGhlIGNvbXBhdGlibGUgc3RyaW5nIGJlY2F1c2UgdGhlIAo+
-Pj4gZGlzcGxheQo+Pj4gcGFuZWwgSSBhbSB3b3JraW5nIHdpdGggaXMgYW4gaW50ZWdyYWwgcGFy
-dCBvZiB0aGUgTEVHTyBNSU5EU1RPUk1TIEVWMy4KPj4KPj4gSXMgdGhpcyBkaXNwbGF5IGF2YWls
-YWJsZSBvdXRzaWRlIG9mIHRoaXMgTGVnbyBwYXJ0Pwo+IE5vLCBpdCBpcyBub3QuCj4KPj4gSWYg
-bm90IHlvdSBjYW4gcmVtb3ZlIHRoZSBwcm9wZXJ0aWVzIHlvdSBkb24ndCBuZWVkIGZvciB0aGlz
-IHBhcnRpY3VsYXIKPj4gZGlzcGxheSBzZXR1cC4gQW5vdGhlciBzdDc1ODYgZGlzcGxheSB3aXRo
-IGEgZGlmZmVyZW50IHBhbmVsIHdvdWxkIG5lZWQKPj4gYSBkaWZmZXJlbnQgaW5pdGlhbGl6YXRp
-b24gc2VxdWVuY2UgYW5kIGNvbXBhdGlibGUgc3RyaW5nLCBzbyB3ZSBjYW4KPj4gYWRkIHByb3Bl
-cnRpZXMgd2hlbi9pZiB0aGF0IGhhcHBlbnMuCj4KPiBPSy4gc28gSSB3aWxsIGRyb3AgcG93ZXIt
-c3VwcGx5IGFuZCBiYWNrbGlnaHQuCj4KCkFuZCB0aGUgZGMvcmVzZXQgZ3Bpb3Mgc2hvdWxkIGJl
-IHJlcXVpcmVkIHByb3BlcnRpZXMgc2luY2UgeW91ciBkaXNwbGF5Cndvbid0IHdvcmsgd2l0aG91
-dCB0aGVtIChvciByYXRoZXIgdGhleSdyZSBoYXJkd2lyZWQgdGhhdCB3YXkpLgoKPiBTaG91bGQg
-SSByZW1vdmUgdGhlc2UgZnJvbSB0aGUgZHJpdmVyIGFzIHdlbGw/IFRoZXJlIGFyZSBzb21lIHBh
-bmVscyAKPiBvdXQgdGhlcmUgdGhhdCBjb3VsZCB1c2UgdGhlbS5bMV0KPgo+IFsxXTogCj4gaHR0
-cDovL3d3dy5idXlkaXNwbGF5LmNvbS9kb3dubG9hZC9tYW51YWwvRVJDMjQwMTYwLTFfU2VyaWVz
-X0RhdGFzaGVldC5wZGYKPgoKWWVzLCBiZWNhdXNlIHRoYXQgZGlzcGxheSB3b24ndCB3b3JrIHdp
-dGggdGhlIGRyaXZlciBhcy1pcywgc28gaXQncwpyZWFsbHkgZGVhZCBjb2RlLiBJZiBzb21lb25l
-IHdhbnRzIHRvIGFkZCBzdXBwb3J0IGZvciB0aGF0IGRpc3BsYXksCnRoZXknbGwgYWRkIHRoZSBu
-ZWNlc3NhcnkgY29kZS4gV2hlbiBtYWludGFpbmluZyBjb2RlIGZvciAxMC0yMCB5ZWFycywKaXQn
-cyBpbXBvcnRhbnQgdG8gbm90IGFkZCBjb2RlIHRoYXQgJ21pZ2h0JyBiZSB1c2VkIGluIHRoZSBm
-dXR1cmUuCkxldCB0aGUgZnV0dXJlIHRha2UgY2FyZSBvZiBpdHNlbGYgYW5kIGtlZXAgdGhlIGNv
-ZGViYXNlIHNsaW0gOi0pCgpOb3JhbGYuCgo+Pgo+PiBOb3JhbGYuCj4+Cj4+PiBTaWduZWQtb2Zm
-LWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KPj4+IC0tLQo+Pj4gICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDI2IAo+
-Pj4gKysrKysrKysrKysrKysrKysrKysrKwo+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMjYgaW5zZXJ0
-aW9ucygrKQo+Pj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+PiBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0Cj4+Pgo+Pj4gZGlmZiAt
-LWdpdCAKPj4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0
-cm9uaXgsc3Q3NTg2LnR4dCAKPj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+
-IGluZGV4IDAwMDAwMDAuLmRmYjBiN2IKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQK
-Pj4+IEBAIC0wLDAgKzEsMjYgQEAKPj4+ICtTaXRyb25peCBTVDc1ODYgZGlzcGxheSBwYW5lbAo+
-Pj4gKwo+Pj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+PiArLSBjb21wYXRpYmxlOiAgICAibGVn
-byxldjMtbGNkIi4KPj4+ICsKPj4+ICtUaGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBh
-IGNoaWxkIG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgCj4+PiBoZW5jZQo+Pj4gK2FsbCBtYW5k
-YXRvcnkgcHJvcGVydGllcyBkZXNjcmliZWQgaW4gLi4vc3BpL3NwaS1idXMudHh0IG11c3QgYmUg
-Cj4+PiBzcGVjaWZpZWQuCj4+PiArCj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoKPj4+ICstIGRj
-LWdwaW9zOiAgICBEL0MgcGluLiBUaGUgcHJlc2VuY2UvYWJzZW5jZSBvZiB0aGlzIEdQSU8gZGV0
-ZXJtaW5lcwo+Pj4gKyAgICAgICAgdGhlIHBhbmVsIGludGVyZmFjZSBvcGVyYXRpb24gbW9kZSAo
-SUZbMzoxXSBwaW5zKToKPj4+ICsgICAgICAgIC0gcHJlc2VudDogSUY9MDExIDQtd2lyZSA4LWJp
-dCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UKPj4+ICsgICAgICAgIC0gYWJzZW50OiAgSUY9MDEwIDMt
-d2lyZSA5LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UKPj4+ICstIHJlc2V0LWdwaW9zOiAgICBS
-ZXNldCBwaW4KPj4+ICstIHBvd2VyLXN1cHBseTogICAgQSByZWd1bGF0b3Igbm9kZSBmb3IgdGhl
-IHN1cHBseSB2b2x0YWdlLgo+Pj4gKy0gYmFja2xpZ2h0OiAgICBwaGFuZGxlIG9mIHRoZSBiYWNr
-bGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAo+Pj4gKy0gcm90YXRpb246ICAgIHBh
-bmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBjbG9ja3dpc2UgCj4+PiAoMCw5MCwxODAs
-MjcwKQo+Pj4gKwo+Pj4gK0V4YW1wbGU6Cj4+PiArICAgIGRpc3BsYXlAMHsKPj4+ICsgICAgICAg
-IGNvbXBhdGlibGUgPSAibGVnbyxldjMtbGNkIjsKPj4+ICsgICAgICAgIHJlZyA9IDwwPjsKPj4+
-ICsgICAgICAgIHNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAwMDAwPjsKPj4+ICsgICAgICAgIGRj
-LWdwaW9zID0gPCZncGlvIDQzIEdQSU9fQUNUSVZFX0hJR0g+Owo+Pj4gKyAgICAgICAgcmVzZXQt
-Z3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJVkVfSElHSD47Cj4+PiArICAgIH07Cj4+Cj4KCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The patchset feature update around mmc. It is linked to this series [0]
+but does not strictly depends on it. It adds:
+
+* The regulator settling times for the gpio regulator of nanopi-k2 and
+  the libretech-cc.
+* UHS modes for the p20x and nanopi-k2. SDR104 is left out because the
+  p20x does not support it and the driver requires more work to enable
+  it on the nanopi-k2
+* clk-gate pins: these are the pinmuxes used for the clk-stop work
+  around explained here [0]
+
+It also removes cap-sd-highspeed from eMMC nodes.
+
+This series has been tested on the gxbb-200, the gxbb-nanopi-k2 and the
+gxl-s905x-libretech-cc
+
+Jerome Brunet (6):
+  ARM64: dts: meson-gxbb: nanopi-k2: add card regulator settle times
+  ARM64: dts: meson-gxl: libretech-cc: add card regulator settle times
+  ARM64: dts: meson-gxbb: p20x: enable sdcard UHS modes
+  ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+  ARM64: dts: meson: add mmc clk gate pins
+  ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
+
+ .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 10 ++++---
+ .../boot/dts/amlogic/meson-gxbb-nanopi-k2.dts      | 18 ++++++++----
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 12 ++++----
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  9 +++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 13 ++++++---
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 10 ++++---
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 33 ++++++++++++++++++++++
+ .../dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts |  7 +++--
+ .../dts/amlogic/meson-gxl-s905x-libretech-cc.dts   |  9 ++++--
+ .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 10 ++++---
+ .../boot/dts/amlogic/meson-gxl-s905x-p212.dtsi     | 10 ++++---
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 33 ++++++++++++++++++++++
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  7 +++--
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts |  1 -
+ 14 files changed, 139 insertions(+), 43 deletions(-)
+
+-- 
+2.9.4
