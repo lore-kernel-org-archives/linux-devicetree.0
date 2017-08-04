@@ -1,77 +1,227 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 18/18] cpufreq: scmi: add support for fast frequency switching
-Date: Fri,  4 Aug 2017 15:31:44 +0100
-Message-ID: <1501857104-11279-19-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v2 02/18] dt-bindings: arm: add support for ARM System Control
+ and Management Interface(SCMI) protocol
+Date: Fri,  4 Aug 2017 15:31:28 +0100
+Message-ID: <1501857104-11279-3-git-send-email-sudeep.holla@arm.com>
 References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org
+Cc: Nishanth Menon <nm@ti.com>, Harb Abdulhamid <harba@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Roy Franz <roy.franz@cavium.com>, Rob Herring <robh+dt@kernel.org>, Loc Ho <lho@apm.com>, Sudeep Holla <sudeep.holla@arm.com>, Alexey Klimov <alexey.klimov@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-The cpufreq core provides option for drivers to implement fast_switch
-callback which is invoked for frequency switching from interrupt context.
+This patch adds devicetree binding for System Control and Management
+Interface (SCMI) Message Protocol used between the Application Cores(AP)
+and the System Control Processor(SCP). The MHU peripheral provides a
+mechanism for inter-processor communication between SCP's M3 processor
+and AP.
 
-This patch adds support for fast_switch callback in SCMI cpufreq driver
-by making use of polling based SCMI transfer. It also sets the flag
-fast_switch_possible.
+SCP offers control and management of the core/cluster power states,
+various power domain DVFS including the core/cluster, certain system
+clocks configuration, thermal sensors and many others.
 
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org
+SCMI protocol is developed as better replacement to the existing SCPI
+which is not flexible and easily extensible.
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/cpufreq/scmi-cpufreq.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ Documentation/devicetree/bindings/arm/arm,scmi.txt | 174 +++++++++++++++++++++
+ 1 file changed, 174 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
 
-diff --git a/drivers/cpufreq/scmi-cpufreq.c b/drivers/cpufreq/scmi-cpufreq.c
-index 034359cafea5..cb1084cb1ef1 100644
---- a/drivers/cpufreq/scmi-cpufreq.c
-+++ b/drivers/cpufreq/scmi-cpufreq.c
-@@ -61,6 +61,19 @@ scmi_cpufreq_set_target(struct cpufreq_policy *policy, unsigned int index)
- 	return perf_ops->freq_set(priv->handle, priv->domain_id, freq, false);
- }
- 
-+static unsigned int scmi_cpufreq_fast_switch(struct cpufreq_policy *policy,
-+					     unsigned int target_freq)
-+{
-+	struct scmi_data *priv = policy->driver_data;
-+	struct scmi_perf_ops *perf_ops = priv->handle->perf_ops;
+diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+new file mode 100644
+index 000000000000..33c16be58e72
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+@@ -0,0 +1,174 @@
++System Control and Management Interface (SCMI) Message Protocol
++----------------------------------------------------------
 +
-+	if (!perf_ops->freq_set(priv->handle, priv->domain_id,
-+				target_freq * 1000, true))
-+		return target_freq;
++The SCMI is intended to allow agents such as OSPM to manage various functions
++that are provided by the hardware platform it is running on, including power
++and performance functions.
 +
-+	return CPUFREQ_ENTRY_INVALID;
-+}
++This binding is intended to define the interface the firmware implementing
++the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
++and Management Interface Platform Design Document")[0] provide for OSPM in
++the device tree.
 +
- static int
- scmi_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask)
- {
-@@ -164,6 +177,7 @@ static int scmi_cpufreq_init(struct cpufreq_policy *policy)
- 
- 	policy->cpuinfo.transition_latency = latency;
- 
-+	policy->fast_switch_possible = true;
- 	return 0;
- 
- out_free_cpufreq_table:
-@@ -180,6 +194,7 @@ static int scmi_cpufreq_exit(struct cpufreq_policy *policy)
- {
- 	struct scmi_data *priv = policy->driver_data;
- 
-+	policy->fast_switch_possible = false;
- 	cpufreq_cooling_unregister(priv->cdev);
- 	dev_pm_opp_free_cpufreq_table(priv->cpu_dev, &policy->freq_table);
- 	dev_pm_opp_cpumask_remove_table(policy->related_cpus);
-@@ -228,6 +243,7 @@ static struct cpufreq_driver scmi_cpufreq_driver = {
- 	.init			= scmi_cpufreq_init,
- 	.exit			= scmi_cpufreq_exit,
- 	.ready			= scmi_cpufreq_ready,
-+	.fast_switch		= scmi_cpufreq_fast_switch,
- };
- 
- static int scmi_cpufreq_probe(struct platform_device *pdev)
++Required properties:
++
++- compatible : shall be "arm,scmi"
++- mboxes: List of phandle and mailbox channel specifiers. It should contain
++	  exactly one or two mailboxes, one for transmitting messages("tx")
++	  and another optional for receiving the notifications("rx") if
++	  supported.
++- mbox-names: shall be "tx" or "rx"
++- shmem : List of phandle pointing to the shared memory(SHM) area as per
++	  generic mailbox client binding.
++
++See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
++about the generic mailbox controller and client driver bindings.
++
++The mailbox is the only permitted method of calling the SCMI firmware.
++Mailbox doorbell is used as a mechanism to alert the presence of a
++messages and/or notification.
++
++Each protocol supported shall have a sub-node with corresponding compatible
++as described in the following sections. If the platform supports dedicated
++communication channel for a particular protocol, the 3 properties namely:
++mboxes, mbox-names and shmem shall be present in the sub-node corresponding
++to that protocol.
++
++Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
++------------------------------------------------------------
++
++This binding uses the common clock binding[1].
++
++Required properties:
++- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
++
++Power domain bindings for the power domains based on SCMI Message Protocol
++------------------------------------------------------------
++
++This binding uses the generic power domain binding[4].
++
++PM domain providers
++===================
++
++Required properties:
++ - #power-domain-cells : Should be 1. Contains the device or the power
++			 domain ID value used by SCMI commands.
++
++PM domain consumers
++===================
++
++Required properties:
++ - power-domains : A phandle and PM domain specifier as defined by bindings of
++                   the power controller specified by phandle.
++
++Sensor bindings for the sensors based on SCMI Message Protocol
++--------------------------------------------------------------
++SCMI provides an API to access the various sensors on the SoC.
++
++Required properties:
++- #thermal-sensor-cells: should be set to 1. This property follows the
++			 thermal device tree bindings[2].
++
++			 Valid cell values are raw identifiers (Sensor ID)
++			 as used by the firmware. Refer to  platform details
++			 for your implementation for the IDs to use.
++
++SRAM and Shared Memory for SCMI
++-------------------------------
++
++A small area of SRAM is reserved for SCMI communication between application
++processors and SCP.
++
++The properties should follow the generic mmio-sram description found in [3]
++
++Each sub-node represents the reserved area for SCMI.
++
++Required sub-node properties:
++- reg : The base offset and size of the reserved area with the SRAM
++- compatible : should be "arm,scmi-shmem" for Non-secure SRAM based
++	       shared memory
++
++[0] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/thermal/thermal.txt
++[3] Documentation/devicetree/bindings/sram/sram.txt
++[4] Documentation/devicetree/bindings/power/power_domain.txt
++
++Example:
++
++sram: sram@50000000 {
++	compatible = "mmio-sram";
++	reg = <0x0 0x50000000 0x0 0x10000>;
++
++	#address-cells = <1>;
++	#size-cells = <1>;
++	ranges = <0 0x0 0x50000000 0x10000>;
++
++	cpu_scp_lpri: scp-shmem@0 {
++		compatible = "arm,scmi-shmem";
++		reg = <0x0 0x200>;
++	};
++
++	cpu_scp_hpri: scp-shmem@200 {
++		compatible = "arm,scmi-shmem";
++		reg = <0x200 0x200>;
++	};
++};
++
++mailbox: mailbox0@40000000 {
++	....
++	#mbox-cells = <1>;
++};
++
++scmi_protocol: scmi@2e000000 {
++	compatible = "arm,scmi";
++	method = "mailbox-doorbell";
++	mboxes = <&mailbox 0 &mailbox 1>;
++	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	scmi_devpd: protocol@11 {
++		reg = <0x11>;
++		#power-domain-cells = <1>;
++	};
++
++	scmi_dvfs: protocol@13 {
++		reg = <0x13>;
++		#clock-cells = <1>;
++	};
++
++	scmi_clk: protocol@14 {
++		reg = <0x14>;
++		#clock-cells = <1>;
++	};
++
++	scmi_sensors0: protocol@15 {
++		reg = <0x15>;
++		#thermal-sensor-cells = <1>;
++	};
++};
++
++cpu@0 {
++	...
++	reg = <0 0>;
++	clocks = <&scmi_dvfs 0>;
++};
++
++hdlcd@7ff60000 {
++	...
++	reg = <0 0x7ff60000 0 0x1000>;
++	clocks = <&scmi_clk 4>;
++	power-domains = <&scmi_devpd 1>;
++};
++
++thermal-zones {
++	soc_thermal {
++		polling-delay-passive = <100>;
++		polling-delay = <1000>;
++
++				/* sensor         ID */
++		thermal-sensors = <&scmi_sensors0 3>;
++		...
++	};
++};
 -- 
 2.7.4
