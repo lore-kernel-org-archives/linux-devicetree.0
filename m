@@ -1,110 +1,99 @@
 From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 11/25] mtd: nand: qcom: support for NAND controller
- properties
-Date: Fri, 4 Aug 2017 14:39:54 +0200
-Message-ID: <20170804143954.3038390d@bbrezillon>
+Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND
+ documentation
+Date: Fri, 4 Aug 2017 14:45:36 +0200
+Message-ID: <20170804144536.4177a12f@bbrezillon>
 References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
-        <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
+        <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
+        <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
+        <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
+        <abf14014808fa0557696fee509c28046@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1500464893-11352-12-git-send-email-absahu@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <abf14014808fa0557696fee509c28046@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+Cc: Rob Herring <robh@kernel.org>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Jul 2017 17:17:59 +0530
+On Mon, 31 Jul 2017 21:35:57 +0530
 Abhishek Sahu <absahu@codeaurora.org> wrote:
 
-> Currently driver data is being assigned directly with ECC modes.
-> Now, the plan is to add more NAND controller versions, so
-> reorganized the current driver data assignment by creating NAND
-> controller properties structure.  This will contain all
-> properties specific to NAND controller.
+> On 2017-07-26 00:13, Abhishek Sahu wrote:
+> > On 2017-07-25 00:47, Rob Herring wrote:  
+> >> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:  
+> >>> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
+> >>> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
+> >>>    while EBI2 NAND uses only single ADM channel.
+> >>> 3. CRCI is only required for ADM DMA and its not required for
+> >>>    QPIC NAND.
+> >>> 
+> >>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >>> ---
+> >>>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54 
+> >>> ++++++++++++++++++++--
+> >>>  1 file changed, 51 insertions(+), 3 deletions(-)
+> >>> 
+> >>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt 
+> >>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >>> index b24adfe..8efaeb0 100644
+> >>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >>> @@ -1,13 +1,15 @@
+> >>>  * Qualcomm NAND controller
+> >>> 
+> >>>  Required properties:
+> >>> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses 
+> >>> ADM
+> >>> -			DMA like IPQ8064.
+> >>> -
+> >>> +- compatible:		must be one of the following:
+> >>> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
+> >>> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA 
+> >>> like IPQ4019.  
+> >> 
+> >> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
+> >> compatible strings.  
+> > 
+> >  We have 3 versions of NAND HW currently.
+> >  EBI2,
+> >  QPIC version 1.4.0
+> >  QPIC version 1.5.0
+> > 
+> >  and multiple Qualcomm SoCs which use any one of these.
+> > 
+> >  The original plan was to have compatible string for NAND version since
+> >  same NAND hardware is being in different SoC and SoC dtsi will simply
+> >  use its NAND version compatible string like other Qualcomm hardwares
+> > 
+> > 
+> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> > 
+> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+> >   
 > 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
->  drivers/mtd/nand/qcom_nandc.c | 23 +++++++++++++++++------
->  1 file changed, 17 insertions(+), 6 deletions(-)
+>   Following are the partial list for NAND controller and supported
+>   SoC
 > 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 8f9e86c..3b0ae91 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -235,7 +235,7 @@ struct nandc_regs {
->   *				writes. contains the register values to be
->   *				written to controller
->   * @cmd1/vld:			some fixed controller register values
-> - * @ecc_modes:			supported ECC modes by the current controller,
-> + * @props:			properties of current NAND controller IP,
->   *				initialized via DT match data
->   */
->  struct qcom_nand_controller {
-> @@ -266,7 +266,7 @@ struct qcom_nand_controller {
->  	struct nandc_regs *regs;
->  
->  	u32 cmd1, vld;
-> -	u32 ecc_modes;
-> +	const struct qcom_props *props;
->  };
->  
->  /*
-> @@ -319,6 +319,15 @@ struct qcom_nand_host {
->  	u32 clrreadstatus;
->  };
->  
-> +/*
-> + * This data type corresponds to the nand controller properties which varies
-> + * among different NAND controller IP's.
-> + * @ecc_modes - ecc mode for NAND
-> + */
-> +struct qcom_props {
-> +	u32 ecc_modes;
-> +};
-> +
->  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
->  {
->  	return container_of(chip, struct qcom_nand_host, chip);
-> @@ -1820,7 +1829,7 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
->  		 * uses lesser bytes for ECC. If RS is used, the ECC bytes is
->  		 * always 10 bytes
->  		 */
-> -		if (nandc->ecc_modes & ECC_BCH_4BIT) {
-> +		if (nandc->props->ecc_modes & ECC_BCH_4BIT) {
->  			/* BCH */
->  			host->bch_enabled = true;
->  			ecc_mode = 0;
-> @@ -2165,7 +2174,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	nandc->ecc_modes = (unsigned long)dev_data;
-> +	nandc->props = dev_data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	nandc->base = devm_ioremap_resource(dev, res);
-> @@ -2234,7 +2243,9 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
-> +static const struct qcom_props ebi2_nandc_data = {
-> +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+>    EBI2:          IPQ8064, APQ8064, MSM7xx, MDM9x15
+>    QPIC v1.4.0    MDM9x25, MDM9x35, MDM9x45, IPQ4019
+>    QPIC v1.5.0    MDM9x55, IPQ8074
+> 
+>   so could we use NAND controller specific compatible strings instead of 
+> SoC
+>   since it will easy to maintain?
 
-Just a nit: parenthesis are unneeded here.
+Nope, though you can re-use the compatible of an old SoC for new SoCs
+if the IP did not change.
 
-> +};
->  
->  /*
->   * data will hold a struct pointer containing more differences once we support
-> @@ -2242,7 +2253,7 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->   */
->  static const struct of_device_id qcom_nandc_of_match[] = {
->  	{	.compatible = "qcom,ebi2-nandc",
-> -		.data = (void *)EBI2_NANDC_ECC_MODES,
-> +		.data = &ebi2_nandc_data,
->  	},
->  	{}
->  };
+For example:
+
+- EBI2: compatible = "qcom,ipq8064"
+- QPIC 1.4: compatible = "qcom,mdm9x25"
+- QPIC 1.5: compatible = "qcom,mdm9x55"
+
+Note that we usually pick the oldest SoC that started embedding an IP
+when choosing the compatible. So my suggestion assumes IPQ8064 is older
+than APQ8064, MSM7xx and MDM9x15.
