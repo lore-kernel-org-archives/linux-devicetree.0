@@ -1,62 +1,170 @@
-From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 4/4] arm: dts: mediatek: add larbid property for larb
-Date: Fri, 4 Aug 2017 09:32:28 +0800
-Message-ID: <1501810348-20997-5-git-send-email-honghui.zhang@mediatek.com>
-References: <1501810348-20997-1-git-send-email-honghui.zhang@mediatek.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v4 3/3] power: wm831x_power: Support USB charger current
+ limit management
+Date: Fri, 4 Aug 2017 10:13:01 +0800
+Message-ID: <CAMz4kuLBK7RjnOw8s+jih9xVbSnyGLcV2UzACMcB__c1mcL0Kw@mail.gmail.com>
+References: <cover.1501132171.git.baolin.wang@linaro.org> <b25c3a5e595716c701091d848188585dbd95bb20.1501132173.git.baolin.wang@linaro.org>
+ <20170803191658.fksnm5iknwxlck7l@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1501810348-20997-1-git-send-email-honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kendrick.hsu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170803191658.fksnm5iknwxlck7l@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Felipe Balbi <balbi@kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Sebastian Reichel <sre@kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jun Li <jun.li@nxp.com>, Peter Chen <peter.chen@freescale.com>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, NeilBrown <neilb@suse.com>, patches@opensource.wolfsonmicro.com, Linux PM list <linux-pm@vger.kernel.org>, USB <linux-usb@vger.kernel.org>, device-mainlining@lists.linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 4 August 2017 at 03:16, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jul 27, 2017 at 01:14:38PM +0800, Baolin Wang wrote:
+>> Integrate with the newly added USB charger interface to limit the current
+>> we draw from the USB input based on the input device configuration
+>> identified by the USB stack, allowing us to charge more quickly from high
+>> current inputs without drawing more current than specified from others.
+>>
+>> Signed-off-by: Mark Brown <broonie@kernel.org>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> Acked-by: Lee Jones <lee.jones@linaro.org>
+>> Acked-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+>> ---
+>>  Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
+>>  drivers/power/supply/wm831x_power.c              |   72 ++++++++++++++++++++++
+>>  2 files changed, 73 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/wm831x.txt b/Documentation/devicetree/bindings/mfd/wm831x.txt
+>> index 9f8b743..4e3bc07 100644
+>> --- a/Documentation/devicetree/bindings/mfd/wm831x.txt
+>> +++ b/Documentation/devicetree/bindings/mfd/wm831x.txt
+>> @@ -31,6 +31,7 @@ Required properties:
+>>      ../interrupt-controller/interrupts.txt
+>>
+>>  Optional sub-nodes:
+>> +  - usb-phy : Contains a phandle to the USB PHY.
+>
+> Use the phy binding ("phys") instead.
 
-Add mediatek's hardware id information for smi larb.
+OK. Will fix in next version. Thanks.
 
-Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+>
+>>    - regulators : Contains sub-nodes for each of the regulators supplied by
+>>      the device. The regulators are bound using their names listed below:
+>>
+>> diff --git a/drivers/power/supply/wm831x_power.c b/drivers/power/supply/wm831x_power.c
+>> index 7082301..dff6473 100644
+>> --- a/drivers/power/supply/wm831x_power.c
+>> +++ b/drivers/power/supply/wm831x_power.c
+>> @@ -13,6 +13,7 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/power_supply.h>
+>>  #include <linux/slab.h>
+>> +#include <linux/usb/phy.h>
+>>
+>>  #include <linux/mfd/wm831x/core.h>
+>>  #include <linux/mfd/wm831x/auxadc.h>
+>> @@ -31,6 +32,8 @@ struct wm831x_power {
+>>       char usb_name[20];
+>>       char battery_name[20];
+>>       bool have_battery;
+>> +     struct usb_phy *usb_phy;
+>> +     struct notifier_block usb_notify;
+>>  };
+>>
+>>  static int wm831x_power_check_online(struct wm831x *wm831x, int supply,
+>> @@ -125,6 +128,43 @@ static int wm831x_usb_get_prop(struct power_supply *psy,
+>>       POWER_SUPPLY_PROP_VOLTAGE_NOW,
+>>  };
+>>
+>> +/* In milliamps */
+>> +static const unsigned int wm831x_usb_limits[] = {
+>> +     0,
+>> +     2,
+>> +     100,
+>> +     500,
+>> +     900,
+>> +     1500,
+>> +     1800,
+>> +     550,
+>> +};
+>> +
+>> +static int wm831x_usb_limit_change(struct notifier_block *nb,
+>> +                                unsigned long limit, void *data)
+>> +{
+>> +     struct wm831x_power *wm831x_power = container_of(nb,
+>> +                                                      struct wm831x_power,
+>> +                                                      usb_notify);
+>> +     unsigned int i, best;
+>> +
+>> +     /* Find the highest supported limit */
+>> +     best = 0;
+>> +     for (i = 0; i < ARRAY_SIZE(wm831x_usb_limits); i++) {
+>> +             if (limit >= wm831x_usb_limits[i] &&
+>> +                 wm831x_usb_limits[best] < wm831x_usb_limits[i])
+>> +                     best = i;
+>> +     }
+>> +
+>> +     dev_dbg(wm831x_power->wm831x->dev,
+>> +             "Limiting USB current to %umA", wm831x_usb_limits[best]);
+>> +
+>> +     wm831x_set_bits(wm831x_power->wm831x, WM831X_POWER_STATE,
+>> +                     WM831X_USB_ILIM_MASK, best);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>>  /*********************************************************************
+>>   *           Battery properties
+>>   *********************************************************************/
+>> @@ -607,6 +647,33 @@ static int wm831x_power_probe(struct platform_device *pdev)
+>>               }
+>>       }
+>>
+>> +     power->usb_phy = devm_usb_get_phy_by_phandle(&pdev->dev, "usb-phy", 0);
+>> +     ret = PTR_ERR_OR_ZERO(power->usb_phy);
+>> +
+>> +     switch (ret) {
+>> +     case 0:
+>> +             power->usb_notify.notifier_call = wm831x_usb_limit_change;
+>> +             ret = usb_register_notifier(power->usb_phy, &power->usb_notify);
+>> +             if (ret) {
+>> +                     dev_err(&pdev->dev, "Failed to register notifier: %d\n",
+>> +                             ret);
+>> +                     goto err_bat_irq;
+>> +             }
+>> +             break;
+>> +     case -EINVAL:
+>> +     case -ENODEV:
+>> +             /* ignore missing usb-phy, it's optional */
+>> +             power->usb_phy = NULL;
+>> +             ret = 0;
+>> +             break;
+>> +     default:
+>> +             dev_err(&pdev->dev, "Failed to find USB phy: %d\n", ret);
+>> +             /* fall-through */
+>> +     case -EPROBE_DEFER:
+>> +             goto err_bat_irq;
+>> +             break;
+>> +     }
+>> +
+>>       return ret;
+>>
+>>  err_bat_irq:
+>> @@ -637,6 +704,11 @@ static int wm831x_power_remove(struct platform_device *pdev)
+>>       struct wm831x *wm831x = wm831x_power->wm831x;
+>>       int irq, i;
+>>
+>> +     if (wm831x_power->usb_phy) {
+>> +             usb_unregister_notifier(wm831x_power->usb_phy,
+>> +                                     &wm831x_power->usb_notify);
+>> +     }
+>> +
+>>       for (i = 0; i < ARRAY_SIZE(wm831x_bat_irqs); i++) {
+>>               irq = wm831x_irq(wm831x,
+>>                                platform_get_irq_byname(pdev,
+>> --
+>> 1.7.9.5
+>>
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index f1efdc6..d95bfe0 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -533,6 +533,7 @@
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x14010000 0 0x1000>;
- 		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <0>;
- 		clocks = <&mmsys CLK_MM_SMI_LARB0>,
- 			 <&mmsys CLK_MM_SMI_LARB0>;
- 		clock-names = "apb", "smi";
-@@ -549,6 +550,7 @@
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x15001000 0 0x1000>;
- 		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <2>;
- 		clocks = <&imgsys CLK_IMG_SMI_COMM>,
- 			 <&imgsys CLK_IMG_SMI_COMM>;
- 		clock-names = "apb", "smi";
-@@ -579,6 +581,7 @@
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x16010000 0 0x1000>;
- 		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <1>;
- 		clocks = <&vdecsys CLK_VDEC_CKGEN>,
- 			 <&vdecsys CLK_VDEC_LARB>;
- 		clock-names = "apb", "smi";
+
+
 -- 
-2.6.4
+Baolin.wang
+Best Regards
