@@ -1,248 +1,659 @@
-From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 6/6] dt-bindings: PCI: add support for new generation
- controller
-Date: Fri, 4 Aug 2017 20:06:42 +0800
-Message-ID: <721a9148b9e80ad52ec0b8fbd5f9fe9b9be0f23e.1501846816.git.honghui.zhang@mediatek.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v3 5/6] PCI: mediatek: Add new generation controller support
+Date: Fri, 4 Aug 2017 20:06:41 +0800
+Message-ID: <2adcb5f915eb8bd5817592ea32974eb25da02e4f.1501846816.git.honghui.zhang@mediatek.com>
 References: <cover.1501846816.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1501846816.git.honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh-+zGGX9k9yNkdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1501846816.git.honghui.zhang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, honghui.zhang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-Add support for MediaTek new generation controller and update related
-properities.
+MediaTek's PCIe host controller has two generation HWs, the new
+generation HW has two root ports, it shares most probing flow with the
+legacy controller. But the read/write config space logical is different
+from the legacy controller. The per-port register must be touched for
+read/write config space, And the per-port register base are in separate
+address space.
 
-Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Add support for new Gen2 controller which can be found on MT7622/MT2712.
+
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- .../devicetree/bindings/pci/mediatek-pcie.txt      | 168 ++++++++++++++++++++-
- 1 file changed, 161 insertions(+), 7 deletions(-)
+ drivers/pci/host/Kconfig         |   5 +-
+ drivers/pci/host/pcie-mediatek.c | 473 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 471 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-index 0fdcb15..2e81742 100644
---- a/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-@@ -3,18 +3,31 @@ MediaTek Gen2 PCIe controller
- Required properties:
- - compatible: Should contain one of the following strings:
- 	"mediatek,mt2701-pcie"
-+	"mediatek,mt2712-pcie"
-+	"mediatek,mt7622-pcie"
- 	"mediatek,mt7623-pcie"
- - device_type: Must be "pci"
--- reg: Base addresses and lengths of the PCIe controller.
-+- reg: Base addresses and lengths of the PCIe subsys and root ports.
-+- reg-names: Names of the above areas to use during resource look-up.
- - #address-cells: Address representation for root ports (must be 3)
- - #size-cells: Size representation for root ports (must be 2)
- - clocks: Must contain an entry for each entry in clock-names.
-   See ../clocks/clock-bindings.txt for details.
--- clock-names: Must include the following entries:
--  - free_ck :for reference clock of PCIe subsys
--  - sys_ck0 :for clock of Port0
--  - sys_ck1 :for clock of Port1
--  - sys_ck2 :for clock of Port2
-+- clock-names:
-+  Mandatory entries:
-+   - sys_ckN :transaction layer and data link layer clock
-+  Required entries for MT2701/MT7623:
-+   - free_ck :for reference clock of PCIe subsys
-+  Required entries for MT2712/MT7622:
-+   - ahb_ckN :AHB slave interface operating clock for CSR access and RC
-+	      initiated MMIO access
-+  Required entries for MT7622:
-+   - axi_ckN :application layer MMIO channel operating clock
-+   - aux_ckN :pe2_mac_bridge and pe2_mac_core operating clock when
-+	      pcie_mac_ck/pcie_pipe_ck is turned off
-+   - obff_ckN :OBFF functional block operating clock
-+   - pipe_ckN :LTSSM and PHY/MAC layer operating clock
-+  where N starting from 0 to one less than the number of root ports.
- - phys: List of PHY specifiers (used by generic PHY framework).
- - phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
-   number of PHYs as specified in *phys* property.
-@@ -33,6 +46,10 @@ Required properties for MT7623/MT2701:
- - reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
-   number of root ports.
+diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+index 89d61c2..5b1ae9f 100644
+--- a/drivers/pci/host/Kconfig
++++ b/drivers/pci/host/Kconfig
+@@ -182,14 +182,13 @@ config PCIE_ROCKCHIP
  
-+Required properties for MT2712/MT7622:
-+-interrupts: A list of interrupt outputs of the controller, must have one
-+	     entry for each PCIe port
-+
- In addition, the device tree node must have sub-nodes describing each
- PCIe port interface, having the following mandatory properties:
+ config PCIE_MEDIATEK
+ 	bool "MediaTek PCIe controller"
+-	depends on ARM && (ARCH_MEDIATEK || COMPILE_TEST)
++	depends on (ARM || ARM64) && (ARCH_MEDIATEK || COMPILE_TEST)
+ 	depends on OF
+ 	depends on PCI
+ 	select PCIEPORTBUS
+ 	help
+ 	  Say Y here if you want to enable PCIe controller support on
+-	  MT7623 series SoCs.  There is one single root complex with 3 root
+-	  ports available.  Each port supports Gen2 lane x1.
++	  MediaTek SoCs.
  
-@@ -50,7 +67,7 @@ Required properties:
-   property is sufficient.
- - num-lanes: Number of lanes to use for this port.
+ config PCIE_TANGO_SMP8759
+ 	bool "Tango SMP8759 PCIe controller (DANGEROUS)"
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index 63d300f..91eb53b 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -3,6 +3,7 @@
+  *
+  * Copyright (c) 2017 MediaTek Inc.
+  * Author: Ryder Lee <ryder.lee@mediatek.com>
++ *	   Honghui Zhang <honghui.zhang@mediatek.com>
+  *
+  * This program is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -17,6 +18,8 @@
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/iopoll.h>
++#include <linux/irq.h>
++#include <linux/irqdomain.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -64,16 +67,77 @@
+ #define PCIE_FC_CREDIT_MASK	(GENMASK(31, 31) | GENMASK(28, 16))
+ #define PCIE_FC_CREDIT_VAL(x)	((x) << 16)
  
--Examples:
-+Examples for MT7623:
++/* PCIe V2 share registers */
++#define PCIE_SYS_CFG_V2		0x0
++#define PCIE_CSR_LTSSM_EN(x)	BIT(0 + (x) * 8)
++#define PCIE_CSR_ASPM_L1_EN(x)	BIT(1 + (x) * 8)
++
++/* PCIe V2 per-port registers */
++#define PCIE_INT_MASK		0x420
++#define INTX_MASK		GENMASK(19, 16)
++#define INTX_SHIFT		16
++#define INTX_NUM		4
++#define PCIE_INT_STATUS		0x424
++
++#define PCIE_AHB_TRANS_BASE0_L	0x438
++#define PCIE_AHB_TRANS_BASE0_H	0x43c
++#define AHB2PCIE_BASEL(x)	((x) & GENMASK(31, 0))
++#define AHB2PCIE_BASEH(x)	(((u64)(x) >> 32) & GENMASK(31, 0))
++#define AHB2PCIE_SIZE(x)	((x) & GENMASK(4, 0))
++#define PCIE_AXI_WINDOW0	0x448
++#define WIN_ENABLE		BIT(7)
++
++/* PCIe V2 Configuration Transaction Header */
++#define PCIE_CFG_HEADER0	0x460
++#define PCIE_CFG_HEADER1	0x464
++#define PCIE_CFG_HEADER2	0x468
++#define PCIE_CFG_WDATA		0x470
++#define PCIE_APP_TLP_REQ	0x488
++#define PCIE_CFG_RDATA		0x48c
++#define APP_CFG_REQ		BIT(0)
++#define APP_CPL_STATUS		GENMASK(7, 5)
++
++#define CFG_WRRD_TYPE_0		4
++#define CFG_WR_FMT		2
++#define CFG_RD_FMT		0
++
++#define CFG_DW0_LENGTH(length)	((length) & GENMASK(9, 0))
++#define CFG_DW0_TYPE(type)	(((type) << 24) & GENMASK(28, 24))
++#define CFG_DW0_FMT(fmt)	(((fmt) << 29) & GENMASK(31, 29))
++#define CFG_DW2_REGN(regn)	((regn) & GENMASK(11, 2))
++#define CFG_DW2_FUN(fun)	(((fun) << 16) & GENMASK(18, 16))
++#define CFG_DW2_DEV(dev)	(((dev) << 19) & GENMASK(23, 19))
++#define CFG_DW2_BUS(bus)	(((bus) << 24) & GENMASK(31, 24))
++#define CFG_HEADER_DW0(type, fmt) \
++	(CFG_DW0_LENGTH(1) | CFG_DW0_TYPE(type) | CFG_DW0_FMT(fmt))
++#define CFG_HEADER_DW1(where, size) \
++	(GENMASK(((size) - 1), 0) << ((where) & 0x3))
++#define CFG_HEADER_DW2(regn, fun, dev, bus) \
++	(CFG_DW2_REGN(regn) | CFG_DW2_FUN(fun) | \
++	CFG_DW2_DEV(dev) | CFG_DW2_BUS(bus))
++
++#define PCIE_RST_CTRL		0x510
++#define PCIE_PHY_RSTB		BIT(0)
++#define PCIE_PIPE_SRSTB		BIT(1)
++#define PCIE_MAC_SRSTB		BIT(2)
++#define PCIE_CRSTB		BIT(3)
++#define PCIE_PERSTB		BIT(8)
++#define PCI_LINKDOWN_RST_EN	GENMASK(15, 13)
++#define PCIE_LINK_STATUS_V2	0x804
++#define PCIE_PORT_LINKUP_V2	BIT(10)
++
+ struct mtk_pcie_port;
  
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
-@@ -68,6 +85,7 @@ Examples:
- 		      <0 0x1a142000 0 0x1000>, /* Port0 registers */
- 		      <0 0x1a143000 0 0x1000>, /* Port1 registers */
- 		      <0 0x1a144000 0 0x1000>; /* Port2 registers */
-+		reg-names = "subsys", "port0", "port1", "port2";
- 		#address-cells = <3>;
- 		#size-cells = <2>;
- 		#interrupt-cells = <1>;
-@@ -128,3 +146,139 @@ Examples:
- 			num-lanes = <1>;
- 		};
- 	};
+ /**
+  * struct mtk_pcie_soc - differentiate between host generations
+  * @ops: pointer to configuration access functions
+  * @startup: pointer to controller setting functions
++ * @setup_irq: pointer to initialize IRQ functions
+  */
+ struct mtk_pcie_soc {
+ 	struct pci_ops *ops;
+ 	int (*startup)(struct mtk_pcie_port *port);
++	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
+ };
+ 
+ /**
+@@ -82,10 +146,18 @@ struct mtk_pcie_soc {
+  * @list: port list
+  * @pcie: pointer to PCIe host info
+  * @reset: pointer to port reset control
+- * @sys_ck: pointer to bus clock
+- * @phy: pointer to phy control block
++ * @sys_ck: pointer to transaction/data link layer clock
++ * @ahb_ck: pointer to AHB slave interface operating clock for CSR access
++ *          and RC initiated MMIO access
++ * @axi_ck: pointer to application layer MMIO channel operating clock
++ * @aux_ck: pointer to pe2_mac_bridge and pe2_mac_core operating clock
++ *          when pcie_mac_ck/pcie_pipe_ck is turned off
++ * @obff_ck: pointer to OBFF functional block operating clock
++ * @pipe_ck: pointer to LTSSM and PHY/MAC layer operating clock
++ * @phy: pointer to PHY control block
+  * @lane: lane count
+  * @index: port index
++ * @irq_domain: legacy INTx IRQ domain
+  */
+ struct mtk_pcie_port {
+ 	void __iomem *base;
+@@ -93,9 +165,15 @@ struct mtk_pcie_port {
+ 	struct mtk_pcie *pcie;
+ 	struct reset_control *reset;
+ 	struct clk *sys_ck;
++	struct clk *ahb_ck;
++	struct clk *axi_ck;
++	struct clk *aux_ck;
++	struct clk *obff_ck;
++	struct clk *pipe_ck;
+ 	struct phy *phy;
+ 	u32 lane;
+ 	u32 index;
++	struct irq_domain *irq_domain;
+ };
+ 
+ /**
+@@ -156,6 +234,12 @@ static void mtk_pcie_put_resources(struct mtk_pcie *pcie)
+ 
+ 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+ 		phy_power_off(port->phy);
++		phy_exit(port->phy);
++		clk_disable_unprepare(port->pipe_ck);
++		clk_disable_unprepare(port->obff_ck);
++		clk_disable_unprepare(port->axi_ck);
++		clk_disable_unprepare(port->aux_ck);
++		clk_disable_unprepare(port->ahb_ck);
+ 		clk_disable_unprepare(port->sys_ck);
+ 		mtk_pcie_port_free(port);
+ 	}
+@@ -163,6 +247,278 @@ static void mtk_pcie_put_resources(struct mtk_pcie *pcie)
+ 	mtk_pcie_subsys_powerdown(pcie);
+ }
+ 
++static int mtk_pcie_check_cfg_cpld(struct mtk_pcie_port *port)
++{
++	u32 val;
++	int err;
 +
-+Examples for MT2712:
-+	pcie: pcie@11700000 {
-+		compatible = "mediatek,mt2712-pcie";
-+		device_type = "pci";
-+		reg = <0 0x11700000 0 0x1000>,
-+		      <0 0x112ff000 0 0x1000>;
-+		reg-names = "port0", "port1";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&topckgen CLK_TOP_PE2_MAC_P0_SEL>,
-+			 <&topckgen CLK_TOP_PE2_MAC_P1_SEL>,
-+			 <&pericfg CLK_PERI_PCIE0>,
-+			 <&pericfg CLK_PERI_PCIE1>;
-+		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1";
-+		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy0", "pcie-phy1";
-+		bus-range = <0x00 0xff>;
-+		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
++	err = readl_poll_timeout_atomic(port->base + PCIE_APP_TLP_REQ, val,
++					!(val & APP_CFG_REQ), 10,
++					100 * USEC_PER_MSEC);
++	if (err)
++		return PCIBIOS_SET_FAILED;
 +
-+		pcie0: pcie@0,0 {
-+			device_type = "pci";
-+			reg = <0x0000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-+					<0 0 0 2 &pcie_intc0 1>,
-+					<0 0 0 3 &pcie_intc0 2>,
-+					<0 0 0 4 &pcie_intc0 3>;
-+			pcie_intc0: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
++	if (readl(port->base + PCIE_APP_TLP_REQ) & APP_CPL_STATUS)
++		return PCIBIOS_SET_FAILED;
 +
-+		pcie1: pcie@1,0 {
-+			device_type = "pci";
-+			reg = <0x0800 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-+					<0 0 0 2 &pcie_intc1 1>,
-+					<0 0 0 3 &pcie_intc1 2>,
-+					<0 0 0 4 &pcie_intc1 3>;
-+			pcie_intc1: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+	};
++	return PCIBIOS_SUCCESSFUL;
++}
 +
-+Examples for MT7622:
-+	pcie: pcie@1a140000 {
-+		compatible = "mediatek,mt7622-pcie";
-+		device_type = "pci";
-+		reg = <0 0x1a140000 0 0x1000>,
-+		      <0 0x1a143000 0 0x1000>,
-+		      <0 0x1a145000 0 0x1000>;
-+		reg-names = "subsys", "port0", "port1";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 229 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pciesys CLK_PCIE_P0_MAC_EN>,
-+			 <&pciesys CLK_PCIE_P1_MAC_EN>,
-+			 <&pciesys CLK_PCIE_P0_AHB_EN>,
-+			 <&pciesys CLK_PCIE_P1_AHB_EN>,
-+			 <&pciesys CLK_PCIE_P0_AUX_EN>,
-+			 <&pciesys CLK_PCIE_P1_AUX_EN>,
-+			 <&pciesys CLK_PCIE_P0_AXI_EN>,
-+			 <&pciesys CLK_PCIE_P1_AXI_EN>,
-+			 <&pciesys CLK_PCIE_P0_OBFF_EN>,
-+			 <&pciesys CLK_PCIE_P1_OBFF_EN>,
-+			 <&pciesys CLK_PCIE_P0_PIPE_EN>,
-+			 <&pciesys CLK_PCIE_P1_PIPE_EN>;
-+		clock-names = "sys_ck0", "sys_ck1", "ahb_ck0", "ahb_ck1",
-+			      "aux_ck0", "aux_ck1", "axi_ck0", "axi_ck1",
-+			      "obff_ck0", "obff_ck1", "pipe_ck0", "pipe_ck1";
-+		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy0", "pcie-phy1";
-+		power-domains = <&scpsys MT7622_POWER_DOMAIN_HIF0>;
-+		bus-range = <0x00 0xff>;
-+		ranges = <0x82000000 0 0x20000000  0x0 0x20000000  0 0x10000000>;
++static int mtk_pcie_hw_rd_cfg(struct mtk_pcie_port *port, u32 bus, u32 devfn,
++			      int where, int size, u32 *val)
++{
++	int reg, shift = 8 * (where & 3);
 +
-+		pcie0: pcie@0,0 {
-+			device_type = "pci";
-+			reg = <0x0000 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc0 0>,
-+					<0 0 0 2 &pcie_intc0 1>,
-+					<0 0 0 3 &pcie_intc0 2>,
-+					<0 0 0 4 &pcie_intc0 3>;
-+			pcie_intc0: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
++	/* Write PCIe Configuration Transaction Header for cfgrd */
++	writel(CFG_HEADER_DW0(CFG_WRRD_TYPE_0, CFG_RD_FMT),
++	       port->base + PCIE_CFG_HEADER0);
++	writel(CFG_HEADER_DW1(where, size), port->base + PCIE_CFG_HEADER1);
++	writel(CFG_HEADER_DW2(where, PCI_FUNC(devfn), PCI_SLOT(devfn), bus),
++	       port->base + PCIE_CFG_HEADER2);
 +
-+		pcie1: pcie@1,0 {
-+			device_type = "pci";
-+			reg = <0x0800 0 0 0 0>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			#interrupt-cells = <1>;
-+			ranges;
-+			num-lanes = <1>;
-+			interrupt-map-mask = <0 0 0 7>;
-+			interrupt-map = <0 0 0 1 &pcie_intc1 0>,
-+					<0 0 0 2 &pcie_intc1 1>,
-+					<0 0 0 3 &pcie_intc1 2>,
-+					<0 0 0 4 &pcie_intc1 3>;
-+			pcie_intc1: interrupt-controller {
-+				interrupt-controller;
-+				#address-cells = <0>;
-+				#interrupt-cells = <1>;
-+			};
-+		};
-+	};
++	/* Trigger h/w to transmit Cfgrd TLP */
++	reg = readl(port->base + PCIE_APP_TLP_REQ);
++	writel(reg | APP_CFG_REQ, port->base + PCIE_APP_TLP_REQ);
++
++	/* Check completion status */
++	if (mtk_pcie_check_cfg_cpld(port))
++		return PCIBIOS_SET_FAILED;
++
++	/* Read cpld payload of Cfgrd */
++	*val = readl(port->base + PCIE_CFG_RDATA);
++
++	switch (size) {
++	case 4:
++		break;
++	case 3:
++		*val = (*val >> shift) & 0xffffff;
++		break;
++	case 2:
++		*val = (*val >> shift) & 0xffff;
++		break;
++	case 1:
++		*val = (*val >> shift) & 0xff;
++		break;
++	default:
++		return PCIBIOS_BAD_REGISTER_NUMBER;
++	}
++
++	return PCIBIOS_SUCCESSFUL;
++}
++
++static int mtk_pcie_hw_wr_cfg(struct mtk_pcie_port *port, u32 bus, u32 devfn,
++			      int where, int size, u32 val)
++{
++	/* Write PCIe Configuration Transaction Header for Cfgwr */
++	writel(CFG_HEADER_DW0(CFG_WRRD_TYPE_0, CFG_WR_FMT),
++	       port->base + PCIE_CFG_HEADER0);
++	writel(CFG_HEADER_DW1(where, size), port->base + PCIE_CFG_HEADER1);
++	writel(CFG_HEADER_DW2(where, PCI_FUNC(devfn), PCI_SLOT(devfn), bus),
++	       port->base + PCIE_CFG_HEADER2);
++
++	/* Write cfgwr data */
++	val = val << 8 * (where & 3);
++	writel(val, port->base + PCIE_CFG_WDATA);
++
++	/* Trigger h/w to transmit Cfgwr TLP */
++	val = readl(port->base + PCIE_APP_TLP_REQ);
++	val |= APP_CFG_REQ;
++	writel(val, port->base + PCIE_APP_TLP_REQ);
++
++	/* Check completion status */
++	return mtk_pcie_check_cfg_cpld(port);
++}
++
++static int mtk_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
++				int where, int size, u32 *val)
++{
++	struct mtk_pcie_port *port = NULL, *iter, *tmp;
++	struct mtk_pcie *pcie = bus->sysdata;
++	u32 bn = bus->number;
++	int ret;
++
++	list_for_each_entry_safe(iter, tmp, &pcie->ports, list)
++		if (iter->index == PCI_SLOT(devfn)) {
++			port = iter;
++			break;
++		}
++
++	if (!port) {
++		*val = ~0;
++		return PCIBIOS_DEVICE_NOT_FOUND;
++	}
++
++	ret = mtk_pcie_hw_rd_cfg(port, bn, devfn, where, size, val);
++	if (ret)
++		*val = ~0;
++
++	return ret;
++}
++
++static int mtk_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
++				 int where, int size, u32 val)
++{
++	struct mtk_pcie_port *port = NULL, *iter, *tmp;
++	struct mtk_pcie *pcie = bus->sysdata;
++	u32 bn = bus->number;
++
++	list_for_each_entry_safe(iter, tmp, &pcie->ports, list)
++		if (iter->index == PCI_SLOT(devfn)) {
++			port = iter;
++			break;
++		}
++
++	if (!port)
++		return PCIBIOS_DEVICE_NOT_FOUND;
++
++	return mtk_pcie_hw_wr_cfg(port, bn, devfn, where, size, val);
++}
++
++static struct pci_ops mtk_pcie_ops_v2 = {
++	.read  = mtk_pcie_config_read,
++	.write = mtk_pcie_config_write,
++};
++
++static int mtk_pcie_startup_ports_v2(struct mtk_pcie_port *port)
++{
++	struct mtk_pcie *pcie = port->pcie;
++	struct resource *mem = &pcie->mem;
++	u32 val;
++	size_t size;
++	int err;
++
++	/* mt7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
++	if (pcie->base) {
++		val = readl(pcie->base + PCIE_SYS_CFG_V2);
++		val |= PCIE_CSR_LTSSM_EN(port->index) |
++		       PCIE_CSR_ASPM_L1_EN(port->index);
++		writel(val, pcie->base + PCIE_SYS_CFG_V2);
++	}
++
++	/* Assert all reset signals */
++	writel(0, port->base + PCIE_RST_CTRL);
++
++	/*
++	 * Enable PCIe link down reset, if link status changed from link up to
++	 * link down, this will reset MAC control registers and configuration
++	 * space.
++	 */
++	writel(PCI_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
++
++	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
++	val = readl(port->base + PCIE_RST_CTRL);
++	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
++	       PCIE_MAC_SRSTB | PCIE_CRSTB;
++	writel(val, port->base + PCIE_RST_CTRL);
++
++	/* PCIe v2.0 need at least 100ms delay to train from Gen1 to Gen2 */
++	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
++				 !!(val & PCIE_PORT_LINKUP_V2), 20,
++				 100 * USEC_PER_MSEC);
++	if (err)
++		return -ETIMEDOUT;
++
++	/* Set INTx mask */
++	val = readl(port->base + PCIE_INT_MASK);
++	val &= ~INTX_MASK;
++	writel(val, port->base + PCIE_INT_MASK);
++
++	/* Set AHB to PCIe translation windows */
++	size = mem->end - mem->start;
++	val = AHB2PCIE_BASEL(mem->start) | AHB2PCIE_SIZE(fls(size));
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
++
++	val = AHB2PCIE_BASEH(mem->start);
++	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
++
++	/* Set PCIe to AXI translation memory space.*/
++	val = fls(0xffffffff) | WIN_ENABLE;
++	writel(val, port->base + PCIE_AXI_WINDOW0);
++
++	return 0;
++}
++
++static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
++			     irq_hw_number_t hwirq)
++{
++	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
++	irq_set_chip_data(irq, domain->host_data);
++
++	return 0;
++}
++
++static const struct irq_domain_ops intx_domain_ops = {
++	.map = mtk_pcie_intx_map,
++};
++
++static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
++				    struct device_node *node)
++{
++	struct device *dev = port->pcie->dev;
++	struct device_node *pcie_intc_node;
++
++	/* Setup INTx */
++	pcie_intc_node = of_get_next_child(node, NULL);
++	if (!pcie_intc_node) {
++		dev_err(dev, "No PCIe Intc node found\n");
++		return PTR_ERR(pcie_intc_node);
++	}
++
++	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
++						 &intx_domain_ops, port);
++	if (!port->irq_domain) {
++		dev_err(dev, "Failed to get INTx IRQ domain\n");
++		return PTR_ERR(port->irq_domain);
++	}
++
++	return 0;
++}
++
++static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
++{
++	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
++	unsigned long status;
++	u32 virq;
++	u32 bit = INTX_SHIFT;
++
++	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
++		for_each_set_bit_from(bit, &status, INTX_NUM + INTX_SHIFT) {
++			/* Clear the INTx */
++			writel(1 << bit, port->base + PCIE_INT_STATUS);
++			virq = irq_find_mapping(port->irq_domain,
++						bit - INTX_SHIFT);
++			generic_handle_irq(virq);
++		}
++	}
++
++	return IRQ_HANDLED;
++}
++
++static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
++			      struct device_node *node)
++{
++	struct mtk_pcie *pcie = port->pcie;
++	struct device *dev = pcie->dev;
++	struct platform_device *pdev = to_platform_device(dev);
++	int err, irq;
++
++	irq = platform_get_irq(pdev, port->index);
++	err = devm_request_irq(dev, irq, mtk_pcie_intr_handler,
++			       IRQF_SHARED, "mtk-pcie", port);
++	if (err) {
++		dev_err(dev, "unable to request IRQ %d\n", irq);
++		return err;
++	}
++
++	err = mtk_pcie_init_irq_domain(port, node);
++	if (err) {
++		dev_err(dev, "failed to init PCIe legacy IRQ domain\n");
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
+ static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
+ 				      unsigned int devfn, int where)
+ {
+@@ -249,13 +605,49 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+ 
+ 	err = clk_prepare_enable(port->sys_ck);
+ 	if (err) {
+-		dev_err(dev, "failed to enable port%d clock\n", port->index);
++		dev_err(dev, "failed to enable sys_ck%d\n", port->index);
+ 		goto err_sys_clk;
+ 	}
+ 
++	err = clk_prepare_enable(port->ahb_ck);
++	if (err) {
++		dev_err(dev, "failed to enable ahb_ck%d\n", port->index);
++		goto err_ahb_clk;
++	}
++
++	err = clk_prepare_enable(port->aux_ck);
++	if (err) {
++		dev_err(dev, "failed to enable aux_ck%d\n", port->index);
++		goto err_aux_clk;
++	}
++
++	err = clk_prepare_enable(port->axi_ck);
++	if (err) {
++		dev_err(dev, "failed to enable axi_ck%d\n", port->index);
++		goto err_axi_clk;
++	}
++
++	err = clk_prepare_enable(port->obff_ck);
++	if (err) {
++		dev_err(dev, "failed to enable obff_ck%d\n", port->index);
++		goto err_obff_clk;
++	}
++
++	err = clk_prepare_enable(port->pipe_ck);
++	if (err) {
++		dev_err(dev, "failed to enable pipe_ck%d\n", port->index);
++		goto err_pipe_clk;
++	}
++
+ 	reset_control_assert(port->reset);
+ 	reset_control_deassert(port->reset);
+ 
++	err = phy_init(port->phy);
++	if (err) {
++		dev_err(dev, "failed to initialize port%d phy\n", port->index);
++		goto err_phy_init;
++	}
++
+ 	err = phy_power_on(port->phy);
+ 	if (err) {
+ 		dev_err(dev, "failed to power on port%d phy\n", port->index);
+@@ -269,6 +661,18 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+ 
+ 	phy_power_off(port->phy);
+ err_phy_on:
++	phy_exit(port->phy);
++err_phy_init:
++	clk_disable_unprepare(port->pipe_ck);
++err_pipe_clk:
++	clk_disable_unprepare(port->obff_ck);
++err_obff_clk:
++	clk_disable_unprepare(port->axi_ck);
++err_axi_clk:
++	clk_disable_unprepare(port->aux_ck);
++err_aux_clk:
++	clk_disable_unprepare(port->ahb_ck);
++err_ahb_clk:
+ 	clk_disable_unprepare(port->sys_ck);
+ err_sys_clk:
+ 	mtk_pcie_port_free(port);
+@@ -306,10 +710,56 @@ static int mtk_pcie_parse_ports(struct mtk_pcie *pcie,
+ 	snprintf(name, sizeof(name), "sys_ck%d", index);
+ 	port->sys_ck = devm_clk_get(dev, name);
+ 	if (IS_ERR(port->sys_ck)) {
+-		dev_err(dev, "failed to get port%d clock\n", index);
++		dev_err(dev, "failed to get sys_ck%d\n", index);
+ 		return PTR_ERR(port->sys_ck);
+ 	}
+ 
++	/* sys_ck might be divided into the following parts in some chips */
++	snprintf(name, sizeof(name), "ahb_ck%d", index);
++	port->ahb_ck = devm_clk_get(dev, name);
++	if (IS_ERR(port->ahb_ck)) {
++		if (PTR_ERR(port->ahb_ck) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		port->ahb_ck = NULL;
++	}
++
++	snprintf(name, sizeof(name), "axi_ck%d", index);
++	port->axi_ck = devm_clk_get(dev, name);
++	if (IS_ERR(port->axi_ck)) {
++		if (PTR_ERR(port->axi_ck) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		port->axi_ck = NULL;
++	}
++
++	snprintf(name, sizeof(name), "aux_ck%d", index);
++	port->aux_ck = devm_clk_get(dev, name);
++	if (IS_ERR(port->aux_ck)) {
++		if (PTR_ERR(port->aux_ck) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		port->aux_ck = NULL;
++	}
++
++	snprintf(name, sizeof(name), "obff_ck%d", index);
++	port->obff_ck = devm_clk_get(dev, name);
++	if (IS_ERR(port->obff_ck)) {
++		if (PTR_ERR(port->obff_ck) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		port->obff_ck = NULL;
++	}
++
++	snprintf(name, sizeof(name), "pipe_ck%d", index);
++	port->pipe_ck = devm_clk_get(dev, name);
++	if (IS_ERR(port->pipe_ck)) {
++		if (PTR_ERR(port->pipe_ck) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		port->pipe_ck = NULL;
++	}
++
+ 	snprintf(name, sizeof(name), "pcie-rst%d", index);
+ 	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
+ 	if (PTR_ERR(port->reset) == -EPROBE_DEFER)
+@@ -324,6 +774,12 @@ static int mtk_pcie_parse_ports(struct mtk_pcie *pcie,
+ 	port->index = index;
+ 	port->pcie = pcie;
+ 
++	if (pcie->soc->setup_irq) {
++		err = pcie->soc->setup_irq(port, node);
++		if (err)
++			return err;
++	}
++
+ 	INIT_LIST_HEAD(&port->list);
+ 	list_add_tail(&port->list, &pcie->ports);
+ 
+@@ -493,6 +949,7 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
+ 	host->ops = pcie->soc->ops;
+ 	host->map_irq = of_irq_parse_and_map_pci;
+ 	host->swizzle_irq = pci_common_swizzle;
++	host->sysdata = pcie;
+ 
+ 	err = pci_scan_root_bus_bridge(host);
+ 	if (err < 0)
+@@ -553,9 +1010,17 @@ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
+ 	.startup = mtk_pcie_startup_ports,
+ };
+ 
++static const struct mtk_pcie_soc mtk_pcie_soc_v2 = {
++	.ops = &mtk_pcie_ops_v2,
++	.startup = mtk_pcie_startup_ports_v2,
++	.setup_irq = mtk_pcie_setup_irq,
++};
++
+ static const struct of_device_id mtk_pcie_ids[] = {
+ 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
++	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_v2 },
++	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_v2 },
+ 	{},
+ };
+ 
 -- 
 2.6.4
