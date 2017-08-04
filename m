@@ -1,52 +1,60 @@
-From: Guochun Mao <guochun.mao@mediatek.com>
-Subject: [PATCH v5 1/1] dt-bindings: mtd: add new compatible strings and improve description
-Date: Fri, 4 Aug 2017 16:10:39 +0800
-Message-ID: <1501834239-25581-2-git-send-email-guochun.mao@mediatek.com>
-References: <1501834239-25581-1-git-send-email-guochun.mao@mediatek.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/2] dt/bindings: display: fix display-timing reference
+Date: Fri, 04 Aug 2017 11:18:55 +0300
+Message-ID: <8909960.iKQN7v5pk9@avalon>
+References: <22d9c447946555c7268119dc4d7ee5f63d5f668d.1501825126.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501834239-25581-1-git-send-email-guochun.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Richard Weinberger <richard@nod.at>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <22d9c447946555c7268119dc4d7ee5f63d5f668d.1501825126.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
-for nor flash node's compatible strings.
-Explicate the fallback compatible.
+Hi Baruch,
 
-Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
----
- .../devicetree/bindings/mtd/mtk-quadspi.txt        |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-index 5ded66a..f97d601 100644
---- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-@@ -1,13 +1,16 @@
- * Serial NOR flash controller for MTK MT81xx (and similar)
- 
- Required properties:
--- compatible: 	  The possible values are:
--		  "mediatek,mt2701-nor"
--		  "mediatek,mt7623-nor"
-+- compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-+		  and it's the fallback compatible for other Soc.
-+		  For every other SoC, should contain both the SoC-specific compatible
-+		  string and "mediatek,mt8173-nor".
-+		  The possible values are:
-+		  "mediatek,mt2701-nor", "mediatek,mt8173-nor"
-+		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
-+		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
-+		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt8173-nor"
--		  For mt8173, compatible should be "mediatek,mt8173-nor".
--		  For every other SoC, should contain both the SoC-specific compatible string
--		  and "mediatek,mt8173-nor".
- - reg: 		  physical base address and length of the controller's register
- - clocks: 	  the phandle of the clocks needed by the nor controller
- - clock-names: 	  the names of the clocks
+On Friday 04 Aug 2017 08:38:45 Baruch Siach wrote:
+> Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document common panel
+> properties") Cc: Laurent Pinchart
+> <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+
+I've had the exact same patch in my tree for some time now, and forgot to send 
+it :-/ So,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+
+> ---
+>  Documentation/devicetree/bindings/display/panel/panel-common.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> b/Documentation/devicetree/bindings/display/panel/panel-common.txt index
+> ec52c472c845..0603af877155 100644
+> --- a/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> +++ b/Documentation/devicetree/bindings/display/panel/panel-common.txt
+> @@ -38,7 +38,7 @@ Display Timings
+>    require specific display timings. The panel-timing subnode expresses
+> those timings as specified in the timing subnode section of the display
+> timing bindings defined in
+> -  Documentation/devicetree/bindings/display/display-timing.txt.
+> +  Documentation/devicetree/bindings/display/panel/display-timing.txt.
+> 
+> 
+>  Connectivity
+
 -- 
-1.7.9.5
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
