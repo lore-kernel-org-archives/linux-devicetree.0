@@ -1,175 +1,284 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 15/25] mtd: nand: qcom: DMA mapping support for
- register read buffer
-Date: Fri, 4 Aug 2017 10:56:01 +0530
-Message-ID: <2d1accf4-811a-1246-99cc-ab1b9c7f0a32@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-16-git-send-email-absahu@codeaurora.org>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] phy: add inno-usb2-phy driver for hi3798cv200 SoC
+Date: Fri, 4 Aug 2017 10:56:55 +0530
+Message-ID: <94beaddf-96ec-9c0b-a4ed-a39ac78b839a@ti.com>
+References: <1501049163-18892-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1501049163-18892-3-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500464893-11352-16-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1501049163-18892-3-git-send-email-xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hermit.wangheming-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, project-aspen-dev-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 07/19/2017 05:18 PM, Abhishek Sahu wrote:
-> The EBI2 NAND directly remaps register read buffer with
-> dma_map_sg. The QPIC NAND will give register read buffer in its
-> command descriptor and the command descriptor will be mapped with
-> dma_map_sg instead of register read buffer. This command
-> descriptor will contain the dma address of the register read
-> buffer.
-
-It isn't entirely clear from the commit message why we can't use
-the existing code with QPIC NAND. A bit of background would help.
-Can you consider adding something like this:
-
-"On QPIC NAND, which uses BAM DMA, we read the controller registers
-by preparing a BAM command descriptor. This descriptor requires the
-the a) controller register address and b) the DMA address in which we
-want to store the value read back from the controller register. Therefore,
-it's required that we also map our register read buffer for DMA (using
-dma_map_single). We use the returned DMA address for preparing
-entries in our command descriptor."
-
+On Wednesday 26 July 2017 11:36 AM, Jiancheng Xue wrote:
+> From: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 > 
-> This patch adds the DMA mapping support for register read buffer.
-> This buffer will be DMA mapped during allocation time. Before
-> starting of any operation, this buffer will be synced for device
-> operation and after operation completion, it will be synced for
-> CPU.
+> Add inno-usb2-phy driver for hi3798cv200 SoC.
 > 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Pengcheng Li <lpc.li-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Jiancheng Xue <xuejiancheng-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 > ---
->   drivers/mtd/nand/qcom_nandc.c | 40 ++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 40 insertions(+)
+>  drivers/phy/hisilicon/Kconfig              |  11 +-
+>  drivers/phy/hisilicon/Makefile             |   1 +
+>  drivers/phy/hisilicon/phy-hisi-inno-usb2.c | 236 +++++++++++++++++++++++++++++
+>  3 files changed, 247 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/phy/hisilicon/phy-hisi-inno-usb2.c
 > 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index cb2b245..f49c3da 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -229,6 +229,7 @@ struct nandc_regs {
->    *				by upper layers directly
->    * @buf_size/count/start:	markers for chip->read_buf/write_buf functions
->    * @reg_read_buf:		local buffer for reading back registers via DMA
-> + * @reg_read_buf_phys:		contains dma address for register read buffer
-
-Maybe we should rename this as reg_read_dma since it is dma_addr_t ?
-
-Looks good otherwise.
-
-Thanks,
-Archit
-
->    * @reg_read_pos:		marker for data read in reg_read_buf
->    *
->    * @regs:			a contiguous chunk of memory for DMA register
-> @@ -271,6 +272,7 @@ struct qcom_nand_controller {
->   	int		buf_start;
->   
->   	__le32 *reg_read_buf;
-> +	dma_addr_t reg_read_buf_phys;
->   	int reg_read_pos;
->   
->   	struct nandc_regs *regs;
-> @@ -363,6 +365,24 @@ static inline void nandc_write(struct qcom_nand_controller *nandc, int offset,
->   	iowrite32(val, nandc->base + offset);
->   }
->   
-> +static inline void nandc_read_buffer_sync(struct qcom_nand_controller *nandc,
-> +					  bool is_cpu)
-> +{
-> +	if (!nandc->props->is_bam)
-> +		return;
+> diff --git a/drivers/phy/hisilicon/Kconfig b/drivers/phy/hisilicon/Kconfig
+> index 6164c4c..6a675c5 100644
+> --- a/drivers/phy/hisilicon/Kconfig
+> +++ b/drivers/phy/hisilicon/Kconfig
+> @@ -8,9 +8,18 @@ config PHY_HI6220_USB
+>  	select MFD_SYSCON
+>  	help
+>  	  Enable this to support the HISILICON HI6220 USB PHY.
+> -
+  ^^
+not related to $patch.
+>  	  To compile this driver as a module, choose M here.
+>  
+> +config PHY_HISI_INNO_USB2
+> +       tristate "HiSilicon INNO USB2 PHY support"
+> +       depends on (ARCH_HISI) || COMPILE_TEST
+> +       select GENERIC_PHY
+> +       select MFD_SYSCON
+> +       help
+> +         Support for INNO USB2 PHY on HiSilicon SoCs. This Phy supports
+> +         USB 1.5Mb/s, USB 12Mb/s, USB 480Mb/s speeds. It supports one
+> +         USB host port to accept one USB device.
 > +
-> +	if (is_cpu)
-> +		dma_sync_single_for_cpu(nandc->dev, nandc->reg_read_buf_phys,
-> +					MAX_REG_RD *
-> +					sizeof(*nandc->reg_read_buf),
-> +					DMA_FROM_DEVICE);
-> +	else
-> +		dma_sync_single_for_device(nandc->dev, nandc->reg_read_buf_phys,
-> +					   MAX_REG_RD *
-> +					   sizeof(*nandc->reg_read_buf),
-> +					   DMA_FROM_DEVICE);
+>  config PHY_HIX5HD2_SATA
+>  	tristate "HIX5HD2 SATA PHY Driver"
+>  	depends on ARCH_HIX5HD2 && OF && HAS_IOMEM
+> diff --git a/drivers/phy/hisilicon/Makefile b/drivers/phy/hisilicon/Makefile
+> index 541b348..e6c9794 100644
+> --- a/drivers/phy/hisilicon/Makefile
+> +++ b/drivers/phy/hisilicon/Makefile
+> @@ -1,2 +1,3 @@
+>  obj-$(CONFIG_PHY_HI6220_USB)		+= phy-hi6220-usb.o
+> +obj-$(CONFIG_PHY_HISI_INNO_USB2)	+= phy-hisi-inno-usb2.o
+>  obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
+> diff --git a/drivers/phy/hisilicon/phy-hisi-inno-usb2.c b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+> new file mode 100644
+> index 0000000..7edf4a3
+> --- /dev/null
+> +++ b/drivers/phy/hisilicon/phy-hisi-inno-usb2.c
+> @@ -0,0 +1,236 @@
+> +/*
+> + * HiSilicon INNO USB2 PHY Driver.
+> + *
+> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +
+> +#define INNO_PHY_PORT_NUM	2
+> +#define REF_CLK_STABLE_TIME	100	/* unit:us */
+> +#define UTMI_CLK_STABLE_TIME	200	/* unit:us */
+> +#define TEST_CLK_STABLE_TIME	2	/* unit:ms */
+> +#define PHY_CLK_STABLE_TIME	2	/* unit:ms */
+> +#define UTMI_RST_COMPLETE_TIME	2	/* unit:ms */
+> +#define TEST_RST_COMPLETE_TIME	100	/* unit:us */
+> +#define POR_RST_COMPLETE_TIME	300	/* unit:us */
+> +#define PHY_TEST_DATA	GENMASK(7, 0)
+> +#define PHY_TEST_ADDR	GENMASK(15, 8)
+> +#define PHY_TEST_PORT	GENMASK(18, 16)
+> +#define PHY_TEST_WREN	BIT(21)
+> +#define PHY_TEST_CLK	BIT(22)	/* rising edge active */
+> +#define PHY_TEST_RST	BIT(23)	/* low active */
+> +#define PHY_CLK_ENABLE	BIT(2)
+> +
+> +struct hisi_inno_phy_priv {
+> +	struct regmap *syscon;
+> +	u32 reg;
+> +	struct clk *ref_clk;
+> +	struct reset_control *por_rst;
+> +	struct reset_control *test_rst;
+> +	struct reset_control *utmi_rst[INNO_PHY_PORT_NUM];
+> +	u32 port_num;
+> +};
+> +
+> +static void hisi_inno_phy_write_reg(struct regmap *syscon,
+> +			u32 reg, u8 port, u32 addr, u32 data)
+> +{
+> +	u32 value;
+> +
+> +	value = (data & PHY_TEST_DATA)
+> +		| ((addr << 8) & PHY_TEST_ADDR)
+> +		| ((port << 16) & PHY_TEST_PORT)
+> +		| PHY_TEST_WREN | PHY_TEST_RST;
+> +	regmap_write(syscon, reg, value);
+> +	value |= PHY_TEST_CLK;
+> +	regmap_write(syscon, reg, value);
+> +	value &= ~PHY_TEST_CLK;
+> +	regmap_write(syscon, reg, value);
 > +}
 > +
->   static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
->   {
->   	switch (offset) {
-> @@ -847,6 +867,7 @@ static void free_descs(struct qcom_nand_controller *nandc)
->   static void clear_read_regs(struct qcom_nand_controller *nandc)
->   {
->   	nandc->reg_read_pos = 0;
-> +	nandc_read_buffer_sync(nandc, false);
->   }
->   
->   static void pre_command(struct qcom_nand_host *host, int command)
-> @@ -876,6 +897,7 @@ static void parse_erase_write_errors(struct qcom_nand_host *host, int command)
->   	int i;
->   
->   	num_cw = command == NAND_CMD_PAGEPROG ? ecc->steps : 1;
-> +	nandc_read_buffer_sync(nandc, true);
->   
->   	for (i = 0; i < num_cw; i++) {
->   		u32 flash_status = le32_to_cpu(nandc->reg_read_buf[i]);
-> @@ -897,6 +919,7 @@ static void post_command(struct qcom_nand_host *host, int command)
->   
->   	switch (command) {
->   	case NAND_CMD_READID:
-> +		nandc_read_buffer_sync(nandc, true);
->   		memcpy(nandc->data_buffer, nandc->reg_read_buf,
->   		       nandc->buf_count);
->   		break;
-> @@ -1060,6 +1083,7 @@ static int parse_read_errors(struct qcom_nand_host *host, u8 *data_buf,
->   	int i;
->   
->   	buf = (struct read_stats *)nandc->reg_read_buf;
-> +	nandc_read_buffer_sync(nandc, true);
->   
->   	for (i = 0; i < ecc->steps; i++, buf++) {
->   		u32 flash, buffer, erased_cw;
-> @@ -1996,6 +2020,16 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
->   		return -ENOMEM;
->   
->   	if (nandc->props->is_bam) {
-> +		nandc->reg_read_buf_phys =
-> +			dma_map_single(nandc->dev, nandc->reg_read_buf,
-> +				       MAX_REG_RD *
-> +				       sizeof(*nandc->reg_read_buf),
-> +				       DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(nandc->dev, nandc->reg_read_buf_phys)) {
-> +			dev_err(nandc->dev, "failed to DMA MAP reg buffer\n");
-> +			return -EIO;
-> +		}
+> +static void hisi_inno_phy_setup(struct hisi_inno_phy_priv *priv)
+> +{
+> +	/* The phy clk is controlled by the port0 register 0x06. */
+> +	hisi_inno_phy_write_reg(priv->syscon,
+> +			priv->reg, 0, 0x06, PHY_CLK_ENABLE);
+> +	msleep(PHY_CLK_STABLE_TIME);
+> +}
 > +
->   		nandc->tx_chan = dma_request_slave_channel(nandc->dev, "tx");
->   		if (!nandc->tx_chan) {
->   			dev_err(nandc->dev, "failed to request tx channel\n");
-> @@ -2033,6 +2067,12 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
->   static void qcom_nandc_unalloc(struct qcom_nand_controller *nandc)
->   {
->   	if (nandc->props->is_bam) {
-> +		if (!dma_mapping_error(nandc->dev, nandc->reg_read_buf_phys))
-> +			dma_unmap_single(nandc->dev, nandc->reg_read_buf_phys,
-> +					 MAX_REG_RD *
-> +					 sizeof(*nandc->reg_read_buf),
-> +					 DMA_FROM_DEVICE);
+> +static int hisi_inno_phy_init(struct phy *phy)
+> +{
+> +	struct hisi_inno_phy_priv *priv = phy_get_drvdata(phy);
+> +	int ret, i;
 > +
->   		if (nandc->tx_chan)
->   			dma_release_channel(nandc->tx_chan);
->   
-> 
+> +	ret = clk_prepare_enable(priv->ref_clk);
+> +	if (ret)
+> +		return ret;
+> +	udelay(REF_CLK_STABLE_TIME);
+> +
+> +	if (priv->test_rst) {
+> +		reset_control_deassert(priv->test_rst);
+> +		udelay(TEST_RST_COMPLETE_TIME);
+> +	}
+> +
+> +	reset_control_deassert(priv->por_rst);
+> +	udelay(POR_RST_COMPLETE_TIME);
+> +
+> +	/* config phy clk and phy eye diagram */
+> +	hisi_inno_phy_setup(priv);
+> +
+> +	for (i = 0; i < priv->port_num; i++) {
+> +		reset_control_deassert(priv->utmi_rst[i]);
+> +		udelay(UTMI_RST_COMPLETE_TIME);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void hisi_inno_phy_disable(struct phy *phy)
+> +{
+> +	struct hisi_inno_phy_priv *priv = phy_get_drvdata(phy);
+> +	int i;
+> +
+> +	for (i = 0; i < priv->port_num; i++)
+> +		reset_control_assert(priv->utmi_rst[i]);
+> +
+> +	reset_control_assert(priv->por_rst);
+> +	if (priv->test_rst)
+> +		reset_control_assert(priv->test_rst);
+> +	clk_disable_unprepare(priv->ref_clk);
+> +}
+> +
+> +static int hisi_inno_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct phy *phy;
+> +	struct hisi_inno_phy_priv *priv;
+> +	struct device_node *node = dev->of_node;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->syscon = syscon_regmap_lookup_by_phandle(node,
+> +			"hisilicon,peripheral-syscon");
+> +	if (IS_ERR(priv->syscon)) {
+> +		dev_err(dev, "no hisilicon,peripheral-syscon\n");
+> +		return PTR_ERR(priv->syscon);
+> +	}
+> +
+> +	ret = device_property_read_u32(dev,
+> +			"hisilicon,phycon-reg", &priv->reg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->ref_clk = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(priv->ref_clk))
+> +		return PTR_ERR(priv->ref_clk);
+> +
+> +	priv->por_rst = devm_reset_control_get_exclusive(dev, "power_on");
+> +	if (IS_ERR(priv->por_rst))
+> +		return PTR_ERR(priv->por_rst);
+> +
+> +	ret = device_property_read_u32(dev,
+> +					"hisilicon,port-num", &priv->port_num);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (priv->port_num <= 0
+> +		|| priv->port_num > INNO_PHY_PORT_NUM)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < priv->port_num; i++) {
+> +		char id[6];
+> +
+> +		snprintf(id, 6, "utmi%1d\n", i);
+> +		priv->utmi_rst[i] = devm_reset_control_get_exclusive(dev, id);
+> +		if (IS_ERR(priv->utmi_rst[i]))
+> +			return PTR_ERR(priv->utmi_rst[i]);
+> +	}
+> +
+> +	priv->test_rst = devm_reset_control_get_optional_exclusive(dev, "test");
+> +	if (IS_ERR(priv->test_rst))
+> +		return PTR_ERR(priv->test_rst);
+> +
+> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
+> +	if (!phy)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, phy);
+> +	phy_set_drvdata(phy, priv);
+> +
+> +	return hisi_inno_phy_init(phy);
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+why don't you use the phy framework and initialize the phy only when required
+by the usb host controller?
+> +}
+> +
+> +static int hisi_inno_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct phy *phy = platform_get_drvdata(pdev);
+> +
+> +	hisi_inno_phy_disable(phy);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int hisi_inno_phy_suspend(struct device *dev)
+> +{
+> +	struct phy *phy = dev_get_drvdata(dev);
+> +
+> +	hisi_inno_phy_disable(phy);
+
+How do you make sure, usb is not using the phy when suspend is invoked? We
+don't want to be disabling the phy when usb controller is using it.
+
+Thanks
+Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
