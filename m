@@ -1,243 +1,199 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH v2 12/18] firmware: arm_scmi: refactor in preparation to support per-protocol channels
-Date: Fri,  4 Aug 2017 15:31:38 +0100
-Message-ID: <1501857104-11279-13-git-send-email-sudeep.holla@arm.com>
+Subject: [PATCH v2 14/18] firmware: arm_scmi: add device power domain support using genpd
+Date: Fri,  4 Aug 2017 15:31:40 +0100
+Message-ID: <1501857104-11279-15-git-send-email-sudeep.holla@arm.com>
 References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to support per-protocol channels if available, we need to
-factor out all the mailbox channel information(Tx/Rx payload and
-channel handle) out of the main SCMI instance information structure.
+This patch hooks up the support for device power domain provided by
+SCMI using the Linux generic power domain infrastructure.
 
-This patch refactors the existing channel information into a separate
-chan_info structure.
-
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Kevin Hilman <khilman@baylibre.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/driver.c | 93 +++++++++++++++++++++++---------------
- 1 file changed, 57 insertions(+), 36 deletions(-)
+ drivers/firmware/Kconfig                   |  13 +++
+ drivers/firmware/arm_scmi/Makefile         |   1 +
+ drivers/firmware/arm_scmi/scmi_pm_domain.c | 134 +++++++++++++++++++++++++++++
+ 3 files changed, 148 insertions(+)
+ create mode 100644 drivers/firmware/arm_scmi/scmi_pm_domain.c
 
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 8257315cf3eb..3eaf619858bb 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -104,6 +104,25 @@ struct scmi_desc {
- };
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index c3d1a12763ce..a4462bc661c8 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -40,6 +40,19 @@ config ARM_SCMI_PROTOCOL
+ 	  This protocol library provides interface for all the client drivers
+ 	  making use of the features offered by the SCMI.
  
- /**
-+ * struct scmi_chan_info - Structure representing a SCMI channel informfation
++config ARM_SCMI_POWER_DOMAIN
++	tristate "SCMI power domain driver"
++	depends on ARM_SCMI_PROTOCOL || (COMPILE_TEST && OF)
++	default y
++	select PM_GENERIC_DOMAINS if PM
++	help
++	  This enables support for the SCMI power domains which can be
++	  enabled or disabled via the SCP firmware
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called scmi_pm_domain. Note this may needed early in boot
++	  before rootfs may be available.
++
+ config ARM_SCPI_PROTOCOL
+ 	tristate "ARM System Control and Power Interface (SCPI) Message Protocol"
+ 	depends on ARM || ARM64 || COMPILE_TEST
+diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+index f9dee5ad0aa0..93e399d8f0ce 100644
+--- a/drivers/firmware/arm_scmi/Makefile
++++ b/drivers/firmware/arm_scmi/Makefile
+@@ -1,2 +1,3 @@
+ obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
+ arm_scmi-y = base.o clock.o driver.o perf.o power.o sensors.o
++obj-$(CONFIG_ARM_SCMI_POWER_DOMAIN) += scmi_pm_domain.o
+diff --git a/drivers/firmware/arm_scmi/scmi_pm_domain.c b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+new file mode 100644
+index 000000000000..e53aa9d0af6e
+--- /dev/null
++++ b/drivers/firmware/arm_scmi/scmi_pm_domain.c
+@@ -0,0 +1,134 @@
++/*
++ * SCMI Generic power domain support.
 + *
-+ * @cl: Mailbox Client
-+ * @tx_chan: Transmit mailbox channel
-+ * @rx_chan: Receive mailbox channel
-+ * @tx_payload: Transmit mailbox channel payload area
-+ * @rx_payload: Receive mailbox channel payload area
-+ * @info: Reference to SCMI instance corresponding to this channel
++ * Copyright (C) 2017 ARM Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License along
++ * with this program. If not, see <http://www.gnu.org/licenses/>.
 + */
-+struct scmi_chan_info {
-+	struct mbox_client cl;
-+	struct mbox_chan *tx_chan;
-+	struct mbox_chan *rx_chan;
-+	void __iomem *tx_payload;
-+	void __iomem *rx_payload;
-+	struct scmi_info *info;
++
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/pm_domain.h>
++#include <linux/scmi_protocol.h>
++
++struct scmi_pm_domain {
++	struct generic_pm_domain genpd;
++	const struct scmi_handle *handle;
++	const char *name;
++	u32 domain;
 +};
 +
-+/**
-  * struct scmi_info - Structure representing a  SCMI instance
-  *
-  * @dev: Device pointer
-@@ -111,12 +130,8 @@ struct scmi_desc {
-  * @handle: Instance of SCMI handle to send to clients
-  * @version: SCMI revision information containing protocol version,
-  *	implementation version and (sub-)vendor identification.
-- * @cl: Mailbox Client
-- * @tx_chan: Transmit mailbox channel
-- * @rx_chan: Receive mailbox channel
-- * @tx_payload: Transmit mailbox channel payload area
-- * @rx_payload: Receive mailbox channel payload area
-  * @minfo: Message info
-+ * @cinfo: Reference to SCMI channel information
-  * @protocols_imp: list of protocols implemented
-  * @node: list head
-  * @users: Number of users of this instance
-@@ -126,18 +141,14 @@ struct scmi_info {
- 	const struct scmi_desc *desc;
- 	struct scmi_revision_info version;
- 	struct scmi_handle handle;
--	struct mbox_client cl;
--	struct mbox_chan *tx_chan;
--	struct mbox_chan *rx_chan;
--	void __iomem *tx_payload;
--	void __iomem *rx_payload;
- 	struct scmi_xfers_info minfo;
-+	struct scmi_chan_info *cinfo;
- 	u8 *protocols_imp;
- 	struct list_head node;
- 	int users;
- };
- 
--#define client_to_scmi_info(c)	container_of(c, struct scmi_info, cl)
-+#define client_to_scmi_chan_info(c) container_of(c, struct scmi_chan_info, cl)
- #define handle_to_scmi_info(h)	container_of(h, struct scmi_info, handle)
- 
- /*
-@@ -226,10 +237,11 @@ static void scmi_rx_callback(struct mbox_client *cl, void *m)
- {
- 	u16 xfer_id;
- 	struct scmi_xfer *xfer;
--	struct scmi_info *info = client_to_scmi_info(cl);
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+	struct scmi_info *info = cinfo->info;
- 	struct scmi_xfers_info *minfo = &info->minfo;
- 	struct device *dev = info->dev;
--	struct scmi_shared_mem *mem = info->tx_payload;
-+	struct scmi_shared_mem *mem = cinfo->tx_payload;
- 
- 	xfer_id = MSG_XTRACT_TOKEN(mem->msg_header);
- 
-@@ -280,8 +292,8 @@ static inline u32 pack_scmi_header(struct scmi_msg_hdr *hdr)
- static void scmi_tx_prepare(struct mbox_client *cl, void *m)
- {
- 	struct scmi_xfer *t = m;
--	struct scmi_info *info = client_to_scmi_info(cl);
--	struct scmi_shared_mem *mem = info->tx_payload;
-+	struct scmi_chan_info *cinfo = client_to_scmi_chan_info(cl);
-+	struct scmi_shared_mem *mem = cinfo->tx_payload;
- 
- 	mem->channel_status = 0x0; /* Mark channel busy + clear error */
- 	mem->flags = t->hdr.poll_completion ? 0 : SCMI_SHMEM_FLAG_INTR_ENABLED;
-@@ -372,9 +384,9 @@ void scmi_one_xfer_put(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- }
- 
- static bool
--scmi_xfer_poll_done(const struct scmi_info *info, struct scmi_xfer *xfer)
-+scmi_xfer_poll_done(const struct scmi_chan_info *cinfo, struct scmi_xfer *xfer)
- {
--	struct scmi_shared_mem *mem = info->tx_payload;
-+	struct scmi_shared_mem *mem = cinfo->tx_payload;
- 	u16 xfer_id = MSG_XTRACT_TOKEN(mem->msg_header);
- 
- 	if (xfer->hdr.seq != xfer_id)
-@@ -400,8 +412,9 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	int timeout;
- 	struct scmi_info *info = handle_to_scmi_info(handle);
- 	struct device *dev = info->dev;
-+	struct scmi_chan_info *cinfo = info->cinfo;
- 
--	ret = mbox_send_message(info->tx_chan, xfer);
-+	ret = mbox_send_message(cinfo->tx_chan, xfer);
- 	if (ret < 0) {
- 		dev_dbg(dev, "mbox send fail %d\n", ret);
- 		return ret;
-@@ -412,10 +425,10 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 
- 	if (xfer->hdr.poll_completion) {
- 		timeout = info->desc->max_rx_timeout_ms * 100;
--		while (!scmi_xfer_poll_done(info, xfer) && timeout--)
-+		while (!scmi_xfer_poll_done(cinfo, xfer) && timeout--)
- 			udelay(10);
- 		if (timeout)
--			scmi_fetch_response(xfer, info->tx_payload);
-+			scmi_fetch_response(xfer, cinfo->tx_payload);
- 		else
- 			ret = -ETIMEDOUT;
- 	} else {
-@@ -435,7 +448,7 @@ int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
- 	 * Unfortunately, we have to kick the mailbox framework after we have
- 	 * received our message.
- 	 */
--	mbox_client_txdone(info->tx_chan, ret);
-+	mbox_client_txdone(cinfo->tx_chan, ret);
- 
- 	return ret;
- }
-@@ -759,15 +772,15 @@ static int scmi_mailbox_check(struct device_node *np)
- 	return of_parse_phandle_with_args(np, "mboxes", "#mbox-cells", 0, &arg);
- }
- 
--static int scmi_mbox_free_channel(struct scmi_info *info)
-+static int scmi_mbox_free_channel(struct scmi_chan_info *cinfo)
- {
--	if (!IS_ERR_OR_NULL(info->tx_chan)) {
--		mbox_free_channel(info->tx_chan);
--		info->tx_chan = NULL;
-+	if (!IS_ERR_OR_NULL(cinfo->tx_chan)) {
-+		mbox_free_channel(cinfo->tx_chan);
-+		cinfo->tx_chan = NULL;
- 	}
--	if (!IS_ERR_OR_NULL(info->rx_chan)) {
--		mbox_free_channel(info->rx_chan);
--		info->rx_chan = NULL;
-+	if (!IS_ERR_OR_NULL(cinfo->rx_chan)) {
-+		mbox_free_channel(cinfo->rx_chan);
-+		cinfo->rx_chan = NULL;
- 	}
- 
- 	return 0;
-@@ -789,7 +802,7 @@ static int scmi_remove(struct platform_device *pdev)
- 
- 	if (!ret)
- 		/* Safe to free channels since no more users */
--		return scmi_mbox_free_channel(info);
-+		return scmi_mbox_free_channel(info->cinfo);
- 
- 	return ret;
- }
-@@ -801,9 +814,17 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
- 	resource_size_t size;
- 	struct device *dev = info->dev;
- 	struct device_node *shmem, *np = dev->of_node;
-+	struct scmi_chan_info *cinfo;
- 	struct mbox_client *cl;
- 
--	cl = &info->cl;
-+	cinfo = devm_kzalloc(info->dev, sizeof(*cinfo), GFP_KERNEL);
-+	if (!cinfo)
++#define to_scmi_pd(gpd) container_of(gpd, struct scmi_pm_domain, genpd)
++
++static int scmi_pd_power(struct generic_pm_domain *domain, bool power_on)
++{
++	int ret;
++	u32 state, ret_state;
++	struct scmi_pm_domain *pd = to_scmi_pd(domain);
++	const struct scmi_power_ops *ops = pd->handle->power_ops;
++
++	if (power_on)
++		state = SCMI_POWER_STATE_GENERIC_ON;
++	else
++		state = SCMI_POWER_STATE_GENERIC_OFF;
++
++	ret = ops->state_set(pd->handle, pd->domain, state);
++	if (!ret)
++		ret = ops->state_get(pd->handle, pd->domain, &ret_state);
++	if (!ret && state != ret_state)
++		return -EIO;
++
++	return ret;
++}
++
++static int scmi_pd_power_on(struct generic_pm_domain *domain)
++{
++	return scmi_pd_power(domain, true);
++}
++
++static int scmi_pd_power_off(struct generic_pm_domain *domain)
++{
++	return scmi_pd_power(domain, false);
++}
++
++static int scmi_pm_domain_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct scmi_pm_domain *scmi_pd;
++	struct genpd_onecell_data *scmi_pd_data;
++	struct generic_pm_domain **domains;
++	int num_domains, i;
++	const struct scmi_handle *handle = devm_scmi_handle_get(dev);
++
++	if (IS_ERR_OR_NULL(handle) || !handle->power_ops)
++		return -EPROBE_DEFER;
++
++	num_domains = handle->power_ops->num_domains_get(handle);
++	if (num_domains < 0) {
++		dev_err(dev, "number of domains not found\n");
++		return num_domains;
++	}
++
++	scmi_pd = devm_kcalloc(dev, num_domains, sizeof(*scmi_pd), GFP_KERNEL);
++	if (!scmi_pd)
 +		return -ENOMEM;
 +
-+	info->cinfo = cinfo;
-+	cinfo->info = info;
++	scmi_pd_data = devm_kzalloc(dev, sizeof(*scmi_pd_data), GFP_KERNEL);
++	if (!scmi_pd_data)
++		return -ENOMEM;
 +
-+	cl = &cinfo->cl;
- 	cl->dev = dev;
- 	cl->rx_callback = scmi_rx_callback;
- 	cl->tx_prepare = scmi_tx_prepare;
-@@ -819,15 +840,15 @@ static inline int scmi_mbox_chan_setup(struct scmi_info *info)
- 	}
- 
- 	size = resource_size(&res);
--	info->tx_payload = devm_ioremap(dev, res.start, size);
--	if (!info->tx_payload) {
-+	cinfo->tx_payload = devm_ioremap(info->dev, res.start, size);
-+	if (!cinfo->tx_payload) {
- 		dev_err(dev, "failed to ioremap SCMI Tx payload\n");
- 		return -EADDRNOTAVAIL;
- 	}
- 
--	info->tx_chan = mbox_request_channel_byname(cl, "tx");
--	if (IS_ERR(info->tx_chan)) {
--		ret = PTR_ERR(info->tx_chan);
-+	cinfo->tx_chan = mbox_request_channel_byname(cl, "tx");
-+	if (IS_ERR(cinfo->tx_chan)) {
-+		ret = PTR_ERR(cinfo->tx_chan);
- 		if (ret != -EPROBE_DEFER)
- 			dev_err(dev, "failed to request SCMI Tx mailbox\n");
- 		return ret;
-@@ -878,7 +899,7 @@ static int scmi_probe(struct platform_device *pdev)
- 	ret = scmi_base_protocol_init(handle);
- 	if (ret) {
- 		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
--		scmi_mbox_free_channel(info);
-+		scmi_mbox_free_channel(info->cinfo);
- 		return ret;
- 	}
- 
++	domains = devm_kcalloc(dev, num_domains, sizeof(*domains), GFP_KERNEL);
++	if (!domains)
++		return -ENOMEM;
++
++	for (i = 0; i < num_domains; i++, scmi_pd++) {
++		domains[i] = &scmi_pd->genpd;
++
++		scmi_pd->domain = i;
++		scmi_pd->handle = handle;
++		scmi_pd->name = handle->power_ops->name_get(handle, i);
++		scmi_pd->genpd.name = scmi_pd->name;
++		scmi_pd->genpd.power_off = scmi_pd_power_off;
++		scmi_pd->genpd.power_on = scmi_pd_power_on;
++
++		/*
++		 * Treat all power domains as off at boot.
++		 *
++		 * The SCP firmware itself may have switched on some domains,
++		 * but for reference counting purpose, keep it this way.
++		 */
++		pm_genpd_init(&scmi_pd->genpd, NULL, true);
++	}
++
++	scmi_pd_data->domains = domains;
++	scmi_pd_data->num_domains = num_domains;
++
++	of_genpd_add_provider_onecell(np, scmi_pd_data);
++
++	return 0;
++}
++
++static struct platform_driver scmi_power_domain_driver = {
++	.driver	= {
++		.name = "scmi-power-domain",
++	},
++	.probe = scmi_pm_domain_probe,
++};
++module_platform_driver(scmi_power_domain_driver);
++
++MODULE_AUTHOR("Sudeep Holla <sudeep.holla@arm.com>");
++MODULE_DESCRIPTION("ARM SCMI power domain driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.7.4
