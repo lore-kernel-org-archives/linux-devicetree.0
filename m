@@ -1,7 +1,7 @@
 From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v1 3/3] ipmi: bt-i2c: added IPMI Block Transfer over I2C BMC side
-Date: Fri,  4 Aug 2017 16:18:54 -0700
-Message-ID: <20170804231854.19730-4-brendanhiggins@google.com>
+Subject: [PATCH v1 2/3] ipmi: bt-i2c: added IPMI Block Transfer over I2C host side
+Date: Fri,  4 Aug 2017 16:18:53 -0700
+Message-ID: <20170804231854.19730-3-brendanhiggins@google.com>
 References: <20170804231854.19730-1-brendanhiggins@google.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170804231854.19730-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
@@ -13,90 +13,47 @@ List-Id: devicetree@vger.kernel.org
 The IPMI definition of the Block Transfer protocol defines the hardware
 registers and behavior in addition to the message format and messaging
 semantics. This implements a new protocol that uses IPMI Block Transfer
-messages and semantics on top of a standard I2C interface. This protocol
-has the same BMC side file system interface as "ipmi-bt-host".
+messages and semantics on top of a standard I2C interface.
 
 Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/char/Kconfig                    |   1 +
- drivers/char/Makefile                   |   1 +
- drivers/char/ipmi_bmc/Kconfig           |  22 ++
- drivers/char/ipmi_bmc/Makefile          |   5 +
- drivers/char/ipmi_bmc/ipmi_bmc_bt_i2c.c | 346 ++++++++++++++++++++++++++++++++
- include/linux/ipmi_bmc.h                |  76 +++++++
- 6 files changed, 451 insertions(+)
- create mode 100644 drivers/char/ipmi_bmc/Kconfig
- create mode 100644 drivers/char/ipmi_bmc/Makefile
- create mode 100644 drivers/char/ipmi_bmc/ipmi_bmc_bt_i2c.c
- create mode 100644 include/linux/ipmi_bmc.h
+ drivers/char/ipmi/Kconfig       |   4 +
+ drivers/char/ipmi/Makefile      |   1 +
+ drivers/char/ipmi/ipmi_bt_i2c.c | 452 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 457 insertions(+)
+ create mode 100644 drivers/char/ipmi/ipmi_bt_i2c.c
 
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index ccd239ab879f..2a6ca2325a45 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -195,6 +195,7 @@ config POWERNV_OP_PANEL
- 	  If unsure, say M here to build it as a module called powernv-op-panel.
+diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
+index f6fa056a52fc..a8734a369cb0 100644
+--- a/drivers/char/ipmi/Kconfig
++++ b/drivers/char/ipmi/Kconfig
+@@ -79,6 +79,10 @@ config IPMI_POWEROFF
+          This enables a function to power off the system with IPMI if
+ 	 the IPMI management controller is capable of this.
  
- source "drivers/char/ipmi/Kconfig"
-+source "drivers/char/ipmi_bmc/Kconfig"
++config IPMI_BT_I2C
++	select I2C
++	tristate 'BT IPMI bmc driver over I2c'
++
+ endif # IPMI_HANDLER
  
- config DS1620
- 	tristate "NetWinder thermometer support"
-diff --git a/drivers/char/Makefile b/drivers/char/Makefile
-index 53e33720818c..9e143186fa30 100644
---- a/drivers/char/Makefile
-+++ b/drivers/char/Makefile
-@@ -58,4 +58,5 @@ js-rtc-y = rtc.o
- 
- obj-$(CONFIG_TILE_SROM)		+= tile-srom.o
- obj-$(CONFIG_XILLYBUS)		+= xillybus/
-+obj-$(CONFIG_IPMI_BMC)		+= ipmi_bmc/
- obj-$(CONFIG_POWERNV_OP_PANEL)	+= powernv-op-panel.o
-diff --git a/drivers/char/ipmi_bmc/Kconfig b/drivers/char/ipmi_bmc/Kconfig
+ config ASPEED_BT_IPMI_BMC
+diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
+index eefb0b301e83..323de0b0b8b5 100644
+--- a/drivers/char/ipmi/Makefile
++++ b/drivers/char/ipmi/Makefile
+@@ -12,4 +12,5 @@ obj-$(CONFIG_IPMI_SSIF) += ipmi_ssif.o
+ obj-$(CONFIG_IPMI_POWERNV) += ipmi_powernv.o
+ obj-$(CONFIG_IPMI_WATCHDOG) += ipmi_watchdog.o
+ obj-$(CONFIG_IPMI_POWEROFF) += ipmi_poweroff.o
++obj-$(CONFIG_IPMI_BT_I2C) += ipmi_bt_i2c.o
+ obj-$(CONFIG_ASPEED_BT_IPMI_BMC) += bt-bmc.o
+diff --git a/drivers/char/ipmi/ipmi_bt_i2c.c b/drivers/char/ipmi/ipmi_bt_i2c.c
 new file mode 100644
-index 000000000000..26c8e0cb765c
+index 000000000000..94b5c11d23cd
 --- /dev/null
-+++ b/drivers/char/ipmi_bmc/Kconfig
-@@ -0,0 +1,22 @@
-+#
-+# IPMI BMC configuration
-+#
-+
-+menuconfig IPMI_BMC
-+	tristate 'IPMI BMC core'
-+	help
-+	  This enables the BMC-side IPMI drivers.
-+
-+	  If unsure, say N.
-+
-+if IPMI_BMC
-+
-+config IPMI_BMC_BT_I2C
-+	depends on I2C
-+	select I2C_SLAVE
-+	tristate 'Generic I2C BT IPMI BMC driver'
-+	help
-+	  Provides a driver that uses IPMI Block Transfer messages and
-+	  semantics on top of plain old I2C.
-+
-+endif # IPMI_BMC
-diff --git a/drivers/char/ipmi_bmc/Makefile b/drivers/char/ipmi_bmc/Makefile
-new file mode 100644
-index 000000000000..dfe5128f8158
---- /dev/null
-+++ b/drivers/char/ipmi_bmc/Makefile
-@@ -0,0 +1,5 @@
-+#
-+# Makefile for the ipmi bmc drivers.
-+#
-+
-+obj-$(CONFIG_IPMI_BMC_BT_I2C) += ipmi_bmc_bt_i2c.o
-diff --git a/drivers/char/ipmi_bmc/ipmi_bmc_bt_i2c.c b/drivers/char/ipmi_bmc/ipmi_bmc_bt_i2c.c
-new file mode 100644
-index 000000000000..686b83fa42a4
---- /dev/null
-+++ b/drivers/char/ipmi_bmc/ipmi_bmc_bt_i2c.c
-@@ -0,0 +1,346 @@
++++ b/drivers/char/ipmi/ipmi_bt_i2c.c
+@@ -0,0 +1,452 @@
 +/*
 + * Copyright 2017 Google Inc.
 + *
@@ -110,421 +67,445 @@ index 000000000000..686b83fa42a4
 + * GNU General Public License for more details.
 + */
 +
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/ipmi_bmc.h>
-+#include <linux/miscdevice.h>
++#define pr_fmt(fmt)        "ipmi-bt-i2c: " fmt
++
 +#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/errno.h>
 +#include <linux/mutex.h>
-+#include <linux/poll.h>
 +#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/wait.h>
-+
-+#define PFX "IPMI BMC BT-I2C: "
-+
-+/*
-+ * TODO: This is "bt-host" to match the bt-host driver; however, I think this is
-+ * unclear in the context of a CPU side driver. Should probably name this
-+ * and the DEVICE_NAME in bt-host to something like "bt-bmc" or "bt-slave".
-+ */
-+#define DEVICE_NAME	"ipmi-bt-host"
-+
-+static const unsigned long request_queue_max_len = 256;
-+
-+struct bt_request_elem {
-+	struct list_head	list;
-+	struct bt_msg		request;
-+};
-+
-+struct bt_i2c_slave {
-+	struct i2c_client	*client;
-+	struct miscdevice	miscdev;
-+	struct bt_msg		request;
-+	struct list_head	request_queue;
-+	atomic_t		request_queue_len;
-+	struct bt_msg		response;
-+	bool			response_in_progress;
-+	size_t			msg_idx;
-+	spinlock_t		lock;
-+	wait_queue_head_t	wait_queue;
-+	struct mutex		file_mutex;
-+};
-+
-+static int receive_bt_request(struct bt_i2c_slave *bt_slave, bool non_blocking,
-+			      struct bt_msg *bt_request)
-+{
-+	int res;
-+	unsigned long flags;
-+	struct bt_request_elem *queue_elem;
-+
-+	if (!non_blocking) {
-+try_again:
-+		res = wait_event_interruptible(
-+				bt_slave->wait_queue,
-+				atomic_read(&bt_slave->request_queue_len));
-+		if (res)
-+			return res;
-+	}
-+
-+	spin_lock_irqsave(&bt_slave->lock, flags);
-+	if (!atomic_read(&bt_slave->request_queue_len)) {
-+		spin_unlock_irqrestore(&bt_slave->lock, flags);
-+		if (non_blocking)
-+			return -EAGAIN;
-+		goto try_again;
-+	}
-+
-+	if (list_empty(&bt_slave->request_queue)) {
-+		pr_err(PFX "request_queue was empty despite nonzero request_queue_len\n");
-+		return -EIO;
-+	}
-+	queue_elem = list_first_entry(&bt_slave->request_queue,
-+				      struct bt_request_elem, list);
-+	memcpy(bt_request, &queue_elem->request, sizeof(*bt_request));
-+	list_del(&queue_elem->list);
-+	kfree(queue_elem);
-+	atomic_dec(&bt_slave->request_queue_len);
-+	spin_unlock_irqrestore(&bt_slave->lock, flags);
-+	return 0;
-+}
-+
-+static int send_bt_response(struct bt_i2c_slave *bt_slave, bool non_blocking,
-+			    struct bt_msg *bt_response)
-+{
-+	int res;
-+	unsigned long flags;
-+
-+	if (!non_blocking) {
-+try_again:
-+		res = wait_event_interruptible(bt_slave->wait_queue,
-+					       !bt_slave->response_in_progress);
-+		if (res)
-+			return res;
-+	}
-+
-+	spin_lock_irqsave(&bt_slave->lock, flags);
-+	if (bt_slave->response_in_progress) {
-+		spin_unlock_irqrestore(&bt_slave->lock, flags);
-+		if (non_blocking)
-+			return -EAGAIN;
-+		goto try_again;
-+	}
-+
-+	memcpy(&bt_slave->response, bt_response, sizeof(*bt_response));
-+	bt_slave->response_in_progress = true;
-+	spin_unlock_irqrestore(&bt_slave->lock, flags);
-+	return 0;
-+}
-+
-+static inline struct bt_i2c_slave *to_bt_i2c_slave(struct file *file)
-+{
-+	return container_of(file->private_data, struct bt_i2c_slave, miscdev);
-+}
-+
-+static ssize_t bt_read(struct file *file, char __user *buf, size_t count,
-+		       loff_t *ppos)
-+{
-+	struct bt_i2c_slave *bt_slave = to_bt_i2c_slave(file);
-+	struct bt_msg msg;
-+	ssize_t ret;
-+
-+	mutex_lock(&bt_slave->file_mutex);
-+	ret = receive_bt_request(bt_slave, file->f_flags & O_NONBLOCK, &msg);
-+	if (ret < 0)
-+		goto out;
-+	count = min_t(size_t, count, bt_msg_len(&msg));
-+	if (copy_to_user(buf, &msg, count)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+out:
-+	mutex_unlock(&bt_slave->file_mutex);
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return count;
-+}
-+
-+static ssize_t bt_write(struct file *file, const char __user *buf, size_t count,
-+			loff_t *ppos)
-+{
-+	struct bt_i2c_slave *bt_slave = to_bt_i2c_slave(file);
-+	struct bt_msg msg;
-+	ssize_t ret;
-+
-+	if (count > sizeof(msg))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&msg, buf, count) || count < bt_msg_len(&msg))
-+		return -EINVAL;
-+
-+	mutex_lock(&bt_slave->file_mutex);
-+	ret = send_bt_response(bt_slave, file->f_flags & O_NONBLOCK, &msg);
-+	mutex_unlock(&bt_slave->file_mutex);
-+
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return count;
-+}
-+
-+static unsigned int bt_poll(struct file *file, poll_table *wait)
-+{
-+	struct bt_i2c_slave *bt_slave = to_bt_i2c_slave(file);
-+	unsigned int mask = 0;
-+
-+	mutex_lock(&bt_slave->file_mutex);
-+	poll_wait(file, &bt_slave->wait_queue, wait);
-+
-+	if (atomic_read(&bt_slave->request_queue_len))
-+		mask |= POLLIN;
-+	if (!bt_slave->response_in_progress)
-+		mask |= POLLOUT;
-+	mutex_unlock(&bt_slave->file_mutex);
-+	return mask;
-+}
-+
-+static const struct file_operations bt_fops = {
-+	.owner		= THIS_MODULE,
-+	.read		= bt_read,
-+	.write		= bt_write,
-+	.poll		= bt_poll,
-+};
-+
-+/* Called with bt_slave->lock held. */
-+static int handle_request(struct bt_i2c_slave *bt_slave)
-+{
-+	struct bt_request_elem *queue_elem;
-+
-+	if (atomic_read(&bt_slave->request_queue_len) >= request_queue_max_len)
-+		return -EFAULT;
-+	queue_elem = kmalloc(sizeof(*queue_elem), GFP_KERNEL);
-+	if (!queue_elem)
-+		return -ENOMEM;
-+	memcpy(&queue_elem->request, &bt_slave->request, sizeof(struct bt_msg));
-+	list_add(&queue_elem->list, &bt_slave->request_queue);
-+	atomic_inc(&bt_slave->request_queue_len);
-+	wake_up_all(&bt_slave->wait_queue);
-+	return 0;
-+}
-+
-+/* Called with bt_slave->lock held. */
-+static int complete_response(struct bt_i2c_slave *bt_slave)
-+{
-+	/* Invalidate response in buffer to denote it having been sent. */
-+	bt_slave->response.len = 0;
-+	bt_slave->response_in_progress = false;
-+	wake_up_all(&bt_slave->wait_queue);
-+	return 0;
-+}
-+
-+static int bt_i2c_slave_cb(struct i2c_client *client,
-+			   enum i2c_slave_event event, u8 *val)
-+{
-+	struct bt_i2c_slave *bt_slave = i2c_get_clientdata(client);
-+	u8 *buf;
-+
-+	spin_lock(&bt_slave->lock);
-+	switch (event) {
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		bt_slave->msg_idx = 0;
-+		break;
-+
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		buf = (u8 *) &bt_slave->request;
-+		if (bt_slave->msg_idx >= sizeof(struct bt_msg))
-+			break;
-+
-+		buf[bt_slave->msg_idx++] = *val;
-+		if (bt_slave->msg_idx >= bt_msg_len(&bt_slave->request))
-+			handle_request(bt_slave);
-+		break;
-+
-+	case I2C_SLAVE_READ_REQUESTED:
-+		buf = (u8 *) &bt_slave->response;
-+		bt_slave->msg_idx = 0;
-+		*val = buf[bt_slave->msg_idx];
-+		/*
-+		 * Do not increment buffer_idx here, because we don't know if
-+		 * this byte will be actually used. Read Linux I2C slave docs
-+		 * for details.
-+		 */
-+		break;
-+
-+	case I2C_SLAVE_READ_PROCESSED:
-+		buf = (u8 *) &bt_slave->response;
-+		if (bt_slave->response.len &&
-+		    bt_slave->msg_idx < bt_msg_len(&bt_slave->response)) {
-+			*val = buf[++bt_slave->msg_idx];
-+		} else {
-+			*val = 0;
-+		}
-+		if (bt_slave->msg_idx + 1 >= bt_msg_len(&bt_slave->response))
-+			complete_response(bt_slave);
-+		break;
-+
-+	case I2C_SLAVE_STOP:
-+		bt_slave->msg_idx = 0;
-+		break;
-+
-+	default:
-+		break;
-+	}
-+	spin_unlock(&bt_slave->lock);
-+
-+	return 0;
-+}
-+
-+static int bt_i2c_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct bt_i2c_slave *bt_slave;
-+	int ret;
-+
-+	bt_slave = devm_kzalloc(&client->dev, sizeof(*bt_slave),
-+				GFP_KERNEL);
-+	if (!bt_slave)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&bt_slave->lock);
-+	init_waitqueue_head(&bt_slave->wait_queue);
-+	atomic_set(&bt_slave->request_queue_len, 0);
-+	bt_slave->response_in_progress = false;
-+	INIT_LIST_HEAD(&bt_slave->request_queue);
-+
-+	mutex_init(&bt_slave->file_mutex);
-+
-+	bt_slave->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	bt_slave->miscdev.name = DEVICE_NAME;
-+	bt_slave->miscdev.fops = &bt_fops;
-+	bt_slave->miscdev.parent = &client->dev;
-+	ret = misc_register(&bt_slave->miscdev);
-+	if (ret)
-+		return ret;
-+
-+	bt_slave->client = client;
-+	i2c_set_clientdata(client, bt_slave);
-+	ret = i2c_slave_register(client, bt_i2c_slave_cb);
-+	if (ret) {
-+		misc_deregister(&bt_slave->miscdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bt_i2c_remove(struct i2c_client *client)
-+{
-+	struct bt_i2c_slave *bt_slave = i2c_get_clientdata(client);
-+
-+	i2c_slave_unregister(client);
-+	misc_deregister(&bt_slave->miscdev);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id bt_i2c_id[] = {
-+	{"ipmi-bmc-bt-i2c", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, bt_i2c_id);
-+
-+static struct i2c_driver bt_i2c_driver = {
-+	.driver = {
-+		.name		= "ipmi-bmc-bt-i2c",
-+	},
-+	.probe		= bt_i2c_probe,
-+	.remove		= bt_i2c_remove,
-+	.id_table	= bt_i2c_id,
-+};
-+module_i2c_driver(bt_i2c_driver);
-+
-+MODULE_AUTHOR("Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("BMC-side IPMI Block Transfer over I2C.");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/ipmi_bmc.h b/include/linux/ipmi_bmc.h
-new file mode 100644
-index 000000000000..d0885c0bf190
---- /dev/null
-+++ b/include/linux/ipmi_bmc.h
-@@ -0,0 +1,76 @@
-+/*
-+ * Copyright 2017 Google Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __LINUX_IPMI_BMC_H
-+#define __LINUX_IPMI_BMC_H
-+
-+#include <linux/bug.h>
-+#include <linux/list.h>
-+#include <linux/mutex.h>
++#include <linux/i2c.h>
++#include <linux/ipmi_smi.h>
++#include <linux/init.h>
++#include <linux/delay.h>
++#include <linux/timer.h>
++#include <linux/jiffies.h>
 +#include <linux/types.h>
 +
-+#define BT_MSG_PAYLOAD_LEN_MAX 252
++#define IPMI_BT_I2C_TIMEOUT (msecs_to_jiffies(1000))
 +
-+/**
-+ * struct bt_msg - Block Transfer IPMI message.
-+ * @len: Length of the message, not including this field.
-+ * @netfn_lun: 6-bit netfn field definining the category of message and 2-bit
-+ *             lun field used for routing.
-+ * @seq: Sequence number used to associate requests with responses.
-+ * @cmd: Command within a netfn category.
-+ * @payload: Variable length field. May have specific requirements based on
-+ *           netfn/cmd pair.
-+ *
-+ * Use bt_msg_len() to determine the total length of a message (including
-+ * the @len field) rather than reading it directly.
-+ */
-+struct bt_msg {
++/* If we don't have netfn_lun, seq, and cmd, we might as well have nothing. */
++#define IPMI_BT_I2C_LEN_MIN 3
++/* We need at least netfn_lun, seq, cmd, and completion. */
++#define IPMI_BT_I2C_RESPONSE_LEN_MIN 4
++#define IPMI_BT_I2C_MSG_MAX_PAYLOAD_SIZE 252
++
++struct ipmi_bt_i2c_msg {
 +	u8 len;
 +	u8 netfn_lun;
 +	u8 seq;
 +	u8 cmd;
-+	u8 payload[BT_MSG_PAYLOAD_LEN_MAX];
++	u8 payload[IPMI_BT_I2C_MSG_MAX_PAYLOAD_SIZE];
 +} __packed;
 +
-+/**
-+ * bt_msg_len() - Determine the total length of a Block Transfer message.
-+ * @bt_msg: Pointer to the message.
-+ *
-+ * This function calculates the length of an IPMI Block Transfer message
-+ * including the length field itself.
-+ *
-+ * Return: Length of @bt_msg.
-+ */
-+static inline u32 bt_msg_len(struct bt_msg *bt_msg)
++#define IPMI_BT_I2C_MAX_SMI_SIZE 254 /* Need extra byte for seq. */
++#define IPMI_BT_I2C_SMI_MSG_HEADER_SIZE 2
++
++struct ipmi_bt_i2c_smi_msg {
++	u8 netfn_lun;
++	u8 cmd;
++	u8 payload[IPMI_MAX_MSG_LENGTH - 2];
++} __packed;
++
++static inline u32 bt_msg_len(struct ipmi_bt_i2c_msg *bt_request)
 +{
-+	return bt_msg->len + 1;
++	return bt_request->len + 1;
 +}
 +
-+/**
-+ * bt_msg_payload_to_len() - Calculate the len field of a Block Transfer message
-+ *                           given the length of the payload.
-+ * @payload_len: Length of the payload.
-+ *
-+ * Return: len field of the Block Transfer message which contains this payload.
-+ */
-+static inline u8 bt_msg_payload_to_len(u8 payload_len)
++#define IPMI_BT_I2C_SEQ_MAX 256
++
++struct ipmi_bt_i2c_seq_entry {
++	struct ipmi_smi_msg		*msg;
++	unsigned long			send_time;
++};
++
++struct ipmi_bt_i2c_master {
++	struct ipmi_device_id		ipmi_id;
++	struct i2c_client		*client;
++	ipmi_smi_t			intf;
++	spinlock_t			lock;
++	struct ipmi_bt_i2c_seq_entry	seq_msg_map[IPMI_BT_I2C_SEQ_MAX];
++	struct work_struct		ipmi_bt_i2c_recv_work;
++	struct work_struct		ipmi_bt_i2c_send_work;
++	struct ipmi_smi_msg		*msg_to_send;
++};
++
++static const unsigned long write_timeout = 25;
++
++static int ipmi_bt_i2c_send_request(struct ipmi_bt_i2c_master *master,
++				    struct ipmi_bt_i2c_msg *request)
 +{
-+	if (unlikely(payload_len > BT_MSG_PAYLOAD_LEN_MAX)) {
-+		payload_len = BT_MSG_PAYLOAD_LEN_MAX;
-+		WARN(1, "BT message payload is too large. Truncating to %u.\n",
-+		     BT_MSG_PAYLOAD_LEN_MAX);
++	struct i2c_client *client = master->client;
++	unsigned long timeout, read_time;
++	u8 *buf = (u8 *) request;
++	int ret;
++
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		read_time = jiffies;
++		ret = i2c_master_send(client, buf, bt_msg_len(request));
++		if (ret >= 0)
++			return 0;
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
++	return ret;
++}
++
++static int ipmi_bt_i2c_receive_response(struct ipmi_bt_i2c_master *master,
++					struct ipmi_bt_i2c_msg *response)
++{
++	struct i2c_client *client = master->client;
++	unsigned long timeout, read_time;
++	u8 *buf = (u8 *) response;
++	u8 len = 0;
++	int ret;
++
++	/*
++	 * Slave may not NACK when not ready, so we peek at the first byte to
++	 * see if it is a valid length.
++	 */
++	ret = i2c_master_recv(client, &len, 1);
++	while (ret != 1 || len == 0) {
++		if (ret < 0)
++			return ret;
++
++		usleep_range(1000, 1500);
++
++		/* Signal received: quit syscall. */
++		if (signal_pending(current))
++			return -ERESTARTSYS;
++
++		ret = i2c_master_recv(client, &len, 1);
 +	}
-+	return payload_len + 3;
++
++	timeout = jiffies + msecs_to_jiffies(write_timeout);
++	do {
++		read_time = jiffies;
++		ret = i2c_master_recv(client, buf, len + 1);
++		if (ret >= 0)
++			return 0;
++		usleep_range(1000, 1500);
++	} while (time_before(read_time, timeout));
++	return ret;
 +}
 +
-+#endif /* __LINUX_IPMI_BMC_H */
++static int ipmi_bt_i2c_start_processing(void *data, ipmi_smi_t intf)
++{
++	struct ipmi_bt_i2c_master *master = data;
++
++	master->intf = intf;
++
++	return 0;
++}
++
++static void __ipmi_bt_i2c_error_reply(struct ipmi_bt_i2c_master *master,
++				      struct ipmi_smi_msg *msg,
++				      u8 completion_code)
++{
++	struct ipmi_bt_i2c_smi_msg *response;
++	struct ipmi_bt_i2c_smi_msg *request;
++
++	response = (struct ipmi_bt_i2c_smi_msg *) msg->rsp;
++	request = (struct ipmi_bt_i2c_smi_msg *) msg->data;
++
++	response->netfn_lun = request->netfn_lun | 0x4;
++	response->cmd = request->cmd;
++	response->payload[0] = completion_code;
++	msg->rsp_size = 3;
++	ipmi_smi_msg_received(master->intf, msg);
++}
++
++static void ipmi_bt_i2c_error_reply(struct ipmi_bt_i2c_master *master,
++				    struct ipmi_smi_msg *msg,
++				    u8 completion_code)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&master->lock, flags);
++	__ipmi_bt_i2c_error_reply(master, msg, completion_code);
++	spin_unlock_irqrestore(&master->lock, flags);
++}
++
++/*
++ * ipmi_bt_i2c_smi_msg contains a payload and 2 header fields, each 1 byte:
++ * netfn_lun and cmd. They're passed to OpenIPMI within an ipmi_smi_msg struct
++ * along with their length.
++ *
++ * ipmi_bt_i2c_msg contains a payload and 4 header fields: the two above in
++ * addition to seq and len. However, len is not included in the length count so
++ * this message encapsulation is considered 1 byte longer than the other.
++ */
++static u8 ipmi_bt_i2c_smi_to_bt_len(u8 smi_msg_len)
++{
++	/* Only field that BT adds to the header is seq. */
++	return smi_msg_len + 1;
++}
++
++static u8 ipmi_bt_i2c_bt_to_smi_len(struct ipmi_bt_i2c_msg *bt_msg)
++{
++	/* Subtract one byte for seq (opposite of above) */
++	return bt_msg->len - 1;
++}
++
++static size_t ipmi_bt_i2c_payload_len(struct ipmi_bt_i2c_msg *bt_msg)
++{
++	/* Subtract one byte for each: netfn_lun, seq, cmd. */
++	return bt_msg->len - 3;
++}
++
++static bool ipmi_bt_i2c_assign_seq(struct ipmi_bt_i2c_master *master,
++				   struct ipmi_smi_msg *msg, u8 *ret_seq)
++{
++	struct ipmi_bt_i2c_seq_entry *entry;
++	bool did_cleanup = false;
++	unsigned long flags;
++	u8 seq;
++
++	spin_lock_irqsave(&master->lock, flags);
++retry:
++	for (seq = 0; seq < IPMI_BT_I2C_SEQ_MAX; seq++) {
++		if (!master->seq_msg_map[seq].msg) {
++			master->seq_msg_map[seq].msg = msg;
++			master->seq_msg_map[seq].send_time = jiffies;
++			spin_unlock_irqrestore(&master->lock, flags);
++			*ret_seq = seq;
++			return true;
++		}
++	}
++
++	if (did_cleanup) {
++		spin_unlock_irqrestore(&master->lock, flags);
++		return false;
++	}
++
++	/*
++	 * TODO: we should do cleanup at times other than only when we run out
++	 * of sequence numbers.
++	 */
++	for (seq = 0; seq < IPMI_BT_I2C_SEQ_MAX; seq++) {
++		entry = &master->seq_msg_map[seq];
++		if (entry->msg &&
++		    time_after(entry->send_time + IPMI_BT_I2C_TIMEOUT,
++			       jiffies)) {
++			__ipmi_bt_i2c_error_reply(master, entry->msg,
++						  IPMI_TIMEOUT_ERR);
++			entry->msg = NULL;
++		}
++	}
++	did_cleanup = true;
++	goto retry;
++}
++
++static struct ipmi_smi_msg *ipmi_bt_i2c_find_msg(
++		struct ipmi_bt_i2c_master *master, u8 seq)
++{
++	struct ipmi_smi_msg *msg;
++	unsigned long flags;
++
++	spin_lock_irqsave(&master->lock, flags);
++	msg = master->seq_msg_map[seq].msg;
++	spin_unlock_irqrestore(&master->lock, flags);
++	return msg;
++}
++
++static void ipmi_bt_i2c_free_seq(struct ipmi_bt_i2c_master *master, u8 seq)
++{
++	unsigned long flags;
++
++	spin_lock_irqsave(&master->lock, flags);
++	master->seq_msg_map[seq].msg = NULL;
++	spin_unlock_irqrestore(&master->lock, flags);
++}
++
++static void ipmi_bt_i2c_send_workfn(struct work_struct *work)
++{
++	struct ipmi_bt_i2c_smi_msg *smi_msg;
++	struct ipmi_bt_i2c_master *master;
++	struct ipmi_bt_i2c_msg bt_msg;
++	struct ipmi_smi_msg *msg;
++	size_t smi_msg_size;
++	unsigned long flags;
++
++	master = container_of(work, struct ipmi_bt_i2c_master,
++			      ipmi_bt_i2c_send_work);
++
++	msg = master->msg_to_send;
++	smi_msg_size = msg->data_size;
++	smi_msg = (struct ipmi_bt_i2c_smi_msg *) msg->data;
++
++	if (smi_msg_size > IPMI_BT_I2C_MAX_SMI_SIZE) {
++		ipmi_bt_i2c_error_reply(master, msg, IPMI_REQ_LEN_EXCEEDED_ERR);
++		return;
++	}
++
++	if (smi_msg_size < IPMI_BT_I2C_SMI_MSG_HEADER_SIZE) {
++		ipmi_bt_i2c_error_reply(master, msg, IPMI_REQ_LEN_INVALID_ERR);
++		return;
++	}
++
++	if (!ipmi_bt_i2c_assign_seq(master, msg, &bt_msg.seq)) {
++		ipmi_bt_i2c_error_reply(master, msg, IPMI_NODE_BUSY_ERR);
++		return;
++	}
++
++	bt_msg.len = ipmi_bt_i2c_smi_to_bt_len(smi_msg_size);
++	bt_msg.netfn_lun = smi_msg->netfn_lun;
++	bt_msg.cmd = smi_msg->cmd;
++	memcpy(bt_msg.payload, smi_msg->payload,
++	       ipmi_bt_i2c_payload_len(&bt_msg));
++
++	if (ipmi_bt_i2c_send_request(master, &bt_msg) < 0) {
++		ipmi_bt_i2c_free_seq(master, bt_msg.seq);
++		ipmi_bt_i2c_error_reply(master, msg, IPMI_BUS_ERR);
++	}
++
++	spin_lock_irqsave(&master->lock, flags);
++	master->msg_to_send = NULL;
++	spin_unlock_irqrestore(&master->lock, flags);
++}
++
++void ipmi_bt_i2c_recv_workfn(struct work_struct *work)
++{
++	struct ipmi_bt_i2c_smi_msg *smi_msg;
++	struct ipmi_bt_i2c_master *master;
++	struct ipmi_bt_i2c_msg bt_msg;
++	struct ipmi_smi_msg *msg;
++
++	master = container_of(work, struct ipmi_bt_i2c_master,
++			      ipmi_bt_i2c_recv_work);
++
++	if (ipmi_bt_i2c_receive_response(master, &bt_msg) < 0)
++		return;
++
++	if (bt_msg.len < IPMI_BT_I2C_LEN_MIN)
++		return;
++
++	msg = ipmi_bt_i2c_find_msg(master, bt_msg.seq);
++	if (!msg)
++		return;
++
++	ipmi_bt_i2c_free_seq(master, bt_msg.seq);
++
++	if (bt_msg.len < IPMI_BT_I2C_RESPONSE_LEN_MIN)
++		ipmi_bt_i2c_error_reply(master, msg, IPMI_ERR_MSG_TRUNCATED);
++
++	msg->rsp_size = ipmi_bt_i2c_bt_to_smi_len(&bt_msg);
++	smi_msg = (struct ipmi_bt_i2c_smi_msg *) msg->rsp;
++	smi_msg->netfn_lun = bt_msg.netfn_lun;
++	smi_msg->cmd = bt_msg.cmd;
++	memcpy(smi_msg->payload, bt_msg.payload,
++	       ipmi_bt_i2c_payload_len(&bt_msg));
++	ipmi_smi_msg_received(master->intf, msg);
++}
++
++static void ipmi_bt_i2c_sender(void *data, struct ipmi_smi_msg *msg)
++{
++	struct ipmi_bt_i2c_master *master = data;
++	unsigned long flags;
++
++	spin_lock_irqsave(&master->lock, flags);
++	if (master->msg_to_send) {
++		/*
++		 * TODO(benjaminfair): Queue messages to send instead of only
++		 * keeping one.
++		 */
++		__ipmi_bt_i2c_error_reply(master, msg, IPMI_NODE_BUSY_ERR);
++	} else {
++		master->msg_to_send = msg;
++		schedule_work(&master->ipmi_bt_i2c_send_work);
++	}
++	spin_unlock_irqrestore(&master->lock, flags);
++}
++
++static void ipmi_bt_i2c_request_events(void *data)
++{
++	struct ipmi_bt_i2c_master *master = data;
++
++	schedule_work(&master->ipmi_bt_i2c_recv_work);
++}
++
++static void ipmi_bt_i2c_set_run_to_completion(void *data,
++					      bool run_to_completion)
++{
++}
++
++static void ipmi_bt_i2c_poll(void *data)
++{
++	struct ipmi_bt_i2c_master *master = data;
++
++	schedule_work(&master->ipmi_bt_i2c_recv_work);
++}
++
++static struct ipmi_smi_handlers ipmi_bt_i2c_smi_handlers = {
++	.owner			= THIS_MODULE,
++	.start_processing	= ipmi_bt_i2c_start_processing,
++	.sender			= ipmi_bt_i2c_sender,
++	.request_events		= ipmi_bt_i2c_request_events,
++	.set_run_to_completion	= ipmi_bt_i2c_set_run_to_completion,
++	.poll			= ipmi_bt_i2c_poll,
++};
++
++static int ipmi_bt_i2c_probe(struct i2c_client *client,
++			     const struct i2c_device_id *id)
++{
++	struct ipmi_bt_i2c_master *master;
++	int ret;
++
++	master = devm_kzalloc(&client->dev, sizeof(struct ipmi_bt_i2c_master),
++			      GFP_KERNEL);
++	if (!master)
++		return -ENOMEM;
++
++	spin_lock_init(&master->lock);
++	INIT_WORK(&master->ipmi_bt_i2c_recv_work, ipmi_bt_i2c_recv_workfn);
++	INIT_WORK(&master->ipmi_bt_i2c_send_work, ipmi_bt_i2c_send_workfn);
++	master->client = client;
++	i2c_set_clientdata(client, master);
++
++	/*
++	 * TODO(benjaminfair): read ipmi_device_id from BMC to determine version
++	 * information and be able to tell multiple BMCs apart
++	 */
++	ret = ipmi_register_smi(&ipmi_bt_i2c_smi_handlers, master,
++				&master->ipmi_id, &client->dev, 0);
++
++	return ret;
++}
++
++static int ipmi_bt_i2c_remove(struct i2c_client *client)
++{
++	struct ipmi_bt_i2c_master *master;
++
++	master = i2c_get_clientdata(client);
++	return ipmi_unregister_smi(master->intf);
++}
++
++static const struct acpi_device_id ipmi_bt_i2c_acpi_id[] = {
++	{"BTMA0001", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(acpi, ipmi_bt_i2c_acpi_id);
++
++static const struct i2c_device_id ipmi_bt_i2c_i2c_id[] = {
++	{"ipmi-bt-i2c", 0},
++	{},
++};
++MODULE_DEVICE_TABLE(i2c, ipmi_bt_i2c_i2c_id);
++
++static struct i2c_driver ipmi_bt_i2c_driver = {
++	.driver = {
++		.name = "ipmi-bt-i2c",
++		.acpi_match_table = ipmi_bt_i2c_acpi_id,
++	},
++	.id_table = ipmi_bt_i2c_i2c_id,
++	.probe = ipmi_bt_i2c_probe,
++	.remove = ipmi_bt_i2c_remove,
++};
++module_i2c_driver(ipmi_bt_i2c_driver);
++
++MODULE_AUTHOR("Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("IPMI Block Transfer over I2C.");
++MODULE_LICENSE("GPL v2");
 -- 
 2.14.0.rc1.383.gd1ce394fe2-goog
 
