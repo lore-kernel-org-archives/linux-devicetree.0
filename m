@@ -1,111 +1,68 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586 display panels
-Date: Fri, 04 Aug 2017 22:39:37 +0300
-Message-ID: <2830608.h203mxr23Z@avalon>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com> <2434051.fAH1OaXNrL@avalon> <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
+Date: Fri, 4 Aug 2017 21:44:01 +0200 (CEST)
+Message-ID: <1498038890.121361.1501875841550@email.1und1.de>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <1501576704-26423-3-git-send-email-loic.poulain@gmail.com>
+ <696124D4-A5DA-46FA-A0F0-5DC74363BD23@holtmann.org>
+ <444254163.121186.1501874785594@email.1und1.de>
+ <51D602E3-B21A-402B-A1F5-6241D55448E9@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51D602E3-B21A-402B-A1F5-6241D55448E9-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-On Friday 04 Aug 2017 10:51:37 David Lechner wrote:
-> On 08/04/2017 09:54 AM, Laurent Pinchart wrote:
-> > On Thursday 03 Aug 2017 17:33:47 David Lechner wrote:
-> >> This adds a new binding for Sitronix ST7586 display panels.
+> Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> hat am 4. August 2017 um 21:37 geschrieben:
+> 
+> 
+> Hi Stefan,
+> 
+> >>> Add basic support for Broadcom serial slave devices.
+> >>> Probe the serial device, retrieve its maximum speed and
+> >>> register a new hci uart device.
+> >>> 
+> >>> Tested/compatible with bcm43438 (RPi3).
+> >>> 
+> >>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> ...
+> >>> 
+> >>> +static int bcm_serdev_probe(struct serdev_device *serdev)
+> >>> +{
+> >>> +	struct bcm_bt_device *bcmdev;
+> >>> +	u32 speed;
+> >>> +	int err;
+> >>> +
+> >>> +	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
+> >>> +	if (!bcmdev)
+> >>> +		return -ENOMEM;
+> >>> +
+> >>> +	bcmdev->hu.serdev = serdev;
+> >>> +	serdev_device_set_drvdata(serdev, bcmdev);
+> >>> +
+> >>> +	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
+> >>> +	if (!err)
+> >>> +		bcmdev->hu.oper_speed = speed;
+> >>> +
+> >>> +	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
+> >>> +}
 > >> 
-> >> Using lego as the vendor prefix in the compatible string because the
-> >> display panel I am working with is an integral part of the LEGO
-> >> MINDSTORMS EV3.
+> >> We do not need any GPIO for reset lines or anything else for the rPI3?
 > >> 
-> >> Signed-off-by: David Lechner <david@lechnology.com>
-> >> ---
-> >> 
-> >>   .../bindings/display/sitronix,st7586.txt           | 26
-> >>   +++++++++++++++++++
-> >>   1 file changed, 26 insertions(+)
-> >>   create mode 100644
-> >> 
-> >> Documentation/devicetree/bindings/display/sitronix,st7586.txt
-> >> 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/display/sitronix,st7586.txt
-> >> b/Documentation/devicetree/bindings/display/sitronix,st7586.txt new file
-> >> mode 100644
-> >> index 0000000..dfb0b7b
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/display/sitronix,st7586.txt
-> >> @@ -0,0 +1,26 @@
-> >> +Sitronix ST7586 display panel
-> >> +
-> >> +Required properties:
-> >> +- compatible:	"lego,ev3-lcd".
-> >> +
-> >> +The node for this driver must be a child node of a SPI controller, hence
-> >> +all mandatory properties described in ../spi/spi-bus.txt must be
-> >> specified. +
-> >> +Optional properties:
-> >> +- dc-gpios:	D/C pin. The presence/absence of this GPIO determines
-> >> +		the panel interface operation mode (IF[3:1] pins):
-> >> +		- present: IF=011 4-wire 8-bit data serial interface
-> >> +		- absent:  IF=010 3-wire 9-bit data serial interface
 > > 
-> > How does this work ? Do you have a single GPIO on your system connected to
-> > IF[1], with IF[3:2] hardwired to 01 ?
+> > unfortunately we don't have full schematics for RPI3, but according to firmware dt-blob.dts [1] there is a GPIO called BT_ON. This GPIO is controlled by the GPIO expander on the RPI3 board. The necessary driver for this expander is still out of tree (last mainlining attempt [2]).
 > 
-> LEGO has not made the internals of the display publicly available, so I
-> cannot say for sure. But I assume that IF[3:1] is hardwired to 011. This
-> causes pin D1 to assigned to the signal A0, which is what we are calling
-> the dc gpio here.
+> so who handles this GPIO then right now (or any other GPIO for that matter)? I have seen Bluetooth being enabled and operational, but I really want to get this working in a plain upstream Fedora and without using hciattach or btattach.
+
+The GPU firmware enables the GPIO and keeps this state. The mentioned expander driver should provide the ARM core (Linux) the necessary control.
+
 > 
-> If IF[3:1] were hardwired to 010, then pin D1 would be not not used and
-> there would be no A0 signal.
+> Regards
 > 
-> So, basically, we can infer the state of IF[3:1] by the fact that we
-> have a dc pin or not.
-
-OK, now I understand what you mean. Maybe you should phrase it a bit 
-differently to make it clearer ? How about
-
-dc-gpios: Specified or the GPIO connected to the panel's D/C pin (also called 
-A0). The property is required when the panel operates in 4-wire mode (IF[3:1] 
-= 011) and prohibited when the panel operates in 3-wire mode (IF[3:1] = 010).
-
-By the way, if the signal is named A0, why don't you call the property a0-
-gpios ?
-
-> >> +- reset-gpios:	Reset pin
-> >> +- power-supply:	A regulator node for the supply voltage.
-> >> +- backlight:	phandle of the backlight device attached to the panel
-> >> +- rotation:	panel rotation in degrees counter clockwise 
-(0,90,180,270)
-> > 
-> > Please use the OF graph DT bindings (a.k.a. ports) to describe the
-> > connection between the panel and its source.
-> 
-> I am afraid that I do not understand this request. What would the source
-> of the panel be? There is nothing like a SoC LCD controller that is
-> driving this panel.
-
-My bad, I should have read the panel datasheet before replying :-S Please 
-ignore this comment.
-
-> >> +Example:
-> >> +	display@0{
-> >> +		compatible = "lego,ev3-lcd";
-> >> +		reg = <0>;
-> >> +		spi-max-frequency = <10000000>;
-> >> +		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-> >> +		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
-> >> +	};
-
--- 
-Regards,
-
-Laurent Pinchart
+> Marcel
+>
