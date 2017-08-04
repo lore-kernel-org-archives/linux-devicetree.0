@@ -1,260 +1,60 @@
-From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
- Qualcomm Camera subsystem driver
-Date: Fri, 4 Aug 2017 14:54:21 +0300
-Message-ID: <1dc5ab4d-5171-c6df-4300-2abcd0e5483b@linaro.org>
-References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
- <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
- <20170720101345.eovx5ovuxr7sqpea@valkosipuli.retiisi.org.uk>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v6 0/2] Add basic support for Mediatek MT2712 SoC
+Date: Fri, 4 Aug 2017 19:59:35 +0800
+Message-ID: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170720101345.eovx5ovuxr7sqpea-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+MT2712 is a SoC based on 64bit ARMv8 architecture.
+MT2712 share many HW IP with MT8173.  This patchset was tested on MT2712 evaluation board, and boot to shell ok.
 
-Thank you for the review.
+This series contains document bindings, device tree including interrupt and uart.
 
-On 20.07.2017 13:13, Sakari Ailus wrote:
-> Hi Todor,
-> 
-> On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
->> Add DT binding document for Qualcomm Camera subsystem driver.
->>
->> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
->>  1 file changed, 191 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> new file mode 100644
->> index 0000000..f698498
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> @@ -0,0 +1,191 @@
->> +Qualcomm Camera Subsystem
->> +
->> +* Properties
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain:
->> +		- "qcom,msm8916-camss"
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Register ranges as listed in the reg-names property.
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy0_clk_mux"
->> +		- "csiphy1"
->> +		- "csiphy1_clk_mux"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "csi_clk_mux"
->> +		- "vfe0"
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Interrupts as listed in the interrupt-names property.
->> +- interrupt-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy1"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "vfe0"
->> +- power-domains:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A phandle and power domain specifier pairs to the
->> +		    power domain which is responsible for collapsing
->> +		    and restoring power to the peripheral.
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and clock specifier pairs as listed
->> +		    in clock-names property.
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +                - "camss_top_ahb"
->> +                - "ispif_ahb"
->> +                - "csiphy0_timer"
->> +                - "csiphy1_timer"
->> +                - "csi0_ahb"
->> +                - "csi0"
->> +                - "csi0_phy"
->> +                - "csi0_pix"
->> +                - "csi0_rdi"
->> +                - "csi1_ahb"
->> +                - "csi1"
->> +                - "csi1_phy"
->> +                - "csi1_pix"
->> +                - "csi1_rdi"
->> +                - "camss_ahb"
->> +                - "camss_vfe_vfe"
->> +                - "camss_csi_vfe"
->> +                - "iface"
->> +                - "bus"
->> +- vdda-supply:
->> +	Usage: required
->> +	Value type: <phandle>
->> +	Definition: A phandle to voltage supply for CSI2.
->> +- iommus:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and IOMMU specifier pairs.
->> +
->> +* Nodes
->> +
->> +- ports:
->> +	Usage: required
->> +	Definition: As described in video-interfaces.txt in same directory.
->> +	Properties:
->> +		- reg:
->> +			Usage: required
->> +			Value type: <u32>
->> +			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
->> +	Endpoint node properties:
->> +		- clock-lanes:
->> +			Usage: required
->> +			Value type: <u32>
->> +			Definition: The clock lane.
->> +		- data-lanes:
->> +			Usage: required
->> +			Value type: <prop-encoded-array>
->> +			Definition: An array of data lanes.
->> +
->> +* An Example
->> +
->> +	camss: camss@1b00000 {
->> +		compatible = "qcom,msm8916-camss";
->> +		reg = <0x1b0ac00 0x200>,
->> +			<0x1b00030 0x4>,
->> +			<0x1b0b000 0x200>,
->> +			<0x1b00038 0x4>,
->> +			<0x1b08000 0x100>,
->> +			<0x1b08400 0x100>,
->> +			<0x1b0a000 0x500>,
->> +			<0x1b00020 0x10>,
->> +			<0x1b10000 0x1000>;
->> +		reg-names = "csiphy0",
->> +			"csiphy0_clk_mux",
->> +			"csiphy1",
->> +			"csiphy1_clk_mux",
->> +			"csid0",
->> +			"csid1",
->> +			"ispif",
->> +			"csi_clk_mux",
->> +			"vfe0";
->> +		interrupts = <GIC_SPI 78 0>,
->> +			<GIC_SPI 79 0>,
->> +			<GIC_SPI 51 0>,
->> +			<GIC_SPI 52 0>,
->> +			<GIC_SPI 55 0>,
->> +			<GIC_SPI 57 0>;
->> +		interrupt-names = "csiphy0",
->> +			"csiphy1",
->> +			"csid0",
->> +			"csid1",
->> +			"ispif",
->> +			"vfe0";
->> +		power-domains = <&gcc VFE_GDSC>;
->> +		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
->> +			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
->> +			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
->> +			<&gcc GCC_CAMSS_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_VFE0_CLK>,
->> +			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
->> +			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
->> +			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
->> +                clock-names = "camss_top_ahb",
->> +                        "ispif_ahb",
->> +                        "csiphy0_timer",
->> +                        "csiphy1_timer",
->> +                        "csi0_ahb",
->> +                        "csi0",
->> +                        "csi0_phy",
->> +                        "csi0_pix",
->> +                        "csi0_rdi",
->> +                        "csi1_ahb",
->> +                        "csi1",
->> +                        "csi1_phy",
->> +                        "csi1_pix",
->> +                        "csi1_rdi",
->> +                        "camss_ahb",
->> +                        "camss_vfe_vfe",
->> +                        "camss_csi_vfe",
->> +                        "iface",
->> +                        "bus";
->> +		vdda-supply = <&pm8916_l2>;
->> +		iommus = <&apps_iommu 3>;
->> +		ports {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +			port@0 {
->> +				reg = <0>;
->> +				csiphy0_ep: endpoint {
->> +					clock-lanes = <1>;
->> +					data-lanes = <0 2>;
-> 
-> Do you support lane mapping? The values suggest "yes". That's something I
-> could improve in the documentation: if lane mapping isn't supported, then
-> the clock lane should be 0 and the data lanes from 1 to n.
+Changes compared to v5:
+- remove the soc node
 
-Lane mapping is supported only for the data lanes. The clock lane is always
-the physical lane 1. This is why I think it makes sense to keep the value
-of the clock lane to 1 as this is the physical lane 1 really. I'll add
-explanation in the documentation for this and for the data lanes too so
-it is clear.
+Changes compared to v4:
+- rebase to 4.13-rc1
+- use two clocks (baud_clk & sys_clk) instead of one uart_clk to the correct bindings
 
-> 
-> Is the split of the lanes between the ports static and specific to the
-> hardware?
+Changes compared to v3:
+- use two uart clocks refer to the bindings
 
-Each port describes a separate CSIPHY so each has its own set of lanes.
+Changes compared to v2:
+- remove alias from serial1 to serial5
+- remove initrd-start and initrd-end
+- change GIC_CPU_MASK_SIMPLE(6) to GIC_CPU_MASK_RAW(0x13)
+- change gic-400 reg range
 
-> 
->> +					remote-endpoint = <&ov5645_ep>;
->> +				};
->> +			};
->> +		};
->> +	};
-> 
+Changes compared to v1:
+- change subject prefix for bindings
+- change device tree license to SPDX tag.
+- change bootargs parameter to DT usage.
+- change intpol-controller to interrupt-controller
+
+YT Shen (2):
+  dt-bindings: arm: Add bindings for Mediatek MT2712 SoC Platform
+  arm64: dts: Add Mediatek SoC MT2712 and evaluation board dts and
+    Makefile
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |   1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  32 ++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 171 +++++++++++++++++++++
+ 6 files changed, 210 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 
 -- 
-Best regards,
-Todor Tomov
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
