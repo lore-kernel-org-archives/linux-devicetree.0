@@ -1,213 +1,64 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
-Date: Fri, 4 Aug 2017 16:36:02 +0200
-Message-ID: <696124D4-A5DA-46FA-A0F0-5DC74363BD23@holtmann.org>
-References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
- <1501576704-26423-3-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501576704-26423-3-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] of: reserved_mem: Accessor for acquiring reserved_mem
+Date: Fri, 4 Aug 2017 09:50:55 -0500
+Message-ID: <CAL_JsqJDhi=PoBgqXce5MekuAkG_G1XJNL-fDbdxmm2KZ1Nt9Q@mail.gmail.com>
+References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
+ <20170803025754.19101-3-bjorn.andersson@linaro.org> <CAL_JsqL1Jh2AnWSWfau3LGhvuS1giTg6_r7gPGrHyZ6KRocSYg@mail.gmail.com>
+ <20170803233146.GB29306@minitux>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803233146.GB29306@minitux>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Loic,
+On Thu, Aug 3, 2017 at 6:31 PM, Bjorn Andersson
+<bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu 03 Aug 10:45 PDT 2017, Rob Herring wrote:
+>
+>> On Wed, Aug 2, 2017 at 9:57 PM, Bjorn Andersson
+>> <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > In some cases drivers referencing a reserved-memory region might want to
+>> > remap the entire region, but when defining the reserved-memory by "size"
+>> > the client driver has no means to know the associated base address of
+>> > the reserved memory region.
+>> >
+>> > This patch adds an accessor for such drivers to acquire a handle to
+>> > their associated reserved-memory for this purpose.
+>> >
+>> > A complicating factor for the implementation is that the reserved_mem
+>> > objects are created from the flattened DeviceTree, as such we can't
+>> > use the device_node address for comparison. Fortunately the name of the
+>> > node will be used as "name" of the reserved_mem and will be used when
+>> > building the full_name, so we can compare the "name" with the basename
+>> > of the full_name to find the match.
+>>
+>> Maybe we should add the device_node pointer when we unflatten?
+>>
+>
+> It did try to figure something sane out in that direction.
+>
+> The solution I came up with was to amend populate_node() to in a !dryrun
+> block check if the "dad" full_name is /reserved-memory and if so
+> call call a new accessor in of_reserved_mem.c to add the "np" to the
+> reserved_mem object with fdt_node equal offset.
 
-> Add basic support for Broadcom serial slave devices.
-> Probe the serial device, retrieve its maximum speed and
-> register a new hci uart device.
-> 
-> Tested/compatible with bcm43438 (RPi3).
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: dt-bindings as separate patch
->    rebase on upcoming pi3 dts changes
-> 
-> drivers/bluetooth/hci_bcm.c | 82 ++++++++++++++++++++++++++++++++++++++++++---
-> 1 file changed, 78 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-> index 6b42372..f824738 100644
-> --- a/drivers/bluetooth/hci_bcm.c
-> +++ b/drivers/bluetooth/hci_bcm.c
-> @@ -27,6 +27,7 @@
-> #include <linux/firmware.h>
-> #include <linux/module.h>
-> #include <linux/acpi.h>
-> +#include <linux/of.h>
-> #include <linux/platform_device.h>
-> #include <linux/clk.h>
-> #include <linux/gpio/consumer.h>
-> @@ -34,6 +35,7 @@
-> #include <linux/interrupt.h>
-> #include <linux/dmi.h>
-> #include <linux/pm_runtime.h>
-> +#include <linux/serdev.h>
-> 
-> #include <net/bluetooth/bluetooth.h>
-> #include <net/bluetooth/hci_core.h>
-> @@ -46,6 +48,7 @@
-> 
-> #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
-> 
-> +/* platform device driver resources */
-> struct bcm_device {
-> 	struct list_head	list;
-> 
-> @@ -68,6 +71,12 @@ struct bcm_device {
-> #endif
-> };
-> 
-> +/* serdev driver resources */
-> +struct bcm_bt_device {
-> +	struct hci_uart hu;
-> +};
+I was thinking doing it with the unflattened tree just after it has
+been unflattened rather than during unflattening.
 
-why not call this bcm_serdev for now. I think that keeps it a bit simpler.
+> This code path is already cluttered due to the version differences when
+> it comes to building full_name and we would end up checking for each
+> node in the entire tree if the parent happens to be "/reserved-mem".
+>
+> So I went for the less intrusive and more straight forward comparison
+> with basename(full_name) instead.
 
-> +
-> +/* generic bcm uart resources */
-> struct bcm_data {
-> 	struct sk_buff		*rx_skb;
-> 	struct sk_buff_head	txq;
-> @@ -289,6 +298,11 @@ static int bcm_open(struct hci_uart *hu)
-> 
-> 	hu->priv = bcm;
-> 
-> +	if (hu->serdev) {
-> +		serdev_device_open(hu->serdev);
-> +		goto out;
-> +	}
-> +
+That's good, because full_name is about to become just the basename.
 
-Lets prefix these with comments saying that if this is a serdev / DT defined device, then we only use serdev open primitive and skip the rest.
-
-> 	if (!hu->tty->dev)
-> 		goto out;
-> 
-> @@ -323,6 +337,9 @@ static int bcm_close(struct hci_uart *hu)
-> 
-> 	bt_dev_dbg(hu->hdev, "hu %p", hu);
-> 
-> +	if (hu->serdev)
-> +		serdev_device_close(hu->serdev);
-> +
-
-Similar here, lets have a comment that says we are closing serdev and then continue as usual.
-
-> 	/* Protect bcm->dev against removal of the device or driver */
-> 	mutex_lock(&bcm_device_lock);
-> 	if (bcm_device_exists(bdev)) {
-> @@ -397,8 +414,12 @@ static int bcm_setup(struct hci_uart *hu)
-> 	else
-> 		speed = 0;
-> 
-> -	if (speed)
-> -		hci_uart_set_baudrate(hu, speed);
-> +	if (speed) {
-> +		if (hu->serdev)
-> +			serdev_device_set_baudrate(hu->serdev, speed);
-> +		else
-> +			hci_uart_set_baudrate(hu, speed);
-> +	}
-> 
-
-Here I would also add a small comment that when serdev is used a different baud rate primitive needs to be used.
-
-> 	/* Operational speed if any */
-> 	if (hu->oper_speed)
-> @@ -410,8 +431,12 @@ static int bcm_setup(struct hci_uart *hu)
-> 
-> 	if (speed) {
-> 		err = bcm_set_baudrate(hu, speed);
-> -		if (!err)
-> -			hci_uart_set_baudrate(hu, speed);
-> +		if (!err) {
-> +			if (hu->serdev)
-> +				serdev_device_set_baudrate(hu->serdev, speed);
-> +			else
-> +				hci_uart_set_baudrate(hu, speed);
-> +		}
-
-Maybe we should split this out into a helper. Maybe call it it device_set_baudrate.
-
-> 	}
-> 
-> finalize:
-> @@ -903,9 +928,57 @@ static int bcm_remove(struct platform_device *pdev)
-> 	},
-> };
-> 
-> +static int bcm_serdev_probe(struct serdev_device *serdev)
-> +{
-> +	struct bcm_bt_device *bcmdev;
-> +	u32 speed;
-> +	int err;
-> +
-> +	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
-> +	if (!bcmdev)
-> +		return -ENOMEM;
-> +
-> +	bcmdev->hu.serdev = serdev;
-> +	serdev_device_set_drvdata(serdev, bcmdev);
-> +
-> +	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
-> +	if (!err)
-> +		bcmdev->hu.oper_speed = speed;
-> +
-> +	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
-> +}
-
-We do not need any GPIO for reset lines or anything else for the rPI3?
-
-> +
-> +static void bcm_serdev_remove(struct serdev_device *serdev)
-> +{
-> +	struct bcm_bt_device *bcmdev = serdev_device_get_drvdata(serdev);
-> +
-> +	hci_uart_unregister_device(&bcmdev->hu);
-> +}
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id bcm_bluetooth_of_match[] = {
-> +	{ .compatible = "brcm,bcm43438-bt" },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
-> +#endif
-> +
-> +static struct serdev_device_driver bcm_serdev_driver = {
-> +	.probe = bcm_serdev_probe,
-> +	.remove = bcm_serdev_remove,
-> +	.driver = {
-> +		.name = "hci_uart_bcm",
-> +		.of_match_table = of_match_ptr(bcm_bluetooth_of_match),
-> +	},
-> +};
-> +
-> int __init bcm_init(void)
-> {
-> +	/* For now, we need to keep both platform device
-> +	 * driver (ACPI generated) and serdev driver (DT).
-> +	 */
-> 	platform_driver_register(&bcm_driver);
-> +	serdev_device_driver_register(&bcm_serdev_driver);
-> 
-> 	return hci_uart_register_proto(&bcm_proto);
-> }
-> @@ -913,6 +986,7 @@ int __init bcm_init(void)
-> int __exit bcm_deinit(void)
-> {
-> 	platform_driver_unregister(&bcm_driver);
-> +	serdev_device_driver_unregister(&bcm_serdev_driver);
-> 
-> 	return hci_uart_unregister_proto(&bcm_proto);
-> }
-
-Regards
-
-Marcel
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
