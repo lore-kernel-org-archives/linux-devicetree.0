@@ -1,58 +1,73 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH 10/13] [NOT FOR REVIEW NOW] clk: sunxi: Add
- CLK_SET_RATE_PARENT flag for H3 HDMI clock
-Date: Fri, 4 Aug 2017 12:15:27 +0800
-Message-ID: <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
-References: <20170801131304.7741-1-icenowy@aosc.io>
- <20170801131304.7741-11-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] [PATCH 10/13] [NOT FOR REVIEW NOW] clk: sunxi: Add CLK_SET_RATE_PARENT flag for H3 HDMI clock
+Date: Fri, 04 Aug 2017 12:16:41 +0800
+Message-ID: <55076172-DD11-4AF5-AEAF-A16C757BF5F0@aosc.io>
+References: <20170801131304.7741-1-icenowy@aosc.io> <20170801131304.7741-11-icenowy@aosc.io> <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170801131304.7741-11-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v65Ncp5jfq5hrOpqBNYER-VGW1B5j4zT40rj8_CJh5xxVw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: wens@csie.orgChen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBUdWUsIEF1ZyAxLCAyMDE3IGF0IDk6MTMgUE0sIEljZW5vd3kgWmhlbmcgPGljZW5v
-d3lAYW9zYy5pbz4gd3JvdGU6Cj4gRnJvbTogSmVybmVqIFNrcmFiZWMgPGplcm5lai5za3JhYmVj
-QHNpb2wubmV0Pgo+Cj4gV2hlbiBzZXR0aW5nIHRoZSBIRE1JIGNsb2NrIG9mIEgzLCB0aGUgUExM
-X1ZJREVPIGNsb2NrIG5lZWRzIHRvIGJlIHNldC4KPgo+IEFkZCBDTEtfU0VUX1JBVEVfUEFSRU5U
-IGZsYWcgZm9yIEgzIEhETUkgY2xvY2suCj4KPiBTaWduZWQtb2ZmLWJ5OiBKZXJuZWogU2tyYWJl
-YyA8amVybmVqLnNrcmFiZWNAc2lvbC5uZXQ+Cj4gU2lnbmVkLW9mZi1ieTogSWNlbm93eSBaaGVu
-ZyA8aWNlbm93eUBhb3NjLmlvPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3Vu
-OGktaDMuYyB8IDIgKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
-aW9uKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1LXN1bjhpLWgz
-LmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuOGktaDMuYwo+IGluZGV4IGIxMTI3ZTg2
-MjlkOS4uMmViYjNkODY1YjAxIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
-dS1zdW44aS1oMy5jCj4gKysrIGIvZHJpdmVycy9jbGsvc3VueGktbmcvY2N1LXN1bjhpLWgzLmMK
-PiBAQCAtNDc0LDcgKzQ3NCw3IEBAIHN0YXRpYyBTVU5YSV9DQ1VfR0FURShhdnNfY2xrLCAgICAg
-ICAgICAgICAgImF2cyIsICAgICAgICAgICJvc2MyNE0iLAo+Cj4gIHN0YXRpYyBjb25zdCBjaGFy
-ICogY29uc3QgaGRtaV9wYXJlbnRzW10gPSB7ICJwbGwtdmlkZW8iIH07Cj4gIHN0YXRpYyBTVU5Y
-SV9DQ1VfTV9XSVRIX01VWF9HQVRFKGhkbWlfY2xrLCAiaGRtaSIsIGhkbWlfcGFyZW50cywKPiAt
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDE1MCwgMCwgNCwgMjQsIDIsIEJJVCgz
-MSksIDApOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MTUwLCAwLCA0LCAy
-NCwgMiwgQklUKDMxKSwgQ0xLX1NFVF9SQVRFX1BBUkVOVCk7CgpMaW5lIGlzIGxvbmdlciB0aGFu
-IDgwIGNoYXJhY3RlcnMuCgpUaGlzIGxvb2tzIGluZGVwZW5kZW50IGVub3VnaCBzbyBJJ3ZlIG1l
-cmdlZCB0aGlzIGZvciA0LjE0IHdpdGggdGhlCm9mZmVuZGluZyBsaW5lIHdyYXBwZWQgYW5kIHRo
-ZSBmb2xsb3dpbmcgdGFnIGFkZGVkOgoKRml4ZXM6IDA1NzdlNDg1M2JmYiAoImNsazogc3VueGkt
-bmc6IEFkZCBIMyBjbG9ja3MiKQoKQ2hlbll1Cgo+Cj4gIHN0YXRpYyBTVU5YSV9DQ1VfR0FURSho
-ZG1pX2RkY19jbGssICAgICJoZG1pLWRkYyIsICAgICAib3NjMjRNIiwKPiAgICAgICAgICAgICAg
-ICAgICAgICAgMHgxNTQsIEJJVCgzMSksIDApOwo+IC0tCj4gMi4xMy4wCj4KPiAtLQo+IFlvdSBy
-ZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhlIEdv
-b2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRo
-aXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVtYWls
-IHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uCj4gRm9yIG1vcmUg
-b3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4KX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+于 2017年8月4日 GMT+08:00 下午12:15:27, Chen-Yu Tsai <wens@csie.org> 写到:
+>Hi,
+>
+>On Tue, Aug 1, 2017 at 9:13 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>> From: Jernej Skrabec <jernej.skrabec@siol.net>
+>>
+>> When setting the HDMI clock of H3, the PLL_VIDEO clock needs to be
+>set.
+>>
+>> Add CLK_SET_RATE_PARENT flag for H3 HDMI clock.
+>>
+>> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> ---
+>>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+>b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+>> index b1127e8629d9..2ebb3d865b01 100644
+>> --- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+>> +++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.c
+>> @@ -474,7 +474,7 @@ static SUNXI_CCU_GATE(avs_clk,             
+>"avs",          "osc24M",
+>>
+>>  static const char * const hdmi_parents[] = { "pll-video" };
+>>  static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", hdmi_parents,
+>> -                                0x150, 0, 4, 24, 2, BIT(31), 0);
+>> +                                0x150, 0, 4, 24, 2, BIT(31),
+>CLK_SET_RATE_PARENT);
+>
+>Line is longer than 80 characters.
+>
+>This looks independent enough so I've merged this for 4.14 with the
+>offending line wrapped and the following tag added:
+>
+>Fixes: 0577e4853bfb ("clk: sunxi-ng: Add H3 clocks")
+
+Please don't merge this now until Jernej send it.
+
+>
+>ChenYu
+>
+>>
+>>  static SUNXI_CCU_GATE(hdmi_ddc_clk,    "hdmi-ddc",     "osc24M",
+>>                       0x154, BIT(31), 0);
+>> --
+>> 2.13.0
+>>
+>> --
+>> You received this message because you are subscribed to the Google
+>Groups "linux-sunxi" group.
+>> To unsubscribe from this group and stop receiving emails from it,
+>send an email to linux-sunxi+unsubscribe@googlegroups.com.
+>> For more options, visit https://groups.google.com/d/optout.
