@@ -1,136 +1,131 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v3 1/6] PCI: mediatek: Using readl_poll_timeout to wait Gen2
- training
-Date: Fri, 4 Aug 2017 20:06:37 +0800
-Message-ID: <0bc1c2217c420277b3eec038d6e7a579e709737a.1501846816.git.honghui.zhang@mediatek.com>
+From: <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 2/6] PCI: mediatek: Add a structure to abstract the
+ controller generations
+Date: Fri, 4 Aug 2017 20:06:38 +0800
+Message-ID: <d8d42eae0a649b0c944dbc9b2ceebed432a04f32.1501846816.git.honghui.zhang@mediatek.com>
 References: <cover.1501846816.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1501846816.git.honghui.zhang@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: youlin.pei@mediatek.com, hongkun.cao@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com, honghui.zhang@mediatek.com, yt.shen@mediatek.com, yong.wu@mediatek.com
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1501846816.git.honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh-+zGGX9k9yNkdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Wait Gen2 training by using readl_poll_timeout() calls, and simplify
-the hardware assert logical by merge it into the new interface
-mtk_pcie_startup_ports.
+Introduce a structure "mtk_pcie_soc" to abstract the differences between
+controller generations, and the .startup() hook is used to encapsulate
+some SoC-dependent related setting. In doing so, the common code which
+will be reused by future chips.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/pci/host/pcie-mediatek.c | 52 +++++++++++++++++-----------------------
- 1 file changed, 22 insertions(+), 30 deletions(-)
+ drivers/pci/host/pcie-mediatek.c | 31 ++++++++++++++++++++++++++-----
+ 1 file changed, 26 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index 9c9f89b..0d46cda 100644
+index 0d46cda..5d7f62e 100644
 --- a/drivers/pci/host/pcie-mediatek.c
 +++ b/drivers/pci/host/pcie-mediatek.c
-@@ -16,6 +16,7 @@
+@@ -64,6 +64,18 @@
+ #define PCIE_FC_CREDIT_MASK	(GENMASK(31, 31) | GENMASK(28, 16))
+ #define PCIE_FC_CREDIT_VAL(x)	((x) << 16)
  
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-@@ -113,11 +114,6 @@ struct mtk_pcie {
++struct mtk_pcie_port;
++
++/**
++ * struct mtk_pcie_soc - differentiate between host generations
++ * @ops: pointer to configuration access functions
++ * @startup: pointer to controller setting functions
++ */
++struct mtk_pcie_soc {
++	struct pci_ops *ops;
++	int (*startup)(struct mtk_pcie_port *port);
++};
++
+ /**
+  * struct mtk_pcie_port - PCIe port information
+  * @base: IO mapped register base
+@@ -97,6 +109,7 @@ struct mtk_pcie_port {
+  * @busn: bus range
+  * @offset: IO / Memory offset
+  * @ports: pointer to PCIe port information
++ * @soc: pointer to SoC-dependent operations
+  */
+ struct mtk_pcie {
+ 	struct device *dev;
+@@ -112,6 +125,7 @@ struct mtk_pcie {
+ 		resource_size_t io;
+ 	} offset;
  	struct list_head ports;
++	const struct mtk_pcie_soc *soc;
  };
  
--static inline bool mtk_pcie_link_up(struct mtk_pcie_port *port)
--{
--	return !!(readl(port->base + PCIE_LINK_STATUS) & PCIE_PORT_LINKUP);
--}
--
  static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -171,12 +167,30 @@ static struct pci_ops mtk_pcie_ops = {
- 	.write = pci_generic_config_write,
- };
- 
--static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
-+static int mtk_pcie_startup_ports(struct mtk_pcie_port *port)
- {
- 	struct mtk_pcie *pcie = port->pcie;
- 	u32 func = PCI_FUNC(port->index << 3);
- 	u32 slot = PCI_SLOT(port->index << 3);
- 	u32 val;
-+	int err;
-+
-+	/* assert port PERST_N */
-+	val = readl(pcie->base + PCIE_SYS_CFG);
-+	val |= PCIE_PORT_PERST(port->index);
-+	writel(val, pcie->base + PCIE_SYS_CFG);
-+
-+	/* de-assert port PERST_N */
-+	val = readl(pcie->base + PCIE_SYS_CFG);
-+	val &= ~PCIE_PORT_PERST(port->index);
-+	writel(val, pcie->base + PCIE_SYS_CFG);
-+
-+	/* 100ms timeout value should be enough for Gen1/2 training */
-+	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS, val,
-+				 !!(val & PCIE_PORT_LINKUP), 20,
-+				 100 * USEC_PER_MSEC);
-+	if (err)
-+		return -ETIMEDOUT;
- 
- 	/* enable interrupt */
- 	val = readl(pcie->base + PCIE_INT_ENABLE);
-@@ -209,25 +223,8 @@ static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
- 	writel(PCIE_CONF_ADDR(PCIE_FTS_NUM, func, slot, 0),
- 	       pcie->base + PCIE_CFG_ADDR);
- 	writel(val, pcie->base + PCIE_CFG_DATA);
--}
- 
--static void mtk_pcie_assert_ports(struct mtk_pcie_port *port)
--{
--	struct mtk_pcie *pcie = port->pcie;
--	u32 val;
--
--	/* assert port PERST_N */
--	val = readl(pcie->base + PCIE_SYS_CFG);
--	val |= PCIE_PORT_PERST(port->index);
--	writel(val, pcie->base + PCIE_SYS_CFG);
--
--	/* de-assert port PERST_N */
--	val = readl(pcie->base + PCIE_SYS_CFG);
--	val &= ~PCIE_PORT_PERST(port->index);
--	writel(val, pcie->base + PCIE_SYS_CFG);
--
--	/* PCIe v2.0 need at least 100ms delay to train from Gen1 to Gen2 */
--	msleep(100);
-+	return 0;
- }
+@@ -229,7 +243,8 @@ static int mtk_pcie_startup_ports(struct mtk_pcie_port *port)
  
  static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
-@@ -250,13 +247,8 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+ {
+-	struct device *dev = port->pcie->dev;
++	struct mtk_pcie *pcie = port->pcie;
++	struct device *dev = pcie->dev;
+ 	int err;
+ 
+ 	err = clk_prepare_enable(port->sys_ck);
+@@ -247,7 +262,7 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
  		goto err_phy_on;
  	}
  
--	mtk_pcie_assert_ports(port);
--
--	/* if link up, then setup root port configuration space */
--	if (mtk_pcie_link_up(port)) {
--		mtk_pcie_configure_rc(port);
-+	if (!mtk_pcie_startup_ports(port))
+-	if (!mtk_pcie_startup_ports(port))
++	if (!pcie->soc->startup(port))
  		return;
--	}
  
  	dev_info(dev, "Port%d link down\n", port->index);
+@@ -472,7 +487,7 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
+ 
+ 	host->busnr = pcie->busn.start;
+ 	host->dev.parent = pcie->dev;
+-	host->ops = &mtk_pcie_ops;
++	host->ops = pcie->soc->ops;
+ 	host->map_irq = of_irq_parse_and_map_pci;
+ 	host->swizzle_irq = pci_common_swizzle;
+ 
+@@ -505,6 +520,7 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	pcie = pci_host_bridge_priv(host);
+ 
+ 	pcie->dev = dev;
++	pcie->soc = of_device_get_match_data(dev);
+ 	platform_set_drvdata(pdev, pcie);
+ 	INIT_LIST_HEAD(&pcie->ports);
+ 
+@@ -529,9 +545,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+ 	return err;
+ }
+ 
++static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
++	.ops = &mtk_pcie_ops,
++	.startup = mtk_pcie_startup_ports,
++};
++
+ static const struct of_device_id mtk_pcie_ids[] = {
+-	{ .compatible = "mediatek,mt7623-pcie"},
+-	{ .compatible = "mediatek,mt2701-pcie"},
++	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
++	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
+ 	{},
+ };
  
 -- 
 2.6.4
