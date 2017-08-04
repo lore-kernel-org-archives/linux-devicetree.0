@@ -1,164 +1,67 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 6/6] ARM64: dts: meson: remove cap-sd-highspeed from emmc nodes
-Date: Fri,  4 Aug 2017 20:08:16 +0200
-Message-ID: <20170804180816.18737-7-jbrunet@baylibre.com>
-References: <20170804180816.18737-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170804180816.18737-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
+Date: Fri, 4 Aug 2017 21:26:25 +0200 (CEST)
+Message-ID: <444254163.121186.1501874785594@email.1und1.de>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <1501576704-26423-3-git-send-email-loic.poulain@gmail.com>
+ <696124D4-A5DA-46FA-A0F0-5DC74363BD23@holtmann.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <696124D4-A5DA-46FA-A0F0-5DC74363BD23-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-It does not make much sense to define cap-sd-highspeed in the emmc nodes
-Just remove it.
+Hi Marcel,
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            | 1 -
- arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             | 1 -
- 11 files changed, 11 deletions(-)
+> Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> hat am 4. August 2017 um 16:36 geschrieben:
+> 
+> 
+> Hi Loic,
+> 
+> > Add basic support for Broadcom serial slave devices.
+> > Probe the serial device, retrieve its maximum speed and
+> > register a new hci uart device.
+> > 
+> > Tested/compatible with bcm43438 (RPi3).
+> > 
+> > Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ...
+> > 
+> > +static int bcm_serdev_probe(struct serdev_device *serdev)
+> > +{
+> > +	struct bcm_bt_device *bcmdev;
+> > +	u32 speed;
+> > +	int err;
+> > +
+> > +	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
+> > +	if (!bcmdev)
+> > +		return -ENOMEM;
+> > +
+> > +	bcmdev->hu.serdev = serdev;
+> > +	serdev_device_set_drvdata(serdev, bcmdev);
+> > +
+> > +	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
+> > +	if (!err)
+> > +		bcmdev->hu.oper_speed = speed;
+> > +
+> > +	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
+> > +}
+> 
+> We do not need any GPIO for reset lines or anything else for the rPI3?
+> 
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index ac16096d095e..9ac904f75013 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -211,7 +211,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-index 919c956a204c..5f065faff6c7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-@@ -248,7 +248,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
- 	disable-wp;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 21cd94247f6c..7342c31f73b6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -270,7 +270,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index d2fac2f62a21..1ffa1c238a72 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -276,7 +276,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
- 	disable-wp;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-index 738bb45fd07b..d5dad8fa4993 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-@@ -240,7 +240,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 8acd8d8b375a..f2bc6dea1fc6 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -204,7 +204,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-index 068623e75fec..977b4240f3c1 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-@@ -146,7 +146,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <100000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index cf3b6e7860a4..df448b11a16b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -227,7 +227,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-index e2509a834a62..129af9068814 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-@@ -140,7 +140,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index ae988bdf1f92..7af153535073 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -191,7 +191,6 @@
- 	pinctrl-names = "default", "clk-gate";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-index 08f1dd69b679..470f72bb863c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-@@ -220,7 +220,6 @@
- 	pinctrl-names = "default";
- 
- 	bus-width = <8>;
--	cap-sd-highspeed;
- 	cap-mmc-highspeed;
- 	max-frequency = <200000000>;
- 	non-removable;
--- 
-2.9.4
+unfortunately we don't have full schematics for RPI3, but according to firmware dt-blob.dts [1] there is a GPIO called BT_ON. This GPIO is controlled by the GPIO expander on the RPI3 board. The necessary driver for this expander is still out of tree (last mainlining attempt [2]).
+
+Regards
+Stefan
+
+[1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
+[2] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2017-March/005801.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
