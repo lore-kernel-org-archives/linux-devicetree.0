@@ -1,115 +1,54 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND
- documentation
-Date: Fri, 4 Aug 2017 15:22:47 +0200
-Message-ID: <20170804152247.075e00ea@bbrezillon>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
-        <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
-        <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
-        <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
-        <abf14014808fa0557696fee509c28046@codeaurora.org>
-        <20170804144536.4177a12f@bbrezillon>
-        <ae7df79750977b366bf44ba505b791f0@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae7df79750977b366bf44ba505b791f0@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: Rob Herring <robh@kernel.org>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/3] arm64 xilinx zynqmp firmware interface
+Date: Fri,  4 Aug 2017 15:45:29 +0200
+Message-ID: <cover.1501854302.git.michal.simek@xilinx.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>M
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 04 Aug 2017 18:41:20 +0530
-Abhishek Sahu <absahu@codeaurora.org> wrote:
+Hi,
 
-> On 2017-08-04 18:15, Boris Brezillon wrote:
-> > On Mon, 31 Jul 2017 21:35:57 +0530
-> > Abhishek Sahu <absahu@codeaurora.org> wrote:
-> >   
-> >> On 2017-07-26 00:13, Abhishek Sahu wrote:  
-> >> > On 2017-07-25 00:47, Rob Herring wrote:  
-> >> >> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:  
-> >> >>> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
-> >> >>> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
-> >> >>>    while EBI2 NAND uses only single ADM channel.
-> >> >>> 3. CRCI is only required for ADM DMA and its not required for
-> >> >>>    QPIC NAND.
-> >> >>>
-> >> >>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> >> >>> ---
-> >> >>>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54
-> >> >>> ++++++++++++++++++++--
-> >> >>>  1 file changed, 51 insertions(+), 3 deletions(-)
-> >> >>>
-> >> >>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> >> >>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> >> >>> index b24adfe..8efaeb0 100644
-> >> >>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> >> >>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> >> >>> @@ -1,13 +1,15 @@
-> >> >>>  * Qualcomm NAND controller
-> >> >>>
-> >> >>>  Required properties:
-> >> >>> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses
-> >> >>> ADM
-> >> >>> -			DMA like IPQ8064.
-> >> >>> -
-> >> >>> +- compatible:		must be one of the following:
-> >> >>> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
-> >> >>> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA
-> >> >>> like IPQ4019.  
-> >> >>
-> >> >> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
-> >> >> compatible strings.  
-> >> >
-> >> >  We have 3 versions of NAND HW currently.
-> >> >  EBI2,
-> >> >  QPIC version 1.4.0
-> >> >  QPIC version 1.5.0
-> >> >
-> >> >  and multiple Qualcomm SoCs which use any one of these.
-> >> >
-> >> >  The original plan was to have compatible string for NAND version since
-> >> >  same NAND hardware is being in different SoC and SoC dtsi will simply
-> >> >  use its NAND version compatible string like other Qualcomm hardwares
-> >> >
-> >> >
-> >> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
-> >> >
-> >> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> >> >  
-> >> 
-> >>   Following are the partial list for NAND controller and supported
-> >>   SoC
-> >> 
-> >>    EBI2:          IPQ8064, APQ8064, MSM7xx, MDM9x15
-> >>    QPIC v1.4.0    MDM9x25, MDM9x35, MDM9x45, IPQ4019
-> >>    QPIC v1.5.0    MDM9x55, IPQ8074
-> >> 
-> >>   so could we use NAND controller specific compatible strings instead 
-> >> of
-> >> SoC
-> >>   since it will easy to maintain?  
-> > 
-> > Nope, though you can re-use the compatible of an old SoC for new SoCs
-> > if the IP did not change.
-> > 
-> > For example:
-> > 
-> > - EBI2: compatible = "qcom,ipq8064"
-> > - QPIC 1.4: compatible = "qcom,mdm9x25"
-> > - QPIC 1.5: compatible = "qcom,mdm9x55"
-> > 
-> > Note that we usually pick the oldest SoC that started embedding an IP
-> > when choosing the compatible. So my suggestion assumes IPQ8064 is older
-> > than APQ8064, MSM7xx and MDM9x15.  
-> 
->   Thanks Boris for detailed clarification.
->   Then I will change the patch to use SoC specific compatible string.
-> 
->   Its better to use qcom,ipq4019 for 1.4.0 and qcom,ipq8074 for 1.5.0
->   since we don't have other SoC in upstream and I have tested the
->   NAND driver on these IPQ SoC's.
+xilinx is using this interface for very long time and we can't merge our
+driver changes to Linux because of missing communication layer with
+firmware. This interface was developed before scpi and scmi was
+available. In connection to power management scpi and scmi are missing
+pieces which we already use. There is a separate discussion how to
+extend scmi to support all our use cases.
+This simply patch is not adding any power management features but only
+adding minimum functionality which are needed for drivers.
 
-Sounds good, but I'll let Rob confirm.
+Thanks,
+Michal
+
+
+Michal Simek (1):
+  soc: xilinx: zynqmp: Add firmware interface
+
+Soren Brinkmann (2):
+  dt: xilinx: zynqmp: Add bindings for PM firmware
+  arm64: zynqmp: dt: Add PM firmware node
+
+ .../bindings/soc/xilinx/xlnx,zynqmp-pm.txt         |  19 +
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   7 +
+ drivers/soc/Kconfig                                |   1 +
+ drivers/soc/Makefile                               |   1 +
+ drivers/soc/xilinx/Kconfig                         |   6 +
+ drivers/soc/xilinx/zynqmp/Makefile                 |   1 +
+ drivers/soc/xilinx/zynqmp/firmware.c               | 419 +++++++++++++++++++++
+ include/linux/soc/xilinx/zynqmp/firmware.h         | 246 ++++++++++++
+ 8 files changed, 700 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
+ create mode 100644 drivers/soc/xilinx/Kconfig
+ create mode 100644 drivers/soc/xilinx/zynqmp/Makefile
+ create mode 100644 drivers/soc/xilinx/zynqmp/firmware.c
+ create mode 100644 include/linux/soc/xilinx/zynqmp/firmware.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
