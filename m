@@ -1,34 +1,92 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] arm64: dts: r8a7796: add USB-DMAC and HSUSB device
- nodes
-Date: Fri, 4 Aug 2017 13:00:27 +0200
-Message-ID: <20170804110026.GB9178@verge.net.au>
-References: <1501763357-26075-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501763357-26075-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM: zynq: Remove earlycon from bootargs
+Date: Fri,  4 Aug 2017 13:07:03 +0200
+Message-ID: <dff4b3c7a291fca6648134f5c8950e7ec472eec0.1501844819.git.michal.simek@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 09:29:15PM +0900, Yoshihiro Shimoda wrote:
-> This patch is based on the renesas.git / renesas-devel-20170731v2-v4.13-rc3 tag.
-> 
-> For usb-dmac, we should wait for the following patch (even if we don't apply
-> the patch, the usb-dmac driver can be probed correctly though.)
->  https://patchwork.kernel.org/patch/9876639/
-> 
-> For hsusb, we need the "arm64: dts: r8a7796: add usb host device nodes" patch
-> set for using usb2_phy0.
+Earlyconsole is used for early kernel debugging that's why this option
+shouldn't be enabled by default.
+Earlyconsole is partially copying the part of the bootlog after
+"bootconsole [uart0] disabled".
 
-Thanks, I am marking this series as deferred pending acceptance of
-the dependencies of "arm64: dts: r8a7796: add usb host device nodes".
-Please repost this series or otherwise ping me once those
-dependencies are in place.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
+
+ arch/arm/boot/dts/zynq-parallella.dts | 2 +-
+ arch/arm/boot/dts/zynq-zc702.dts      | 2 +-
+ arch/arm/boot/dts/zynq-zc706.dts      | 2 +-
+ arch/arm/boot/dts/zynq-zed.dts        | 2 +-
+ arch/arm/boot/dts/zynq-zybo.dts       | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/boot/dts/zynq-parallella.dts b/arch/arm/boot/dts/zynq-parallella.dts
+index 77f6f10bf685..0144acfa9793 100644
+--- a/arch/arm/boot/dts/zynq-parallella.dts
++++ b/arch/arm/boot/dts/zynq-parallella.dts
+@@ -34,7 +34,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlycon root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
++		bootargs = "root=/dev/mmcblk0p2 rootfstype=ext4 rw rootwait";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+index a096275d903d..34e8277fce0d 100644
+--- a/arch/arm/boot/dts/zynq-zc702.dts
++++ b/arch/arm/boot/dts/zynq-zc702.dts
+@@ -30,7 +30,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlycon";
++		bootargs = "";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zc706.dts b/arch/arm/boot/dts/zynq-zc706.dts
+index 689ec9d6f7b9..7ebc8c5ae39d 100644
+--- a/arch/arm/boot/dts/zynq-zc706.dts
++++ b/arch/arm/boot/dts/zynq-zc706.dts
+@@ -30,7 +30,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlycon";
++		bootargs = "";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zed.dts b/arch/arm/boot/dts/zynq-zed.dts
+index c6a5749c8930..5e44dc12fd60 100644
+--- a/arch/arm/boot/dts/zynq-zed.dts
++++ b/arch/arm/boot/dts/zynq-zed.dts
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlycon";
++		bootargs = "";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/zynq-zybo.dts b/arch/arm/boot/dts/zynq-zybo.dts
+index 8b42fb199a8e..e40cafc5ee5b 100644
+--- a/arch/arm/boot/dts/zynq-zybo.dts
++++ b/arch/arm/boot/dts/zynq-zybo.dts
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	chosen {
+-		bootargs = "earlycon";
++		bootargs = "";
+ 		stdout-path = "serial0:115200n8";
+ 	};
+ 
+-- 
+1.9.1
