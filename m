@@ -1,121 +1,251 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v1 4/5] [media] stm32-dcmi: set default format at open()
-Date: Fri, 4 Aug 2017 14:00:05 +0200
-Message-ID: <a5a158b3-b502-d220-52bb-8138328c1773@xs4all.nl>
-References: <1501236302-18097-1-git-send-email-hugues.fruchet@st.com>
- <1501236302-18097-5-git-send-email-hugues.fruchet@st.com>
+From: YT Shen <yt.shen@mediatek.com>
+Subject: [PATCH v6 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation board dts and Makefile
+Date: Fri, 4 Aug 2017 19:59:37 +0800
+Message-ID: <1501847977-4023-3-git-send-email-yt.shen@mediatek.com>
+References: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501236302-18097-5-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501847977-4023-1-git-send-email-yt.shen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Mars Cheng <mars.cheng@mediatek.com>, YT Shen <yt.shen@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/07/17 12:05, Hugues Fruchet wrote:
-> Ensure that we start with default pixel format and resolution
-> when opening a new instance.
+This adds basic chip support for Mediatek 2712
 
-Why? The format is persistent in V4L2 and (re)opening the video device
-shouldn't change the format.
+Signed-off-by: YT Shen <yt.shen@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  32 ++++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 171 ++++++++++++++++++++++++++++
+ 3 files changed, 204 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 
-Suppose you use v4l2-ctl to set up a format. E.g. v4l2-ctl -v width=320,height-240.
-Now run v4l2-ctl -V to get the format and with this code it would suddenly be
-back to the default!
-
-You set up the default format in the dcmi_graph_notify_complete, but after that
-it is only changed if userspace explicitly requests it.
-
-Regards,
-
-	Hans
-
-> 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/media/platform/stm32/stm32-dcmi.c | 49 ++++++++++++++++++-------------
->  1 file changed, 28 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-> index 4733d1f..2be56b6 100644
-> --- a/drivers/media/platform/stm32/stm32-dcmi.c
-> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
-> @@ -890,6 +890,28 @@ static int dcmi_enum_frameintervals(struct file *file, void *fh,
->  	return 0;
->  }
->  
-> +static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
-> +{
-> +	struct v4l2_format f = {
-> +		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
-> +		.fmt.pix = {
-> +			.width		= CIF_WIDTH,
-> +			.height		= CIF_HEIGHT,
-> +			.field		= V4L2_FIELD_NONE,
-> +			.pixelformat	= dcmi->sd_formats[0]->fourcc,
-> +		},
-> +	};
-> +	int ret;
-> +
-> +	ret = dcmi_try_fmt(dcmi, &f, NULL);
-> +	if (ret)
-> +		return ret;
-> +	dcmi->sd_format = dcmi->sd_formats[0];
-> +	dcmi->fmt = f;
-> +
-> +	return 0;
-> +}
-> +
->  static const struct of_device_id stm32_dcmi_of_match[] = {
->  	{ .compatible = "st,stm32-dcmi"},
->  	{ /* end node */ },
-> @@ -916,7 +938,13 @@ static int dcmi_open(struct file *file)
->  	if (ret < 0 && ret != -ENOIOCTLCMD)
->  		goto fh_rel;
->  
-> +	ret = dcmi_set_default_fmt(dcmi);
-> +	if (ret)
-> +		goto power_off;
-> +
->  	ret = dcmi_set_fmt(dcmi, &dcmi->fmt);
-> +
-> +power_off:
->  	if (ret)
->  		v4l2_subdev_call(sd, core, s_power, 0);
->  fh_rel:
-> @@ -991,27 +1019,6 @@ static int dcmi_release(struct file *file)
->  	.read		= vb2_fop_read,
->  };
->  
-> -static int dcmi_set_default_fmt(struct stm32_dcmi *dcmi)
-> -{
-> -	struct v4l2_format f = {
-> -		.type = V4L2_BUF_TYPE_VIDEO_CAPTURE,
-> -		.fmt.pix = {
-> -			.width		= CIF_WIDTH,
-> -			.height		= CIF_HEIGHT,
-> -			.field		= V4L2_FIELD_NONE,
-> -			.pixelformat	= dcmi->sd_formats[0]->fourcc,
-> -		},
-> -	};
-> -	int ret;
-> -
-> -	ret = dcmi_try_fmt(dcmi, &f, NULL);
-> -	if (ret)
-> -		return ret;
-> -	dcmi->sd_format = dcmi->sd_formats[0];
-> -	dcmi->fmt = f;
-> -	return 0;
-> -}
-> -
->  static const struct dcmi_format dcmi_formats[] = {
->  	{
->  		.fourcc = V4L2_PIX_FMT_RGB565,
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 015eb07..f323936 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -1,3 +1,4 @@
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+new file mode 100644
+index 0000000..8c804df
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+@@ -0,0 +1,32 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: YT Shen <yt.shen@mediatek.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
++ */
++
++/dts-v1/;
++#include "mt2712e.dtsi"
++
++/ {
++	model = "MediaTek MT2712 evaluation board";
++	compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x80000000>;
++	};
++
++	chosen {
++		stdout-path = "serial0:921600n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+new file mode 100644
+index 0000000..57d0396
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -0,0 +1,171 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: YT Shen <yt.shen@mediatek.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "mediatek,mt2712";
++	interrupt-parent = <&sysirq>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&cpu2>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a35";
++			reg = <0x000>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a35";
++			reg = <0x001>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@200 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a72";
++			reg = <0x200>;
++			enable-method = "psci";
++		};
++	};
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	baud_clk: dummy26m {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	sys_clk: dummyclk {
++		compatible = "fixed-clock";
++		clock-frequency = <26000000>;
++		#clock-cells = <0>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13
++			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14
++			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11
++			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10
++			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	uart5: serial@1000f000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x1000f000 0 0x400>;
++		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++
++	sysirq: interrupt-controller@10220a80 {
++		compatible = "mediatek,mt2712-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10220a80 0 0x40>;
++	};
++
++	gic: interrupt-controller@10510000 {
++		compatible = "arm,gic-400";
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		interrupt-controller;
++		reg = <0 0x10510000 0 0x10000>,
++		      <0 0x10520000 0 0x20000>,
++		      <0 0x10540000 0 0x20000>,
++		      <0 0x10560000 0 0x20000>;
++		interrupts = <GIC_PPI 9
++			 (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11002000 0 0x400>;
++		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++
++	uart1: serial@11003000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11003000 0 0x400>;
++		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++
++	uart2: serial@11004000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11004000 0 0x400>;
++		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++
++	uart3: serial@11005000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11005000 0 0x400>;
++		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++
++	uart4: serial@11019000 {
++		compatible = "mediatek,mt2712-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11019000 0 0x400>;
++		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&baud_clk>, <&sys_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++};
++
+-- 
+1.9.1
