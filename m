@@ -1,36 +1,72 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v3 4/4] MAINTAINERS: Add ARTPEC crypto maintainer
-Date: Fri,  4 Aug 2017 09:18:48 +0200
-Message-ID: <19f3801d5a934767319ed4dc8bf7849d6187d73d.1501830919.git.larper@axis.com>
-References: <cover.1501830919.git.larper@axis.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1501830919.git.larper@axis.com>
-In-Reply-To: <cover.1501830919.git.larper@axis.com>
-References: <cover.1501830919.git.larper@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Lars Persson <larper@axis.com>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
+ slave
+Date: Fri, 4 Aug 2017 09:24:31 +0200
+Message-ID: <FFCBE5D2-B32A-4715-A91E-899A87F31EBD@holtmann.org>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <1501576704-26423-2-git-send-email-loic.poulain@gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501576704-26423-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Assign the Axis kernel team as maintainer for crypto drivers under
-drivers/crypto/axis.
+Hi Rob,
 
-Signed-off-by: Lars Persson <larper@axis.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
+> This allows to automatically insert the bcm43438 to the bluetooth
+> subsystem instead of relying on userspace helpers (hciattach).
+> 
+> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
+> of pl011/ttyAMA0.
+> 
+> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> v2: dt-bindings as separate patch
+>    rebase on upcoming pi3 dts changes
+> 
+> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+> 1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> index 20725ca..5abc1df 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> @@ -8,6 +8,11 @@
+> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+> 	model = "Raspberry Pi 3 Model B";
+> 
+> +	chosen {
+> +		/* 8250 auxiliar UART instead of pl011 */
+> +		bootargs = "earlyprintk console=ttyS0,115200";
+> +	};
+> +
+> 	memory {
+> 		reg = <0 0x40000000>;
+> 	};
+> @@ -24,6 +29,11 @@
+> 	pinctrl-names = "default";
+> 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+> 	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		max-speed = <921600>;
+> +	};
+> };
+> 
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d5b6c71e783e..72186cf9820d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1129,6 +1129,7 @@ L:	linux-arm-kernel@axis.com
- F:	arch/arm/mach-artpec
- F:	arch/arm/boot/dts/artpec6*
- F:	drivers/clk/axis
-+F:	drivers/crypto/axis
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
--- 
-2.11.0
+can I get an ack on these patches? I like to take them through bluetooth-next tree.
+
+Regards
+
+Marcel
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
