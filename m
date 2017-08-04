@@ -1,109 +1,98 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND documentation
-Date: Fri, 04 Aug 2017 18:41:20 +0530
-Message-ID: <ae7df79750977b366bf44ba505b791f0@codeaurora.org>
-References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
- <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
- <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
- <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
- <abf14014808fa0557696fee509c28046@codeaurora.org>
- <20170804144536.4177a12f@bbrezillon>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 1/6] drm/tinydrm: remove call to mipi_dbi_init() from
+ mipi_dbi_spi_init()
+Date: Fri, 4 Aug 2017 15:16:25 +0200
+Message-ID: <899f6103-694d-1eef-8f28-3ecda91e580d@tronnes.org>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <1501799630-1650-2-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170804144536.4177a12f@bbrezillon>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1501799630-1650-2-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-04 18:15, Boris Brezillon wrote:
-> On Mon, 31 Jul 2017 21:35:57 +0530
-> Abhishek Sahu <absahu@codeaurora.org> wrote:
-> 
->> On 2017-07-26 00:13, Abhishek Sahu wrote:
->> > On 2017-07-25 00:47, Rob Herring wrote:
->> >> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:
->> >>> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
->> >>> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
->> >>>    while EBI2 NAND uses only single ADM channel.
->> >>> 3. CRCI is only required for ADM DMA and its not required for
->> >>>    QPIC NAND.
->> >>>
->> >>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> >>> ---
->> >>>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54
->> >>> ++++++++++++++++++++--
->> >>>  1 file changed, 51 insertions(+), 3 deletions(-)
->> >>>
->> >>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> >>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> >>> index b24adfe..8efaeb0 100644
->> >>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> >>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
->> >>> @@ -1,13 +1,15 @@
->> >>>  * Qualcomm NAND controller
->> >>>
->> >>>  Required properties:
->> >>> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses
->> >>> ADM
->> >>> -			DMA like IPQ8064.
->> >>> -
->> >>> +- compatible:		must be one of the following:
->> >>> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
->> >>> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA
->> >>> like IPQ4019.
->> >>
->> >> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
->> >> compatible strings.
->> >
->> >  We have 3 versions of NAND HW currently.
->> >  EBI2,
->> >  QPIC version 1.4.0
->> >  QPIC version 1.5.0
->> >
->> >  and multiple Qualcomm SoCs which use any one of these.
->> >
->> >  The original plan was to have compatible string for NAND version since
->> >  same NAND hardware is being in different SoC and SoC dtsi will simply
->> >  use its NAND version compatible string like other Qualcomm hardwares
->> >
->> >
->> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
->> >
->> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
->> >
->> 
->>   Following are the partial list for NAND controller and supported
->>   SoC
->> 
->>    EBI2:          IPQ8064, APQ8064, MSM7xx, MDM9x15
->>    QPIC v1.4.0    MDM9x25, MDM9x35, MDM9x45, IPQ4019
->>    QPIC v1.5.0    MDM9x55, IPQ8074
->> 
->>   so could we use NAND controller specific compatible strings instead 
->> of
->> SoC
->>   since it will easy to maintain?
-> 
-> Nope, though you can re-use the compatible of an old SoC for new SoCs
-> if the IP did not change.
-> 
-> For example:
-> 
-> - EBI2: compatible = "qcom,ipq8064"
-> - QPIC 1.4: compatible = "qcom,mdm9x25"
-> - QPIC 1.5: compatible = "qcom,mdm9x55"
-> 
-> Note that we usually pick the oldest SoC that started embedding an IP
-> when choosing the compatible. So my suggestion assumes IPQ8064 is older
-> than APQ8064, MSM7xx and MDM9x15.
-
-  Thanks Boris for detailed clarification.
-  Then I will change the patch to use SoC specific compatible string.
-
-  Its better to use qcom,ipq4019 for 1.4.0 and qcom,ipq8074 for 1.5.0
-  since we don't have other SoC in upstream and I have tested the
-  NAND driver on these IPQ SoC's.
+CkRlbiAwNC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IFRoaXMgcmVtb3Zl
+cyB0aGUgY2FsbCB0byBtaXBpX2RiaV9pbml0KCkgZnJvbSBtaXBpX2RiaV9zcGlfaW5pdCgpIHNv
+IHRoYXQKPiBkcml2ZXJzIGNhbiBoYXZlIGEgZHJpdmVyLXNwZWNpZmljIGltcGxlbWVudGF0aW9u
+IGlmIG5lZWRlZC4KPgo+IFN1Z2dlc3RlZC1ieTogTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJv
+bm5lcy5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9n
+eS5jb20+Cj4gUmV2aWV3ZWQtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3Jn
+Pgo+IC0tLQoKVGhhbmtzLCBhcHBsaWVkIHRvIGRybS1taXNjLgoKTm9yYWxmLgoKPiAgIGRyaXZl
+cnMvZ3B1L2RybS90aW55ZHJtL21pMDI4M3F0LmMgfCAgOCArKysrKystLQo+ICAgZHJpdmVycy9n
+cHUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuYyB8IDE3ICsrKysrLS0tLS0tLS0tLS0tCj4gICBpbmNs
+dWRlL2RybS90aW55ZHJtL21pcGktZGJpLmggICAgIHwgIDYgKy0tLS0tCj4gICAzIGZpbGVzIGNo
+YW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBh
+L2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL21pMDI4M3F0LmMgYi9kcml2ZXJzL2dwdS9kcm0vdGlu
+eWRybS9taTAyODNxdC5jCj4gaW5kZXggNDgyZmYxYzMuLjdlNWJiN2QgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vbWkwMjgzcXQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS90aW55ZHJtL21pMDI4M3F0LmMKPiBAQCAtMTk1LDggKzE5NSwxMiBAQCBzdGF0aWMgaW50IG1p
+MDI4M3F0X3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gICAKPiAgIAlkZXZpY2VfcHJv
+cGVydHlfcmVhZF91MzIoZGV2LCAicm90YXRpb24iLCAmcm90YXRpb24pOwo+ICAgCj4gLQlyZXQg
+PSBtaXBpX2RiaV9zcGlfaW5pdChzcGksIG1pcGksIGRjLCAmbWkwMjgzcXRfcGlwZV9mdW5jcywK
+PiAtCQkJCSZtaTAyODNxdF9kcml2ZXIsICZtaTAyODNxdF9tb2RlLCByb3RhdGlvbik7Cj4gKwly
+ZXQgPSBtaXBpX2RiaV9zcGlfaW5pdChzcGksIG1pcGksIGRjKTsKPiArCWlmIChyZXQpCj4gKwkJ
+cmV0dXJuIHJldDsKPiArCj4gKwlyZXQgPSBtaXBpX2RiaV9pbml0KCZzcGktPmRldiwgbWlwaSwg
+Jm1pMDI4M3F0X3BpcGVfZnVuY3MsCj4gKwkJCSAgICAmbWkwMjgzcXRfZHJpdmVyLCAmbWkwMjgz
+cXRfbW9kZSwgcm90YXRpb24pOwo+ICAgCWlmIChyZXQpCj4gICAJCXJldHVybiByZXQ7Cj4gICAK
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuYyBiL2RyaXZl
+cnMvZ3B1L2RybS90aW55ZHJtL21pcGktZGJpLmMKPiBpbmRleCBlMTBmYTRiLi5jYmE5Nzg0IDEw
+MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL21pcGktZGJpLmMKPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vdGlueWRybS9taXBpLWRiaS5jCj4gQEAgLTc3NywxNSArNzc3LDEyIEBA
+IHN0YXRpYyBpbnQgbWlwaV9kYmlfdHlwZWMzX2NvbW1hbmQoc3RydWN0IG1pcGlfZGJpICptaXBp
+LCB1OCBjbWQsCj4gICAvKioKPiAgICAqIG1pcGlfZGJpX3NwaV9pbml0IC0gSW5pdGlhbGl6ZSBN
+SVBJIERCSSBTUEkgaW50ZXJmYWNlZCBjb250cm9sbGVyCj4gICAgKiBAc3BpOiBTUEkgZGV2aWNl
+Cj4gLSAqIEBkYzogRC9DIGdwaW8gKG9wdGlvbmFsKQo+ICAgICogQG1pcGk6ICZtaXBpX2RiaSBz
+dHJ1Y3R1cmUgdG8gaW5pdGlhbGl6ZQo+IC0gKiBAcGlwZV9mdW5jczogRGlzcGxheSBwaXBlIGZ1
+bmN0aW9ucwo+IC0gKiBAZHJpdmVyOiBEUk0gZHJpdmVyCj4gLSAqIEBtb2RlOiBEaXNwbGF5IG1v
+ZGUKPiAtICogQHJvdGF0aW9uOiBJbml0aWFsIHJvdGF0aW9uIGluIGRlZ3JlZXMgQ291bnRlciBD
+bG9jayBXaXNlCj4gKyAqIEBkYzogRC9DIGdwaW8gKG9wdGlvbmFsKQo+ICAgICoKPiAgICAqIFRo
+aXMgZnVuY3Rpb24gc2V0cyAmbWlwaV9kYmktPmNvbW1hbmQsIGVuYWJsZXMgJm1pcGktPnJlYWRf
+Y29tbWFuZHMgZm9yIHRoZQo+IC0gKiB1c3VhbCByZWFkIGNvbW1hbmRzIGFuZCBpbml0aWFsaXpl
+cyBAbWlwaSB1c2luZyBtaXBpX2RiaV9pbml0KCkuCj4gKyAqIHVzdWFsIHJlYWQgY29tbWFuZHMu
+IEl0IHNob3VsZCBiZSBmb2xsb3dlZCBieSBhIGNhbGwgdG8gbWlwaV9kYmlfaW5pdCgpIG9yCj4g
+KyAqIGEgZHJpdmVyLXNwZWNpZmljIGluaXQuCj4gICAgKgo+ICAgICogSWYgQGRjIGlzIHNldCwg
+YSBUeXBlIEMgT3B0aW9uIDMgaW50ZXJmYWNlIGlzIGFzc3VtZWQsIGlmIG5vdAo+ICAgICogVHlw
+ZSBDIE9wdGlvbiAxLgo+IEBAIC04MDAsMTEgKzc5Nyw3IEBAIHN0YXRpYyBpbnQgbWlwaV9kYmlf
+dHlwZWMzX2NvbW1hbmQoc3RydWN0IG1pcGlfZGJpICptaXBpLCB1OCBjbWQsCj4gICAgKiBaZXJv
+IG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIGVycm9yIGNvZGUgb24gZmFpbHVyZS4KPiAgICAqLwo+ICAg
+aW50IG1pcGlfZGJpX3NwaV9pbml0KHN0cnVjdCBzcGlfZGV2aWNlICpzcGksIHN0cnVjdCBtaXBp
+X2RiaSAqbWlwaSwKPiAtCQkgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICpkYywKPiAtCQkgICAgICBj
+b25zdCBzdHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfZnVuY3MgKnBpcGVfZnVuY3MsCj4g
+LQkJICAgICAgc3RydWN0IGRybV9kcml2ZXIgKmRyaXZlciwKPiAtCQkgICAgICBjb25zdCBzdHJ1
+Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSwKPiAtCQkgICAgICB1bnNpZ25lZCBpbnQgcm90YXRp
+b24pCj4gKwkJICAgICAgc3RydWN0IGdwaW9fZGVzYyAqZGMpCj4gICB7Cj4gICAJc2l6ZV90IHR4
+X3NpemUgPSB0aW55ZHJtX3NwaV9tYXhfdHJhbnNmZXJfc2l6ZShzcGksIDApOwo+ICAgCXN0cnVj
+dCBkZXZpY2UgKmRldiA9ICZzcGktPmRldjsKPiBAQCAtODUwLDcgKzg0Myw3IEBAIGludCBtaXBp
+X2RiaV9zcGlfaW5pdChzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCBzdHJ1Y3QgbWlwaV9kYmkgKm1p
+cGksCj4gICAJCQlyZXR1cm4gLUVOT01FTTsKPiAgIAl9Cj4gICAKPiAtCXJldHVybiBtaXBpX2Ri
+aV9pbml0KGRldiwgbWlwaSwgcGlwZV9mdW5jcywgZHJpdmVyLCBtb2RlLCByb3RhdGlvbik7Cj4g
+KwlyZXR1cm4gMDsKPiAgIH0KPiAgIEVYUE9SVF9TWU1CT0wobWlwaV9kYmlfc3BpX2luaXQpOwo+
+ICAgCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuaCBiL2luY2x1
+ZGUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuaAo+IGluZGV4IGQxMzdiMTYuLjgzMzQ2ZGQgMTAwNjQ0
+Cj4gLS0tIGEvaW5jbHVkZS9kcm0vdGlueWRybS9taXBpLWRiaS5oCj4gKysrIGIvaW5jbHVkZS9k
+cm0vdGlueWRybS9taXBpLWRiaS5oCj4gQEAgLTYyLDExICs2Miw3IEBAIG1pcGlfZGJpX2Zyb21f
+dGlueWRybShzdHJ1Y3QgdGlueWRybV9kZXZpY2UgKnRkZXYpCj4gICB9Cj4gICAKPiAgIGludCBt
+aXBpX2RiaV9zcGlfaW5pdChzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCBzdHJ1Y3QgbWlwaV9kYmkg
+Km1pcGksCj4gLQkJICAgICAgc3RydWN0IGdwaW9fZGVzYyAqZGMsCj4gLQkJICAgICAgY29uc3Qg
+c3RydWN0IGRybV9zaW1wbGVfZGlzcGxheV9waXBlX2Z1bmNzICpwaXBlX2Z1bmNzLAo+IC0JCSAg
+ICAgIHN0cnVjdCBkcm1fZHJpdmVyICpkcml2ZXIsCj4gLQkJICAgICAgY29uc3Qgc3RydWN0IGRy
+bV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gLQkJICAgICAgdW5zaWduZWQgaW50IHJvdGF0aW9uKTsK
+PiArCQkgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICpkYyk7Cj4gICBpbnQgbWlwaV9kYmlfaW5pdChz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBtaXBpX2RiaSAqbWlwaSwKPiAgIAkJICBjb25zdCBz
+dHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfZnVuY3MgKnBpcGVfZnVuY3MsCj4gICAJCSAg
+c3RydWN0IGRybV9kcml2ZXIgKmRyaXZlciwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
