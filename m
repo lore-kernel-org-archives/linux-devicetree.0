@@ -1,82 +1,79 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586 display panels
-Date: Fri, 04 Aug 2017 17:54:27 +0300
-Message-ID: <2434051.fAH1OaXNrL@avalon>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com> <1501799630-1650-4-git-send-email-david@lechnology.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/5] of: reserved_mem: Accessor for acquiring
+ reserved_mem
+Date: Fri, 4 Aug 2017 08:08:25 -0700
+Message-ID: <20170804150825.GE29306@minitux>
+References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
+ <20170803025754.19101-3-bjorn.andersson@linaro.org>
+ <CAL_JsqL1Jh2AnWSWfau3LGhvuS1giTg6_r7gPGrHyZ6KRocSYg@mail.gmail.com>
+ <20170803233146.GB29306@minitux>
+ <CAL_JsqJDhi=PoBgqXce5MekuAkG_G1XJNL-fDbdxmm2KZ1Nt9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501799630-1650-4-git-send-email-david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJDhi=PoBgqXce5MekuAkG_G1XJNL-fDbdxmm2KZ1Nt9Q@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+On Fri 04 Aug 07:50 PDT 2017, Rob Herring wrote:
 
-Thank you for the patch.
-
-On Thursday 03 Aug 2017 17:33:47 David Lechner wrote:
-> This adds a new binding for Sitronix ST7586 display panels.
+> On Thu, Aug 3, 2017 at 6:31 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > On Thu 03 Aug 10:45 PDT 2017, Rob Herring wrote:
+> >
+> >> On Wed, Aug 2, 2017 at 9:57 PM, Bjorn Andersson
+> >> <bjorn.andersson@linaro.org> wrote:
+> >> > In some cases drivers referencing a reserved-memory region might want to
+> >> > remap the entire region, but when defining the reserved-memory by "size"
+> >> > the client driver has no means to know the associated base address of
+> >> > the reserved memory region.
+> >> >
+> >> > This patch adds an accessor for such drivers to acquire a handle to
+> >> > their associated reserved-memory for this purpose.
+> >> >
+> >> > A complicating factor for the implementation is that the reserved_mem
+> >> > objects are created from the flattened DeviceTree, as such we can't
+> >> > use the device_node address for comparison. Fortunately the name of the
+> >> > node will be used as "name" of the reserved_mem and will be used when
+> >> > building the full_name, so we can compare the "name" with the basename
+> >> > of the full_name to find the match.
+> >>
+> >> Maybe we should add the device_node pointer when we unflatten?
+> >>
+> >
+> > It did try to figure something sane out in that direction.
+> >
+> > The solution I came up with was to amend populate_node() to in a !dryrun
+> > block check if the "dad" full_name is /reserved-memory and if so
+> > call call a new accessor in of_reserved_mem.c to add the "np" to the
+> > reserved_mem object with fdt_node equal offset.
 > 
-> Using lego as the vendor prefix in the compatible string because the display
-> panel I am working with is an integral part of the LEGO MINDSTORMS EV3.
+> I was thinking doing it with the unflattened tree just after it has
+> been unflattened rather than during unflattening.
 > 
-> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-> ---
->  .../bindings/display/sitronix,st7586.txt           | 26 +++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/display/sitronix,st7586.txt
+
+The problem is that the fdt_node of the reserved_mem is the offset in
+the flat tree, but we don't carry this information with us when we
+create the individual device_nodes.
+
+So, AFAICT, to fill out this information at any point after returning
+from the particular populate_node() call we will have to use some sort
+of heuristics in matching the two nodes.
+
+> > This code path is already cluttered due to the version differences when
+> > it comes to building full_name and we would end up checking for each
+> > node in the entire tree if the parent happens to be "/reserved-mem".
+> >
+> > So I went for the less intrusive and more straight forward comparison
+> > with basename(full_name) instead.
 > 
-> diff --git a/Documentation/devicetree/bindings/display/sitronix,st7586.txt
-> b/Documentation/devicetree/bindings/display/sitronix,st7586.txt new file
-> mode 100644
-> index 0000000..dfb0b7b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/sitronix,st7586.txt
-> @@ -0,0 +1,26 @@
-> +Sitronix ST7586 display panel
-> +
-> +Required properties:
-> +- compatible:	"lego,ev3-lcd".
-> +
-> +The node for this driver must be a child node of a SPI controller, hence
-> +all mandatory properties described in ../spi/spi-bus.txt must be specified.
-> +
-> +Optional properties:
-> +- dc-gpios:	D/C pin. The presence/absence of this GPIO determines
-> +		the panel interface operation mode (IF[3:1] pins):
-> +		- present: IF=011 4-wire 8-bit data serial interface
-> +		- absent:  IF=010 3-wire 9-bit data serial interface
+> That's good, because full_name is about to become just the basename.
+> 
 
-How does this work ? Do you have a single GPIO on your system connected to 
-IF[1], with IF[3:2] hardwired to 01 ?
+I'll update patch 1/5 and resend the series.
 
-> +- reset-gpios:	Reset pin
-> +- power-supply:	A regulator node for the supply voltage.
-> +- backlight:	phandle of the backlight device attached to the panel
-> +- rotation:	panel rotation in degrees counter clockwise (0,90,180,270)
-
-Please use the OF graph DT bindings (a.k.a. ports) to describe the connection 
-between the panel and its source.
-
-> +Example:
-> +	display@0{
-> +		compatible = "lego,ev3-lcd";
-> +		reg = <0>;
-> +		spi-max-frequency = <10000000>;
-> +		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
-> +	};
-
--- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Bjorn
