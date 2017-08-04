@@ -1,100 +1,47 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] arm: dts: mt7623: Add SD-card and EMMC to
- bananapi-r2
-Date: Fri, 4 Aug 2017 18:14:24 +0800
-Message-ID: <1501841664.17551.2.camel@mtkswgap22>
-References: <1c83eae1944992f7c5a9af946e03bc2c4e62c874.1501819056.git.sean.wang@mediatek.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH 1/2] devicetree: ARM: zynq: Add DT binding for eFuse controller
+Date: Fri,  4 Aug 2017 12:29:53 +0200
+Message-ID: <4b4bfaad88f16d7229bf3da58be8f50f9d82a461.1501842586.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1c83eae1944992f7c5a9af946e03bc2c4e62c874.1501819056.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-08-04 at 11:59 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> The bananapi-r2 board has an SD-card controller and built-in
-> EMMC storage so enables those devices in the devicetree. Also
-> cleanup nodes in alphabetical order in the patch.
-> 
+Add DT binding for eFuse controller available at Xilinx Zynq
+SoC.
 
-Hi, Matthias
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Acked-by: Sören Brinkmann <soren.brinkmann@xilinx.com>
+---
 
-could your help remove those words "Also cleanup nodes in alphabetical
-order in the patch." when merging, i was forgetting to do it.
+ Documentation/devicetree/bindings/arm/zynq/zynq-efuse.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/zynq/zynq-efuse.txt
 
-or prefer wanting me to resend it again?
-
-	Sean
-
-> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts | 37 +++++++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> index 9f3e6dd..444ed93 100644
-> --- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> +++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
-> @@ -179,6 +179,32 @@
->  	status = "okay";
->  };
->  
-> +&mmc0 {
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&mmc0_pins_default>;
-> +	pinctrl-1 = <&mmc0_pins_uhs>;
-> +	status = "okay";
-> +	bus-width = <8>;
-> +	max-frequency = <50000000>;
-> +	cap-mmc-highspeed;
-> +	vmmc-supply = <&mt6323_vemc3v3_reg>;
-> +	vqmmc-supply = <&mt6323_vio18_reg>;
-> +	non-removable;
-> +};
-> +
-> +&mmc1 {
-> +	pinctrl-names = "default", "state_uhs";
-> +	pinctrl-0 = <&mmc1_pins_default>;
-> +	pinctrl-1 = <&mmc1_pins_uhs>;
-> +	status = "okay";
-> +	bus-width = <4>;
-> +	max-frequency = <50000000>;
-> +	cap-sd-highspeed;
-> +	cd-gpios = <&pio 261 0>;
-> +	vmmc-supply = <&mt6323_vmch_reg>;
-> +	vqmmc-supply = <&mt6323_vio18_reg>;
-> +};
-> +
->  &pio {
->  	cir_pins_a:cir@0 {
->  		pins_cir {
-> @@ -314,6 +340,17 @@
->  			bias-pull-down;
->  			drive-strength = <MTK_DRIVE_4mA>;
->  		};
-> +
-> +		pins_wp {
-> +			pinmux = <MT7623_PIN_29_EINT7_FUNC_MSDC1_WP>;
-> +			input-enable;
-> +			bias-pull-up;
-> +		};
-> +
-> +		pins_insert {
-> +			pinmux = <MT7623_PIN_261_MSDC1_INS_FUNC_GPIO261>;
-> +			bias-pull-up;
-> +		};
->  	};
->  
->  	mmc1_pins_uhs: mmc1 {
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/zynq/zynq-efuse.txt b/Documentation/devicetree/bindings/arm/zynq/zynq-efuse.txt
+new file mode 100644
+index 000000000000..39817e9750c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/zynq/zynq-efuse.txt
+@@ -0,0 +1,15 @@
++Device tree bindings for Zynq's eFuse Controller
++
++The Zynq eFuse controller provides the access to the chip efuses which contain
++information about device DNA, security settings and also device status.
++
++Required properties:
++ compatible: Compatibility string. Must be "xlnx,zynq-efuse".
++ reg: Specify the base and size of the EFUSE controller registers
++      in the memory map. E.g.: reg = <0xf800d000 0x20>;
++
++Example:
++efuse: efuse@f800d000 {
++	compatible = "xlnx,zynq-efuse";
++	reg = <0xf800d000 0x20>;
++};
+-- 
+1.9.1
