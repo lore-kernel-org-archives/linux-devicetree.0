@@ -1,187 +1,153 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH 2/2] ARM: zynq: Add support for Zynq-7000S devices
-Date: Fri,  4 Aug 2017 12:29:54 +0200
-Message-ID: <84fc91f48dffbd68aa569f482a178dc9c1703339.1501842586.git.michal.simek@xilinx.com>
-References: <4b4bfaad88f16d7229bf3da58be8f50f9d82a461.1501842586.git.michal.simek@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4b4bfaad88f16d7229bf3da58be8f50f9d82a461.1501842586.git.michal.simek@xilinx.com>
-In-Reply-To: <4b4bfaad88f16d7229bf3da58be8f50f9d82a461.1501842586.git.michal.simek@xilinx.com>
-References: <4b4bfaad88f16d7229bf3da58be8f50f9d82a461.1501842586.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org, monstr@monstr.eu, Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-kernel@vger.kernel.org, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Josh Cartwright <josh.cartwright@ni.com>, Russell King <linux@armlinux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ASoC: samsung: odroid: Drop requirement of clocks in the
+ sound node
+Date: Fri, 04 Aug 2017 12:58:17 +0200
+Message-ID: <1501844297-22842-1-git-send-email-s.nawrocki@samsung.com>
+References: <CGME20170804105854epcas2p30ed120bc4bcb51979a880f44ffe3aca6@epcas2p3.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds detection of Zynq-7000 base silicon configuration,
-namely Dual or Single CPU. Device trees attempting to enable DUAL CORE
-behavior on SINGLE CPU Zynq-7000S devices are prevented from corrupting
-system behavior.
+As suggested in reviews the requirement of clocks in the 'sound' node
+is dropped and instead a leaf clock is used to configure frequency
+of the audio root clock PLL. This can work now after the clock tree
+definitions have been updated to allow clock rate setting propagation
+on the path from the I2S controller up to the EPLL.
 
-Detection of Dual or Single CPU is done via eFuses.
+This patch also lowers the CODEC master clock frequency so as
+to not exceed the maximum allowed 60 MHz at maximum audio sampling
+rates.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Acked-by: Sören Brinkmann <soren.brinkmann@xilinx.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
+ .../devicetree/bindings/sound/samsung,odroid.txt   |  6 ---
+ sound/soc/samsung/odroid.c                         | 44 +++++++++++++++-------
+ 2 files changed, 30 insertions(+), 20 deletions(-)
 
- arch/arm/boot/dts/zynq-7000.dtsi |  5 +++
- arch/arm/mach-zynq/Makefile      |  2 +-
- arch/arm/mach-zynq/common.c      |  1 +
- arch/arm/mach-zynq/common.h      |  3 ++
- arch/arm/mach-zynq/efuse.c       | 75 ++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-zynq/platsmp.c     |  3 ++
- 6 files changed, 88 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/mach-zynq/efuse.c
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index f3ac9bfe580e..ac37d46b2eab 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -305,6 +305,11 @@
- 			syscon = <&slcr>;
- 		};
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index c30934d..625b1b1 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -7,9 +7,6 @@ Required properties:
+  - model - the user-visible name of this sound complex
+  - clocks - should contain entries matching clock names in the clock-names
+     property
+- - clock-names - should contain following entries:
+-    - "epll" - indicating the EPLL output clock
+-    - "i2s_rclk" - indicating the RCLK (root) clock of the I2S0 controller
+  - samsung,audio-widgets - this property specifies off-codec audio elements
+    like headphones or speakers, for details see widgets.txt
+  - samsung,audio-routing - a list of the connections between audio
+@@ -46,9 +43,6 @@ sound {
+ 		"IN1", "Mic Jack",
+ 		"Mic Jack", "MICBIAS";
  
-+		efuse: efuse@f800d000 {
-+			compatible = "xlnx,zynq-efuse";
-+			reg = <0xf800d000 0x20>;
-+		};
-+
- 		global_timer: timer@f8f00200 {
- 			compatible = "arm,cortex-a9-global-timer";
- 			reg = <0xf8f00200 0x20>;
-diff --git a/arch/arm/mach-zynq/Makefile b/arch/arm/mach-zynq/Makefile
-index b03a97eb7501..1fc2d4b53a5e 100644
---- a/arch/arm/mach-zynq/Makefile
-+++ b/arch/arm/mach-zynq/Makefile
-@@ -3,5 +3,5 @@
- #
+-	clocks = <&clock CLK_FOUT_EPLL>, <&i2s0 CLK_I2S_RCLK_SRC>;
+-	clock-names = "epll", "sclk_i2s";
+-
+ 	cpu {
+ 		sound-dai = <&i2s0 0>;
+ 	};
+diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
+index 0834319..44b6de5 100644
+--- a/sound/soc/samsung/odroid.c
++++ b/sound/soc/samsung/odroid.c
+@@ -19,8 +19,8 @@ struct odroid_priv {
+ 	struct snd_soc_card card;
+ 	struct snd_soc_dai_link dai_link;
  
- # Common support
--obj-y				:= common.o slcr.o pm.o
-+obj-y				:= common.o efuse.o slcr.o pm.o
- obj-$(CONFIG_SMP)		+= headsmp.o platsmp.o
-diff --git a/arch/arm/mach-zynq/common.c b/arch/arm/mach-zynq/common.c
-index 6aba9ebf8041..5f28f7220d48 100644
---- a/arch/arm/mach-zynq/common.c
-+++ b/arch/arm/mach-zynq/common.c
-@@ -182,6 +182,7 @@ static void __init zynq_map_io(void)
+-	struct clk *pll;
+-	struct clk *rclk;
++	struct clk *clk_i2s_bus;
++	struct clk *sclk_i2s;
+ };
  
- static void __init zynq_irq_init(void)
- {
-+	zynq_early_efuse_init();
- 	zynq_early_slcr_init();
- 	irqchip_init();
- }
-diff --git a/arch/arm/mach-zynq/common.h b/arch/arm/mach-zynq/common.h
-index e771933db7e8..33742c3308e0 100644
---- a/arch/arm/mach-zynq/common.h
-+++ b/arch/arm/mach-zynq/common.h
-@@ -25,6 +25,9 @@
- extern void zynq_slcr_cpu_state_write(int cpu, bool die);
- extern u32 zynq_slcr_get_device_id(void);
+ static int odroid_card_startup(struct snd_pcm_substream *substream)
+@@ -58,13 +58,18 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
+ 		return -EINVAL;
+ 	}
  
-+extern bool zynq_efuse_cpu_state(int cpu);
-+extern int zynq_early_efuse_init(void);
+-	ret = clk_set_rate(priv->pll, pll_freq + 1);
++	ret = clk_set_rate(priv->clk_i2s_bus, pll_freq / 2 + 1);
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	rclk_freq = params_rate(params) * 256 * 4;
++	/*
++	 *  We add 1 to the rclk_freq value in order to avoid too low clock
++	 *  frequency values due to the EPLL output frequency not being exact
++	 *  multiple of the audio sampling rate.
++	 */
++	rclk_freq = params_rate(params) * 256 + 1;
+ 
+-	ret = clk_set_rate(priv->rclk, rclk_freq);
++	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
+ 	if (ret < 0)
+ 		return ret;
+ 
+@@ -118,14 +123,6 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 
+ 	snd_soc_card_set_drvdata(card, priv);
+ 
+-	priv->pll = devm_clk_get(dev, "epll");
+-	if (IS_ERR(priv->pll))
+-		return PTR_ERR(priv->pll);
+-
+-	priv->rclk = devm_clk_get(dev, "i2s_rclk");
+-	if (IS_ERR(priv->rclk))
+-		return PTR_ERR(priv->rclk);
+-
+ 	ret = snd_soc_of_parse_card_name(card, "model");
+ 	if (ret < 0)
+ 		return ret;
+@@ -171,14 +168,31 @@ static int odroid_audio_probe(struct platform_device *pdev)
+ 	link->name = "Primary";
+ 	link->stream_name = link->name;
+ 
 +
- #ifdef CONFIG_SMP
- extern char zynq_secondary_trampoline;
- extern char zynq_secondary_trampoline_jump;
-diff --git a/arch/arm/mach-zynq/efuse.c b/arch/arm/mach-zynq/efuse.c
-new file mode 100644
-index 000000000000..d31a5822ec65
---- /dev/null
-+++ b/arch/arm/mach-zynq/efuse.c
-@@ -0,0 +1,75 @@
-+/*
-+ * Xilinx EFUSE driver
-+ *
-+ * Copyright (c) 2016 Xilinx Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/of_address.h>
-+#include "common.h"
-+
-+#define EFUSE_STATUS_OFFSET	0x10
-+
-+/* 0 means cpu1 is working, 1 means cpu1 is broken */
-+#define EFUSE_STATUS_CPU_BIT	BIT(7)
-+
-+void __iomem *zynq_efuse_base;
-+
-+/**
-+ * zynq_efuse_cpu_state - Read/write cpu state
-+ * @cpu:	cpu number
-+ *
-+ * Return: true if cpu is running, false if cpu is broken
-+ */
-+bool zynq_efuse_cpu_state(int cpu)
-+{
-+	u32 state;
-+
-+	if (!cpu)
-+		return true;
-+
-+	state = readl(zynq_efuse_base + EFUSE_STATUS_OFFSET);
-+	state &= EFUSE_STATUS_CPU_BIT;
-+
-+	if (!state)
-+		return true;
-+
-+	return false;
-+}
-+
-+/**
-+ * zynq_early_efuse_init - Early efuse init function
-+ *
-+ * Return:	0 on success, negative errno otherwise.
-+ *
-+ * Called very early during boot from platform code.
-+ */
-+int __init zynq_early_efuse_init(void)
-+{
-+	struct device_node *np;
-+
-+	np = of_find_compatible_node(NULL, NULL, "xlnx,zynq-efuse");
-+	if (!np) {
-+		pr_err("%s: no efuse node found\n", __func__);
-+		BUG();
++	priv->sclk_i2s = of_clk_get_by_name(link->cpu_of_node, "i2s_opclk1");
++	if (IS_ERR(priv->sclk_i2s)) {
++		ret = PTR_ERR(priv->sclk_i2s);
++		goto err_put_i2s_n;
 +	}
 +
-+	zynq_efuse_base = of_iomap(np, 0);
-+	if (!zynq_efuse_base) {
-+		pr_err("%s: Unable to map I/O memory\n", __func__);
-+		BUG();
++	priv->clk_i2s_bus = of_clk_get_by_name(link->cpu_of_node, "iis");
++	if (IS_ERR(priv->clk_i2s_bus)) {
++		ret = PTR_ERR(priv->clk_i2s_bus);
++		goto err_put_sclk;
 +	}
 +
-+	np->data = (__force void *)zynq_efuse_base;
-+
-+	pr_info("%s mapped to %p\n", np->name, zynq_efuse_base);
-+
-+	of_node_put(np);
-+
-+	return 0;
-+}
-diff --git a/arch/arm/mach-zynq/platsmp.c b/arch/arm/mach-zynq/platsmp.c
-index caa6d5fe9078..3d81e0f2972f 100644
---- a/arch/arm/mach-zynq/platsmp.c
-+++ b/arch/arm/mach-zynq/platsmp.c
-@@ -89,6 +89,9 @@ int zynq_cpun_start(u32 address, int cpu)
+ 	ret = devm_snd_soc_register_card(dev, card);
+ 	if (ret < 0) {
+ 		dev_err(dev, "snd_soc_register_card() failed: %d\n", ret);
+-		goto err_put_i2s_n;
++		goto err_put_clk_i2s;
+ 	}
  
- static int zynq_boot_secondary(unsigned int cpu, struct task_struct *idle)
- {
-+	if (!zynq_efuse_cpu_state(cpu))
-+		return -1;
-+
- 	return zynq_cpun_start(__pa_symbol(secondary_startup), cpu);
+ 	return 0;
+ 
++err_put_clk_i2s:
++	clk_put(priv->clk_i2s_bus);
++err_put_sclk:
++	clk_put(priv->sclk_i2s);
+ err_put_i2s_n:
+ 	of_node_put(link->cpu_of_node);
+ err_put_codec_n:
+@@ -192,6 +206,8 @@ static int odroid_audio_remove(struct platform_device *pdev)
+ 
+ 	of_node_put(priv->dai_link.cpu_of_node);
+ 	odroid_put_codec_of_nodes(&priv->dai_link);
++	clk_put(priv->sclk_i2s);
++	clk_put(priv->clk_i2s_bus);
+ 
+ 	return 0;
  }
- 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
