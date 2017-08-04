@@ -1,48 +1,75 @@
-From: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] PCI: Convert to using %pOF instead of full_name
-Date: Fri, 4 Aug 2017 09:38:42 -0700
-Message-ID: <dd5a317b-9e72-97bc-0386-8470998421c3@linux.vnet.ibm.com>
-References: <20170718214339.7774-41-robh@kernel.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
+ display panels
+Date: Fri, 4 Aug 2017 11:51:22 -0500
+Message-ID: <e824aca6-b668-1d63-65a0-c56bfd8bec79@lechnology.com>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <1501799630-1650-4-git-send-email-david@lechnology.com>
+ <66f0b765-928e-1fca-9588-99da747749a5@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170718214339.7774-41-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-GB
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <66f0b765-928e-1fca-9588-99da747749a5@tronnes.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/18/2017 02:43 PM, Rob Herring wrote:
-> Now that we have a custom printf format specifier, convert users of
-> full_name to use %pOF instead. This is preparation to remove storing
-> of the full path string for each node.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-> Cc: Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
-> Cc: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-> Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> ---
->  drivers/pci/host/pci-mvebu.c        | 8 ++++----
->  drivers/pci/host/pci-tegra.c        | 3 +--
->  drivers/pci/hotplug/pnv_php.c       | 4 ++--
->  drivers/pci/hotplug/rpadlpar_core.c | 4 ++--
->  drivers/pci/hotplug/rpaphp_core.c   | 2 +-
->  drivers/pci/hotplug/rpaphp_pci.c    | 4 ++--
->  drivers/pci/hotplug/rpaphp_slot.c   | 4 ++--
->  drivers/pci/pci-sysfs.c             | 4 ++--
->  drivers/pci/pci.c                   | 4 ++--
->  9 files changed, 18 insertions(+), 19 deletions(-)
-> 
-
-Reviewed-by: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+T24gMDgvMDQvMjAxNyAwNDo0OCBBTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAw
+NC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiBUaGlzIGFkZHMgYSBuZXcg
+YmluZGluZyBmb3IgU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWxzLgo+Pgo+PiBVc2luZyBs
+ZWdvIGFzIHRoZSB2ZW5kb3IgcHJlZml4IGluIHRoZSBjb21wYXRpYmxlIHN0cmluZyBiZWNhdXNl
+IHRoZSAKPj4gZGlzcGxheQo+PiBwYW5lbCBJIGFtIHdvcmtpbmcgd2l0aCBpcyBhbiBpbnRlZ3Jh
+bCBwYXJ0IG9mIHRoZSBMRUdPIE1JTkRTVE9STVMgRVYzLgo+IAo+IElzIHRoaXMgZGlzcGxheSBh
+dmFpbGFibGUgb3V0c2lkZSBvZiB0aGlzIExlZ28gcGFydD8KTm8sIGl0IGlzIG5vdC4KCj4gSWYg
+bm90IHlvdSBjYW4gcmVtb3ZlIHRoZSBwcm9wZXJ0aWVzIHlvdSBkb24ndCBuZWVkIGZvciB0aGlz
+IHBhcnRpY3VsYXIKPiBkaXNwbGF5IHNldHVwLiBBbm90aGVyIHN0NzU4NiBkaXNwbGF5IHdpdGgg
+YSBkaWZmZXJlbnQgcGFuZWwgd291bGQgbmVlZAo+IGEgZGlmZmVyZW50IGluaXRpYWxpemF0aW9u
+IHNlcXVlbmNlIGFuZCBjb21wYXRpYmxlIHN0cmluZywgc28gd2UgY2FuCj4gYWRkIHByb3BlcnRp
+ZXMgd2hlbi9pZiB0aGF0IGhhcHBlbnMuCgpPSy4gc28gSSB3aWxsIGRyb3AgcG93ZXItc3VwcGx5
+IGFuZCBiYWNrbGlnaHQuCgpTaG91bGQgSSByZW1vdmUgdGhlc2UgZnJvbSB0aGUgZHJpdmVyIGFz
+IHdlbGw/IFRoZXJlIGFyZSBzb21lIHBhbmVscyBvdXQgCnRoZXJlIHRoYXQgY291bGQgdXNlIHRo
+ZW0uWzFdCgpbMV06IApodHRwOi8vd3d3LmJ1eWRpc3BsYXkuY29tL2Rvd25sb2FkL21hbnVhbC9F
+UkMyNDAxNjAtMV9TZXJpZXNfRGF0YXNoZWV0LnBkZgoKPiAKPiBOb3JhbGYuCj4gCj4+IFNpZ25l
+ZC1vZmYtYnk6IERhdmlkIExlY2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgo+PiAtLS0KPj4g
+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDI2
+IAo+PiArKysrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2Vy
+dGlvbnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgCj4+IERvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4KPj4gZGlmZiAtLWdp
+dCAKPj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zaXRyb25p
+eCxzdDc1ODYudHh0IAo+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXgg
+MDAwMDAwMC4uZGZiMGI3Ygo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NpdHJvbml4LHN0NzU4Ni50eHQKPj4gQEAgLTAs
+MCArMSwyNiBAQAo+PiArU2l0cm9uaXggU1Q3NTg2IGRpc3BsYXkgcGFuZWwKPj4gKwo+PiArUmVx
+dWlyZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogICAgImxlZ28sZXYzLWxjZCIuCj4+
+ICsKPj4gK1RoZSBub2RlIGZvciB0aGlzIGRyaXZlciBtdXN0IGJlIGEgY2hpbGQgbm9kZSBvZiBh
+IFNQSSBjb250cm9sbGVyLCBoZW5jZQo+PiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2Ny
+aWJlZCBpbiAuLi9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSAKPj4gc3BlY2lmaWVkLgo+PiArCj4+
+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+PiArLSBkYy1ncGlvczogICAgRC9DIHBpbi4gVGhlIHBy
+ZXNlbmNlL2Fic2VuY2Ugb2YgdGhpcyBHUElPIGRldGVybWluZXMKPj4gKyAgICAgICAgdGhlIHBh
+bmVsIGludGVyZmFjZSBvcGVyYXRpb24gbW9kZSAoSUZbMzoxXSBwaW5zKToKPj4gKyAgICAgICAg
+LSBwcmVzZW50OiBJRj0wMTEgNC13aXJlIDgtYml0IGRhdGEgc2VyaWFsIGludGVyZmFjZQo+PiAr
+ICAgICAgICAtIGFic2VudDogIElGPTAxMCAzLXdpcmUgOS1iaXQgZGF0YSBzZXJpYWwgaW50ZXJm
+YWNlCj4+ICstIHJlc2V0LWdwaW9zOiAgICBSZXNldCBwaW4KPj4gKy0gcG93ZXItc3VwcGx5OiAg
+ICBBIHJlZ3VsYXRvciBub2RlIGZvciB0aGUgc3VwcGx5IHZvbHRhZ2UuCj4+ICstIGJhY2tsaWdo
+dDogICAgcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFu
+ZWwKPj4gKy0gcm90YXRpb246ICAgIHBhbmVsIHJvdGF0aW9uIGluIGRlZ3JlZXMgY291bnRlciBj
+bG9ja3dpc2UgCj4+ICgwLDkwLDE4MCwyNzApCj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsgICAgZGlz
+cGxheUAwewo+PiArICAgICAgICBjb21wYXRpYmxlID0gImxlZ28sZXYzLWxjZCI7Cj4+ICsgICAg
+ICAgIHJlZyA9IDwwPjsKPj4gKyAgICAgICAgc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMDA+
+Owo+PiArICAgICAgICBkYy1ncGlvcyA9IDwmZ3BpbyA0MyBHUElPX0FDVElWRV9ISUdIPjsKPj4g
+KyAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmdwaW8gODAgR1BJT19BQ1RJVkVfSElHSD47Cj4+ICsg
+ICAgfTsKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
