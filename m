@@ -1,72 +1,139 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave
-Date: Fri, 4 Aug 2017 09:24:31 +0200
-Message-ID: <FFCBE5D2-B32A-4715-A91E-899A87F31EBD@holtmann.org>
-References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
- <1501576704-26423-2-git-send-email-loic.poulain@gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501576704-26423-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 2/6] drm/tinydrm: generalize tinydrm_xrgb8888_to_gray8()
+Date: Fri, 4 Aug 2017 09:27:17 +0200
+Message-ID: <e53e6ff2-ae9b-a710-a9f4-410992c29a66@tronnes.org>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <1501799630-1650-3-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1501799630-1650-3-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
-> This allows to automatically insert the bcm43438 to the bluetooth
-> subsystem instead of relying on userspace helpers (hciattach).
-> 
-> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
-> of pl011/ttyAMA0.
-> 
-> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> v2: dt-bindings as separate patch
->    rebase on upcoming pi3 dts changes
-> 
-> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
-> 1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> index 20725ca..5abc1df 100644
-> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -8,6 +8,11 @@
-> 	compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
-> 	model = "Raspberry Pi 3 Model B";
-> 
-> +	chosen {
-> +		/* 8250 auxiliar UART instead of pl011 */
-> +		bootargs = "earlyprintk console=ttyS0,115200";
-> +	};
-> +
-> 	memory {
-> 		reg = <0 0x40000000>;
-> 	};
-> @@ -24,6 +29,11 @@
-> 	pinctrl-names = "default";
-> 	pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
-> 	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <921600>;
-> +	};
-> };
-> 
-
-can I get an ack on these patches? I like to take them through bluetooth-next tree.
-
-Regards
-
-Marcel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkRlbiAwNC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IFRoaXMgYWRkcyBw
+YXJhbWV0ZXJzIGZvciB2YWRkciBhbmQgY2xpcCB0byB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4
+KCkgdG8KPiBtYWtlIGl0IG1vcmUgZ2VuZXJpYy4KPgo+IGRtYV9idWZfe2JlZ2luLGVuZH1fY3B1
+X2FjY2VzcygpIGFyZSBtb3ZlZCBvdXQgdG8gdGhlIHJlcGFwZXIgZHJpdmVyLgo+Cj4gU2lnbmVk
+LW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+Cj4gLS0tCj4gICBk
+cml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jIHwgMzUgKysrKysr
+KysrKy0tLS0tLS0tLS0tLS0tLS0KPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL3JlcGFwZXIu
+YyAgICAgICAgICAgICAgfCAyMSArKysrKysrKysrKysrKystCj4gICBpbmNsdWRlL2RybS90aW55
+ZHJtL3Rpbnlkcm0taGVscGVycy5oICAgICAgICAgIHwgIDMgKystCj4gICAzIGZpbGVzIGNoYW5n
+ZWQsIDM1IGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1oZWxwZXJzLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jCj4gaW5kZXggNzU4MDhiYi4uNTkx
+NWJhOCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0t
+aGVscGVycy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS90aW55ZHJtLWhl
+bHBlcnMuYwo+IEBAIC0xODUsNyArMTg1LDkgQEAgRVhQT1JUX1NZTUJPTCh0aW55ZHJtX3hyZ2I4
+ODg4X3RvX3JnYjU2NSk7Cj4gICAvKioKPiAgICAqIHRpbnlkcm1feHJnYjg4ODhfdG9fZ3JheTgg
+LSBDb252ZXJ0IFhSR0I4ODg4IHRvIGdyYXlzY2FsZQo+ICAgICogQGRzdDogOC1iaXQgZ3JheXNj
+YWxlIGRlc3RpbmF0aW9uIGJ1ZmZlcgo+ICsgKiBAdmFkZHI6IFhSR0I4ODg4IHNvdXJjZSBidWZm
+ZXIKPiAgICAqIEBmYjogRFJNIGZyYW1lYnVmZmVyCj4gKyAqIEBjbGlwOiBDbGlwIHJlY3Rhbmds
+ZSBhcmVhIHRvIGNvcHkKPiAgICAqCj4gICAgKiBEcm0gZG9lc24ndCBoYXZlIG5hdGl2ZSBtb25v
+Y2hyb21lIG9yIGdyYXlzY2FsZSBzdXBwb3J0Lgo+ICAgICogU3VjaCBkcml2ZXJzIGNhbiBhbm5v
+dW5jZSB0aGUgY29tbW9ubHkgc3VwcG9ydGVkIFhSMjQgZm9ybWF0IHRvIHVzZXJzcGFjZQo+IEBA
+IC0xOTksMTIgKzIwMSwxMSBAQCBFWFBPUlRfU1lNQk9MKHRpbnlkcm1feHJnYjg4ODhfdG9fcmdi
+NTY1KTsKPiAgICAqIFJldHVybnM6Cj4gICAgKiBaZXJvIG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIGVy
+cm9yIGNvZGUgb24gZmFpbHVyZS4KPiAgICAqLwo+IC1pbnQgdGlueWRybV94cmdiODg4OF90b19n
+cmF5OCh1OCAqZHN0LCBzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYikKPiAraW50IHRpbnlkcm1f
+eHJnYjg4ODhfdG9fZ3JheTgodTggKmRzdCwgdm9pZCAqdmFkZHIsIHN0cnVjdCBkcm1fZnJhbWVi
+dWZmZXIgKmZiLAo+ICsJCQkgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcCkKPiAgIHsK
+PiAtCXN0cnVjdCBkcm1fZ2VtX2NtYV9vYmplY3QgKmNtYV9vYmogPSBkcm1fZmJfY21hX2dldF9n
+ZW1fb2JqKGZiLCAwKTsKPiAtCXN0cnVjdCBkbWFfYnVmX2F0dGFjaG1lbnQgKmltcG9ydF9hdHRh
+Y2ggPSBjbWFfb2JqLT5iYXNlLmltcG9ydF9hdHRhY2g7Cj4gLQl1bnNpZ25lZCBpbnQgeCwgeSwg
+cGl0Y2ggPSBmYi0+cGl0Y2hlc1swXTsKPiAtCWludCByZXQgPSAwOwo+ICsJdW5zaWduZWQgaW50
+IGxlbiA9IChjbGlwLT54MiAtIGNsaXAtPngxKSAqIHNpemVvZih1MzIpOwo+ICsJdW5zaWduZWQg
+aW50IHgsIHk7Cj4gICAJdm9pZCAqYnVmOwo+ICAgCXUzMiAqc3JjOwo+ICAgCj4gQEAgLTIxNCwy
+MiArMjE1LDE2IEBAIGludCB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KHU4ICpkc3QsIHN0cnVj
+dCBkcm1fZnJhbWVidWZmZXIgKmZiKQo+ICAgCSAqIFRoZSBjbWEgbWVtb3J5IGlzIHdyaXRlLWNv
+bWJpbmVkIHNvIHJlYWRzIGFyZSB1bmNhY2hlZC4KPiAgIAkgKiBTcGVlZCB1cCBieSBmZXRjaGlu
+ZyBvbmUgbGluZSBhdCBhIHRpbWUuCj4gICAJICovCj4gLQlidWYgPSBrbWFsbG9jKHBpdGNoLCBH
+RlBfS0VSTkVMKTsKPiArCWJ1ZiA9IGttYWxsb2MobGVuLCBHRlBfS0VSTkVMKTsKPiAgIAlpZiAo
+IWJ1ZikKPiAgIAkJcmV0dXJuIC1FTk9NRU07Cj4gICAKPiAtCWlmIChpbXBvcnRfYXR0YWNoKSB7
+Cj4gLQkJcmV0ID0gZG1hX2J1Zl9iZWdpbl9jcHVfYWNjZXNzKGltcG9ydF9hdHRhY2gtPmRtYWJ1
+ZiwKPiAtCQkJCQkgICAgICAgRE1BX0ZST01fREVWSUNFKTsKPiAtCQlpZiAocmV0KQo+IC0JCQln
+b3RvIGVycl9mcmVlOwo+IC0JfQo+IC0KPiAtCWZvciAoeSA9IDA7IHkgPCBmYi0+aGVpZ2h0OyB5
+KyspIHsKPiAtCQlzcmMgPSBjbWFfb2JqLT52YWRkciArICh5ICogcGl0Y2gpOwo+IC0JCW1lbWNw
+eShidWYsIHNyYywgcGl0Y2gpOwo+ICsJZm9yICh5ID0gY2xpcC0+eTE7IHkgPCBjbGlwLT55Mjsg
+eSsrKSB7Cj4gKwkJc3JjID0gdmFkZHIgKyAoeSAqIGZiLT5waXRjaGVzWzBdKTsKPiArCQlzcmMg
+Kz0gY2xpcC0+eDE7Cj4gKwkJbWVtY3B5KGJ1Ziwgc3JjLCBsZW4pOwo+ICAgCQlzcmMgPSBidWY7
+Cj4gLQkJZm9yICh4ID0gMDsgeCA8IGZiLT53aWR0aDsgeCsrKSB7Cj4gKwkJZm9yICh4ID0gY2xp
+cC0+eDE7IHggPCBjbGlwLT54MjsgeCsrKSB7Cj4gICAJCQl1OCByID0gKCpzcmMgJiAweDAwZmYw
+MDAwKSA+PiAxNjsKPiAgIAkJCXU4IGcgPSAoKnNyYyAmIDB4MDAwMGZmMDApID4+IDg7Cj4gICAJ
+CQl1OCBiID0gICpzcmMgJiAweDAwMDAwMGZmOwo+IEBAIC0yNDAsMTMgKzIzNSw5IEBAIGludCB0
+aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KHU4ICpkc3QsIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIg
+KmZiKQo+ICAgCQl9Cj4gICAJfQo+ICAgCj4gLQlpZiAoaW1wb3J0X2F0dGFjaCkKPiAtCQlyZXQg
+PSBkbWFfYnVmX2VuZF9jcHVfYWNjZXNzKGltcG9ydF9hdHRhY2gtPmRtYWJ1ZiwKPiAtCQkJCQkg
+ICAgIERNQV9GUk9NX0RFVklDRSk7Cj4gLWVycl9mcmVlOgo+ICAgCWtmcmVlKGJ1Zik7Cj4gICAK
+PiAtCXJldHVybiByZXQ7Cj4gKwlyZXR1cm4gMDsKPiAgIH0KPiAgIEVYUE9SVF9TWU1CT0wodGlu
+eWRybV94cmdiODg4OF90b19ncmF5OCk7Cj4gICAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL3Rpbnlkcm0vcmVwYXBlci5jIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vcmVwYXBlci5j
+Cj4gaW5kZXggMzM0M2QzZi4uZDM0Y2Q5YiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
+dGlueWRybS9yZXBhcGVyLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVy
+LmMKPiBAQCAtMTgsNiArMTgsNyBAQAo+ICAgICovCj4gICAKPiAgICNpbmNsdWRlIDxsaW51eC9k
+ZWxheS5oPgo+ICsjaW5jbHVkZSA8bGludXgvZG1hLWJ1Zi5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4
+L2dwaW8vY29uc3VtZXIuaD4KPiAgICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAgICNpbmNs
+dWRlIDxsaW51eC9vZl9kZXZpY2UuaD4KPiBAQCAtNTI1LDExICs1MjYsMjAgQEAgc3RhdGljIGlu
+dCByZXBhcGVyX2ZiX2RpcnR5KHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAo+ICAgCQkJICAg
+IHN0cnVjdCBkcm1fY2xpcF9yZWN0ICpjbGlwcywKPiAgIAkJCSAgICB1bnNpZ25lZCBpbnQgbnVt
+X2NsaXBzKQo+ICAgewo+ICsJc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqY21hX29iaiA9IGRy
+bV9mYl9jbWFfZ2V0X2dlbV9vYmooZmIsIDApOwo+ICsJc3RydWN0IGRtYV9idWZfYXR0YWNobWVu
+dCAqaW1wb3J0X2F0dGFjaCA9IGNtYV9vYmotPmJhc2UuaW1wb3J0X2F0dGFjaDsKPiAgIAlzdHJ1
+Y3QgdGlueWRybV9kZXZpY2UgKnRkZXYgPSBmYi0+ZGV2LT5kZXZfcHJpdmF0ZTsKPiAgIAlzdHJ1
+Y3QgcmVwYXBlcl9lcGQgKmVwZCA9IGVwZF9mcm9tX3Rpbnlkcm0odGRldik7Cj4gKwlzdHJ1Y3Qg
+ZHJtX2NsaXBfcmVjdCBjbGlwOwo+ICAgCXU4ICpidWYgPSBOVUxMOwo+ICAgCWludCByZXQgPSAw
+Owo+ICAgCj4gKwkvKiByZXBhcGVyIGNhbid0IGRvIHBhcnRpYWwgdXBkYXRlcyAqLwo+ICsJY2xp
+cC54MSA9IDA7Cj4gKwljbGlwLngyID0gZmItPndpZHRoOwo+ICsJY2xpcC55MSA9IDA7Cj4gKwlj
+bGlwLnkyID0gZmItPmhlaWdodDsKPiArCj4gICAJbXV0ZXhfbG9jaygmdGRldi0+ZGlydHlfbG9j
+ayk7Cj4gICAKPiAgIAlpZiAoIWVwZC0+ZW5hYmxlZCkKPiBAQCAtNTUwLDcgKzU2MCwxNiBAQCBz
+dGF0aWMgaW50IHJlcGFwZXJfZmJfZGlydHkoc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4g
+ICAJCWdvdG8gb3V0X3VubG9jazsKPiAgIAl9Cj4gICAKPiAtCXJldCA9IHRpbnlkcm1feHJnYjg4
+ODhfdG9fZ3JheTgoYnVmLCBmYik7Cj4gKwlpZiAoaW1wb3J0X2F0dGFjaCkgewo+ICsJCXJldCA9
+IGRtYV9idWZfYmVnaW5fY3B1X2FjY2VzcyhpbXBvcnRfYXR0YWNoLT5kbWFidWYsCj4gKwkJCQkJ
+ICAgICAgIERNQV9GUk9NX0RFVklDRSk7Cj4gKwkJaWYgKHJldCkKPiArCQkJZ290byBvdXRfdW5s
+b2NrOwo+ICsJfQo+ICsKPiArCXJldCA9IHRpbnlkcm1feHJnYjg4ODhfdG9fZ3JheTgoYnVmLCBj
+bWFfb2JqLT52YWRkciwgZmIsICZjbGlwKTsKPiArCWlmIChpbXBvcnRfYXR0YWNoKQo+ICsJCWRt
+YV9idWZfZW5kX2NwdV9hY2Nlc3MoaW1wb3J0X2F0dGFjaC0+ZG1hYnVmLCBETUFfRlJPTV9ERVZJ
+Q0UpOwoKSSB0aGluayB3ZSBjYW4gbWFrZSB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KCkgcmV0
+dXJuIHZvaWQgbGlrZSB0aGUKb3RoZXIgY29weSBmdW5jdGlvbnMuIFdlIGxvb3NlIHRoZSBlcnJv
+ciBpZiB0aGUgbGluZSBidWZmZXIgY2FuJ3QgYmUKYWxsb2NhdGVkLCBidXQgdGhhdCdzIG5vIGJp
+ZyBkZWFsLiBJZiB3ZSBjYW4ndCBhbGxvY2F0ZSA8NGsgb2YgbWVtb3J5LAp0aGVuIHdlIGhhdmUg
+bXVjaCBiaWdnZXIgcHJvYmxlbXMgZWxzZXdoZXJlLgpUaGlzIHNpbXBsaWZpZXMgcmV0dXJuaW5n
+IGFuIGVycm9yIGZyb20gZG1hX2J1Zl9lbmRfY3B1X2FjY2VzcygpLgpUaGUgZXJyb3IgaXMgcHJv
+cGFnYXRlZCB0byB1c2Vyc3BhY2Ugd2hvIGNhbGxlZCB0aGUgZGlydHkgaW9jdGwuCgpXaGVuIEkg
+aGF2ZSBzd2l0Y2hlZCBmcm9tIGNtYSB0byBzaG1lbSBidWZmZXJzIGJhY2tpbmcgdGhlIGZyYW1l
+YnVmZmVyCihvbmdvaW5nIHdvcmspLCB3ZSBkb24ndCBuZWVkIHRoZSBsaW5lIGJ1ZmZlciBjb3B5
+IHRvIHNwZWVkIHVwIHRoZQp1bmNhY2hlZCByZWFkcyBmcm9tIHdyaXRlIGNvbWJpbmVkIG1lbW9y
+eSBtYXBwaW5ncy4gQnV0IHdlIHdpbGwKcHJvYmFibHkgbmVlZCBpdCBvbiBidWZmZXJzIGltcG9y
+dGVkIHdpdGggUFJJTUUsIHNpbmNlIHdlIGRvbid0IGtub3cKdGhlIG1lbW9yeSBtYXBwaW5nLiBB
+dCBsZWFzdCBJIGRvbid0IHRoaW5rIHdlIGNhbiBmaW5kIHRoYXQgb3V0LgoKTm9yYWxmLgoKPiAg
+IAlpZiAocmV0KQo+ICAgCQlnb3RvIG91dF91bmxvY2s7Cj4gICAKPiBkaWZmIC0tZ2l0IGEvaW5j
+bHVkZS9kcm0vdGlueWRybS90aW55ZHJtLWhlbHBlcnMuaCBiL2luY2x1ZGUvZHJtL3Rpbnlkcm0v
+dGlueWRybS1oZWxwZXJzLmgKPiBpbmRleCBhNmMzODdmLi45ZTEzZWY1IDEwMDY0NAo+IC0tLSBh
+L2luY2x1ZGUvZHJtL3Rpbnlkcm0vdGlueWRybS1oZWxwZXJzLmgKPiArKysgYi9pbmNsdWRlL2Ry
+bS90aW55ZHJtL3Rpbnlkcm0taGVscGVycy5oCj4gQEAgLTQzLDcgKzQzLDggQEAgdm9pZCB0aW55
+ZHJtX3N3YWIxNih1MTYgKmRzdCwgdm9pZCAqdmFkZHIsIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIg
+KmZiLAo+ICAgdm9pZCB0aW55ZHJtX3hyZ2I4ODg4X3RvX3JnYjU2NSh1MTYgKmRzdCwgdm9pZCAq
+dmFkZHIsCj4gICAJCQkJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4gICAJCQkJc3RydWN0
+IGRybV9jbGlwX3JlY3QgKmNsaXAsIGJvb2wgc3dhcCk7Cj4gLWludCB0aW55ZHJtX3hyZ2I4ODg4
+X3RvX2dyYXk4KHU4ICpkc3QsIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiKTsKPiAraW50IHRp
+bnlkcm1feHJnYjg4ODhfdG9fZ3JheTgodTggKmRzdCwgdm9pZCAqdmFkZHIsIHN0cnVjdCBkcm1f
+ZnJhbWVidWZmZXIgKmZiLAo+ICsJCQkgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcCk7
+Cj4gICAKPiAgIHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICp0aW55ZHJtX29mX2ZpbmRfYmFja2xp
+Z2h0KHN0cnVjdCBkZXZpY2UgKmRldik7Cj4gICBpbnQgdGlueWRybV9lbmFibGVfYmFja2xpZ2h0
+KHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiYWNrbGlnaHQpOwoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
