@@ -1,158 +1,115 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v3 2/6] drm/tinydrm: generalize tinydrm_xrgb8888_to_gray8()
-Date: Fri, 4 Aug 2017 15:20:21 +0200
-Message-ID: <9713028d-ac77-40d6-fe62-9be2e9a5dd28@tronnes.org>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-3-git-send-email-david@lechnology.com>
- <e53e6ff2-ae9b-a710-a9f4-410992c29a66@tronnes.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 12/25] dt-bindings: qcom_nandc: QPIC NAND
+ documentation
+Date: Fri, 4 Aug 2017 15:22:47 +0200
+Message-ID: <20170804152247.075e00ea@bbrezillon>
+References: <1500464893-11352-1-git-send-email-absahu@codeaurora.org>
+        <1500464893-11352-13-git-send-email-absahu@codeaurora.org>
+        <20170724191723.aisibziviylk5ihc@rob-hp-laptop>
+        <d8d8fef7d13acc4ffc29edac42eaa429@codeaurora.org>
+        <abf14014808fa0557696fee509c28046@codeaurora.org>
+        <20170804144536.4177a12f@bbrezillon>
+        <ae7df79750977b366bf44ba505b791f0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e53e6ff2-ae9b-a710-a9f4-410992c29a66@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ae7df79750977b366bf44ba505b791f0@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: Rob Herring <robh@kernel.org>, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAwNC4wOC4yMDE3IDA5LjI3LCBza3JldiBOb3JhbGYgVHLDuG5uZXM6Cj4KPiBEZW4gMDQu
-MDguMjAxNyAwMC4zMywgc2tyZXYgRGF2aWQgTGVjaG5lcjoKPj4gVGhpcyBhZGRzIHBhcmFtZXRl
-cnMgZm9yIHZhZGRyIGFuZCBjbGlwIHRvIAo+PiB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KCkg
-dG8KPj4gbWFrZSBpdCBtb3JlIGdlbmVyaWMuCj4+Cj4+IGRtYV9idWZfe2JlZ2luLGVuZH1fY3B1
-X2FjY2VzcygpIGFyZSBtb3ZlZCBvdXQgdG8gdGhlIHJlcGFwZXIgZHJpdmVyLgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBEYXZpZCBMZWNobmVyIDxkYXZpZEBsZWNobm9sb2d5LmNvbT4KPj4gLS0tCj4+
-ICAgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS90aW55ZHJtLWhlbHBlcnMuYyB8IDM1IAo+
-PiArKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLQo+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
-L3JlcGFwZXIuYyAgICAgICAgICAgICAgfCAyMSArKysrKysrKysrKysrKystCj4+ICAgaW5jbHVk
-ZS9kcm0vdGlueWRybS90aW55ZHJtLWhlbHBlcnMuaCAgICAgICAgICB8ICAzICsrLQo+PiAgIDMg
-ZmlsZXMgY2hhbmdlZCwgMzUgaW5zZXJ0aW9ucygrKSwgMjQgZGVsZXRpb25zKC0pCj4+Cj4+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5j
-IAo+PiBiL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1oZWxwZXJzLmMKPj4g
-aW5kZXggNzU4MDhiYi4uNTkxNWJhOCAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3Rp
-bnlkcm0vY29yZS90aW55ZHJtLWhlbHBlcnMuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vdGlu
-eWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jCj4+IEBAIC0xODUsNyArMTg1LDkgQEAgRVhQT1JU
-X1NZTUJPTCh0aW55ZHJtX3hyZ2I4ODg4X3RvX3JnYjU2NSk7Cj4+ICAgLyoqCj4+ICAgICogdGlu
-eWRybV94cmdiODg4OF90b19ncmF5OCAtIENvbnZlcnQgWFJHQjg4ODggdG8gZ3JheXNjYWxlCj4+
-ICAgICogQGRzdDogOC1iaXQgZ3JheXNjYWxlIGRlc3RpbmF0aW9uIGJ1ZmZlcgo+PiArICogQHZh
-ZGRyOiBYUkdCODg4OCBzb3VyY2UgYnVmZmVyCj4+ICAgICogQGZiOiBEUk0gZnJhbWVidWZmZXIK
-Pj4gKyAqIEBjbGlwOiBDbGlwIHJlY3RhbmdsZSBhcmVhIHRvIGNvcHkKPj4gICAgKgo+PiAgICAq
-IERybSBkb2Vzbid0IGhhdmUgbmF0aXZlIG1vbm9jaHJvbWUgb3IgZ3JheXNjYWxlIHN1cHBvcnQu
-Cj4+ICAgICogU3VjaCBkcml2ZXJzIGNhbiBhbm5vdW5jZSB0aGUgY29tbW9ubHkgc3VwcG9ydGVk
-IFhSMjQgZm9ybWF0IHRvIAo+PiB1c2Vyc3BhY2UKPj4gQEAgLTE5OSwxMiArMjAxLDExIEBAIEVY
-UE9SVF9TWU1CT0wodGlueWRybV94cmdiODg4OF90b19yZ2I1NjUpOwo+PiAgICAqIFJldHVybnM6
-Cj4+ICAgICogWmVybyBvbiBzdWNjZXNzLCBuZWdhdGl2ZSBlcnJvciBjb2RlIG9uIGZhaWx1cmUu
-Cj4+ICAgICovCj4+IC1pbnQgdGlueWRybV94cmdiODg4OF90b19ncmF5OCh1OCAqZHN0LCBzdHJ1
-Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYikKPj4gK2ludCB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4
-KHU4ICpkc3QsIHZvaWQgKnZhZGRyLCBzdHJ1Y3QgCj4+IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4+
-ICsgICAgICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcCkKPj4gICB7Cj4+
-IC0gICAgc3RydWN0IGRybV9nZW1fY21hX29iamVjdCAqY21hX29iaiA9IGRybV9mYl9jbWFfZ2V0
-X2dlbV9vYmooZmIsIDApOwo+PiAtICAgIHN0cnVjdCBkbWFfYnVmX2F0dGFjaG1lbnQgKmltcG9y
-dF9hdHRhY2ggPSAKPj4gY21hX29iai0+YmFzZS5pbXBvcnRfYXR0YWNoOwo+PiAtICAgIHVuc2ln
-bmVkIGludCB4LCB5LCBwaXRjaCA9IGZiLT5waXRjaGVzWzBdOwo+PiAtICAgIGludCByZXQgPSAw
-Owo+PiArICAgIHVuc2lnbmVkIGludCBsZW4gPSAoY2xpcC0+eDIgLSBjbGlwLT54MSkgKiBzaXpl
-b2YodTMyKTsKPj4gKyAgICB1bnNpZ25lZCBpbnQgeCwgeTsKPj4gICAgICAgdm9pZCAqYnVmOwo+
-PiAgICAgICB1MzIgKnNyYzsKPj4gICBAQCAtMjE0LDIyICsyMTUsMTYgQEAgaW50IHRpbnlkcm1f
-eHJnYjg4ODhfdG9fZ3JheTgodTggKmRzdCwgc3RydWN0IAo+PiBkcm1fZnJhbWVidWZmZXIgKmZi
-KQo+PiAgICAgICAgKiBUaGUgY21hIG1lbW9yeSBpcyB3cml0ZS1jb21iaW5lZCBzbyByZWFkcyBh
-cmUgdW5jYWNoZWQuCj4+ICAgICAgICAqIFNwZWVkIHVwIGJ5IGZldGNoaW5nIG9uZSBsaW5lIGF0
-IGEgdGltZS4KPj4gICAgICAgICovCj4+IC0gICAgYnVmID0ga21hbGxvYyhwaXRjaCwgR0ZQX0tF
-Uk5FTCk7Cj4+ICsgICAgYnVmID0ga21hbGxvYyhsZW4sIEdGUF9LRVJORUwpOwo+PiAgICAgICBp
-ZiAoIWJ1ZikKPj4gICAgICAgICAgIHJldHVybiAtRU5PTUVNOwo+PiAgIC0gICAgaWYgKGltcG9y
-dF9hdHRhY2gpIHsKPj4gLSAgICAgICAgcmV0ID0gZG1hX2J1Zl9iZWdpbl9jcHVfYWNjZXNzKGlt
-cG9ydF9hdHRhY2gtPmRtYWJ1ZiwKPj4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgIERNQV9G
-Uk9NX0RFVklDRSk7Cj4+IC0gICAgICAgIGlmIChyZXQpCj4+IC0gICAgICAgICAgICBnb3RvIGVy
-cl9mcmVlOwo+PiAtICAgIH0KPj4gLQo+PiAtICAgIGZvciAoeSA9IDA7IHkgPCBmYi0+aGVpZ2h0
-OyB5KyspIHsKPj4gLSAgICAgICAgc3JjID0gY21hX29iai0+dmFkZHIgKyAoeSAqIHBpdGNoKTsK
-Pj4gLSAgICAgICAgbWVtY3B5KGJ1Ziwgc3JjLCBwaXRjaCk7Cj4+ICsgICAgZm9yICh5ID0gY2xp
-cC0+eTE7IHkgPCBjbGlwLT55MjsgeSsrKSB7Cj4+ICsgICAgICAgIHNyYyA9IHZhZGRyICsgKHkg
-KiBmYi0+cGl0Y2hlc1swXSk7Cj4+ICsgICAgICAgIHNyYyArPSBjbGlwLT54MTsKPj4gKyAgICAg
-ICAgbWVtY3B5KGJ1Ziwgc3JjLCBsZW4pOwo+PiAgICAgICAgICAgc3JjID0gYnVmOwo+PiAtICAg
-ICAgICBmb3IgKHggPSAwOyB4IDwgZmItPndpZHRoOyB4KyspIHsKPj4gKyAgICAgICAgZm9yICh4
-ID0gY2xpcC0+eDE7IHggPCBjbGlwLT54MjsgeCsrKSB7Cj4+ICAgICAgICAgICAgICAgdTggciA9
-ICgqc3JjICYgMHgwMGZmMDAwMCkgPj4gMTY7Cj4+ICAgICAgICAgICAgICAgdTggZyA9ICgqc3Jj
-ICYgMHgwMDAwZmYwMCkgPj4gODsKPj4gICAgICAgICAgICAgICB1OCBiID0gICpzcmMgJiAweDAw
-MDAwMGZmOwo+PiBAQCAtMjQwLDEzICsyMzUsOSBAQCBpbnQgdGlueWRybV94cmdiODg4OF90b19n
-cmF5OCh1OCAqZHN0LCBzdHJ1Y3QgCj4+IGRybV9mcmFtZWJ1ZmZlciAqZmIpCj4+ICAgICAgICAg
-ICB9Cj4+ICAgICAgIH0KPj4gICAtICAgIGlmIChpbXBvcnRfYXR0YWNoKQo+PiAtICAgICAgICBy
-ZXQgPSBkbWFfYnVmX2VuZF9jcHVfYWNjZXNzKGltcG9ydF9hdHRhY2gtPmRtYWJ1ZiwKPj4gLSAg
-ICAgICAgICAgICAgICAgICAgICAgICBETUFfRlJPTV9ERVZJQ0UpOwo+PiAtZXJyX2ZyZWU6Cj4+
-ICAgICAgIGtmcmVlKGJ1Zik7Cj4+ICAgLSAgICByZXR1cm4gcmV0Owo+PiArICAgIHJldHVybiAw
-Owo+PiAgIH0KPj4gICBFWFBPUlRfU1lNQk9MKHRpbnlkcm1feHJnYjg4ODhfdG9fZ3JheTgpOwo+
-PiAgIGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVyLmMgCj4+IGIv
-ZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vcmVwYXBlci5jCj4+IGluZGV4IDMzNDNkM2YuLmQzNGNk
-OWIgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL3JlcGFwZXIuYwo+PiAr
-KysgYi9kcml2ZXJzL2dwdS9kcm0vdGlueWRybS9yZXBhcGVyLmMKPj4gQEAgLTE4LDYgKzE4LDcg
-QEAKPj4gICAgKi8KPj4gICAgICNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+PiArI2luY2x1ZGUg
-PGxpbnV4L2RtYS1idWYuaD4KPj4gICAjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgo+
-PiAgICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4gICAjaW5jbHVkZSA8bGludXgvb2ZfZGV2
-aWNlLmg+Cj4+IEBAIC01MjUsMTEgKzUyNiwyMCBAQCBzdGF0aWMgaW50IHJlcGFwZXJfZmJfZGly
-dHkoc3RydWN0IAo+PiBkcm1fZnJhbWVidWZmZXIgKmZiLAo+PiAgICAgICAgICAgICAgICAgICBz
-dHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcHMsCj4+ICAgICAgICAgICAgICAgICAgIHVuc2lnbmVk
-IGludCBudW1fY2xpcHMpCj4+ICAgewo+PiArICAgIHN0cnVjdCBkcm1fZ2VtX2NtYV9vYmplY3Qg
-KmNtYV9vYmogPSBkcm1fZmJfY21hX2dldF9nZW1fb2JqKGZiLCAwKTsKPj4gKyAgICBzdHJ1Y3Qg
-ZG1hX2J1Zl9hdHRhY2htZW50ICppbXBvcnRfYXR0YWNoID0gCj4+IGNtYV9vYmotPmJhc2UuaW1w
-b3J0X2F0dGFjaDsKPj4gICAgICAgc3RydWN0IHRpbnlkcm1fZGV2aWNlICp0ZGV2ID0gZmItPmRl
-di0+ZGV2X3ByaXZhdGU7Cj4+ICAgICAgIHN0cnVjdCByZXBhcGVyX2VwZCAqZXBkID0gZXBkX2Zy
-b21fdGlueWRybSh0ZGV2KTsKPj4gKyAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCBjbGlwOwo+PiAg
-ICAgICB1OCAqYnVmID0gTlVMTDsKPj4gICAgICAgaW50IHJldCA9IDA7Cj4+ICAgKyAgICAvKiBy
-ZXBhcGVyIGNhbid0IGRvIHBhcnRpYWwgdXBkYXRlcyAqLwo+PiArICAgIGNsaXAueDEgPSAwOwo+
-PiArICAgIGNsaXAueDIgPSBmYi0+d2lkdGg7Cj4+ICsgICAgY2xpcC55MSA9IDA7Cj4+ICsgICAg
-Y2xpcC55MiA9IGZiLT5oZWlnaHQ7Cj4+ICsKPj4gICAgICAgbXV0ZXhfbG9jaygmdGRldi0+ZGly
-dHlfbG9jayk7Cj4+ICAgICAgICAgaWYgKCFlcGQtPmVuYWJsZWQpCj4+IEBAIC01NTAsNyArNTYw
-LDE2IEBAIHN0YXRpYyBpbnQgcmVwYXBlcl9mYl9kaXJ0eShzdHJ1Y3QgCj4+IGRybV9mcmFtZWJ1
-ZmZlciAqZmIsCj4+ICAgICAgICAgICBnb3RvIG91dF91bmxvY2s7Cj4+ICAgICAgIH0KPj4gICAt
-ICAgIHJldCA9IHRpbnlkcm1feHJnYjg4ODhfdG9fZ3JheTgoYnVmLCBmYik7Cj4+ICsgICAgaWYg
-KGltcG9ydF9hdHRhY2gpIHsKPj4gKyAgICAgICAgcmV0ID0gZG1hX2J1Zl9iZWdpbl9jcHVfYWNj
-ZXNzKGltcG9ydF9hdHRhY2gtPmRtYWJ1ZiwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-IERNQV9GUk9NX0RFVklDRSk7Cj4+ICsgICAgICAgIGlmIChyZXQpCj4+ICsgICAgICAgICAgICBn
-b3RvIG91dF91bmxvY2s7Cj4+ICsgICAgfQo+PiArCj4+ICsgICAgcmV0ID0gdGlueWRybV94cmdi
-ODg4OF90b19ncmF5OChidWYsIGNtYV9vYmotPnZhZGRyLCBmYiwgJmNsaXApOwo+PiArICAgIGlm
-IChpbXBvcnRfYXR0YWNoKQo+PiArICAgICAgICBkbWFfYnVmX2VuZF9jcHVfYWNjZXNzKGltcG9y
-dF9hdHRhY2gtPmRtYWJ1ZiwgRE1BX0ZST01fREVWSUNFKTsKPgo+IEkgdGhpbmsgd2UgY2FuIG1h
-a2UgdGlueWRybV94cmdiODg4OF90b19ncmF5OCgpIHJldHVybiB2b2lkIGxpa2UgdGhlCj4gb3Ro
-ZXIgY29weSBmdW5jdGlvbnMuIFdlIGxvb3NlIHRoZSBlcnJvciBpZiB0aGUgbGluZSBidWZmZXIg
-Y2FuJ3QgYmUKPiBhbGxvY2F0ZWQsIGJ1dCB0aGF0J3Mgbm8gYmlnIGRlYWwuIElmIHdlIGNhbid0
-IGFsbG9jYXRlIDw0ayBvZiBtZW1vcnksCj4gdGhlbiB3ZSBoYXZlIG11Y2ggYmlnZ2VyIHByb2Js
-ZW1zIGVsc2V3aGVyZS4KPiBUaGlzIHNpbXBsaWZpZXMgcmV0dXJuaW5nIGFuIGVycm9yIGZyb20g
-ZG1hX2J1Zl9lbmRfY3B1X2FjY2VzcygpLgo+IFRoZSBlcnJvciBpcyBwcm9wYWdhdGVkIHRvIHVz
-ZXJzcGFjZSB3aG8gY2FsbGVkIHRoZSBkaXJ0eSBpb2N0bC4KPgo+IFdoZW4gSSBoYXZlIHN3aXRj
-aGVkIGZyb20gY21hIHRvIHNobWVtIGJ1ZmZlcnMgYmFja2luZyB0aGUgZnJhbWVidWZmZXIKPiAo
-b25nb2luZyB3b3JrKSwgd2UgZG9uJ3QgbmVlZCB0aGUgbGluZSBidWZmZXIgY29weSB0byBzcGVl
-ZCB1cCB0aGUKPiB1bmNhY2hlZCByZWFkcyBmcm9tIHdyaXRlIGNvbWJpbmVkIG1lbW9yeSBtYXBw
-aW5ncy4gQnV0IHdlIHdpbGwKPiBwcm9iYWJseSBuZWVkIGl0IG9uIGJ1ZmZlcnMgaW1wb3J0ZWQg
-d2l0aCBQUklNRSwgc2luY2Ugd2UgZG9uJ3Qga25vdwo+IHRoZSBtZW1vcnkgbWFwcGluZy4gQXQg
-bGVhc3QgSSBkb24ndCB0aGluayB3ZSBjYW4gZmluZCB0aGF0IG91dC4KPgoKSSByZWFsaXNlZCB0
-aGF0IHdlIGNhbiBqdXN0IGRvIGEgc2xvdyBjb3B5LCBpZiB3ZSBjYW4ndCBhbGxvY2F0ZSBhIGJ1
-ZmZlci4KSSB3aWxsIHNvcnQgdGhhdCBvdXQgaW4gYWxsIHRoZSBjb3B5IGZ1bmN0aW9ucyB3aGVu
-IHdlIHN3aXRjaCB0byBzaG1lbS4KU28gcGxlYXNlIG1ha2UgdGlueWRybV94cmdiODg4OF90b19n
-cmF5OCgpIHZvaWQuCgo+IE5vcmFsZi4KPgo+PiAgICAgICBpZiAocmV0KQo+PiAgICAgICAgICAg
-Z290byBvdXRfdW5sb2NrOwo+PiAgIGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS90aW55ZHJtL3Rp
-bnlkcm0taGVscGVycy5oIAo+PiBiL2luY2x1ZGUvZHJtL3Rpbnlkcm0vdGlueWRybS1oZWxwZXJz
-LmgKPj4gaW5kZXggYTZjMzg3Zi4uOWUxM2VmNSAxMDA2NDQKPj4gLS0tIGEvaW5jbHVkZS9kcm0v
-dGlueWRybS90aW55ZHJtLWhlbHBlcnMuaAo+PiArKysgYi9pbmNsdWRlL2RybS90aW55ZHJtL3Rp
-bnlkcm0taGVscGVycy5oCj4+IEBAIC00Myw3ICs0Myw4IEBAIHZvaWQgdGlueWRybV9zd2FiMTYo
-dTE2ICpkc3QsIHZvaWQgKnZhZGRyLCBzdHJ1Y3QgCj4+IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4+
-ICAgdm9pZCB0aW55ZHJtX3hyZ2I4ODg4X3RvX3JnYjU2NSh1MTYgKmRzdCwgdm9pZCAqdmFkZHIs
-Cj4+ICAgICAgICAgICAgICAgICAgIHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAo+PiAgICAg
-ICAgICAgICAgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcCwgYm9vbCBzd2FwKTsKPj4g
-LWludCB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KHU4ICpkc3QsIHN0cnVjdCBkcm1fZnJhbWVi
-dWZmZXIgKmZiKTsKPj4gK2ludCB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KHU4ICpkc3QsIHZv
-aWQgKnZhZGRyLCBzdHJ1Y3QgCj4+IGRybV9mcmFtZWJ1ZmZlciAqZmIsCj4+ICsgICAgICAgICAg
-ICAgICAgICBzdHJ1Y3QgZHJtX2NsaXBfcmVjdCAqY2xpcCk7Cj4+ICAgICBzdHJ1Y3QgYmFja2xp
-Z2h0X2RldmljZSAqdGlueWRybV9vZl9maW5kX2JhY2tsaWdodChzdHJ1Y3QgZGV2aWNlIAo+PiAq
-ZGV2KTsKPj4gICBpbnQgdGlueWRybV9lbmFibGVfYmFja2xpZ2h0KHN0cnVjdCBiYWNrbGlnaHRf
-ZGV2aWNlICpiYWNrbGlnaHQpOwo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Fri, 04 Aug 2017 18:41:20 +0530
+Abhishek Sahu <absahu@codeaurora.org> wrote:
+
+> On 2017-08-04 18:15, Boris Brezillon wrote:
+> > On Mon, 31 Jul 2017 21:35:57 +0530
+> > Abhishek Sahu <absahu@codeaurora.org> wrote:
+> >   
+> >> On 2017-07-26 00:13, Abhishek Sahu wrote:  
+> >> > On 2017-07-25 00:47, Rob Herring wrote:  
+> >> >> On Wed, Jul 19, 2017 at 05:18:00PM +0530, Abhishek Sahu wrote:  
+> >> >>> 1. QPIC NAND will use compatible string "qcom,qpic-nandc-v1.4.0"
+> >> >>> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
+> >> >>>    while EBI2 NAND uses only single ADM channel.
+> >> >>> 3. CRCI is only required for ADM DMA and its not required for
+> >> >>>    QPIC NAND.
+> >> >>>
+> >> >>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> >> >>> ---
+> >> >>>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 54
+> >> >>> ++++++++++++++++++++--
+> >> >>>  1 file changed, 51 insertions(+), 3 deletions(-)
+> >> >>>
+> >> >>> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >> >>> b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >> >>> index b24adfe..8efaeb0 100644
+> >> >>> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >> >>> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> >> >>> @@ -1,13 +1,15 @@
+> >> >>>  * Qualcomm NAND controller
+> >> >>>
+> >> >>>  Required properties:
+> >> >>> -- compatible:		should be "qcom,ebi2-nandc" - EBI2 NAND which uses
+> >> >>> ADM
+> >> >>> -			DMA like IPQ8064.
+> >> >>> -
+> >> >>> +- compatible:		must be one of the following:
+> >> >>> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
+> >> >>> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA
+> >> >>> like IPQ4019.  
+> >> >>
+> >> >> Looks like you have 2 SoCs and 2 versions of h/w. Use SoC specific
+> >> >> compatible strings.  
+> >> >
+> >> >  We have 3 versions of NAND HW currently.
+> >> >  EBI2,
+> >> >  QPIC version 1.4.0
+> >> >  QPIC version 1.5.0
+> >> >
+> >> >  and multiple Qualcomm SoCs which use any one of these.
+> >> >
+> >> >  The original plan was to have compatible string for NAND version since
+> >> >  same NAND hardware is being in different SoC and SoC dtsi will simply
+> >> >  use its NAND version compatible string like other Qualcomm hardwares
+> >> >
+> >> >
+> >> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+> >> >
+> >> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+> >> >  
+> >> 
+> >>   Following are the partial list for NAND controller and supported
+> >>   SoC
+> >> 
+> >>    EBI2:          IPQ8064, APQ8064, MSM7xx, MDM9x15
+> >>    QPIC v1.4.0    MDM9x25, MDM9x35, MDM9x45, IPQ4019
+> >>    QPIC v1.5.0    MDM9x55, IPQ8074
+> >> 
+> >>   so could we use NAND controller specific compatible strings instead 
+> >> of
+> >> SoC
+> >>   since it will easy to maintain?  
+> > 
+> > Nope, though you can re-use the compatible of an old SoC for new SoCs
+> > if the IP did not change.
+> > 
+> > For example:
+> > 
+> > - EBI2: compatible = "qcom,ipq8064"
+> > - QPIC 1.4: compatible = "qcom,mdm9x25"
+> > - QPIC 1.5: compatible = "qcom,mdm9x55"
+> > 
+> > Note that we usually pick the oldest SoC that started embedding an IP
+> > when choosing the compatible. So my suggestion assumes IPQ8064 is older
+> > than APQ8064, MSM7xx and MDM9x15.  
+> 
+>   Thanks Boris for detailed clarification.
+>   Then I will change the patch to use SoC specific compatible string.
+> 
+>   Its better to use qcom,ipq4019 for 1.4.0 and qcom,ipq8074 for 1.5.0
+>   since we don't have other SoC in upstream and I have tested the
+>   NAND driver on these IPQ SoC's.
+
+Sounds good, but I'll let Rob confirm.
