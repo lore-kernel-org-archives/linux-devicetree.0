@@ -1,98 +1,114 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH v3 1/6] drm/tinydrm: remove call to mipi_dbi_init() from
- mipi_dbi_spi_init()
-Date: Fri, 4 Aug 2017 15:16:25 +0200
-Message-ID: <899f6103-694d-1eef-8f28-3ecda91e580d@tronnes.org>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-2-git-send-email-david@lechnology.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller
+ support
+Date: Fri, 4 Aug 2017 08:18:09 -0500
+Message-ID: <20170804131808.GA16580@bhelgaas-glaptop.roam.corp.google.com>
+References: <cover.1501122135.git.honghui.zhang@mediatek.com>
+ <824c61d13fe2731d812df8a0a878ca1a36399e76.1501122135.git.honghui.zhang@mediatek.com>
+ <20170803224206.GN20308@bhelgaas-glaptop.roam.corp.google.com>
+ <1501835976.24341.21.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1501799630-1650-2-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Lechner <david@lechnology.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501835976.24341.21.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Honghui Zhang <honghui.zhang@mediatek.com>
+Cc: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAwNC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+IFRoaXMgcmVtb3Zl
-cyB0aGUgY2FsbCB0byBtaXBpX2RiaV9pbml0KCkgZnJvbSBtaXBpX2RiaV9zcGlfaW5pdCgpIHNv
-IHRoYXQKPiBkcml2ZXJzIGNhbiBoYXZlIGEgZHJpdmVyLXNwZWNpZmljIGltcGxlbWVudGF0aW9u
-IGlmIG5lZWRlZC4KPgo+IFN1Z2dlc3RlZC1ieTogTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJv
-bm5lcy5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9n
-eS5jb20+Cj4gUmV2aWV3ZWQtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3Jn
-Pgo+IC0tLQoKVGhhbmtzLCBhcHBsaWVkIHRvIGRybS1taXNjLgoKTm9yYWxmLgoKPiAgIGRyaXZl
-cnMvZ3B1L2RybS90aW55ZHJtL21pMDI4M3F0LmMgfCAgOCArKysrKystLQo+ICAgZHJpdmVycy9n
-cHUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuYyB8IDE3ICsrKysrLS0tLS0tLS0tLS0tCj4gICBpbmNs
-dWRlL2RybS90aW55ZHJtL21pcGktZGJpLmggICAgIHwgIDYgKy0tLS0tCj4gICAzIGZpbGVzIGNo
-YW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL21pMDI4M3F0LmMgYi9kcml2ZXJzL2dwdS9kcm0vdGlu
-eWRybS9taTAyODNxdC5jCj4gaW5kZXggNDgyZmYxYzMuLjdlNWJiN2QgMTAwNjQ0Cj4gLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vbWkwMjgzcXQuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS90aW55ZHJtL21pMDI4M3F0LmMKPiBAQCAtMTk1LDggKzE5NSwxMiBAQCBzdGF0aWMgaW50IG1p
-MDI4M3F0X3Byb2JlKHN0cnVjdCBzcGlfZGV2aWNlICpzcGkpCj4gICAKPiAgIAlkZXZpY2VfcHJv
-cGVydHlfcmVhZF91MzIoZGV2LCAicm90YXRpb24iLCAmcm90YXRpb24pOwo+ICAgCj4gLQlyZXQg
-PSBtaXBpX2RiaV9zcGlfaW5pdChzcGksIG1pcGksIGRjLCAmbWkwMjgzcXRfcGlwZV9mdW5jcywK
-PiAtCQkJCSZtaTAyODNxdF9kcml2ZXIsICZtaTAyODNxdF9tb2RlLCByb3RhdGlvbik7Cj4gKwly
-ZXQgPSBtaXBpX2RiaV9zcGlfaW5pdChzcGksIG1pcGksIGRjKTsKPiArCWlmIChyZXQpCj4gKwkJ
-cmV0dXJuIHJldDsKPiArCj4gKwlyZXQgPSBtaXBpX2RiaV9pbml0KCZzcGktPmRldiwgbWlwaSwg
-Jm1pMDI4M3F0X3BpcGVfZnVuY3MsCj4gKwkJCSAgICAmbWkwMjgzcXRfZHJpdmVyLCAmbWkwMjgz
-cXRfbW9kZSwgcm90YXRpb24pOwo+ICAgCWlmIChyZXQpCj4gICAJCXJldHVybiByZXQ7Cj4gICAK
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuYyBiL2RyaXZl
-cnMvZ3B1L2RybS90aW55ZHJtL21pcGktZGJpLmMKPiBpbmRleCBlMTBmYTRiLi5jYmE5Nzg0IDEw
-MDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJtL21pcGktZGJpLmMKPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vdGlueWRybS9taXBpLWRiaS5jCj4gQEAgLTc3NywxNSArNzc3LDEyIEBA
-IHN0YXRpYyBpbnQgbWlwaV9kYmlfdHlwZWMzX2NvbW1hbmQoc3RydWN0IG1pcGlfZGJpICptaXBp
-LCB1OCBjbWQsCj4gICAvKioKPiAgICAqIG1pcGlfZGJpX3NwaV9pbml0IC0gSW5pdGlhbGl6ZSBN
-SVBJIERCSSBTUEkgaW50ZXJmYWNlZCBjb250cm9sbGVyCj4gICAgKiBAc3BpOiBTUEkgZGV2aWNl
-Cj4gLSAqIEBkYzogRC9DIGdwaW8gKG9wdGlvbmFsKQo+ICAgICogQG1pcGk6ICZtaXBpX2RiaSBz
-dHJ1Y3R1cmUgdG8gaW5pdGlhbGl6ZQo+IC0gKiBAcGlwZV9mdW5jczogRGlzcGxheSBwaXBlIGZ1
-bmN0aW9ucwo+IC0gKiBAZHJpdmVyOiBEUk0gZHJpdmVyCj4gLSAqIEBtb2RlOiBEaXNwbGF5IG1v
-ZGUKPiAtICogQHJvdGF0aW9uOiBJbml0aWFsIHJvdGF0aW9uIGluIGRlZ3JlZXMgQ291bnRlciBD
-bG9jayBXaXNlCj4gKyAqIEBkYzogRC9DIGdwaW8gKG9wdGlvbmFsKQo+ICAgICoKPiAgICAqIFRo
-aXMgZnVuY3Rpb24gc2V0cyAmbWlwaV9kYmktPmNvbW1hbmQsIGVuYWJsZXMgJm1pcGktPnJlYWRf
-Y29tbWFuZHMgZm9yIHRoZQo+IC0gKiB1c3VhbCByZWFkIGNvbW1hbmRzIGFuZCBpbml0aWFsaXpl
-cyBAbWlwaSB1c2luZyBtaXBpX2RiaV9pbml0KCkuCj4gKyAqIHVzdWFsIHJlYWQgY29tbWFuZHMu
-IEl0IHNob3VsZCBiZSBmb2xsb3dlZCBieSBhIGNhbGwgdG8gbWlwaV9kYmlfaW5pdCgpIG9yCj4g
-KyAqIGEgZHJpdmVyLXNwZWNpZmljIGluaXQuCj4gICAgKgo+ICAgICogSWYgQGRjIGlzIHNldCwg
-YSBUeXBlIEMgT3B0aW9uIDMgaW50ZXJmYWNlIGlzIGFzc3VtZWQsIGlmIG5vdAo+ICAgICogVHlw
-ZSBDIE9wdGlvbiAxLgo+IEBAIC04MDAsMTEgKzc5Nyw3IEBAIHN0YXRpYyBpbnQgbWlwaV9kYmlf
-dHlwZWMzX2NvbW1hbmQoc3RydWN0IG1pcGlfZGJpICptaXBpLCB1OCBjbWQsCj4gICAgKiBaZXJv
-IG9uIHN1Y2Nlc3MsIG5lZ2F0aXZlIGVycm9yIGNvZGUgb24gZmFpbHVyZS4KPiAgICAqLwo+ICAg
-aW50IG1pcGlfZGJpX3NwaV9pbml0KHN0cnVjdCBzcGlfZGV2aWNlICpzcGksIHN0cnVjdCBtaXBp
-X2RiaSAqbWlwaSwKPiAtCQkgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICpkYywKPiAtCQkgICAgICBj
-b25zdCBzdHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfZnVuY3MgKnBpcGVfZnVuY3MsCj4g
-LQkJICAgICAgc3RydWN0IGRybV9kcml2ZXIgKmRyaXZlciwKPiAtCQkgICAgICBjb25zdCBzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSwKPiAtCQkgICAgICB1bnNpZ25lZCBpbnQgcm90YXRp
-b24pCj4gKwkJICAgICAgc3RydWN0IGdwaW9fZGVzYyAqZGMpCj4gICB7Cj4gICAJc2l6ZV90IHR4
-X3NpemUgPSB0aW55ZHJtX3NwaV9tYXhfdHJhbnNmZXJfc2l6ZShzcGksIDApOwo+ICAgCXN0cnVj
-dCBkZXZpY2UgKmRldiA9ICZzcGktPmRldjsKPiBAQCAtODUwLDcgKzg0Myw3IEBAIGludCBtaXBp
-X2RiaV9zcGlfaW5pdChzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCBzdHJ1Y3QgbWlwaV9kYmkgKm1p
-cGksCj4gICAJCQlyZXR1cm4gLUVOT01FTTsKPiAgIAl9Cj4gICAKPiAtCXJldHVybiBtaXBpX2Ri
-aV9pbml0KGRldiwgbWlwaSwgcGlwZV9mdW5jcywgZHJpdmVyLCBtb2RlLCByb3RhdGlvbik7Cj4g
-KwlyZXR1cm4gMDsKPiAgIH0KPiAgIEVYUE9SVF9TWU1CT0wobWlwaV9kYmlfc3BpX2luaXQpOwo+
-ICAgCj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuaCBiL2luY2x1
-ZGUvZHJtL3Rpbnlkcm0vbWlwaS1kYmkuaAo+IGluZGV4IGQxMzdiMTYuLjgzMzQ2ZGQgMTAwNjQ0
-Cj4gLS0tIGEvaW5jbHVkZS9kcm0vdGlueWRybS9taXBpLWRiaS5oCj4gKysrIGIvaW5jbHVkZS9k
-cm0vdGlueWRybS9taXBpLWRiaS5oCj4gQEAgLTYyLDExICs2Miw3IEBAIG1pcGlfZGJpX2Zyb21f
-dGlueWRybShzdHJ1Y3QgdGlueWRybV9kZXZpY2UgKnRkZXYpCj4gICB9Cj4gICAKPiAgIGludCBt
-aXBpX2RiaV9zcGlfaW5pdChzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpLCBzdHJ1Y3QgbWlwaV9kYmkg
-Km1pcGksCj4gLQkJICAgICAgc3RydWN0IGdwaW9fZGVzYyAqZGMsCj4gLQkJICAgICAgY29uc3Qg
-c3RydWN0IGRybV9zaW1wbGVfZGlzcGxheV9waXBlX2Z1bmNzICpwaXBlX2Z1bmNzLAo+IC0JCSAg
-ICAgIHN0cnVjdCBkcm1fZHJpdmVyICpkcml2ZXIsCj4gLQkJICAgICAgY29uc3Qgc3RydWN0IGRy
-bV9kaXNwbGF5X21vZGUgKm1vZGUsCj4gLQkJICAgICAgdW5zaWduZWQgaW50IHJvdGF0aW9uKTsK
-PiArCQkgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjICpkYyk7Cj4gICBpbnQgbWlwaV9kYmlfaW5pdChz
-dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBtaXBpX2RiaSAqbWlwaSwKPiAgIAkJICBjb25zdCBz
-dHJ1Y3QgZHJtX3NpbXBsZV9kaXNwbGF5X3BpcGVfZnVuY3MgKnBpcGVfZnVuY3MsCj4gICAJCSAg
-c3RydWN0IGRybV9kcml2ZXIgKmRyaXZlciwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
+> On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
+> 
+> 
+> ......
+> > > +}
+> > > +
+> > > +static struct mtk_pcie_port *mtk_pcie_find_port(struct mtk_pcie *pcie,
+> > > +						struct pci_bus *bus, int devfn)
+> > > +{
+> > > +	struct pci_dev *dev;
+> > > +	struct pci_bus *pbus;
+> > > +	struct mtk_pcie_port *port, *tmp;
+> > > +
+> > > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> > > +		if (bus->number == 0 && port->index == PCI_SLOT(devfn)) {
+> > > +			return port;
+> > > +		} else if (bus->number != 0) {
+> > > +			pbus = bus;
+> > > +			do {
+> > > +				dev = pbus->self;
+> > > +				if (port->index == PCI_SLOT(dev->devfn))
+> > > +					return port;
+> > > +				pbus = dev->bus;
+> > > +			} while (dev->bus->number != 0);
+> > > +		}
+> > > +	}
+> > > +
+> > > +	return NULL;
+> > 
+> > You should be able to use sysdata to avoid searching the list.
+> > See drivers/pci/host/pci-aardvark.c, for example.
+> > 
+> 
+> I could put the mtk_pcie * in sysdata, but still need to searching the
+> list to get the mtk_pcie_port *, how about:
+> 
+> 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> 		if (port->index == PCI_SLOT(devfn))
+> 			return port;
+> 	}
+
+No.  Other drivers don't need to search the list.  Please take a look
+at them and see how they solve this problem.  I don't think your
+hardware is fundamentally different in a way that means you need to
+search when the others don't.
+
+> > > +	 * Enable rc internal reset.
+> > > +	 * The reset will work when the link is from link up to link down.
+> > 
+> > ?  That sentence doesn't parse for me.
+> 
+> What about:
+> 
+> 	/*
+> 	 * Enable PCIe link down reset, if link status changed from link up to
+> 	 * link down, this will reset MAC control registers and configuration
+> 	 * space.
+> 	 */
+
+That at least parses as a sentence.
+
+> > > +	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
+> > > +						 &intx_domain_ops, port);
+> > 
+> > I think there's an issue here with a 4-element IRQ domain and the
+> > hwirq numbers 1-4 from the of_irq_parse_and_map_pci() path, so INTD
+> > may not work correctly.
+> > 
+> > See
+> > http://lkml.kernel.org/r/20170801212931.GA26498@bhelgaas-glaptop.roam.corp.google.com
+> > and related discussion.
+> 
+> Sorry, I did not get this,
+> I do some test with an intel E350T4 PCIe NICs, it's a x1 lane
+> multi-function device.
+> What I got from the log is below:
+> ->of_irq_parse_and_map_pci
+> 	->of_irq_parse_pci
+> 		->irq_create_of_mapping
+> 			->irq_create_fwspec_mapping
+> 				->irq_domain_translate
+> 				which will go through
+> 				d->ops->translate #the hwirq really start from 0
+> 
+> And I tested every NIC port of the Intel E350T4 with tftp transfer data,
+> seems all are OK with this code.
+
+OK.  I don't know what d->ops->translate is involved here, but if it
+works, I guess this is OK for now.  We're trying to clean this up and
+make it consistent across all the drivers.  Many of them allocate a
+5-element IRQ domain, some make a 4-element domain, and on some of
+them INTD doesn't work.  It's a mess.
+
+Bjorn
