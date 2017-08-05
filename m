@@ -1,26 +1,130 @@
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2 4/5] soc: qcom: Remote FS memory driver
-Date: Sat, 5 Aug 2017 02:58:04 -0700
-Message-ID: <20170805095804.GA14401@infradead.org>
-References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
- <20170803025754.19101-5-bjorn.andersson@linaro.org>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
+ display panels
+Date: Sat, 5 Aug 2017 11:13:47 -0500
+Message-ID: <2b06fff0-679b-4597-d129-cd4c0b34a4d7@lechnology.com>
+References: <1501799630-1650-1-git-send-email-david@lechnology.com>
+ <2434051.fAH1OaXNrL@avalon>
+ <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
+ <2830608.h203mxr23Z@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170803025754.19101-5-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2830608.h203mxr23Z@avalon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 07:57:53PM -0700, Bjorn Andersson wrote:
-> The rfsa driver is used for allocating and exposing regions of shared
-> memory with remote processors for the purpose of exchanging sector-data
-> between the remote filesystem service and its clients.
+On 08/04/2017 02:39 PM, Laurent Pinchart wrote:
+> Hi David,
+> 
+> On Friday 04 Aug 2017 10:51:37 David Lechner wrote:
+>> On 08/04/2017 09:54 AM, Laurent Pinchart wrote:
+>>> On Thursday 03 Aug 2017 17:33:47 David Lechner wrote:
+>>>> This adds a new binding for Sitronix ST7586 display panels.
+>>>>
+>>>> Using lego as the vendor prefix in the compatible string because the
+>>>> display panel I am working with is an integral part of the LEGO
+>>>> MINDSTORMS EV3.
+>>>>
+>>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+>>>> ---
+>>>>
+>>>>    .../bindings/display/sitronix,st7586.txt           | 26
+>>>>    +++++++++++++++++++
+>>>>    1 file changed, 26 insertions(+)
+>>>>    create mode 100644
+>>>>
+>>>> Documentation/devicetree/bindings/display/sitronix,st7586.txt
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/display/sitronix,st7586.txt
+>>>> b/Documentation/devicetree/bindings/display/sitronix,st7586.txt new file
+>>>> mode 100644
+>>>> index 0000000..dfb0b7b
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/display/sitronix,st7586.txt
+>>>> @@ -0,0 +1,26 @@
+>>>> +Sitronix ST7586 display panel
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible:	"lego,ev3-lcd".
+>>>> +
+>>>> +The node for this driver must be a child node of a SPI controller, hence
+>>>> +all mandatory properties described in ../spi/spi-bus.txt must be
+>>>> specified. +
+>>>> +Optional properties:
+>>>> +- dc-gpios:	D/C pin. The presence/absence of this GPIO determines
+>>>> +		the panel interface operation mode (IF[3:1] pins):
+>>>> +		- present: IF=011 4-wire 8-bit data serial interface
+>>>> +		- absent:  IF=010 3-wire 9-bit data serial interface
+>>>
+>>> How does this work ? Do you have a single GPIO on your system connected to
+>>> IF[1], with IF[3:2] hardwired to 01 ?
+>>
+>> LEGO has not made the internals of the display publicly available, so I
+>> cannot say for sure. But I assume that IF[3:1] is hardwired to 011. This
+>> causes pin D1 to assigned to the signal A0, which is what we are calling
+>> the dc gpio here.
+>>
+>> If IF[3:1] were hardwired to 010, then pin D1 would be not not used and
+>> there would be no A0 signal.
+>>
+>> So, basically, we can infer the state of IF[3:1] by the fact that we
+>> have a dc pin or not.
+> 
+> OK, now I understand what you mean. Maybe you should phrase it a bit
+> differently to make it clearer ? How about
+> 
+> dc-gpios: Specified or the GPIO connected to the panel's D/C pin (also called
+> A0). The property is required when the panel operates in 4-wire mode (IF[3:1]
+> = 011) and prohibited when the panel operates in 3-wire mode (IF[3:1] = 010).
 
-Please explain which remote fs this is for, and submit said file system
-for incluѕion.
+Yes, this is more clear. Thank you for the suggestion.
 
-Else: NAK as the scheme looks completely brain dead and bonkers.
+> 
+> By the way, if the signal is named A0, why don't you call the property a0-
+> gpios ?
+
+I consider "dc-gpios" to be a generic name since it is used by many 
+different panels. But I would be OK with calling it "a0-gpios" as well. 
+It will just require more explanation that this is the A0 *signal* and 
+not the A0 *pin*. The actual pin used is labeled *D1* on the controller.
+
+On the other hand, it is labeled as A0 on LEGO's schematic, so perhaps 
+a0 is better.
+
+> 
+>>>> +- reset-gpios:	Reset pin
+>>>> +- power-supply:	A regulator node for the supply voltage.
+>>>> +- backlight:	phandle of the backlight device attached to the panel
+>>>> +- rotation:	panel rotation in degrees counter clockwise
+> (0,90,180,270)
+>>>
+>>> Please use the OF graph DT bindings (a.k.a. ports) to describe the
+>>> connection between the panel and its source.
+>>
+>> I am afraid that I do not understand this request. What would the source
+>> of the panel be? There is nothing like a SoC LCD controller that is
+>> driving this panel.
+> 
+> My bad, I should have read the panel datasheet before replying :-S Please
+> ignore this comment.
+> 
+>>>> +Example:
+>>>> +	display@0{
+>>>> +		compatible = "lego,ev3-lcd";
+>>>> +		reg = <0>;
+>>>> +		spi-max-frequency = <10000000>;
+>>>> +		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
+>>>> +		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
+>>>> +	};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
