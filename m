@@ -1,128 +1,80 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: add binding for Sitronix ST7586
- display panels
-Date: Sat, 5 Aug 2017 11:13:47 -0500
-Message-ID: <2b06fff0-679b-4597-d129-cd4c0b34a4d7@lechnology.com>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <2434051.fAH1OaXNrL@avalon>
- <cc04e31c-2206-2f0c-0f92-7ef096bfd9da@lechnology.com>
- <2830608.h203mxr23Z@avalon>
+From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v3 00/20] Add QCOM QPIC NAND support
+Date: Sat,  5 Aug 2017 21:49:38 +0530
+Message-ID: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2830608.h203mxr23Z@avalon>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/2017 02:39 PM, Laurent Pinchart wrote:
-> Hi David,
-> 
-> On Friday 04 Aug 2017 10:51:37 David Lechner wrote:
->> On 08/04/2017 09:54 AM, Laurent Pinchart wrote:
->>> On Thursday 03 Aug 2017 17:33:47 David Lechner wrote:
->>>> This adds a new binding for Sitronix ST7586 display panels.
->>>>
->>>> Using lego as the vendor prefix in the compatible string because the
->>>> display panel I am working with is an integral part of the LEGO
->>>> MINDSTORMS EV3.
->>>>
->>>> Signed-off-by: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
->>>> ---
->>>>
->>>>    .../bindings/display/sitronix,st7586.txt           | 26
->>>>    +++++++++++++++++++
->>>>    1 file changed, 26 insertions(+)
->>>>    create mode 100644
->>>>
->>>> Documentation/devicetree/bindings/display/sitronix,st7586.txt
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/display/sitronix,st7586.txt
->>>> b/Documentation/devicetree/bindings/display/sitronix,st7586.txt new file
->>>> mode 100644
->>>> index 0000000..dfb0b7b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/display/sitronix,st7586.txt
->>>> @@ -0,0 +1,26 @@
->>>> +Sitronix ST7586 display panel
->>>> +
->>>> +Required properties:
->>>> +- compatible:	"lego,ev3-lcd".
->>>> +
->>>> +The node for this driver must be a child node of a SPI controller, hence
->>>> +all mandatory properties described in ../spi/spi-bus.txt must be
->>>> specified. +
->>>> +Optional properties:
->>>> +- dc-gpios:	D/C pin. The presence/absence of this GPIO determines
->>>> +		the panel interface operation mode (IF[3:1] pins):
->>>> +		- present: IF=011 4-wire 8-bit data serial interface
->>>> +		- absent:  IF=010 3-wire 9-bit data serial interface
->>>
->>> How does this work ? Do you have a single GPIO on your system connected to
->>> IF[1], with IF[3:2] hardwired to 01 ?
->>
->> LEGO has not made the internals of the display publicly available, so I
->> cannot say for sure. But I assume that IF[3:1] is hardwired to 011. This
->> causes pin D1 to assigned to the signal A0, which is what we are calling
->> the dc gpio here.
->>
->> If IF[3:1] were hardwired to 010, then pin D1 would be not not used and
->> there would be no A0 signal.
->>
->> So, basically, we can infer the state of IF[3:1] by the fact that we
->> have a dc pin or not.
-> 
-> OK, now I understand what you mean. Maybe you should phrase it a bit
-> differently to make it clearer ? How about
-> 
-> dc-gpios: Specified or the GPIO connected to the panel's D/C pin (also called
-> A0). The property is required when the panel operates in 4-wire mode (IF[3:1]
-> = 011) and prohibited when the panel operates in 3-wire mode (IF[3:1] = 010).
+* v3:
 
-Yes, this is more clear. Thank you for the suggestion.
+1. Removed the patches already applied to linux-next and
+   rebased the remaining patches on [1]
+2. Reordered the patches and put the BAM DMA changes [2]
+   dependent patches and compatible string patches in last
+3. Removed the register offsets array and used the dev_cmd offsets
+4. Changed some macro names to small letters for better code readability
+5. Changed the compatible string to SoC specific
+6. Did minor code changes for adding comment, error handling, structure names
+7. Combined raw write (patch#18) and passing flag parameter (patch#22) patch
+   into one
+8. Made separate patch for compatible string and NAND properties
+9. Made separate patch for BAM command descriptor and data descriptors handling
+10. Changed commit message for some of the patches
+11. Addressed review comments given in v2
+12. Added Reviewed-by of Archit for some of the patches from v2
+13. All the MTD tests are working fine for IPQ8064 AP148, IPQ4019 DK04 and
+    IPQ8074 HK01 boards for v3 patches
 
-> 
-> By the way, if the signal is named A0, why don't you call the property a0-
-> gpios ?
+[1] http://git.infradead.org/l2-mtd.git/shortlog/refs/heads/nand/next
+[2] http://www.spinics.net/lists/dmaengine/msg13662.html
 
-I consider "dc-gpios" to be a generic name since it is used by many 
-different panels. But I would be OK with calling it "a0-gpios" as well. 
-It will just require more explanation that this is the A0 *signal* and 
-not the A0 *pin*. The actual pin used is labeled *D1* on the controller.
+* v2:
 
-On the other hand, it is labeled as A0 on LEGO's schematic, so perhaps 
-a0 is better.
+1. Addressed the review comments given in v1
+2. Removed the DMA coherent buffer for register read and used
+   streaming DMA API’s
+3. Reorganized the NAND read and write functions
+4. Separated patch for driver and documentation changes
+5. Changed the compatible string for EBI2
 
-> 
->>>> +- reset-gpios:	Reset pin
->>>> +- power-supply:	A regulator node for the supply voltage.
->>>> +- backlight:	phandle of the backlight device attached to the panel
->>>> +- rotation:	panel rotation in degrees counter clockwise
-> (0,90,180,270)
->>>
->>> Please use the OF graph DT bindings (a.k.a. ports) to describe the
->>> connection between the panel and its source.
->>
->> I am afraid that I do not understand this request. What would the source
->> of the panel be? There is nothing like a SoC LCD controller that is
->> driving this panel.
-> 
-> My bad, I should have read the panel datasheet before replying :-S Please
-> ignore this comment.
-> 
->>>> +Example:
->>>> +	display@0{
->>>> +		compatible = "lego,ev3-lcd";
->>>> +		reg = <0>;
->>>> +		spi-max-frequency = <10000000>;
->>>> +		dc-gpios = <&gpio 43 GPIO_ACTIVE_HIGH>;
->>>> +		reset-gpios = <&gpio 80 GPIO_ACTIVE_HIGH>;
->>>> +	};
-> 
+* v1:
+
+http://www.spinics.net/lists/devicetree/msg183706.html
+
+Abhishek Sahu (20):
+  mtd: nand: qcom: program NAND_DEV_CMD_VLD register
+  mtd: nand: qcom: support for NAND controller properties
+  mtd: nand: qcom: add bam property for QPIC NAND controller
+  mtd: nand: qcom: add and initialize QPIC DMA resources
+  mtd: nand: qcom: DMA mapping support for register read buffer
+  mtd: nand: qcom: allocate BAM transaction
+  mtd: nand: qcom: add BAM DMA descriptor handling
+  mtd: nand: qcom: support for passing flags in transfer functions
+  mtd: nand: qcom: support for read location registers
+  mtd: nand: qcom: erased codeword detection configuration
+  mtd: nand: qcom: enable BAM or ADM mode
+  mtd: nand: qcom: QPIC data descriptors handling
+  mtd: nand: qcom: support for different DEV_CMD register offsets
+  mtd: nand: qcom: add command elements in BAM transaction
+  mtd: nand: qcom: support for command descriptor formation
+  dt-bindings: qcom_nandc: fix the ipq806x device tree example
+  dt-bindings: qcom_nandc: IPQ4019 QPIC NAND documentation
+  dt-bindings: qcom_nandc: IPQ8074 QPIC NAND documentation
+  mtd: nand: qcom: Support for IPQ4019 QPIC NAND controller
+  mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller
+
+ .../devicetree/bindings/mtd/qcom_nandc.txt         |  63 +-
+ drivers/mtd/nand/qcom_nandc.c                      | 863 ++++++++++++++++++---
+ 2 files changed, 814 insertions(+), 112 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
