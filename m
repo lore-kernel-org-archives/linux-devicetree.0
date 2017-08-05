@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v3 20/20] mtd: nand: qcom: Support for IPQ8074 QPIC NAND controller
-Date: Sat,  5 Aug 2017 21:49:58 +0530
-Message-ID: <1501949998-29859-21-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v3 10/20] mtd: nand: qcom: erased codeword detection configuration
+Date: Sat,  5 Aug 2017 21:49:48 +0530
+Message-ID: <1501949998-29859-11-git-send-email-absahu@codeaurora.org>
 References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
@@ -10,42 +10,78 @@ To: dwmw2@infradead.org, boris.brezillon@free-electrons.com, computersforpeace@g
 Cc: richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible string for IPQ8074 QPIC NAND controller
-version 1.5.0 which uses BAM DMA and its FLASH_DEV_CMD registers
-starting offset is 0x7000.
+The NAND controller returns ECC failure during read of completely
+erased codeword. The NAND controller has hardware functionality
+to detect erased codeword in case of BCH ECC algorithm. The
+NAND_ERASED_CW_DETECT_CFG register controls the erased
+codeword/page detection controller. This register should be reset
+before every page read by setting and clearing bit 0 of
+NAND_ERASED_CW_DETECT_CFG.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mtd/nand/qcom_nandc.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index cc58e8f..d606262 100644
+index 28543c1..67c7e62 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -2866,6 +2866,12 @@ static int qcom_nandc_remove(struct platform_device *pdev)
- 	.flash_dev_offset = 0x0,
+@@ -202,6 +202,11 @@
+ #define NAND_BAM_NWD			BIT(1)
+ /* Finish writing in the current sgl and start writing in another sgl */
+ #define NAND_BAM_NEXT_SGL		BIT(2)
++/*
++ * Erased codeword status is being used two times in single transfer so this
++ * flag will determine the current value of erased codeword status register
++ */
++#define NAND_ERASED_CW_SET		BIT(4)
+ 
+ /*
+  * This data type corresponds to the BAM transaction which will be used for all
+@@ -280,6 +285,8 @@ struct nandc_regs {
+ 	__le32 read_location2;
+ 	__le32 read_location3;
+ 
++	__le32 erased_cw_detect_cfg_clr;
++	__le32 erased_cw_detect_cfg_set;
  };
  
-+static const struct qcom_nandc_props ipq8074_nandc_props = {
-+	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
-+	.is_bam = true,
-+	.flash_dev_offset = 0x7000,
-+};
-+
  /*
-  * data will hold a struct pointer containing more differences once we support
-  * more controller variants
-@@ -2879,6 +2885,10 @@ static int qcom_nandc_remove(struct platform_device *pdev)
- 		.compatible = "qcom,ipq4019-nand",
- 		.data = &ipq4019_nandc_props,
- 	},
-+	{
-+		.compatible = "qcom,ipq8074-nand",
-+		.data = &ipq8074_nandc_props,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, qcom_nandc_of_match);
+@@ -807,6 +814,13 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
+ 	if (first == NAND_FLASH_CMD)
+ 		flow_control = true;
+ 
++	if (first == NAND_ERASED_CW_DETECT_CFG) {
++		if (flags & NAND_ERASED_CW_SET)
++			vaddr = &regs->erased_cw_detect_cfg_set;
++		else
++			vaddr = &regs->erased_cw_detect_cfg_clr;
++	}
++
+ 	if (first == NAND_EXEC_CMD)
+ 		flags |= NAND_BAM_NWD;
+ 
+@@ -859,6 +873,9 @@ static void config_nand_page_read(struct qcom_nand_controller *nandc)
+ 	write_reg_dma(nandc, NAND_ADDR0, 2, 0);
+ 	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
+ 	write_reg_dma(nandc, NAND_EBI2_ECC_BUF_CFG, 1, 0);
++	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, 0);
++	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1,
++		      NAND_ERASED_CW_SET | NAND_BAM_NEXT_SGL);
+ }
+ 
+ /*
+@@ -2261,6 +2278,10 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
+ 
+ 	host->clrflashstatus = FS_READY_BSY_N;
+ 	host->clrreadstatus = 0xc0;
++	nandc->regs->erased_cw_detect_cfg_clr =
++		cpu_to_le32(CLR_ERASED_PAGE_DET);
++	nandc->regs->erased_cw_detect_cfg_set =
++		cpu_to_le32(SET_ERASED_PAGE_DET);
+ 
+ 	dev_dbg(nandc->dev,
+ 		"cfg0 %x cfg1 %x ecc_buf_cfg %x ecc_bch cfg %x cw_size %d cw_data %d strength %d parity_bytes %d steps %d\n",
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
