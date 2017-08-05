@@ -1,33 +1,38 @@
 From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 0/8] Add board support for TS-4600
-Date: Sat, 5 Aug 2017 09:50:55 +0800
-Message-ID: <20170805015053.GM31819@dragon>
-References: <20170714203218.14409-1-sebastien.bourdelin@savoirfairelinux.com>
- <20170803012652.GB31819@dragon>
- <d40e5ff1-2741-af5c-9dee-b24cd5780aae@savoirfairelinux.com>
+Subject: Re: [PATCH 0/4] crypto: caam - add Job Ring support for DPAA2 parts
+Date: Sat, 5 Aug 2017 09:54:45 +0800
+Message-ID: <20170805015444.GN31819@dragon>
+References: <20170718153050.15330-1-horia.geanta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <d40e5ff1-2741-af5c-9dee-b24cd5780aae-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+In-Reply-To: <20170718153050.15330-1-horia.geanta-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>
+Cc: Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Douglass <dan.douglass-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 03:32:36PM -0400, Sebastien Bourdelin wrote:
-> Hi Shawn,
+On Tue, Jul 18, 2017 at 06:30:46PM +0300, Horia Geantă wrote:
+> This patch set adds support for CAAM's legacy Job Ring backend / interface
+> on platforms having DPAA2 (Datapath Acceleration Architecture v2), like
+> LS1088A or LS2088A.
 > 
-> Thanks i understand, however if it's ok, i would like to process in the
-> same time with the TS4600 board bindings and initial dts without the
-> part related to the nbus and watchdog.
-> There is no dependencies here and we can accellerate the process.
+> I would like to get the DT patches through the crypto list (to make sure
+> they don't end up merged before driver support).
+> 
+> Thanks,
+> Horia
+> 
+> Horia Geantă (4):
+>   crypto: caam/jr - add support for DPAA2 parts
+>   arm64: dts: freescale: ls208xa: share aliases node
+>   arm64: dts: freescale: ls208xa: add crypto node
+>   arm64: dts: freescale: ls1088a: add crypto node
 
-Okay.  I just put a few comments on the initial dts patch.  I can pick
-it up after the comments get addressed.
-
-Shawn
+Applied 3 dts patches, thanks.
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
