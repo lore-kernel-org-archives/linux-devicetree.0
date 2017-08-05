@@ -1,7 +1,7 @@
 From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH v3 15/20] mtd: nand: qcom: support for command descriptor formation
-Date: Sat,  5 Aug 2017 21:49:53 +0530
-Message-ID: <1501949998-29859-16-git-send-email-absahu@codeaurora.org>
+Subject: [PATCH v3 17/20] dt-bindings: qcom_nandc: IPQ4019 QPIC NAND documentation
+Date: Sat,  5 Aug 2017 21:49:55 +0530
+Message-ID: <1501949998-29859-18-git-send-email-absahu@codeaurora.org>
 References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
@@ -10,201 +10,99 @@ To: dwmw2@infradead.org, boris.brezillon@free-electrons.com, computersforpeace@g
 Cc: richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-1. Add the function for command descriptor preparation which will
-   be used only by BAM DMA and it will form the DMA descriptors
-   containing command elements
-2. DMA_PREP_CMD flag should be used for forming command DMA
-   descriptors
+1. Qualcom IPQ4019 SoC uses QPIC NAND controller version 1.4.0
+   which uses BAM DMA Engine while IPQ806x uses EBI2 NAND
+   which uses ADM DMA Engine.
+2. QPIC NAND will 3 BAM channels: command, data tx and data rx
+   while EBI2 NAND uses only single ADM channel.
+3. CRCI is only required for ADM DMA and its not required for
+   BAM DMA.
 
 Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 108 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 92 insertions(+), 16 deletions(-)
+ .../devicetree/bindings/mtd/qcom_nandc.txt         | 55 +++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 9c12404..16463ac 100644
---- a/drivers/mtd/nand/qcom_nandc.c
-+++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -196,6 +196,14 @@
- 	      ((size) << READ_LOCATION_SIZE) |			\
- 	      ((is_last) << READ_LOCATION_LAST))
+diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+index f475b65..d93b952 100644
+--- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
++++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+@@ -1,11 +1,18 @@
+ * Qualcomm NAND controller
  
-+/* Returns the NAND register physical address */
-+#define nandc_reg_phys(chip, offset) ((chip)->base_phys + (offset))
+ Required properties:
+-- compatible:		should be "qcom,ipq806x-nand"
++- compatible:		must be one of the following:
++    * "qcom,ipq806x-nand" - for EBI2 NAND controller being used in IPQ806x
++			    SoC and it uses ADM DMA
++    * "qcom,ipq4019-nand" - for QPIC NAND controller v1.4.0 being used in
++                            IPQ4019 SoC and it uses BAM DMA
 +
-+/* Returns the dma address for reg read buffer */
-+#define reg_buf_dma_addr(chip, vaddr) \
-+	((chip)->reg_read_dma + \
-+	((uint8_t *)(vaddr) - (uint8_t *)(chip)->reg_read_buf))
+ - reg:			MMIO address range
+ - clocks:		must contain core clock and always on clock
+ - clock-names:		must contain "core" for the core clock and "aon" for the
+ 			always on clock
 +
- /* Returns the actual register address for NAND_FLASH_DEV_* */
- #define nandc_dev_addr(nandc, reg) ((nandc)->props->flash_dev_offset + (reg))
- 
-@@ -313,7 +321,8 @@ struct nandc_regs {
-  *				controller
-  * @dev:			parent device
-  * @base:			MMIO base
-- * @base_dma:			physical base address of controller registers
-+ * @base_phys:			physical base address of controller registers
-+ * @base_dma:			dma base address of controller registers
-  * @core_clk:			controller clock
-  * @aon_clk:			another controller clock
-  *
-@@ -346,6 +355,7 @@ struct qcom_nand_controller {
- 	struct device *dev;
- 
- 	void __iomem *base;
-+	phys_addr_t base_phys;
- 	dma_addr_t base_dma;
- 
- 	struct clk *core_clk;
-@@ -747,6 +757,66 @@ static int prepare_bam_async_desc(struct qcom_nand_controller *nandc,
- }
- 
- /*
-+ * Prepares the command descriptor for BAM DMA which will be used for NAND
-+ * register reads and writes. The command descriptor requires the command
-+ * to be formed in command element type so this function uses the command
-+ * element from bam transaction ce array and fills the same with required
-+ * data. A single SGL can contain multiple command elements so
-+ * NAND_BAM_NEXT_SGL will be used for starting the separate SGL
-+ * after the current command element.
-+ */
-+static int prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, bool read,
-+				 int reg_off, const void *vaddr,
-+				 int size, unsigned int flags)
-+{
-+	int bam_ce_size;
-+	int i, ret;
-+	struct bam_cmd_element *bam_ce_buffer;
-+	struct bam_transaction *bam_txn = nandc->bam_txn;
++EBI2 specific properties:
+ - dmas:			DMA specifier, consisting of a phandle to the ADM DMA
+ 			controller node and the channel number to be used for
+ 			NAND. Refer to dma.txt and qcom_adm.txt for more details
+@@ -16,6 +23,12 @@ Required properties:
+ - qcom,data-crci:	must contain the ADM data type CRCI block instance
+ 			number specified for the NAND controller on the given
+ 			platform
 +
-+	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
++QPIC specific properties:
++- dmas:			DMA specifier, consisting of a phandle to the BAM DMA
++			and the channel number to be used for NAND. Refer to
++			dma.txt, qcom_bam_dma.txt for more details
++- dma-names:		must contain all 3 channel names : "tx", "rx", "cmd"
+ - #address-cells:	<1> - subnodes give the chip-select number
+ - #size-cells:		<0>
+ 
+@@ -82,3 +95,43 @@ nand-controller@1ac00000 {
+ 		};
+ 	};
+ };
 +
-+	/* fill the command desc */
-+	for (i = 0; i < size; i++) {
-+		if (read)
-+			bam_prep_ce(&bam_ce_buffer[i],
-+				    nandc_reg_phys(nandc, reg_off + 4 * i),
-+				    BAM_READ_COMMAND,
-+				    reg_buf_dma_addr(nandc,
-+						     (__le32 *)vaddr + i));
-+		else
-+			bam_prep_ce_le32(&bam_ce_buffer[i],
-+					 nandc_reg_phys(nandc, reg_off + 4 * i),
-+					 BAM_WRITE_COMMAND,
-+					 *((__le32 *)vaddr + i));
-+	}
++nand-controller@79b0000 {
++	compatible = "qcom,ipq4019-nand";
++	reg = <0x79b0000 0x1000>;
 +
-+	bam_txn->bam_ce_pos += size;
++	clocks = <&gcc GCC_QPIC_CLK>,
++		<&gcc GCC_QPIC_AHB_CLK>;
++	clock-names = "core", "aon";
 +
-+	/* use the separate sgl after this command */
-+	if (flags & NAND_BAM_NEXT_SGL) {
-+		bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_start];
-+		bam_ce_size = (bam_txn->bam_ce_pos -
-+				bam_txn->bam_ce_start) *
-+				sizeof(struct bam_cmd_element);
-+		sg_set_buf(&bam_txn->cmd_sgl[bam_txn->cmd_sgl_pos],
-+			   bam_ce_buffer, bam_ce_size);
-+		bam_txn->cmd_sgl_pos++;
-+		bam_txn->bam_ce_start = bam_txn->bam_ce_pos;
++	dmas = <&qpicbam 0>,
++		<&qpicbam 1>,
++		<&qpicbam 2>;
++	dma-names = "tx", "rx", "cmd";
 +
-+		if (flags & NAND_BAM_NWD) {
-+			ret = prepare_bam_async_desc(nandc, nandc->cmd_chan,
-+						     DMA_PREP_FENCE |
-+						     DMA_PREP_CMD);
-+			if (ret)
-+				return ret;
-+		}
-+	}
++	#address-cells = <1>;
++	#size-cells = <0>;
 +
-+	return 0;
-+}
++	nand@0 {
++		reg = <0>;
++		nand-ecc-strength = <4>;
++		nand-ecc-step-size = <512>;
++		nand-bus-width = <8>;
 +
-+/*
-  * Prepares the data descriptor for BAM DMA which will be used for NAND
-  * data reads and writes.
-  */
-@@ -863,19 +933,22 @@ static int read_reg_dma(struct qcom_nand_controller *nandc, int first,
- {
- 	bool flow_control = false;
- 	void *vaddr;
--	int size;
- 
--	if (first == NAND_READ_ID || first == NAND_FLASH_STATUS)
--		flow_control = true;
-+	vaddr = nandc->reg_read_buf + nandc->reg_read_pos;
-+	nandc->reg_read_pos += num_regs;
- 
- 	if (first == NAND_DEV_CMD_VLD || first == NAND_DEV_CMD1)
- 		first = nandc_dev_addr(nandc, first);
- 
--	size = num_regs * sizeof(u32);
--	vaddr = nandc->reg_read_buf + nandc->reg_read_pos;
--	nandc->reg_read_pos += num_regs;
-+	if (nandc->props->is_bam)
-+		return prep_bam_dma_desc_cmd(nandc, true, first, vaddr,
-+					     num_regs, flags);
- 
--	return prep_adm_dma_desc(nandc, true, first, vaddr, size, flow_control);
-+	if (first == NAND_READ_ID || first == NAND_FLASH_STATUS)
-+		flow_control = true;
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+	return prep_adm_dma_desc(nandc, true, first, vaddr,
-+				 num_regs * sizeof(u32), flow_control);
- }
- 
- /*
-@@ -891,13 +964,9 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
- 	bool flow_control = false;
- 	struct nandc_regs *regs = nandc->regs;
- 	void *vaddr;
--	int size;
- 
- 	vaddr = offset_to_nandc_reg(regs, first);
- 
--	if (first == NAND_FLASH_CMD)
--		flow_control = true;
--
- 	if (first == NAND_ERASED_CW_DETECT_CFG) {
- 		if (flags & NAND_ERASED_CW_SET)
- 			vaddr = &regs->erased_cw_detect_cfg_set;
-@@ -914,10 +983,15 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
- 	if (first == NAND_DEV_CMD_VLD_RESTORE || first == NAND_DEV_CMD_VLD)
- 		first = nandc_dev_addr(nandc, NAND_DEV_CMD_VLD);
- 
--	size = num_regs * sizeof(u32);
-+	if (nandc->props->is_bam)
-+		return prep_bam_dma_desc_cmd(nandc, false, first, vaddr,
-+					     num_regs, flags);
++			partition@0 {
++				label = "boot-nand";
++				reg = <0 0x58a0000>;
++			};
 +
-+	if (first == NAND_FLASH_CMD)
-+		flow_control = true;
- 
--	return prep_adm_dma_desc(nandc, false, first, vaddr, size,
--				 flow_control);
-+	return prep_adm_dma_desc(nandc, false, first, vaddr,
-+				 num_regs * sizeof(u32), flow_control);
- }
- 
- /*
-@@ -1180,7 +1254,8 @@ static int submit_descs(struct qcom_nand_controller *nandc)
- 		}
- 
- 		if (bam_txn->cmd_sgl_pos > bam_txn->cmd_sgl_start) {
--			r = prepare_bam_async_desc(nandc, nandc->cmd_chan, 0);
-+			r = prepare_bam_async_desc(nandc, nandc->cmd_chan,
-+						   DMA_PREP_CMD);
- 			if (r)
- 				return r;
- 		}
-@@ -2716,6 +2791,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
- 	if (IS_ERR(nandc->base))
- 		return PTR_ERR(nandc->base);
- 
-+	nandc->base_phys = res->start;
- 	nandc->base_dma = phys_to_dma(dev, (phys_addr_t)res->start);
- 
- 	nandc->core_clk = devm_clk_get(dev, "core");
++			partition@58a0000 {
++				label = "fs-nand";
++				reg = <0x58a0000 0x4000000>;
++			};
++		};
++	};
++};
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
