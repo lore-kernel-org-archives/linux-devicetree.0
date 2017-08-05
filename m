@@ -1,89 +1,270 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller
- support
-Date: Sat, 5 Aug 2017 14:16:53 +0800
-Message-ID: <1501913813.12086.17.camel@mtkswgap22>
-References: <cover.1501122135.git.honghui.zhang@mediatek.com>
-         <824c61d13fe2731d812df8a0a878ca1a36399e76.1501122135.git.honghui.zhang@mediatek.com>
-         <20170803224206.GN20308@bhelgaas-glaptop.roam.corp.google.com>
-         <1501835976.24341.21.camel@mtksdaap41>
-         <20170804131808.GA16580@bhelgaas-glaptop.roam.corp.google.com>
-         <1501908763.8298.11.camel@mtkswgap22>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v3 04/23] dt-bindings: media: Binding document for
+ Qualcomm Camera subsystem driver
+Date: Sat, 5 Aug 2017 11:19:02 +0300
+Message-ID: <20170805081902.pbf4gl5o74uokrmb@valkosipuli.retiisi.org.uk>
+References: <1500287629-23703-1-git-send-email-todor.tomov@linaro.org>
+ <1500287629-23703-5-git-send-email-todor.tomov@linaro.org>
+ <20170720101345.eovx5ovuxr7sqpea@valkosipuli.retiisi.org.uk>
+ <1dc5ab4d-5171-c6df-4300-2abcd0e5483b@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1501908763.8298.11.camel@mtkswgap22>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Honghui Zhang <honghui.zhang@mediatek.com>, bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1dc5ab4d-5171-c6df-4300-2abcd0e5483b-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-08-05 at 12:52 +0800, Ryder Lee wrote:
-> Hi Honghui, Bjorn,
+Hi Todor,
+
+On Fri, Aug 04, 2017 at 02:54:21PM +0300, Todor Tomov wrote:
+> Hi Sakari,
 > 
-> On Fri, 2017-08-04 at 08:18 -0500, Bjorn Helgaas wrote:
-> > On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
-> > > On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
-> > > > > +
-> > > > > +static struct mtk_pcie_port *mtk_pcie_find_port(struct mtk_pcie *pcie,
-> > > > > +						struct pci_bus *bus, int devfn)
-> > > > > +{
-> > > > > +	struct pci_dev *dev;
-> > > > > +	struct pci_bus *pbus;
-> > > > > +	struct mtk_pcie_port *port, *tmp;
-> > > > > +
-> > > > > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > > > > +		if (bus->number == 0 && port->index == PCI_SLOT(devfn)) {
-> > > > > +			return port;
-> > > > > +		} else if (bus->number != 0) {
-> > > > > +			pbus = bus;
-> > > > > +			do {
-> > > > > +				dev = pbus->self;
-> > > > > +				if (port->index == PCI_SLOT(dev->devfn))
-> > > > > +					return port;
-> > > > > +				pbus = dev->bus;
-> > > > > +			} while (dev->bus->number != 0);
-> > > > > +		}
-> > > > > +	}
-> > > > > +
-> > > > > +	return NULL;
-> > > > 
-> > > > You should be able to use sysdata to avoid searching the list.
-> > > > See drivers/pci/host/pci-aardvark.c, for example.
-> > > > 
-> > > 
-> > > I could put the mtk_pcie * in sysdata, but still need to searching the
-> > > list to get the mtk_pcie_port *, how about:
-> > > 
-> > > 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > > 		if (port->index == PCI_SLOT(devfn))
-> > > 			return port;
-> > > 	}
+> Thank you for the review.
+
+You're welcome!
+
+> 
+> On 20.07.2017 13:13, Sakari Ailus wrote:
+> > Hi Todor,
 > > 
-> > No.  Other drivers don't need to search the list.  Please take a look
-> > at them and see how they solve this problem.  I don't think your
-> > hardware is fundamentally different in a way that means you need to
-> > search when the others don't.
+> > On Mon, Jul 17, 2017 at 01:33:30PM +0300, Todor Tomov wrote:
+> >> Add DT binding document for Qualcomm Camera subsystem driver.
+> >>
+> >> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/media/qcom,camss.txt       | 191 +++++++++++++++++++++
+> >>  1 file changed, 191 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> >> new file mode 100644
+> >> index 0000000..f698498
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+> >> @@ -0,0 +1,191 @@
+> >> +Qualcomm Camera Subsystem
+> >> +
+> >> +* Properties
+> >> +
+> >> +- compatible:
+> >> +	Usage: required
+> >> +	Value type: <stringlist>
+> >> +	Definition: Should contain:
+> >> +		- "qcom,msm8916-camss"
+> >> +- reg:
+> >> +	Usage: required
+> >> +	Value type: <prop-encoded-array>
+> >> +	Definition: Register ranges as listed in the reg-names property.
+> >> +- reg-names:
+> >> +	Usage: required
+> >> +	Value type: <stringlist>
+> >> +	Definition: Should contain the following entries:
+> >> +		- "csiphy0"
+> >> +		- "csiphy0_clk_mux"
+> >> +		- "csiphy1"
+> >> +		- "csiphy1_clk_mux"
+> >> +		- "csid0"
+> >> +		- "csid1"
+> >> +		- "ispif"
+> >> +		- "csi_clk_mux"
+> >> +		- "vfe0"
+> >> +- interrupts:
+> >> +	Usage: required
+> >> +	Value type: <prop-encoded-array>
+> >> +	Definition: Interrupts as listed in the interrupt-names property.
+> >> +- interrupt-names:
+> >> +	Usage: required
+> >> +	Value type: <stringlist>
+> >> +	Definition: Should contain the following entries:
+> >> +		- "csiphy0"
+> >> +		- "csiphy1"
+> >> +		- "csid0"
+> >> +		- "csid1"
+> >> +		- "ispif"
+> >> +		- "vfe0"
+> >> +- power-domains:
+> >> +	Usage: required
+> >> +	Value type: <prop-encoded-array>
+> >> +	Definition: A phandle and power domain specifier pairs to the
+> >> +		    power domain which is responsible for collapsing
+> >> +		    and restoring power to the peripheral.
+> >> +- clocks:
+> >> +	Usage: required
+> >> +	Value type: <prop-encoded-array>
+> >> +	Definition: A list of phandle and clock specifier pairs as listed
+> >> +		    in clock-names property.
+> >> +- clock-names:
+> >> +	Usage: required
+> >> +	Value type: <stringlist>
+> >> +	Definition: Should contain the following entries:
+> >> +                - "camss_top_ahb"
+> >> +                - "ispif_ahb"
+> >> +                - "csiphy0_timer"
+> >> +                - "csiphy1_timer"
+> >> +                - "csi0_ahb"
+> >> +                - "csi0"
+> >> +                - "csi0_phy"
+> >> +                - "csi0_pix"
+> >> +                - "csi0_rdi"
+> >> +                - "csi1_ahb"
+> >> +                - "csi1"
+> >> +                - "csi1_phy"
+> >> +                - "csi1_pix"
+> >> +                - "csi1_rdi"
+> >> +                - "camss_ahb"
+> >> +                - "camss_vfe_vfe"
+> >> +                - "camss_csi_vfe"
+> >> +                - "iface"
+> >> +                - "bus"
+> >> +- vdda-supply:
+> >> +	Usage: required
+> >> +	Value type: <phandle>
+> >> +	Definition: A phandle to voltage supply for CSI2.
+> >> +- iommus:
+> >> +	Usage: required
+> >> +	Value type: <prop-encoded-array>
+> >> +	Definition: A list of phandle and IOMMU specifier pairs.
+> >> +
+> >> +* Nodes
+> >> +
+> >> +- ports:
+> >> +	Usage: required
+> >> +	Definition: As described in video-interfaces.txt in same directory.
+> >> +	Properties:
+> >> +		- reg:
+> >> +			Usage: required
+> >> +			Value type: <u32>
+> >> +			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
+> >> +	Endpoint node properties:
+> >> +		- clock-lanes:
+> >> +			Usage: required
+> >> +			Value type: <u32>
+> >> +			Definition: The clock lane.
+> >> +		- data-lanes:
+> >> +			Usage: required
+> >> +			Value type: <prop-encoded-array>
+> >> +			Definition: An array of data lanes.
+> >> +
+> >> +* An Example
+> >> +
+> >> +	camss: camss@1b00000 {
+> >> +		compatible = "qcom,msm8916-camss";
+> >> +		reg = <0x1b0ac00 0x200>,
+> >> +			<0x1b00030 0x4>,
+> >> +			<0x1b0b000 0x200>,
+> >> +			<0x1b00038 0x4>,
+> >> +			<0x1b08000 0x100>,
+> >> +			<0x1b08400 0x100>,
+> >> +			<0x1b0a000 0x500>,
+> >> +			<0x1b00020 0x10>,
+> >> +			<0x1b10000 0x1000>;
+> >> +		reg-names = "csiphy0",
+> >> +			"csiphy0_clk_mux",
+> >> +			"csiphy1",
+> >> +			"csiphy1_clk_mux",
+> >> +			"csid0",
+> >> +			"csid1",
+> >> +			"ispif",
+> >> +			"csi_clk_mux",
+> >> +			"vfe0";
+> >> +		interrupts = <GIC_SPI 78 0>,
+> >> +			<GIC_SPI 79 0>,
+> >> +			<GIC_SPI 51 0>,
+> >> +			<GIC_SPI 52 0>,
+> >> +			<GIC_SPI 55 0>,
+> >> +			<GIC_SPI 57 0>;
+> >> +		interrupt-names = "csiphy0",
+> >> +			"csiphy1",
+> >> +			"csid0",
+> >> +			"csid1",
+> >> +			"ispif",
+> >> +			"vfe0";
+> >> +		power-domains = <&gcc VFE_GDSC>;
+> >> +		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
+> >> +			<&gcc GCC_CAMSS_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_VFE0_CLK>,
+> >> +			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
+> >> +			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
+> >> +			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
+> >> +                clock-names = "camss_top_ahb",
+> >> +                        "ispif_ahb",
+> >> +                        "csiphy0_timer",
+> >> +                        "csiphy1_timer",
+> >> +                        "csi0_ahb",
+> >> +                        "csi0",
+> >> +                        "csi0_phy",
+> >> +                        "csi0_pix",
+> >> +                        "csi0_rdi",
+> >> +                        "csi1_ahb",
+> >> +                        "csi1",
+> >> +                        "csi1_phy",
+> >> +                        "csi1_pix",
+> >> +                        "csi1_rdi",
+> >> +                        "camss_ahb",
+> >> +                        "camss_vfe_vfe",
+> >> +                        "camss_csi_vfe",
+> >> +                        "iface",
+> >> +                        "bus";
+> >> +		vdda-supply = <&pm8916_l2>;
+> >> +		iommus = <&apps_iommu 3>;
+> >> +		ports {
+> >> +			#address-cells = <1>;
+> >> +			#size-cells = <0>;
+> >> +			port@0 {
+> >> +				reg = <0>;
+> >> +				csiphy0_ep: endpoint {
+> >> +					clock-lanes = <1>;
+> >> +					data-lanes = <0 2>;
 > > 
+> > Do you support lane mapping? The values suggest "yes". That's something I
+> > could improve in the documentation: if lane mapping isn't supported, then
+> > the clock lane should be 0 and the data lanes from 1 to n.
 > 
-> I'm not directly involved in this generation, but I guess the main reason why Honghui need to do that is just because this hardware access configuration space via per-port registers, not just for the guard.  
-> Currently, We had a host bridge with two ports (two subnodes in binding text), thus he tried to tells them apart so that he can get the correct registers.
+> Lane mapping is supported only for the data lanes. The clock lane is always
+> the physical lane 1. This is why I think it makes sense to keep the value
+> of the clock lane to 1 as this is the physical lane 1 really. I'll add
+> explanation in the documentation for this and for the data lanes too so
+> it is clear.
+
+Could you document this in the binding documentation? What I've seen
+previously is that either the lanes can be mapped any way you want, or
+there's just a single possible mapping.
+
 > 
-> Some platforms don't need to do that since they just have a single port (no more subnodes), the others might have specific/shared registers to access configuration space. (e.g. Tegra, MTK legacy IP block).
-> Or, he can split them into two independent nodes, but it will break common probing flow by doing so. (I'd prefer to use subnodes.)
+> > 
+> > Is the split of the lanes between the ports static and specific to the
+> > hardware?
 > 
-> Ryder
-> 
+> Each port describes a separate CSIPHY so each has its own set of lanes.
 
-Sorry for the typesetting in previous mail and noise again,
+Ack. I asked since if the lanes can be shared, the lane numbering needs to
+be global to the device; otherwise there's no way to convey the lane/PHY
+association using the standard bindings.
 
-I've took a look at pci-rcar-gen2.c, this is a similar case I can found
-for Honghui's case. It gathers two ports reg regions into one, and uses
-the "slot id" to calculate the cfg base of each port.
+-- 
+Regards,
 
-Perhaps this is a example for those who need to use subnodes and use
-port registers for cfg operation. Not sure whether it's worthwhile doing
-that since we need to changes ports/host structures.
-
-Ryder.
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
