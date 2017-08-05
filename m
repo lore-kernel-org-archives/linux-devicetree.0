@@ -1,27 +1,32 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx6ul-liteboard: Support poweroff
-Date: Sat, 5 Aug 2017 13:32:36 +0800
-Message-ID: <20170805053234.GS31819@dragon>
-References: <20170803073713.14889-1-m.niestroj@grinn-global.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 2/2] ARM: dts: TS-4600: add basic device tree
+Date: Sat, 5 Aug 2017 13:38:21 +0800
+Message-ID: <20170805053820.GT31819@dragon>
+References: <20170803193815.4127-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20170803193815.4127-2-sebastien.bourdelin@savoirfairelinux.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170803073713.14889-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170803193815.4127-2-sebastien.bourdelin@savoirfairelinux.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+Cc: linux-kernel@vger.kernel.org, kernel@savoirfairelinux.com, mark.rutland@arm.com, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, robh@kernel.org, devicetree@vger.kernel.org, fabio.estevam@nxp.com, mark@embeddedarm.com, kris@embeddedarm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 09:37:13AM +0200, Marcin Niestroj wrote:
-> Support proper system power-off, which disables main regulator. This
-> results in much lower power consumption and support of power-on issued
-> by button press.
+On Thu, Aug 03, 2017 at 03:38:15PM -0400, Sebastien Bourdelin wrote:
+> These device trees add support for the TS-4600 by Technologic Systems.
 > 
-> Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+> More details here:
+>   http://wiki.embeddedarm.com/wiki/TS-4600
+> 
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@savoirfairelinux.com>
+> ---
+> Changes v5 -> v6:
+>   - rebase on master
+>   - split the previous patch series into series by subsystem
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for splitting the series.  I didn't see this and had the review
+comments on v5.  Sorry.
+
+Shawn
