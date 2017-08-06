@@ -1,48 +1,61 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add support for rk3399 excavator main board
-Date: Sun, 06 Aug 2017 17:46:01 +0200
-Message-ID: <3974482.WU7faVNnLz@phil>
-References: <201708040551.mSxlH21s%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201708040551.mSxlH21s%fengguang.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Jacob Chen <jacob-chen@iotwrt.com>, kbuild-all@01.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kever.yang@rock-chips.com, mark.yao@rock-chips.com, zhangqing@rock-chips.com
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCH 0/3] Altera ASMI Parallel II IP Core
+Date: Sun,  6 Aug 2017 11:24:01 -0700
+Message-ID: <1502043844-3626-1-git-send-email-matthew.gerlach@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 4. August 2017, 05:28:40 CEST schrieb kbuild test robot:
-> Hi Jacob,
-> 
-> [auto build test ERROR on rockchip/for-next]
-> [also build test ERROR on v4.13-rc3 next-20170803]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Jacob-Chen/arm64-dts-rockchip-Add-support-for-rk3399-sapphire-SOM/20170804-002840
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-> config: arm64-defconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64 
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:197.1-6 Label or path hdmi not found
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:632.1-6 Label or path vopb not found
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:636.1-10 Label or path vopb_mmu not found
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:640.1-6 Label or path vopl not found
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire.dtsi:644.1-10 Label or path vopl_mmu not found
-> >> Error: arch/arm64/boot/dts/rockchip/rk3399-sapphire-excavator.dts:157.1-5 Label or path edp not found
->    FATAL ERROR: Syntax error parsing input tree
+From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-that's ok, it just depended on the series from Jacob adding these
-display-related nodes and I've applied that series before picking up
-this new board, so everything still compiles fine.
+This patch set adds a spi-nor flash driver for the Altera ASMI Parallel II 
+IP Core.  This driver was created based on feedback from Marek Vasut,
+Cyrill Pitchen, and Michal Suchanek regarding Version 2 of the Altera
+Quadspi Controller: https://lkml.org/lkml/2017/6/26/518
 
+The overall problem with Version 2 of the Altera Quadspi Controller and 
+its driver was the fact that there was much duplication of code and logic
+with the spi-nor framework.  This new combination of fpga hardware and 
+software "gets out of the way" of the spi-nor framework.  The result is a
+much simpler driver with the spi-nor framework performing the bulk of the work.
 
-Heiko
+Patch 1 contains the device tree bindings for the driver for
+the Altera ASMI-Parallel II IP Core.
+
+Patch 2 contains the driver code for the Altera ASMI-Parallel II IP Core.
+This driver supports being configured via a device tree or with platform
+data.  In the later case, the memory for the registers has been remapped.
+This later case is intended for cases where the Altera ASMI-Parallel II
+driver is child of a pcie driver that has already mapped the BAR memory
+(See Patch 3).
+
+Patch 3 is for informational purposes only.  The patch is against the
+intel-fpga PCIe driver currently being reviewed linux-fpga mailing list.
+It shows how a PCIe driver might create an instance of the Altera
+ASMI Parallel II spi-nor driver.
+
+Matthew Gerlach (3):
+  dt-bindings: mtd: Altera ASMI Parallel II IP Core
+  mtd: spi-nor: Altera ASMI Parallel II IP Core
+  fpga: intel: Add QSPI FPGA Management Entity Feature
+
+ .../devicetree/bindings/mtd/altera-asmip2.txt      |  22 +
+ MAINTAINERS                                        |   7 +
+ drivers/mtd/spi-nor/Kconfig                        |   6 +
+ drivers/mtd/spi-nor/Makefile                       |   3 +-
+ drivers/mtd/spi-nor/altera-asmip2.c                | 474 +++++++++++++++++++++
+ include/linux/mtd/altera-asmip2.h                  |  24 ++
+ 6 files changed, 535 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
+ create mode 100644 drivers/mtd/spi-nor/altera-asmip2.c
+ create mode 100644 include/linux/mtd/altera-asmip2.h
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
