@@ -1,322 +1,37 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 3/4] leds: pca955x: add GPIO support
-Date: Sun, 6 Aug 2017 23:42:39 +0200
-Message-ID: <c9276953-7c4c-d77b-f393-4d3144e0cbd9@gmail.com>
-References: <1501589349-5681-1-git-send-email-clg@kaod.org>
- <1501589349-5681-4-git-send-email-clg@kaod.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1501589349-5681-4-git-send-email-clg@kaod.org>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, linux-leds@vger.kernel.org
-Cc: Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/3] ARM: dts: mvebu: set reduced-width property for SDRAM on 98dx3236
+Date: Mon,  7 Aug 2017 10:30:05 +1200
+Message-ID: <20170806223006.14231-3-chris.packham@alliedtelesis.co.nz>
+References: <20170806223006.14231-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170806223006.14231-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregory.clement@free-electrons.com, bp@alien8.de, jlu@pengutronix.de
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Cedric,
+Because the 98dx3236 and similar SoCs are switch chips with integrated
+CPUs they use a reduced pin count for the SDRAM interface. As such
+"full" with is 32-bits and "half" width is 16-bits (as opposed to 64/32
+on the discrete SoC). Set the reduced-width property on the sdramc node
+to indicate this.
 
-On 08/01/2017 02:09 PM, Cédric Le Goater wrote:
-> The PCA955x family of chips are I2C LED blinkers whose pins not used
-> to control LEDs can be used as general purpose I/Os (GPIOs).
-> 
-> The following adds such a support by defining different operation
-> modes for the pins (See bindings documentation for more details). The
-> pca955x driver is then extended with a gpio_chip when some of pins are
-> operating as GPIOs. The default operating mode is to behave as a LED.
-> 
-> The GPIO support is conditioned by CONFIG_LEDS_PCA955X_GPIO.
-> 
-> Signed-off-by: Cédric Le Goater <clg@kaod.org>
-> ---
->  drivers/leds/Kconfig                    |  11 +++
->  drivers/leds/leds-pca955x.c             | 158 +++++++++++++++++++++++++++-----
->  include/dt-bindings/leds/leds-pca955x.h |  16 ++++
->  3 files changed, 162 insertions(+), 23 deletions(-)
->  create mode 100644 include/dt-bindings/leds/leds-pca955x.h
-> 
-> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> index 594b24d410c3..3013cd35c65e 100644
-> --- a/drivers/leds/Kconfig
-> +++ b/drivers/leds/Kconfig
-> @@ -377,6 +377,17 @@ config LEDS_PCA955X
->  	  LED driver chips accessed via the I2C bus.  Supported
->  	  devices include PCA9550, PCA9551, PCA9552, and PCA9553.
->  
-> +config LEDS_PCA955X_GPIO
-> +	bool "Enable GPIO support for PCA955X"
-> +	depends on LEDS_PCA955X
-> +	depends on GPIOLIB
-> +	help
-> +	  Allow unused pins on PCA955X to be used as gpio.
-> +
-> +	  To use a pin as gpio the pin type should be set to
-> +	  PCA955X_TYPE_GPIO in the device tree.
-> +
-> +
->  config LEDS_PCA963X
->  	tristate "LED support for PCA963x I2C chip"
->  	depends on LEDS_CLASS
-> diff --git a/drivers/leds/leds-pca955x.c b/drivers/leds/leds-pca955x.c
-> index a8918ff0a7e9..ac0f726ff1af 100644
-> --- a/drivers/leds/leds-pca955x.c
-> +++ b/drivers/leds/leds-pca955x.c
-> @@ -53,6 +53,8 @@
->  #include <linux/slab.h>
->  #include <linux/string.h>
->  
-> +#include <dt-bindings/leds/leds-pca955x.h>
-> +
->  /* LED select registers determine the source that drives LED outputs */
->  #define PCA955X_LS_LED_ON	0x0	/* Output LOW */
->  #define PCA955X_LS_LED_OFF	0x1	/* Output HI-Z */
-> @@ -118,6 +120,9 @@ struct pca955x {
->  	struct pca955x_led *leds;
->  	struct pca955x_chipdef	*chipdef;
->  	struct i2c_client	*client;
-> +#ifdef CONFIG_LEDS_PCA955X_GPIO
-> +	struct gpio_chip gpio;
-> +#endif
->  };
->  
->  struct pca955x_led {
-> @@ -125,6 +130,7 @@ struct pca955x_led {
->  	struct led_classdev	led_cdev;
->  	int			led_num;	/* 0 .. 15 potentially */
->  	char			name[32];
-> +	u32			type;
->  	const char		*default_trigger;
->  };
->  
-> @@ -259,6 +265,65 @@ static int pca955x_led_set(struct led_classdev *led_cdev,
->  	return 0;
->  }
->  
-> +#ifdef CONFIG_LEDS_PCA955X_GPIO
-> +/*
-> + * Read the INPUT register, which contains the state of LEDs.
-> + */
-> +static u8 pca955x_read_input(struct i2c_client *client, int n)
-> +{
-> +	return (u8)i2c_smbus_read_byte_data(client, n);
-> +}
-> +
-> +static int pca955x_gpio_request_pin(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct pca955x *pca955x = gpiochip_get_data(gc);
-> +	struct pca955x_led *led = &pca955x->leds[offset];
-> +
-> +	if (led->type == PCA955X_TYPE_GPIO)
-> +		return 0;
-> +
-> +	return -EBUSY;
-> +}
-> +
-> +static void pca955x_gpio_set_value(struct gpio_chip *gc, unsigned int offset,
-> +				   int val)
-> +{
-> +	struct pca955x *pca955x = gpiochip_get_data(gc);
-> +	struct pca955x_led *led = &pca955x->leds[offset];
-> +
-> +	if (val)
-> +		pca955x_led_set(&led->led_cdev, LED_FULL);
-> +	else
-> +		pca955x_led_set(&led->led_cdev, LED_OFF);
-> +}
-> +
-> +static int pca955x_gpio_get_value(struct gpio_chip *gc, unsigned int offset)
-> +{
-> +	struct pca955x *pca955x = gpiochip_get_data(gc);
-> +	struct pca955x_led *led = &pca955x->leds[offset];
-> +	u8 reg = pca955x_read_input(pca955x->client, led->led_num / 8);
-> +
-> +	return !!(reg & (1 << (led->led_num % 8)));
-> +}
-> +
-> +static int pca955x_gpio_direction_input(struct gpio_chip *gc,
-> +					unsigned int offset)
-> +{
-> +	/* To use as input ensure pin is not driven */
-> +	pca955x_gpio_set_value(gc, offset, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pca955x_gpio_direction_output(struct gpio_chip *gc,
-> +					 unsigned int offset, int val)
-> +{
-> +	pca955x_gpio_set_value(gc, offset, val);
-> +
-> +	return 0;
-> +}
-> +#endif /* CONFIG_LEDS_PCA955X_GPIO */
-> +
->  #if IS_ENABLED(CONFIG_OF)
->  static struct pca955x_platform_data *
->  pca955x_pdata_of_init(struct i2c_client *client, struct pca955x_chipdef *chip)
-> @@ -297,6 +362,8 @@ pca955x_pdata_of_init(struct i2c_client *client, struct pca955x_chipdef *chip)
->  		snprintf(pdata->leds[reg].name, sizeof(pdata->leds[reg].name),
->  			 "%s", name);
->  
-> +		pdata->leds[reg].type = PCA955X_TYPE_LED;
-> +		of_property_read_u32(child, "type", &pdata->leds[reg].type);
->  		of_property_read_string(child, "linux,default-trigger",
->  					&pdata->leds[reg].default_trigger);
->  	}
-> @@ -332,6 +399,7 @@ static int pca955x_probe(struct i2c_client *client,
->  	struct i2c_adapter *adapter;
->  	int i, err;
->  	struct pca955x_platform_data *pdata;
-> +	int ngpios = 0;
->  
->  	if (id) {
->  		chip = &pca955x_chipdefs[id->driver_data];
-> @@ -391,36 +459,52 @@ static int pca955x_probe(struct i2c_client *client,
->  	pca955x->chipdef = chip;
->  
->  	for (i = 0; i < chip->bits; i++) {
-> +		struct pca955x_led *pdata_led = &pdata->leds[i];
-> +
->  		pca955x_led = &pca955x->leds[i];
->  		pca955x_led->led_num = i;
->  		pca955x_led->pca955x = pca955x;
-> -
-> -		/* Platform data can specify LED names and default triggers */
-> -		if (pdata) {
-> -			if (pdata->leds[i].name)
-> +		pca955x_led->type = pdata_led->type;
-> +
-> +		switch (pca955x_led->type) {
-> +		case PCA955X_TYPE_NONE:
-> +			break;
-> +		case PCA955X_TYPE_GPIO:
-> +			ngpios++;
-> +			break;
-> +		case PCA955X_TYPE_LED:
-> +			/*
-> +			 * Platform data can specify LED names and
-> +			 * default triggers
-> +			 */
-> +			if (pdata) {
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Similarly as in 1/4: this check seems to be redundant and we could
-simplify the code a bit here.
-
-> +				if (pdata->leds[i].name)
-> +					snprintf(pca955x_led->name,
-> +						 sizeof(pca955x_led->name),
-> +						 "pca955x:%s",
-> +						 pdata->leds[i].name);
-
-DT label property should contain also vendor prefix, and there should be
-no need to concatenate the segments here. The situation when label is
-not provided and LED class device name is taken from DT node name
-should be considered as a fallback.
-
-
-> +				if (pdata->leds[i].default_trigger)
-> +					pca955x_led->led_cdev.default_trigger =
-> +						pdata->leds[i].default_trigger;
-> +			} else {
->  				snprintf(pca955x_led->name,
-> -					sizeof(pca955x_led->name), "pca955x:%s",
-> -					pdata->leds[i].name);
-> -			if (pdata->leds[i].default_trigger)
-> -				pca955x_led->led_cdev.default_trigger =
-> -					pdata->leds[i].default_trigger;
-> -		} else {
-> -			snprintf(pca955x_led->name, sizeof(pca955x_led->name),
-> -				 "pca955x:%d", i);
-> -		}
-> +					 sizeof(pca955x_led->name),
-> +					 "pca955x:%d", i);
-> +			}
->  
-> -		pca955x_led->led_cdev.name = pca955x_led->name;
-> -		pca955x_led->led_cdev.brightness_set_blocking = pca955x_led_set;
-> +			pca955x_led->led_cdev.name = pca955x_led->name;
-> +			pca955x_led->led_cdev.brightness_set_blocking =
-> +				pca955x_led_set;
->  
-> -		err = devm_led_classdev_register(&client->dev,
-> -						 &pca955x_led->led_cdev);
-> -		if (err)
-> -			return err;
-> -	}
-> +			err = devm_led_classdev_register(&client->dev,
-> +							&pca955x_led->led_cdev);
-> +			if (err)
-> +				return err;
->  
-> -	/* Turn off LEDs */
-> -	for (i = 0; i < pca95xx_num_led_regs(chip->bits); i++)
-> -		pca955x_write_ls(client, i, 0x55);
-> +			/* Turn off LED */
-> +			pca955x_led_set(&pca955x_led->led_cdev, LED_OFF);
-> +		}
-> +	}
->  
->  	/* PWM0 is used for half brightness or 50% duty cycle */
->  	pca955x_write_pwm(client, 0, 255-LED_HALF);
-> @@ -432,6 +516,34 @@ static int pca955x_probe(struct i2c_client *client,
->  	pca955x_write_psc(client, 0, 0);
->  	pca955x_write_psc(client, 1, 0);
->  
-> +#ifdef CONFIG_LEDS_PCA955X_GPIO
-> +	if (ngpios) {
-> +		pca955x->gpio.label = "gpio-pca955x";
-> +		pca955x->gpio.direction_input = pca955x_gpio_direction_input;
-> +		pca955x->gpio.direction_output = pca955x_gpio_direction_output;
-> +		pca955x->gpio.set = pca955x_gpio_set_value;
-> +		pca955x->gpio.get = pca955x_gpio_get_value;
-> +		pca955x->gpio.request = pca955x_gpio_request_pin;
-> +		pca955x->gpio.can_sleep = 1;
-> +		pca955x->gpio.base = -1;
-> +		pca955x->gpio.ngpio = ngpios;
-> +		pca955x->gpio.parent = &client->dev;
-> +		pca955x->gpio.owner = THIS_MODULE;
-> +
-> +		err = devm_gpiochip_add_data(&client->dev, &pca955x->gpio,
-> +					     pca955x);
-> +		if (err) {
-> +			/* Use data->gpio.dev as a flag for freeing gpiochip */
-> +			pca955x->gpio.parent = NULL;
-> +			dev_warn(&client->dev, "could not add gpiochip\n");
-> +			return err;
-> +		}
-> +		dev_info(&client->dev, "gpios %i...%i\n",
-> +			 pca955x->gpio.base, pca955x->gpio.base +
-> +			 pca955x->gpio.ngpio - 1);
-> +	}
-> +#endif
-> +
->  	return 0;
->  }
->  
-> diff --git a/include/dt-bindings/leds/leds-pca955x.h b/include/dt-bindings/leds/leds-pca955x.h
-> new file mode 100644
-> index 000000000000..78cb7e979de7
-> --- /dev/null
-> +++ b/include/dt-bindings/leds/leds-pca955x.h
-> @@ -0,0 +1,16 @@
-> +/*
-> + * This header provides constants for pca955x LED bindings.
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2.  This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_LEDS_PCA955X_H
-> +#define _DT_BINDINGS_LEDS_PCA955X_H
-> +
-> +#define PCA955X_TYPE_NONE         0
-> +#define PCA955X_TYPE_LED          1
-> +#define PCA955X_TYPE_GPIO         2
-> +
-> +#endif /* _DT_BINDINGS_LEDS_PCA955X_H */
-> 
-
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index 0e12816d961e..4d6a2acc1b55 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -129,6 +129,7 @@
+ 			sdramc@1400 {
+ 				compatible = "marvell,armada-xp-sdram-controller";
+ 				reg = <0x1400 0x500>;
++				marvell,reduced-width;
+ 			};
+ 
+ 			L2: l2-cache@8000 {
 -- 
-Best regards,
-Jacek Anaszewski
+2.13.0
