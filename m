@@ -1,37 +1,44 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/3] ARM: dts: mvebu: set reduced-width property for SDRAM on 98dx3236
-Date: Mon,  7 Aug 2017 10:30:05 +1200
-Message-ID: <20170806223006.14231-3-chris.packham@alliedtelesis.co.nz>
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: add "reduced-width" property for Armada XP SDRAM controller
+Date: Mon,  7 Aug 2017 10:30:04 +1200
+Message-ID: <20170806223006.14231-2-chris.packham@alliedtelesis.co.nz>
 References: <20170806223006.14231-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170806223006.14231-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregory.clement@free-electrons.com, bp@alien8.de, jlu@pengutronix.de
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170806223006.14231-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Because the 98dx3236 and similar SoCs are switch chips with integrated
-CPUs they use a reduced pin count for the SDRAM interface. As such
-"full" with is 32-bits and "half" width is 16-bits (as opposed to 64/32
-on the discrete SoC). Set the reduced-width property on the sdramc node
-to indicate this.
+Some SoC implementations that use this controller have a reduced pin
+count so the meaning of "full" and "half" with change.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ .../bindings/memory-controllers/mvebu-sdram-controller.txt          | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index 0e12816d961e..4d6a2acc1b55 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -129,6 +129,7 @@
- 			sdramc@1400 {
- 				compatible = "marvell,armada-xp-sdram-controller";
- 				reg = <0x1400 0x500>;
-+				marvell,reduced-width;
- 			};
+diff --git a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+index 89657d1d4cd4..3041868321c8 100644
+--- a/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
++++ b/Documentation/devicetree/bindings/memory-controllers/mvebu-sdram-controller.txt
+@@ -13,6 +13,12 @@ Required properties:
+  - reg: a resource specifier for the register space, which should
+    include all SDRAM controller registers as per the datasheet.
  
- 			L2: l2-cache@8000 {
++Optional properties:
++ - marvell,reduced-width: some SoCs that use this SDRAM controller have
++   a reduced pin count. On such systems "full" width is 32-bits and
++   "half" width is 16-bits. Set this property to indicate that the SoC
++   used is such a system.
++
+ Example:
+ 
+ sdramc@1400 {
 -- 
 2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
