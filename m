@@ -1,30 +1,35 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rockchip: convert rk3288 device tree files to 64 bits
-Date: Sun, 06 Aug 2017 12:58:35 +0200
-Message-ID: <3943637.qfjA7HYY3v@phil>
-References: <1501730496-1893-1-git-send-email-huangtao@rock-chips.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/5] arm64: dts: rockchip: Add rk3399 vop and display-subsystem
+Date: Sun, 06 Aug 2017 15:45:28 +0200
+Message-ID: <3297411.sT6PaoiFec@phil>
+References: <1500301019-9960-1-git-send-email-jacob-chen@iotwrt.com> <1500301019-9960-2-git-send-email-jacob-chen@iotwrt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501730496-1893-1-git-send-email-huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1500301019-9960-2-git-send-email-jacob-chen@iotwrt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacob Chen <jacob-chen@iotwrt.com>
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Yao <mark.yao@rock-chips.com>, Yakir Yang <ykk@rock-chips.com>, Caesar Wang <wxt@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 3. August 2017, 11:21:36 CEST schrieb Tao Huang:
-> In order to be able to use more than 4GB of RAM when the LPAE is
-> activated, the dts must be converted in 64 bits.
+Am Montag, 17. Juli 2017, 22:16:55 CEST schrieb Jacob Chen:
+> From: Mark Yao <mark.yao@rock-chips.com>
 > 
-> Signed-off-by: Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Add devicetree nodes for rk3399 VOP (Video Output Processors), and the
+> top level display-subsystem root node.
+> 
+> Later patches add endpoints (eDP, HDMI, MIPI, etc) that attach to the
+> VOPs' output ports.
+> 
+> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Caesar Wang <wxt@rock-chips.com>
+> Signed-off-by: Jacob Chen <jacob-chen@iotwrt.com>
 
-applied for 4.14
+applied for 4.14 after moving the display-subsystem node between
+cpus and pmu nodes (alphabetical sorting)
 
 
 Thanks
 Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
