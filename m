@@ -1,34 +1,27 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] arm64: dts: rockchip: add rk3399 edp nodes
-Date: Sun, 06 Aug 2017 15:53:24 +0200
-Message-ID: <1647218.4UM7NyvqRo@phil>
-References: <1500301019-9960-1-git-send-email-jacob-chen@iotwrt.com> <1500301019-9960-4-git-send-email-jacob-chen@iotwrt.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1500301019-9960-4-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: "Bui Duc Phuc (Fukuda)" <phucduc.bui@gmail.com>
+Subject: [PATCH] ARM:dts:armadillo800eva: Add console parametters
+Date: Sun,  6 Aug 2017 20:55:01 +0700
+Message-ID: <1502027702-4366-1-git-send-email-phucduc.bui@gmail.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: geert+renesas@glider.be, horms@verge.net.au
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@vger.kernel.org, laurent.pinchart+renesas@ideasonboard.com, magnus.damm@gmail.com, kuninori.morimoto.gx@renesas.com, yoshihiro.shimoda.uh@renesas.com
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 17. Juli 2017, 22:16:57 CEST schrieb Jacob Chen:
-> From: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Add an edp node, and also add edp endpoints to vopb and vopl
-> output port nodes.
-> 
-> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+From: Bui Duc Phuc <phucduc.bui@gmail.com>
 
-applied for 4.14 after some minimal property reordering
+Hi, Everyone!  
 
+I have a patch for the armadillo board device-tree.
+Please consider this patch.
 
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards.
+
+Bui Duc Phuc (1):
+  ARM:dts:armadillo800eva: Add console parametters
+
+ arch/arm/boot/dts/r8a7740-armadillo800eva.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+-- 
+2.7.4
