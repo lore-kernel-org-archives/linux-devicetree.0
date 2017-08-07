@@ -1,393 +1,83 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] fdt: Allow stacked overlays phandle references
-Date: Mon,  7 Aug 2017 15:26:09 +0300
-Message-ID: <1502108769-11203-1-git-send-email-pantelis.antoniou@konsulko.com>
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
+ add/remove device
+Date: Mon, 7 Aug 2017 08:29:59 -0400
+Message-ID: <CAF6AEGsw2=nERuJ8UCBr_kTBS0TigaA9LL1Hxw3JmNiu4oycOA@mail.gmail.com>
+References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
+ <20170712225459.GZ22780@codeaurora.org> <5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
+ <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org> <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+ <CAFp+6iH-WR4gNExaOBfnwy7GG7DXrjdytPvnMHNmo64YQZdQWQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iH-WR4gNExaOBfnwy7GG7DXrjdytPvnMHNmo64YQZdQWQ@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Robin Murphy <robin.murphy@arm.com>, Sricharan R <sricharan@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Archit Taneja <architt@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables an overlay to refer to a previous overlay's
-labels by performing a merge of symbol information at application
-time.
+On Mon, Aug 7, 2017 at 4:27 AM, Vivek Gautam
+<vivek.gautam@codeaurora.org> wrote:
+> On Thu, Jul 13, 2017 at 5:20 PM, Rob Clark <robdclark@gmail.com> wrote:
+>> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan@codeaurora.org> wrote:
+>>> Hi Vivek,
+>>>
+>>> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
+>>>> Hi Stephen,
+>>>>
+>>>>
+>>>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
+>>>>> On 07/06, Vivek Gautam wrote:
+>>>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+>>>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+>>>>>>                    size_t size)
+>>>>>>   {
+>>>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>>>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
+>>>>>> +    size_t ret;
+>>>>>>         if (!ops)
+>>>>>>           return 0;
+>>>>>>   -    return ops->unmap(ops, iova, size);
+>>>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
+>>>>> Can these map/unmap ops be called from an atomic context? I seem
+>>>>> to recall that being a problem before.
+>>>>
+>>>> That's something which was dropped in the following patch merged in master:
+>>>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
+>>>>
+>>>> Looks like we don't  need locks here anymore?
+>>>
+>>>  Apart from the locking, wonder why a explicit pm_runtime is needed
+>>>  from unmap. Somehow looks like some path in the master using that
+>>>  should have enabled the pm ?
+>>>
+>>
+>> Yes, there are a bunch of scenarios where unmap can happen with
+>> disabled master (but not in atomic context).
+>
+> I would like to understand whether there is a situation where an unmap is
+> called in atomic context without an enabled master?
+>
+> Let's say we have the case where all the unmap calls in atomic context happen
+> only from the master's context (in which case the device link should
+> take care of
+> the pm state of smmu), and the only unmap that happen in non-atomic context
+> is the one with master disabled. In such a case doesn it make sense to
+> distinguish
+> the atomic/non-atomic context and add pm_runtime_get_sync()/put_sync() only
+> for the non-atomic context since that would be the one with master disabled.
+>
 
-In a nutshell it allows an overlay to refer to a symbol that a previous
-overlay has defined. It requires both the base and all the overlays
-to be compiled with the -@ command line switch so that symbol
-information is included.
+At least drm/msm needs to hold obj->lock (a mutex) in unmap, so it
+won't unmap anything in atomic ctx (but it can unmap w/ master
+disabled).  I can't really comment about other non-gpu drivers.  It
+seems like a reasonable constraint that either master is enabled or
+not in atomic ctx.
 
-base.dts
---------
+Currently we actually wrap unmap w/ pm_runtime_get/put_sync(), but I'd
+like to drop that to avoid powering up the gpu.
 
-	/dts-v1/;
-	/ {
-		foo: foonode {
-			foo-property;
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o base.dtb base.dts
-
-bar.dts
--------
-
-	/dts-v1/;
-	/plugin/;
-	/ {
-		fragment@1 {
-			target = <&foo>;
-			__overlay__ {
-				overlay-1-property;
-				bar: barnode {
-					bar-property;
-				};
-			};
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o bar.dtb bar.dts
-
-baz.dts
--------
-
-	/dts-v1/;
-	/plugin/;
-	/ {
-		fragment@1 {
-			target = <&bar>;
-			__overlay__ {
-				overlay-2-property;
-				baz: baznode {
-					baz-property;
-				};
-			};
-		};
-	};
-
-	$ dtc -@ -I dts -O dtb -o baz.dtb baz.dts
-
-Applying the overlays:
-
-	$ fdtoverlay -i base.dtb -o target.dtb bar.dtb baz.dtb
-
-Dumping:
-
-	$ fdtdump target.dtb
-	/ {
-            foonode {
-                overlay-1-property;
-                foo-property;
-                linux,phandle = <0x00000001>;
-                phandle = <0x00000001>;
-                barnode {
-                    overlay-2-property;
-                    phandle = <0x00000002>;
-                    linux,phandle = <0x00000002>;
-                    bar-property;
-                    baznode {
-                        phandle = <0x00000003>;
-                        linux,phandle = <0x00000003>;
-                        baz-property;
-                    };
-                };
-            };
-            __symbols__ {
-                baz = "/foonode/barnode/baznode";
-                bar = "/foonode/barnode";
-                foo = "/foonode";
-            };
-	};
-
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
- libfdt/fdt_overlay.c | 228 ++++++++++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 206 insertions(+), 22 deletions(-)
-
-diff --git a/libfdt/fdt_overlay.c b/libfdt/fdt_overlay.c
-index ceb9687..bd81241 100644
---- a/libfdt/fdt_overlay.c
-+++ b/libfdt/fdt_overlay.c
-@@ -39,6 +39,7 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
-  * @fdt: Base device tree blob
-  * @fdto: Device tree overlay blob
-  * @fragment: node offset of the fragment in the overlay
-+ * @pathp: pointer which receives the path of the target (or NULL)
-  *
-  * overlay_get_target() retrieves the target offset in the base
-  * device tree of a fragment, no matter how the actual targetting is
-@@ -49,37 +50,47 @@ static uint32_t overlay_get_target_phandle(const void *fdto, int fragment)
-  *      Negative error code on error
-  */
- static int overlay_get_target(const void *fdt, const void *fdto,
--			      int fragment)
-+			      int fragment, char const **pathp)
- {
- 	uint32_t phandle;
--	const char *path;
--	int path_len;
-+	const char *path = NULL;
-+	int path_len = 0, ret;
- 
- 	/* Try first to do a phandle based lookup */
- 	phandle = overlay_get_target_phandle(fdto, fragment);
- 	if (phandle == (uint32_t)-1)
- 		return -FDT_ERR_BADPHANDLE;
- 
--	if (phandle)
--		return fdt_node_offset_by_phandle(fdt, phandle);
-+	/* no phandle, try path */
-+	if (!phandle) {
-+		/* And then a path based lookup */
-+		path = fdt_getprop(fdto, fragment, "target-path", &path_len);
-+		if (path)
-+			ret = fdt_path_offset(fdt, path);
-+		else
-+			ret = path_len;
-+	} else
-+		ret = fdt_node_offset_by_phandle(fdt, phandle);
- 
--	/* And then a path based lookup */
--	path = fdt_getprop(fdto, fragment, "target-path", &path_len);
--	if (!path) {
--		/*
--		 * If we haven't found either a target or a
--		 * target-path property in a node that contains a
--		 * __overlay__ subnode (we wouldn't be called
--		 * otherwise), consider it a improperly written
--		 * overlay
--		 */
--		if (path_len == -FDT_ERR_NOTFOUND)
--			return -FDT_ERR_BADOVERLAY;
-+	/*
-+	* If we haven't found either a target or a
-+	* target-path property in a node that contains a
-+	* __overlay__ subnode (we wouldn't be called
-+	* otherwise), consider it a improperly written
-+	* overlay
-+	*/
-+	if (ret < 0 && path_len == -FDT_ERR_NOTFOUND)
-+		ret = -FDT_ERR_BADOVERLAY;
-+
-+	/* return on error */
-+	if (ret < 0)
-+		return ret;
- 
--		return path_len;
--	}
-+	/* return pointer to path (if available) */
-+	if (pathp)
-+		*pathp = path ? path : NULL;
- 
--	return fdt_path_offset(fdt, path);
-+	return ret;
- }
- 
- /**
-@@ -590,7 +601,7 @@ static int overlay_apply_node(void *fdt, int target,
-  *
-  * overlay_merge() merges an overlay into its base device tree.
-  *
-- * This is the final step in the device tree overlay application
-+ * This is the next to last step in the device tree overlay application
-  * process, when all the phandles have been adjusted and resolved and
-  * you just have to merge overlay into the base device tree.
-  *
-@@ -618,7 +629,7 @@ static int overlay_merge(void *fdt, void *fdto)
- 		if (overlay < 0)
- 			return overlay;
- 
--		target = overlay_get_target(fdt, fdto, fragment);
-+		target = overlay_get_target(fdt, fdto, fragment, NULL);
- 		if (target < 0)
- 			return target;
- 
-@@ -630,6 +641,175 @@ static int overlay_merge(void *fdt, void *fdto)
- 	return 0;
- }
- 
-+static int get_path_len(const void *fdt, int nodeoffset)
-+{
-+	int len = 0, namelen;
-+	const char *name;
-+
-+	FDT_CHECK_HEADER(fdt);
-+
-+	for (;;) {
-+		name = fdt_get_name(fdt, nodeoffset, &namelen);
-+		if (!name)
-+			return namelen;
-+
-+		/* root? we're done */
-+		if (namelen == 0)
-+			break;
-+
-+		nodeoffset = fdt_parent_offset(fdt, nodeoffset);
-+		if (nodeoffset < 0)
-+			return nodeoffset;
-+		len += namelen + 1;
-+	}
-+
-+	/* in case of root pretend it's "/" */
-+	if (len == 0)
-+		len++;
-+	return len;
-+}
-+
-+/**
-+ * overlay_symbol_update - Update the symbols of base tree after a merge
-+ * @fdt: Base Device Tree blob
-+ * @fdto: Device tree overlay blob
-+ *
-+ * overlay_symbol_update() updates the symbols of the base tree with the
-+ * symbols of the applied overlay
-+ *
-+ * This is the last step in the device tree overlay application
-+ * process, allowing the reference of overlay symbols by subsequent
-+ * overlay operations.
-+ *
-+ * returns:
-+ *      0 on success
-+ *      Negative error code on failure
-+ */
-+static int overlay_symbol_update(void *fdt, void *fdto)
-+{
-+	int root_sym, ov_sym, prop, path_len, fragment, target;
-+	int len, frag_name_len, ret, rel_path_len;
-+	const char *s, *e;
-+	const char *path;
-+	const char *name;
-+	const char *frag_name;
-+	const char *rel_path;
-+	const char *target_path;
-+	char *buf;
-+	void *p;
-+
-+	ov_sym = fdt_subnode_offset(fdto, 0, "__symbols__");
-+
-+	/* if no overlay symbols exist no problem */
-+	if (ov_sym < 0)
-+		return 0;
-+
-+	root_sym = fdt_subnode_offset(fdt, 0, "__symbols__");
-+
-+	/* it no root symbols exist we should create them */
-+	if (root_sym == -FDT_ERR_NOTFOUND)
-+		root_sym = fdt_add_subnode(fdt, 0, "__symbols__");
-+
-+	/* any error is fatal now */
-+	if (root_sym < 0)
-+		return root_sym;
-+
-+	/* iterate over each overlay symbol */
-+	fdt_for_each_property_offset(prop, fdto, ov_sym) {
-+		path = fdt_getprop_by_offset(fdto, prop, &name, &path_len);
-+		if (!path)
-+			return path_len;
-+
-+		/* verify it's a string property (terminated by a single \0) */
-+		if (path_len < 1 || memchr(path, '\0', path_len) != &path[path_len - 1])
-+			return -FDT_ERR_BADVALUE;
-+
-+		/* keep end marker to avoid strlen() */
-+		e = path + path_len;
-+
-+		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
-+
-+		if (*path != '/')
-+			return -FDT_ERR_BADVALUE;
-+
-+		/* get fragment name first */
-+		s = strchr(path + 1, '/');
-+		if (!s)
-+			return -FDT_ERR_BADOVERLAY;
-+
-+		frag_name = path + 1;
-+		frag_name_len = s - path - 1;
-+
-+		/* verify format; safe since "s" lies in \0 terminated prop */
-+		len = sizeof("/__overlay__/") - 1;
-+		if ((e - s) < len || memcmp(s, "/__overlay__/", len))
-+			return -FDT_ERR_BADOVERLAY;
-+
-+		rel_path = s + len;
-+		rel_path_len = e - rel_path;
-+
-+		/* find the fragment index in which the symbol lies */
-+		ret = fdt_subnode_offset_namelen(fdto, 0, frag_name,
-+					       frag_name_len);
-+		/* not found? */
-+		if (ret < 0)
-+			return -FDT_ERR_BADOVERLAY;
-+		fragment = ret;
-+
-+		/* an __overlay__ subnode must exist */
-+		ret = fdt_subnode_offset(fdto, fragment, "__overlay__");
-+		if (ret < 0)
-+			return -FDT_ERR_BADOVERLAY;
-+
-+		/* get the target of the fragment */
-+		ret = overlay_get_target(fdt, fdto, fragment, &target_path);
-+		if (ret < 0)
-+			return ret;
-+		target = ret;
-+
-+		/* if we have a target path use */
-+		if (!target_path) {
-+			ret = get_path_len(fdt, target);
-+			if (ret < 0)
-+				return ret;
-+			len = ret;
-+		} else {
-+			len = strlen(target_path);
-+		}
-+
-+		ret = fdt_setprop_placeholder(fdt, root_sym, name,
-+				len + (len > 1) + rel_path_len + 1, &p);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (!target_path) {
-+			/* again in case setprop_placeholder changed it */
-+			ret = overlay_get_target(fdt, fdto, fragment, &target_path);
-+			if (ret < 0)
-+				return ret;
-+			target = ret;
-+		}
-+
-+		buf = p;
-+		if (len > 1) { /* target is not root */
-+			if (!target_path) {
-+				ret = fdt_get_path(fdt, target, buf, len + 1);
-+				if (ret < 0)
-+					return ret;
-+			} else
-+				memcpy(buf, target_path, len + 1);
-+
-+		} else
-+			len--;
-+
-+		buf[len] = '/';
-+		memcpy(buf + len + 1, rel_path, rel_path_len);
-+		buf[len + 1 + rel_path_len] = '\0';
-+	}
-+
-+	return 0;
-+}
-+
- int fdt_overlay_apply(void *fdt, void *fdto)
- {
- 	uint32_t delta = fdt_get_max_phandle(fdt);
-@@ -654,6 +834,10 @@ int fdt_overlay_apply(void *fdt, void *fdto)
- 	if (ret)
- 		goto err;
- 
-+	ret = overlay_symbol_update(fdt, fdto);
-+	if (ret)
-+		goto err;
-+
- 	/*
- 	 * The overlay has been damaged, erase its magic.
- 	 */
--- 
-2.1.4
+BR,
+-R
