@@ -1,181 +1,110 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
-Date: Mon, 7 Aug 2017 11:03:53 +0200
-Message-ID: <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
-References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 3/3] irqchip: bcm2836: Move SMP startup code to arch/arm
+Date: Mon, 7 Aug 2017 11:04:30 +0200
+Message-ID: <a4e7f1f9-3bf9-11ec-1e6e-da1830685122@i2se.com>
+References: <1502058731-12462-1-git-send-email-stefan.wahren@i2se.com>
+ <1502058731-12462-4-git-send-email-stefan.wahren@i2se.com>
+ <143fe51b-50d8-ef6d-2946-47a675f0337e@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170731222452.22887-1-danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
+In-Reply-To: <143fe51b-50d8-ef6d-2946-47a675f0337e-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Content-Language: de-DE
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 1, 2017 at 12:24 AM, Danilo Krummrich
-<danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org> wrote:
-
-> This driver provides PS2 serio bus support by implementing bit banging
-> with the GPIO API. The GPIO pins, data and clock, can be configured with
-> a node in the device tree or by static platform data.
+Am 07.08.2017 um 09:47 schrieb Phil Elwell:
+> Hi Stefan,
 >
-> Writing to a device is supported as well, though it is not recommended as
-> the timings to be halt given by libps2 are very tough and difficult to
-> reach with bit banging. Therefore it can be configured (also in DT and
-> pdata) whether the serio write function should be available for clients.
->
-> This driver is for development purposes and not for productive use.
-> However, this driver can be useful e.g. when no USB port is available or
-> using old peripherals is desired as PS2 controllers getting rare.
->
-> This driver was tested on a RPI1 and on Hikey960 and it worked well
-> together with the atkbd driver.
->
-> Signed-off-by: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>
-
-> +++ b/Documentation/devicetree/bindings/serio/ps2-gpio.txt
-
-When you add DT bindings you have to CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-> @@ -0,0 +1,20 @@
-> +Device-Tree bindings for ps2 gpio driver
+> On 06/08/2017 23:32, Stefan Wahren wrote:
+>> In order to easily provide SMP for BCM2837 on 32-bit and 64-bit
+>> the SMP startup code was placed in irq-bcm2836. That's not the
+>> right approach. So move this code where it belongs.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>> Fixes: 41f4988cc287 ("irqchip/bcm2836: Add SMP support for the 2836")
+>> ---
+>>  arch/arm/mach-bcm/Makefile          |  3 ++
+>>  arch/arm/mach-bcm/platsmp.c         | 35 ++++++++++++++++
+>>  drivers/irqchip/irq-bcm2836.c       | 79 +------------------------------------
+>>  include/linux/irqchip/irq-bcm2836.h | 70 ++++++++++++++++++++++++++++++++
+>>  4 files changed, 110 insertions(+), 77 deletions(-)
+>>  create mode 100644 include/linux/irqchip/irq-bcm2836.h
+>>
+>> diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
+>> index 980f585..637cd9e 100644
+>> --- a/arch/arm/mach-bcm/Makefile
+>> +++ b/arch/arm/mach-bcm/Makefile
+>> @@ -43,6 +43,9 @@ endif
+>>  
+>>  # BCM2835
+>>  obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
+>> +ifeq ($(CONFIG_ARCH_BCM2835),y)
+>> +obj-$(CONFIG_SMP)		+= platsmp.o
+>> +endif
+>>  
+>>  # BCM5301X
+>>  obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
+>> diff --git a/arch/arm/mach-bcm/platsmp.c b/arch/arm/mach-bcm/platsmp.c
+>> index 9e3f275..3fa1a99 100644
+>> --- a/arch/arm/mach-bcm/platsmp.c
+>> +++ b/arch/arm/mach-bcm/platsmp.c
+>> @@ -17,6 +17,7 @@
+>>  #include <linux/errno.h>
+>>  #include <linux/init.h>
+>>  #include <linux/io.h>
+>> +#include <linux/irqchip/irq-bcm2836.h>
+>>  #include <linux/jiffies.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_address.h>
+>> @@ -287,6 +288,35 @@ static int nsp_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>>  	return ret;
+>>  }
+>>  
+>> +static int bcm2836_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>> +{
+>> +	void __iomem *intc_base;
+>> +	struct device_node *dn;
+>> +	char *name;
+>> +
+>> +	name = "brcm,bcm2836-l1-intc";
+>> +	dn = of_find_compatible_node(NULL, NULL, name);
+>> +	if (!dn) {
+>> +		pr_err("unable to find intc node\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	intc_base = of_iomap(dn, 0);
+>> +	of_node_put(dn);
+>> +
+>> +	if (!intc_base) {
+>> +		pr_err("unable to remap intc base register\n");
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	writel(virt_to_phys(secondary_startup),
+>> +	       intc_base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
+> I was going to upstream the patch to add dsb+sev today, but now the goalposts are
+> (literally) moving. Should I produce two patchsets - one for before your patch is
+> appied, and one for after - or will you add the required lines here?:
+>  
+> +       dsb(sy); /* Ensure write has completed before waking the other CPUs */
+> +       sev();
 > +
-> +Required properties:
-> +       - compatible = "ps2-gpio";
-> +       - gpios: data and clock gpio
-> +
-> +Optional properties:
-> +       - ps2-gpio,write-enable: Indicates whether write function is provided
-> +       to serio device. Most probably providing the write fn will not work,
-> +       because of the tough timing libps2 requires.
-> +
-> +Example nodes:
-> +
-> +ps2@0 {
-> +       compatible = "ps2-gpio";
-> +       gpios = <&gpio 24 0 /* data */
-> +                &gpio 23 0 /* clock */
-> +               >;
-> +       i2c-gpio,write-enable = <0>;
-> +};
 
-These look fine to me though.
+Since Marc make it clear that he won't accept any patches before this
+cleanup, please base your patch on top of this repo:
 
-> diff --git a/Documentation/gpio/drivers-on-gpio.txt b/Documentation/gpio/drivers-on-gpio.txt
+https://github.com/anholt/linux/commits/bcm2835-soc-smp-cleanup
 
-Thanks for patching this!
+Btw Eric reported problems [1] about this change, is this fixed now?
 
-> +config SERIO_GPIO_PS2
-> +       tristate "GPIO PS/2 bit banging driver"
-> +       help
-> +         Say Y here if you want PS/2 bit banging support via GPIO.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called gpio-ps2.
-> +
-> +         If you are unsure, say N.
+[1] -
+https://github.com/raspberrypi/linux/issues/1989#issuecomment-318180597
 
-As mentioned
-
-depends on GPIOLIB
-depends on OF
-
-> +#include <linux/gpio.h>
-
-Use only:
-
-#include <linux/gpio/consumer.h>
-
-> +#include <linux/of_gpio.h>
-
-Should not be needed.
-
-
-> +struct ps2_gpio_data {
-> +       struct device *dev;
-> +       struct serio *serio;
-> +       unsigned char mode;
-> +       unsigned int gpio_clk;
-> +       unsigned int gpio_data;
-> +       unsigned int write_enable;
-
-Do not use the global GPIO number space, use GPIO descriptors.
-
-Example:
-drivers/input/keyboard/gpio_keys.c
-
-> +static int ps2_gpio_write(struct serio *serio, unsigned char val)
-> +{
-> +       struct ps2_gpio_data *drvdata = serio->port_data;
-> +
-> +       drvdata->mode = PS2_MODE_TX;
-> +       drvdata->tx_byte = val;
-> +       /* Make sure ISR running on other CPU notice changes. */
-> +       barrier();
-
-This seems overengineered, is this really needed?
-
-If we have races like this, the error is likely elsewhere, and should be
-fixed in the GPIO driver MMIO access or so.
-
-> +       disable_irq_nosync(drvdata->irq);
-> +       gpio_direction_output(drvdata->gpio_clk, 0);
-
-No use GPIO descriptors please.
-
-> +       // dev_info(drvdata->dev, "recv bit %u: %u\n", cnt, data);
-
-Delete comments or convert to dev_dbg()
-
-> +static int of_ps2_gpio_get_props(struct device *dev,
-> +                                struct ps2_gpio_data *drvdata)
-> +{
-> +       if (of_gpio_count(dev->of_node) < 2)
-> +               return -ENODEV;
-> +
-> +       drvdata->gpio_data = of_get_gpio(dev->of_node, 0);
-> +       drvdata->gpio_clk = of_get_gpio(dev->of_node, 1);
-> +
-> +       if (drvdata->gpio_data == -EPROBE_DEFER ||
-> +           drvdata->gpio_clk == -EPROBE_DEFER)
-> +               return -EPROBE_DEFER;
-> +
-> +       if (!gpio_is_valid(drvdata->gpio_data) ||
-> +           !gpio_is_valid(drvdata->gpio_clk)) {
-> +               dev_err(dev, "invalid GPIOs, data=%d, clk=%d\n",
-> +                       drvdata->gpio_data, drvdata->gpio_clk);
-> +               return -ENODEV;
-> +       }
-
-With GPIO descriptors you should just gpiod_get(dev, "foo", FLAG);
-No need to poke around in the device tree like this.
-
-Error checks and deferrals apply as usual though.
-
-> +       error = devm_gpio_request(dev, drvdata->gpio_clk, "ps2 clk");
-> +       if (error) {
-> +               dev_err(dev, "failed to request gpio %u: %d",
-> +                               drvdata->gpio_clk, error);
-> +               goto err_free_serio;
-> +       }
-> +
-> +       error = devm_gpio_request(dev, drvdata->gpio_data, "ps2 data");
-> +       if (error) {
-> +               dev_err(dev, "failed to request gpio %u: %d",
-> +                               drvdata->gpio_data, error);
-> +               goto err_free_serio;
-> +       }
-
-So devm_gpiod_get(...)
-
-> +       gpio_direction_input(drvdata->gpio_clk);
-> +       gpio_direction_input(drvdata->gpio_data);
-
-And incidentallt then you can just specify GPIOD_IN as flag and
-it will be set up for you.
-
-Yours,
-Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
