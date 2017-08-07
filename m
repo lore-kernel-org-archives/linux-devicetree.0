@@ -1,28 +1,47 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] arm64: dts: rockchip: add rk3328 i2s nodes
-Date: Mon, 07 Aug 2017 23:30:55 +0200
-Message-ID: <1918910.fG6X1AiR1q@phil>
-References: <1501143365-76104-1-git-send-email-sugar.zhang@rock-chips.com> <1501143365-76104-2-git-send-email-sugar.zhang@rock-chips.com>
+From: Franklin S Cooper Jr <fcooper@ti.com>
+Subject: Re: [PATCH 0/3] ARM: dts: keystone-k2g: Add DCAN instances to 66AK2G
+Date: Mon, 7 Aug 2017 16:31:43 -0500
+Message-ID: <8930852b-6995-3d41-440e-86f440b313ad@ti.com>
+References: <20170802201822.11532-1-fcooper@ti.com>
+ <69995971-2fe7-87f4-a46a-8ef4f729ffc5@oracle.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501143365-76104-2-git-send-email-sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liang Chen <cl-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <69995971-2fe7-87f4-a46a-8ef4f729ffc5@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 27. Juli 2017, 16:16:03 CEST schrieb Sugar Zhang:
-> This patch add the i2s dt nodes for rk3328.
+
+Hi Santosh,
+On 08/04/2017 12:07 PM, Santosh Shilimkar wrote:
+> Hi Franklin,
 > 
-> Signed-off-by: Sugar Zhang <sugar.zhang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> On 8/2/2017 1:18 PM, Franklin S Cooper Jr wrote:
+>> Add D CAN nodes to 66AK2G based SoC dtsi.
+>>
+>> Franklin S Cooper Jr (2):
+>>    dt-bindings: net: c_can: Update binding for clock and power-domains
+>>      property
+>>    ARM: configs: keystone: Enable D_CAN driver
+>>
+>> Lokesh Vutla (1):
+>>    ARM: dts: k2g: Add DCAN nodes
+>>
+> Any DCAN driver dependency with these patchset ? If not, I can
+> queue this up so do let me know.
 
-as the binding patch got applied I've now also applied thos one for 4.14
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There aren't any dependencies.
+> 
+> Regards,
+> Santosh
