@@ -1,28 +1,59 @@
-From: Nathan Sullivan <nathan.sullivan@ni.com>
-Subject: Re: [PATCH v6] MIPS: NI 169445 board support
-Date: Mon, 7 Aug 2017 10:32:21 -0500
-Message-ID: <20170807153221.GA28214@nathan3500-linux-VM>
-References: <1500402549-12090-1-git-send-email-nathan.sullivan@ni.com>
- <20170807152648.GA13214@linux-mips.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Mon, 7 Aug 2017 17:37:10 +0200
+Message-ID: <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
+References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
+ <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com> <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170807152648.GA13214@linux-mips.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Keerthy <j-keerthy@ti.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 05:26:48PM +0200, Ralf Baechle wrote:
-> On Tue, Jul 18, 2017 at 01:29:09PM -0500, Nathan Sullivan wrote:
-> 
-> > Support the National Instruments 169445 board.
-> 
-> Thanks, applied with minor changes:
-> 
->   Ralf
+On Mon, Aug 7, 2017 at 3:50 PM, Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
 
-Thank you for your patience!
+> Adding "interrupts" property in DT causes
+> of_pupulate_default_populate() to assign virtual IRQ numbers
+> before driver probing.  So it does not work well with IRQ domain hierarchy.
 
-   Nathan
+I think I heard some noise about this the week before.
+
+> For pinctrl/stm32/pinctrl-stm32.c,
+> I do not see "interrupts", so it just straight maps the irq numbers.
+
+I think OMAP and DaVinci does someting similar too. This is from a recent
+DaVinci patch from Keerthy:
+
++Example for 66AK2G:
++
++gpio0: gpio@2603000 {
++       compatible = "ti,k2g-gpio", "ti,keystone-gpio";
++       reg = <0x02603000 0x100>;
++       gpio-controller;
++       #gpio-cells = <2>;
++       interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
++                       <GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
++       interrupt-controller;
++       #interrupt-cells = <2>;
++       ti,ngpio = <144>;
++       ti,davinci-gpio-unbanked = <0>;
++       clocks = <&k2g_clks 0x001b 0x0>;
++       clock-names = "gpio";
++};
+
+
+That looks fairly similar.
+
+Yours,
+Linus Walleij
