@@ -1,63 +1,49 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/4] thermal: add brcmstb AVS TMON driver
-Date: Mon, 7 Aug 2017 10:52:51 -0700
-Message-ID: <a29d8aef-8d24-9e63-c078-48c3a1a6fccf@gmail.com>
-References: <20170731192633.58747-1-code@mmayer.net>
+Subject: Re: [PATCH] of_mdio: use of_property_read_u32_array()
+Date: Mon, 7 Aug 2017 11:01:01 -0700
+Message-ID: <f9af35a3-bb53-c554-eb6e-93cf6c24cb29@gmail.com>
+References: <20170804214354.351406407@cogentembedded.com>
+ <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
+ <080ebcb6-b5aa-63db-176b-83477c2540e5@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170731192633.58747-1-code@mmayer.net>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <080ebcb6-b5aa-63db-176b-83477c2540e5@cogentembedded.com>
 Content-Language: en-US
-Sender: linux-pm-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/31/2017 12:26 PM, Markus Mayer wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
+On 08/07/2017 09:18 AM, Sergei Shtylyov wrote:
+> Hello!
 > 
-> This series adds the brcmstb AVS TMON driver.
+> On 08/07/2017 05:18 PM, Rob Herring wrote:
 > 
-> The driver was originally written by Brian Norris.
+>>> The "fixed-link" prop support predated of_property_read_u32_array(), so
+>>> basically had to open-code it. Using the modern API saves 24 bytes of
+>>> the
+>>> object code (ARM gcc 4.8.5); the only behavior change would be that the
+>>> prop length check is now less strict (however the strict pre-check done
+>>> in of_phy_is_fixed_link() is left intact anyway)...
+>>>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>
+>>> ---
+>>> The patch is against the 'dt/next' branch of Rob Herring's
+>>> 'linux-git' repo
+>>> plus the previously posted patch killing the useless local variable in
+>>> of_phy_register_fixed_link().
+>>
+>> It shouldn't depend on anything in my tree and David normally takes
+>> of_mdio.c changes.
 > 
-> v1 of this series can be found at https://lkml.org/lkml/2017/6/5/921
-> v2 of this series can be found at https://lkml.org/lkml/2017/7/21/585
+>    MAINTAINERS still only point at the DT repo, perhaps it should be
+> updated?
 
-FWIW, this looks good to me, Eduardo, Rui, can we get this moving?
+More or less done with this (minus the repo part):
 
-> 
-> Changes since v2:
-> - replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4 only]
-> - all other patches are unchanged from v2
-> 
-> Changes since v1:
-> - Fixed wording in binding document
-> - Fixed lincensing to consistently mention GPL v2
-> - Use thermal_zone_get_slope() and thermal_zone_get_offset()
-> - Some minor clean-ups
-> 
-> Brian Norris (2):
->   Documentation: devicetree: add binding for Broadcom STB AVS TMON
->   thermal: add brcmstb AVS TMON driver
-> 
-> Markus Mayer (2):
->   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
->   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
-> 
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
->  MAINTAINERS                                        |   8 +
->  arch/arm/configs/multi_v7_defconfig                |   1 +
->  arch/arm64/configs/defconfig                       |   1 +
->  drivers/thermal/Kconfig                            |   2 +-
->  drivers/thermal/broadcom/Kconfig                   |   7 +
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/brcmstb_thermal.c         | 386 +++++++++++++++++++++
->  8 files changed, 425 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
->  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
-> 
-
-
+http://patchwork.ozlabs.org/patch/795887/
 -- 
 Florian
