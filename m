@@ -1,33 +1,57 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/23] clk: rockchip: fix up the pll clks error for rv1108 SoC
-Date: Tue, 08 Aug 2017 00:52:46 +0200
-Message-ID: <20580261.Hd2GIELq42@phil>
-References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com> <1501662784-11973-1-git-send-email-andy.yan@rock-chips.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 06/23] clk: rockchip: support more clks for rv1108
+Date: Tue, 08 Aug 2017 00:57:45 +0200
+Message-ID: <11738434.oWbxbgkgjP@phil>
+References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com> <1501662837-12029-1-git-send-email-andy.yan@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501662784-11973-1-git-send-email-andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1501662837-12029-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: robh+dt@kernel.org, shawn.lin@rock-chips.com, zhangqing@rock-chips.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, linux-rockchip@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 2. August 2017, 16:33:04 CEST schrieb Andy Yan:
-> From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> fix up the lock_shift describe error.
-> remove the ROCKCHIP_PLL_SYNC_RATE flag for gpll.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Andy Yan <andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Hi Andy,
 
-applied for 4.14
+Am Mittwoch, 2. August 2017, 16:33:57 CEST schrieb Andy Yan:
+> From: Elaine Zhang <zhangqing@rock-chips.com>
+> 
+> Added the description of the missing clock,
+> make the clock tree more complete.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+
+[...]
+
+>  	FACTOR(0, "xin12m", "xin24m", 0, 1, 2),
+>  
+> -	COMPOSITE(0, "i2s0_src", mux_pll_src_2plls_p, 0,
+> +	/* PD_BUS */
+> +	GATE(0, "aclk_bus_src_gpll", "gpll", CLK_IGNORE_UNUSED,
+> +			RV1108_CLKGATE_CON(1), 0, GFLAGS),
+> +	GATE(0, "aclk_bus_src_apll", "apll", CLK_IGNORE_UNUSED,
+> +			RV1108_CLKGATE_CON(1), 1, GFLAGS),
+> +	GATE(0, "aclk_bus_src_dpll", "dpll", CLK_IGNORE_UNUSED,
+> +			RV1108_CLKGATE_CON(1), 2, GFLAGS),
+> +	COMPOSITE_NOGATE(ACLK_PRE, "aclk_bus_pre", mux_aclk_bus_src_p, 0,
+> +			RV1108_CLKSEL_CON(2), 8, 2, MFLAGS, 0, 5, DFLAGS),
+> +	COMPOSITE_NOMUX(HCLK_BUS, "hclk_bus_pre", "aclk_bus_pre", 0,
+> +			RV1108_CLKSEL_CON(3), 0, 5, DFLAGS,
+> +			RV1108_CLKGATE_CON(1), 4, GFLAGS),
+
+you're adding a (new / second) hclk_bus_pre here, but only drop the
+old in patch 7. Please structure patch-contents in a way that each patch
+is self-contained and works on its own ... aka the clock tree should not
+get worse if only patch 6 is applied (like in a random git bisect), but
+here the state is bad between these 2 patches.
+
+hclk_bus_pre also is only _one_ example and there are probably more of
+those hiding in these clock patches. So please fix these issues.
 
 
 Thanks
 Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
