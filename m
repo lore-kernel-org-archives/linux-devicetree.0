@@ -1,50 +1,51 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 1/3] mfd: syscon: update Atmel SMC binding doc
-Date: Mon, 7 Aug 2017 16:41:24 +0100
-Message-ID: <20170807154124.norjlxavx4u75yzs@dell>
-References: <20170718132220.25018-1-ludovic.desroches@microchip.com>
- <20170718132220.25018-2-ludovic.desroches@microchip.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: mfd: axp20x: Add AXP806 to supported
+ list of chips
+Date: Mon, 7 Aug 2017 16:43:25 +0100
+Message-ID: <20170807154325.f6nmbu7dkadfaht4@dell>
+References: <20170726082832.16789-1-wens@csie.org>
+ <20170726082832.16789-2-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170718132220.25018-2-ludovic.desroches@microchip.com>
+In-Reply-To: <20170726082832.16789-2-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@microchip.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, romain.izard.pro@gmail.com
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
+On Wed, 26 Jul 2017, Chen-Yu Tsai wrote:
 
-The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
+> The binding already lists compatibles and regulators for the AXP806,
+> but it is missing from the list of supported chips at the beginning.
+> 
+> Add it.
+> 
+> Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-  Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
+Applied, thanks.
 
-are available in the git repository at:
+> diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> index aca09af66514..211a100c6b20 100644
+> --- a/Documentation/devicetree/bindings/mfd/axp20x.txt
+> +++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+> @@ -7,6 +7,7 @@ axp209 (X-Powers)
+>  axp221 (X-Powers)
+>  axp223 (X-Powers)
+>  axp803 (X-Powers)
+> +axp806 (X-Powers)
+>  axp809 (X-Powers)
+>  
+>  Required properties:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-v4.14
-
-for you to fetch changes up to 5df46ec0f4cf3b2cb0791abe5c68821a4f7ffffe:
-
-  ARM: dts: at91: sama5d2: Use sama5d2 compatible string for SMC (2017-08-07 16:38:30 +0100)
-
-----------------------------------------------------------------
-Immutable branch between MFD and ARM due for the v4.14 merge window
-
-----------------------------------------------------------------
-Ludovic Desroches (3):
-      mfd: syscon: Update Atmel SMC binding doc
-      mfd: syscon: atmel-smc: Add helper to retrieve register layout
-      ARM: dts: at91: sama5d2: Use sama5d2 compatible string for SMC
-
- .../devicetree/bindings/mfd/atmel-smc.txt          |  1 +
- arch/arm/boot/dts/sama5d2.dtsi                     |  2 +-
- drivers/memory/atmel-ebi.c                         | 13 +++--
- drivers/mfd/atmel-smc.c                            | 67 +++++++++++++++++-----
- drivers/mtd/nand/atmel/nand-controller.c           | 10 +++-
- include/linux/mfd/syscon/atmel-smc.h               | 32 ++++++++---
- 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
