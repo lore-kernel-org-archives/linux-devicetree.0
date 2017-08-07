@@ -1,66 +1,52 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 4/6] drm/tinydrm: add support for LEGO MINDSTORMS EV3
- LCD
-Date: Mon, 7 Aug 2017 11:03:36 -0500
-Message-ID: <2abbab73-0314-aaca-29b0-6366452d921b@lechnology.com>
-References: <1501799630-1650-1-git-send-email-david@lechnology.com>
- <1501799630-1650-5-git-send-email-david@lechnology.com>
- <d814508b-1225-b385-6a90-091487bee2b5@tronnes.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 3/7] mmc: sdhci: Add callback to set bus mode
+Date: Mon, 7 Aug 2017 21:31:38 +0530
+Message-ID: <20170807160142.12134-4-kishon@ti.com>
+References: <20170807160142.12134-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <d814508b-1225-b385-6a90-091487bee2b5@tronnes.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170807160142.12134-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: kishon@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDUvMjAxNyAwMToxOSBQTSwgTm9yYWxmIFRyw7hubmVzIHdyb3RlOgo+IAo+IERlbiAw
-NC4wOC4yMDE3IDAwLjMzLCBza3JldiBEYXZpZCBMZWNobmVyOgo+PiArCj4+ICsgICAgYnVmID0g
-a21hbGxvYyhsZW4sIEdGUF9LRVJORUwpOwo+PiArICAgIGlmICghYnVmKQo+PiArICAgICAgICBy
-ZXR1cm47Cj4+ICsKPj4gKyAgICB0aW55ZHJtX3hyZ2I4ODg4X3RvX2dyYXk4KGJ1ZiwgdmFkZHIs
-IGZiLCBjbGlwKTsKPj4gKyAgICBzcmMgPSBidWY7Cj4+ICsKPj4gKyAgICBmb3IgKHkgPSBjbGlw
-LT55MTsgeSA8IGNsaXAtPnkyOyB5KyspIHsKPj4gKyAgICAgICAgZm9yICh4ID0gY2xpcC0+eDE7
-IHggPCBjbGlwLT54MjsgeCArPSAzKSB7Cj4+ICsgICAgICAgICAgICB2YWwgPSAqc3JjKysgJiAw
-eGMwOwo+PiArICAgICAgICAgICAgaWYgKHZhbCAmIDB4YzApCj4+ICsgICAgICAgICAgICAgICAg
-dmFsIHw9IDB4MjA7Cj4+ICsgICAgICAgICAgICB2YWwgfD0gKCpzcmMrKyAmIDB4YzApID4+IDM7
-Cj4+ICsgICAgICAgICAgICBpZiAodmFsICYgMHgxOCkKPj4gKyAgICAgICAgICAgICAgICB2YWwg
-fD0gMHgwNDsKPj4gKyAgICAgICAgICAgIHZhbCB8PSAqc3JjKysgPj4gNjsKPj4gKyAgICAgICAg
-ICAgICpkc3QrKyA9IH52YWw7Cj4gCj4gSSBkb24ndCB1bmRlcnN0YW5kIGhvdyB0aGlzIHBpeGVs
-IHBhY2tpbmcgbWF0Y2hlcyB0aGUgb25lIGRlc2NyaWJlZCBpbgo+IHRoZSBkYXRhc2hlZXQuIFdo
-eSBkbyB5b3UgZmxpcCB0aGUgYml0cyBhdCB0aGUgZW5kPwo+IAoKSSBhIHRyeWluZyB0byBiZSB0
-b28gY2xldmVyLiA6LSkKCkhlcmUgaXMgdGhlIGNvbW1lbnQgSSB3aWxsIGFkZCB0byB0aGUgbmV4
-dCByZXZpc2lvbjoKCi8qCiAgKiBUaGUgU1Q3NTg2IGNvbnRyb2xsZXIgaGFzIGFuIHVudXN1YWwg
-cGl4ZWwgZm9ybWF0IHdoZXJlIDJicHAgCmdyYXlzY2FsZSBpcwogICogcGFja2VkIDMgcGl4ZWxz
-IHBlciBieXRlIHdpdGggdGhlIGZpcnN0IHR3byBwaXhlbHMgdXNpbmcgMyBiaXRzIGFuZCAKdGhl
-IDNyZAogICogcGl4ZWwgdXNpbmcgb25seSAyIGJpdHMuCiAgKgogICogfCAgRDcgIHwgIEQ2ICB8
-ICBENSAgfHwgIEQxICB8ICBEMCAgfHwgMmJwcCB8CiAgKiB8IChENCkgfCAoRDMpIHwgKEQyKSB8
-fCAgICAgIHwgICAgICB8fCBHUkFZIHwKICAqICstLS0tLS0rLS0tLS0tKy0tLS0tLSsrLS0tLS0t
-Ky0tLS0tLSsrLS0tLS0tKwogICogfCAgMSAgIHwgIDEgICB8ICAxICAgfHwgIDEgICB8ICAxICAg
-fHwgMCAgMCB8IGJsYWNrCiAgKiB8ICAxICAgfCAgMCAgIHwgIDAgICB8fCAgMSAgIHwgIDAgICB8
-fCAwICAxIHwgZGFyayBncmF5CiAgKiB8ICAwICAgfCAgMSAgIHwgIDAgICB8fCAgMCAgIHwgIDEg
-ICB8fCAxICAwIHwgbGlnaHQgZ3JheQogICogfCAgMCAgIHwgIDAgICB8ICAwICAgfHwgIDAgICB8
-ICAwICAgfHwgMSAgMSB8IHdoaXRlCiAgKi8KCgpBcyB5b3UgY2FuIHNlZSwgaW4gdGhlIGNvbnRy
-b2xsZXIgRFJBTSAxJ3MgYXJlIGJsYWNrIGFuZCAwJ3MgYXJlIHdoaXRlLCAKYnV0IGluIHRoZSBr
-ZXJuZWwsIGl0IGlzIHRoZSBvcHBvc2l0ZS4gQWxzbywgaWYgeW91IGxvb2sgYXQgdGhlIHRydXRo
-IAp0YWJsZSwgeW91IGNhbiBzZWUgdGhhdCB0aGUgZXh0cmEgM3JkIGJpdCBoYXMgdGhlIHBhdHRl
-cm4gaWYgRDcgPT0gMCBvciAKRDYgPT0gMCB0aGVuIEQ1IGlzIHplcm8uCgpJIHN1cHBvc2UgaXQg
-Y291bGQgYmUgYmV0dGVyIHRvIGRvIHRoaXMgd2l0aCBhIGxvb2t1cCB0YWJsZToKCnN0YXRpYyBj
-b25zdCB1OCBzdDc1ODZfbG9va3VwW10gPSB7IDB4NywgMHg0LCAweDIsIDB4MCB9OwoKLi4uCgoJ
-Zm9yICh5ID0gY2xpcC0+eTE7IHkgPCBjbGlwLT55MjsgeSsrKSB7CgkJZm9yICh4ID0gY2xpcC0+
-eDE7IHggPCBjbGlwLT54MjsgeCArPSAzKSB7CgkJCXZhbCA9IHN0NzU4Nl9sb29rdXBbKnNyYysr
-ID4+IDZdIDw8IDU7CgkJCXZhbCB8PSBzdDc1ODZfbG9va3VwWypzcmMrKyA+PiA2XSA8PCAyOwoJ
-CQl2YWwgfD0gc3Q3NTg2X2xvb2t1cFsqc3JjKysgPj4gNl0gPj4gMTsKCQkJKmRzdCsrID0gdmFs
-OwoJCX0KCX0KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Add callback to set bus mode in sdhci library so that the
+controller driver can perform any bus mode specific configurations
+in the callback function.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/mmc/host/sdhci.c | 3 +++
+ drivers/mmc/host/sdhci.h | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index fff0baadbc3e..d5050ec42481 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1747,6 +1747,9 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 	if (host->quirks & SDHCI_QUIRK_RESET_CMD_DATA_ON_IOS)
+ 		sdhci_do_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
+ 
++	if (host->ops->set_bus_mode)
++		host->ops->set_bus_mode(host, ios->bus_mode);
++
+ 	mmiowb();
+ }
+ EXPORT_SYMBOL_GPL(sdhci_set_ios);
+diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+index d778034e324d..39c7a2723906 100644
+--- a/drivers/mmc/host/sdhci.h
++++ b/drivers/mmc/host/sdhci.h
+@@ -583,6 +583,7 @@ struct sdhci_ops {
+ 	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);
+ 	void    (*card_event)(struct sdhci_host *host);
+ 	void	(*voltage_switch)(struct sdhci_host *host);
++	void	(*set_bus_mode)(struct sdhci_host *host, unsigned int mode);
+ };
+ 
+ #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
+-- 
+2.11.0
