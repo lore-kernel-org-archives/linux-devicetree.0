@@ -1,42 +1,107 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 4/6] ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
-Date: Mon, 07 Aug 2017 14:45:41 -0700
-Message-ID: <7ho9rrnjay.fsf@baylibre.com>
-References: <20170804180816.18737-1-jbrunet@baylibre.com>
-        <20170804180816.18737-5-jbrunet@baylibre.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
+Date: Mon, 07 Aug 2017 15:17:25 -0700
+Message-ID: <87o9rr10qy.fsf@eliezer.anholt.net>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com> <1501576704-26423-3-git-send-email-loic.poulain@gmail.com> <696124D4-A5DA-46FA-A0F0-5DC74363BD23@holtmann.org> <444254163.121186.1501874785594@email.1und1.de> <51D602E3-B21A-402B-A1F5-6241D55448E9@holtmann.org> <1498038890.121361.1501875841550@email.1und1.de> <BB04C3A8-2BFC-44B7-AA84-E0B81F560B8C@holtmann.org> <653244764.121525.1501876203800@email.1und1.de> <A997C486-989A-4040-9871-773A858D8410@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170804180816.18737-5-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Fri, 4 Aug 2017 20:08:14 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <A997C486-989A-4040-9871-773A858D8410-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org> writes:
 
-nit: missing changelog.
-
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+> Hi Stefan,
 >
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> index 6b7495dc6014..5d59fd75cae7 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> @@ -225,7 +225,10 @@
->  
->  	bus-width = <4>;
->  	cap-sd-highspeed;
-> -	max-frequency = <100000000>;
-> +	sd-uhs-sdr12;
-> +	sd-uhs-sdr25;
-> +	sd-uhs-sdr50;
-> +	max-frequency = <200000000>;
->  	disable-wp;
->  
->  	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+>>>>>>>> Add basic support for Broadcom serial slave devices.
+>>>>>>>> Probe the serial device, retrieve its maximum speed and
+>>>>>>>> register a new hci uart device.
+>>>>>>>>=20
+>>>>>>>> Tested/compatible with bcm43438 (RPi3).
+>>>>>>>>=20
+>>>>>>>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>> ...
+>>>>>>>>=20
+>>>>>>>> +static int bcm_serdev_probe(struct serdev_device *serdev)
+>>>>>>>> +{
+>>>>>>>> +	struct bcm_bt_device *bcmdev;
+>>>>>>>> +	u32 speed;
+>>>>>>>> +	int err;
+>>>>>>>> +
+>>>>>>>> +	bcmdev =3D devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNE=
+L);
+>>>>>>>> +	if (!bcmdev)
+>>>>>>>> +		return -ENOMEM;
+>>>>>>>> +
+>>>>>>>> +	bcmdev->hu.serdev =3D serdev;
+>>>>>>>> +	serdev_device_set_drvdata(serdev, bcmdev);
+>>>>>>>> +
+>>>>>>>> +	err =3D of_property_read_u32(serdev->dev.of_node, "max-speed", &=
+speed);
+>>>>>>>> +	if (!err)
+>>>>>>>> +		bcmdev->hu.oper_speed =3D speed;
+>>>>>>>> +
+>>>>>>>> +	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
+>>>>>>>> +}
+>>>>>>>=20
+>>>>>>> We do not need any GPIO for reset lines or anything else for the rP=
+I3?
+>>>>>>>=20
+>>>>>>=20
+>>>>>> unfortunately we don't have full schematics for RPI3, but according =
+to firmware dt-blob.dts [1] there is a GPIO called BT_ON. This GPIO is cont=
+rolled by the GPIO expander on the RPI3 board. The necessary driver for thi=
+s expander is still out of tree (last mainlining attempt [2]).
+>>>>>=20
+>>>>> so who handles this GPIO then right now (or any other GPIO for that m=
+atter)? I have seen Bluetooth being enabled and operational, but I really w=
+ant to get this working in a plain upstream Fedora and without using hciatt=
+ach or btattach.
+>>>>=20
+>>>> The GPU firmware enables the GPIO and keeps this state. The mentioned =
+expander driver should provide the ARM core (Linux) the necessary control.
+>>>=20
+>>> what is the default behavior after reboot. BT_ON enabled or not?
+>>=20
+>> AFAIK: enabled
+
+Correct: it's enabled by the 2nd stage bootloader and never modified
+From=20there.
+
+> that would be a funny default since it means that it consumes power
+> even if Bluetooth is never used. We really want to hook this up into
+> the Bluetooth power control of the controller. So that on power down
+> it also disables it and saves as much power as possible.
+
+We would need a driver to talk to the firmware for the GPIO expander to
+turn it off.  I wrote one last year, but my motivation got killed by DT
+bikeshedding.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlmI5vYACgkQtdYpNtH8
+nuiQpBAAjpOkOzUm5soRf0LWy38aWFIHEkHlIjUreAv4em81pDyO2zYiRXEOz8hF
+wm8bGxoOgi21nc1lQJgh1nzLuXUuHohXdEm6haN3EHDJGvOTX7fk49BGL3BGi0ld
+f6NHAYEpkrUFwjekmYeUNjgGstkKL96eE30V0MVl+4mWiRY0zV5mR9H/w41mIxgV
+/4dobMJiJD15lwY5Kh22EB+EgAiURHoEpCNRJAgorHcwR4kiK223pLwhQ8ZtaA13
+hk6x7GdAcfpshGopUNsTd18nCZIm/6IgghMH+WetUg/c3j5/8ttyTn9v0Jr8CmmV
+VV8ZZypti2RK9gwHUqct6SFGrc7IvC3FrhgAD2hYsMWrIq2uDaEQ3R11qwUeVJxc
+n/YpeNt/ZZsGguQ9h01In3Qh68Zd1DSzOh7VEirNAQrP/Qx6s+ZzVOuWwQCaG/YR
+hND01SPt2Cgcf4k8tW5Kz/drc5EWs8uOrmLn+GD42QRjAZdkoHBxR7L/RUqR9OQU
+UZcZtpIJ+GOydL/VKAaMiOZ2OrUPml8zk+ilAqOdwyS4PKf2mdup8v9afcaIyBT9
+y9ZAfh+nMJpPRH2/W+GyLKrEiB83F2Fz7zt58igivri7MWEwu2FrP46adHjwYGxZ
++AAG3ZYfRc1XKP5cm93uvAVtJ6l0rOUrSf4e9GS9r+YIgpw3nN8=
+=TLCr
+-----END PGP SIGNATURE-----
+--=-=-=--
