@@ -1,33 +1,47 @@
-From: "santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org" <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: dts: keystone-k2g: Add support for eDMA and MMC
-Date: Mon, 7 Aug 2017 06:38:32 -0700
-Message-ID: <9a14c0bb-b472-2fb4-4cb3-f4c624341c59@oracle.com>
-References: <20170801044119.16201-1-lokeshvutla@ti.com>
- <adb66c80-3a33-3fcf-b50e-555df2c62eb7@oracle.com>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/3] ARM: dts: k2g: Add support for USB instances on 66AK2G
+Date: Mon, 7 Aug 2017 06:41:20 -0700
+Message-ID: <804f13a3-fa4b-6902-d6dc-1c9d4aa0b8fb@oracle.com>
+References: <20170802201724.11439-1-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <adb66c80-3a33-3fcf-b50e-555df2c62eb7-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170802201724.11439-1-fcooper@ti.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, gregkh@linuxfoundation.org, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/1/17 11:10 AM, Santosh Shilimkar wrote:
+On 8/2/17 1:17 PM, Franklin S Cooper Jr wrote:
+> Add support for 66AK2G usb instances. However, the driver needs to be updated
+> to support PM_RUNTIME. This update has been validated to work on K2L and boot
+> tested on K2HK and K2E.
 > 
-> On 7/31/2017 9:41 PM, Lokesh Vutla wrote:
->> This series adds DT nodes and documentation for eDMA and MMC IPs on
->> Keystone 66AK2G SoC. Also enable the required configs in 
->> keystone_defconfig.
->>
->> This series depends on Keerthy's gpio node patches on 66AK2G:
-> Am waiting for Keerthy to send refresh series. Thanks for
-> note about the deps.
+> Franklin S Cooper Jr (2):
+>    usb: dwc3: keystone: Add PM_RUNTIME Support to DWC3 Keystone USB
+>      driver
+>    dt-bindings: usb: keystone-usb: Update bindings pm and clocks
+>      properties
 > 
-Series applied !!
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Vitaly Andrianov (1):
+>    ARM: dts: k2g: Add USB instances
+> 
+>   .../devicetree/bindings/usb/keystone-usb.txt       | 18 ++++++-
+>   arch/arm/boot/dts/keystone-k2g.dtsi                | 56 ++++++++++++++++++++++
+>   drivers/usb/dwc3/dwc3-keystone.c                   | 22 ++++-----
+>   3 files changed, 82 insertions(+), 14 deletions(-)
+> 
+Once you get you driver patch lined up, post
+the DTS patch separately.
+
+Regards,
+Santosh
