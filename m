@@ -1,114 +1,113 @@
-From: Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH] RM: dts: rockchip: rk322x: add spi node and spi pinctrl
-Date: Mon, 7 Aug 2017 10:33:15 +0800
-Message-ID: <7b4b3bce-e467-51ae-3295-20933c85e6ef@rock-chips.com>
-References: <1502070311-19663-1-git-send-email-huibin.hong@rock-chips.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller
+ support
+Date: Mon, 7 Aug 2017 11:40:31 +0800
+Message-ID: <1502077231.24341.29.camel@mtksdaap41>
+References: <cover.1501122135.git.honghui.zhang@mediatek.com>
+         <824c61d13fe2731d812df8a0a878ca1a36399e76.1501122135.git.honghui.zhang@mediatek.com>
+         <20170803224206.GN20308@bhelgaas-glaptop.roam.corp.google.com>
+         <1501835976.24341.21.camel@mtksdaap41>
+         <20170804131808.GA16580@bhelgaas-glaptop.roam.corp.google.com>
+         <1501908763.8298.11.camel@mtkswgap22>
+         <1501913813.12086.17.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502070311-19663-1-git-send-email-huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, sofia-kernel.list-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501913813.12086.17.camel@mtkswgap22>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Huibing,
+On Sat, 2017-08-05 at 14:16 +0800, Ryder Lee wrote:
+> On Sat, 2017-08-05 at 12:52 +0800, Ryder Lee wrote:
+> > Hi Honghui, Bjorn,
+> > 
+> > On Fri, 2017-08-04 at 08:18 -0500, Bjorn Helgaas wrote:
+> > > On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
+> > > > On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
+> > > > > > +
+> > > > > > +static struct mtk_pcie_port *mtk_pcie_find_port(struct mtk_pcie *pcie,
+> > > > > > +						struct pci_bus *bus, int devfn)
+> > > > > > +{
+> > > > > > +	struct pci_dev *dev;
+> > > > > > +	struct pci_bus *pbus;
+> > > > > > +	struct mtk_pcie_port *port, *tmp;
+> > > > > > +
+> > > > > > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> > > > > > +		if (bus->number == 0 && port->index == PCI_SLOT(devfn)) {
+> > > > > > +			return port;
+> > > > > > +		} else if (bus->number != 0) {
+> > > > > > +			pbus = bus;
+> > > > > > +			do {
+> > > > > > +				dev = pbus->self;
+> > > > > > +				if (port->index == PCI_SLOT(dev->devfn))
+> > > > > > +					return port;
+> > > > > > +				pbus = dev->bus;
+> > > > > > +			} while (dev->bus->number != 0);
+> > > > > > +		}
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	return NULL;
+> > > > > 
+> > > > > You should be able to use sysdata to avoid searching the list.
+> > > > > See drivers/pci/host/pci-aardvark.c, for example.
+> > > > > 
+> > > > 
+> > > > I could put the mtk_pcie * in sysdata, but still need to searching the
+> > > > list to get the mtk_pcie_port *, how about:
+> > > > 
+> > > > 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
+> > > > 		if (port->index == PCI_SLOT(devfn))
+> > > > 			return port;
+> > > > 	}
+> > > 
+> > > No.  Other drivers don't need to search the list.  Please take a look
+> > > at them and see how they solve this problem.  I don't think your
+> > > hardware is fundamentally different in a way that means you need to
+> > > search when the others don't.
+> > > 
+> > 
+> > I'm not directly involved in this generation, but I guess the main reason why Honghui need to do that is just because this hardware access configuration space via per-port registers, not just for the guard.  
+> > Currently, We had a host bridge with two ports (two subnodes in binding text), thus he tried to tells them apart so that he can get the correct registers.
+> > 
+> > Some platforms don't need to do that since they just have a single port (no more subnodes), the others might have specific/shared registers to access configuration space. (e.g. Tegra, MTK legacy IP block).
+> > Or, he can split them into two independent nodes, but it will break common probing flow by doing so. (I'd prefer to use subnodes.)
+> > 
+> > Ryder
+> > 
+> 
+> Sorry for the typesetting in previous mail and noise again,
+> 
+> I've took a look at pci-rcar-gen2.c, this is a similar case I can found
+> for Honghui's case. It gathers two ports reg regions into one, and uses
+> the "slot id" to calculate the cfg base of each port.
+> 
+> Perhaps this is a example for those who need to use subnodes and use
+> port registers for cfg operation. Not sure whether it's worthwhile doing
+> that since we need to changes ports/host structures.
+> 
+> Ryder.
+> 
+As Ryder's description, Mediatek's new generation HW blocks has two
+separate ports, they have separate control register base address. We
+must touch the per-port control register to access the EP's
+configuration space. One port's control register is the only way to
+access the EP's configuration space(the EP which is connect under this
+very port).
+Given an EP device, we need to determine which ports it's been
+connected, and get the base address for that port. It's a bit like
+pci-tegra/pci-mvebu.
 
-     Does this patch suppose to be V3?
+Seems list is not forbidden, pci-tegra search the list to identify the
+ports[1], mvebu use point array to search the ports[2], they have the
+same functionality through different approach. I may propose another
+patch to make the code like mvebu[2] if you insist, but I'm prefer the
+current list way.
 
-     and there is a typo in subject.
+[1]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/pci/host/pci-tegra.c#L456
+[2]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/pci/host/pci-mvebu.c#L780
 
-
-Thanks,
-- Kever
-On 08/07/2017 09:45 AM, Huibin Hong wrote:
-> Add spi node and spi pinctrl for rk322x
->
-> Signed-off-by: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->
->   arch/arm/boot/dts/rk322x.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 50 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index f3e4ffd..1a7afef 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -55,6 +55,7 @@
->   		serial0 = &uart0;
->   		serial1 = &uart1;
->   		serial2 = &uart2;
-> +		spi0 = &spi0;
->   	};
->   
->   	cpus {
-> @@ -361,6 +362,19 @@
->   		status = "disabled";
->   	};
->   
-> +	spi0: spi@11090000 {
-> +		compatible = "rockchip,rk3228-spi";
-> +		reg = <0x11090000 0x1000>;
-> +		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
-> +		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-> +		clock-names = "spiclk", "apb_pclk";
-> +		status = "disabled";
-> +	};
-> +
->   	wdt: watchdog@110a0000 {
->   		compatible = "snps,dw-wdt";
->   		reg = <0x110a0000 0x100>;
-> @@ -797,6 +811,42 @@
->   			};
->   		};
->   
-> +		spi-0 {
-> +			spi0_clk: spi0-clk {
-> +				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi0_cs0: spi0-cs0 {
-> +				rockchip,pins = <0 14 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi0_tx: spi0-tx {
-> +				rockchip,pins = <0 11 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi0_rx: spi0-rx {
-> +				rockchip,pins = <0 13 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi0_cs1: spi0-cs1 {
-> +				rockchip,pins = <1 12 RK_FUNC_1 &pcfg_pull_up>;
-> +			};
-> +		};
-> +
-> +		spi-1 {
-> +			spi1_clk: spi1-clk {
-> +				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi1_cs0: spi1-cs0 {
-> +				rockchip,pins = <2 2 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi1_rx: spi1-rx {
-> +				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi1_tx: spi1-tx {
-> +				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +			spi1_cs1: spi1-cs1 {
-> +				rockchip,pins = <2 3 RK_FUNC_2 &pcfg_pull_up>;
-> +			};
-> +		};
-> +
->   		i2s1 {
->   			i2s1_bus: i2s1-bus {
->   				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks.
+> 
