@@ -1,47 +1,67 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] of_mdio: use of_property_read_u32_array()
-Date: Mon, 7 Aug 2017 19:18:09 +0300
-Message-ID: <080ebcb6-b5aa-63db-176b-83477c2540e5@cogentembedded.com>
-References: <20170804214354.351406407@cogentembedded.com>
- <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
+From: Danilo Krummrich <danilokrummrich@dk-develop.de>
+Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
+Date: Mon, 7 Aug 2017 18:21:07 +0200
+Message-ID: <20170807182107.6b25804213443850c157c123@dk-develop.de>
+References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
+        <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
-Content-Language: en-MW
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi Linus,
 
-On 08/07/2017 05:18 PM, Rob Herring wrote:
+thanks for reviewing. Commented the ones which still holds.
 
->> The "fixed-link" prop support predated of_property_read_u32_array(), so
->> basically had to open-code it. Using the modern API saves 24 bytes of the
->> object code (ARM gcc 4.8.5); the only behavior change would be that the
->> prop length check is now less strict (however the strict pre-check done
->> in of_phy_is_fixed_link() is left intact anyway)...
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>
->> ---
->> The patch is against the 'dt/next' branch of Rob Herring's 'linux-git' repo
->> plus the previously posted patch killing the useless local variable in
->> of_phy_register_fixed_link().
+On Mon, 7 Aug 2017 11:03:53 +0200
+Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> On Tue, Aug 1, 2017 at 12:24 AM, Danilo Krummrich
+> <danilokrummrich@dk-develop.de> wrote:
 > 
-> It shouldn't depend on anything in my tree and David normally takes
-> of_mdio.c changes.
+> 
+> When you add DT bindings you have to CC devicetree@vger.kernel.org
+> 
+I will do prospectively.
 
-    MAINTAINERS still only point at the DT repo, perhaps it should be updated?
+> > +#include <linux/gpio.h>
+> 
+> Use only:
+> 
+> #include <linux/gpio/consumer.h>
+> 
+Done in v6.
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> > +#include <linux/of_gpio.h>
+> 
+> Should not be needed.
+> 
+> 
+Removed in v6.
 
-    Thank you.
+> > +static int ps2_gpio_write(struct serio *serio, unsigned char val)
+> > +{
+> > +       struct ps2_gpio_data *drvdata = serio->port_data;
+> > +
+> > +       drvdata->mode = PS2_MODE_TX;
+> > +       drvdata->tx_byte = val;
+> > +       /* Make sure ISR running on other CPU notice changes. */
+> > +       barrier();
+> 
+> This seems overengineered, is this really needed?
+> 
+> If we have races like this, the error is likely elsewhere, and should be
+> fixed in the GPIO driver MMIO access or so.
+> 
+Yes, seems it can be removed. I didn't saw any explicit barriers in the GPIO
+driver (I'm testing on bcm2835), but it seems MMIO operations on SMP archs
+does contain barriers. Not sure if all do. If some do not this barrier might
+be needed to ensure ISR on other CPU notice the correct mode and byte to send.
 
->>   drivers/of/of_mdio.c |   16 ++++++++--------
->>   1 file changed, 8 insertions(+), 8 deletions(-)
-
-MBR, Sergei
+-- 
+Danilo Krummrich <danilokrummrich@dk-develop.de>
