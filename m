@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH 1/3] ARM: dts: NSP: Add dma-coherent to relevant DT
-Date: Mon,  7 Aug 2017 10:28:00 -0700
-Message-ID: <20170807172800.5131-1-f.fainelli@gmail.com>
+Date: Mon,  7 Aug 2017 10:28:16 -0700
+Message-ID: <20170807172816.5326-1-f.fainelli@gmail.com>
 References: <1501020372-19607-1-git-send-email-jon.mason@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1501020372-19607-2-git-send-email-jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
