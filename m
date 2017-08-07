@@ -1,7 +1,7 @@
 From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 08/10] ARM: dts: imx6qdl-apalis: imx6q-apalis-ixora: use i2c from dwc hdmi
-Date: Mon,  7 Aug 2017 12:52:40 +0530
-Message-ID: <3f1aa78a25f8f2973a58ba160252cefa2f27aef8.1502087184.git.maitysanchayan@gmail.com>
+Subject: [PATCH 09/10] ARM: dts: imx6: add support for Toradex Ixora V1.1 carrier board
+Date: Mon,  7 Aug 2017 12:52:41 +0530
+Message-ID: <51ee987c6e23e77600ac8fdbaa539893f7614414.1502087184.git.maitysanchayan@gmail.com>
 References: <cover.1502087184.git.maitysanchayan@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,101 +12,324 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Add support for the Toradex Ixora V1.1 carrier board.
 
-Migrate to using functionally-reduced I2C master contained in the DWC
-HDMI. Therefore drop the GPIO bitbanging based i2cddc definition and
-modify resp. pinctrl.
-
-While at it re-order the I2C aliases to start with the generic, followed
-by the camera and concluded by the power I2C one.
-
-Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6q-apalis-ixora.dts | 10 ++--------
- arch/arm/boot/dts/imx6qdl-apalis.dtsi    | 25 +++++++++----------------
- 2 files changed, 11 insertions(+), 24 deletions(-)
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts | 291 ++++++++++++++++++++++++++
+ 2 files changed, 292 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
 
-diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora.dts b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-index 73c1ec883ff5..60d33e99de76 100644
---- a/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-+++ b/arch/arm/boot/dts/imx6q-apalis-ixora.dts
-@@ -55,10 +55,9 @@
- 		     "fsl,imx6q";
- 
- 	aliases {
--		i2c0 = &i2cddc;
--		i2c1 = &i2c1;
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index ccfaf8e9e397..1c16e891a76a 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -393,6 +393,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+ 	imx6dl-wandboard.dtb \
+ 	imx6dl-wandboard-revb1.dtb \
+ 	imx6q-apalis-ixora.dtb \
++	imx6q-apalis-ixora-v1.1.dtb \
+ 	imx6q-apf6dev.dtb \
+ 	imx6q-arm2.dtb \
+ 	imx6q-b450v3.dtb \
+diff --git a/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+new file mode 100644
+index 000000000000..a35c7a54ad3b
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6q-apalis-ixora-v1.1.dts
+@@ -0,0 +1,291 @@
++/*
++ * Copyright 2014-2017 Toradex AG
++ * Copyright 2012 Freescale Semiconductor, Inc.
++ * Copyright 2011 Linaro Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
++#include "imx6q.dtsi"
++#include "imx6qdl-apalis.dtsi"
++
++/ {
++	model = "Toradex Apalis iMX6Q/D Module on Ixora Carrier Board V1.1";
++	compatible = "toradex,apalis_imx6q-ixora-v1.1",
++		     "toradex,apalis_imx6q-ixora", "toradex,apalis_imx6q",
++		     "fsl,imx6q";
++
++	aliases {
 +		i2c0 = &i2c1;
 +		i2c1 = &i2c3;
- 		i2c2 = &i2c2;
--		i2c3 = &i2c3;
- 		rtc0 = &rtc_i2c;
- 		rtc1 = &snvs_rtc;
- 	};
-@@ -161,11 +160,6 @@
- };
- 
- &hdmi {
--	ddc-i2c-bus = <&i2cddc>;
--	status = "okay";
--};
--
--&i2cddc {
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index 6658c659b7d7..ea339fa58f4a 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -56,18 +56,6 @@
- 		status = "disabled";
- 	};
- 
--	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
--	i2cddc: i2c@0 {
--		compatible = "i2c-gpio";
--		pinctrl-names = "default";
--		pinctrl-0 = <&pinctrl_i2c_ddc>;
--		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
--			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
--			>;
--		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
--		status = "disabled";
--	};
--
- 	reg_1p8v: regulator-1p8v {
- 		compatible = "regulator-fixed";
- 		regulator-name = "1P8V";
-@@ -210,6 +198,12 @@
- 	};
- };
- 
-+&hdmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_hdmi_ddc>;
-+	status = "disabled";
++		i2c2 = &i2c2;
++		rtc0 = &rtc_i2c;
++		rtc1 = &snvs_rtc;
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		wakeup {
++			label = "Wake-Up";
++			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_WAKEUP>;
++			debounce-interval = <10>;
++			wakeup-source;
++		};
++	};
++
++	lcd_display: display@di0 {
++		compatible = "fsl,imx-parallel-display";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interface-pix-fmt = "rgb24";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
++		status = "okay";
++
++		port@0 {
++			reg = <0>;
++
++			lcd_display_in: endpoint {
++				remote-endpoint = <&ipu1_di1_disp1>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			lcd_display_out: endpoint {
++				remote-endpoint = <&lcd_panel_in>;
++			};
++		};
++	};
++
++	panel: panel {
++		/*
++		 * edt,et057090dhu: EDT 5.7" LCD TFT
++		 * edt,et070080dh6: EDT 7.0" LCD TFT
++		 */
++		compatible = "edt,et057090dhu";
++		backlight = <&backlight>;
++
++		port {
++			lcd_panel_in: endpoint {
++				remote-endpoint = <&lcd_display_out>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds_ixora>;
++
++		led4-green {
++			label = "LED_4_GREEN";
++			gpios = <&gpio1 14 GPIO_ACTIVE_HIGH>;
++		};
++
++		led4-red {
++			label = "LED_4_RED";
++			gpios = <&gpio1 12 GPIO_ACTIVE_HIGH>;
++		};
++
++		led5-green {
++			label = "LED_5_GREEN";
++			gpios = <&gpio2 1 GPIO_ACTIVE_HIGH>;
++		};
++
++		led5-red {
++			label = "LED_5_RED";
++			gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
++		};
++	};
 +};
 +
- /* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
- &i2c1 {
- 	clock-frequency = <100000>;
-@@ -638,11 +632,10 @@
- 		>;
- 	};
- 
--	pinctrl_i2c_ddc: gpioi2cddcgrp {
-+	pinctrl_hdmi_ddc: hdmiddcgrp {
- 		fsl,pins = <
--			/* DDC bitbang */
--			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
--			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
-+			MX6QDL_PAD_EIM_EB2__HDMI_TX_DDC_SCL 0x4001b8b1
-+			MX6QDL_PAD_EIM_D16__HDMI_TX_DDC_SDA 0x4001b8b1
- 		>;
- 	};
- 
++&backlight {
++	brightness-levels = <0 127 191 223 239 247 251 255>;
++	default-brightness-level = <1>;
++	status = "okay";
++};
++
++&can1 {
++	status = "okay";
++};
++
++&can2 {
++	status = "okay";
++};
++
++&hdmi {
++	status = "okay";
++};
++
++/* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
++&i2c1 {
++	status = "okay";
++
++	/* M41T0M6 real time clock on carrier board */
++	rtc_i2c: rtc@68 {
++		compatible = "st,m41t00";
++		reg = <0x68>;
++	};
++};
++
++/*
++ * I2C3_SDA/SCL (CAM) on MXM3 pin 201/203 (e.g. camera sensor on carrier
++ * board)
++ */
++&i2c3 {
++	status = "okay";
++};
++
++&ipu1_di1_disp1 {
++	remote-endpoint = <&lcd_display_in>;
++};
++
++&ldb {
++	status = "okay";
++};
++
++&pcie {
++	/* active-high meaning opposite of regular PERST# active-low polarity */
++	reset-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
++	reset-gpio-active-high;
++	status = "okay";
++};
++
++&pwm1 {
++	status = "okay";
++};
++
++&pwm2 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&pwm4 {
++	status = "okay";
++};
++
++&reg_usb_otg_vbus {
++	status = "okay";
++};
++
++&reg_usb_host_vbus {
++	status = "okay";
++};
++
++&sata {
++	status = "okay";
++};
++
++&sound_spdif {
++	status = "okay";
++};
++
++&spdif {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&uart4 {
++	status = "okay";
++};
++
++&uart5 {
++	status = "okay";
++};
++
++&usbh1 {
++	vbus-supply = <&reg_usb_host_vbus>;
++	status = "okay";
++};
++
++&usbotg {
++	vbus-supply = <&reg_usb_otg_vbus>;
++	status = "okay";
++};
++
++/* MMC1 */
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1_4bit &pinctrl_mmc_cd>;
++	cd-gpios = <&gpio4 20 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&iomuxc {
++	/*
++	 * Mux the Apalis GPIOs
++	 */
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_apalis_gpio1 &pinctrl_apalis_gpio2
++		     &pinctrl_apalis_gpio3 &pinctrl_apalis_gpio4
++		     &pinctrl_apalis_gpio5 &pinctrl_apalis_gpio6
++		     &pinctrl_apalis_gpio7 &pinctrl_apalis_gpio8
++		    >;
++
++	pinctrl_leds_ixora: ledsixoragrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_DAT1__GPIO1_IO14 0x1b0b0
++			MX6QDL_PAD_SD2_DAT3__GPIO1_IO12 0x1b0b0
++			MX6QDL_PAD_NANDF_D1__GPIO2_IO01 0x1b0b0
++			MX6QDL_PAD_NANDF_D2__GPIO2_IO02 0x1b0b0
++		>;
++	};
++};
 -- 
 2.13.3
 
