@@ -1,77 +1,33 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH v2 1/5] mfd: mt6397: create irq mappings in mfd core
- driver
-Date: Mon, 7 Aug 2017 23:32:44 +0200
-Message-ID: <20170807213244.7hrd3isq5jj44dgd@piout.net>
-References: <1502071065-6745-1-git-send-email-chen.zhong@mediatek.com>
- <1502071065-6745-2-git-send-email-chen.zhong@mediatek.com>
+From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Subject: Re: [PATCH v6] MIPS: NI 169445 board support
+Date: Mon, 7 Aug 2017 23:36:03 +0200
+Message-ID: <20170807213603.GE3509@linux-mips.org>
+References: <1500402549-12090-1-git-send-email-nathan.sullivan@ni.com>
+ <20170807152648.GA13214@linux-mips.org>
+ <11583742.zienCqJRO5@np-p-burton>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1502071065-6745-2-git-send-email-chen.zhong@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Zhong <chen.zhong@mediatek.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Lee Jones <lee.jones@linaro.org>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Jaechul Lee <jcsing.lee@samsung.com>, Jonathan Cameron <jic23@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Beomho Seo <beomho.seo@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+In-Reply-To: <11583742.zienCqJRO5@np-p-burton>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/08/2017 at 09:57:41 +0800, Chen Zhong wrote:
-> The core driver should create and manage irq mappings instead of
-> leaf drivers. This patch change to pass irq domain to
-> devm_mfd_add_devices() and it will create mapping for irq resources
-> automatically. And remove irq mapping in rtc driver since this has
-> been done in core driver.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
+On Mon, Aug 07, 2017 at 10:24:05AM -0700, Paul Burton wrote:
 
-For the RTC part:
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-
-> ---
->  drivers/mfd/mt6397-core.c |    4 ++--
->  drivers/rtc/rtc-mt6397.c  |    2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
+> One possibility would be for us to split the board portions of vmlinux.its.S 
+> out into a file per-board, perhaps board-boston.its.S, board-ni169445.its.S 
+> etc. The build process would then have to concatenate the right files to 
+> generate the full image tree source.
 > 
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 04a601f..6546d7f 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -289,7 +289,7 @@ static int mt6397_probe(struct platform_device *pdev)
->  
->  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
->  					   ARRAY_SIZE(mt6323_devs), NULL,
-> -					   0, NULL);
-> +					   0, pmic->irq_domain);
->  		break;
->  
->  	case MT6397_CID_CODE:
-> @@ -304,7 +304,7 @@ static int mt6397_probe(struct platform_device *pdev)
->  
->  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
->  					   ARRAY_SIZE(mt6397_devs), NULL,
-> -					   0, NULL);
-> +					   0, pmic->irq_domain);
->  		break;
->  
->  	default:
-> diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
-> index 1a61fa5..22c52f7 100644
-> --- a/drivers/rtc/rtc-mt6397.c
-> +++ b/drivers/rtc/rtc-mt6397.c
-> @@ -323,7 +323,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
->  	rtc->addr_base = res->start;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> -	rtc->irq = irq_create_mapping(mt6397_chip->irq_domain, res->start);
-> +	rtc->irq = res->start;
->  	if (rtc->irq <= 0)
->  		return -EINVAL;
->  
-> -- 
-> 1.7.9.5
-> 
+> Does that sound good to you?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yes, that sounds good.
+
+  Ralf
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
