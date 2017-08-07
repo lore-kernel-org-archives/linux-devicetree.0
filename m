@@ -1,61 +1,35 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 3/6] coresight: of: Use of_cpu_node_to_id helper
-Date: Mon,  7 Aug 2017 10:52:37 +0100
-Message-ID: <1502099560-6267-4-git-send-email-suzuki.poulose@arm.com>
-References: <1502099560-6267-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502099560-6267-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] reset: uniphier: UniPhier reset data update for
+ v4.14
+Date: Mon, 07 Aug 2017 12:08:16 +0200
+Message-ID: <1502100496.2490.8.camel@pengutronix.de>
+References: <1501987442-2583-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501987442-2583-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Reuse the new generic helper, of_cpu_node_to_id() to map a
-given CPU phandle to a logical CPU number.
+Hi Masahiro,
 
-Cc: Leo Yan <leo.yan@linaro.org>
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
-Changes since V3:
- - Reflect the renaming of the helper and return value changes
----
- drivers/hwtracing/coresight/of_coresight.c | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
+On Sun, 2017-08-06 at 11:44 +0900, Masahiro Yamada wrote:
+> Hi Philipp,
+> 
+> Here are UniPhier SoCs updates for v4.14.
+> 
+>  - Remove old SoC support
+>  - Remove useless macros
 
-diff --git a/drivers/hwtracing/coresight/of_coresight.c b/drivers/hwtracing/coresight/of_coresight.c
-index a187941..14ca13b 100644
---- a/drivers/hwtracing/coresight/of_coresight.c
-+++ b/drivers/hwtracing/coresight/of_coresight.c
-@@ -104,26 +104,17 @@ static int of_coresight_alloc_memory(struct device *dev,
- int of_coresight_get_cpu(const struct device_node *node)
- {
- 	int cpu;
--	bool found;
--	struct device_node *dn, *np;
-+	struct device_node *dn;
- 
- 	dn = of_parse_phandle(node, "cpu", 0);
--
- 	/* Affinity defaults to CPU0 */
- 	if (!dn)
- 		return 0;
--
--	for_each_possible_cpu(cpu) {
--		np = of_cpu_device_node_get(cpu);
--		found = (dn == np);
--		of_node_put(np);
--		if (found)
--			break;
--	}
-+	cpu = of_cpu_node_to_id(dn);
- 	of_node_put(dn);
- 
- 	/* Affinity to CPU0 if no cpu nodes are found */
--	return found ? cpu : 0;
-+	return (cpu < 0) 0 : cpu;
- }
- EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
- 
--- 
-2.7.5
+Applied both to the reset/next branch, thank you.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
