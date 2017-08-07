@@ -1,113 +1,463 @@
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller
- support
-Date: Mon, 7 Aug 2017 11:40:31 +0800
-Message-ID: <1502077231.24341.29.camel@mtksdaap41>
-References: <cover.1501122135.git.honghui.zhang@mediatek.com>
-         <824c61d13fe2731d812df8a0a878ca1a36399e76.1501122135.git.honghui.zhang@mediatek.com>
-         <20170803224206.GN20308@bhelgaas-glaptop.roam.corp.google.com>
-         <1501835976.24341.21.camel@mtksdaap41>
-         <20170804131808.GA16580@bhelgaas-glaptop.roam.corp.google.com>
-         <1501908763.8298.11.camel@mtkswgap22>
-         <1501913813.12086.17.camel@mtkswgap22>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] fdt: Allow stacked overlays phandle references
+Date: Mon, 7 Aug 2017 15:01:57 +1000
+Message-ID: <20170807050157.GB3940@umbus.fritz.box>
+References: <1501520996-3366-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501913813.12086.17.camel@mtkswgap22>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3uo+9/B/ebqu+fSQ"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1501520996-3366-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-08-05 at 14:16 +0800, Ryder Lee wrote:
-> On Sat, 2017-08-05 at 12:52 +0800, Ryder Lee wrote:
-> > Hi Honghui, Bjorn,
-> > 
-> > On Fri, 2017-08-04 at 08:18 -0500, Bjorn Helgaas wrote:
-> > > On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
-> > > > On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
-> > > > > > +
-> > > > > > +static struct mtk_pcie_port *mtk_pcie_find_port(struct mtk_pcie *pcie,
-> > > > > > +						struct pci_bus *bus, int devfn)
-> > > > > > +{
-> > > > > > +	struct pci_dev *dev;
-> > > > > > +	struct pci_bus *pbus;
-> > > > > > +	struct mtk_pcie_port *port, *tmp;
-> > > > > > +
-> > > > > > +	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > > > > > +		if (bus->number == 0 && port->index == PCI_SLOT(devfn)) {
-> > > > > > +			return port;
-> > > > > > +		} else if (bus->number != 0) {
-> > > > > > +			pbus = bus;
-> > > > > > +			do {
-> > > > > > +				dev = pbus->self;
-> > > > > > +				if (port->index == PCI_SLOT(dev->devfn))
-> > > > > > +					return port;
-> > > > > > +				pbus = dev->bus;
-> > > > > > +			} while (dev->bus->number != 0);
-> > > > > > +		}
-> > > > > > +	}
-> > > > > > +
-> > > > > > +	return NULL;
-> > > > > 
-> > > > > You should be able to use sysdata to avoid searching the list.
-> > > > > See drivers/pci/host/pci-aardvark.c, for example.
-> > > > > 
-> > > > 
-> > > > I could put the mtk_pcie * in sysdata, but still need to searching the
-> > > > list to get the mtk_pcie_port *, how about:
-> > > > 
-> > > > 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
-> > > > 		if (port->index == PCI_SLOT(devfn))
-> > > > 			return port;
-> > > > 	}
-> > > 
-> > > No.  Other drivers don't need to search the list.  Please take a look
-> > > at them and see how they solve this problem.  I don't think your
-> > > hardware is fundamentally different in a way that means you need to
-> > > search when the others don't.
-> > > 
-> > 
-> > I'm not directly involved in this generation, but I guess the main reason why Honghui need to do that is just because this hardware access configuration space via per-port registers, not just for the guard.  
-> > Currently, We had a host bridge with two ports (two subnodes in binding text), thus he tried to tells them apart so that he can get the correct registers.
-> > 
-> > Some platforms don't need to do that since they just have a single port (no more subnodes), the others might have specific/shared registers to access configuration space. (e.g. Tegra, MTK legacy IP block).
-> > Or, he can split them into two independent nodes, but it will break common probing flow by doing so. (I'd prefer to use subnodes.)
-> > 
-> > Ryder
-> > 
-> 
-> Sorry for the typesetting in previous mail and noise again,
-> 
-> I've took a look at pci-rcar-gen2.c, this is a similar case I can found
-> for Honghui's case. It gathers two ports reg regions into one, and uses
-> the "slot id" to calculate the cfg base of each port.
-> 
-> Perhaps this is a example for those who need to use subnodes and use
-> port registers for cfg operation. Not sure whether it's worthwhile doing
-> that since we need to changes ports/host structures.
-> 
-> Ryder.
-> 
-As Ryder's description, Mediatek's new generation HW blocks has two
-separate ports, they have separate control register base address. We
-must touch the per-port control register to access the EP's
-configuration space. One port's control register is the only way to
-access the EP's configuration space(the EP which is connect under this
-very port).
-Given an EP device, we need to determine which ports it's been
-connected, and get the base address for that port. It's a bit like
-pci-tegra/pci-mvebu.
 
-Seems list is not forbidden, pci-tegra search the list to identify the
-ports[1], mvebu use point array to search the ports[2], they have the
-same functionality through different approach. I may propose another
-patch to make the code like mvebu[2] if you insist, but I'm prefer the
-current list way.
+--3uo+9/B/ebqu+fSQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/pci/host/pci-tegra.c#L456
-[2]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/pci/host/pci-mvebu.c#L780
+On Mon, Jul 31, 2017 at 08:09:56PM +0300, Pantelis Antoniou wrote:
+> This patch enables an overlay to refer to a previous overlay's
+> labels by performing a merge of symbol information at application
+> time.
+>=20
+> In a nutshell it allows an overlay to refer to a symbol that a previous
+> overlay has defined. It requires both the base and all the overlays
+> to be compiled with the -@ command line switch so that symbol
+> information is included.
+>=20
+> base.dts
+> --------
+>=20
+> 	/dts-v1/;
+> 	/ {
+> 		foo: foonode {
+> 			foo-property;
+> 		};
+> 	};
+>=20
+> 	$ dtc -@ -I dts -O dtb -o base.dtb base.dts
+>=20
+> bar.dts
+> -------
+>=20
+> 	/dts-v1/;
+> 	/plugin/;
+> 	/ {
+> 		fragment@1 {
+> 			target =3D <&foo>;
+> 			__overlay__ {
+> 				overlay-1-property;
+> 				bar: barnode {
+> 					bar-property;
+> 				};
+> 			};
+> 		};
+> 	};
+>=20
+> 	$ dtc -@ -I dts -O dtb -o bar.dtb bar.dts
+>=20
+> baz.dts
+> -------
+>=20
+> 	/dts-v1/;
+> 	/plugin/;
+> 	/ {
+> 		fragment@1 {
+> 			target =3D <&bar>;
+> 			__overlay__ {
+> 				overlay-2-property;
+> 				baz: baznode {
+> 					baz-property;
+> 				};
+> 			};
+> 		};
+> 	};
+>=20
+> 	$ dtc -@ -I dts -O dtb -o baz.dtb baz.dts
+>=20
+> Applying the overlays:
+>=20
+> 	$ fdtoverlay -i base.dtb -o target.dtb bar.dtb baz.dtb
+>=20
+> Dumping:
+>=20
+> 	$ fdtdump target.dtb
+> 	/ {
+>             foonode {
+>                 overlay-1-property;
+>                 foo-property;
+>                 linux,phandle =3D <0x00000001>;
+>                 phandle =3D <0x00000001>;
+>                 barnode {
+>                     overlay-2-property;
+>                     phandle =3D <0x00000002>;
+>                     linux,phandle =3D <0x00000002>;
+>                     bar-property;
+>                     baznode {
+>                         phandle =3D <0x00000003>;
+>                         linux,phandle =3D <0x00000003>;
+>                         baz-property;
+>                     };
+>                 };
+>             };
+>             __symbols__ {
+>                 baz =3D "/foonode/barnode/baznode";
+>                 bar =3D "/foonode/barnode";
+>                 foo =3D "/foonode";
+>             };
+> 	};
+>=20
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> ---
+>  libfdt/fdt_overlay.c | 225 +++++++++++++++++++++++++++++++++++++++++++++=
++-----
+>  1 file changed, 203 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/libfdt/fdt_overlay.c b/libfdt/fdt_overlay.c
+> index ceb9687..a4f81f0 100644
+> --- a/libfdt/fdt_overlay.c
+> +++ b/libfdt/fdt_overlay.c
+> @@ -39,6 +39,7 @@ static uint32_t overlay_get_target_phandle(const void *=
+fdto, int fragment)
+>   * @fdt: Base device tree blob
+>   * @fdto: Device tree overlay blob
+>   * @fragment: node offset of the fragment in the overlay
+> + * @pathp: pointer which receives the path of the target (or NULL)
+>   *
+>   * overlay_get_target() retrieves the target offset in the base
+>   * device tree of a fragment, no matter how the actual targetting is
+> @@ -49,37 +50,47 @@ static uint32_t overlay_get_target_phandle(const void=
+ *fdto, int fragment)
+>   *      Negative error code on error
+>   */
+>  static int overlay_get_target(const void *fdt, const void *fdto,
+> -			      int fragment)
+> +			      int fragment, char const **pathp)
+>  {
+>  	uint32_t phandle;
+> -	const char *path;
+> -	int path_len;
+> +	const char *path =3D NULL;
+> +	int path_len =3D 0, ret;
+> =20
+>  	/* Try first to do a phandle based lookup */
+>  	phandle =3D overlay_get_target_phandle(fdto, fragment);
+>  	if (phandle =3D=3D (uint32_t)-1)
+>  		return -FDT_ERR_BADPHANDLE;
+> =20
+> -	if (phandle)
+> -		return fdt_node_offset_by_phandle(fdt, phandle);
+> +	/* no phandle, try path */
+> +	if (!phandle) {
+> +		/* And then a path based lookup */
+> +		path =3D fdt_getprop(fdto, fragment, "target-path", &path_len);
+> +		if (path)
+> +			ret =3D fdt_path_offset(fdt, path);
+> +		else
+> +			ret =3D path_len;
+> +	} else
+> +		ret =3D fdt_node_offset_by_phandle(fdt, phandle);
+> =20
+> -	/* And then a path based lookup */
+> -	path =3D fdt_getprop(fdto, fragment, "target-path", &path_len);
+> -	if (!path) {
+> -		/*
+> -		 * If we haven't found either a target or a
+> -		 * target-path property in a node that contains a
+> -		 * __overlay__ subnode (we wouldn't be called
+> -		 * otherwise), consider it a improperly written
+> -		 * overlay
+> -		 */
+> -		if (path_len =3D=3D -FDT_ERR_NOTFOUND)
+> -			return -FDT_ERR_BADOVERLAY;
+> +	/*
+> +	* If we haven't found either a target or a
+> +	* target-path property in a node that contains a
+> +	* __overlay__ subnode (we wouldn't be called
+> +	* otherwise), consider it a improperly written
+> +	* overlay
+> +	*/
+> +	if (ret < 0 && path_len =3D=3D -FDT_ERR_NOTFOUND)
+> +		ret =3D -FDT_ERR_BADOVERLAY;
+> +
+> +	/* return on error */
+> +	if (ret < 0)
+> +		return ret;
+> =20
+> -		return path_len;
+> -	}
+> +	/* return pointer to path (if available) */
+> +	if (pathp)
+> +		*pathp =3D path ? path : NULL;
+> =20
+> -	return fdt_path_offset(fdt, path);
+> +	return ret;
+>  }
+> =20
+>  /**
+> @@ -590,7 +601,7 @@ static int overlay_apply_node(void *fdt, int target,
+>   *
+>   * overlay_merge() merges an overlay into its base device tree.
+>   *
+> - * This is the final step in the device tree overlay application
+> + * This is the next to last step in the device tree overlay application
+>   * process, when all the phandles have been adjusted and resolved and
+>   * you just have to merge overlay into the base device tree.
+>   *
+> @@ -618,7 +629,7 @@ static int overlay_merge(void *fdt, void *fdto)
+>  		if (overlay < 0)
+>  			return overlay;
+> =20
+> -		target =3D overlay_get_target(fdt, fdto, fragment);
+> +		target =3D overlay_get_target(fdt, fdto, fragment, NULL);
+>  		if (target < 0)
+>  			return target;
+> =20
+> @@ -630,6 +641,172 @@ static int overlay_merge(void *fdt, void *fdto)
+>  	return 0;
+>  }
+> =20
+> +static int get_path_len(const void *fdt, int nodeoffset)
+> +{
+> +	int len =3D 0, namelen;
+> +	const char *name;
+> +
+> +	FDT_CHECK_HEADER(fdt);
+> +
+> +	for (;;) {
+> +		name =3D fdt_get_name(fdt, nodeoffset, &namelen);
+> +		if (!name)
+> +			return namelen;
+> +
+> +		/* root? we're done */
+> +		if (namelen =3D=3D 0)
+> +			break;
+> +
+> +		nodeoffset =3D fdt_parent_offset(fdt, nodeoffset);
+> +		if (nodeoffset < 0)
+> +			return nodeoffset;
+> +		len +=3D namelen + 1;
+> +	}
+> +
+> +	/* in case of root pretend it's "/" */
+> +	if (len =3D=3D 0)
+> +		len++;
+> +	return len;
+> +}
+> +
+> +/**
+> + * overlay_symbol_update - Update the symbols of base tree after a merge
+> + * @fdt: Base Device Tree blob
+> + * @fdto: Device tree overlay blob
+> + *
+> + * overlay_symbol_update() updates the symbols of the base tree with the
+> + * symbols of the applied overlay
+> + *
+> + * This is the last step in the device tree overlay application
+> + * process, allowing the reference of overlay symbols by subsequent
+> + * overlay operations.
+> + *
+> + * returns:
+> + *      0 on success
+> + *      Negative error code on failure
+> + */
+> +static int overlay_symbol_update(void *fdt, void *fdto)
+> +{
+> +	int root_sym, ov_sym, prop, path_len, fragment, target;
+> +	int len, frag_name_len, ret, rel_path_len;
+> +	const char *s;
+> +	const char *path;
+> +	const char *name;
+> +	const char *frag_name;
+> +	const char *rel_path;
+> +	const char *target_path;
+> +	char *buf;
+> +	void *p;
+> +
+> +	ov_sym =3D fdt_subnode_offset(fdto, 0, "__symbols__");
+> +
+> +	/* if no overlay symbols exist no problem */
+> +	if (ov_sym < 0)
+> +		return 0;
+> +
+> +	root_sym =3D fdt_subnode_offset(fdt, 0, "__symbols__");
+> +
+> +	/* it no root symbols exist we should create them */
+> +	if (root_sym < 0) {
 
-thanks.
-> 
+Should only do this for root_sym =3D=3D NOTFOUND, not for other error
+conditions.
+
+
+> +		root_sym =3D fdt_add_subnode(fdt, 0, "__symbols__");
+> +		if (root_sym < 0)
+> +			return root_sym;
+> +	}
+> +
+> +	/* iterate over each overlay symbol */
+> +	fdt_for_each_property_offset(prop, fdto, ov_sym) {
+> +		path =3D fdt_getprop_by_offset(fdto, prop, &name, &path_len);
+> +		if (!path)
+> +			return path_len;
+> +
+> +		/* verify it's a string property (terminated by a single \0) */
+> +		if (path_len < 1 || memchr(path, '\0', path_len) !=3D &path[path_len -=
+ 1])
+> +			return -FDT_ERR_BADVALUE;
+> +
+> +		/* format: /<fragment-name>/__overlay__/<relative-subnode-path> */
+> +
+> +		if (*path !=3D '/')
+> +			return -FDT_ERR_BADVALUE;
+> +
+> +		/* verify that no stray \0 exist in the property */
+> +		if (strlen(path) !=3D path_len - 1)
+> +			return -FDT_ERR_BADOVERLAY;
+
+Redundant with the revised string check above.
+
+> +		/* get fragment name first */
+> +		s =3D strchr(path + 1, '/');
+> +		if (!s)
+> +			return -FDT_ERR_BADOVERLAY;
+> +
+> +		frag_name =3D path + 1;
+> +		frag_name_len =3D s - path - 1;
+> +
+> +		/* verify format; safe since "s" lies in \0 terminated prop */
+> +		len =3D strlen("/__overlay__/");
+> +		if (strlen(s) < len || memcmp(s, "/__overlay__/", len))
+
+You can derive strlen(s) from path_len and frag_name_len, to avoid the
+call to strlen().
+
+> +			return -FDT_ERR_NOTFOUND;
+
+Should be BADOVERLAY.
+
+> +
+> +		rel_path =3D s + len;
+> +		rel_path_len =3D strlen(rel_path);
+
+Again, you can avoid this strlen().
+
+> +
+> +		/* find the fragment index in which the symbol lies */
+> +		ret =3D fdt_subnode_offset_namelen(fdto, 0, frag_name,
+> +					       frag_name_len);
+> +		/* not found? */
+> +		if (ret < 0)
+> +			return ret;
+
+NOTFOUND should become BADOVERLAY here.
+
+> +		fragment =3D ret;
+> +
+> +		/* an __overlay__ subnode must exist */
+> +		ret =3D fdt_subnode_offset(fdto, fragment, "__overlay__");
+> +		if (ret < 0)
+> +			return ret;
+
+And here.
+
+> +
+> +		/* get the target of the fragment */
+> +		ret =3D overlay_get_target(fdt, fdto, fragment, &target_path);
+> +		if (ret < 0)
+> +			return ret;
+> +		target =3D ret;
+> +
+> +		/* if we have a target path use */
+> +		if (!target_path) {
+> +			ret =3D get_path_len(fdt, target);
+> +			if (ret < 0)
+> +				return ret;
+> +			len =3D ret;
+> +		} else
+> +			len =3D strlen(target_path);
+
+Braces around both if/else branches, if they're around either, please.
+
+> +
+> +		ret =3D fdt_setprop_placeholder(fdt, root_sym, name,
+> +				len + (len > 1) + rel_path_len + 1, &p);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* again in case setprop_placeholder changed it */
+> +		ret =3D overlay_get_target(fdt, fdto, fragment, &target_path);
+
+You only need to do this if !target_path - if you already have the
+target_path, you don't actually need the offset of the target.
+
+> +		if (ret < 0)
+> +			return ret;
+> +		target =3D ret;
+> +
+> +		buf =3D p;
+> +		if (len > 1) { /* target is not root */
+> +			if (!target_path) {
+> +				ret =3D fdt_get_path(fdt, target, buf, len + 1);
+> +				if (ret < 0)
+> +					return ret;
+> +			} else
+> +				memcpy(buf, target_path, len + 1);
+> +
+> +		} else
+> +			len--;
+> +
+> +		buf[len] =3D '/';
+> +		memcpy(buf + len + 1, rel_path, rel_path_len);
+> +		buf[len + 1 + rel_path_len] =3D '\0';
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int fdt_overlay_apply(void *fdt, void *fdto)
+>  {
+>  	uint32_t delta =3D fdt_get_max_phandle(fdt);
+> @@ -654,6 +831,10 @@ int fdt_overlay_apply(void *fdt, void *fdto)
+>  	if (ret)
+>  		goto err;
+> =20
+> +	ret =3D overlay_symbol_update(fdt, fdto);
+> +	if (ret)
+> +		goto err;
+> +
+>  	/*
+>  	 * The overlay has been damaged, erase its magic.
+>  	 */
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--3uo+9/B/ebqu+fSQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmH9EIACgkQbDjKyiDZ
+s5JXEBAA4riNKSIcUT69ORMlkglwJbzam4r2RPPkM7blvTsbqazIMkITe6K7F3mq
+eiysQb7zjCD+p3rVbBHrjHkd6ofLZjxLmrxERO0Ew/bP0ciwLe8Ww1xSE+5uAViS
+VfjRZmTfnVVGWqUDIoWTfG72Am5V6u2Ca/XTREVwchr64aivb+Yd20or/MgF8IZq
+jIRAKZR2i58cG/F0UeRcteZcsrWYprgEoMKsrf3XaSbTVUtd/GfoWJXEKjxWvKT6
+loy8MD+QEgUF8/pHQMXdbHmEGmu6t2e3RFQHT00J9gb+hNb0CD1WBdOuGC3O3IMd
+IMkivEQJl+TQGur7W8O/DYUU631yxqHq8i4r72pdQWxw8HZl/oytt6vTahmi7/va
+FwVoiiqs8DHIGSHNJTh1l3VF7Q7SQXJ06iN0RwHo0+jt8cbpFZRA2Ee7CzprBOkW
+wTw/LH/LyURAprjsESOVdjFfujWZZvI2RHgts7XU+8GT+OYHNdaAgQU3hTv/lEul
+dwgc0mNC5WoauwaOCzOB0f5sYUUYlWJM1IFZ3vdrsRE28NogX+QMRtG64r0vpgi2
+doGytlghuSqRkva7x7qj5Apk9YxxcRVzfkRaOXUULZyAB1Cods40fIm/mlxwCM5Y
+z9I2ekvd0sBiMOtr6H9bgmY7Gfq9HuEvlcv9TkPGdwwC0cV/5Tg=
+=q3xq
+-----END PGP SIGNATURE-----
+
+--3uo+9/B/ebqu+fSQ--
