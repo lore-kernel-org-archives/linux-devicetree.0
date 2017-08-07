@@ -1,59 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Mon, 7 Aug 2017 17:37:10 +0200
-Message-ID: <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
-References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
- <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com> <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/3] mfd: syscon: update Atmel SMC binding doc
+Date: Mon, 7 Aug 2017 16:40:33 +0100
+Message-ID: <20170807154033.pupuc6yxq5del3ho@dell>
+References: <20170718132220.25018-1-ludovic.desroches@microchip.com>
+ <20170718132220.25018-2-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Keerthy <j-keerthy@ti.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170718132220.25018-2-ludovic.desroches@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, romain.izard.pro@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 7, 2017 at 3:50 PM, Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Tue, 18 Jul 2017, Ludovic Desroches wrote:
 
-> Adding "interrupts" property in DT causes
-> of_pupulate_default_populate() to assign virtual IRQ numbers
-> before driver probing.  So it does not work well with IRQ domain hierarchy.
+> A new compatible string is introduced for SMC on sama5d2 to manage a
+> different layout of the registers.
+> 
+> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/atmel-smc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I think I heard some noise about this the week before.
+Applied, thanks.
 
-> For pinctrl/stm32/pinctrl-stm32.c,
-> I do not see "interrupts", so it just straight maps the irq numbers.
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-smc.txt b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> index 26eeed373934..1103ce2030fb 100644
+> --- a/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-smc.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - compatible:		Should be one of the following
+>  			"atmel,at91sam9260-smc", "syscon"
+>  			"atmel,sama5d3-smc", "syscon"
+> +			"atmel,sama5d2-smc", "syscon"
+>  - reg:			Contains offset/length value of the SMC memory
+>  			region.
+>  
 
-I think OMAP and DaVinci does someting similar too. This is from a recent
-DaVinci patch from Keerthy:
-
-+Example for 66AK2G:
-+
-+gpio0: gpio@2603000 {
-+       compatible = "ti,k2g-gpio", "ti,keystone-gpio";
-+       reg = <0x02603000 0x100>;
-+       gpio-controller;
-+       #gpio-cells = <2>;
-+       interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
-+                       <GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
-+       interrupt-controller;
-+       #interrupt-cells = <2>;
-+       ti,ngpio = <144>;
-+       ti,davinci-gpio-unbanked = <0>;
-+       clocks = <&k2g_clks 0x001b 0x0>;
-+       clock-names = "gpio";
-+};
-
-
-That looks fairly similar.
-
-Yours,
-Linus Walleij
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
