@@ -1,163 +1,543 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ASoC: samsung: odroid: Drop requirement of clocks in the
- sound node
-Date: Mon, 7 Aug 2017 20:56:23 +0200
-Message-ID: <20170807185623.jwitnpcaay4wrv6a@kozik-lap>
-References: <CGME20170804105854epcas2p30ed120bc4bcb51979a880f44ffe3aca6@epcas2p3.samsung.com>
- <1501844297-22842-1-git-send-email-s.nawrocki@samsung.com>
+From: Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] v4l: cadence: Add Cadence MIPI-CSI2 RX driver
+Date: Mon, 7 Aug 2017 14:24:24 -0500
+Message-ID: <20170807192423.GD10611@ti.com>
+References: <20170720092302.2982-1-maxime.ripard@free-electrons.com>
+ <20170720092302.2982-3-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1501844297-22842-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-samsung-soc@vger.kernel.org, b.zolnierkie@samsung.com, alsa-devel@alsa-project.org
+In-Reply-To: <20170720092302.2982-3-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Steve Creaney <screaney-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 12:58:17PM +0200, Sylwester Nawrocki wrote:
-> As suggested in reviews the requirement of clocks in the 'sound' node
-> is dropped and instead a leaf clock is used to configure frequency
-> of the audio root clock PLL. This can work now after the clock tree
-> definitions have been updated to allow clock rate setting propagation
-> on the path from the I2S controller up to the EPLL.
+Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote on Thu [2017-Jul-20 11:23:02 +0200]:
+> The Cadence CSI-2 RX Controller is an hardware block meant to be used as a
+> bridge between a CSI-2 bus and pixel grabbers.
 > 
-> This patch also lowers the CODEC master clock frequency so as
-> to not exceed the maximum allowed 60 MHz at maximum audio sampling
-> rates.
+> It supports operating with internal or external D-PHY, with up to 4 lanes,
+> or without any D-PHY. The current code only supports the former case.
 > 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> It also support dynamic mapping of the CSI-2 virtual channels to the
+> associated pixel grabbers, but that isn't allowed at the moment either.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  .../devicetree/bindings/sound/samsung,odroid.txt   |  6 ---
->  sound/soc/samsung/odroid.c                         | 44 +++++++++++++++-------
->  2 files changed, 30 insertions(+), 20 deletions(-)
+>  drivers/media/platform/Kconfig               |   1 +
+>  drivers/media/platform/Makefile              |   2 +
+>  drivers/media/platform/cadence/Kconfig       |  12 +
+>  drivers/media/platform/cadence/Makefile      |   1 +
+>  drivers/media/platform/cadence/cdns-csi2rx.c | 413 +++++++++++++++++++++++++++
+>  5 files changed, 429 insertions(+)
+>  create mode 100644 drivers/media/platform/cadence/Kconfig
+>  create mode 100644 drivers/media/platform/cadence/Makefile
+>  create mode 100644 drivers/media/platform/cadence/cdns-csi2rx.c
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> index c30934d..625b1b1 100644
-> --- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> +++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-> @@ -7,9 +7,6 @@ Required properties:
->   - model - the user-visible name of this sound complex
->   - clocks - should contain entries matching clock names in the clock-names
->      property
-> - - clock-names - should contain following entries:
-> -    - "epll" - indicating the EPLL output clock
-> -    - "i2s_rclk" - indicating the RCLK (root) clock of the I2S0 controller
->   - samsung,audio-widgets - this property specifies off-codec audio elements
->     like headphones or speakers, for details see widgets.txt
->   - samsung,audio-routing - a list of the connections between audio
-> @@ -46,9 +43,6 @@ sound {
->  		"IN1", "Mic Jack",
->  		"Mic Jack", "MICBIAS";
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index 1313cd533436..a79d96e9b723 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -26,6 +26,7 @@ config VIDEO_VIA_CAMERA
+>  #
+>  # Platform multimedia device configuration
+>  #
+> +source "drivers/media/platform/cadence/Kconfig"
 >  
-> -	clocks = <&clock CLK_FOUT_EPLL>, <&i2s0 CLK_I2S_RCLK_SRC>;
-> -	clock-names = "epll", "sclk_i2s";
-> -
->  	cpu {
->  		sound-dai = <&i2s0 0>;
->  	};
-> diff --git a/sound/soc/samsung/odroid.c b/sound/soc/samsung/odroid.c
-> index 0834319..44b6de5 100644
-> --- a/sound/soc/samsung/odroid.c
-> +++ b/sound/soc/samsung/odroid.c
-> @@ -19,8 +19,8 @@ struct odroid_priv {
->  	struct snd_soc_card card;
->  	struct snd_soc_dai_link dai_link;
+>  source "drivers/media/platform/davinci/Kconfig"
 >  
-> -	struct clk *pll;
-> -	struct clk *rclk;
-> +	struct clk *clk_i2s_bus;
-> +	struct clk *sclk_i2s;
->  };
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index 9beadc760467..1d31eb51e9bb 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -2,6 +2,8 @@
+>  # Makefile for the video capture/playback device drivers.
+>  #
 >  
->  static int odroid_card_startup(struct snd_pcm_substream *substream)
-> @@ -58,13 +58,18 @@ static int odroid_card_hw_params(struct snd_pcm_substream *substream,
->  		return -EINVAL;
->  	}
+> +obj-$(CONFIG_VIDEO_CADENCE)		+= cadence/
+> +
+>  obj-$(CONFIG_VIDEO_M32R_AR_M64278) += arv.o
 >  
-> -	ret = clk_set_rate(priv->pll, pll_freq + 1);
-> +	ret = clk_set_rate(priv->clk_i2s_bus, pll_freq / 2 + 1);
->  	if (ret < 0)
->  		return ret;
->  
-> -	rclk_freq = params_rate(params) * 256 * 4;
+>  obj-$(CONFIG_VIDEO_VIA_CAMERA) += via-camera.o
+> diff --git a/drivers/media/platform/cadence/Kconfig b/drivers/media/platform/cadence/Kconfig
+> new file mode 100644
+> index 000000000000..d1b6bbb6a0eb
+> --- /dev/null
+> +++ b/drivers/media/platform/cadence/Kconfig
+> @@ -0,0 +1,12 @@
+> +config VIDEO_CADENCE
+> +	bool "Cadence Video Devices"
+> +
+> +if VIDEO_CADENCE
+> +
+> +config VIDEO_CADENCE_CSI2RX
+> +	tristate "Cadence MIPI-CSI2 RX Controller v1.3"
+> +	depends on MEDIA_CONTROLLER
+> +	depends on VIDEO_V4L2_SUBDEV_API
+> +	select V4L2_FWNODE
+> +
+> +endif
+> diff --git a/drivers/media/platform/cadence/Makefile b/drivers/media/platform/cadence/Makefile
+> new file mode 100644
+> index 000000000000..99a4086b7448
+> --- /dev/null
+> +++ b/drivers/media/platform/cadence/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_VIDEO_CADENCE_CSI2RX)	+= cdns-csi2rx.o
+> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+> new file mode 100644
+> index 000000000000..9a58f275f53c
+> --- /dev/null
+> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+> @@ -0,0 +1,413 @@
+> +/*
+> + * Driver for Cadence MIPI-CSI2 RX Controller v1.3
+> + *
+> + * Copyright (C) 2017 Cadence Design Systems Inc.
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <media/v4l2-ctrls.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-fwnode.h>
+> +#include <media/v4l2-subdev.h>
+> +
+> +#define CSI2RX_DEVICE_CFG_REG			0x000
+> +
+> +#define CSI2RX_SOFT_RESET_REG			0x004
+> +#define CSI2RX_SOFT_RESET_PROTOCOL			BIT(1)
+> +#define CSI2RX_SOFT_RESET_FRONT				BIT(0)
+> +
+> +#define CSI2RX_STATIC_CFG_REG			0x008
+> +
+> +#define CSI2RX_STREAM_BASE(n)		(((n) + 1) * 0x100)
+> +
+> +#define CSI2RX_STREAM_CTRL_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x000)
+> +#define CSI2RX_STREAM_CTRL_START			BIT(0)
+> +
+> +#define CSI2RX_STREAM_DATA_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x008)
+> +#define CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT		BIT(31)
+> +#define CSI2RX_STREAM_DATA_CFG_VC_SELECT(n)		BIT((n) + 16)
+> +
+> +#define CSI2RX_STREAM_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x00c)
+> +#define CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF		(1 << 8)
+> +
+> +#define CSI2RX_STREAMS_MAX	4
+> +
+
+Just to confirm here that "streams" in this case are equivalent to
+"Virtual Channel", correct?
+
+> +enum csi2rx_pads {
+> +	CSI2RX_PAD_SINK,
+> +	CSI2RX_PAD_SOURCE_VC0,
+> +	CSI2RX_PAD_SOURCE_VC1,
+> +	CSI2RX_PAD_SOURCE_VC2,
+> +	CSI2RX_PAD_SOURCE_VC3,
+> +	CSI2RX_PAD_MAX,
+> +};
+> +
+> +struct csi2rx_priv {
+> +	struct device		*dev;
+> +
+> +	void __iomem		*base;
+> +	struct clk		*sys_clk;
+> +	struct clk		*p_clk;
+> +	struct clk		*p_free_clk;
+> +	struct clk		*pixel_clk[CSI2RX_STREAMS_MAX];
+> +	struct clk		*dphy_rx_clk;
+> +
+> +	u8			lanes;
+> +	u8			max_lanes;
+> +	u8			max_streams;
+> +	bool			cdns_dphy;
+> +
+> +	struct v4l2_subdev	subdev;
+> +	struct media_pad	pads[CSI2RX_PAD_MAX];
+> +
+> +	/* Remote sensor */
+> +	struct v4l2_async_subdev	asd;
+> +	struct device_node		*sensor_node;
+> +	struct v4l2_subdev		*sensor_subdev;
+> +	int				sensor_pad;
+> +};
+> +
+> +static inline
+> +struct csi2rx_priv *v4l2_subdev_to_csi2rx(struct v4l2_subdev *subdev)
+> +{
+> +	return container_of(subdev, struct csi2rx_priv, subdev);
+> +}
+> +
+> +static void csi2rx_reset(struct csi2rx_priv *csi2rx)
+> +{
+> +	writel(CSI2RX_SOFT_RESET_PROTOCOL | CSI2RX_SOFT_RESET_FRONT,
+> +	       csi2rx->base + CSI2RX_SOFT_RESET_REG);
+> +
+> +	udelay(10);
+
+Shouldn't we use usleep_range() instead?
+
+> +
+> +	writel(0, csi2rx->base + CSI2RX_SOFT_RESET_REG);
+> +}
+> +
+> +static int csi2rx_start(struct csi2rx_priv *csi2rx)
+> +{
+> +	u32 reg;
+> +	int i;
+> +
+> +	csi2rx_reset(csi2rx);
+> +
+> +	// TODO: modify the mapping of the DPHY lanes?
+> +	reg = readl(csi2rx->base + CSI2RX_STATIC_CFG_REG);
+> +	reg &= ~GENMASK(11, 8);
+> +	writel(reg | (csi2rx->lanes << 8),
+> +	       csi2rx->base + CSI2RX_STATIC_CFG_REG);
+> +
 > +	/*
-> +	 *  We add 1 to the rclk_freq value in order to avoid too low clock
-> +	 *  frequency values due to the EPLL output frequency not being exact
-> +	 *  multiple of the audio sampling rate.
+> +	 * Create a static mapping between the CSI virtual channels
+> +	 * and the output stream.
+> +	 *
+> +	 * This should be enhanced, but v4l2 lacks the support for
+> +	 * changing that mapping dynamically.
 > +	 */
-> +	rclk_freq = params_rate(params) * 256 + 1;
->  
-> -	ret = clk_set_rate(priv->rclk, rclk_freq);
-> +	ret = clk_set_rate(priv->sclk_i2s, rclk_freq);
->  	if (ret < 0)
->  		return ret;
->  
-> @@ -118,14 +123,6 @@ static int odroid_audio_probe(struct platform_device *pdev)
->  
->  	snd_soc_card_set_drvdata(card, priv);
->  
-> -	priv->pll = devm_clk_get(dev, "epll");
-> -	if (IS_ERR(priv->pll))
-> -		return PTR_ERR(priv->pll);
-> -
-> -	priv->rclk = devm_clk_get(dev, "i2s_rclk");
-> -	if (IS_ERR(priv->rclk))
-> -		return PTR_ERR(priv->rclk);
-> -
->  	ret = snd_soc_of_parse_card_name(card, "model");
->  	if (ret < 0)
->  		return ret;
-> @@ -171,14 +168,31 @@ static int odroid_audio_probe(struct platform_device *pdev)
->  	link->name = "Primary";
->  	link->stream_name = link->name;
->  
+> +	for (i = 0; i < csi2rx->max_streams; i++) {
+> +		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
+> +		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
 > +
-
-One blank line too much but beside that:
-
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
-
-> +	priv->sclk_i2s = of_clk_get_by_name(link->cpu_of_node, "i2s_opclk1");
-> +	if (IS_ERR(priv->sclk_i2s)) {
-> +		ret = PTR_ERR(priv->sclk_i2s);
-> +		goto err_put_i2s_n;
+> +		writel(CSI2RX_STREAM_DATA_CFG_EN_VC_SELECT |
+> +		       CSI2RX_STREAM_DATA_CFG_VC_SELECT(i),
+> +		       csi2rx->base + CSI2RX_STREAM_DATA_CFG_REG(i));
+> +
+> +		writel(CSI2RX_STREAM_CTRL_START,
+> +		       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
 > +	}
 > +
-> +	priv->clk_i2s_bus = of_clk_get_by_name(link->cpu_of_node, "iis");
-> +	if (IS_ERR(priv->clk_i2s_bus)) {
-> +		ret = PTR_ERR(priv->clk_i2s_bus);
-> +		goto err_put_sclk;
+> +	return 0;
+> +}
+> +
+> +static int csi2rx_stop(struct csi2rx_priv *csi2rx)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < csi2rx->max_streams; i++)
+> +		writel(0, csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
+> +
+> +	return 0;
+> +}
+> +
+
+Here, it is entirely possible that the "dma/buffer" engine which will
+make use of this receiver creates separates video nodes for each streams.
+In which case, you could theoretically have multiple user space capture
+on-going.
+But the "start" and "stop" method above would disrupt any of the other
+stream. Unless you start and stop all 4 capture streams in lock step.
+
+Eventually, the sub device might be a port aggregator which has up to
+4 sensors on the source pad and feed each camera traffic on its own
+Virtual Channel.
+
+I know there isn't support in the framework for this currently but it
+is something to think about.
+
+Regards,
+Benoit
+
+> +static int csi2rx_s_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(sd);
+> +
+> +	v4l2_subdev_call(csi2rx->sensor_subdev, video, s_stream,
+> +			 enable);
+> +
+> +	if (enable)
+> +		csi2rx_start(csi2rx);
+> +	else
+> +		csi2rx_stop(csi2rx);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops csi2rx_video_ops = {
+> +	.s_stream	= csi2rx_s_stream,
+> +};
+> +
+> +static struct v4l2_subdev_ops csi2rx_subdev_ops = {
+> +	.video		= &csi2rx_video_ops,
+> +};
+> +
+> +static int csi2rx_async_bound(struct v4l2_async_notifier *notifier,
+> +			      struct v4l2_subdev *s_subdev,
+> +			      struct v4l2_async_subdev *asd)
+> +{
+> +	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
+> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+> +
+> +	csi2rx->sensor_pad = media_entity_get_fwnode_pad(&s_subdev->entity,
+> +							 &csi2rx->sensor_node->fwnode,
+> +							 MEDIA_PAD_FL_SOURCE);
+> +	if (csi2rx->sensor_pad < 0) {
+> +		dev_err(csi2rx->dev, "Couldn't find output pad for subdev %s\n",
+> +			s_subdev->name);
+> +		return csi2rx->sensor_pad;
 > +	}
 > +
->  	ret = devm_snd_soc_register_card(dev, card);
->  	if (ret < 0) {
->  		dev_err(dev, "snd_soc_register_card() failed: %d\n", ret);
-> -		goto err_put_i2s_n;
-> +		goto err_put_clk_i2s;
->  	}
->  
->  	return 0;
->  
-> +err_put_clk_i2s:
-> +	clk_put(priv->clk_i2s_bus);
-> +err_put_sclk:
-> +	clk_put(priv->sclk_i2s);
->  err_put_i2s_n:
->  	of_node_put(link->cpu_of_node);
->  err_put_codec_n:
-> @@ -192,6 +206,8 @@ static int odroid_audio_remove(struct platform_device *pdev)
->  
->  	of_node_put(priv->dai_link.cpu_of_node);
->  	odroid_put_codec_of_nodes(&priv->dai_link);
-> +	clk_put(priv->sclk_i2s);
-> +	clk_put(priv->clk_i2s_bus);
->  
->  	return 0;
->  }
+> +	csi2rx->sensor_subdev = s_subdev;
+> +
+> +	dev_dbg(csi2rx->dev, "Bound %s pad: %d\n", s_subdev->name,
+> +		csi2rx->sensor_pad);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2rx_async_complete(struct v4l2_async_notifier *notifier)
+> +{
+> +	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
+> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+> +
+> +	return media_create_pad_link(&csi2rx->sensor_subdev->entity,
+> +				     csi2rx->sensor_pad,
+> +				     &csi2rx->subdev.entity, 0,
+> +				     MEDIA_LNK_FL_ENABLED |
+> +				     MEDIA_LNK_FL_IMMUTABLE);
+> +}
+> +
+> +static void csi2rx_async_unbind(struct v4l2_async_notifier *notifier,
+> +				struct v4l2_subdev *s_subdev,
+> +				struct v4l2_async_subdev *asd)
+> +{
+> +	struct v4l2_subdev *subdev = subnotifier_to_v4l2_subdev(notifier);
+> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+> +
+> +	dev_dbg(csi2rx->dev, "Unbound %s pad: %d\n", s_subdev->name,
+> +		csi2rx->sensor_pad);
+> +
+> +	csi2rx->sensor_subdev = NULL;
+> +	csi2rx->sensor_pad = -EINVAL;
+> +}
+> +
+> +static int csi2rx_get_resources(struct csi2rx_priv *csi2rx,
+> +				struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	u32 reg;
+> +	int i;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	csi2rx->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(csi2rx->base)) {
+> +		dev_err(&pdev->dev, "Couldn't map our registers\n");
+> +		return PTR_ERR(csi2rx->base);
+> +	}
+> +
+> +	reg = readl(csi2rx->base + CSI2RX_DEVICE_CFG_REG);
+> +	csi2rx->max_lanes = (reg & 7) + 1;
+> +	csi2rx->max_streams = ((reg >> 4) & 7);
+> +	csi2rx->cdns_dphy = reg & BIT(3);
+> +
+> +	csi2rx->sys_clk = devm_clk_get(&pdev->dev, "sys_clk");
+> +	if (IS_ERR(csi2rx->sys_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get sys clock\n");
+> +		return PTR_ERR(csi2rx->sys_clk);
+> +	}
+> +
+> +	csi2rx->p_clk = devm_clk_get(&pdev->dev, "p_clk");
+> +	if (IS_ERR(csi2rx->p_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get P clock\n");
+> +		return PTR_ERR(csi2rx->p_clk);
+> +	}
+> +
+> +	csi2rx->p_free_clk = devm_clk_get(&pdev->dev, "p_free_clk");
+> +	if (IS_ERR(csi2rx->p_free_clk)) {
+> +		dev_err(&pdev->dev, "Couldn't get free running P clock\n");
+> +		return PTR_ERR(csi2rx->p_free_clk);
+> +	}
+> +
+> +	for (i = 0; i < csi2rx->max_streams; i++) {
+> +		char clk_name[16];
+> +
+> +		snprintf(clk_name, sizeof(clk_name), "pixel_if%u_clk", i);
+> +		csi2rx->pixel_clk[i] = devm_clk_get(&pdev->dev, clk_name);
+> +		if (IS_ERR(csi2rx->pixel_clk[i])) {
+> +			dev_err(&pdev->dev, "Couldn't get clock %s\n", clk_name);
+> +			return PTR_ERR(csi2rx->pixel_clk[i]);
+> +		}
+> +	}
+> +
+> +	if (csi2rx->cdns_dphy) {
+> +		csi2rx->dphy_rx_clk = devm_clk_get(&pdev->dev, "dphy_rx_clk");
+> +		if (IS_ERR(csi2rx->dphy_rx_clk)) {
+> +			dev_err(&pdev->dev, "Couldn't get D-PHY RX clock\n");
+> +			return PTR_ERR(csi2rx->dphy_rx_clk);
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2rx_parse_dt(struct csi2rx_priv *csi2rx)
+> +{
+> +	struct v4l2_fwnode_endpoint v4l2_ep;
+> +	struct v4l2_async_subdev **subdevs;
+> +	struct device_node *ep, *remote;
+> +	int ret = 0;
+> +
+> +	ep = of_graph_get_endpoint_by_regs(csi2rx->dev->of_node, 0, 0);
+> +	if (!ep)
+> +		return -EINVAL;
+> +
+> +	ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &v4l2_ep);
+> +	if (ret) {
+> +		dev_err(csi2rx->dev, "Could not parse v4l2 endpoint\n");
+> +		goto out;
+> +	}
+> +
+> +	if (v4l2_ep.bus_type != V4L2_MBUS_CSI2) {
+> +		dev_err(csi2rx->dev, "Unsupported media bus type: 0x%x\n",
+> +			v4l2_ep.bus_type);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	csi2rx->lanes = v4l2_ep.bus.mipi_csi2.num_data_lanes;
+> +	if (csi2rx->lanes > csi2rx->max_lanes) {
+> +		dev_err(csi2rx->dev, "Unsupported number of data-lanes: %d\n",
+> +			csi2rx->lanes);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	remote = of_graph_get_remote_port_parent(ep);
+> +	if (!remote) {
+> +		dev_err(csi2rx->dev, "No device found for endpoint %pOF\n", ep);
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	dev_dbg(csi2rx->dev, "Found remote device %pOF\n", remote);
+> +
+> +	csi2rx->sensor_node = remote;
+> +	csi2rx->asd.match.fwnode.fwnode = &remote->fwnode;
+> +	csi2rx->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> +
+> +	subdevs = devm_kzalloc(csi2rx->dev, sizeof(*subdevs), GFP_KERNEL);
+> +	if (subdevs == NULL)
+> +		return -ENOMEM;
+> +	subdevs[0] = &csi2rx->asd;
+> +
+> +	ret = v4l2_async_subdev_notifier_register(&csi2rx->subdev, 1, subdevs,
+> +						  csi2rx_async_bound,
+> +						  csi2rx_async_complete,
+> +						  csi2rx_async_unbind);
+> +	if (ret < 0) {
+> +		dev_err(csi2rx->dev, "Failed to register our notifier\n");
+> +		return ret;
+> +	}
+> +
+> +out:
+> +	of_node_put(ep);
+> +	return ret;
+> +}
+> +
+> +static int csi2rx_probe(struct platform_device *pdev)
+> +{
+> +	struct csi2rx_priv *csi2rx;
+> +	int i, ret;
+> +
+> +	csi2rx = devm_kzalloc(&pdev->dev, sizeof(*csi2rx), GFP_KERNEL);
+> +	if (!csi2rx)
+> +		return -ENOMEM;
+> +	platform_set_drvdata(pdev, csi2rx);
+> +	csi2rx->dev = &pdev->dev;
+> +
+> +	ret = csi2rx_get_resources(csi2rx, pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Failed to get our resources\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = csi2rx_parse_dt(csi2rx);
+> +	if (ret)
+> +		return ret;
+> +
+> +	csi2rx->subdev.owner = THIS_MODULE;
+> +	csi2rx->subdev.dev = &pdev->dev;
+> +	v4l2_subdev_init(&csi2rx->subdev, &csi2rx_subdev_ops);
+> +	v4l2_set_subdevdata(&csi2rx->subdev, &pdev->dev);
+> +	snprintf(csi2rx->subdev.name, V4L2_SUBDEV_NAME_SIZE, "%s.%s",
+> +		 KBUILD_MODNAME, dev_name(&pdev->dev));
+> +
+> +	/* Create our media pads */
+> +	csi2rx->subdev.entity.function = MEDIA_ENT_F_PROC_VIDEO_PIXEL_FORMATTER;
+> +	csi2rx->pads[CSI2RX_PAD_SINK].flags = MEDIA_PAD_FL_SINK;
+> +	for (i = CSI2RX_PAD_SOURCE_VC0; i < CSI2RX_PAD_MAX; i++)
+> +		csi2rx->pads[i].flags = MEDIA_PAD_FL_SOURCE;
+> +
+> +	ret = media_entity_pads_init(&csi2rx->subdev.entity, CSI2RX_PAD_MAX,
+> +				     csi2rx->pads);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = v4l2_async_register_subdev(&csi2rx->subdev);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	dev_info(&pdev->dev,
+> +		 "Probed CSI2RX with %d/%d lanes, %d streams, %s D-PHY\n",
+> +		 csi2rx->lanes, csi2rx->max_lanes, csi2rx->max_streams,
+> +		 csi2rx->cdns_dphy ? "Cadence" : "no");
+> +
+> +	return 0;
+> +}
+> +
+> +static int csi2rx_remove(struct platform_device *pdev)
+> +{
+> +	struct csi2rx_priv *csi2rx = platform_get_drvdata(pdev);
+> +
+> +	v4l2_async_unregister_subdev(&csi2rx->subdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id csi2rx_of_table[] = {
+> +	{ .compatible = "cdns,csi2rx" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, csi2rx_of_table);
+> +
+> +static struct platform_driver csi2rx_driver = {
+> +	.probe	= csi2rx_probe,
+> +	.remove	= csi2rx_remove,
+> +
+> +	.driver	= {
+> +		.name		= "cdns-csi2rx",
+> +		.of_match_table	= csi2rx_of_table,
+> +	},
+> +};
+> +module_platform_driver(csi2rx_driver);
 > -- 
-> 1.9.1
+> 2.13.3
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
