@@ -1,60 +1,49 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Altera ASMI Parallel II IP Core
- (fwd)
-Date: Mon, 7 Aug 2017 07:59:20 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1708070757550.2061@hadrien>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/3] arm64 xilinx zynqmp firmware interface
+Date: Mon, 7 Aug 2017 08:09:32 +0200
+Message-ID: <1182e5f8-2588-32ff-8380-04273c28d1cd@xilinx.com>
+References: <cover.1501854302.git.michal.simek@xilinx.com>
+ <34C9E6FB-A8CA-462F-8B10-3E15F9EC87D4@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <34C9E6FB-A8CA-462F-8B10-3E15F9EC87D4-l3A5Bk7waGM@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+To: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monst>
 List-Id: devicetree@vger.kernel.org
 
-dev_err does not seem possible to use here (line 447).
+On 5.8.2017 06:23, Alexander Graf wrote:
+> 
+> 
+>> Am 04.08.2017 um 15:45 schrieb Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>:
+>>
+>> Hi,
+>>
+>> xilinx is using this interface for very long time and we can't merge our
+>> driver changes to Linux because of missing communication layer with
+>> firmware. This interface was developed before scpi and scmi was
+>> available. In connection to power management scpi and scmi are missing
+>> pieces which we already use. There is a separate discussion how to
+>> extend scmi to support all our use cases.
+>> This simply patch is not adding any power management features but only
+>> adding minimum functionality which are needed for drivers.
+> 
+> If you're thinking of changing the interface later down the road, wouldn't it make sense to probe EL3 for its existence? 
+You could then expose this interface on today's EL3 and something
+scpi/scmi based on tomorrow's.
 
-julia
+Right now driver is checking pmu firmware version. Based on this it is
+clear how to communicate with it. The same checking could be there for
+ATF version. Both of these should tell you exactly what's the
+communication channel.
+If we decide to use scmi or any other implementation we will increase
+versions.
 
----------- Forwarded message ----------
-Date: Mon, 7 Aug 2017 04:45:58 +0800
-From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-To: kbuild-JC7UmRfGjtg@public.gmane.org
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH 2/2] mtd: spi-nor: Altera ASMI Parallel II IP Core
-
-Hi Matthew,
-
-[auto build test WARNING on next-20170804]
-[also build test WARNING on v4.13-rc3]
-[cannot apply to mtd/spi-nor/fixes linus/master mtd/master v4.13-rc3 v4.13-rc2 v4.13-rc1]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/matthew-gerlach-linux-intel-com/dt-bindings-mtd-Altera-ASMI-Parallel-II-IP-Core/20170807-023147
-:::::: branch date: 2 hours ago
-:::::: commit date: 2 hours ago
-
->> drivers/mtd/spi-nor/altera-asmip2.c:447:17-20: ERROR: pdev is NULL but dereferenced.
-
-# https://github.com/0day-ci/linux/commit/ec2e26c1b07806d734a2939530e7d4b4d7c67f0c
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout ec2e26c1b07806d734a2939530e7d4b4d7c67f0c
-vim +447 drivers/mtd/spi-nor/altera-asmip2.c
-
-ec2e26c1 Matthew Gerlach 2017-08-06  443
-ec2e26c1 Matthew Gerlach 2017-08-06  444  static int altera_asmip2_remove(struct platform_device *pdev)
-ec2e26c1 Matthew Gerlach 2017-08-06  445  {
-ec2e26c1 Matthew Gerlach 2017-08-06  446  	if (!pdev) {
-ec2e26c1 Matthew Gerlach 2017-08-06 @447  		dev_err(&pdev->dev, "%s NULL\n", __func__);
-ec2e26c1 Matthew Gerlach 2017-08-06  448  		return -EINVAL;
-ec2e26c1 Matthew Gerlach 2017-08-06  449  	} else {
-ec2e26c1 Matthew Gerlach 2017-08-06  450  		return altera_asmip2_remove_banks(&pdev->dev);
-ec2e26c1 Matthew Gerlach 2017-08-06  451  	}
-ec2e26c1 Matthew Gerlach 2017-08-06  452  }
-ec2e26c1 Matthew Gerlach 2017-08-06  453
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+Thanks,
+Michal
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
