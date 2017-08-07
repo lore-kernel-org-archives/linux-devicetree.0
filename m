@@ -1,47 +1,50 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/3] ARM: dts: at91: sama5d2: use sama5d2 compatible
- string for SMC
-Date: Mon, 7 Aug 2017 16:41:00 +0100
-Message-ID: <20170807154100.hvl5ua3vdqttghfj@dell>
+Subject: Re: [PATCH v2 1/3] mfd: syscon: update Atmel SMC binding doc
+Date: Mon, 7 Aug 2017 16:41:24 +0100
+Message-ID: <20170807154124.norjlxavx4u75yzs@dell>
 References: <20170718132220.25018-1-ludovic.desroches@microchip.com>
- <20170718132220.25018-4-ludovic.desroches@microchip.com>
+ <20170718132220.25018-2-ludovic.desroches@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170718132220.25018-4-ludovic.desroches@microchip.com>
+In-Reply-To: <20170718132220.25018-2-ludovic.desroches@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ludovic Desroches <ludovic.desroches@microchip.com>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, romain.izard.pro@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Jul 2017, Ludovic Desroches wrote:
+Enjoy!
 
-> A new compatible string has been introduced for sama5d2 SMC to allow to
-> manage the registers mapping change.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-> ---
->  arch/arm/boot/dts/sama5d2.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+The following changes since commit 5771a8c08880cdca3bfb4a3fc6d309d6bba20877:
 
-Applied, thanks.
+  Linux v4.13-rc1 (2017-07-15 15:22:10 -0700)
 
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index cc06da394366..3e6e2dbc2595 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -1048,7 +1048,7 @@
->  			};
->  
->  			hsmc: hsmc@f8014000 {
-> -				compatible = "atmel,sama5d3-smc", "syscon", "simple-mfd";
-> +				compatible = "atmel,sama5d2-smc", "syscon", "simple-mfd";
->  				reg = <0xf8014000 0x1000>;
->  				interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
->  				clocks = <&hsmc_clk>;
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-v4.14
+
+for you to fetch changes up to 5df46ec0f4cf3b2cb0791abe5c68821a4f7ffffe:
+
+  ARM: dts: at91: sama5d2: Use sama5d2 compatible string for SMC (2017-08-07 16:38:30 +0100)
+
+----------------------------------------------------------------
+Immutable branch between MFD and ARM due for the v4.14 merge window
+
+----------------------------------------------------------------
+Ludovic Desroches (3):
+      mfd: syscon: Update Atmel SMC binding doc
+      mfd: syscon: atmel-smc: Add helper to retrieve register layout
+      ARM: dts: at91: sama5d2: Use sama5d2 compatible string for SMC
+
+ .../devicetree/bindings/mfd/atmel-smc.txt          |  1 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |  2 +-
+ drivers/memory/atmel-ebi.c                         | 13 +++--
+ drivers/mfd/atmel-smc.c                            | 67 +++++++++++++++++-----
+ drivers/mtd/nand/atmel/nand-controller.c           | 10 +++-
+ include/linux/mfd/syscon/atmel-smc.h               | 32 ++++++++---
+ 
 -- 
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
