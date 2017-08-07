@@ -1,46 +1,117 @@
-From: "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Subject: RE: [PATCHv2 0/3] dts: add ls2088a and 1088a pcie DT nodes
-Date: Mon, 7 Aug 2017 02:05:06 +0000
-Message-ID: <VI1PR0402MB278248A2FD55FD70FA9B262184B50@VI1PR0402MB2782.eurprd04.prod.outlook.com>
-References: <1501829046-3761-1-git-send-email-Zhiqiang.Hou@nxp.com>
- <20170805054627.GU31819@dragon>
+From: <andy.tang@nxp.com>
+Subject: [PATCH 1/2 v2] arm64: dts: ls1088a: add cpu idle support
+Date: Mon, 7 Aug 2017 09:54:38 +0800
+Message-ID: <1502070879-14106-1-git-send-email-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170805054627.GU31819@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2hhd24sDQoNClRoYW5rcyBhIGxvdCBmb3IgeW91ciBjb21tZW50cyENCg0KPiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTaGF3biBHdW8gW21haWx0bzpzaGF3bmd1b0Br
-ZXJuZWwub3JnXQ0KPiBTZW50OiAyMDE3xOo41MI1yNUgMTM6NDYNCj4gVG86IFoucS4gSG91IDx6
-aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207IGNhdGFsaW4ubWFyaW5hc0Bhcm0uY29tOw0KPiB3aWxs
-LmRlYWNvbkBhcm0uY29tOyBQcmFiaGFrYXIgS3VzaHdhaGEgPHByYWJoYWthci5rdXNod2FoYUBu
-eHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIdjIgMC8zXSBkdHM6IGFkZCBsczIwODhhIGFu
-ZCAxMDg4YSBwY2llIERUIG5vZGVzDQo+IA0KPiBPbiBGcmksIEF1ZyAwNCwgMjAxNyBhdCAwMjo0
-NDowM1BNICswODAwLCBaaGlxaWFuZyBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpoaXFpYW5n
-IDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IEFkZCBHSUN2MyBJVFMgRFQgbm9kZSBm
-b3IgbHMxMDg4YSwgYmVjYXVzZSB0aGUgUENJZSBub2RlcyBtdXN0IGhhdmUgYQ0KPiA+IG1zaS1w
-YXJlbnQuDQo+ID4NCj4gPiBIb3UgWmhpcWlhbmcgKDMpOg0KPiA+ICAgZHRzOiBsczIwODhhOiBh
-ZGQgcGNpZSBzdXBwb3J0DQo+ID4gICBkdHM6IGxzMTA4OGE6IGFkZCBnaWN2MyBJVFMgRFQgbm9k
-ZQ0KPiA+ICAgZHRzOiBsczEwODhhOiBhZGQgUENJZSBjb250cm9sbGVyIERUIG5vZGVzDQo+IA0K
-PiBQbGVhc2UgaGF2ZSBhbiBhZGRpdGlvbmFsICdhcm02NDogJyBwcmVmaXggZm9yIHRoZXNlIGFy
-bTY0IGR0cyBwYXRjaGVzLg0KDQp5ZXMsIHdpbGwgYWRkIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtz
-LA0KWmhpcWlhbmcNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
-aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2xpbnV4LWFybS1rZXJuZWwK
+From: Yuantian Tang <andy.tang@nxp.com>
+
+ls1088a supports another cpu idle state which is ph20 which saves
+more power when cpu is idle.
+It was implemented through psci firmware.
+
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+v2:
+  -- no change
+
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+index c144d06..adc1ff5 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+@@ -62,6 +62,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x0>;
+ 			clocks = <&clockgen 1 0>;
++			cpu-idle-states = <&CPU_PH20>;
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -70,6 +71,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x1>;
+ 			clocks = <&clockgen 1 0>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu2: cpu@2 {
+@@ -77,6 +79,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x2>;
+ 			clocks = <&clockgen 1 0>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu3: cpu@3 {
+@@ -84,6 +87,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x3>;
+ 			clocks = <&clockgen 1 0>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu4: cpu@100 {
+@@ -91,6 +95,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x100>;
+ 			clocks = <&clockgen 1 1>;
++			cpu-idle-states = <&CPU_PH20>;
+ 			#cooling-cells = <2>;
+ 		};
+ 
+@@ -99,6 +104,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x101>;
+ 			clocks = <&clockgen 1 1>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu6: cpu@102 {
+@@ -106,6 +112,7 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x102>;
+ 			clocks = <&clockgen 1 1>;
++			cpu-idle-states = <&CPU_PH20>;
+ 		};
+ 
+ 		cpu7: cpu@103 {
+@@ -113,6 +120,16 @@
+ 			compatible = "arm,cortex-a53";
+ 			reg = <0x103>;
+ 			clocks = <&clockgen 1 1>;
++			cpu-idle-states = <&CPU_PH20>;
++		};
++
++		CPU_PH20: cpu-ph20 {
++			compatible = "arm,idle-state";
++			idle-state-name = "PH20";
++			arm,psci-suspend-param = <0x00010000>;
++			entry-latency-us = <1000>;
++			exit-latency-us = <1000>;
++			min-residency-us = <3000>;
+ 		};
+ 	};
+ 
+@@ -136,6 +153,11 @@
+ 			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
+ 	};
+ 
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
+ 	sysclk: sysclk {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+-- 
+2.1.0.27.g96db324
