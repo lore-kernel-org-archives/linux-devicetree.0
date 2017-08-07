@@ -1,63 +1,29 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: rockchip: add bindings for i2s
-Date: Mon, 7 Aug 2017 12:36:53 +0100
-Message-ID: <20170807113653.zcxv4zgxem4ivghp@sirena.org.uk>
-References: <1501465671-22863-1-git-send-email-sugar.zhang@rock-chips.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 0/4] K2G: Add support for PWM ECAP
+Date: Mon, 7 Aug 2017 17:19:39 +0530
+Message-ID: <20170807114943.22612-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8986657769506224397=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1501465671-22863-1-git-send-email-sugar.zhang@rock-chips.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Vignesh R <vigneshr@ti.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This series adds support for TI ECAP PWM IP present in 66AK2G SoC.
+Based on linux-next.
 
---===============8986657769506224397==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mtk2zd6ml7hyfpnp"
-Content-Disposition: inline
+Vignesh R (4):
+  pwm: pwm-tiecap: Add TI 66AK2G SoC specific compatible
+  ARM: dts: keystone-k2g: Add ECAP PWM DT nodes
+  ARM: dts: keystone-k2g-evm: Enable PWM ECAP0
+  ARM: configs: keystone: Enable TIECAP PWM driver
 
+ Documentation/devicetree/bindings/pwm/pwm-tiecap.txt |  1 +
+ arch/arm/boot/dts/keystone-k2g-evm.dts               | 12 ++++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi                  | 20 ++++++++++++++++++++
+ arch/arm/configs/keystone_defconfig                  |  2 ++
+ 4 files changed, 35 insertions(+)
 
---mtk2zd6ml7hyfpnp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Mon, Jul 31, 2017 at 09:47:51AM +0800, Sugar Zhang wrote:
-> This patch add bindings for rk3036/rk3228/rk3328/rk3366 i2s.
-
-Can we please also add these to the driver so that we'll match on those.
-
---mtk2zd6ml7hyfpnp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmIUNQACgkQJNaLcl1U
-h9Buzwf/Q3ZNHGMbUt8Viu3l+KFV/SvTQAc4tsWYizNKkXK9sTlSLT14CN9rh/F7
-Av61CYxfJRubveQzaHnT44un841dq0T1ZvDtBgyZmXf7mrHhFZsLQ0b+ESuQZPGT
-j3rrYMFkyM9oQeb9qedi3wYQdlWTYzFANNGyoIIRR71jS5ZEdDKO3Hi/9kAC/KW8
-OQsGvJEjz2JJooLQ6sJRY73xWHQjICApFmBdSJWA/xVGY3/G8fRqSvtt5/8lBFvb
-I4G8m/FbIwd6dJwCnjEwd90G+MvWYjTlwN7lldcquBhLHRd4RiB5xjUV1FA0x0WX
-MLYMJeVtHaDkkUjq7apzo58ubojGYQ==
-=VZLi
------END PGP SIGNATURE-----
-
---mtk2zd6ml7hyfpnp--
-
---===============8986657769506224397==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8986657769506224397==--
+-- 
+2.13.3
