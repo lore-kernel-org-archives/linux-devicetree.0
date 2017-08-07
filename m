@@ -1,100 +1,271 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v4 2/6] of: Add helper for mapping device node to logical CPU number
-Date: Mon,  7 Aug 2017 10:52:36 +0100
-Message-ID: <1502099560-6267-3-git-send-email-suzuki.poulose@arm.com>
-References: <1502099560-6267-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502099560-6267-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>
+From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 1/2] ata: mediatek: add support for MediaTek SATA controller
+Date: Mon, 7 Aug 2017 17:52:20 +0800
+Message-ID: <7859e9ed333ab2803ac21c0178a78e448e7d87aa.1502098458.git.ryder.lee@mediatek.com>
+References: <cover.1502098458.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <cover.1502098458.git.ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Long Cheng <long.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a helper to map a device node to a logical CPU number to avoid
-duplication. Currently this is open coded in different places (e.g
-gic-v3, coresight). The helper tries to map device node to a "possible"
-logical CPU id, which may not be online yet. It is the responsibility
-of the user to make sure that the CPU is online. The helper uses
-of_get_cpu_node() which uses arch specific backends to match the phyiscal
-ids.
+This adds support the AHCI-compliant Serial ATA controller present
+on MediaTek SoCs.
 
-Cc: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
-Changes since V3:
- - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
- - Return -ENODEV on failure than nr_cpus_id
----
- drivers/of/base.c  | 26 ++++++++++++++++++++++++++
- include/linux/of.h |  7 +++++++
- 2 files changed, 33 insertions(+)
+ drivers/ata/Kconfig    |  10 +++
+ drivers/ata/Makefile   |   1 +
+ drivers/ata/ahci_mtk.c | 196 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 207 insertions(+)
+ create mode 100644 drivers/ata/ahci_mtk.c
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 686628d..e8625ff 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -420,6 +420,32 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
- EXPORT_SYMBOL(of_get_cpu_node);
+diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+index 363fc53..488c937 100644
+--- a/drivers/ata/Kconfig
++++ b/drivers/ata/Kconfig
+@@ -153,6 +153,16 @@ config AHCI_CEVA
  
- /**
-+ * of_cpu_node_to_id: Get the logical CPU number for a given device_node
-+ *
-+ * @cpu_node: Pointer to the device_node for CPU.
-+ *
-+ * Returns the logical CPU number of the given CPU device_node.
-+ * Returns -ENODEV if the CPU is not found.
-+ */
-+int of_cpu_node_to_id(struct device_node *cpu_node)
-+{
-+	int cpu;
-+	bool found = false;
-+	struct device_node *np;
+ 	  If unsure, say N.
+ 
++config AHCI_MTK
++	tristate "MediaTek AHCI SATA support"
++	depends on ARCH_MEDIATEK
++	select MFD_SYSCON
++	help
++	  This option enables support for the MediaTek SoC's
++	  onboard AHCI SATA controller.
 +
-+	for_each_possible_cpu(cpu) {
-+		np = of_get_cpu_node(cpu, NULL);
-+		found = (cpu_node == np);
-+		of_node_put(np);
-+		if (found)
-+			return cpu;
++	  If unsure, say N.
++
+ config AHCI_MVEBU
+ 	tristate "Marvell EBU AHCI SATA support"
+ 	depends on ARCH_MVEBU
+diff --git a/drivers/ata/Makefile b/drivers/ata/Makefile
+index a26ef5a..ff9cd2e 100644
+--- a/drivers/ata/Makefile
++++ b/drivers/ata/Makefile
+@@ -17,6 +17,7 @@ obj-$(CONFIG_AHCI_CEVA)		+= ahci_ceva.o libahci.o libahci_platform.o
+ obj-$(CONFIG_AHCI_DA850)	+= ahci_da850.o libahci.o libahci_platform.o
+ obj-$(CONFIG_AHCI_DM816)	+= ahci_dm816.o libahci.o libahci_platform.o
+ obj-$(CONFIG_AHCI_IMX)		+= ahci_imx.o libahci.o libahci_platform.o
++obj-$(CONFIG_AHCI_MTK)		+= ahci_mtk.o libahci.o libahci_platform.o
+ obj-$(CONFIG_AHCI_MVEBU)	+= ahci_mvebu.o libahci.o libahci_platform.o
+ obj-$(CONFIG_AHCI_OCTEON)	+= ahci_octeon.o
+ obj-$(CONFIG_AHCI_SUNXI)	+= ahci_sunxi.o libahci.o libahci_platform.o
+diff --git a/drivers/ata/ahci_mtk.c b/drivers/ata/ahci_mtk.c
+new file mode 100644
+index 0000000..5bd3046
+--- /dev/null
++++ b/drivers/ata/ahci_mtk.c
+@@ -0,0 +1,196 @@
++/*
++ * MeidaTek AHCI SATA driver
++ *
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/ahci_platform.h>
++#include <linux/kernel.h>
++#include <linux/libata.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include "ahci.h"
++
++#define DRV_NAME		"ahci"
++
++#define SYS_CFG			0x14
++#define SYS_CFG_SATA_MSK	GENMASK(31, 30)
++#define SYS_CFG_SATA_EN		BIT(31)
++
++struct mtk_ahci_plat {
++	struct regmap *mode;
++	struct reset_control *axi_rst;
++	struct reset_control *sw_rst;
++	struct reset_control *reg_rst;
++};
++
++static const struct ata_port_info ahci_port_info = {
++	.flags		= AHCI_FLAG_COMMON,
++	.pio_mask	= ATA_PIO4,
++	.udma_mask	= ATA_UDMA6,
++	.port_ops	= &ahci_platform_ops,
++};
++
++static struct scsi_host_template ahci_platform_sht = {
++	AHCI_SHT(DRV_NAME),
++};
++
++static int mtk_ahci_platform_resets(struct ahci_host_priv *hpriv,
++				    struct device *dev)
++{
++	struct mtk_ahci_plat *plat = hpriv->plat_data;
++	int err;
++
++	/* reset AXI bus and PHY part */
++	plat->axi_rst = devm_reset_control_get_optional_exclusive(dev, "axi");
++	if (PTR_ERR(plat->axi_rst) == -EPROBE_DEFER)
++		return PTR_ERR(plat->axi_rst);
++
++	plat->sw_rst = devm_reset_control_get_optional_exclusive(dev, "sw");
++	if (PTR_ERR(plat->sw_rst) == -EPROBE_DEFER)
++		return PTR_ERR(plat->sw_rst);
++
++	plat->reg_rst = devm_reset_control_get_optional_exclusive(dev, "reg");
++	if (PTR_ERR(plat->reg_rst) == -EPROBE_DEFER)
++		return PTR_ERR(plat->reg_rst);
++
++	err = reset_control_assert(plat->axi_rst);
++	if (err) {
++		dev_err(dev, "assert axi bus failed\n");
++		return err;
 +	}
 +
-+	return -ENODEV;
++	err = reset_control_assert(plat->sw_rst);
++	if (err) {
++		dev_err(dev, "assert phy digital part failed\n");
++		return err;
++	}
++
++	err = reset_control_assert(plat->reg_rst);
++	if (err) {
++		dev_err(dev, "assert phy register part failed\n");
++		return err;
++	}
++
++	err = reset_control_deassert(plat->reg_rst);
++	if (err) {
++		dev_err(dev, "deassert phy register part failed\n");
++		return err;
++	}
++
++	err = reset_control_deassert(plat->sw_rst);
++	if (err) {
++		dev_err(dev, "deassert phy digital part failed\n");
++		return err;
++	}
++
++	err = reset_control_deassert(plat->axi_rst);
++	if (err) {
++		dev_err(dev, "deassert axi bus failed\n");
++		return err;
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL(of_cpu_node_to_id);
 +
-+/**
-  * __of_device_is_compatible() - Check if the node matches given constraints
-  * @device: pointer to node
-  * @compat: required compatible string, NULL or "" for any match
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 4a8a709..23cf02d 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -539,6 +539,8 @@ const char *of_prop_next_string(struct property *prop, const char *cur);
- 
- bool of_console_check(struct device_node *dn, char *name, int index);
- 
-+extern int of_cpu_node_to_id(struct device_node *np);
-+
- #else /* CONFIG_OF */
- 
- static inline void of_core_init(void)
-@@ -863,6 +865,11 @@ static inline void of_property_clear_flag(struct property *p, unsigned long flag
- {
- }
- 
-+static inline int of_cpu_node_to_id(struct device_node *np)
++static int mtk_ahci_parse_property(struct ahci_host_priv *hpriv,
++				   struct device *dev)
 +{
-+	return -ENODEV;
++	struct mtk_ahci_plat *plat = hpriv->plat_data;
++	struct device_node *np = dev->of_node;
++
++	/* enable SATA function if needed */
++	if (of_find_property(np, "mediatek,phy-mode", NULL)) {
++		plat->mode = syscon_regmap_lookup_by_phandle(
++					np, "mediatek,phy-mode");
++		if (IS_ERR(plat->mode)) {
++			dev_err(dev, "missing phy-mode phandle\n");
++			return PTR_ERR(plat->mode);
++		}
++
++		regmap_update_bits(plat->mode, SYS_CFG, SYS_CFG_SATA_MSK,
++				   SYS_CFG_SATA_EN);
++	}
++
++	of_property_read_u32(np, "ports-implemented", &hpriv->force_port_map);
++
++	return 0;
 +}
 +
- #define of_match_ptr(_ptr)	NULL
- #define of_match_node(_matches, _node)	NULL
- #endif /* CONFIG_OF */
++static int mtk_ahci_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct mtk_ahci_plat *plat;
++	struct ahci_host_priv *hpriv;
++	int err;
++
++	plat = devm_kzalloc(dev, sizeof(*plat), GFP_KERNEL);
++	if (!plat)
++		return -ENOMEM;
++
++	hpriv = ahci_platform_get_resources(pdev);
++	if (IS_ERR(hpriv))
++		return PTR_ERR(hpriv);
++
++	hpriv->plat_data = plat;
++
++	err = mtk_ahci_parse_property(hpriv, dev);
++	if (err)
++		return err;
++
++	err = mtk_ahci_platform_resets(hpriv, dev);
++	if (err)
++		return err;
++
++	err = ahci_platform_enable_resources(hpriv);
++	if (err)
++		return err;
++
++	err = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
++				      &ahci_platform_sht);
++	if (err)
++		goto disable_resources;
++
++	return 0;
++
++disable_resources:
++	ahci_platform_disable_resources(hpriv);
++	return err;
++}
++
++static SIMPLE_DEV_PM_OPS(ahci_pm_ops, ahci_platform_suspend,
++			 ahci_platform_resume);
++
++static const struct of_device_id ahci_of_match[] = {
++	{ .compatible = "mediatek,ahci", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ahci_of_match);
++
++static struct platform_driver mtk_ahci_driver = {
++	.probe = mtk_ahci_probe,
++	.remove = ata_platform_remove_one,
++	.driver = {
++		.name = DRV_NAME,
++		.of_match_table = ahci_of_match,
++		.pm = &ahci_pm_ops,
++	},
++};
++module_platform_driver(mtk_ahci_driver);
++
++MODULE_DESCRIPTION("MeidaTek SATA AHCI Driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.5
+1.9.1
