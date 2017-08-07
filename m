@@ -1,33 +1,42 @@
-From: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Subject: Re: [PATCH v6] MIPS: NI 169445 board support
-Date: Mon, 7 Aug 2017 23:36:03 +0200
-Message-ID: <20170807213603.GE3509@linux-mips.org>
-References: <1500402549-12090-1-git-send-email-nathan.sullivan@ni.com>
- <20170807152648.GA13214@linux-mips.org>
- <11583742.zienCqJRO5@np-p-burton>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 4/6] ARM64: dts: meson-gxbb: nanopi-k2: enable sdcard UHS modes
+Date: Mon, 07 Aug 2017 14:45:41 -0700
+Message-ID: <7ho9rrnjay.fsf@baylibre.com>
+References: <20170804180816.18737-1-jbrunet@baylibre.com>
+        <20170804180816.18737-5-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <11583742.zienCqJRO5@np-p-burton>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Nathan Sullivan <nathan.sullivan-acOepvfBmUk@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170804180816.18737-5-jbrunet@baylibre.com> (Jerome Brunet's
+        message of "Fri, 4 Aug 2017 20:08:14 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 10:24:05AM -0700, Paul Burton wrote:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> One possibility would be for us to split the board portions of vmlinux.its.S 
-> out into a file per-board, perhaps board-boston.its.S, board-ni169445.its.S 
-> etc. The build process would then have to concatenate the right files to 
-> generate the full image tree source.
-> 
-> Does that sound good to you?
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
-Yes, that sounds good.
+nit: missing changelog.
 
-  Ralf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> index 6b7495dc6014..5d59fd75cae7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> @@ -225,7 +225,10 @@
+>  
+>  	bus-width = <4>;
+>  	cap-sd-highspeed;
+> -	max-frequency = <100000000>;
+> +	sd-uhs-sdr12;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	max-frequency = <200000000>;
+>  	disable-wp;
+>  
+>  	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
