@@ -1,46 +1,31 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Mon, 7 Aug 2017 14:42:19 +0200
-Message-ID: <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com>
-References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v8 08/12] pinctrl: Add pinctrl driver for the RK805 PMIC
+Date: Mon, 7 Aug 2017 14:49:14 +0200
+Message-ID: <CACRpkdbrDdfU4fxpx2Yb2EFkx2Sw05CWnfK863f3-NwUmg3QQQ@mail.gmail.com>
+References: <1501762841-20262-1-git-send-email-chenjh@rock-chips.com> <1501763123-20486-1-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501758371-25316-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <1501763123-20486-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tao Huang <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Tony Xie <tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, David Wu <wdc-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 3, 2017 at 1:06 PM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+On Thu, Aug 3, 2017 at 2:25 PM, Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
 
-> This GPIO controller device is used on UniPhier SoCs.
+> RK805 is one of Rockchip PMICs family, it has 2 output only GPIOs.
 >
-> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-(...)
-> +static const u32 uniphier_gpio_irq_parent_hwirqs[] = {
-> +       80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95,
-> +       186, 187, 188, 189, 190, 249, 250, 251,
-> +};
-(..)
-> +               /* parent is UniPhier AIDET */
-> +               parent_fwspec.fwnode = domain->parent->fwnode;
-> +               parent_fwspec.param_count = 2;
-> +               parent_fwspec.param[0] = uniphier_gpio_irq_parent_hwirqs[hwirq];
-> +               parent_fwspec.param[1] = type;
-> +
-> +               ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
-> +                                                  &parent_fwspec);
+> This driver is also designed for other Rockchip PMICs to expend.
+> Different PMIC maybe have different pin features, for example,
+> RK816 has one pin which can be used for TS or GPIO(input/out).
+> The mainly difference between PMICs pins are pinmux, direction
+> and output value, that is 'struct rk805_pin_config'.
+>
+> Signed-off-by: Joseph Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-This is not right.
-
-That parent IRQ needs to come from the device tree, not from a static array
-like this, and it is definately to use hierarchical irqdomain.
-
-Please look at similar drivers merged recently for inspiration:
-gpio/gpio-xgene-sb.c
-pinctrl/stm32/pinctrl-stm32.c
+Looks good to me.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Yours,
 Linus Walleij
