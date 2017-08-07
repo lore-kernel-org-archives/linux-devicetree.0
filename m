@@ -1,283 +1,100 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH 3/3] irqchip: bcm2836: Move SMP startup code to arch/arm
-Date: Mon,  7 Aug 2017 00:32:11 +0200
-Message-ID: <1502058731-12462-4-git-send-email-stefan.wahren@i2se.com>
-References: <1502058731-12462-1-git-send-email-stefan.wahren@i2se.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: hisi: add PCIe host controller node for hip07
+ SoC
+Date: Mon, 7 Aug 2017 08:59:44 +0800
+Message-ID: <5987BB80.8060701@hisilicon.com>
+References: <1500366820-58555-1-git-send-email-wangzhou1@hisilicon.com>
+ <5984703A.4060302@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502058731-12462-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+In-Reply-To: <5984703A.4060302-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+To: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In order to easily provide SMP for BCM2837 on 32-bit and 64-bit
-the SMP startup code was placed in irq-bcm2836. That's not the
-right approach. So move this code where it belongs.
+On 2017/8/4 21:01, Wei Xu wrote:
+> Hi Zhou,
+> 
+> On 2017/7/18 9:33, Zhou Wang wrote:
+>> Add one PCIe host controller node for HiSilicon Hip07 SoC and enable it in
+>> D05 board.
+>>
+>> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/hisilicon/hip07-d05.dts |  4 ++++
+>>  arch/arm64/boot/dts/hisilicon/hip07.dtsi    | 21 +++++++++++++++++++++
+>>  2 files changed, 25 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+>> index f5d7f08..fe7c16c 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+>> +++ b/arch/arm64/boot/dts/hisilicon/hip07-d05.dts
+>> @@ -84,3 +84,7 @@
+>>  &sas1 {
+>>  	status = "ok";
+>>  };
+>> +
+>> +&p0_pcie2_a {
+>> +	status = "ok";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+>> index 283d7b5..077b2d7b 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
+>> @@ -1534,5 +1534,26 @@
+>>  				     <637 1>,<638 1>,<639 1>;
+>>  			status = "disabled";
+>>  		};
+>> +
+>> +		p0_pcie2_a: pcie@a00a0000 {
+>> +			compatible = "hisilicon,pcie-almost-ecam";
+> 
+> The compatible string should be "hisilicon,hip07-pcie-ecam".
 
-Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Fixes: 41f4988cc287 ("irqchip/bcm2836: Add SMP support for the 2836")
----
- arch/arm/mach-bcm/Makefile          |  3 ++
- arch/arm/mach-bcm/platsmp.c         | 35 ++++++++++++++++
- drivers/irqchip/irq-bcm2836.c       | 79 +------------------------------------
- include/linux/irqchip/irq-bcm2836.h | 70 ++++++++++++++++++++++++++++++++
- 4 files changed, 110 insertions(+), 77 deletions(-)
- create mode 100644 include/linux/irqchip/irq-bcm2836.h
+OK, I will modify this and resend it later.
 
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index 980f585..637cd9e 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -43,6 +43,9 @@ endif
- 
- # BCM2835
- obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
-+ifeq ($(CONFIG_ARCH_BCM2835),y)
-+obj-$(CONFIG_SMP)		+= platsmp.o
-+endif
- 
- # BCM5301X
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-diff --git a/arch/arm/mach-bcm/platsmp.c b/arch/arm/mach-bcm/platsmp.c
-index 9e3f275..3fa1a99 100644
---- a/arch/arm/mach-bcm/platsmp.c
-+++ b/arch/arm/mach-bcm/platsmp.c
-@@ -17,6 +17,7 @@
- #include <linux/errno.h>
- #include <linux/init.h>
- #include <linux/io.h>
-+#include <linux/irqchip/irq-bcm2836.h>
- #include <linux/jiffies.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-@@ -287,6 +288,35 @@ static int nsp_boot_secondary(unsigned int cpu, struct task_struct *idle)
- 	return ret;
- }
- 
-+static int bcm2836_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	void __iomem *intc_base;
-+	struct device_node *dn;
-+	char *name;
-+
-+	name = "brcm,bcm2836-l1-intc";
-+	dn = of_find_compatible_node(NULL, NULL, name);
-+	if (!dn) {
-+		pr_err("unable to find intc node\n");
-+		return -ENODEV;
-+	}
-+
-+	intc_base = of_iomap(dn, 0);
-+	of_node_put(dn);
-+
-+	if (!intc_base) {
-+		pr_err("unable to remap intc base register\n");
-+		return -ENOMEM;
-+	}
-+
-+	writel(virt_to_phys(secondary_startup),
-+	       intc_base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
-+
-+	iounmap(intc_base);
-+
-+	return 0;
-+}
-+
- static const struct smp_operations kona_smp_ops __initconst = {
- 	.smp_prepare_cpus	= bcm_smp_prepare_cpus,
- 	.smp_boot_secondary	= kona_boot_secondary,
-@@ -305,3 +335,8 @@ static const struct smp_operations nsp_smp_ops __initconst = {
- 	.smp_boot_secondary	= nsp_boot_secondary,
- };
- CPU_METHOD_OF_DECLARE(bcm_smp_nsp, "brcm,bcm-nsp-smp", &nsp_smp_ops);
-+
-+static const struct smp_operations bcm2836_smp_ops __initconst = {
-+	.smp_boot_secondary	= bcm2836_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(bcm_smp_bcm2836, "brcm,bcm2836-smp", &bcm2836_smp_ops);
-diff --git a/drivers/irqchip/irq-bcm2836.c b/drivers/irqchip/irq-bcm2836.c
-index e7463e3..cb4a6f5 100644
---- a/drivers/irqchip/irq-bcm2836.c
-+++ b/drivers/irqchip/irq-bcm2836.c
-@@ -19,62 +19,9 @@
- #include <linux/of_irq.h>
- #include <linux/irqchip.h>
- #include <linux/irqdomain.h>
--#include <asm/exception.h>
--
--#define LOCAL_CONTROL			0x000
--#define LOCAL_PRESCALER			0x008
-+#include <linux/irqchip/irq-bcm2836.h>
- 
--/*
-- * The low 2 bits identify the CPU that the GPU IRQ goes to, and the
-- * next 2 bits identify the CPU that the GPU FIQ goes to.
-- */
--#define LOCAL_GPU_ROUTING		0x00c
--/* When setting bits 0-3, enables PMU interrupts on that CPU. */
--#define LOCAL_PM_ROUTING_SET		0x010
--/* When setting bits 0-3, disables PMU interrupts on that CPU. */
--#define LOCAL_PM_ROUTING_CLR		0x014
--/*
-- * The low 4 bits of this are the CPU's timer IRQ enables, and the
-- * next 4 bits are the CPU's timer FIQ enables (which override the IRQ
-- * bits).
-- */
--#define LOCAL_TIMER_INT_CONTROL0	0x040
--/*
-- * The low 4 bits of this are the CPU's per-mailbox IRQ enables, and
-- * the next 4 bits are the CPU's per-mailbox FIQ enables (which
-- * override the IRQ bits).
-- */
--#define LOCAL_MAILBOX_INT_CONTROL0	0x050
--/*
-- * The CPU's interrupt status register.  Bits are defined by the the
-- * LOCAL_IRQ_* bits below.
-- */
--#define LOCAL_IRQ_PENDING0		0x060
--/* Same status bits as above, but for FIQ. */
--#define LOCAL_FIQ_PENDING0		0x070
--/*
-- * Mailbox write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-- * these bits are organized by mailbox number and then CPU number.  We
-- * use mailbox 0 for IPIs.  The mailbox's interrupt is raised while
-- * any bit is set.
-- */
--#define LOCAL_MAILBOX0_SET0		0x080
--#define LOCAL_MAILBOX3_SET0		0x08c
--/* Mailbox write-to-clear bits. */
--#define LOCAL_MAILBOX0_CLR0		0x0c0
--#define LOCAL_MAILBOX3_CLR0		0x0cc
--
--#define LOCAL_IRQ_CNTPSIRQ	0
--#define LOCAL_IRQ_CNTPNSIRQ	1
--#define LOCAL_IRQ_CNTHPIRQ	2
--#define LOCAL_IRQ_CNTVIRQ	3
--#define LOCAL_IRQ_MAILBOX0	4
--#define LOCAL_IRQ_MAILBOX1	5
--#define LOCAL_IRQ_MAILBOX2	6
--#define LOCAL_IRQ_MAILBOX3	7
--#define LOCAL_IRQ_GPU_FAST	8
--#define LOCAL_IRQ_PMU_FAST	9
--#define LAST_IRQ		LOCAL_IRQ_PMU_FAST
-+#include <asm/exception.h>
- 
- struct bcm2836_arm_irqchip_intc {
- 	struct irq_domain *domain;
-@@ -215,24 +162,6 @@ static int bcm2836_cpu_dying(unsigned int cpu)
- 					     cpu);
- 	return 0;
- }
--
--#ifdef CONFIG_ARM
--static int __init bcm2836_smp_boot_secondary(unsigned int cpu,
--					     struct task_struct *idle)
--{
--	unsigned long secondary_startup_phys =
--		(unsigned long)virt_to_phys((void *)secondary_startup);
--
--	writel(secondary_startup_phys,
--	       intc.base + LOCAL_MAILBOX3_SET0 + 16 * cpu);
--
--	return 0;
--}
--
--static const struct smp_operations bcm2836_smp_ops __initconst = {
--	.smp_boot_secondary	= bcm2836_smp_boot_secondary,
--};
--#endif
- #endif
- 
- static const struct irq_domain_ops bcm2836_arm_irqchip_intc_ops = {
-@@ -249,10 +178,6 @@ bcm2836_arm_irqchip_smp_init(void)
- 			  bcm2836_cpu_dying);
- 
- 	set_smp_cross_call(bcm2836_arm_irqchip_send_ipi);
--
--#ifdef CONFIG_ARM
--	smp_set_ops(&bcm2836_smp_ops);
--#endif
- #endif
- }
- 
-diff --git a/include/linux/irqchip/irq-bcm2836.h b/include/linux/irqchip/irq-bcm2836.h
-new file mode 100644
-index 0000000..218a6e1
---- /dev/null
-+++ b/include/linux/irqchip/irq-bcm2836.h
-@@ -0,0 +1,70 @@
-+/*
-+ * Root interrupt controller for the BCM2836 (Raspberry Pi 2).
-+ *
-+ * Copyright 2015 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define LOCAL_CONTROL			0x000
-+#define LOCAL_PRESCALER			0x008
-+
-+/*
-+ * The low 2 bits identify the CPU that the GPU IRQ goes to, and the
-+ * next 2 bits identify the CPU that the GPU FIQ goes to.
-+ */
-+#define LOCAL_GPU_ROUTING		0x00c
-+/* When setting bits 0-3, enables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_SET		0x010
-+/* When setting bits 0-3, disables PMU interrupts on that CPU. */
-+#define LOCAL_PM_ROUTING_CLR		0x014
-+/*
-+ * The low 4 bits of this are the CPU's timer IRQ enables, and the
-+ * next 4 bits are the CPU's timer FIQ enables (which override the IRQ
-+ * bits).
-+ */
-+#define LOCAL_TIMER_INT_CONTROL0	0x040
-+/*
-+ * The low 4 bits of this are the CPU's per-mailbox IRQ enables, and
-+ * the next 4 bits are the CPU's per-mailbox FIQ enables (which
-+ * override the IRQ bits).
-+ */
-+#define LOCAL_MAILBOX_INT_CONTROL0	0x050
-+/*
-+ * The CPU's interrupt status register.  Bits are defined by the the
-+ * LOCAL_IRQ_* bits below.
-+ */
-+#define LOCAL_IRQ_PENDING0		0x060
-+/* Same status bits as above, but for FIQ. */
-+#define LOCAL_FIQ_PENDING0		0x070
-+/*
-+ * Mailbox write-to-set bits.  There are 16 mailboxes, 4 per CPU, and
-+ * these bits are organized by mailbox number and then CPU number.  We
-+ * use mailbox 0 for IPIs.  The mailbox's interrupt is raised while
-+ * any bit is set.
-+ */
-+#define LOCAL_MAILBOX0_SET0		0x080
-+#define LOCAL_MAILBOX3_SET0		0x08c
-+/* Mailbox write-to-clear bits. */
-+#define LOCAL_MAILBOX0_CLR0		0x0c0
-+#define LOCAL_MAILBOX3_CLR0		0x0cc
-+
-+#define LOCAL_IRQ_CNTPSIRQ	0
-+#define LOCAL_IRQ_CNTPNSIRQ	1
-+#define LOCAL_IRQ_CNTHPIRQ	2
-+#define LOCAL_IRQ_CNTVIRQ	3
-+#define LOCAL_IRQ_MAILBOX0	4
-+#define LOCAL_IRQ_MAILBOX1	5
-+#define LOCAL_IRQ_MAILBOX2	6
-+#define LOCAL_IRQ_MAILBOX3	7
-+#define LOCAL_IRQ_GPU_FAST	8
-+#define LOCAL_IRQ_PMU_FAST	9
-+#define LAST_IRQ		LOCAL_IRQ_PMU_FAST
--- 
-2.7.4
+> 
+>> +			reg = <0 0xa8000000 0 0x800000>,<0 0xa00a0000 0 0x10000>;
+>> +			bus-range = <0x80 0x87>;
+>> +			msi-map = <0x8000 &p0_its_dsa_a 0x8000 0x800>;
+>> +			msi-map-mask = <0xffff>;
+>> +			#address-cells = <3>;
+>> +			#size-cells = <2>;
+>> +			device_type = "pci";
+>> +			dma-coherent;
+>> +			ranges = <0x02000000 0 0xa8800000 0 0xa8800000 0 0x77f0000
+>> +				  0x01000000 0 0 0 0xafff0000 0 0x10000>;
+> 
+> Can you also check whether the ranges are working or not with current UEFI?
+> Thanks!
+
+Sure.
+
+Thanks,
+Zhou
+
+> 
+> Best Regards,
+> Wei
+> 
+>> +			#interrupt-cells = <1>;
+>> +			interrupt-map-mask = <0xf800 0 0 7>;
+>> +			interrupt-map = <0x0 0 0 1 &mbigen_pcie2_a 671 4
+>> +					 0x0 0 0 2 &mbigen_pcie2_a 671 4
+>> +					 0x0 0 0 3 &mbigen_pcie2_a 671 4
+>> +					 0x0 0 0 4 &mbigen_pcie2_a 671 4>;
+>> +			status = "disabled";
+>> +		};
+>>  	};
+>>  };
+>>
+> 
+> 
+> .
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
