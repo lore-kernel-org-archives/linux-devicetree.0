@@ -1,50 +1,73 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 0/3] arm64 xilinx zynqmp firmware interface
-Date: Mon, 7 Aug 2017 08:09:32 +0200
-Message-ID: <1182e5f8-2588-32ff-8380-04273c28d1cd@xilinx.com>
-References: <cover.1501854302.git.michal.simek@xilinx.com>
- <34C9E6FB-A8CA-462F-8B10-3E15F9EC87D4@suse.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 0/8] omap*: Fixes/Cleanups for MMC devicetree node
+Date: Sun, 6 Aug 2017 23:48:14 -0700
+Message-ID: <20170807064813.GA5487@atomide.com>
+References: <20170607093749.15656-1-kishon@ti.com>
+ <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
+ <e9c1cce6-5d6d-3762-8a84-28f36fa3bc33@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <34C9E6FB-A8CA-462F-8B10-3E15F9EC87D4-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bharat Kumar Gogada <bharatku-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, yangbo lu <yangbo.lu-3arQi8VN3Tc@public.gmane.org>, =?UTF-8?Q?S=c3=b6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monst>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e9c1cce6-5d6d-3762-8a84-28f36fa3bc33@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5.8.2017 06:23, Alexander Graf wrote:
+* Kishon Vijay Abraham I <kishon@ti.com> [170803 04:20]:
+> Hi Tony.
 > 
+> On Thursday 08 June 2017 12:50 PM, Ulf Hansson wrote:
+> > On 7 June 2017 at 11:37, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >> There are the set of fixes that were sent initially as part
+> >> of [1].
+> >>
+> >> These are mostly fixes w.r.t populating regulators in
+> >> mmc dt node. It was working before because the regulators
+> >> connecting to the IO lines are always on regulators. This will
+> >> break once we add UHS support where voltage has to be changed
+> >> dynamically.
+> >>
+> >> It also includes a patch to replace all vmmc_aux-supply
+> >> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
+> >> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
+> >> This will break old dt compatibility but not sure how better
+> >> to handle this.
+> >>
+> >> Performed enumeration testing on dra72-evm-revc, dra72-evm,
+> >> dra7-evm, am572x-evm, am571x-idk, am572x-idk, omap5-evm,
+> >> pandaboard-es, am43xx-evm, am335x-evm, beagleboard etc.,
+> >>
+> >> This is a preparation series for adding UHS mode support in
+> >> the above mentioned platforms.
+> >>
+> >> Changes from v1:
+> >> *) Included a patch to replace deprecated "vmmc_aux" with
+> >>    "vqmmc"
 > 
->> Am 04.08.2017 um 15:45 schrieb Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>:
->>
->> Hi,
->>
->> xilinx is using this interface for very long time and we can't merge our
->> driver changes to Linux because of missing communication layer with
->> firmware. This interface was developed before scpi and scmi was
->> available. In connection to power management scpi and scmi are missing
->> pieces which we already use. There is a separate discussion how to
->> extend scmi to support all our use cases.
->> This simply patch is not adding any power management features but only
->> adding minimum functionality which are needed for drivers.
-> 
-> If you're thinking of changing the interface later down the road, wouldn't it make sense to probe EL3 for its existence? 
-You could then expose this interface on today's EL3 and something
-scpi/scmi based on tomorrow's.
+> Have you already merged this series in your for-next? I could see all the
+> patches except "ARM: dts: omap*: Replace deprecated "vmmc_aux" with "vqmmc" in
+> your for-next.
 
-Right now driver is checking pmu firmware version. Based on this it is
-clear how to communicate with it. The same checking could be there for
-ATF version. Both of these should tell you exactly what's the
-communication channel.
-If we decide to use scmi or any other implementation we will increase
-versions.
+Sorry it got delayed, I was planning to send it at -rc1 time but
+had a pending pull request for fixes that got delayed, and it's
+too late now until next merge window.
 
-Thanks,
-Michal
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Do you want me to resend the entire series or only "ARM: dts: omap*: Replace
+> deprecated "vmmc_aux" with "vqmmc"?
+
+Seems that the missing one is safe to apply now? If so, let me just
+take a look at that since I do have a branch already set up that
+I can use.
+
+Also, I was offline last week so I'll first have to check for any
+pending fixes that might need attention.
+
+> Please note having vqmmc property is required when we move to sdhci driver.
+
+OK
+
+Regards,
+
+Tony
