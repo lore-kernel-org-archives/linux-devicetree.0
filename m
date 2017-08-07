@@ -1,56 +1,62 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v4 2/5] dt-bindings: add binding for Sitronix ST7586 display
- panels
-Date: Mon,  7 Aug 2017 12:39:38 -0500
-Message-ID: <1502127581-10517-3-git-send-email-david@lechnology.com>
-References: <1502127581-10517-1-git-send-email-david@lechnology.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1502127581-10517-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH v4 0/5] Support for LEGO MINDSTORMS EV3 LCD display
+Date: Mon,  7 Aug 2017 12:39:36 -0500
+Message-ID: <1502127581-10517-1-git-send-email-david@lechnology.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+Cc: David Lechner <david@lechnology.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGEgbmV3IGJpbmRpbmcgZm9yIFNpdHJvbml4IFNUNzU4NiBkaXNwbGF5IHBhbmVs
-cy4KClVzaW5nIGxlZ28gYXMgdGhlIHZlbmRvciBwcmVmaXggaW4gdGhlIGNvbXBhdGlibGUgc3Ry
-aW5nIGJlY2F1c2UgdGhlIGRpc3BsYXkKcGFuZWwgSSBhbSB3b3JraW5nIHdpdGggaXMgYW4gaW50
-ZWdyYWwgcGFydCBvZiB0aGUgTEVHTyBNSU5EU1RPUk1TIEVWMy4KClNpZ25lZC1vZmYtYnk6IERh
-dmlkIExlY2huZXIgPGRhdmlkQGxlY2hub2xvZ3kuY29tPgotLS0KCnY0IGNoYW5nZXM6CiogRHJv
-cHBlZCBvcHRpb25hbCBwcm9wZXJ0aWVzIGFuZCBvbmx5IHVzZSBwaW5zIGFjdHVhbGx5IHVzZWQg
-b24gTEVHTyBFVjMuCiogUmVuYW1lIGRjIHRvIGEwIHNpbmNlIHRoYXQgaXMgd2hhdCBpcyBvbiB0
-aGUgZGF0YXNoZWV0L0xFR08gc2NoZW1hdGljLgoKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9zaXRy
-b25peCxzdDc1ODYudHh0ICAgICAgICAgICB8IDIyICsrKysrKysrKysrKysrKysrKysrKysKIDEg
-ZmlsZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc2l0cm9uaXgsc3Q3NTg2LnR4dAoK
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Np
-dHJvbml4LHN0NzU4Ni50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9zaXRyb25peCxzdDc1ODYudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAw
-MDAuLjFkMGRhZDEKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9zaXRyb25peCxzdDc1ODYudHh0CkBAIC0wLDAgKzEsMjIgQEAKK1Np
-dHJvbml4IFNUNzU4NiBkaXNwbGF5IHBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNv
-bXBhdGlibGU6CSJsZWdvLGV2My1sY2QiLgorLSBhMC1ncGlvczoJVGhlIEEwIHNpZ25hbCAoc2lu
-Y2UgdGhpcyBiaW5kaW5nIGlzIGZvciBzZXJpYWwgbW9kZSwgdGhpcyBpcworICAgICAgICAgICAg
-ICAgIHRoZSBwaW4gbGFiZWxlZCBEMSBvbiB0aGUgY29udHJvbGxlciwgbm90IHRoZSBwaW4gbGFi
-ZWxlZCBBMCkKKy0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgorCitUaGUgbm9kZSBmb3IgdGhpcyBk
-cml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29udHJvbGxlciwgaGVuY2UKK2Fs
-bCBtYW5kYXRvcnkgcHJvcGVydGllcyBkZXNjcmliZWQgaW4gLi4vc3BpL3NwaS1idXMudHh0IG11
-c3QgYmUgc3BlY2lmaWVkLgorCitPcHRpb25hbCBwcm9wZXJ0aWVzOgorLSByb3RhdGlvbjoJcGFu
-ZWwgcm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQor
-CitFeGFtcGxlOgorCWRpc3BsYXlAMHsKKwkJY29tcGF0aWJsZSA9ICJsZWdvLGV2My1sY2QiOwor
-CQlyZWcgPSA8MD47CisJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwMDAwMDAwPjsKKwkJYTAtZ3Bp
-b3MgPSA8JmdwaW8gNDMgR1BJT19BQ1RJVkVfSElHSD47CisJCXJlc2V0LWdwaW9zID0gPCZncGlv
-IDgwIEdQSU9fQUNUSVZFX0hJR0g+OworCX07Ci0tIAoyLjcuNAoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The goal of this series is to get the built-in LCD of the LEGO MINDSTORMS EV3
+working.
+
+v2 changes:
+* Wrote a new driver for ST7586 instead of combining it with existing drivers
+* Don't touch MIPI DBI code (other than the patch suggested by Noralf)
+* New defconfig patch
+
+v3 changes:
+* New patch to generalize tinydrm_xrgb8888_to_gray8() so that it can be reused.
+* Device tree bindings in separate patch.
+* Fixed incorrect device tree binding pin descriptions.
+* Added MAINTAINERS entry for drivers/gpu/drm/tinydrm/st7586.c.
+* Removed "mipi_dbi_" from function names in st7586.c.
+* Moved init and fini to pipe_enable and pipe_disable ops.
+* Dropped RGB565 format.
+* Made adjustments for the fact the controller cannot be read via SPI.
+* Dropped st7586.h - values moved into st7586.c.
+
+v4 changes:
+* Dropped patch "drm/tinydrm: remove call to mipi_dbi_init()
+  from mipi_dbi_spi_init()" since it has been applied.
+* correct order for MAINTAINERS entry
+* Drop code/dt bindings not used by LEGO EV3 (regulator, backlight, etc)
+* Make gpios required
+* Use lookup table for pixel packing algorithm
+* Don't modify clip when used as function parameter
+* Rename dc to a0 since that is what is on the datasheet/LEGO schematic.
+
+David Lechner (5):
+  drm/tinydrm: Generalize tinydrm_xrgb8888_to_gray8()
+  dt-bindings: add binding for Sitronix ST7586 display panels
+  drm/tinydrm: add support for LEGO MINDSTORMS EV3 LCD
+  ARM: dts: da850-lego-ev3: Add node for LCD display
+  ARM: davinci_all_defconfig: enable tinydrm and ST7586
+
+ .../bindings/display/sitronix,st7586.txt           |  22 ++
+ MAINTAINERS                                        |   6 +
+ arch/arm/boot/dts/da850-lego-ev3.dts               |  24 ++
+ arch/arm/configs/davinci_all_defconfig             |   2 +
+ drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
+ drivers/gpu/drm/tinydrm/Makefile                   |   1 +
+ drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c     |  42 +-
+ drivers/gpu/drm/tinydrm/repaper.c                  |  28 +-
+ drivers/gpu/drm/tinydrm/st7586.c                   | 428 +++++++++++++++++++++
+ include/drm/tinydrm/tinydrm-helpers.h              |   3 +-
+ 10 files changed, 534 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7586.txt
+ create mode 100644 drivers/gpu/drm/tinydrm/st7586.c
+
+-- 
+2.7.4
