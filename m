@@ -1,62 +1,46 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH v4 0/5] Support for LEGO MINDSTORMS EV3 LCD display
-Date: Mon,  7 Aug 2017 12:39:36 -0500
-Message-ID: <1502127581-10517-1-git-send-email-david@lechnology.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v4 4/5] ARM: dts: da850-lego-ev3: Add node for LCD display
+Date: Mon,  7 Aug 2017 12:39:40 -0500
+Message-ID: <1502127581-10517-5-git-send-email-david@lechnology.com>
+References: <1502127581-10517-1-git-send-email-david@lechnology.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1502127581-10517-1-git-send-email-david@lechnology.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: David Lechner <david@lechnology.com>, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>, Daniel Vetter <daniel@ffwll.ch>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The goal of this series is to get the built-in LCD of the LEGO MINDSTORMS EV3
-working.
-
-v2 changes:
-* Wrote a new driver for ST7586 instead of combining it with existing drivers
-* Don't touch MIPI DBI code (other than the patch suggested by Noralf)
-* New defconfig patch
-
-v3 changes:
-* New patch to generalize tinydrm_xrgb8888_to_gray8() so that it can be reused.
-* Device tree bindings in separate patch.
-* Fixed incorrect device tree binding pin descriptions.
-* Added MAINTAINERS entry for drivers/gpu/drm/tinydrm/st7586.c.
-* Removed "mipi_dbi_" from function names in st7586.c.
-* Moved init and fini to pipe_enable and pipe_disable ops.
-* Dropped RGB565 format.
-* Made adjustments for the fact the controller cannot be read via SPI.
-* Dropped st7586.h - values moved into st7586.c.
-
-v4 changes:
-* Dropped patch "drm/tinydrm: remove call to mipi_dbi_init()
-  from mipi_dbi_spi_init()" since it has been applied.
-* correct order for MAINTAINERS entry
-* Drop code/dt bindings not used by LEGO EV3 (regulator, backlight, etc)
-* Make gpios required
-* Use lookup table for pixel packing algorithm
-* Don't modify clip when used as function parameter
-* Rename dc to a0 since that is what is on the datasheet/LEGO schematic.
-
-David Lechner (5):
-  drm/tinydrm: Generalize tinydrm_xrgb8888_to_gray8()
-  dt-bindings: add binding for Sitronix ST7586 display panels
-  drm/tinydrm: add support for LEGO MINDSTORMS EV3 LCD
-  ARM: dts: da850-lego-ev3: Add node for LCD display
-  ARM: davinci_all_defconfig: enable tinydrm and ST7586
-
- .../bindings/display/sitronix,st7586.txt           |  22 ++
- MAINTAINERS                                        |   6 +
- arch/arm/boot/dts/da850-lego-ev3.dts               |  24 ++
- arch/arm/configs/davinci_all_defconfig             |   2 +
- drivers/gpu/drm/tinydrm/Kconfig                    |  10 +
- drivers/gpu/drm/tinydrm/Makefile                   |   1 +
- drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c     |  42 +-
- drivers/gpu/drm/tinydrm/repaper.c                  |  28 +-
- drivers/gpu/drm/tinydrm/st7586.c                   | 428 +++++++++++++++++++++
- include/drm/tinydrm/tinydrm-helpers.h              |   3 +-
- 10 files changed, 534 insertions(+), 32 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/sitronix,st7586.txt
- create mode 100644 drivers/gpu/drm/tinydrm/st7586.c
-
--- 
-2.7.4
+VGhpcyBhZGRzIGEgbmV3IG5vZGUgZm9yIHRoZSBMRUdPIE1JTkRTVE9STVMgRVYzIExDRCBkaXNw
+bGF5LgoKU2lnbmVkLW9mZi1ieTogRGF2aWQgTGVjaG5lciA8ZGF2aWRAbGVjaG5vbG9neS5jb20+
+Ci0tLQoKdjQgY2hhbmdlczoKKiBjaGFuZ2VkIGRjIHRvIGEwCgogYXJjaC9hcm0vYm9vdC9kdHMv
+ZGE4NTAtbGVnby1ldjMuZHRzIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUg
+Y2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2RhODUwLWxlZ28tZXYzLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWxlZ28tZXYzLmR0
+cwppbmRleCA0NTk4M2MwLi40MTNkYmQ1IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9k
+YTg1MC1sZWdvLWV2My5kdHMKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGVnby1ldjMu
+ZHRzCkBAIC0yNDksNiArMjQ5LDE1IEBACiAJCQkweDRjIDB4MDAwMDAwODAgMHgwMDAwMDBmMAog
+CQk+OwogCX07CisKKwlldjNfbGNkX3BpbnM6IHBpbm11eF9sY2QgeworCQlwaW5jdHJsLXNpbmds
+ZSxiaXRzID0gPAorCQkJLyogU0lNTywgR1AyWzExXSwgR1AyWzEyXSwgQ0xLICovCisJCQkweDE0
+IDB4MDAxODgxMDAgMHgwMGZmZmYwMAorCQkJLyogR1A1WzBdICovCisJCQkweDMwIDB4ODAwMDAw
+MDAgMHhmMDAwMDAwMAorCQk+OworCX07CiB9OwogCiAmcGluY29uZiB7CkBAIC0zNTcsNiArMzY2
+LDIxIEBACiAJfTsKIH07CiAKKyZzcGkxIHsKKwlzdGF0dXMgPSAib2theSI7CisJcGluY3RybC0w
+ID0gPCZldjNfbGNkX3BpbnM+OworCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJY3MtZ3Bp
+b3MgPSA8JmdwaW8gNDQgR1BJT19BQ1RJVkVfTE9XPjsKKworCWRpc3BsYXlAMHsKKwkJY29tcGF0
+aWJsZSA9ICJsZWdvLGV2My1sY2QiOworCQlyZWcgPSA8MD47CisJCXNwaS1tYXgtZnJlcXVlbmN5
+ID0gPDEwMDAwMDAwPjsKKwkJYTAtZ3Bpb3MgPSA8JmdwaW8gNDMgR1BJT19BQ1RJVkVfSElHSD47
+CisJCXJlc2V0LWdwaW9zID0gPCZncGlvIDgwIEdQSU9fQUNUSVZFX0hJR0g+OworCX07Cit9Owor
+CiAmZWhycHdtMCB7CiAJc3RhdHVzID0gIm9rYXkiOwogfTsKLS0gCjIuNy40CgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
