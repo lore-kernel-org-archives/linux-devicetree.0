@@ -1,32 +1,42 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm64: dts: mt2712: add pintcrl device node.
-Date: Mon, 7 Aug 2017 14:09:01 +0200
-Message-ID: <CACRpkda7suMXejCjLB_GVKrr5imMNQB1B5kgXt+WLhAcfrPEYQ@mail.gmail.com>
-References: <1501489333-23145-1-git-send-email-zhiyong.tao@mediatek.com> <1501489333-23145-3-git-send-email-zhiyong.tao@mediatek.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 16/18] hwmon: add support for sensors exported via ARM
+ SCMI
+Date: Mon, 7 Aug 2017 13:25:14 +0100
+Message-ID: <20e0a388-79a1-a7f1-57b4-fa5993eed9bf@arm.com>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-17-git-send-email-sudeep.holla@arm.com>
+ <20170804193231.GA18153@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501489333-23145-3-git-send-email-zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, "Joe.C" <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Biao Huang <biao.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Hongzhou Yang <hongzhou.yang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170804193231.GA18153@roeck-us.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-hwmon@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 31, 2017 at 10:22 AM, Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 
-> The commit includes two change:
-> 1)add pintcrl device node for mt2712.
-> 2)add pinfunc file for mt2712.
->
-> Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 04/08/17 20:32, Guenter Roeck wrote:
+> On Fri, Aug 04, 2017 at 03:31:42PM +0100, Sudeep Holla wrote:
 
-Please take this through the ARM SoC tree.
+[...]
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +	platform_set_drvdata(pdev, scmi_sensors);
+>> +
+>> +	hwdev = devm_hwmon_device_register_with_groups(dev, "scmi_sensors",
+>> +						       scmi_sensors,
+>> +						       scmi_sensors->groups);
+> 
+> Can you rework this to use devm_hwmon_device_register_with_info(),
+> and if possible let it handle the thermal registration ? 
+> 
+
+Thanks for the pointers. I will check on the possibility and use it if
+possible.
+
+-- 
+Regards,
+Sudeep
