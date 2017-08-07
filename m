@@ -1,35 +1,50 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: 74x164: Introduce 'enable-gpios' property
-Date: Mon, 7 Aug 2017 13:17:49 -0500
-Message-ID: <CAL_JsqJMZ76e84pA8V7dCwGix_j-kkAoNoR0D6P9t1uXrBJeEw@mail.gmail.com>
-References: <1502109710-31624-1-git-send-email-festevam@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of_mdio: use of_property_read_u32_array()
+Date: Mon, 7 Aug 2017 13:44:59 -0500
+Message-ID: <CAL_JsqLwZogY7n3+uEyGzDbKLv3DmOBAFKgML4XeJiF8Qvzq7A@mail.gmail.com>
+References: <20170804214354.351406407@cogentembedded.com> <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
+ <080ebcb6-b5aa-63db-176b-83477c2540e5@cogentembedded.com> <f9af35a3-bb53-c554-eb6e-93cf6c24cb29@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502109710-31624-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f9af35a3-bb53-c554-eb6e-93cf6c24cb29@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Andrew Lunn <andrew@lunn.ch>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Please send bindings to the DT list.
+On Mon, Aug 7, 2017 at 1:01 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 08/07/2017 09:18 AM, Sergei Shtylyov wrote:
+>> Hello!
+>>
+>> On 08/07/2017 05:18 PM, Rob Herring wrote:
+>>
+>>>> The "fixed-link" prop support predated of_property_read_u32_array(), so
+>>>> basically had to open-code it. Using the modern API saves 24 bytes of
+>>>> the
+>>>> object code (ARM gcc 4.8.5); the only behavior change would be that the
+>>>> prop length check is now less strict (however the strict pre-check done
+>>>> in of_phy_is_fixed_link() is left intact anyway)...
+>>>>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>
+>>>> ---
+>>>> The patch is against the 'dt/next' branch of Rob Herring's
+>>>> 'linux-git' repo
+>>>> plus the previously posted patch killing the useless local variable in
+>>>> of_phy_register_fixed_link().
+>>>
+>>> It shouldn't depend on anything in my tree and David normally takes
+>>> of_mdio.c changes.
+>>
+>>    MAINTAINERS still only point at the DT repo, perhaps it should be
+>> updated?
+>
+> More or less done with this (minus the repo part):
+>
+> http://patchwork.ozlabs.org/patch/795887/
 
-On Mon, Aug 7, 2017 at 7:41 AM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->
-> 74HC595 has an /OE (output enable) pin that can be controlled by a GPIO.
->
-> Introduce an optional property called 'enable-gpios' that allows
-> controlling the /OE pin.
->
-> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/gpio/gpio-74x164.txt |  3 +++
->  drivers/gpio/gpio-74x164.c                             | 10 ++++++++++
->  2 files changed, 13 insertions(+)
+Really I'd like to see this fixed by moving of_mdio.c and of_net.c to
+drivers/net/ as we've done for all other subsystems.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
