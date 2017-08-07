@@ -1,97 +1,110 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V4 3/6] iommu/arm-smmu: Invoke pm_runtime during probe,
- add/remove device
-Date: Mon, 7 Aug 2017 13:57:35 +0530
-Message-ID: <CAFp+6iH-WR4gNExaOBfnwy7GG7DXrjdytPvnMHNmo64YQZdQWQ@mail.gmail.com>
-References: <1499333825-7658-1-git-send-email-vivek.gautam@codeaurora.org>
- <1499333825-7658-4-git-send-email-vivek.gautam@codeaurora.org>
- <20170712225459.GZ22780@codeaurora.org> <5ee0bacd-e557-a6c4-a897-844fb12ea6ae@codeaurora.org>
- <4dbc938c-ac88-9bd4-cf00-458008ae24c1@codeaurora.org> <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA@mail.gmail.com>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 15/17] ASoC: cs47l35: Add codec driver
+ for Cirrus Logic CS47L35
+Date: Mon, 7 Aug 2017 09:32:19 +0100
+Message-ID: <1502094739.5479.21.camel@rf-debian.wolfsonmicro.main>
+References: <201707300644.LqBZNeVM%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAF6AEGsFOtsOjt1sLNPSFLEcu-7d1zxCOhTeC+P8e0TDbb1dSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <201707300644.LqBZNeVM%fengguang.wu@intel.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, broonie@kernel.org, lee.jones@linaro.org
+Cc: linux-gpio@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 13, 2017 at 5:20 PM, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jul 13, 2017 at 1:35 AM, Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> Hi Vivek,
->>
->> On 7/13/2017 10:43 AM, Vivek Gautam wrote:
->>> Hi Stephen,
->>>
->>>
->>> On 07/13/2017 04:24 AM, Stephen Boyd wrote:
->>>> On 07/06, Vivek Gautam wrote:
->>>>> @@ -1231,12 +1237,18 @@ static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
->>>>>   static size_t arm_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
->>>>>                    size_t size)
->>>>>   {
->>>>> -    struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
->>>>> +    struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->>>>> +    struct io_pgtable_ops *ops = smmu_domain->pgtbl_ops;
->>>>> +    size_t ret;
->>>>>         if (!ops)
->>>>>           return 0;
->>>>>   -    return ops->unmap(ops, iova, size);
->>>>> +    pm_runtime_get_sync(smmu_domain->smmu->dev);
->>>> Can these map/unmap ops be called from an atomic context? I seem
->>>> to recall that being a problem before.
->>>
->>> That's something which was dropped in the following patch merged in master:
->>> 523d7423e21b iommu/arm-smmu: Remove io-pgtable spinlock
->>>
->>> Looks like we don't  need locks here anymore?
->>
->>  Apart from the locking, wonder why a explicit pm_runtime is needed
->>  from unmap. Somehow looks like some path in the master using that
->>  should have enabled the pm ?
->>
->
-> Yes, there are a bunch of scenarios where unmap can happen with
-> disabled master (but not in atomic context).
+On Sun, 2017-07-30 at 07:01 +0800, kbuild test robot wrote:
+> Hi Richard,
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.13-rc2 next-20170728]
+> [cannot apply to ljones-mfd/for-mfd-next asoc/for-next]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Richard-Fitzgerald/Add-support-for-Cirrus-Logic-CS47L35-L85-L90-L91-codecs/20170730-062737
+> config: x86_64-allmodconfig (attached as .config)
+> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> Note: the linux-review/Richard-Fitzgerald/Add-support-for-Cirrus-Logic-CS47L35-L85-L90-L91-codecs/20170730-062737 HEAD 15487144eec6910ecfbbbbd97bb5a2c7efdb259f builds fine.
+>       It only hurts bisectibility.
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> sound/soc//codecs/madera.c:146:2: error: 'MADERA_IRQ_DSP1_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP1_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:147:2: error: 'MADERA_IRQ_DSP2_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP2_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:148:2: error: 'MADERA_IRQ_DSP3_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP3_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:149:2: error: 'MADERA_IRQ_DSP4_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP4_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:150:2: error: 'MADERA_IRQ_DSP5_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP5_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:151:2: error: 'MADERA_IRQ_DSP6_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP6_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> >> sound/soc//codecs/madera.c:152:2: error: 'MADERA_IRQ_DSP7_BUS_ERROR' undeclared here (not in a function)
+>      MADERA_IRQ_DSP7_BUS_ERROR,
+>      ^~~~~~~~~~~~~~~~~~~~~~~~~
+> 
 
-I would like to understand whether there is a situation where an unmap is
-called in atomic context without an enabled master?
+Oops. The rename of these somehow got merged into the top patch instead
+of going into #14 where it should be. I'll wait a while and see what
+comments I get on the earlier patches, maybe they will all be accepted
+for merge and then I'll only have to reissue the top 4 patches to fix
+this.
 
-Let's say we have the case where all the unmap calls in atomic context happen
-only from the master's context (in which case the device link should
-take care of
-the pm state of smmu), and the only unmap that happen in non-atomic context
-is the one with master disabled. In such a case doesn it make sense to
-distinguish
-the atomic/non-atomic context and add pm_runtime_get_sync()/put_sync() only
-for the non-atomic context since that would be the one with master disabled.
-
-
-Thanks
-Vivek
-
-> On the gpu side we
-> opportunistically keep a buffer mapping until the buffer is freed
-> (which can happen after gpu is disabled).  Likewise, v4l2 won't unmap
-> an exported dmabuf while some other driver holds a reference to it
-> (which can be dropped when the v4l2 device is suspended).
->
-> Since unmap triggers tbl flush which touches iommu regs, the iommu
-> driver *definitely* needs a pm_runtime_get_sync().
->
-> BR,
-> -R
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> vim +/MADERA_IRQ_DSP1_BUS_ERROR +146 sound/soc//codecs/madera.c
+> 
+> da1efc4cc Richard Fitzgerald 2017-07-28  130  
+> da1efc4cc Richard Fitzgerald 2017-07-28  131  #define madera_fll_err(_fll, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  132  	dev_err(_fll->madera->dev, "FLL%d: " fmt, _fll->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  133  #define madera_fll_warn(_fll, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  134  	dev_warn(_fll->madera->dev, "FLL%d: " fmt, _fll->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  135  #define madera_fll_dbg(_fll, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  136  	dev_dbg(_fll->madera->dev, "FLL%d: " fmt, _fll->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  137  
+> da1efc4cc Richard Fitzgerald 2017-07-28  138  #define madera_aif_err(_dai, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  139  	dev_err(_dai->dev, "AIF%d: " fmt, _dai->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  140  #define madera_aif_warn(_dai, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  141  	dev_warn(_dai->dev, "AIF%d: " fmt, _dai->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  142  #define madera_aif_dbg(_dai, fmt, ...) \
+> da1efc4cc Richard Fitzgerald 2017-07-28  143  	dev_dbg(_dai->dev, "AIF%d: " fmt, _dai->id, ##__VA_ARGS__)
+> da1efc4cc Richard Fitzgerald 2017-07-28  144  
+> da1efc4cc Richard Fitzgerald 2017-07-28  145  static const int madera_dsp_bus_error_irqs[MADERA_MAX_ADSP] = {
+> da1efc4cc Richard Fitzgerald 2017-07-28 @146  	MADERA_IRQ_DSP1_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @147  	MADERA_IRQ_DSP2_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @148  	MADERA_IRQ_DSP3_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @149  	MADERA_IRQ_DSP4_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @150  	MADERA_IRQ_DSP5_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @151  	MADERA_IRQ_DSP6_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28 @152  	MADERA_IRQ_DSP7_BUS_ERROR,
+> da1efc4cc Richard Fitzgerald 2017-07-28  153  };
+> da1efc4cc Richard Fitzgerald 2017-07-28  154  
+> 
+> :::::: The code at line 146 was first introduced by commit
+> :::::: da1efc4cc715281f9599274bb5ff408b19cd3335 ASoC: madera: Add common support for Cirrus Logic Madera codecs
+> 
+> :::::: TO: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> :::::: CC: 0day robot <fengguang.wu@intel.com>
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
