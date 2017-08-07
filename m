@@ -1,155 +1,204 @@
-From: Vinay Simha B N <simhavcs@gmail.com>
-Subject: Re: [PATCH] power: smb347-charger: Summit SMB358 charger IC
-Date: Mon, 7 Aug 2017 12:22:57 +0530
-Message-ID: <CAGWqDJ5B9ypdK4rNqdcVCiyzPpbJ0DsYKAydU1JJ+-BmcpW5cQ@mail.gmail.com>
-References: <1501613430-24508-1-git-send-email-simhavcs@gmail.com> <201708030521.CLrgdI2G%fengguang.wu@intel.com>
+From: Peter Robinson <pbrobinson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] Bluetooth: hci_bcm: Add serdev support
+Date: Mon, 7 Aug 2017 07:58:25 +0100
+Message-ID: <CALeDE9MWoNsiJqVhy_+FnbSKUGmikriqty5nrFd8V8ZtRYmTrA@mail.gmail.com>
+References: <1501495414-17103-1-git-send-email-loic.poulain@gmail.com> <1501495414-17103-2-git-send-email-loic.poulain@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201708030521.CLrgdI2G%fengguang.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: kbuild-all@01.org, John Stultz <john.stultz@linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1501495414-17103-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-In the config attached. CONFIG_GPIOLIB is not set. please set and recompile
-
-fyi,
-devm_gpiod_get() declared in drivers/gpio/devres.c -> CONFIG_GPIOLIB
-
-On Thu, Aug 3, 2017 at 3:28 AM, kbuild test robot <lkp@intel.com> wrote:
+On Mon, Jul 31, 2017 at 11:03 AM, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add basic support for Broadcom serial slave devices.
+> Probe the serial device, retrieve its maximum speed and
+> register a new hci uart device.
 >
-> Hi Vinay,
+> Tested/compatible with bcm43438 (RPi3).
 >
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.13-rc3 next-20170802]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Vinay-Simha-BN/power-smb347-charger-Summit-SMB358-charger-IC/20170802-054147
-> config: x86_64-randconfig-b0-08030519 (attached as .config)
-> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=x86_64
->
-> All errors (new ones prefixed by >>):
->
->    drivers/power/supply/smb347-charger.c: In function 'smb347_probe':
-> >> drivers/power/supply/smb347-charger.c:1341:24: error: implicit declaration of function 'devm_gpiod_get' [-Werror=implicit-function-declaration]
->      smb->pdata->en_gpio = devm_gpiod_get(dev, "en", GPIOD_OUT_HIGH);
->                            ^~~~~~~~~~~~~~
-> >> drivers/power/supply/smb347-charger.c:1341:50: error: 'GPIOD_OUT_HIGH' undeclared (first use in this function)
->      smb->pdata->en_gpio = devm_gpiod_get(dev, "en", GPIOD_OUT_HIGH);
->                                                      ^~~~~~~~~~~~~~
->    drivers/power/supply/smb347-charger.c:1341:50: note: each undeclared identifier is reported only once for each function it appears in
->    cc1: some warnings being treated as errors
->
-> vim +/devm_gpiod_get +1341 drivers/power/supply/smb347-charger.c
->
->   1273
->   1274  static int smb347_probe(struct i2c_client *client,
->   1275                          const struct i2c_device_id *id)
->   1276  {
->   1277          struct power_supply_config mains_usb_cfg = {}, battery_cfg = {};
->   1278          struct device *dev = &client->dev;
->   1279          struct smb347_charger *smb;
->   1280          int ret;
->   1281
->   1282          smb = devm_kzalloc(dev, sizeof(*smb), GFP_KERNEL);
->   1283          if (!smb)
->   1284                  return -ENOMEM;
->   1285
->   1286          smb->pdata = smb347_get_platdata(dev);
->   1287          if (IS_ERR_OR_NULL(smb->pdata))
->   1288                  return -ENODEV;
->   1289
->   1290          if (!smb->pdata->use_mains && !smb->pdata->use_usb)
->   1291                  return -EINVAL;
->   1292
->   1293          i2c_set_clientdata(client, smb);
->   1294
->   1295          mutex_init(&smb->lock);
->   1296          smb->id = id->driver_data;
->   1297          smb->dev = &client->dev;
->   1298
->   1299          smb->regmap = devm_regmap_init_i2c(client, &smb347_regmap);
->   1300          if (IS_ERR(smb->regmap))
->   1301                  return PTR_ERR(smb->regmap);
->   1302
->   1303          ret = smb347_hw_init(smb);
->   1304          if (ret < 0)
->   1305                  return ret;
->   1306
->   1307          mains_usb_cfg.supplied_to = battery;
->   1308          mains_usb_cfg.num_supplicants = ARRAY_SIZE(battery);
->   1309          mains_usb_cfg.drv_data = smb;
->   1310          if (smb->pdata->use_mains) {
->   1311                  smb->mains = power_supply_register(dev, &smb347_mains_desc,
->   1312                                                     &mains_usb_cfg);
->   1313                  if (IS_ERR(smb->mains))
->   1314                          return PTR_ERR(smb->mains);
->   1315          }
->   1316
->   1317          if (smb->pdata->use_usb) {
->   1318                  smb->usb = power_supply_register(dev, &smb347_usb_desc,
->   1319                                                   &mains_usb_cfg);
->   1320                  if (IS_ERR(smb->usb)) {
->   1321                          if (smb->pdata->use_mains)
->   1322                                  power_supply_unregister(smb->mains);
->   1323                          return PTR_ERR(smb->usb);
->   1324                  }
->   1325          }
->   1326
->   1327          battery_cfg.drv_data = smb;
->   1328          smb->battery = power_supply_register(dev, &smb347_battery_desc,
->   1329                                               &battery_cfg);
->   1330          if (IS_ERR(smb->battery)) {
->   1331                  if (smb->pdata->use_usb)
->   1332                          power_supply_unregister(smb->usb);
->   1333                  if (smb->pdata->use_mains)
->   1334                          power_supply_unregister(smb->mains);
->   1335                  return PTR_ERR(smb->battery);
->   1336          }
->   1337
->   1338          /*
->   1339           * EN - enable input can be controlled by i2c or gpio.
->   1340           */
-> > 1341          smb->pdata->en_gpio = devm_gpiod_get(dev, "en", GPIOD_OUT_HIGH);
->   1342          if (IS_ERR(smb->pdata->en_gpio)) {
->   1343                  ret = PTR_ERR(smb->pdata->en_gpio);
->   1344                  dev_err(dev, "cannot get en-gpio %d\n", ret);
->   1345                  dev_dbg(smb->dev, "charging enable/disable in SW enabled\n");
->   1346
->   1347                  smb->pdata->enable_control = SMB347_CHG_ENABLE_SW;
->   1348          } else {
->   1349                  smb->pdata->enable_control = SMB347_CHG_ENABLE_PIN_ACTIVE_HIGH;
->   1350          }
->   1351
->   1352          /*
->   1353           * Interrupt pin is optional. If it is connected, we setup the
->   1354           * interrupt support here.
->   1355           */
->   1356          if (smb->pdata->irq_gpio >= 0) {
->   1357                  ret = smb347_irq_init(smb, client);
->   1358                  if (ret < 0) {
->   1359                          dev_warn(dev, "failed to initialize IRQ: %d\n", ret);
->   1360                          dev_warn(dev, "disabling IRQ support\n");
->   1361                  } else {
->   1362                          smb347_irq_enable(smb);
->   1363                  }
->   1364          }
->   1365
->   1366          return 0;
->   1367  }
->   1368
->
+> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>  drivers/bluetooth/hci_bcm.c | 82 ++++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 78 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+> index 6b42372..f824738 100644
+> --- a/drivers/bluetooth/hci_bcm.c
+> +++ b/drivers/bluetooth/hci_bcm.c
+> @@ -27,6 +27,7 @@
+>  #include <linux/firmware.h>
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+> +#include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/clk.h>
+>  #include <linux/gpio/consumer.h>
+> @@ -34,6 +35,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/dmi.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/serdev.h>
+>
+>  #include <net/bluetooth/bluetooth.h>
+>  #include <net/bluetooth/hci_core.h>
+> @@ -46,6 +48,7 @@
+>
+>  #define BCM_AUTOSUSPEND_DELAY  5000 /* default autosleep delay */
+>
+> +/* platform device driver resources */
+>  struct bcm_device {
+>         struct list_head        list;
+>
+> @@ -68,6 +71,12 @@ struct bcm_device {
+>  #endif
+>  };
+>
+> +/* serdev driver resources */
+> +struct bcm_bt_device {
+> +       struct hci_uart hu;
+> +};
+> +
+> +/* generic bcm uart resources */
+>  struct bcm_data {
+>         struct sk_buff          *rx_skb;
+>         struct sk_buff_head     txq;
+> @@ -289,6 +298,11 @@ static int bcm_open(struct hci_uart *hu)
+>
+>         hu->priv = bcm;
+>
+> +       if (hu->serdev) {
+> +               serdev_device_open(hu->serdev);
+> +               goto out;
+> +       }
+> +
+>         if (!hu->tty->dev)
+>                 goto out;
+>
+> @@ -323,6 +337,9 @@ static int bcm_close(struct hci_uart *hu)
+>
+>         bt_dev_dbg(hu->hdev, "hu %p", hu);
+>
+> +       if (hu->serdev)
+> +               serdev_device_close(hu->serdev);
+> +
+>         /* Protect bcm->dev against removal of the device or driver */
+>         mutex_lock(&bcm_device_lock);
+>         if (bcm_device_exists(bdev)) {
+> @@ -397,8 +414,12 @@ static int bcm_setup(struct hci_uart *hu)
+>         else
+>                 speed = 0;
+>
+> -       if (speed)
+> -               hci_uart_set_baudrate(hu, speed);
+> +       if (speed) {
+> +               if (hu->serdev)
+> +                       serdev_device_set_baudrate(hu->serdev, speed);
+> +               else
+> +                       hci_uart_set_baudrate(hu, speed);
+> +       }
+>
+>         /* Operational speed if any */
+>         if (hu->oper_speed)
+> @@ -410,8 +431,12 @@ static int bcm_setup(struct hci_uart *hu)
+>
+>         if (speed) {
+>                 err = bcm_set_baudrate(hu, speed);
+> -               if (!err)
+> -                       hci_uart_set_baudrate(hu, speed);
+> +               if (!err) {
+> +                       if (hu->serdev)
+> +                               serdev_device_set_baudrate(hu->serdev, speed);
+> +                       else
+> +                               hci_uart_set_baudrate(hu, speed);
+> +               }
+>         }
+>
+>  finalize:
+> @@ -903,9 +928,57 @@ static int bcm_remove(struct platform_device *pdev)
+>         },
+>  };
+>
+> +static int bcm_serdev_probe(struct serdev_device *serdev)
+> +{
+> +       struct bcm_bt_device *bcmdev;
+> +       u32 speed;
+> +       int err;
+> +
+> +       bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
+> +       if (!bcmdev)
+> +               return -ENOMEM;
+> +
+> +       bcmdev->hu.serdev = serdev;
+> +       serdev_device_set_drvdata(serdev, bcmdev);
+> +
+> +       err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
+> +       if (!err)
+> +               bcmdev->hu.oper_speed = speed;
+> +
+> +       return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
+> +}
+> +
+> +static void bcm_serdev_remove(struct serdev_device *serdev)
+> +{
+> +       struct bcm_bt_device *bcmdev = serdev_device_get_drvdata(serdev);
+> +
+> +       hci_uart_unregister_device(&bcmdev->hu);
+> +}
 
+I'm seeing the following warning when building this with Fedora-26/gcc7:
 
+drivers/bluetooth/hci_bcm.c: In function 'bcm_serdev_remove':
+drivers/bluetooth/hci_bcm.c:953:2: error: implicit declaration of
+function 'hci_uart_unregister_device'; did you mean
+'hci_uart_register_device'? [-Werror=implicit-function-declaration]
+  hci_uart_unregister_device(&bcmdev->hu);
+  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+  hci_uart_register_device
+cc1: some warnings being treated as errors
 
-
--- 
-regards,
-vinaysimha
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id bcm_bluetooth_of_match[] = {
+> +       { .compatible = "brcm,bcm43438-bt" },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm_bluetooth_of_match);
+> +#endif
+> +
+> +static struct serdev_device_driver bcm_serdev_driver = {
+> +       .probe = bcm_serdev_probe,
+> +       .remove = bcm_serdev_remove,
+> +       .driver = {
+> +               .name = "hci_uart_bcm",
+> +               .of_match_table = of_match_ptr(bcm_bluetooth_of_match),
+> +       },
+> +};
+> +
+>  int __init bcm_init(void)
+>  {
+> +       /* For now, we need to keep both platform device
+> +        * driver (ACPI generated) and serdev driver (DT).
+> +        */
+>         platform_driver_register(&bcm_driver);
+> +       serdev_device_driver_register(&bcm_serdev_driver);
+>
+>         return hci_uart_register_proto(&bcm_proto);
+>  }
+> @@ -913,6 +986,7 @@ int __init bcm_init(void)
+>  int __exit bcm_deinit(void)
+>  {
+>         platform_driver_unregister(&bcm_driver);
+> +       serdev_device_driver_unregister(&bcm_serdev_driver);
+>
+>         return hci_uart_unregister_proto(&bcm_proto);
+>  }
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-rpi-kernel mailing list
+> linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel
