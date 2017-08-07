@@ -1,99 +1,38 @@
-From: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH] RM: dts: rockchip: rk322x: add spi node and spi pinctrl
-Date: Mon,  7 Aug 2017 09:45:11 +0800
-Message-ID: <1502070311-19663-1-git-send-email-huibin.hong@rock-chips.com>
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [RESEND PATCH 1/4] ARM: dts: enable L2 cache parity and ecc on db-xc3-24g4xg board
+Date: Mon,  7 Aug 2017 13:46:38 +1200
+Message-ID: <20170807014641.4003-2-chris.packham@alliedtelesis.co.nz>
+References: <20170807014641.4003-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170807014641.4003-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sofia-kernel.list-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add spi node and spi pinctrl for rk322x
-
-Signed-off-by: Huibin Hong <huibin.hong-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 ---
+ arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- arch/arm/boot/dts/rk322x.dtsi | 50 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index f3e4ffd..1a7afef 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -55,6 +55,7 @@
- 		serial0 = &uart0;
- 		serial1 = &uart1;
- 		serial2 = &uart2;
-+		spi0 = &spi0;
+diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+index 06fce35d7491..00ca489fc788 100644
+--- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
++++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+@@ -70,6 +70,11 @@
  	};
+ };
  
- 	cpus {
-@@ -361,6 +362,19 @@
- 		status = "disabled";
- 	};
++&L2 {
++	arm,parity-enable;
++	marvell,ecc-enable;
++};
++
+ &devbus_bootcs {
+ 	status = "okay";
  
-+	spi0: spi@11090000 {
-+		compatible = "rockchip,rk3228-spi";
-+		reg = <0x11090000 0x1000>;
-+		interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
-+		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
-+		clock-names = "spiclk", "apb_pclk";
-+		status = "disabled";
-+	};
-+
- 	wdt: watchdog@110a0000 {
- 		compatible = "snps,dw-wdt";
- 		reg = <0x110a0000 0x100>;
-@@ -797,6 +811,42 @@
- 			};
- 		};
- 
-+		spi-0 {
-+			spi0_clk: spi0-clk {
-+				rockchip,pins = <0 9 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs0: spi0-cs0 {
-+				rockchip,pins = <0 14 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_tx: spi0-tx {
-+				rockchip,pins = <0 11 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_rx: spi0-rx {
-+				rockchip,pins = <0 13 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi0_cs1: spi0-cs1 {
-+				rockchip,pins = <1 12 RK_FUNC_1 &pcfg_pull_up>;
-+			};
-+		};
-+
-+		spi-1 {
-+			spi1_clk: spi1-clk {
-+				rockchip,pins = <0 23 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs0: spi1-cs0 {
-+				rockchip,pins = <2 2 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_rx: spi1-rx {
-+				rockchip,pins = <2 0 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_tx: spi1-tx {
-+				rockchip,pins = <2 1 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+			spi1_cs1: spi1-cs1 {
-+				rockchip,pins = <2 3 RK_FUNC_2 &pcfg_pull_up>;
-+			};
-+		};
-+
- 		i2s1 {
- 			i2s1_bus: i2s1-bus {
- 				rockchip,pins = <0 8 RK_FUNC_1 &pcfg_pull_none>,
 -- 
-1.9.1
-
+2.13.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
