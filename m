@@ -1,42 +1,112 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH] video: fbdev: Convert to using %pOF instead of
- full_name
-Date: Mon, 07 Aug 2017 17:02:05 +0200
-Message-ID: <11214112.PD8VBvCJLW@amdc3058>
-References: <CGME20170718214516epcas5p41593e7a72c2abb4ab7f78934027679fb@epcas5p4.samsung.com>
-        <4331639.hUALxSEUjp@amdc3058>
-        <CAL_JsqLy44aZdGcH7mGbmfQ49DTXU7fwoed8UCuaNEMVc_M8FQ@mail.gmail.com>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 02/22] fpga: add FPGA device framework
+Date: Mon, 7 Aug 2017 10:13:53 -0500
+Message-ID: <CANk1AXSS=9S6W1X90iUieuHPai2Mfe+EsLGoWKJxu+On7hfJXQ@mail.gmail.com>
+References: <1498441938-14046-1-git-send-email-hao.wu@intel.com>
+ <1498441938-14046-3-git-send-email-hao.wu@intel.com> <CANk1AXRoxz7nOY--UYfBtg-3kGFy0gqCz0cbF9mOvzU2+EdzpA@mail.gmail.com>
+ <CAL_JsqJfGJwDcXtpBs73TsSKTCwfAPywgyTPwzy1GQotJ7DTzw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAL_JsqLy44aZdGcH7mGbmfQ49DTXU7fwoed8UCuaNEMVc_M8FQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJfGJwDcXtpBs73TsSKTCwfAPywgyTPwzy1GQotJ7DTzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Moritz Fischer <mdf-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-api-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Kang, Luwei" <luwei.kang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Zhang, Yi Z" <yi.z.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Tim Whisonant <tim.whisonant-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Enno Luebbers <enno.luebbers-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shiva Rao <shiva.rao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Christopher Rauer <christopher.rauer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, August 01, 2017 12:24:53 PM Rob Herring wrote:
-> On Tue, Aug 1, 2017 at 8:47 AM, Bartlomiej Zolnierkiewicz
-> <b.zolnierkie@samsung.com> wrote:
-> > On Tuesday, July 18, 2017 04:43:36 PM Rob Herring wrote:
-> >> Now that we have a custom printf format specifier, convert users of
-> >> full_name to use %pOF instead. This is preparation to remove storing
-> >> of the full path string for each node.
-> >>
-> >> Signed-off-by: Rob Herring <robh@kernel.org>
-> >> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> >> Cc: linux-fbdev@vger.kernel.org
-> >
-> > The patch Looks fine to me. Do you want me to merge it through fbdev
-> > tree or do you have some other plan for %pOF conversion patches?
-> 
-> Please take thru the fbdev tree.
+On Thu, Jul 27, 2017 at 2:10 PM, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Jul 27, 2017 at 11:35 AM, Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Sun, Jun 25, 2017 at 8:51 PM, Wu Hao <hao.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>> Hi Rob,
+>>
+>> I was hoping to pick your brain a bit on a DT question.
+>>
+>>> During FPGA device (e.g PCI-based) discovery, platform devices are
+>>> registered for different FPGA function units. But the device node path
+>>> isn't quite friendly to applications.
+>>>
+>>> Consider this case, applications want to access child device's sysfs file
+>>> for some information.
+>>>
+>>> 1) Access using bus-based path (e.g PCI)
+>>>
+>>>   /sys/bus/pci/devices/xxxxx/fpga_func_a.0/sysfs_file
+>>>
+>>>   From the path, it's clear which PCI device is the parent, but not perfect
+>>>   solution for applications. PCI device BDF is not fixed, application may
+>>>   need to search all PCI device to find the actual FPGA Device.
+>>>
+>>> 2) Or access using platform device path
+>>>
+>>>   /sys/bus/platform/devices/fpga_func_a.0/sysfs_file
+>>>
+>>>   Applications find the actual function by name easily, but no information
+>>>   about which fpga device it belongs to. It's quite confusing if multiple
+>>>   FPGA devices are in one system.
+>>
+>> There's a proposal for adding sysfs nodes that correspond to each FPGA
+>> device., with the devices located on each FPGA under them.  It makes
+>> it easier to see which device is on which FPGA.
+>
+> Makes sense.
+>
+>>> 'FPGA Device' class is introduced to resolve this problem. Each node under
+>>> this class represents a fpga device, which may have one or more child
+>>> devices. Applications only need to search under this FPGA Device class
+>>> folder to find the child device node it needs.
+>>>
+>>> For example, for the platform has 2 fpga devices, each fpga device has
+>>> 3 child devices, the hierarchy looks like this.
+>>>
+>>> Two nodes are under /sys/class/fpga/:
+>>> /sys/class/fpga/fpga.0
+>>> /sys/class/fpga/fpga.1
+>>>
+>>> Each node has 1 function A device and 2 function B devices:
+>>> /sys/class/fpga/fpga.0/func_a.0
+>>> /sys/class/fpga/fpga.0/func_b.0
+>>> /sys/class/fpga/fpga.0/func_b.1
+>>>
+>>> /sys/class/fpga/fpga.1/func_a.1
+>>> /sys/class/fpga/fpga.1/func_b.2
+>>> /sys/class/fpga/fpga.1/func_b.3
+>
+> A class is generally what is the function of the device, not how it is
+> attached. Seems like what you want here is a new bus type if the
+> existing PCI and platform bus types don't work.
+>
+>>
+>> I can see the value of having sysfs nodes that correspond to fpga
+>> devices and being able to find devices under them.  I'm thinking what
+>> that would mean for Device Tree when fpga-dev is used on DT enabled
+>> systems.  In Device Tree, what is a fpga-dev?
+>
+> Just properly setting the parent struct device on the functions should
+> be enough to figure out which function is in which fpga. I don't see
+> why a new class is needed.
+>
+>> Currently the DT would have a FPGA bridge corresponding to each FPGA's
+>> hardware bridge and a heirarchy of bridges, regions and devices under
+>> it.  On systems that don't support partial reconfiguration under the
+>> OS (so not main bridge that was controlled by the OS), there would be
+>> a FPGA region, then its child regions, bridges, and devices.
+>
+> The FPGA bridges could instantiate fpga bus type devices instead of
+> platform devices.
 
-Patch queued for 4.14, thanks.
+Seems like of_platform_bus_create() would have to be expanded to
+support FPGA bus devices, right?  Or is it acceptable to create
+platform devices under the FPGA bus?  I'm still pondering this.
+Currently this patchset is creating platform devices under a PCIe bus.
 
-Best regards,
+Alan
+
+> That's really up to Linux and outside the scope of
+> the bindings.
+>
+> Rob
 --
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
