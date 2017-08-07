@@ -1,52 +1,47 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 3/7] mmc: sdhci: Add callback to set bus mode
-Date: Mon, 7 Aug 2017 21:31:38 +0530
-Message-ID: <20170807160142.12134-4-kishon@ti.com>
-References: <20170807160142.12134-1-kishon@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] of_mdio: use of_property_read_u32_array()
+Date: Mon, 7 Aug 2017 19:18:09 +0300
+Message-ID: <080ebcb6-b5aa-63db-176b-83477c2540e5@cogentembedded.com>
+References: <20170804214354.351406407@cogentembedded.com>
+ <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170807160142.12134-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
-Cc: kishon@ti.com, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKDXAbAVpgMSU39+9mF7MZWQotLUNkjePy9eUsnBs99Vw@mail.gmail.com>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Frank Rowand <frowand.list@gmail.com>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add callback to set bus mode in sdhci library so that the
-controller driver can perform any bus mode specific configurations
-in the callback function.
+Hello!
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/mmc/host/sdhci.c | 3 +++
- drivers/mmc/host/sdhci.h | 1 +
- 2 files changed, 4 insertions(+)
+On 08/07/2017 05:18 PM, Rob Herring wrote:
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index fff0baadbc3e..d5050ec42481 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -1747,6 +1747,9 @@ void sdhci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 	if (host->quirks & SDHCI_QUIRK_RESET_CMD_DATA_ON_IOS)
- 		sdhci_do_reset(host, SDHCI_RESET_CMD | SDHCI_RESET_DATA);
- 
-+	if (host->ops->set_bus_mode)
-+		host->ops->set_bus_mode(host, ios->bus_mode);
-+
- 	mmiowb();
- }
- EXPORT_SYMBOL_GPL(sdhci_set_ios);
-diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-index d778034e324d..39c7a2723906 100644
---- a/drivers/mmc/host/sdhci.h
-+++ b/drivers/mmc/host/sdhci.h
-@@ -583,6 +583,7 @@ struct sdhci_ops {
- 	void    (*adma_workaround)(struct sdhci_host *host, u32 intmask);
- 	void    (*card_event)(struct sdhci_host *host);
- 	void	(*voltage_switch)(struct sdhci_host *host);
-+	void	(*set_bus_mode)(struct sdhci_host *host, unsigned int mode);
- };
- 
- #ifdef CONFIG_MMC_SDHCI_IO_ACCESSORS
--- 
-2.11.0
+>> The "fixed-link" prop support predated of_property_read_u32_array(), so
+>> basically had to open-code it. Using the modern API saves 24 bytes of the
+>> object code (ARM gcc 4.8.5); the only behavior change would be that the
+>> prop length check is now less strict (however the strict pre-check done
+>> in of_phy_is_fixed_link() is left intact anyway)...
+>>
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>
+>> ---
+>> The patch is against the 'dt/next' branch of Rob Herring's 'linux-git' repo
+>> plus the previously posted patch killing the useless local variable in
+>> of_phy_register_fixed_link().
+> 
+> It shouldn't depend on anything in my tree and David normally takes
+> of_mdio.c changes.
+
+    MAINTAINERS still only point at the DT repo, perhaps it should be updated?
+
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+    Thank you.
+
+>>   drivers/of/of_mdio.c |   16 ++++++++--------
+>>   1 file changed, 8 insertions(+), 8 deletions(-)
+
+MBR, Sergei
