@@ -1,326 +1,46 @@
-From: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/10] ARM: dts: imx6q-apalis-eval: add support for Apalis Evaluation Board
-Date: Mon,  7 Aug 2017 12:52:42 +0530
-Message-ID: <fd12d8b098612db413250d98237382dc6d9d3c85.1502087184.git.maitysanchayan@gmail.com>
-References: <cover.1502087184.git.maitysanchayan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-In-Reply-To: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-References: <cover.1502087184.git.maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org, maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v3 0/4] add support of SCPSYS power domain for MediaTek MT7622
+Date: Mon, 7 Aug 2017 15:24:33 +0800
+Message-ID: <cover.1502090240.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, rjw@rjwysocki.net, khilman@baylibre.com
+Cc: ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the Toradex Apalis Evaluation Board.
+From: Sean Wang <sean.wang@mediatek.com>
 
-Signed-off-by: Sanchayan Maity <maitysanchayan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile              |   1 +
- arch/arm/boot/dts/imx6q-apalis-eval.dts | 278 ++++++++++++++++++++++++++++++++
- 2 files changed, 279 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6q-apalis-eval.dts
+Changes since v2:
+- reduce code duplication of scpsys_probe across all SoCs
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1c16e891a76a..2c5aca56a29f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -392,6 +392,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
- 	imx6dl-udoo.dtb \
- 	imx6dl-wandboard.dtb \
- 	imx6dl-wandboard-revb1.dtb \
-+	imx6q-apalis-eval.dtb \
- 	imx6q-apalis-ixora.dtb \
- 	imx6q-apalis-ixora-v1.1.dtb \
- 	imx6q-apf6dev.dtb \
-diff --git a/arch/arm/boot/dts/imx6q-apalis-eval.dts b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-new file mode 100644
-index 000000000000..4bbfe3d61027
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6q-apalis-eval.dts
-@@ -0,0 +1,278 @@
-+/*
-+ * Copyright 2014-2017 Toradex AG
-+ * Copyright 2012 Freescale Semiconductor, Inc.
-+ * Copyright 2011 Linaro Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include "imx6q.dtsi"
-+#include "imx6qdl-apalis.dtsi"
-+
-+/ {
-+	model = "Toradex Apalis iMX6Q/D Module on Apalis Evaluation Board";
-+	compatible = "toradex,apalis_imx6q-eval", "toradex,apalis_imx6q",
-+		     "fsl,imx6q";
-+
-+	aliases {
-+		i2c0 = &i2c1;
-+		i2c1 = &i2c3;
-+		i2c2 = &i2c2;
-+		rtc0 = &rtc_i2c;
-+		rtc1 = &snvs_rtc;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_gpio_keys>;
-+
-+		wakeup {
-+			label = "Wake-Up";
-+			gpios = <&gpio1 4 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_WAKEUP>;
-+			debounce-interval = <10>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	lcd_display: display@di0 {
-+		compatible = "fsl,imx-parallel-display";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interface-pix-fmt = "rgb24";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ipu1_lcdif>;
-+		status = "okay";
-+
-+		port@0 {
-+			reg = <0>;
-+
-+			lcd_display_in: endpoint {
-+				remote-endpoint = <&ipu1_di1_disp1>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			lcd_display_out: endpoint {
-+				remote-endpoint = <&lcd_panel_in>;
-+			};
-+		};
-+	};
-+
-+	panel: panel {
-+		/*
-+		 * edt,et057090dhu: EDT 5.7" LCD TFT
-+		 * edt,et070080dh6: EDT 7.0" LCD TFT
-+		 */
-+		compatible = "edt,et057090dhu";
-+		backlight = <&backlight>;
-+
-+		port {
-+			lcd_panel_in: endpoint {
-+				remote-endpoint = <&lcd_display_out>;
-+			};
-+		};
-+	};
-+
-+	reg_pcie_switch: regulator-pcie-switch {
-+		compatible = "regulator-fixed";
-+		regulator-name = "pcie_switch";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		status = "okay";
-+	};
-+};
-+
-+&backlight {
-+	brightness-levels = <0 127 191 223 239 247 251 255>;
-+	default-brightness-level = <1>;
-+	status = "okay";
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&hdmi {
-+	status = "okay";
-+};
-+
-+/* I2C1_SDA/SCL on MXM3 209/211 (e.g. RTC on carrier board) */
-+&i2c1 {
-+	status = "okay";
-+
-+	pcie-switch@58 {
-+		compatible = "plx,pex8605";
-+		reg = <0x58>;
-+	};
-+
-+	/* M41T0M6 real time clock on carrier board */
-+	rtc_i2c: rtc@68 {
-+		compatible = "st,m41t00";
-+		reg = <0x68>;
-+	};
-+};
-+
-+/*
-+ * I2C3_SDA/SCL (CAM) on MXM3 pin 201/203 (e.g. camera sensor on carrier
-+ * board)
-+ */
-+&i2c3 {
-+	status = "okay";
-+};
-+
-+&ipu1_di1_disp1 {
-+	remote-endpoint = <&lcd_display_in>;
-+};
-+
-+&ldb {
-+	status = "okay";
-+};
-+
-+&pcie {
-+	/* active-high meaning opposite of regular PERST# active-low polarity */
-+	reset-gpio = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-+	reset-gpio-active-high;
-+	vpcie-supply = <&reg_pcie_switch>;
-+	status = "okay";
-+};
-+
-+&pwm1 {
-+	status = "okay";
-+};
-+
-+&pwm2 {
-+	status = "okay";
-+};
-+
-+&pwm3 {
-+	status = "okay";
-+};
-+
-+&pwm4 {
-+	status = "okay";
-+};
-+
-+&reg_usb_otg_vbus {
-+	status = "okay";
-+};
-+
-+&reg_usb_host_vbus {
-+	status = "okay";
-+};
-+
-+&sata {
-+	status = "okay";
-+};
-+
-+&sound_spdif {
-+	status = "okay";
-+};
-+
-+&spdif {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	status = "okay";
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-+
-+&usbh1 {
-+	vbus-supply = <&reg_usb_host_vbus>;
-+	status = "okay";
-+};
-+
-+&usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
-+	status = "okay";
-+};
-+
-+/* MMC1 */
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1_4bit &pinctrl_usdhc1_8bit &pinctrl_mmc_cd>;
-+	cd-gpios = <&gpio4 20 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+/* SD1 */
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2 &pinctrl_sd_cd>;
-+	cd-gpios = <&gpio6 14 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	/*
-+	 * Mux the Apalis GPIOs
-+	 */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_apalis_gpio1 &pinctrl_apalis_gpio2
-+		     &pinctrl_apalis_gpio3 &pinctrl_apalis_gpio4
-+		     &pinctrl_apalis_gpio5 &pinctrl_apalis_gpio6
-+		     &pinctrl_apalis_gpio7 &pinctrl_apalis_gpio8
-+		    >;
-+};
+Changes since v1:
+- rebase to Linux v4.13-rc1
+
+There are four power domains on MediaTek MT7622 SoC which are respectively
+ETHSYS for Ethernet including extra embedded switch, HIF0SYS for PCI-E and
+SATA, HIF1SYS for USB and WBSYS for WIFI and Bluetooth.
+
+Those functions could be selectively powered gated when the corresponding
+function is no longer to use in order to reach more minimal power
+dissipation through the patch series introduced here.
+
+Chen Zhong (1):
+  soc: mediatek: add header files required for MT7622 SCPSYS dt-binding
+
+Sean Wang (3):
+  dt-bindings: soc: update the binding document for SCPSYS on MediaTek
+    MT7622 SoC
+  soc: mediatek: reduce code duplication of scpsys_probe across all SoCs
+  soc: mediatek: add SCPSYS power domain driver for MediaTek MT7622 SoC
+
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |   3 +
+ drivers/soc/mediatek/mtk-scpsys.c                  | 247 ++++++++++++---------
+ include/dt-bindings/power/mt7622-power.h           |  22 ++
+ include/linux/soc/mediatek/infracfg.h              |   7 +
+ 4 files changed, 179 insertions(+), 100 deletions(-)
+ create mode 100644 include/dt-bindings/power/mt7622-power.h
+
 -- 
-2.13.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
