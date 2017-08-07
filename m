@@ -1,47 +1,46 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH 5/7] arm64: dts: hikey960: Add support for syscon-reboot-mode
-Date: Mon,  7 Aug 2017 16:13:23 +0800
-Message-ID: <20170807081325.11406-6-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 7/7] arm64: dts: hi3660: Reset the mmc hosts
+Date: Mon,  7 Aug 2017 16:13:25 +0800
+Message-ID: <20170807081325.11406-8-guodong.xu@linaro.org>
 References: <20170807081325.11406-1-guodong.xu@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170807081325.11406-1-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Guodong Xu <guodong.xu@linaro.org>, John Stultz <john.stultz@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170807081325.11406-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support to hikey960 dts for the syscon-reboot-mode driver.
+Add reset-names = "reset" into mmc nodes.
 
-Cc: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index b96d865..ce5e874 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -39,6 +39,20 @@
- 		reg = <0x0 0x0 0x0 0x0>;
- 	};
- 
-+	reboot-mode-syscon@32100000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0x32100000 0x0 0x00001000>;
-+
-+		reboot-mode {
-+			compatible = "syscon-reboot-mode";
-+			offset = <0x0>;
-+
-+			mode-normal	= <0x77665501>;
-+			mode-bootloader	= <0x77665500>;
-+			mode-recovery	= <0x77665502>;
-+		};
-+	};
-+
- 	keys {
- 		compatible = "gpio-keys";
- 		pinctrl-names = "default";
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 5fd5686..41841f7 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -909,6 +909,7 @@
+ 			clock-names = "ciu", "biu";
+ 			clock-frequency = <3200000>;
+ 			resets = <&crg_rst 0x94 18>;
++			reset-names = "reset";
+ 			cd-gpios = <&gpio25 3 0>;
+ 			hisilicon,peripheral-syscon = <&sctrl>;
+ 			pinctrl-names = "default";
+@@ -938,6 +939,7 @@
+ 				 <&crg_ctrl HI3660_HCLK_GATE_SDIO0>;
+ 			clock-names = "ciu", "biu";
+ 			resets = <&crg_rst 0x94 20>;
++			reset-names = "reset";
+ 			card-detect-delay = <200>;
+ 			supports-highspeed;
+ 			keep-power-in-suspend;
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
