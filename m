@@ -1,76 +1,31 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
-Date: Tue, 8 Aug 2017 10:06:45 +0900
-Message-ID: <CAK7LNATCZ9r6KCbFLAW68r9WtYrQ2OvWOZd0AXW4GbdHjHQDVw@mail.gmail.com>
-References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
- <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com>
- <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com> <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
+From: Peng Fan <peng.fan-3arQi8VN3Tc@public.gmane.org>
+Subject: RE: [PATCH 2/2] gpio: 74x164: handling enable-gpios
+Date: Tue, 8 Aug 2017 01:15:04 +0000
+Message-ID: <DB6PR04MB3221895A72F6B8635D8289DD888A0@DB6PR04MB3221.eurprd04.prod.outlook.com>
+References: <1502108833-10317-1-git-send-email-peng.fan@nxp.com>
+ <1502108833-10317-2-git-send-email-peng.fan@nxp.com>
+ <CAOMZO5D6gUCjLstFLYEZ0e6eMAGgzff03BfJywB4znEct5gYMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5D6gUCjLstFLYEZ0e6eMAGgzff03BfJywB4znEct5gYMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-2017-08-08 0:37 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
-> On Mon, Aug 7, 2017 at 3:50 PM, Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->
->> Adding "interrupts" property in DT causes
->> of_pupulate_default_populate() to assign virtual IRQ numbers
->> before driver probing.  So it does not work well with IRQ domain hierarchy.
->
-> I think I heard some noise about this the week before.
->
->> For pinctrl/stm32/pinctrl-stm32.c,
->> I do not see "interrupts", so it just straight maps the irq numbers.
->
-> I think OMAP and DaVinci does someting similar too. This is from a recent
-> DaVinci patch from Keerthy:
->
-> +Example for 66AK2G:
-> +
-> +gpio0: gpio@2603000 {
-> +       compatible = "ti,k2g-gpio", "ti,keystone-gpio";
-> +       reg = <0x02603000 0x100>;
-> +       gpio-controller;
-> +       #gpio-cells = <2>;
-> +       interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
-> +                       <GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
-> +       interrupt-controller;
-> +       #interrupt-cells = <2>;
-> +       ti,ngpio = <144>;
-> +       ti,davinci-gpio-unbanked = <0>;
-> +       clocks = <&k2g_clks 0x001b 0x0>;
-> +       clock-names = "gpio";
-> +};
->
->
-> That looks fairly similar.
->
-
-I do not think so.
-
-
-I do not see .alloc hook in drivers/gpio/gpio-davinci.c
-so this driver is unrelated to IRQ domain hierarchy.
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+PiA+ICsgICAgICAgY2hpcC0+ZW5hYmxlX2dwaW8gPSBkZXZtX2dwaW9kX2dldCgmc3BpLT5kZXYs
+ICJlbmFibGUiLA0KPiBHUElPRF9PVVRfTE9XKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIoY2hp
+cC0+ZW5hYmxlX2dwaW8pKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldl9kYmcoJnNwaS0+ZGV2
+LCAiTm8gZW5hYmxlLWdwaW9zIHByb3BlcnR5XG4iKTsNCj4gPiArICAgICAgICAgICAgICAgY2hp
+cC0+ZW5hYmxlX2dwaW8gPSBOVUxMOw0KPiANCj4gQWxzbywgdGhlIGVycm9yIGhhbmRsaW5nIGhl
+cmUgaXMgbm90IGNvcnJlY3QgYXMgaXQgd2lsbCBuZXZlciBwcm9wYWdhdGUNCj4gRVBST0JFX0RF
+RkVSLg0KPiANCj4gSSB3aWxsIHN1Ym1pdCBteSB2ZXJzaW9uIG9mIHRoZSBwYXRjaCBpZiB5b3Ug
+ZG9uJ3QgbWluZC4NCg0KVGhhdCdzIG9rIGlmIHlvdSBoYXZlIGEgYmV0dGVyIHBhdGNoLg0KDQpS
+ZWdhcmRzLA0KUGVuZy4NCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
