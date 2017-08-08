@@ -1,39 +1,37 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
-Date: Tue, 8 Aug 2017 17:39:11 +0530
-Message-ID: <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com>
-References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 4/4] dt-bindings: phy-mt65xx-usb: supports PCIe, SATA and
+ rename file
+Date: Tue, 8 Aug 2017 17:44:37 +0530
+Message-ID: <ef2a5b54-4fe7-83e3-9c24-fb3ddb3029d5@ti.com>
+References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
+ <1501754483-10392-4-git-send-email-chunfeng.yun@mediatek.com>
+ <1501755607.25536.109.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-scsi-owner@vger.kernel.org>
-In-Reply-To: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, martin.petersen@oracle.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, subhashj@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, jejb@linux.vnet.ibm.com, vinholikatti@gmail.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1501755607.25536.109.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Chunfeng
 
-On Friday 04 August 2017 12:18 PM, Vivek Gautam wrote:
-> Refactoring the qcom-ufs phy and host controller code to move
-> further towards the generic phy usage. Right now the qcom-ufs exports
-> a bunch of APIs that are used by the host controller to initialize
-> the phy.
-> With this patch series, we populate the phy_init() which was a no-op
-> earlier. The host controller then calls the phy_init() at the designated
-> place rather than doing it invariably in ufs_hcd_init().
+On Thursday 03 August 2017 03:50 PM, Chunfeng Yun wrote:
+> hi,
 > 
-> As part of this series, we introduce phy modes for ufs phy.
-> The M-PHY has two data rates defined for each generations (Gears) -
-> Rate A and Rate B. These can serve as the two modes of ufs HS phy.
-> Host controller can direct the phy to set the respective configurations
-> based on the phy modes.
-> 
-> The patch-series has been tested with necessary dt patches on db820c.
+> I made a mistake, please ignore the patches with Change-Id, very sorry
 
-Can the first 3 patches go independently of the other 2 or should all this be
-merged together?
+No problem. However can you resend the series after fixing all checkpatch warnings?
 
 Thanks
 Kishon
