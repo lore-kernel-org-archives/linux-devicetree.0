@@ -1,49 +1,79 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH  1/2] dt-bindings: i2c: Document r8a7743/5 support
-Date: Tue,  8 Aug 2017 12:20:31 +0100
-Message-ID: <1502191231-8682-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH v5 0/6] perf: Support for ARM DynamIQ Shared Unit
+Date: Tue,  8 Aug 2017 12:37:20 +0100
+Message-ID: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Document i2c Device Tree support for RZ/G1[ME]
-(also known as r8aA774[35]) SoCs. They are compatible with
-R-Car Gen2 SoC family.
+This series adds support for the PMU in ARM DynamIQ Shared Unit (DSU).
+The DSU integrates one or more cores with an L3 memory system, control
+logic, and external interfaces to form a multicore cluster. The PMU
+allows counting the various events related to L3, SCU etc, using 32bit
+independent counters along with providing a 64bit cycle counter.
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
- Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+The PMU can only be accessed via CPU system registers, which are common
+to the cores connected to the same DSU. The PMU registers follow the
+semantics of the ARMv8 PMU, mostly, with the exception that
+the counters record the cluster wide events.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-index 2b8bd33..cad39ae 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-@@ -2,6 +2,8 @@ I2C for R-Car platforms
- 
- Required properties:
- - compatible:
-+	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
-+	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
- 	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
- 	"renesas,i2c-r8a7779" if the device is a part of a R8A7779 SoC.
- 	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-@@ -12,7 +14,8 @@ Required properties:
- 	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
- 	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
- 	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
--	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 compatible device.
-+	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 or RZ/G1 compatible
-+				device.
- 	"renesas,rcar-gen3-i2c" for a generic R-Car Gen3 compatible device.
- 	"renesas,i2c-rcar" (deprecated)
- 
+Tested on a Fast model with DSU. The driver only supports ARM64 at the
+moment. It can be extended to support ARM32 by providing register
+accessors like we do in arch/arm64/include/arm_dsu_pmu.h.
+
+The firmware should setup appropriate bits in the ACTLR_EL3/EL2 to
+allow EL1 access to the PMU registers.
+
+Series applies on v4.13-rc4 and is also available at:
+
+  git://linux-arm.org/linux-skp.git 4.13/dsu-v5
+
+Changes since V4:
+ - Fix regressions introduced by v4, with the rename of generic
+   helper.
+ - Added reviewed-by tag from Rob
+
+Changes since V3:
+ - Rename the of generic helper to of_cpu_node_to_id(), and return
+   -ENODEV upon failure than nr_cpus_id
+ - Fix node name in device tree node example.
+
+Changes since V2:
+ - Cleanup dsu_pmu_device_probe error handling.
+ - Fix event validate_group to invert the result check of validate_event
+ - Return errors if we failed to parse CPUs in the DSU.
+ - Add MODULE_DEVICE_TABLE entry
+ - Use hlist_entry_safe for converting cpuhp_node to dsu_pmu.
+ - Added Reviews and Acks.
+
+Changes since V1:
+ - Use the new of_device_node_get_cpu() helper for Coresight
+ - Rebased to 4.13-rc2
+
+Suzuki K Poulose (6):
+  perf: Export perf_event_update_userpage
+  of: Add helper for mapping device node to logical CPU number
+  coresight: of: Use of_cpu_node_to_id helper
+  irqchip: gic-v3: Use of_cpu_node_to_id helper
+  dt-bindings: Document devicetree binding for ARM DSU PMU
+  perf: ARM DynamIQ Shared Unit PMU support
+
+ .../devicetree/bindings/arm/arm-dsu-pmu.txt        |  27 +
+ arch/arm64/include/asm/arm_dsu_pmu.h               | 124 +++
+ drivers/hwtracing/coresight/of_coresight.c         |  15 +-
+ drivers/irqchip/irq-gic-v3.c                       |  29 +-
+ drivers/of/base.c                                  |  26 +
+ drivers/perf/Kconfig                               |   9 +
+ drivers/perf/Makefile                              |   1 +
+ drivers/perf/arm_dsu_pmu.c                         | 883 +++++++++++++++++++++
+ include/linux/of.h                                 |   7 +
+ kernel/events/core.c                               |   1 +
+ 10 files changed, 1083 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+ create mode 100644 arch/arm64/include/asm/arm_dsu_pmu.h
+ create mode 100644 drivers/perf/arm_dsu_pmu.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.5
