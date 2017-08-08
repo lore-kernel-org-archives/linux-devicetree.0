@@ -1,74 +1,70 @@
-From: Prabhakar Kushwaha <prabhakar.kushwaha-3arQi8VN3Tc@public.gmane.org>
-Subject: RE: [U-Boot] [PATCH] config: ls1012aqds: Add USB EHCI support for
-        ls1012aqds
-Date: Tue, 8 Aug 2017 08:30:49 +0000
-Message-ID: <HE1PR04MB12410A493E08EB27A2F77F66978A0@HE1PR04MB1241.eurprd04.prod.outlook.com>
-References: <1501148945-11775-1-git-send-email-yinbo.zhu@nxp.com>
+From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [patch v2 1/2] mfd: Add Mellanox regmap core driver
+Date: Tue, 8 Aug 2017 08:32:14 +0000
+Message-ID: <AM4PR05MB3330A3B5F71CCD4A21682320A28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+References: <1501108094-16898-1-git-send-email-vadimp@mellanox.com>
+ <1501108094-16898-2-git-send-email-vadimp@mellanox.com>
+ <20170807155836.uqa2nezqqheg6so6@dell>
+ <AM4PR05MB3330A1043B618D723EFF4C8DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+ <20170808070211.ikxbzkygymlolavv@dell>
+ <AM4PR05MB33301E39B8BB39F68D49B30DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+ <20170808074523.GA12854@amd>
+ <AM4PR05MB33300159962297EEC58F1BDAA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
+ <20170808081711.GE12854@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501148945-11775-1-git-send-email-yinbo.zhu-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170808081711.GE12854@amd>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org" <u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mihai Emilian Bantea <mihai.bantea-3arQi8VN3Tc@public.gmane.org>, =?utf-8?B?SG9yaWEgR2VhbnTEgw==?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Gang Liu <gang.liu-3arQi8VN3Tc@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Rajat Srivastava <rajat.srivastava-3arQi8VN3Tc@public.gmane.org>, Yinbo Zhu <yinbo.zhu-3arQi8VN3Tc@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFUtQm9vdCBbbWFpbHRvOnUt
-Ym9vdC1ib3VuY2VzQGxpc3RzLmRlbnguZGVdIE9uIEJlaGFsZiBPZg0KPiB5aW5iby56aHVAbnhw
-LmNvbQ0KPiBTZW50OiBUaHVyc2RheSwgSnVseSAyNywgMjAxNyAzOjE5IFBNDQo+IFRvOiB1LWJv
-b3RAbGlzdHMuZGVueC5kZQ0KPiBDYzogb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRU
-RU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUw0KPiA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+
-OyBNaWhhaSBFbWlsaWFuIEJhbnRlYSA8bWloYWkuYmFudGVhQG54cC5jb20+Ow0KPiBIb3JpYSBH
-ZWFudMSDIDxob3JpYS5nZWFudGFAbnhwLmNvbT47IE1hcmMgWnluZ2llcg0KPiA8bWFyYy56eW5n
-aWVyQGFybS5jb20+OyBHYW5nIExpdSA8Z2FuZy5saXVAbnhwLmNvbT47IG9wZW4gbGlzdCA8bGlu
-dXgtDQo+IGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+OyBTY290dCBXb29kIDxvc3NAYnVzZXJyb3Iu
-bmV0PjsgUmFqYXQgU3JpdmFzdGF2YQ0KPiA8cmFqYXQuc3JpdmFzdGF2YUBueHAuY29tPjsgWWlu
-Ym8gWmh1IDx5aW5iby56aHVAbnhwLmNvbT47IG1vZGVyYXRlZA0KPiBsaXN0OkFSTTY0IFBPUlQg
-KEFBUkNINjQgQVJDSElURUNUVVJFKSA8bGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZz4NCj4gU3ViamVjdDogW1UtQm9vdF0gW1BBVENIXSBjb25maWc6IGxzMTAxMmFxZHM6
-IEFkZCBVU0IgRUhDSSBzdXBwb3J0IGZvcg0KPiBsczEwMTJhcWRzDQo+IA0KPiBGcm9tOiBSYWpl
-c2ggQmhhZ2F0IDxyYWplc2guYmhhZ2F0QG54cC5jb20+DQo+IA0KPiBBZGQgVVNCIEVIQ0kgc3Vw
-cG9ydCBmb3IgbHMxMDEyYXFkcyBwbGF0Zm9ybQ0KPiANCj4gU2lnbmVkLW9mZi1ieTogUmFqYXQg
-U3JpdmFzdGF2YSA8cmFqYXQuc3JpdmFzdGF2YUBueHAuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBS
-YWplc2ggQmhhZ2F0IDxyYWplc2guYmhhZ2F0QG54cC5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IHlp
-bmJvLnpodSA8eWluYm8uemh1QG54cC5jb20+DQo+IC0tLQ0KPiAgYXJjaC9hcm0vaW5jbHVkZS9h
-c20vYXJjaC1mc2wtbGF5ZXJzY2FwZS9pbW1hcF9sc2NoMi5oIHwgMSArDQo+ICBpbmNsdWRlL2Nv
-bmZpZ3MvbHMxMDEyYXFkcy5oICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAyICsrDQo+ICBp
-bmNsdWRlL3VzYi9laGNpLWNpLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAy
-ICstDQo+ICAzIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2luY2x1ZGUvYXNtL2FyY2gtZnNsLWxheWVyc2Nh
-cGUvaW1tYXBfbHNjaDIuaA0KPiBiL2FyY2gvYXJtL2luY2x1ZGUvYXNtL2FyY2gtZnNsLWxheWVy
-c2NhcGUvaW1tYXBfbHNjaDIuaA0KPiBpbmRleCA4YWQxOTlmLi40YWZjMzM4IDEwMDY0NA0KPiAt
-LS0gYS9hcmNoL2FybS9pbmNsdWRlL2FzbS9hcmNoLWZzbC1sYXllcnNjYXBlL2ltbWFwX2xzY2gy
-LmgNCj4gKysrIGIvYXJjaC9hcm0vaW5jbHVkZS9hc20vYXJjaC1mc2wtbGF5ZXJzY2FwZS9pbW1h
-cF9sc2NoMi5oDQo+IEBAIC0zNSw2ICszNSw3IEBADQo+ICAjZGVmaW5lIENPTkZJR19TWVNfWEhD
-SV9VU0IxX0FERFIJCShDT05GSUdfU1lTX0lNTVIgKw0KPiAweDAxZjAwMDAwKQ0KPiAgI2RlZmlu
-ZSBDT05GSUdfU1lTX1hIQ0lfVVNCMl9BRERSCQkoQ09ORklHX1NZU19JTU1SICsNCj4gMHgwMjAw
-MDAwMCkNCj4gICNkZWZpbmUgQ09ORklHX1NZU19YSENJX1VTQjNfQUREUgkJKENPTkZJR19TWVNf
-SU1NUiArDQo+IDB4MDIxMDAwMDApDQo+ICsjZGVmaW5lIENPTkZJR19TWVNfRUhDSV9VU0IxX0FE
-RFIJCShDT05GSUdfU1lTX0lNTVIgKw0KPiAweDA3NjAwMDAwKQ0KPiAgI2RlZmluZSBDT05GSUdf
-U1lTX1BDSUUxX0FERFIJCQkoQ09ORklHX1NZU19JTU1SICsNCj4gMHgyNDAwMDAwKQ0KPiAgI2Rl
-ZmluZSBDT05GSUdfU1lTX1BDSUUyX0FERFIJCQkoQ09ORklHX1NZU19JTU1SICsNCj4gMHgyNTAw
-MDAwKQ0KPiAgI2RlZmluZSBDT05GSUdfU1lTX1BDSUUzX0FERFIJCQkoQ09ORklHX1NZU19JTU1S
-ICsNCj4gMHgyNjAwMDAwKQ0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9jb25maWdzL2xzMTAxMmFx
-ZHMuaCBiL2luY2x1ZGUvY29uZmlncy9sczEwMTJhcWRzLmgNCj4gaW5kZXggNWI4NTAwYi4uNTVm
-MjU3OCAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9jb25maWdzL2xzMTAxMmFxZHMuaA0KPiArKysg
-Yi9pbmNsdWRlL2NvbmZpZ3MvbHMxMDEyYXFkcy5oDQo+IEBAIC0xMTUsNiArMTE1LDggQEANCj4g
-DQo+ICAjaWZkZWYgQ09ORklHX0hBU19GU0xfRFJfVVNCDQo+ICAjZGVmaW5lIENPTkZJR19VU0Jf
-RUhDSV9GU0wNCj4gKyNkZWZpbmUgQ09ORklHX1VTQl9VTFBJDQo+ICsjZGVmaW5lIENPTkZJR19V
-U0JfVUxQSV9WSUVXUE9SVA0KPiAgI2RlZmluZSBDT05GSUdfRUhDSV9IQ0RfSU5JVF9BRlRFUl9S
-RVNFVA0KPiAgI2VuZGlmDQo+IA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS91c2IvZWhjaS1jaS5o
-IGIvaW5jbHVkZS91c2IvZWhjaS1jaS5oDQo+IGluZGV4IDg0N2I2OTguLmNkM2ViNDcgMTAwNjQ0
-DQo+IC0tLSBhL2luY2x1ZGUvdXNiL2VoY2ktY2kuaA0KPiArKysgYi9pbmNsdWRlL3VzYi9laGNp
-LWNpLmgNCj4gQEAgLTE1Niw3ICsxNTYsNyBAQA0KPiAgI2VsaWYgZGVmaW5lZChDT05GSUdfTVBD
-ODV4eCkNCj4gICNkZWZpbmUgQ09ORklHX1NZU19GU0xfVVNCMV9BRERSIENPTkZJR19TWVNfTVBD
-ODV4eF9VU0IxX0FERFINCj4gICNkZWZpbmUgQ09ORklHX1NZU19GU0xfVVNCMl9BRERSIENPTkZJ
-R19TWVNfTVBDODV4eF9VU0IyX0FERFINCj4gLSNlbGlmIGRlZmluZWQoQ09ORklHX0FSQ0hfTFMx
-MDIxQSkNCj4gKyNlbGlmIGRlZmluZWQoQ09ORklHX0xTMTAyWEEpIHx8IGRlZmluZWQoQ09ORklH
-X0FSQ0hfTFMxMDEyQSkNCg0KV2h5IENPTkZJR19BUkNIX0xTMTAyMUEgaGFzIGJlZW4gcmVwbGFj
-ZWQgYnkgQ09ORklHX0xTMTAyWEE/DQoNCi1wcmFiaGFrYXINCg==
+
+
+> -----Original Message-----
+> From: Pavel Machek [mailto:pavel-+ZI9xUNit7I@public.gmane.org]
+> Sent: Tuesday, August 08, 2017 11:17 AM
+> To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org;
+> rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org; linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org;
+> jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> Subject: Re: [patch v2 1/2] mfd: Add Mellanox regmap core driver
+>=20
+> Hi!
+>=20
+> > > > And such code can't be placed under drivers/platform/x86/.
+> > >
+> > > So aim for drivers/platform/mlx ...?
+> > >
+> >
+> > So you suggest to move drivers/platform/x86/mlxcpld-hotplug.c to
+> > drivers/platform/mellanox/mlxcpld-hotplug.c and extend thr driver with
+> > DTS support (mlxreg_core_dev_enable/mlxreg_core_dev_disable)?
+>=20
+> If this leads to less code duplication -- yes, by all means do that.
+
+OK.
+So, I will remove from mlxreg-core IC related part and send the patches for=
+ your
+review.
+In parallel I'll start to work with platform maintainers for moving mlxcpld=
+-hotplug=20
+and further extension for DTS support. After this is ready, I'll extend mlx=
+reg-core
+with IC activation.
+
+Is sounds OK with you?
+
+>=20
+> 									Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures)
+> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
