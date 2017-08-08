@@ -1,93 +1,25 @@
 From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
-Date: Tue,  8 Aug 2017 13:46:58 +0100
-Message-ID: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+Subject: [PATCH  0/2] Add BQ32000 RTC support for iWave RZ/G1M board
+Date: Tue,  8 Aug 2017 14:04:23 +0100
+Message-ID: <1502197465-61546-1-git-send-email-biju.das@bp.renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch has been tested against Linux-next tag 20170727 and renesas-dev branch.
-This patch depends on https://www.spinics.net/lists/arm-kernel/msg599220.html
+This series aims to add BQ32000 RTC support for iWave RZ/G1M board.
 
- arch/arm/boot/dts/r8a7743.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+This series has been tested against Linux-next tag 20170727 and renesas-dev branch.
+This patch series depends on https://www.spinics.net/lists/arm-kernel/msg599220.html
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 14222c72..5c2b140 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -25,6 +25,9 @@
- 		i2c3 = &i2c3;
- 		i2c4 = &i2c4;
- 		i2c5 = &i2c5;
-+		i2c6 = &i2c6;
-+		i2c7 = &i2c7;
-+		i2c8 = &i2c8;
- 	};
- 
- 	cpus {
-@@ -436,6 +439,58 @@
- 			status = "disabled";
- 		};
- 
-+		i2c6: i2c@e60b0000 {
-+			/* doesn't need pinmux */
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe60b0000 0 0x425>;
-+			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 926>;
-+			dmas = <&dmac0 0x77>, <&dmac0 0x78>,
-+			       <&dmac1 0x77>, <&dmac1 0x78>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg CPG_MOD 926>;
-+			status = "disabled";
-+		};
-+
-+		i2c7: i2c@e6500000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe6500000 0 0x425>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 318>;
-+			dmas = <&dmac0 0x61>, <&dmac0 0x62>,
-+			       <&dmac1 0x61>, <&dmac1 0x62>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 318>;
-+			status = "disabled";
-+		};
-+
-+		i2c8: i2c@e6510000 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			compatible = "renesas,iic-r8a7743",
-+				     "renesas,rcar-gen2-iic",
-+				     "renesas,rmobile-iic";
-+			reg = <0 0xe6510000 0 0x425>;
-+			interrupts = <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 323>;
-+			dmas = <&dmac0 0x65>, <&dmac0 0x66>,
-+			       <&dmac1 0x65>, <&dmac1 0x66>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 323>;
-+			status = "disabled";
-+		};
-+
- 		scifa0: serial@e6c40000 {
- 			compatible = "renesas,scifa-r8a7743",
- 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
+Biju Das (2):
+  ARM: dts: iwg20d-q7: Add RTC support
+  ARM: shmobile: Enable BQ32000 rtc in shmobile_defconfig
+
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 18 ++++++++++++++++++
+ arch/arm/configs/shmobile_defconfig     |  1 +
+ 2 files changed, 19 insertions(+)
+
 -- 
 1.9.1
