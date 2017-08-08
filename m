@@ -1,71 +1,76 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] coresight: of: Use of_cpu_node_to_id helper
-Date: Tue, 8 Aug 2017 10:41:35 +0100
-Message-ID: <5460b978-e624-6b38-fe3d-6427eed3ebd7@arm.com>
-References: <201708081748.bujrMOmJ%fengguang.wu@intel.com>
+From: <yinbo.zhu@nxp.com>
+Subject: [PATCH] config: ls1012aqds: Add USB EHCI support for ls1012aqds
+Date: Tue, 8 Aug 2017 17:25:06 +0800
+Message-ID: <1502184306-14345-1-git-send-email-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201708081748.bujrMOmJ%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: u-boot@linux.freescale.net
+Cc: "open list:OPEN FIRMWARE AND
+ FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mihai Bantea <mihai.bantea@nxp.com>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Rajesh Bhagat <rajesh.bhagat@nxp.com>, Liu Gang <Gang.Liu@nxp.com>, open list <linux-kernel@vger.kernel.org>, Scott Wood <oss@buserror.net>, Tang Yuantian <Yuantian.Tang@nxp.com>, Rajat Srivastava <rajat.srivastava@nxp.com>, York Sun <york.sun@nxp.com>, "yinbo.zhu" <yinbo.zhu@nxp.com>, "moderated
+ list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/08/17 10:18, kbuild test robot wrote:
-> Hi Suzuki,
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v4.13-rc4 next-20170807]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->
-> url:    https://github.com/0day-ci/linux/commits/Suzuki-K-Poulose/perf-Support-for-ARM-DynamIQ-Shared-Unit-PMU/20170808-124822
-> config: arm-allmodconfig (attached as .config)
-> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm
->
-> Note: the linux-review/Suzuki-K-Poulose/perf-Support-for-ARM-DynamIQ-Shared-Unit-PMU/20170808-124822 HEAD 5757d34d451ed5a1452526b27b0f36664a8f2007 builds fine.
->       It only hurts bisectibility.
->
-> All errors (new ones prefixed by >>):
->
->    drivers//hwtracing/coresight/of_coresight.c: In function 'of_coresight_get_cpu':
->>> drivers//hwtracing/coresight/of_coresight.c:117:19: error: expected ';' before numeric constant
->      return (cpu < 0) 0 : cpu;
->                       ^
->
-> vim +117 drivers//hwtracing/coresight/of_coresight.c
->
->    103	
->    104	int of_coresight_get_cpu(const struct device_node *node)
->    105	{
->    106		int cpu;
->    107		struct device_node *dn;
->    108	
->    109		dn = of_parse_phandle(node, "cpu", 0);
->    110		/* Affinity defaults to CPU0 */
->    111		if (!dn)
->    112			return 0;
->    113		cpu = of_cpu_node_to_id(dn);
->    114		of_node_put(dn);
->    115	
->    116		/* Affinity to CPU0 if no cpu nodes are found */
->  > 117		return (cpu < 0) 0 : cpu;
->    118	}
->    119	EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
->    120	
->
+From: Rajesh Bhagat <rajesh.bhagat@nxp.com>
 
-Thanks for the bug report, I will respin the series with a fix for this.
+Add USB EHCI support for ls1012aqds platform
 
-Suzuki
+Signed-off-by: Rajat Srivastava <rajat.srivastava@nxp.com>
+Signed-off-by: Rajesh Bhagat <rajesh.bhagat@nxp.com>
+Signed-off-by: yinbo.zhu <yinbo.zhu@nxp.com>
+---
+ arch/arm/include/asm/arch-fsl-layerscape/immap_lsch2.h | 1 +
+ include/configs/ls1012aqds.h                           | 2 ++
+ include/usb/ehci-ci.h                                  | 2 +-
+ 3 files changed, 4 insertions(+), 1 deletion(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/include/asm/arch-fsl-layerscape/immap_lsch2.h b/arch/arm/include/asm/arch-fsl-layerscape/immap_lsch2.h
+index 8ad199f..4afc338 100644
+--- a/arch/arm/include/asm/arch-fsl-layerscape/immap_lsch2.h
++++ b/arch/arm/include/asm/arch-fsl-layerscape/immap_lsch2.h
+@@ -35,6 +35,7 @@
+ #define CONFIG_SYS_XHCI_USB1_ADDR		(CONFIG_SYS_IMMR + 0x01f00000)
+ #define CONFIG_SYS_XHCI_USB2_ADDR		(CONFIG_SYS_IMMR + 0x02000000)
+ #define CONFIG_SYS_XHCI_USB3_ADDR		(CONFIG_SYS_IMMR + 0x02100000)
++#define CONFIG_SYS_EHCI_USB1_ADDR		(CONFIG_SYS_IMMR + 0x07600000)
+ #define CONFIG_SYS_PCIE1_ADDR			(CONFIG_SYS_IMMR + 0x2400000)
+ #define CONFIG_SYS_PCIE2_ADDR			(CONFIG_SYS_IMMR + 0x2500000)
+ #define CONFIG_SYS_PCIE3_ADDR			(CONFIG_SYS_IMMR + 0x2600000)
+diff --git a/include/configs/ls1012aqds.h b/include/configs/ls1012aqds.h
+index 5b8500b..55f2578 100644
+--- a/include/configs/ls1012aqds.h
++++ b/include/configs/ls1012aqds.h
+@@ -115,6 +115,8 @@
+ 
+ #ifdef CONFIG_HAS_FSL_DR_USB
+ #define CONFIG_USB_EHCI_FSL
++#define CONFIG_USB_ULPI
++#define CONFIG_USB_ULPI_VIEWPORT
+ #define CONFIG_EHCI_HCD_INIT_AFTER_RESET
+ #endif
+ 
+diff --git a/include/usb/ehci-ci.h b/include/usb/ehci-ci.h
+index 847b698..cd3eb47 100644
+--- a/include/usb/ehci-ci.h
++++ b/include/usb/ehci-ci.h
+@@ -156,7 +156,7 @@
+ #elif defined(CONFIG_MPC85xx)
+ #define CONFIG_SYS_FSL_USB1_ADDR CONFIG_SYS_MPC85xx_USB1_ADDR
+ #define CONFIG_SYS_FSL_USB2_ADDR CONFIG_SYS_MPC85xx_USB2_ADDR
+-#elif defined(CONFIG_ARCH_LS1021A)
++#elif defined(CONFIG_LS102XA) || defined(CONFIG_ARCH_LS1012A)
+ #define CONFIG_SYS_FSL_USB1_ADDR CONFIG_SYS_EHCI_USB1_ADDR
+ #define CONFIG_SYS_FSL_USB2_ADDR        0
+ #endif
+-- 
+2.1.0.27.g96db324
