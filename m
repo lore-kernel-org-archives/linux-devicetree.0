@@ -1,75 +1,71 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 0/8] Remove fwnode type field, constify property
- fwnode arguments
-Date: Tue, 8 Aug 2017 12:32:16 +0300
-Message-ID: <20170808093215.uw2lricbbvwb7t3k@valkosipuli.retiisi.org.uk>
-References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
- <1500640389.29303.177.camel@linux.intel.com>
- <1578902.vGrhFWnP8d@aspire.rjw.lan>
- <26807574.YAK92jB8KX@aspire.rjw.lan>
+From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/6] coresight: of: Use of_cpu_node_to_id helper
+Date: Tue, 8 Aug 2017 10:41:35 +0100
+Message-ID: <5460b978-e624-6b38-fe3d-6427eed3ebd7@arm.com>
+References: <201708081748.bujrMOmJ%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <26807574.YAK92jB8KX@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>, erik.veijola@intel.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201708081748.bujrMOmJ%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jul 24, 2017 at 10:28:12PM +0200, Rafael J. Wysocki wrote:
-> On Friday, July 21, 2017 02:29:06 PM Rafael J. Wysocki wrote:
-> > On Friday, July 21, 2017 03:33:09 PM Andy Shevchenko wrote:
-> > > On Fri, 2017-07-21 at 13:52 +0200, Rafael J. Wysocki wrote:
-> > > > On Fri, Jul 21, 2017 at 1:39 PM, Sakari Ailus
-> > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > Hello everyone,
-> > > > > 
-> > > > > This set removes the struct fwnode_handle type field and constifies
-> > > > > the
-> > > > > fwnode arguments in the fwnode property API more or less the way
-> > > > > they are
-> > > > > const in OF property API.
-> > > > > 
-> > > > > Comments are welcome.
-> > > > > 
-> > > > > All the dependent patches are now in linux-pm master branch.
-> > > > > 
-> > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg75957.html>;
-> > > > > 
-> > > > > v1 can be found here:
-> > > > > 
-> > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg74564.html>;
-> > > > > 
-> > > > > changes since v2:
-> > > > > 
-> > > > > - Add 8th patch "device property: Introduce
-> > > > >   fwnode_property_get_reference_args". This allows obtaining
-> > > > > references
-> > > > >   with integer arguments using the fwnode interface.
-> > > > > 
-> > > > >   The functionality will be soon needed in adding support for nvmem
-> > > > >   framework on ACPI as well as in referring to e.g. lens and flash
-> > > > > devices
-> > > > >   on V4L2.
-> > > > 
-> > > > OK, so if people have no objections, I'll queue this up for 4.14.
-> > > 
-> > > I have no objections.
-> > > 
-> > > One comment Sakari already has addressed, another one
-> > > (list_first_enatry_or_null() use) might be addressed later.
-> > 
-> > Cool, thanks!
-> 
-> So the series have been applied.
+On 08/08/17 10:18, kbuild test robot wrote:
+> Hi Suzuki,
+>
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v4.13-rc4 next-20170807]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Suzuki-K-Poulose/perf-Support-for-ARM-DynamIQ-Shared-Unit-PMU/20170808-124822
+> config: arm-allmodconfig (attached as .config)
+> compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm
+>
+> Note: the linux-review/Suzuki-K-Poulose/perf-Support-for-ARM-DynamIQ-Shared-Unit-PMU/20170808-124822 HEAD 5757d34d451ed5a1452526b27b0f36664a8f2007 builds fine.
+>       It only hurts bisectibility.
+>
+> All errors (new ones prefixed by >>):
+>
+>    drivers//hwtracing/coresight/of_coresight.c: In function 'of_coresight_get_cpu':
+>>> drivers//hwtracing/coresight/of_coresight.c:117:19: error: expected ';' before numeric constant
+>      return (cpu < 0) 0 : cpu;
+>                       ^
+>
+> vim +117 drivers//hwtracing/coresight/of_coresight.c
+>
+>    103	
+>    104	int of_coresight_get_cpu(const struct device_node *node)
+>    105	{
+>    106		int cpu;
+>    107		struct device_node *dn;
+>    108	
+>    109		dn = of_parse_phandle(node, "cpu", 0);
+>    110		/* Affinity defaults to CPU0 */
+>    111		if (!dn)
+>    112			return 0;
+>    113		cpu = of_cpu_node_to_id(dn);
+>    114		of_node_put(dn);
+>    115	
+>    116		/* Affinity to CPU0 if no cpu nodes are found */
+>  > 117		return (cpu < 0) 0 : cpu;
+>    118	}
+>    119	EXPORT_SYMBOL_GPL(of_coresight_get_cpu);
+>    120	
+>
 
-Thanks a lot!
+Thanks for the bug report, I will respin the series with a fix for this.
 
-I see this is in the linux-next branch now; the device-properties branch
-seems to be in its former state still. Is there a chance that you have
-merged it locally but not pushed the new device-properties branch?
+Suzuki
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
