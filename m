@@ -1,46 +1,63 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 1/6] perf: Export perf_event_update_userpage
-Date: Tue,  8 Aug 2017 12:37:21 +0100
-Message-ID: <1502192246-5623-2-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v5 5/6] dt-bindings: Document devicetree binding for ARM DSU PMU
+Date: Tue,  8 Aug 2017 12:37:25 +0100
+Message-ID: <1502192246-5623-6-git-send-email-suzuki.poulose@arm.com>
 References: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, marc.zyngier@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, will.deacon@arm.com, linux-kernel@vger.kernel.org, peterz@infradead.org, frowand.list@gmail.com
+Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Export perf_event_update_userpage() so that PMU driver using them,
-can be built as modules.
+This patch documents the devicetree bindings for ARM DSU PMU.
 
-Cc: Peter Zilstra <peterz@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: frowand.list@gmail.com
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- kernel/events/core.c | 1 +
- 1 file changed, 1 insertion(+)
+Changes since V3:
+ - Fixed node name in the example, suggested by Rob
+---
+ .../devicetree/bindings/arm/arm-dsu-pmu.txt        | 27 ++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 426c2ff..21aad7a 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -4946,6 +4946,7 @@ void perf_event_update_userpage(struct perf_event *event)
- unlock:
- 	rcu_read_unlock();
- }
-+EXPORT_SYMBOL_GPL(perf_event_update_userpage);
- 
- static int perf_mmap_fault(struct vm_fault *vmf)
- {
+diff --git a/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+new file mode 100644
+index 0000000..6efabba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+@@ -0,0 +1,27 @@
++* ARM DynamIQ Shared Unit (DSU) Performance Monitor Unit (PMU)
++
++ARM DyanmIQ Shared Unit (DSU) integrates one or more CPU cores
++with a shared L3 memory system, control logic and external interfaces to
++form a multicore cluster. The PMU enables to gather various statistics on
++the operations of the DSU. The PMU provides independent 32bit counters that
++can count any of the supported events, along with a 64bit cycle counter.
++The PMU is accessed via CPU system registers and has no MMIO component.
++
++** DSU PMU required properties:
++
++- compatible	: should be one of :
++
++		"arm,dsu-pmu"
++
++- interrupts	: Exactly 1 SPI must be listed.
++
++- cpus		: List of phandles for the CPUs connected to this DSU instance.
++
++
++** Example:
++
++dsu-pmu-0 {
++	compatible = "arm,dsu-pmu";
++	interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>;
++	cpus = <&cpu_0>, <&cpu_1>;
++};
 -- 
 2.7.5
