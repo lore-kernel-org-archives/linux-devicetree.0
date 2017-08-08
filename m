@@ -1,81 +1,63 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v2 3/7] pwm: rockchip: Remove the dumplicate
- rockchip_pwm_ops ops
-Date: Tue, 8 Aug 2017 23:41:46 +0800
-Message-ID: <78121683-137a-eb5c-c447-e763b18ccd12@rock-chips.com>
-References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com>
- <1499486629-9659-4-git-send-email-david.wu@rock-chips.com>
- <20170802105902.2d137072@bbrezillon>
- <af056420-5c33-e6c8-62cb-bcd3456000a7@rock-chips.com>
- <20170802134011.1124f1dd@bbrezillon>
- <6d1f60ee-2402-5ee0-54f6-9521c039c36c@rock-chips.com>
- <20170804090935.6aba3351@bbrezillon>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
+Date: Tue, 08 Aug 2017 21:20:35 +0530
+Message-ID: <b69ecef93852cf5a7bf342550de16f19@codeaurora.org>
+References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
+ <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170804090935.6aba3351@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: thierry.reding@gmail.com, heiko@sntech.de, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-scsi-owner@vger.kernel.org>
+In-Reply-To: <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: martin.petersen@oracle.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-msm@vger.kernel.org, subhashj@codeaurora.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, jejb@linux.vnet.ibm.com, vinholikatti@gmail.com, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Koshon,
 
-在 2017/8/4 15:09, Boris Brezillon 写道:
-> On Fri, 4 Aug 2017 10:38:26 +0800
-> "David.Wu" <david.wu@rock-chips.com> wrote:
+On 2017-08-08 17:39, Kishon Vijay Abraham I wrote:
+> Hi,
 > 
->> Hi Boris，
->>
->> 在 2017/8/2 19:40, Boris Brezillon 写道:
->>> Yep, just define 3 different pwm_ops (one for each IP), each of them
->>> implementing ->apply() and ->get_state() and that's all.
->>>
->>> Something like:
->>>
->>> static const struct pwm_ops rockchip_pwm_ops_v1 = {
->>> 	.get_state = rockchip_pwm_v1_get_state,
->>> 	.apply = rockchip_pwm_v1_apply,
->>> 	.owner = THIS_MODULE,
->>> };
->>>
->>> static const struct pwm_ops rockchip_pwm_ops_v2 = {
->>> 	.get_state = rockchip_pwm_v2_get_state,
->>> 	.apply = rockchip_pwm_v2_apply,
->>> 	.owner = THIS_MODULE,
->>> };
->>>
->>> static const struct pwm_ops rockchip_pwm_ops_vop = {
->>> 	.get_state = rockchip_pwm_vop_get_state,
->>> 	.apply = rockchip_pwm_vop_apply,
->>> 	.owner = THIS_MODULE,
->>> };
->>>
->>> static const struct of_device_id rockchip_pwm_dt_ids[] = {
->>> 	{ .compatible = "rockchip,rk2928-pwm", .data = &rockchip_pwm_ops_v1 },
->>> 	{ .compatible = "rockchip,rk3288-pwm", .data = &rockchip_pwm_ops_v2 },
->>> 	{ .compatible = "rockchip,vop-pwm", .data = &rockchip_pwm_ops_vop },
->>> 	{ /* sentinel */ }
->>> };
->>> MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
->>
->> I think we should keep the data members in the rockchip_pwm_data，like
->> supports_polarity and regs...
->>
->> The supports_polarity is needed for of_pwm_n_cells when pwm registered.
->> And the other data members is helpful for us to use common code.
->>
->> It's okay for just define 3 different pwm_ops (one for each IP), but
->> they are with other data members in the struct of rockchip_pwm_data.
->>
+> On Friday 04 August 2017 12:18 PM, Vivek Gautam wrote:
+>> Refactoring the qcom-ufs phy and host controller code to move
+>> further towards the generic phy usage. Right now the qcom-ufs exports
+>> a bunch of APIs that are used by the host controller to initialize
+>> the phy.
+>> With this patch series, we populate the phy_init() which was a no-op
+>> earlier. The host controller then calls the phy_init() at the 
+>> designated
+>> place rather than doing it invariably in ufs_hcd_init().
+>> 
+>> As part of this series, we introduce phy modes for ufs phy.
+>> The M-PHY has two data rates defined for each generations (Gears) -
+>> Rate A and Rate B. These can serve as the two modes of ufs HS phy.
+>> Host controller can direct the phy to set the respective 
+>> configurations
+>> based on the phy modes.
+>> 
+>> The patch-series has been tested with necessary dt patches on db820c.
 > 
-> I think we could even get rid of the other fields in rockchip_pwm_data,
-> but ok, let's do that.
+> Can the first 3 patches go independently of the other 2 or should all 
+> this be
+> merged together?
 
-I use the same pwm ops for each IP at V3's patch, but defined 3 
-different rockchip_pwm_data for use. I think this might look more clean.
+The first 3 patches are independent, but the next 2 patches depend on 
+those 3 for functionality.
+I would prefer all to go in one tree. If you want to pull these in the 
+phy tree,
+I will request Subhash/Martin to ack the patches.
+
+
+Regards
+Vivek
 
 > 
-> 
-> 
+> Thanks
+> Kishon
+> --
+> To unsubscribe from this list: send the line "unsubscribe 
+> linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
