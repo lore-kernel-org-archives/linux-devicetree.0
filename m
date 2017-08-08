@@ -1,76 +1,94 @@
 From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v3 0/4] thermal: add brcmstb AVS TMON driver
-Date: Tue, 08 Aug 2017 20:26:57 +0800
-Message-ID: <1502195217.4296.33.camel@intel.com>
+Subject: Re: [PATCH v3 1/4] Documentation: devicetree: add binding for
+ Broadcom STB AVS TMON
+Date: Tue, 08 Aug 2017 20:36:35 +0800
+Message-ID: <1502195795.4296.37.camel@intel.com>
 References: <20170731192633.58747-1-code@mmayer.net>
-         <a29d8aef-8d24-9e63-c078-48c3a1a6fccf@gmail.com>
+         <20170731192633.58747-2-code@mmayer.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a29d8aef-8d24-9e63-c078-48c3a1a6fccf@gmail.com>
+In-Reply-To: <20170731192633.58747-2-code@mmayer.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Markus Mayer <code@mmayer.net>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Markus Mayer <code@mmayer.net>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-08-07 at 10:52 -0700, Florian Fainelli wrote:
-> On 07/31/2017 12:26 PM, Markus Mayer wrote:
-> > 
-> > From: Markus Mayer <mmayer@broadcom.com>
-> > 
-> > This series adds the brcmstb AVS TMON driver.
-> > 
-> > The driver was originally written by Brian Norris.
-> > 
-> > v1 of this series can be found at https://lkml.org/lkml/2017/6/5/92
-> > 1
-> > v2 of this series can be found at https://lkml.org/lkml/2017/7/21/5
-> > 85
-> FWIW, this looks good to me, Eduardo, Rui, can we get this moving?
+On Mon, 2017-07-31 at 12:26 -0700, Markus Mayer wrote:
+> From: Brian Norris <computersforpeace@gmail.com>
 > 
-Usually, Eduardo will take the arm soc thermal patches. But he is not
-able to take it this time as he is really busy.
-To me, the thermal framework related code looks good, and I will queue
-it for next merge window, although I don't have the knowledge about the
-hardware details.
+> Add binding for Broadcom STB thermal.
+> 
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+
+$ file v3-1-4-Documentation-devicetree-add-binding-for-Broadcom-STB-
+AVS-TMON.patch 
+unified diff output, UTF-8 Unicode text
+
+BTW, can you please rebase this patch set on top of v4.13-rc3?
+At least there are some conflicts in MAINTAINER file, introduced in
+-rc2.
 
 thanks,
 rui
-
-> > 
-> > 
-> > Changes since v2:
-> > - replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4
-> > only]
-> > - all other patches are unchanged from v2
-> > 
-> > Changes since v1:
-> > - Fixed wording in binding document
-> > - Fixed lincensing to consistently mention GPL v2
-> > - Use thermal_zone_get_slope() and thermal_zone_get_offset()
-> > - Some minor clean-ups
-> > 
-> > Brian Norris (2):
-> >   Documentation: devicetree: add binding for Broadcom STB AVS TMON
-> >   thermal: add brcmstb AVS TMON driver
-> > 
-> > Markus Mayer (2):
-> >   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
-> >   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
-> > 
-> >  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
-> >  MAINTAINERS                                        |   8 +
-> >  arch/arm/configs/multi_v7_defconfig                |   1 +
-> >  arch/arm64/configs/defconfig                       |   1 +
-> >  drivers/thermal/Kconfig                            |   2 +-
-> >  drivers/thermal/broadcom/Kconfig                   |   7 +
-> >  drivers/thermal/broadcom/Makefile                  |   1 +
-> >  drivers/thermal/broadcom/brcmstb_thermal.c         | 386
-> > +++++++++++++++++++++
-> >  8 files changed, 425 insertions(+), 1 deletion(-)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-> >  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
-> > 
+> ---
+>  .../devicetree/bindings/thermal/brcm,avs-tmon.txt    | 20
+> ++++++++++++++++++++
+>  MAINTAINERS                                          |  8 ++++++++
+>  2 files changed, 28 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-
+> tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-
+> tmon.txt
+> new file mode 100644
+> index 0000000..9d43553
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+> @@ -0,0 +1,20 @@
+> +* Broadcom STB thermal management
+> +
+> +Thermal management core, provided by the AVS TMON hardware block.
+> +
+> +Required properties:
+> +- compatible: must be "brcm,avs-tmon" and/or "brcm,avs-tmon-bcm7445"
+> +- reg: address range for the AVS TMON registers
+> +- interrupts: temperature monitor interrupt, for high/low threshold
+> triggers
+> +- interrupt-names: should be "tmon"
+> +- interrupt-parent: the parent interrupt controller
+> +
+> +Example:
+> +
+> +	thermal@f04d1500 {
+> +		compatible = "brcm,avs-tmon-bcm7445", "brcm,avs-
+> tmon";
+> +		reg = <0xf04d1500 0x28>;
+> +		interrupts = <0x6>;
+> +		interrupt-names = "tmon";
+> +		interrupt-parent = <&avs_host_l2_intc>;
+> +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 205d397..a683d4c 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2928,6 +2928,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-
+> cpu-freq.txt
+>  F:	drivers/cpufreq/brcmstb*
+>  
+> +BROADCOM STB AVS TMON DRIVER
+> +M:	Markus Mayer <mmayer@broadcom.com>
+> +M:	bcm-kernel-feedback-list@broadcom.com
+> +L:	linux-pm@vger.kernel.org
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/thermal/brcm,avs-
+> tmon.txt
+> +F:	drivers/thermal/broadcom/brcmstb*
+> +
+>  BROADCOM SPECIFIC AMBA DRIVER (BCMA)
+>  M:	Rafał Miłecki <zajec5@gmail.com>
+>  L:	linux-wireless@vger.kernel.org
