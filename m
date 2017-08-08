@@ -1,70 +1,64 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: iproc: Add optional brcm,pci-hotplug
-Date: Tue, 8 Aug 2017 09:20:26 -0500
-Message-ID: <CAL_JsqL3dWA-0Sq-_8ufa-cwXZEbFQBJHCK-5wLp_xw5NrTHKw@mail.gmail.com>
-References: <1502167455-10516-1-git-send-email-oza.oza@broadcom.com> <1502167455-10516-3-git-send-email-oza.oza@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] Removing full paths from DT full_name
+Date: Tue, 8 Aug 2017 10:08:52 -0500
+Message-ID: <CAL_Jsq+-GuQKgM5uWpBDW8cwcT6_3x5ksYY1qMY1MLvSvP-vPg@mail.gmail.com>
+References: <20170725214427.25768-1-robh@kernel.org> <CAL_Jsq+tarBMM-frN+V9GYa-ZAzfJO4sv2owdOS3Ks+urned1g@mail.gmail.com>
+ <87mv7aol41.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502167455-10516-3-git-send-email-oza.oza@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oza Pawandeep <oza.oza@broadcom.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oza Pawandeep <oza.pawandeep@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87mv7aol41.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Please send bindings to DT list.
-
-On Mon, Aug 7, 2017 at 11:44 PM, Oza Pawandeep <oza.oza@broadcom.com> wrote:
-> Add description for optional device tree property
-> 'brcm,pci-hotplug' for PCI hotplug feature.
+On Mon, Aug 7, 2017 at 9:21 PM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 >
-> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>> On Tue, Jul 25, 2017 at 4:44 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>> This series is the last steps to remove storing the full path for every
+>>> DT node. Instead, we can create full path strings dynamically as needed
+>>> with printf %pOF specifiers (commit ce4fecf1fe15). There are a number of
+>>> remaining direct users of full_name after this series. I don't believe
+>>> there should be any functional impact for those users with the change to
+>>> only the node name (+unit-address). The majority are for struct
+>>> resource.name. This should only affect /proc/iomem display.
+>>>
+>>> Patches 1 and 2 can be applied now for 4.14. For patches 3 and 4, my
+>>> target is 4.15 after all the dependencies have been merged.
+>>>
+>>> PPC folks, Please test! The PPC parts are untested. A git branch with
+>>> all the dependencies is here[1].
+>>
+>> PPC folks, any chance to test this?
 >
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-> index b8e48b4..a3bad24 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-> @@ -72,6 +72,29 @@ Optional properties:
->  - brcm,pcie-msi-inten: Needs to be present for some older iProc platforms that
->  require the interrupt enable registers to be set explicitly to enable MSI
+> I got stuck on your %pOF conversion, which broke the vio.c code, because of:
 >
-> +Optional properties:
-> +- brcm,pci-hotplug: PCI hotplug feature is supported.
-
-I think we should make this a common property. We already have
-"ibm,slot-pluggable", so I'd propose "slot-pluggable".
-
-There's also "hotpluggable" for memory nodes defined, so we could
-reuse that here.
-
-> +
-> +If the brcm,pcie-hotplug property is present, the following properties become
-> +effective:
-> +
-> +- brcm,prsnt-gpio: Array of gpios, needs to be present if Hotplug is supported.
-
-prsnt-gpios
-
-> +
-> +PCI hotplug implementation is SOC/Board specific, and also it depends on
-> +how add-in card is designed (e.g. how many present pins are implemented).
-> +
-> +If x8 card is connected, then it might be possible that all the
-> +3 present pins could go low, or at least one pin goes low.
-> +
-> +If x4 card is connected, then it might be possible that 2 present
-> +pins go low, or at least one pin goes low.
-> +
-> +Example:
-> +brcm,prsnt-gpio: <&pca9505 32 1>, <&pca9505 33 1>;
-> +This is x4 connector: monitoring max 2 present lines.
-> +brcm,prsnt-gpio: <&pca9505 32 1>, <&pca9505 33 1>, <&pca9505 34 1>;
-> +This is x8 connector: monitoring max 3 present lines.
-> +
->  Example:
->         pcie0: pcie@18012000 {
->                 compatible = "brcm,iproc-pcie";
-> --
-> 1.9.1
+> -               if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
+> +               if (!strcmp(parent_node->full_name, "ibm,platform-facilities"))
 >
+> But full_name hasn't been changed yet.
+
+Ah, those lines need to be dropped from the %pOF conversion. I'll send
+a new version.
+
+What I was originally considering here was just:
+
+strcmp(kbasename(parent_node->full_name), "ibm,platform-facilities")
+
+That would work for "/foo/ibm,platform-facilities" too, but IMO
+validation of the DT is not the kernel's job (if it is, we're doing a
+horrible job). But in the end here, I decided to keep the existing
+full path matching as patch 1 does.
+
+> But patch 1 here should fix that, so I'll pull it all together and try
+> and get it tested.
+
+Thanks.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
