@@ -1,72 +1,64 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v2 1/2] mfd: Add Mellanox regmap core driver
-Date: Tue, 8 Aug 2017 07:59:34 +0000
-Message-ID: <AM4PR05MB33300159962297EEC58F1BDAA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1501108094-16898-1-git-send-email-vadimp@mellanox.com>
- <1501108094-16898-2-git-send-email-vadimp@mellanox.com>
- <20170807155836.uqa2nezqqheg6so6@dell>
- <AM4PR05MB3330A1043B618D723EFF4C8DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20170808070211.ikxbzkygymlolavv@dell>
- <AM4PR05MB33301E39B8BB39F68D49B30DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20170808074523.GA12854@amd>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170808074523.GA12854@amd>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Lee Jones <lee.jones@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "j.anaszewski@samsung.com" <j.anaszewski@samsung.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 1/2] remoteproc: dt: Provide bindings for iMX6SX/7D Remote Processor Controller driver
+Date: Tue,  8 Aug 2017 10:00:29 +0200
+Message-ID: <20170808080030.2581-2-o.rempel@pengutronix.de>
+References: <20170808080030.2581-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170808080030.2581-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../devicetree/bindings/remoteproc/imx-rproc.txt   | 33 ++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
 
+diff --git a/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+new file mode 100644
+index 000000000000..faf30ef3d6cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/imx-rproc.txt
+@@ -0,0 +1,33 @@
++NXP iMX6SX/iMX7D Co-Processor Bindings
++----------------------------------------
++
++This binding provides support for ARM Cortex M4 Co-processor found on some
++NXP iMX SoCs.
++
++Required properties:
++- compatible		Should be one of:
++				"fsl,imx7d-rproc"
++				"fsl,imx6sx-rproc"
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++- syscon		Phandle to syscon block which provide access to
++			System Reset Controller
++
++Optional properties:
++- memory-region		list of phandels to the reserved memory regions.
++			(See: ../reserved-memory/reserved-memory.txt)
++
++Example:
++	m4_reserved_sysmem1: rproc@80000000 {
++		reg = <0x80000000 0x80000>;
++	};
++
++	m4_reserved_sysmem2: rproc@81000000 {
++		reg = <0x81000000 0x80000>;
++	};
++
++	imx7d-rproc {
++		compatible	= "fsl,imx7d-rproc";
++		memory-region	= <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
++		syscon		= <&src>;
++		clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
++	};
+-- 
+2.11.0
 
-> -----Original Message-----
-> From: Pavel Machek [mailto:pavel@ucw.cz]
-> Sent: Tuesday, August 08, 2017 10:45 AM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: Lee Jones <lee.jones@linaro.org>; robh+dt@kernel.org;
-> devicetree@vger.kernel.org; j.anaszewski@samsung.com;
-> rpurdie@rpsys.net; linux-leds@vger.kernel.org; jiri@resnulli.us;
-> jacek.anaszewski@gmail.com
-> Subject: Re: [patch v2 1/2] mfd: Add Mellanox regmap core driver
->=20
-> Hi!
->=20
-> > > Why don't you extend the support you already provide in
-> drivers/platform?
-> > > This seems like a logical place for an all encompassing device which
-> > > cannot be split out to individual subsystems.
-> >
-> > There is a problem to extend for that the existing driver
-> > drivers/platform/x86/mlxcpld-hotplug.c.
-> > It has been provided for x86 arch and I am planning to extend it with
-> > ACPI support.
-> >
-> > But in mlxreg-core I am using DTS, which is not supported for x86.
-> > Here I am using the next functions for probing and removing hotplug
-> > entities:
-> > static void mlxreg_core_dev_enable(struct device_node *np) {
-> > 	/* Enable and create device. */
-> > 	of_update_property(np, &mlxreg_core_device_en); }
-> >
-> > static void mlxreg_core_dev_disable(struct device_node *np) {
-> > 	/* Disable and unregister platform device. */
-> > 	of_update_property(np, &mlxreg_core_device_dis);
-> > 	of_node_clear_flag(np, OF_POPULATED); }
-> >
-> > And such code can't be placed under drivers/platform/x86/.
->=20
-> So aim for drivers/platform/mlx ...?
->=20
-
-So you suggest to move drivers/platform/x86/mlxcpld-hotplug.c to
-drivers/platform/mellanox/mlxcpld-hotplug.c and extend thr driver
-with DTS support (mlxreg_core_dev_enable/mlxreg_core_dev_disable)?
-
-> 									Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
