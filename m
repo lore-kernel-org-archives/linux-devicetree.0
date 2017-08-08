@@ -1,68 +1,75 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v2 03/18] firmware: arm_scmi: add basic driver
- infrastructure for SCMI
-Date: Tue, 8 Aug 2017 10:29:31 +0100
-Message-ID: <3279524c-d3e5-fe0f-ba7d-f715bfdcad9c@arm.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-4-git-send-email-sudeep.holla@arm.com>
- <CABb+yY0DQ1H8Apb6PoqKg-HrTfbyxShum9YtJit96T4Yo9+zrQ@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 0/8] Remove fwnode type field, constify property
+ fwnode arguments
+Date: Tue, 8 Aug 2017 12:32:16 +0300
+Message-ID: <20170808093215.uw2lricbbvwb7t3k@valkosipuli.retiisi.org.uk>
+References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1500640389.29303.177.camel@linux.intel.com>
+ <1578902.vGrhFWnP8d@aspire.rjw.lan>
+ <26807574.YAK92jB8KX@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY0DQ1H8Apb6PoqKg-HrTfbyxShum9YtJit96T4Yo9+zrQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Ryan Harkin <Ryan.Harkin@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <26807574.YAK92jB8KX@aspire.rjw.lan>
+Sender: linux-acpi-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>, erik.veijola@intel.com
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/08/17 03:46, Jassi Brar wrote:
-> On Fri, Aug 4, 2017 at 8:01 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
+On Mon, Jul 24, 2017 at 10:28:12PM +0200, Rafael J. Wysocki wrote:
+> On Friday, July 21, 2017 02:29:06 PM Rafael J. Wysocki wrote:
+> > On Friday, July 21, 2017 03:33:09 PM Andy Shevchenko wrote:
+> > > On Fri, 2017-07-21 at 13:52 +0200, Rafael J. Wysocki wrote:
+> > > > On Fri, Jul 21, 2017 at 1:39 PM, Sakari Ailus
+> > > > <sakari.ailus@linux.intel.com> wrote:
+> > > > > Hello everyone,
+> > > > > 
+> > > > > This set removes the struct fwnode_handle type field and constifies
+> > > > > the
+> > > > > fwnode arguments in the fwnode property API more or less the way
+> > > > > they are
+> > > > > const in OF property API.
+> > > > > 
+> > > > > Comments are welcome.
+> > > > > 
+> > > > > All the dependent patches are now in linux-pm master branch.
+> > > > > 
+> > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg75957.html>;
+> > > > > 
+> > > > > v1 can be found here:
+> > > > > 
+> > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg74564.html>;
+> > > > > 
+> > > > > changes since v2:
+> > > > > 
+> > > > > - Add 8th patch "device property: Introduce
+> > > > >   fwnode_property_get_reference_args". This allows obtaining
+> > > > > references
+> > > > >   with integer arguments using the fwnode interface.
+> > > > > 
+> > > > >   The functionality will be soon needed in adding support for nvmem
+> > > > >   framework on ACPI as well as in referring to e.g. lens and flash
+> > > > > devices
+> > > > >   on V4L2.
+> > > > 
+> > > > OK, so if people have no objections, I'll queue this up for 4.14.
+> > > 
+> > > I have no objections.
+> > > 
+> > > One comment Sakari already has addressed, another one
+> > > (list_first_enatry_or_null() use) might be addressed later.
+> > 
+> > Cool, thanks!
 > 
-> ....
->> +int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
->> +{
->> +       int ret;
->> +       int timeout;
->> +       struct scmi_info *info = handle_to_scmi_info(handle);
->> +       struct device *dev = info->dev;
->> +
->> +       ret = mbox_send_message(info->tx_chan, xfer);
->>
-> NAK
-> 
-> This is still not fixed. For the reasons mentioned many times like
-> here...   https://lkml.org/lkml/2017/7/7/465
-> 
+> So the series have been applied.
 
-Since SCPI and SCMI are based on doorbell designs like ACPI PCC, they
-can't send any data as all the data are part of shared memory.
+Thanks a lot!
 
-What data needs to be sent from SCPI/SCMI as part of mbox_send_message
-in your opinion ? I can't think of any generic way to form this data.
-
-It's not possible to generalize that and SCPI/SCMI's transport is
-specifically designed in that way to avoid any kind of dependency
-on the mailbox hardware so that the protocol can be generic exactly like
-ACPI PCC.
-
-I understand your concern on how existing mailbox controllers work with
-it. They can't as they stand today as they expect some specific data
-based on the hardware or the protocol they support on it.
-
-One option to deal with this is to have a generic DT based doorbell kind
-of controller driver but I am not sure if we can define register level
-bindings like ACPI PCC.
-
-Or we teach them to ignore the data if it's not present. I don't like
-the idea of adding shim layer for each of the controller as each one
-expect different format and more over SCPI/SCMI doesn't even require it
-to support SCMI on those mailbox controllers. That may end up with 2x
-drivers(one actual driver and and another shim layer for it)
+I see this is in the linux-next branch now; the device-properties branch
+seems to be in its former state still. Is there a chance that you have
+merged it locally but not pushed the new device-properties branch?
 
 -- 
-Regards,
-Sudeep
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
