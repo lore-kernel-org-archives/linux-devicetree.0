@@ -1,37 +1,78 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/4] dt-bindings: phy-mt65xx-usb: supports PCIe, SATA and
- rename file
-Date: Tue, 8 Aug 2017 17:44:37 +0530
-Message-ID: <ef2a5b54-4fe7-83e3-9c24-fb3ddb3029d5@ti.com>
-References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
- <1501754483-10392-4-git-send-email-chunfeng.yun@mediatek.com>
- <1501755607.25536.109.camel@mhfsdcap03>
+From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt-bindings: phy: sun4i-usb-phy: Add
+ property descriptions for H3
+Date: Tue, 8 Aug 2017 17:46:33 +0530
+Message-ID: <c7dfc4e8-7a4e-e57d-e1e8-16f0a56cd505@ti.com>
+References: <20170803081411.22389-1-wens@csie.org>
+ <20170803081411.22389-2-wens@csie.org>
+Reply-To: kishon-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1501755607.25536.109.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ryder Lee <ryder.lee@mediatek.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCOOP4VF5IDRBMGXU3GAKGQEVTOTQWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20170803081411.22389-2-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Chunfeng
 
-On Thursday 03 August 2017 03:50 PM, Chunfeng Yun wrote:
-> hi,
+
+On Thursday 03 August 2017 01:44 PM, Chen-Yu Tsai wrote:
+> The Allwinner H3 SoC has 4 USB PHYs, so it needs four sets of pmu
+> regions, clocks, resets, and optional vbus properties. These were
+> not described when the H3 compatible string was added.
 > 
-> I made a mistake, please ignore the patches with Change-Id, very sorry
+> Fixes: 626a630e003c ("phy-sun4i-usb: Add support for the host usb-phys
+> 		      found on the H3 SoC")
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-No problem. However can you resend the series after fixing all checkpatch warnings?
+Rob, can you give your Acked-by for this patch?
 
 Thanks
 Kishon
+> ---
+>  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> index 005bc22938ff..893dd01dfe64 100644
+> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+> @@ -17,18 +17,21 @@ Required properties:
+>    * "phy_ctrl"
+>    * "pmu0" for H3, V3s and A64
+>    * "pmu1"
+> -  * "pmu2" for sun4i, sun6i or sun7i
+> +  * "pmu2" for sun4i, sun6i, sun7i or sun8i-h3
+> +  * "pmu3" for sun8i-h3
+>  - #phy-cells : from the generic phy bindings, must be 1
+>  - clocks : phandle + clock specifier for the phy clocks
+>  - clock-names :
+>    * "usb_phy" for sun4i, sun5i or sun7i
+>    * "usb0_phy", "usb1_phy" and "usb2_phy" for sun6i
+>    * "usb0_phy", "usb1_phy" for sun8i
+> +  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
+>  - resets : a list of phandle + reset specifier pairs
+>  - reset-names :
+>    * "usb0_reset"
+>    * "usb1_reset"
+> -  * "usb2_reset" for sun4i, sun6i or sun7i
+> +  * "usb2_reset" for sun4i, sun6i, sun7i or sun8i-h3
+> +  * "usb3_reset" for sun8i-h3
+>  
+>  Optional properties:
+>  - usb0_id_det-gpios : gpio phandle for reading the otg id pin value
+> @@ -37,6 +40,7 @@ Optional properties:
+>  - usb0_vbus-supply : regulator phandle for controller usb0 vbus
+>  - usb1_vbus-supply : regulator phandle for controller usb1 vbus
+>  - usb2_vbus-supply : regulator phandle for controller usb2 vbus
+> +- usb3_vbus-supply : regulator phandle for controller usb3 vbus
+>  
+>  Example:
+>  	usbphy: phy@0x01c13400 {
+> 
