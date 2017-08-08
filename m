@@ -1,45 +1,39 @@
-From: Elaine Zhang <zhangqing@rock-chips.com>
-Subject: [PATCH v3 9/9] clk: rockchip: add some critical clocks for rv1108 SoC
-Date: Tue,  8 Aug 2017 15:19:33 +0800
-Message-ID: <1502176773-32415-1-git-send-email-zhangqing@rock-chips.com>
-References: <1502176547-30817-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502176547-30817-1-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, heiko@sntech.de
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, shawn.lin@rock-chips.com, andy.yan@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v2 3/5] thermal: imx: Add support for reading OCOTP
+ through nvmem
+Date: Tue, 08 Aug 2017 15:21:55 +0800
+Message-ID: <1502176915.4296.1.camel@intel.com>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
+         <faf9c3e5f970b9609073c4c191a7af03d647ea51.1500041281.git.leonard.crestez@nxp.com>
+         <20170725080835.GD20064@dragon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170725080835.GD20064@dragon>
+Sender: linux-pm-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Rob Herring <robh+dt@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-the bus/periph/nclk_ddrupctl/pclk_ddrmon/pclk_acodecphy/pclk_pmu
-no driver to handle them,
-Chip design requirements for these clock to always on.
+On Tue, 2017-07-25 at 16:08 +0800, Shawn Guo wrote:
+> On Fri, Jul 14, 2017 at 05:11:08PM +0300, Leonard Crestez wrote:
+> > 
+> > On newer imx SOCs accessing OCOTP directly is wrong because the
+> > ocotp clock
+> > needs to be enabled first. Add support for reading those same
+> > values through
+> > the nvmem API instead.
+> > 
+> > The older path is preserved for compatibility with older dts and
+> > because it
+> > works correctly on imx6qdl chips.
+> > 
+> > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> Acked-by: Shawn Guo <shawnguo@kernel.org>
 
-Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
----
- drivers/clk/rockchip/clk-rv1108.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+I'm okay with the thermal change.
+We still need ACK for the nvmem changes in this patch series.
 
-diff --git a/drivers/clk/rockchip/clk-rv1108.c b/drivers/clk/rockchip/clk-rv1108.c
-index b845c5d8e792..e3101d8dae08 100644
---- a/drivers/clk/rockchip/clk-rv1108.c
-+++ b/drivers/clk/rockchip/clk-rv1108.c
-@@ -776,10 +776,16 @@ enum rv1108_plls {
- 
- static const char *const rv1108_critical_clocks[] __initconst = {
- 	"aclk_core",
--	"aclk_bus_src_gpll",
-+	"aclk_bus",
-+	"hclk_bus",
-+	"pclk_bus",
- 	"aclk_periph",
- 	"hclk_periph",
- 	"pclk_periph",
-+	"nclk_ddrupctl",
-+	"pclk_ddrmon",
-+	"pclk_acodecphy",
-+	"pclk_pmu",
- };
- 
- static void __init rv1108_clk_init(struct device_node *np)
--- 
-1.9.1
+thanks,
+rui
