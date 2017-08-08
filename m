@@ -1,70 +1,92 @@
-From: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Subject: RE: [patch v2 1/2] mfd: Add Mellanox regmap core driver
-Date: Tue, 8 Aug 2017 08:32:14 +0000
-Message-ID: <AM4PR05MB3330A3B5F71CCD4A21682320A28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1501108094-16898-1-git-send-email-vadimp@mellanox.com>
- <1501108094-16898-2-git-send-email-vadimp@mellanox.com>
- <20170807155836.uqa2nezqqheg6so6@dell>
- <AM4PR05MB3330A1043B618D723EFF4C8DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20170808070211.ikxbzkygymlolavv@dell>
- <AM4PR05MB33301E39B8BB39F68D49B30DA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20170808074523.GA12854@amd>
- <AM4PR05MB33300159962297EEC58F1BDAA28A0@AM4PR05MB3330.eurprd05.prod.outlook.com>
- <20170808081711.GE12854@amd>
+From: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] mfd: mt6397: create irq mappings in mfd core
+ driver
+Date: Tue, 8 Aug 2017 17:09:55 +0800
+Message-ID: <1502183395.28466.5.camel@mhfsdcap03>
+References: <1502071065-6745-1-git-send-email-chen.zhong@mediatek.com>
+         <1502071065-6745-2-git-send-email-chen.zhong@mediatek.com>
+         <20170807213244.7hrd3isq5jj44dgd@piout.net>
+         <20170808025328.GB12328@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170808081711.GE12854@amd>
-Content-Language: en-US
+In-Reply-To: <20170808025328.GB12328@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org" <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org" <jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org>, "jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rtc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2017-08-07 at 19:53 -0700, Dmitry Torokhov wrote:
+> On Mon, Aug 07, 2017 at 11:32:44PM +0200, Alexandre Belloni wrote:
+> > On 07/08/2017 at 09:57:41 +0800, Chen Zhong wrote:
+> > > The core driver should create and manage irq mappings instead of
+> > > leaf drivers. This patch change to pass irq domain to
+> > > devm_mfd_add_devices() and it will create mapping for irq resources
+> > > automatically. And remove irq mapping in rtc driver since this has
+> > > been done in core driver.
+> > > 
+> > > Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > For the RTC part:
+> > Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > 
+> > > ---
+> > >  drivers/mfd/mt6397-core.c |    4 ++--
+> > >  drivers/rtc/rtc-mt6397.c  |    2 +-
+> > >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> > > index 04a601f..6546d7f 100644
+> > > --- a/drivers/mfd/mt6397-core.c
+> > > +++ b/drivers/mfd/mt6397-core.c
+> > > @@ -289,7 +289,7 @@ static int mt6397_probe(struct platform_device *pdev)
+> > >  
+> > >  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6323_devs,
+> > >  					   ARRAY_SIZE(mt6323_devs), NULL,
+> > > -					   0, NULL);
+> > > +					   0, pmic->irq_domain);
+> > >  		break;
+> > >  
+> > >  	case MT6397_CID_CODE:
+> > > @@ -304,7 +304,7 @@ static int mt6397_probe(struct platform_device *pdev)
+> > >  
+> > >  		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6397_devs,
+> > >  					   ARRAY_SIZE(mt6397_devs), NULL,
+> > > -					   0, NULL);
+> > > +					   0, pmic->irq_domain);
+> > >  		break;
+> > >  
+> > >  	default:
+> > > diff --git a/drivers/rtc/rtc-mt6397.c b/drivers/rtc/rtc-mt6397.c
+> > > index 1a61fa5..22c52f7 100644
+> > > --- a/drivers/rtc/rtc-mt6397.c
+> > > +++ b/drivers/rtc/rtc-mt6397.c
+> > > @@ -323,7 +323,7 @@ static int mtk_rtc_probe(struct platform_device *pdev)
+> > >  	rtc->addr_base = res->start;
+> > >  
+> > >  	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+> > > -	rtc->irq = irq_create_mapping(mt6397_chip->irq_domain, res->start);
+> > > +	rtc->irq = res->start;
+> 
+> Why not
+> 
+> 	rtc->irq = platform_get_irq(pdev, 0);
+> 	if (rtc->irq < 0)
+> 		return rtc->irq;
+> ?
+> 
+> This way you propagate error properly.
+> 
+> Thanks.
+> 
 
+Hi Dmitry,
 
-> -----Original Message-----
-> From: Pavel Machek [mailto:pavel-+ZI9xUNit7I@public.gmane.org]
-> Sent: Tuesday, August 08, 2017 11:17 AM
-> To: Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-> Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; j.anaszewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org;
-> rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org; linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org;
-> jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Subject: Re: [patch v2 1/2] mfd: Add Mellanox regmap core driver
->=20
-> Hi!
->=20
-> > > > And such code can't be placed under drivers/platform/x86/.
-> > >
-> > > So aim for drivers/platform/mlx ...?
-> > >
-> >
-> > So you suggest to move drivers/platform/x86/mlxcpld-hotplug.c to
-> > drivers/platform/mellanox/mlxcpld-hotplug.c and extend thr driver with
-> > DTS support (mlxreg_core_dev_enable/mlxreg_core_dev_disable)?
->=20
-> If this leads to less code duplication -- yes, by all means do that.
+	I'll modify it to get irq number via this way.
 
-OK.
-So, I will remove from mlxreg-core IC related part and send the patches for=
- your
-review.
-In parallel I'll start to work with platform maintainers for moving mlxcpld=
--hotplug=20
-and further extension for DTS support. After this is ready, I'll extend mlx=
-reg-core
-with IC activation.
+Thank you.
 
-Is sounds OK with you?
-
->=20
-> 									Pavel
-> --
-> (english) http://www.livejournal.com/~pavelmachek
-> (cesky, pictures)
-> http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
