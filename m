@@ -1,99 +1,107 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 5/5] mfd: mt6397: Add PMIC keys support to MT6397
- driver
-Date: Tue, 8 Aug 2017 12:15:56 +0100
-Message-ID: <20170808111556.dmx2s6bcwnsccrkn@dell>
-References: <1502071065-6745-1-git-send-email-chen.zhong@mediatek.com>
- <1502071065-6745-6-git-send-email-chen.zhong@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1502071065-6745-6-git-send-email-chen.zhong@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Zhong <chen.zhong@mediatek.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie Huang <eddie.huang@mediatek.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jaechul Lee <jcsing.lee@samsung.com>, Jonathan Cameron <jic23@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Beomho Seo <beomho.seo@samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "spi: qup: Ensure done detection" to the spi tree
+Date: Tue, 08 Aug 2017 12:17:57 +0100
+Message-ID: <E1df2WL-0006EH-RR@finisterre>
+References: <1497603538-12750-15-git-send-email-varada@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497603538-12750-15-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgAndy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 07 Aug 2017, Chen Zhong wrote:
+The patch
 
-> This patch adds compatible strings and interrupts for pmic keys
-> which serves as child device of MFD.
-> 
-> Signed-off-by: Chen Zhong <chen.zhong@mediatek.com>
-> ---
->  drivers/mfd/mt6397-core.c |   36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-> index 6546d7f..3c6a765 100644
-> --- a/drivers/mfd/mt6397-core.c
-> +++ b/drivers/mfd/mt6397-core.c
-> @@ -43,6 +43,30 @@
->  	},
->  };
->  
-> +static const struct resource mt6323_keys_resources[] = {
-> +	{
-> +		.start = MT6323_IRQ_STATUS_PWRKEY,
-> +		.end   = MT6323_IRQ_STATUS_PWRKEY,
-> +		.flags = IORESOURCE_IRQ,
-> +	}, {
-> +		.start = MT6323_IRQ_STATUS_FCHRKEY,
-> +		.end   = MT6323_IRQ_STATUS_FCHRKEY,
-> +		.flags = IORESOURCE_IRQ,
-> +	},
-> +};
-> +
-> +static const struct resource mt6397_keys_resources[] = {
-> +	{
-> +		.start = MT6397_IRQ_PWRKEY,
-> +		.end   = MT6397_IRQ_PWRKEY,
-> +		.flags = IORESOURCE_IRQ,
-> +	}, {
-> +		.start = MT6397_IRQ_HOMEKEY,
-> +		.end   = MT6397_IRQ_HOMEKEY,
-> +		.flags = IORESOURCE_IRQ,
-> +	},
-> +};
+   spi: qup: Ensure done detection
 
-We have better ways to define these now.
+has been applied to the spi tree at
 
-Please grep for "DEFINE_RES_"
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
->  static const struct mfd_cell mt6323_devs[] = {
->  	{
->  		.name = "mt6323-regulator",
-> @@ -50,6 +74,11 @@
->  	}, {
->  		.name = "mt6323-led",
->  		.of_compatible = "mediatek,mt6323-led"
-> +	}, {
-> +		.name = "mtk-pmic-keys",
-> +		.num_resources = ARRAY_SIZE(mt6323_keys_resources),
-> +		.resources = mt6323_keys_resources,
-> +		.of_compatible = "mediatek,mt6323-keys"
->  	},
->  };
->  
-> @@ -71,7 +100,12 @@
->  	}, {
->  		.name = "mt6397-pinctrl",
->  		.of_compatible = "mediatek,mt6397-pinctrl",
-> -	},
-> +	}, {
-> +		.name = "mtk-pmic-keys",
-> +		.num_resources = ARRAY_SIZE(mt6397_keys_resources),
-> +		.resources = mt6397_keys_resources,
-> +		.of_compatible = "mediatek,mt6397-keys"
-> +	}
->  };
->  
->  static void mt6397_irq_lock(struct irq_data *data)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From cd595b99af24b8efa4a6a8889ad65f4d270fd644 Mon Sep 17 00:00:00 2001
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Date: Fri, 28 Jul 2017 12:23:00 +0530
+Subject: [PATCH] spi: qup: Ensure done detection
+
+This patch fixes an issue where a SPI transaction has completed, but the
+done condition is missed.  This occurs because at the time of interrupt the
+MAX_INPUT_DONE_FLAG is not asserted.  However, in the process of reading
+blocks of data from the FIFO, the last portion of data comes in.
+
+The opflags read at the beginning of the irq handler no longer matches the
+current opflag state.  To get around this condition, the block read
+function should update the opflags so that done detection is correct after
+the return.
+
+Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ drivers/spi/spi-qup.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 3c2c2c0ed9ab..4c3c938360f4 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -266,7 +266,7 @@ static void spi_qup_read_from_fifo(struct spi_qup *controller, u32 num_words)
+ 	}
+ }
+ 
+-static void spi_qup_read(struct spi_qup *controller)
++static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
+ {
+ 	u32 remainder, words_per_block, num_words;
+ 	bool is_block_mode = controller->mode == QUP_IO_M_MODE_BLOCK;
+@@ -305,10 +305,12 @@ static void spi_qup_read(struct spi_qup *controller)
+ 
+ 	/*
+ 	 * Due to extra stickiness of the QUP_OP_IN_SERVICE_FLAG during block
+-	 * mode reads, it has to be cleared again at the very end
++	 * reads, it has to be cleared again at the very end.  However, be sure
++	 * to refresh opflags value because MAX_INPUT_DONE_FLAG may now be
++	 * present and this is used to determine if transaction is complete
+ 	 */
+-	if (is_block_mode && spi_qup_is_flag_set(controller,
+-				QUP_OP_MAX_INPUT_DONE_FLAG))
++	*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
++	if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
+ 		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
+ 			       controller->base + QUP_OPERATIONAL);
+ 
+@@ -613,7 +615,7 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+ 	} else {
+ 		if (opflags & QUP_OP_IN_SERVICE_FLAG)
+-			spi_qup_read(controller);
++			spi_qup_read(controller, &opflags);
+ 
+ 		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
+ 			spi_qup_write(controller);
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.13.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
