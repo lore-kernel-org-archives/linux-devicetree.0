@@ -1,41 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] of: Add helper for mapping device node to logical
- CPU number
-Date: Mon, 7 Aug 2017 18:33:15 -0500
-Message-ID: <CAL_JsqLuvHwnrVKfS34T8xmBMx0x-0Y6VkaYCa7rtGi8fjS_kw@mail.gmail.com>
-References: <1502099560-6267-1-git-send-email-suzuki.poulose@arm.com> <1502099560-6267-3-git-send-email-suzuki.poulose@arm.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] gpio: uniphier: add UniPhier GPIO controller driver
+Date: Tue, 8 Aug 2017 10:06:45 +0900
+Message-ID: <CAK7LNATCZ9r6KCbFLAW68r9WtYrQ2OvWOZd0AXW4GbdHjHQDVw@mail.gmail.com>
+References: <1501758371-25316-1-git-send-email-yamada.masahiro@socionext.com>
+ <CACRpkdZWxjwDnVy5f2rLAWs=+T=5SnwyU8dz1FW1eg8dk8JN_Q@mail.gmail.com>
+ <CAK7LNAT4FvsX2-hYrKYmrftEZZb_RZOrfZoKWvR8hopt9jT8-Q@mail.gmail.com> <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502099560-6267-3-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <CACRpkdZ26q09s-L2wVy+Vv5rV0Enjith0AJ_sJCAH3kvzvjn1Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Will Deacon <will.deacon@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Sudeep Holla <sudeep.holla@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, Marc Zyngier <marc.zyngier@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 7, 2017 at 4:52 AM, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> Add a helper to map a device node to a logical CPU number to avoid
-> duplication. Currently this is open coded in different places (e.g
-> gic-v3, coresight). The helper tries to map device node to a "possible"
-> logical CPU id, which may not be online yet. It is the responsibility
-> of the user to make sure that the CPU is online. The helper uses
-> of_get_cpu_node() which uses arch specific backends to match the phyiscal
-> ids.
->
-> Cc: devicetree@vger.kernel.org
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
-> Changes since V3:
->  - Renamed the helper to of_cpu_node_to_id(), suggested by Rob
->  - Return -ENODEV on failure than nr_cpus_id
-> ---
->  drivers/of/base.c  | 26 ++++++++++++++++++++++++++
->  include/linux/of.h |  7 +++++++
->  2 files changed, 33 insertions(+)
+Hi Linus,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+2017-08-08 0:37 GMT+09:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Mon, Aug 7, 2017 at 3:50 PM, Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>
+>> Adding "interrupts" property in DT causes
+>> of_pupulate_default_populate() to assign virtual IRQ numbers
+>> before driver probing.  So it does not work well with IRQ domain hierarchy.
+>
+> I think I heard some noise about this the week before.
+>
+>> For pinctrl/stm32/pinctrl-stm32.c,
+>> I do not see "interrupts", so it just straight maps the irq numbers.
+>
+> I think OMAP and DaVinci does someting similar too. This is from a recent
+> DaVinci patch from Keerthy:
+>
+> +Example for 66AK2G:
+> +
+> +gpio0: gpio@2603000 {
+> +       compatible = "ti,k2g-gpio", "ti,keystone-gpio";
+> +       reg = <0x02603000 0x100>;
+> +       gpio-controller;
+> +       #gpio-cells = <2>;
+> +       interrupts = <GIC_SPI 432 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 433 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 434 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 435 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 436 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 437 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 438 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 439 IRQ_TYPE_EDGE_RISING>,
+> +                       <GIC_SPI 440 IRQ_TYPE_EDGE_RISING>;
+> +       interrupt-controller;
+> +       #interrupt-cells = <2>;
+> +       ti,ngpio = <144>;
+> +       ti,davinci-gpio-unbanked = <0>;
+> +       clocks = <&k2g_clks 0x001b 0x0>;
+> +       clock-names = "gpio";
+> +};
+>
+>
+> That looks fairly similar.
+>
+
+I do not think so.
+
+
+I do not see .alloc hook in drivers/gpio/gpio-davinci.c
+so this driver is unrelated to IRQ domain hierarchy.
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
