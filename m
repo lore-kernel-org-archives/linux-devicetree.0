@@ -1,34 +1,45 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 03/18] firmware: arm_scmi: add basic driver
- infrastructure for SCMI
-Date: Tue, 8 Aug 2017 08:16:24 +0530
-Message-ID: <CABb+yY0DQ1H8Apb6PoqKg-HrTfbyxShum9YtJit96T4Yo9+zrQ@mail.gmail.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com> <1501857104-11279-4-git-send-email-sudeep.holla@arm.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] serio: PS2 gpio bit banging driver for the serio bus
+Date: Mon, 7 Aug 2017 19:49:02 -0700
+Message-ID: <20170808024902.GA12328@dtor-ws>
+References: <20170731222452.22887-1-danilokrummrich@dk-develop.de>
+ <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1501857104-11279-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYz_+soss4Rb9zMiP4eZZtXqjW_Xy7hH=wm1x2m_R9R3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Danilo Krummrich <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Input <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 4, 2017 at 8:01 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+On Mon, Aug 07, 2017 at 11:03:53AM +0200, Linus Walleij wrote:
+> On Tue, Aug 1, 2017 at 12:24 AM, Danilo Krummrich
+> <danilokrummrich-q2z19idT6fYRctDU1SCqIg@public.gmane.org> wrote:
+> 
+> > +config SERIO_GPIO_PS2
+> > +       tristate "GPIO PS/2 bit banging driver"
+> > +       help
+> > +         Say Y here if you want PS/2 bit banging support via GPIO.
+> > +
+> > +         To compile this driver as a module, choose M here: the
+> > +         module will be called gpio-ps2.
+> > +
+> > +         If you are unsure, say N.
+> 
+> As mentioned
+> 
+> depends on GPIOLIB
+> depends on OF
 
-....
-> +int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
-> +{
-> +       int ret;
-> +       int timeout;
-> +       struct scmi_info *info = handle_to_scmi_info(handle);
-> +       struct device *dev = info->dev;
-> +
-> +       ret = mbox_send_message(info->tx_chan, xfer);
->
-NAK
+I do not think this driver has to depend on OF. It should use gpiod and
+generic device properties.
 
-This is still not fixed. For the reasons mentioned many times like
-here...   https://lkml.org/lkml/2017/7/7/465
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
