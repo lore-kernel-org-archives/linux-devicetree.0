@@ -1,52 +1,71 @@
-From: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] thermal: imx: Add support for reading OCOTP
- through nvmem
-Date: Tue, 8 Aug 2017 12:00:40 +0100
-Message-ID: <26407dd5-a9b1-67c0-c4ab-d97fa0b88b79@linaro.org>
-References: <cover.1500041281.git.leonard.crestez@nxp.com>
- <faf9c3e5f970b9609073c4c191a7af03d647ea51.1500041281.git.leonard.crestez@nxp.com>
- <20170725080835.GD20064@dragon> <1502176915.4296.1.camel@intel.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 01/17] mfd: madera: Add register
+ definitions for Cirrus Logic Madera codecs
+Date: Tue, 8 Aug 2017 12:03:19 +0100
+Message-ID: <20170808110319.ssagukhfp72r5vys@dell>
+References: <1501235239-11145-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1501235239-11145-2-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502176915.4296.1.camel-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?Q?Lothar_Wa=c3=9fmann?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Anson Huang <Anson.Huang-3arQi8VN3Tc@public.gmane.org>, Octavian Purdila <octavian.purdila-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1501235239-11145-2-git-send-email-rf@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, broonie@kernel.org, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 08/08/17 08:21, Zhang Rui wrote:
-> On Tue, 2017-07-25 at 16:08 +0800, Shawn Guo wrote:
->> On Fri, Jul 14, 2017 at 05:11:08PM +0300, Leonard Crestez wrote:
->>>
->>> On newer imx SOCs accessing OCOTP directly is wrong because the
->>> ocotp clock
->>> needs to be enabled first. Add support for reading those same
->>> values through
->>> the nvmem API instead.
->>>
->>> The older path is preserved for compatibility with older dts and
->>> because it
->>> works correctly on imx6qdl chips.
->>>
->>> Signed-off-by: Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
->> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> I'm okay with the thermal change.
-> We still need ACK for the nvmem changes in this patch series.
-NVMEM changes are already sent to Greg K H with other patches 
-(https://lkml.org/lkml/2017/7/26/164), should appear in next.
-
-
-> 
-> thanks,
-> rui
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyOCBKdWwgMjAxNywgUmljaGFyZCBGaXR6Z2VyYWxkIHdyb3RlOgoKPiBUaGlzIHBh
+dGNoIGFkZHMgYSBoZWFkZXIgZmlsZSBvZiByZWdpc3RlciBkZWZpbml0aW9ucyBmb3IgQ2lycnVz
+Cj4gTG9naWMgIk1hZGVyYSIgY2xhc3MgY29kZWNzLiBUaGVzZSBjb2RlY3MgYXJlIGFsbCBiYXNl
+ZCBvZmYgYSBjb21tb24KPiBzZXQgb2YgaGFyZHdhcmUgSVAgc28gaGF2ZSBhIGNvbW1vbiByZWdp
+c3RlciBtYXAgKHdpdGggYSBmZXcgbWlub3IKPiBkZXZpY2UtdG8tZGV2aWNlIHZhcmlhdGlvbnMp
+Lgo+IAo+IFRoZSByZWdpc3RlcnMuaCBmaWxlIGlzIHRvb2wtZ2VuZXJhdGVkIGRpcmVjdGx5IGZy
+b20gdGhlIGhhcmR3YXJlIGRlc2lnbgo+IGJ1dCBoYXMgYmVlbiBtYW51YWxseSBzdHJpcHBlZCBk
+b3duIHRvIHJlZHVjZSBzaXplIChmdWxsIHJlZ2lzdGVyCj4gbWFwIGlzID40NDAwMCBsaW5lcyku
+IEFsbCBuYW1lcyBhcmUga2VwdCB0aGUgc2FtZSBhcyBkYXRhc2hlZXQgbmFtZXMKPiBzbyB0aGF0
+IHRoZXkgY2FuIGJlIGNyb3NzLXJlZmVyZW5jZWQgYmV0d2VlbiBzb3VyY2UgYW5kIGRhdGFzaGVl
+dCB3aXRob3V0Cj4gY29uZnVzaW9uLgo+IAo+IFRoZSByZWdpc3RlciBtYXAgbGF5b3V0IGlzIGtl
+cHQgZnVsbHktZGVmaW5lZCByYXRoZXIgdGhhbiBmYWN0b3JlZCBpbnRvCj4gbWFjcm9zIGFuZC9v
+ciBibG9jay1pbmRleGluZyBjb2RlLiBUaGUgbWFqb3IgcmVhc29ucyBmb3IgdGhpcyBhcmU6Cj4g
+Cj4gIC0gIzEgaXMgdGhhdCBpdCBtYWtlcyB0aGUgc291cmNlIGhpZ2hseSBncmVwcGFibGUsIHdo
+aWNoIGlzIGltcG9ydGFudC4KPiAgICAiV2hhdCBkb2VzIHRoZSBkcml2ZXIgZG8gd2l0aCByZWdp
+c3RlciBiaXRzIFhZWiIgb3IgIldoZXJlIGRvZXMgaXQgdXNlCj4gICAgcmVnaXN0ZXIgYml0cyBY
+WVoiIGFyZSBjb21tb25seSB0eXBlcyBvZiBxdWVzdGlvbnMuIFRoZXNlIGNhbiBiZSBxdWlja2x5
+Cj4gICAgYW5zd2VyZWQgYnkgYSBncmVwLiBTcXVhc2hpbmcgZGVmaW5pdGlvbnMgaW50byBnZW5l
+cmF0b3IgbWFjcm9zIG9yIGJsb2NrLQo+ICAgIGluZGV4aW5nIGNvZGUgaXMgYSB3YXkgb2YgZGVm
+ZWF0aW5nIGdyZXAuCj4gCj4gIC0gbW9zdCBvZiB0aGUgcmVnaXN0ZXIgZGVmaW5pdGlvbnMgYXJl
+IHVzZWQgaW4gdGFibGVzLCBzbyBhIGNvbnN0YW50IHZhbHVlCj4gICAgaXMgcmVxdWlyZWQuIFVz
+aW5nIGdlbmVyYXRvciBtYWNyb3MgbWFrZSB0aGUgdGFibGUgZGVmaW5pdGlvbiBjbHVua3kgYW5k
+Cj4gICAgb2JzY3VyZS4KPiAKPiAgLSB0aGUgY29kZSBpcyBjbGVhcmVyIHdoZW4gaXQncyB0aGVy
+ZSBpbiB0aGUgc291cmNlIGV4YWN0bHkgd2hhdCByZWdpc3Rlcgo+ICAgIGFuZCBmaWVsZCBpdCBp
+cyB1c2luZwo+IAo+ICAtIGl0IGlzIGVhc2llciB0byBkaWZmIHRoZSByZWdpc3RlciBtYXAgb2Yg
+YSBuZXcgKHVuc3VwcG9ydGVkKSBjb2RlYyBhZ2FpbnN0Cj4gICAgd2hhdCBpcyBhbHJlYWR5IHN1
+cHBvcnRlZCBhbmQgbWVyZ2UgaW4gZGlmZmVyZW5jZXMKPiAKPiAgLSBpdCBtYWtlcyB0aGUgcmVn
+aXN0ZXIgbWFwIGF2YWlsYWJsZSBpbiBzb3VyY2UgZm9yIG1haW50ZW5hbmNlL2RlYnVnZ2luZwo+
+ICAgIGluc3RlYWQgb2YgaGF2aW5nIHRvIHJlZmVyIGJhY2sgdG8gdGhlIGRhdGFzaGVldCBmb3Ig
+YSByZWdpc3RlciBtYXAKPiAKPiBTaWduZWQtb2ZmLWJ5OiBSaWNoYXJkIEZpdHpnZXJhbGQgPHJm
+QG9wZW5zb3VyY2Uud29sZnNvbm1pY3JvLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIHNpbmNlIFYzOgo+
+IC0gTWFudWFsbHkgc3RyaXBwZWQgb3V0IGEgbG90IG1vcmUgc3R1ZmYsIGRlZmluZXMgd2UncmUg
+bm90IHVzaW5nIHJpZ2h0IG5vdwo+IC0gQWRkZWQgdGhlIGV4cGxhbmF0aW9uIGFib3ZlIHRvIHRo
+ZSBjb21taXQgbWVzc2FnZSBvZiB3aHkgd2UgZGVmaW5lIHRoZQo+ICAgbWFwIGVmZmVjdGl2ZWx5
+IHZlcmJhdGltCj4gCj4gIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MTAgKwo+ICBpbmNsdWRlL2xpbnV4L21mZC9tYWRlcmEvcmVnaXN0ZXJzLmggfCAzOTg3ICsrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzOTk3IGlu
+c2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL21hZGVy
+YS9yZWdpc3RlcnMuaAoKRm9yIG15IG93biByZWZlcmVuY2U6CiAgQWNrZWQtZm9yLU1GRC1ieTog
+TGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4KCi0tIApMZWUgSm9uZXMKTGluYXJvIFNU
+TWljcm9lbGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNv
+dXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0
+dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0
+cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
