@@ -1,228 +1,62 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: [PATCH v4 02/21] dt-bindings: media: Binding document for Qualcomm Camera subsystem driver
-Date: Tue,  8 Aug 2017 16:29:59 +0300
-Message-ID: <1502199018-28250-3-git-send-email-todor.tomov@linaro.org>
-References: <1502199018-28250-1-git-send-email-todor.tomov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502199018-28250-1-git-send-email-todor.tomov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mchehab@kernel.org, hans.verkuil@cisco.com, s.nawrocki@samsung.com, sakari.ailus@iki.fi, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Cc: Todor Tomov <todor.tomov@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: [PATCH v3 0/4] leds: pca955x: add GPIO support
+Date: Tue,  8 Aug 2017 15:42:36 +0200
+Message-ID: <1502199760-763-1-git-send-email-clg@kaod.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding document for Qualcomm Camera subsystem driver.
+Hello !
 
-CC: Rob Herring <robh+dt@kernel.org>
-CC: devicetree@vger.kernel.org
-Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/media/qcom,camss.txt       | 197 +++++++++++++++++++++
- 1 file changed, 197 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+The PCA955x family of chips are I2C LED blinkers whose pins not used
+to control LEDs can be used as general purpose I/Os (GPIOs).
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
-new file mode 100644
-index 0000000..cadeceb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
-@@ -0,0 +1,197 @@
-+Qualcomm Camera Subsystem
-+
-+* Properties
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain:
-+		- "qcom,msm8916-camss"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register ranges as listed in the reg-names property.
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "csiphy0"
-+		- "csiphy0_clk_mux"
-+		- "csiphy1"
-+		- "csiphy1_clk_mux"
-+		- "csid0"
-+		- "csid1"
-+		- "ispif"
-+		- "csi_clk_mux"
-+		- "vfe0"
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Interrupts as listed in the interrupt-names property.
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "csiphy0"
-+		- "csiphy1"
-+		- "csid0"
-+		- "csid1"
-+		- "ispif"
-+		- "vfe0"
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+                - "camss_top_ahb"
-+                - "ispif_ahb"
-+                - "csiphy0_timer"
-+                - "csiphy1_timer"
-+                - "csi0_ahb"
-+                - "csi0"
-+                - "csi0_phy"
-+                - "csi0_pix"
-+                - "csi0_rdi"
-+                - "csi1_ahb"
-+                - "csi1"
-+                - "csi1_phy"
-+                - "csi1_pix"
-+                - "csi1_rdi"
-+                - "camss_ahb"
-+                - "camss_vfe_vfe"
-+                - "camss_csi_vfe"
-+                - "iface"
-+                - "bus"
-+- vdda-supply:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: A phandle to voltage supply for CSI2.
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
-+* Nodes
-+
-+- ports:
-+	Usage: required
-+	Definition: As described in video-interfaces.txt in same directory.
-+	Properties:
-+		- reg:
-+			Usage: required
-+			Value type: <u32>
-+			Definition: Selects CSI2 PHY interface - PHY0 or PHY1.
-+	Endpoint node properties:
-+		- clock-lanes:
-+			Usage: required
-+			Value type: <u32>
-+                        Definition: The physical clock lane index. The value
-+                                    must always be <1> as the physical clock
-+                                    lane is lane 1.
-+		- data-lanes:
-+			Usage: required
-+			Value type: <prop-encoded-array>
-+                        Definition: An array of physical data lanes indexes.
-+                                    Position of an entry determines the logical
-+                                    lane number, while the value of an entry
-+                                    indicates physical lane index. Lane swapping
-+                                    is supported.
-+
-+* An Example
-+
-+	camss: camss@1b00000 {
-+		compatible = "qcom,msm8916-camss";
-+		reg = <0x1b0ac00 0x200>,
-+			<0x1b00030 0x4>,
-+			<0x1b0b000 0x200>,
-+			<0x1b00038 0x4>,
-+			<0x1b08000 0x100>,
-+			<0x1b08400 0x100>,
-+			<0x1b0a000 0x500>,
-+			<0x1b00020 0x10>,
-+			<0x1b10000 0x1000>;
-+		reg-names = "csiphy0",
-+			"csiphy0_clk_mux",
-+			"csiphy1",
-+			"csiphy1_clk_mux",
-+			"csid0",
-+			"csid1",
-+			"ispif",
-+			"csi_clk_mux",
-+			"vfe0";
-+		interrupts = <GIC_SPI 78 0>,
-+			<GIC_SPI 79 0>,
-+			<GIC_SPI 51 0>,
-+			<GIC_SPI 52 0>,
-+			<GIC_SPI 55 0>,
-+			<GIC_SPI 57 0>;
-+		interrupt-names = "csiphy0",
-+			"csiphy1",
-+			"csid0",
-+			"csid1",
-+			"ispif",
-+			"vfe0";
-+		power-domains = <&gcc VFE_GDSC>;
-+		clocks = <&gcc GCC_CAMSS_TOP_AHB_CLK>,
-+			<&gcc GCC_CAMSS_ISPIF_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PHYTIMER_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PHYTIMER_CLK>,
-+			<&gcc GCC_CAMSS_CSI0_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI0_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PHY_CLK>,
-+			<&gcc GCC_CAMSS_CSI0PIX_CLK>,
-+			<&gcc GCC_CAMSS_CSI0RDI_CLK>,
-+			<&gcc GCC_CAMSS_CSI1_AHB_CLK>,
-+			<&gcc GCC_CAMSS_CSI1_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PHY_CLK>,
-+			<&gcc GCC_CAMSS_CSI1PIX_CLK>,
-+			<&gcc GCC_CAMSS_CSI1RDI_CLK>,
-+			<&gcc GCC_CAMSS_AHB_CLK>,
-+			<&gcc GCC_CAMSS_VFE0_CLK>,
-+			<&gcc GCC_CAMSS_CSI_VFE0_CLK>,
-+			<&gcc GCC_CAMSS_VFE_AHB_CLK>,
-+			<&gcc GCC_CAMSS_VFE_AXI_CLK>;
-+                clock-names = "camss_top_ahb",
-+                        "ispif_ahb",
-+                        "csiphy0_timer",
-+                        "csiphy1_timer",
-+                        "csi0_ahb",
-+                        "csi0",
-+                        "csi0_phy",
-+                        "csi0_pix",
-+                        "csi0_rdi",
-+                        "csi1_ahb",
-+                        "csi1",
-+                        "csi1_phy",
-+                        "csi1_pix",
-+                        "csi1_rdi",
-+                        "camss_ahb",
-+                        "camss_vfe_vfe",
-+                        "camss_csi_vfe",
-+                        "iface",
-+                        "bus";
-+		vdda-supply = <&pm8916_l2>;
-+		iommus = <&apps_iommu 3>;
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				csiphy0_ep: endpoint {
-+					clock-lanes = <1>;
-+					data-lanes = <0 2>;
-+					remote-endpoint = <&ov5645_ep>;
-+				};
-+			};
-+		};
-+	};
+The following adds support for device tree and Open Firmware to be
+able do define different operation modes for each pin. See bindings
+documentation for more details. The pca955x driver is then extended
+with a gpio_chip when pins are operating in GPIO mode.
+
+The driver follows the scheme of the leds-pca9532 driver which behaves
+quite similarly.
+ 
+Thanks,
+
+C.
+
+Changes since v2:
+
+ - removed 'if (pdata)' tests
+
+Changes since v1:
+
+ - split the patchset in two : DT support and GPIO support
+ - introduced the use of devm_led_classdev_register()
+ - replaced the 'compatible' property with 'type' 
+ - removed the 'gpio-base' property
+
+Cédric Le Goater (4):
+  leds: pca955x: add device tree support
+  leds: pca955x: use devm_led_classdev_register
+  leds: pca955x: add GPIO support
+  dt-bindings leds: add pca955x
+
+ .../devicetree/bindings/leds/leds-pca955x.txt      |  88 +++++++
+ drivers/leds/Kconfig                               |  11 +
+ drivers/leds/leds-pca955x.c                        | 254 +++++++++++++++++----
+ include/dt-bindings/leds/leds-pca955x.h            |  16 ++
+ 4 files changed, 323 insertions(+), 46 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pca955x.txt
+ create mode 100644 include/dt-bindings/leds/leds-pca955x.h
+
 -- 
-2.7.4
+2.7.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
