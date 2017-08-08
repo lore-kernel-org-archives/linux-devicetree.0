@@ -1,41 +1,36 @@
-From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Subject: [RESEND PATCH 0/2] Fix clock name in Aspeed GPIO bindings and driver
-Date: Tue,  8 Aug 2017 15:46:32 +0930
-Message-ID: <20170808061634.11857-1-andrew@aj.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: [RESEND PATCH 1/2] dt-bindings: gpio: aspeed: Remove reference to clock name
+Date: Tue,  8 Aug 2017 15:46:33 +0930
+Message-ID: <20170808061634.11857-2-andrew@aj.id.au>
+References: <20170808061634.11857-1-andrew@aj.id.au>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170808061634.11857-1-andrew@aj.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org
+Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Resending to fix Ryan's email address. I think I'll step away from computers
-now.
+HPLL was in fact not the clock we need. Remove prescription of which
+clock to avoid further error. Please refer to your datasheet and double
+check like I should have.
 
-Hello,
-
-Joel discovered I brain-farted the referenced clock name in the patches
-introducing the debounce capability for the Aspeed driver. The datasheet says
-PCLK but I wrote HPLL for whatever reason, so clean up that mistake by simply
-removing references to HPLL and put the onus on the devicetree author to
-get it right.
-
-Cheers,
-
-Andrew
-
-Andrew Jeffery (2):
-  dt-bindings: gpio: aspeed: Remove reference to clock name
-  gpio: aspeed: Remove reference to clock name in debounce warning
-    message
-
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
  Documentation/devicetree/bindings/gpio/gpio-aspeed.txt | 2 +-
- drivers/gpio/gpio-aspeed.c                             | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+index c756afa88cc6..fc6378c778c5 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+@@ -18,7 +18,7 @@ Required properties:
+ Optional properties:
+ 
+ - interrupt-parent      : The parent interrupt controller, optional if inherited
+-- clocks                : A phandle to the HPLL clock node for debounce timings
++- clocks                : A phandle to the clock to use for debounce timings
+ 
+ The gpio and interrupt properties are further described in their respective
+ bindings documentation:
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
