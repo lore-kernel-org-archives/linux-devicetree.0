@@ -1,98 +1,96 @@
-From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v5 1/1] usb:host:xhci support option to disable the xHCI USB2 HW LPM
-Date: Tue,  8 Aug 2017 11:27:57 +0700
-Message-ID: <1502166477-23897-1-git-send-email-tqnguyen@apm.com>
+From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] Bluetooth: hci_bcm: Add serdev support
+Date: Tue, 8 Aug 2017 06:47:18 +0200
+Message-ID: <52A773C0-3783-4A49-9F4F-0863F79B17F6@holtmann.org>
+References: <1501576704-26423-1-git-send-email-loic.poulain@gmail.com>
+ <1501576704-26423-3-git-send-email-loic.poulain@gmail.com>
+ <696124D4-A5DA-46FA-A0F0-5DC74363BD23@holtmann.org>
+ <444254163.121186.1501874785594@email.1und1.de>
+ <51D602E3-B21A-402B-A1F5-6241D55448E9@holtmann.org>
+ <1498038890.121361.1501875841550@email.1und1.de>
+ <BB04C3A8-2BFC-44B7-AA84-E0B81F560B8C@holtmann.org>
+ <653244764.121525.1501876203800@email.1und1.de>
+ <A997C486-989A-4040-9871-773A858D8410@holtmann.org>
+ <87o9rr10qy.fsf@eliezer.anholt.net>
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87o9rr10qy.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-XHCI specification 1.1 does not require xHCI-compliant controllers
-to always enable hardware USB2 LPM. However, the current xHCI
-driver always enable it when seeing HLC=1.
-This patch supports an option for users to control disabling
-USB2 Hardware LPM via DT/ACPI attribute.
-This option is needed in case user would like to disable this
-feature. For example, their xHCI controller has its USB2 HW LPM
-broken.
+Hi Eric,
 
-Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Changes since v4:
- - When HW LPM is optionally disabled, explicitly disable HLE, RWE, ...
- - Update codes to work with kernel 4.13-rc4
- - Add Acked-By from Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Changes since v3:
- - Bypass updating LPM parameters when HW LPM is optionally disabled.
-Changes since v2:
- - Change code to disable HW LPM as an option for user which
-   is set via ACPI/DT.
-Changes since v1:
- - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
-   be consistent with other attribute names.
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
- drivers/usb/host/xhci-plat.c                       |    3 +++
- drivers/usb/host/xhci.c                            |    2 +-
- drivers/usb/host/xhci.h                            |    1 +
- 4 files changed, 6 insertions(+), 1 deletions(-)
+>>>>>>>>> Add basic support for Broadcom serial slave devices.
+>>>>>>>>> Probe the serial device, retrieve its maximum speed and
+>>>>>>>>> register a new hci uart device.
+>>>>>>>>> 
+>>>>>>>>> Tested/compatible with bcm43438 (RPi3).
+>>>>>>>>> 
+>>>>>>>>> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>>>>>> ...
+>>>>>>>>> 
+>>>>>>>>> +static int bcm_serdev_probe(struct serdev_device *serdev)
+>>>>>>>>> +{
+>>>>>>>>> +	struct bcm_bt_device *bcmdev;
+>>>>>>>>> +	u32 speed;
+>>>>>>>>> +	int err;
+>>>>>>>>> +
+>>>>>>>>> +	bcmdev = devm_kzalloc(&serdev->dev, sizeof(*bcmdev), GFP_KERNEL);
+>>>>>>>>> +	if (!bcmdev)
+>>>>>>>>> +		return -ENOMEM;
+>>>>>>>>> +
+>>>>>>>>> +	bcmdev->hu.serdev = serdev;
+>>>>>>>>> +	serdev_device_set_drvdata(serdev, bcmdev);
+>>>>>>>>> +
+>>>>>>>>> +	err = of_property_read_u32(serdev->dev.of_node, "max-speed", &speed);
+>>>>>>>>> +	if (!err)
+>>>>>>>>> +		bcmdev->hu.oper_speed = speed;
+>>>>>>>>> +
+>>>>>>>>> +	return hci_uart_register_device(&bcmdev->hu, &bcm_proto);
+>>>>>>>>> +}
+>>>>>>>> 
+>>>>>>>> We do not need any GPIO for reset lines or anything else for the rPI3?
+>>>>>>>> 
+>>>>>>> 
+>>>>>>> unfortunately we don't have full schematics for RPI3, but according to firmware dt-blob.dts [1] there is a GPIO called BT_ON. This GPIO is controlled by the GPIO expander on the RPI3 board. The necessary driver for this expander is still out of tree (last mainlining attempt [2]).
+>>>>>> 
+>>>>>> so who handles this GPIO then right now (or any other GPIO for that matter)? I have seen Bluetooth being enabled and operational, but I really want to get this working in a plain upstream Fedora and without using hciattach or btattach.
+>>>>> 
+>>>>> The GPU firmware enables the GPIO and keeps this state. The mentioned expander driver should provide the ARM core (Linux) the necessary control.
+>>>> 
+>>>> what is the default behavior after reboot. BT_ON enabled or not?
+>>> 
+>>> AFAIK: enabled
+> 
+> Correct: it's enabled by the 2nd stage bootloader and never modified
+> From there.
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 2d80b60..ae6e484 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -26,6 +26,7 @@ Required properties:
- 
- Optional properties:
-   - clocks: reference to a clock
-+  - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
-   - usb3-lpm-capable: determines if platform is USB3 LPM capable
-   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
- 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index c04144b..9028fb5 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 		goto disable_clk;
- 	}
- 
-+	if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
-+		xhci->quirks |= XHCI_HW_LPM_DISABLE;
-+
- 	if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
- 		xhci->quirks |= XHCI_LPM_SUPPORT;
- 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index b2ff1ff..3a8e75f 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4087,7 +4087,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
- 			enable ? "enable" : "disable", port_num + 1);
- 
--	if (enable) {
-+	if (enable && !(xhci->quirks & XHCI_HW_LPM_DISABLE)) {
- 		/* Host supports BESL timeout instead of HIRD */
- 		if (udev->usb2_hw_lpm_besl_capable) {
- 			/* if device doesn't have a preferred BESL value use a
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index e3e9352..5d89c51 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1821,6 +1821,7 @@ struct xhci_hcd {
- #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
- #define XHCI_U2_DISABLE_WAKE	(1 << 27)
- #define XHCI_ASMEDIA_MODIFY_FLOWCONTROL	(1 << 28)
-+#define XHCI_HW_LPM_DISABLE	(1 << 29)
- 
- 	unsigned int		num_active_eps;
- 	unsigned int		limit_active_eps;
--- 
-1.7.1
+so I do not have Bluetooth working with a Fedora 26 upstream kernel. I can not figure out what extra is needed to make the Bluetooth chip respond. Is there a simple way to check the status of the BT_ON GPIO (with the lacking GPIO expander code).
+
+>> that would be a funny default since it means that it consumes power
+>> even if Bluetooth is never used. We really want to hook this up into
+>> the Bluetooth power control of the controller. So that on power down
+>> it also disables it and saves as much power as possible.
+> 
+> We would need a driver to talk to the firmware for the GPIO expander to
+> turn it off.  I wrote one last year, but my motivation got killed by DT
+> bikeshedding.
+
+If we get the GPIO expander code upstream, I wonder if we can make BT_ON disabled by default. The hci_bcm could in theory turn it back off if the Bluetooth controller doesn’t get enabled, but it would require the Bluetooth driver to be at least loaded. While for now it is easiest to have BT_ON enabled, but if you really don’t want Bluetooth it seems kinda wasteful.
+
+In addition we would need to know if the Bluetooth firmware needs to be reloaded after every BT_ON toggle. Normally there is an additional BT_RST reset line, but that seems to be missing in the rPI3 design.
+
+Also all these hacks with miniuart and switching the console from ttyAMA0 to ttyS0 is totally weird to me. The Raspbian side of things seems to have hacked a bunch of things to make this work, but we really need to use serdev for Bluetooth devices like this and also have the power control of these done by the Bluetooth driver.
+
+So what would it take to get this all working upstream so it can trickle down into a Fedora kernel?
+
+Regards
+
+Marcel
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
