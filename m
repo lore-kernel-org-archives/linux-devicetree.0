@@ -1,63 +1,142 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 5/6] dt-bindings: Document devicetree binding for ARM DSU PMU
-Date: Tue,  8 Aug 2017 12:37:25 +0100
-Message-ID: <1502192246-5623-6-git-send-email-suzuki.poulose@arm.com>
-References: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502192246-5623-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, mathieu.poirier@linaro.org, peterz@infradead.org, Suzuki K Poulose <suzuki.poulose@arm.com>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH  2/2] ARM: dts: r8a7743: Add I2C DT support
+Date: Tue,  8 Aug 2017 12:24:09 +0100
+Message-ID: <1502191449-16118-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents the devicetree bindings for ARM DSU PMU.
+Add the I2C[0-5] devices to the r8a7743 device tree.
 
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: frowand.list@gmail.com
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 ---
-Changes since V3:
- - Fixed node name in the example, suggested by Rob
----
- .../devicetree/bindings/arm/arm-dsu-pmu.txt        | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
+This patch has been tested against Linux-next tag 20170727 and renesas-dev branch.
+This patch depends on https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg17008.html
 
-diff --git a/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-new file mode 100644
-index 0000000..6efabba
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/arm-dsu-pmu.txt
-@@ -0,0 +1,27 @@
-+* ARM DynamIQ Shared Unit (DSU) Performance Monitor Unit (PMU)
+ arch/arm/boot/dts/r8a7743.dtsi | 97 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 97 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+index 8c46f62..14222c72 100644
+--- a/arch/arm/boot/dts/r8a7743.dtsi
++++ b/arch/arm/boot/dts/r8a7743.dtsi
+@@ -18,6 +18,15 @@
+ 	#address-cells = <2>;
+ 	#size-cells = <2>;
+ 
++	aliases {
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++	};
 +
-+ARM DyanmIQ Shared Unit (DSU) integrates one or more CPU cores
-+with a shared L3 memory system, control logic and external interfaces to
-+form a multicore cluster. The PMU enables to gather various statistics on
-+the operations of the DSU. The PMU provides independent 32bit counters that
-+can count any of the supported events, along with a 64bit cycle counter.
-+The PMU is accessed via CPU system registers and has no MMIO component.
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -339,6 +348,94 @@
+ 			dma-channels = <15>;
+ 		};
+ 
++		/* The memory map in the User's Manual maps the cores to bus
++		 *  numbers
++		 */
++		i2c0: i2c@e6508000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6508000 0 0x40>;
++			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 931>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 931>;
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
 +
-+** DSU PMU required properties:
++		i2c1: i2c@e6518000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6518000 0 0x40>;
++			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 930>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 930>;
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
 +
-+- compatible	: should be one of :
++		i2c2: i2c@e6530000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6530000 0 0x40>;
++			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 929>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 929>;
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
 +
-+		"arm,dsu-pmu"
++		i2c3: i2c@e6540000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6540000 0 0x40>;
++			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 928>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 928>;
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
 +
-+- interrupts	: Exactly 1 SPI must be listed.
++		i2c4: i2c@e6520000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6520000 0 0x40>;
++			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 927>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 927>;
++			i2c-scl-internal-delay-ns = <6>;
++			status = "disabled";
++		};
 +
-+- cpus		: List of phandles for the CPUs connected to this DSU instance.
++		i2c5: i2c@e6528000 {
++			/* doesn't need pinmux */
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "renesas,i2c-r8a7743",
++				     "renesas,rcar-gen2-i2c";
++			reg = <0 0xe6528000 0 0x40>;
++			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 925>;
++			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
++			resets = <&cpg 925>;
++			i2c-scl-internal-delay-ns = <110>;
++			status = "disabled";
++		};
 +
-+
-+** Example:
-+
-+dsu-pmu-0 {
-+	compatible = "arm,dsu-pmu";
-+	interrupts = <GIC_SPI 02 IRQ_TYPE_LEVEL_HIGH>;
-+	cpus = <&cpu_0>, <&cpu_1>;
-+};
+ 		scifa0: serial@e6c40000 {
+ 			compatible = "renesas,scifa-r8a7743",
+ 				     "renesas,rcar-gen2-scifa", "renesas,scifa";
 -- 
-2.7.5
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
