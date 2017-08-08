@@ -1,49 +1,48 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 03/18] firmware: arm_scmi: add basic driver
- infrastructure for SCMI
-Date: Tue, 8 Aug 2017 16:57:54 +0530
-Message-ID: <CABb+yY3rLAB6F8VtuExaBch1b-hTfqHDzO0ADsJd9Z7JkNfQ8A@mail.gmail.com>
-References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
- <1501857104-11279-4-git-send-email-sudeep.holla@arm.com> <CABb+yY0DQ1H8Apb6PoqKg-HrTfbyxShum9YtJit96T4Yo9+zrQ@mail.gmail.com>
- <3279524c-d3e5-fe0f-ba7d-f715bfdcad9c@arm.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: fix '%zx' warning
+Date: Tue, 8 Aug 2017 12:28:19 +0100
+Message-ID: <20170808112818.GC20805@n2100.armlinux.org.uk>
+References: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk>
+ <20170726013004.GJ8978@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3279524c-d3e5-fe0f-ba7d-f715bfdcad9c-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170726013004.GJ8978-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 8, 2017 at 2:59 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->
-> On 08/08/17 03:46, Jassi Brar wrote:
->> On Fri, Aug 4, 2017 at 8:01 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->> ....
->>> +int scmi_do_xfer(const struct scmi_handle *handle, struct scmi_xfer *xfer)
->>> +{
->>> +       int ret;
->>> +       int timeout;
->>> +       struct scmi_info *info = handle_to_scmi_info(handle);
->>> +       struct device *dev = info->dev;
->>> +
->>> +       ret = mbox_send_message(info->tx_chan, xfer);
->>>
->> NAK
->>
->> This is still not fixed. For the reasons mentioned many times like
->> here...   https://lkml.org/lkml/2017/7/7/465
->>
->
-> Since SCPI and SCMI are based on doorbell designs like ACPI PCC, they
-> can't send any data as all the data are part of shared memory.
->
-> What data needs to be sent from SCPI/SCMI as part of mbox_send_message
-> in your opinion ? I can't think of any generic way to form this data.
->
-https://lkml.org/lkml/2017/7/7/290
+On Wed, Jul 26, 2017 at 11:30:04AM +1000, David Gibson wrote:
+> On Tue, Jul 25, 2017 at 05:20:09PM +0100, Russell King wrote:
+> > dtc uses an incorrect format specifier for printing a uint64_t value.
+> > uint64_t may be either 'unsigned long' or 'unsigned long long' depending
+> > on the host architecture.
+> > 
+> > Fix this by using %llx and casting to unsigned long long, which ensures
+> > that we always have a wide enough variable to print 64 bits of hex.
+> > 
+> >   HOSTCC  scripts/dtc/checks.o
+> > scripts/dtc/checks.c: In function 'check_simple_bus_reg':
+> > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+> >   snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
+> >   ^
+> > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=]
+> > 
+> > Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
+> > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> 
+> This (embarrassing) error is already fixed in upstream dtc.
+
+It remains unfixed in 4.13-rc4.  How do we get this fixed in the
+kernel's dtc?  From what I can see, sending a patch to fix stuff
+doesn't work.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 8.8Mbps down 630kbps up
+According to speedtest.net: 8.21Mbps down 510kbps up
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
