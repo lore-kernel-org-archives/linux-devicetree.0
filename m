@@ -1,14 +1,15 @@
 From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH 0/2] ARM: shmobile: document iWave's
- iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development platform
-Date: Tue, 8 Aug 2017 14:14:50 +0000
-Message-ID: <TY1PR06MB07023F6BECCA3E86D00EBE23B78A0@TY1PR06MB0702.apcprd06.prod.outlook.com>
+Subject: RE: [PATCH 1/2] ARM: shmobile: document iW-RainboW-G22M-SM SODIMM
+ System on Module
+Date: Tue, 8 Aug 2017 14:15:26 +0000
+Message-ID: <TY1PR06MB07022F94098538D678A49E1EB78A0@TY1PR06MB0702.apcprd06.prod.outlook.com>
 References: <cover.1502190772.git.fabrizio.castro@bp.renesas.com>
+ <7aca0c97c8bdb3f330fe37c125476c827780514c.1502190772.git.fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1502190772.git.fabrizio.castro@bp.renesas.com>
+In-Reply-To: <7aca0c97c8bdb3f330fe37c125476c827780514c.1502190772.git.fabrizio.castro@bp.renesas.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
@@ -19,30 +20,33 @@ List-Id: devicetree@vger.kernel.org
 
 > From: Fabrizio Castro [mailto:fabrizio.castro@bp.renesas.com]
 > Sent: 08 August 2017 13:28
-> To: robh+dt@kernel.org; mark.rutland@arm.com
 >=20
-> Hello,
+> Document the iW-RainboW-G22M-SM SODIMM System on Module device tree
+> bindings. It is just a placeholder for the time being, the actual impleme=
+ntation
+> is not available yet.
 >=20
-> This series aims to add the documentation for the device tree bindings of=
- the
-> iWave iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development kit:
-> http://www.iwavesystems.com/product/development-platform/sodimm-
-> evaluation-boards/rz-g1e-sodimm-development-kit-28/rz-g1e-sodimm-
-> development-kit.html
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> which consists of a System on Module (iW-RainboW-G22M-SM) and a carrier
-> card (iW-RainboW-G22D).
->=20
-> Regards,
->=20
-> Fabrizio Castro (2):
->   ARM: shmobile: document iW-RainboW-G22M-SM SODIMM System on
-> Module
->   ARM: shmobile: document iW-RainboW-G22D SODIMM SOM Development
->     Platform
->=20
->  Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt
+> b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index 275cda1..64e7f63 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -68,6 +68,8 @@ Boards:
+>      compatible =3D "renesas,h3ulcb", "renesas,r8a7795";
+>    - Henninger
+>      compatible =3D "renesas,henninger", "renesas,r8a7791"
+> +  - iWave Systems RZ/G1E SODIMM System On Module (iW-RainboW-G22M-
+> SM)
+> +    compatible =3D "iwave,g22m", "renesas,r8a7745"
+>    - iWave Systems RZ/G1M Qseven Development Platform (iW-RainboW-G20D-
+> Qseven)
+>      compatible =3D "iwave,g20d", "iwave,g20m", "renesas,r8a7743"
+>    - iWave Systems RZ/G1M Qseven System On Module (iW-RainboW-G20M-
+> Qseven)
 > --
 > 1.9.1
