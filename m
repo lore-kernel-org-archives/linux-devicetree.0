@@ -1,89 +1,49 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH  1/2] dt-bindings: i2c: Document r8a7743/5 support
-Date: Tue, 8 Aug 2017 13:50:06 +0200
-Message-ID: <20170808115006.GC1674@katana>
-References: <1502191231-8682-1-git-send-email-biju.das@bp.renesas.com>
+From: Vincent Legoll <vincent.legoll-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3
+Date: Tue, 8 Aug 2017 13:56:05 +0200
+Message-ID: <CAEwRq=oJDmUBhb5n5=X-M5NL7855yW0t2J=TOJf0WSmBQuKyVQ@mail.gmail.com>
+References: <20170723141354.42646-1-icenowy@aosc.io> <20170723141354.42646-2-icenowy@aosc.io>
+Reply-To: vincent.legoll-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="V88s5gaDVPzZ0KCq"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1502191231-8682-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC54X5M3ZUNRBVWNU3GAKGQE2GFBQCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170723141354.42646-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel ML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---V88s5gaDVPzZ0KCq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the very-clueless question
 
-On Tue, Aug 08, 2017 at 12:20:31PM +0100, Biju Das wrote:
-> Document i2c Device Tree support for RZ/G1[ME]
-> (also known as r8aA774[35]) SoCs. They are compatible with
-> R-Car Gen2 SoC family.
->=20
-> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+On Sun, Jul 23, 2017 at 4:13 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+> +  - clock-names: should be "bus" and "mod",
 
-Looks good to me, yet I'd like an ack from Simon who is currently
-working on the generic fallback compatibles.
+When I first read that, I wondered what value clock-names should
+eally be given.
 
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documen=
-tation/devicetree/bindings/i2c/i2c-rcar.txt
-> index 2b8bd33..cad39ae 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> @@ -2,6 +2,8 @@ I2C for R-Car platforms
-> =20
->  Required properties:
->  - compatible:
-> +	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
-> +	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
->  	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
->  	"renesas,i2c-r8a7779" if the device is a part of a R8A7779 SoC.
->  	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-> @@ -12,7 +14,8 @@ Required properties:
->  	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
->  	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
->  	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
-> -	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 compatible device.
-> +	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 or RZ/G1 compatible
-> +				device.
->  	"renesas,rcar-gen3-i2c" for a generic R-Car Gen3 compatible device.
->  	"renesas,i2c-rcar" (deprecated)
-> =20
-> --=20
-> 1.9.1
->=20
+Then...
 
---V88s5gaDVPzZ0KCq
-Content-Type: application/pgp-signature; name="signature.asc"
+> +               clock-names = "bus", "mod";
 
------BEGIN PGP SIGNATURE-----
+OK, now this is clearer, but still the documentation is less documenting
+than the code itself, sigh...
 
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmJpW4ACgkQFA3kzBSg
-KbZj7A//UhqZXNEcCAeQgrztrtSx5oOOtGbWw3mBgQtKrpbeYV7gyCxXVutESTG1
-55Lp5923e+mjtGQ2HoMQYC++BGsilwIQnPVnmCxryVo0wq6/RozygXtrnSBzeSV+
-HrpBazS5mvemi9gEb4CBgpihO3cTKGqWHWh2/n1eAcHiFNj3+FKLAvJDi1pyvY0L
-3Cid/n+mOmwWhDdXVTm0Ca6p6TnXMx/dXRqqmsRQWNPwq33cTHi+/qgj/jcwFeWc
-IpxsLOROaI/fl+VM6jwtdUhny8bG6ooVd1E5UHGRRBdwm3sdGceo0AI/bfHxa5UM
-voY0TOkv/9Egpq4vXiBDHAxBB+rHJxL4jpFO0qe4ji+lESi3JIky5Lo8Lw15gO88
-SUVBpMGsTHBg2ztlpfVc7yYieaF1trMbJgIIUd0mLBHb+sUNezfCZiOIRkoQhMOO
-cPrXF7kW7HRGxVebIUsslvOupZDBUyDNWcZhd79uzZ2iDLakigUiTS7l8P1FeEps
-Zeu0mikURbf7lKuzx7LdcEu+JwG/9JUpwFowftIQ5Yu3Sn3LYeLtGdKC8oiZ+FCF
-McP4soo/6UGyTz7oZbEx/VML0XPWIAvEmtS0w6HDYypxhBDE2v4PeKJEsv9Wvucr
-f+S6AjREq7cjjQ86PLZznOaIHTnRJxVcJ7ymWZRJEv//1znr1Ms=
-=m1iM
------END PGP SIGNATURE-----
+I cannot think of a better wording, though, as a non-native-english
+speaker. Maybe just add a "(See example below)" would be
+sufficient...
 
---V88s5gaDVPzZ0KCq--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Or decide that this documentation is for clueful ones.
+
+WDYT ?
+
+-- 
+Vincent Legoll
