@@ -1,128 +1,88 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle
- usb switch
-Date: Tue, 8 Aug 2017 14:46:30 +0200
-Message-ID: <c5c411fe-2f5a-88cc-73e8-28ab61f5de04@axentia.se>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-3-stephen.boyd@linaro.org>
- <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
- <150215709134.18242.599725161375995991@sboyd-linaro>
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v2 3/5] thermal: imx: Add support for reading OCOTP
+ through nvmem
+Date: Tue, 08 Aug 2017 20:58:20 +0800
+Message-ID: <1502197100.4296.45.camel@intel.com>
+References: <cover.1500041281.git.leonard.crestez@nxp.com>
+         <faf9c3e5f970b9609073c4c191a7af03d647ea51.1500041281.git.leonard.crestez@nxp.com>
+         <20170725080835.GD20064@dragon> <1502176915.4296.1.camel@intel.com>
+         <26407dd5-a9b1-67c0-c4ab-d97fa0b88b79@linaro.org>
+         <1502192287.24350.9.camel@nxp.com>
+         <9732c524-fbdc-d1be-cd03-089dbb2266c4@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <150215709134.18242.599725161375995991@sboyd-linaro>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-1bcDf/t0825pWr+L1FloEB2eb7JE58TQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9732c524-fbdc-d1be-cd03-089dbb2266c4@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Leonard Crestez <leonard.crestez@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Lothar =?ISO-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>, Dong Aisheng <aisheng.dong@nxp.com>, Bai Ping <ping.bai@nxp.com>, Anson Huang <Anson.Huang@nxp.com>, Octavian Purdila <octavian.purdila@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-08 03:51, Stephen Boyd wrote:
-> Quoting Peter Rosin (2017-07-31 03:33:22)
->> On 2017-07-14 23:40, Stephen Boyd wrote:
->>> @@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
->>>  
->>>  static int udc_id_switch_for_device(struct ci_hdrc *ci)
->>>  {
->>> +     int ret = 0;
->>> +
->>>       if (ci->is_otg)
->>>               /* Clear and enable BSV irq */
->>>               hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
->>>                                       OTGSC_BSVIS | OTGSC_BSVIE);
->>>  
->>> -     return 0;
->>> +     if (!ci_otg_is_fsm_mode(ci))
->>> +             ret = mux_control_select(ci->platdata->usb_switch, 0);
->>> +
->>> +     if (ci->is_otg && ret)
->>> +             hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS);
->>> +
->>> +     return ret;
->>>  }
->>>  
->>>  static void udc_id_switch_for_host(struct ci_hdrc *ci)
->>>  {
->>> +     mux_control_deselect(ci->platdata->usb_switch);
->>> +
->>
->> This looks broken. You conditionally lock the mux and you unconditionally
->> unlock it. Quoting the mux_control_deselect doc:
->>
->>  * It is required that a single call is made to mux_control_deselect() for
->>  * each and every successful call made to either of mux_control_select() or
->>  * mux_control_try_select().
->>
->> Think of the mux as a semaphore with a max count of one. If you lock it,
->> you have to unlock it when you're done. If you didn't lock it, you have
->> zero business unlocking it. If you try to lock it but fail, you also have
->> no business unlocking it. Just like a semaphore.
+On Tue, 2017-08-08 at 12:44 +0100, Srinivas Kandagatla wrote:
+> > 
+
+
 > 
-> Good catch. I've added a if (!ci_otg_is_fsm_mode()) check here.
+> On 08/08/17 12:38, Leonard Crestez wrote:
+> > 
+> > On Tue, 2017-08-08 at 12:00 +0100, Srinivas Kandagatla wrote:
+> > > 
+> > > On 08/08/17 08:21, Zhang Rui wrote:
+> > > > 
+> > > > On Tue, 2017-07-25 at 16:08 +0800, Shawn Guo wrote:
+> > > > > 
+> > > > > On Fri, Jul 14, 2017 at 05:11:08PM +0300, Leonard Crestez
+> > > > > wrote:
+> > > 
+> > > > 
+> > > > > 
+> > > > > > 
+> > > > > > On newer imx SOCs accessing OCOTP directly is wrong because
+> > > > > > the
+> > > > > > ocotp clock
+> > > > > > needs to be enabled first. Add support for reading those
+> > > > > > same
+> > > > > > values through
+> > > > > > the nvmem API instead.
+> > > > > > 
+> > > > > > The older path is preserved for compatibility with older
+> > > > > > dts and
+> > > > > > because it
+> > > > > > works correctly on imx6qdl chips.
+> > > > > > 
+> > > > > > Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
+> > > > > Acked-by: Shawn Guo <shawnguo@kernel.org>
+> > > 
+> > > > 
+> > > > I'm okay with the thermal change.
+> > > > We still need ACK for the nvmem changes in this patch series.
+> > > 
+> > > NVMEM changes are already sent to Greg K H with other patches
+> > > (https://lkml.org/lkml/2017/7/26/164), should appear in next.
+> > These patches have a compile-time dependency on each other.
+> > Wouldn't it
+> > make more sense for the whole series to go through a single
+> > maintainer
+> > tree, atomically? Most of the changes are in driver/thermal.
+> I was expecting that the nvmem change go in as fix in a rc release
+> so 
+> that you could apply the other patches after that.
 > 
->>
->> Another point: I do not know if udc_id_switch_for_host is *only* called
->> when there has been a prior call to udc_id_switch_for_device that
->> succeeded or how this works exactly. But this all looks fragile. Using
->> mux_control_select and mux_control_deselect *must* be done in pairs.
->> If you want a mux to be locked for "a while", such as in this case, you
->> have to make sure you stay within the rules. There is no room for half
->> measures, or you will likely cause a deadlock when something unexpected
->> happens.
->>
-> 
-> Can you elaborate? Is it bad that we keep it "locked" while we're in
-> host or device mode?
+> Let me ping Greg about this!!
 
-No no, that's good. You do not want some other consumer of the same mux
-controller to clobber your state (in case it's shared), so you absolutely
-want to have the mux locked when you want it to remain in a specific
-position.
+As Shawn is okay with patch 4/5 and 5/5, I guess I can queue patch 1/5,
+3/5, 4/5, 5/5 for 4.14-rc1, if the nvmem patch can catch 4.13, or I can
+queue the full patch set for 4.14, with Srinivas' ACK.
 
->                      It looked like we paired the start/stop ops with
-> each other so that the mux is properly managed across these ops.
-
-Yes, it *looks* ok...
-
->                                                                  My
-> testing hasn't shown a problem, but maybe there's some corner case
-> you're thinking of? I'll double check the code.
-
-...but since I do not know the usb code, I can't tell. What I worry about
-is the usb core calling udc_id_switch_for_host or udc_id_switch_for_device
-more than once without any call to the other in between. Maybe that is a
-guarantee that the usb core makes? Or maybe it isn't? If e.g. there is a
-third mode (or if one is added in the future), then the calls to
-mux_control_select and mux_control_deselect would not be paired correctly.
-Ok, sure, a third mode probably doesn't exist and will probably not be
-added, but but but...
-
-Also, what happens if udc_id_switch_for_device fails? Is it certain that
-it will be called again before udc_id_switch_for_host is called, or is
-the failure simply logged? If the latter, you might have a call to
-mux_control_deselect without a preceding (and successful) call to
-mux_control_select. That's fatal.
-
-I have similar worries for host_start/host_stop, but for that case
-host_stop is not allowed to fail, and it seems like a safe bet that
-host_stop will only be called if host_start succeeds. So, I'm not as
-worried there.
-
-In other words, the question is if the usb core is designed to allow
-this kind of "raw" resource administration in udc_id_switch_for_host and
-udc_id_switch_for_device, or if you need to keep a local record of the
-state so that you do not do double resource acquisition or attempt to
-free resources you don't have?
-
-I think I would feel better if the muxing for the device mode could
-be done in a start/stop pair of function just like the host mode is
-doing. Again, I don't know the usb code and don't know if such hooks
-exist or not?
-
-Cheers,
-Peter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thanks,
+rui
+> > 
+> > I'm really very confused about how series that touch multiple areas
+> > are
+> > applied. It seems to be a mostly ad-hoc process.
+> > 
+> > --
+> > Regards,
+> > Leonard
+> > 
