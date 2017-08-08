@@ -1,78 +1,76 @@
-From: "'Kishon Vijay Abraham I' via linux-sunxi" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: phy: sun4i-usb-phy: Add
- property descriptions for H3
-Date: Tue, 8 Aug 2017 17:46:33 +0530
-Message-ID: <c7dfc4e8-7a4e-e57d-e1e8-16f0a56cd505@ti.com>
-References: <20170803081411.22389-1-wens@csie.org>
- <20170803081411.22389-2-wens@csie.org>
-Reply-To: kishon-l0cyMroinI0@public.gmane.org
+From: Zhang Rui <rui.zhang@intel.com>
+Subject: Re: [PATCH v3 0/4] thermal: add brcmstb AVS TMON driver
+Date: Tue, 08 Aug 2017 20:26:57 +0800
+Message-ID: <1502195217.4296.33.camel@intel.com>
+References: <20170731192633.58747-1-code@mmayer.net>
+         <a29d8aef-8d24-9e63-c078-48c3a1a6fccf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCOOP4VF5IDRBMGXU3GAKGQEVTOTQWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20170803081411.22389-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a29d8aef-8d24-9e63-c078-48c3a1a6fccf@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Markus Mayer <code@mmayer.net>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 03 August 2017 01:44 PM, Chen-Yu Tsai wrote:
-> The Allwinner H3 SoC has 4 USB PHYs, so it needs four sets of pmu
-> regions, clocks, resets, and optional vbus properties. These were
-> not described when the H3 compatible string was added.
+On Mon, 2017-08-07 at 10:52 -0700, Florian Fainelli wrote:
+> On 07/31/2017 12:26 PM, Markus Mayer wrote:
+> > 
+> > From: Markus Mayer <mmayer@broadcom.com>
+> > 
+> > This series adds the brcmstb AVS TMON driver.
+> > 
+> > The driver was originally written by Brian Norris.
+> > 
+> > v1 of this series can be found at https://lkml.org/lkml/2017/6/5/92
+> > 1
+> > v2 of this series can be found at https://lkml.org/lkml/2017/7/21/5
+> > 85
+> FWIW, this looks good to me, Eduardo, Rui, can we get this moving?
 > 
-> Fixes: 626a630e003c ("phy-sun4i-usb: Add support for the host usb-phys
-> 		      found on the H3 SoC")
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Usually, Eduardo will take the arm soc thermal patches. But he is not
+able to take it this time as he is really busy.
+To me, the thermal framework related code looks good, and I will queue
+it for next merge window, although I don't have the knowledge about the
+hardware details.
 
-Rob, can you give your Acked-by for this patch?
+thanks,
+rui
 
-Thanks
-Kishon
-> ---
->  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> index 005bc22938ff..893dd01dfe64 100644
-> --- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-> @@ -17,18 +17,21 @@ Required properties:
->    * "phy_ctrl"
->    * "pmu0" for H3, V3s and A64
->    * "pmu1"
-> -  * "pmu2" for sun4i, sun6i or sun7i
-> +  * "pmu2" for sun4i, sun6i, sun7i or sun8i-h3
-> +  * "pmu3" for sun8i-h3
->  - #phy-cells : from the generic phy bindings, must be 1
->  - clocks : phandle + clock specifier for the phy clocks
->  - clock-names :
->    * "usb_phy" for sun4i, sun5i or sun7i
->    * "usb0_phy", "usb1_phy" and "usb2_phy" for sun6i
->    * "usb0_phy", "usb1_phy" for sun8i
-> +  * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
->  - resets : a list of phandle + reset specifier pairs
->  - reset-names :
->    * "usb0_reset"
->    * "usb1_reset"
-> -  * "usb2_reset" for sun4i, sun6i or sun7i
-> +  * "usb2_reset" for sun4i, sun6i, sun7i or sun8i-h3
-> +  * "usb3_reset" for sun8i-h3
->  
->  Optional properties:
->  - usb0_id_det-gpios : gpio phandle for reading the otg id pin value
-> @@ -37,6 +40,7 @@ Optional properties:
->  - usb0_vbus-supply : regulator phandle for controller usb0 vbus
->  - usb1_vbus-supply : regulator phandle for controller usb1 vbus
->  - usb2_vbus-supply : regulator phandle for controller usb2 vbus
-> +- usb3_vbus-supply : regulator phandle for controller usb3 vbus
->  
->  Example:
->  	usbphy: phy@0x01c13400 {
+> > 
+> > 
+> > Changes since v2:
+> > - replaced calls to pr_debug() with calls to dev_dbg() [PATCH 2/4
+> > only]
+> > - all other patches are unchanged from v2
+> > 
+> > Changes since v1:
+> > - Fixed wording in binding document
+> > - Fixed lincensing to consistently mention GPL v2
+> > - Use thermal_zone_get_slope() and thermal_zone_get_offset()
+> > - Some minor clean-ups
+> > 
+> > Brian Norris (2):
+> >   Documentation: devicetree: add binding for Broadcom STB AVS TMON
+> >   thermal: add brcmstb AVS TMON driver
+> > 
+> > Markus Mayer (2):
+> >   ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
+> >   arm64: defconfig: add CONFIG_BRCMSTB_THERMAL
+> > 
+> >  .../devicetree/bindings/thermal/brcm,avs-tmon.txt  |  20 ++
+> >  MAINTAINERS                                        |   8 +
+> >  arch/arm/configs/multi_v7_defconfig                |   1 +
+> >  arch/arm64/configs/defconfig                       |   1 +
+> >  drivers/thermal/Kconfig                            |   2 +-
+> >  drivers/thermal/broadcom/Kconfig                   |   7 +
+> >  drivers/thermal/broadcom/Makefile                  |   1 +
+> >  drivers/thermal/broadcom/brcmstb_thermal.c         | 386
+> > +++++++++++++++++++++
+> >  8 files changed, 425 insertions(+), 1 deletion(-)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+> >  create mode 100644 drivers/thermal/broadcom/brcmstb_thermal.c
+> > 
 > 
