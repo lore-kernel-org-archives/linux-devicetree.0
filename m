@@ -1,110 +1,63 @@
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v3 3/9] clk: rockchip: fix up the indentation stuff for RV1108 SoC
-Date: Tue,  8 Aug 2017 15:15:41 +0800
-Message-ID: <1502176547-30817-4-git-send-email-zhangqing@rock-chips.com>
+From: Elaine Zhang <zhangqing@rock-chips.com>
+Subject: [PATCH v3 4/9] clk: rockchip: support more rates for cpuclk
+Date: Tue,  8 Aug 2017 15:15:42 +0800
+Message-ID: <1502176547-30817-5-git-send-email-zhangqing@rock-chips.com>
 References: <1502176547-30817-1-git-send-email-zhangqing@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502176547-30817-1-git-send-email-zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xxx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, xf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andy.yan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502176547-30817-1-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, heiko@sntech.de
+Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, shawn.lin@rock-chips.com, andy.yan@rock-chips.com, Elaine Zhang <zhangqing@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Make the code look better.
+fix up the cpuclk rates table for support more freqs.
+fix up the mux_core_mask describe error.
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 ---
- include/dt-bindings/clock/rv1108-cru.h | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ drivers/clk/rockchip/clk-rv1108.c | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/include/dt-bindings/clock/rv1108-cru.h b/include/dt-bindings/clock/rv1108-cru.h
-index e8aa6d56990a..f269d833e41a 100644
---- a/include/dt-bindings/clock/rv1108-cru.h
-+++ b/include/dt-bindings/clock/rv1108-cru.h
-@@ -173,16 +173,16 @@
- #define CLK_NR_CLKS			(HCLK_VPU + 1)
+diff --git a/drivers/clk/rockchip/clk-rv1108.c b/drivers/clk/rockchip/clk-rv1108.c
+index 7c05ab366348..3c670db16e18 100644
+--- a/drivers/clk/rockchip/clk-rv1108.c
++++ b/drivers/clk/rockchip/clk-rv1108.c
+@@ -93,9 +93,24 @@ enum rv1108_plls {
+ 	}
  
- /* reset id */
--#define SRST_CORE_PO_AD		0
-+#define SRST_CORE_PO_AD			0
- #define SRST_CORE_AD			1
- #define SRST_L2_AD			2
--#define SRST_CPU_NIU_AD		3
-+#define SRST_CPU_NIU_AD			3
- #define SRST_CORE_PO			4
- #define SRST_CORE			5
--#define SRST_L2			6
-+#define SRST_L2				6
- #define SRST_CORE_DBG			8
- #define PRST_DBG			9
--#define RST_DAP			10
-+#define RST_DAP				10
- #define PRST_DBG_NIU			11
- #define ARST_STRC_SYS_AD		15
+ static struct rockchip_cpuclk_rate_table rv1108_cpuclk_rates[] __initdata = {
+-	RV1108_CPUCLK_RATE(816000000, 4),
+-	RV1108_CPUCLK_RATE(600000000, 4),
+-	RV1108_CPUCLK_RATE(312000000, 4),
++	RV1108_CPUCLK_RATE(1608000000, 7),
++	RV1108_CPUCLK_RATE(1512000000, 7),
++	RV1108_CPUCLK_RATE(1488000000, 5),
++	RV1108_CPUCLK_RATE(1416000000, 5),
++	RV1108_CPUCLK_RATE(1392000000, 5),
++	RV1108_CPUCLK_RATE(1296000000, 5),
++	RV1108_CPUCLK_RATE(1200000000, 5),
++	RV1108_CPUCLK_RATE(1104000000, 5),
++	RV1108_CPUCLK_RATE(1008000000, 5),
++	RV1108_CPUCLK_RATE(912000000, 5),
++	RV1108_CPUCLK_RATE(816000000, 3),
++	RV1108_CPUCLK_RATE(696000000, 3),
++	RV1108_CPUCLK_RATE(600000000, 3),
++	RV1108_CPUCLK_RATE(500000000, 3),
++	RV1108_CPUCLK_RATE(408000000, 1),
++	RV1108_CPUCLK_RATE(312000000, 1),
++	RV1108_CPUCLK_RATE(216000000, 1),
++	RV1108_CPUCLK_RATE(96000000, 1),
+ };
  
-@@ -249,9 +249,9 @@
- #define HRST_SYSBUS			75
- #define PRST_USBGRF			76
+ static const struct rockchip_cpuclk_reg_data rv1108_cpuclk_data = {
+@@ -105,7 +120,7 @@ enum rv1108_plls {
+ 	.mux_core_alt = 1,
+ 	.mux_core_main = 0,
+ 	.mux_core_shift = 8,
+-	.mux_core_mask = 0x1,
++	.mux_core_mask = 0x3,
+ };
  
--#define ARST_PERIPH_NIU		80
--#define HRST_PERIPH_NIU		81
--#define PRST_PERIPH_NIU		82
-+#define ARST_PERIPH_NIU			80
-+#define HRST_PERIPH_NIU			81
-+#define PRST_PERIPH_NIU			82
- #define HRST_PERIPH			83
- #define HRST_SDMMC			84
- #define HRST_SDIO			85
-@@ -269,7 +269,7 @@
- #define HRST_HOST0_AUX			96
- #define HRST_HOST0_ARB			97
- #define SRST_HOST0_EHCIPHY		98
--#define SRST_HOST0_UTMI		99
-+#define SRST_HOST0_UTMI			99
- #define SRST_USBPOR			100
- #define SRST_UTMI0			101
- #define SRST_UTMI1			102
-@@ -316,21 +316,21 @@
- #define HRST_VPU_NIU			141
- #define ARST_VPU			142
- #define HRST_VPU			143
--#define ARST_RKVDEC_NIU		144
--#define HRST_RKVDEC_NIU		145
-+#define ARST_RKVDEC_NIU			144
-+#define HRST_RKVDEC_NIU			145
- #define ARST_RKVDEC			146
- #define HRST_RKVDEC			147
- #define SRST_RKVDEC_CABAC		148
- #define SRST_RKVDEC_CORE		149
--#define ARST_RKVENC_NIU		150
--#define HRST_RKVENC_NIU		151
-+#define ARST_RKVENC_NIU			150
-+#define HRST_RKVENC_NIU			151
- #define ARST_RKVENC			152
- #define HRST_RKVENC			153
- #define SRST_RKVENC_CORE		154
- 
- #define SRST_DSP_CORE			156
- #define SRST_DSP_SYS			157
--#define SRST_DSP_GLOBAL		158
-+#define SRST_DSP_GLOBAL			158
- #define SRST_DSP_OECM			159
- #define PRST_DSP_IOP_NIU		160
- #define ARST_DSP_EPP_NIU		161
-@@ -348,7 +348,7 @@
- #define SRST_PMU_I2C0			173
- #define PRST_PMU_I2C0			174
- #define PRST_PMU_GPIO0			175
--#define PRST_PMU_INTMEM		176
-+#define PRST_PMU_INTMEM			176
- #define PRST_PMU_PWM0			177
- #define SRST_PMU_PWM0			178
- #define PRST_PMU_GRF			179
+ PNAME(mux_pll_p)		= { "xin24m", "xin24m"};
 -- 
 1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
