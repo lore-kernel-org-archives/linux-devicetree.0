@@ -1,86 +1,48 @@
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Subject: Re: [PATCH v2 2/3] usb: chipidea: Hook into mux framework to toggle usb
- switch
-Date: Mon, 07 Aug 2017 18:51:31 -0700
-Message-ID: <150215709134.18242.599725161375995991@sboyd-linaro>
-References: <20170714214005.14967-1-stephen.boyd@linaro.org>
- <20170714214005.14967-3-stephen.boyd@linaro.org>
- <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH 0/4] Removing full paths from DT full_name
+Date: Tue, 08 Aug 2017 12:21:18 +1000
+Message-ID: <87mv7aol41.fsf@concordia.ellerman.id.au>
+References: <20170725214427.25768-1-robh@kernel.org> <CAL_Jsq+tarBMM-frN+V9GYa-ZAzfJO4sv2owdOS3Ks+urned1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7080030c-c9c2-657d-aad4-aef636438cb1@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <Peter.Chen@nxp.com>, Peter Rosin <peda@axentia.se>
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.infradead.org, Rob Herring <robh+dt@kernel.org>, Rob Clark <robdclark@gmail.com>, Andy Gross <andy.gross@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+tarBMM-frN+V9GYa-ZAzfJO4sv2owdOS3Ks+urned1g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Rosin (2017-07-31 03:33:22)
-> On 2017-07-14 23:40, Stephen Boyd wrote:
-> > @@ -1964,16 +1965,26 @@ void ci_hdrc_gadget_destroy(struct ci_hdrc *ci)
-> >  =
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-> >  static int udc_id_switch_for_device(struct ci_hdrc *ci)
-> >  {
-> > +     int ret =3D 0;
-> > +
-> >       if (ci->is_otg)
-> >               /* Clear and enable BSV irq */
-> >               hw_write_otgsc(ci, OTGSC_BSVIS | OTGSC_BSVIE,
-> >                                       OTGSC_BSVIS | OTGSC_BSVIE);
-> >  =
+> On Tue, Jul 25, 2017 at 4:44 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> This series is the last steps to remove storing the full path for every
+>> DT node. Instead, we can create full path strings dynamically as needed
+>> with printf %pOF specifiers (commit ce4fecf1fe15). There are a number of
+>> remaining direct users of full_name after this series. I don't believe
+>> there should be any functional impact for those users with the change to
+>> only the node name (+unit-address). The majority are for struct
+>> resource.name. This should only affect /proc/iomem display.
+>>
+>> Patches 1 and 2 can be applied now for 4.14. For patches 3 and 4, my
+>> target is 4.15 after all the dependencies have been merged.
+>>
+>> PPC folks, Please test! The PPC parts are untested. A git branch with
+>> all the dependencies is here[1].
+>
+> PPC folks, any chance to test this?
 
-> > -     return 0;
-> > +     if (!ci_otg_is_fsm_mode(ci))
-> > +             ret =3D mux_control_select(ci->platdata->usb_switch, 0);
-> > +
-> > +     if (ci->is_otg && ret)
-> > +             hw_write_otgsc(ci, OTGSC_BSVIE | OTGSC_BSVIS, OTGSC_BSVIS=
-);
-> > +
-> > +     return ret;
-> >  }
-> >  =
+I got stuck on your %pOF conversion, which broke the vio.c code, because of:
 
-> >  static void udc_id_switch_for_host(struct ci_hdrc *ci)
-> >  {
-> > +     mux_control_deselect(ci->platdata->usb_switch);
-> > +
-> =
+-		if (!strcmp(parent_node->full_name, "/ibm,platform-facilities"))
++		if (!strcmp(parent_node->full_name, "ibm,platform-facilities"))
 
-> This looks broken. You conditionally lock the mux and you unconditionally
-> unlock it. Quoting the mux_control_deselect doc:
-> =
+But full_name hasn't been changed yet.
 
->  * It is required that a single call is made to mux_control_deselect() for
->  * each and every successful call made to either of mux_control_select() =
-or
->  * mux_control_try_select().
-> =
+But patch 1 here should fix that, so I'll pull it all together and try
+and get it tested.
 
-> Think of the mux as a semaphore with a max count of one. If you lock it,
-> you have to unlock it when you're done. If you didn't lock it, you have
-> zero business unlocking it. If you try to lock it but fail, you also have
-> no business unlocking it. Just like a semaphore.
-
-Good catch. I've added a if (!ci_otg_is_fsm_mode()) check here.
-
-> =
-
-> Another point: I do not know if udc_id_switch_for_host is *only* called
-> when there has been a prior call to udc_id_switch_for_device that
-> succeeded or how this works exactly. But this all looks fragile. Using
-> mux_control_select and mux_control_deselect *must* be done in pairs.
-> If you want a mux to be locked for "a while", such as in this case, you
-> have to make sure you stay within the rules. There is no room for half
-> measures, or you will likely cause a deadlock when something unexpected
-> happens.
-> =
-
-
-Can you elaborate? Is it bad that we keep it "locked" while we're in
-host or device mode? It looked like we paired the start/stop ops with
-each other so that the mux is properly managed across these ops. My
-testing hasn't shown a problem, but maybe there's some corner case
-you're thinking of? I'll double check the code.
+cheers
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
