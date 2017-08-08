@@ -1,26 +1,81 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 7/9] clk: rockchip: fix up some clks describe error for rv1108 SoC
-Date: Tue, 08 Aug 2017 17:36:41 +0200
-Message-ID: <2886228.L8ZHQJ0d60@phil>
-References: <1502176547-30817-1-git-send-email-zhangqing@rock-chips.com> <1502176739-32321-1-git-send-email-zhangqing@rock-chips.com>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH v2 3/7] pwm: rockchip: Remove the dumplicate
+ rockchip_pwm_ops ops
+Date: Tue, 8 Aug 2017 23:41:46 +0800
+Message-ID: <78121683-137a-eb5c-c447-e763b18ccd12@rock-chips.com>
+References: <1499486629-9659-1-git-send-email-david.wu@rock-chips.com>
+ <1499486629-9659-4-git-send-email-david.wu@rock-chips.com>
+ <20170802105902.2d137072@bbrezillon>
+ <af056420-5c33-e6c8-62cb-bcd3456000a7@rock-chips.com>
+ <20170802134011.1124f1dd@bbrezillon>
+ <6d1f60ee-2402-5ee0-54f6-9521c039c36c@rock-chips.com>
+ <20170804090935.6aba3351@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502176739-32321-1-git-send-email-zhangqing@rock-chips.com>
+In-Reply-To: <20170804090935.6aba3351@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: mturquette@baylibre.com, sboyd@codeaurora.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com, shawn.lin@rock-chips.com, andy.yan@rock-chips.com
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: thierry.reding@gmail.com, heiko@sntech.de, robh+dt@kernel.org, catalin.marinas@arm.com, briannorris@chromium.org, dianders@chromium.org, mark.rutland@arm.com, huangtao@rock-chips.com, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 8. August 2017, 15:18:59 CEST schrieb Elaine Zhang:
-> 1. fix up the parent name
-> 2. remove the CLK_IGNORE_UNUSED flag for some clk not need to always on.
-> 3. fix up some clks regs describe error.
+Hi Boris,
+
+在 2017/8/4 15:09, Boris Brezillon 写道:
+> On Fri, 4 Aug 2017 10:38:26 +0800
+> "David.Wu" <david.wu@rock-chips.com> wrote:
 > 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+>> Hi Boris，
+>>
+>> 在 2017/8/2 19:40, Boris Brezillon 写道:
+>>> Yep, just define 3 different pwm_ops (one for each IP), each of them
+>>> implementing ->apply() and ->get_state() and that's all.
+>>>
+>>> Something like:
+>>>
+>>> static const struct pwm_ops rockchip_pwm_ops_v1 = {
+>>> 	.get_state = rockchip_pwm_v1_get_state,
+>>> 	.apply = rockchip_pwm_v1_apply,
+>>> 	.owner = THIS_MODULE,
+>>> };
+>>>
+>>> static const struct pwm_ops rockchip_pwm_ops_v2 = {
+>>> 	.get_state = rockchip_pwm_v2_get_state,
+>>> 	.apply = rockchip_pwm_v2_apply,
+>>> 	.owner = THIS_MODULE,
+>>> };
+>>>
+>>> static const struct pwm_ops rockchip_pwm_ops_vop = {
+>>> 	.get_state = rockchip_pwm_vop_get_state,
+>>> 	.apply = rockchip_pwm_vop_apply,
+>>> 	.owner = THIS_MODULE,
+>>> };
+>>>
+>>> static const struct of_device_id rockchip_pwm_dt_ids[] = {
+>>> 	{ .compatible = "rockchip,rk2928-pwm", .data = &rockchip_pwm_ops_v1 },
+>>> 	{ .compatible = "rockchip,rk3288-pwm", .data = &rockchip_pwm_ops_v2 },
+>>> 	{ .compatible = "rockchip,vop-pwm", .data = &rockchip_pwm_ops_vop },
+>>> 	{ /* sentinel */ }
+>>> };
+>>> MODULE_DEVICE_TABLE(of, rockchip_pwm_dt_ids);
+>>
+>> I think we should keep the data members in the rockchip_pwm_data，like
+>> supports_polarity and regs...
+>>
+>> The supports_polarity is needed for of_pwm_n_cells when pwm registered.
+>> And the other data members is helpful for us to use common code.
+>>
+>> It's okay for just define 3 different pwm_ops (one for each IP), but
+>> they are with other data members in the struct of rockchip_pwm_data.
+>>
+> 
+> I think we could even get rid of the other fields in rockchip_pwm_data,
+> but ok, let's do that.
 
-applied for 4.14
+I use the same pwm ops for each IP at V3's patch, but defined 3 
+different rockchip_pwm_data for use. I think this might look more clean.
 
-Thanks for restructuring the patches
-Heiko
+> 
+> 
+> 
