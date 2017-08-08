@@ -1,65 +1,42 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] irqchip: uniphier-aidet: add UniPhier AIDET irqchip driver
-Date: Tue, 8 Aug 2017 10:20:22 +0900
-Message-ID: <CAK7LNASiqYJ6iF35P78PNQwa8GNdTWE+GEbmFdJr8-_2J4Mgfw@mail.gmail.com>
-References: <1501758910-3488-1-git-send-email-yamada.masahiro@socionext.com>
- <cae2ec7d-5f57-3e4f-7688-5a1523c66b82@arm.com> <CAK7LNAR=t2=6LbmFKUhSD-ttfxVcyOy6Qy=kj7hsFftDFWqmzQ@mail.gmail.com>
- <43777e45-c002-95b8-3b15-d57680f320ec@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <43777e45-c002-95b8-3b15-d57680f320ec-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Jonathan Liu <net147@gmail.com>
+Subject: [PATCH] dt-bindings: clock: sunxi-ccu: Add compatibles for sun5i CCU driver
+Date: Tue,  8 Aug 2017 11:25:40 +1000
+Message-ID: <20170808012540.16691-1-net147@gmail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+The bindings were not updated when the sun5i CCU driver was added in
+commit 5e73761786d6 ("clk: sunxi-ng: Add sun5i CCU driver").
 
+Signed-off-by: Jonathan Liu <net147@gmail.com>
+---
+ Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-2017-08-07 22:36 GMT+09:00 Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>:
-> On 07/08/17 12:59, Masahiro Yamada wrote:
->> Hi Marc,
->>
->> Thanks for your comments.
->>
->>
->> 2017-08-07 19:43 GMT+09:00 Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>:
->>> On 03/08/17 12:15, Masahiro Yamada wrote:
->>>> UniPhier SoCs contain AIDET (ARM Interrupt Detector).  This is intended
->>>> to provide additional features that are not covered by GIC.  The main
->>>> purpose is to provide logic inverter to support low level and falling
->>>> edge trigger type for interrupt lines from on-board devices.
->>>>
->>>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-
-
-Thanks.  I will send v2 based on your comments.
-
-
-
-If possible, could you help me with my GPIO driver?
-
-I implemented a similar IRQ domain hierarchy handling in the driver.
-
-This patch:
-http://patchwork.ozlabs.org/patch/797145/
-
-
-If I am understanding correctly, the IRQ mapping to the parent
-must be somehow hard-coded in the .alloc() hook of irq_domain_ops.
-
-I asked a question in the following.
-https://lkml.org/lkml/2017/7/6/758
-
-
-I do not have a solution to get the IRQ info from "interrupts" property,
-so I am hard-coding it in the driver.
-
+diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+index df9fad58facd..dbe0c1c58ab5 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
+@@ -3,6 +3,8 @@ Allwinner Clock Control Unit Binding
+ 
+ Required properties :
+ - compatible: must contain one of the following compatibles:
++		- "allwinner,sun5i-a10s-ccu"
++		- "allwinner,sun5i-a13-ccu"
+ 		- "allwinner,sun6i-a31-ccu"
+ 		- "allwinner,sun8i-a23-ccu"
+ 		- "allwinner,sun8i-a33-ccu"
+@@ -15,6 +17,7 @@ Required properties :
+ 		- "allwinner,sun50i-a64-ccu"
+ 		- "allwinner,sun50i-a64-r-ccu"
+ 		- "allwinner,sun50i-h5-ccu"
++		- "nextthing,gr8-ccu"
+ 
+ - reg: Must contain the registers base address and length
+ - clocks: phandle to the oscillators feeding the CCU. Two are needed:
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.2
+
