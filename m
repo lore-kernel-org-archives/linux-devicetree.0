@@ -1,94 +1,36 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v3 1/4] Documentation: devicetree: add binding for
- Broadcom STB AVS TMON
-Date: Tue, 08 Aug 2017 20:36:35 +0800
-Message-ID: <1502195795.4296.37.camel@intel.com>
-References: <20170731192633.58747-1-code@mmayer.net>
-         <20170731192633.58747-2-code@mmayer.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170731192633.58747-2-code@mmayer.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Markus Mayer <code@mmayer.net>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
+From: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: [PATCH 0/2] ARM: shmobile: document iWave's iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development platform
+Date: Tue,  8 Aug 2017 13:27:30 +0100
+Message-ID: <cover.1502190772.git.fabrizio.castro@bp.renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org, Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-07-31 at 12:26 -0700, Markus Mayer wrote:
-> From: Brian Norris <computersforpeace@gmail.com>
-> 
-> Add binding for Broadcom STB thermal.
-> 
-> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+Hello,
 
-$ file v3-1-4-Documentation-devicetree-add-binding-for-Broadcom-STB-
-AVS-TMON.patch 
-unified diff output, UTF-8 Unicode text
+This series aims to add the documentation for the device tree bindings
+of the iWave iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development kit:
+http://www.iwavesystems.com/product/development-platform/sodimm-evaluation-boards/rz-g1e-sodimm-development-kit-28/rz-g1e-sodimm-development-kit.html
 
-BTW, can you please rebase this patch set on top of v4.13-rc3?
-At least there are some conflicts in MAINTAINER file, introduced in
--rc2.
+which consists of a System on Module (iW-RainboW-G22M-SM) and a carrier
+card (iW-RainboW-G22D).
 
-thanks,
-rui
-> ---
->  .../devicetree/bindings/thermal/brcm,avs-tmon.txt    | 20
-> ++++++++++++++++++++
->  MAINTAINERS                                          |  8 ++++++++
->  2 files changed, 28 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/brcm,avs-
-> tmon.txt b/Documentation/devicetree/bindings/thermal/brcm,avs-
-> tmon.txt
-> new file mode 100644
-> index 0000000..9d43553
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
-> @@ -0,0 +1,20 @@
-> +* Broadcom STB thermal management
-> +
-> +Thermal management core, provided by the AVS TMON hardware block.
-> +
-> +Required properties:
-> +- compatible: must be "brcm,avs-tmon" and/or "brcm,avs-tmon-bcm7445"
-> +- reg: address range for the AVS TMON registers
-> +- interrupts: temperature monitor interrupt, for high/low threshold
-> triggers
-> +- interrupt-names: should be "tmon"
-> +- interrupt-parent: the parent interrupt controller
-> +
-> +Example:
-> +
-> +	thermal@f04d1500 {
-> +		compatible = "brcm,avs-tmon-bcm7445", "brcm,avs-
-> tmon";
-> +		reg = <0xf04d1500 0x28>;
-> +		interrupts = <0x6>;
-> +		interrupt-names = "tmon";
-> +		interrupt-parent = <&avs_host_l2_intc>;
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 205d397..a683d4c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -2928,6 +2928,14 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-
-> cpu-freq.txt
->  F:	drivers/cpufreq/brcmstb*
->  
-> +BROADCOM STB AVS TMON DRIVER
-> +M:	Markus Mayer <mmayer@broadcom.com>
-> +M:	bcm-kernel-feedback-list@broadcom.com
-> +L:	linux-pm@vger.kernel.org
-> +S:	Maintained
-> +F:	Documentation/devicetree/bindings/thermal/brcm,avs-
-> tmon.txt
-> +F:	drivers/thermal/broadcom/brcmstb*
-> +
->  BROADCOM SPECIFIC AMBA DRIVER (BCMA)
->  M:	Rafał Miłecki <zajec5@gmail.com>
->  L:	linux-wireless@vger.kernel.org
+Regards,
+
+Fabrizio Castro (2):
+  ARM: shmobile: document iW-RainboW-G22M-SM SODIMM System on Module
+  ARM: shmobile: document iW-RainboW-G22D SODIMM SOM Development
+    Platform
+
+ Documentation/devicetree/bindings/arm/shmobile.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
