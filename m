@@ -1,64 +1,37 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 4/4] dt-bindings: mt8173-xhci: add generic compatible and rename file
-Date: Tue, 8 Aug 2017 13:42:52 +0800
-Message-ID: <ed176bd0af123ad6a94982c628bb70a6a3bf7515.1502170518.git.chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 2/4] usb: xhci-mtk: add generic compatible string
+Date: Tue, 8 Aug 2017 13:42:50 +0800
+Message-ID: <c90d5a8f0d7e67e277ebd3d4339598e83c044bc5.1502170518.git.chunfeng.yun@mediatek.com>
 References: <8f0cb0047b2aa195d818ad686cbbceabb3ad91a0.1502170518.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8f0cb0047b2aa195d818ad686cbbceabb3ad91a0.1502170518.git.chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8f0cb0047b2aa195d818ad686cbbceabb3ad91a0.1502170518.git.chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The mt8173-xhci.txt actually holds the bindings for all mediatek
-SoCs with xHCI controller, so add a generic compatible and change
-the name to xhci-mtk.txt to reflect that.
+The xhci-mtk driver is a generic driver for MediaTek xHCI IP, add
+a generic compatible to avoid confusion when support new SoCs but
+use a compatible with specific SoC's name "mt8173".
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- .../bindings/usb/{mt8173-xhci.txt => xhci-mtk.txt} |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
- rename Documentation/devicetree/bindings/usb/{mt8173-xhci.txt => xhci-mtk.txt} (92%)
+ drivers/usb/host/xhci-mtk.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/xhci-mtk.txt
-similarity index 92%
-rename from Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-rename to Documentation/devicetree/bindings/usb/xhci-mtk.txt
-index 0acfc8a..1ce77c7 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/xhci-mtk.txt
-@@ -11,7 +11,9 @@ into two parts.
- ------------------------------------------------------------------------
- 
- Required properties:
-- - compatible : should contain "mediatek,mt8173-xhci"
-+ - compatible : should be one of
-+	"mediatek,mt8173-xhci" (deprecated, use "mediatek,xhci-mtk" instead),
-+	"mediatek,xhci-mtk"
-  - reg : specifies physical base address and size of the registers
-  - reg-names: should be "mac" for xHCI MAC and "ippc" for IP port control
-  - interrupts : interrupt used by the controller
-@@ -68,10 +70,12 @@ usb30: usb@11270000 {
- 
- In the case, xhci is added as subnode to mtu3. An example and the DT binding
- details of mtu3 can be found in:
--Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-+Documentation/devicetree/bindings/usb/mtu3.txt
- 
- Required properties:
-- - compatible : should contain "mediatek,mt8173-xhci"
-+ - compatible : should be one of
-+	"mediatek,mt8173-xhci" (deprecated, use "mediatek,xhci-mtk" instead),
-+	"mediatek,xhci-mtk"
-  - reg : specifies physical base address and size of the registers
-  - reg-names: should be "mac" for xHCI MAC
-  - interrupts : interrupt used by the host controller
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 67d5dc7..d2934b9 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -795,6 +795,7 @@ static int __maybe_unused xhci_mtk_resume(struct device *dev)
+ #ifdef CONFIG_OF
+ static const struct of_device_id mtk_xhci_of_match[] = {
+ 	{ .compatible = "mediatek,mt8173-xhci"},
++	{ .compatible = "mediatek,xhci-mtk"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, mtk_xhci_of_match);
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
