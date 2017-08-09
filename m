@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 3/3] mfd: mt6397: Add MT6351 support into MT6397 driver
-Date: Wed, 9 Aug 2017 10:31:05 +0800
-Message-ID: <1502245865-11403-4-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH 2/3] regulator: mt6351: Add support for MT6351 regulator
+Date: Wed, 9 Aug 2017 10:31:04 +0800
+Message-ID: <1502245865-11403-3-git-send-email-mars.cheng@mediatek.com>
 References: <1502245865-11403-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,1193 +23,588 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Jimmy-YJ.Huang" <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
+The MT6351 is a regulator found on boards based on MediaTek MT6797 and
+probably other SoCs. It is a so called pmic and connects as a slave to
+SoC using SPI, wrapped inside the pmic-wrapper.
+
 Signed-off-by: Jimmy-YJ.Huang <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- drivers/mfd/mt6397-core.c            |   18 +
- include/linux/mfd/mt6351/core.h      |   80 +++
- include/linux/mfd/mt6351/registers.h | 1028 ++++++++++++++++++++++++++++++++++
- 3 files changed, 1126 insertions(+)
- create mode 100644 include/linux/mfd/mt6351/core.h
- create mode 100644 include/linux/mfd/mt6351/registers.h
+ drivers/regulator/Kconfig                  |    9 +
+ drivers/regulator/Makefile                 |    1 +
+ drivers/regulator/mt6351-regulator.c       |  458 ++++++++++++++++++++++++++++
+ include/linux/regulator/mt6351-regulator.h |   66 ++++
+ 4 files changed, 534 insertions(+)
+ create mode 100644 drivers/regulator/mt6351-regulator.c
+ create mode 100644 include/linux/regulator/mt6351-regulator.h
 
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index 04a601f..7dab386 100644
---- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -19,14 +19,17 @@
- #include <linux/regmap.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/mt6397/core.h>
-+#include <linux/mfd/mt6351/core.h>
- #include <linux/mfd/mt6323/core.h>
- #include <linux/mfd/mt6397/registers.h>
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 99b9362..1d84ddb 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -559,6 +559,15 @@ config REGULATOR_MT6323
+ 	  This driver supports the control of different power rails of device
+ 	  through regulator interface.
+ 
++config REGULATOR_MT6351
++	tristate "MediaTek MT6351 PMIC"
++	depends on MFD_MT6397
++	help
++	  Say y here to select this option to enable the power regulator of
++	  MediaTek MT6351 PMIC.
++	  This driver supports the control of different power rails of device
++	  through regulator interface.
++
+ config REGULATOR_MT6397
+ 	tristate "MediaTek MT6397 PMIC"
+ 	depends on MFD_MT6397
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 95b1e86..fe301cf 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -72,6 +72,7 @@ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
+ obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+ obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
++obj-$(CONFIG_REGULATOR_MT6351)	+= mt6351-regulator.o
+ obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+ obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+diff --git a/drivers/regulator/mt6351-regulator.c b/drivers/regulator/mt6351-regulator.c
+new file mode 100644
+index 0000000..fda1eea
+--- /dev/null
++++ b/drivers/regulator/mt6351-regulator.c
+@@ -0,0 +1,458 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Jimmy-Yj Huang <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/mfd/mt6397/core.h>
 +#include <linux/mfd/mt6351/registers.h>
- #include <linux/mfd/mt6323/registers.h>
- 
- #define MT6397_RTC_BASE		0xe000
- #define MT6397_RTC_SIZE		0x3e
- 
- #define MT6323_CID_CODE		0x23
-+#define MT6351_CID_CODE		0x51
- #define MT6391_CID_CODE		0x91
- #define MT6397_CID_CODE		0x97
- 
-@@ -53,6 +56,13 @@
- 	},
- };
- 
-+static const struct mfd_cell mt6351_devs[] = {
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/mt6351-regulator.h>
++#include <linux/regulator/of_regulator.h>
++
++/*
++ * MT6351 regulators' information
++ *
++ * @desc: standard fields of regulator description.
++ * @qi: Mask for query enable signal status of regulators
++ * @vselon_reg: Register sections for hardware control mode of bucks
++ * @vselctrl_reg: Register for controlling the buck control mode.
++ * @vselctrl_mask: Mask for query buck's voltage control mode.
++ */
++struct mt6351_regulator_info {
++	struct regulator_desc desc;
++	u32 qi;
++	u32 vselon_reg;
++	u32 vselctrl_reg;
++	u32 vselctrl_mask;
++};
++
++/*
++ * MTK regulators' init data
++ *
++ * @id: chip id
++ * @size: num of regulators
++ * @regulator_info: regulator info.
++ */
++struct mt_regulator_init_data {
++	u32 id;
++	u32 size;
++	struct mt6351_regulator_info *regulator_info;
++};
++
++#define MT_BUCK(ver, match, vreg, min, max, step, volt_ranges,	\
++		enreg, vosel, vosel_mask, voselon, vosel_ctrl)		\
++[ver##_ID_##vreg] = {							\
++	.desc = {							\
++		.name = #vreg,						\
++		.of_match = of_match_ptr(match),			\
++		.ops = &mt6351_volt_range_ops,				\
++		.type = REGULATOR_VOLTAGE,				\
++		.id = ver##_ID_##vreg,					\
++		.owner = THIS_MODULE,					\
++		.n_voltages = (max - min) / step + 1,			\
++		.linear_ranges = volt_ranges,				\
++		.n_linear_ranges = ARRAY_SIZE(volt_ranges),		\
++		.vsel_reg = vosel,					\
++		.vsel_mask = vosel_mask,				\
++		.enable_reg = enreg,					\
++		.enable_mask = BIT(0),					\
++	},								\
++	.qi = BIT(13),							\
++	.vselon_reg = voselon,						\
++	.vselctrl_reg = vosel_ctrl,					\
++	.vselctrl_mask = BIT(1),					\
++}
++
++#define MT_LDO(ver, match, vreg, ldo_volt_table, enreg, enbit,	\
++		vosel, vosel_mask)					\
++[ver##_ID_##vreg] = {							\
++	.desc = {							\
++		.name = #vreg,						\
++		.of_match = of_match_ptr(match),			\
++		.ops = &mt6351_volt_table_ops,				\
++		.type = REGULATOR_VOLTAGE,				\
++		.id = ver##_ID_##vreg,					\
++		.owner = THIS_MODULE,					\
++		.n_voltages = ARRAY_SIZE(ldo_volt_table),		\
++		.volt_table = ldo_volt_table,				\
++		.vsel_reg = vosel,					\
++		.vsel_mask = vosel_mask,				\
++		.enable_reg = enreg,					\
++		.enable_mask = BIT(enbit),				\
++	},								\
++	.qi = BIT(15),							\
++}
++
++#define MT_REG_FIXED(ver, match, vreg, enreg, enbit, volt)		\
++[ver##_ID_##vreg] = {							\
++	.desc = {							\
++		.name = #vreg,						\
++		.of_match = of_match_ptr(match),			\
++		.ops = &mt6351_volt_fixed_ops,				\
++		.type = REGULATOR_VOLTAGE,				\
++		.id = ver##_ID_##vreg,					\
++		.owner = THIS_MODULE,					\
++		.n_voltages = 1,					\
++		.enable_reg = enreg,					\
++		.enable_mask = BIT(enbit),				\
++		.min_uV = volt,						\
++	},								\
++	.qi = BIT(15),							\
++}
++
++static const struct regulator_linear_range buck_volt_range1[] = {
++	REGULATOR_LINEAR_RANGE(600000, 0, 0x7f, 6250),
++};
++
++static const struct regulator_linear_range buck_volt_range2[] = {
++	REGULATOR_LINEAR_RANGE(700000, 0, 0x7f, 6250),
++};
++
++static const struct regulator_linear_range buck_volt_range3[] = {
++	REGULATOR_LINEAR_RANGE(1500000, 0, 0x1f, 20000),
++};
++
++static const u32 ldo_volt_table1[] = {
++	1800000, 2200000, 2375000, 2800000,
++};
++
++static const u32 ldo_volt_table2[] = {
++	1200000, 1300000, 1700000, 1800000, 1860000, 2760000, 3000000, 3100000,
++};
++
++static const u32 ldo_volt_table3[] = {
++	3000000, 3300000,
++};
++
++static const u32 ldo_volt_table4[] = {
++	1500000, 1800000, 2500000, 2800000,
++};
++
++static const u32 ldo_volt_table5[] = {
++	3300000, 3400000, 3500000, 3600000,
++};
++
++static const u32 ldo_volt_table5_v2[] = {
++	1200000, 1000000, 1500000, 1800000, 2500000, 2800000, 3000000, 3300000,
++};
++
++static const u32 ldo_volt_table6[] = {
++	1200000, 1300000, 1500000, 1800000, 2000000, 2900000, 3000000, 3300000,
++};
++
++static const u32 ldo_volt_table6_v1[] = {
++	2500000, 2900000, 3000000, 3300000,
++};
++
++static const u32 ldo_volt_table6_v2[] = {
++	1300000, 1800000, 2900000, 3300000,
++};
++
++static const u32 ldo_volt_table7[] = {
++	1200000, 1300000, 1500000, 1800000, 2000000, 2800000, 3000000, 3300000,
++};
++
++static const u32 ldo_volt_table8[] = {
++	900000, 950000, 1000000, 1050000, 1100000, 1200000, 1210000,
++};
++
++static const u32 ldo_volt_table9[] = {
++	900000, 950000, 1000000, 1050000, 1200000, 1500000, 1800000,
++};
++
++static const u32 ldo_volt_table10[] = {
++	1000000, 1050000, 1100000, 1220000, 1300000, 1500000, 1800000, 1810000,
++};
++
++static const u32 ldo_volt_table10_v1[] = {
++	1000000, 1200000, 1300000, 1500000, 1800000, 1810000,
++};
++
++static const u32 ldo_volt_table11[] = {
++	1800000, 2900000, 3000000, 3300000,
++};
++
++static int mt6351_get_status(struct regulator_dev *rdev)
++{
++	int ret;
++	u32 regval;
++	struct mt6351_regulator_info *info = rdev_get_drvdata(rdev);
++
++	ret = regmap_read(rdev->regmap, info->desc.enable_reg, &regval);
++	if (ret != 0) {
++		dev_err(&rdev->dev, "Failed to get enable reg: %d\n", ret);
++		return ret;
++	}
++
++	return (regval & info->qi) ? REGULATOR_STATUS_ON : REGULATOR_STATUS_OFF;
++}
++
++static struct regulator_ops mt6351_volt_range_ops = {
++	.list_voltage = regulator_list_voltage_linear_range,
++	.map_voltage = regulator_map_voltage_linear_range,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.get_status = mt6351_get_status,
++};
++
++static struct regulator_ops mt6351_volt_table_ops = {
++	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_iterate,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.get_status = mt6351_get_status,
++};
++
++static struct regulator_ops mt6351_volt_fixed_ops = {
++	.list_voltage = regulator_list_voltage_linear,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.get_status = mt6351_get_status,
++};
++
++/* The array is indexed by id(MT6351_ID_XXX) */
++static struct mt6351_regulator_info mt6351_regulators[] = {
++	MT_BUCK(MT6351, "buck_vcore", VCORE, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VCORE_CON2,
++		MT6351_BUCK_VCORE_CON4, 0x7f,
++		MT6351_BUCK_VCORE_CON5, MT6351_BUCK_VCORE_CON0),
++	MT_BUCK(MT6351, "buck_vgpu", VGPU, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VGPU_CON2,
++		MT6351_BUCK_VGPU_CON4, 0x7f,
++		MT6351_BUCK_VGPU_CON5, MT6351_BUCK_VGPU_CON0),
++	MT_BUCK(MT6351, "buck_vmodem", VMODEM, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VMODEM_CON2,
++		MT6351_BUCK_VMODEM_CON4, 0x7f,
++		MT6351_BUCK_VMODEM_CON5, MT6351_BUCK_VMODEM_CON0),
++	MT_BUCK(MT6351, "buck_vmd1", VMD1, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VMD1_CON2,
++		MT6351_BUCK_VMD1_CON4, 0x7f,
++		MT6351_BUCK_VMD1_CON5, MT6351_BUCK_VMD1_CON0),
++	MT_BUCK(MT6351, "buck_vsram_md", VSRAM_MD, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VSRAM_MD_CON2,
++		MT6351_BUCK_VSRAM_MD_CON4, 0x7f,
++		MT6351_BUCK_VSRAM_MD_CON5, MT6351_BUCK_VSRAM_MD_CON0),
++	MT_BUCK(MT6351, "buck_vs1", VS1, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VS1_CON2,
++		MT6351_BUCK_VS1_CON4, 0x7f,
++		MT6351_BUCK_VS1_CON5, MT6351_BUCK_VS1_CON0),
++	MT_BUCK(MT6351, "buck_vs2", VS2, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VS2_CON2,
++		MT6351_BUCK_VS2_CON4, 0x7f,
++		MT6351_BUCK_VS2_CON5, MT6351_BUCK_VS2_CON0),
++	MT_BUCK(MT6351, "buck_vpa", VPA, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VPA_CON2,
++		MT6351_BUCK_VPA_CON4, 0x7f,
++		MT6351_BUCK_VPA_CON5, MT6351_BUCK_VPA_CON0),
++	MT_BUCK(MT6351, "buck_vsram_proc", VSRAM_PROC, 600000, 1393750, 6250,
++		buck_volt_range1, MT6351_BUCK_VSRAM_PROC_CON2,
++		MT6351_BUCK_VSRAM_PROC_CON4, 0x7f,
++		MT6351_BUCK_VSRAM_PROC_CON5, MT6351_BUCK_VSRAM_PROC_CON0),
++	MT_LDO(MT6351, "ldo_va18", VA18, ldo_volt_table1,
++	       MT6351_VA18_ANA_CON0, 1, MT6351_LDO_VA18_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vtcxo24", VTCXO24, ldo_volt_table1,
++	       MT6351_VTCXO24_ANA_CON0, 1, MT6351_LDO_VTCXO24_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vtcxo28", VTCXO28, ldo_volt_table1,
++	       MT6351_VTCXO28_ANA_CON0, 1, MT6351_LDO_VTCXO28_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcn28", VCN28, ldo_volt_table1,
++	       MT6351_VCN28_ANA_CON0, 1, MT6351_LDO_VCN28_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcama", VCAMA, ldo_volt_table4,
++	       MT6351_VCAMA_ANA_CON0, 1, MT6351_LDO_VCAMA_CON0, 0x300),
++	MT_REG_FIXED(MT6351, "ldo_vusb33", VUSB33,
++		     MT6351_LDO_VUSB33_CON0, 1, 3300000),
++	MT_LDO(MT6351, "ldo_vsim1", VSIM1, ldo_volt_table2,
++	       MT6351_VSIM1_ANA_CON0, 1, MT6351_LDO_VSIM1_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vsim2", VSIM2, ldo_volt_table2,
++	       MT6351_VSIM2_ANA_CON0, 1, MT6351_LDO_VSIM2_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vemc_3v3", VEMC_3V3, ldo_volt_table3,
++	       MT6351_VEMC_ANA_CON0, 1, MT6351_LDO_VEMC_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vmch", VMCH, ldo_volt_table3,
++	       MT6351_VMCH_ANA_CON0, 1, MT6351_LDO_VMCH_CON0, 0x300),
++	MT_REG_FIXED(MT6351, "ldo_vio28", VIO28,
++		     MT6351_LDO_VIO28_CON0, 1, 2800000),
++	MT_LDO(MT6351, "ldo_vibr", VIBR, ldo_volt_table7,
++	       MT6351_VIBR_ANA_CON0, 1, MT6351_LDO_VIBR_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcamd", VCAMD, ldo_volt_table8,
++	       MT6351_VCAMD_ANA_CON0, 1, MT6351_LDO_VCAMD_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vrf18", VRF18, ldo_volt_table10,
++	       MT6351_VRF18_ANA_CON0, 1, MT6351_LDO_VRF18_CON0, 0x300),
++	MT_REG_FIXED(MT6351, "ldo_vio18", VIO18,
++		     MT6351_LDO_VIO18_CON0, 1, 1800000),
++	MT_LDO(MT6351, "ldo_vcn18", VCN18, ldo_volt_table9,
++	       MT6351_VCN18_ANA_CON0, 1, MT6351_LDO_VCN18_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcamio", VCAMIO, ldo_volt_table9,
++	       MT6351_VCAMIO_ANA_CON0, 1, MT6351_LDO_VCAMIO_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vxo22", VXO22, ldo_volt_table1,
++	       MT6351_VXO22_ANA_CON0, 1, MT6351_LDO_VXO22_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vrf12", VRF12, ldo_volt_table9,
++	       MT6351_VRF12_ANA_CON0, 1, MT6351_LDO_VRF12_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_va10", VA10, ldo_volt_table9,
++	       MT6351_VA10_ANA_CON0, 1, MT6351_LDO_VA10_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vdram", VDRAM, ldo_volt_table8,
++	       MT6351_VDRAM_ANA_CON0, 1, MT6351_LDO_VDRAM_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vmipi", VMIPI, ldo_volt_table9,
++	       MT6351_VMIPI_ANA_CON0, 1, MT6351_LDO_VMIPI_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vgp3", VGP3, ldo_volt_table10,
++	       MT6351_VGP3_ANA_CON0, 1, MT6351_LDO_VGP3_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vbif28", VBIF28, ldo_volt_table1,
++	       MT6351_VBIF28_ANA_CON0, 1, MT6351_LDO_VBIF28_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vefuse", VEFUSE, ldo_volt_table2,
++	       MT6351_VEFUSE_ANA_CON0, 1, MT6351_LDO_VEFUSE_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcn33_bt", VCN33_BT, ldo_volt_table5,
++	       MT6351_VCN33_ANA_CON0, 1, MT6351_LDO_VCN33_CON0, 0x300),
++	MT_LDO(MT6351, "ldo_vcn33_wifi", VCN33_WIFI, ldo_volt_table5,
++	       MT6351_VCN33_ANA_CON0, 1, MT6351_LDO_VCN33_CON0, 0x300),
++	MT_REG_FIXED(MT6351, "ldo_vldo28", VLDO28,
++		     MT6351_LDO_VLDO28_CON3, 1, 2800000),
++	MT_LDO(MT6351, "ldo_vmc", VMC, ldo_volt_table6,
++	       MT6351_VMC_ANA_CON0, 1, MT6351_LDO_VMC_CON0, 0x300),
++	MT_REG_FIXED(MT6351, "ldo_vldo28_0", VLDO28_0,
++		     MT6351_LDO_VLDO28_CON3, 1, 2800000),
++	MT_REG_FIXED(MT6351, "ldo_vldo28_1", VLDO28_1,
++		     MT6351_LDO_VLDO28_CON4, 1, 2800000),
++};
++
++static const struct mt_regulator_init_data mt6351_regulator_init_data = {
++	.id = MT6351_HWCID,
++	.size = MT6351_MAX_REGULATOR,
++	.regulator_info = &mt6351_regulators[0],
++};
++
++static const struct platform_device_id mt6351_platform_ids[] = {
++	{"mt6351-regulator", 0},
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(platform, mt6351_platform_ids);
++
++static const struct of_device_id mt6351_of_match[] = {
 +	{
-+		.name = "mt6351-regulator",
-+		.of_compatible = "mediatek,mt6351-regulator"
-+	},
++		.compatible = "mediatek,mt6351-regulator",
++		.data = &mt6351_regulator_init_data,
++	}, {
++		/* sentinel */
++	}
 +};
++MODULE_DEVICE_TABLE(of, mt6351_of_match);
 +
- static const struct mfd_cell mt6397_devs[] = {
- 	{
- 		.name = "mt6397-rtc",
-@@ -292,6 +302,13 @@ static int mt6397_probe(struct platform_device *pdev)
- 					   0, NULL);
- 		break;
- 
-+	case MT6351_CID_CODE:
-+		ret = devm_mfd_add_devices(&pdev->dev, -1, mt6351_devs,
-+					   ARRAY_SIZE(mt6351_devs), NULL,
-+					   0, NULL);
-+		dev_err(&pdev->dev, "supported chip: %d\n", ret);
++static int mt6351_set_buck_vosel_reg(struct platform_device *pdev)
++{
++	const struct of_device_id *of_id;
++	struct mt6397_chip *mt6351 = dev_get_drvdata(pdev->dev.parent);
++	struct mt6351_regulator_info *mt_regulators;
++	struct mt_regulator_init_data *regulator_init_data;
++	int i;
++	u32 regval, reg;
++
++	of_id = of_match_device(mt6351_of_match, &pdev->dev);
++	if (!of_id || !of_id->data)
++		return -ENODEV;
++
++	regulator_init_data = (struct mt_regulator_init_data *)of_id->data;
++	mt_regulators = regulator_init_data->regulator_info;
++
++	for (i = 0; i < regulator_init_data->size; i++) {
++		if ((mt_regulators + i)->vselctrl_reg) {
++			reg = (mt_regulators + i)->vselctrl_reg;
++			if (regmap_read(mt6351->regmap, reg, &regval) < 0) {
++				dev_err(&pdev->dev,
++					"Failed to read buck ctrl\n");
++					return -EIO;
++			}
++
++			if (regval & (mt_regulators + i)->vselctrl_mask) {
++				(mt_regulators + i)->desc.vsel_reg =
++				(mt_regulators + i)->vselon_reg;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static int mt6351_regulator_probe(struct platform_device *pdev)
++{
++	const struct of_device_id *of_id;
++	struct mt6397_chip *mt6351 = dev_get_drvdata(pdev->dev.parent);
++	struct regulator_config config = {};
++	struct regulator_dev *rdev;
++	int i;
++	u32 reg_value, version;
++
++	of_id = of_match_device(mt6351_of_match, &pdev->dev);
++	if (!of_id || !of_id->data)
++		return -ENODEV;
++
++	regulator_init_data = (struct mt_regulator_init_data *)of_id->data;
++	mt_regulators = regulator_init_data->regulator_info;
++
++	/* Query buck controller to select activated voltage register part */
++	if (mt6351_set_buck_vosel_reg(pdev))
++		return -EIO;
++
++	/* Read PMIC chip revision to update constraints and voltage table */
++	if (regmap_read(mt6351->regmap, MT6351_HWCID, &reg_value) < 0) {
++		dev_err(&pdev->dev, "Failed to read Chip ID\n");
++		return -EIO;
++	}
++	dev_info(&pdev->dev, "Chip ID = 0x%x\n", reg_value);
++
++	version = (reg_value & 0xFF);
++	switch (version) {
++	case MT6351_REGULATOR_ID12:
++		mt6351_regulators[MT6351_ID_VMC].desc.volt_table =
++		ldo_volt_table5_v2;
 +		break;
++	default:
++		break;
++	}
 +
- 	case MT6397_CID_CODE:
- 	case MT6391_CID_CODE:
- 		pmic->int_con[0] = MT6397_INT_CON0;
-@@ -323,6 +340,7 @@ static int mt6397_probe(struct platform_device *pdev)
- 
- static const struct of_device_id mt6397_of_match[] = {
- 	{ .compatible = "mediatek,mt6397" },
-+	{ .compatible = "mediatek,mt6351" },
- 	{ .compatible = "mediatek,mt6323" },
- 	{ }
- };
-diff --git a/include/linux/mfd/mt6351/core.h b/include/linux/mfd/mt6351/core.h
-new file mode 100644
-index 0000000..cdddca6
---- /dev/null
-+++ b/include/linux/mfd/mt6351/core.h
-@@ -0,0 +1,80 @@
-+/*
-+ * Copyright (c) 2017 Jimmy-Yj Huang <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++	for (i = 0; i < regulator_init_data->size; i++) {
++		config.dev = &pdev->dev;
++		config.driver_data = (mt_regulators + i);
++		config.regmap = mt6351->regmap;
++		rdev = devm_regulator_register(&pdev->dev,
++					       &(mt_regulators + i)->desc,
++					       &config);
++		if (IS_ERR(rdev)) {
++			dev_err(&pdev->dev, "failed to register %s\n",
++				(mt_regulators + i)->desc.name);
++			return PTR_ERR(rdev);
++		}
++	}
 +
-+#ifndef __MFD_MT6351_CORE_H__
-+#define __MFD_MT6351_CORE_H__
++	return 0;
++}
 +
-+enum mt6351_irq_numbers {
-+	RG_INT_STATUS_PWRKEY = 0,
-+	RG_INT_STATUS_HOMEKEY,
-+	RG_INT_STATUS_PWRKEY_R,
-+	RG_INT_STATUS_HOMEKEY_R,
-+	RG_INT_STATUS_THR_H,
-+	RG_INT_STATUS_THR_L,
-+	RG_INT_STATUS_BAT_H,
-+	RG_INT_STATUS_BAT_L,
-+	RG_INT_STATUS_NO_USE1,
-+	RG_INT_STATUS_RTC,
-+	RG_INT_STATUS_AUDIO,
-+	RG_INT_STATUS_MAD,
-+	RG_INT_STATUS_ACCDET,
-+	RG_INT_STATUS_ACCDET_EINT,
-+	RG_INT_STATUS_ACCDET_NEGV,
-+	RG_INT_STATUS_NI_LBAT_INT,
-+	RG_INT_STATUS_VCORE_OC,
-+	RG_INT_STATUS_VGPU_OC,
-+	RG_INT_STATUS_VSRAM_MD_OC,
-+	RG_INT_STATUS_VMODEM_OC,
-+	RG_INT_STATUS_VM1_OC,
-+	RG_INT_STATUS_VS1_OC,
-+	RG_INT_STATUS_VS2_OC,
-+	RG_INT_STATUS_VPA_OC,
-+	RG_INT_STATUS_VCORE_PREOC,
-+	RG_INT_STATUS_VGPU_PREOC,
-+	RG_INT_STATUS_VSRAM_MD_PREOC,
-+	RG_INT_STATUS_VMODEM_PREOC,
-+	RG_INT_STATUS_VM1_PREOC,
-+	RG_INT_STATUS_VS1_PREOC,
-+	RG_INT_STATUS_VS2_PREOC,
-+	RG_INT_STATUS_LDO_OC,
-+	RG_INT_STATUS_JEITA_HOT,
-+	RG_INT_STATUS_JEITA_WARM,
-+	RG_INT_STATUS_JEITA_COOL,
-+	RG_INT_STATUS_JEITA_COLD,
-+	RG_INT_STATUS_AUXADC_IMP,
-+	RG_INT_STATUS_NAG_C_DLTV,
-+	RG_INT_STATUS_NO_USE2,
-+	RG_INT_STATUS_NO_USE3,
-+	RG_INT_STATUS_OV,
-+	RG_INT_STATUS_BVALID_DET,
-+	RG_INT_STATUS_RGS_BATON_HV,
-+	RG_INT_STATUS_VBATON_UNDET,
-+	RG_INT_STATUS_WATCHDOG,
-+	RG_INT_STATUS_PCHR_CM_VDEC,
-+	RG_INT_STATUS_CHRDET,
-+	RG_INT_STATUS_PCHR_CM_VINC,
-+	RG_INT_STATUS_FG_BAT_H,
-+	RG_INT_STATUS_FG_BAT_L,
-+	RG_INT_STATUS_FG_CUR_H,
-+	RG_INT_STATUS_FG_CUR_L,
-+	RG_INT_STATUS_FG_ZCV,
-+	RG_INT_STATUS_NO_USE4,
-+	RG_INT_STATUS_NO_USE5,
-+	RG_INT_STATUS_NO_USE6,
-+	RG_INT_STATUS_NO_USE7,
-+	RG_INT_STATUS_NO_USE8,
-+	RG_INT_STATUS_NO_USE9,
-+	RG_INT_STATUS_NO_USE10,
-+	RG_INT_STATUS_NO_USE11,
-+	RG_INT_STATUS_NO_USE12,
-+	RG_INT_STATUS_NO_USE13,
-+	RG_INT_STATUS_NO_USE14,
-+	RG_INT_STATUS_NR,
++static struct platform_driver mt6351_regulator_driver = {
++	.driver = {
++		.name = "mt6351-regulator",
++		.of_match_table = of_match_ptr(mt6351_of_match),
++	},
++	.probe = mt6351_regulator_probe,
++	.id_table = mt6351_platform_ids,
 +};
 +
-+#endif /* __MFD_MT6351_CORE_H__ */
-diff --git a/include/linux/mfd/mt6351/registers.h b/include/linux/mfd/mt6351/registers.h
++module_platform_driver(mt6351_regulator_driver);
++
++MODULE_AUTHOR("Jimmy-Yj Huang <Jimmy-YJ.Hunag-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>");
++MODULE_DESCRIPTION("Regulator Driver for MediaTek MT6351 PMIC");
++MODULE_LICENSE("GPL");
++MODULE_ALIAS("platform:mt6351-regulator");
+diff --git a/include/linux/regulator/mt6351-regulator.h b/include/linux/regulator/mt6351-regulator.h
 new file mode 100644
-index 0000000..22c56e4
+index 0000000..b8bd6a6
 --- /dev/null
-+++ b/include/linux/mfd/mt6351/registers.h
-@@ -0,0 +1,1028 @@
++++ b/include/linux/regulator/mt6351-regulator.h
+@@ -0,0 +1,66 @@
 +/*
-+ * Copyright (c) 2017 Jimmy-Yj Huang <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Jimmy-Yj Huang <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
 + * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
 + */
 +
-+#ifndef __MFD_MT6351_REGISTERS_H__
-+#define __MFD_MT6351_REGISTERS_H__
++#ifndef __LINUX_REGULATOR_MT6351_H
++#define __LINUX_REGULATOR_MT6351_H
 +
-+/* PMIC Registers */
-+#define MT6351_STRUP_CON0            0x0000
-+#define MT6351_STRUP_CON1            0x0002
-+#define MT6351_STRUP_CON2            0x0004
-+#define MT6351_STRUP_CON3            0x0006
-+#define MT6351_STRUP_CON4            0x0008
-+#define MT6351_STRUP_CON5            0x000A
-+#define MT6351_STRUP_CON6            0x000C
-+#define MT6351_STRUP_CON7            0x000E
-+#define MT6351_STRUP_CON8            0x0010
-+#define MT6351_STRUP_CON9            0x0012
-+#define MT6351_STRUP_CON10           0x0014
-+#define MT6351_STRUP_CON11           0x0016
-+#define MT6351_STRUP_CON12           0x0018
-+#define MT6351_STRUP_CON13           0x001A
-+#define MT6351_STRUP_CON14           0x001C
-+#define MT6351_STRUP_CON15           0x001E
-+#define MT6351_STRUP_CON16           0x0020
-+#define MT6351_STRUP_CON17           0x0022
-+#define MT6351_STRUP_CON18           0x0024
-+#define MT6351_STRUP_CON19           0x0026
-+#define MT6351_STRUP_CON20           0x0028
-+#define MT6351_STRUP_CON21           0x002A
-+#define MT6351_STRUP_CON22           0x002C
-+#define MT6351_STRUP_CON23           0x002E
-+#define MT6351_STRUP_ANA_CON0        0x0030
-+#define MT6351_STRUP_ANA_CON1        0x0032
-+#define MT6351_HWCID                 0x0200
-+#define MT6351_SWCID                 0x0202
-+#define MT6351_TOP_CON               0x0204
-+#define MT6351_TEST_OUT              0x0206
-+#define MT6351_TEST_CON0             0x0208
-+#define MT6351_TEST_CON1             0x020A
-+#define MT6351_TESTMODE_SW           0x020C
-+#define MT6351_EN_STATUS1            0x020E
-+#define MT6351_EN_STATUS2            0x0210
-+#define MT6351_OCSTATUS1             0x0212
-+#define MT6351_OCSTATUS2             0x0214
-+#define MT6351_PGDEBSTATUS0          0x0216
-+#define MT6351_PGDEBSTATU1           0x0218
-+#define MT6351_PGSTATUS0             0x021A
-+#define MT6351_PGSTATUS1             0x021C
-+#define MT6351_THERMALSTATUS         0x021E
-+#define MT6351_TOPSTATUS             0x0220
-+#define MT6351_TDSEL_CON             0x0222
-+#define MT6351_RDSEL_CON             0x0224
-+#define MT6351_SMT_CON0              0x0226
-+#define MT6351_SMT_CON1              0x0228
-+#define MT6351_SMT_CON2              0x022A
-+#define MT6351_DRV_CON0              0x022C
-+#define MT6351_DRV_CON1              0x022E
-+#define MT6351_DRV_CON2              0x0230
-+#define MT6351_DRV_CON3              0x0232
-+#define MT6351_TOP_STATUS            0x0234
-+#define MT6351_TOP_STATUS_SET        0x0236
-+#define MT6351_TOP_STATUS_CLR        0x0238
-+#define MT6351_TOP_CKPDN_CON0        0x023A
-+#define MT6351_TOP_CKPDN_CON0_SET    0x023C
-+#define MT6351_TOP_CKPDN_CON0_CLR    0x023E
-+#define MT6351_TOP_CKPDN_CON1        0x0240
-+#define MT6351_TOP_CKPDN_CON1_SET    0x0242
-+#define MT6351_TOP_CKPDN_CON1_CLR    0x0244
-+#define MT6351_TOP_CKPDN_CON2        0x0246
-+#define MT6351_TOP_CKPDN_CON2_SET    0x0248
-+#define MT6351_TOP_CKPDN_CON2_CLR    0x024A
-+#define MT6351_TOP_CKPDN_CON3        0x024C
-+#define MT6351_TOP_CKPDN_CON3_SET    0x024E
-+#define MT6351_TOP_CKPDN_CON3_CLR    0x0250
-+#define MT6351_TOP_CKPDN_CON4        0x0252
-+#define MT6351_TOP_CKPDN_CON4_SET    0x0254
-+#define MT6351_TOP_CKPDN_CON4_CLR    0x0256
-+#define MT6351_TOP_CKPDN_CON5        0x0258
-+#define MT6351_TOP_CKPDN_CON5_SET    0x025A
-+#define MT6351_TOP_CKPDN_CON5_CLR    0x025C
-+#define MT6351_TOP_CKSEL_CON0        0x025E
-+#define MT6351_TOP_CKSEL_CON0_SET    0x0260
-+#define MT6351_TOP_CKSEL_CON0_CLR    0x0262
-+#define MT6351_TOP_CKSEL_CON1        0x0264
-+#define MT6351_TOP_CKSEL_CON1_SET    0x0266
-+#define MT6351_TOP_CKSEL_CON1_CLR    0x0268
-+#define MT6351_TOP_CKSEL_CON2        0x026A
-+#define MT6351_TOP_CKSEL_CON2_SET    0x026C
-+#define MT6351_TOP_CKSEL_CON2_CLR    0x026E
-+#define MT6351_TOP_CKSEL_CON3        0x0270
-+#define MT6351_TOP_CKSEL_CON3_SET    0x0272
-+#define MT6351_TOP_CKSEL_CON3_CLR    0x0274
-+#define MT6351_TOP_CKDIVSEL_CON0     0x0276
-+#define MT6351_TOP_CKDIVSEL_CON0_SET 0x0278
-+#define MT6351_TOP_CKDIVSEL_CON0_CLR 0x027A
-+#define MT6351_TOP_CKDIVSEL_CON1     0x027C
-+#define MT6351_TOP_CKDIVSEL_CON1_SET 0x027E
-+#define MT6351_TOP_CKDIVSEL_CON1_CLR 0x0280
-+#define MT6351_TOP_CKHWEN_CON0       0x0282
-+#define MT6351_TOP_CKHWEN_CON0_SET   0x0284
-+#define MT6351_TOP_CKHWEN_CON0_CLR   0x0286
-+#define MT6351_TOP_CKHWEN_CON1       0x0288
-+#define MT6351_TOP_CKHWEN_CON1_SET   0x028A
-+#define MT6351_TOP_CKHWEN_CON1_CLR   0x028C
-+#define MT6351_TOP_CKHWEN_CON2       0x028E
-+#define MT6351_TOP_CKHWEN_CON2_SET   0x0290
-+#define MT6351_TOP_CKHWEN_CON2_CLR   0x0292
-+#define MT6351_TOP_CKTST_CON0        0x0294
-+#define MT6351_TOP_CKTST_CON1        0x0296
-+#define MT6351_TOP_CKTST_CON2        0x0298
-+#define MT6351_TOP_CLKSQ             0x029A
-+#define MT6351_TOP_CLKSQ_SET         0x029C
-+#define MT6351_TOP_CLKSQ_CLR         0x029E
-+#define MT6351_TOP_CLKSQ_RTC         0x02A0
-+#define MT6351_TOP_CLKSQ_RTC_SET     0x02A2
-+#define MT6351_TOP_CLKSQ_RTC_CLR     0x02A4
-+#define MT6351_TOP_CLK_TRIM          0x02A6
-+#define MT6351_TOP_RST_CON0          0x02A8
-+#define MT6351_TOP_RST_CON0_SET      0x02AA
-+#define MT6351_TOP_RST_CON0_CLR      0x02AC
-+#define MT6351_TOP_RST_CON1          0x02AE
-+#define MT6351_TOP_RST_CON1_SET      0x02B0
-+#define MT6351_TOP_RST_CON1_CLR      0x02B2
-+#define MT6351_TOP_RST_CON2          0x02B4
-+#define MT6351_TOP_RST_MISC          0x02B6
-+#define MT6351_TOP_RST_MISC_SET      0x02B8
-+#define MT6351_TOP_RST_MISC_CLR      0x02BA
-+#define MT6351_TOP_RST_STATUS        0x02BC
-+#define MT6351_TOP_RST_STATUS_SET    0x02BE
-+#define MT6351_TOP_RST_STATUS_CLR    0x02C0
-+#define MT6351_INT_CON0              0x02C2
-+#define MT6351_INT_CON0_SET          0x02C4
-+#define MT6351_INT_CON0_CLR          0x02C6
-+#define MT6351_INT_CON1              0x02C8
-+#define MT6351_INT_CON1_SET          0x02CA
-+#define MT6351_INT_CON1_CLR          0x02CC
-+#define MT6351_INT_CON2              0x02CE
-+#define MT6351_INT_CON2_SET          0x02D0
-+#define MT6351_INT_CON2_CLR          0x02D2
-+#define MT6351_INT_CON3              0x02D4
-+#define MT6351_INT_CON3_SET          0x02D6
-+#define MT6351_INT_CON3_CLR          0x02D8
-+#define MT6351_INT_MISC_CON          0x02DA
-+#define MT6351_INT_MISC_CON_SET      0x02DC
-+#define MT6351_INT_MISC_CON_CLR      0x02DE
-+#define MT6351_INT_STATUS0           0x02E0
-+#define MT6351_INT_STATUS1           0x02E2
-+#define MT6351_INT_STATUS2           0x02E4
-+#define MT6351_INT_STATUS3           0x02E6
-+#define MT6351_OC_GEAR_0             0x02E8
-+#define MT6351_FQMTR_CON0            0x02EA
-+#define MT6351_FQMTR_CON1            0x02EC
-+#define MT6351_FQMTR_CON2            0x02EE
-+#define MT6351_RG_SPI_CON            0x02F0
-+#define MT6351_DEW_DIO_EN            0x02F2
-+#define MT6351_DEW_READ_TEST         0x02F4
-+#define MT6351_DEW_WRITE_TEST        0x02F6
-+#define MT6351_DEW_CRC_SWRST         0x02F8
-+#define MT6351_DEW_CRC_EN            0x02FA
-+#define MT6351_DEW_CRC_VAL           0x02FC
-+#define MT6351_DEW_DBG_MON_SEL       0x02FE
-+#define MT6351_DEW_CIPHER_KEY_SEL    0x0300
-+#define MT6351_DEW_CIPHER_IV_SEL     0x0302
-+#define MT6351_DEW_CIPHER_EN         0x0304
-+#define MT6351_DEW_CIPHER_RDY        0x0306
-+#define MT6351_DEW_CIPHER_MODE       0x0308
-+#define MT6351_DEW_CIPHER_SWRST      0x030A
-+#define MT6351_DEW_RDDMY_NO          0x030C
-+#define MT6351_INT_TYPE_CON0         0x030E
-+#define MT6351_INT_TYPE_CON0_SET     0x0310
-+#define MT6351_INT_TYPE_CON0_CLR     0x0312
-+#define MT6351_INT_TYPE_CON1         0x0314
-+#define MT6351_INT_TYPE_CON1_SET     0x0316
-+#define MT6351_INT_TYPE_CON1_CLR     0x0318
-+#define MT6351_INT_TYPE_CON2         0x031A
-+#define MT6351_INT_TYPE_CON2_SET     0x031C
-+#define MT6351_INT_TYPE_CON2_CLR     0x031E
-+#define MT6351_INT_TYPE_CON3         0x0320
-+#define MT6351_INT_TYPE_CON3_SET     0x0322
-+#define MT6351_INT_TYPE_CON3_CLR     0x0324
-+#define MT6351_INT_STA               0x0326
-+#define MT6351_BUCK_ALL_CON0         0x0400
-+#define MT6351_BUCK_ALL_CON1         0x0402
-+#define MT6351_BUCK_ALL_CON2         0x0404
-+#define MT6351_BUCK_ALL_CON3         0x0406
-+#define MT6351_BUCK_ALL_CON4         0x0408
-+#define MT6351_BUCK_ALL_CON5         0x040A
-+#define MT6351_BUCK_ALL_CON6         0x040C
-+#define MT6351_BUCK_DLC_VPA_CON0     0x040E
-+#define MT6351_BUCK_DLC_VPA_CON1     0x0410
-+#define MT6351_BUCK_DLC_VPA_CON2     0x0412
-+#define MT6351_BUCK_DVS_VPA_CON0     0x0414
-+#define MT6351_BUCK_VOW_CON0         0x0416
-+#define MT6351_BUCK_VOW_CON1         0x0418
-+#define MT6351_BUCK_VOW_CON2         0x041A
-+#define MT6351_BUCK_VOW_CON3         0x041C
-+#define MT6351_BUCK_OC_CON0          0x041E
-+#define MT6351_BUCK_OC_CON1          0x0420
-+#define MT6351_BUCK_OC_CON2          0x0422
-+#define MT6351_BUCK_OC_CON3          0x0424
-+#define MT6351_BUCK_OC_CON4          0x0426
-+#define MT6351_BUCK_OC_VCORE_CON0    0x0428
-+#define MT6351_BUCK_OC_VGPU_CON0     0x042A
-+#define MT6351_BUCK_OC_VMODEM_CON0   0x042C
-+#define MT6351_BUCK_OC_VMD1_CON0     0x042E
-+#define MT6351_BUCK_OC_VSRAM_MD_CON0 0x0430
-+#define MT6351_BUCK_OC_VS1_CON0      0x0432
-+#define MT6351_BUCK_OC_VS2_CON0      0x0434
-+#define MT6351_BUCK_OC_VPA_CON0      0x0436
-+#define MT6351_SMPS_ANA_CON0         0x0438
-+#define MT6351_SMPS_ANA_CON1         0x043A
-+#define MT6351_SMPS_ANA_CON2         0x043C
-+#define MT6351_SMPS_ANA_CON3         0x043E
-+#define MT6351_SMPS_ANA_CON4         0x0440
-+#define MT6351_SMPS_ANA_CON5         0x0442
-+#define MT6351_SMPS_ANA_CON6         0x0444
-+#define MT6351_SMPS_ANA_CON7         0x0446
-+#define MT6351_SMPS_ANA_CON8         0x0448
-+#define MT6351_SMPS_ANA_CON9         0x044A
-+#define MT6351_SMPS_ANA_CON10        0x044C
-+#define MT6351_VCORE_ANA_CON0        0x044E
-+#define MT6351_VCORE_ANA_CON1        0x0450
-+#define MT6351_VCORE_ANA_CON2        0x0452
-+#define MT6351_VCORE_ANA_CON3        0x0454
-+#define MT6351_VCORE_ANA_CON4        0x0456
-+#define MT6351_VCORE_ANA_CON5        0x0458
-+#define MT6351_VCORE_ANA_CON6        0x045A
-+#define MT6351_VCORE_ANA_CON7        0x045C
-+#define MT6351_VCORE_ANA_CON8        0x045E
-+#define MT6351_VCORE_ANA_CON9        0x0460
-+#define MT6351_VGPU_ANA_CON0         0x0462
-+#define MT6351_VGPU_ANA_CON1         0x0464
-+#define MT6351_VGPU_ANA_CON2         0x0466
-+#define MT6351_VGPU_ANA_CON3         0x0468
-+#define MT6351_VGPU_ANA_CON4         0x046A
-+#define MT6351_VGPU_ANA_CON5         0x046C
-+#define MT6351_VGPU_ANA_CON6         0x046E
-+#define MT6351_VGPU_ANA_CON7         0x0470
-+#define MT6351_VGPU_ANA_CON8         0x0472
-+#define MT6351_VGPU_ANA_CON9         0x0474
-+#define MT6351_VSRAM_MD_ANA_CON0     0x0476
-+#define MT6351_VSRAM_MD_ANA_CON1     0x0478
-+#define MT6351_VSRAM_MD_ANA_CON2     0x047A
-+#define MT6351_VSRAM_MD_ANA_CON3     0x047C
-+#define MT6351_VSRAM_MD_ANA_CON4     0x047E
-+#define MT6351_VSRAM_MD_ANA_CON5     0x0480
-+#define MT6351_VSRAM_MD_ANA_CON6     0x0482
-+#define MT6351_VSRAM_MD_ANA_CON7     0x0484
-+#define MT6351_VSRAM_MD_ANA_CON8     0x0486
-+#define MT6351_VSRAM_MD_ANA_CON9     0x0488
-+#define MT6351_VMODEM_ANA_CON0       0x048A
-+#define MT6351_VMODEM_ANA_CON1       0x048C
-+#define MT6351_VMODEM_ANA_CON2       0x048E
-+#define MT6351_VMODEM_ANA_CON3       0x0490
-+#define MT6351_VMODEM_ANA_CON4       0x0492
-+#define MT6351_VMODEM_ANA_CON5       0x0494
-+#define MT6351_VMODEM_ANA_CON6       0x0496
-+#define MT6351_VMODEM_ANA_CON7       0x0498
-+#define MT6351_VMODEM_ANA_CON8       0x049A
-+#define MT6351_VMODEM_ANA_CON9       0x049C
-+#define MT6351_VMD1_ANA_CON0         0x049E
-+#define MT6351_VMD1_ANA_CON1         0x04A0
-+#define MT6351_VMD1_ANA_CON2         0x04A2
-+#define MT6351_VMD1_ANA_CON3         0x04A4
-+#define MT6351_VMD1_ANA_CON4         0x04A6
-+#define MT6351_VMD1_ANA_CON5         0x04A8
-+#define MT6351_VMD1_ANA_CON6         0x04AA
-+#define MT6351_VMD1_ANA_CON7         0x04AC
-+#define MT6351_VMD1_ANA_CON8         0x04AE
-+#define MT6351_VMD1_ANA_CON9         0x04B0
-+#define MT6351_VS1_ANA_CON0          0x04B2
-+#define MT6351_VS1_ANA_CON1          0x04B4
-+#define MT6351_VS1_ANA_CON2          0x04B6
-+#define MT6351_VS1_ANA_CON3          0x04B8
-+#define MT6351_VS1_ANA_CON4          0x04BA
-+#define MT6351_VS1_ANA_CON5          0x04BC
-+#define MT6351_VS1_ANA_CON6          0x04BE
-+#define MT6351_VS1_ANA_CON7          0x04C0
-+#define MT6351_VS1_ANA_CON8          0x04C2
-+#define MT6351_VS1_ANA_CON9          0x04C4
-+#define MT6351_VS2_ANA_CON0          0x04C6
-+#define MT6351_VS2_ANA_CON1          0x04C8
-+#define MT6351_VS2_ANA_CON2          0x04CA
-+#define MT6351_VS2_ANA_CON3          0x04CC
-+#define MT6351_VS2_ANA_CON4          0x04CE
-+#define MT6351_VS2_ANA_CON5          0x04D0
-+#define MT6351_VS2_ANA_CON6          0x04D2
-+#define MT6351_VS2_ANA_CON7          0x04D4
-+#define MT6351_VS2_ANA_CON8          0x04D6
-+#define MT6351_VS2_ANA_CON9          0x04D8
-+#define MT6351_VPA_ANA_CON0          0x04DA
-+#define MT6351_VPA_ANA_CON1          0x04DC
-+#define MT6351_VPA_ANA_CON2          0x04DE
-+#define MT6351_VPA_ANA_CON3          0x04E0
-+#define MT6351_VPA_ANA_CON4          0x04E2
-+#define MT6351_VPA_ANA_CON5          0x04E4
-+#define MT6351_BUCK_VCORE_CON0       0x0600
-+#define MT6351_BUCK_VCORE_CON1       0x0602
-+#define MT6351_BUCK_VCORE_CON2       0x0604
-+#define MT6351_BUCK_VCORE_CON3       0x0606
-+#define MT6351_BUCK_VCORE_CON4       0x0608
-+#define MT6351_BUCK_VCORE_CON5       0x060A
-+#define MT6351_BUCK_VCORE_CON6       0x060C
-+#define MT6351_BUCK_VCORE_CON7       0x060E
-+#define MT6351_BUCK_VCORE_CON8       0x0610
-+#define MT6351_BUCK_VCORE_CON9       0x0612
-+#define MT6351_BUCK_VGPU_CON0        0x0614
-+#define MT6351_BUCK_VGPU_CON1        0x0616
-+#define MT6351_BUCK_VGPU_CON2        0x0618
-+#define MT6351_BUCK_VGPU_CON3        0x061A
-+#define MT6351_BUCK_VGPU_CON4        0x061C
-+#define MT6351_BUCK_VGPU_CON5        0x061E
-+#define MT6351_BUCK_VGPU_CON6        0x0620
-+#define MT6351_BUCK_VGPU_CON7        0x0622
-+#define MT6351_BUCK_VGPU_CON8        0x0624
-+#define MT6351_BUCK_VGPU_CON9        0x0626
-+#define MT6351_BUCK_VMODEM_CON0      0x0628
-+#define MT6351_BUCK_VMODEM_CON1      0x062A
-+#define MT6351_BUCK_VMODEM_CON2      0x062C
-+#define MT6351_BUCK_VMODEM_CON3      0x062E
-+#define MT6351_BUCK_VMODEM_CON4      0x0630
-+#define MT6351_BUCK_VMODEM_CON5      0x0632
-+#define MT6351_BUCK_VMODEM_CON6      0x0634
-+#define MT6351_BUCK_VMODEM_CON7      0x0636
-+#define MT6351_BUCK_VMODEM_CON8      0x0638
-+#define MT6351_BUCK_VMODEM_CON9      0x063A
-+#define MT6351_BUCK_VMD1_CON0        0x063C
-+#define MT6351_BUCK_VMD1_CON1        0x063E
-+#define MT6351_BUCK_VMD1_CON2        0x0640
-+#define MT6351_BUCK_VMD1_CON3        0x0642
-+#define MT6351_BUCK_VMD1_CON4        0x0644
-+#define MT6351_BUCK_VMD1_CON5        0x0646
-+#define MT6351_BUCK_VMD1_CON6        0x0648
-+#define MT6351_BUCK_VMD1_CON7        0x064A
-+#define MT6351_BUCK_VMD1_CON8        0x064C
-+#define MT6351_BUCK_VMD1_CON9        0x064E
-+#define MT6351_BUCK_VSRAM_MD_CON0    0x0650
-+#define MT6351_BUCK_VSRAM_MD_CON1    0x0652
-+#define MT6351_BUCK_VSRAM_MD_CON2    0x0654
-+#define MT6351_BUCK_VSRAM_MD_CON3    0x0656
-+#define MT6351_BUCK_VSRAM_MD_CON4    0x0658
-+#define MT6351_BUCK_VSRAM_MD_CON5    0x065A
-+#define MT6351_BUCK_VSRAM_MD_CON6    0x065C
-+#define MT6351_BUCK_VSRAM_MD_CON7    0x065E
-+#define MT6351_BUCK_VSRAM_MD_CON8    0x0660
-+#define MT6351_BUCK_VSRAM_MD_CON9    0x0662
-+#define MT6351_BUCK_VS1_CON0         0x0664
-+#define MT6351_BUCK_VS1_CON1         0x0666
-+#define MT6351_BUCK_VS1_CON2         0x0668
-+#define MT6351_BUCK_VS1_CON3         0x066A
-+#define MT6351_BUCK_VS1_CON4         0x066C
-+#define MT6351_BUCK_VS1_CON5         0x066E
-+#define MT6351_BUCK_VS1_CON6         0x0670
-+#define MT6351_BUCK_VS1_CON7         0x0672
-+#define MT6351_BUCK_VS1_CON8         0x0674
-+#define MT6351_BUCK_VS1_CON9         0x0676
-+#define MT6351_BUCK_VS2_CON0         0x0678
-+#define MT6351_BUCK_VS2_CON1         0x067A
-+#define MT6351_BUCK_VS2_CON2         0x067C
-+#define MT6351_BUCK_VS2_CON3         0x067E
-+#define MT6351_BUCK_VS2_CON4         0x0680
-+#define MT6351_BUCK_VS2_CON5         0x0682
-+#define MT6351_BUCK_VS2_CON6         0x0684
-+#define MT6351_BUCK_VS2_CON7         0x0686
-+#define MT6351_BUCK_VS2_CON8         0x0688
-+#define MT6351_BUCK_VS2_CON9         0x068A
-+#define MT6351_BUCK_VPA_CON0         0x068C
-+#define MT6351_BUCK_VPA_CON1         0x068E
-+#define MT6351_BUCK_VPA_CON2         0x0690
-+#define MT6351_BUCK_VPA_CON3         0x0692
-+#define MT6351_BUCK_VPA_CON4         0x0694
-+#define MT6351_BUCK_VPA_CON5         0x0696
-+#define MT6351_BUCK_VPA_CON6         0x0698
-+#define MT6351_BUCK_VPA_CON7         0x069A
-+#define MT6351_BUCK_VPA_CON8         0x069C
-+#define MT6351_BUCK_VPA_CON9         0x069E
-+#define MT6351_BUCK_VSRAM_PROC_CON0  0x06A0
-+#define MT6351_BUCK_VSRAM_PROC_CON1  0x06A2
-+#define MT6351_BUCK_VSRAM_PROC_CON2  0x06A4
-+#define MT6351_BUCK_VSRAM_PROC_CON3  0x06A6
-+#define MT6351_BUCK_VSRAM_PROC_CON4  0x06A8
-+#define MT6351_BUCK_VSRAM_PROC_CON5  0x06AA
-+#define MT6351_BUCK_VSRAM_PROC_CON6  0x06AC
-+#define MT6351_BUCK_VSRAM_PROC_CON7  0x06AE
-+#define MT6351_BUCK_VSRAM_PROC_CON8  0x06B0
-+#define MT6351_BUCK_VSRAM_PROC_CON9  0x06B2
-+#define MT6351_BUCK_K_CON0           0x06B4
-+#define MT6351_BUCK_K_CON1           0x06B6
-+#define MT6351_BUCK_K_CON2           0x06B8
-+#define MT6351_BUCK_K_CON3           0x06BA
-+#define MT6351_WDTDBG_CON0           0x06BC
-+#define MT6351_WDTDBG_CON1           0x06BE
-+#define MT6351_WDTDBG_CON2           0x06C0
-+#define MT6351_WDTDBG_CON3           0x06C2
-+#define MT6351_ZCD_CON0              0x0800
-+#define MT6351_ZCD_CON1              0x0802
-+#define MT6351_ZCD_CON2              0x0804
-+#define MT6351_ZCD_CON3              0x0806
-+#define MT6351_ZCD_CON4              0x0808
-+#define MT6351_ZCD_CON5              0x080A
-+#define MT6351_ISINKA_ANA_CON_0      0x080C
-+#define MT6351_ISINKB_ANA_CON_0      0x080E
-+#define MT6351_ISINK0_CON0           0x0810
-+#define MT6351_ISINK0_CON1           0x0812
-+#define MT6351_ISINK0_CON2           0x0814
-+#define MT6351_ISINK0_CON3           0x0816
-+#define MT6351_ISINK1_CON0           0x0818
-+#define MT6351_ISINK1_CON1           0x081A
-+#define MT6351_ISINK1_CON2           0x081C
-+#define MT6351_ISINK1_CON3           0x081E
-+#define MT6351_ISINK4_CON0           0x0820
-+#define MT6351_ISINK4_CON1           0x0822
-+#define MT6351_ISINK4_CON2           0x0824
-+#define MT6351_ISINK4_CON3           0x0826
-+#define MT6351_ISINK5_CON0           0x0828
-+#define MT6351_ISINK5_CON1           0x082A
-+#define MT6351_ISINK5_CON2           0x082C
-+#define MT6351_ISINK5_CON3           0x082E
-+#define MT6351_ISINK_ANA1            0x0830
-+#define MT6351_ISINK_PHASE_DLY       0x0832
-+#define MT6351_ISINK_SFSTR           0x0834
-+#define MT6351_ISINK_EN_CTRL         0x0836
-+#define MT6351_ISINK_MODE_CTRL       0x0838
-+#define MT6351_ISINK_ANA_CON0        0x083A
-+#define MT6351_ISINK2_CON1           0x083C
-+#define MT6351_ISINK3_CON1           0x083E
-+#define MT6351_ISINK6_CON1           0x0840
-+#define MT6351_ISINK7_CON1           0x0842
-+#define MT6351_ISINK_ANA1_SMPL       0x0844
-+#define MT6351_ISINK_PHASE_DLY_SMPL  0x0846
-+#define MT6351_ISINK_EN_CTRL_SMPL    0x0848
-+#define MT6351_CHRIND_CON0           0x084A
-+#define MT6351_CHRIND_CON1           0x084C
-+#define MT6351_CHRIND_CON2           0x084E
-+#define MT6351_CHRIND_CON3           0x0850
-+#define MT6351_CHRIND_EN_CTRL        0x0852
-+#define MT6351_LDO_VA18_CON0         0x0A00
-+#define MT6351_LDO_VA18_CON1         0x0A02
-+#define MT6351_LDO_VTCXO24_CON0      0x0A04
-+#define MT6351_LDO_VTCXO24_CON1      0x0A06
-+#define MT6351_LDO_VTCXO28_CON0      0x0A08
-+#define MT6351_LDO_VTCXO28_CON1      0x0A0A
-+#define MT6351_LDO_VCN28_CON0        0x0A0C
-+#define MT6351_LDO_VCN28_CON1        0x0A0E
-+#define MT6351_LDO_VCN28_CON2        0x0A10
-+#define MT6351_LDO_VCAMA_CON0        0x0A12
-+#define MT6351_LDO_VCAMA_CON1        0x0A14
-+#define MT6351_LDO_VUSB33_CON0       0x0A16
-+#define MT6351_LDO_VUSB33_CON1       0x0A18
-+#define MT6351_LDO_VUSB33_CON2       0x0A1A
-+#define MT6351_LDO_VSIM1_CON0        0x0A1C
-+#define MT6351_LDO_VSIM1_CON1        0x0A1E
-+#define MT6351_LDO_VSIM1_CON2        0x0A20
-+#define MT6351_LDO_VSIM2_CON0        0x0A22
-+#define MT6351_LDO_VSIM2_CON1        0x0A24
-+#define MT6351_LDO_VSIM2_CON2        0x0A26
-+#define MT6351_LDO_VEMC_CON0         0x0A28
-+#define MT6351_LDO_VEMC_CON1         0x0A2A
-+#define MT6351_LDO_VEMC_CON2         0x0A2C
-+#define MT6351_LDO_VMCH_CON0         0x0A2E
-+#define MT6351_LDO_VMCH_CON1         0x0A30
-+#define MT6351_LDO_VMCH_CON2         0x0A32
-+#define MT6351_LDO_VIO28_CON0        0x0A34
-+#define MT6351_LDO_VIO28_CON1        0x0A36
-+#define MT6351_LDO_VIO28_CON2        0x0A38
-+#define MT6351_LDO_VIBR_CON0         0x0A3A
-+#define MT6351_LDO_VIBR_CON1         0x0A3C
-+#define MT6351_LDO_VIBR_CON2         0x0A3E
-+#define MT6351_LDO_VCAMD_CON0        0x0A40
-+#define MT6351_LDO_VCAMD_CON1        0x0A42
-+#define MT6351_LDO_VCAMD_CON2        0x0A44
-+#define MT6351_LDO_VRF18_CON0        0x0A46
-+#define MT6351_LDO_VRF18_CON1        0x0A48
-+#define MT6351_LDO_VRF18_CON2        0x0A4A
-+#define MT6351_LDO_VIO18_CON0        0x0A4C
-+#define MT6351_LDO_VIO18_CON1        0x0A4E
-+#define MT6351_LDO_VIO18_CON2        0x0A50
-+#define MT6351_LDO_VCN18_CON0        0x0A52
-+#define MT6351_LDO_VCN18_CON1        0x0A54
-+#define MT6351_LDO_VCN18_CON2        0x0A56
-+#define MT6351_LDO_VCAMIO_CON0       0x0A58
-+#define MT6351_LDO_VCAMIO_CON1       0x0A5A
-+#define MT6351_LDO_VCAMIO_CON2       0x0A5C
-+#define MT6351_LDO_VSRAM_PROC_CON0   0x0A5E
-+#define MT6351_LDO_VSRAM_PROC_CON1   0x0A60
-+#define MT6351_LDO_VSRAM_PROC_CON2   0x0A62
-+#define MT6351_LDO_VXO22_CON0        0x0A64
-+#define MT6351_LDO_VXO22_CON1        0x0A66
-+#define MT6351_LDO_VRF12_CON0        0x0A68
-+#define MT6351_LDO_VRF12_CON1        0x0A6A
-+#define MT6351_LDO_VRF12_CON2        0x0A6C
-+#define MT6351_LDO_VA10_CON0         0x0A6E
-+#define MT6351_LDO_VA10_CON1         0x0A70
-+#define MT6351_LDO_VA10_CON2         0x0A72
-+#define MT6351_LDO_VDRAM_CON0        0x0A74
-+#define MT6351_LDO_VDRAM_CON1        0x0A76
-+#define MT6351_LDO_VDRAM_CON2        0x0A78
-+#define MT6351_LDO_VMIPI_CON0        0x0A7A
-+#define MT6351_LDO_VMIPI_CON1        0x0A7C
-+#define MT6351_LDO_VMIPI_CON2        0x0A7E
-+#define MT6351_LDO_VGP3_CON0         0x0A80
-+#define MT6351_LDO_VGP3_CON1         0x0A82
-+#define MT6351_LDO_VGP3_CON2         0x0A84
-+#define MT6351_LDO_VBIF28_CON0       0x0A86
-+#define MT6351_LDO_VBIF28_CON1       0x0A88
-+#define MT6351_LDO_VBIF28_CON2       0x0A8A
-+#define MT6351_LDO_VEFUSE_CON0       0x0A8C
-+#define MT6351_LDO_VEFUSE_CON1       0x0A8E
-+#define MT6351_LDO_VEFUSE_CON2       0x0A90
-+#define MT6351_LDO_VCN33_CON0        0x0A92
-+#define MT6351_LDO_VCN33_CON1        0x0A94
-+#define MT6351_LDO_VCN33_CON2        0x0A96
-+#define MT6351_LDO_VCN33_CON3        0x0A98
-+#define MT6351_LDO_VCN33_CON4        0x0A9A
-+#define MT6351_LDO_VLDO28_CON0       0x0A9C
-+#define MT6351_LDO_VLDO28_CON1       0x0A9E
-+#define MT6351_LDO_VLDO28_CON2       0x0AA0
-+#define MT6351_LDO_VLDO28_CON3       0x0AA2
-+#define MT6351_LDO_VLDO28_CON4       0x0AA4
-+#define MT6351_LDO_RSV_CON0          0x0AA6
-+#define MT6351_LDO_RSV_CON1          0x0AA8
-+#define MT6351_LDO_VMC_CON0          0x0AAA
-+#define MT6351_LDO_VMC_CON1          0x0AAC
-+#define MT6351_LDO_VMC_CON2          0x0AAE
-+#define MT6351_LDO_VMC_CON3          0x0AB0
-+#define MT6351_LDO_K_CON0            0x0AB2
-+#define MT6351_LDO_K_CON1            0x0AB4
-+#define MT6351_LDO_K_CON2            0x0AB6
-+#define MT6351_LDO_OCFB0             0x0AB8
-+#define MT6351_VRTC_CON0             0x0ABA
-+#define MT6351_ALDO_ANA_CON0         0x0ABC
-+#define MT6351_DLDO_ANA_CON0         0x0ABE
-+#define MT6351_SLDO20_ANA_CON0       0x0AC0
-+#define MT6351_SLDO14_ANA_CON0       0x0AC2
-+#define MT6351_VXO22_ANA_CON0        0x0AC4
-+#define MT6351_VTCXO28_ANA_CON0      0x0AC6
-+#define MT6351_VTCXO24_ANA_CON0      0x0AC8
-+#define MT6351_VBIF28_ANA_CON0       0x0ACA
-+#define MT6351_VCN28_ANA_CON0        0x0ACC
-+#define MT6351_VMCH_ANA_CON0         0x0ACE
-+#define MT6351_VMCH_ANA_CON1         0x0AD0
-+#define MT6351_VEMC_ANA_CON0         0x0AD2
-+#define MT6351_VEMC_ANA_CON1         0x0AD4
-+#define MT6351_VCAMA_ANA_CON0        0x0AD6
-+#define MT6351_VCAMA_ANA_CON1        0x0AD8
-+#define MT6351_VCN33_ANA_CON0        0x0ADA
-+#define MT6351_VCN33_ANA_CON1        0x0ADC
-+#define MT6351_VIO28_ANA_CON0        0x0ADE
-+#define MT6351_VIO28_ANA_CON1        0x0AE0
-+#define MT6351_VMC_ANA_CON0          0x0AE2
-+#define MT6351_VMC_ANA_CON1          0x0AE4
-+#define MT6351_VIBR_ANA_CON0         0x0AE6
-+#define MT6351_VIBR_ANA_CON1         0x0AE8
-+#define MT6351_VUSB33_ANA_CON0       0x0AEA
-+#define MT6351_VUSB33_ANA_CON1       0x0AEC
-+#define MT6351_VSIM1_ANA_CON0        0x0AEE
-+#define MT6351_VSIM1_ANA_CON1        0x0AF0
-+#define MT6351_VSIM2_ANA_CON0        0x0AF2
-+#define MT6351_VSIM2_ANA_CON1        0x0AF4
-+#define MT6351_VEFUSE_ANA_CON0       0x0AF6
-+#define MT6351_VEFUSE_ANA_CON1       0x0AF8
-+#define MT6351_VA18_ANA_CON0         0x0AFA
-+#define MT6351_VGP3_ANA_CON0         0x0AFC
-+#define MT6351_VGP3_ANA_CON1         0x0AFE
-+#define MT6351_VCAMD_ANA_CON0        0x0B00
-+#define MT6351_VCAMD_ANA_CON1        0x0B02
-+#define MT6351_VIO18_ANA_CON0        0x0B04
-+#define MT6351_VIO18_ANA_CON1        0x0B06
-+#define MT6351_VRF18_ANA_CON0        0x0B08
-+#define MT6351_VRF18_ANA_CON1        0x0B0A
-+#define MT6351_VRF12_ANA_CON0        0x0B0C
-+#define MT6351_VRF12_ANA_CON1        0x0B0E
-+#define MT6351_VA10_ANA_CON0         0x0B10
-+#define MT6351_VA10_ANA_CON1         0x0B12
-+#define MT6351_VCAMIO_ANA_CON0       0x0B14
-+#define MT6351_VCAMIO_ANA_CON1       0x0B16
-+#define MT6351_VCN18_ANA_CON0        0x0B18
-+#define MT6351_VCN18_ANA_CON1        0x0B1A
-+#define MT6351_VMIPI_ANA_CON0        0x0B1C
-+#define MT6351_VMIPI_ANA_CON1        0x0B1E
-+#define MT6351_VSRAM_PROC_ANA_CON1   0x0B20
-+#define MT6351_VDRAM_ANA_CON0        0x0B22
-+#define MT6351_VDRAM_ANA_CON1        0x0B24
-+#define MT6351_VLDO28_ANA_CON0       0x0B26
-+#define MT6351_VLDO28_ANA_CON1       0x0B28
-+#define MT6351_BIF_CON0              0x0B2A
-+#define MT6351_BIF_CON1              0x0B2C
-+#define MT6351_BIF_CON2              0x0B2E
-+#define MT6351_BIF_CON3              0x0B30
-+#define MT6351_BIF_CON4              0x0B32
-+#define MT6351_BIF_CON5              0x0B34
-+#define MT6351_BIF_CON6              0x0B36
-+#define MT6351_BIF_CON7              0x0B38
-+#define MT6351_BIF_CON8              0x0B3A
-+#define MT6351_BIF_CON9              0x0B3C
-+#define MT6351_BIF_CON10             0x0B3E
-+#define MT6351_BIF_CON11             0x0B40
-+#define MT6351_BIF_CON12             0x0B42
-+#define MT6351_BIF_CON13             0x0B44
-+#define MT6351_BIF_CON14             0x0B46
-+#define MT6351_BIF_CON15             0x0B48
-+#define MT6351_BIF_CON16             0x0B4A
-+#define MT6351_BIF_CON17             0x0B4C
-+#define MT6351_BIF_CON18             0x0B4E
-+#define MT6351_BIF_CON19             0x0B50
-+#define MT6351_BIF_CON20             0x0B52
-+#define MT6351_BIF_CON21             0x0B54
-+#define MT6351_BIF_CON22             0x0B56
-+#define MT6351_BIF_CON23             0x0B58
-+#define MT6351_BIF_CON24             0x0B5A
-+#define MT6351_BIF_CON25             0x0B5C
-+#define MT6351_BIF_CON26             0x0B5E
-+#define MT6351_BIF_CON27             0x0B60
-+#define MT6351_BIF_CON28             0x0B62
-+#define MT6351_BIF_CON29             0x0B64
-+#define MT6351_BIF_CON30             0x0B66
-+#define MT6351_BIF_CON31             0x0B68
-+#define MT6351_BIF_CON32             0x0B6A
-+#define MT6351_BIF_CON33             0x0B6C
-+#define MT6351_BIF_CON34             0x0B6E
-+#define MT6351_BIF_CON35             0x0B70
-+#define MT6351_BIF_CON36             0x0B72
-+#define MT6351_BIF_BAT_CON0          0x0B74
-+#define MT6351_BIF_CON37             0x0B76
-+#define MT6351_BIF_CON38             0x0B78
-+#define MT6351_BIF_CON39             0x0B7A
-+#define MT6351_OTP_CON0              0x0C00
-+#define MT6351_OTP_CON1              0x0C02
-+#define MT6351_OTP_CON2              0x0C04
-+#define MT6351_OTP_CON3              0x0C06
-+#define MT6351_OTP_CON4              0x0C08
-+#define MT6351_OTP_CON5              0x0C0A
-+#define MT6351_OTP_CON6              0x0C0C
-+#define MT6351_OTP_CON7              0x0C0E
-+#define MT6351_OTP_CON8              0x0C10
-+#define MT6351_OTP_CON9              0x0C12
-+#define MT6351_OTP_CON10             0x0C14
-+#define MT6351_OTP_CON11             0x0C16
-+#define MT6351_OTP_CON12             0x0C18
-+#define MT6351_OTP_CON13             0x0C1A
-+#define MT6351_OTP_CON14             0x0C1C
-+#define MT6351_OTP_DOUT_0_15         0x0C1E
-+#define MT6351_OTP_DOUT_16_31        0x0C20
-+#define MT6351_OTP_DOUT_32_47        0x0C22
-+#define MT6351_OTP_DOUT_48_63        0x0C24
-+#define MT6351_OTP_DOUT_64_79        0x0C26
-+#define MT6351_OTP_DOUT_80_95        0x0C28
-+#define MT6351_OTP_DOUT_96_111       0x0C2A
-+#define MT6351_OTP_DOUT_112_127      0x0C2C
-+#define MT6351_OTP_DOUT_128_143      0x0C2E
-+#define MT6351_OTP_DOUT_144_159      0x0C30
-+#define MT6351_OTP_DOUT_160_175      0x0C32
-+#define MT6351_OTP_DOUT_176_191      0x0C34
-+#define MT6351_OTP_DOUT_192_207      0x0C36
-+#define MT6351_OTP_DOUT_208_223      0x0C38
-+#define MT6351_OTP_DOUT_224_239      0x0C3A
-+#define MT6351_OTP_DOUT_240_255      0x0C3C
-+#define MT6351_OTP_DOUT_256_271      0x0C3E
-+#define MT6351_OTP_DOUT_272_287      0x0C40
-+#define MT6351_OTP_DOUT_288_303      0x0C42
-+#define MT6351_OTP_DOUT_304_319      0x0C44
-+#define MT6351_OTP_DOUT_320_335      0x0C46
-+#define MT6351_OTP_DOUT_336_351      0x0C48
-+#define MT6351_OTP_DOUT_352_367      0x0C4A
-+#define MT6351_OTP_DOUT_368_383      0x0C4C
-+#define MT6351_OTP_DOUT_384_399      0x0C4E
-+#define MT6351_OTP_DOUT_400_415      0x0C50
-+#define MT6351_OTP_DOUT_416_431      0x0C52
-+#define MT6351_OTP_DOUT_432_447      0x0C54
-+#define MT6351_OTP_DOUT_448_463      0x0C56
-+#define MT6351_OTP_DOUT_464_479      0x0C58
-+#define MT6351_OTP_DOUT_480_495      0x0C5A
-+#define MT6351_OTP_DOUT_496_511      0x0C5C
-+#define MT6351_OTP_VAL_0_15          0x0C5E
-+#define MT6351_OTP_VAL_16_31         0x0C60
-+#define MT6351_OTP_VAL_32_47         0x0C62
-+#define MT6351_OTP_VAL_48_63         0x0C64
-+#define MT6351_OTP_VAL_64_79         0x0C66
-+#define MT6351_OTP_VAL_80_95         0x0C68
-+#define MT6351_OTP_VAL_96_111        0x0C6A
-+#define MT6351_OTP_VAL_112_127       0x0C6C
-+#define MT6351_OTP_VAL_128_143       0x0C6E
-+#define MT6351_OTP_VAL_144_159       0x0C70
-+#define MT6351_OTP_VAL_160_175       0x0C72
-+#define MT6351_OTP_VAL_176_191       0x0C74
-+#define MT6351_OTP_VAL_192_207       0x0C76
-+#define MT6351_OTP_VAL_208_223       0x0C78
-+#define MT6351_OTP_VAL_224_239       0x0C7A
-+#define MT6351_OTP_VAL_240_255       0x0C7C
-+#define MT6351_OTP_VAL_256_271       0x0C7E
-+#define MT6351_OTP_VAL_272_287       0x0C80
-+#define MT6351_OTP_VAL_288_303       0x0C82
-+#define MT6351_OTP_VAL_304_319       0x0C84
-+#define MT6351_OTP_VAL_320_335       0x0C86
-+#define MT6351_OTP_VAL_336_351       0x0C88
-+#define MT6351_OTP_VAL_352_367       0x0C8A
-+#define MT6351_OTP_VAL_368_383       0x0C8C
-+#define MT6351_OTP_VAL_384_399       0x0C8E
-+#define MT6351_OTP_VAL_400_415       0x0C90
-+#define MT6351_OTP_VAL_416_431       0x0C92
-+#define MT6351_OTP_VAL_432_447       0x0C94
-+#define MT6351_OTP_VAL_448_463       0x0C96
-+#define MT6351_OTP_VAL_464_479       0x0C98
-+#define MT6351_OTP_VAL_480_495       0x0C9A
-+#define MT6351_OTP_VAL_496_511       0x0C9C
-+#define MT6351_RTC_MIX_CON0          0x0C9E
-+#define MT6351_RTC_MIX_CON1          0x0CA0
-+#define MT6351_RTC_MIX_CON2          0x0CA2
-+#define MT6351_FGADC_CON0            0x0CA4
-+#define MT6351_FGADC_CON1            0x0CA6
-+#define MT6351_FGADC_CON2            0x0CA8
-+#define MT6351_FGADC_CON3            0x0CAA
-+#define MT6351_FGADC_CON4            0x0CAC
-+#define MT6351_FGADC_CON5            0x0CAE
-+#define MT6351_FGADC_CON6            0x0CB0
-+#define MT6351_FGADC_CON7            0x0CB2
-+#define MT6351_FGADC_CON8            0x0CB4
-+#define MT6351_FGADC_CON9            0x0CB6
-+#define MT6351_FGADC_CON10           0x0CB8
-+#define MT6351_FGADC_CON11           0x0CBA
-+#define MT6351_FGADC_CON12           0x0CBC
-+#define MT6351_FGADC_CON13           0x0CBE
-+#define MT6351_FGADC_CON14           0x0CC0
-+#define MT6351_FGADC_CON15           0x0CC2
-+#define MT6351_FGADC_CON16           0x0CC4
-+#define MT6351_FGADC_CON17           0x0CC6
-+#define MT6351_FGADC_CON18           0x0CC8
-+#define MT6351_FGADC_CON19           0x0CCA
-+#define MT6351_FGADC_CON20           0x0CCC
-+#define MT6351_FGADC_CON21           0x0CCE
-+#define MT6351_FGADC_CON22           0x0CD0
-+#define MT6351_FGADC_CON23           0x0CD2
-+#define MT6351_FGADC_CON24           0x0CD4
-+#define MT6351_FGADC_CON25           0x0CD6
-+#define MT6351_FGADC_CON26           0x0CD8
-+#define MT6351_FGADC_CON27           0x0CDA
-+#define MT6351_FGADC_CON28           0x0CDC
-+#define MT6351_FGADC_CON29           0x0CDE
-+#define MT6351_FGADC_CON30           0x0CE0
-+#define MT6351_FGADC_CON31           0x0CE2
-+#define MT6351_FGADC_CON32           0x0CE4
-+#define MT6351_FGADC_CON33           0x0CE6
-+#define MT6351_SYSTEM_INFO_CON0      0x0CE8
-+#define MT6351_SYSTEM_INFO_CON1      0x0CEA
-+#define MT6351_SYSTEM_INFO_CON2      0x0CEC
-+#define MT6351_SYSTEM_INFO_CON3      0x0CEE
-+#define MT6351_SYSTEM_INFO_CON4      0x0CF0
-+#define MT6351_AUDDEC_ANA_CON0       0x0CF2
-+#define MT6351_AUDDEC_ANA_CON1       0x0CF4
-+#define MT6351_AUDDEC_ANA_CON2       0x0CF6
-+#define MT6351_AUDDEC_ANA_CON3       0x0CF8
-+#define MT6351_AUDDEC_ANA_CON4       0x0CFA
-+#define MT6351_AUDDEC_ANA_CON5       0x0CFC
-+#define MT6351_AUDDEC_ANA_CON6       0x0CFE
-+#define MT6351_AUDDEC_ANA_CON7       0x0D00
-+#define MT6351_AUDDEC_ANA_CON8       0x0D02
-+#define MT6351_AUDDEC_ANA_CON9       0x0D04
-+#define MT6351_AUDDEC_ANA_CON10      0x0D06
-+#define MT6351_AUDENC_ANA_CON0       0x0D08
-+#define MT6351_AUDENC_ANA_CON1       0x0D0A
-+#define MT6351_AUDENC_ANA_CON2       0x0D0C
-+#define MT6351_AUDENC_ANA_CON3       0x0D0E
-+#define MT6351_AUDENC_ANA_CON4       0x0D10
-+#define MT6351_AUDENC_ANA_CON5       0x0D12
-+#define MT6351_AUDENC_ANA_CON6       0x0D14
-+#define MT6351_AUDENC_ANA_CON7       0x0D16
-+#define MT6351_AUDENC_ANA_CON8       0x0D18
-+#define MT6351_AUDENC_ANA_CON9       0x0D1A
-+#define MT6351_AUDENC_ANA_CON10      0x0D1C
-+#define MT6351_AUDENC_ANA_CON11      0x0D1E
-+#define MT6351_AUDENC_ANA_CON12      0x0D20
-+#define MT6351_AUDENC_ANA_CON13      0x0D22
-+#define MT6351_AUDENC_ANA_CON14      0x0D24
-+#define MT6351_AUDENC_ANA_CON15      0x0D26
-+#define MT6351_AUDENC_ANA_CON16      0x0D28
-+#define MT6351_AUDNCP_CLKDIV_CON0    0x0D2A
-+#define MT6351_AUDNCP_CLKDIV_CON1    0x0D2C
-+#define MT6351_AUDNCP_CLKDIV_CON2    0x0D2E
-+#define MT6351_AUDNCP_CLKDIV_CON3    0x0D30
-+#define MT6351_AUDNCP_CLKDIV_CON4    0x0D32
-+#define MT6351_AUXADC_ADC0           0x0E00
-+#define MT6351_AUXADC_ADC1           0x0E02
-+#define MT6351_AUXADC_ADC2           0x0E04
-+#define MT6351_AUXADC_ADC3           0x0E06
-+#define MT6351_AUXADC_ADC4           0x0E08
-+#define MT6351_AUXADC_ADC5           0x0E0A
-+#define MT6351_AUXADC_ADC6           0x0E0C
-+#define MT6351_AUXADC_ADC7           0x0E0E
-+#define MT6351_AUXADC_ADC8           0x0E10
-+#define MT6351_AUXADC_ADC9           0x0E12
-+#define MT6351_AUXADC_ADC10          0x0E14
-+#define MT6351_AUXADC_ADC11          0x0E16
-+#define MT6351_AUXADC_ADC12          0x0E18
-+#define MT6351_AUXADC_ADC13          0x0E1A
-+#define MT6351_AUXADC_ADC14          0x0E1C
-+#define MT6351_AUXADC_ADC15          0x0E1E
-+#define MT6351_AUXADC_ADC16          0x0E20
-+#define MT6351_AUXADC_ADC17          0x0E22
-+#define MT6351_AUXADC_ADC18          0x0E24
-+#define MT6351_AUXADC_ADC19          0x0E26
-+#define MT6351_AUXADC_ADC20          0x0E28
-+#define MT6351_AUXADC_ADC21          0x0E2A
-+#define MT6351_AUXADC_ADC22          0x0E2C
-+#define MT6351_AUXADC_ADC23          0x0E2E
-+#define MT6351_AUXADC_ADC24          0x0E30
-+#define MT6351_AUXADC_ADC25          0x0E32
-+#define MT6351_AUXADC_ADC26          0x0E34
-+#define MT6351_AUXADC_ADC27          0x0E36
-+#define MT6351_AUXADC_ADC28          0x0E38
-+#define MT6351_AUXADC_ADC29          0x0E3A
-+#define MT6351_AUXADC_ADC30          0x0E3C
-+#define MT6351_AUXADC_ADC31          0x0E3E
-+#define MT6351_AUXADC_ADC32          0x0E40
-+#define MT6351_AUXADC_ADC33          0x0E42
-+#define MT6351_AUXADC_ADC34          0x0E44
-+#define MT6351_AUXADC_ADC35          0x0E46
-+#define MT6351_AUXADC_ADC36          0x0E48
-+#define MT6351_AUXADC_ADC37          0x0E4A
-+#define MT6351_AUXADC_ADC38          0x0E4C
-+#define MT6351_AUXADC_ADC39          0x0E4E
-+#define MT6351_AUXADC_BUF0           0x0E50
-+#define MT6351_AUXADC_BUF1           0x0E52
-+#define MT6351_AUXADC_BUF2           0x0E54
-+#define MT6351_AUXADC_BUF3           0x0E56
-+#define MT6351_AUXADC_BUF4           0x0E58
-+#define MT6351_AUXADC_BUF5           0x0E5A
-+#define MT6351_AUXADC_BUF6           0x0E5C
-+#define MT6351_AUXADC_BUF7           0x0E5E
-+#define MT6351_AUXADC_BUF8           0x0E60
-+#define MT6351_AUXADC_BUF9           0x0E62
-+#define MT6351_AUXADC_BUF10          0x0E64
-+#define MT6351_AUXADC_BUF11          0x0E66
-+#define MT6351_AUXADC_BUF12          0x0E68
-+#define MT6351_AUXADC_BUF13          0x0E6A
-+#define MT6351_AUXADC_BUF14          0x0E6C
-+#define MT6351_AUXADC_BUF15          0x0E6E
-+#define MT6351_AUXADC_BUF16          0x0E70
-+#define MT6351_AUXADC_BUF17          0x0E72
-+#define MT6351_AUXADC_BUF18          0x0E74
-+#define MT6351_AUXADC_BUF19          0x0E76
-+#define MT6351_AUXADC_BUF20          0x0E78
-+#define MT6351_AUXADC_BUF21          0x0E7A
-+#define MT6351_AUXADC_BUF22          0x0E7C
-+#define MT6351_AUXADC_BUF23          0x0E7E
-+#define MT6351_AUXADC_BUF24          0x0E80
-+#define MT6351_AUXADC_BUF25          0x0E82
-+#define MT6351_AUXADC_BUF26          0x0E84
-+#define MT6351_AUXADC_BUF27          0x0E86
-+#define MT6351_AUXADC_BUF28          0x0E88
-+#define MT6351_AUXADC_BUF29          0x0E8A
-+#define MT6351_AUXADC_BUF30          0x0E8C
-+#define MT6351_AUXADC_BUF31          0x0E8E
-+#define MT6351_AUXADC_STA0           0x0E90
-+#define MT6351_AUXADC_STA1           0x0E92
-+#define MT6351_AUXADC_STA2           0x0E94
-+#define MT6351_AUXADC_RQST0          0x0E96
-+#define MT6351_AUXADC_RQST0_SET      0x0E98
-+#define MT6351_AUXADC_RQST0_CLR      0x0E9A
-+#define MT6351_AUXADC_RQST1          0x0E9C
-+#define MT6351_AUXADC_RQST1_SET      0x0E9E
-+#define MT6351_AUXADC_RQST1_CLR      0x0EA0
-+#define MT6351_AUXADC_CON0           0x0EA2
-+#define MT6351_AUXADC_CON0_SET       0x0EA4
-+#define MT6351_AUXADC_CON0_CLR       0x0EA6
-+#define MT6351_AUXADC_CON1           0x0EA8
-+#define MT6351_AUXADC_CON2           0x0EAA
-+#define MT6351_AUXADC_CON3           0x0EAC
-+#define MT6351_AUXADC_CON4           0x0EAE
-+#define MT6351_AUXADC_CON5           0x0EB0
-+#define MT6351_AUXADC_CON6           0x0EB2
-+#define MT6351_AUXADC_CON7           0x0EB4
-+#define MT6351_AUXADC_CON8           0x0EB6
-+#define MT6351_AUXADC_CON9           0x0EB8
-+#define MT6351_AUXADC_CON10          0x0EBA
-+#define MT6351_AUXADC_CON11          0x0EBC
-+#define MT6351_AUXADC_CON12          0x0EBE
-+#define MT6351_AUXADC_CON13          0x0EC0
-+#define MT6351_AUXADC_CON14          0x0EC2
-+#define MT6351_AUXADC_CON15          0x0EC4
-+#define MT6351_AUXADC_CON16          0x0EC6
-+#define MT6351_AUXADC_AUTORPT0       0x0EC8
-+#define MT6351_AUXADC_LBAT0          0x0ECA
-+#define MT6351_AUXADC_LBAT1          0x0ECC
-+#define MT6351_AUXADC_LBAT2          0x0ECE
-+#define MT6351_AUXADC_LBAT3          0x0ED0
-+#define MT6351_AUXADC_LBAT4          0x0ED2
-+#define MT6351_AUXADC_LBAT5          0x0ED4
-+#define MT6351_AUXADC_LBAT6          0x0ED6
-+#define MT6351_AUXADC_ACCDET         0x0ED8
-+#define MT6351_AUXADC_THR0           0x0EDA
-+#define MT6351_AUXADC_THR1           0x0EDC
-+#define MT6351_AUXADC_THR2           0x0EDE
-+#define MT6351_AUXADC_THR3           0x0EE0
-+#define MT6351_AUXADC_THR4           0x0EE2
-+#define MT6351_AUXADC_THR5           0x0EE4
-+#define MT6351_AUXADC_THR6           0x0EE6
-+#define MT6351_AUXADC_EFUSE0         0x0EE8
-+#define MT6351_AUXADC_EFUSE1         0x0EEA
-+#define MT6351_AUXADC_EFUSE2         0x0EEC
-+#define MT6351_AUXADC_EFUSE3         0x0EEE
-+#define MT6351_AUXADC_EFUSE4         0x0EF0
-+#define MT6351_AUXADC_EFUSE5         0x0EF2
-+#define MT6351_AUXADC_DBG0           0x0EF4
-+#define MT6351_AUXADC_IMP0           0x0EF6
-+#define MT6351_AUXADC_IMP1           0x0EF8
-+#define MT6351_AUXADC_VISMPS0_1      0x0EFA
-+#define MT6351_AUXADC_VISMPS0_2      0x0EFC
-+#define MT6351_AUXADC_VISMPS0_3      0x0EFE
-+#define MT6351_AUXADC_VISMPS0_4      0x0F00
-+#define MT6351_AUXADC_VISMPS0_5      0x0F02
-+#define MT6351_AUXADC_VISMPS0_6      0x0F04
-+#define MT6351_AUXADC_VISMPS0_7      0x0F06
-+#define MT6351_AUXADC_LBAT2_1        0x0F08
-+#define MT6351_AUXADC_LBAT2_2        0x0F0A
-+#define MT6351_AUXADC_LBAT2_3        0x0F0C
-+#define MT6351_AUXADC_LBAT2_4        0x0F0E
-+#define MT6351_AUXADC_LBAT2_5        0x0F10
-+#define MT6351_AUXADC_LBAT2_6        0x0F12
-+#define MT6351_AUXADC_LBAT2_7        0x0F14
-+#define MT6351_AUXADC_MDBG_0         0x0F16
-+#define MT6351_AUXADC_MDBG_1         0x0F18
-+#define MT6351_AUXADC_MDBG_2         0x0F1A
-+#define MT6351_AUXADC_MDRT_0         0x0F1C
-+#define MT6351_AUXADC_MDRT_1         0x0F1E
-+#define MT6351_AUXADC_MDRT_2         0x0F20
-+#define MT6351_AUXADC_JEITA_0        0x0F22
-+#define MT6351_AUXADC_JEITA_1        0x0F24
-+#define MT6351_AUXADC_JEITA_2        0x0F26
-+#define MT6351_AUXADC_JEITA_3        0x0F28
-+#define MT6351_AUXADC_JEITA_4        0x0F2A
-+#define MT6351_AUXADC_JEITA_5        0x0F2C
-+#define MT6351_AUXADC_DCXO_MDRT_0    0x0F2E
-+#define MT6351_AUXADC_DCXO_MDRT_1    0x0F30
-+#define MT6351_AUXADC_DCXO_MDRT_2    0x0F32
-+#define MT6351_AUXADC_NAG_0          0x0F34
-+#define MT6351_AUXADC_NAG_1          0x0F36
-+#define MT6351_AUXADC_NAG_2          0x0F38
-+#define MT6351_AUXADC_NAG_3          0x0F3A
-+#define MT6351_AUXADC_NAG_4          0x0F3C
-+#define MT6351_AUXADC_NAG_5          0x0F3E
-+#define MT6351_AUXADC_NAG_6          0x0F40
-+#define MT6351_AUXADC_NAG_7          0x0F42
-+#define MT6351_AUXADC_NAG_8          0x0F44
-+#define MT6351_ACCDET_CON0           0x0F46
-+#define MT6351_ACCDET_CON1           0x0F48
-+#define MT6351_ACCDET_CON2           0x0F4A
-+#define MT6351_ACCDET_CON3           0x0F4C
-+#define MT6351_ACCDET_CON4           0x0F4E
-+#define MT6351_ACCDET_CON5           0x0F50
-+#define MT6351_ACCDET_CON6           0x0F52
-+#define MT6351_ACCDET_CON7           0x0F54
-+#define MT6351_ACCDET_CON8           0x0F56
-+#define MT6351_ACCDET_CON9           0x0F58
-+#define MT6351_ACCDET_CON10          0x0F5A
-+#define MT6351_ACCDET_CON11          0x0F5C
-+#define MT6351_ACCDET_CON12          0x0F5E
-+#define MT6351_ACCDET_CON13          0x0F60
-+#define MT6351_ACCDET_CON14          0x0F62
-+#define MT6351_ACCDET_CON15          0x0F64
-+#define MT6351_ACCDET_CON16          0x0F66
-+#define MT6351_ACCDET_CON17          0x0F68
-+#define MT6351_ACCDET_CON19          0x0F6A
-+#define MT6351_ACCDET_CON20          0x0F6C
-+#define MT6351_ACCDET_CON21          0x0F6E
-+#define MT6351_ACCDET_CON22          0x0F70
-+#define MT6351_ACCDET_CON23          0x0F72
-+#define MT6351_ACCDET_CON24          0x0F74
-+#define MT6351_ACCDET_CON25          0x0F76
-+#define MT6351_CHR_CON0              0x0F78
-+#define MT6351_CHR_CON1              0x0F7A
-+#define MT6351_CHR_CON2              0x0F7C
-+#define MT6351_CHR_CON3              0x0F7E
-+#define MT6351_CHR_CON4              0x0F80
-+#define MT6351_CHR_CON5              0x0F82
-+#define MT6351_CHR_CON6              0x0F84
-+#define MT6351_CHR_CON7              0x0F86
-+#define MT6351_CHR_CON8              0x0F88
-+#define MT6351_CHR_CON9              0x0F8A
-+#define MT6351_CHR_CON10             0x0F8C
-+#define MT6351_CHR_CON11             0x0F8E
-+#define MT6351_CHR_CON12             0x0F90
-+#define MT6351_CHR_CON13             0x0F92
-+#define MT6351_CHR_CON14             0x0F94
-+#define MT6351_CHR_CON15             0x0F96
-+#define MT6351_CHR_CON16             0x0F98
-+#define MT6351_CHR_CON17             0x0F9A
-+#define MT6351_CHR_CON18             0x0F9C
-+#define MT6351_CHR_CON19             0x0F9E
-+#define MT6351_CHR_CON20             0x0FA0
-+#define MT6351_CHR_CON21             0x0FA2
-+#define MT6351_CHR_CON22             0x0FA4
-+#define MT6351_CHR_CON23             0x0FA6
-+#define MT6351_CHR_CON24             0x0FA8
-+#define MT6351_CHR_CON25             0x0FAA
-+#define MT6351_CHR_CON26             0x0FAC
-+#define MT6351_CHR_CON27             0x0FAE
-+#define MT6351_CHR_CON28             0x0FB0
-+#define MT6351_CHR_CON29             0x0FB2
-+#define MT6351_CHR_CON30             0x0FB4
-+#define MT6351_CHR_CON31             0x0FB6
-+#define MT6351_CHR_CON32             0x0FB8
-+#define MT6351_CHR_CON33             0x0FBA
-+#define MT6351_CHR_CON34             0x0FBC
-+#define MT6351_CHR_CON35             0x0FBE
-+#define MT6351_CHR_CON36             0x0FC0
-+#define MT6351_CHR_CON37             0x0FC2
-+#define MT6351_CHR_CON38             0x0FC4
-+#define MT6351_CHR_CON39             0x0FC6
-+#define MT6351_CHR_CON40             0x0FC8
-+#define MT6351_CHR_CON41             0x0FCA
-+#define MT6351_CHR_CON42             0x0FCC
-+#define MT6351_BATON_CON0            0x0FCE
-+#define MT6351_CHR_CON43             0x0FD0
-+#define MT6351_CHR_CON44             0x0FD2
-+#define MT6351_CHR_CON45             0x0FD4
-+#define MT6351_CHR_CON46             0x0FD6
-+#define MT6351_CHR_CON47             0x0FD8
-+#define MT6351_CHR_CON48             0x0FDA
-+#define MT6351_EOSC_CALI_CON0        0x0FDC
-+#define MT6351_EOSC_CALI_CON1        0x0FDE
-+#define MT6351_VRTC_PWM_CON0         0x0FE0
++enum {
++	MT6351_ID_VCORE = 0,
++	MT6351_ID_VGPU,
++	MT6351_ID_VMODEM,
++	MT6351_ID_VMD1,
++	MT6351_ID_VSRAM_MD,
++	MT6351_ID_VS1,
++	MT6351_ID_VS2,
++	MT6351_ID_VPA,
++	MT6351_ID_VSRAM_PROC,
++	MT6351_ID_VA18 = 9,
++	MT6351_ID_VTCXO24,
++	MT6351_ID_VTCXO28,
++	MT6351_ID_VCN28,
++	MT6351_ID_VCAMA,
++	MT6351_ID_VUSB33,
++	MT6351_ID_VSIM1,
++	MT6351_ID_VSIM2,
++	MT6351_ID_VEMC_3V3,
++	MT6351_ID_VMCH,
++	MT6351_ID_VIO28,
++	MT6351_ID_VIBR,
++	MT6351_ID_VCAMD,
++	MT6351_ID_VRF18,
++	MT6351_ID_VIO18,
++	MT6351_ID_VCN18,
++	MT6351_ID_VCAMIO,
++	MT6351_ID_VXO22,
++	MT6351_ID_VRF12,
++	MT6351_ID_VA10,
++	MT6351_ID_VDRAM,
++	MT6351_ID_VMIPI,
++	MT6351_ID_VGP3,
++	MT6351_ID_VBIF28,
++	MT6351_ID_VEFUSE,
++	MT6351_ID_VCN33_BT,
++	MT6351_ID_VCN33_WIFI,
++	MT6351_ID_VLDO28,
++	MT6351_ID_VMC,
++	MT6351_ID_VLDO28_0,
++	MT6351_ID_VLDO28_1,
++	MT6351_ID_RG_MAX,
++};
 +
-+#endif /* __MFD_MT6351_REGISTERS_H__ */
++#define MT6351_MAX_REGULATOR	MT6351_ID_RG_MAX
++#define MT6351_REGULATOR_ID12	0x20
++#define MT6351_REGULATOR_ID14	0x40
++
++#endif /* __LINUX_REGULATOR_MT6351_H */
 -- 
 1.7.9.5
