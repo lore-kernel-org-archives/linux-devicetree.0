@@ -1,94 +1,42 @@
-From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c: mediatek: Add i2c compatible for MediaTek
- MT7622
-Date: Wed, 9 Aug 2017 20:58:39 +0800
-Message-ID: <1502283519.930.62.camel@mhfsdcap03>
-References: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
-         <1502264631-12572-3-git-send-email-jun.gao@mediatek.com>
-         <1502271638.31781.3.camel@mtksdaap41>
+From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] rc: add zx-irdec remote control driver
+Date: Wed, 9 Aug 2017 14:00:29 +0100
+Message-ID: <20170809130029.eneyqstlejfkotz2@gofer.mess.org>
+References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+ <1501420993-21977-4-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502271638.31781.3.camel@mtksdaap41>
+Content-Disposition: inline
+In-Reply-To: <1501420993-21977-4-git-send-email-shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-08-09 at 17:40 +0800, Yingjoe Chen wrote:
-> On Wed, 2017-08-09 at 15:43 +0800, Jun Gao wrote:
-> > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
-> > MT7622 limit message size to 255, and not support 4GB DMA mode.
+On Sun, Jul 30, 2017 at 09:23:13PM +0800, Shawn Guo wrote:
+> From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > 
+> It adds the remote control driver and corresponding keymap file for
+> IRDEC block found on ZTE ZX family SoCs.
 > 
-> Jun,
-> 
-> Do you mean message numbers?
-> 
-> 
-> Joe.C
-> 
+> Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/media/rc/Kconfig               |  11 ++
+>  drivers/media/rc/Makefile              |   1 +
+>  drivers/media/rc/keymaps/Makefile      |   3 +-
+>  drivers/media/rc/keymaps/rc-zx-irdec.c |  79 ++++++++++++++
+>  drivers/media/rc/zx-irdec.c            | 183 +++++++++++++++++++++++++++++++++
+>  include/media/rc-map.h                 |   1 +
+>  6 files changed, 277 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/media/rc/keymaps/rc-zx-irdec.c
+>  create mode 100644 drivers/media/rc/zx-irdec.c
 
-Yes, bit7~bit0 of i2c register TRANSAC_LEN will be used as message
-numbers.
+We're missing an MAINTAINERS entry for this driver. Could this be added
+please as a separate patch?
 
-Jun
-> > 
-> > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index 9bedf0b..2c7f847 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -172,6 +172,14 @@ struct mtk_i2c {
-> >  	.max_comb_2nd_msg_len = 31,
-> >  };
-> >  
-> > +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
-> > +	.max_num_msgs = 255,
-> > +	.max_write_len = 65535,
-> > +	.max_read_len = 65535,
-> > +	.max_comb_1st_msg_len = 65535,
-> > +	.max_comb_2nd_msg_len = 65535,
-> > +};
-> > +
-> >  static const struct mtk_i2c_compatible mt6577_compat = {
-> >  	.quirks = &mt6577_i2c_quirks,
-> >  	.pmic_i2c = 0,
-> > @@ -190,6 +198,15 @@ struct mtk_i2c {
-> >  	.support_33bits = 0,
-> >  };
-> >  
-> > +static const struct mtk_i2c_compatible mt7622_compat = {
-> > +	.quirks = &mt7622_i2c_quirks,
-> > +	.pmic_i2c = 0,
-> > +	.dcm = 1,
-> > +	.auto_restart = 1,
-> > +	.aux_len_reg = 1,
-> > +	.support_33bits = 0,
-> > +};
-> > +
-> >  static const struct mtk_i2c_compatible mt8173_compat = {
-> >  	.pmic_i2c = 0,
-> >  	.dcm = 1,
-> > @@ -201,6 +218,7 @@ struct mtk_i2c {
-> >  static const struct of_device_id mtk_i2c_of_match[] = {
-> >  	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
-> >  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
-> > +	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
-> >  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-> >  	{}
-> >  };
-> 
-> 
-
-
+Thanks
+Sean
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
