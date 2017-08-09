@@ -1,34 +1,60 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [PATCH 0/2] Add i2c dt-binding and compatible for Mediatek MT7622 SoC
-Date: Wed, 9 Aug 2017 15:43:49 +0800
-Message-ID: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
+From: Anthony Kim <ktyrun@gmail.com>
+Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
+Date: Wed, 9 Aug 2017 16:54:26 +0900
+Message-ID: <CA+d1ZXK_f82RL4pmiCLr5f4=YPssYYzWZLWzJ8MegvPKQyT7Uw@mail.gmail.com>
+References: <1500510154-6661-1-git-send-email-anthony.kim@hideep.com>
+ <1500965607-2446-1-git-send-email-anthony.kim@hideep.com> <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, rydberg@bitmath.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series based on v4.13-rc1, include MT7622 i2c dt-binding
-and compatible.
+Hi, Dmitry.
+My company is registering the Approved Vendor List for the Chrome OS.
+So I need to upstream my driver code. For it, I need your confirm.
+Please confirm my driver code.
+Thank You.
+Anthony.
 
-Jun Gao (2):
-  dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-  i2c: mediatek: Add i2c compatible for MediaTek MT7622
-
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
- drivers/i2c/busses/i2c-mt65xx.c                   | 18 ++++++++++++++++++
- 2 files changed, 24 insertions(+), 5 deletions(-)
-
---
-1.8.1.1
+2017-08-04 2:50 GMT+09:00 Rob Herring <robh@kernel.org>:
+> On Tue, Jul 25, 2017 at 03:53:27PM +0900, Anthony Kim wrote:
+>> The HiDeep touchscreen device is a capacitive multi-touch controller
+>> mainly for multi-touch supported devices use. It use I2C interface for
+>> communication to IC and provide axis X, Y, Z locations for ten finger
+>> touch through input event interface to userspace.
+>>
+>> It support the Crimson and the Lime two type IC. They are different
+>> the number of channel supported and FW size. But the working protocol
+>> is same.
+>>
+>> Signed-off-by: Anthony Kim <anthony.kim@hideep.com>
+>> ---
+>>  .../bindings/input/touchscreen/hideep.txt          |  35 +
+>>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>
+> For the binding,
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+>
+>>  drivers/input/touchscreen/Kconfig                  |  11 +
+>>  drivers/input/touchscreen/Makefile                 |   2 +
+>>  drivers/input/touchscreen/hideep.h                 | 318 +++++++
+>>  drivers/input/touchscreen/hideep_core.c            | 916 +++++++++++++++++++++
+>>  drivers/input/touchscreen/hideep_dbg.c             | 405 +++++++++
+>>  drivers/input/touchscreen/hideep_dbg.h             |  24 +
+>>  drivers/input/touchscreen/hideep_isp.c             | 592 +++++++++++++
+>>  drivers/input/touchscreen/hideep_isp.h             |  96 +++
+>>  drivers/input/touchscreen/hideep_sysfs.c           | 245 ++++++
+>>  11 files changed, 2645 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
+>>  create mode 100644 drivers/input/touchscreen/hideep.h
+>>  create mode 100644 drivers/input/touchscreen/hideep_core.c
+>>  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
+>>  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
+>>  create mode 100644 drivers/input/touchscreen/hideep_isp.c
+>>  create mode 100644 drivers/input/touchscreen/hideep_isp.h
+>>  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
