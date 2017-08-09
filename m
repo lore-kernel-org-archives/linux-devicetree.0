@@ -1,52 +1,137 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 2/4] drivers: soc: sunxi: fix error processing
- on base address when claiming
-Date: Wed,  9 Aug 2017 16:56:25 +0800
-Message-ID: <20170809085627.32687-3-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH 3/4] drivers: soc: sunxi: add support for remapping func value to reg value
+Date: Wed,  9 Aug 2017 16:56:26 +0800
+Message-ID: <20170809085627.32687-4-icenowy@aosc.io>
 References: <20170809085627.32687-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7M4VPGAKGQEHLPRUKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170809085627.32687-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170809085627.32687-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-When claiming SRAM, if the base is set to an error, it means that the
-SRAM controller has been probed, but failed to remap the controller
-memory zone. If the base is zero, thus the SRAM controller should be not
-probed at all, and it should return -EPROBE_DEFER. However, currently we
-returned -EPROBE_DEFER in the former situation, and ignored the latter
-situation (which will lead to the kernel to panic).
+On some Allwinner SoCs, sometimes the value needed to write into the
+register to claim SRAM is not equal to the value specified in the
+device tree.
 
-Fix the behavior on abnormal base address processing when claiming.
+We now defines 0 as "CPU" and 1 as "Device", however, for VE SRAM, the
+register needs to be written 0x7FFFFFFF to claim it to VE, and for
+Allwinner A64's SRAM C the needed register value to claim it to DE2 is
+0, and the value that enables CPU's access to the SRAM is 1.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Add a value remapping in sunxi_sram_func structure, and let the
+sunxi_sram_of_parse function set the remapped register value.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
- drivers/soc/sunxi/sunxi_sram.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/soc/sunxi/sunxi_sram.c | 43 +++++++++++++++++++++++++++++++++---------
+ 1 file changed, 34 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/soc/sunxi/sunxi_sram.c b/drivers/soc/sunxi/sunxi_sram.c
-index 99e354c8f53f..c1ff7fa62cb4 100644
+index c1ff7fa62cb4..edc993480020 100644
 --- a/drivers/soc/sunxi/sunxi_sram.c
 +++ b/drivers/soc/sunxi/sunxi_sram.c
-@@ -190,6 +190,9 @@ int sunxi_sram_claim(struct device *dev)
- 	u32 val, mask;
+@@ -23,6 +23,7 @@
+ struct sunxi_sram_func {
+ 	char	*func;
+ 	u8	val;
++	u32	reg_val;
+ };
  
- 	if (IS_ERR(base))
-+		return PTR_ERR(base);
+ struct sunxi_sram_data {
+@@ -39,10 +40,11 @@ struct sunxi_sram_desc {
+ 	bool			claimed;
+ };
+ 
+-#define SUNXI_SRAM_MAP(_val, _func)				\
++#define SUNXI_SRAM_MAP(_reg_val, _val, _func)			\
+ 	{							\
+ 		.func = _func,					\
+ 		.val = _val,					\
++		.reg_val = _reg_val,				\
+ 	}
+ 
+ #define SUNXI_SRAM_DATA(_name, _reg, _off, _width, ...)		\
+@@ -57,14 +59,14 @@ struct sunxi_sram_desc {
+ 
+ static struct sunxi_sram_desc sun4i_a10_sram_a3_a4 = {
+ 	.data	= SUNXI_SRAM_DATA("A3-A4", 0x4, 0x4, 2,
+-				  SUNXI_SRAM_MAP(0, "cpu"),
+-				  SUNXI_SRAM_MAP(1, "emac")),
++				  SUNXI_SRAM_MAP(0, 0, "cpu"),
++				  SUNXI_SRAM_MAP(1, 1, "emac")),
+ };
+ 
+ static struct sunxi_sram_desc sun4i_a10_sram_d = {
+ 	.data	= SUNXI_SRAM_DATA("D", 0x4, 0x0, 1,
+-				  SUNXI_SRAM_MAP(0, "cpu"),
+-				  SUNXI_SRAM_MAP(1, "usb-otg")),
++				  SUNXI_SRAM_MAP(0, 0, "cpu"),
++				  SUNXI_SRAM_MAP(1, 1, "usb-otg")),
+ };
+ 
+ static const struct of_device_id sunxi_sram_dt_ids[] = {
+@@ -121,7 +123,8 @@ static int sunxi_sram_show(struct seq_file *s, void *data)
+ 
+ 			for (func = sram_data->func; func->func; func++) {
+ 				seq_printf(s, "\t\t%s%c\n", func->func,
+-					   func->val == val ? '*' : ' ');
++					   func->reg_val == val ?
++					   '*' : ' ');
+ 			}
+ 		}
+ 
+@@ -149,10 +152,13 @@ static inline struct sunxi_sram_desc *to_sram_desc(const struct sunxi_sram_data
+ }
+ 
+ static const struct sunxi_sram_data *sunxi_sram_of_parse(struct device_node *node,
+-							 unsigned int *value)
++							 unsigned int *reg_value)
+ {
+ 	const struct of_device_id *match;
++	const struct sunxi_sram_data *data;
++	struct sunxi_sram_func *func;
+ 	struct of_phandle_args args;
++	u8 val;
+ 	int ret;
+ 
+ 	ret = of_parse_phandle_with_fixed_args(node, "allwinner,sram", 1, 0,
+@@ -165,8 +171,7 @@ static const struct sunxi_sram_data *sunxi_sram_of_parse(struct device_node *nod
+ 		goto err;
+ 	}
+ 
+-	if (value)
+-		*value = args.args[0];
++	val = args.args[0];
+ 
+ 	match = of_match_node(sunxi_sram_dt_ids, args.np);
+ 	if (!match) {
+@@ -174,6 +179,26 @@ static const struct sunxi_sram_data *sunxi_sram_of_parse(struct device_node *nod
+ 		goto err;
+ 	}
+ 
++	data = match->data;
++	if (!data) {
++		ret = -EINVAL;
++		goto err;
++	};
 +
-+	if (!base)
- 		return -EPROBE_DEFER;
++	for (func = data->func; func->func; func++) {
++		if (val == func->val) {
++			if (reg_value)
++				*reg_value = func->reg_val;
++
++			break;
++		}
++	}
++
++	if (!func->func) {
++		ret = -EINVAL;
++		goto err;
++	}
++
+ 	of_node_put(args.np);
+ 	return match->data;
  
- 	if (!dev || !dev->of_node)
 -- 
 2.13.0
