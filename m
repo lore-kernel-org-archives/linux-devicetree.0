@@ -1,60 +1,114 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH  1/2] dt-bindings: i2c: Document r8a7743/5 support
-Date: Wed, 9 Aug 2017 09:59:29 +0200
-Message-ID: <20170809075929.GG2705@verge.net.au>
-References: <1502191231-8682-1-git-send-email-biju.das@bp.renesas.com>
- <20170808115006.GC1674@katana>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v3 14/20] mtd: nand: qcom: add command elements in BAM
+ transaction
+Date: Wed, 09 Aug 2017 13:59:46 +0530
+Message-ID: <3a2c31052ab1c4428997d198e4a25594@codeaurora.org>
+References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
+ <1501949998-29859-15-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170808115006.GC1674@katana>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1501949998-29859-15-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dwmw2@infradead.org, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 08, 2017 at 01:50:06PM +0200, Wolfram Sang wrote:
-> On Tue, Aug 08, 2017 at 12:20:31PM +0100, Biju Das wrote:
-> > Document i2c Device Tree support for RZ/G1[ME]
-> > (also known as r8aA774[35]) SoCs. They are compatible with
-> > R-Car Gen2 SoC family.
-> > 
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+On 2017-08-05 21:49, Abhishek Sahu wrote:
+> All the QPIC register read/write through BAM DMA requires
+> command descriptor which contains the array of command elements.
 > 
-> Looks good to me, yet I'd like an ack from Simon who is currently
-> working on the generic fallback compatibles.
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+  This patch has build dependency on
+  http://www.spinics.net/lists/dmaengine/msg13665.html
 
+> ---
+>  drivers/mtd/nand/qcom_nandc.c | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > index 2b8bd33..cad39ae 100644
-> > --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-> > @@ -2,6 +2,8 @@ I2C for R-Car platforms
-> >  
-> >  Required properties:
-> >  - compatible:
-> > +	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
-> > +	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
-> >  	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
-> >  	"renesas,i2c-r8a7779" if the device is a part of a R8A7779 SoC.
-> >  	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
-> > @@ -12,7 +14,8 @@ Required properties:
-> >  	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
-> >  	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
-> >  	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
-> > -	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 compatible device.
-> > +	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 or RZ/G1 compatible
-> > +				device.
-> >  	"renesas,rcar-gen3-i2c" for a generic R-Car Gen3 compatible device.
-> >  	"renesas,i2c-rcar" (deprecated)
-> >  
-> > -- 
-> > 1.9.1
-> > 
+> diff --git a/drivers/mtd/nand/qcom_nandc.c 
+> b/drivers/mtd/nand/qcom_nandc.c
+> index c940a20..9c12404 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+>  #include <linux/delay.h>
+> +#include <linux/dma/qcom_bam_dma.h>
+> 
+>  /* NANDc reg offsets */
+>  #define	NAND_FLASH_CMD			0x00
+> @@ -198,6 +199,7 @@
+>  /* Returns the actual register address for NAND_FLASH_DEV_* */
+>  #define nandc_dev_addr(nandc, reg) ((nandc)->props->flash_dev_offset + 
+> (reg))
+> 
+> +#define QPIC_PER_CW_CMD_ELEMENTS	32
+>  #define QPIC_PER_CW_CMD_SGL		32
+>  #define QPIC_PER_CW_DATA_SGL		8
+> 
+> @@ -217,8 +219,13 @@
+>  /*
+>   * This data type corresponds to the BAM transaction which will be 
+> used for all
+>   * NAND transfers.
+> + * @bam_ce - the array of BAM command elements
+>   * @cmd_sgl - sgl for NAND BAM command pipe
+>   * @data_sgl - sgl for NAND BAM consumer/producer pipe
+> + * @bam_ce_pos - the index in bam_ce which is available for next sgl
+> + * @bam_ce_start - the index in bam_ce which marks the start position 
+> ce
+> + *		   for current sgl. It will be used for size calculation
+> + *		   for current sgl
+>   * @cmd_sgl_pos - current index in command sgl.
+>   * @cmd_sgl_start - start index in command sgl.
+>   * @tx_sgl_pos - current index in data sgl for tx.
+> @@ -227,8 +234,11 @@
+>   * @rx_sgl_start - start index in data sgl for rx.
+>   */
+>  struct bam_transaction {
+> +	struct bam_cmd_element *bam_ce;
+>  	struct scatterlist *cmd_sgl;
+>  	struct scatterlist *data_sgl;
+> +	u32 bam_ce_pos;
+> +	u32 bam_ce_start;
+>  	u32 cmd_sgl_pos;
+>  	u32 cmd_sgl_start;
+>  	u32 tx_sgl_pos;
+> @@ -458,7 +468,8 @@ static void free_bam_transaction(struct
+> qcom_nand_controller *nandc)
+> 
+>  	bam_txn_size =
+>  		sizeof(*bam_txn) + num_cw *
+> -		((sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL) +
+> +		((sizeof(*bam_txn->bam_ce) * QPIC_PER_CW_CMD_ELEMENTS) +
+> +		(sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL) +
+>  		(sizeof(*bam_txn->data_sgl) * QPIC_PER_CW_DATA_SGL));
+> 
+>  	bam_txn_buf = devm_kzalloc(nandc->dev, bam_txn_size, GFP_KERNEL);
+> @@ -468,6 +479,10 @@ static void free_bam_transaction(struct
+> qcom_nand_controller *nandc)
+>  	bam_txn = bam_txn_buf;
+>  	bam_txn_buf += sizeof(*bam_txn);
+> 
+> +	bam_txn->bam_ce = bam_txn_buf;
+> +	bam_txn_buf +=
+> +		sizeof(*bam_txn->bam_ce) * QPIC_PER_CW_CMD_ELEMENTS * num_cw;
+> +
+>  	bam_txn->cmd_sgl = bam_txn_buf;
+>  	bam_txn_buf +=
+>  		sizeof(*bam_txn->cmd_sgl) * QPIC_PER_CW_CMD_SGL * num_cw;
+> @@ -485,6 +500,8 @@ static void clear_bam_transaction(struct
+> qcom_nand_controller *nandc)
+>  	if (!nandc->props->is_bam)
+>  		return;
+> 
+> +	bam_txn->bam_ce_pos = 0;
+> +	bam_txn->bam_ce_start = 0;
+>  	bam_txn->cmd_sgl_pos = 0;
+>  	bam_txn->cmd_sgl_start = 0;
+>  	bam_txn->tx_sgl_pos = 0;
