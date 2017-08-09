@@ -1,60 +1,110 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
-Date: Wed, 9 Aug 2017 09:21:38 +0000
-Message-ID: <KL1PR06MB17020393F851912D578B9EAFB88B0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
- <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/9] regulator: mt6380: Add support for MT6380
+Date: Wed, 9 Aug 2017 17:22:39 +0800
+Message-ID: <1502270559.6566.14.camel@mtksdaap41>
+References: <cover.1500368529.git.sean.wang@mediatek.com>
+         <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <12d923ba-184c-ef59-f27b-41a7592a5f93-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <0cd2be9a7058bb51fbbc7cc96101cba44fc081f6.1500368529.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2VyZ2VpIFNodHlseW92
-IFttYWlsdG86c2VyZ2VpLnNodHlseW92QGNvZ2VudGVtYmVkZGVkLmNvbV0NCj4gU2VudDogMDkg
-QXVndXN0IDIwMTcgMTA6MTcNCj4gVG86IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNv
-bT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBNYXJrIFJ1dGxhbmQgPG1h
-cmsucnV0bGFuZEBhcm0uY29tPg0KPiBDYzogU2ltb24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQu
-YXU+OyBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtDQo+IGRyZWFtcy5kZT47IE1hZ251cyBEYW1tIDxt
-YWdudXMuZGFtbUBnbWFpbC5jb20+OyBSdXNzZWxsIEtpbmcNCj4gPGxpbnV4QGFybWxpbnV4Lm9y
-Zy51az47IENocmlzIFBhdGVyc29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+Ow0KPiBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NAdmdlci5rZXJuZWwu
-b3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+IFN1YmplY3Q6
-IFJlOiBbUEFUQ0ggMi8yXSBBUk06IGR0czogcjhhNzc0MzogQWRkIElJQyBjb3JlcyB0byBkdHNp
-DQo+DQo+IE9uIDgvOC8yMDE3IDM6NDYgUE0sIEJpanUgRGFzIHdyb3RlOg0KPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4g
-PiBUaGlzIHBhdGNoIGhhcyBiZWVuIHRlc3RlZCBhZ2FpbnN0IExpbnV4LW5leHQgdGFnIDIwMTcw
-NzI3IGFuZCByZW5lc2FzLWRldg0KPiBicmFuY2guDQo+ID4gVGhpcyBwYXRjaCBkZXBlbmRzIG9u
-DQo+ID4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5lbC9tc2c1OTkyMjAu
-aHRtbA0KPiA+DQo+ID4gICBhcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLmR0c2kgfCA1NQ0KPiAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgIDEgZmlsZSBj
-aGFuZ2VkLCA1NSBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvcjhhNzc0My5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLmR0
-c2kgaW5kZXggMTQyMjJjNzIuLjVjMmIxNDAgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvcjhhNzc0My5kdHNpDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0My5k
-dHNpDQo+IFsuLi5dDQo+ID4gQEAgLTQzNiw2ICs0MzksNTggQEANCj4gPiAgIHN0YXR1cyA9ICJk
-aXNhYmxlZCI7DQo+ID4gICB9Ow0KPiA+DQo+ID4gK2kyYzY6IGkyY0BlNjBiMDAwMCB7DQo+DQo+
-ICAgICBJJ2QgdXNlIGlpYzAgYXMgdGhlIGxhYmVsLg0KPg0KPiA+ICsvKiBkb2Vzbid0IG5lZWQg
-cGlubXV4ICovDQo+ID4gKyNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsjc2l6ZS1jZWxscyA9
-IDwwPjsNCj4gPiArY29tcGF0aWJsZSA9ICJyZW5lc2FzLGlpYy1yOGE3NzQzIiwNCj4gPiArICAg
-ICAicmVuZXNhcyxyY2FyLWdlbjItaWljIiwNCj4gPiArICAgICAicmVuZXNhcyxybW9iaWxlLWlp
-YyI7DQo+ID4gK3JlZyA9IDwwIDB4ZTYwYjAwMDAgMCAweDQyNT47DQo+ID4gK2ludGVycnVwdHMg
-PSA8R0lDX1NQSSAxNzMgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+ID4gK2Nsb2NrcyA9IDwmY3Bn
-IENQR19NT0QgOTI2PjsNCj4gPiArZG1hcyA9IDwmZG1hYzAgMHg3Nz4sIDwmZG1hYzAgMHg3OD4s
-DQo+ID4gKyAgICAgICA8JmRtYWMxIDB4Nzc+LCA8JmRtYWMxIDB4Nzg+Ow0KPiA+ICtkbWEtbmFt
-ZXMgPSAidHgiLCAicngiLCAidHgiLCAicngiOw0KPiA+ICtwb3dlci1kb21haW5zID0gPCZzeXNj
-IFI4QTc3NDNfUERfQUxXQVlTX09OPjsNCj4gPiArcmVzZXRzID0gPCZjcGcgQ1BHX01PRCA5MjY+
-Ow0KPg0KPiAgICAgQ1BHX01PRCBub3QgbmVlZGVkIGhlcmUsIGl0J3Mgbm90IGEgImNsb2NrcyIg
-cHJvcC4NClRoYW5rcyBTZXJnaWUsICBJIHdpbGwgY29ycmVjdCB0aGlzLg0KWz5dDQo+IFsuLi5d
-DQo+DQo+IE1CUiwgU2VyZ2VpDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQs
-IER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGly
-ZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lz
-dGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+On Tue, 2017-07-18 at 17:49 +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> The MT6380 is a regulator found those boards with MediaTek MT7622 SoC
+> It is connected as a slave to the SoC using MediaTek PMIC wrapper which
+> is the common interface connecting with Mediatek made various PMICs.
+> 
+> Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/regulator/Kconfig                  |   9 +
+>  drivers/regulator/Makefile                 |   1 +
+>  drivers/regulator/mt6380-regulator.c       | 359 +++++++++++++++++++++++++++++
+>  include/linux/regulator/mt6380-regulator.h |  32 +++
+>  4 files changed, 401 insertions(+)
+>  create mode 100644 drivers/regulator/mt6380-regulator.c
+>  create mode 100644 include/linux/regulator/mt6380-regulator.h
+> 
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 48db87d..c46ef9c 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -541,6 +541,15 @@ config REGULATOR_MT6323
+>  	  This driver supports the control of different power rails of device
+>  	  through regulator interface.
+>  
+> +config REGULATOR_MT6380
+> +	tristate "MediaTek MT6380 PMIC"
+> +	depends on MTK_PMIC_WRAP
+> +	help
+> +	  Say y here to select this option to enable the power regulator of
+> +	  MediaTek MT6380 PMIC.
+> +	  This driver supports the control of different power rails of device
+> +	  through regulator interface.
+> +
+>  config REGULATOR_MT6397
+>  	tristate "MediaTek MT6397 PMIC"
+>  	depends on MFD_MT6397
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index dc3503f..5148583 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -70,6 +70,7 @@ obj-$(CONFIG_REGULATOR_MC13892) += mc13892-regulator.o
+>  obj-$(CONFIG_REGULATOR_MC13XXX_CORE) +=  mc13xxx-regulator-core.o
+>  obj-$(CONFIG_REGULATOR_MT6311) += mt6311-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6323)	+= mt6323-regulator.o
+> +obj-$(CONFIG_REGULATOR_MT6380)	+= mt6380-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6397)	+= mt6397-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_RPM) += qcom_rpm-regulator.o
+>  obj-$(CONFIG_REGULATOR_QCOM_SMD_RPM) += qcom_smd-regulator.o
+> diff --git a/drivers/regulator/mt6380-regulator.c b/drivers/regulator/mt6380-regulator.c
+> new file mode 100644
+> index 0000000..5fca36f
+> --- /dev/null
+> +++ b/drivers/regulator/mt6380-regulator.c
+
+<...>
+
+> +static struct regulator_ops mt6380_volt_range_ops = {
+> +	.list_voltage = regulator_list_voltage_linear_range,
+> +	.map_voltage = regulator_map_voltage_linear_range,
+> +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+> +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+> +	.set_voltage_time_sel = regulator_set_voltage_time_sel,
+> +	.enable = regulator_enable_regmap,
+> +	.disable = regulator_disable_regmap,
+> +	.is_enabled = regulator_is_enabled_regmap,
+> +	.set_mode = mt6380_regulator_set_mode,
+> +	.get_mode = mt6380_regulator_get_mode,
+> +};
+> +
+> +static struct regulator_ops mt6380_volt_table_ops = {
+> +	.list_voltage = regulator_list_voltage_table,
+> +	.map_voltage = regulator_map_voltage_iterate,
+> +	.set_voltage_sel = regulator_set_voltage_sel_regmap,
+> +	.get_voltage_sel = regulator_get_voltage_sel_regmap,
+> +	.set_voltage_time_sel = regulator_set_voltage_time_sel,
+> +	.enable = regulator_enable_regmap,
+> +	.disable = regulator_disable_regmap,
+> +	.is_enabled = regulator_is_enabled_regmap,
+> +	.set_mode = mt6380_regulator_set_mode,
+> +	.get_mode = mt6380_regulator_get_mode,
+> +};
+> +
+> +static struct regulator_ops mt6380_volt_fixed_ops = {
+
+this should be const.
+
+Joe.C
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
