@@ -1,256 +1,56 @@
-Return-Path: <SRS0=N70N=7N=rock-chips.com=wxt@kernel.org>
-Subject: Re: [PATCH v2 2/5] thermal: rockchip: Support the RK3328 SOC in
- thermal driver
-References: <1501833976-1100-1-git-send-email-rocky.hao@rock-chips.com>
- <1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com>
-From: Caesar Wang <wxt@rock-chips.com>
-Message-ID: <04068b8a-e5e1-ab73-8b7a-4b4f7137e491@rock-chips.com>
-Date: Fri, 11 Aug 2017 14:32:13 +0800
+Return-Path: <SRS0=6qfL=7L=yandex-team.ru=mouse@kernel.org>
+From: Anton D. Kachalov <mouse@yandex-team.ru>
+In-Reply-To: <20170804231854.19730-1-brendanhiggins@google.com>
+References: <20170804231854.19730-1-brendanhiggins@google.com>
+Subject: Re: [PATCH v1 0/3] ipmi: bt-i2c: added IPMI Block Transfer over I2C
 MIME-Version: 1.0
-In-Reply-To: <1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com>
-Content-Type: multipart/alternative;
- boundary="------------F5EED96DE44B81665F5F602C"
-Content-Language: en-US
-To: Rocky Hao <rocky.hao@rock-chips.com>, rui.zhang@intel.com, edubezval@gmail.com, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, cl@rock-chips.com, william.wu@rock-chips.com, jay.xu@rock-chips.com, xxx@rock-chips.com, linux-arm-kernel@lists.infradead.org, wxt@rock-chips.com
+Message-Id: <57021502276176@webcorp01h.yandex-team.ru>
+Date: Wed, 09 Aug 2017 13:56:16 +0300
+Content-Transfer-Encoding: base64
+Content-Type: text/html; charset=utf-8
+To: Brendan Higgins <brendanhiggins@google.com>, "corbet@lwn.net" <corbet@lwn.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "minyard@acm.org" <minyard@acm.org>, "joel@jms.id.au" <joel@jms.id.au>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "openipmi-developer@lists.sourceforge.net" <openipmi-developer@lists.sourceforge.net>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------F5EED96DE44B81665F5F602C
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-
-�� 2017��08��04�� 16:06, Rocky Hao д��:
-> RK3328 SOC has one Temperature Sensor for CPU.
->
-> Signed-off-by: Rocky Hao <rocky.hao@rock-chips.com>
-
-Reviewed-by: Caesar Wang <wxt@rock-chips.com>
-
-> ---
-> Change in v2:
-> - remove gerrit Change-Id
->
->   drivers/thermal/rockchip_thermal.c | 65 ++++++++++++++++++++++++++++++++++++++
->   1 file changed, 65 insertions(+)
->
-> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-> index 4c7796512453..206035139110 100644
-> --- a/drivers/thermal/rockchip_thermal.c
-> +++ b/drivers/thermal/rockchip_thermal.c
-> @@ -320,6 +320,44 @@ struct tsadc_table {
->   	{0, 125000},
->   };
->   
-> +static const struct tsadc_table rk3328_code_table[] = {
-> +	{0, -40000},
-> +	{296, -40000},
-> +	{304, -35000},
-> +	{313, -30000},
-> +	{331, -20000},
-> +	{340, -15000},
-> +	{349, -10000},
-> +	{359, -5000},
-> +	{368, 0},
-> +	{378, 5000},
-> +	{388, 10000},
-> +	{398, 15000},
-> +	{408, 20000},
-> +	{418, 25000},
-> +	{429, 30000},
-> +	{440, 35000},
-> +	{451, 40000},
-> +	{462, 45000},
-> +	{473, 50000},
-> +	{485, 55000},
-> +	{496, 60000},
-> +	{508, 65000},
-> +	{521, 70000},
-> +	{533, 75000},
-> +	{546, 80000},
-> +	{559, 85000},
-> +	{572, 90000},
-> +	{586, 95000},
-> +	{600, 100000},
-> +	{614, 105000},
-> +	{629, 110000},
-> +	{644, 115000},
-> +	{659, 120000},
-> +	{675, 125000},
-> +	{TSADCV2_DATA_MASK, 125000},
-> +};
-> +
->   static const struct tsadc_table rk3368_code_table[] = {
->   	{0, -40000},
->   	{106, -40000},
-> @@ -790,6 +828,29 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
->   	},
->   };
->   
-> +static const struct rockchip_tsadc_chip rk3328_tsadc_data = {
-> +	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
-> +	.chn_num = 1, /* one channels for tsadc */
-> +
-> +	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
-> +	.tshut_temp = 95000,
-> +
-> +	.initialize = rk_tsadcv2_initialize,
-> +	.irq_ack = rk_tsadcv3_irq_ack,
-> +	.control = rk_tsadcv3_control,
-> +	.get_temp = rk_tsadcv2_get_temp,
-> +	.set_alarm_temp = rk_tsadcv2_alarm_temp,
-> +	.set_tshut_temp = rk_tsadcv2_tshut_temp,
-> +	.set_tshut_mode = rk_tsadcv2_tshut_mode,
-> +
-> +	.table = {
-> +		.id = rk3328_code_table,
-> +		.length = ARRAY_SIZE(rk3328_code_table),
-> +		.data_mask = TSADCV2_DATA_MASK,
-> +		.mode = ADC_INCREMENT,
-> +	},
-> +};
-> +
->   static const struct rockchip_tsadc_chip rk3366_tsadc_data = {
->   	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
->   	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
-> @@ -875,6 +936,10 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
->   		.data = (void *)&rk3288_tsadc_data,
->   	},
->   	{
-> +		.compatible = "rockchip,rk3328-tsadc",
-> +		.data = (void *)&rk3328_tsadc_data,
-> +	},
-> +	{
->   		.compatible = "rockchip,rk3366-tsadc",
->   		.data = (void *)&rk3366_tsadc_data,
->   	},
-
-
---------------F5EED96DE44B81665F5F602C
-Content-Type: text/html; charset=gbk
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=gbk">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">�� 2017��08��04�� 16:06, Rocky Hao д��:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com">
-      <pre wrap="">RK3328 SOC has one Temperature Sensor for CPU.
-
-Signed-off-by: Rocky Hao <a class="moz-txt-link-rfc2396E" href="mailto:rocky.hao@rock-chips.com">&lt;rocky.hao@rock-chips.com&gt;</a></pre>
-    </blockquote>
-    <br>
-    Reviewed-by: Caesar Wang <a class="moz-txt-link-rfc2396E"
-      href="mailto:wxt@rock-chips.com">&lt;wxt@rock-chips.com&gt;</a><br>
-    <br>
-    <blockquote type="cite"
-      cite="mid:1501833976-1100-3-git-send-email-rocky.hao@rock-chips.com">
-      <pre wrap="">
----
-Change in v2:
-- remove gerrit Change-Id
-
- drivers/thermal/rockchip_thermal.c | 65 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 65 insertions(+)
-
-diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-index 4c7796512453..206035139110 100644
---- a/drivers/thermal/rockchip_thermal.c
-+++ b/drivers/thermal/rockchip_thermal.c
-@@ -320,6 +320,44 @@ struct tsadc_table {
- 	{0, 125000},
- };
- 
-+static const struct tsadc_table rk3328_code_table[] = {
-+	{0, -40000},
-+	{296, -40000},
-+	{304, -35000},
-+	{313, -30000},
-+	{331, -20000},
-+	{340, -15000},
-+	{349, -10000},
-+	{359, -5000},
-+	{368, 0},
-+	{378, 5000},
-+	{388, 10000},
-+	{398, 15000},
-+	{408, 20000},
-+	{418, 25000},
-+	{429, 30000},
-+	{440, 35000},
-+	{451, 40000},
-+	{462, 45000},
-+	{473, 50000},
-+	{485, 55000},
-+	{496, 60000},
-+	{508, 65000},
-+	{521, 70000},
-+	{533, 75000},
-+	{546, 80000},
-+	{559, 85000},
-+	{572, 90000},
-+	{586, 95000},
-+	{600, 100000},
-+	{614, 105000},
-+	{629, 110000},
-+	{644, 115000},
-+	{659, 120000},
-+	{675, 125000},
-+	{TSADCV2_DATA_MASK, 125000},
-+};
-+
- static const struct tsadc_table rk3368_code_table[] = {
- 	{0, -40000},
- 	{106, -40000},
-@@ -790,6 +828,29 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
- 	},
- };
- 
-+static const struct rockchip_tsadc_chip rk3328_tsadc_data = {
-+	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
-+	.chn_num = 1, /* one channels for tsadc */
-+
-+	.tshut_mode = TSHUT_MODE_CRU, /* default TSHUT via CRU */
-+	.tshut_temp = 95000,
-+
-+	.initialize = rk_tsadcv2_initialize,
-+	.irq_ack = rk_tsadcv3_irq_ack,
-+	.control = rk_tsadcv3_control,
-+	.get_temp = rk_tsadcv2_get_temp,
-+	.set_alarm_temp = rk_tsadcv2_alarm_temp,
-+	.set_tshut_temp = rk_tsadcv2_tshut_temp,
-+	.set_tshut_mode = rk_tsadcv2_tshut_mode,
-+
-+	.table = {
-+		.id = rk3328_code_table,
-+		.length = ARRAY_SIZE(rk3328_code_table),
-+		.data_mask = TSADCV2_DATA_MASK,
-+		.mode = ADC_INCREMENT,
-+	},
-+};
-+
- static const struct rockchip_tsadc_chip rk3366_tsadc_data = {
- 	.chn_id[SENSOR_CPU] = 0, /* cpu sensor is channel 0 */
- 	.chn_id[SENSOR_GPU] = 1, /* gpu sensor is channel 1 */
-@@ -875,6 +936,10 @@ static void rk_tsadcv2_tshut_mode(int chn, void __iomem *regs,
- 		.data = (void *)&amp;rk3288_tsadc_data,
- 	},
- 	{
-+		.compatible = "rockchip,rk3328-tsadc",
-+		.data = (void *)&amp;rk3328_tsadc_data,
-+	},
-+	{
- 		.compatible = "rockchip,rk3366-tsadc",
- 		.data = (void *)&amp;rk3366_tsadc_data,
- 	},
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------F5EED96DE44B81665F5F602C--
+PGRpdj5IZWxsbyw8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj5JIHdvdWxkIGxpa2UgdG8gbWVudGlv
+biBvbmUgb2YgdGhlIG91ciByZWxhdGVkIHdvcmsgZm9yIElQTUkgYW5kIEkyQy48L2Rpdj48ZGl2
+PsKgPC9kaXY+PGRpdj5XZSB1c2UgT3BlbklQTUkgc3RhY2sgdG8gY29ubmVjdCB0byB0aGUgY29t
+cHV0aW5nIG5vZGVzIHRocm91Z2ggdGhlIEkyQyB1c2luZyBJUE1CIChCVCBpcyBub3Qgc3VwcG9y
+dGVkIGJ5IG5vZGVzKTo8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj48YSBocmVmPSJodHRwczovL2dp
+dGh1Yi5jb20veWEtbW91c2UvbWV0YS1vcGVuYm1jLXlhbmRleC9ibG9iL21hc3Rlci9tZXRhLXlh
+bmRleC9tZXRhLW9wZW5yYWNrL21ldGEtc2hhb3NpL3JlY2lwZXMta2VybmVsL2xpbnV4L2xpbnV4
+LW9ibWMvaXBtaV9pMmMuYyI+aHR0cHM6Ly9naXRodWIuY29tL3lhLW1vdXNlL21ldGEtb3BlbmJt
+Yy15YW5kZXgvYmxvYi9tYXN0ZXIvbWV0YS15YW5kZXgvbWV0YS1vcGVucmFjay9tZXRhLXNoYW9z
+aS9yZWNpcGVzLWtlcm5lbC9saW51eC9saW51eC1vYm1jL2lwbWlfaTJjLmM8L2E+PC9kaXY+PGRp
+dj7CoDwvZGl2PjxkaXY+SXQgbGFja3MgY29tcGxldGUgc2xhdmUgc3VwcG9ydCAoc2xhdmUgcGFy
+dCBpcyBvbmx5IGZvciByZWNlaXZpbmcga25vd24gcGFja2V0cyB3aXRoIHF1ZXJ5IHJlc3VsdHMg
+ZHVlIHRvIE9wZW5JUE1JIGltcGxlbWVudGF0aW9uIGluIGtlcm5lbCkgYW5kIHVzZSBvbmUgbG9j
+YWwgc2xhdmUgdG8gY29tbXVuaWNhdGUgd2l0aCBhIG51bWJlciBvZiB0YXJnZXQgc3lzdGVtcyBv
+biB0aGUgc2FtZSBidXMgKGN1cnJlbnRseSBzdXBwb3J0ZWQgb25seSAxLXRvLTEgc2NoZW1hKS48
+L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj5XaXRoIHRoaXMgc3R1ZmYgd2UgYWJsZSB0byB1c2UgaXBt
+aXRvb2wgYWNyb3NzIGRpZmZlcmVudCAvZGV2L2lwbWlYIGRldmljZXMgdG8gY29tbXVuaWNhdGUg
+d2l0aCBub2Rlcy48L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4wNS4wOC4yMDE3LCAwMjoxOSwgIkJy
+ZW5kYW4gSGlnZ2lucyIgJmx0O2JyZW5kYW5oaWdnaW5zQGdvb2dsZS5jb20mZ3Q7OjwvZGl2Pjxi
+bG9ja3F1b3RlIHR5cGU9ImNpdGUiPjxwPlRoaXMgcGF0Y2hzZXQgaW50cm9kdWNlcyBJUE1JIEJs
+b2NrIFRyYW5zZmVyIG92ZXIgSTJDIChCVC1JMkMpLCB3aGljaCBoYXMgdGhlPGJyIC8+c2FtZSBz
+ZW1hbnRpY3MgYXMgSVBNSSBCbG9jayBUcmFuc2ZlciBleGNlcHQgaXQgZG9uZSBvdmVyIEkyQy48
+YnIgLz48YnIgLz5UaGUgZG9jdW1lbnRhdGlvbiBkaXNjdXNzZXMgdGhlIHJlYXNvbiBmb3IgdGhp
+cyBpbiBncmVhdGVyIGRldGFpbCwgc3VmZmljZSBpdCB0bzxiciAvPnNheSBTU0lGIGNhbm5vdCBi
+ZSBjb3JyZWN0bHkgaW1wbGVtZW50ZWQgb24gc29tZSBuYWl2ZSBJMkMgZGV2aWNlcy4gVGhlcmUg
+YXJlPGJyIC8+c29tZSBhZGRpdGlvbmFsIHJlYXNvbnMgd2h5IHdlIGRvbid0IGxpa2UgU1NJRiwg
+YnV0IHRob3NlIGFyZSBhZ2FpbiBjb3ZlcmVkIGluPGJyIC8+dGhlIGRvY3VtZW50YXRpb24gZm9y
+IGFsbCB0aG9zZSB3aG8gYXJlIGludGVyZXN0ZWQuPGJyIC8+PGJyIC8+SW4gYWRkaXRpb24sIHNp
+bmNlIEkgYW0gYWRkaW5nIGJvdGggaG9zdCBzaWRlIGFuZCBCTUMgc2lkZSBzdXBwb3J0LCBJIGZp
+Z3VyZWQ8YnIgLz50aGF0IG5vdyBpcyBhIGdvb2QgdGltZSB0byByZXNvbHZlIHRoZSBwcm9ibGVt
+IG9mIHdoZXJlIHRvIHB1dCBCTUMgc2lkZSBJUE1JPGJyIC8+ZHJpdmVyczsgcmlnaHQgbm93IHdl
+IGhhdmUgaXQgKHRoZXJlIGlzIG9ubHkgb25lKSBpbiBkcml2ZXJzL2NoYXIvaXBtaS8gd2l0aCB0
+aGU8YnIgLz5yZXN0IG9mIHRoZSBob3N0IHNpZGUgSVBNSSBkcml2ZXJzLCBidXQgSSB0aGluayBp
+dCBtYWtlcyBzZW5zZSB0byBwdXQgYWxsIG9mIHRoZTxiciAvPmhvc3Qgc2lkZSBJUE1JIGRyaXZl
+cnMgaW4gb25lIGRpcmVjdG9yeSBhbmQgYWxsIG9mIHRoZSBCTUMgc2lkZSBkcml2ZXJzIGluPGJy
+IC8+YW5vdGhlciwgcHJlZmVyYWJseSBpbiBhIHdheSB0aGF0IGRvZXMgbm90IGVmZmVjdCBhbGwg
+b2YgdGhlIGN1cnJlbnQgT3BlbklQTUk8YnIgLz51c2Vycy4gSSBoYXZlIG5vdCBjcmVhdGVkIGEg
+TUFJTlRBSU5FUlMgZW50cnkgZm9yIHRoZSBuZXcgZGlyZWN0b3J5IHlldCwgYXMgSTxiciAvPmZp
+Z3VyZWQgdGhlcmUgbWlnaHQgYmUgc29tZSBkaXNjdXNzaW9uIHRvIGJlIGhhZCBhYm91dCBpdC48
+YnIgLz48YnIgLz5JIGhhdmUgdGVzdGVkIHRoaXMgcGF0Y2hzZXQgb24gdGhlIEFzcGVlZCAyNTAw
+IEVWQi48L3A+PC9ibG9ja3F1b3RlPjxkaXY+wqA8L2Rpdj48ZGl2PsKgPC9kaXY+PGRpdj4tLcKg
+PGJyIC8+QW50b24gRC4gS2FjaGFsb3Y8YnIgLz7CoDwvZGl2PjxkaXY+wqA8L2Rpdj4=
