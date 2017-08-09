@@ -1,44 +1,34 @@
-From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3] mfd: mt6397: Add MT6351 support into MT6397 driver
-Date: Wed, 9 Aug 2017 17:35:24 +0800
-Message-ID: <1502271324.31781.2.camel@mtksdaap41>
-References: <1502245865-11403-1-git-send-email-mars.cheng@mediatek.com>
- <1502245865-11403-4-git-send-email-mars.cheng@mediatek.com>
- <1502268892.6566.10.camel@mtksdaap41> <1502269976.31210.0.camel@mtkswgap22>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v9 00/12] rk808: Add RK805 support
+Date: Wed, 09 Aug 2017 11:35:53 +0200
+Message-ID: <1741653.yAH6rPlhTH@phil>
+References: <1502244643-11712-1-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1502269976.31210.0.camel@mtkswgap22>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Jimmy-YJ.Huang" <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502244643-11712-1-git-send-email-chenjh@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-rockchip@lists.infradead.org
+Cc: Joseph Chen <chenjh@rock-chips.com>, gnurou@gmail.com, linus.walleij@linaro.org, dmitry.torokhov@gmail.com, huangtao@rock-chips.com, devicetree@vger.kernel.org, tony.xie@rock-chips.com, zhangqing@rock-chips.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, lgirdwood@gmail.com, linux-gpio@vger.kernel.org, wdc@rock-chips.com, broonie@kernel.org, linux-input@vger.kernel.org, mark.rutland@arm.com, w.egorov@phytec.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-08-09 at 17:12 +0800, Mars Cheng wrote:
-> On Wed, 2017-08-09 at 16:54 +0800, Yingjoe Chen wrote:
-> > Hi Mars,
-> > 
-> > Does this pmic support interrupt?
-> > or do you plan to add interrupt support later?
-> > 
-> > Joe.C
-> > 
-> 
-> Hi Yingjoe
-> 
-> No, this pmic does not support interrupt.
+Hi Joseph,
 
-In this case, we should remove mt6351_irq_numbers.
-Does this PMIC have interrupt to AP? Current mt6397-core need interrupt
-to AP to work.
+Am Mittwoch, 9. August 2017, 10:10:41 CEST schrieb Joseph Chen:
+> change in v9:
+> PATCH V9 1/12:  (1) fix spelling issue: s/Chip/chip/
+> 		(2) add: Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+> PATCH V9 2/12 ~ 12/12: they are applied and no changes, so I don't resend them.
 
-Joe.C
+I don't know Lee's workflow, but I'm not sure that is actually true.
+
+I.e. he added "for his own reference" Acked-for-MFD-by: tags to the
+patches, but did not apply them (and therefore you cannot find them on [0])
+
+So I'd think you might need to send everything again?
+
+
+Heiko
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/log/?h=for-mfd-next
