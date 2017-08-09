@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 4/8] pinctrl: sh-pfc: r8a77995: Add I2C pins, groups and functions
-Date: Wed,  9 Aug 2017 21:19:43 +0900
-Message-ID: <1502281187-24068-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 8/8] pinctrl: sh-pfc: r8a77995: Add voltage switch operations for MMC
+Date: Wed,  9 Aug 2017 21:19:47 +0900
+Message-ID: <1502281187-24068-9-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -17,111 +17,47 @@ From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 71 +++++++++++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-index 9be1993..96c97ff 100644
+index f8f71b6..f806560 100644
 --- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
 +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-@@ -936,6 +936,50 @@ enum {
- 	PINMUX_GPIO_GP_ALL(),
+@@ -23,7 +23,7 @@
+ 		PORT_GP_9(0,  fn, sfx),		\
+ 		PORT_GP_32(1, fn, sfx),		\
+ 		PORT_GP_32(2, fn, sfx),		\
+-		PORT_GP_10(3,  fn, sfx),	\
++		PORT_GP_CFG_10(3,  fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
+ 		PORT_GP_32(4, fn, sfx),		\
+ 		PORT_GP_21(5, fn, sfx),		\
+ 		PORT_GP_14(6, fn, sfx)
+@@ -1968,8 +1968,25 @@ enum {
+ 	{ },
  };
  
-+/* - I2C -------------------------------------------------------------------- */
-+static const unsigned int i2c0_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(4, 8), RCAR_GP_PIN(4, 9),
-+};
-+static const unsigned int i2c0_mux[] = {
-+	SCL0_MARK, SDA0_MARK,
-+};
-+static const unsigned int i2c1_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(4, 10), RCAR_GP_PIN(4, 11),
-+};
-+static const unsigned int i2c1_mux[] = {
-+	SCL1_MARK, SDA1_MARK,
-+};
-+static const unsigned int i2c2_a_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(4, 6), RCAR_GP_PIN(4, 7),
-+};
-+static const unsigned int i2c2_a_mux[] = {
-+	SCL2_A_MARK, SDA2_A_MARK,
-+};
-+static const unsigned int i2c2_b_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(2, 29), RCAR_GP_PIN(2, 30),
-+};
-+static const unsigned int i2c2_b_mux[] = {
-+	SCL2_B_MARK, SDA2_B_MARK,
-+};
-+static const unsigned int i2c3_a_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(0, 4), RCAR_GP_PIN(0, 5),
-+};
-+static const unsigned int i2c3_a_mux[] = {
-+	SCL3_A_MARK, SDA3_A_MARK,
-+};
-+static const unsigned int i2c3_b_pins[] = {
-+	/* SCL, SDA */
-+	RCAR_GP_PIN(0, 7), RCAR_GP_PIN(0, 8),
-+};
-+static const unsigned int i2c3_b_mux[] = {
-+	SCL3_B_MARK, SDA3_B_MARK,
++static int r8a77995_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin, u32 *pocctrl)
++{
++	int bit = -EINVAL;
++
++	*pocctrl = 0xe6060380;
++
++	if (pin >= RCAR_GP_PIN(3, 0) && pin <= RCAR_GP_PIN(3, 9))
++		bit = 29 - (pin - RCAR_GP_PIN(3, 0));
++
++	return bit;
++}
++
++static const struct sh_pfc_soc_operations r8a77995_pinmux_ops = {
++	.pin_to_pocctrl = r8a77995_pin_to_pocctrl,
 +};
 +
- /* - SCIF0 ------------------------------------------------------------------ */
- static const unsigned int scif0_data_a_pins[] = {
- 	/* RX, TX */
-@@ -1121,6 +1165,12 @@ enum {
- };
+ const struct sh_pfc_soc_info r8a77995_pinmux_info = {
+ 	.name = "r8a77995_pfc",
++	.ops = &r8a77995_pinmux_ops,
+ 	.unlock_reg = 0xe6060000, /* PMMR */
  
- static const struct sh_pfc_pin_group pinmux_groups[] = {
-+	SH_PFC_PIN_GROUP(i2c0),
-+	SH_PFC_PIN_GROUP(i2c1),
-+	SH_PFC_PIN_GROUP(i2c2_a),
-+	SH_PFC_PIN_GROUP(i2c2_b),
-+	SH_PFC_PIN_GROUP(i2c3_a),
-+	SH_PFC_PIN_GROUP(i2c3_b),
- 	SH_PFC_PIN_GROUP(scif0_data_a),
- 	SH_PFC_PIN_GROUP(scif0_clk_a),
- 	SH_PFC_PIN_GROUP(scif0_data_b),
-@@ -1148,6 +1198,23 @@ enum {
- 	SH_PFC_PIN_GROUP(scif_clk),
- };
- 
-+static const char * const i2c0_groups[] = {
-+	"i2c0",
-+};
-+static const char * const i2c1_groups[] = {
-+	"i2c1",
-+};
-+
-+static const char * const i2c2_groups[] = {
-+	"i2c2_a",
-+	"i2c2_b",
-+};
-+
-+static const char * const i2c3_groups[] = {
-+	"i2c3_a",
-+	"i2c3_b",
-+};
-+
- static const char * const scif0_groups[] = {
- 	"scif0_data_a",
- 	"scif0_clk_a",
-@@ -1195,6 +1262,10 @@ enum {
- };
- 
- static const struct sh_pfc_function pinmux_functions[] = {
-+	SH_PFC_FUNCTION(i2c0),
-+	SH_PFC_FUNCTION(i2c1),
-+	SH_PFC_FUNCTION(i2c2),
-+	SH_PFC_FUNCTION(i2c3),
- 	SH_PFC_FUNCTION(scif0),
- 	SH_PFC_FUNCTION(scif1),
- 	SH_PFC_FUNCTION(scif2),
+ 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
 -- 
 1.9.1
