@@ -1,48 +1,96 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/3] mfd: add MT6351 regulator driver
-Date: Wed, 9 Aug 2017 10:31:02 +0800
-Message-ID: <1502245865-11403-1-git-send-email-mars.cheng@mediatek.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho
+ cooling device.
+Date: Tue, 8 Aug 2017 21:08:48 -0700
+Message-ID: <3c427ddd-aab6-13d4-bfb2-ae22848c0d13@roeck-us.net>
+References: <20170803084650.22298-1-c_mykolak@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Jimmy-YJ.Huang" <jimmy-yj.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170803084650.22298-1-c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds MT6351 regulator driver which is included in MT6797.
-Also might be used in other chips.
+On 08/03/2017 01:46 AM, Mykola Kostenok wrote:
+> It's add support for cooling device creation to
+> aspeed-pwm-tacho.
+> Cooling device could be bound to a thermal zone
+> for the thermal control.
+> 
+> v1 -> v2:
+>   - Fix commit message.
+> v2 -> v3:
+>   Pointed out by Rob Herring:
+>   - Put cooling-levels under fan subnodes.
+> 
+> Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
+Did Rob ever Ack this patch ?
 
-Jimmy-YJ.Huang (3):
-  dt-bindings: mfd: Add bindings for the MediaTek MT6351 PMIC
-  regulator: mt6351: Add support for MT6351 regulator
-  mfd: mt6397: Add MT6351 support into MT6397 driver
+Note you didn't copy the hwmon mailing list, which doesn't exactly help
+to keep track of it, and I may have lost Rob's Ack. My apologies if that
+is the case.
 
- Documentation/devicetree/bindings/mfd/mt6397.txt   |   10 +-
- .../bindings/regulator/mt6351-regulator.txt        |  347 +++++++
- drivers/mfd/mt6397-core.c                          |   18 +
- drivers/regulator/Kconfig                          |    9 +
- drivers/regulator/Makefile                         |    1 +
- drivers/regulator/mt6351-regulator.c               |  458 +++++++++
- include/linux/mfd/mt6351/core.h                    |   80 ++
- include/linux/mfd/mt6351/registers.h               | 1028 ++++++++++++++++++++
- include/linux/regulator/mt6351-regulator.h         |   66 ++
- 9 files changed, 2013 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6351-regulator.txt
- create mode 100644 drivers/regulator/mt6351-regulator.c
- create mode 100644 include/linux/mfd/mt6351/core.h
- create mode 100644 include/linux/mfd/mt6351/registers.h
- create mode 100644 include/linux/regulator/mt6351-regulator.h
+Guenter
+
+> ---
+>   Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
+>   1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> index cf44605..367c820 100644
+> --- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+> @@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
+>   
+>   - #size-cells : should be 1.
+>   
+> +- #cooling-cells: should be 2.
+> +
+>   - reg : address and length of the register set for the device.
+>   
+>   - pinctrl-names : a pinctrl state named "default" must be defined.
+> @@ -28,12 +30,17 @@ fan subnode format:
+>   Under fan subnode there can upto 8 child nodes, with each child node
+>   representing a fan. If there are 8 fans each fan can have one PWM port and
+>   one/two Fan tach inputs.
+> +For PWM port can be configured cooling-levels to create cooling device.
+> +Cooling device could be bound to a thermal zone for the thermal control.
+>   
+>   Required properties for each child node:
+>   - reg : should specify PWM source port.
+>   	integer value in the range 0 to 7 with 0 indicating PWM port A and
+>   	7 indicating PWM port H.
+>   
+> +- cooling-levels: PWM duty cycle values in a range from 0 to 255
+> +                  which correspond to thermal cooling states.
+> +
+>   - aspeed,fan-tach-ch : should specify the Fan tach input channel.
+>                   integer value in the range 0 through 15, with 0 indicating
+>   		Fan tach channel 0 and 15 indicating Fan tach channel 15.
+> @@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
+>   pwm_tacho: pwmtachocontroller@1e786000 {
+>   	#address-cells = <1>;
+>   	#size-cells = <1>;
+> +	#cooling-cells = <2>;
+>   	reg = <0x1E786000 0x1000>;
+>   	compatible = "aspeed,ast2500-pwm-tacho";
+>   	clocks = <&pwm_tacho_fixed_clk>;
+> @@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
+>   
+>   	fan@0 {
+>   		reg = <0x00>;
+> +		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
+>   		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
+>   	};
+>   
+> 
 
 --
-1.7.9.5
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
