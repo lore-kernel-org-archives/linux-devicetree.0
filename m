@@ -1,32 +1,74 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 10/12] ARM: dts: rk3228-evb: Enable the internal phy for gmac
-Date: Wed, 09 Aug 2017 15:50:23 -0700
-Message-ID: <9627716E-01B9-4DC0-9982-A335FAFA567E@gmail.com>
-References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com> <1502280799-2514-1-git-send-email-david.wu@rock-chips.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial slave
+Date: Wed, 9 Aug 2017 18:10:04 -0500
+Message-ID: <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
+References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com> <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502280799-2514-1-git-send-email-david.wu@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>, davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
-Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502102366-2760-2-git-send-email-loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On August 9, 2017 5:13:19 AM PDT, David Wu <david=2Ewu@rock-chips=2Ecom> wr=
-ote:
->This patch enables the internal phy for rk3228 evb board
->by default=2E
->To use the external 1000M phy on evb board, need to make
->some switch of evb board to be on=2E
+On Mon, Aug 7, 2017 at 5:39 AM, Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
+> This allows to automatically insert the bcm43438 to the bluetooth
+> subsystem instead of relying on userspace helpers (hciattach).
 >
->Signed-off-by: David Wu <david=2Ewu@rock-chips=2Ecom>
+> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
+> of pl011/ttyAMA0.
+>
+> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  v2: dt-bindings as separate patch
+>      rebase on upcoming pi3 dts changes
+>  v3: changes in bcm serdev drivers:
+>      name refactoring and additional comments
+>      Add generic host_set_baudrate method
+>      Use agnostic device_property_read
+>
+>  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> index 20725ca..5abc1df 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> @@ -8,6 +8,11 @@
+>         compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
+>         model = "Raspberry Pi 3 Model B";
+>
+> +       chosen {
+> +               /* 8250 auxiliar UART instead of pl011 */
+> +               bootargs = "earlyprintk console=ttyS0,115200";
 
+This is an unrelated change. "earlyprintk" is arm32 specific and only
+works with a kernel built with a specific uart type and address. Also,
+stdout-path property is preferred to set the default over "console".
 
-LGTM
-
-Reviewed-by: Florian Fainelli <f=2Efainelli@gmail=2Ecom>
-
---=20
-Florian
+> +       };
+> +
+>         memory {
+>                 reg = <0 0x40000000>;
+>         };
+> @@ -24,6 +29,11 @@
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&uart0_gpio32 &gpclk2_gpio43>;
+>         status = "okay";
+> +
+> +       bluetooth {
+> +               compatible = "brcm,bcm43438-bt";
+> +               max-speed = <921600>;
+> +       };
+>  };
+>
+>  /* uart1 is mapped to the pin header */
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
