@@ -1,52 +1,49 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] rc: add zx-irdec remote control driver
-Date: Wed, 9 Aug 2017 21:48:18 +0800
-Message-ID: <20170809134816.GA31819@dragon>
-References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
- <1501420993-21977-4-git-send-email-shawnguo@kernel.org>
- <20170809130029.eneyqstlejfkotz2@gofer.mess.org>
+From: "Langer, Thomas" <thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: RE: [PATCH v9 03/16] mtd: spi-falcon: drop check of boot select
+Date: Wed, 9 Aug 2017 14:02:16 +0000
+Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1EA0A385@IRSMSX101.ger.corp.intel.com>
+References: <20170808225247.32266-1-hauke@hauke-m.de>
+ <20170808225247.32266-4-hauke@hauke-m.de>
+ <20170809114421.oo2bunardgw3p4tk@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170809130029.eneyqstlejfkotz2-3XSxi2G4b3iXFJAUJl40Xg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baoyou Xie <xie.baoyou-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Xin Zhou <zhou.xin8-i+zz7BTLltu8dxfXipz/DA@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170809114421.oo2bunardgw3p4tk-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: "ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org" <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mehrtens, Hauke" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sean,
 
-On Wed, Aug 09, 2017 at 02:00:29PM +0100, Sean Young wrote:
-> On Sun, Jul 30, 2017 at 09:23:13PM +0800, Shawn Guo wrote:
-> > From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > 
-> > It adds the remote control driver and corresponding keymap file for
-> > IRDEC block found on ZTE ZX family SoCs.
-> > 
-> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/media/rc/Kconfig               |  11 ++
-> >  drivers/media/rc/Makefile              |   1 +
-> >  drivers/media/rc/keymaps/Makefile      |   3 +-
-> >  drivers/media/rc/keymaps/rc-zx-irdec.c |  79 ++++++++++++++
-> >  drivers/media/rc/zx-irdec.c            | 183 +++++++++++++++++++++++++++++++++
-> >  include/media/rc-map.h                 |   1 +
-> >  6 files changed, 277 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/media/rc/keymaps/rc-zx-irdec.c
-> >  create mode 100644 drivers/media/rc/zx-irdec.c
+
+> -----Original Message-----
+> From: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-spi-
+> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Mark Brown
+> Sent: Wednesday, August 9, 2017 1:44 PM
+> To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org; linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org; linux-
+> mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org;
+> john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org; linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mehrtens, Hauke
+> <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>; robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
+> p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; kishon-l0cyMroinI0@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org
+> Subject: Re: [PATCH v9 03/16] mtd: spi-falcon: drop check of boot select
 > 
-> We're missing an MAINTAINERS entry for this driver. Could this be added
-> please as a separate patch?
+> On Wed, Aug 09, 2017 at 12:52:34AM +0200, Hauke Mehrtens wrote:
+> 
+> > Do not check which flash type the SoC was booted from before
+> > using this driver. Assume that the device tree is correct and use this
+> > driver when it was added to device tree. This also removes a build
+> > dependency to the SoC code.
+> 
+> Why?  Is this assumption reliably true?
 
-We are using 'ARM/ZTE ARCHITECTURE' entry in MAINTAINERS for ZTE ZX
-drivers.  I plan to send a separate patch going through arm-soc tree,
-updating MAINTAINERS for those new ZTE ZX drivers landed on mainline
-during 4.14 merge window.  IRDEC will be covered by that patch.  Is that
-okay?
+Yes. We only have one type of flash interface in the device tree, as they 
+are connected to the shared EBU (External Bus Unit).
 
-Shawn
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
