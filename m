@@ -1,69 +1,95 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
-Date: Wed, 9 Aug 2017 18:07:37 +0530
-Message-ID: <de7beea0-5b58-cf52-a49d-50b06ba182ae@codeaurora.org>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
+From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: mediatek: Add i2c compatible for MediaTek
+ MT7622
+Date: Wed, 9 Aug 2017 20:58:39 +0800
+Message-ID: <1502283519.930.62.camel@mhfsdcap03>
+References: <1502264631-12572-1-git-send-email-jun.gao@mediatek.com>
+         <1502264631-12572-3-git-send-email-jun.gao@mediatek.com>
+         <1502271638.31781.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170730130743.19681-1-hverkuil@xs4all.nl>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502271638.31781.3.camel@mtksdaap41>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNy8zMC8yMDE3IDA2OjM3IFBNLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4gRnJvbTogSGFu
-cyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+IAo+IFRoaXMgcGF0Y2ggc2VyaWVz
-IGFkZHMgQ0VDIHN1cHBvcnQgdG8gdGhlIGRybSBhZHY3NTExL2Fkdjc1MzMgZHJpdmVycy4KPiAK
-PiBJIGhhdmUgdGVzdGVkIHRoaXMgd2l0aCB0aGUgUXVhbGNvbW0gRHJhZ29uYm9hcmQgQzQxMCAo
-YWR2NzUzMyBiYXNlZCkKPiBhbmQgdGhlIFJlbmVzYXMgUi1DYXIgS29lbHNjaCBib2FyZCAoYWR2
-NzUxMSBiYXNlZCkuCj4gCj4gTm90ZTogdGhlIERyYWdvbmJvYXJkIG5lZWRzIHRoaXMgcGF0Y2g6
-Cj4gCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODI0NzczLwo+IAo+IEFy
-Y2hpdCwgY2FuIHlvdSBjb25maXJtIHRoYXQgdGhpcyBwYXRjaCB3aWxsIGdvIHRvIGtlcm5lbCA0
-LjE0PwoKWWVzLCBpdCdzIGJlZW4gcXVldWVkIHRvIGNsay1uZXh0LgoKVGhhbmtzLApBcmNoaXQK
-Cj4gCj4gQW5kIHRoZSBLb2Vsc2NoIGJvYXJkIG5lZWRzIHRoaXMgNC4xMyBmaXg6Cj4gCj4gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODM2ODY1Lwo+IAo+IEkgb25seSBoYXZl
-IHRoZSBLb2Vsc2NoIGJvYXJkIHRvIHRlc3Qgd2l0aCwgYnV0IGl0IGxvb2tzIGxpa2Ugb3RoZXIK
-PiBSLUNhciBib2FyZHMgdXNlIHRoZSBzYW1lIGFkdjc1MTEuIEl0IHdvdWxkIGJlIG5pY2UgaWYg
-c29tZW9uZSBjYW4KPiBhZGQgQ0VDIHN1cHBvcnQgdG8gdGhlIG90aGVyIFItQ2FyIGJvYXJkcyBh
-cyB3ZWxsLiBUaGUgbWFpbiB0aGluZwo+IHRvIGNoZWNrIGlzIGlmIHRoZXkgYWxsIHVzZSB0aGUg
-c2FtZSAxMiBNSHogZml4ZWQgQ0VDIGNsb2NrIHNvdXJjZS4KPiAKPiBBbnlvbmUgd2hvIHdhbnRz
-IHRvIHRlc3QgdGhpcyB3aWxsIG5lZWQgdGhlIENFQyB1dGlsaXRpZXMgdGhhdAo+IGFyZSBwYXJ0
-IG9mIHRoZSB2NGwtdXRpbHMgZ2l0IHJlcG9zaXRvcnk6Cj4gCj4gZ2l0IGNsb25lIGdpdDovL2xp
-bnV4dHYub3JnL3Y0bC11dGlscy5naXQKPiBjZCB2NGwtdXRpbHMKPiAuL2Jvb3RzdHJhcC5zaAo+
-IC4vY29uZmlndXJlCj4gbWFrZQo+IHN1ZG8gbWFrZSBpbnN0YWxsCj4gCj4gTm93IGNvbmZpZ3Vy
-ZSB0aGUgQ0VDIGFkYXB0ZXIgYXMgYSBQbGF5YmFjayBkZXZpY2U6Cj4gCj4gY2VjLWN0bCAtLXBs
-YXliYWNrCj4gCj4gRGlzY292ZXIgb3RoZXIgQ0VDIGRldmljZXM6Cj4gCj4gY2VjLWN0bCAtUwo+
-IAo+IFJlZ2FyZHMsCj4gCj4gCUhhbnMKPiAKPiBIYW5zIFZlcmt1aWwgKDQpOgo+ICAgIGR0LWJp
-bmRpbmdzOiBhZGksYWR2NzUxMS50eHQ6IGRvY3VtZW50IGNlYyBjbG9jawo+ICAgIGFybTogZHRz
-OiBxY29tOiBhZGQgY2VjIGNsb2NrIGZvciBhcHE4MDE2IGJvYXJkCj4gICAgYXJtOiBkdHM6IHJl
-bmVzYXM6IGFkZCBjZWMgY2xvY2sgZm9yIEtvZWxzY2ggYm9hcmQKPiAgICBkcm06IGFkdjc1MTEv
-MzM6IGFkZCBIRE1JIENFQyBzdXBwb3J0Cj4gCj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlk
-Z2UvYWRpLGFkdjc1MTEudHh0ICAgICAgICB8ICAgNCArCj4gICBhcmNoL2FybS9ib290L2R0cy9y
-OGE3NzkxLWtvZWxzY2guZHRzICAgICAgICAgICAgICB8ICAgOCArCj4gICBhcmNoL2FybTY0L2Jv
-b3QvZHRzL3Fjb20vYXBxODAxNi1zYmMuZHRzaSAgICAgICAgICB8ICAgMiArCj4gICBkcml2ZXJz
-L2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvS2NvbmZpZyAgICAgICAgICAgICB8ICAgOCArCj4gICBk
-cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvTWFrZWZpbGUgICAgICAgICAgICB8ICAgMSAr
-Cj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMS5oICAgICAgICAgICB8
-ICA0NSArKy0KPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTExX2NlYy5j
-ICAgICAgIHwgMzE0ICsrKysrKysrKysrKysrKysrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL2Jy
-aWRnZS9hZHY3NTExL2Fkdjc1MTFfZHJ2LmMgICAgICAgfCAxNTIgKysrKysrKysrLQo+ICAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MzMuYyAgICAgICAgICAgfCAgMzAgKy0K
-PiAgIDkgZmlsZXMgY2hhbmdlZCwgNTE0IGluc2VydGlvbnMoKyksIDUwIGRlbGV0aW9ucygtKQo+
-ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3
-NTExX2NlYy5jCj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBt
-ZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0
-aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+On Wed, 2017-08-09 at 17:40 +0800, Yingjoe Chen wrote:
+> On Wed, 2017-08-09 at 15:43 +0800, Jun Gao wrote:
+> > From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
+> > MT7622 limit message size to 255, and not support 4GB DMA mode.
+> 
+> 
+> Jun,
+> 
+> Do you mean message numbers?
+> 
+> 
+> Joe.C
+> 
+
+Yes, bit7~bit0 of i2c register TRANSAC_LEN will be used as message
+numbers.
+
+Jun
+> > 
+> > Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/i2c/busses/i2c-mt65xx.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+> > index 9bedf0b..2c7f847 100644
+> > --- a/drivers/i2c/busses/i2c-mt65xx.c
+> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
+> > @@ -172,6 +172,14 @@ struct mtk_i2c {
+> >  	.max_comb_2nd_msg_len = 31,
+> >  };
+> >  
+> > +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
+> > +	.max_num_msgs = 255,
+> > +	.max_write_len = 65535,
+> > +	.max_read_len = 65535,
+> > +	.max_comb_1st_msg_len = 65535,
+> > +	.max_comb_2nd_msg_len = 65535,
+> > +};
+> > +
+> >  static const struct mtk_i2c_compatible mt6577_compat = {
+> >  	.quirks = &mt6577_i2c_quirks,
+> >  	.pmic_i2c = 0,
+> > @@ -190,6 +198,15 @@ struct mtk_i2c {
+> >  	.support_33bits = 0,
+> >  };
+> >  
+> > +static const struct mtk_i2c_compatible mt7622_compat = {
+> > +	.quirks = &mt7622_i2c_quirks,
+> > +	.pmic_i2c = 0,
+> > +	.dcm = 1,
+> > +	.auto_restart = 1,
+> > +	.aux_len_reg = 1,
+> > +	.support_33bits = 0,
+> > +};
+> > +
+> >  static const struct mtk_i2c_compatible mt8173_compat = {
+> >  	.pmic_i2c = 0,
+> >  	.dcm = 1,
+> > @@ -201,6 +218,7 @@ struct mtk_i2c {
+> >  static const struct of_device_id mtk_i2c_of_match[] = {
+> >  	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
+> >  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
+> > +	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+> >  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+> >  	{}
+> >  };
+> 
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
