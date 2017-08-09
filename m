@@ -1,48 +1,135 @@
 From: Sandy Huang <hjc@rock-chips.com>
-Subject: [PATCH 0/3] drm/rockchip: lvds: add support Rockchip Soc LVDS
-Date: Wed,  9 Aug 2017 18:00:46 +0800
-Message-ID: <1502272846-63941-1-git-send-email-hjc@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 1/3] dt-bindings: display: Add Document for Rockchip Soc LVDS
+Date: Wed,  9 Aug 2017 18:00:49 +0800
+Message-ID: <1502272851-63997-1-git-send-email-hjc@rock-chips.com>
+References: <1502272846-63941-1-git-send-email-hjc@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502272846-63941-1-git-send-email-hjc@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
+Cc: Sandy Huang <hjc@rock-chips.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaGVzIGFkZCBzdXBwb3J0IFJvY2tjaGlwIFJLMzI4OCBMVkRTIHN1cHBvcnQsIGJh
-c2VkIG9uIHBhdGNoZXMgZnJvbQpNYXJrIHlhb1swXSBhbmQgSGVpa28gU3R1ZWJuZXJbMV0uCgpb
-MF06IGh0dHBzOi8vZ2l0aHViLmNvbS9Sb2NrY2hpcE9wZW5zb3VyY2VDb21tdW5pdHkvcG9wbWV0
-YWwta2VybmVsLTMuMTQKWzFdOiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
-bGludXgtcm9ja2NoaXAvMjAxNS1BcHJpbC8wMDI4MzAuaHRtbAoKQ2hhbmdlczoKLSBVcGRhdGUg
-cm9ja2NoaXBfbHZkc19lbmNvZGVyX2hlbHBlcl9mdW5jcyB0byBhdG9taWMgQVBJCi0gQWRkIGJy
-aWRnZSBmdW5jdGlvbiBmb3IgUkdCL0xWRFMgY29udmVydCB0byBvdGhlciBvdXRwdXQgdHlwZQot
-IEZpeCBzb21lIHVucmVhc29uYWJsZSBkZWZpbmUKLSBBZGFwdGVyIHRvIHRoZSBsYXRlc3Qgcm9j
-a2NoaXAgRFJNIGRyaXZlciBmcmFtZXdvcmsKLSBBZGQgcGluY3RybCBmb3IgUkdCIG91dHB1dCB0
-eXBlCi0gUmVzZXZlZCBzb21lIGRlZmluZSBmb3Igcm9ja2NoaXAgbmV4dCBTb2MKClNhbmR5IEh1
-YW5nICgzKToKICBkdC1iaW5kaW5nczogZGlzcGxheTogQWRkIERvY3VtZW50IGZvciBSb2NrY2hp
-cCBTb2MgTFZEUwogIEFSTTogZHRzOiBBZGQgTFZEUyBpbmZvIGZvciByazMyODgKICBkcm0vcm9j
-a2NoaXA6IEFkZCBzdXBwb3J0IGZvciBSb2NrY2hpcCBTb2MgTFZEUwoKIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L3JvY2tjaGlwL3JvY2tjaGlwLWx2ZHMudHh0ICAgIHwgMTA0ICsrKwogYXJjaC9hcm0v
-Ym9vdC9kdHMvcmszMjg4LmR0c2kgICAgICAgICAgICAgICAgICAgICAgfCAgNTIgKysKIGRyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRy
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgIHwgICAxICsK
-IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9sdmRzLmMgICAgICAgICAgIHwgNzM0
-ICsrKysrKysrKysrKysrKysrKysrKwogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlw
-X2x2ZHMuaCAgICAgICAgICAgfCAxMTIgKysrKwogNiBmaWxlcyBjaGFuZ2VkLCAxMDEyIGluc2Vy
-dGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9yb2NrY2hpcC1sdmRzLnR4dAogY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9sdmRzLmMKIGNyZWF0ZSBtb2Rl
-IDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBfbHZkcy5oCgotLSAKMi43
-LjQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This patch add Document for Rockchip Soc RK3288 LVDS,
+This based on the patches from Mark yao and Heiko Stuebner.
+
+Signed-off-by: Sandy Huang <hjc@rock-chips.com>
+Signed-off-by: Mark yao <mark.yao@rock-chips.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+---
+ .../bindings/display/rockchip/rockchip-lvds.txt    | 104 +++++++++++++++++++++
+ 1 file changed, 104 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+new file mode 100644
+index 0000000..bf934ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-lvds.txt
+@@ -0,0 +1,104 @@
++Rockchip RK3288 LVDS interface
++================================
++
++Required properties:
++- compatible: matching the soc type, one of
++	- "rockchip,rk3288-lvds";
++
++- reg: physical base address of the controller and length
++	of memory mapped region.
++- clocks: must include clock specifiers corresponding to entries in the
++	clock-names property.
++- clock-names: must contain "pclk_lvds"
++
++- avdd1v0-supply: regulator phandle for 1.0V analog power
++- avdd1v8-supply: regulator phandle for 1.8V analog power
++- avdd3v3-supply: regulator phandle for 3.3V analog power
++
++- rockchip,grf: phandle to the general register files syscon
++
++Optional properties
++- pinctrl-names: must contain a "lcdc" entry.
++- pinctrl-0: pin control group to be used for this controller.
++
++Required nodes:
++
++The lvds has two video ports as described by
++	Documentation/devicetree/bindings/media/video-interfaces.txt.
++Their connections are modeled using the OF graph bindings specified in
++	Documentation/devicetree/bindings/graph.txt.
++
++- video port 0 for the VOP inputs
++- video port 1 for either a panel or subsequent encoder
++
++the lvds panel described by
++	Documentation/devicetree/bindings/display/panel/simple-panel.txt
++
++- rockchip,data-mapping: should be "vesa" or "jeida",
++	This describes how the color bits are laid out in the
++	serialized LVDS signal.
++- rockchip,data-width : should be <18> or <24>;
++- rockchip,output: should be "rgb", "lvds" or "duallvds",
++	This describes the output face.
++- ports for remote LVDS output
++
++Example:
++
++lvds_panel: lvds-panel {
++	status = "okay";
++	compatible = "simple-panel";
++	enable-gpios = <&gpio7 21 GPIO_ACTIVE_HIGH>;
++	rockchip,data-mapping = "jeida";
++	rockchip,data-width = <24>;
++	rockchip,output = "rgb";
++
++	ports {
++		panel_in_lvds: endpoint {
++			remote-endpoint = <&lvds_out_panel>;
++		};
++	};
++};
++
++
++For Rockchip RK3288:
++
++	lvds: lvds@ff96c000 {
++		compatible = "rockchip,rk3288-lvds";
++		rockchip,grf = <&grf>;
++		reg = <0xff96c000 0x4000>;
++		clocks = <&cru PCLK_LVDS_PHY>;
++		clock-names = "pclk_lvds";
++		pinctrl-names = "lcdc";
++		pinctrl-0 = <&lcdc_ctl>;
++		avdd1v0-supply = <&vdd10_lcd>;
++		avdd1v8-supply = <&vcc18_lcd>;
++		avdd3v3-supply = <&vcca_33>;
++		rockchip,data-mapping = "jeida";
++		rockchip,data-width = <24>;
++		rockchip,output = "rgb";
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			lvds_in: port@0 {
++				reg = <0>;
++
++				lvds_in_vopb: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&vopb_out_lvds>;
++				};
++				lvds_in_vopl: endpoint@1 {
++					reg = <1>;
++					remote-endpoint = <&vopl_out_lvds>;
++				};
++			};
++
++			lvds_out: port@1 {
++				reg = <1>;
++
++				lvds_out_panel: endpoint {
++					remote-endpoint = <&panel_in>;
++				};
++			};
++		};
++	};
+-- 
+2.7.4
