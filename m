@@ -1,49 +1,61 @@
-From: "Langer, Thomas" <thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH v9 03/16] mtd: spi-falcon: drop check of boot select
-Date: Wed, 9 Aug 2017 14:02:16 +0000
-Message-ID: <0DAF21CFE1B20740AE23D6AF6E54843F1EA0A385@IRSMSX101.ger.corp.intel.com>
-References: <20170808225247.32266-1-hauke@hauke-m.de>
- <20170808225247.32266-4-hauke@hauke-m.de>
- <20170809114421.oo2bunardgw3p4tk@sirena.org.uk>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: [PATCH v2 1/3] ARM: dts: dra71-evm: workaround incorrect DP83867
+ RX_CTRL pin strap
+Date: Wed, 9 Aug 2017 19:32:47 +0530
+Message-ID: <dfb0980a35c345bc82f42128028c4d08ac6ae58c.1502284400.git.nsekhar@ti.com>
+References: <cover.1502284400.git.nsekhar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170809114421.oo2bunardgw3p4tk-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: "ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org" <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mehrtens, Hauke" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1502284400.git.nsekhar@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The DRA71 EVM straps the DP83867 GigaBit Ethernet phy's RX_DV/RX_CTRL pin
+in mode 1. Unfortunately, the phy data manual disallows this.
 
+Add "ti,dp83867-rxctrl-strap-quirk" property to the phy's device-tree node
+to allow kernel to enable software workaround for this incorrect strap
+setting. This is as suggested by the phy's datamanual and ensures proper
+operation of this PHY.
 
-> -----Original Message-----
-> From: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-spi-
-> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Mark Brown
-> Sent: Wednesday, August 9, 2017 1:44 PM
-> To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org; linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org; linux-
-> mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org;
-> john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org; linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Mehrtens, Hauke
-> <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>; robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org;
-> p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org; kishon-l0cyMroinI0@public.gmane.org; mark.rutland-5wv7dgnIgG8@public.gmane.org
-> Subject: Re: [PATCH v9 03/16] mtd: spi-falcon: drop check of boot select
-> 
-> On Wed, Aug 09, 2017 at 12:52:34AM +0200, Hauke Mehrtens wrote:
-> 
-> > Do not check which flash type the SoC was booted from before
-> > using this driver. Assume that the device tree is correct and use this
-> > driver when it was added to device tree. This also removes a build
-> > dependency to the SoC code.
-> 
-> Why?  Is this assumption reliably true?
+This needs to be done for both instances of this PHY present on the board.
 
-Yes. We only have one type of flash interface in the device tree, as they 
-are connected to the shared EBU (External Bus Unit).
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/boot/dts/dra71-evm.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index a6298eb56978..9897e8fa6845 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -191,6 +191,7 @@
+ 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
+ 		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+ 		ti,min-output-impedance;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ 
+ 	dp83867_1: ethernet-phy@3 {
+@@ -199,6 +200,7 @@
+ 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
+ 		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+ 		ti,min-output-impedance;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
+-- 
+2.9.0
