@@ -1,83 +1,69 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 0/8] Remove fwnode type field, constify property
- fwnode arguments
-Date: Wed, 9 Aug 2017 11:47:55 +0300
-Message-ID: <20170809084755.pec6w2y2thmbmjyi@valkosipuli.retiisi.org.uk>
-References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
- <26807574.YAK92jB8KX@aspire.rjw.lan>
- <20170808093215.uw2lricbbvwb7t3k@valkosipuli.retiisi.org.uk>
- <3442396.FuC0BxuCi0@aspire.rjw.lan>
+From: Christoffer Dall <cdall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/11] KVM: arm64: Store vcpu on the stack during
+ __guest_enter()
+Date: Wed, 9 Aug 2017 10:48:09 +0200
+Message-ID: <20170809084809.GA16705@cbox>
+References: <20170515174400.29735-1-james.morse@arm.com>
+ <20170515174400.29735-2-james.morse@arm.com>
+ <20170606195951.GN9464@cbox>
+ <5989EB5D.6@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3442396.FuC0BxuCi0@aspire.rjw.lan>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>, erik.veijola@intel.com
+In-Reply-To: <5989EB5D.6-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Christoffer Dall <christoffer.dall-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 02:53:25AM +0200, Rafael J. Wysocki wrote:
-> On Tuesday, August 8, 2017 11:32:16 AM CEST Sakari Ailus wrote:
-> > On Mon, Jul 24, 2017 at 10:28:12PM +0200, Rafael J. Wysocki wrote:
-> > > On Friday, July 21, 2017 02:29:06 PM Rafael J. Wysocki wrote:
-> > > > On Friday, July 21, 2017 03:33:09 PM Andy Shevchenko wrote:
-> > > > > On Fri, 2017-07-21 at 13:52 +0200, Rafael J. Wysocki wrote:
-> > > > > > On Fri, Jul 21, 2017 at 1:39 PM, Sakari Ailus
-> > > > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > > > Hello everyone,
-> > > > > > > 
-> > > > > > > This set removes the struct fwnode_handle type field and constifies
-> > > > > > > the
-> > > > > > > fwnode arguments in the fwnode property API more or less the way
-> > > > > > > they are
-> > > > > > > const in OF property API.
-> > > > > > > 
-> > > > > > > Comments are welcome.
-> > > > > > > 
-> > > > > > > All the dependent patches are now in linux-pm master branch.
-> > > > > > > 
-> > > > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg75957.html>;
-> > > > > > > 
-> > > > > > > v1 can be found here:
-> > > > > > > 
-> > > > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg74564.html>;
-> > > > > > > 
-> > > > > > > changes since v2:
-> > > > > > > 
-> > > > > > > - Add 8th patch "device property: Introduce
-> > > > > > >   fwnode_property_get_reference_args". This allows obtaining
-> > > > > > > references
-> > > > > > >   with integer arguments using the fwnode interface.
-> > > > > > > 
-> > > > > > >   The functionality will be soon needed in adding support for nvmem
-> > > > > > >   framework on ACPI as well as in referring to e.g. lens and flash
-> > > > > > > devices
-> > > > > > >   on V4L2.
-> > > > > > 
-> > > > > > OK, so if people have no objections, I'll queue this up for 4.14.
-> > > > > 
-> > > > > I have no objections.
-> > > > > 
-> > > > > One comment Sakari already has addressed, another one
-> > > > > (list_first_enatry_or_null() use) might be addressed later.
-> > > > 
-> > > > Cool, thanks!
-> > > 
-> > > So the series have been applied.
-> > 
-> > Thanks a lot!
-> > 
-> > I see this is in the linux-next branch now; the device-properties branch
-> > seems to be in its former state still. Is there a chance that you have
-> > merged it locally but not pushed the new device-properties branch?
+On Tue, Aug 08, 2017 at 05:48:29PM +0100, James Morse wrote:
+> Hi Christoffer,
 > 
-> The branch is only local for the time being, but I can push it out if
-> that helps.
+> On 06/06/17 20:59, Christoffer Dall wrote:
+> > On Mon, May 15, 2017 at 06:43:49PM +0100, James Morse wrote:
+> >> KVM uses tpidr_el2 as its private vcpu register, which makes sense for
+> >> non-vhe world switch as only KVM can access this register. This means
+> >> vhe Linux has to use tpidr_el1, which KVM has to save/restore as part
+> >> of the host context.
+> >>
+> >> __guest_enter() stores the host_ctxt on the stack, do the same with
+> >> the vcpu.
+> 
+> >> diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
+> >> index 12ee62d6d410..113735df7d01 100644
+> >> --- a/arch/arm64/kvm/hyp/entry.S
+> >> +++ b/arch/arm64/kvm/hyp/entry.S
+> >> @@ -159,9 +159,15 @@ abort_guest_exit_end:
+> >>  ENDPROC(__guest_exit)
+> >>  
+> >>  ENTRY(__fpsimd_guest_restore)
+> >> +	// x0: esr
+> >> +	// x1: vcpu
+> >> +	// x2-x29,lr: vcpu regs
+> >> +	// vcpu x0-x1 on the stack
+> >>  	stp	x2, x3, [sp, #-16]!
+> >>  	stp	x4, lr, [sp, #-16]!
+> >>  
+> >> +	mov	x3, x1
+> >> +
+> > 
+> > nit: can you avoid this by using x1 for the vcpu pointer in this routine
+> > instead?
+> 
+> Unfortunately x1 is clobbered by the __fpsimd_{save,restore}_state() macros that
+> are called further down this function.
+> 
+> (its a bit obscure:
+> > fpsimd_save	x0, 1
+> that '1' is used to generate 'x1' or 'w1' in includes/asm/fpsimdmacros.h)
+> 
 
-I have V4L2 patches that depend on these --- I'd like to attempt to get
-them in through the mediatree during this merge window.
+Ah, I guess I missed that.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Thanks,
+-Christoffer
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
