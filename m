@@ -1,35 +1,33 @@
-From: Markus Mayer <code@mmayer.net>
-Subject: [PATCH v3 3/4] ARM: multi_v7_defconfig: add CONFIG_BRCMSTB_THERMAL
-Date: Wed,  9 Aug 2017 14:56:31 -0700
-Message-ID: <20170809215632.4124-4-code@mmayer.net>
-References: <20170809215632.4124-1-code@mmayer.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170809215632.4124-1-code@mmayer.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] misc: Convert to using %pOF instead of full_name
+Date: Wed, 9 Aug 2017 16:59:53 -0500
+Message-ID: <CAL_Jsq+yqM_C=O5sTsuevuQwNYAvJ5YbuZEwHxHtOxEt+e6fcw@mail.gmail.com>
+References: <20170718214339.7774-35-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170718214339.7774-35-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Markus Mayer <mmayer@broadcom.com>
+On Tue, Jul 18, 2017 at 4:43 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> Now that we have a custom printf format specifier, convert users of
+> full_name to use %pOF instead. This is preparation to remove storing
+> of the full path string for each node.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 
-Turn on CONFIG_BRCMSTB_THERMAL as module.
+Greg, ping. You picked up most of the the other patches, but not this one.
 
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 4d19c1b..230f7fa 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -455,6 +455,7 @@ CONFIG_SENSORS_NTC_THERMISTOR=m
- CONFIG_SENSORS_PWM_FAN=m
- CONFIG_SENSORS_INA2XX=m
- CONFIG_CPU_THERMAL=y
-+CONFIG_BRCMSTB_THERMAL=m
- CONFIG_ROCKCHIP_THERMAL=y
- CONFIG_RCAR_THERMAL=y
- CONFIG_ARMADA_THERMAL=y
--- 
-2.7.4
+> ---
+>  drivers/misc/eeprom/idt_89hpesx.c |  8 ++++----
+>  drivers/misc/sram.c               | 12 ++++++------
+>  2 files changed, 10 insertions(+), 10 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
