@@ -1,139 +1,143 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: cs43130: Add support for CS43130 codec
-Date: Wed, 9 Aug 2017 17:11:01 +0100
-Message-ID: <20170809161101.iab74ibtcjat4q3v@sirena.org.uk>
-References: <f5ea5455-b359-4f55-bf73-ee69a7c5d54d@EX3.ad.cirrus.com>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller support
+Date: Wed, 9 Aug 2017 09:43:25 -0700
+Message-ID: <3973443.7gXFUutQhY@np-p-burton>
+References: <cover.1501122135.git.honghui.zhang@mediatek.com> <20170808201912.GJ16580@bhelgaas-glaptop.roam.corp.google.com> <1502261392.17420.5.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qc23qm7agzcyzfc4"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <f5ea5455-b359-4f55-bf73-ee69a7c5d54d-XU/xxMRwCJnfk+Ne4bZl5AC/G2K4zDHf@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Li Xu <li.xu-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/signed; boundary="nextPart4656749.UlJgSgIPiG";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502261392.17420.5.camel@mtksdaap41>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Honghui Zhang <honghui.zhang@mediatek.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, ryder.lee@mediatek.com, linux-pci@vger.kernel.org, sean.wang@mediatek.com, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, robh@kerenl.org, linux-mediatek@lists.infradead.org, yong.wu@mediatek.com, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--nextPart4656749.UlJgSgIPiG
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
---qc23qm7agzcyzfc4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Honghui & Bjorn,
 
-On Wed, Aug 09, 2017 at 10:00:21AM -0500, Li Xu wrote:
+On Tuesday, 8 August 2017 23:49:52 PDT Honghui Zhang wrote:
+> On Tue, 2017-08-08 at 15:19 -0500, Bjorn Helgaas wrote:
+> > On Fri, Aug 04, 2017 at 08:18:09AM -0500, Bjorn Helgaas wrote:
+> > > On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
+> > > > On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
+> > > > > > +	port->irq_domain = irq_domain_add_linear(pcie_intc_node,
+> > > > > > INTX_NUM,
+> > > > > > +						 &intx_domain_ops, port);
+> > > > > 
+> > > > > I think there's an issue here with a 4-element IRQ domain and the
+> > > > > hwirq numbers 1-4 from the of_irq_parse_and_map_pci() path, so INTD
+> > > > > may not work correctly.
+> > > > > 
+> > > > > See
+> > > > > http://lkml.kernel.org/r/20170801212931.GA26498@bhelgaas-glaptop.roa
+> > > > > m.corp.google.com and related discussion.
+> > > > 
+> > > > Sorry, I did not get this,
+> > > > I do some test with an intel E350T4 PCIe NICs, it's a x1 lane
+> > > > multi-function device.
+> > > > What I got from the log is below:
+> > > > ->of_irq_parse_and_map_pci
+> > > > 
+> > > > 	->of_irq_parse_pci
+> > > > 	
+> > > > 		->irq_create_of_mapping
+> > > > 		
+> > > > 			->irq_create_fwspec_mapping
+> > > > 			
+> > > > 				->irq_domain_translate
+> > > > 				which will go through
+> > > > 				d->ops->translate #the hwirq really start from 0
+> > > > 
+> > > > And I tested every NIC port of the Intel E350T4 with tftp transfer
+> > > > data,
+> > > > seems all are OK with this code.
+> > > 
+> > > OK.  I don't know what d->ops->translate is involved here, but if it
+> > > works, I guess this is OK for now.  We're trying to clean this up and
+> > > make it consistent across all the drivers.  Many of them allocate a
+> > > 5-element IRQ domain, some make a 4-element domain, and on some of
+> > > them INTD doesn't work.  It's a mess.
+> > 
+> > Paul Burton is cleaning this up.  Can you point out the d->ops->translate
+> > function that's involved here?
+> 
+> Hi, Bjorn,
+> 
+> Sorry for my last reply, I was tracking the wrong logs. The real trick
+> is here:
+> 
+> ->of_irq_parse_and_map_pci
+>   ->of_irq_parse_pci	#out_irq->args[0] start from 1(1 == INTA)
+>      ->of_irq_parse_raw
+> 
+> After of_irq_parse_raw finished it's work, the out_irq->args[0] will be
+> remapped as "interrupt-map" property defines[1], which in my case, it's
+> start from 0, and then fwspec->param[0] is start from 0 (0 == INTA).
+> 
+> My "interrupt-map" property is defined as below:
+> interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+> 		<0 0 0 2 &pcie_intc0 1>,
+> 		<0 0 0 3 &pcie_intc0 2>,
+> 		<0 0 0 4 &pcie_intc0 3>;
+> 
+> I do some test with the changes of property defined as below:
+> interrupt-map = <0 0 0 1 &pcie_intc0 1>,
+> 		<0 0 0 2 &pcie_intc0 2>,
+> 		<0 0 0 3 &pcie_intc0 3>,
+> 		<0 0 0 4 &pcie_intc0 4>;
+> Then I got the same running complain as Paul have got[2]
+> 
+> So I guess it's the "interrupt-map" property defined in dtsi node play
+> the key role in this.
+> 
+> [1]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/of/irq.c#
+> L265 [2]https://patchwork.kernel.org/patch/9794355
+> 
+> thanks.
 
-> +	if (cs43130->dev_id == CS43131_CHIP_ID ||
-> +	    cs43130->dev_id == CS43198_CHIP_ID) {
-> +		if (val >= 2)
+That seems like a possibly more sensible way to handle it, so long as you have 
+control over all the device trees that the driver may be exposed to.
 
-Throughout the driver you're doing lots of ID checks like this with if
-statements, these are better written with switch statements so it's
-easier to add new cases in (eg, if a new chip variant gets made) and so
-that it's clear that the default case is being handled properly.
+Bjorn: is this something you want to deal with on a driver by driver basis? 
+ie. new drivers just use interrupt-map as above and older ones with existing 
+DT bindings use the xlate function? Looking at the drivers & device trees we 
+have in-tree it seems we already have a mix of 0-3 & 1-4 ranges in use, so 
+we'd just need to use the xlate function for those which currently use 1-4.
 
-> +static const char * const enum_texts[] = {
-> +	"Off",
-> +	"On",
-> +};
-> +
-> +static SOC_ENUM_SINGLE_DECL(pcm_phs_enum, CS43130_PCM_FILT_OPT, 6, enum_texts);
-> +
-> +static SOC_ENUM_SINGLE_DECL(pcm_nos_enum, CS43130_PCM_FILT_OPT, 5, enum_texts);
-> +
-> +static SOC_ENUM_SINGLE_DECL(pcm_high_enum, CS43130_PCM_FILT_OPT, 1, enum_texts);
-> +
-> +static SOC_ENUM_SINGLE_DECL(pcm_dmp_enum, CS43130_PCM_FILT_OPT, 0, enum_texts);
+I had originally done the same thing with interrupt-map on the MIPS Boston 
+board[1] and the Xilinx PCIe driver[2], though that change would break any 
+pre-existing device trees that use 1-4 in the interrupt-map property (which is 
+sadly what the driver's binding document shows...).
 
-These look like simple on/off switches, why are they enums?
+Thanks,
+    Paul
 
-> +static int cs43130_pcm_mute(struct snd_soc_dai *dai, int mute)
-> +{
-> +	struct snd_soc_codec *codec = dai->codec;
-> +	struct cs43130_private *cs43130 = snd_soc_codec_get_drvdata(codec);
-> +
-> +	if (mute) {
-> +		if (cs43130->dev_id == CS43130_CHIP_ID ||
-> +		    cs43130->dev_id == CS4399_CHIP_ID) {
-> +			regmap_multi_reg_write(cs43130->regmap, mute_seq,
-> +					       ARRAY_SIZE(mute_seq));
-> +			regmap_update_bits(cs43130->regmap,
-> +					   CS43130_PCM_PATH_CTL_1,
-> +					   CS43130_MUTE_MASK, CS43130_MUTE_EN);
-> +			/*
-> +			 * PCM Power Down Sequence
-> +			 * According to Design, 130ms is preferred.
-> +			 */
-> +			msleep(130);
-
-Powering down doesn't sound like muting, shouldn't this be DAPM stuff
-(especially with the very long 130ms delay)?  What is this actually
-doing at the chip level, the register names do sound like muting might
-be part of it but it looks like there's more?
-
-> +static char *hpload_msgs[] = {
-> +	"HPLOAD_DC_L:%u\n",
-> +	"HPLOAD_DC_R:%u\n",
-> +};
-> +
-> +static char *hpload_ac_msgs[] = {
-> +	"HPLOAD_AC_L:%u:%u\n",
-> +	"HPLOAD_AC_R:%u:%u\n",
-> +};
-
-> +	if (cs43130->ac_meas) {
-> +		for (k = 0; k < CS43130_AC_FREQ; k++) {
-> +			for (j = 0; j < ARRAY_SIZE(hpload_ac_msgs); j++) {
-
-The loops are wrapping their iterators in the order i, k, j not i, j, k.
-
-> +				ret = scnprintf(buf + i, PAGE_SIZE - i,
-> +						hpload_ac_msgs[j],
-> +						cs43130->ac_freq[k],
-> +						cs43130->hpload_ac[k][j]);
-
-We're not using ARRAY_SIZE() for the k iteration, this whole thing feels
-risky.  In any case...
-
-> +static DEVICE_ATTR(hpload, S_IRUGO, cs43130_show_hpload, NULL);
-
-...you're adding device attributes that aren't just single values (which
-is a requirement for all sysfs files).  It'd be a lot simpler and
-compliant with the sysfs ABI to just make four appropriately named files
-with the individual values in them if they exist.
-
-> +	cs43130->idle_bias_off = of_property_read_bool(np,
-> +						       "cirrus,idle-bias-off");
-
-This should not be in the DT - either the device can reasonably power
-down when idle or it can't but that's not machine specific configuration
-and is a Linux specific implementation detail anyway.
-
-> +static const struct i2c_device_id cs43130_i2c_id[] = {
-> +	{"cs43130", 0},
-> +	{}
-> +};
-
-Since the driver supports multiple parts I'd expect to see all the parts
-individually recognized as I2C IDs, and similarly for DT compatible
-strings.  This makes it easier for people to do system integration and
-means that if it turns out we need the data it's there.
-
---qc23qm7agzcyzfc4
+[1] https://www.linux-mips.org/archives/linux-mips/2016-08/msg00425.html
+[2] https://patchwork.kernel.org/patch/9763191/
+--nextPart4656749.UlJgSgIPiG
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmLNBQACgkQJNaLcl1U
-h9DDIQf/evHwOiYpGGWqhm5Cy9AGtZ1hsJNPUkETmac8fLzbqMp8wm4RL1B/T3j2
-sYa1DHfzBZE/9+tPvSA8fXSEN27dlk1n2EOyFy8zAnEgIM+aLovfi/A2peg4Oii4
-2MLCCRXwWwGFO1X8QQrhLeUA9Tb3yGVRavN2SLWstzGB+RX9W7poa1s9MOdJCKdc
-8Sz9Fr4hddQQXR0tpfaSM2xjnbxVMsaFh9LsYUUEcjJvP9jvym4te+J/9iqzRCE9
-LAp/oQmC5iOsPUcOTeKtbnhLZUMAmaroEwpuX6OXVV/bpxUh0FYBb/nzhctBiRXe
-ejy0B6DL4lRevxo4ct4qDmA8n205Ag==
-=tbKh
+iQIzBAABCAAdFiEELIGR03D5+Fg+69wPgiDZ+mk8HGUFAlmLO60ACgkQgiDZ+mk8
+HGUQbw//TmLHkh+bvOPQeUpZaogIb8o7hlE9wlntyCY8dk4+R/RvA2EP98ZPh6OW
+mFbW1Ar0gDBK3jnEqoKIdKu5b69UjLONCEt8YaUKqWLUWNbGet8X7oNEmueiNkdu
+BXkw223FMu0G70dQkQEDc4hpKITUs9mp5cBZMq4tdQCbKfzYenpOD2+jE9rWiyMf
+pCnsnj+3FMIyOCUBvD6EBfHB4OH/ZBFI4cuTfCjDOptL4k1xSxGJNYklOu7NiG1M
+s1XtnbQJOumK9TnZN0Rhsb8EH/uo8v/PDOoGR4HGgQXurYUjJ4nzi4lvmFXz+ZSK
+u8w61kAn37S4rBrm4jZ3p7OaN84pRDI8UdGQMJY8WN4POK5tiKOHpVDRQZRlbTlE
+BHhwRzrN7ez1db3PPSjGj8gx797ES9jdwpUL0W/8eGgSKGrKXFHRE+MlzJaW+l+C
+B0yzoquvGTbAXB+JD26zfaJyd9DIDor4b+tXjcTEeY7HxPRh7qiY9CQV1xwPGgLY
+Ih9ug9VWPotpvCB0f8hjytEKVd5vvDtHXLXVBK6Se5nqT6gVfvJbSswn4Bd+APgG
+FYtRPShzyibYGKYlmqJSeVmUfKHfm/VPks+fVlOfg+xB0i0pkmbBxekI5aZ5l+H2
+2l1l3/hsly96QSvzuBZgzrPMxM0VY2j8usiniBMzL7W3Kw00n24=
+=rYvY
 -----END PGP SIGNATURE-----
 
---qc23qm7agzcyzfc4--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nextPart4656749.UlJgSgIPiG--
