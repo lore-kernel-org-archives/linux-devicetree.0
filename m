@@ -1,60 +1,60 @@
-From: Anthony Kim <ktyrun@gmail.com>
-Subject: Re: [PATCH] Input: add support for HiDeep touchscreen
-Date: Wed, 9 Aug 2017 16:54:26 +0900
-Message-ID: <CA+d1ZXK_f82RL4pmiCLr5f4=YPssYYzWZLWzJ8MegvPKQyT7Uw@mail.gmail.com>
-References: <1500510154-6661-1-git-send-email-anthony.kim@hideep.com>
- <1500965607-2446-1-git-send-email-anthony.kim@hideep.com> <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  1/2] dt-bindings: i2c: Document r8a7743/5 support
+Date: Wed, 9 Aug 2017 09:59:29 +0200
+Message-ID: <20170809075929.GG2705@verge.net.au>
+References: <1502191231-8682-1-git-send-email-biju.das@bp.renesas.com>
+ <20170808115006.GC1674@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170803175013.3a4kbotidleipkwe@rob-hp-laptop>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, mark.rutland@arm.com, rydberg@bitmath.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170808115006.GC1674@katana>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Dmitry.
-My company is registering the Approved Vendor List for the Chrome OS.
-So I need to upstream my driver code. For it, I need your confirm.
-Please confirm my driver code.
-Thank You.
-Anthony.
+On Tue, Aug 08, 2017 at 01:50:06PM +0200, Wolfram Sang wrote:
+> On Tue, Aug 08, 2017 at 12:20:31PM +0100, Biju Das wrote:
+> > Document i2c Device Tree support for RZ/G1[ME]
+> > (also known as r8aA774[35]) SoCs. They are compatible with
+> > R-Car Gen2 SoC family.
+> > 
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Looks good to me, yet I'd like an ack from Simon who is currently
+> working on the generic fallback compatibles.
 
-2017-08-04 2:50 GMT+09:00 Rob Herring <robh@kernel.org>:
-> On Tue, Jul 25, 2017 at 03:53:27PM +0900, Anthony Kim wrote:
->> The HiDeep touchscreen device is a capacitive multi-touch controller
->> mainly for multi-touch supported devices use. It use I2C interface for
->> communication to IC and provide axis X, Y, Z locations for ten finger
->> touch through input event interface to userspace.
->>
->> It support the Crimson and the Lime two type IC. They are different
->> the number of channel supported and FW size. But the working protocol
->> is same.
->>
->> Signed-off-by: Anthony Kim <anthony.kim@hideep.com>
->> ---
->>  .../bindings/input/touchscreen/hideep.txt          |  35 +
->>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
->
-> For the binding,
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->>  drivers/input/touchscreen/Kconfig                  |  11 +
->>  drivers/input/touchscreen/Makefile                 |   2 +
->>  drivers/input/touchscreen/hideep.h                 | 318 +++++++
->>  drivers/input/touchscreen/hideep_core.c            | 916 +++++++++++++++++++++
->>  drivers/input/touchscreen/hideep_dbg.c             | 405 +++++++++
->>  drivers/input/touchscreen/hideep_dbg.h             |  24 +
->>  drivers/input/touchscreen/hideep_isp.c             | 592 +++++++++++++
->>  drivers/input/touchscreen/hideep_isp.h             |  96 +++
->>  drivers/input/touchscreen/hideep_sysfs.c           | 245 ++++++
->>  11 files changed, 2645 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/hideep.txt
->>  create mode 100644 drivers/input/touchscreen/hideep.h
->>  create mode 100644 drivers/input/touchscreen/hideep_core.c
->>  create mode 100644 drivers/input/touchscreen/hideep_dbg.c
->>  create mode 100644 drivers/input/touchscreen/hideep_dbg.h
->>  create mode 100644 drivers/input/touchscreen/hideep_isp.c
->>  create mode 100644 drivers/input/touchscreen/hideep_isp.h
->>  create mode 100644 drivers/input/touchscreen/hideep_sysfs.c
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
+
+> 
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+> > index 2b8bd33..cad39ae 100644
+> > --- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
+> > @@ -2,6 +2,8 @@ I2C for R-Car platforms
+> >  
+> >  Required properties:
+> >  - compatible:
+> > +	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
+> > +	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
+> >  	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
+> >  	"renesas,i2c-r8a7779" if the device is a part of a R8A7779 SoC.
+> >  	"renesas,i2c-r8a7790" if the device is a part of a R8A7790 SoC.
+> > @@ -12,7 +14,8 @@ Required properties:
+> >  	"renesas,i2c-r8a7795" if the device is a part of a R8A7795 SoC.
+> >  	"renesas,i2c-r8a7796" if the device is a part of a R8A7796 SoC.
+> >  	"renesas,rcar-gen1-i2c" for a generic R-Car Gen1 compatible device.
+> > -	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 compatible device.
+> > +	"renesas,rcar-gen2-i2c" for a generic R-Car Gen2 or RZ/G1 compatible
+> > +				device.
+> >  	"renesas,rcar-gen3-i2c" for a generic R-Car Gen3 compatible device.
+> >  	"renesas,i2c-rcar" (deprecated)
+> >  
+> > -- 
+> > 1.9.1
+> > 
