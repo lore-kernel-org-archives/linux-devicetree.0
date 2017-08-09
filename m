@@ -1,50 +1,49 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH v3 01/11] net: phy: Add rockchip phy driver support
-Date: Wed, 9 Aug 2017 15:01:16 +0800
-Message-ID: <4cfa1cbc-d3a9-d27a-ecd3-2285d6e498a7@rock-chips.com>
-References: <1501654546-17292-1-git-send-email-david.wu@rock-chips.com>
- <1501654546-17292-2-git-send-email-david.wu@rock-chips.com>
- <20170802132121.GA24708@lunn.ch>
+From: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Subject: RE: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho
+ cooling device.
+Date: Wed, 9 Aug 2017 07:15:26 +0000
+Message-ID: <DB5PR05MB122451EAD6E4A470ED2FCFBEEF8B0@DB5PR05MB1224.eurprd05.prod.outlook.com>
+References: <20170803084650.22298-1-c_mykolak@mellanox.com>
+ <3c427ddd-aab6-13d4-bfb2-ae22848c0d13@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170802132121.GA24708@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, heiko@sntech.de, f.fainelli@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3c427ddd-aab6-13d4-bfb2-ae22848c0d13-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
-
-ÔÚ 2017/8/2 21:21, Andrew Lunn Ð´µÀ:
->> +static struct phy_driver rockchip_phy_driver[] = {
->> +{
->> +	.phy_id			= 0x1234d400,
->> +	.phy_id_mask		= 0xfffffff0,
->> +	.name			= "Rockchip internal EPHY",
->> +	.features		= (PHY_BASIC_FEATURES | SUPPORTED_Pause
->> +				   | SUPPORTED_Asym_Pause),
-> 
-> Please take a look at Documentation/networking/phy.txt and
-> Fixes: 529ed1275263 ("net: phy: phy drivers should not set SUPPORTED_[Asym_]Pause")
-> 
-> Pause frames / flow control
-> 
->   The PHY does not participate directly in flow control/pause frames except by
->   making sure that the SUPPORTED_Pause and SUPPORTED_AsymPause bits are set in
->   MII_ADVERTISE to indicate towards the link partner that the Ethernet MAC
->   controller supports such a thing. Since flow control/pause frames generation
->   involves the Ethernet MAC driver, it is recommended that this driver takes care
->   of properly indicating advertisement and support for such features by setting
->   the SUPPORTED_Pause and SUPPORTED_AsymPause bits accordingly. This can be done
->   either before or after phy_connect() and/or as a result of implementing the
->   ethtool::set_pauseparam feature.
-> 
-
-Thanks for the reminder, I'll remove it.
-
-> 	Andrew
-> 
-> 
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBHdWVudGVyIFJvZWNrIFttYWls
+dG86bGludXhAcm9lY2stdXMubmV0XQ0KPiBTZW50OiBXZWRuZXNkYXksIEF1Z3VzdCA5LCAyMDE3
+IDc6MDkgQU0NCj4gVG86IE15a29sYSBLb3N0ZW5vayA8Y19teWtvbGFrQG1lbGxhbm94LmNvbT47
+IFJvYiBIZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZw0KPiBDYzogSmFnaGF0aGlzd2FyaSBSYW5rYXBwYWdvdW5kZXIgTmF0YXJhamFuIDxq
+YWdodUBnb29nbGUuY29tPjsNCj4gb3BlbmJtY0BsaXN0cy5vemxhYnMub3JnOyBQYXRyaWNrIFZl
+bnR1cmUgPHZlbnR1cmVAZ29vZ2xlLmNvbT47IFZhZGltDQo+IFBhc3Rlcm5hayA8dmFkaW1wQG1l
+bGxhbm94LmNvbT47IE9oYWQgT3ogPG9oYWRvQG1lbGxhbm94LmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtwYXRjaCB2MyByZXNlbmRdIERvY3VtZW50YXRpb246IGR0LWJpbmRpbmdzOiBhc3BlZWQtcHdt
+LQ0KPiB0YWNobyBjb29saW5nIGRldmljZS4NCj4gDQo+IE9uIDA4LzAzLzIwMTcgMDE6NDYgQU0s
+IE15a29sYSBLb3N0ZW5vayB3cm90ZToNCj4gPiBJdCdzIGFkZCBzdXBwb3J0IGZvciBjb29saW5n
+IGRldmljZSBjcmVhdGlvbiB0byBhc3BlZWQtcHdtLXRhY2hvLg0KPiA+IENvb2xpbmcgZGV2aWNl
+IGNvdWxkIGJlIGJvdW5kIHRvIGEgdGhlcm1hbCB6b25lIGZvciB0aGUgdGhlcm1hbA0KPiA+IGNv
+bnRyb2wuDQo+ID4NCj4gPiB2MSAtPiB2MjoNCj4gPiAgIC0gRml4IGNvbW1pdCBtZXNzYWdlLg0K
+PiA+IHYyIC0+IHYzOg0KPiA+ICAgUG9pbnRlZCBvdXQgYnkgUm9iIEhlcnJpbmc6DQo+ID4gICAt
+IFB1dCBjb29saW5nLWxldmVscyB1bmRlciBmYW4gc3Vibm9kZXMuDQo+ID4NCj4gPiBTaWduZWQt
+b2ZmLWJ5OiBNeWtvbGEgS29zdGVub2sgPGNfbXlrb2xha0BtZWxsYW5veC5jb20+DQo+IA0KPiBE
+aWQgUm9iIGV2ZXIgQWNrIHRoaXMgcGF0Y2ggPw0KPiANCj4gTm90ZSB5b3UgZGlkbid0IGNvcHkg
+dGhlIGh3bW9uIG1haWxpbmcgbGlzdCwgd2hpY2ggZG9lc24ndCBleGFjdGx5IGhlbHAgdG8NCj4g
+a2VlcCB0cmFjayBvZiBpdCwgYW5kIEkgbWF5IGhhdmUgbG9zdCBSb2IncyBBY2suIE15IGFwb2xv
+Z2llcyBpZiB0aGF0IGlzIHRoZQ0KPiBjYXNlLg0KPiANCj4gR3VlbnRlcg0KDQpIaSwgR3VlbnRl
+ci4gDQoNCk5vLCBSb2IgSGVycmluZyBkaWQgbm90IGFjayBwYXRjaCB5ZXQuIEp1c3QgY29tbWVu
+dC4NCg0KWWVzLCBzaW5jZSBJIHNwbGl0IGluaXRpYWwgcGF0Y2ggdG8gMiBwYXRjaGVzLCBJIGhh
+dmUgc2VudCBvbmUgdG8geW91IGFuZCBod21vbiBtYWlsIGxpc3QsDQphbmQgYW5vdGhlciB0byBS
+b2IgYW5kIGRldmljZXRyZWUgbWFpbCBsaXN0LiBBbmQgYWRkZWQgeW91IGJvdGggdG8gY2MuDQpB
+bSBJIG5lZWQgdG8gYWRkIGJvdGggbWFpbCBsaXN0cyB0byBib3RoIHBhdGNoZXMgaW4gc3VjaCBj
+YXNlcz8NCg0KQmVzdCByZWdhcmRzLCBNeWtvbGEgS29zdGVub2suDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
