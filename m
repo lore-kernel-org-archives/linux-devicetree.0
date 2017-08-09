@@ -1,45 +1,69 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] arm64: dts: renesas: r8a77995: add pfc device node
-Date: Wed,  9 Aug 2017 21:20:47 +0900
-Message-ID: <1502281247-24124-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
+Date: Wed, 9 Aug 2017 18:07:37 +0530
+Message-ID: <de7beea0-5b58-cf52-a49d-50b06ba182ae@codeaurora.org>
+References: <20170730130743.19681-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170730130743.19681-1-hverkuil@xs4all.nl>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org
+Cc: linux-renesas-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-
- This patch set is based on the renesas-drivers.git /
-topic/r8a77995-integration branch and depends on the following patch
- "pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support"
-
- arch/arm64/boot/dts/renesas/r8a77995.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/renesas/r8a77995.dtsi b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-index 7419688..240b0f8 100644
---- a/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a77995.dtsi
-@@ -123,6 +123,11 @@
- 			reg = <0 0xe6160000 0 0x0200>;
- 		};
- 
-+		pfc: pfc@e6060000 {
-+			compatible = "renesas,pfc-r8a77995";
-+			reg = <0 0xe6060000 0 0x508>;
-+		};
-+
- 		prr: chipid@fff00044 {
- 			compatible = "renesas,prr";
- 			reg = <0 0xfff00044 0 4>;
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiAwNy8zMC8yMDE3IDA2OjM3IFBNLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4gRnJvbTogSGFu
+cyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+IAo+IFRoaXMgcGF0Y2ggc2VyaWVz
+IGFkZHMgQ0VDIHN1cHBvcnQgdG8gdGhlIGRybSBhZHY3NTExL2Fkdjc1MzMgZHJpdmVycy4KPiAK
+PiBJIGhhdmUgdGVzdGVkIHRoaXMgd2l0aCB0aGUgUXVhbGNvbW0gRHJhZ29uYm9hcmQgQzQxMCAo
+YWR2NzUzMyBiYXNlZCkKPiBhbmQgdGhlIFJlbmVzYXMgUi1DYXIgS29lbHNjaCBib2FyZCAoYWR2
+NzUxMSBiYXNlZCkuCj4gCj4gTm90ZTogdGhlIERyYWdvbmJvYXJkIG5lZWRzIHRoaXMgcGF0Y2g6
+Cj4gCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODI0NzczLwo+IAo+IEFy
+Y2hpdCwgY2FuIHlvdSBjb25maXJtIHRoYXQgdGhpcyBwYXRjaCB3aWxsIGdvIHRvIGtlcm5lbCA0
+LjE0PwoKWWVzLCBpdCdzIGJlZW4gcXVldWVkIHRvIGNsay1uZXh0LgoKVGhhbmtzLApBcmNoaXQK
+Cj4gCj4gQW5kIHRoZSBLb2Vsc2NoIGJvYXJkIG5lZWRzIHRoaXMgNC4xMyBmaXg6Cj4gCj4gaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODM2ODY1Lwo+IAo+IEkgb25seSBoYXZl
+IHRoZSBLb2Vsc2NoIGJvYXJkIHRvIHRlc3Qgd2l0aCwgYnV0IGl0IGxvb2tzIGxpa2Ugb3RoZXIK
+PiBSLUNhciBib2FyZHMgdXNlIHRoZSBzYW1lIGFkdjc1MTEuIEl0IHdvdWxkIGJlIG5pY2UgaWYg
+c29tZW9uZSBjYW4KPiBhZGQgQ0VDIHN1cHBvcnQgdG8gdGhlIG90aGVyIFItQ2FyIGJvYXJkcyBh
+cyB3ZWxsLiBUaGUgbWFpbiB0aGluZwo+IHRvIGNoZWNrIGlzIGlmIHRoZXkgYWxsIHVzZSB0aGUg
+c2FtZSAxMiBNSHogZml4ZWQgQ0VDIGNsb2NrIHNvdXJjZS4KPiAKPiBBbnlvbmUgd2hvIHdhbnRz
+IHRvIHRlc3QgdGhpcyB3aWxsIG5lZWQgdGhlIENFQyB1dGlsaXRpZXMgdGhhdAo+IGFyZSBwYXJ0
+IG9mIHRoZSB2NGwtdXRpbHMgZ2l0IHJlcG9zaXRvcnk6Cj4gCj4gZ2l0IGNsb25lIGdpdDovL2xp
+bnV4dHYub3JnL3Y0bC11dGlscy5naXQKPiBjZCB2NGwtdXRpbHMKPiAuL2Jvb3RzdHJhcC5zaAo+
+IC4vY29uZmlndXJlCj4gbWFrZQo+IHN1ZG8gbWFrZSBpbnN0YWxsCj4gCj4gTm93IGNvbmZpZ3Vy
+ZSB0aGUgQ0VDIGFkYXB0ZXIgYXMgYSBQbGF5YmFjayBkZXZpY2U6Cj4gCj4gY2VjLWN0bCAtLXBs
+YXliYWNrCj4gCj4gRGlzY292ZXIgb3RoZXIgQ0VDIGRldmljZXM6Cj4gCj4gY2VjLWN0bCAtUwo+
+IAo+IFJlZ2FyZHMsCj4gCj4gCUhhbnMKPiAKPiBIYW5zIFZlcmt1aWwgKDQpOgo+ICAgIGR0LWJp
+bmRpbmdzOiBhZGksYWR2NzUxMS50eHQ6IGRvY3VtZW50IGNlYyBjbG9jawo+ICAgIGFybTogZHRz
+OiBxY29tOiBhZGQgY2VjIGNsb2NrIGZvciBhcHE4MDE2IGJvYXJkCj4gICAgYXJtOiBkdHM6IHJl
+bmVzYXM6IGFkZCBjZWMgY2xvY2sgZm9yIEtvZWxzY2ggYm9hcmQKPiAgICBkcm06IGFkdjc1MTEv
+MzM6IGFkZCBIRE1JIENFQyBzdXBwb3J0Cj4gCj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlk
+Z2UvYWRpLGFkdjc1MTEudHh0ICAgICAgICB8ICAgNCArCj4gICBhcmNoL2FybS9ib290L2R0cy9y
+OGE3NzkxLWtvZWxzY2guZHRzICAgICAgICAgICAgICB8ICAgOCArCj4gICBhcmNoL2FybTY0L2Jv
+b3QvZHRzL3Fjb20vYXBxODAxNi1zYmMuZHRzaSAgICAgICAgICB8ICAgMiArCj4gICBkcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvS2NvbmZpZyAgICAgICAgICAgICB8ICAgOCArCj4gICBk
+cml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvTWFrZWZpbGUgICAgICAgICAgICB8ICAgMSAr
+Cj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMS5oICAgICAgICAgICB8
+ICA0NSArKy0KPiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTExX2NlYy5j
+ICAgICAgIHwgMzE0ICsrKysrKysrKysrKysrKysrKysrKwo+ICAgZHJpdmVycy9ncHUvZHJtL2Jy
+aWRnZS9hZHY3NTExL2Fkdjc1MTFfZHJ2LmMgICAgICAgfCAxNTIgKysrKysrKysrLQo+ICAgZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MzMuYyAgICAgICAgICAgfCAgMzAgKy0K
+PiAgIDkgZmlsZXMgY2hhbmdlZCwgNTE0IGluc2VydGlvbnMoKyksIDUwIGRlbGV0aW9ucygtKQo+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3
+NTExX2NlYy5jCj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBt
+ZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0
+aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
