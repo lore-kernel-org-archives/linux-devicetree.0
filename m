@@ -1,42 +1,39 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH 3/3] dt-bindings: ASoC: rockchip: Add rockchip,codec-names property
-Date: Wed,  9 Aug 2017 20:19:39 +0800
-Message-ID: <1502281179-15916-4-git-send-email-jeffy.chen@rock-chips.com>
-References: <1502281179-15916-1-git-send-email-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502281179-15916-1-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: briannorris@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 0/8] pinctrl: sh-pfc: r8a77995: Initial R8A77995 PFC support
+Date: Wed,  9 Aug 2017 21:19:39 +0900
+Message-ID: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a new rockchip,codec-names property, so that the driver can parse
-the codecs by name.
+This patch set is based on the renesas-drivers.git /
+topic/r8a77995-integration branch.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
 
- Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Takeshi Kihara (7):
+  pinctrl: sh-pfc: Initial R8A77995 PFC support
+  pinctrl: sh-pfc: r8a77995: Add SCIF pins, groups and functions
+  pinctrl: sh-pfc: r8a77995: Add I2C pins, groups and functions
+  pinctrl: sh-pfc: r8a77995: Add EthernetAVB pins, groups and functions
+  pinctrl: sh-pfc: r8a77995: Add USB2.0 host support
+  pinctrl: sh-pfc: r8a77995: Add MMC pins, groups and functions
+  pinctrl: sh-pfc: r8a77995: Add voltage switch operations for MMC
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index eac91db..aa951a7 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -11,6 +11,7 @@ Optional properties:
-   If this option is specified, which means it's required dmic need
-   delay for DMIC to ready so that rt5514 can avoid recording before
-   DMIC send valid data
-+- rockchip,codec-names: The names of the MAX98357A/RT5514/DA7219 codecs
- 
- Example:
- 
-@@ -18,5 +19,6 @@ sound {
- 	compatible = "rockchip,rk3399-gru-sound";
- 	rockchip,cpu = <&i2s0>;
- 	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	rockchip,codec-names = "MAX98357A", "RT5514", "DA7219";
- 	dmic-wakeup-delay-ms = <20>;
- };
+Yoshihiro Shimoda (1):
+  pinctrl: sh-pfc: Add PORT_GP_{10,2[01]} helper macros
+
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |    1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |    5 +
+ drivers/pinctrl/sh-pfc/Makefile                    |    1 +
+ drivers/pinctrl/sh-pfc/core.c                      |    6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c              | 2005 ++++++++++++++++++++
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   23 +-
+ 6 files changed, 2036 insertions(+), 5 deletions(-)
+ create mode 100644 drivers/pinctrl/sh-pfc/pfc-r8a77995.c
+
 -- 
-2.1.4
+1.9.1
