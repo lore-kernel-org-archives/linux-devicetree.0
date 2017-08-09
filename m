@@ -1,38 +1,44 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 4/4] dt-bindings: phy-mt65xx-usb: supports PCIe, SATA
- and rename file
-Date: Wed, 9 Aug 2017 09:44:14 +0800
-Message-ID: <1502243054.25536.117.camel@mhfsdcap03>
-References: <72854b92d5d86698e5cbb427b1009e346eb15978.1501753328.git.chunfeng.yun@mediatek.com>
-         <1501754483-10392-4-git-send-email-chunfeng.yun@mediatek.com>
-         <1501755607.25536.109.camel@mhfsdcap03>
-         <ef2a5b54-4fe7-83e3-9c24-fb3ddb3029d5@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ef2a5b54-4fe7-83e3-9c24-fb3ddb3029d5-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: SZ Lin <sz.lin@moxa.com>
+Subject: [PATCH] ARM: dts: ls1021a: Add support for QSPI with ls1021a SoC
+Date: Wed,  9 Aug 2017 09:59:09 +0800
+Message-ID: <20170809015909.12969-1-sz.lin@moxa.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: SZ Lin <sz.lin@moxa.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-08-08 at 17:44 +0530, Kishon Vijay Abraham I wrote:
-> Chunfeng
-> 
-> On Thursday 03 August 2017 03:50 PM, Chunfeng Yun wrote:
-> > hi,
-> > 
-> > I made a mistake, please ignore the patches with Change-Id, very sorry
-> 
-> No problem. However can you resend the series after fixing all checkpatch warnings?
-Ok
-> 
-> Thanks
-> Kishon
+Add QSPI node support, and this function is disabled by default
+This setting could be overwritten in board-level definitions
 
+Signed-off-by: SZ Lin <sz.lin@moxa.com>
+---
+ arch/arm/boot/dts/ls1021a.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 7bb9df2c1460..9da876e47810 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -154,6 +154,20 @@
+ 			big-endian;
+ 		};
+ 
++		qspi: quadspi@1550000 {
++			compatible = "fsl,ls1021a-qspi";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0 0x1550000 0x0 0x10000>,
++			      <0x0 0x40000000 0x0 0x40000000>;
++			reg-names = "QuadSPI", "QuadSPI-memory";
++			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++			clock-names = "qspi_en", "qspi";
++			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
++			big-endian;
++			status = "disabled";
++		};
++
+ 		esdhc: esdhc@1560000 {
+ 			compatible = "fsl,esdhc";
+ 			reg = <0x0 0x1560000 0x0 0x10000>;
+-- 
+2.14.0
