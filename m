@@ -1,68 +1,78 @@
-From: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/3] Introduce USB charger support in USB phy
-Date: Wed, 9 Aug 2017 13:34:18 +0800
-Message-ID: <CAMz4kuKYOjHgapntbuNB9b6qz35osKetwJ8jmxb=TnDKgLEuDg@mail.gmail.com>
-References: <cover.1501132171.git.baolin.wang@linaro.org>
+From: Oza Oza <oza.oza@broadcom.com>
+Subject: Re: [PATCH 2/2] PCI: iproc: Add optional brcm,pci-hotplug
+Date: Wed, 9 Aug 2017 11:13:33 +0530
+Message-ID: <CAMSpPPejuTn210aSYjApbz_Jx_tO7V1Fd6nSt96axm-9MFruhA@mail.gmail.com>
+References: <1502167455-10516-1-git-send-email-oza.oza@broadcom.com>
+ <1502167455-10516-3-git-send-email-oza.oza@broadcom.com> <CAL_JsqL3dWA-0Sq-_8ufa-cwXZEbFQBJHCK-5wLp_xw5NrTHKw@mail.gmail.com>
+ <CAMSpPPfjxbjaScqovegcRG6GBhkUutqgj3Ly1B+0_BnZN2Ewug@mail.gmail.com> <735e0534-ab77-7440-fbc6-5b40598da445@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1501132171.git.baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jun Li <jun.li-3arQi8VN3Tc@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, NeilBrown <neilb-IBi9RG/b67k@public.gmane.org>, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, USB <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, device-mainlining-cunTk1MwBs98uUxBSJOaYoYkZiVZrdSR2LY78lusg7I@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <735e0534-ab77-7440-fbc6-5b40598da445@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ray Jui <ray.jui@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oza Pawandeep <oza.pawandeep@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-On 27 July 2017 at 13:14, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Currently the Linux kernel does not provide any standard integration of this
-> feature that integrates the USB subsystem with the system power regulation
-> provided by PMICs meaning that either vendors must add this in their kernels
-> or USB gadget devices based on Linux (such as mobile phones) may not behave
-> as they should. Thus provide a standard USB charger support in USB phy core
-> for doing this in kernel.
+On Wed, Aug 9, 2017 at 10:57 AM, Ray Jui <ray.jui@broadcom.com> wrote:
 >
-> Now introduce one user with wm831x_power to support and test the usb charger.
-> In future we will also cnvert below power drivers:
-> drivers/power/supply/axp288_charger.c
-> drivers/power/supply/bq24190_charger.c
-> drivers/power/supply/charger-manager.c
-> drivers/power/supply/qcom_smbb.c
 >
-> Changes since v3:
->  - Bail out errors when failed to find usb phy for wm831x_power driver.
-> Changes since v2:
->  - Add DT binding documentation for wm831x_power driver.
->  - Change 'usb-phy' as one optional property for wm831x_power driver.
-> Changes since v1:
->  - Fix building errors.
-
-Do you have any comments about usb charger support in usb phy core? Thanks.
-
+> On 8/8/2017 10:22 PM, Oza Oza wrote:
+>>
+>> On Tue, Aug 8, 2017 at 7:50 PM, Rob Herring <robh+dt@kernel.org> wrote:
+>>>
+>>> Please send bindings to DT list.
+>>
+>> Sure, will do that.
+>>
+>>> On Mon, Aug 7, 2017 at 11:44 PM, Oza Pawandeep <oza.oza@broadcom.com>
+>>> wrote:
+>>>>
+>>>> Add description for optional device tree property
+>>>> 'brcm,pci-hotplug' for PCI hotplug feature.
+>>>>
+>>>> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
+>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>>>> b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>>>> index b8e48b4..a3bad24 100644
+>>>> --- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>>>> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
+>>>> @@ -72,6 +72,29 @@ Optional properties:
+>>>>   - brcm,pcie-msi-inten: Needs to be present for some older iProc
+>>>> platforms that
+>>>>   require the interrupt enable registers to be set explicitly to enable
+>>>> MSI
+>>>>
+>>>> +Optional properties:
+>>>> +- brcm,pci-hotplug: PCI hotplug feature is supported.
+>>>
+>>> I think we should make this a common property. We already have
+>>> "ibm,slot-pluggable", so I'd propose "slot-pluggable".
+>>>
+>>> There's also "hotpluggable" for memory nodes defined, so we could
+>>> reuse that here.
+>>>
+>> ok I will rename this to
+>> brcm,slot-pluggable
 >
-> Baolin Wang (3):
->   include: uapi: usb: Introduce USB charger type and state definition
->   usb: phy: Add USB charger support
->   power: wm831x_power: Support USB charger current limit management
 >
->  Documentation/devicetree/bindings/mfd/wm831x.txt |    1 +
->  drivers/power/supply/wm831x_power.c              |   72 ++++++
->  drivers/usb/phy/phy.c                            |  272 ++++++++++++++++++++++
->  include/linux/usb/phy.h                          |   49 ++++
->  include/uapi/linux/usb/charger.h                 |   31 +++
->  5 files changed, 425 insertions(+)
->  create mode 100644 include/uapi/linux/usb/charger.h
+> How's brcm,slot-pluggable a common property? It's still brcm specific.
+> Didn't Rob propose either "slot-pluggable" or "hotpluggable"?
 >
-> --
-> 1.7.9.5
+> And note it goes to the generic PCI binding instead iProc PCIe specific
+> binding.
 >
 
+Initially I thought, Rob suggested either "slot-pluggable".
+followed by, "hotpluggable" since memory node already has such property.
 
+but not sure in which generic pci binding I should add ?
+should it be part of
+Documentation/devicetree/bindings/pci/host-generic-pci.txt
 
--- 
-Baolin.wang
-Best Regards
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you please clarify Rob ?
+
+Regards,
+Oza.
