@@ -1,160 +1,113 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RESEND PATCH 1/4] Docs: dt: document qcom iommu bindings
-Date: Wed,  9 Aug 2017 10:43:02 -0400
-Message-ID: <20170809144310.22855-2-robdclark@gmail.com>
-References: <20170809144310.22855-1-robdclark@gmail.com>
+From: Li Xu <li.xu@cirrus.com>
+Subject: [PATCH 2/2] ASoC: cs43130: Add devicetree bindings for
+	CS43130
+Date: Wed, 9 Aug 2017 10:00:22 -0500
+Message-ID: <2fb53696-a4af-4736-a144-97ec83606843@EX3.ad.cirrus.com>
+References: <1502290822-10305-1-git-send-email-li.xu@cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170809144310.22855-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1502290822-10305-1-git-send-email-li.xu@cirrus.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, brian.austin@cirrus.com, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, Paul.Handrigan@cirrus.com, Li Xu <li.xu@cirrus.com>
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
- 1 file changed, 121 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+Add devicetree bindings documentation file for Cirrus
+Logic CS43130 codec.
 
-diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+Signed-off-by: Li Xu <li.xu@cirrus.com>
+---
+ .../devicetree/bindings/sound/cs43130.txt          | 72 ++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs43130.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/cs43130.txt b/Documentation/devicetree/bindings/sound/cs43130.txt
 new file mode 100644
-index 000000000000..b2641ceb2b40
+index 0000000..51ea38a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
-@@ -0,0 +1,121 @@
-+* QCOM IOMMU v1 Implementation
++++ b/Documentation/devicetree/bindings/sound/cs43130.txt
+@@ -0,0 +1,72 @@
++CS43130 DAC
 +
-+Qualcomm "B" family devices which are not compatible with arm-smmu have
-+a similar looking IOMMU but without access to the global register space,
-+and optionally requiring additional configuration to route context irqs
-+to non-secure vs secure interrupt line.
++Required properties:
 +
-+** Required properties:
++  - compatible : "cirrus,cs43130"
 +
-+- compatible       : Should be one of:
++  - reg : the I2C address of the device for I2C
 +
-+                        "qcom,msm8916-iommu"
-+
-+                     Followed by "qcom,msm-iommu-v1".
-+
-+- clock-names      : Should be a pair of "iface" (required for IOMMUs
-+                     register group access) and "bus" (required for
-+                     the IOMMUs underlying bus access).
-+
-+- clocks           : Phandles for respective clocks described by
-+                     clock-names.
-+
-+- #address-cells   : must be 1.
-+
-+- #size-cells      : must be 1.
-+
-+- #iommu-cells     : Must be 1.  Index identifies the context-bank #.
-+
-+- ranges           : Base address and size of the iommu context banks.
-+
-+- qcom,iommu-secure-id  : secure-id.
-+
-+- List of sub-nodes, one per translation context bank.  Each sub-node
-+  has the following required properties:
-+
-+  - compatible     : Should be one of:
-+        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
-+        - "qcom,msm-iommu-v1-sec" : secure context bank
-+  - reg            : Base address and size of context bank within the iommu
-+  - interrupts     : The context fault irq.
-+
-+** Optional properties:
-+
-+- reg              : Base address and size of the SMMU local base, should
-+                     be only specified if the iommu requires configuration
-+                     for routing of context bank irq's to secure vs non-
-+                     secure lines.  (Ie. if the iommu contains secure
-+                     context banks)
++  - VA-supply, VP-supply, VL-supply, VCP-supply, VD-supply:
++	power supplies for the device, as covered in
++	Documentation/devicetree/bindings/regulator/regulator.txt.
 +
 +
-+** Examples:
++Optional properties:
 +
-+	apps_iommu: iommu@1e20000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1e20000 0x40000>;
-+		reg = <0x1ef0000 0x3000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_APSS_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <17>;
++  - reset-gpios : Active low GPIO used to reset the device
 +
-+		// mdp_0:
-+		iommu-ctx@4000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x4000 0x1000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+		};
++  - cirrus,xtal-ibias:
++   When external MCLK is generated by external crystal
++   oscillator, CS43130 can be used to provide bias current
++   for external crystal.  Amount of bias current sent is
++   set as:
++   1 = 7.5uA
++   2 = 12.5uA
++   3 = 15uA
 +
-+		// venus_ns:
-+		iommu-ctx@5000 {
-+			compatible = "qcom,msm-iommu-v1-sec";
-+			reg = <0x5000 0x1000>;
-+			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
++  - cirrus,dc-measure:
++   Boolean, define to enable headphone DC impedance measurement.
 +
-+	gpu_iommu: iommu@1f08000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		#iommu-cells = <1>;
-+		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
-+		ranges = <0 0x1f08000 0x10000>;
-+		clocks = <&gcc GCC_SMMU_CFG_CLK>,
-+			 <&gcc GCC_GFX_TCU_CLK>;
-+		clock-names = "iface", "bus";
-+		qcom,iommu-secure-id = <18>;
++  - cirrus,ac-measure:
++   Boolean, define to enable headphone AC impedance measurement.
++   DC impedance must also be enabled for AC impedance measurement.
 +
-+		// gfx3d_user:
-+		iommu-ctx@1000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x1000 0x1000>;
-+			interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
-+		};
++  - cirrus,dc-threshold:
++   Define 2 DC impedance thresholds in ohms for HP output control.
++   Default values are 50 and 120 Ohms.
 +
-+		// gfx3d_priv:
-+		iommu-ctx@2000 {
-+			compatible = "qcom,msm-iommu-v1-ns";
-+			reg = <0x2000 0x1000>;
-+			interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
++  - cirrus,ac-freq:
++   Define the frequencies at which to measure HP AC impedance.
++   Only used if "cirrus,dc-measure" is defined.
++   Exactly 10 frequencies must be defined.
++   If this properties is undefined, by default,
++   following frequencies are used:
++   <24 43 93 200 431 928 2000 4309 9283 20000>
++   The above frequencies are logarithmically equally spaced.
++   Log base is 10.
 +
-+	...
++  - cirrus,idle-bias-off:
++   Boolean, define this flag such that the device is only powered on when
++   playing audio.  Otherwise, the device is turned off.
++   If this flag is defined, HP detection and impedance measurement is disabled.
 +
-+	venus: video-codec@1d00000 {
-+		...
-+		iommus = <&apps_iommu 5>;
-+	};
++Example:
 +
-+	mdp: mdp@1a01000 {
-+		...
-+		iommus = <&apps_iommu 4>;
-+	};
-+
-+	gpu@01c00000 {
-+		...
-+		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
-+	};
++cs43130: audio-codec@30 {
++   compatible = "cirrus,cs43130";
++   reg = <0x30>;
++   reset-gpios = <&axi_gpio 54 0>;
++   VA-supply = <&dummy_vreg>;
++   VP-supply = <&dummy_vreg>;
++   VL-supply = <&dummy_vreg>;
++   VCP-supply = <&dummy_vreg>;
++   VD-supply = <&dummy_vreg>;
++   cirrus,xtal-ibias = <2>;
++   interrupt-parent = <&gpio0>;
++   interrupts = <55 8>;
++   cirrus,idle-bias-off;
++   cirrus,dc-measure;
++   cirrus,ac-measure;
++   cirrus,dc-threshold = /bits/ 16 <20 100>;
++   cirrus,ac-freq = /bits/ 16 <24 43 93 200 431 928 2000 4309 9283 20000>;
++};
 -- 
-2.13.0
+1.9.1
