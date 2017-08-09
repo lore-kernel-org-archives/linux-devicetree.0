@@ -1,7 +1,7 @@
 From: David Wu <david.wu@rock-chips.com>
-Subject: [PATCH v4 02/12] multi_v7_defconfig: Make rockchip phy built-in
-Date: Wed,  9 Aug 2017 20:07:45 +0800
-Message-ID: <1502280475-736-3-git-send-email-david.wu@rock-chips.com>
+Subject: [PATCH v4 05/12] Documentation: net: phy: Add phy-is-internal binding
+Date: Wed,  9 Aug 2017 20:10:30 +0800
+Message-ID: <1502280630-2254-1-git-send-email-david.wu@rock-chips.com>
 References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
@@ -10,24 +10,27 @@ To: davem@davemloft.net, heiko@sntech.de, andrew@lunn.ch, f.fainelli@gmail.com, 
 Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Wu <david.wu@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable the rockchip phy for multi_v7_defconfig builds.
+Add the documentation for internal phy. A boolean property
+indicates that a internal phy will be used.
 
 Signed-off-by: David Wu <david.wu@rock-chips.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/net/phy.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index 4d19c1b..94d7e71 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -270,6 +270,7 @@ CONFIG_ICPLUS_PHY=y
- CONFIG_REALTEK_PHY=y
- CONFIG_MICREL_PHY=y
- CONFIG_FIXED_PHY=y
-+CONFIG_ROCKCHIP_PHY=y
- CONFIG_USB_PEGASUS=y
- CONFIG_USB_RTL8152=m
- CONFIG_USB_USBNET=y
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index b558576..942c892 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -52,6 +52,9 @@ Optional Properties:
+   Mark the corresponding energy efficient ethernet mode as broken and
+   request the ethernet to stop advertising it.
+ 
++- phy-is-internal: If set, indicates that phy will connect to the MAC as a
++  internal phy.
++
+ Example:
+ 
+ ethernet-phy@0 {
 -- 
 1.9.1
