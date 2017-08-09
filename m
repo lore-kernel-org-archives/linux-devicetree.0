@@ -1,235 +1,45 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v3 15/20] mtd: nand: qcom: support for command descriptor
- formation
-Date: Wed, 09 Aug 2017 14:02:13 +0530
-Message-ID: <31e5eb288696717589631d2be46720ae@codeaurora.org>
-References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
- <1501949998-29859-16-git-send-email-absahu@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  0/3] Add SMP support
+Date: Wed, 9 Aug 2017 10:35:54 +0200
+Message-ID: <20170809083554.GI2705@verge.net.au>
+References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1501949998-29859-16-git-send-email-absahu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-05 21:49, Abhishek Sahu wrote:
-> 1. Add the function for command descriptor preparation which will
->    be used only by BAM DMA and it will form the DMA descriptors
->    containing command elements
-> 2. DMA_PREP_CMD flag should be used for forming command DMA
->    descriptors
+On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
+> This series aims to add SMP support for r8a7743 SoC.
 > 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> This series has been tested against Linux-next tag 20170727
+> and renesas-dev branch.
 
-  This patch has build dependency on
-  http://www.spinics.net/lists/dmaengine/msg13665.html
+It seems that these patches are targeted at the renesas tree.
+The best practice in that case is to base patches on the latest
+devel branch. Please consider doing so in future.
 
-> ---
->  drivers/mtd/nand/qcom_nandc.c | 108 
-> +++++++++++++++++++++++++++++++++++-------
->  1 file changed, 92 insertions(+), 16 deletions(-)
+The patches themselves seem good to me, however, I would like to enquire
+about testing. In particular, have you tested CPU hotplug and suspend to
+RAM with these patches (and without in the case of the latter)?
+
+I am cautious about any regressions that may creep in
+when going from UP to SMP.
+
 > 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c 
-> b/drivers/mtd/nand/qcom_nandc.c
-> index 9c12404..16463ac 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -196,6 +196,14 @@
->  	      ((size) << READ_LOCATION_SIZE) |			\
->  	      ((is_last) << READ_LOCATION_LAST))
+> Biju Das (3):
+>   dt-bindings: apmu: Document r8a7743 support
+>   ARM: dts: r8a7743: Add APMU node and second CPU core
+>   ARM: dts: r8a7743: Add OPP table for frequency scaling
 > 
-> +/* Returns the NAND register physical address */
-> +#define nandc_reg_phys(chip, offset) ((chip)->base_phys + (offset))
-> +
-> +/* Returns the dma address for reg read buffer */
-> +#define reg_buf_dma_addr(chip, vaddr) \
-> +	((chip)->reg_read_dma + \
-> +	((uint8_t *)(vaddr) - (uint8_t *)(chip)->reg_read_buf))
-> +
->  /* Returns the actual register address for NAND_FLASH_DEV_* */
->  #define nandc_dev_addr(nandc, reg) ((nandc)->props->flash_dev_offset + 
-> (reg))
+>  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
+>  arch/arm/boot/dts/r8a7743.dtsi                     | 25 ++++++++++++++++++++++
+>  2 files changed, 27 insertions(+), 1 deletion(-)
 > 
-> @@ -313,7 +321,8 @@ struct nandc_regs {
->   *				controller
->   * @dev:			parent device
->   * @base:			MMIO base
-> - * @base_dma:			physical base address of controller registers
-> + * @base_phys:			physical base address of controller registers
-> + * @base_dma:			dma base address of controller registers
->   * @core_clk:			controller clock
->   * @aon_clk:			another controller clock
->   *
-> @@ -346,6 +355,7 @@ struct qcom_nand_controller {
->  	struct device *dev;
+> -- 
+> 1.9.1
 > 
->  	void __iomem *base;
-> +	phys_addr_t base_phys;
->  	dma_addr_t base_dma;
-> 
->  	struct clk *core_clk;
-> @@ -747,6 +757,66 @@ static int prepare_bam_async_desc(struct
-> qcom_nand_controller *nandc,
->  }
-> 
->  /*
-> + * Prepares the command descriptor for BAM DMA which will be used for 
-> NAND
-> + * register reads and writes. The command descriptor requires the 
-> command
-> + * to be formed in command element type so this function uses the 
-> command
-> + * element from bam transaction ce array and fills the same with 
-> required
-> + * data. A single SGL can contain multiple command elements so
-> + * NAND_BAM_NEXT_SGL will be used for starting the separate SGL
-> + * after the current command element.
-> + */
-> +static int prep_bam_dma_desc_cmd(struct qcom_nand_controller *nandc, 
-> bool read,
-> +				 int reg_off, const void *vaddr,
-> +				 int size, unsigned int flags)
-> +{
-> +	int bam_ce_size;
-> +	int i, ret;
-> +	struct bam_cmd_element *bam_ce_buffer;
-> +	struct bam_transaction *bam_txn = nandc->bam_txn;
-> +
-> +	bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_pos];
-> +
-> +	/* fill the command desc */
-> +	for (i = 0; i < size; i++) {
-> +		if (read)
-> +			bam_prep_ce(&bam_ce_buffer[i],
-> +				    nandc_reg_phys(nandc, reg_off + 4 * i),
-> +				    BAM_READ_COMMAND,
-> +				    reg_buf_dma_addr(nandc,
-> +						     (__le32 *)vaddr + i));
-> +		else
-> +			bam_prep_ce_le32(&bam_ce_buffer[i],
-> +					 nandc_reg_phys(nandc, reg_off + 4 * i),
-> +					 BAM_WRITE_COMMAND,
-> +					 *((__le32 *)vaddr + i));
-> +	}
-> +
-> +	bam_txn->bam_ce_pos += size;
-> +
-> +	/* use the separate sgl after this command */
-> +	if (flags & NAND_BAM_NEXT_SGL) {
-> +		bam_ce_buffer = &bam_txn->bam_ce[bam_txn->bam_ce_start];
-> +		bam_ce_size = (bam_txn->bam_ce_pos -
-> +				bam_txn->bam_ce_start) *
-> +				sizeof(struct bam_cmd_element);
-> +		sg_set_buf(&bam_txn->cmd_sgl[bam_txn->cmd_sgl_pos],
-> +			   bam_ce_buffer, bam_ce_size);
-> +		bam_txn->cmd_sgl_pos++;
-> +		bam_txn->bam_ce_start = bam_txn->bam_ce_pos;
-> +
-> +		if (flags & NAND_BAM_NWD) {
-> +			ret = prepare_bam_async_desc(nandc, nandc->cmd_chan,
-> +						     DMA_PREP_FENCE |
-> +						     DMA_PREP_CMD);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
->   * Prepares the data descriptor for BAM DMA which will be used for 
-> NAND
->   * data reads and writes.
->   */
-> @@ -863,19 +933,22 @@ static int read_reg_dma(struct
-> qcom_nand_controller *nandc, int first,
->  {
->  	bool flow_control = false;
->  	void *vaddr;
-> -	int size;
-> 
-> -	if (first == NAND_READ_ID || first == NAND_FLASH_STATUS)
-> -		flow_control = true;
-> +	vaddr = nandc->reg_read_buf + nandc->reg_read_pos;
-> +	nandc->reg_read_pos += num_regs;
-> 
->  	if (first == NAND_DEV_CMD_VLD || first == NAND_DEV_CMD1)
->  		first = nandc_dev_addr(nandc, first);
-> 
-> -	size = num_regs * sizeof(u32);
-> -	vaddr = nandc->reg_read_buf + nandc->reg_read_pos;
-> -	nandc->reg_read_pos += num_regs;
-> +	if (nandc->props->is_bam)
-> +		return prep_bam_dma_desc_cmd(nandc, true, first, vaddr,
-> +					     num_regs, flags);
-> 
-> -	return prep_adm_dma_desc(nandc, true, first, vaddr, size, 
-> flow_control);
-> +	if (first == NAND_READ_ID || first == NAND_FLASH_STATUS)
-> +		flow_control = true;
-> +
-> +	return prep_adm_dma_desc(nandc, true, first, vaddr,
-> +				 num_regs * sizeof(u32), flow_control);
->  }
-> 
->  /*
-> @@ -891,13 +964,9 @@ static int write_reg_dma(struct
-> qcom_nand_controller *nandc, int first,
->  	bool flow_control = false;
->  	struct nandc_regs *regs = nandc->regs;
->  	void *vaddr;
-> -	int size;
-> 
->  	vaddr = offset_to_nandc_reg(regs, first);
-> 
-> -	if (first == NAND_FLASH_CMD)
-> -		flow_control = true;
-> -
->  	if (first == NAND_ERASED_CW_DETECT_CFG) {
->  		if (flags & NAND_ERASED_CW_SET)
->  			vaddr = &regs->erased_cw_detect_cfg_set;
-> @@ -914,10 +983,15 @@ static int write_reg_dma(struct
-> qcom_nand_controller *nandc, int first,
->  	if (first == NAND_DEV_CMD_VLD_RESTORE || first == NAND_DEV_CMD_VLD)
->  		first = nandc_dev_addr(nandc, NAND_DEV_CMD_VLD);
-> 
-> -	size = num_regs * sizeof(u32);
-> +	if (nandc->props->is_bam)
-> +		return prep_bam_dma_desc_cmd(nandc, false, first, vaddr,
-> +					     num_regs, flags);
-> +
-> +	if (first == NAND_FLASH_CMD)
-> +		flow_control = true;
-> 
-> -	return prep_adm_dma_desc(nandc, false, first, vaddr, size,
-> -				 flow_control);
-> +	return prep_adm_dma_desc(nandc, false, first, vaddr,
-> +				 num_regs * sizeof(u32), flow_control);
->  }
-> 
->  /*
-> @@ -1180,7 +1254,8 @@ static int submit_descs(struct
-> qcom_nand_controller *nandc)
->  		}
-> 
->  		if (bam_txn->cmd_sgl_pos > bam_txn->cmd_sgl_start) {
-> -			r = prepare_bam_async_desc(nandc, nandc->cmd_chan, 0);
-> +			r = prepare_bam_async_desc(nandc, nandc->cmd_chan,
-> +						   DMA_PREP_CMD);
->  			if (r)
->  				return r;
->  		}
-> @@ -2716,6 +2791,7 @@ static int qcom_nandc_probe(struct 
-> platform_device *pdev)
->  	if (IS_ERR(nandc->base))
->  		return PTR_ERR(nandc->base);
-> 
-> +	nandc->base_phys = res->start;
->  	nandc->base_dma = phys_to_dma(dev, (phys_addr_t)res->start);
-> 
->  	nandc->core_clk = devm_clk_get(dev, "core");
