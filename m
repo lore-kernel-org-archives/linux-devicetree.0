@@ -1,309 +1,106 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/8] pinctrl: sh-pfc: r8a77995: Add SCIF pins, groups and functions
-Date: Wed,  9 Aug 2017 21:19:42 +0900
-Message-ID: <1502281187-24068-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 7/8] pinctrl: sh-pfc: r8a77995: Add MMC pins, groups and functions
+Date: Wed,  9 Aug 2017 21:19:46 +0900
+Message-ID: <1502281187-24068-8-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 References: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1502281187-24068-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Takeshi Kihara <takeshi.kihara.df@renesas.com>
 
-This patch adds SCIF{0,1,2,3,4,5} pins, groups and functions to R8A77995
-SoC.
-
-Signed-off-by: Takeshi Kihara <takeshi.kihara.df-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Takeshi Kihara <takeshi.kihara.df@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 262 ++++++++++++++++++++++++++++++++++
- 1 file changed, 262 insertions(+)
+ drivers/pinctrl/sh-pfc/pfc-r8a77995.c | 50 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
 diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-index 2670ee3..9be1993 100644
+index 5c0a94f..f8f71b6 100644
 --- a/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
 +++ b/drivers/pinctrl/sh-pfc/pfc-r8a77995.c
-@@ -936,10 +936,272 @@ enum {
- 	PINMUX_GPIO_GP_ALL(),
+@@ -1118,6 +1118,44 @@ enum {
+ 	SCL3_B_MARK, SDA3_B_MARK,
  };
  
-+/* - SCIF0 ------------------------------------------------------------------ */
-+static const unsigned int scif0_data_a_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(4, 20), RCAR_GP_PIN(4, 21),
++/* - MMC ------------------------------------------------------------------- */
++static const unsigned int mmc_data1_pins[] = {
++	/* D0 */
++	RCAR_GP_PIN(3, 2),
 +};
-+static const unsigned int scif0_data_a_mux[] = {
-+	RX0_A_MARK, TX0_A_MARK,
++static const unsigned int mmc_data1_mux[] = {
++	MMC_D0_MARK,
 +};
-+static const unsigned int scif0_clk_a_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(4, 19),
++static const unsigned int mmc_data4_pins[] = {
++	/* D[0:3] */
++	RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
++	RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
 +};
-+static const unsigned int scif0_clk_a_mux[] = {
-+	SCK0_A_MARK,
++static const unsigned int mmc_data4_mux[] = {
++	MMC_D0_MARK, MMC_D1_MARK,
++	MMC_D2_MARK, MMC_D3_MARK,
 +};
-+static const unsigned int scif0_data_b_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(4, 31), RCAR_GP_PIN(4, 28),
++static const unsigned int mmc_data8_pins[] = {
++	/* D[0:7] */
++	RCAR_GP_PIN(3, 2), RCAR_GP_PIN(3, 3),
++	RCAR_GP_PIN(3, 4), RCAR_GP_PIN(3, 5),
++	RCAR_GP_PIN(3, 6), RCAR_GP_PIN(3, 7),
++	RCAR_GP_PIN(3, 8), RCAR_GP_PIN(3, 9),
 +};
-+static const unsigned int scif0_data_b_mux[] = {
-+	RX0_B_MARK, TX0_B_MARK,
++static const unsigned int mmc_data8_mux[] = {
++	MMC_D0_MARK, MMC_D1_MARK,
++	MMC_D2_MARK, MMC_D3_MARK,
++	MMC_D4_MARK, MMC_D5_MARK,
++	MMC_D6_MARK, MMC_D7_MARK,
 +};
-+static const unsigned int scif0_clk_b_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(5, 2),
++static const unsigned int mmc_ctrl_pins[] = {
++	/* CLK, CMD */
++	RCAR_GP_PIN(3, 1), RCAR_GP_PIN(3, 0),
 +};
-+static const unsigned int scif0_clk_b_mux[] = {
-+	SCK0_B_MARK,
-+};
-+static const unsigned int scif0_ctrl_pins[] = {
-+	/* RTS, CTS */
-+	RCAR_GP_PIN(4, 24), RCAR_GP_PIN(4, 23),
-+};
-+static const unsigned int scif0_ctrl_mux[] = {
-+	RTS0_N_TANS_MARK, CTS0_N_MARK,
-+};
-+/* - SCIF1 ------------------------------------------------------------------ */
-+static const unsigned int scif1_data_a_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(4, 23), RCAR_GP_PIN(4, 24),
-+};
-+static const unsigned int scif1_data_a_mux[] = {
-+	RX1_A_MARK, TX1_A_MARK,
-+};
-+static const unsigned int scif1_clk_a_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(4, 22),
-+};
-+static const unsigned int scif1_clk_a_mux[] = {
-+	SCK1_A_MARK,
-+};
-+static const unsigned int scif1_data_b_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(2, 26), RCAR_GP_PIN(2, 28),
-+};
-+static const unsigned int scif1_data_b_mux[] = {
-+	RX1_B_MARK, TX1_B_MARK,
-+};
-+static const unsigned int scif1_clk_b_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(2, 25),
-+};
-+static const unsigned int scif1_clk_b_mux[] = {
-+	SCK1_B_MARK,
-+};
-+static const unsigned int scif1_ctrl_pins[] = {
-+	/* RTS, CTS */
-+	RCAR_GP_PIN(4, 11), RCAR_GP_PIN(4, 10),
-+};
-+static const unsigned int scif1_ctrl_mux[] = {
-+	RTS1_N_TANS_MARK, CTS1_N_MARK,
++static const unsigned int mmc_ctrl_mux[] = {
++	MMC_CLK_MARK, MMC_CMD_MARK,
 +};
 +
-+/* - SCIF2 ------------------------------------------------------------------ */
-+static const unsigned int scif2_data_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(4, 26), RCAR_GP_PIN(4, 27),
-+};
-+static const unsigned int scif2_data_mux[] = {
-+	RX2_MARK, TX2_MARK,
-+};
-+static const unsigned int scif2_clk_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(4, 25),
-+};
-+static const unsigned int scif2_clk_mux[] = {
-+	SCK2_MARK,
-+};
-+/* - SCIF3 ------------------------------------------------------------------ */
-+static const unsigned int scif3_data_a_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(2, 31), RCAR_GP_PIN(4, 00),
-+};
-+static const unsigned int scif3_data_a_mux[] = {
-+	RX3_A_MARK, TX3_A_MARK,
-+};
-+static const unsigned int scif3_clk_a_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(2, 30),
-+};
-+static const unsigned int scif3_clk_a_mux[] = {
-+	SCK3_A_MARK,
-+};
-+static const unsigned int scif3_data_b_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(1, 29), RCAR_GP_PIN(1, 31),
-+};
-+static const unsigned int scif3_data_b_mux[] = {
-+	RX3_B_MARK, TX3_B_MARK,
-+};
-+static const unsigned int scif3_clk_b_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(1, 30),
-+};
-+static const unsigned int scif3_clk_b_mux[] = {
-+	SCK3_B_MARK,
-+};
-+/* - SCIF4 ------------------------------------------------------------------ */
-+static const unsigned int scif4_data_a_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(2, 11), RCAR_GP_PIN(2, 12),
-+};
-+static const unsigned int scif4_data_a_mux[] = {
-+	RX4_A_MARK, TX4_A_MARK,
-+};
-+static const unsigned int scif4_clk_a_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(2, 6),
-+};
-+static const unsigned int scif4_clk_a_mux[] = {
-+	SCK4_A_MARK,
-+};
-+static const unsigned int scif4_data_b_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(1, 16), RCAR_GP_PIN(1, 17),
-+};
-+static const unsigned int scif4_data_b_mux[] = {
-+	RX4_B_MARK, TX4_B_MARK,
-+};
-+static const unsigned int scif4_clk_b_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(1, 15),
-+};
-+static const unsigned int scif4_clk_b_mux[] = {
-+	SCK4_B_MARK,
-+};
-+/* - SCIF5 ------------------------------------------------------------------ */
-+static const unsigned int scif5_data_a_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(0, 7), RCAR_GP_PIN(0, 8),
-+};
-+static const unsigned int scif5_data_a_mux[] = {
-+	RX5_A_MARK, TX5_A_MARK,
-+};
-+static const unsigned int scif5_clk_a_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(0, 6),
-+};
-+static const unsigned int scif5_clk_a_mux[] = {
-+	SCK5_A_MARK,
-+};
-+static const unsigned int scif5_data_b_pins[] = {
-+	/* RX, TX */
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 5),
-+};
-+static const unsigned int scif5_data_b_mux[] = {
-+	RX5_B_MARK, TX5_B_MARK,
-+};
-+static const unsigned int scif5_clk_b_pins[] = {
-+	/* SCK */
-+	RCAR_GP_PIN(1, 3),
-+};
-+static const unsigned int scif5_clk_b_mux[] = {
-+	SCK5_B_MARK,
-+};
-+/* - SCIF Clock ------------------------------------------------------------- */
-+static const unsigned int scif_clk_pins[] = {
-+	/* SCIF_CLK */
-+	RCAR_GP_PIN(2, 27),
-+};
-+static const unsigned int scif_clk_mux[] = {
-+	SCIF_CLK_MARK,
-+};
-+
- static const struct sh_pfc_pin_group pinmux_groups[] = {
-+	SH_PFC_PIN_GROUP(scif0_data_a),
-+	SH_PFC_PIN_GROUP(scif0_clk_a),
-+	SH_PFC_PIN_GROUP(scif0_data_b),
-+	SH_PFC_PIN_GROUP(scif0_clk_b),
-+	SH_PFC_PIN_GROUP(scif0_ctrl),
-+	SH_PFC_PIN_GROUP(scif1_data_a),
-+	SH_PFC_PIN_GROUP(scif1_clk_a),
-+	SH_PFC_PIN_GROUP(scif1_data_b),
-+	SH_PFC_PIN_GROUP(scif1_clk_b),
-+	SH_PFC_PIN_GROUP(scif1_ctrl),
-+	SH_PFC_PIN_GROUP(scif2_data),
-+	SH_PFC_PIN_GROUP(scif2_clk),
-+	SH_PFC_PIN_GROUP(scif3_data_a),
-+	SH_PFC_PIN_GROUP(scif3_clk_a),
-+	SH_PFC_PIN_GROUP(scif3_data_b),
-+	SH_PFC_PIN_GROUP(scif3_clk_b),
-+	SH_PFC_PIN_GROUP(scif4_data_a),
-+	SH_PFC_PIN_GROUP(scif4_clk_a),
-+	SH_PFC_PIN_GROUP(scif4_data_b),
-+	SH_PFC_PIN_GROUP(scif4_clk_b),
-+	SH_PFC_PIN_GROUP(scif5_data_a),
-+	SH_PFC_PIN_GROUP(scif5_clk_a),
-+	SH_PFC_PIN_GROUP(scif5_data_b),
-+	SH_PFC_PIN_GROUP(scif5_clk_b),
-+	SH_PFC_PIN_GROUP(scif_clk),
-+};
-+
-+static const char * const scif0_groups[] = {
-+	"scif0_data_a",
-+	"scif0_clk_a",
-+	"scif0_data_b",
-+	"scif0_clk_b",
-+	"scif0_ctrl",
-+};
-+
-+static const char * const scif1_groups[] = {
-+	"scif1_data_a",
-+	"scif1_clk_a",
-+	"scif1_data_b",
-+	"scif1_clk_b",
-+	"scif1_ctrl",
-+};
-+
-+static const char * const scif2_groups[] = {
-+	"scif2_data",
-+	"scif2_clk",
-+};
-+
-+static const char * const scif3_groups[] = {
-+	"scif3_data_a",
-+	"scif3_clk_a",
-+	"scif3_data_b",
-+	"scif3_clk_b",
-+};
-+
-+static const char * const scif4_groups[] = {
-+	"scif4_data_a",
-+	"scif4_clk_a",
-+	"scif4_data_b",
-+	"scif4_clk_b",
-+};
-+
-+static const char * const scif5_groups[] = {
-+	"scif5_data_a",
-+	"scif5_clk_a",
-+	"scif5_data_b",
-+	"scif5_clk_b",
-+};
-+
-+static const char * const scif_clk_groups[] = {
-+	"scif_clk",
+ /* - SCIF0 ------------------------------------------------------------------ */
+ static const unsigned int scif0_data_a_pins[] = {
+ 	/* RX, TX */
+@@ -1336,6 +1374,10 @@ enum {
+ 	SH_PFC_PIN_GROUP(i2c2_b),
+ 	SH_PFC_PIN_GROUP(i2c3_a),
+ 	SH_PFC_PIN_GROUP(i2c3_b),
++	SH_PFC_PIN_GROUP(mmc_data1),
++	SH_PFC_PIN_GROUP(mmc_data4),
++	SH_PFC_PIN_GROUP(mmc_data8),
++	SH_PFC_PIN_GROUP(mmc_ctrl),
+ 	SH_PFC_PIN_GROUP(scif0_data_a),
+ 	SH_PFC_PIN_GROUP(scif0_clk_a),
+ 	SH_PFC_PIN_GROUP(scif0_data_b),
+@@ -1402,6 +1444,13 @@ enum {
+ 	"i2c3_b",
  };
  
- static const struct sh_pfc_function pinmux_functions[] = {
-+	SH_PFC_FUNCTION(scif0),
-+	SH_PFC_FUNCTION(scif1),
-+	SH_PFC_FUNCTION(scif2),
-+	SH_PFC_FUNCTION(scif3),
-+	SH_PFC_FUNCTION(scif4),
-+	SH_PFC_FUNCTION(scif5),
-+	SH_PFC_FUNCTION(scif_clk),
- };
- 
- static const struct pinmux_cfg_reg pinmux_config_regs[] = {
++static const char * const mmc_groups[] = {
++	"mmc_data1",
++	"mmc_data4",
++	"mmc_data8",
++	"mmc_ctrl",
++};
++
+ static const char * const scif0_groups[] = {
+ 	"scif0_data_a",
+ 	"scif0_clk_a",
+@@ -1458,6 +1507,7 @@ enum {
+ 	SH_PFC_FUNCTION(i2c1),
+ 	SH_PFC_FUNCTION(i2c2),
+ 	SH_PFC_FUNCTION(i2c3),
++	SH_PFC_FUNCTION(mmc),
+ 	SH_PFC_FUNCTION(scif0),
+ 	SH_PFC_FUNCTION(scif1),
+ 	SH_PFC_FUNCTION(scif2),
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
