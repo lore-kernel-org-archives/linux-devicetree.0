@@ -1,79 +1,94 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
-Date: Wed, 9 Aug 2017 12:14:44 +0530
-Message-ID: <CAFp+6iF7m5vgGZcrOTXcxtPinVYUn0iPq1vAjXT909zfHu+wVQ@mail.gmail.com>
-References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
- <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com> <b69ecef93852cf5a7bf342550de16f19@codeaurora.org>
- <d49316e0-8ccc-21b3-e952-ddb0a941f3b3@ti.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v2 4/5] PCI: mediatek: Add new generation controller
+ support
+Date: Wed, 9 Aug 2017 14:49:52 +0800
+Message-ID: <1502261392.17420.5.camel@mtksdaap41>
+References: <cover.1501122135.git.honghui.zhang@mediatek.com>
+         <824c61d13fe2731d812df8a0a878ca1a36399e76.1501122135.git.honghui.zhang@mediatek.com>
+         <20170803224206.GN20308@bhelgaas-glaptop.roam.corp.google.com>
+         <1501835976.24341.21.camel@mtksdaap41>
+         <20170804131808.GA16580@bhelgaas-glaptop.roam.corp.google.com>
+         <20170808201912.GJ16580@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d49316e0-8ccc-21b3-e952-ddb0a941f3b3-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170808201912.GJ16580@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, paul.burton@imgtec.com
+Cc: youlin.pei@mediatek.com, devicetree@vger.kernel.org, hongkun.cao@mediatek.com, ryder.lee@mediatek.com, linux-pci@vger.kernel.org, sean.wang@mediatek.com, xinping.qian@mediatek.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, yt.shen@mediatek.com, matthias.bgg@gmail.com, robh@kerenl.org, linux-mediatek@lists.infradead.org, yong.wu@mediatek.com, bhelgaas@google.com, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin, Subhash
+On Tue, 2017-08-08 at 15:19 -0500, Bjorn Helgaas wrote:
+> On Fri, Aug 04, 2017 at 08:18:09AM -0500, Bjorn Helgaas wrote:
+> > On Fri, Aug 04, 2017 at 04:39:36PM +0800, Honghui Zhang wrote:
+> > > On Thu, 2017-08-03 at 17:42 -0500, Bjorn Helgaas wrote:
+> 
+> > > > > +	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
+> > > > > +						 &intx_domain_ops, port);
+> > > > 
+> > > > I think there's an issue here with a 4-element IRQ domain and the
+> > > > hwirq numbers 1-4 from the of_irq_parse_and_map_pci() path, so INTD
+> > > > may not work correctly.
+> > > > 
+> > > > See
+> > > > http://lkml.kernel.org/r/20170801212931.GA26498@bhelgaas-glaptop.roam.corp.google.com
+> > > > and related discussion.
+> > > 
+> > > Sorry, I did not get this,
+> > > I do some test with an intel E350T4 PCIe NICs, it's a x1 lane
+> > > multi-function device.
+> > > What I got from the log is below:
+> > > ->of_irq_parse_and_map_pci
+> > > 	->of_irq_parse_pci
+> > > 		->irq_create_of_mapping
+> > > 			->irq_create_fwspec_mapping
+> > > 				->irq_domain_translate
+> > > 				which will go through
+> > > 				d->ops->translate #the hwirq really start from 0
+> > > 
+> > > And I tested every NIC port of the Intel E350T4 with tftp transfer data,
+> > > seems all are OK with this code.
+> > 
+> > OK.  I don't know what d->ops->translate is involved here, but if it
+> > works, I guess this is OK for now.  We're trying to clean this up and
+> > make it consistent across all the drivers.  Many of them allocate a
+> > 5-element IRQ domain, some make a 4-element domain, and on some of
+> > them INTD doesn't work.  It's a mess.
+> 
+> Paul Burton is cleaning this up.  Can you point out the d->ops->translate
+> function that's involved here?
 
+Hi, Bjorn,
 
-On Wed, Aug 9, 2017 at 11:18 AM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Vivek,
->
-> On Tuesday 08 August 2017 09:20 PM, Vivek Gautam wrote:
->> Hi Koshon,
->>
->> On 2017-08-08 17:39, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On Friday 04 August 2017 12:18 PM, Vivek Gautam wrote:
->>>> Refactoring the qcom-ufs phy and host controller code to move
->>>> further towards the generic phy usage. Right now the qcom-ufs exports
->>>> a bunch of APIs that are used by the host controller to initialize
->>>> the phy.
->>>> With this patch series, we populate the phy_init() which was a no-op
->>>> earlier. The host controller then calls the phy_init() at the designated
->>>> place rather than doing it invariably in ufs_hcd_init().
->>>>
->>>> As part of this series, we introduce phy modes for ufs phy.
->>>> The M-PHY has two data rates defined for each generations (Gears) -
->>>> Rate A and Rate B. These can serve as the two modes of ufs HS phy.
->>>> Host controller can direct the phy to set the respective configurations
->>>> based on the phy modes.
->>>>
->>>> The patch-series has been tested with necessary dt patches on db820c.
->>>
->>> Can the first 3 patches go independently of the other 2 or should all this be
->>> merged together?
->>
->> The first 3 patches are independent, but the next 2 patches depend on those 3
->> for functionality.
->> I would prefer all to go in one tree. If you want to pull these in the phy tree,
->> I will request Subhash/Martin to ack the patches.
+Sorry for my last reply, I was tracking the wrong logs. The real trick
+is here:
 
-Can you kindly review this patch series (for UFS controller changes) and
-consider giving your Ack so that Kishon can pull in the series through phy tree.
-Thanks.
+->of_irq_parse_and_map_pci
+  ->of_irq_parse_pci	#out_irq->args[0] start from 1(1 == INTA)
+     ->of_irq_parse_raw
 
-best regards
-Vivek
+After of_irq_parse_raw finished it's work, the out_irq->args[0] will be
+remapped as "interrupt-map" property defines[1], which in my case, it's
+start from 0, and then fwspec->param[0] is start from 0 (0 == INTA).
 
->
-> sure, that should be fine!
->
-> Thanks
-> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My "interrupt-map" property is defined as below:
+interrupt-map = <0 0 0 1 &pcie_intc0 0>,
+		<0 0 0 2 &pcie_intc0 1>,
+		<0 0 0 3 &pcie_intc0 2>,
+		<0 0 0 4 &pcie_intc0 3>;
 
+I do some test with the changes of property defined as below:
+interrupt-map = <0 0 0 1 &pcie_intc0 1>,
+		<0 0 0 2 &pcie_intc0 2>,
+		<0 0 0 3 &pcie_intc0 3>,
+		<0 0 0 4 &pcie_intc0 4>;
+Then I got the same running complain as Paul have got[2]
 
+So I guess it's the "interrupt-map" property defined in dtsi node play
+the key role in this.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]http://elixir.free-electrons.com/linux/v4.13-rc4/source/drivers/of/irq.c#L265
+[2]https://patchwork.kernel.org/patch/9794355
+
+thanks.
