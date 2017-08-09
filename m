@@ -1,57 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 1/2] dt-bindings: bus: Add documentation for the
- Technologic Systems NBUS
-Date: Wed, 9 Aug 2017 18:24:43 -0500
-Message-ID: <20170809232443.zdwmvtedstwjoz5o@rob-hp-laptop>
-References: <20170803192819.3279-1-sebastien.bourdelin@savoirfairelinux.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: crypto: add ARTPEC crypto
+Date: Wed, 9 Aug 2017 18:26:20 -0500
+Message-ID: <20170809232620.xvygh4bhyfyfuoqq@rob-hp-laptop>
+References: <cover.1501830919.git.larper@axis.com>
+ <b493a0eb939fe97f7e604c0c83916e0dac1d2bce.1501830919.git.larper@axis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170803192819.3279-1-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org
+In-Reply-To: <b493a0eb939fe97f7e604c0c83916e0dac1d2bce.1501830919.git.larper@axis.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Lars Persson <lars.persson@axis.com>
+Cc: herbert@gondor.apana.org.au, davem@davemloft.net, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 03:28:18PM -0400, Sebastien Bourdelin wrote:
-> Add binding documentation for the Technologic Systems NBUS that is used
-> to interface with peripherals in the FPGA of the TS-4600 SoM.
+On Fri, Aug 04, 2017 at 09:18:45AM +0200, Lars Persson wrote:
+> Document the device tree bindings for the ARTPEC crypto accelerator on
+> ARTPEC-6 and ARTPEC-7 SoCs.
 > 
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Lars Persson <larper@axis.com>
 > ---
-> Changes v5 -> v6:
->   - rebase on master
->   - split the previous patch series into series by subsystem
->   - add ack by Linus Walleij
-> 
-> Changes v4 -> v5:
->   - fix missing signed off
-> 
-> Changes v3 -> v4:
->   - rebase on master
->   - fix vendor prefixes for dts properties (suggested by Rob Herring)
->   - v3 was acked by Linus Walleij
-> 
-> Changes v2 -> v3:
->   - rebase on master
->   - fix typo (suggested by Rob Herring)
-> 
-> Changes v1 -> v2:
->   - rebase on master
->   - remove the simple-bus compatibility as the root node will now
->   populate child nodes (suggested by Rob Herring)
->   - use the ts vendor prefix for gpios (suggested by Rob Herring)
-> ---
->  Documentation/devicetree/bindings/bus/ts-nbus.txt | 50 +++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/bus/ts-nbus.txt
+>  .../devicetree/bindings/crypto/artpec6-crypto.txt        | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
 
-You missed my ack on v4.
+I acked v2. Please add acks when posting new versions.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
