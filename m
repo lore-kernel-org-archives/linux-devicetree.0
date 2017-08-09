@@ -1,95 +1,87 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho
- cooling device.
-Date: Tue, 8 Aug 2017 21:08:48 -0700
-Message-ID: <3c427ddd-aab6-13d4-bfb2-ae22848c0d13@roeck-us.net>
-References: <20170803084650.22298-1-c_mykolak@mellanox.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: fix '%zx' warning
+Date: Wed, 9 Aug 2017 14:06:42 +1000
+Message-ID: <20170809040642.GG13670@umbus.fritz.box>
+References: <E1da2Z7-0008GG-AV@rmk-PC.armlinux.org.uk>
+ <20170726013004.GJ8978@umbus.fritz.box>
+ <20170808112818.GC20805@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xs+9IvWevLaxKUtW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170803084650.22298-1-c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170808112818.GC20805-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shuah Khan <shuahkh-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/03/2017 01:46 AM, Mykola Kostenok wrote:
-> It's add support for cooling device creation to
-> aspeed-pwm-tacho.
-> Cooling device could be bound to a thermal zone
-> for the thermal control.
-> 
-> v1 -> v2:
->   - Fix commit message.
-> v2 -> v3:
->   Pointed out by Rob Herring:
->   - Put cooling-levels under fan subnodes.
-> 
-> Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 
-Did Rob ever Ack this patch ?
+--xs+9IvWevLaxKUtW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Note you didn't copy the hwmon mailing list, which doesn't exactly help
-to keep track of it, and I may have lost Rob's Ack. My apologies if that
-is the case.
+On Tue, Aug 08, 2017 at 12:28:19PM +0100, Russell King - ARM Linux wrote:
+> On Wed, Jul 26, 2017 at 11:30:04AM +1000, David Gibson wrote:
+> > On Tue, Jul 25, 2017 at 05:20:09PM +0100, Russell King wrote:
+> > > dtc uses an incorrect format specifier for printing a uint64_t value.
+> > > uint64_t may be either 'unsigned long' or 'unsigned long long' depend=
+ing
+> > > on the host architecture.
+> > >=20
+> > > Fix this by using %llx and casting to unsigned long long, which ensur=
+es
+> > > that we always have a wide enough variable to print 64 bits of hex.
+> > >=20
+> > >   HOSTCC  scripts/dtc/checks.o
+> > > scripts/dtc/checks.c: In function 'check_simple_bus_reg':
+> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of=
+ type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=3D]
+> > >   snprintf(unit_addr, sizeof(unit_addr), "%zx", reg);
+> > >   ^
+> > > scripts/dtc/checks.c:876:2: warning: format '%zx' expects argument of=
+ type 'size_t', but argument 4 has type 'uint64_t' [-Wformat=3D]
+> > >=20
+> > > Fixes: 828d4cdd012c ("dtc: check.c fix compile error")
+> > > Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> >=20
+> > This (embarrassing) error is already fixed in upstream dtc.
+>=20
+> It remains unfixed in 4.13-rc4.  How do we get this fixed in the
+> kernel's dtc?  From what I can see, sending a patch to fix stuff
+> doesn't work.
 
-Guenter
+Um.. I don't know.  I haven't been the person doing updates of the
+kernel dtc to match upstream dtc for ages.
 
-> ---
->   Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
->   1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> index cf44605..367c820 100644
-> --- a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> @@ -11,6 +11,8 @@ Required properties for pwm-tacho node:
->   
->   - #size-cells : should be 1.
->   
-> +- #cooling-cells: should be 2.
-> +
->   - reg : address and length of the register set for the device.
->   
->   - pinctrl-names : a pinctrl state named "default" must be defined.
-> @@ -28,12 +30,17 @@ fan subnode format:
->   Under fan subnode there can upto 8 child nodes, with each child node
->   representing a fan. If there are 8 fans each fan can have one PWM port and
->   one/two Fan tach inputs.
-> +For PWM port can be configured cooling-levels to create cooling device.
-> +Cooling device could be bound to a thermal zone for the thermal control.
->   
->   Required properties for each child node:
->   - reg : should specify PWM source port.
->   	integer value in the range 0 to 7 with 0 indicating PWM port A and
->   	7 indicating PWM port H.
->   
-> +- cooling-levels: PWM duty cycle values in a range from 0 to 255
-> +                  which correspond to thermal cooling states.
-> +
->   - aspeed,fan-tach-ch : should specify the Fan tach input channel.
->                   integer value in the range 0 through 15, with 0 indicating
->   		Fan tach channel 0 and 15 indicating Fan tach channel 15.
-> @@ -50,6 +57,7 @@ pwm_tacho_fixed_clk: fixedclk {
->   pwm_tacho: pwmtachocontroller@1e786000 {
->   	#address-cells = <1>;
->   	#size-cells = <1>;
-> +	#cooling-cells = <2>;
->   	reg = <0x1E786000 0x1000>;
->   	compatible = "aspeed,ast2500-pwm-tacho";
->   	clocks = <&pwm_tacho_fixed_clk>;
-> @@ -58,6 +66,7 @@ pwm_tacho: pwmtachocontroller@1e786000 {
->   
->   	fan@0 {
->   		reg = <0x00>;
-> +		cooling-levels = /bits/ 8 <125 151 177 203 229 255>;
->   		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
->   	};
->   
-> 
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
+--xs+9IvWevLaxKUtW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlmKilEACgkQbDjKyiDZ
+s5ILlA/+Pkeb8jdWOuwB25rvVnnGn3LzskhHRZGMC5Buz1rubKZ8Ub3/E+URnBWx
+U4a3MYcICBKxFOqLq+C453h8BoP+pM7SxG7SPl4ZoQdzWbtiYQmmv16tZ9HeOFbb
+Dg4zPHSQgwxnaP0wJL+4KYD92TNnWoeGUFeOp11EXYKWk1L+B6joVl8uDKRzx603
+oZkdBe2nbgMyJs7ngxV1SJAJxMuspLqZSrnNQs2bT8cOMgDBZuUeFNj1T92WbDK1
+VT/B+GlDIF0W6bodzC6I87QJQoejS4/TZ5TcqAPkpUHAmdqjGCZBhmEUDKN0h5pn
+q9qq5Mhiq8t+XvQXzdc1pXSFDDBuUA5YmplGi+KNpRfeCJSu0JP5uw4HtNWperRW
+i7qUT2a8w0kT6tpwc9x572bKRJJafty8bBu47tyHJJqc0nvPDvhzozOAuGESwbRV
+WAe1yYJrJKDdE3hywZzQj191dnyQdhMHHYC0aZar+TYgik/ldYixPSYRv19cWYUM
+u9xeBB7n+MrENGdlwcrbtvUuQHOCpVvRZNsdWc5JhkhaAImcQmNHXSa2oLlKZSmE
+moj5XGPAMcmJLozUGf0Hj4PaX46q88HgbDzB8zspwQ0RzpOQiLgX9BPxMTgGMJ8a
+GSJB/Wz+nGUyciXlv6kS0m26GXYRLPeZQF6TscX6FVjhB/mH5Vs=
+=P3PC
+-----END PGP SIGNATURE-----
+
+--xs+9IvWevLaxKUtW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
