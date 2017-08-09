@@ -1,98 +1,79 @@
-From: Oza Oza <oza.oza@broadcom.com>
-Subject: Re: [PATCH 2/2] PCI: iproc: Add optional brcm,pci-hotplug
-Date: Wed, 9 Aug 2017 11:22:50 +0530
-Message-ID: <CAMSpPPdxGdXoh0dux3Lyh5o210mxSK2WhMvyh_ygW8gQN28ymg@mail.gmail.com>
-References: <1502167455-10516-1-git-send-email-oza.oza@broadcom.com>
- <1502167455-10516-3-git-send-email-oza.oza@broadcom.com> <CAL_JsqL3dWA-0Sq-_8ufa-cwXZEbFQBJHCK-5wLp_xw5NrTHKw@mail.gmail.com>
- <CAMSpPPfjxbjaScqovegcRG6GBhkUutqgj3Ly1B+0_BnZN2Ewug@mail.gmail.com>
- <735e0534-ab77-7440-fbc6-5b40598da445@broadcom.com> <CAMSpPPejuTn210aSYjApbz_Jx_tO7V1Fd6nSt96axm-9MFruhA@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 0/5] qcom-ufs: phy/hcd: Refactor phy initialization code
+Date: Wed, 9 Aug 2017 12:14:44 +0530
+Message-ID: <CAFp+6iF7m5vgGZcrOTXcxtPinVYUn0iPq1vAjXT909zfHu+wVQ@mail.gmail.com>
+References: <1501829332-5183-1-git-send-email-vivek.gautam@codeaurora.org>
+ <c29e3a7c-62cc-f25a-4e0b-231c69e01afa@ti.com> <b69ecef93852cf5a7bf342550de16f19@codeaurora.org>
+ <d49316e0-8ccc-21b3-e952-ddb0a941f3b3@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMSpPPejuTn210aSYjApbz_Jx_tO7V1Fd6nSt96axm-9MFruhA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ray Jui <ray.jui@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oza Pawandeep <oza.pawandeep@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d49316e0-8ccc-21b3-e952-ddb0a941f3b3-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-msm-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 11:13 AM, Oza Oza <oza.oza@broadcom.com> wrote:
-> On Wed, Aug 9, 2017 at 10:57 AM, Ray Jui <ray.jui@broadcom.com> wrote:
+Hi Martin, Subhash
+
+
+On Wed, Aug 9, 2017 at 11:18 AM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Vivek,
+>
+> On Tuesday 08 August 2017 09:20 PM, Vivek Gautam wrote:
+>> Hi Koshon,
 >>
->>
->> On 8/8/2017 10:22 PM, Oza Oza wrote:
+>> On 2017-08-08 17:39, Kishon Vijay Abraham I wrote:
+>>> Hi,
 >>>
->>> On Tue, Aug 8, 2017 at 7:50 PM, Rob Herring <robh+dt@kernel.org> wrote:
+>>> On Friday 04 August 2017 12:18 PM, Vivek Gautam wrote:
+>>>> Refactoring the qcom-ufs phy and host controller code to move
+>>>> further towards the generic phy usage. Right now the qcom-ufs exports
+>>>> a bunch of APIs that are used by the host controller to initialize
+>>>> the phy.
+>>>> With this patch series, we populate the phy_init() which was a no-op
+>>>> earlier. The host controller then calls the phy_init() at the designated
+>>>> place rather than doing it invariably in ufs_hcd_init().
 >>>>
->>>> Please send bindings to DT list.
+>>>> As part of this series, we introduce phy modes for ufs phy.
+>>>> The M-PHY has two data rates defined for each generations (Gears) -
+>>>> Rate A and Rate B. These can serve as the two modes of ufs HS phy.
+>>>> Host controller can direct the phy to set the respective configurations
+>>>> based on the phy modes.
+>>>>
+>>>> The patch-series has been tested with necessary dt patches on db820c.
 >>>
->>> Sure, will do that.
->>>
->>>> On Mon, Aug 7, 2017 at 11:44 PM, Oza Pawandeep <oza.oza@broadcom.com>
->>>> wrote:
->>>>>
->>>>> Add description for optional device tree property
->>>>> 'brcm,pci-hotplug' for PCI hotplug feature.
->>>>>
->>>>> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
->>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>> b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>> index b8e48b4..a3bad24 100644
->>>>> --- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>> @@ -72,6 +72,29 @@ Optional properties:
->>>>>   - brcm,pcie-msi-inten: Needs to be present for some older iProc
->>>>> platforms that
->>>>>   require the interrupt enable registers to be set explicitly to enable
->>>>> MSI
->>>>>
->>>>> +Optional properties:
->>>>> +- brcm,pci-hotplug: PCI hotplug feature is supported.
->>>>
->>>> I think we should make this a common property. We already have
->>>> "ibm,slot-pluggable", so I'd propose "slot-pluggable".
->>>>
->>>> There's also "hotpluggable" for memory nodes defined, so we could
->>>> reuse that here.
->>>>
->>> ok I will rename this to
->>> brcm,slot-pluggable
+>>> Can the first 3 patches go independently of the other 2 or should all this be
+>>> merged together?
 >>
->>
->> How's brcm,slot-pluggable a common property? It's still brcm specific.
->> Didn't Rob propose either "slot-pluggable" or "hotpluggable"?
->>
->> And note it goes to the generic PCI binding instead iProc PCIe specific
->> binding.
->>
+>> The first 3 patches are independent, but the next 2 patches depend on those 3
+>> for functionality.
+>> I would prefer all to go in one tree. If you want to pull these in the phy tree,
+>> I will request Subhash/Martin to ack the patches.
+
+Can you kindly review this patch series (for UFS controller changes) and
+consider giving your Ack so that Kishon can pull in the series through phy tree.
+Thanks.
+
+best regards
+Vivek
+
 >
-> Initially I thought, Rob suggested either "slot-pluggable".
-> followed by, "hotpluggable" since memory node already has such property.
+> sure, that should be fine!
 >
-> but not sure in which generic pci binding I should add ?
-> should it be part of
-> Documentation/devicetree/bindings/pci/host-generic-pci.txt
->
-> Can you please clarify Rob ?
->
-> Regards,
-> Oza.
+> Thanks
+> Kishon
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-To add, every SOC might have different way of implementing hotplug.
-so I suppose both the binding documents have to be updated.
 
-Documentation/devicetree/bindings/pci/host-generic-pci.txt
-which can have common boolean property
-named "hotpluggable"
 
-and SOC specific implementation can stay here
-for e.g.
-Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-brcm,prsnt-gpios
-
-Rob and Ray:
-please let me know how this sounds.
-
-Regards,
-Oza.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
