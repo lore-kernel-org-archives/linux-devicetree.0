@@ -1,42 +1,54 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [patch v2 0/2]
-Date: Wed, 9 Aug 2017 16:31:28 +0200
-Message-ID: <20170809143128.GI30723@lunn.ch>
-References: <1502115467-1735-1-git-send-email-oleksandrs@mellanox.com>
+From: Sean Young <sean@mess.org>
+Subject: Re: [PATCH v2 3/3] rc: add zx-irdec remote control driver
+Date: Wed, 9 Aug 2017 15:42:44 +0100
+Message-ID: <20170809144244.6l6k2hllp7fc34pr@gofer.mess.org>
+References: <1501420993-21977-1-git-send-email-shawnguo@kernel.org>
+ <1501420993-21977-4-git-send-email-shawnguo@kernel.org>
+ <20170809130029.eneyqstlejfkotz2@gofer.mess.org>
+ <20170809134816.GA31819@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1502115467-1735-1-git-send-email-oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksandr Shamray <oleksandrs-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, system-sw-low-level-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openocd-devel-owner-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, mec-WqBc5aa1uDFeoWH0uzbU5w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vadimp-45czdsxZ+A5DPfheJLI6IQ@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170809134816.GA31819@dragon>
+Sender: linux-media-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Baoyou Xie <xie.baoyou@sanechips.com.cn>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 07, 2017 at 05:17:45PM +0300, Oleksandr Shamray wrote:
-> When a need raise up to use JTAG interface for system's devices
-> programming or CPU debugging, it could be done from the external
-> JTAG master controller.
->  
-> For such purpose, usually the user layer
-> application implements jtag protocol or using a proprietary
-> connection to vendor hardware.
-> This method is slow and not generic.
->  
-> We propose to implement general JTAG interface and infrastructure
-> to communicate with user layer application. 
+Hi Shawn,
 
-Hi Oleksandr
+On Wed, Aug 09, 2017 at 09:48:18PM +0800, Shawn Guo wrote:
+> On Wed, Aug 09, 2017 at 02:00:29PM +0100, Sean Young wrote:
+> > On Sun, Jul 30, 2017 at 09:23:13PM +0800, Shawn Guo wrote:
+> > > From: Shawn Guo <shawn.guo@linaro.org>
+> > > 
+> > > It adds the remote control driver and corresponding keymap file for
+> > > IRDEC block found on ZTE ZX family SoCs.
+> > > 
+> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> > > ---
+> > >  drivers/media/rc/Kconfig               |  11 ++
+> > >  drivers/media/rc/Makefile              |   1 +
+> > >  drivers/media/rc/keymaps/Makefile      |   3 +-
+> > >  drivers/media/rc/keymaps/rc-zx-irdec.c |  79 ++++++++++++++
+> > >  drivers/media/rc/zx-irdec.c            | 183 +++++++++++++++++++++++++++++++++
+> > >  include/media/rc-map.h                 |   1 +
+> > >  6 files changed, 277 insertions(+), 1 deletion(-)
+> > >  create mode 100644 drivers/media/rc/keymaps/rc-zx-irdec.c
+> > >  create mode 100644 drivers/media/rc/zx-irdec.c
+> > 
+> > We're missing an MAINTAINERS entry for this driver. Could this be added
+> > please as a separate patch?
+> 
+> We are using 'ARM/ZTE ARCHITECTURE' entry in MAINTAINERS for ZTE ZX
+> drivers.  I plan to send a separate patch going through arm-soc tree,
+> updating MAINTAINERS for those new ZTE ZX drivers landed on mainline
+> during 4.14 merge window.  IRDEC will be covered by that patch.  Is that
+> okay?
 
-You might find this discussion interesting:
+Of course.
 
-https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2017-August/004721.html
+Thanks,
 
-You are defining a new ABI here, so linux-abi should be involved in
-the discussion of these patches.
-
-    Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sean
