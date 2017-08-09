@@ -1,87 +1,165 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 0/8] Remove fwnode type field, constify property
- fwnode arguments
-Date: Wed, 9 Aug 2017 11:50:29 +0300
-Message-ID: <20170809085029.4wdphnlyaio6pcya@valkosipuli.retiisi.org.uk>
-References: <1500637177-16095-1-git-send-email-sakari.ailus@linux.intel.com>
- <26807574.YAK92jB8KX@aspire.rjw.lan>
- <20170808093215.uw2lricbbvwb7t3k@valkosipuli.retiisi.org.uk>
- <3442396.FuC0BxuCi0@aspire.rjw.lan>
- <20170809084755.pec6w2y2thmbmjyi@valkosipuli.retiisi.org.uk>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH  2/2] ARM: dts: r8a7743: Add I2C DT support
+Date: Wed, 9 Aug 2017 10:52:38 +0200
+Message-ID: <20170809085238.GJ2705@verge.net.au>
+References: <1502191449-16118-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170809084755.pec6w2y2thmbmjyi@valkosipuli.retiisi.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, ACPI Devel Maling List <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>, erik.veijola@intel.com
+In-Reply-To: <1502191449-16118-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 11:47:55AM +0300, Sakari Ailus wrote:
-> On Wed, Aug 09, 2017 at 02:53:25AM +0200, Rafael J. Wysocki wrote:
-> > On Tuesday, August 8, 2017 11:32:16 AM CEST Sakari Ailus wrote:
-> > > On Mon, Jul 24, 2017 at 10:28:12PM +0200, Rafael J. Wysocki wrote:
-> > > > On Friday, July 21, 2017 02:29:06 PM Rafael J. Wysocki wrote:
-> > > > > On Friday, July 21, 2017 03:33:09 PM Andy Shevchenko wrote:
-> > > > > > On Fri, 2017-07-21 at 13:52 +0200, Rafael J. Wysocki wrote:
-> > > > > > > On Fri, Jul 21, 2017 at 1:39 PM, Sakari Ailus
-> > > > > > > <sakari.ailus@linux.intel.com> wrote:
-> > > > > > > > Hello everyone,
-> > > > > > > > 
-> > > > > > > > This set removes the struct fwnode_handle type field and constifies
-> > > > > > > > the
-> > > > > > > > fwnode arguments in the fwnode property API more or less the way
-> > > > > > > > they are
-> > > > > > > > const in OF property API.
-> > > > > > > > 
-> > > > > > > > Comments are welcome.
-> > > > > > > > 
-> > > > > > > > All the dependent patches are now in linux-pm master branch.
-> > > > > > > > 
-> > > > > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg75957.html>;
-> > > > > > > > 
-> > > > > > > > v1 can be found here:
-> > > > > > > > 
-> > > > > > > > <URL:http://www.spinics.net/lists/linux-acpi/msg74564.html>;
-> > > > > > > > 
-> > > > > > > > changes since v2:
-> > > > > > > > 
-> > > > > > > > - Add 8th patch "device property: Introduce
-> > > > > > > >   fwnode_property_get_reference_args". This allows obtaining
-> > > > > > > > references
-> > > > > > > >   with integer arguments using the fwnode interface.
-> > > > > > > > 
-> > > > > > > >   The functionality will be soon needed in adding support for nvmem
-> > > > > > > >   framework on ACPI as well as in referring to e.g. lens and flash
-> > > > > > > > devices
-> > > > > > > >   on V4L2.
-> > > > > > > 
-> > > > > > > OK, so if people have no objections, I'll queue this up for 4.14.
-> > > > > > 
-> > > > > > I have no objections.
-> > > > > > 
-> > > > > > One comment Sakari already has addressed, another one
-> > > > > > (list_first_enatry_or_null() use) might be addressed later.
-> > > > > 
-> > > > > Cool, thanks!
-> > > > 
-> > > > So the series have been applied.
-> > > 
-> > > Thanks a lot!
-> > > 
-> > > I see this is in the linux-next branch now; the device-properties branch
-> > > seems to be in its former state still. Is there a chance that you have
-> > > merged it locally but not pushed the new device-properties branch?
-> > 
-> > The branch is only local for the time being, but I can push it out if
-> > that helps.
+On Tue, Aug 08, 2017 at 12:24:09PM +0100, Biju Das wrote:
+> Add the I2C[0-5] devices to the r8a7743 device tree.
 > 
-> I have V4L2 patches that depend on these --- I'd like to attempt to get
-> them in through the mediatree during this merge window.
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> This patch has been tested against Linux-next tag 20170727 and renesas-dev branch.
+> This patch depends on https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg17008.html
 
-Or rather to the mediatree before the next merge window opens.
+As per the patch at the link above it seems that these patches are targeted
+at the renesas tree.  The best practice in that case is to base patches on
+the latest devel branch. Please consider doing so in future.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+I would also slightly prefer if dependencies were referenced by name, in
+this case:
+
+*  [PATCH 2/3] ARM: dts: r8a7743: Add APMU node and second CPU core
+
+or
+
+* [PATCH  0/3] Add SMP support
+
+Also including a link is fine by me.
+
+
+It would also be useful if you described the dependency as a conflict
+(merge-time), compile-time or run-time.
+
+As for the patch itself, it looks good to me.
+
+>  arch/arm/boot/dts/r8a7743.dtsi | 97 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 97 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+> index 8c46f62..14222c72 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -18,6 +18,15 @@
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  
+> +	aliases {
+> +		i2c0 = &i2c0;
+> +		i2c1 = &i2c1;
+> +		i2c2 = &i2c2;
+> +		i2c3 = &i2c3;
+> +		i2c4 = &i2c4;
+> +		i2c5 = &i2c5;
+> +	};
+> +
+>  	cpus {
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+> @@ -339,6 +348,94 @@
+>  			dma-channels = <15>;
+>  		};
+>  
+> +		/* The memory map in the User's Manual maps the cores to bus
+> +		 *  numbers
+> +		 */
+> +		i2c0: i2c@e6508000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6508000 0 0x40>;
+> +			interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 931>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 931>;
+> +			i2c-scl-internal-delay-ns = <6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c1: i2c@e6518000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6518000 0 0x40>;
+> +			interrupts = <GIC_SPI 288 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 930>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 930>;
+> +			i2c-scl-internal-delay-ns = <6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c2: i2c@e6530000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6530000 0 0x40>;
+> +			interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 929>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 929>;
+> +			i2c-scl-internal-delay-ns = <6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c3: i2c@e6540000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6540000 0 0x40>;
+> +			interrupts = <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 928>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 928>;
+> +			i2c-scl-internal-delay-ns = <6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c4: i2c@e6520000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6520000 0 0x40>;
+> +			interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 927>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 927>;
+> +			i2c-scl-internal-delay-ns = <6>;
+> +			status = "disabled";
+> +		};
+> +
+> +		i2c5: i2c@e6528000 {
+> +			/* doesn't need pinmux */
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,i2c-r8a7743",
+> +				     "renesas,rcar-gen2-i2c";
+> +			reg = <0 0xe6528000 0 0x40>;
+> +			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 925>;
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg 925>;
+> +			i2c-scl-internal-delay-ns = <110>;
+> +			status = "disabled";
+> +		};
+> +
+>  		scifa0: serial@e6c40000 {
+>  			compatible = "renesas,scifa-r8a7743",
+>  				     "renesas,rcar-gen2-scifa", "renesas,scifa";
+> -- 
+> 1.9.1
+> 
