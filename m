@@ -1,39 +1,59 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 2/4] drivers: soc: sunxi: fix error
- processing on base address when claiming
-Date: Wed, 9 Aug 2017 17:16:29 +0800
-Message-ID: <CAGb2v658CSUwSMdv5yCLtPSfDrsmMZDSBjZQsmi=2Y+EfJPmhg@mail.gmail.com>
-References: <20170809085627.32687-1-icenowy@aosc.io> <20170809085627.32687-3-icenowy@aosc.io>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
+Date: Wed, 9 Aug 2017 12:17:06 +0300
+Message-ID: <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBNGVPGAKGQEBIPQ5QQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170809085627.32687-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 4:56 PM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
-> When claiming SRAM, if the base is set to an error, it means that the
-> SRAM controller has been probed, but failed to remap the controller
-> memory zone. If the base is zero, thus the SRAM controller should be not
-> probed at all, and it should return -EPROBE_DEFER. However, currently we
-> returned -EPROBE_DEFER in the former situation, and ignored the latter
-> situation (which will lead to the kernel to panic).
->
-> Fix the behavior on abnormal base address processing when claiming.
->
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+On 8/8/2017 3:46 PM, Biju Das wrote:
 
-Fixes: 4af34b572a85 ("drivers: soc: sunxi: Introduce SoC driver to map SRAMs") ?
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> This patch has been tested against Linux-next tag 20170727 and renesas-dev branch.
+> This patch depends on https://www.spinics.net/lists/arm-kernel/msg599220.html
+> 
+>   arch/arm/boot/dts/r8a7743.dtsi | 55 ++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 55 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+> index 14222c72..5c2b140 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+[...]
+> @@ -436,6 +439,58 @@
+>   			status = "disabled";
+>   		};
+>   
+> +		i2c6: i2c@e60b0000 {
 
-I can add the tag when applying.
+    I'd use iic0 as the label.
 
-ChenYu
+> +			/* doesn't need pinmux */
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "renesas,iic-r8a7743",
+> +				     "renesas,rcar-gen2-iic",
+> +				     "renesas,rmobile-iic";
+> +			reg = <0 0xe60b0000 0 0x425>;
+> +			interrupts = <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 926>;
+> +			dmas = <&dmac0 0x77>, <&dmac0 0x78>,
+> +			       <&dmac1 0x77>, <&dmac1 0x78>;
+> +			dma-names = "tx", "rx", "tx", "rx";
+> +			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
+> +			resets = <&cpg CPG_MOD 926>;
+
+    CPG_MOD not needed here, it's not a "clocks" prop.
+
+[...]
+
+MBR, Sergei
