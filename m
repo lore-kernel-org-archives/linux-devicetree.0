@@ -1,57 +1,57 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 1/7] mtd: spi-nor: cadence-quadspi: add a delay in write
- sequence
-Date: Thu, 10 Aug 2017 10:58:13 +0530
-Message-ID: <f756daf8-7880-2c0e-f182-1748b65e5c79@ti.com>
-References: <20170801045434.8733-1-vigneshr@ti.com>
- <20170801045434.8733-2-vigneshr@ti.com>
- <20170810000831.mtj5w4sgwa56ja24@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810000831.mtj5w4sgwa56ja24@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Santosh Shilimkar <ssantosh@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH v5 2/7] dt-bindings: clk: at91: add audio plls to the compatible list
+Date: Thu, 10 Aug 2017 08:34:02 +0200
+Message-ID: <09230b9714c7d8fee053d1b014ef6af43c1bebbc.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, Quentin Schulz <quentin.schulz@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+This new clock driver set allows to have a fractional divided clock that
+would generate a precise clock particularly suitable for audio
+applications.
 
+The main audio pll clock has two children clocks: one that is connected
+to the PMC, the other that can directly drive a pad. As these two routes
+have different enable bits and different dividers and divider formulas,
+they are handled by two different drivers.
 
-On Thursday 10 August 2017 05:38 AM, Rob Herring wrote:
-> On Tue, Aug 01, 2017 at 10:24:28AM +0530, Vignesh R wrote:
->> As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
->> Controller programming sequence, a delay equal to couple QSPI master
->> clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
->> writing data to the flash. Add a new compatible to handle the couple of
->> cycles of delay required in the indirect write sequence, since this
->> delay is specific to TI 66AK2G SoC.
->>
->> [1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt |  1 +
->>  drivers/mtd/spi-nor/cadence-quadspi.c                     | 13 +++++++++++++
->>  2 files changed, 14 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> index f248056da24c..fdd511a83511 100644
->> --- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> +++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
->> @@ -2,6 +2,7 @@
->>  
->>  Required properties:
->>  - compatible : Should be "cdns,qspi-nor".
->> +	       Should be "ti,k2g-qspi" for TI 66AK2G platform.
-> 
-> Also, this doesn't indicate that "cdns,qspi-nor" is a fallback as you 
-> have in the dts files. Reformat to 1 valid combination per line.
-> 
+This adds the audio plls (frac, pad and pmc) to the compatible list of
+at91 clocks in DT binding.
 
-Agreed, will fix it in v2.
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ Documentation/devicetree/bindings/clock/at91-clock.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+index 5f3ad65..51c259a 100644
+--- a/Documentation/devicetree/bindings/clock/at91-clock.txt
++++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+@@ -81,6 +81,16 @@ Required properties:
+ 	"atmel,sama5d2-clk-generated":
+ 		at91 generated clock
+ 
++	"atmel,sama5d2-clk-audio-pll-frac":
++		at91 audio fractional pll
++
++	"atmel,sama5d2-clk-audio-pll-pad":
++		at91 audio pll CLK_AUDIO output pin
++
++	"atmel,sama5d2-clk-audio-pll-pmc"
++		at91 audio pll output on AUDIOPLLCLK that feeds the PMC
++		and can be used by peripheral clock or generic clock
++
+ Required properties for SCKC node:
+ - reg : defines the IO memory reserved for the SCKC.
+ - #size-cells : shall be 0 (reg is used to encode clk id).
 -- 
-Regards
-Vignesh
+git-series 0.9.1
