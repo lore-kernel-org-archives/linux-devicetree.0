@@ -1,75 +1,46 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv3 2/4] ARM: tegra: add CEC support to tegra124.dtsi
-Date: Thu, 10 Aug 2017 10:31:23 +0200
-Message-ID: <20170810083125.36649-3-hverkuil@xs4all.nl>
-References: <20170810083125.36649-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810083125.36649-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv2 1/3] dt-bindings: document the CEC GPIO bindings
+Date: Thu, 10 Aug 2017 10:33:57 +0200
+Message-ID: <20170810083359.36800-2-hverkuil@xs4all.nl>
+References: <20170810083359.36800-1-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170810083359.36800-1-hverkuil@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-
-Add support for the Tegra CEC IP to tegra124.dtsi and enable it on the
-Jetson TK1.
-
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/tegra124-jetson-tk1.dts |  4 ++++
- arch/arm/boot/dts/tegra124.dtsi           | 12 +++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/tegra124-jetson-tk1.dts b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-index 7bacb2954f58..7f56de6890c3 100644
---- a/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-+++ b/arch/arm/boot/dts/tegra124-jetson-tk1.dts
-@@ -67,6 +67,10 @@
- 		};
- 	};
- 
-+	cec@70015000 {
-+		status = "okay";
-+	};
-+
- 	gpu@0,57000000 {
- 		/*
- 		 * Node left disabled on purpose - the bootloader will enable
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 1b10b14a6abd..1a21e527fb6e 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -123,7 +123,7 @@
- 			nvidia,head = <1>;
- 		};
- 
--		hdmi@54280000 {
-+		hdmi: hdmi@54280000 {
- 			compatible = "nvidia,tegra124-hdmi";
- 			reg = <0x0 0x54280000 0x0 0x00040000>;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-@@ -851,6 +851,16 @@
- 		status = "disabled";
- 	};
- 
-+	cec@70015000 {
-+		compatible = "nvidia,tegra124-cec";
-+		reg = <0x0 0x70015000 0x0 0x00001000>;
-+		interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA124_CLK_CEC>;
-+		clock-names = "cec";
-+		hdmi-phandle = <&hdmi>;
-+		status = "disabled";
-+	};
-+
- 	soctherm: thermal-sensor@700e2000 {
- 		compatible = "nvidia,tegra124-soctherm";
- 		reg = <0x0 0x700e2000 0x0 0x600 /* SOC_THERM reg_base */
--- 
-2.13.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKRG9jdW1lbnQgdGhl
+IGJpbmRpbmdzIGZvciB0aGUgY2VjLWdwaW8gbW9kdWxlIGZvciBoYXJkd2FyZSB3aGVyZSB0aGUK
+Q0VDIHBpbiBpcyBjb25uZWN0ZWQgdG8gYSBHUElPIHBpbi4KClNpZ25lZC1vZmYtYnk6IEhhbnMg
+VmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0IHwgMTYgKysrKysrKysrKysrKysrKwog
+MSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0CgpkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4
+dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50eHQK
+bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5lMzRhMTc1NDY4ZTIKLS0t
+IC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
+Y2VjLWdwaW8udHh0CkBAIC0wLDAgKzEsMTYgQEAKKyogSERNSSBDRUMgR1BJTy1iYXNlZCBoYXJk
+d2FyZQorCitVc2UgdGhlc2UgYmluZGluZ3MgZm9yIEhETUkgQ0VDIGhhcmR3YXJlIHdoZXJlIHRo
+ZSBDRUMgcGluIGlzIGhvb2tlZCB1cAordG8gYSBwdWxsLXVwIEdQSU8gcGluLgorCitSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgorICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgImNlYy1ncGlvIgor
+ICAtIGdwaW86IGdwaW8gdGhhdCB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVkIHRvCisKK0V4YW1w
+bGUgZm9yIHRoZSBSYXNwYmVycnkgUGkgMyB3aGVyZSB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVk
+IHRvCitwaW4gNyBha2EgQkNNNCBha2EgR1BDTEswIG9uIHRoZSBHUElPIHBpbiBoZWFkZXI6CisK
+K2NlYy1ncGlvIHsKKyAgICAgICBjb21wYXRpYmxlID0gImNlYy1ncGlvIjsKKyAgICAgICBncGlv
+ID0gPCZncGlvIDQgR1BJT19BQ1RJVkVfSElHSD47Cit9OwotLSAKMi4xMy4yCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
