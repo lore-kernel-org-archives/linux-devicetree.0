@@ -1,36 +1,48 @@
-From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH 2/3] ARM: dts: at91: sama5d2: added dma property for ADC device
-Date: Thu, 10 Aug 2017 15:34:58 +0300
-Message-ID: <1502368499-6739-3-git-send-email-eugen.hristev@microchip.com>
-References: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, linux-iio@vger.kernel.org, jic23@kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lars@metafoo.de
-Cc: eugen.hristev@microchip.com
+From: Lars Persson <lars.persson@axis.com>
+Subject: [PATCH v4 1/4] dt-bindings: crypto: add ARTPEC crypto
+Date: Thu, 10 Aug 2017 14:53:51 +0200
+Message-ID: <e5a9a6e0277ae2b49042d1acdbf36648446c1d3e.1502368677.git.larper@axis.com>
+References: <cover.1502368677.git.larper@axis.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <cover.1502368677.git.larper@axis.com>
+In-Reply-To: <cover.1502368677.git.larper@axis.com>
+References: <cover.1502368677.git.larper@axis.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Lars Persson <larper@axis.com>
 List-Id: devicetree@vger.kernel.org
 
-Added DMA property for ADC device
+Document the device tree bindings for the ARTPEC crypto accelerator on
+ARTPEC-6 and ARTPEC-7 SoCs.
 
-Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Lars Persson <larper@axis.com>
 ---
- arch/arm/boot/dts/sama5d2.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/crypto/artpec6-crypto.txt        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 8067c71..2f1dc77 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -1267,6 +1267,8 @@
- 				atmel,min-sample-rate-hz = <200000>;
- 				atmel,max-sample-rate-hz = <20000000>;
- 				atmel,startup-time-ms = <4>;
-+				dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
-+				dma-names = "rx";
- 				status = "disabled";
- 			};
- 
+diff --git a/Documentation/devicetree/bindings/crypto/artpec6-crypto.txt b/Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
+new file mode 100644
+index 000000000000..d9cca4875bd6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/artpec6-crypto.txt
+@@ -0,0 +1,16 @@
++Axis crypto engine with PDMA interface.
++
++Required properties:
++- compatible : Should be one of the following strings:
++	"axis,artpec6-crypto" for the version in the Axis ARTPEC-6 SoC
++	"axis,artpec7-crypto" for the version in the Axis ARTPEC-7 SoC.
++- reg: Base address and size for the PDMA register area.
++- interrupts: Interrupt handle for the PDMA interrupt line.
++
++Example:
++
++crypto@f4264000 {
++	compatible = "axis,artpec6-crypto";
++	reg = <0xf4264000 0x1000>;
++	interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
-2.7.4
+2.11.0
