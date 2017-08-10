@@ -1,33 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/5] dt-binding: soc: qcom: Add binding for RFSA
-Date: Thu, 10 Aug 2017 11:50:37 -0500
-Message-ID: <20170810165037.gbed5bacykbzftgr@rob-hp-laptop>
-References: <20170803025754.19101-1-bjorn.andersson@linaro.org>
- <20170803025754.19101-4-bjorn.andersson@linaro.org>
+From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
+Subject: Re: [PATCH 0/3] ARM: dts: keystone-k2g: Add DCAN instances to 66AK2G
+Date: Thu, 10 Aug 2017 09:51:44 -0700
+Message-ID: <76400dbd-2970-a5bc-d994-3cc7933c8496@oracle.com>
+References: <20170802201822.11532-1-fcooper@ti.com>
+ <69995971-2fe7-87f4-a46a-8ef4f729ffc5@oracle.com>
+ <8930852b-6995-3d41-440e-86f440b313ad@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170803025754.19101-4-bjorn.andersson@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8930852b-6995-3d41-440e-86f440b313ad@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, ssantosh@kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 07:57:52PM -0700, Bjorn Andersson wrote:
-> This adds the binding for describing shared memory used to exchange file
-> system blocks between the RMTFS client and service.
+On 8/7/17 2:31 PM, Franklin S Cooper Jr wrote:
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> Hi Santosh,
+> On 08/04/2017 12:07 PM, Santosh Shilimkar wrote:
+>> Hi Franklin,
+>>
+>> On 8/2/2017 1:18 PM, Franklin S Cooper Jr wrote:
+>>> Add D CAN nodes to 66AK2G based SoC dtsi.
+>>>
+>>> Franklin S Cooper Jr (2):
+>>>     dt-bindings: net: c_can: Update binding for clock and power-domains
+>>>       property
+>>>     ARM: configs: keystone: Enable D_CAN driver
+>>>
+>>> Lokesh Vutla (1):
+>>>     ARM: dts: k2g: Add DCAN nodes
+>>>
+>> Any DCAN driver dependency with these patchset ? If not, I can
+>> queue this up so do let me know.
 > 
-> Changed since v1:
-> - Memory described in a single reserved-memory node, rather than by reference
->   from a "dummy" node
-> - qcom,vmdid added
-> 
->  .../bindings/reserved-memory/qcom,rfsa.txt         | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reserved-memory/qcom,rfsa.txt
+> There aren't any dependencies.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applied. Thanks !!
+
+Regards,
+Santosh
