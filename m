@@ -1,30 +1,35 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/8] dt-bindings: phy: sun4i-usb-phy: Add compatible
- string for A83T
-Date: Thu, 10 Aug 2017 12:09:51 -0500
-Message-ID: <20170810170951.bacpgjwplmm5fz7g@rob-hp-laptop>
-References: <20170803081411.22389-1-wens@csie.org>
- <20170803081411.22389-3-wens@csie.org>
+Subject: Re: [patch v3 resend] Documentation: dt-bindings: aspeed-pwm-tacho
+ cooling device.
+Date: Thu, 10 Aug 2017 12:11:42 -0500
+Message-ID: <20170810171142.zwlnagp7c52p4r5e@rob-hp-laptop>
+References: <20170803084650.22298-1-c_mykolak@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170803081411.22389-3-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <20170803084650.22298-1-c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Patrick Venture <venture-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Vadim Pasternak <vadimp-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>, Ohad Oz <ohado-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 04:14:05PM +0800, Chen-Yu Tsai wrote:
-> The A83T has 3 USB PHYs, 1 for OTG, 1 for standard USB, 1 for USB HSIC.
+On Thu, Aug 03, 2017 at 11:46:50AM +0300, Mykola Kostenok wrote:
+> It's add support for cooling device creation to
+> aspeed-pwm-tacho.
+> Cooling device could be bound to a thermal zone
+> for the thermal control.
 > 
-> Add a compatible string for it, and describe the needed properties.
+> v1 -> v2:
+>  - Fix commit message.
+> v2 -> v3:
+>  Pointed out by Rob Herring:
+>  - Put cooling-levels under fan subnodes.
 > 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Tested-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Mykola Kostenok <c_mykolak-VPRAkNaXOzVWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
