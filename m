@@ -1,136 +1,196 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
-Date: Thu, 10 Aug 2017 14:19:58 +0530
-Message-ID: <9d1757b3-24f9-2f0f-1971-62d1ef4b79e3@codeaurora.org>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [RFC 3/5] dt-bindings: i3c: Document core bindings
+Date: Thu, 10 Aug 2017 10:49:58 +0200
+Message-ID: <20170810104958.7e34332f@bbrezillon>
+References: <1501518290-5723-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1501518290-5723-4-git-send-email-boris.brezillon@free-electrons.com>
+        <20170809234302.ffcr3gwpiy4roj7l@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170730130743.19681-1-hverkuil@xs4all.nl>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170809234302.ffcr3gwpiy4roj7l@rob-hp-laptop>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Jan Kotas <jank@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nishanth Menon <nm@ti.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Rob,
 
-On 07/30/2017 06:37 PM, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> This patch series adds CEC support to the drm adv7511/adv7533 drivers.
-> 
-> I have tested this with the Qualcomm Dragonboard C410 (adv7533 based)
-> and the Renesas R-Car Koelsch board (adv7511 based).
-> 
-> Note: the Dragonboard needs this patch:
-> 
-> https://patchwork.kernel.org/patch/9824773/
-> 
-> Archit, can you confirm that this patch will go to kernel 4.14?
-> 
-> And the Koelsch board needs this 4.13 fix:
-> 
-> https://patchwork.kernel.org/patch/9836865/
-> 
-> I only have the Koelsch board to test with, but it looks like other
-> R-Car boards use the same adv7511. It would be nice if someone can
-> add CEC support to the other R-Car boards as well. The main thing
-> to check is if they all use the same 12 MHz fixed CEC clock source.
-> 
-> Anyone who wants to test this will need the CEC utilities that
-> are part of the v4l-utils git repository:
-> 
-> git clone git://linuxtv.org/v4l-utils.git
-> cd v4l-utils
-> ./bootstrap.sh
-> ./configure
-> make
-> sudo make install
-> 
-> Now configure the CEC adapter as a Playback device:
-> 
-> cec-ctl --playback
-> 
-> Discover other CEC devices:
-> 
-> cec-ctl -S
+Le Wed, 9 Aug 2017 18:43:02 -0500,
+Rob Herring <robh@kernel.org> a écrit :
 
-I tried the instructions, and I get the following output. I don't think I have
-any CEC device connected, though. Is this the expected behaviour?
+> On Mon, Jul 31, 2017 at 06:24:48PM +0200, Boris Brezillon wrote:
+> > A new I3C subsystem has been added and a generic description has been
+> > created to represent the I3C bus and the devices connected on it.
+> > 
+> > Document this generic representation.
+> > 
+> > Signed-off-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> > ---
+> >  Documentation/devicetree/bindings/i3c/i3c.txt | 90 +++++++++++++++++++++++++++
+> >  1 file changed, 90 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i3c/i3c.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i3c/i3c.txt b/Documentation/devicetree/bindings/i3c/i3c.txt
+> > new file mode 100644
+> > index 000000000000..49261dec7b01
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/i3c/i3c.txt
+> > @@ -0,0 +1,90 @@
+> > +Generic device tree bindings for I3C busses
+> > +===========================================
+> > +
+> > +This document describes generic bindings that should be used to describe I3C
+> > +busses in a device tree.
+> > +
+> > +Required properties
+> > +-------------------
+> > +
+> > +- #address-cells  - should be <1>. Read more about addresses below.
+> > +- #size-cells     - should be <0>.
+> > +- compatible      - name of I3C bus controller following generic names
+> > +		    recommended practice.
+> > +
+> > +For other required properties e.g. to describe register sets,
+> > +clocks, etc. check the binding documentation of the specific driver.
+> > +
+> > +Optional properties
+> > +-------------------
+> > +
+> > +These properties may not be supported by all I3C master drivers. Each I3C
+> > +master bindings should specify which of them are supported.
+> > +
+> > +- i3c-scl-frequency: frequency (in Hz) of the SCL signal used for I3C
+> > +		     transfers. When undefined the core set it to 12.5MHz.
+> > +
+> > +- i2c-scl-frequency: frequency (in Hz) of the SCL signal used for I2C
+> > +		     transfers. When undefined, the core looks at LVR values
+> > +		     of I2C devices described in the device tree to determine
+> > +		     the maximum I2C frequency.
+> > +
+> > +I2C devices
+> > +===========
+> > +
+> > +Each I2C device connected to the bus should be described in a subnode with
+> > +the following properties:
+> > +
+> > +All properties described in Documentation/devicetree/bindings/i2c/i2c.txt are
+> > +valid here.
+> > +
+> > +New required properties:
+> > +------------------------
+> > +- i3c-lvr: 32 bits integer property (only the lowest 8 bits are meaningful)  
+> 
+> What does lvr mean?
 
-#cec-ctl -S
-Driver Info:
-         Driver Name                : adv7511
-         Adapter Name               : 3-0039
-         Capabilities               : 0x0000000e
-                 Logical Addresses
-                 Transmit
-                 Passthrough
-         Driver version             : 4.13.0
-         Available Logical Addresses: 3
-         Physical Address           : 1.0.0.0
-         Logical Address Mask       : 0x0000
-         CEC Version                : 2.0
-         Logical Addresses          : 0
+Legacy Virtual Register. It's the name used in the I3C specification
+and a short description is given in the I3C doc (patch 2 of this RFC):
 
-#cec-ctl --playback
-[ 1038.761545] cec-3-0039: cec_thread_func: message 44 timed out!
-Driver Info:
-         Driver Name                : adv7511
-         Adapter Name               : 3-0039
-         Capabilities               : 0x0000000e
-                 Logical Addresses
-                 Transmit
-                 Passthrough
-         Driver version             : 4.13.0
-         Available Logical Addresses: 3
-         Physical Address           : 1.0.0.0
-         Logical Address Mask       : 0x0010
-         CEC Version                : 2.0
-         Vendor ID                  : 0x000c03
-         Logical Addresses          : 1 (Allow RC Passthrough)
+"
+Backward compatibility with I2C devices
+=======================================
 
-           Logical Address          : 4
-             Primary Device Type    : Playback
-             Logical Address Type   : Playback
-             All Device Types       : Playback
-             RC TV Profile          : None
-             Device Features        :
-                 None
+The I3C protocol has been designed to be backward compatible with I2C
+devices. This backward compatibility allows one to connect a mix of I2C
+and I3C device on the same bus, though, in order to be really
+efficient, I2C devices should be equipped with 50 ns spike filters.
 
-
-[ 1041.063605] cec-3-0039: cec_thread_func: message 4f a6 06 10 00 00 timed out!
-[ 1043.367482] cec-3-0039: cec_thread_func: message 4f 84 10 00 04 timed out!
-
-Thanks,
-Archit
+I2C devices can't be discovered like I3C ones and have to be statically
+declared. In order to let the master know what these devices are
+capable of (both in terms of bus related limitations and
+functionalities), the software has to provide some information, which
+is done through the LVR (Legacy I2C Virtual Register).
+"
 
 > 
-> Regards,
+> > +	   describing device capabilities as described in the I3C
+> > +	   specification.
+> > +
+> > +	   bit[31:8]: unused
+> > +	   bit[7:5]: I2C device index. Possible values  
 > 
-> 	Hans
-> 
-> Hans Verkuil (4):
->    dt-bindings: adi,adv7511.txt: document cec clock
->    arm: dts: qcom: add cec clock for apq8016 board
->    arm: dts: renesas: add cec clock for Koelsch board
->    drm: adv7511/33: add HDMI CEC support
-> 
->   .../bindings/display/bridge/adi,adv7511.txt        |   4 +
->   arch/arm/boot/dts/r8a7791-koelsch.dts              |   8 +
->   arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi          |   2 +
->   drivers/gpu/drm/bridge/adv7511/Kconfig             |   8 +
->   drivers/gpu/drm/bridge/adv7511/Makefile            |   1 +
->   drivers/gpu/drm/bridge/adv7511/adv7511.h           |  45 ++-
->   drivers/gpu/drm/bridge/adv7511/adv7511_cec.c       | 314 +++++++++++++++++++++
->   drivers/gpu/drm/bridge/adv7511/adv7511_drv.c       | 152 +++++++++-
->   drivers/gpu/drm/bridge/adv7511/adv7533.c           |  30 +-
->   9 files changed, 514 insertions(+), 50 deletions(-)
->   create mode 100644 drivers/gpu/drm/bridge/adv7511/adv7511_cec.c
-> 
+> index?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Yes, I also find this name inappropriate, but that's directly
+extracted from the specification. 
+
+> Seems more like flags
+
+These are not described as independent flags in the spec. It's an enum
+with only 3 values on 7 currently defined. I guess MIPI reserves other
+values for future use (v2 of the spec?).
+
+> 
+> > +	    * 0: I2C device has a 50 ns spike filter
+> > +	    * 1: I2C device does not have a 50 ns spike filter but supports high
+> > +		 frequency on SCL
+> > +	    * 2: I2C device does not have a 50 ns spike filter and is not
+> > +		 tolerant to high frequencies
+> > +	    * 3-7: reserved
+> > +
+> > +	   bit[4]: tell whether the device operates in FM or FM+ mode
+> > +	    * 0: FM+ mode
+> > +	    * 1: FM mode
+> > +
+> > +	   bit[3:0]: device type
+> > +	    * 0-15: reserved  
+> 
+> That's useful...
+
+Unfortunately, v1 of the spec does not define any of these device
+types. Probably something that will be extended in future versions.
+
+> 
+> > +
+> > +I3C devices
+> > +===========
+> > +
+> > +I3C are not described in the device tree yet. We could decide to represent them
+> > +at some point to assign a specific dynamic address to a device or to force an
+> > +I3C device to act as an I2C device if it has a static address.  
+> 
+> I think we need to define this sooner rather than later if there's not a 
+> standard connector. That's the only thing that would enforce any sort of 
+> standard. Of course, that didn't help with SDIO.
+
+I'm perfectly fine with that. I'll try to come up with a proposal in
+v2 of this patchset.
+
+> 
+> > +
+> > +Example:
+> > +
+> > +	i3c-master@0d040000 {  
+> 
+> The node name should go into the DT spec. I tend to think "i3c" would be 
+> sufficient and aligned with i2c.
+
+Well, I3C slave IPs are around the corner (actually I used one to test
+this framework), and I thought clarifying things from the beginning
+would be beneficial. But if you think i3c implicitly means i3c-master,
+I can change that.
+
+> 
+> > +		compatible = "cdns,i3c-master";
+> > +		clocks = <&coreclock>, <&i3csysclock>;
+> > +		clock-names = "pclk", "sysclk";
+> > +		interrupts = <3 0>;
+> > +		reg = <0x0d040000 0x1000>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		status = "okay";
+> > +		i2c-scl-frequency = <100000>;
+> > +
+> > +		nunchuk: nunchuk@52 {
+> > +			compatible = "nintendo,nunchuk";
+> > +			reg = <0x52>;
+> > +			i3c-lvr = <0x10>;
+> > +		};
+> > +	};
+> > +
+> > -- 
+> > 2.7.4
+> >   
+
