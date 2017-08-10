@@ -1,75 +1,62 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: keystone-k2g: Add DSP node
-Date: Thu, 10 Aug 2017 18:52:43 -0500
-Message-ID: <20170810235245.30316-2-s-anna@ti.com>
-References: <20170810235245.30316-1-s-anna@ti.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/3] Add DSP DT nodes on Keystone 66AK2G platforms
+Date: Thu, 10 Aug 2017 18:52:42 -0500
+Message-ID: <20170810235245.30316-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810235245.30316-1-s-anna-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The Keystone 2 66AK2G SoC has a single TMS320C66x DSP Core
-Subsystem (C66x CorePac), containing a C66x Fixed/Floating-Point
-DSP Core, and 32 KB of L1P & L1D SRAMs and a 1 MB L2 SRAM. Add
-the DT node for this DSP processor sub-system.
+Hi Santosh,
 
-The DT node has a new property 'power-domains' and no 'clocks'
-properties, and uses slightly different property values for
-'resets' compared to other Keystone 2 SoCs. The processor does
-not have an MMU, and uses various IPC Generation registers and
-shared memory for inter-processor communication. The alias with
-a stem 'rproc' has also been added for the DSP, it provides a
-fixed remoteproc id for the DSP processor.
+The following series adds the DT nodes for the DSP device present
+on the Keystone2 66AK2G SoC and enables them on the currently
+supported platforms.
 
-Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone-k2g.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+The DTS nodes for the other Keystone2 family of SoCs were posted
+previously [1] and already in your staging branches for 4.14.
+This series adds the equivalent patches for 66AK2G SoCs. K2G uses
+slightly different properties compared to other K2 SoCs. The
+binding update for K2G is in-flight [2] and already acked by Rob.
+So, I am not sure if you need to wait for that patch to show up
+on mainline to avoid checkpatch warnings on these patches due to
+the undocumented compatible on your tree.
 
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 35726b66fb91..826b286665e6 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -28,6 +28,7 @@
- 
- 	aliases {
- 		serial0 = &uart0;
-+		rproc0 = &dsp0;
- 	};
- 
- 	cpus {
-@@ -147,6 +148,22 @@
- 			gpio,syscon-dev = <&devctrl 0x240>;
- 		};
- 
-+		dsp0: dsp@10800000 {
-+			compatible = "ti,k2g-dsp";
-+			reg = <0x10800000 0x00100000>,
-+			      <0x10e00000 0x00008000>,
-+			      <0x10f00000 0x00008000>;
-+			reg-names = "l2sram", "l1pram", "l1dram";
-+			power-domains = <&k2g_pds 0x0046>;
-+			ti,syscon-dev = <&devctrl 0x844>;
-+			resets = <&k2g_reset 0x0046 0x1>;
-+			interrupt-parent = <&kirq0>;
-+			interrupts = <0 8>;
-+			interrupt-names = "vring", "exception";
-+			kick-gpios = <&dspgpio0 27 0>;
-+			status = "disabled";
-+		};
-+
- 		msgmgr: msgmgr@02a00000 {
- 			compatible = "ti,k2g-message-manager";
- 			#mbox-cells = <2>;
+Validation done on K2G EVM and K2G ICE boards using ramdisk boot.
+Supported features are the same as the other Keystone 2 platforms.
+Patches are based on your current -next branch [3], so should apply
+fine on your 4.14 keystone_dts branch.
+
+regards
+Suman
+
+[1] http://marc.info/?l=linux-kernel&m=150128405901497&w=2
+[2] https://patchwork.kernel.org/patch/9873085/
+[3] https://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git/log/?h=next
+
+Andrew F. Davis (1):
+  ARM: dts: keystone-k2g-evm: Add and enable DSP CMA memory pool
+
+Suman Anna (2):
+  ARM: dts: keystone-k2g: Add DSP node
+  ARM: dts: keystone-k2g-ice: Add and enable DSP CMA memory pool
+
+ arch/arm/boot/dts/keystone-k2g-evm.dts | 18 ++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2g-ice.dts | 18 ++++++++++++++++++
+ arch/arm/boot/dts/keystone-k2g.dtsi    | 17 +++++++++++++++++
+ 3 files changed, 53 insertions(+)
+
 -- 
 2.13.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
