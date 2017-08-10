@@ -1,67 +1,236 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt: xilinx: zynqmp: Add bindings for PM firmware
-Date: Thu, 10 Aug 2017 14:10:56 -0500
-Message-ID: <20170810191056.ur5b3zdrcgmb6sim@rob-hp-laptop>
-References: <cover.1501854302.git.michal.simek@xilinx.com>
- <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 02/18] dt-bindings: arm: add support for ARM System
+ Control and Management Interface(SCMI) protocol
+Date: Thu, 10 Aug 2017 14:28:38 -0500
+Message-ID: <20170810192838.prslgnjvxv3xvyes@rob-hp-laptop>
+References: <1501857104-11279-1-git-send-email-sudeep.holla@arm.com>
+ <1501857104-11279-3-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1501857104-11279-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Ryan Harkin <Ryan.Harkin-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 03:45:30PM +0200, Michal Simek wrote:
-> From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+On Fri, Aug 04, 2017 at 03:31:28PM +0100, Sudeep Holla wrote:
+> This patch adds devicetree binding for System Control and Management
+> Interface (SCMI) Message Protocol used between the Application Cores(AP)
+> and the System Control Processor(SCP). The MHU peripheral provides a
+> mechanism for inter-processor communication between SCP's M3 processor
+> and AP.
 > 
-> Document the DT bindings for the Zynq UltraScale+ PM Firmware.
+> SCP offers control and management of the core/cluster power states,
+> various power domain DVFS including the core/cluster, certain system
+> clocks configuration, thermal sensors and many others.
 > 
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> SCMI protocol is developed as better replacement to the existing SCPI
+> which is not flexible and easily extensible.
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 > ---
+>  Documentation/devicetree/bindings/arm/arm,scmi.txt | 174 +++++++++++++++++++++
+>  1 file changed, 174 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
 > 
->  .../devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt | 19 +++++++++++++++++++
-
-bindings/firmware/
-
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
+> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
 > new file mode 100644
-> index 000000000000..222a18ce07fc
+> index 000000000000..33c16be58e72
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
-> @@ -0,0 +1,19 @@
-> +Xilinx Zynq MPSoC Firmware Device Tree Bindings
+> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> @@ -0,0 +1,174 @@
+> +System Control and Management Interface (SCMI) Message Protocol
+> +----------------------------------------------------------
 > +
-> +The zynqmp-pm node describes the interface to platform firmware.
-
-Please define this should be under /firmware node.
-
+> +The SCMI is intended to allow agents such as OSPM to manage various functions
+> +that are provided by the hardware platform it is running on, including power
+> +and performance functions.
+> +
+> +This binding is intended to define the interface the firmware implementing
+> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
+> +and Management Interface Platform Design Document")[0] provide for OSPM in
+> +the device tree.
+> +
 > +Required properties:
-> + - compatible:	Must contain:  "xlnx,zynqmp-pm"
-> + - method:	The method of calling the PM-API firmware layer.
-> +		Permitted values are:
-> +		 - "smc" : To be used in configurations without a hypervisor
-> +		 - "hvc" : To be used when hypervisor is present
 
-Do you really use both?
+Please define this is a subnode of /firmware node.
 
-> + - interrupts:	Interrupt specifier
 > +
-> +Examples:
-> +	zynqmp-firmware {
-> +		compatible = "xlnx,zynqmp-pm";
-> +		method = "smc";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 35 4>;
+> +- compatible : shall be "arm,scmi"
+> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
+> +	  exactly one or two mailboxes, one for transmitting messages("tx")
+> +	  and another optional for receiving the notifications("rx") if
+> +	  supported.
+> +- mbox-names: shall be "tx" or "rx"
+> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
+> +	  generic mailbox client binding.
+> +
+> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
+> +about the generic mailbox controller and client driver bindings.
+> +
+> +The mailbox is the only permitted method of calling the SCMI firmware.
+> +Mailbox doorbell is used as a mechanism to alert the presence of a
+> +messages and/or notification.
+> +
+> +Each protocol supported shall have a sub-node with corresponding compatible
+> +as described in the following sections. If the platform supports dedicated
+> +communication channel for a particular protocol, the 3 properties namely:
+> +mboxes, mbox-names and shmem shall be present in the sub-node corresponding
+> +to that protocol.
+> +
+> +Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
+> +------------------------------------------------------------
+> +
+> +This binding uses the common clock binding[1].
+> +
+> +Required properties:
+> +- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
+> +
+> +Power domain bindings for the power domains based on SCMI Message Protocol
+> +------------------------------------------------------------
+> +
+> +This binding uses the generic power domain binding[4].
+> +
+> +PM domain providers
+> +===================
+> +
+> +Required properties:
+> + - #power-domain-cells : Should be 1. Contains the device or the power
+> +			 domain ID value used by SCMI commands.
+> +
+> +PM domain consumers
+> +===================
+
+How consumers work is already defined elsewhere.
+
+> +
+> +Required properties:
+> + - power-domains : A phandle and PM domain specifier as defined by bindings of
+> +                   the power controller specified by phandle.
+> +
+> +Sensor bindings for the sensors based on SCMI Message Protocol
+> +--------------------------------------------------------------
+> +SCMI provides an API to access the various sensors on the SoC.
+> +
+> +Required properties:
+> +- #thermal-sensor-cells: should be set to 1. This property follows the
+> +			 thermal device tree bindings[2].
+> +
+> +			 Valid cell values are raw identifiers (Sensor ID)
+> +			 as used by the firmware. Refer to  platform details
+> +			 for your implementation for the IDs to use.
+> +
+> +SRAM and Shared Memory for SCMI
+> +-------------------------------
+> +
+> +A small area of SRAM is reserved for SCMI communication between application
+> +processors and SCP.
+> +
+> +The properties should follow the generic mmio-sram description found in [3]
+> +
+> +Each sub-node represents the reserved area for SCMI.
+> +
+> +Required sub-node properties:
+> +- reg : The base offset and size of the reserved area with the SRAM
+> +- compatible : should be "arm,scmi-shmem" for Non-secure SRAM based
+> +	       shared memory
+> +
+> +[0] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
+> +[3] Documentation/devicetree/bindings/sram/sram.txt
+> +[4] Documentation/devicetree/bindings/power/power_domain.txt
+> +
+> +Example:
+> +
+> +sram: sram@50000000 {
+> +	compatible = "mmio-sram";
+> +	reg = <0x0 0x50000000 0x0 0x10000>;
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges = <0 0x0 0x50000000 0x10000>;
+> +
+> +	cpu_scp_lpri: scp-shmem@0 {
+> +		compatible = "arm,scmi-shmem";
+> +		reg = <0x0 0x200>;
 > +	};
+> +
+> +	cpu_scp_hpri: scp-shmem@200 {
+> +		compatible = "arm,scmi-shmem";
+> +		reg = <0x200 0x200>;
+> +	};
+> +};
+> +
+> +mailbox: mailbox0@40000000 {
+> +	....
+> +	#mbox-cells = <1>;
+> +};
+> +
+> +scmi_protocol: scmi@2e000000 {
+
+The unit address is not valid.
+
+> +	compatible = "arm,scmi";
+> +	method = "mailbox-doorbell";
+
+Is this not implied by the mboxes property? 
+
+> +	mboxes = <&mailbox 0 &mailbox 1>;
+> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	scmi_devpd: protocol@11 {
+> +		reg = <0x11>;
+> +		#power-domain-cells = <1>;
+> +	};
+> +
+> +	scmi_dvfs: protocol@13 {
+> +		reg = <0x13>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	scmi_clk: protocol@14 {
+> +		reg = <0x14>;
+> +		#clock-cells = <1>;
+> +	};
+> +
+> +	scmi_sensors0: protocol@15 {
+> +		reg = <0x15>;
+> +		#thermal-sensor-cells = <1>;
+> +	};
+> +};
+> +
+> +cpu@0 {
+> +	...
+> +	reg = <0 0>;
+> +	clocks = <&scmi_dvfs 0>;
+> +};
+> +
+> +hdlcd@7ff60000 {
+> +	...
+> +	reg = <0 0x7ff60000 0 0x1000>;
+> +	clocks = <&scmi_clk 4>;
+> +	power-domains = <&scmi_devpd 1>;
+> +};
+> +
+> +thermal-zones {
+> +	soc_thermal {
+> +		polling-delay-passive = <100>;
+> +		polling-delay = <1000>;
+> +
+> +				/* sensor         ID */
+> +		thermal-sensors = <&scmi_sensors0 3>;
+> +		...
+> +	};
+> +};
 > -- 
-> 1.9.1
+> 2.7.4
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
