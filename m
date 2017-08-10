@@ -1,30 +1,90 @@
-From: Vladimir Murzin <vladimir.murzin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] drm: hdlcd: allow HDLCD to be used without interrupt
-Date: Thu, 10 Aug 2017 13:15:43 +0100
-Message-ID: <e68186a4-2435-a969-7eff-21556d6a6b03@arm.com>
-References: <E1daJCF-0003pG-DI@rmk-PC.armlinux.org.uk>
- <20170726102748.GM31807@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+Subject: [PATCH v2 1/1] ARM: dts: imx6q-bx50v3: Enable i2c recovery mechanism
+Date: Thu, 10 Aug 2017 13:42:29 +0300
+Message-ID: <622b0df0cfc7ed6fe3510ea8a2ef07fb7073bee5.1502360101.git.jose.alarcon@ge.com>
+References: <cover.1502360101.git.jose.alarcon@ge.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170726102748.GM31807-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+In-Reply-To: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
+In-Reply-To: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
+References: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mali DP Maintainers <malidp-VeJGdqYn5oNWk0Htik3J/w@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, nandor.han-JJi787mZWgc@public.gmane.org, Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/07/17 11:27, Russell King - ARM Linux wrote:
-> I suspect the above failure is down to either (a) not having enough
-> memory available to allocate a 1920x1080 frame buffer, or (b) not
-> (yet) being able to program the hdlcd pixel clock for this platform,
-> which is currently hard-coded in DT at 23.75MHz.
+This commit enables i2c recovery, supported by the i2c core subsystem.
+It defines the required GPIOs for SDA and SLC lines.
 
-Given it is NOMMU it is likely (a). Usually, tweaking FORCE_MAX_ZONEORDER
-helped me in such cases.
+Signed-off-by: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 42 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-Cheers
-Vladimir
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index c90b26f..1015e55 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -111,6 +111,11 @@
+ };
+ 
+ &i2c1 {
++	pinctrl-names = "default", "gpio";
++	pinctrl-1 = <&pinctrl_i2c1_gpio>;
++	sda-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
++
+ 	pca9547: mux@70 {
+ 		compatible = "nxp,pca9547";
+ 		reg = <0x70>;
+@@ -261,6 +266,43 @@
+ 	};
+ };
+ 
++&i2c2 {
++	pinctrl-names = "default", "gpio";
++	pinctrl-1 = <&pinctrl_i2c2_gpio>;
++	sda-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
++};
++
++&i2c3 {
++	pinctrl-names = "default", "gpio";
++	pinctrl-1 = <&pinctrl_i2c3_gpio>;
++	sda-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++	scl-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
++};
++
++&iomuxc {
++	pinctrl_i2c1_gpio: i2c1gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x1b0b0
++			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c2_gpio: i2c2gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x1b0b0
++			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x1b0b0
++		>;
++	};
++
++	pinctrl_i2c3_gpio: i2c3gpiogrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_3__GPIO1_IO03	0x1b0b0
++			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0
++		>;
++	};
++};
++
+ &usdhc4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_usdhc4>;
+-- 
+2.10.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
