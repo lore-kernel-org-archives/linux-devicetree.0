@@ -1,36 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 17/20] dt-bindings: qcom_nandc: IPQ4019 QPIC NAND
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 18/20] dt-bindings: qcom_nandc: IPQ8074 QPIC NAND
  documentation
-Date: Thu, 10 Aug 2017 15:27:54 -0500
-Message-ID: <20170810202754.jufcee4si6ujmqia@rob-hp-laptop>
+Date: Thu, 10 Aug 2017 15:30:09 -0500
+Message-ID: <20170810203009.sree54ddecbnymep@rob-hp-laptop>
 References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
- <1501949998-29859-18-git-send-email-absahu@codeaurora.org>
+ <1501949998-29859-19-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501949998-29859-18-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1501949998-29859-19-git-send-email-absahu@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: dwmw2@infradead.org, boris.brezillon@free-electrons.com, computersforpeace@gmail.com, marek.vasut@gmail.com, mark.rutland@arm.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Aug 05, 2017 at 09:49:55PM +0530, Abhishek Sahu wrote:
-> 1. Qualcom IPQ4019 SoC uses QPIC NAND controller version 1.4.0
->    which uses BAM DMA Engine while IPQ806x uses EBI2 NAND
->    which uses ADM DMA Engine.
-> 2. QPIC NAND will 3 BAM channels: command, data tx and data rx
->    while EBI2 NAND uses only single ADM channel.
-> 3. CRCI is only required for ADM DMA and its not required for
->    BAM DMA.
+On Sat, Aug 05, 2017 at 09:49:56PM +0530, Abhishek Sahu wrote:
+> Qualcom IPQ8074 SoC uses QPIC NAND controller version 1.5.0
+> which uses BAM DMA Engine.
 > 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 > ---
->  .../devicetree/bindings/mtd/qcom_nandc.txt         | 55 +++++++++++++++++++++-
->  1 file changed, 54 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> index d93b952..8dfa543 100644
+> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> @@ -6,6 +6,8 @@ Required properties:
+>  			    SoC and it uses ADM DMA
+>      * "qcom,ipq4019-nand" - for QPIC NAND controller v1.4.0 being used in
+>                              IPQ4019 SoC and it uses BAM DMA
+> +    * "qcom,ipq8074-nand" - for QPIC NAND controller v1.5.0 being used in
+> +                            IPQ8074 SoC and it uses BAM DMA
+>  
+>  - reg:			MMIO address range
+>  - clocks:		must contain core clock and always on clock
+> @@ -97,7 +99,7 @@ nand-controller@1ac00000 {
+>  };
+>  
+>  nand-controller@79b0000 {
+> -	compatible = "qcom,ipq4019-nand";
+> +	compatible = "qcom,ipq4019-nand", "qcom,ipq8074-nand";
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The order here should be reversed as 8074 is the newer one. And if 4019 
+is the fallback compatible, that needs to be documented above.
+
+Rob
