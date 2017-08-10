@@ -1,91 +1,65 @@
-From: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
-Subject: [PATCH v2 1/1] ARM: dts: imx6q-bx50v3: Enable i2c recovery mechanism
-Date: Thu, 10 Aug 2017 13:42:29 +0300
-Message-ID: <622b0df0cfc7ed6fe3510ea8a2ef07fb7073bee5.1502360101.git.jose.alarcon@ge.com>
-References: <cover.1502360101.git.jose.alarcon@ge.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
-In-Reply-To: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
-References: <cover.1502360101.git.jose.alarcon-JJi787mZWgc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, nandor.han-JJi787mZWgc@public.gmane.org, Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+From: Eugen Hristev <eugen.hristev@microchip.com>
+Subject: [PATCH 0/3] iio: adc: at91-sama5d2_adc: add DMA support
+Date: Thu, 10 Aug 2017 15:34:56 +0300
+Message-ID: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, linux-iio@vger.kernel.org, jic23@kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lars@metafoo.de
+Cc: eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-This commit enables i2c recovery, supported by the i2c core subsystem.
-It defines the required GPIOs for SDA and SLC lines.
+This patch implements the DMA support for the ADC in sam5d2 SOC.
+After discussing on the mailing list, this approach is based on triggered
+kfifo buffer, with DMA support added on top of it.
+Thus, the trigger is enabled by the buffer. The ADC itself will not have
+an IRQ enabled if using DMA. With DMA, the channels are enabled, and DMA
+controller is configured to read from the data ready registers.
+When DMA starts, the trigger will start the conversion (external trigger
+configured), then the registers will have the conversion data ready, trigger
+the DMA controller to read from the registers, the DMA will copy the data into
+the software buffer, and trigger the DMA IRQ. In the bottom half, the
+trigger polled and the data from the DMA buffer is pushed to buffer.
 
-Signed-off-by: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
-Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 42 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+The DMA will use a cyclic buffer to write to one half, and the software can
+read from the other half. The DMA operation doesn't stop until the buffer is
+disabled.
+The DMA coherent area is allocated when DMA is initially started, and
+deallocated only if the watermark is changed to 1 (no more DMA usage). The
+coherent area is large enough to cope with maximum fifo size for all possible
+channels enabled.
+The fifo size is set to 128 conversions by default in the driver.
 
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index c90b26f..1015e55 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -111,6 +111,11 @@
- };
- 
- &i2c1 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+	sda-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
-+
- 	pca9547: mux@70 {
- 		compatible = "nxp,pca9547";
- 		reg = <0x70>;
-@@ -261,6 +266,43 @@
- 	};
- };
- 
-+&i2c2 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+	sda-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
-+	sda-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio1 3 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&iomuxc {
-+	pinctrl_i2c1_gpio: i2c1gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c2_gpio: i2c2gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x1b0b0
-+			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x1b0b0
-+		>;
-+	};
-+
-+	pinctrl_i2c3_gpio: i2c3gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__GPIO1_IO03	0x1b0b0
-+			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0
-+		>;
-+	};
-+};
-+
- &usdhc4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc4>;
+The implementation uses the user watermark  to decide whether DMA will be
+used or not. For watermark 1, DMA will not be used. If watermark is greater,
+DMA will be used.
+Sysfs attributes are created to indicate whether the DMA is used,
+with hwfifo_enabled, and the current DMA watermark is readable
+in hwfifo_watermark. Minimum and maximum values are in hwfifo_watermark_min
+and hwfifo_watermark_max.
+
+Devicetree binding added for dma as well.
+Modified devicetree for sama5d2 SoC to add connected DMA channel.
+
+Eugen Hristev (3):
+  Documentation: dt: iio: at91-sama5d2_adc: add optional dma property
+  ARM: dts: at91: sama5d2: added dma property for ADC device
+  iio: adc: at91-sama5d2_adc: add support for DMA
+
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   7 +
+ arch/arm/boot/dts/sama5d2.dtsi                     |   2 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 366 ++++++++++++++++++++-
+ 3 files changed, 359 insertions(+), 16 deletions(-)
+
 -- 
-2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
