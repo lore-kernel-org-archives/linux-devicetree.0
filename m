@@ -1,52 +1,70 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 4/9] arm64: dts: hikey960: Add optee node
-Date: Thu, 10 Aug 2017 10:26:10 +0800
-Message-ID: <20170810022615.19204-5-guodong.xu@linaro.org>
-References: <20170810022615.19204-1-guodong.xu@linaro.org>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: [RESEND PATCH 2/2] i2c: mediatek: Add i2c compatible for MediaTek MT7622
+Date: Thu, 10 Aug 2017 10:27:41 +0800
+Message-ID: <1502332061-25085-3-git-send-email-jun.gao@mediatek.com>
+References: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170810022615.19204-1-guodong.xu@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, Victor Chong <victor.chong@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Victor Chong <victor.chong@linaro.org>
+From: Jun Gao <jun.gao@mediatek.com>
 
-This patch adds op-tee node for hikey960
+Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
+MT7622 limits message numbers to 255, and does not support 4GB
+DMA mode.
 
-Signed-off-by: Victor Chong <victor.chong@linaro.org>
+Signed-off-by: Jun Gao <jun.gao@mediatek.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/i2c/busses/i2c-mt65xx.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 6609b0f..b96d865 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -159,6 +159,13 @@
- 		startup-delay-us = <70000>;
- 		enable-active-high;
- 	};
-+
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
+diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
+index 9bedf0b..2c7f847 100644
+--- a/drivers/i2c/busses/i2c-mt65xx.c
++++ b/drivers/i2c/busses/i2c-mt65xx.c
+@@ -172,6 +172,14 @@ struct mtk_i2c {
+ 	.max_comb_2nd_msg_len = 31,
  };
  
- &i2c0 {
++static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
++	.max_num_msgs = 255,
++	.max_write_len = 65535,
++	.max_read_len = 65535,
++	.max_comb_1st_msg_len = 65535,
++	.max_comb_2nd_msg_len = 65535,
++};
++
+ static const struct mtk_i2c_compatible mt6577_compat = {
+ 	.quirks = &mt6577_i2c_quirks,
+ 	.pmic_i2c = 0,
+@@ -190,6 +198,15 @@ struct mtk_i2c {
+ 	.support_33bits = 0,
+ };
+ 
++static const struct mtk_i2c_compatible mt7622_compat = {
++	.quirks = &mt7622_i2c_quirks,
++	.pmic_i2c = 0,
++	.dcm = 1,
++	.auto_restart = 1,
++	.aux_len_reg = 1,
++	.support_33bits = 0,
++};
++
+ static const struct mtk_i2c_compatible mt8173_compat = {
+ 	.pmic_i2c = 0,
+ 	.dcm = 1,
+@@ -201,6 +218,7 @@ struct mtk_i2c {
+ static const struct of_device_id mtk_i2c_of_match[] = {
+ 	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
+ 	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
++	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
+ 	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
+ 	{}
+ };
 -- 
-2.10.2
+1.8.1.1
