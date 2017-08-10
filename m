@@ -1,117 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ipmi: bt-i2c: added documentation for bt-i2c
- drivers
-Date: Thu, 10 Aug 2017 15:25:35 -0500
-Message-ID: <20170810202535.7bctfuhjh63b6jtm@rob-hp-laptop>
-References: <20170805011855.1027-1-brendanhiggins@google.com>
- <20170805011855.1027-2-brendanhiggins@google.com>
+Subject: Re: [PATCH v3 16/20] dt-bindings: qcom_nandc: fix the ipq806x device
+ tree example
+Date: Thu, 10 Aug 2017 15:26:23 -0500
+Message-ID: <20170810202623.oksod6fo5upzpvfe@rob-hp-laptop>
+References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
+ <1501949998-29859-17-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170805011855.1027-2-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1501949998-29859-17-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, benjaminfair-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 06:18:52PM -0700, Brendan Higgins wrote:
-> Added device tree binding documentation for ipmi-bt-i2c (host) and
-> ipmi-bmc-bt-i2c (BMC) and documentation for the Block Transfer over I2C
-> (bt-i2c) protocol.
-
-Please split the bindings to a separate patch.
-
+On Sat, Aug 05, 2017 at 09:49:54PM +0530, Abhishek Sahu wrote:
+> 1. Correct the compatible string for IPQ806x
+> 2. Change the NAND controller and NAND chip nodes name
+>    for more clarity.
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > ---
-> Changes for v2:
->   - Fixed a typo
->   - Reworded a sentence to make it clear that I was talking about IBM's BT-BMC
->   - Deleted an unnecessary discussion of the host side interface (unnecessary
->     since the OpenIPMI stuff already has its own documentation).
-> ---
->  Documentation/bt-i2c.txt                           | 109 +++++++++++++++++++++
->  .../devicetree/bindings/ipmi/ipmi-bt-i2c.txt       |  21 ++++
->  .../bindings/ipmi_bmc/ipmi-bmc-bt-i2c.txt          |  21 ++++
->  3 files changed, 151 insertions(+)
->  create mode 100644 Documentation/bt-i2c.txt
->  create mode 100644 Documentation/devicetree/bindings/ipmi/ipmi-bt-i2c.txt
->  create mode 100644 Documentation/devicetree/bindings/ipmi_bmc/ipmi-bmc-bt-i2c.txt
+>  Documentation/devicetree/bindings/mtd/qcom_nandc.txt | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-
-> diff --git a/Documentation/devicetree/bindings/ipmi/ipmi-bt-i2c.txt b/Documentation/devicetree/bindings/ipmi/ipmi-bt-i2c.txt
-> new file mode 100644
-> index 000000000000..bd956f2805e4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ipmi/ipmi-bt-i2c.txt
-> @@ -0,0 +1,21 @@
-> +Device tree configuration for the ipmi-bt-i2c driver.
-> +
-> +Required Properties:
-> +- compatible 	: should be "ipmi-bt-i2c"
-> +- reg		: the I2C slave address of the ipmi-bmc-bt-i2c
-> +
-> +i2c0: i2c-bus@40 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x40 0x40>;
-> +	compatible = "aspeed,ast2400-i2c-bus";
-
-This is the host side, right? So this should be something besides an 
-ASpeed I2C controller.
-
-> +	clock-frequency = <100000>;
-> +	status = "disabled";
-
-Don't should status in examples.
-
-> +	interrupts = <0>;
-> +	interrupt-parent = <&i2c>;
-> +
-> +	bt-i2c-master@41 {
-
-But it's the slave device you are describing here, right? The host is 
-the master. Just "ipmi-bt" is probably enough.
-
-> +		compatible = "ipmi-bt-i2c";
-> +		reg = <0x41>;
-> +	};
-> +};
-> diff --git a/Documentation/devicetree/bindings/ipmi_bmc/ipmi-bmc-bt-i2c.txt b/Documentation/devicetree/bindings/ipmi_bmc/ipmi-bmc-bt-i2c.txt
-> new file mode 100644
-> index 000000000000..6e82693ee50e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ipmi_bmc/ipmi-bmc-bt-i2c.txt
-> @@ -0,0 +1,21 @@
-> +Device tree configuration for the ipmi-bmc-bt-i2c driver.
-> +
-> +Required Properties:
-> +- compatible 	: should be "ipmi-bmc-bt-i2c"
-> +- reg		: the I2C slave address of this driver.
-> +
-> +i2c0: i2c-bus@40 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	reg = <0x40 0x40>;
-> +	compatible = "aspeed,ast2400-i2c-bus";
-> +	clock-frequency = <100000>;
-> +	status = "disabled";
-> +	interrupts = <0>;
-> +	interrupt-parent = <&i2c>;
-> +
-> +	bt-i2c-slave@41 {
-> +		compatible = "ipmi-bmc-bt-i2c";
-> +		reg = <0x41>;
-
-This doesn't follow the slave binding which sets bit 30 for slave 
-devices.
-
-> +	};
-> +};
-> -- 
-> 2.14.0.rc1.383.gd1ce394fe2-goog
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
