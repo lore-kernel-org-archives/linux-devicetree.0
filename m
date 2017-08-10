@@ -1,92 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/9] devicetree: bindings: Add sata port phy config
- parameters in ahci-ceva
-Date: Thu, 10 Aug 2017 14:07:20 -0500
-Message-ID: <20170810190720.yqeu4qzztylu5slb@rob-hp-laptop>
-References: <cover.1501852693.git.michal.simek@xilinx.com>
- <b7692739885fe200a4ea5a4e3828349a406e2247.1501852693.git.michal.simek@xilinx.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt: xilinx: zynqmp: Add bindings for PM firmware
+Date: Thu, 10 Aug 2017 14:10:56 -0500
+Message-ID: <20170810191056.ur5b3zdrcgmb6sim@rob-hp-laptop>
+References: <cover.1501854302.git.michal.simek@xilinx.com>
+ <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <b7692739885fe200a4ea5a4e3828349a406e2247.1501852693.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Alexander Graf <agraf@suse.de>, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <8c27b7eec6cc00d37dfe9b3998212ce9c9c27a31.1501854302.git.michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 04, 2017 at 03:18:10PM +0200, Michal Simek wrote:
-> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+On Fri, Aug 04, 2017 at 03:45:30PM +0200, Michal Simek wrote:
+> From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > 
-> This patch adds device tree bindings for sata port phy parameters
-> in the ahci-ceva.txt file.
+> Document the DT bindings for the Zynq UltraScale+ PM Firmware.
 > 
-> Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
 > 
->  .../devicetree/bindings/ata/ahci-ceva.txt          | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+>  .../devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt | 19 +++++++++++++++++++
+
+bindings/firmware/
+
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-> index 7ca8b976c13a..f97546f61444 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
-> @@ -5,6 +5,36 @@ Required properties:
->    - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
->    - clocks: Input clock specifier. Refer to common clock bindings.
->    - interrupts: Interrupt specifier. Refer to interrupt binding.
-> +  - ceva,p0-cominit-params: OOB timing value for COMINIT parameter for port 0.
-> +  - ceva,p1-cominit-params: OOB timing value for COMINIT parameter for port 1.
-> +			The fields for the above parameter must be as shown below:
-> +			ceva,phy-cominit-params = /bits/ 8 <CIBGMN CIBGMX CIBGN CINMP>;
-
-phy? Should be pN?
-
-> +			CINMP : COMINIT Negate Minimum Period.
-> +			CIBGN : COMINIT Burst Gap Nominal.
-> +			CIBGMX: COMINIT Burst Gap Maximum.
-> +			CIBGMN: COMINIT Burst Gap Minimum.
-> +  - ceva,p0-comwake-params: OOB timing value for COMWAKE parameter for port 0.
-> +  - ceva,p1-comwake-params: OOB timing value for COMWAKE parameter for port 1.
-> +			The fields for the above parameter must be as shown below:
-> +			ceva,phy-comwake-params = /bits/ 8 <CWBGMN CWBGMX CWBGN CWNMP>;
-> +			CWBGMN: COMWAKE Burst Gap Minimum.
-> +			CWBGMX: COMWAKE Burst Gap Maximum.
-> +			CWBGN: COMWAKE Burst Gap Nominal.
-> +			CWNMP: COMWAKE Negate Minimum Period.
-> +  - ceva,p0-burst-params: Burst timing value for COM parameter for port 0.
-> +  - ceva,p1-burst-params: Burst timing value for COM parameter for port 1.
-> +			The fields for the above parameter must be as shown below:
-> +			ceva,phy-burst-params = /bits/ 8 <BMX BNM SFD PTST>;
-> +			BMX: COM Burst Maximum.
-> +			BNM: COM Burst Nominal.
-> +			SFD: Signal Failure Detection value.
-> +			PTST: Partial to Slumber timer value.
-> +  - ceva,p0-retry-params: Retry interval timing value for port 0.
-> +  - ceva,p1-retry-params: Retry interval timing value for port 1.
-> +			The fields for the above parameter must be as shown below:
-> +			ceva,phy-retry-params = /bits/ 16 <RIT RCT>;
-> +			RIT:  Retry Interval Timer.
-> +			RCT:  Rate Change Timer.
->  
->  Optional properties:
->    - ceva,broken-gen2: limit to gen1 speed instead of gen2.
-> @@ -16,5 +46,14 @@ Examples:
->  		interrupt-parent = <&gic>;
->  		interrupts = <0 133 4>;
->  		clocks = <&clkc SATA_CLK_ID>;
-> +		ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
-> +		ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
-> +		ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
-> +		ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
+> diff --git a/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
+> new file mode 100644
+> index 000000000000..222a18ce07fc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/xilinx/xlnx,zynqmp-pm.txt
+> @@ -0,0 +1,19 @@
+> +Xilinx Zynq MPSoC Firmware Device Tree Bindings
 > +
-> +		ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
-> +		ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
-> +		ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
-> +		ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
->  		ceva,broken-gen2;
->  	};
+> +The zynqmp-pm node describes the interface to platform firmware.
+
+Please define this should be under /firmware node.
+
+> +Required properties:
+> + - compatible:	Must contain:  "xlnx,zynqmp-pm"
+> + - method:	The method of calling the PM-API firmware layer.
+> +		Permitted values are:
+> +		 - "smc" : To be used in configurations without a hypervisor
+> +		 - "hvc" : To be used when hypervisor is present
+
+Do you really use both?
+
+> + - interrupts:	Interrupt specifier
+> +
+> +Examples:
+> +	zynqmp-firmware {
+> +		compatible = "xlnx,zynqmp-pm";
+> +		method = "smc";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 35 4>;
+> +	};
 > -- 
 > 1.9.1
 > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
