@@ -1,46 +1,21 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v2 3/4] dt-bindings: remoteproc: Add bindings for Davinci
- DSP processors
-Date: Thu, 10 Aug 2017 10:05:24 -0500
-Message-ID: <1aec744a-5e9c-d33f-9a55-1ef4f937400d@ti.com>
-References: <20170801154844.24662-1-s-anna@ti.com>
- <20170801154844.24662-4-s-anna@ti.com>
- <20170810140157.osn5rtymykgdf6gp@rob-hp-laptop>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [patch v2 0/2]
+Date: Thu, 10 Aug 2017 08:18:54 -0700
+Message-ID: <20170810151854.GA16915@kroah.com>
+References: <1502115467-1735-1-git-send-email-oleksandrs@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810140157.osn5rtymykgdf6gp@rob-hp-laptop>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1502115467-1735-1-git-send-email-oleksandrs@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Robert Tivy <rtivy@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Oleksandr Shamray <oleksandrs@mellanox.com>
+Cc: arnd@arndb.de, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au, jiri@resnulli.us, tklauser@distanz.ch, linux-serial@vger.kernel.org, mec@shout.net, vadimp@maellanox.com, system-sw-low-level@mellanox.com, robh+dt@kernel.org, openocd-devel-owner@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-On 08/10/2017 09:01 AM, Rob Herring wrote:
-> On Tue, Aug 01, 2017 at 10:48:43AM -0500, Suman Anna wrote:
->> Add the device tree bindings document for the DSP processor
->> subsystem devices on TI Davinci DA8xx/OMAP-L13x SoCs.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> ---
->> v2: 
->>  - Updated the patch header
->>  - Revised the binding status statement slightly
->>  - Updated the example to address Rob's comments
->>  - No changes in properties description themselves
->> v1: https://patchwork.kernel.org/patch/9751269/
->>
->>  .../bindings/remoteproc/ti,davinci-rproc.txt       | 86 ++++++++++++++++++++++
->>  1 file changed, 86 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Aug 07, 2017 at 05:17:45PM +0300, Oleksandr Shamray wrote:
+> When a need raise up to use JTAG interface for system's devices
+> programming or CPU debugging, it could be done from the external
+> JTAG master controller.
 
-Thanks Rob.
-
-Bjorn,
-Appreciate it if you can pick up the series for v4.14.
-
-Thanks,
-Suman
+Your subject line is a bit "odd" :(
