@@ -1,41 +1,46 @@
-From: Lars Persson <lars.persson-VrBV9hrLPhE@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] crypto: add crypto_(un)register_ahashes()
-Date: Thu, 10 Aug 2017 16:54:16 +0200
-Message-ID: <6d27d00b-cac9-d613-90ec-782815266b87@axis.com>
-References: <cover.1502368677.git.larper@axis.com>
- <01cfbf11707a9907d87c59fb47385c4178a08688.1502368677.git.larper@axis.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 3/3] dt-bindings: ASoC: rockchip: Add
+ rockchip,codec-names property
+Date: Thu, 10 Aug 2017 15:56:07 +0100
+Message-ID: <20170810145607.g663oq7cfxjmaxtf@sirena.org.uk>
+References: <1502340898-28403-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1502340898-28403-4-git-send-email-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <01cfbf11707a9907d87c59fb47385c4178a08688.1502368677.git.larper-VrBV9hrLPhE@public.gmane.org>
-Content-Language: sv
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rabin Vincent <rabinv-VrBV9hrLPhE@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="faaqy76szqpegs3z"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1502340898-28403-4-git-send-email-jeffy.chen@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffy Chen <jeffy.chen@rock-chips.com>
+Cc: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de, briannorris@chromium.org, dianders@chromium.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--faaqy76szqpegs3z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 08/10/2017 02:53 PM, Lars Persson wrote:
-> From: Rabin Vincent <rabinv-VrBV9hrLPhE@public.gmane.org>
-> 
-> There are already helpers to (un)register multiple normal
-> and AEAD algos.  Add one for ahashes too.
-> 
-> Signed-off-by: Lars Persson <larper-VrBV9hrLPhE@public.gmane.org>
-> Signed-off-by: Rabin Vincent <rabinv-VrBV9hrLPhE@public.gmane.org>
-> ---
-> v4: crypto_register_skciphers was used where crypto_unregister_skciphers
->      was intended.
->
+On Thu, Aug 10, 2017 at 12:54:58PM +0800, Jeffy Chen wrote:
+> Add a new rockchip,codec-names property, so that the driver can parse
+> the codecs by name.
 
-The v4 change comment above in fact belongs to patch 3/4 of this series. 
-Sorry for the confusion.
+Why?  You're already referencing the CODECs by phandle and these names
+are not part of any ABI...
 
-BR,
-  Lars
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--faaqy76szqpegs3z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmMdAYACgkQJNaLcl1U
+h9Dnagf/aZxJVOsaZqXldjTeBwE/IwMytJ3nEKJxSv3g+L2gRYxj7WpiiZ2egki6
+YsLbpcydyyTOqdYEFNUdUPeBmoZ/lXvQ6Jt4v5+9apktmUIR81NBCpVnvynityMy
+bs6bbovTiUOJ0OXBL5VjGGmr0K7r8IlFuB6kbeO18WnVNUWHlJIsghn4c5vE01k0
+J36cd8WdfPzz+OS7kmtndxn5479d1xgT0K1ySFhCBOKxkA2O7L4UWsThBp3P865V
+6FUIBqTOdzTKA/twcMKTlxMlIYyLm1ZBDVrE4v/k4wPQIHZMcD8SzSuc2HzCLMhC
+drgYizLNsOzMoEACWe/vGjuTTD446w==
+=yAX5
+-----END PGP SIGNATURE-----
+
+--faaqy76szqpegs3z--
