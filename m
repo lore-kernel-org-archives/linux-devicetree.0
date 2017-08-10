@@ -1,7 +1,7 @@
 From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH 1/3] Documentation: dt: iio: at91-sama5d2_adc: add optional dma property
-Date: Thu, 10 Aug 2017 15:34:57 +0300
-Message-ID: <1502368499-6739-2-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH 2/3] ARM: dts: at91: sama5d2: added dma property for ADC device
+Date: Thu, 10 Aug 2017 15:34:58 +0300
+Message-ID: <1502368499-6739-3-git-send-email-eugen.hristev@microchip.com>
 References: <1502368499-6739-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,35 +12,25 @@ To: nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, linux-iio@vger
 Cc: eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Added property for DMA configuration of the device.
+Added DMA property for ADC device
 
 Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
- Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/sama5d2.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-index 552e7a8..5f94d47 100644
---- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-@@ -17,6 +17,11 @@ Required properties:
-   This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
-   IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 8067c71..2f1dc77 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -1267,6 +1267,8 @@
+ 				atmel,min-sample-rate-hz = <200000>;
+ 				atmel,max-sample-rate-hz = <20000000>;
+ 				atmel,startup-time-ms = <4>;
++				dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
++				dma-names = "rx";
+ 				status = "disabled";
+ 			};
  
-+Optional properties:
-+  - dmas: Phandle to dma channel for the ADC.
-+  See ../../dma/dma.txt for details.
-+  - dma-names: Must be "rx" when dmas property is being used.
-+
- Example:
- 
- adc: adc@fc030000 {
-@@ -31,4 +36,6 @@ adc: adc@fc030000 {
- 	vddana-supply = <&vdd_3v3_lp_reg>;
- 	vref-supply = <&vdd_3v3_lp_reg>;
- 	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
-+	dmas = <&dma0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
-+	dma-names = "rx";
- }
 -- 
 2.7.4
