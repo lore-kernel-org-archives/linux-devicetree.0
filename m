@@ -1,82 +1,35 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/7] PCI: MediaTek: Add host controller support for
- mt2712 and mt7622
-Date: Thu, 10 Aug 2017 17:26:13 -0500
-Message-ID: <20170810222613.GA4142@bhelgaas-glaptop.roam.corp.google.com>
-References: <cover.1502336769.git.honghui.zhang@mediatek.com>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH 0/2] add cpufreq support to MT7622
+Date: Fri, 11 Aug 2017 01:13:41 +0200
+Message-ID: <38532456.kVN5V9NzkU@aspire.rjw.lan>
+References: <cover.1502272372.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1502336769.git.honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <cover.1502272372.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh-+zGGX9k9yNkdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, xinping.qian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 10, 2017 at 02:34:53PM +0800, honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Honghui Zhang <honghui.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On Wednesday, August 9, 2017 12:12:37 PM CEST sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> MediaTek's PCIe host controller has two generation HWs, MT2712 and MT7622
-> using the new generation HW, which has two root ports. They share most
-> probing flow with MT2701/MT7623. But the read/write config space logical
-> is different. The per-port registers must be touched for read/write
-> configuration space.
+> Add cpufreq support to MT7622 SoC and also include some cleanups
+> with the generic naming to explicitly support all MediaTek SoCs.
 > 
-> This patchset abstract the common probing flow, and add support for the
-> new generation controller.
+> Sean Wang (2):
+>   cpufreq: mediatek: add cleanups with the more generic naming
+>   cpufreq: mediatek: add support of cpufreq to MT7622 SoC
 > 
-> Changes since v3:
->  - Unify the macro define's names with PCIE_ prefix.
->  - Use lower/upper_32_bits macro and remove AHB2PCIE_BASEL/AHB2PCIE_BASEH.
->  - Factor out mtk_pcie_find_port to eliminate duplicate code.
->  - Use list_for_each_entry instead of list_for_each_entry_safe when search list.
->  - Simplify the mtk_pcie_hw_rd_cfg flow.
->  - Split a new patch to rename the parameter and function names.
->  - Update the subject and changelog to include specific SoC IDs.
+>  drivers/cpufreq/mediatek-cpufreq.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
 > 
-> Changes since v2:
->  - Split the Gen2 training change to a separate patch.
->  - Simplify the config_read/write logical and get rid of mtk_pcie_find_port.
->  - Using bus->sysdata to simplify the code.
->  - Rebase to commit 65b83b13204a ("PCI: mediatek: Explicitly request exclusive
->    reset control")[1].
->  - Fix some misspells.
->  - Add review tags in commit message.
 > 
-> Changes since v1:
->  - Fix build warnings in arm arch.
->  - Using SoC specific compatible instead of generic compatible.
->  - Add devicetree binding example for mt7622.
->  - Unified the register define names with PCIE_ prefix.
->  - Cleanup some un-necessary condition determine when starup port.
->  - minor code cleanups.
-> 
-> [1] https://patchwork.kernel.org/patch/9852591/
-> 
-> Honghui Zhang (2):
->   PCI: mediatek: make the parameter and function names more accurate
->   PCI: mediatek: Add a structure to abstract the controller generations
-> 
-> Ryder Lee (5):
->   PCI: mediatek: Using readl_poll_timeout to wait Gen2 training
->   PCI: mediatek: switch to use platform_get_resource_byname()
->   dt-bindings: PCI: rename and cleanup MediaTek binding text
->   PCI: mediatek: Add controller support for mt2712 and mt7622
->   dt-bindings: PCI: add support for mt2712 and mt7622
-> 
->  .../bindings/pci/mediatek,mt7623-pcie.txt          | 130 -----
->  .../devicetree/bindings/pci/mediatek-pcie.txt      | 284 ++++++++++
->  drivers/pci/host/Kconfig                           |   5 +-
->  drivers/pci/host/pcie-mediatek.c                   | 598 ++++++++++++++++++---
->  4 files changed, 820 insertions(+), 197 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
->  create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.txt
 
-I applied these on pci/host-mediatek for v4.14, thanks!
+Applied with ACKs from Viresh, thanks!
 
-I did split the rename/cleanup DT patch into two to make the changes more
-obvious.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
