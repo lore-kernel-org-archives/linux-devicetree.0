@@ -1,102 +1,75 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 01/20] mtd: nand: qcom: program NAND_DEV_CMD_VLD
- register
-Date: Thu, 10 Aug 2017 11:42:50 +0200
-Message-ID: <20170810114250.6663a6b0@bbrezillon>
-References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
-        <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
+Date: Thu, 10 Aug 2017 11:51:46 +0200
+Message-ID: <319342e7-a07a-5cac-a5d2-f822c98630bd@xs4all.nl>
+References: <20170730130743.19681-1-hverkuil@xs4all.nl>
+ <9d1757b3-24f9-2f0f-1971-62d1ef4b79e3@codeaurora.org>
+ <fa41b1e5-7319-c7f8-32e9-36c291d85a0f@xs4all.nl>
+ <75a39db0-a5cc-9a20-2bbf-ebfc3573efca@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
-Sender: stable-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <75a39db0-a5cc-9a20-2bbf-ebfc3573efca@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le Sat,  5 Aug 2017 21:49:39 +0530,
-Abhishek Sahu <absahu@codeaurora.org> a écrit :
-
-> The NAND page read fails without complete boot chain since
-> NAND_DEV_CMD_VLD value is not proper. The default power on reset
-> value for this register is
-> 
->     0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
-> 
-> The READ_START_VALID should be enabled for sending PAGE_READ
-> command. READ_STOP_VALID should be cleared since normal NAND
-> page read does not require READ_STOP command.
-> 
-> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Archit Taneja <architt@codeaurora.org>
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> ---
->  drivers/mtd/nand/qcom_nandc.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 0289f09..7406019 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -110,6 +110,10 @@
->  
->  /* NAND_DEV_CMD_VLD bits */
->  #define	READ_START_VLD			0
-> +#define	READ_STOP_VALID			1
-> +#define	WRITE_START_VALID		2
-> +#define	ERASE_START_VALID		3
-> +#define	SEQ_READ_START_VLD		4
-
-Why not
-
-#define	READ_START_VLD				BIT(0)
-#define	READ_STOP_VALID				BIT(1)
-#define	WRITE_START_VALID			BIT(2)
-#define	ERASE_START_VALID			BIT(3)
-#define	SEQ_READ_START_VLD			BIT(4)
-
->  
->  /* NAND_EBI2_ECC_BUF_CFG bits */
->  #define	NUM_STEPS			0
-> @@ -148,6 +152,12 @@
->  #define	FETCH_ID			0xb
->  #define	RESET_DEVICE			0xd
->  
-> +/* Default Value for NAND_DEV_CMD_VLD */
-> +#define NAND_DEV_CMD_VLD_VAL		(BIT(READ_START_VLD)	| \
-> +					 BIT(WRITE_START_VALID)	| \
-> +					 BIT(ERASE_START_VALID)	| \
-> +					 BIT(SEQ_READ_START_VLD))
-> +
-
-and then:
-
-#define NAND_DEV_CMD_VLD_VAL	(READ_START_VLD	| \
-				 WRITE_START_VALID | \
-				 ERASE_START_VALID | \
-				 SEQ_READ_START_VLD)
-
-BTW, can you use consistent suffixes? Sometime definitions are suffixed
-with _VLD and others are suffixed with _VALID.
-
->  /*
->   * the NAND controller performs reads/writes with ECC in 516 byte chunks.
->   * the driver calls the chunks 'step' or 'codeword' interchangeably
-> @@ -1995,13 +2005,14 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
->  {
->  	/* kill onenand */
->  	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
-> +	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
->  
->  	/* enable ADM DMA */
->  	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
->  
->  	/* save the original values of these registers */
->  	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
-> -	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
-> +	nandc->vld = NAND_DEV_CMD_VLD_VAL;
->  
->  	return 0;
->  }
+T24gMTAvMDgvMTcgMTE6MDgsIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4gCj4gCj4gT24gMDgvMTAv
+MjAxNyAwMjoyNiBQTSwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBPbiAxMC8wOC8xNyAxMDo0OSwg
+QXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+IEhpIEhhbnMsCj4+Pgo+Pj4gT24gMDcvMzAvMjAxNyAw
+NjozNyBQTSwgSGFucyBWZXJrdWlsIHdyb3RlOgo+Pj4+IEZyb206IEhhbnMgVmVya3VpbCA8aGFu
+cy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+Pgo+Pj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgQ0VD
+IHN1cHBvcnQgdG8gdGhlIGRybSBhZHY3NTExL2Fkdjc1MzMgZHJpdmVycy4KPj4+Pgo+Pj4+IEkg
+aGF2ZSB0ZXN0ZWQgdGhpcyB3aXRoIHRoZSBRdWFsY29tbSBEcmFnb25ib2FyZCBDNDEwIChhZHY3
+NTMzIGJhc2VkKQo+Pj4+IGFuZCB0aGUgUmVuZXNhcyBSLUNhciBLb2Vsc2NoIGJvYXJkIChhZHY3
+NTExIGJhc2VkKS4KPj4+Pgo+Pj4+IE5vdGU6IHRoZSBEcmFnb25ib2FyZCBuZWVkcyB0aGlzIHBh
+dGNoOgo+Pj4+Cj4+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODI0Nzcz
+Lwo+Pj4+Cj4+Pj4gQXJjaGl0LCBjYW4geW91IGNvbmZpcm0gdGhhdCB0aGlzIHBhdGNoIHdpbGwg
+Z28gdG8ga2VybmVsIDQuMTQ/Cj4+Pj4KPj4+PiBBbmQgdGhlIEtvZWxzY2ggYm9hcmQgbmVlZHMg
+dGhpcyA0LjEzIGZpeDoKPj4+Pgo+Pj4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvOTgzNjg2NS8KPj4+Pgo+Pj4+IEkgb25seSBoYXZlIHRoZSBLb2Vsc2NoIGJvYXJkIHRvIHRl
+c3Qgd2l0aCwgYnV0IGl0IGxvb2tzIGxpa2Ugb3RoZXIKPj4+PiBSLUNhciBib2FyZHMgdXNlIHRo
+ZSBzYW1lIGFkdjc1MTEuIEl0IHdvdWxkIGJlIG5pY2UgaWYgc29tZW9uZSBjYW4KPj4+PiBhZGQg
+Q0VDIHN1cHBvcnQgdG8gdGhlIG90aGVyIFItQ2FyIGJvYXJkcyBhcyB3ZWxsLiBUaGUgbWFpbiB0
+aGluZwo+Pj4+IHRvIGNoZWNrIGlzIGlmIHRoZXkgYWxsIHVzZSB0aGUgc2FtZSAxMiBNSHogZml4
+ZWQgQ0VDIGNsb2NrIHNvdXJjZS4KPj4+Pgo+Pj4+IEFueW9uZSB3aG8gd2FudHMgdG8gdGVzdCB0
+aGlzIHdpbGwgbmVlZCB0aGUgQ0VDIHV0aWxpdGllcyB0aGF0Cj4+Pj4gYXJlIHBhcnQgb2YgdGhl
+IHY0bC11dGlscyBnaXQgcmVwb3NpdG9yeToKPj4+Pgo+Pj4+IGdpdCBjbG9uZSBnaXQ6Ly9saW51
+eHR2Lm9yZy92NGwtdXRpbHMuZ2l0Cj4+Pj4gY2QgdjRsLXV0aWxzCj4+Pj4gLi9ib290c3RyYXAu
+c2gKPj4+PiAuL2NvbmZpZ3VyZQo+Pj4+IG1ha2UKPj4+PiBzdWRvIG1ha2UgaW5zdGFsbAo+Pj4+
+Cj4+Pj4gTm93IGNvbmZpZ3VyZSB0aGUgQ0VDIGFkYXB0ZXIgYXMgYSBQbGF5YmFjayBkZXZpY2U6
+Cj4+Pj4KPj4+PiBjZWMtY3RsIC0tcGxheWJhY2sKPj4+Pgo+Pj4+IERpc2NvdmVyIG90aGVyIENF
+QyBkZXZpY2VzOgo+Pj4+Cj4+Pj4gY2VjLWN0bCAtUwo+Pj4KPj4+IEkgdHJpZWQgdGhlIGluc3Ry
+dWN0aW9ucywgYW5kIEkgZ2V0IHRoZSBmb2xsb3dpbmcgb3V0cHV0LiBJIGRvbid0IHRoaW5rIEkg
+aGF2ZQo+Pj4gYW55IENFQyBkZXZpY2UgY29ubmVjdGVkLCB0aG91Z2guIElzIHRoaXMgdGhlIGV4
+cGVjdGVkIGJlaGF2aW91cj8KPj4+Cj4+PiAjY2VjLWN0bCAtUwo+Pj4gRHJpdmVyIEluZm86Cj4+
+PiAgICAgICAgICBEcml2ZXIgTmFtZSAgICAgICAgICAgICAgICA6IGFkdjc1MTEKPj4+ICAgICAg
+ICAgIEFkYXB0ZXIgTmFtZSAgICAgICAgICAgICAgIDogMy0wMDM5Cj4+PiAgICAgICAgICBDYXBh
+YmlsaXRpZXMgICAgICAgICAgICAgICA6IDB4MDAwMDAwMGUKPj4+ICAgICAgICAgICAgICAgICAg
+TG9naWNhbCBBZGRyZXNzZXMKPj4+ICAgICAgICAgICAgICAgICAgVHJhbnNtaXQKPj4+ICAgICAg
+ICAgICAgICAgICAgUGFzc3Rocm91Z2gKPj4+ICAgICAgICAgIERyaXZlciB2ZXJzaW9uICAgICAg
+ICAgICAgIDogNC4xMy4wCj4+PiAgICAgICAgICBBdmFpbGFibGUgTG9naWNhbCBBZGRyZXNzZXM6
+IDMKPj4+ICAgICAgICAgIFBoeXNpY2FsIEFkZHJlc3MgICAgICAgICAgIDogMS4wLjAuMAo+Pj4g
+ICAgICAgICAgTG9naWNhbCBBZGRyZXNzIE1hc2sgICAgICAgOiAweDAwMDAKPj4+ICAgICAgICAg
+IENFQyBWZXJzaW9uICAgICAgICAgICAgICAgIDogMi4wCj4+PiAgICAgICAgICBMb2dpY2FsIEFk
+ZHJlc3NlcyAgICAgICAgICA6IDAKPj4+Cj4+PiAjY2VjLWN0bCAtLXBsYXliYWNrCj4+PiBbIDEw
+MzguNzYxNTQ1XSBjZWMtMy0wMDM5OiBjZWNfdGhyZWFkX2Z1bmM6IG1lc3NhZ2UgNDQgdGltZWQg
+b3V0IQo+Pgo+PiBUaGlzIGlzbid0IHJpZ2h0LiBZb3Ugc2hvdWxkbid0IHNlZSB0aGlzLiBJdCBu
+ZXZlciByZWNlaXZlcyBhbiBpbnRlcnJ1cHQKPj4gd2hlbiB0aGUgdHJhbnNtaXQgaGFzIGZpbmlz
+aGVkLCB3aGljaCBjYXVzZXMgdGhlc2UgdGltZSBvdXRzLgo+Pgo+PiBXaGF0IGFyZSB5b3UgdGVz
+dGluZyB0aGlzIG9uPyBUaGUgRHJhZ29uYm9hcmQgYzQxMD8KPiAKPiBZZXMuCgpPbiB0b3Agb2Yg
+d2hpY2gga2VybmVsIHRyZWUgYXJlIHRoZXNlIHBhdGNoZXMgYXBwbGllZD8gSSBjYW4gdHJ5IGFu
+ZCByZXByb2R1Y2UKaXQuCgpSZWdhcmRzLAoKCUhhbnMKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
