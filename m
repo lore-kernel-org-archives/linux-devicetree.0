@@ -1,62 +1,46 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 03/16] mtd: spi-falcon: drop check of boot select
-Date: Thu, 10 Aug 2017 16:05:15 +0100
-Message-ID: <20170810150515.w66ksbfexbcegy6z@sirena.org.uk>
-References: <20170808225247.32266-1-hauke@hauke-m.de>
- <20170808225247.32266-4-hauke@hauke-m.de>
- <20170809114421.oo2bunardgw3p4tk@sirena.org.uk>
- <0DAF21CFE1B20740AE23D6AF6E54843F1EA0A385@IRSMSX101.ger.corp.intel.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 3/4] dt-bindings: remoteproc: Add bindings for Davinci
+ DSP processors
+Date: Thu, 10 Aug 2017 10:05:24 -0500
+Message-ID: <1aec744a-5e9c-d33f-9a55-1ef4f937400d@ti.com>
+References: <20170801154844.24662-1-s-anna@ti.com>
+ <20170801154844.24662-4-s-anna@ti.com>
+ <20170810140157.osn5rtymykgdf6gp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="s6uae5i4hoypg7dc"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <0DAF21CFE1B20740AE23D6AF6E54843F1EA0A385-kPTMFJFq+rF9qrmMLTLiibfspsVTdybXVpNB7YpNyf8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Langer, Thomas" <thomas.langer-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, "ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org" <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Mehrtens, Hauke" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kishon-l0cyMroinI0@public.gmane.org" <kishon-l0cyMroinI0@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170810140157.osn5rtymykgdf6gp@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Robert Tivy <rtivy@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 08/10/2017 09:01 AM, Rob Herring wrote:
+> On Tue, Aug 01, 2017 at 10:48:43AM -0500, Suman Anna wrote:
+>> Add the device tree bindings document for the DSP processor
+>> subsystem devices on TI Davinci DA8xx/OMAP-L13x SoCs.
+>>
+>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>> ---
+>> v2: 
+>>  - Updated the patch header
+>>  - Revised the binding status statement slightly
+>>  - Updated the example to address Rob's comments
+>>  - No changes in properties description themselves
+>> v1: https://patchwork.kernel.org/patch/9751269/
+>>
+>>  .../bindings/remoteproc/ti,davinci-rproc.txt       | 86 ++++++++++++++++++++++
+>>  1 file changed, 86 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
 
---s6uae5i4hoypg7dc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Rob.
 
-On Wed, Aug 09, 2017 at 02:02:16PM +0000, Langer, Thomas wrote:
-> > On Wed, Aug 09, 2017 at 12:52:34AM +0200, Hauke Mehrtens wrote:
+Bjorn,
+Appreciate it if you can pick up the series for v4.14.
 
-> > > Do not check which flash type the SoC was booted from before
-> > > using this driver. Assume that the device tree is correct and use this
-> > > driver when it was added to device tree. This also removes a build
-> > > dependency to the SoC code.
-
-> > Why?  Is this assumption reliably true?
-
-> Yes. We only have one type of flash interface in the device tree, as they=
-=20
-> are connected to the shared EBU (External Bus Unit).
-
-That sounds board specific but this is a driver for a SoC?  In any case
-this needs to end up in the commit log.
-
---s6uae5i4hoypg7dc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlmMdioACgkQJNaLcl1U
-h9BYlAgAgCDu3huZzBs6oYvZZ+POaY/GV5Cs55enzpxuT8F87rnOrYbTGQw66HzP
-+4Foc1xogiJOKDNSs+BpPiuFTo/zvwu+ApKkEE8OeaDOQh4gVhCag/OUKz9z5hAZ
-ZvSHQud2xiO1FjFZeLFB1KGEA9jb9ltOjWdJxqdiv1S9mV4ITiVho//mhTNf6HcL
-RMiKTeDmSz37Q3X1vgrnQehpTYgqUHYCzr/NjUjsJ3nATLZpr8bLbLhh4YKalxqj
-Elnt3lXSauR4/LfcfwpSqRYfeMP/LhWAHMRRJpSMLqFVAyWgndZP9IXm9mP4fXia
-R3yhSmQxzNY7qhWMoY1vQAfNsr4hwA==
-=HdUK
------END PGP SIGNATURE-----
-
---s6uae5i4hoypg7dc--
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Suman
