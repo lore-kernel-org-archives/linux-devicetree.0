@@ -1,73 +1,80 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM:dts:armadillo800eva: Add console parametters
-Date: Thu, 10 Aug 2017 10:25:32 +0200
-Message-ID: <CAMuHMdWoCd85ROYjTn5Q023Re+sYW+B4TRRvZBt9bLBAkNHMbQ@mail.gmail.com>
-References: <1502027702-4366-1-git-send-email-phucduc.bui@gmail.com>
- <1502027702-4366-2-git-send-email-phucduc.bui@gmail.com> <20170807075920.GD7175@verge.net.au>
- <CAABR9nHUuSw7m6BCBxDs28YtppHxwHNQR5f06H0n8xcXKx7gCw@mail.gmail.com> <87o9rnyhhh.wl%kuninori.morimoto.gx@renesas.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: [PATCHv3 0/4] tegra-cec: add Tegra HDMI CEC support
+Date: Thu, 10 Aug 2017 10:31:21 +0200
+Message-ID: <20170810083125.36649-1-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <87o9rnyhhh.wl%kuninori.morimoto.gx@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Bui Duc Phuc <phucduc.bui@gmail.com>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux-sh list <linux-sh@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-arm-kernel@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san, Phuc-san,
-
-On Thu, Aug 10, 2017 at 10:12 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->>     >       chosen {
->>     > -             bootargs = "earlyprintk ignore_loglevel root=/dev/nfs ip=dhcp rw";
->>     > +             bootargs = "console=tty0 console=ttySC0,115200 earlyprintk
->>     > +                             ignore_loglevel root=/dev/nfs ip=dhcp rw";
->>     >               stdout-path = "serial0:115200n8";
->>     >       };
->>
->>     Hi,
->>
->>     this feels wrong. My understanding is that stdout-path should be enough
->>     to get the console.
-> (snip)
->> Thank you for your comment.
->> Before creating this patch, I have a patch reference of you and Geert.
->> https://patchwork.kernel.org/patch/5184001/
->
-> I think he want to say here is that it needs "console=" which
-> is indicated by Geert on https://patchwork.kernel.org/patch/5184001/
->
->         "Note that we have to keep the "console=ttySC1" parameter in
->         chosen/bootargs, ..."
-
-        "... else we only get console messages on tty0, and because
-        this DTS is shared between legacy and multi-platform."
-
-That was needed at the time of commit 2c32622c3f3f9c7e ("ARM:
-shmobile: armadillo800eva dts: Add chosen/stdout-path").
-
-Due to generic DT/console updates later, the "console=" parameters were
-no longer needed, cfr. commit 1403e38b829acdad ("ARM: dts: armadillo800eva:
-Update console parameters").
-
-> I don't have armadillo800eva anymore, so I can't test this patch.
-> But according to Phuc-san, there is not command prompt after boot
-> without this patch.
-
-I'm quite sure I do get console output on both ttyS0 and tty0 with the current
-kernel (can't test right now due to board farm move/restructuring).
-
-For a userspace prompt, I guess Phuc-san uses /dev/console as the console
-device in e.g. /etc/inittab (or an equivalent)? If you want a prompt on tty0,
-you better specify /dev/tty0 instead of /dev/console.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+RnJvbTogSGFucyBWZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgoKVGhpcyBwYXRjaCBz
+ZXJpZXMgYWRkcyBzdXBwb3J0IGZvciB0aGUgVGVncmEgQ0VDIGZ1bmN0aW9uYWxpdHkuCgpJdCBo
+YXMgdGhpcyBwcmVyZXF1aXNpdGU6IGh0dHBzOi8vcGF0Y2h3b3JrLmxpbnV4dHYub3JnL3BhdGNo
+LzQyNTIxLwoKVGhhdCBwYXRjaCBoYXMgYmVlbiBtZXJnZWQgaW4gNC4xMy1yYzQuCgpUaGUgZmly
+c3QgcGF0Y2ggZG9jdW1lbnRzIHRoZSBDRUMgYmluZGluZ3MsIHRoZSBzZWNvbmQgYWRkcyBzdXBw
+b3J0CmZvciB0aGlzIHRvIHRlZ3JhMTI0LmR0c2kgYW5kIGVuYWJsZXMgaXQgZm9yIHRoZSBKZXRz
+b24gVEsxLgoKVGhlIHRoaXJkIHBhdGNoIGFkZHMgdGhlIENFQyBkcml2ZXIgaXRzZWxmIGFuZCB0
+aGUgZmluYWwgcGF0Y2ggYWRkcwp0aGUgY2VjIG5vdGlmaWVyIHN1cHBvcnQgdG8gdGhlIGRybS90
+ZWdyYSBkcml2ZXIgaW4gb3JkZXIgdG8gbm90aWZ5CnRoZSBDRUMgZHJpdmVyIHdoZW5ldmVyIHRo
+ZSBwaHlzaWNhbCBhZGRyZXNzIGNoYW5nZXMuCgpJIGV4cGVjdCB0aGF0IHRoZSBkdHMgY2hhbmdl
+cyBhcHBseSBhcyB3ZWxsIHRvIHRoZSBUZWdyYSBYMS9YMiBhbmQgcG9zc2libHkKb3RoZXIgVGVn
+cmEgU29DcywgYnV0IEkgY2FuIG9ubHkgdGVzdCB0aGlzIHdpdGggbXkgSmV0c29uIFRLMSBib2Fy
+ZC4KClRoZSBkdC1iaW5kaW5ncyBhbmQgdGhlIHRlZ3JhLWNlYyBkcml2ZXIgd291bGQgZ28gaW4g
+dGhyb3VnaCB0aGUgbWVkaWEKc3Vic3lzdGVtLCB0aGUgZHJtL3RlZ3JhIHBhcnQgdGhyb3VnaCB0
+aGUgZHJtIHN1YnN5c3RlbSBhbmQgdGhlIGR0cwpjaGFuZ2VzIHRocm91Z2ggKEkgZ3Vlc3MpIHRo
+ZSBsaW51eC10ZWdyYSBkZXZlbG9wZXJzLiBMdWNraWx5IHRoZXkgYXJlCmFsbCBpbmRlcGVuZGVu
+dCBvZiBvbmUgYW5vdGhlci4KClRvIHRlc3QgdGhpcyB5b3UgbmVlZCB0aGUgQ0VDIHV0aWxpdGll
+cyBmcm9tIGdpdDovL2xpbnV4dHYub3JnL3Y0bC11dGlscy5naXQuCgpUbyBidWlsZCB0aGlzOgoK
+Z2l0IGNsb25lIGdpdDovL2xpbnV4dHYub3JnL3Y0bC11dGlscy5naXQKY2QgdjRsLXV0aWxzCi4v
+Ym9vdHN0cmFwLnNoOyAuL2NvbmZpZ3VyZQptYWtlCnN1ZG8gbWFrZSBpbnN0YWxsICMgb3B0aW9u
+YWwsIHlvdSByZWFsbHkgb25seSBuZWVkIHV0aWxzL2NlYyoKClRvIHRlc3Q6CgpjZWMtY3RsIC0t
+cGxheWJhY2sgIyBjb25maWd1cmUgYXMgcGxheWJhY2sgZGV2aWNlCmNlYy1jdGwgLVN1YmplY3Qg
+IyBkZXRlY3QgYWxsIGNvbm5lY3RlZCBDRUMgZGV2aWNlcwoKU2VlIGhlcmUgZm9yIHRoZSBwdWJs
+aWMgQ0VDIEFQSToKCmh0dHBzOi8vaHZlcmt1aWwuaG9tZS54czRhbGwubmwvc3BlYy91YXBpL2Nl
+Yy9jZWMtYXBpLmh0bWwKClJlZ2FyZHMsCgoJSGFucwoKQ2hhbmdlcyBzaW5jZSB2MToKCi0gVXBk
+YXRlIHRoZSBiaW5kaW5ncyBkb2Mgc28gaXQgbm8gbG9uZ2VyIHJlZmVycyB0byAnZHJpdmVyJywg
+aW5zdGVhZCBpdAogIG9ubHkgcmVmZXJzIHRvIHRoZSBoYXJkd2FyZS4KLSBBZGQgJ3NlbGVjdCBD
+RUNfQ09SRSBpZiBDRUNfTk9USUZJRVInIHRvIEtjb25maWcuIElmIHRoZSB0ZWdyYS1jZWMgZHJp
+dmVyCiAgaXMgYSBtb2R1bGUgYW5kIHRoZSBkcm0gdGVncmEgZHJpdmVyIGlzIGJ1aWx0LWluLCB0
+aGVuIHRoZSBDRUMgY29yZQogIHdpbGwgYmUgYSBtb2R1bGUgYWxzbywgY2F1c2luZyB0aGUgQ0VD
+IG5vdGlmaWVyIHRvIGZhaWwgKHdpbGwgYmUKICBjb21waWxlZCBhcyBlbXB0eSBmdW5jdGlvbnMp
+LiBUaGlzIHNlbGVjdCBmb3JjZXMgdGhlIGNvcnJlY3QgZGVwZW5kZW5jeS4KICAoTm90ZTogdGhp
+cyB3YXMgcG9zdGVkIHNlcGFyYXRlbHkgYXMgYSB2MiBwYXRjaCkKCkhhbnMgVmVya3VpbCAoNCk6
+CiAgZHQtYmluZGluZ3M6IGRvY3VtZW50IHRoZSB0ZWdyYSBDRUMgYmluZGluZ3MKICBBUk06IHRl
+Z3JhOiBhZGQgQ0VDIHN1cHBvcnQgdG8gdGVncmExMjQuZHRzaQogIHRlZ3JhLWNlYzogYWRkIFRl
+Z3JhIEhETUkgQ0VDIGRyaXZlcgogIGRybS90ZWdyYTogYWRkIGNlYy1ub3RpZmllciBzdXBwb3J0
+CgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdGVncmEtY2VjLnR4dCAgICAgICAgfCAg
+MjcgKysKIE1BSU5UQUlORVJTICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IHwgICA4ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LWpldHNvbi10azEuZHRzICAgICAg
+ICAgIHwgICA0ICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMTI0LmR0c2kgICAgICAgICAgICAg
+ICAgICAgIHwgIDEyICstCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvS2NvbmZpZyAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvZHJtLmggICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvaGRtaS5jICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL2dwdS9kcm0vdGVncmEvb3V0cHV0LmMg
+ICAgICAgICAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL0tjb25m
+aWcgICAgICAgICAgICAgICAgICAgICB8ICAxMSArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01h
+a2VmaWxlICAgICAgICAgICAgICAgICAgICB8ICAgMiArCiBkcml2ZXJzL21lZGlhL3BsYXRmb3Jt
+L3RlZ3JhLWNlYy9NYWtlZmlsZSAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL21lZGlhL3BsYXRm
+b3JtL3RlZ3JhLWNlYy90ZWdyYV9jZWMuYyAgICAgICB8IDUwNiArKysrKysrKysrKysrKysrKysr
+KysKIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vdGVncmEtY2VjL3RlZ3JhX2NlYy5oICAgICAgIHwg
+MTI3ICsrKysrKwogMTMgZmlsZXMgY2hhbmdlZCwgNzE2IGluc2VydGlvbnMoKyksIDEgZGVsZXRp
+b24oLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWVkaWEvdGVncmEtY2VjLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbWVkaWEv
+cGxhdGZvcm0vdGVncmEtY2VjL01ha2VmaWxlCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9t
+ZWRpYS9wbGF0Zm9ybS90ZWdyYS1jZWMvdGVncmFfY2VjLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL21lZGlhL3BsYXRmb3JtL3RlZ3JhLWNlYy90ZWdyYV9jZWMuaAoKLS0gCjIuMTMuMgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
