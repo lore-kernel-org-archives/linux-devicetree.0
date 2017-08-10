@@ -1,110 +1,67 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: iproc: Add optional brcm,pci-hotplug
-Date: Thu, 10 Aug 2017 13:00:20 -0500
-Message-ID: <CAL_JsqKi-jBEV6d8SbBZik6RjzgvVn_A9x7VShLbXgd1k3_GPg@mail.gmail.com>
-References: <1502167455-10516-1-git-send-email-oza.oza@broadcom.com>
- <1502167455-10516-3-git-send-email-oza.oza@broadcom.com> <CAL_JsqL3dWA-0Sq-_8ufa-cwXZEbFQBJHCK-5wLp_xw5NrTHKw@mail.gmail.com>
- <CAMSpPPfjxbjaScqovegcRG6GBhkUutqgj3Ly1B+0_BnZN2Ewug@mail.gmail.com>
- <735e0534-ab77-7440-fbc6-5b40598da445@broadcom.com> <CAMSpPPejuTn210aSYjApbz_Jx_tO7V1Fd6nSt96axm-9MFruhA@mail.gmail.com>
- <CAMSpPPdxGdXoh0dux3Lyh5o210mxSK2WhMvyh_ygW8gQN28ymg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] char: xilinx_hwicap: Fix warnings in the driver
+Date: Thu, 10 Aug 2017 13:16:31 -0500
+Message-ID: <CAL_JsqLy3yV60eoxL0s7vohpcCuh=d3-Z8zVyaEPe=g772yySA@mail.gmail.com>
+References: <6da0afe2afd2c7a21d16da9a9c7acab09385ae2c.1501247838.git.michal.simek@xilinx.com>
+ <79e2e616a8b7dbf38eb72ba0b620230017dcbc65.1501247838.git.michal.simek@xilinx.com>
+ <20170803223218.ilryp5spqztsr3cz@rob-hp-laptop> <0e40a687-e11b-b5bb-24f0-465144c98929@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMSpPPdxGdXoh0dux3Lyh5o210mxSK2WhMvyh_ygW8gQN28ymg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oza Oza <oza.oza@broadcom.com>
-Cc: Ray Jui <ray.jui@broadcom.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, Andy Gospodarek <gospo@broadcom.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oza Pawandeep <oza.pawandeep@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0e40a687-e11b-b5bb-24f0-465144c98929-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 9, 2017 at 12:52 AM, Oza Oza <oza.oza@broadcom.com> wrote:
-> On Wed, Aug 9, 2017 at 11:13 AM, Oza Oza <oza.oza@broadcom.com> wrote:
->> On Wed, Aug 9, 2017 at 10:57 AM, Ray Jui <ray.jui@broadcom.com> wrote:
+On Fri, Aug 4, 2017 at 2:49 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> On 4.8.2017 00:32, Rob Herring wrote:
+>> On Fri, Jul 28, 2017 at 03:17:26PM +0200, Michal Simek wrote:
+>>> From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >>>
+>>> This patch fixes the below warning
+>>>         --> Use #include <linux/io.h> instead of <asm/io.h>
+>>>         --> Use #include <linux/uaccess.h> instead of <asm/uaccess.h>
+>>>         --> please, no space before tabs
+>>>         --> Block comments use a trailing */ on a separate line
+>>>         --> Possible unnecessary 'out of memory' message
+>>>         --> Block comments use * on subsequent lines
+>>>         --> Block comments use a trailing */ on a separate line
+>>>         --> braces {} are not necessary for any arm of this statement
+>>>         --> DT compatible string "xlnx,opb-hwicap-1.00.b"
+>>>          appears un-documented
+>>>         --> DT compatible string "xlnx,xps-hwicap-1.00.a"
+>>>             appears un-documented
 >>>
->>> On 8/8/2017 10:22 PM, Oza Oza wrote:
->>>>
->>>> On Tue, Aug 8, 2017 at 7:50 PM, Rob Herring <robh+dt@kernel.org> wrote:
->>>>>
->>>>> Please send bindings to DT list.
->>>>
->>>> Sure, will do that.
->>>>
->>>>> On Mon, Aug 7, 2017 at 11:44 PM, Oza Pawandeep <oza.oza@broadcom.com>
->>>>> wrote:
->>>>>>
->>>>>> Add description for optional device tree property
->>>>>> 'brcm,pci-hotplug' for PCI hotplug feature.
->>>>>>
->>>>>> Signed-off-by: Oza Pawandeep <oza.oza@broadcom.com>
->>>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>>> b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>>> index b8e48b4..a3bad24 100644
->>>>>> --- a/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>>> +++ b/Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
->>>>>> @@ -72,6 +72,29 @@ Optional properties:
->>>>>>   - brcm,pcie-msi-inten: Needs to be present for some older iProc
->>>>>> platforms that
->>>>>>   require the interrupt enable registers to be set explicitly to enable
->>>>>> MSI
->>>>>>
->>>>>> +Optional properties:
->>>>>> +- brcm,pci-hotplug: PCI hotplug feature is supported.
->>>>>
->>>>> I think we should make this a common property. We already have
->>>>> "ibm,slot-pluggable", so I'd propose "slot-pluggable".
->>>>>
->>>>> There's also "hotpluggable" for memory nodes defined, so we could
->>>>> reuse that here.
->>>>>
->>>> ok I will rename this to
->>>> brcm,slot-pluggable
+>>> Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>>> ---
 >>>
->>>
->>> How's brcm,slot-pluggable a common property? It's still brcm specific.
->>> Didn't Rob propose either "slot-pluggable" or "hotpluggable"?
->>>
->>> And note it goes to the generic PCI binding instead iProc PCIe specific
->>> binding.
->>>
+>>>  Documentation/devicetree/bindings/xilinx.txt |  2 ++
 >>
->> Initially I thought, Rob suggested either "slot-pluggable".
->> followed by, "hotpluggable" since memory node already has such property.
-
-I didn't say which because I'm fine with either one. Pick the color of
-the bikeshed.
-
+>> It's preferred to split bindings to separate patches. No need unless you
+>> respin:
 >>
->> but not sure in which generic pci binding I should add ?
->> should it be part of
->> Documentation/devicetree/bindings/pci/host-generic-pci.txt
-
-That's for generic CAM/ECAM hosts.
-
-pci.txt would be the place.
-
->>
->> Can you please clarify Rob ?
->>
->> Regards,
->> Oza.
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> To add, every SOC might have different way of implementing hotplug.
-> so I suppose both the binding documents have to be updated.
->
-> Documentation/devicetree/bindings/pci/host-generic-pci.txt
-> which can have common boolean property
-> named "hotpluggable"
->
-> and SOC specific implementation can stay here
-> for e.g.
-> Documentation/devicetree/bindings/pci/brcm,iproc-pcie.txt
-> brcm,prsnt-gpios
+> thanks. Was there any outcome from that discussion to extract binding
+> out of kernel source code?
 
-PRSNT# is a standard signal though, right? The h/w specific part would
-be whether it is connected to GPIOs or the host controller has some
-built-in controls. So yes, it should be documented if iproc-pcie uses
-"prsnt-gpios", but it can still be a common property.
+Well, the reason to split the patches is so the history of the
+filtered DT repository we generate from the kernel tree[1] looks
+saner.
+
+As far as actually moving things out, no there's not been any
+movement. My biggest concern with moving things out would be the loss
+of kernel subsystem maintainers' review. Once it's a separate tree and
+not merged thru their tree, we'd loose their reviews and I don't have
+confidence that we'd be gaining reviews from other places. Though some
+subsystem maintainers merge bindings and don't look at them already.
 
 Rob
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
