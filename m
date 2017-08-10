@@ -1,100 +1,64 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH  0/3] Add SMP support
-Date: Thu, 10 Aug 2017 11:19:10 +0000
-Message-ID: <KL1PR06MB1702C4E3CE94EFA111DE530BB8880@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
- <20170809083554.GI2705@verge.net.au>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
+Date: Thu, 10 Aug 2017 13:24:11 +0200
+Message-ID: <20170810112411.GA4380@katana>
+References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
+ <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
+ <20170810080121.GE16647@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="45Z9DzgjV8m4Oswq"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170810080121.GE16647-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-> -----Original Message-----
-> From: Biju Das
-> Sent: 10 August 2017 10:17
-> To: 'Simon Horman' <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
-> <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
-> Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Chris Paterson
-> <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-renesas-
-> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: RE: [PATCH 0/3] Add SMP support
->
->
-> > -----Original Message-----
-> > From: Simon Horman [mailto:horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org]
-> > Sent: 09 August 2017 09:36
-> > To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>; Mark Rutland
-> > <mark.rutland-5wv7dgnIgG8@public.gmane.org>; Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>;
-> Russell
-> > King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>; Chris Paterson
-> > <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > linux-renesas- soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
-> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> > Subject: Re: [PATCH 0/3] Add SMP support
-> >
-> > On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
-> > > This series aims to add SMP support for r8a7743 SoC.
-> > >
-> > > This series has been tested against Linux-next tag 20170727 and
-> > > renesas-dev branch.
-> >
-> > It seems that these patches are targeted at the renesas tree.
-> > The best practice in that case is to base patches on the latest devel b=
-ranch.
-> > Please consider doing so in future.
-> >
-> > The patches themselves seem good to me, however, I would like to
-> > enquire about testing. In particular, have you tested CPU hotplug and
-> > suspend to RAM with these patches (and without in the case of the latte=
-r)?
->
-> I have tested CPU hotplug with this patch and it works ok.
->
-> Currently iWave platform doesn't support STR I guess. But we should check=
- the
-> changes on other M2 platforms to prove that things don't break.
-
-I have tested STR on RZ-G1M SK(r8a7743) platform using gpio-key as wake up =
-source.
-It works fine with and without the patch . It is tested against renesas-dev=
-eloper branch.
-
-Also I have tested STR on R-Car M2 board.it works fine with gpio-key as wak=
-e up source.
-
-> [>]
-> > I am cautious about any regressions that may creep in when going from
-> > UP to SMP.
->
-> > >
-> > > Biju Das (3):
-> > >   dt-bindings: apmu: Document r8a7743 support
-> > >   ARM: dts: r8a7743: Add APMU node and second CPU core
-> > >   ARM: dts: r8a7743: Add OPP table for frequency scaling
-> > >
-> > >  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
-> > >  arch/arm/boot/dts/r8a7743.dtsi                     | 25
-> ++++++++++++++++++++++
-> > >  2 files changed, 27 insertions(+), 1 deletion(-)
-> > >
-> > > --
-> > > 1.9.1
-> > >
+--45Z9DzgjV8m4Oswq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
+> > >+		i2c6: i2c@e60b0000 {
+> >=20
+> >    I'd use iic0 as the label.
+>=20
+> I have no preference here other than that we try to be consistent
+> in DT for different R-Car SoCs. Wolfram, do you have an opinion on this?
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+Back then, for M2-W, I decided to go with the schematics/datasheets.
+And those mentioned i2c6 rather than iic0. For that reason, the comment
+
+"/* The memory map in the User's Manual maps the cores to bus numbers */"
+
+exists in r8a7791.dtsi. Dunno the manual of this SoC here.
+
+
+--45Z9DzgjV8m4Oswq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlmMQlcACgkQFA3kzBSg
+KbbrDw/9GbIlcfEPP2pVfBfgSDS1AcPeWNphcRPskadWKquynFLGO3p3KnFMiIx1
+hvU4TZm6coPeQGH11aW10LUHA7GGVpWN7Zu0HMJfm6UeVJX3Uw1WqK/ymBSNYrHb
+tqN1HnzIaqymZsdy/Qrl8ERkGB/c8EHp7cTN9MXN2XBN6FR/I0U32NCatsXRCVyL
+SA6w4/cSQIs+70XeLczpwuXm2nr1ehR6TdKTBJWuM26uJGzUZod5DLMZG/ZFvDrG
+OMRiPx+n0rQL7vdUml9Vz76VPSOxJc170Of/zSKfJI4H2yly3AsZcqDumXwkuIFS
+0EKFXMLiRialUaLHV6kAwbseR/RAZzqb3Js7AFItlTeKCzZsQz8Yn9NBd2pB5aT2
+m+8A+pu6ISwz3Eqsxh4kLgRE+tK7WYGcBmAK8KJKuj8MQLg39LR/Fa2/hfTbzKf7
+erRv4YLqfcddXBv5Mv+UBCa+LaJXYeWKakqTGYznYlGhFTt0oaTelmZXtXsqjXSo
+lZ52ms3szZhPiefP0T+u5fLBhLkEWexYaC7bUSfRB3uPBLjGdNlrPz5HHMR0pbjk
+vLNNNjiktknfrmLrkQqXQkD9N/6uubGstCQBB3IxuSF92t31WwLhYfEqw/dOjZzi
+32JO1FNdM+frjFhkHLHoKZuswkdC+Z3qli+NCTYsL2eerKrecok=
+=QDrh
+-----END PGP SIGNATURE-----
+
+--45Z9DzgjV8m4Oswq--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
