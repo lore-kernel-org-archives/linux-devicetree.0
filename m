@@ -1,49 +1,52 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: [RESEND PATCH 1/2] dt-bindings: i2c: Add MediaTek MT7622 i2c binding
-Date: Thu, 10 Aug 2017 10:27:40 +0800
-Message-ID: <1502332061-25085-2-git-send-email-jun.gao@mediatek.com>
-References: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v2 4/9] arm64: dts: hikey960: Add optee node
+Date: Thu, 10 Aug 2017 10:26:10 +0800
+Message-ID: <20170810022615.19204-5-guodong.xu@linaro.org>
+References: <20170810022615.19204-1-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Jun Gao <jun.gao@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170810022615.19204-1-guodong.xu@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
+Cc: devicetree@vger.kernel.org, Victor Chong <victor.chong@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jun Gao <jun.gao@mediatek.com>
+From: Victor Chong <victor.chong@linaro.org>
 
-Add MT7622 i2c binding to binding file. Compare to MT8173 i2c
-controller, MT7622 limits message numbers to 255, and does not
-support 4GB DMA mode.
+This patch adds op-tee node for hikey960
 
-Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+Signed-off-by: Victor Chong <victor.chong@linaro.org>
 ---
- Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-index bd5a7be..ff9ac61 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
-@@ -4,11 +4,12 @@ The Mediatek's I2C controller is used to interface with I2C devices.
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index 6609b0f..b96d865 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -159,6 +159,13 @@
+ 		startup-delay-us = <70000>;
+ 		enable-active-high;
+ 	};
++
++	firmware {
++		optee {
++			compatible = "linaro,optee-tz";
++			method = "smc";
++		};
++	};
+ };
  
- Required properties:
-   - compatible: value should be either of the following.
--      "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek mt2701
--      "mediatek,mt6577-i2c": for i2c compatible with mt6577.
--      "mediatek,mt6589-i2c": for i2c compatible with mt6589.
--      "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with mt7623.
--      "mediatek,mt8173-i2c": for i2c compatible with mt8173.
-+	"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-+	"mediatek,mt6577-i2c": for Mediatek MT6577
-+	"mediatek,mt6589-i2c": for Mediatek MT6589
-+	"mediatek,mt7622-i2c": for Mediatek MT7622
-+	"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-+	"mediatek,mt8173-i2c": for Mediatek MT8173
-   - reg: physical base address of the controller and dma base, length of memory
-     mapped region.
-   - interrupts: interrupt number to the cpu.
+ &i2c0 {
 -- 
-1.8.1.1
+2.10.2
