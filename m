@@ -1,64 +1,125 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 1/9] arm64: dts: hi3660: enable idle states
-Date: Thu, 10 Aug 2017 12:07:07 +0200
-Message-ID: <b3d8f55b-3d70-9b3a-a4c6-474a933a13a9@linaro.org>
-References: <20170810022615.19204-1-guodong.xu@linaro.org>
- <20170810022615.19204-2-guodong.xu@linaro.org>
+From: Abhishek Sahu <absahu@codeaurora.org>
+Subject: Re: [PATCH v3 01/20] mtd: nand: qcom: program NAND_DEV_CMD_VLD
+ register
+Date: Thu, 10 Aug 2017 16:01:17 +0530
+Message-ID: <4b66fe6b922115781c67f1555f21fee5@codeaurora.org>
+References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
+ <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
+ <20170810114250.6663a6b0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810022615.19204-2-guodong.xu@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20170810114250.6663a6b0@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>, xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Leo Yan <leo.yan@linaro.org>, Kevin Wang <jean.wangtao@linaro.org>
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2017-08-10 15:12, Boris Brezillon wrote:
+> Le Sat,  5 Aug 2017 21:49:39 +0530,
+> Abhishek Sahu <absahu@codeaurora.org> a écrit :
+> 
+>> The NAND page read fails without complete boot chain since
+>> NAND_DEV_CMD_VLD value is not proper. The default power on reset
+>> value for this register is
+>> 
+>>     0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
+>> 
+>> The READ_START_VALID should be enabled for sending PAGE_READ
+>> command. READ_STOP_VALID should be cleared since normal NAND
+>> page read does not require READ_STOP command.
+>> 
+>> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
+>> Cc: stable@vger.kernel.org
+>> Reviewed-by: Archit Taneja <architt@codeaurora.org>
+>> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+>> ---
+>>  drivers/mtd/nand/qcom_nandc.c | 13 ++++++++++++-
+>>  1 file changed, 12 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/mtd/nand/qcom_nandc.c 
+>> b/drivers/mtd/nand/qcom_nandc.c
+>> index 0289f09..7406019 100644
+>> --- a/drivers/mtd/nand/qcom_nandc.c
+>> +++ b/drivers/mtd/nand/qcom_nandc.c
+>> @@ -110,6 +110,10 @@
+>> 
+>>  /* NAND_DEV_CMD_VLD bits */
+>>  #define	READ_START_VLD			0
+>> +#define	READ_STOP_VALID			1
+>> +#define	WRITE_START_VALID		2
+>> +#define	ERASE_START_VALID		3
+>> +#define	SEQ_READ_START_VLD		4
+> 
+> Why not
+> 
+> #define	READ_START_VLD				BIT(0)
+> #define	READ_STOP_VALID				BIT(1)
+> #define	WRITE_START_VALID			BIT(2)
+> #define	ERASE_START_VALID			BIT(3)
+> #define	SEQ_READ_START_VLD			BIT(4)
+> 
 
-Hi Guodong, Leo,
+  Sure. we can change to use BIT macro.
 
-there are several typos in the patch description. I *humbly* propose an
-alternate description to make it a bit more English friendly.
+  We are using READ_START_VLD only at one place so will replace in
+  current code from
 
-"""
+  /* configure CMD1 and VLD for ONFI param probing */
+         nandc_set_reg(nandc, NAND_DEV_CMD_VLD,
+                       (nandc->vld & ~(1 << READ_START_VLD))
+                       | 0 << READ_START_VLD);
+  to
 
-There are two clusters on the Hi3660, the first one is Cortex-A53 based
-and the other one is Cortex-A73 based. These two clusters have different
-idle states.
+  nandc_set_reg(nandc, NAND_DEV_CMD_VLD, nandc->vld & ~READ_START_VLD)
 
-Thanks to Daniel Lezcano's recent changes, the generic ARM cpuidle
-driver can now support several clusters with different idle states, thus
-supporting the big.Little architecture.
+>> 
+>>  /* NAND_EBI2_ECC_BUF_CFG bits */
+>>  #define	NUM_STEPS			0
+>> @@ -148,6 +152,12 @@
+>>  #define	FETCH_ID			0xb
+>>  #define	RESET_DEVICE			0xd
+>> 
+>> +/* Default Value for NAND_DEV_CMD_VLD */
+>> +#define NAND_DEV_CMD_VLD_VAL		(BIT(READ_START_VLD)	| \
+>> +					 BIT(WRITE_START_VALID)	| \
+>> +					 BIT(ERASE_START_VALID)	| \
+>> +					 BIT(SEQ_READ_START_VLD))
+>> +
+> 
+> and then:
+> 
+> #define NAND_DEV_CMD_VLD_VAL	(READ_START_VLD	| \
+> 				 WRITE_START_VALID | \
+> 				 ERASE_START_VALID | \
+> 				 SEQ_READ_START_VLD)
+> 
+> BTW, can you use consistent suffixes? Sometime definitions are suffixed
+> with _VLD and others are suffixed with _VALID.
+> 
 
-In addition to the WFI idle state which is the default shallowest state
-for all ARM cpus, the Hi3660 supports the following states:
+  Sure. I will change all the names to _VLD.
 
- - CA53 CPUs:
-	- CPU_SLEEP:       CPU power off state
-	- CLUSTER_SLEEP_0: Cluster power off state
-
- - CA73 CPUs:
-	- CPU_NAP:         CPU retention state
-	- CPU_SLEEP:       CPU power off state
-	- CLUSTER_SLEEP_1: Cluster power off state
-
-This patch adds the idle states description for the Hi3660 to the device
-tree.
-
-"""
-
-
-Other than that.
-
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+>>  /*
+>>   * the NAND controller performs reads/writes with ECC in 516 byte 
+>> chunks.
+>>   * the driver calls the chunks 'step' or 'codeword' interchangeably
+>> @@ -1995,13 +2005,14 @@ static int qcom_nandc_setup(struct 
+>> qcom_nand_controller *nandc)
+>>  {
+>>  	/* kill onenand */
+>>  	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
+>> +	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
+>> 
+>>  	/* enable ADM DMA */
+>>  	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+>> 
+>>  	/* save the original values of these registers */
+>>  	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
+>> -	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
+>> +	nandc->vld = NAND_DEV_CMD_VLD_VAL;
+>> 
+>>  	return 0;
+>>  }
