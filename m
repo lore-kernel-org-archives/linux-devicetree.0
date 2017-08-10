@@ -1,58 +1,38 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 1/3] dt-bindings: document the CEC GPIO bindings
-Date: Thu, 10 Aug 2017 10:11:49 +0200
-Message-ID: <e64f40cb-f53c-4de9-180c-a6a30e052965@xs4all.nl>
-References: <20170802084242.14947-1-hverkuil@xs4all.nl>
- <20170802084242.14947-2-hverkuil@xs4all.nl>
- <64803004-6bea-44db-a651-cc21806250b5@xs4all.nl>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH repost 0/2] ARM: shmobile: document iWave's
+ iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development platform
+Date: Thu, 10 Aug 2017 10:11:48 +0200
+Message-ID: <20170810081148.GH16647@verge.net.au>
+References: <cover.1502274234.git.fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <64803004-6bea-44db-a651-cc21806250b5@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cover.1502274234.git.fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDgvMTcgMTA6MDMsIEhhbnMgVmVya3VpbCB3cm90ZToKPiBPbiAwMi8wOC8xNyAxMDo0
-MiwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3Vp
-bEBjaXNjby5jb20+Cj4+Cj4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyBmb3IgdGhlIGNlYy1ncGlv
-IG1vZHVsZSBmb3IgaGFyZHdhcmUgd2hlcmUgdGhlCj4+IENFQyBwaW4gaXMgY29ubmVjdGVkIHRv
-IGEgR1BJTyBwaW4uCj4gCj4gcGluZz8KPiAKPj4KPj4gU2lnbmVkLW9mZi1ieTogSGFucyBWZXJr
-dWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50eHQgfCAxOCArKysrKysrKysrKysrKysr
-KysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4
-dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL2NlYy1ncGlvLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
-YS9jZWMtZ3Bpby50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAw
-MDAwLi41OGZhNTYwODBjZGEKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0Cj4+IEBAIC0wLDAgKzEsMTgg
-QEAKPj4gKyogSERNSSBDRUMgR1BJTyBkcml2ZXIKCk9LLCByZWFkaW5nIHlvdXIgY29tbWVudHMg
-ZnJvbSBhbiBvdGhlciBiaW5kaW5ncyBwYXRjaCBJIHJlYWxpemUgdGhhdCAnYmluZGluZ3MKcmVm
-ZXIgdG8gaGFyZHdhcmUsIG5vdCBkcml2ZXJzJy4gSSdsbCBmaXggYW5kIHJlcG9zdCA6LSkKClJl
-Z2FyZHMsCgoJSGFucwoKPj4gKwo+PiArVGhlIEhETUkgQ0VDIEdQSU8gbW9kdWxlIHN1cHBvcnRz
-IENFQyBpbXBsZW1lbnRhdGlvbnMgd2hlcmUgdGhlIENFQyBwaW4KPj4gK2lzIGhvb2tlZCB1cCB0
-byBhIHB1bGwtdXAgR1BJTyBwaW4uCj4+ICsKPj4gK1RoZSBDRUMgR1BJTwo+PiArCj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+PiArICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgImNlYy1n
-cGlvIgo+PiArICAtIGdwaW86IGdwaW8gdGhhdCB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVkIHRv
-Cj4+ICsKPj4gK0V4YW1wbGUgZm9yIHRoZSBSYXNwYmVycnkgUGkgMyB3aGVyZSB0aGUgQ0VDIGxp
-bmUgaXMgY29ubmVjdGVkIHRvCj4+ICtwaW4gNyBha2EgQkNNNCBha2EgR1BDTEswIG9uIHRoZSBH
-UElPIHBpbiBoZWFkZXI6Cj4+ICsKPj4gK2NlYy1ncGlvIHsKPj4gKyAgICAgICBjb21wYXRpYmxl
-ID0gImNlYy1ncGlvIjsKPj4gKyAgICAgICBncGlvID0gPCZncGlvIDQgR1BJT19BQ1RJVkVfSElH
-SD47Cj4+ICt9Owo+Pgo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Wed, Aug 09, 2017 at 12:27:38PM +0100, Fabrizio Castro wrote:
+> Hello,
+> 
+> This series aims to add the documentation for the device tree bindings
+> of the iWave iW-RainboW-G22D-SODIMM RZ/G1E SODIMM development kit:
+> http://www.iwavesystems.com/product/development-platform/sodimm-evaluation-boards/rz-g1e-sodimm-development-kit-28/rz-g1e-sodimm-development-kit.html
+> 
+> which consists of a System on Module (iW-RainboW-G22M-SM) and a carrier
+> card (iW-RainboW-G22D).
+
+Hi Fabrizio,
+
+Thanks for reposting with myself and linux-renesas-soc CCed.
+
+As is the common practice for DT binding updates I will wait to see if Rob
+or others wish to Ack this change before applying it.  Please ping me, f.e.
+by a reply-to-all to this email, in one week if there has been no further
+activity.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
