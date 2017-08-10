@@ -1,86 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [patch v2 1/1 - resend] Documentation: dt-bindings: Add Device
- Tree bindings for Mellanox programming devices
-Date: Thu, 10 Aug 2017 12:40:13 -0500
-Message-ID: <20170810174013.lt3vaqe2oq5lfq2j@rob-hp-laptop>
-References: <1501761859-22149-1-git-send-email-vadimp@mellanox.com>
- <1501761859-22149-2-git-send-email-vadimp@mellanox.com>
+Subject: Re: [PATCH v2 3/3] usb: gadget: udc: renesas_usb3: add support for
+ R-Car M3-W
+Date: Thu, 10 Aug 2017 12:42:21 -0500
+Message-ID: <20170810174221.ovyl7bd64s6mjvyw@rob-hp-laptop>
+References: <1501813018-6116-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1501813018-6116-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1501761859-22149-2-git-send-email-vadimp@mellanox.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Vadim Pasternak <vadimp@mellanox.com>
-Cc: devicetree@vger.kernel.org, lee.jones@linaro.org, pavel@ucw.cz, j.anaszewski@samsung.com, rpurdie@rpsys.net, linux-leds@vger.kernel.org, jiri@resnulli.us, jacek.anaszewski@gmail.com
+In-Reply-To: <1501813018-6116-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: balbi@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 12:04:19PM +0000, Vadim Pasternak wrote:
-> The mlxreg a multifunction device driver handling LEDs, events, exposing
-> through sysfs reset signal, and reset causes info. These components share
-> a common register space.
-
-"dt-bindings: mfd: ..." for the subject please.
-
+On Fri, Aug 04, 2017 at 11:16:58AM +0900, Yoshihiro Shimoda wrote:
+> This patch adds support for R-Car M3-W. This patch also adds R-Car
+> Gen3 generic version's compatible and changes ".compatible" in
+> the usb3_of_match from "renesas,r8a7796-usb3-peri" to
+> "renesas,rcar-gen3-usb3-peri".
 > 
-> Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  .../devicetree/bindings/mfd/mellanox,mlxreg-core   | 346 +++++++++++++++++++++
->  1 file changed, 346 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
+>  Documentation/devicetree/bindings/usb/renesas_usb3.txt | 16 +++++++++++++---
+>  drivers/usb/gadget/udc/renesas_usb3.c                  |  2 +-
+>  2 files changed, 14 insertions(+), 4 deletions(-)
+
+Binding looks fine, but...
+
+> diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+> index aa2b185..b1e166c 100644
+> --- a/drivers/usb/gadget/udc/renesas_usb3.c
+> +++ b/drivers/usb/gadget/udc/renesas_usb3.c
+> @@ -2503,7 +2503,7 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
+>  
+>  static const struct of_device_id usb3_of_match[] = {
+>  	{
+> -		.compatible = "renesas,r8a7795-usb3-peri",
+> +		.compatible = "renesas,rcar-gen3-usb3-peri",
+
+You need to keep the existing string for compatibility with existing 
+dtbs.
+
+>  		.data = &renesas_usb3_priv_gen3,
+>  	},
+>  	{ },
+> -- 
+> 1.9.1
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> new file mode 100644
-> index 0000000..a90933e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> @@ -0,0 +1,346 @@
-> +Mellanox programmable device control.
-> +-------------------------------------
-> +This binding defines the device control interface over I2C bus for Mellanox BMC
-> +based switches.
-> +
-> +Required properties:
-> +- compatible = "mellanox,mlxreg-i2c",
-> +	       "mellanox,mlxreg-i2c-16",
-> +	       "mellanox,mlxreg-core";
-
-This is all one compatible entry? Why 3 compatibles?
-
-> +- #address-cells : must be 1;
-> +- #size-cells : must be 0;
-> +- reg : I2C address;
-> +
-> +Optional properties:
-> +- interrupt-parent : phandle of parent interrupt controller;
-> +- interrupts : interrupt line;
-> +- deferred - I2C deferred bus phandle;
-> +	     For example, for the case when device attached to I2C bus number 4
-> +	     performs dynamic attachment of device to bus 12 upon some event.
-> +	     Due to this reason bus 4 is enforced to be activated after bus 12;
-
-I don't understand...
-
-> +- cell - top aggregation register offset;
-> +- mask - top aggregation register mask;
-> +- psu - power supply unit nodes:
-
-This section is "Optional Properties" and this is a sub-node. Each 
-subnode should have its own section.
-
-> +	- aggr_mask - effective bit in aggregation mask;
-
-Don't use '_' in node or property names.
-
-> +	- reg - register offset for all group members;
-> +	- mask - register mask;
-> +	- phandles - list of relevant device nodes;
-
-Other than reg, I don't understand what any of these are.
-
->From what I can tell you are describing things down to register bit 
-level which generally is too much detail in DT. How many variations of 
-h/w do you have? Do you really need to be able to define any possible 
-combination or have some finite set?
-
-Rob
