@@ -1,123 +1,77 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
-Date: Thu, 10 Aug 2017 14:38:59 +0530
-Message-ID: <75a39db0-a5cc-9a20-2bbf-ebfc3573efca@codeaurora.org>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
- <9d1757b3-24f9-2f0f-1971-62d1ef4b79e3@codeaurora.org>
- <fa41b1e5-7319-c7f8-32e9-36c291d85a0f@xs4all.nl>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH  0/3] Add SMP support
+Date: Thu, 10 Aug 2017 09:18:13 +0000
+Message-ID: <KL1PR06MB17028862FF6D21E2D611B24AB8880@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
+ <20170809083554.GI2705@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <fa41b1e5-7319-c7f8-32e9-36c291d85a0f@xs4all.nl>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170809083554.GI2705@verge.net.au>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwOC8xMC8yMDE3IDAyOjI2IFBNLCBIYW5zIFZlcmt1aWwgd3JvdGU6Cj4gT24gMTAvMDgv
-MTcgMTA6NDksIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4+IEhpIEhhbnMsCj4+Cj4+IE9uIDA3LzMw
-LzIwMTcgMDY6MzcgUE0sIEhhbnMgVmVya3VpbCB3cm90ZToKPj4+IEZyb206IEhhbnMgVmVya3Vp
-bCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+Cj4+PiBUaGlzIHBhdGNoIHNlcmllcyBhZGRz
-IENFQyBzdXBwb3J0IHRvIHRoZSBkcm0gYWR2NzUxMS9hZHY3NTMzIGRyaXZlcnMuCj4+Pgo+Pj4g
-SSBoYXZlIHRlc3RlZCB0aGlzIHdpdGggdGhlIFF1YWxjb21tIERyYWdvbmJvYXJkIEM0MTAgKGFk
-djc1MzMgYmFzZWQpCj4+PiBhbmQgdGhlIFJlbmVzYXMgUi1DYXIgS29lbHNjaCBib2FyZCAoYWR2
-NzUxMSBiYXNlZCkuCj4+Pgo+Pj4gTm90ZTogdGhlIERyYWdvbmJvYXJkIG5lZWRzIHRoaXMgcGF0
-Y2g6Cj4+Pgo+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODI0NzczLwo+
-Pj4KPj4+IEFyY2hpdCwgY2FuIHlvdSBjb25maXJtIHRoYXQgdGhpcyBwYXRjaCB3aWxsIGdvIHRv
-IGtlcm5lbCA0LjE0Pwo+Pj4KPj4+IEFuZCB0aGUgS29lbHNjaCBib2FyZCBuZWVkcyB0aGlzIDQu
-MTMgZml4Ogo+Pj4KPj4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTgzNjg2
-NS8KPj4+Cj4+PiBJIG9ubHkgaGF2ZSB0aGUgS29lbHNjaCBib2FyZCB0byB0ZXN0IHdpdGgsIGJ1
-dCBpdCBsb29rcyBsaWtlIG90aGVyCj4+PiBSLUNhciBib2FyZHMgdXNlIHRoZSBzYW1lIGFkdjc1
-MTEuIEl0IHdvdWxkIGJlIG5pY2UgaWYgc29tZW9uZSBjYW4KPj4+IGFkZCBDRUMgc3VwcG9ydCB0
-byB0aGUgb3RoZXIgUi1DYXIgYm9hcmRzIGFzIHdlbGwuIFRoZSBtYWluIHRoaW5nCj4+PiB0byBj
-aGVjayBpcyBpZiB0aGV5IGFsbCB1c2UgdGhlIHNhbWUgMTIgTUh6IGZpeGVkIENFQyBjbG9jayBz
-b3VyY2UuCj4+Pgo+Pj4gQW55b25lIHdobyB3YW50cyB0byB0ZXN0IHRoaXMgd2lsbCBuZWVkIHRo
-ZSBDRUMgdXRpbGl0aWVzIHRoYXQKPj4+IGFyZSBwYXJ0IG9mIHRoZSB2NGwtdXRpbHMgZ2l0IHJl
-cG9zaXRvcnk6Cj4+Pgo+Pj4gZ2l0IGNsb25lIGdpdDovL2xpbnV4dHYub3JnL3Y0bC11dGlscy5n
-aXQKPj4+IGNkIHY0bC11dGlscwo+Pj4gLi9ib290c3RyYXAuc2gKPj4+IC4vY29uZmlndXJlCj4+
-PiBtYWtlCj4+PiBzdWRvIG1ha2UgaW5zdGFsbAo+Pj4KPj4+IE5vdyBjb25maWd1cmUgdGhlIENF
-QyBhZGFwdGVyIGFzIGEgUGxheWJhY2sgZGV2aWNlOgo+Pj4KPj4+IGNlYy1jdGwgLS1wbGF5YmFj
-awo+Pj4KPj4+IERpc2NvdmVyIG90aGVyIENFQyBkZXZpY2VzOgo+Pj4KPj4+IGNlYy1jdGwgLVMK
-Pj4KPj4gSSB0cmllZCB0aGUgaW5zdHJ1Y3Rpb25zLCBhbmQgSSBnZXQgdGhlIGZvbGxvd2luZyBv
-dXRwdXQuIEkgZG9uJ3QgdGhpbmsgSSBoYXZlCj4+IGFueSBDRUMgZGV2aWNlIGNvbm5lY3RlZCwg
-dGhvdWdoLiBJcyB0aGlzIHRoZSBleHBlY3RlZCBiZWhhdmlvdXI/Cj4+Cj4+ICNjZWMtY3RsIC1T
-Cj4+IERyaXZlciBJbmZvOgo+PiAgICAgICAgICBEcml2ZXIgTmFtZSAgICAgICAgICAgICAgICA6
-IGFkdjc1MTEKPj4gICAgICAgICAgQWRhcHRlciBOYW1lICAgICAgICAgICAgICAgOiAzLTAwMzkK
-Pj4gICAgICAgICAgQ2FwYWJpbGl0aWVzICAgICAgICAgICAgICAgOiAweDAwMDAwMDBlCj4+ICAg
-ICAgICAgICAgICAgICAgTG9naWNhbCBBZGRyZXNzZXMKPj4gICAgICAgICAgICAgICAgICBUcmFu
-c21pdAo+PiAgICAgICAgICAgICAgICAgIFBhc3N0aHJvdWdoCj4+ICAgICAgICAgIERyaXZlciB2
-ZXJzaW9uICAgICAgICAgICAgIDogNC4xMy4wCj4+ICAgICAgICAgIEF2YWlsYWJsZSBMb2dpY2Fs
-IEFkZHJlc3NlczogMwo+PiAgICAgICAgICBQaHlzaWNhbCBBZGRyZXNzICAgICAgICAgICA6IDEu
-MC4wLjAKPj4gICAgICAgICAgTG9naWNhbCBBZGRyZXNzIE1hc2sgICAgICAgOiAweDAwMDAKPj4g
-ICAgICAgICAgQ0VDIFZlcnNpb24gICAgICAgICAgICAgICAgOiAyLjAKPj4gICAgICAgICAgTG9n
-aWNhbCBBZGRyZXNzZXMgICAgICAgICAgOiAwCj4+Cj4+ICNjZWMtY3RsIC0tcGxheWJhY2sKPj4g
-WyAxMDM4Ljc2MTU0NV0gY2VjLTMtMDAzOTogY2VjX3RocmVhZF9mdW5jOiBtZXNzYWdlIDQ0IHRp
-bWVkIG91dCEKPiAKPiBUaGlzIGlzbid0IHJpZ2h0LiBZb3Ugc2hvdWxkbid0IHNlZSB0aGlzLiBJ
-dCBuZXZlciByZWNlaXZlcyBhbiBpbnRlcnJ1cHQKPiB3aGVuIHRoZSB0cmFuc21pdCBoYXMgZmlu
-aXNoZWQsIHdoaWNoIGNhdXNlcyB0aGVzZSB0aW1lIG91dHMuCj4gCj4gV2hhdCBhcmUgeW91IHRl
-c3RpbmcgdGhpcyBvbj8gVGhlIERyYWdvbmJvYXJkIGM0MTA/CgpZZXMuCgo+IAo+IENhbiB5b3Ug
-Y2hlY2sgdGhlIGNlYyBjbG9jayBmcmVxdWVuY3k/IEl0IHNob3VsZCBiZSAxOS4yIE1Iei4KPiBS
-ZW1lbWJlciB0byBhcHBseSB0aGlzIHBhdGNoOiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
-L3BhdGNoLzk4MjQ3NzMvCj4gWW91IHByb2JhYmx5IGRpZCwgYnV0IGp1c3QgaW4gY2FzZS4uLgoK
-Y2xrX3N1bW1hcnkgZG9lcyBzaG93IGJiX2NsazIgdG8gYmUgc2V0IHRvIDE5LjIgTWh6LgoKSSBh
-cHBsaWVkIGEgbmV3ZXIgdmVyc2lvbiBvZiB0aGlzIHBhdGNoLCB3aGljaCBnb3QgbWVyZ2VkIGlu
-IGNsay1uZXh0OgoKaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODQ1NDkzLwoK
-SSB3aWxsIHRyeSB0byBhcHBseSB0aGUgcGF0Y2ggeW91IHVzZSBhbmQgY2hlY2sgYWdhaW4uCgpU
-aGFua3MsCkFyY2hpdAoKPiAKPiBSZWdhcmRzLAo+IAo+IAlIYW5zCj4gCj4+IERyaXZlciBJbmZv
-Ogo+PiAgICAgICAgICBEcml2ZXIgTmFtZSAgICAgICAgICAgICAgICA6IGFkdjc1MTEKPj4gICAg
-ICAgICAgQWRhcHRlciBOYW1lICAgICAgICAgICAgICAgOiAzLTAwMzkKPj4gICAgICAgICAgQ2Fw
-YWJpbGl0aWVzICAgICAgICAgICAgICAgOiAweDAwMDAwMDBlCj4+ICAgICAgICAgICAgICAgICAg
-TG9naWNhbCBBZGRyZXNzZXMKPj4gICAgICAgICAgICAgICAgICBUcmFuc21pdAo+PiAgICAgICAg
-ICAgICAgICAgIFBhc3N0aHJvdWdoCj4+ICAgICAgICAgIERyaXZlciB2ZXJzaW9uICAgICAgICAg
-ICAgIDogNC4xMy4wCj4+ICAgICAgICAgIEF2YWlsYWJsZSBMb2dpY2FsIEFkZHJlc3NlczogMwo+
-PiAgICAgICAgICBQaHlzaWNhbCBBZGRyZXNzICAgICAgICAgICA6IDEuMC4wLjAKPj4gICAgICAg
-ICAgTG9naWNhbCBBZGRyZXNzIE1hc2sgICAgICAgOiAweDAwMTAKPj4gICAgICAgICAgQ0VDIFZl
-cnNpb24gICAgICAgICAgICAgICAgOiAyLjAKPj4gICAgICAgICAgVmVuZG9yIElEICAgICAgICAg
-ICAgICAgICAgOiAweDAwMGMwMwo+PiAgICAgICAgICBMb2dpY2FsIEFkZHJlc3NlcyAgICAgICAg
-ICA6IDEgKEFsbG93IFJDIFBhc3N0aHJvdWdoKQo+Pgo+PiAgICAgICAgICAgIExvZ2ljYWwgQWRk
-cmVzcyAgICAgICAgICA6IDQKPj4gICAgICAgICAgICAgIFByaW1hcnkgRGV2aWNlIFR5cGUgICAg
-OiBQbGF5YmFjawo+PiAgICAgICAgICAgICAgTG9naWNhbCBBZGRyZXNzIFR5cGUgICA6IFBsYXli
-YWNrCj4+ICAgICAgICAgICAgICBBbGwgRGV2aWNlIFR5cGVzICAgICAgIDogUGxheWJhY2sKPj4g
-ICAgICAgICAgICAgIFJDIFRWIFByb2ZpbGUgICAgICAgICAgOiBOb25lCj4+ICAgICAgICAgICAg
-ICBEZXZpY2UgRmVhdHVyZXMgICAgICAgIDoKPj4gICAgICAgICAgICAgICAgICBOb25lCj4+Cj4+
-Cj4+IFsgMTA0MS4wNjM2MDVdIGNlYy0zLTAwMzk6IGNlY190aHJlYWRfZnVuYzogbWVzc2FnZSA0
-ZiBhNiAwNiAxMCAwMCAwMCB0aW1lZCBvdXQhCj4+IFsgMTA0My4zNjc0ODJdIGNlYy0zLTAwMzk6
-IGNlY190aHJlYWRfZnVuYzogbWVzc2FnZSA0ZiA4NCAxMCAwMCAwNCB0aW1lZCBvdXQhCj4+Cj4+
-IFRoYW5rcywKPj4gQXJjaGl0Cj4+Cj4+Pgo+Pj4gUmVnYXJkcywKPj4+Cj4+PiAgICAgIEhhbnMK
-Pj4+Cj4+PiBIYW5zIFZlcmt1aWwgKDQpOgo+Pj4gICAgIGR0LWJpbmRpbmdzOiBhZGksYWR2NzUx
-MS50eHQ6IGRvY3VtZW50IGNlYyBjbG9jawo+Pj4gICAgIGFybTogZHRzOiBxY29tOiBhZGQgY2Vj
-IGNsb2NrIGZvciBhcHE4MDE2IGJvYXJkCj4+PiAgICAgYXJtOiBkdHM6IHJlbmVzYXM6IGFkZCBj
-ZWMgY2xvY2sgZm9yIEtvZWxzY2ggYm9hcmQKPj4+ICAgICBkcm06IGFkdjc1MTEvMzM6IGFkZCBI
-RE1JIENFQyBzdXBwb3J0Cj4+Pgo+Pj4gICAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2Fk
-aSxhZHY3NTExLnR4dCAgICAgICAgfCAgIDQgKwo+Pj4gICAgYXJjaC9hcm0vYm9vdC9kdHMvcjhh
-Nzc5MS1rb2Vsc2NoLmR0cyAgICAgICAgICAgICAgfCAgIDggKwo+Pj4gICAgYXJjaC9hcm02NC9i
-b290L2R0cy9xY29tL2FwcTgwMTYtc2JjLmR0c2kgICAgICAgICAgfCAgIDIgKwo+Pj4gICAgZHJp
-dmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL0tjb25maWcgICAgICAgICAgICAgfCAgIDggKwo+
-Pj4gICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL01ha2VmaWxlICAgICAgICAgICAg
-fCAgIDEgKwo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9hZHY3NTExL2Fkdjc1MTEuaCAg
-ICAgICAgICAgfCAgNDUgKystCj4+PiAgICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2Fkdjc1MTEv
-YWR2NzUxMV9jZWMuYyAgICAgICB8IDMxNCArKysrKysrKysrKysrKysrKysrKysKPj4+ICAgIGRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTExX2Rydi5jICAgICAgIHwgMTUyICsr
-KysrKysrKy0KPj4+ICAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvYWR2NzUxMS9hZHY3NTMzLmMg
-ICAgICAgICAgIHwgIDMwICstCj4+PiAgICA5IGZpbGVzIGNoYW5nZWQsIDUxNCBpbnNlcnRpb25z
-KCspLCA1MCBkZWxldGlvbnMoLSkKPj4+ICAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dw
-dS9kcm0vYnJpZGdlL2Fkdjc1MTEvYWR2NzUxMV9jZWMuYwo+Pj4KPj4KPiAKPiAtLQo+IFRvIHVu
-c3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1YnNjcmliZSBsaW51
-eC1hcm0tbXNtIiBpbgo+IHRoZSBib2R5IG9mIGEgbWVzc2FnZSB0byBtYWpvcmRvbW9Admdlci5r
-ZXJuZWwub3JnCj4gTW9yZSBtYWpvcmRvbW8gaW5mbyBhdCAgaHR0cDovL3ZnZXIua2VybmVsLm9y
-Zy9tYWpvcmRvbW8taW5mby5odG1sCj4gCgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIs
-IEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlv
-biBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+
+> -----Original Message-----
+> From: Simon Horman [mailto:horms@verge.net.au]
+> Sent: 09 August 2017 09:36
+> To: Biju Das <biju.das@bp.renesas.com>
+> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
+> Russell King <linux@armlinux.org.uk>; Chris Paterson
+> <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org; linux-renesas-
+> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH 0/3] Add SMP support
+>
+> On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
+> > This series aims to add SMP support for r8a7743 SoC.
+> >
+> > This series has been tested against Linux-next tag 20170727 and
+> > renesas-dev branch.
+>
+> It seems that these patches are targeted at the renesas tree.
+> The best practice in that case is to base patches on the latest devel branch.
+> Please consider doing so in future.
+>
+> The patches themselves seem good to me, however, I would like to enquire
+> about testing. In particular, have you tested CPU hotplug and suspend to RAM
+> with these patches (and without in the case of the latter)?
+
+I have tested CPU hotplug with this patch and it works ok.
+
+Currently iWave platform doesn't support STR I guess. But we should check the changes on other M2 platforms to prove that
+things don't break.
+
+[>]
+> I am cautious about any regressions that may creep in when going from UP to
+> SMP.
+
+> >
+> > Biju Das (3):
+> >   dt-bindings: apmu: Document r8a7743 support
+> >   ARM: dts: r8a7743: Add APMU node and second CPU core
+> >   ARM: dts: r8a7743: Add OPP table for frequency scaling
+> >
+> >  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
+> >  arch/arm/boot/dts/r8a7743.dtsi                     | 25 ++++++++++++++++++++++
+> >  2 files changed, 27 insertions(+), 1 deletion(-)
+> >
+> > --
+> > 1.9.1
+> >
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
