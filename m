@@ -1,109 +1,44 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v2 0/4] ipmi: bt-i2c: added IPMI Block Transfer over I2C
-Date: Wed, 9 Aug 2017 18:04:17 -0700
-Message-ID: <CAFd5g47FmTiygHDjm0-h2NAz8qa85zZVLKgCf9vGYP8iK6_+ZQ@mail.gmail.com>
-References: <20170805011855.1027-1-brendanhiggins@google.com>
- <8f5579cb-2c4d-2cd0-e874-a44374e08417@acm.org> <CAFd5g46LmyjPnjKis7c-F9FbjzyU1MgvrVkR7vjrEC4oWV1doQ@mail.gmail.com>
- <fd82d68b-0ca4-fa43-4ed4-e18f684f6dee@acm.org>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v1 0/3] ipmi: bt-i2c: added IPMI Block Transfer over I2C
+Date: Wed, 9 Aug 2017 18:14:43 -0700
+Message-ID: <CAFd5g47LA0jyhvnRb4i6GXsQOdPbJJrn+uCsQgnMRQgah6gKfA@mail.gmail.com>
+References: <20170804231854.19730-1-brendanhiggins@google.com> <57021502276176@webcorp01h.yandex-team.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fd82d68b-0ca4-fa43-4ed4-e18f684f6dee@acm.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Corey Minyard <minyard@acm.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Benjamin Fair <benjaminfair@google.com>, linux-doc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, openipmi-developer@lists.sourceforge.net, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <57021502276176-OEmCjAEqX0ITMcy66jKROkXOewmhPV1Zh13vi7wywA4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Anton D. Kachalov" <mouse-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org>
+Cc: "corbet-T1hC0tSOHrs@public.gmane.org" <corbet-T1hC0tSOHrs@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "minyard-HInyCGIudOg@public.gmane.org" <minyard-HInyCGIudOg@public.gmane.org>, "joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org" <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org" <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Perhaps that is some level of abuse, but it's pretty common.  I'm not
-> against it.
+On Wed, Aug 9, 2017 at 3:56 AM, Anton D. Kachalov <mouse-XoJtRXgx1JseBXzfvpsJ4g@public.gmane.org> wrote:
+> Hello,
 >
-> There is standard IPMI firmware NetFN (though no commands defined) that if
-> you use
-> the driver automatically goes into "Maintenance mode" and modified the
-> timeouts
-> and handling to some extent to help with this.
-
-That is a really good point, I missed that.
-...
+> I would like to mention one of the our related work for IPMI and I2C.
 >
+> We use OpenIPMI stack to connect to the computing nodes through the I2C
+> using IPMB (BT is not supported by nodes):
 >
-> There are ways to accomplish this that aren't that complex.  You can create
-> an OEM
-> command that can query the maximum message size and the ability to do
-> sequence
-> numbers in the messages.
+> https://github.com/ya-mouse/meta-openbmc-yandex/blob/master/meta-yandex/meta-openrack/meta-shaosi/recipes-kernel/linux/linux-obmc/ipmi_i2c.c
 >
-> If messages larger than 32-bytes are supported, and the host I2C/SMBus
-> driver
-> supports it, you could use the standard SSIF SMBus commands to do this, they
-> have an 8-bit length field.
+> It lacks complete slave support (slave part is only for receiving known
+> packets with query results due to OpenIPMI implementation in kernel) and use
+> one local slave to communicate with a number of target systems on the same
+> bus (currently supported only 1-to-1 schema).
 >
-> If sequence numbers are supported, The SSIF could use different SMBus
-> commands
-> to do the write and read requests.  Since this is only if you get an OEM
-> command,
-> and if you put the sequence numbers at the end where they are easy to add on
-> the send side, this is a small change to the driver.
+> With this stuff we able to use ipmitool across different /dev/ipmiX devices
+> to communicate with nodes.
 
-What if we just had an OEM command that changed the message structure from
-that point on? We could abuse the "maintenance mode" NetFN to get back into
-normal SSIF if necessary.
+Cool, I met someone else who had a similar use case which is part of why
+I decided to share this (not sure if should say who).
 
->
-> So I think the changes would be small and contained.  I'm actually ok with a
-> different driver, but I think it would be more valuable to the OpenBMC
-> project
-> to have a standardized interface that would work (in a not quite as
-> efficient
-> mode) with software that does not use the Linux IPMI driver.
-
-I guess I see the all of my asks as hacky things which we can hopefully remove
-at some point. Hopefully, most OpenBMC users won't want or need these things.
-...
->>
->> Regardless of what we do with the "BT-I2C" stuff, I am still interested in
->> what
->> you think about this.
->
->
-> I think you are right, it probably belongs some place else.  The way that
-> makes the most
-> sense to me would be to have an "ipmi" directory with a "host" and "slave"
-> side, and since
-> ipmi is not really a char driver, to move it to the main driver directory.
-> That might be
-> fairly disruptive, though.
-
-That was my thinking exactly.
-
->
-> The other option that makes sense to me would be to add a
-> drivers/char/ipmi_slave directory,
-> or something like that, and put the slave code there.  That would be less
-> disruptive.
-
-Right that is the approach I took, except I called it drivers/char/ipmi_bmc.
-
-I originally thought doing the less disruptive thing is best; however, I know
-there are also some OpenBMC people who are interested in implementing
-IPMB. So maybe now is the time to bite the bullet and create an ipmi
-directory under drivers/.
-
->
-> -corey
-
-In summary, I think I can live with making it a mangled form of SSIF, but
-I would prefer to put it in its own driver.
-
-In any case, I think I would rather focus on the the BMC side IPMI framework
-now, since it is a bigger change and would also reduce the work of
-implementing a BMC side SSIF driver.
-
-Here is what I propose: we focus on the BMC side IPMI framework RFC that
-I sent out the other day:
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1463473.html
-I will add a change to the BMC side IPMI framework patchset to move all the
-IPMI stuff to the new drivers/ipmi directory as discussed and then drop the
-patch in that patchset that depends on this patchset.
+So it sounds like we are probably not going to go with the approach I proposed;
+if you indeed find this useful, I would suggest that we put this in our OpenBMC
+repository and switch it out with the suggested method at some point.
 
 Let me know what you think
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
