@@ -1,29 +1,61 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/12] ARM: dts: Add iodelay data for MMC
-Date: Thu, 10 Aug 2017 09:33:56 -0700
-Message-ID: <20170810163356.GF8569@atomide.com>
-References: <20170616115439.8508-1-kishon@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: usb: keystone-usb: Update bindings pm
+ and clocks properties
+Date: Thu, 10 Aug 2017 11:33:51 -0500
+Message-ID: <20170810163351.ykqkf353uk5ehjdn@rob-hp-laptop>
+References: <20170802201724.11439-1-fcooper@ti.com>
+ <20170802201724.11439-3-fcooper@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170616115439.8508-1-kishon@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: nsekhar@ti.com, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, linux-mmc@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+In-Reply-To: <20170802201724.11439-3-fcooper@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: gregkh@linuxfoundation.org, ssantosh@kernel.org, linux@armlinux.org.uk, balbi@kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [170616 04:54]:
-> This is the second part of the series originally sent as
-> part of [1] with one important modification.
+On Wed, Aug 02, 2017 at 03:17:23PM -0500, Franklin S Cooper Jr wrote:
+> Update varous properties to properly indicate their requirement depending
+> on the SoC.
 > 
-> Now PINCTRL_TI_IODELAY will be enabled for SOC_DRA7XX
-> (in mach-omap2/Kconfig) so that omap2plus_defconfig or
-> multi_v7_defconfig don't have to be modified.
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+>  Documentation/devicetree/bindings/usb/keystone-usb.txt | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
 > 
-> This series only adds data and it won't be used until
-> the next series which adds UHS support to omap_hsmmc driver.
+> diff --git a/Documentation/devicetree/bindings/usb/keystone-usb.txt b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+> index 60527d3..307531b 100644
+> --- a/Documentation/devicetree/bindings/usb/keystone-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/keystone-usb.txt
+> @@ -12,8 +12,22 @@ Required properties:
+>     MPU.
+>   - ranges: allows valid 1:1 translation between child's address space and
+>     parent's address space.
+> - - clocks: Clock IDs array as required by the controller.
+> - - clock-names: names of clocks correseponding to IDs in the clock property.
+> +
+> +SoC-specific Required Properties:
+> +The following are mandatory properties for Keystone 2 66AK2HK, 66AK2L and 66AK2E
+> +SoCs only:
+> +
+> +- clocks:		Clock IDs array as required by the controller.
+> +- clock-names:		names of clocks correseponding to IDs in the clock
+> +			property.
 
-Applying these finally into omap-for-v4.14/dt thanks.
+This needs to be specific as to how many clocks and their names.
 
-Tony
+> +
+> +
+> +The following are mandatory properties for Keystone 2 66AK2G SoCs only:
+> +
+> +- power-domains:	Should contain a phandle to a PM domain provider node
+> +			and an args specifier containing the USB device id
+> +			value. This property is as per the binding,
+> +			Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
+>  
+>  Sub-nodes:
+>  The dwc3 core should be added as subnode to Keystone DWC3 glue.
+> -- 
+> 2.9.4.dirty
+> 
