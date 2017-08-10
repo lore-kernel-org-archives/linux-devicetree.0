@@ -1,100 +1,173 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v4 5/7] dt-bindings: PCI: rename and cleanup MediaTek binding text
-Date: Thu, 10 Aug 2017 14:34:58 +0800
-Message-ID: <9767937d128a8efe516522292af59944e1a4066a.1502336769.git.honghui.zhang@mediatek.com>
-References: <cover.1502336769.git.honghui.zhang@mediatek.com>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH v5 5/7] clk: at91: clk-generated: make gclk
+	determine audio_pll rate
+Date: Thu, 10 Aug 2017 08:34:05 +0200
+Message-ID: <600ed1e3623477c8083c6c4fa16299e33f7b76a9.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1502336769.git.honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+This allows gclk to determine audio_pll rate and set the parent rate
+accordingly.
 
-In order to accommodate other SoC generations, this patch updates filename
-to make it more generic, regroups specific properties by SoCs, and removes
-redundant descriptions.
+However, there are multiple children clocks that could technically
+change the rate of audio_pll (via gck). With the rate locking, the first
+consumer to enable the clock will be the one definitely setting the rate
+of the clock.
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Since audio IPs are most likely to request the same rate, we enforce
+that the only clks able to modify gck rate are those of audio IPs.
+
+To remain consistent, we deny other clocks to be children of audio_pll.
+
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
 ---
- ...{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} | 32 +++++++++++-----------
- 1 file changed, 16 insertions(+), 16 deletions(-)
- rename Documentation/devicetree/bindings/pci/{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} (90%)
+ drivers/clk/at91/clk-generated.c | 63 +++++++++++++++++++++++++++++----
+ 1 file changed, 57 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-similarity index 90%
-rename from Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-rename to Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-index fe80dda..0fdcb15 100644
---- a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
-@@ -1,18 +1,13 @@
--MediaTek Gen2 PCIe controller which is available on MT7623 series SoCs
--
--PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
--ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
-+MediaTek Gen2 PCIe controller
+diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+index 7260e49..3348136 100644
+--- a/drivers/clk/at91/clk-generated.c
++++ b/drivers/clk/at91/clk-generated.c
+@@ -26,6 +26,13 @@
+ #define GENERATED_SOURCE_MAX	6
+ #define GENERATED_MAX_DIV	255
  
- Required properties:
--- compatible: Should contain "mediatek,mt7623-pcie".
-+- compatible: Should contain one of the following strings:
-+	"mediatek,mt2701-pcie"
-+	"mediatek,mt7623-pcie"
- - device_type: Must be "pci"
- - reg: Base addresses and lengths of the PCIe controller.
- - #address-cells: Address representation for root ports (must be 3)
- - #size-cells: Size representation for root ports (must be 2)
--- #interrupt-cells: Size representation for interrupts (must be 1)
--- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
--  Please refer to the standard PCI bus binding document for a more detailed
--  explanation.
- - clocks: Must contain an entry for each entry in clock-names.
-   See ../clocks/clock-bindings.txt for details.
- - clock-names: Must include the following entries:
-@@ -20,12 +15,6 @@ Required properties:
-   - sys_ck0 :for clock of Port0
-   - sys_ck1 :for clock of Port1
-   - sys_ck2 :for clock of Port2
--- resets: Must contain an entry for each entry in reset-names.
--  See ../reset/reset.txt for details.
--- reset-names: Must include the following entries:
--  - pcie-rst0 :port0 reset
--  - pcie-rst1 :port1 reset
--  - pcie-rst2 :port2 reset
- - phys: List of PHY specifiers (used by generic PHY framework).
- - phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
-   number of PHYs as specified in *phys* property.
-@@ -34,6 +23,16 @@ Required properties:
- - bus-range: Range of bus numbers associated with this controller.
- - ranges: Ranges for the PCI memory and I/O regions.
- 
-+Required properties for MT7623/MT2701:
-+- #interrupt-cells: Size representation for interrupts (must be 1)
-+- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
-+  Please refer to the standard PCI bus binding document for a more detailed
-+  explanation.
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
-+  number of root ports.
++#define GCK_ID_SSC0		43
++#define GCK_ID_SSC1		44
++#define GCK_ID_I2S0		54
++#define GCK_ID_I2S1		55
++#define GCK_ID_CLASSD		59
++#define GCK_INDEX_DT_AUDIO_PLL	5
 +
- In addition, the device tree node must have sub-nodes describing each
- PCIe port interface, having the following mandatory properties:
+ struct clk_generated {
+ 	struct clk_hw hw;
+ 	struct regmap *regmap;
+@@ -34,6 +41,7 @@ struct clk_generated {
+ 	u32 id;
+ 	u32 gckdiv;
+ 	u8 parent_id;
++	bool audio_pll_allowed;
+ };
  
-@@ -85,7 +84,8 @@ Examples:
- 			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
- 			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
- 		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
--		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
-+		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>,
-+		       <&pcie2_phy PHY_TYPE_PCIE>;
- 		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
- 		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
- 		bus-range = <0x00 0xff>;
+ #define to_clk_generated(hw) \
+@@ -126,15 +134,14 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+ {
+ 	struct clk_generated *gck = to_clk_generated(hw);
+ 	struct clk_hw *parent = NULL;
++	struct clk_rate_request req_parent = *req;
+ 	long best_rate = -EINVAL;
+-	unsigned long min_rate;
++	unsigned long min_rate, parent_rate;
+ 	int best_diff = -1;
+ 	int i;
++	u32 div;
+ 
+-	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
+-		u32 div;
+-		unsigned long parent_rate;
+-
++	for (i = 0; i < clk_hw_get_num_parents(hw) - 1; i++) {
+ 		parent = clk_hw_get_parent_by_index(hw, i);
+ 		if (!parent)
+ 			continue;
+@@ -150,11 +157,38 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+ 		clk_generated_best_diff(req, parent, parent_rate, div,
+ 					&best_diff, &best_rate);
+ 
++		if (!best_diff)
++			break;
++	}
++
++	/*
++	 * The audio_pll rate can be modified, unlike the five others clocks
++	 * that should never be altered.
++	 * The audio_pll can technically be used by multiple consumers. However,
++	 * with the rate locking, the first consumer to enable to clock will be
++	 * the one definitely setting the rate of the clock.
++	 * Since audio IPs are most likely to request the same rate, we enforce
++	 * that the only clks able to modify gck rate are those of audio IPs.
++	 */
++
++	if (!gck->audio_pll_allowed)
++		goto end;
++
++	parent = clk_hw_get_parent_by_index(hw, GCK_INDEX_DT_AUDIO_PLL);
++	if (!parent)
++		goto end;
++
++	for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
++		req_parent.rate = req->rate * div;
++		__clk_determine_rate(parent, &req_parent);
++		clk_generated_best_diff(req, parent, req_parent.rate, div,
++					&best_diff, &best_rate);
+ 
+ 		if (!best_diff)
+ 			break;
+ 	}
+ 
++end:
+ 	pr_debug("GCLK: %s, best_rate = %ld, parent clk: %s @ %ld\n",
+ 		 __func__, best_rate,
+ 		 __clk_get_name((req->best_parent_hw)->clk),
+@@ -264,7 +298,8 @@ at91_clk_register_generated(struct regmap *regmap, spinlock_t *lock,
+ 	init.ops = &generated_ops;
+ 	init.parent_names = parent_names;
+ 	init.num_parents = num_parents;
+-	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE;
++	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
++		CLK_SET_RATE_PARENT;
+ 
+ 	gck->id = id;
+ 	gck->hw.init = &init;
+@@ -296,6 +331,7 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
+ 	struct device_node *gcknp;
+ 	struct clk_range range = CLK_RANGE(0, 0);
+ 	struct regmap *regmap;
++	struct clk_generated *gck;
+ 
+ 	num_parents = of_clk_get_parent_count(np);
+ 	if (num_parents == 0 || num_parents > GENERATED_SOURCE_MAX)
+@@ -327,6 +363,21 @@ static void __init of_sama5d2_clk_generated_setup(struct device_node *np)
+ 		hw = at91_clk_register_generated(regmap, &pmc_pcr_lock, name,
+ 						  parent_names, num_parents,
+ 						  id, &range);
++
++		gck = to_clk_generated(hw);
++
++		if (of_device_is_compatible(np,
++					    "atmel,sama5d2-clk-generated")) {
++			if (gck->id == GCK_ID_SSC0 || gck->id == GCK_ID_SSC1 ||
++			    gck->id == GCK_ID_I2S0 || gck->id == GCK_ID_I2S1 ||
++			    gck->id == GCK_ID_CLASSD)
++				gck->audio_pll_allowed = true;
++			else
++				gck->audio_pll_allowed = false;
++		} else {
++			gck->audio_pll_allowed = false;
++		}
++
+ 		if (IS_ERR(hw))
+ 			continue;
+ 
 -- 
-2.6.4
+git-series 0.9.1
