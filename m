@@ -1,52 +1,48 @@
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH 2/2] ARM: dts: r8a7743: Add IIC cores to dtsi
-Date: Thu, 10 Aug 2017 13:49:05 +0000
-Message-ID: <TY1PR06MB0702EA22AFE7D8145BF623A6B7880@TY1PR06MB0702.apcprd06.prod.outlook.com>
-References: <1502196418-31341-1-git-send-email-biju.das@bp.renesas.com>
- <12d923ba-184c-ef59-f27b-41a7592a5f93@cogentembedded.com>
- <20170810080121.GE16647@verge.net.au> <20170810112411.GA4380@katana>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170810112411.GA4380@katana>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 00/11] Add the integrated PHY support
+Date: Thu, 10 Aug 2017 21:56:39 +0800
+Message-ID: <1502373410-2423-1-git-send-email-david.wu@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The rk3228 and rk3328 support integrated PHY inside, let's enable
+it to work. And the integrated PHY need to do some special setting,
+so register the rockchip integrated PHY driver.
 
-> From: Wolfram Sang [mailto:wsa@the-dreams.de]
-> Sent: 10 August 2017 12:24
-> 
-> 
-> > > >+		i2c6: i2c@e60b0000 {
-> > >
-> > >    I'd use iic0 as the label.
-> >
-> > I have no preference here other than that we try to be consistent in
-> > DT for different R-Car SoCs. Wolfram, do you have an opinion on this?
-> 
-> Back then, for M2-W, I decided to go with the schematics/datasheets.
-> And those mentioned i2c6 rather than iic0. For that reason, the comment
+David Wu (11):
+  net: phy: Add rockchip PHY driver support
+  multi_v7_defconfig: Make rockchip PHY built-in
+  arm64: defconfig: Enable CONFIG_ROCKCHIP_PHY
+  net: stmmac: dwmac-rk: Remove unwanted code for rk3328_set_to_rmii()
+  Documentation: net: phy: Add phy-is-integrated binding
+  net: stmmac: dwmac-rk: Add integrated PHY support
+  net: stmmac: dwmac-rk: Add integrated PHY support for rk3228
+  net: stmmac: dwmac-rk: Add integrated PHY supprot for rk3328
+  ARM: dts: rk3228-evb: Enable the integrated PHY for gmac
+  ARM64: dts: rockchip: Add gmac2phy node support for rk3328
+  ARM64: dts: rockchip: Enable gmac2phy for rk3328-evb
 
-The M2 schematics still use i2c6, and for consistency I'd vote to use the same with RZ/G1M.
+ Documentation/devicetree/bindings/net/phy.txt  |   5 +
+ arch/arm/boot/dts/rk3228-evb.dts               |  34 ++++
+ arch/arm/configs/multi_v7_defconfig            |   1 +
+ arch/arm64/boot/dts/rockchip/rk3328-evb.dts    |  17 ++
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi       |  39 +++++
+ arch/arm64/configs/defconfig                   |   1 +
+ drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 140 +++++++++++++--
+ drivers/net/phy/Kconfig                        |   5 +
+ drivers/net/phy/Makefile                       |   1 +
+ drivers/net/phy/rockchip.c                     | 233 +++++++++++++++++++++++++
+ 10 files changed, 466 insertions(+), 10 deletions(-)
+ create mode 100644 drivers/net/phy/rockchip.c
 
-> 
-> "/* The memory map in the User's Manual maps the cores to bus numbers */"
-> 
-> exists in r8a7791.dtsi. Dunno the manual of this SoC here.
+-- 
+1.9.1
 
-The manual for r8a7743 uses the same terminology as the r8a7791 manuals.
 
-Kind regards, Chris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
