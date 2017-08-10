@@ -1,125 +1,70 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: Re: [PATCH v3 01/20] mtd: nand: qcom: program NAND_DEV_CMD_VLD
- register
-Date: Thu, 10 Aug 2017 16:01:17 +0530
-Message-ID: <4b66fe6b922115781c67f1555f21fee5@codeaurora.org>
-References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
- <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
- <20170810114250.6663a6b0@bbrezillon>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] ARM: dts: uniphier: add nodes of thermal monitor
+ and thermal zone for PXs2
+Date: Thu, 10 Aug 2017 19:44:38 +0900
+Message-ID: <CAK7LNAS2chLuW_PzeghNCTYf038qS_BgxMqJ6FoQbqT6hRJYSQ@mail.gmail.com>
+References: <1499255595-31805-1-git-send-email-hayashi.kunihiko@socionext.com> <1499255595-31805-2-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810114250.6663a6b0@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1499255595-31805-2-git-send-email-hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-08-10 15:12, Boris Brezillon wrote:
-> Le Sat,  5 Aug 2017 21:49:39 +0530,
-> Abhishek Sahu <absahu@codeaurora.org> a écrit :
-> 
->> The NAND page read fails without complete boot chain since
->> NAND_DEV_CMD_VLD value is not proper. The default power on reset
->> value for this register is
->> 
->>     0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
->> 
->> The READ_START_VALID should be enabled for sending PAGE_READ
->> command. READ_STOP_VALID should be cleared since normal NAND
->> page read does not require READ_STOP command.
->> 
->> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
->> Cc: stable@vger.kernel.org
->> Reviewed-by: Archit Taneja <architt@codeaurora.org>
->> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
->> ---
->>  drivers/mtd/nand/qcom_nandc.c | 13 ++++++++++++-
->>  1 file changed, 12 insertions(+), 1 deletion(-)
->> 
->> diff --git a/drivers/mtd/nand/qcom_nandc.c 
->> b/drivers/mtd/nand/qcom_nandc.c
->> index 0289f09..7406019 100644
->> --- a/drivers/mtd/nand/qcom_nandc.c
->> +++ b/drivers/mtd/nand/qcom_nandc.c
->> @@ -110,6 +110,10 @@
->> 
->>  /* NAND_DEV_CMD_VLD bits */
->>  #define	READ_START_VLD			0
->> +#define	READ_STOP_VALID			1
->> +#define	WRITE_START_VALID		2
->> +#define	ERASE_START_VALID		3
->> +#define	SEQ_READ_START_VLD		4
-> 
-> Why not
-> 
-> #define	READ_START_VLD				BIT(0)
-> #define	READ_STOP_VALID				BIT(1)
-> #define	WRITE_START_VALID			BIT(2)
-> #define	ERASE_START_VALID			BIT(3)
-> #define	SEQ_READ_START_VLD			BIT(4)
-> 
+Hayashi-san
 
-  Sure. we can change to use BIT macro.
 
-  We are using READ_START_VLD only at one place so will replace in
-  current code from
+2017-07-05 20:53 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> Add nodes of thermal monitor and thermal zone for UniPhier PXs2 SoC.
+> The thermal monitor is included in sysctrl.
+> Furthermore, add cpuN labels for reference in cooling-device property.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
 
-  /* configure CMD1 and VLD for ONFI param probing */
-         nandc_set_reg(nandc, NAND_DEV_CMD_VLD,
-                       (nandc->vld & ~(1 << READ_START_VLD))
-                       | 0 << READ_START_VLD);
-  to
 
-  nandc_set_reg(nandc, NAND_DEV_CMD_VLD, nandc->vld & ~READ_START_VLD)
+Please add socionext,tmod-calibration
+in case the efuse is not brown.
 
->> 
->>  /* NAND_EBI2_ECC_BUF_CFG bits */
->>  #define	NUM_STEPS			0
->> @@ -148,6 +152,12 @@
->>  #define	FETCH_ID			0xb
->>  #define	RESET_DEVICE			0xd
->> 
->> +/* Default Value for NAND_DEV_CMD_VLD */
->> +#define NAND_DEV_CMD_VLD_VAL		(BIT(READ_START_VLD)	| \
->> +					 BIT(WRITE_START_VALID)	| \
->> +					 BIT(ERASE_START_VALID)	| \
->> +					 BIT(SEQ_READ_START_VLD))
->> +
-> 
-> and then:
-> 
-> #define NAND_DEV_CMD_VLD_VAL	(READ_START_VLD	| \
-> 				 WRITE_START_VALID | \
-> 				 ERASE_START_VALID | \
-> 				 SEQ_READ_START_VLD)
-> 
-> BTW, can you use consistent suffixes? Sometime definitions are suffixed
-> with _VLD and others are suffixed with _VALID.
-> 
 
-  Sure. I will change all the names to _VLD.
+>
+> +       thermal-zones {
+> +               cpu_thermal {
+> +                       polling-delay-passive = <250>;  /* 250ms */
+> +                       polling-delay = <1000>;         /* 1000ms */
+> +                       thermal-sensors = <&pvtctl>;
+> +
+> +                       trips {
+> +                               cpu_crit: cpu_crit {
+> +                                       temperature = <95000>;  /* 95C */
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                               cpu_alert: cpu_alert {
+> +                                       temperature = <85000>;  /* 85C */
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +                       };
+> +
+> +                       cooling-maps {
+> +                               map {
+> +                                       trip = <&cpu_alert>;
+> +                                       cooling-device = <&cpu0 (-1) (-1)>;
+> +                               };
 
->>  /*
->>   * the NAND controller performs reads/writes with ECC in 516 byte 
->> chunks.
->>   * the driver calls the chunks 'step' or 'codeword' interchangeably
->> @@ -1995,13 +2005,14 @@ static int qcom_nandc_setup(struct 
->> qcom_nand_controller *nandc)
->>  {
->>  	/* kill onenand */
->>  	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
->> +	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
->> 
->>  	/* enable ADM DMA */
->>  	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
->> 
->>  	/* save the original values of these registers */
->>  	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
->> -	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
->> +	nandc->vld = NAND_DEV_CMD_VLD_VAL;
->> 
->>  	return 0;
->>  }
+
+After all, I decided to use dt-bindings headers.
+Could you use THERMAL_NO_LIMIT for clarification?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
