@@ -1,65 +1,75 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 3/3] ARM: dts: keystone-k2g-ice: Add and enable DSP CMA memory pool
-Date: Thu, 10 Aug 2017 18:52:45 -0500
-Message-ID: <20170810235245.30316-4-s-anna@ti.com>
+From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: keystone-k2g: Add DSP node
+Date: Thu, 10 Aug 2017 18:52:43 -0500
+Message-ID: <20170810235245.30316-2-s-anna@ti.com>
 References: <20170810235245.30316-1-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810235245.30316-1-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <ssantosh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Suman Anna <s-anna@ti.com>, Sam Nelson <sam.nelson@ti.com>, "Andrew F. Davis" <afd@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810235245.30316-1-s-anna-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-A CMA memory pool reserved memory node is added, and is attached
-to the DSP node through the 'memory-region' property on the K2G
-ICE board. This area will be used for allocating virtio rings and
-buffers. This node allows the DSP Memory Protection and Address
-Extension (MPAX) module to be configured properly for the DSP
-processor, and matches the values used on the other Keystone 2
-boards for software compatibility.
+The Keystone 2 66AK2G SoC has a single TMS320C66x DSP Core
+Subsystem (C66x CorePac), containing a C66x Fixed/Floating-Point
+DSP Core, and 32 KB of L1P & L1D SRAMs and a 1 MB L2 SRAM. Add
+the DT node for this DSP processor sub-system.
 
-The reserved memory node and the user DSP node are also marked
-okay to enable the DSP on the K2G ICE board.
+The DT node has a new property 'power-domains' and no 'clocks'
+properties, and uses slightly different property values for
+'resets' compared to other Keystone 2 SoCs. The processor does
+not have an MMU, and uses various IPC Generation registers and
+shared memory for inter-processor communication. The alias with
+a stem 'rproc' has also been added for the DSP, it provides a
+fixed remoteproc id for the DSP processor.
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
+Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone-k2g-ice.dts | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm/boot/dts/keystone-k2g.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm/boot/dts/keystone-k2g-ice.dts b/arch/arm/boot/dts/keystone-k2g-ice.dts
-index d820d37b5148..78692745e0af 100644
---- a/arch/arm/boot/dts/keystone-k2g-ice.dts
-+++ b/arch/arm/boot/dts/keystone-k2g-ice.dts
-@@ -17,6 +17,19 @@
- 		device_type = "memory";
- 		reg = <0x00000008 0x00000000 0x00000000 0x20000000>;
- 	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		dsp_common_memory: dsp-common-memory@81f800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
-+			reusable;
-+			status = "okay";
-+		};
-+	};
- };
+diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+index 35726b66fb91..826b286665e6 100644
+--- a/arch/arm/boot/dts/keystone-k2g.dtsi
++++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+@@ -28,6 +28,7 @@
  
- &k2g_pinctrl {
-@@ -33,3 +46,8 @@
- 	pinctrl-0 = <&uart0_pins>;
- 	status = "okay";
- };
+ 	aliases {
+ 		serial0 = &uart0;
++		rproc0 = &dsp0;
+ 	};
+ 
+ 	cpus {
+@@ -147,6 +148,22 @@
+ 			gpio,syscon-dev = <&devctrl 0x240>;
+ 		};
+ 
++		dsp0: dsp@10800000 {
++			compatible = "ti,k2g-dsp";
++			reg = <0x10800000 0x00100000>,
++			      <0x10e00000 0x00008000>,
++			      <0x10f00000 0x00008000>;
++			reg-names = "l2sram", "l1pram", "l1dram";
++			power-domains = <&k2g_pds 0x0046>;
++			ti,syscon-dev = <&devctrl 0x844>;
++			resets = <&k2g_reset 0x0046 0x1>;
++			interrupt-parent = <&kirq0>;
++			interrupts = <0 8>;
++			interrupt-names = "vring", "exception";
++			kick-gpios = <&dspgpio0 27 0>;
++			status = "disabled";
++		};
 +
-+&dsp0 {
-+	memory-region = <&dsp_common_memory>;
-+	status = "okay";
-+};
+ 		msgmgr: msgmgr@02a00000 {
+ 			compatible = "ti,k2g-message-manager";
+ 			#mbox-cells = <2>;
 -- 
 2.13.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
