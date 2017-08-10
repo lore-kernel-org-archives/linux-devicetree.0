@@ -1,77 +1,102 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH  0/3] Add SMP support
-Date: Thu, 10 Aug 2017 09:18:13 +0000
-Message-ID: <KL1PR06MB17028862FF6D21E2D611B24AB8880@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1502189793-59679-1-git-send-email-biju.das@bp.renesas.com>
- <20170809083554.GI2705@verge.net.au>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 01/20] mtd: nand: qcom: program NAND_DEV_CMD_VLD
+ register
+Date: Thu, 10 Aug 2017 11:42:50 +0200
+Message-ID: <20170810114250.6663a6b0@bbrezillon>
+References: <1501949998-29859-1-git-send-email-absahu@codeaurora.org>
+        <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170809083554.GI2705@verge.net.au>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1501949998-29859-2-git-send-email-absahu@codeaurora.org>
+Sender: stable-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Le Sat,  5 Aug 2017 21:49:39 +0530,
+Abhishek Sahu <absahu@codeaurora.org> a écrit :
 
-> -----Original Message-----
-> From: Simon Horman [mailto:horms@verge.net.au]
-> Sent: 09 August 2017 09:36
-> To: Biju Das <biju.das@bp.renesas.com>
-> Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> <mark.rutland@arm.com>; Magnus Damm <magnus.damm@gmail.com>;
-> Russell King <linux@armlinux.org.uk>; Chris Paterson
-> <Chris.Paterson2@renesas.com>; devicetree@vger.kernel.org; linux-renesas-
-> soc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH 0/3] Add SMP support
->
-> On Tue, Aug 08, 2017 at 11:56:30AM +0100, Biju Das wrote:
-> > This series aims to add SMP support for r8a7743 SoC.
-> >
-> > This series has been tested against Linux-next tag 20170727 and
-> > renesas-dev branch.
->
-> It seems that these patches are targeted at the renesas tree.
-> The best practice in that case is to base patches on the latest devel branch.
-> Please consider doing so in future.
->
-> The patches themselves seem good to me, however, I would like to enquire
-> about testing. In particular, have you tested CPU hotplug and suspend to RAM
-> with these patches (and without in the case of the latter)?
+> The NAND page read fails without complete boot chain since
+> NAND_DEV_CMD_VLD value is not proper. The default power on reset
+> value for this register is
+> 
+>     0xe - ERASE_START_VALID | WRITE_START_VALID | READ_STOP_VALID
+> 
+> The READ_START_VALID should be enabled for sending PAGE_READ
+> command. READ_STOP_VALID should be cleared since normal NAND
+> page read does not require READ_STOP command.
+> 
+> Fixes: c76b78d8ec05a ("mtd: nand: Qualcomm NAND controller driver")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Archit Taneja <architt@codeaurora.org>
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+> ---
+>  drivers/mtd/nand/qcom_nandc.c | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+> index 0289f09..7406019 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -110,6 +110,10 @@
+>  
+>  /* NAND_DEV_CMD_VLD bits */
+>  #define	READ_START_VLD			0
+> +#define	READ_STOP_VALID			1
+> +#define	WRITE_START_VALID		2
+> +#define	ERASE_START_VALID		3
+> +#define	SEQ_READ_START_VLD		4
 
-I have tested CPU hotplug with this patch and it works ok.
+Why not
 
-Currently iWave platform doesn't support STR I guess. But we should check the changes on other M2 platforms to prove that
-things don't break.
+#define	READ_START_VLD				BIT(0)
+#define	READ_STOP_VALID				BIT(1)
+#define	WRITE_START_VALID			BIT(2)
+#define	ERASE_START_VALID			BIT(3)
+#define	SEQ_READ_START_VLD			BIT(4)
 
-[>]
-> I am cautious about any regressions that may creep in when going from UP to
-> SMP.
+>  
+>  /* NAND_EBI2_ECC_BUF_CFG bits */
+>  #define	NUM_STEPS			0
+> @@ -148,6 +152,12 @@
+>  #define	FETCH_ID			0xb
+>  #define	RESET_DEVICE			0xd
+>  
+> +/* Default Value for NAND_DEV_CMD_VLD */
+> +#define NAND_DEV_CMD_VLD_VAL		(BIT(READ_START_VLD)	| \
+> +					 BIT(WRITE_START_VALID)	| \
+> +					 BIT(ERASE_START_VALID)	| \
+> +					 BIT(SEQ_READ_START_VLD))
+> +
 
-> >
-> > Biju Das (3):
-> >   dt-bindings: apmu: Document r8a7743 support
-> >   ARM: dts: r8a7743: Add APMU node and second CPU core
-> >   ARM: dts: r8a7743: Add OPP table for frequency scaling
-> >
-> >  .../devicetree/bindings/power/renesas,apmu.txt     |  3 ++-
-> >  arch/arm/boot/dts/r8a7743.dtsi                     | 25 ++++++++++++++++++++++
-> >  2 files changed, 27 insertions(+), 1 deletion(-)
-> >
-> > --
-> > 1.9.1
-> >
+and then:
 
+#define NAND_DEV_CMD_VLD_VAL	(READ_START_VLD	| \
+				 WRITE_START_VALID | \
+				 ERASE_START_VALID | \
+				 SEQ_READ_START_VLD)
 
+BTW, can you use consistent suffixes? Sometime definitions are suffixed
+with _VLD and others are suffixed with _VALID.
 
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
+>  /*
+>   * the NAND controller performs reads/writes with ECC in 516 byte chunks.
+>   * the driver calls the chunks 'step' or 'codeword' interchangeably
+> @@ -1995,13 +2005,14 @@ static int qcom_nandc_setup(struct qcom_nand_controller *nandc)
+>  {
+>  	/* kill onenand */
+>  	nandc_write(nandc, SFLASHC_BURST_CFG, 0);
+> +	nandc_write(nandc, NAND_DEV_CMD_VLD, NAND_DEV_CMD_VLD_VAL);
+>  
+>  	/* enable ADM DMA */
+>  	nandc_write(nandc, NAND_FLASH_CHIP_SELECT, DM_EN);
+>  
+>  	/* save the original values of these registers */
+>  	nandc->cmd1 = nandc_read(nandc, NAND_DEV_CMD1);
+> -	nandc->vld = nandc_read(nandc, NAND_DEV_CMD_VLD);
+> +	nandc->vld = NAND_DEV_CMD_VLD_VAL;
+>  
+>  	return 0;
+>  }
