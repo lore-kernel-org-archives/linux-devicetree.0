@@ -1,29 +1,51 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Add support for buzzer
-Date: Thu, 10 Aug 2017 09:36:02 -0700
-Message-ID: <20170810163602.GG8569@atomide.com>
-References: <1497935361-11019-1-git-send-email-faiz_abbas@ti.com>
- <c135a805-868a-87fc-ce78-b4e49139211d@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: net: c_can: Update binding for clock
+ and power-domains property
+Date: Thu, 10 Aug 2017 11:35:58 -0500
+Message-ID: <20170810163558.todxrky4f4nve57x@rob-hp-laptop>
+References: <20170802201822.11532-1-fcooper@ti.com>
+ <20170802201822.11532-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <c135a805-868a-87fc-ce78-b4e49139211d@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170802201822.11532-2-fcooper@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linux@armlinux.org.uk, linux-can@vger.kernel.org, mkl@pengutronix.de, linux-arm-kernel@lists.infradead.org, ssantosh@kernel.org, wg@grandegger.com
 List-Id: devicetree@vger.kernel.org
 
-* Faiz Abbas <faiz_abbas@ti.com> [170802 02:32]:
-> 
-> 
-> On Tuesday 20 June 2017 10:39 AM, Faiz Abbas wrote:
-> > Add support for onboard gpio buzzer. It works using
-> > the gpio-beeper driver. Pinmux entries for GPIO
-> > controlling the buzzer are also added.
-> 
-> Gentle ping
+On Wed, Aug 02, 2017 at 03:18:20PM -0500, Franklin S Cooper Jr wrote:
+> CAN driver uses the clk_get_rate call to determine the frequency of the
+> functional clock. OMAP based SoCs do not require the clock property since
+> hwmod already handles creating a "fck" clock thats accessible to drivers.
 
-Applying finally into omap-for-v4.14/dt thanks.
+that's
 
-Tony
+> However, this isn't the case for 66AK2G which makes the clocks property
+> require for that SoC.
+
+required
+
+> 
+> 66AK2G requires a new property. Therefore, update the binding to also make
+> this property requirement clear. Also clarify that for OMAP based SoCs
+> ti,hwmod is a required property.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+>  Documentation/devicetree/bindings/net/can/c_can.txt | 13 ++++++++++++-
+>  1 file changed, 12 insertions(+), 1 deletion(-)
+
+Otherwise,
+
+Acked-by: Rob Herring <robh@kernel.org>
