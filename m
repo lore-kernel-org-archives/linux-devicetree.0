@@ -1,45 +1,84 @@
-From: Jeffy Chen <jeffy.chen@rock-chips.com>
-Subject: [PATCH v2 3/3] dt-bindings: ASoC: rockchip: Add rockchip,codec-names property
-Date: Thu, 10 Aug 2017 12:54:58 +0800
-Message-ID: <1502340898-28403-4-git-send-email-jeffy.chen@rock-chips.com>
-References: <1502340898-28403-1-git-send-email-jeffy.chen@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502340898-28403-1-git-send-email-jeffy.chen@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, dgreid@chromium.org, heiko@sntech.de
-Cc: briannorris@chromium.org, dianders@chromium.org, Jeffy Chen <jeffy.chen@rock-chips.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/7] mtd: spi-nor: cadence-quadspi: add a delay in write
+ sequence
+Date: Thu, 10 Aug 2017 10:54:01 +0530
+Message-ID: <86dc7599-bf45-504e-2bbd-ef72054d0a6f@ti.com>
+References: <20170801045434.8733-1-vigneshr@ti.com>
+ <20170801045434.8733-2-vigneshr@ti.com>
+ <20170810000545.hphnihd5ghugfbof@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170810000545.hphnihd5ghugfbof@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a new rockchip,codec-names property, so that the driver can parse
-the codecs by name.
 
-Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
----
 
-Changes in v2:
-Let rockchip,codec-names be a required property.
+On Thursday 10 August 2017 05:35 AM, Rob Herring wrote:
+> On Tue, Aug 01, 2017 at 10:24:28AM +0530, Vignesh R wrote:
+>> As per 66AK2G02 TRM[1] SPRUHY8F section 11.15.5.3 Indirect Access
+>> Controller programming sequence, a delay equal to couple QSPI master
+>> clock(~5ns) is required after setting CQSPI_REG_INDIRECTWR_START bit and
+>> writing data to the flash. Add a new compatible to handle the couple of
+>> cycles of delay required in the indirect write sequence, since this
+>> delay is specific to TI 66AK2G SoC.
+>>
+>> [1]http://www.ti.com/lit/ug/spruhy8f/spruhy8f.pdf
+>>
+[...]
+>> +	/*
+>> +	 * As per 66AK2G02 TRM SPRUHY8F section 11.15.5.3 Indirect Access
+>> +	 * Controller programming sequence, couple of cycles of
+>> +	 * QSPI_REF_CLK delay is required for the above bit to
+>> +	 * be internally synchronized by the QSPI module. Provide 5
+>> +	 * cycles of delay.
+>> +	 */
+>> +	ndelay(cqspi->wr_delay);
+>>  
+>>  	while (remaining > 0) {
+>>  		write_bytes = remaining > page_size ? page_size : remaining;
+>> @@ -1213,6 +1222,9 @@ static int cqspi_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>> +	if (of_device_is_compatible(dev->of_node, "ti,k2g-qspi"))
+>> +		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+>> +						   cqspi->master_ref_clk_hz);
+> 
+> Use the data pointer in the of_device_id table and put the delay value 
+> there.
+> 
 
- Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt | 2 ++
- 1 file changed, 2 insertions(+)
+I thought about this, but for a given SoC, delay value might vary
+depending on what frequency QSPI master_ref_clk is set to. So hard
+coding will not help. How about having a flag (CQSPI_NEEDS_WR_DELAY) in
+data pointer and then using that to determine whether or not to
+calculate and set delay here?
 
-diff --git a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-index eac91db..05351df 100644
---- a/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-+++ b/Documentation/devicetree/bindings/sound/rockchip,rk3399-gru-sound.txt
-@@ -5,6 +5,7 @@ Required properties:
- - rockchip,cpu: The phandle of the Rockchip I2S controller that's
-   connected to the codecs
- - rockchip,codec: The phandle of the MAX98357A/RT5514/DA7219 codecs
-+- rockchip,codec-names: The names of the MAX98357A/RT5514/DA7219 codecs
- 
- Optional properties:
- - dmic-wakeup-delay-ms : specify delay time (ms) for DMIC ready.
-@@ -18,5 +19,6 @@ sound {
- 	compatible = "rockchip,rk3399-gru-sound";
- 	rockchip,cpu = <&i2s0>;
- 	rockchip,codec = <&max98357a &rt5514 &da7219>;
-+	rockchip,codec-names = "MAX98357A", "RT5514", "DA7219";
- 	dmic-wakeup-delay-ms = <20>;
- };
+>>  
+>>  	ret = devm_request_irq(dev, irq, cqspi_irq_handler, 0,
+>>  			       pdev->name, cqspi);
+>> @@ -1285,6 +1297,7 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+>>  
+>>  static const struct of_device_id cqspi_dt_ids[] = {
+>>  	{.compatible = "cdns,qspi-nor",},
+>> +	{.compatible = "ti,k2g-qspi",},
+>>  	{ /* end of table */ }
+>>  };
+>>  
+>> -- 
+>> 2.13.3
+>>
+
 -- 
-2.1.4
+Regards
+Vignesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
