@@ -1,28 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] tty/bcm63xx_uart: allow naming clock in device tree
-Date: Thu, 10 Aug 2017 11:25:15 -0500
-Message-ID: <20170810162515.qkmhcnsaoh4wjrzs@rob-hp-laptop>
-References: <20170802093429.12572-1-jonas.gorski@gmail.com>
- <20170802093429.12572-5-jonas.gorski@gmail.com>
+Subject: Re: [PATCH] dmaengine: usb-dmac: Add soctype for R-Car M3-W
+Date: Thu, 10 Aug 2017 11:25:38 -0500
+Message-ID: <20170810162538.j5whbtnucs3jkojh@rob-hp-laptop>
+References: <1501673614-6633-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170802093429.12572-5-jonas.gorski@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Jonas Gorski <jonas.gorski@gmail.com>
-Cc: linux-mips@linux-mips.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kevin Cernekee <cernekee@gmail.com>, Jiri Slaby <jslaby@suse.com>, "David S. Miller" <davem@davemloft.net>, Russell King <linux@armlinux.org.uk>
+In-Reply-To: <1501673614-6633-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: vinod.koul@intel.com, mark.rutland@arm.com, dmaengine@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 11:34:25AM +0200, Jonas Gorski wrote:
-> Codify using a named clock for the refclk of the uart. This makes it
-> easier if we might need to add a gating clock (like present on the
-> BCM6345).
+On Wed, Aug 02, 2017 at 08:33:34PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds R-Car M3-W device tree bindings for usb-dmac driver.
 > 
-> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/serial/brcm,bcm6345-uart.txt | 6 ++++++
->  drivers/tty/serial/bcm63xx_uart.c                              | 6 ++++--
->  2 files changed, 10 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/dma/renesas,usb-dmac.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
