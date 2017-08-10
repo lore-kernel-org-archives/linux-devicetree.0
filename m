@@ -1,75 +1,98 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 0/4] drm/bridge/adv7511: add CEC support
-Date: Thu, 10 Aug 2017 11:51:46 +0200
-Message-ID: <319342e7-a07a-5cac-a5d2-f822c98630bd@xs4all.nl>
-References: <20170730130743.19681-1-hverkuil@xs4all.nl>
- <9d1757b3-24f9-2f0f-1971-62d1ef4b79e3@codeaurora.org>
- <fa41b1e5-7319-c7f8-32e9-36c291d85a0f@xs4all.nl>
- <75a39db0-a5cc-9a20-2bbf-ebfc3573efca@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
+ bitrate
+Date: Thu, 10 Aug 2017 13:05:14 +0300
+Message-ID: <9a6f4fdf-a4f6-283b-0e5a-693cc7d263ef@cogentembedded.com>
+References: <20170810005916.27163-1-fcooper@ti.com>
+ <20170810005916.27163-2-fcooper@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <75a39db0-a5cc-9a20-2bbf-ebfc3573efca@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170810005916.27163-2-fcooper@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-can@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, robh+dt@kernel.org, quentin.schulz@free-electrons.com, dev.kurt@vandijck-laurijssen.be, andrew@lunn.ch, socketcan@hartkopp.net
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAvMDgvMTcgMTE6MDgsIEFyY2hpdCBUYW5lamEgd3JvdGU6Cj4gCj4gCj4gT24gMDgvMTAv
-MjAxNyAwMjoyNiBQTSwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBPbiAxMC8wOC8xNyAxMDo0OSwg
-QXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+IEhpIEhhbnMsCj4+Pgo+Pj4gT24gMDcvMzAvMjAxNyAw
-NjozNyBQTSwgSGFucyBWZXJrdWlsIHdyb3RlOgo+Pj4+IEZyb206IEhhbnMgVmVya3VpbCA8aGFu
-cy52ZXJrdWlsQGNpc2NvLmNvbT4KPj4+Pgo+Pj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgQ0VD
-IHN1cHBvcnQgdG8gdGhlIGRybSBhZHY3NTExL2Fkdjc1MzMgZHJpdmVycy4KPj4+Pgo+Pj4+IEkg
-aGF2ZSB0ZXN0ZWQgdGhpcyB3aXRoIHRoZSBRdWFsY29tbSBEcmFnb25ib2FyZCBDNDEwIChhZHY3
-NTMzIGJhc2VkKQo+Pj4+IGFuZCB0aGUgUmVuZXNhcyBSLUNhciBLb2Vsc2NoIGJvYXJkIChhZHY3
-NTExIGJhc2VkKS4KPj4+Pgo+Pj4+IE5vdGU6IHRoZSBEcmFnb25ib2FyZCBuZWVkcyB0aGlzIHBh
-dGNoOgo+Pj4+Cj4+Pj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85ODI0Nzcz
-Lwo+Pj4+Cj4+Pj4gQXJjaGl0LCBjYW4geW91IGNvbmZpcm0gdGhhdCB0aGlzIHBhdGNoIHdpbGwg
-Z28gdG8ga2VybmVsIDQuMTQ/Cj4+Pj4KPj4+PiBBbmQgdGhlIEtvZWxzY2ggYm9hcmQgbmVlZHMg
-dGhpcyA0LjEzIGZpeDoKPj4+Pgo+Pj4+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvOTgzNjg2NS8KPj4+Pgo+Pj4+IEkgb25seSBoYXZlIHRoZSBLb2Vsc2NoIGJvYXJkIHRvIHRl
-c3Qgd2l0aCwgYnV0IGl0IGxvb2tzIGxpa2Ugb3RoZXIKPj4+PiBSLUNhciBib2FyZHMgdXNlIHRo
-ZSBzYW1lIGFkdjc1MTEuIEl0IHdvdWxkIGJlIG5pY2UgaWYgc29tZW9uZSBjYW4KPj4+PiBhZGQg
-Q0VDIHN1cHBvcnQgdG8gdGhlIG90aGVyIFItQ2FyIGJvYXJkcyBhcyB3ZWxsLiBUaGUgbWFpbiB0
-aGluZwo+Pj4+IHRvIGNoZWNrIGlzIGlmIHRoZXkgYWxsIHVzZSB0aGUgc2FtZSAxMiBNSHogZml4
-ZWQgQ0VDIGNsb2NrIHNvdXJjZS4KPj4+Pgo+Pj4+IEFueW9uZSB3aG8gd2FudHMgdG8gdGVzdCB0
-aGlzIHdpbGwgbmVlZCB0aGUgQ0VDIHV0aWxpdGllcyB0aGF0Cj4+Pj4gYXJlIHBhcnQgb2YgdGhl
-IHY0bC11dGlscyBnaXQgcmVwb3NpdG9yeToKPj4+Pgo+Pj4+IGdpdCBjbG9uZSBnaXQ6Ly9saW51
-eHR2Lm9yZy92NGwtdXRpbHMuZ2l0Cj4+Pj4gY2QgdjRsLXV0aWxzCj4+Pj4gLi9ib290c3RyYXAu
-c2gKPj4+PiAuL2NvbmZpZ3VyZQo+Pj4+IG1ha2UKPj4+PiBzdWRvIG1ha2UgaW5zdGFsbAo+Pj4+
-Cj4+Pj4gTm93IGNvbmZpZ3VyZSB0aGUgQ0VDIGFkYXB0ZXIgYXMgYSBQbGF5YmFjayBkZXZpY2U6
-Cj4+Pj4KPj4+PiBjZWMtY3RsIC0tcGxheWJhY2sKPj4+Pgo+Pj4+IERpc2NvdmVyIG90aGVyIENF
-QyBkZXZpY2VzOgo+Pj4+Cj4+Pj4gY2VjLWN0bCAtUwo+Pj4KPj4+IEkgdHJpZWQgdGhlIGluc3Ry
-dWN0aW9ucywgYW5kIEkgZ2V0IHRoZSBmb2xsb3dpbmcgb3V0cHV0LiBJIGRvbid0IHRoaW5rIEkg
-aGF2ZQo+Pj4gYW55IENFQyBkZXZpY2UgY29ubmVjdGVkLCB0aG91Z2guIElzIHRoaXMgdGhlIGV4
-cGVjdGVkIGJlaGF2aW91cj8KPj4+Cj4+PiAjY2VjLWN0bCAtUwo+Pj4gRHJpdmVyIEluZm86Cj4+
-PiAgICAgICAgICBEcml2ZXIgTmFtZSAgICAgICAgICAgICAgICA6IGFkdjc1MTEKPj4+ICAgICAg
-ICAgIEFkYXB0ZXIgTmFtZSAgICAgICAgICAgICAgIDogMy0wMDM5Cj4+PiAgICAgICAgICBDYXBh
-YmlsaXRpZXMgICAgICAgICAgICAgICA6IDB4MDAwMDAwMGUKPj4+ICAgICAgICAgICAgICAgICAg
-TG9naWNhbCBBZGRyZXNzZXMKPj4+ICAgICAgICAgICAgICAgICAgVHJhbnNtaXQKPj4+ICAgICAg
-ICAgICAgICAgICAgUGFzc3Rocm91Z2gKPj4+ICAgICAgICAgIERyaXZlciB2ZXJzaW9uICAgICAg
-ICAgICAgIDogNC4xMy4wCj4+PiAgICAgICAgICBBdmFpbGFibGUgTG9naWNhbCBBZGRyZXNzZXM6
-IDMKPj4+ICAgICAgICAgIFBoeXNpY2FsIEFkZHJlc3MgICAgICAgICAgIDogMS4wLjAuMAo+Pj4g
-ICAgICAgICAgTG9naWNhbCBBZGRyZXNzIE1hc2sgICAgICAgOiAweDAwMDAKPj4+ICAgICAgICAg
-IENFQyBWZXJzaW9uICAgICAgICAgICAgICAgIDogMi4wCj4+PiAgICAgICAgICBMb2dpY2FsIEFk
-ZHJlc3NlcyAgICAgICAgICA6IDAKPj4+Cj4+PiAjY2VjLWN0bCAtLXBsYXliYWNrCj4+PiBbIDEw
-MzguNzYxNTQ1XSBjZWMtMy0wMDM5OiBjZWNfdGhyZWFkX2Z1bmM6IG1lc3NhZ2UgNDQgdGltZWQg
-b3V0IQo+Pgo+PiBUaGlzIGlzbid0IHJpZ2h0LiBZb3Ugc2hvdWxkbid0IHNlZSB0aGlzLiBJdCBu
-ZXZlciByZWNlaXZlcyBhbiBpbnRlcnJ1cHQKPj4gd2hlbiB0aGUgdHJhbnNtaXQgaGFzIGZpbmlz
-aGVkLCB3aGljaCBjYXVzZXMgdGhlc2UgdGltZSBvdXRzLgo+Pgo+PiBXaGF0IGFyZSB5b3UgdGVz
-dGluZyB0aGlzIG9uPyBUaGUgRHJhZ29uYm9hcmQgYzQxMD8KPiAKPiBZZXMuCgpPbiB0b3Agb2Yg
-d2hpY2gga2VybmVsIHRyZWUgYXJlIHRoZXNlIHBhdGNoZXMgYXBwbGllZD8gSSBjYW4gdHJ5IGFu
-ZCByZXByb2R1Y2UKaXQuCgpSZWdhcmRzLAoKCUhhbnMKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello!
+
+On 8/10/2017 3:59 AM, Franklin S Cooper Jr wrote:
+
+> Various CAN or CAN-FD IP may be able to run at a faster rate than
+> what the transceiver the CAN node is connected to. This can lead to
+> unexpected errors. However, CAN transceivers typically have fixed
+> limitations and provide no means to discover these limitations at
+> runtime. Therefore, add support for a can-transceiver node that
+> can be reused by other CAN peripheral drivers to determine for both
+> CAN and CAN-FD what the max bitrate that can be used. If the user
+> tries to configure CAN to pass these maximum bitrates it will throw
+> an error.
+> 
+> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> ---
+> Version 4 changes:
+> Used can-transceiver instead of fixed-transceiver.
+> 
+>   drivers/net/can/dev.c   | 50 +++++++++++++++++++++++++++++++++++++++++++++++++
+>   include/linux/can/dev.h |  5 +++++
+>   2 files changed, 55 insertions(+)
+> 
+> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
+> index 365a8cc..372108f 100644
+> --- a/drivers/net/can/dev.c
+> +++ b/drivers/net/can/dev.c
+[...]
+> @@ -814,6 +815,39 @@ int open_candev(struct net_device *dev)
+>   }
+>   EXPORT_SYMBOL_GPL(open_candev);
+>   
+> +#ifdef CONFIG_OF
+> +/*
+> + * Common function that can be used to understand the limitation of
+> + * a transceiver when it provides no means to determine these limitations
+> + * at runtime.
+> + */
+> +void of_can_transceiver(struct net_device *dev)
+> +{
+> +	struct device_node *dn;
+> +	struct can_priv *priv = netdev_priv(dev);
+> +	struct device_node *np;
+> +	unsigned int max_bitrate;
+> +	int ret;
+> +
+> +	np = dev->dev.parent->of_node;
+
+    I'd do that as an initializer.
+
+> +
+> +	dn = of_get_child_by_name(np, "can-transceiver");
+> +	if (!dn)
+> +		return;
+> +
+> +	max_bitrate = 0;
+> +	ret = of_property_read_u32(dn, "max-bitrate", &max_bitrate);
+
+    I'd initialize max_bitrate to 0 as iff of_property_read_u32() fails, it'll 
+leave the variable unset...
+
+> +
+> +	if (max_bitrate > 0) {
+
+    You risk checking unset variable here.
+
+> +		priv->max_bitrate = max_bitrate;
+> +		priv->is_bitrate_limited = true;
+> +	} else if (ret != -EINVAL) {
+> +		netdev_warn(dev, "Invalid value for transceiver max bitrate\n");
+> +	}
+> +}
+> +EXPORT_SYMBOL(of_can_transceiver);
+> +#endif
+> +
+>   /*
+>    * Common close function for cleanup before the device gets closed.
+>    *
+[...]
+
+MBR, Sergei
