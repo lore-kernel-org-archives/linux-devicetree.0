@@ -1,66 +1,161 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v4 05/12] Documentation: net: phy: Add phy-is-internal
- binding
-Date: Thu, 10 Aug 2017 02:20:41 +0200
-Message-ID: <20170810002041.GA10776@lunn.ch>
-References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
- <1502280630-2254-1-git-send-email-david.wu@rock-chips.com>
- <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/13] dt-bindings: update the binding for
+ Allwinner H3 DE2 support
+Date: Wed, 9 Aug 2017 19:21:21 -0500
+Message-ID: <20170810002121.jydgklyxpm3fuekl@rob-hp-laptop>
+References: <20170801131304.7741-1-icenowy@aosc.io>
+ <79034825.lnfmIyYlWl@jernej-laptop>
+ <d6c7c6de29be2674ad6b37b184d1df7f@aosc.io>
+ <48442573.082BymFnMM@jernej-laptop>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJIP47K7MERBA6OV3GAKGQE746OQRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: David Wu <david.wu@rock-chips.com>, davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <48442573.082BymFnMM@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 09, 2017 at 03:47:34PM -0700, Florian Fainelli wrote:
-> On August 9, 2017 5:10:30 AM PDT, David Wu <david.wu@rock-chips.com> wrote:
-> >Add the documentation for internal phy. A boolean property
-> >indicates that a internal phy will be used.
-> >
-> >Signed-off-by: David Wu <david.wu@rock-chips.com>
-> >---
-> > Documentation/devicetree/bindings/net/phy.txt | 3 +++
-> > 1 file changed, 3 insertions(+)
-> >
-> >diff --git a/Documentation/devicetree/bindings/net/phy.txt
-> >b/Documentation/devicetree/bindings/net/phy.txt
-> >index b558576..942c892 100644
-> >--- a/Documentation/devicetree/bindings/net/phy.txt
-> >+++ b/Documentation/devicetree/bindings/net/phy.txt
-> >@@ -52,6 +52,9 @@ Optional Properties:
-> >   Mark the corresponding energy efficient ethernet mode as broken and
-> >   request the ethernet to stop advertising it.
-> > 
-> >+- phy-is-internal: If set, indicates that phy will connect to the MAC
-> >as a
-> >+  internal phy.
-> 
-> Something along the lines of:
-> 
-> If set, indicates that the PHY is integrated into the same physical package as the Ethernet MAC.
+On Wed, Aug 02, 2017 at 09:06:26PM +0200, Jernej =C5=A0krabec wrote:
+> Hi,
+>=20
+> Dne sreda, 02. avgust 2017 ob 07:02:39 CEST je icenowy-h8G6r0blFSE@public.gmane.org napisal(a)=
+:
+> > =E5=9C=A8 2017-08-02 12:53=EF=BC=8CJernej =C5=A0krabec =E5=86=99=E9=81=
+=93=EF=BC=9A
+> >=20
+> > > Hi Icenowy,
+> > >=20
+> > > Dne torek, 01. avgust 2017 ob 15:12:52 CEST je Icenowy Zheng
+> > >=20
+> > > napisal(a):
+> > >> Allwinner H3 features a "Display Engine 2.0".
+> > >>=20
+> > >> Add device tree bindings for the following parts:
+> > >> - H3 TCONs
+> > >> - H3 Mixers
+> > >> - H3 Display engine
+> > >>=20
+> > >> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > >> ---
+> > >>=20
+> > >>  .../bindings/display/sunxi/sun4i-drm.txt           | 25
+> > >>=20
+> > >> ++++++++++++++++++---- 1 file changed, 21 insertions(+), 4
+> > >> deletions(-)
+> > >>=20
+> > >> diff --git
+> > >> a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > >> b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt inde=
+x
+> > >> 2ee6ff0ef98e..92512953943e 100644
+> > >> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > >> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+> > >>=20
+> > >> @@ -87,18 +87,17 @@ Required properties:
+> > >>     * allwinner,sun6i-a31-tcon
+> > >>     * allwinner,sun6i-a31s-tcon
+> > >>     * allwinner,sun8i-a33-tcon
+> > >>=20
+> > >> +   * allwinner,sun8i-h3-tcon
+> > >>=20
+> > >>     * allwinner,sun8i-v3s-tcon
+> > >>  =20
+> > >>   - reg: base address and size of memory-mapped region
+> > >>   - interrupts: interrupt associated to this IP
+> > >>  =20
+> > >>   - clocks: phandles to the clocks feeding the TCON. Three are neede=
+d:
+> > >>     - 'ahb': the interface clocks
+> > >>=20
+> > >> -   - 'tcon-ch0': The clock driving the TCON channel 0
+> > >>=20
+> > >>   - resets: phandles to the reset controllers driving the encoder
+> > >>  =20
+> > >>     - "lcd": the reset line for the TCON channel 0
+> > >>  =20
+> > >>   - clock-names: the clock names mentioned above
+> > >>   - reset-names: the reset names mentioned above
+> > >>=20
+> > >> - - clock-output-names: Name of the pixel clock created
+> > >>=20
+> > >>  - ports: A ports node with endpoint definitions as defined in
+> > >> =20
+> > >>    Documentation/devicetree/bindings/media/video-interfaces.txt. The
+> > >>=20
+> > >> @@ -112,7 +111,23 @@ Required properties:
+> > >>    channel the endpoint is associated to. If that property is not
+> > >>    present, the endpoint number will be used as the channel number.
+> > >>=20
+> > >> -On SoCs other than the A33 and V3s, there is one more clock require=
+d:
+> > >> +For the following compatibles:
+> > >> +   * allwinner,sun5i-a13-tcon
+> > >> +   * allwinner,sun6i-a31-tcon
+> > >> +   * allwinner,sun6i-a31s-tcon
+> > >> +   * allwinner,sun8i-a33-tcon
+> > >> +   * allwinner,sun8i-v3s-tcon
+> > >> +there is one more clock and one more property required:
+> > >> + - clocks:
+> > >> +   - 'tcon-ch0': The clock driving the TCON channel 0
+> > >> + - clock-output-names: Name of the pixel clock created
+> > >> +
+> > >> +For the following compatibles:
+> > >> +   * allwinner,sun5i-a13-tcon
+> > >> +   * allwinner,sun6i-a31-tcon
+> > >> +   * allwinner,sun6i-a31s-tcon
+> > >> +   * allwinner,sun8i-h3-tcon
+> > >>=20
+> > >> +there is one more clock required:
+> > >>     - 'tcon-ch1': The clock driving the TCON channel 1
+> > >> =20
+> > >>  DRC
+> > >>=20
+> > >> @@ -207,6 +222,8 @@ supported.
+> > >>=20
+> > >>  Required properties:
+> > >>    - compatible: value must be one of:
+> > >>      * allwinner,sun8i-v3s-de2-mixer
+> > >>=20
+> > >> +    * allwinner,sun8i-h3-de2-mixer0
+> > >> +    * allwinner,sun8i-h3-de2-mixer1
+> > >=20
+> > > About that, I concur with Maxime here, plane number properties would =
+be
+> > > better. If we don't do this now, we will never have it.
+> >=20
+> > But I still prefer different compatibles, as the capabilities are
+> > already
+> > proven to be different between mixer0 and mixer1, and furtherly we
+> > cannot
+> > promise Allwinner won't add more functions only available at mixer0.
+> >=20
+> > Then we will be trapped into a situation that we describe more and more
+> > functions via properties, but they should be encoded into the
+> > compatible.
+>=20
+> It is either multiple compatibles or multiple properties. I prefer the la=
+ter,=20
+> but it is up to maintainers to decide.
 
-Hi Florian, David.
+It's not the same. A compatible can imply an infinite number of=20
+properties. I'm fine with properties too, but with only 2 instances I=20
+don't think it makes much sense.
 
-I'm happy with the property name. But i think the text needs more
-description. We deal with Ethernet switches with integrated PHYs. Yet
-for us, this property is unneeded.
+Rob
 
-Seeing this property means some bit of software needs to ensure the
-internal PHY should be used, when given the choice between an internal
-and external PHY. So i would say something like:
-
-    If set, indicates that the PHY is integrated into the same
-    physical package as the Ethernet MAC. If needed, muxers should be
-    configured to ensure the internal PHY is used. The absence of this
-    property indicates the muxers should be configured so that the
-    external PHY is used.
-
-This last part is important. If the bootloader has set the internal
-PHY to be used, you need to reset it. Otherwise we are going to get
-into a mess sometime later and need to add a phy-is-external property.
-
-     Andrew
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
