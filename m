@@ -1,31 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3.1 1/4] dt-bindings: clock: amlogic,gxbb-aoclkc: Update
- bindings
-Date: Wed, 9 Aug 2017 19:15:20 -0500
-Message-ID: <20170810001520.bpu2jyfdvx2isu4w@rob-hp-laptop>
-References: <1501588619-10991-1-git-send-email-narmstrong@baylibre.com>
- <1501588619-10991-2-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH 01/13] dt-bindings: update the binding for Allwinner H3
+ DE2 support
+Date: Wed, 9 Aug 2017 19:18:09 -0500
+Message-ID: <20170810001809.6xhloimtgwsg5j5d@rob-hp-laptop>
+References: <20170801131304.7741-1-icenowy@aosc.io>
+ <20170801131304.7741-2-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1501588619-10991-2-git-send-email-narmstrong@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: jbrunet@baylibre.com, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170801131304.7741-2-icenowy@aosc.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Aug 01, 2017 at 01:56:56PM +0200, Neil Armstrong wrote:
-> On the first revision of the bindings, only the gates + resets were known
-> in the AO Clock HW, but more registers used to configures AO clock are known
-> to be spread among the AO register space.
-> This patch adds a parent node for the entire system control zone for the AO
-> domain then moves the clock controller as a subnode of the system control
-> node.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  .../bindings/clock/amlogic,gxbb-aoclkc.txt         | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCBBdWcgMDEsIDIwMTcgYXQgMDk6MTI6NTJQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
+cm90ZToKPiBBbGx3aW5uZXIgSDMgZmVhdHVyZXMgYSAiRGlzcGxheSBFbmdpbmUgMi4wIi4KPiAK
+PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBmb2xsb3dpbmcgcGFydHM6Cj4gLSBI
+MyBUQ09Ocwo+IC0gSDMgTWl4ZXJzCj4gLSBIMyBEaXNwbGF5IGVuZ2luZQo+IAo+IFNpZ25lZC1v
+ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiAtLS0KPiAgLi4uL2JpbmRp
+bmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dCAgICAgICAgICAgfCAyNSArKysrKysrKysr
+KysrKysrKystLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA0IGRlbGV0
+aW9ucygtKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
