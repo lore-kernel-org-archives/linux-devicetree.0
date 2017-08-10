@@ -1,37 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/13] dt-bindings: update the binding for Allwinner H3
- DE2 support
-Date: Wed, 9 Aug 2017 19:18:09 -0500
-Message-ID: <20170810001809.6xhloimtgwsg5j5d@rob-hp-laptop>
-References: <20170801131304.7741-1-icenowy@aosc.io>
- <20170801131304.7741-2-icenowy@aosc.io>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v4 05/12] Documentation: net: phy: Add phy-is-internal
+ binding
+Date: Thu, 10 Aug 2017 02:20:41 +0200
+Message-ID: <20170810002041.GA10776@lunn.ch>
+References: <1502280475-736-1-git-send-email-david.wu@rock-chips.com>
+ <1502280630-2254-1-git-send-email-david.wu@rock-chips.com>
+ <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170801131304.7741-2-icenowy@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <778B0470-8ABD-46AD-A63D-F0CF4911C800@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: David Wu <david.wu@rock-chips.com>, davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBBdWcgMDEsIDIwMTcgYXQgMDk6MTI6NTJQTSArMDgwMCwgSWNlbm93eSBaaGVuZyB3
-cm90ZToKPiBBbGx3aW5uZXIgSDMgZmVhdHVyZXMgYSAiRGlzcGxheSBFbmdpbmUgMi4wIi4KPiAK
-PiBBZGQgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHRoZSBmb2xsb3dpbmcgcGFydHM6Cj4gLSBI
-MyBUQ09Ocwo+IC0gSDMgTWl4ZXJzCj4gLSBIMyBEaXNwbGF5IGVuZ2luZQo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiAtLS0KPiAgLi4uL2JpbmRp
-bmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dCAgICAgICAgICAgfCAyNSArKysrKysrKysr
-KysrKysrKystLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyMSBpbnNlcnRpb25zKCspLCA0IGRlbGV0
-aW9ucygtKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Aug 09, 2017 at 03:47:34PM -0700, Florian Fainelli wrote:
+> On August 9, 2017 5:10:30 AM PDT, David Wu <david.wu@rock-chips.com> wrote:
+> >Add the documentation for internal phy. A boolean property
+> >indicates that a internal phy will be used.
+> >
+> >Signed-off-by: David Wu <david.wu@rock-chips.com>
+> >---
+> > Documentation/devicetree/bindings/net/phy.txt | 3 +++
+> > 1 file changed, 3 insertions(+)
+> >
+> >diff --git a/Documentation/devicetree/bindings/net/phy.txt
+> >b/Documentation/devicetree/bindings/net/phy.txt
+> >index b558576..942c892 100644
+> >--- a/Documentation/devicetree/bindings/net/phy.txt
+> >+++ b/Documentation/devicetree/bindings/net/phy.txt
+> >@@ -52,6 +52,9 @@ Optional Properties:
+> >   Mark the corresponding energy efficient ethernet mode as broken and
+> >   request the ethernet to stop advertising it.
+> > 
+> >+- phy-is-internal: If set, indicates that phy will connect to the MAC
+> >as a
+> >+  internal phy.
+> 
+> Something along the lines of:
+> 
+> If set, indicates that the PHY is integrated into the same physical package as the Ethernet MAC.
+
+Hi Florian, David.
+
+I'm happy with the property name. But i think the text needs more
+description. We deal with Ethernet switches with integrated PHYs. Yet
+for us, this property is unneeded.
+
+Seeing this property means some bit of software needs to ensure the
+internal PHY should be used, when given the choice between an internal
+and external PHY. So i would say something like:
+
+    If set, indicates that the PHY is integrated into the same
+    physical package as the Ethernet MAC. If needed, muxers should be
+    configured to ensure the internal PHY is used. The absence of this
+    property indicates the muxers should be configured so that the
+    external PHY is used.
+
+This last part is important. If the bootloader has set the internal
+PHY to be used, you need to reset it. Otherwise we are going to get
+into a mess sometime later and need to add a phy-is-external property.
+
+     Andrew
