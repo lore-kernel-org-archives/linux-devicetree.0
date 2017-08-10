@@ -1,36 +1,48 @@
-From: Lars Persson <lars.persson@axis.com>
-Subject: [PATCH v4 4/4] MAINTAINERS: Add ARTPEC crypto maintainer
-Date: Thu, 10 Aug 2017 14:53:54 +0200
-Message-ID: <ea2baf287bd5d52ebe99246f93adae9a878a9edc.1502368677.git.larper@axis.com>
-References: <cover.1502368677.git.larper@axis.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1502368677.git.larper@axis.com>
-In-Reply-To: <cover.1502368677.git.larper@axis.com>
-References: <cover.1502368677.git.larper@axis.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: herbert@gondor.apana.org.au, davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Lars Persson <larper@axis.com>
+From: Maciej Purski <m.purski@samsung.com>
+Subject: [PATCH 0/2] add Silicon Image SiI9234 driver
+Date: Thu, 10 Aug 2017 15:20:42 +0200
+Message-ID: <1502371244-31908-1-git-send-email-m.purski@samsung.com>
+References: <CGME20170810132056eucas1p16365b59eb9c4dad15f07b161ff2fb907@eucas1p1.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, krzk@kernel.org, b.zolnierkie@samsung.com, Maciej Purski <m.purski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Assign the Axis kernel team as maintainer for crypto drivers under
-drivers/crypto/axis.
+Hi everyone,
 
-Signed-off-by: Lars Persson <larper@axis.com>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+These patches are a continuation of work by Tomasz Stanislawski on sii9324 driver, which was described
+in th following letter:
+https://lists.freedesktop.org/archives/dri-devel/2014-April/057481.html
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d5b6c71e783e..72186cf9820d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1129,6 +1129,7 @@ L:	linux-arm-kernel@axis.com
- F:	arch/arm/mach-artpec
- F:	arch/arm/boot/dts/artpec6*
- F:	drivers/clk/axis
-+F:	drivers/crypto/axis
- F:	drivers/pinctrl/pinctrl-artpec*
- F:	Documentation/devicetree/bindings/pinctrl/axis,artpec6-pinctrl.txt
- 
+The main differences from the previous code are:
+* driver moved to /gpu/drm/bridge/ and integrated with drm/bridge subsystem
+* added filtering-out unsupported display modes
+* changed gpio interface to up-to-date
+* changed interrupt handling
+* improve code style
+* add hdmi and sii9324 to exynos4412-trats2 device tree
+
+All comments are welcome.
+
+Regards,
+Maciej Purski
+
+
+Patch summary:
+
+Maciej Purski (2):
+  drm/bridge: add Silicon Image SiI9234 driver
+  ARM: dts: exynos: Add HDMI and Sil9234 to Trats2 board
+
+ .../devicetree/bindings/display/bridge/sii9234.txt |   20 +
+ arch/arm/boot/dts/exynos4412-trats2.dts            |   93 ++
+ drivers/gpu/drm/bridge/Kconfig                     |    8 +
+ drivers/gpu/drm/bridge/Makefile                    |    1 +
+ drivers/gpu/drm/bridge/sii9234.c                   | 1019 ++++++++++++++++++++
+ 5 files changed, 1141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/sii9234.txt
+ create mode 100644 drivers/gpu/drm/bridge/sii9234.c
+
 -- 
-2.11.0
+2.7.4
