@@ -1,62 +1,31 @@
-From: Marcel Holtmann <marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ARM: dts: bcm2837-rpi-3-b: Add bcm43438 as serial
- slave
-Date: Thu, 10 Aug 2017 18:15:04 +0200
-Message-ID: <8186E2A3-D0AC-498F-8229-78862D363F78@holtmann.org>
-References: <1502102366-2760-1-git-send-email-loic.poulain@gmail.com>
- <1502102366-2760-2-git-send-email-loic.poulain@gmail.com>
- <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKxA2pgtjmG-cxy5XPWuRWUiia-weRZDSh4++Vn=QZmqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Johan Hedberg <johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 14/23] spi: rockchip: add compatible string for rv1108
+ spi
+Date: Thu, 10 Aug 2017 11:15:23 -0500
+Message-ID: <20170810161523.vzmlgrmnex7yyepy@rob-hp-laptop>
+References: <1501662303-11687-1-git-send-email-andy.yan@rock-chips.com>
+ <1501663563-12482-1-git-send-email-andy.yan@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501663563-12482-1-git-send-email-andy.yan@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Yan <andy.yan@rock-chips.com>
+Cc: heiko@sntech.de, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
->> Add BCM43438 as a slave device of uart0 (pl011/ttyAMA0).
->> This allows to automatically insert the bcm43438 to the bluetooth
->> subsystem instead of relying on userspace helpers (hciattach).
->> 
->> Overwrite bootargs to use 8250 aux uart (ttyS0) as console instead
->> of pl011/ttyAMA0.
->> 
->> Signed-off-by: Loic Poulain <loic.poulain-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->> v2: dt-bindings as separate patch
->>     rebase on upcoming pi3 dts changes
->> v3: changes in bcm serdev drivers:
->>     name refactoring and additional comments
->>     Add generic host_set_baudrate method
->>     Use agnostic device_property_read
->> 
->> arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 10 ++++++++++
->> 1 file changed, 10 insertions(+)
->> 
->> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> index 20725ca..5abc1df 100644
->> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->> @@ -8,6 +8,11 @@
->>        compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
->>        model = "Raspberry Pi 3 Model B";
->> 
->> +       chosen {
->> +               /* 8250 auxiliar UART instead of pl011 */
->> +               bootargs = "earlyprintk console=ttyS0,115200";
+On Wed, Aug 02, 2017 at 04:46:03PM +0800, Andy Yan wrote:
+> The spi on rv1108 is the same as other rockchip based
+> socs, add compatible string for it.
 > 
-> This is an unrelated change. "earlyprintk" is arm32 specific and only
-> works with a kernel built with a specific uart type and address. Also,
-> stdout-path property is preferred to set the default over "console”.
+> Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
+> ---
+> 
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 1 +
+>  drivers/spi/spi-rockchip.c                             | 1 +
+>  2 files changed, 2 insertions(+)
 
-the whole fun with the serial console on the rPI3 and the bt-miniuart overlay is something we should solve now. What is the upstream story on this since the config.txt and everything around it is confusing and also misleading since it relies on a Raspbian userspace.
-
-Do we need to the kernel and init to stay away from the ttyAMA0 to avoid confusing the BT chip? As I mentioned earlier, I can not even get a Fedora 26 with hciattach or btattach to work.
-
-Regards
-
-Marcel
+Acked-by: Rob Herring <robh@kernel.org>
