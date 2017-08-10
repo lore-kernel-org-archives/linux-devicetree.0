@@ -1,276 +1,92 @@
-From: Vadim Pasternak <vadimp@mellanox.com>
-Subject: RE: [patch v2 1/1 - resend] Documentation: dt-bindings: Add Device
- Tree bindings for Mellanox programming devices
-Date: Thu, 10 Aug 2017 19:02:23 +0000
-Message-ID: <AM4PR05MB333001900BAF0CCA7439F31AA2880@AM4PR05MB3330.eurprd05.prod.outlook.com>
-References: <1501761859-22149-1-git-send-email-vadimp@mellanox.com>
- <1501761859-22149-2-git-send-email-vadimp@mellanox.com>
- <20170810174013.lt3vaqe2oq5lfq2j@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/9] devicetree: bindings: Add sata port phy config
+ parameters in ahci-ceva
+Date: Thu, 10 Aug 2017 14:07:20 -0500
+Message-ID: <20170810190720.yqeu4qzztylu5slb@rob-hp-laptop>
+References: <cover.1501852693.git.michal.simek@xilinx.com>
+ <b7692739885fe200a4ea5a4e3828349a406e2247.1501852693.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170810174013.lt3vaqe2oq5lfq2j@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-leds-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "pavel@ucw.cz" <pavel@ucw.cz>, "j.anaszewski@samsung.com" <j.anaszewski@samsung.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "jiri@resnulli.us" <jiri@resnulli.us>, "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b7692739885fe200a4ea5a4e3828349a406e2247.1501852693.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, Alexander Graf <agraf@suse.de>, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Aug 04, 2017 at 03:18:10PM +0200, Michal Simek wrote:
+> From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> 
+> This patch adds device tree bindings for sata port phy parameters
+> in the ahci-ceva.txt file.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+>  .../devicetree/bindings/ata/ahci-ceva.txt          | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-ceva.txt b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> index 7ca8b976c13a..f97546f61444 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-ceva.txt
+> @@ -5,6 +5,36 @@ Required properties:
+>    - compatible: Compatibility string. Must be 'ceva,ahci-1v84'.
+>    - clocks: Input clock specifier. Refer to common clock bindings.
+>    - interrupts: Interrupt specifier. Refer to interrupt binding.
+> +  - ceva,p0-cominit-params: OOB timing value for COMINIT parameter for port 0.
+> +  - ceva,p1-cominit-params: OOB timing value for COMINIT parameter for port 1.
+> +			The fields for the above parameter must be as shown below:
+> +			ceva,phy-cominit-params = /bits/ 8 <CIBGMN CIBGMX CIBGN CINMP>;
 
+phy? Should be pN?
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Thursday, August 10, 2017 8:40 PM
-> To: Vadim Pasternak <vadimp@mellanox.com>
-> Cc: devicetree@vger.kernel.org; lee.jones@linaro.org; pavel@ucw.cz;
-> j.anaszewski@samsung.com; rpurdie@rpsys.net; linux-
-> leds@vger.kernel.org; jiri@resnulli.us; jacek.anaszewski@gmail.com
-> Subject: Re: [patch v2 1/1 - resend] Documentation: dt-bindings: Add Devi=
-ce
-> Tree bindings for Mellanox programming devices
->=20
-> On Thu, Aug 03, 2017 at 12:04:19PM +0000, Vadim Pasternak wrote:
-> > The mlxreg a multifunction device driver handling LEDs, events,
-> > exposing through sysfs reset signal, and reset causes info. These
-> > components share a common register space.
->=20
-> "dt-bindings: mfd: ..." for the subject please.
->=20
-
-Hi Rob,
-Thank you for review.
-
-OK, will change the subject.
-
-> >
-> > Signed-off-by: Vadim Pasternak <vadimp@mellanox.com>
-> > ---
-> >  .../devicetree/bindings/mfd/mellanox,mlxreg-core   | 346
-> +++++++++++++++++++++
-> >  1 file changed, 346 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> > b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> > new file mode 100644
-> > index 0000000..a90933e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/mellanox,mlxreg-core
-> > @@ -0,0 +1,346 @@
-> > +Mellanox programmable device control.
-> > +-------------------------------------
-> > +This binding defines the device control interface over I2C bus for
-> > +Mellanox BMC based switches.
-> > +
-> > +Required properties:
-> > +- compatible =3D "mellanox,mlxreg-i2c",
-> > +	       "mellanox,mlxreg-i2c-16",
-> > +	       "mellanox,mlxreg-core";
->=20
-> This is all one compatible entry? Why 3 compatibles?
-
-It could be
-	"mellanox,mlxreg-i2c" or
-	"mellanox,mlxreg-i2c-16"
-
-Is it not correct syntax?
-
-And I think I'll drop "mellanox,mlxreg-core".
-
->=20
-> > +- #address-cells : must be 1;
-> > +- #size-cells : must be 0;
-> > +- reg : I2C address;
-> > +
-> > +Optional properties:
-> > +- interrupt-parent : phandle of parent interrupt controller;
-> > +- interrupts : interrupt line;
-> > +- deferred - I2C deferred bus phandle;
-> > +	     For example, for the case when device attached to I2C bus
-> number 4
-> > +	     performs dynamic attachment of device to bus 12 upon some
-> event.
-> > +	     Due to this reason bus 4 is enforced to be activated after bus
-> > +12;
->=20
-> I don't understand...
-
-For example I have CPLD device on i2c4, which handles the signals for ASIC =
-device. I can connect this device to the bus at initialization time in case=
- it's ready, or upon receiving the relevant signal when it's getting ready:
-&i2c4 {
-	mlxcpld-swb-ctrl@72 {
-		#address-cells =3D <1>;
-		#size-cells =3D <0>;
-		interrupt-parent =3D <&gpio>;
-		interrupts =3D <ASPEED_GPIO(S, 1) 2>;
-		compatible =3D "mellanox,mlxreg-i2c";
-		reg =3D <0x72>;
-		deferred =3D <&i2c12>;
-		cell =3D <0x40>;
-		mask =3D <0x01>;
-
-		asic {
-			aggr_mask =3D <0x01>;
-			regs =3D <0x50>;
-			masks =3D <0x03>;
-			phandles =3D <&asic_thermal>;
-		};
-....
-};
-
-The ASIC device is connected to i2c12:
-&i2c12 {
-	status =3D "okay";
-	#address-cells =3D <1>;
-	#size-cells =3D <0>;
-
-	asic_thermal: mlxsw_minimal@48 {
-		compatible =3D "mlxsw_minimal";
-		reg =3D <0x48>;
-		status =3D "disabled";
-		cooling-phandle =3D <&cooling>;
-
-		trips {
-			/* trip type, temp in mcelsius, temp min, temp max */
-			trip@0 {
-				trip =3D <0 75000 0 0>;
-			};
-			trip@1 {
-				trip =3D <2 85000 1 5>;
-			};
-			trip@3 {
-				trip =3D <2 105000 5 5>;
-			};
-		};
-	};
-};
-
-So, in this case i2c4 should be activated after i2c12 and for this reason d=
-evice mlxcpld-swb-ctrl@72 is deferred on activation of i2c12.
-
->=20
-> > +- cell - top aggregation register offset;
-> > +- mask - top aggregation register mask;
-> > +- psu - power supply unit nodes:
->=20
-> This section is "Optional Properties" and this is a sub-node. Each subnod=
-e
-> should have its own section.
-
-ACK
-
->=20
-> > +	- aggr_mask - effective bit in aggregation mask;
->=20
-> Don't use '_' in node or property names.
-
-ACK
-
->=20
-> > +	- reg - register offset for all group members;
-> > +	- mask - register mask;
-> > +	- phandles - list of relevant device nodes;
->=20
-> Other than reg, I don't understand what any of these are.
->=20
-> From what I can tell you are describing things down to register bit level=
- which
-> generally is too much detail in DT. How many variations of h/w do you hav=
-e?
-> Do you really need to be able to define any possible combination or have
-> some finite set?
-
-We have about 10 different 1U systems with different numbers of FANs, with =
-replicable or
-non-replaceable PSU. I am also planning to support director systems, which =
-has different
-configurations - different number of leaf and  spine cards and power supply=
- and FAN units.
-This is the wide range of system from smallest with 16x100G ports with bigg=
-est with 800x200G ports.
-I really need flexibility in device description.
-
-In field mask I assign the affective mask for dynamic devices, f.e. example=
- for system with 4 FANs
-mask will be 0x0f, with 6 0x3f and for director system it can be located in=
- several registers with masks
-0xff.
-
-Handles have the next purpose. For example for fan nodes I provide the list=
- of EEPROM devices'
-handles, which should be connected/disconnected on insert/remove:
-
-		fan {
-			aggr_mask =3D <0x40>;
-			reg =3D <0x88>;
-			mask =3D <0x0f>;
-			phandles =3D <&fan1_eeprom &fan2_eeprom &fan3_eeprom
-				    &fan4_eeprom>;
-		};
-
-And this EEPROM devices are connected to i2c switch device like below:
-&i2c6 {
-	...
-	i2cswitch@71 {
-		compatible =3D "nxp,pca9548";
-		#address-cells =3D <1>;
-		#size-cells =3D <0>;
-		reg =3D <0x71>;
-
-                i2c@0 {
-                        #address-cells =3D <1>;
-                        #size-cells =3D <0>;
-                        reg =3D <0>;
-
-                        fan1_eeprom: at24c04@50 {
-                                compatible =3D "atmel,24c32";
-                                reg =3D <0x50>;
-				status =3D "disabled";
-                        };
-                };
-
-                i2c@1 {
-                        #address-cells =3D <1>;
-                        #size-cells =3D <0>;
-                        reg =3D <1>;
-
-                        fan2_eeprom: at24c04@50 {
-                                compatible =3D "atmel,24c32";
-                                reg =3D <0x50>;
-				status =3D "disabled";
-                        };
-                };
-
-                i2c@2 {
-                        #address-cells =3D <1>;
-                        #size-cells =3D <0>;
-                        reg =3D <2>;
-
-                        fan3_eeprom: at24c04@50 {
-                                compatible =3D "atmel,24c32";
-                                reg =3D <0x50>;
-				status =3D "disabled";
-                        };
-                };
-
-                i2c@3 {
-                        #address-cells =3D <1>;
-                        #size-cells =3D <0>;
-                        reg =3D <3>;
-
-                        fan4_eeprom: at24c04@50 {
-                                compatible =3D "atmel,24c32";
-                                reg =3D <0x50>;
-				status =3D "disabled";
-                        };
-                };
-
-	};
-};
-
->=20
-> Rob
+> +			CINMP : COMINIT Negate Minimum Period.
+> +			CIBGN : COMINIT Burst Gap Nominal.
+> +			CIBGMX: COMINIT Burst Gap Maximum.
+> +			CIBGMN: COMINIT Burst Gap Minimum.
+> +  - ceva,p0-comwake-params: OOB timing value for COMWAKE parameter for port 0.
+> +  - ceva,p1-comwake-params: OOB timing value for COMWAKE parameter for port 1.
+> +			The fields for the above parameter must be as shown below:
+> +			ceva,phy-comwake-params = /bits/ 8 <CWBGMN CWBGMX CWBGN CWNMP>;
+> +			CWBGMN: COMWAKE Burst Gap Minimum.
+> +			CWBGMX: COMWAKE Burst Gap Maximum.
+> +			CWBGN: COMWAKE Burst Gap Nominal.
+> +			CWNMP: COMWAKE Negate Minimum Period.
+> +  - ceva,p0-burst-params: Burst timing value for COM parameter for port 0.
+> +  - ceva,p1-burst-params: Burst timing value for COM parameter for port 1.
+> +			The fields for the above parameter must be as shown below:
+> +			ceva,phy-burst-params = /bits/ 8 <BMX BNM SFD PTST>;
+> +			BMX: COM Burst Maximum.
+> +			BNM: COM Burst Nominal.
+> +			SFD: Signal Failure Detection value.
+> +			PTST: Partial to Slumber timer value.
+> +  - ceva,p0-retry-params: Retry interval timing value for port 0.
+> +  - ceva,p1-retry-params: Retry interval timing value for port 1.
+> +			The fields for the above parameter must be as shown below:
+> +			ceva,phy-retry-params = /bits/ 16 <RIT RCT>;
+> +			RIT:  Retry Interval Timer.
+> +			RCT:  Rate Change Timer.
+>  
+>  Optional properties:
+>    - ceva,broken-gen2: limit to gen1 speed instead of gen2.
+> @@ -16,5 +46,14 @@ Examples:
+>  		interrupt-parent = <&gic>;
+>  		interrupts = <0 133 4>;
+>  		clocks = <&clkc SATA_CLK_ID>;
+> +		ceva,p0-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> +		ceva,p0-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> +		ceva,p0-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> +		ceva,p0-retry-params = /bits/ 16 <0x0216 0x7F06>;
+> +
+> +		ceva,p1-cominit-params = /bits/ 8 <0x0F 0x25 0x18 0x29>;
+> +		ceva,p1-comwake-params = /bits/ 8 <0x04 0x0B 0x08 0x0F>;
+> +		ceva,p1-burst-params = /bits/ 8 <0x0A 0x08 0x4A 0x06>;
+> +		ceva,p1-retry-params = /bits/ 16 <0x0216 0x7F06>;
+>  		ceva,broken-gen2;
+>  	};
+> -- 
+> 1.9.1
+> 
