@@ -1,11 +1,11 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 3/3] Documentation: hwmon: Add POWER system power supply documentation
-Date: Thu, 10 Aug 2017 17:19:46 -0500
-Message-ID: <1502403586-20549-4-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 1/3] dt-bindings: i2c: Document the POWER system power supply device
+Date: Thu, 10 Aug 2017 17:19:44 -0500
+Message-ID: <1502403586-20549-2-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@roeck-us.net
 Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, joel@jms.id.au, jk@ozlabs.org, andrew@aj.id.au, eajames@linux.vnet.ibm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
@@ -14,70 +14,36 @@ From: "Edward A. James" <eajames@us.ibm.com>
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- Documentation/hwmon/powerps | 54 +++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/hwmon/powerps
+ .../devicetree/bindings/i2c/ibm,power-ps.txt        | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
 
-diff --git a/Documentation/hwmon/powerps b/Documentation/hwmon/powerps
+diff --git a/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
 new file mode 100644
-index 0000000..a4fbe92
+index 0000000..2ea8ea2
 --- /dev/null
-+++ b/Documentation/hwmon/powerps
-@@ -0,0 +1,54 @@
-+Kernel driver powerps
-+=====================
++++ b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+@@ -0,0 +1,21 @@
++Device-tree bindings for IBM POWER system power supplies
++--------------------------------------------------------
 +
-+Supported chips:
-+  * POWER system power supply
++Required properties:
++ - compatible = "ibm,power-ps";
++ - reg = < I2C bus address >;		: Address of the power supply on the
++					  I2C bus.
 +
-+Author: Eddie James <eajames@us.ibm.com>
++Example:
 +
-+Description
-+-----------
++    i2c-bus@100 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++        #interrupt-cells = <1>;
++        < more properties >
 +
-+This driver supports POWER system power supplies. This driver is a client
-+to the core PMBus driver.
-+
-+Usage Notes
-+-----------
-+
-+This driver should auto-detect devices. In the event that it does not, you will
-+have to instantiate the devices explicitly. Please see
-+Documentation/i2c/instantiating-devices for details.
-+
-+Sysfs entries
-+-------------
-+
-+The following attributes are supported:
-+
-+curr1_alarm		Output current over-current fault.
-+curr1_input		Measured output current in mA.
-+curr1_label		"iout1"
-+
-+fan1_alarm		Fan 1 warning.
-+fan1_fault		Fan 1 fault.
-+fan1_input		Fan 1 speed in RPM.
-+fan2_alarm		Fan 2 warning.
-+fan2_fault		Fan 2 fault.
-+fan2_input		Fan 2 speed in RPM.
-+
-+in1_alarm		Input voltage under-voltage fault.
-+in1_input		Measured input voltage in mV.
-+in1_label		"vin"
-+in2_alarm		Output voltage over-voltage fault.
-+in2_input		Measured output voltage in mV.
-+in2_label		"vout1"
-+
-+power1_alarm		Input fault.
-+power1_input		Measured input power in uW.
-+power1_label		"pin"
-+
-+temp1_alarm		PSU inlet ambient temperature over-temperature fault.
-+temp1_input		Measured PSU inlet ambient temp in millidegrees C.
-+temp2_alarm		Secondary rectifier temp over-temperature fault.
-+temp2_input		Measured secondary rectifier temp in millidegrees C.
-+temp3_alarm		ORing FET temperature over-temperature fault.
-+temp3_input		Measured ORing FET temperature in millidegrees C.
++        power_ps@68 {
++            compatible = "ibm,power-ps";
++            reg = <0x68>;
++        };
++    };
 -- 
 1.8.3.1
-
