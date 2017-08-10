@@ -1,232 +1,79 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH] ARC: reset: introduce AXS10x reset driver
-Date: Thu, 10 Aug 2017 19:41:12 +0300
-Message-ID: <20170810164112.9894-1-Eugeniy.Paltsev@synopsys.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: add device tree binding for Allwinner
+ XR819 SDIO Wi-Fi
+Date: Thu, 10 Aug 2017 11:46:18 -0500
+Message-ID: <20170810164618.wtdptpw4reqbtxwf@rob-hp-laptop>
+References: <20170803010259.45971-1-icenowy@aosc.io>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170803010259.45971-1-icenowy@aosc.io>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-ARC AXS10x boards support custom IP-block which allows to control
-reset signals of selected peripherals. For example DW GMAC, etc...
-This block is controlled via memory-mapped register (AKA CREG) which
-represents up-to 32 reset lines.
+On Thu, Aug 03, 2017 at 09:02:59AM +0800, Icenowy Zheng wrote:
+> Allwinner XR819 is a SDIO Wi-Fi chip, which has the functionality to use
+> an out-of-band interrupt pin instead of SDIO in-band interrupt.
+> 
+> Add the device tree binding of this chip, in order to make it possible
+> to add this interrupt pin to device trees.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v2:
+> - Removed status property in example.
+> - Added required property reg.
+> 
+>  .../bindings/net/wireless/allwinner,xr819.txt      | 38 ++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> new file mode 100644
+> index 000000000000..4d4d0781ca35
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/allwinner,xr819.txt
+> @@ -0,0 +1,38 @@
+> +Allwinner XRadio wireless SDIO devices
+> +
+> +This node provides properties for controlling the XRadio wireless device. The
+> +node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - reg : The SDIO function number, see "Use of function subnodes" in
+> +	../../mmc/mmc.txt.
+> + - compatible : Should be "allwinner,xr819".
+> +
+> +Optional properties:
+> + - interrupt-parent : the phandle for the interrupt controller to which the
+> +	device interrupts are connected.
+> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+> +	When not specified the device will use in-band SDIO interrupts.
+> +
+> +Example:
+> +
+> +mmc1: mmc@01c10000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&mmc1_pins_a>;
+> +	vmmc-supply = <&reg_vcc_wifi>;
+> +	mmc-pwrseq = <&wifi_pwrseq>;
+> +	bus-width = <4>;
+> +	non-removable;
+> +
+> +	xr819: sdio_wifi@1 {
 
-As of today only the following lines are used:
- - DW GMAC - line 5
+You missed one previous comment:
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- .../bindings/reset/snps,axs10x-reset.txt           |  34 +++++++
- MAINTAINERS                                        |   6 ++
- drivers/reset/Kconfig                              |   6 ++
- drivers/reset/Makefile                             |   1 +
- drivers/reset/reset-axs10x.c                       | 109 +++++++++++++++++++++
- 5 files changed, 156 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
- create mode 100644 drivers/reset/reset-axs10x.c
+s/sdio_wifi/wifi/
 
-diff --git a/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
-new file mode 100644
-index 0000000..32eed7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
-@@ -0,0 +1,34 @@
-+Binding for the AXS10x reset controller
-+
-+This binding describes the ARC AXS10x boards custom IP-block which allows
-+to control reset signals of selected peripherals. For example DW GMAC, etc...
-+This block is controlled via memory-mapped register (AKA CREG) which
-+represents up-to 32 reset lines.
-+
-+As of today only the following lines are used:
-+ - DW GMAC - line 5
-+
-+This binding uses the common reset binding[1].
-+
-+[1] Documentation/devicetree/bindings/reset/reset.txt
-+
-+Required properties:
-+- compatible: should be "snps,axs10x-reset".
-+- reg: should always contain pair address - length: for creg reset
-+  bits register.
-+- #reset-cells: from common reset binding; Should always be set to 1.
-+
-+Example:
-+	reset: reset@11220 {
-+		compatible = "snps,axs10x-reset";
-+		#reset-cells = <1>;
-+		reg = <0x11220 0x4>;
-+	};
-+
-+Specifying reset lines connected to IP modules:
-+	ethernet@.... {
-+		....
-+		resets = <&reset 5>;
-+		....
-+	};
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 93dfb9d..f14e804 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12711,6 +12711,12 @@ F:	arch/arc/plat-axs10x
- F:	arch/arc/boot/dts/ax*
- F:	Documentation/devicetree/bindings/arc/axs10*
- 
-+SYNOPSYS AXS10x RESET CONTROLLER DRIVER
-+M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+S:	Supported
-+F:	drivers/reset/reset-axs10x.c
-+F:	Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
-+
- SYNOPSYS DESIGNWARE DMAC DRIVER
- M:	Viresh Kumar <vireshk@kernel.org>
- M:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index 52d5251..65d13f4 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -28,6 +28,12 @@ config RESET_ATH79
- 	  This enables the ATH79 reset controller driver that supports the
- 	  AR71xx SoC reset controller.
- 
-+config RESET_AXS10X
-+	bool "AXS10x Reset Driver" if COMPILE_TEST
-+	default ARC_PLAT_AXS10X
-+	help
-+	  This enables the reset controller driver for AXS10x.
-+
- config RESET_BERLIN
- 	bool "Berlin Reset Driver" if COMPILE_TEST
- 	default ARCH_BERLIN
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index b62783f..45000a5 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -4,6 +4,7 @@ obj-$(CONFIG_ARCH_STI) += sti/
- obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
- obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
-+obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
- obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
- obj-$(CONFIG_RESET_HSDK_V1) += reset-hsdk-v1.o
- obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
-diff --git a/drivers/reset/reset-axs10x.c b/drivers/reset/reset-axs10x.c
-new file mode 100644
-index 0000000..17a4cb4
---- /dev/null
-+++ b/drivers/reset/reset-axs10x.c
-@@ -0,0 +1,109 @@
-+/*
-+ * Copyright (C) 2017 Synopsys.
-+ *
-+ * Synopsys AXS10x reset driver.
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+
-+#define to_axs10x_rst(p)	container_of((p), struct axs10x_rst, rcdev)
-+
-+#define AXS10X_MAX_RESETS	32
-+
-+struct axs10x_rst {
-+	void __iomem			*regs_rst;
-+	spinlock_t			lock;
-+	struct reset_controller_dev	rcdev;
-+};
-+
-+static int axs10x_reset_assert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&rst->lock, flags);
-+	reg = readl(rst->regs_rst);
-+	reg |= BIT(id);
-+	writel(reg, rst->regs_rst);
-+	spin_unlock_irqrestore(&rst->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int axs10x_reset_deassert(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct axs10x_rst *rst = to_axs10x_rst(rcdev);
-+	unsigned long flags;
-+	u32 reg;
-+
-+	spin_lock_irqsave(&rst->lock, flags);
-+	reg = readl(rst->regs_rst);
-+	reg &= ~BIT(id);
-+	writel(reg, rst->regs_rst);
-+	spin_unlock_irqrestore(&rst->lock, flags);
-+
-+	return 0;
-+}
-+
-+static const struct reset_control_ops axs10x_reset_ops = {
-+	.assert		= axs10x_reset_assert,
-+	.deassert	= axs10x_reset_deassert,
-+};
-+
-+static int axs10x_reset_probe(struct platform_device *pdev)
-+{
-+	struct axs10x_rst *rst;
-+	struct resource *mem;
-+
-+	rst = devm_kzalloc(&pdev->dev, sizeof(*rst), GFP_KERNEL);
-+	if (!rst)
-+		return -ENOMEM;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	rst->regs_rst = devm_ioremap_resource(&pdev->dev, mem);
-+	if (IS_ERR(rst->regs_rst))
-+		return PTR_ERR(rst->regs_rst);
-+
-+	spin_lock_init(&rst->lock);
-+
-+	rst->rcdev.owner = THIS_MODULE;
-+	rst->rcdev.ops = &axs10x_reset_ops;
-+	rst->rcdev.of_node = pdev->dev.of_node;
-+	rst->rcdev.nr_resets = AXS10X_MAX_RESETS;
-+	rst->rcdev.of_reset_n_cells = 1;
-+
-+	return reset_controller_register(&rst->rcdev);
-+}
-+
-+static const struct of_device_id axs10x_reset_dt_match[] = {
-+	{ .compatible = "snps,axs10x-reset" },
-+	{ },
-+};
-+
-+static struct platform_driver axs10x_reset_driver = {
-+	.probe	= axs10x_reset_probe,
-+	.driver	= {
-+		.name = "axs10x-reset",
-+		.of_match_table = axs10x_reset_dt_match,
-+	},
-+};
-+builtin_platform_driver(axs10x_reset_driver);
-+
-+MODULE_AUTHOR("Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>");
-+MODULE_DESCRIPTION("Synopsys AXS10x reset driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.9.3
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
