@@ -1,158 +1,126 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v5 7/7] ASoC: atmel-classd: remove aclk clock
-Date: Thu, 10 Aug 2017 08:34:07 +0200
-Message-ID: <bc88924f47f1931e4e807e47775e55246474014f.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v4 1/7] PCI: mediatek: Using readl_poll_timeout to wait Gen2 training
+Date: Thu, 10 Aug 2017 14:34:54 +0800
+Message-ID: <a996a93c48eb7797c7fd061e419d6c6c654af828.1502336769.git.honghui.zhang@mediatek.com>
+References: <cover.1502336769.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1502336769.git.honghui.zhang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Since gclk (generated-clk) is now able to determine the rate of the
-audio_pll, there is no need for classd to have a direct phandle to the
-audio_pll while already having a phandle to gclk.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-Thus, remove all mentions to aclk in classd driver and update macros and
-variable names.
+Wait Gen2 training by using readl_poll_timeout() calls, and simplify
+the hardware assert logical by merge it into the new interface
+mtk_pcie_startup_port.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Acked-by: Mark Brown <broonie@kernel.org>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- sound/soc/atmel/atmel-classd.c | 47 ++++++++++-------------------------
- 1 file changed, 14 insertions(+), 33 deletions(-)
+ drivers/pci/host/pcie-mediatek.c | 52 +++++++++++++++++-----------------------
+ 1 file changed, 22 insertions(+), 30 deletions(-)
 
-diff --git a/sound/soc/atmel/atmel-classd.c b/sound/soc/atmel/atmel-classd.c
-index b7ef8c5..be6b775 100644
---- a/sound/soc/atmel/atmel-classd.c
-+++ b/sound/soc/atmel/atmel-classd.c
-@@ -32,7 +32,6 @@ struct atmel_classd {
- 	struct regmap *regmap;
- 	struct clk *pclk;
- 	struct clk *gclk;
--	struct clk *aclk;
- 	int irq;
- 	const struct atmel_classd_pdata *pdata;
+diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
+index 9c9f89b..f4e4226 100644
+--- a/drivers/pci/host/pcie-mediatek.c
++++ b/drivers/pci/host/pcie-mediatek.c
+@@ -16,6 +16,7 @@
+ 
+ #include <linux/clk.h>
+ #include <linux/delay.h>
++#include <linux/iopoll.h>
+ #include <linux/kernel.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+@@ -113,11 +114,6 @@ struct mtk_pcie {
+ 	struct list_head ports;
  };
-@@ -330,11 +329,6 @@ static int atmel_classd_codec_dai_startup(struct snd_pcm_substream *substream,
+ 
+-static inline bool mtk_pcie_link_up(struct mtk_pcie_port *port)
+-{
+-	return !!(readl(port->base + PCIE_LINK_STATUS) & PCIE_PORT_LINKUP);
+-}
+-
+ static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
  {
- 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
- 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
--	int ret;
--
--	ret = clk_prepare_enable(dd->aclk);
--	if (ret)
--		return ret;
- 
- 	return clk_prepare_enable(dd->gclk);
- }
-@@ -357,31 +351,31 @@ static int atmel_classd_codec_dai_digital_mute(struct snd_soc_dai *codec_dai,
- 	return 0;
- }
- 
--#define CLASSD_ACLK_RATE_11M2896_MPY_8 (112896 * 100 * 8)
--#define CLASSD_ACLK_RATE_12M288_MPY_8  (12288 * 1000 * 8)
-+#define CLASSD_GCLK_RATE_11M2896_MPY_8 (112896 * 100 * 8)
-+#define CLASSD_GCLK_RATE_12M288_MPY_8  (12288 * 1000 * 8)
- 
- static struct {
- 	int rate;
- 	int sample_rate;
- 	int dsp_clk;
--	unsigned long aclk_rate;
-+	unsigned long gclk_rate;
- } const sample_rates[] = {
- 	{ 8000,  CLASSD_INTPMR_FRAME_8K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_ACLK_RATE_12M288_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_GCLK_RATE_12M288_MPY_8 },
- 	{ 16000, CLASSD_INTPMR_FRAME_16K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_ACLK_RATE_12M288_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_GCLK_RATE_12M288_MPY_8 },
- 	{ 32000, CLASSD_INTPMR_FRAME_32K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_ACLK_RATE_12M288_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_GCLK_RATE_12M288_MPY_8 },
- 	{ 48000, CLASSD_INTPMR_FRAME_48K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_ACLK_RATE_12M288_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_GCLK_RATE_12M288_MPY_8 },
- 	{ 96000, CLASSD_INTPMR_FRAME_96K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_ACLK_RATE_12M288_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_12M288, CLASSD_GCLK_RATE_12M288_MPY_8 },
- 	{ 22050, CLASSD_INTPMR_FRAME_22K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_ACLK_RATE_11M2896_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_GCLK_RATE_11M2896_MPY_8 },
- 	{ 44100, CLASSD_INTPMR_FRAME_44K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_ACLK_RATE_11M2896_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_GCLK_RATE_11M2896_MPY_8 },
- 	{ 88200, CLASSD_INTPMR_FRAME_88K,
--	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_ACLK_RATE_11M2896_MPY_8 },
-+	CLASSD_INTPMR_DSP_CLK_FREQ_11M2896, CLASSD_GCLK_RATE_11M2896_MPY_8 },
+ 	struct device *dev = pcie->dev;
+@@ -171,12 +167,30 @@ static struct pci_ops mtk_pcie_ops = {
+ 	.write = pci_generic_config_write,
  };
  
- static int
-@@ -410,13 +404,12 @@ atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
- 	}
+-static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
++static int mtk_pcie_startup_port(struct mtk_pcie_port *port)
+ {
+ 	struct mtk_pcie *pcie = port->pcie;
+ 	u32 func = PCI_FUNC(port->index << 3);
+ 	u32 slot = PCI_SLOT(port->index << 3);
+ 	u32 val;
++	int err;
++
++	/* assert port PERST_N */
++	val = readl(pcie->base + PCIE_SYS_CFG);
++	val |= PCIE_PORT_PERST(port->index);
++	writel(val, pcie->base + PCIE_SYS_CFG);
++
++	/* de-assert port PERST_N */
++	val = readl(pcie->base + PCIE_SYS_CFG);
++	val &= ~PCIE_PORT_PERST(port->index);
++	writel(val, pcie->base + PCIE_SYS_CFG);
++
++	/* 100ms timeout value should be enough for Gen1/2 training */
++	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS, val,
++				 !!(val & PCIE_PORT_LINKUP), 20,
++				 100 * USEC_PER_MSEC);
++	if (err)
++		return -ETIMEDOUT;
  
- 	dev_dbg(codec->dev,
--		"Selected SAMPLE_RATE of %dHz, ACLK_RATE of %ldHz\n",
--		sample_rates[best].rate, sample_rates[best].aclk_rate);
-+		"Selected SAMPLE_RATE of %dHz, GCLK_RATE of %ldHz\n",
-+		sample_rates[best].rate, sample_rates[best].gclk_rate);
+ 	/* enable interrupt */
+ 	val = readl(pcie->base + PCIE_INT_ENABLE);
+@@ -209,25 +223,8 @@ static void mtk_pcie_configure_rc(struct mtk_pcie_port *port)
+ 	writel(PCIE_CONF_ADDR(PCIE_FTS_NUM, func, slot, 0),
+ 	       pcie->base + PCIE_CFG_ADDR);
+ 	writel(val, pcie->base + PCIE_CFG_DATA);
+-}
  
- 	clk_disable_unprepare(dd->gclk);
--	clk_disable_unprepare(dd->aclk);
- 
--	ret = clk_set_rate(dd->aclk, sample_rates[best].aclk_rate);
-+	ret = clk_set_rate(dd->gclk, sample_rates[best].gclk_rate);
- 	if (ret)
- 		return ret;
- 
-@@ -426,10 +419,6 @@ atmel_classd_codec_dai_hw_params(struct snd_pcm_substream *substream,
- 
- 	snd_soc_update_bits(codec, CLASSD_INTPMR, mask, val);
- 
--	ret = clk_prepare_enable(dd->aclk);
--	if (ret)
--		return ret;
+-static void mtk_pcie_assert_ports(struct mtk_pcie_port *port)
+-{
+-	struct mtk_pcie *pcie = port->pcie;
+-	u32 val;
 -
- 	return clk_prepare_enable(dd->gclk);
+-	/* assert port PERST_N */
+-	val = readl(pcie->base + PCIE_SYS_CFG);
+-	val |= PCIE_PORT_PERST(port->index);
+-	writel(val, pcie->base + PCIE_SYS_CFG);
+-
+-	/* de-assert port PERST_N */
+-	val = readl(pcie->base + PCIE_SYS_CFG);
+-	val &= ~PCIE_PORT_PERST(port->index);
+-	writel(val, pcie->base + PCIE_SYS_CFG);
+-
+-	/* PCIe v2.0 need at least 100ms delay to train from Gen1 to Gen2 */
+-	msleep(100);
++	return 0;
  }
  
-@@ -441,7 +430,6 @@ atmel_classd_codec_dai_shutdown(struct snd_pcm_substream *substream,
- 	struct atmel_classd *dd = snd_soc_card_get_drvdata(rtd->card);
- 
- 	clk_disable_unprepare(dd->gclk);
--	clk_disable_unprepare(dd->aclk);
- }
- 
- static int atmel_classd_codec_dai_prepare(struct snd_pcm_substream *substream,
-@@ -596,13 +584,6 @@ static int atmel_classd_probe(struct platform_device *pdev)
- 		return ret;
+ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+@@ -250,13 +247,8 @@ static void mtk_pcie_enable_ports(struct mtk_pcie_port *port)
+ 		goto err_phy_on;
  	}
  
--	dd->aclk = devm_clk_get(dev, "aclk");
--	if (IS_ERR(dd->aclk)) {
--		ret = PTR_ERR(dd->aclk);
--		dev_err(dev, "failed to get audio clock: %d\n", ret);
--		return ret;
+-	mtk_pcie_assert_ports(port);
+-
+-	/* if link up, then setup root port configuration space */
+-	if (mtk_pcie_link_up(port)) {
+-		mtk_pcie_configure_rc(port);
++	if (!mtk_pcie_startup_port(port))
+ 		return;
 -	}
--
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	io_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(io_base)) {
+ 
+ 	dev_info(dev, "Port%d link down\n", port->index);
+ 
 -- 
-git-series 0.9.1
+2.6.4
