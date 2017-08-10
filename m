@@ -1,70 +1,30 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mtd: Altera ASMI Parallel II IP Core
-Date: Thu, 10 Aug 2017 15:35:02 -0500
-Message-ID: <20170810203502.5s2evtamkbolluae@rob-hp-laptop>
-References: <1502043844-3626-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1502043844-3626-2-git-send-email-matthew.gerlach@linux.intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: add SMP enable-method for BCM2836
+Date: Thu, 10 Aug 2017 15:35:35 -0500
+Message-ID: <20170810203535.ujjlo2ctqeg2okai@rob-hp-laptop>
+References: <1502058731-12462-1-git-send-email-stefan.wahren@i2se.com>
+ <1502058731-12462-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1502043844-3626-2-git-send-email-matthew.gerlach@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: matthew.gerlach@linux.intel.com
-Cc: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, linux-fpga@vger.kernel.org
+In-Reply-To: <1502058731-12462-2-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Aug 06, 2017 at 11:24:02AM -0700, matthew.gerlach@linux.intel.com wrote:
-> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+On Mon, Aug 07, 2017 at 12:32:09AM +0200, Stefan Wahren wrote:
+> This adds a compatible string "brcm,bcm2836-smp" for Broadcom's
+> BCM2836 and BCM2837 to the 32 bit ARM CPU device tree binding.
 > 
-> Device Tree bindinds for Altera ASMI Parallel II IP Core.
-
-s/bindinds/bindings/
-
-> 
-> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 > ---
->  .../devicetree/bindings/mtd/altera-asmip2.txt      | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/altera-asmip2.txt b/Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-> new file mode 100644
-> index 0000000..3380366
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/altera-asmip2.txt
-> @@ -0,0 +1,22 @@
-> +* Altera ASMI Parallel II IP Core
-> +
-> +Required properties:
-> +- compatible : Should be "altr,asmi_parallel2".
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-s/_/-/
-
-> +- reg : A tuple consisting of a physical address and length.
-> +
-> +Optional subnodes:
-> +Subnodes of the Altera ASMI Paralllel II IP Core are spi slave nodes.
-
-But this is not a general purpose SPI controller?
-
-> +- reg : chip select value
-> +- label : optional user friendly label
-> +
-> +Example:
-> +
-> +qspi: spi@a0001000 {
-> +	compatible = "altr,asmi_parallel2";
-> +	reg = <0xa0001000 0x10>;
-> +
-> +	flash@0 {
-
-This should have a compatible.
-
-> +		reg = <0>;
-> +		label = "FPGA Image";
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
