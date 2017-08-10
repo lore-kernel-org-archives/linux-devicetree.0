@@ -1,641 +1,660 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v4 6/7] PCI: mediatek: Add controller support for mt2712 and mt7622
-Date: Thu, 10 Aug 2017 14:34:59 +0800
-Message-ID: <6e0a6eb42473afd81657a3b6d57e70edd0fcfd85.1502336769.git.honghui.zhang@mediatek.com>
-References: <cover.1502336769.git.honghui.zhang@mediatek.com>
+From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Subject: [PATCH v5 3/7] clk: at91: add audio pll clock drivers
+Date: Thu, 10 Aug 2017 08:34:03 +0200
+Message-ID: <f1c7acbfec384c2c33bf340464a98b731dac8c0c.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1502336769.git.honghui.zhang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ryder Lee <ryder.lee@mediatek.com>
+This new clock driver set allows to have a fractional divided clock that
+would generate a precise clock particularly suitable for audio
+applications.
 
-MT2712 and MT7622 using a new IP block of Gen2 controller which has two
-root ports and shares the same probing flow with MT2701/MT7623.
+The main audio pll clock has two children clocks: one that is connected
+to the PMC, the other that can directly drive a pad. As these two routes
+have different enable bits and different dividers and divider formulas,
+they are handled by two different drivers. Each of them could modify the
+rate of the main audio pll parent.
 
-Both MT2712 and MT7622 have the same per-port control registers, but
-there are slight differences between them:
-MT7622 has more clocks than MT2712.
-MT7622 has shared control registers which are used to enable ltssm and
-aspm while MT2712 does not.
+The main audio pll clock can output 620MHz to 700MHz.
 
-This patch adds host controller support for MT2712/MT7622.
-
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
 ---
- drivers/pci/host/Kconfig         |   5 +-
- drivers/pci/host/pcie-mediatek.c | 462 ++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 460 insertions(+), 7 deletions(-)
+ arch/arm/mach-at91/Kconfig       |   4 +-
+ drivers/clk/at91/Makefile        |   1 +-
+ drivers/clk/at91/clk-audio-pll.c | 536 ++++++++++++++++++++++++++++++++-
+ include/linux/clk/at91_pmc.h     |  25 +-
+ 4 files changed, 566 insertions(+)
+ create mode 100644 drivers/clk/at91/clk-audio-pll.c
 
-diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-index 89d61c2..5b1ae9f 100644
---- a/drivers/pci/host/Kconfig
-+++ b/drivers/pci/host/Kconfig
-@@ -182,14 +182,13 @@ config PCIE_ROCKCHIP
- 
- config PCIE_MEDIATEK
- 	bool "MediaTek PCIe controller"
--	depends on ARM && (ARCH_MEDIATEK || COMPILE_TEST)
-+	depends on (ARM || ARM64) && (ARCH_MEDIATEK || COMPILE_TEST)
- 	depends on OF
- 	depends on PCI
- 	select PCIEPORTBUS
+diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+index d735e5f..9ae14d5 100644
+--- a/arch/arm/mach-at91/Kconfig
++++ b/arch/arm/mach-at91/Kconfig
+@@ -26,6 +26,7 @@ config SOC_SAMA5D2
+ 	select HAVE_AT91_USB_CLK
+ 	select HAVE_AT91_H32MX
+ 	select HAVE_AT91_GENERATED_CLK
++	select HAVE_AT91_AUDIO_PLL
+ 	select PINCTRL_AT91PIO4
  	help
- 	  Say Y here if you want to enable PCIe controller support on
--	  MT7623 series SoCs.  There is one single root complex with 3 root
--	  ports available.  Each port supports Gen2 lane x1.
-+	  MediaTek SoCs.
+ 	  Select this if ou are using one of Atmel's SAMA5D2 family SoC.
+@@ -125,6 +126,9 @@ config HAVE_AT91_H32MX
+ config HAVE_AT91_GENERATED_CLK
+ 	bool
  
- config PCIE_TANGO_SMP8759
- 	bool "Tango SMP8759 PCIe controller (DANGEROUS)"
-diff --git a/drivers/pci/host/pcie-mediatek.c b/drivers/pci/host/pcie-mediatek.c
-index c649ab4..c96cd8f 100644
---- a/drivers/pci/host/pcie-mediatek.c
-+++ b/drivers/pci/host/pcie-mediatek.c
-@@ -3,6 +3,7 @@
-  *
-  * Copyright (c) 2017 MediaTek Inc.
-  * Author: Ryder Lee <ryder.lee@mediatek.com>
-+ *	   Honghui Zhang <honghui.zhang@mediatek.com>
-  *
-  * This program is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -17,6 +18,8 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/iopoll.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
- #include <linux/kernel.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-@@ -64,16 +67,75 @@
- #define PCIE_FC_CREDIT_MASK	(GENMASK(31, 31) | GENMASK(28, 16))
- #define PCIE_FC_CREDIT_VAL(x)	((x) << 16)
++config HAVE_AT91_AUDIO_PLL
++	bool
++
+ config SOC_SAM_V4_V5
+ 	bool
  
-+/* PCIe V2 share registers */
-+#define PCIE_SYS_CFG_V2		0x0
-+#define PCIE_CSR_LTSSM_EN(x)	BIT(0 + (x) * 8)
-+#define PCIE_CSR_ASPM_L1_EN(x)	BIT(1 + (x) * 8)
-+
-+/* PCIe V2 per-port registers */
-+#define PCIE_INT_MASK		0x420
-+#define INTX_MASK		GENMASK(19, 16)
-+#define INTX_SHIFT		16
-+#define INTX_NUM		4
-+#define PCIE_INT_STATUS		0x424
-+
-+#define PCIE_AHB_TRANS_BASE0_L	0x438
-+#define PCIE_AHB_TRANS_BASE0_H	0x43c
-+#define AHB2PCIE_SIZE(x)	((x) & GENMASK(4, 0))
-+#define PCIE_AXI_WINDOW0	0x448
-+#define WIN_ENABLE		BIT(7)
-+
-+/* PCIe V2 configuration transaction header */
-+#define PCIE_CFG_HEADER0	0x460
-+#define PCIE_CFG_HEADER1	0x464
-+#define PCIE_CFG_HEADER2	0x468
-+#define PCIE_CFG_WDATA		0x470
-+#define PCIE_APP_TLP_REQ	0x488
-+#define PCIE_CFG_RDATA		0x48c
-+#define APP_CFG_REQ		BIT(0)
-+#define APP_CPL_STATUS		GENMASK(7, 5)
-+
-+#define CFG_WRRD_TYPE_0		4
-+#define CFG_WR_FMT		2
-+#define CFG_RD_FMT		0
-+
-+#define CFG_DW0_LENGTH(length)	((length) & GENMASK(9, 0))
-+#define CFG_DW0_TYPE(type)	(((type) << 24) & GENMASK(28, 24))
-+#define CFG_DW0_FMT(fmt)	(((fmt) << 29) & GENMASK(31, 29))
-+#define CFG_DW2_REGN(regn)	((regn) & GENMASK(11, 2))
-+#define CFG_DW2_FUN(fun)	(((fun) << 16) & GENMASK(18, 16))
-+#define CFG_DW2_DEV(dev)	(((dev) << 19) & GENMASK(23, 19))
-+#define CFG_DW2_BUS(bus)	(((bus) << 24) & GENMASK(31, 24))
-+#define CFG_HEADER_DW0(type, fmt) \
-+	(CFG_DW0_LENGTH(1) | CFG_DW0_TYPE(type) | CFG_DW0_FMT(fmt))
-+#define CFG_HEADER_DW1(where, size) \
-+	(GENMASK(((size) - 1), 0) << ((where) & 0x3))
-+#define CFG_HEADER_DW2(regn, fun, dev, bus) \
-+	(CFG_DW2_REGN(regn) | CFG_DW2_FUN(fun) | \
-+	CFG_DW2_DEV(dev) | CFG_DW2_BUS(bus))
-+
-+#define PCIE_RST_CTRL		0x510
-+#define PCIE_PHY_RSTB		BIT(0)
-+#define PCIE_PIPE_SRSTB		BIT(1)
-+#define PCIE_MAC_SRSTB		BIT(2)
-+#define PCIE_CRSTB		BIT(3)
-+#define PCIE_PERSTB		BIT(8)
-+#define PCIE_LINKDOWN_RST_EN	GENMASK(15, 13)
-+#define PCIE_LINK_STATUS_V2	0x804
-+#define PCIE_PORT_LINKUP_V2	BIT(10)
-+
- struct mtk_pcie_port;
+diff --git a/drivers/clk/at91/Makefile b/drivers/clk/at91/Makefile
+index 13e67bd..c68947b 100644
+--- a/drivers/clk/at91/Makefile
++++ b/drivers/clk/at91/Makefile
+@@ -6,6 +6,7 @@ obj-y += pmc.o sckc.o
+ obj-y += clk-slow.o clk-main.o clk-pll.o clk-plldiv.o clk-master.o
+ obj-y += clk-system.o clk-peripheral.o clk-programmable.o
  
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-+ * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
-+	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
- };
- 
- /**
-@@ -82,10 +144,18 @@ struct mtk_pcie_soc {
-  * @list: port list
-  * @pcie: pointer to PCIe host info
-  * @reset: pointer to port reset control
-- * @sys_ck: pointer to bus clock
-- * @phy: pointer to phy control block
-+ * @sys_ck: pointer to transaction/data link layer clock
-+ * @ahb_ck: pointer to AHB slave interface operating clock for CSR access
-+ *          and RC initiated MMIO access
-+ * @axi_ck: pointer to application layer MMIO channel operating clock
-+ * @aux_ck: pointer to pe2_mac_bridge and pe2_mac_core operating clock
-+ *          when pcie_mac_ck/pcie_pipe_ck is turned off
-+ * @obff_ck: pointer to OBFF functional block operating clock
-+ * @pipe_ck: pointer to LTSSM and PHY/MAC layer operating clock
-+ * @phy: pointer to PHY control block
-  * @lane: lane count
-  * @slot: port slot
-+ * @irq_domain: legacy INTx IRQ domain
-  */
- struct mtk_pcie_port {
- 	void __iomem *base;
-@@ -93,9 +163,15 @@ struct mtk_pcie_port {
- 	struct mtk_pcie *pcie;
- 	struct reset_control *reset;
- 	struct clk *sys_ck;
-+	struct clk *ahb_ck;
-+	struct clk *axi_ck;
-+	struct clk *aux_ck;
-+	struct clk *obff_ck;
-+	struct clk *pipe_ck;
- 	struct phy *phy;
- 	u32 lane;
- 	u32 slot;
-+	struct irq_domain *irq_domain;
- };
- 
- /**
-@@ -156,6 +232,12 @@ static void mtk_pcie_put_resources(struct mtk_pcie *pcie)
- 
- 	list_for_each_entry_safe(port, tmp, &pcie->ports, list) {
- 		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
- 		clk_disable_unprepare(port->sys_ck);
- 		mtk_pcie_port_free(port);
- 	}
-@@ -163,6 +245,269 @@ static void mtk_pcie_put_resources(struct mtk_pcie *pcie)
- 	mtk_pcie_subsys_powerdown(pcie);
- }
- 
-+static int mtk_pcie_check_cfg_cpld(struct mtk_pcie_port *port)
-+{
-+	u32 val;
-+	int err;
++obj-$(CONFIG_HAVE_AT91_AUDIO_PLL)	+= clk-audio-pll.o
+ obj-$(CONFIG_HAVE_AT91_UTMI)		+= clk-utmi.o
+ obj-$(CONFIG_HAVE_AT91_USB_CLK)		+= clk-usb.o
+ obj-$(CONFIG_HAVE_AT91_SMD)		+= clk-smd.o
+diff --git a/drivers/clk/at91/clk-audio-pll.c b/drivers/clk/at91/clk-audio-pll.c
+new file mode 100644
+index 0000000..da7bafc
+--- /dev/null
++++ b/drivers/clk/at91/clk-audio-pll.c
+@@ -0,0 +1,536 @@
++/*
++ *  Copyright (C) 2016 Atmel Corporation,
++ *		       Songjun Wu <songjun.wu@atmel.com>,
++ *                     Nicolas Ferre <nicolas.ferre@atmel.com>
++ *  Copyright (C) 2017 Free Electrons,
++ *		       Quentin Schulz <quentin.schulz@free-electrons.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * The Sama5d2 SoC has two audio PLLs (PMC and PAD) that shares the same parent
++ * (FRAC). FRAC can output between 620 and 700MHz and only multiply the rate of
++ * its own parent. PMC and PAD can then divide the FRAC rate to best match the
++ * asked rate.
++ *
++ * Traits of FRAC clock:
++ * enable - clk_enable writes nd, fracr parameters and enables PLL
++ * rate - rate is adjustable.
++ *        clk->rate = parent->rate * ((nd + 1) + (fracr / 2^22))
++ * parent - fixed parent.  No clk_set_parent support
++ *
++ * Traits of PMC clock:
++ * enable - clk_enable writes qdpmc, and enables PMC output
++ * rate - rate is adjustable.
++ *        clk->rate = parent->rate / (qdpmc + 1)
++ * parent - fixed parent.  No clk_set_parent support
++ *
++ * Traits of PAD clock:
++ * enable - clk_enable writes divisors and enables PAD output
++ * rate - rate is adjustable.
++ *        clk->rate = parent->rate / (qdaudio * div))
++ * parent - fixed parent.  No clk_set_parent support
++ *
++ */
 +
-+	err = readl_poll_timeout_atomic(port->base + PCIE_APP_TLP_REQ, val,
-+					!(val & APP_CFG_REQ), 10,
-+					100 * USEC_PER_MSEC);
-+	if (err)
-+		return PCIBIOS_SET_FAILED;
++#include <linux/clk.h>
++#include <linux/clk-provider.h>
++#include <linux/clk/at91_pmc.h>
++#include <linux/of.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
 +
-+	if (readl(port->base + PCIE_APP_TLP_REQ) & APP_CPL_STATUS)
-+		return PCIBIOS_SET_FAILED;
++#define AUDIO_PLL_DIV_FRAC	BIT(22)
++#define AUDIO_PLL_ND_MAX	(AT91_PMC_AUDIO_PLL_ND_MASK >> \
++					AT91_PMC_AUDIO_PLL_ND_OFFSET)
 +
-+	return PCIBIOS_SUCCESSFUL;
-+}
++#define AUDIO_PLL_QDPAD(qd, div)	((AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV(qd) & \
++					  AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_MASK) | \
++					 (AT91_PMC_AUDIO_PLL_QDPAD_DIV(div) & \
++					  AT91_PMC_AUDIO_PLL_QDPAD_DIV_MASK))
 +
-+static int mtk_pcie_hw_rd_cfg(struct mtk_pcie_port *port, u32 bus, u32 devfn,
-+			      int where, int size, u32 *val)
-+{
-+	u32 tmp;
++#define AUDIO_PLL_QDPMC_MAX		(AT91_PMC_AUDIO_PLL_QDPMC_MASK >> \
++						AT91_PMC_AUDIO_PLL_QDPMC_OFFSET)
 +
-+	/* Write PCIe configuration transaction header for Cfgrd */
-+	writel(CFG_HEADER_DW0(CFG_WRRD_TYPE_0, CFG_RD_FMT),
-+	       port->base + PCIE_CFG_HEADER0);
-+	writel(CFG_HEADER_DW1(where, size), port->base + PCIE_CFG_HEADER1);
-+	writel(CFG_HEADER_DW2(where, PCI_FUNC(devfn), PCI_SLOT(devfn), bus),
-+	       port->base + PCIE_CFG_HEADER2);
++#define AUDIO_PLL_FOUT_MIN	620000000UL
++#define AUDIO_PLL_FOUT_MAX	700000000UL
 +
-+	/* Trigger h/w to transmit Cfgrd TLP */
-+	tmp = readl(port->base + PCIE_APP_TLP_REQ);
-+	tmp |= APP_CFG_REQ;
-+	writel(tmp, port->base + PCIE_APP_TLP_REQ);
-+
-+	/* Check completion status */
-+	if (mtk_pcie_check_cfg_cpld(port))
-+		return PCIBIOS_SET_FAILED;
-+
-+	/* Read cpld payload of Cfgrd */
-+	*val = readl(port->base + PCIE_CFG_RDATA);
-+
-+	if (size == 1)
-+		*val = (*val >> (8 * (where & 3))) & 0xff;
-+	else if (size == 2)
-+		*val = (*val >> (8 * (where & 3))) & 0xffff;
-+
-+	return PCIBIOS_SUCCESSFUL;
-+}
-+
-+static int mtk_pcie_hw_wr_cfg(struct mtk_pcie_port *port, u32 bus, u32 devfn,
-+			      int where, int size, u32 val)
-+{
-+	/* Write PCIe configuration transaction header for Cfgwr */
-+	writel(CFG_HEADER_DW0(CFG_WRRD_TYPE_0, CFG_WR_FMT),
-+	       port->base + PCIE_CFG_HEADER0);
-+	writel(CFG_HEADER_DW1(where, size), port->base + PCIE_CFG_HEADER1);
-+	writel(CFG_HEADER_DW2(where, PCI_FUNC(devfn), PCI_SLOT(devfn), bus),
-+	       port->base + PCIE_CFG_HEADER2);
-+
-+	/* Write Cfgwr data */
-+	val = val << 8 * (where & 3);
-+	writel(val, port->base + PCIE_CFG_WDATA);
-+
-+	/* Trigger h/w to transmit Cfgwr TLP */
-+	val = readl(port->base + PCIE_APP_TLP_REQ);
-+	val |= APP_CFG_REQ;
-+	writel(val, port->base + PCIE_APP_TLP_REQ);
-+
-+	/* Check completion status */
-+	return mtk_pcie_check_cfg_cpld(port);
-+}
-+
-+static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
-+						unsigned int devfn)
-+{
-+	struct mtk_pcie *pcie = bus->sysdata;
-+	struct mtk_pcie_port *port;
-+
-+	list_for_each_entry(port, &pcie->ports, list)
-+		if (port->slot == PCI_SLOT(devfn))
-+			return port;
-+
-+	return NULL;
-+}
-+
-+static int mtk_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
-+				int where, int size, u32 *val)
-+{
-+	struct mtk_pcie_port *port;
-+	u32 bn = bus->number;
-+	int ret;
-+
-+	port = mtk_pcie_find_port(bus, devfn);
-+	if (!port) {
-+		*val = ~0;
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+	}
-+
-+	ret = mtk_pcie_hw_rd_cfg(port, bn, devfn, where, size, val);
-+	if (ret)
-+		*val = ~0;
-+
-+	return ret;
-+}
-+
-+static int mtk_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
-+				 int where, int size, u32 val)
-+{
-+	struct mtk_pcie_port *port;
-+	u32 bn = bus->number;
-+
-+	port = mtk_pcie_find_port(bus, devfn);
-+	if (!port)
-+		return PCIBIOS_DEVICE_NOT_FOUND;
-+
-+	return mtk_pcie_hw_wr_cfg(port, bn, devfn, where, size, val);
-+}
-+
-+static struct pci_ops mtk_pcie_ops_v2 = {
-+	.read  = mtk_pcie_config_read,
-+	.write = mtk_pcie_config_write,
++struct clk_audio_frac {
++	struct clk_hw hw;
++	struct regmap *regmap;
++	u32 fracr;
++	u8 nd;
 +};
 +
-+static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
++struct clk_audio_pad {
++	struct clk_hw hw;
++	struct regmap *regmap;
++	u8 qdaudio;
++	u8 div;
++};
++
++struct clk_audio_pmc {
++	struct clk_hw hw;
++	struct regmap *regmap;
++	u8 qdpmc;
++};
++
++#define to_clk_audio_frac(hw) container_of(hw, struct clk_audio_frac, hw)
++#define to_clk_audio_pad(hw) container_of(hw, struct clk_audio_pad, hw)
++#define to_clk_audio_pmc(hw) container_of(hw, struct clk_audio_pmc, hw)
++
++static int clk_audio_pll_frac_enable(struct clk_hw *hw)
 +{
-+	struct mtk_pcie *pcie = port->pcie;
-+	struct resource *mem = &pcie->mem;
-+	u32 val;
-+	size_t size;
-+	int err;
++	struct clk_audio_frac *frac = to_clk_audio_frac(hw);
 +
-+	/* mt7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
-+	if (pcie->base) {
-+		val = readl(pcie->base + PCIE_SYS_CFG_V2);
-+		val |= PCIE_CSR_LTSSM_EN(port->slot) |
-+		       PCIE_CSR_ASPM_L1_EN(port->slot);
-+		writel(val, pcie->base + PCIE_SYS_CFG_V2);
-+	}
-+
-+	/* Assert all reset signals */
-+	writel(0, port->base + PCIE_RST_CTRL);
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_RESETN, 0);
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_RESETN,
++			   AT91_PMC_AUDIO_PLL_RESETN);
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL1,
++			   AT91_PMC_AUDIO_PLL_FRACR_MASK, frac->fracr);
 +
 +	/*
-+	 * Enable PCIe link down reset, if link status changed from link up to
-+	 * link down, this will reset MAC control registers and configuration
-+	 * space.
++	 * reset and enable have to be done in 2 separated writes
++	 * for AT91_PMC_AUDIO_PLL0
 +	 */
-+	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
-+
-+	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
-+	val = readl(port->base + PCIE_RST_CTRL);
-+	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
-+	       PCIE_MAC_SRSTB | PCIE_CRSTB;
-+	writel(val, port->base + PCIE_RST_CTRL);
-+
-+	/* 100ms timeout value should be enough for Gen1/2 training */
-+	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-+				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-+				 100 * USEC_PER_MSEC);
-+	if (err)
-+		return -ETIMEDOUT;
-+
-+	/* Set INTx mask */
-+	val = readl(port->base + PCIE_INT_MASK);
-+	val &= ~INTX_MASK;
-+	writel(val, port->base + PCIE_INT_MASK);
-+
-+	/* Set AHB to PCIe translation windows */
-+	size = mem->end - mem->start;
-+	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
-+	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
-+
-+	val = upper_32_bits(mem->start);
-+	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
-+
-+	/* Set PCIe to AXI translation memory space.*/
-+	val = fls(0xffffffff) | WIN_ENABLE;
-+	writel(val, port->base + PCIE_AXI_WINDOW0);
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PLLEN |
++			   AT91_PMC_AUDIO_PLL_ND_MASK,
++			   AT91_PMC_AUDIO_PLL_PLLEN |
++			   AT91_PMC_AUDIO_PLL_ND(frac->nd));
 +
 +	return 0;
 +}
 +
-+static int mtk_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
-+			     irq_hw_number_t hwirq)
++static int clk_audio_pll_pad_enable(struct clk_hw *hw)
 +{
-+	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
-+	irq_set_chip_data(irq, domain->host_data);
++	struct clk_audio_pad *apad_ck = to_clk_audio_pad(hw);
++
++	regmap_update_bits(apad_ck->regmap, AT91_PMC_AUDIO_PLL1,
++			   AT91_PMC_AUDIO_PLL_QDPAD_MASK,
++			   AUDIO_PLL_QDPAD(apad_ck->qdaudio, apad_ck->div));
++	regmap_update_bits(apad_ck->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PADEN, AT91_PMC_AUDIO_PLL_PADEN);
 +
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops intx_domain_ops = {
-+	.map = mtk_pcie_intx_map,
-+};
-+
-+static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
-+				    struct device_node *node)
++static int clk_audio_pll_pmc_enable(struct clk_hw *hw)
 +{
-+	struct device *dev = port->pcie->dev;
-+	struct device_node *pcie_intc_node;
++	struct clk_audio_pmc *apmc_ck = to_clk_audio_pmc(hw);
 +
-+	/* Setup INTx */
-+	pcie_intc_node = of_get_next_child(node, NULL);
-+	if (!pcie_intc_node) {
-+		dev_err(dev, "No PCIe Intc node found\n");
-+		return PTR_ERR(pcie_intc_node);
-+	}
++	regmap_update_bits(apmc_ck->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PMCEN |
++			   AT91_PMC_AUDIO_PLL_QDPMC_MASK,
++			   AT91_PMC_AUDIO_PLL_PMCEN |
++			   AT91_PMC_AUDIO_PLL_QDPMC(apmc_ck->qdpmc));
++	return 0;
++}
 +
-+	port->irq_domain = irq_domain_add_linear(pcie_intc_node, INTX_NUM,
-+						 &intx_domain_ops, port);
-+	if (!port->irq_domain) {
-+		dev_err(dev, "Failed to get INTx IRQ domain\n");
-+		return PTR_ERR(port->irq_domain);
-+	}
++static void clk_audio_pll_frac_disable(struct clk_hw *hw)
++{
++	struct clk_audio_frac *frac = to_clk_audio_frac(hw);
++
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PLLEN, 0);
++	/* do it in 2 separated writes */
++	regmap_update_bits(frac->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_RESETN, 0);
++}
++
++static void clk_audio_pll_pad_disable(struct clk_hw *hw)
++{
++	struct clk_audio_pad *apad_ck = to_clk_audio_pad(hw);
++
++	regmap_update_bits(apad_ck->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PADEN, 0);
++}
++
++static void clk_audio_pll_pmc_disable(struct clk_hw *hw)
++{
++	struct clk_audio_pmc *apmc_ck = to_clk_audio_pmc(hw);
++
++	regmap_update_bits(apmc_ck->regmap, AT91_PMC_AUDIO_PLL0,
++			   AT91_PMC_AUDIO_PLL_PMCEN, 0);
++}
++
++static unsigned long clk_audio_pll_fout(unsigned long parent_rate,
++					unsigned long nd, unsigned long fracr)
++{
++	unsigned long long fr = (unsigned long long)parent_rate * fracr;
++
++	pr_debug("A PLL: %s, fr = %llu\n", __func__, fr);
++
++	fr = DIV_ROUND_CLOSEST_ULL(fr, AUDIO_PLL_DIV_FRAC);
++
++	pr_debug("A PLL: %s, fr = %llu\n", __func__, fr);
++
++	return parent_rate * (nd + 1) + fr;
++}
++
++static unsigned long clk_audio_pll_frac_recalc_rate(struct clk_hw *hw,
++						    unsigned long parent_rate)
++{
++	struct clk_audio_frac *frac = to_clk_audio_frac(hw);
++	unsigned long fout;
++
++	fout = clk_audio_pll_fout(parent_rate, frac->nd, frac->fracr);
++
++	pr_debug("A PLL: %s, fout = %lu (nd = %u, fracr = %lu)\n", __func__,
++		 fout, frac->nd, (unsigned long)frac->fracr);
++
++	return fout;
++}
++
++static unsigned long clk_audio_pll_pad_recalc_rate(struct clk_hw *hw,
++						   unsigned long parent_rate)
++{
++	struct clk_audio_pad *apad_ck = to_clk_audio_pad(hw);
++	unsigned long apad_rate = 0;
++
++	if (apad_ck->qdaudio && apad_ck->div)
++		apad_rate = parent_rate / (apad_ck->qdaudio * apad_ck->div);
++
++	pr_debug("A PLL/PAD: %s, apad_rate = %lu (div = %u, qdaudio = %u)\n",
++		 __func__, apad_rate, apad_ck->div, apad_ck->qdaudio);
++
++	return apad_rate;
++}
++
++static unsigned long clk_audio_pll_pmc_recalc_rate(struct clk_hw *hw,
++						   unsigned long parent_rate)
++{
++	struct clk_audio_pmc *apmc_ck = to_clk_audio_pmc(hw);
++	unsigned long apmc_rate = 0;
++
++	apmc_rate = parent_rate / (apmc_ck->qdpmc + 1);
++
++	pr_debug("A PLL/PMC: %s, apmc_rate = %lu (qdpmc = %u)\n", __func__,
++		 apmc_rate, apmc_ck->qdpmc);
++
++	return apmc_rate;
++}
++
++static int clk_audio_pll_frac_compute_frac(unsigned long rate,
++					   unsigned long parent_rate,
++					   unsigned long *nd,
++					   unsigned long *fracr)
++{
++	unsigned long long tmp, rem;
++
++	if (!rate)
++		return -EINVAL;
++
++	tmp = rate;
++	rem = do_div(tmp, parent_rate);
++	if (!tmp || tmp >= AUDIO_PLL_ND_MAX)
++		return -EINVAL;
++
++	*nd = tmp - 1;
++
++	tmp = rem * AUDIO_PLL_DIV_FRAC;
++	tmp = DIV_ROUND_CLOSEST_ULL(tmp, parent_rate);
++	if (tmp > AT91_PMC_AUDIO_PLL_FRACR_MASK)
++		return -EINVAL;
++
++	/* we can cast here as we verified the bounds just above */
++	*fracr = (unsigned long)tmp;
 +
 +	return 0;
 +}
 +
-+static irqreturn_t mtk_pcie_intr_handler(int irq, void *data)
++static int clk_audio_pll_frac_determine_rate(struct clk_hw *hw,
++					     struct clk_rate_request *req)
 +{
-+	struct mtk_pcie_port *port = (struct mtk_pcie_port *)data;
-+	unsigned long status;
-+	u32 virq;
-+	u32 bit = INTX_SHIFT;
++	unsigned long fracr, nd;
++	int ret;
 +
-+	while ((status = readl(port->base + PCIE_INT_STATUS)) & INTX_MASK) {
-+		for_each_set_bit_from(bit, &status, INTX_NUM + INTX_SHIFT) {
-+			/* Clear the INTx */
-+			writel(1 << bit, port->base + PCIE_INT_STATUS);
-+			virq = irq_find_mapping(port->irq_domain,
-+						bit - INTX_SHIFT);
-+			generic_handle_irq(virq);
++	pr_debug("A PLL: %s, rate = %lu (parent_rate = %lu)\n", __func__,
++		 req->rate, req->best_parent_rate);
++
++	req->rate = clamp(req->rate, AUDIO_PLL_FOUT_MIN, AUDIO_PLL_FOUT_MAX);
++
++	req->min_rate = max(req->min_rate, AUDIO_PLL_FOUT_MIN);
++	req->max_rate = min(req->max_rate, AUDIO_PLL_FOUT_MAX);
++
++	ret = clk_audio_pll_frac_compute_frac(req->rate, req->best_parent_rate,
++					      &nd, &fracr);
++	if (ret)
++		return ret;
++
++	req->rate = clk_audio_pll_fout(req->best_parent_rate, nd, fracr);
++
++	req->best_parent_hw = clk_hw_get_parent(hw);
++
++	pr_debug("A PLL: %s, best_rate = %lu (nd = %lu, fracr = %lu)\n",
++		 __func__, req->rate, nd, fracr);
++
++	return 0;
++}
++
++static long clk_audio_pll_pad_round_rate(struct clk_hw *hw, unsigned long rate,
++					 unsigned long *parent_rate)
++{
++	struct clk_hw *pclk = clk_hw_get_parent(hw);
++	long best_rate = -EINVAL;
++	unsigned long best_parent_rate;
++	unsigned long tmp_qd;
++	u32 div;
++	long tmp_rate;
++	int tmp_diff;
++	int best_diff = -1;
++
++	pr_debug("A PLL/PAD: %s, rate = %lu (parent_rate = %lu)\n", __func__,
++		 rate, *parent_rate);
++
++	/*
++	 * Rate divisor is actually made of two different divisors, multiplied
++	 * between themselves before dividing the rate.
++	 * tmp_qd goes from 1 to 31 and div is either 2 or 3.
++	 * In order to avoid testing twice the rate divisor (e.g. divisor 12 can
++	 * be found with (tmp_qd, div) = (2, 6) or (3, 4)), we remove any loop
++	 * for a rate divisor when div is 2 and tmp_qd is a multiple of 3.
++	 * We cannot inverse it (condition div is 3 and tmp_qd is even) or we
++	 * would miss some rate divisor that aren't reachable with div being 2
++	 * (e.g. rate divisor 90 is made with div = 3 and tmp_qd = 30, thus
++	 * tmp_qd is even so we skip it because we think div 2 could make this
++	 * rate divisor which isn't possible since tmp_qd has to be <= 31).
++	 */
++	for (tmp_qd = 1; tmp_qd < AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_MAX; tmp_qd++)
++		for (div = 2; div <= 3; div++) {
++			if (div == 2 && tmp_qd % 3 == 0)
++				continue;
++
++			best_parent_rate = clk_hw_round_rate(pclk,
++							rate * tmp_qd * div);
++			tmp_rate = best_parent_rate / (div * tmp_qd);
++			tmp_diff = abs(rate - tmp_rate);
++
++			if (best_diff < 0 || best_diff > tmp_diff) {
++				*parent_rate = best_parent_rate;
++				best_rate = tmp_rate;
++				best_diff = tmp_diff;
++			}
++		}
++
++	pr_debug("A PLL/PAD: %s, best_rate = %ld, best_parent_rate = %lu\n",
++		 __func__, best_rate, best_parent_rate);
++
++	return best_rate;
++}
++
++static long clk_audio_pll_pmc_round_rate(struct clk_hw *hw, unsigned long rate,
++					 unsigned long *parent_rate)
++{
++	struct clk_hw *pclk = clk_hw_get_parent(hw);
++	long best_rate = -EINVAL;
++	unsigned long best_parent_rate = 0;
++	u32 tmp_qd = 0, div;
++	long tmp_rate;
++	int tmp_diff;
++	int best_diff = -1;
++
++	pr_debug("A PLL/PMC: %s, rate = %lu (parent_rate = %lu)\n", __func__,
++		 rate, *parent_rate);
++
++	for (div = 1; div <= AUDIO_PLL_QDPMC_MAX; div++) {
++		best_parent_rate = clk_round_rate(pclk->clk, rate * div);
++		tmp_rate = best_parent_rate / div;
++		tmp_diff = abs(rate - tmp_rate);
++
++		if (best_diff < 0 || best_diff > tmp_diff) {
++			*parent_rate = best_parent_rate;
++			best_rate = tmp_rate;
++			best_diff = tmp_diff;
++			tmp_qd = div;
 +		}
 +	}
 +
-+	return IRQ_HANDLED;
++	pr_debug("A PLL/PMC: %s, best_rate = %ld, best_parent_rate = %lu (qd = %d)\n",
++		 __func__, best_rate, *parent_rate, tmp_qd - 1);
++
++	return best_rate;
 +}
 +
-+static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
-+			      struct device_node *node)
++static int clk_audio_pll_frac_set_rate(struct clk_hw *hw, unsigned long rate,
++				       unsigned long parent_rate)
 +{
-+	struct mtk_pcie *pcie = port->pcie;
-+	struct device *dev = pcie->dev;
-+	struct platform_device *pdev = to_platform_device(dev);
-+	int err, irq;
++	struct clk_audio_frac *frac = to_clk_audio_frac(hw);
++	unsigned long fracr, nd;
++	int ret;
 +
-+	irq = platform_get_irq(pdev, port->slot);
-+	err = devm_request_irq(dev, irq, mtk_pcie_intr_handler,
-+			       IRQF_SHARED, "mtk-pcie", port);
-+	if (err) {
-+		dev_err(dev, "unable to request IRQ %d\n", irq);
-+		return err;
-+	}
++	pr_debug("A PLL: %s, rate = %lu (parent_rate = %lu)\n", __func__, rate,
++		 parent_rate);
 +
-+	err = mtk_pcie_init_irq_domain(port, node);
-+	if (err) {
-+		dev_err(dev, "failed to init PCIe legacy IRQ domain\n");
-+		return -ENODEV;
++	if (rate < AUDIO_PLL_FOUT_MIN || rate > AUDIO_PLL_FOUT_MAX)
++		return -EINVAL;
++
++	ret = clk_audio_pll_frac_compute_frac(rate, parent_rate, &nd, &fracr);
++	if (ret)
++		return ret;
++
++	frac->nd = nd;
++	frac->fracr = fracr;
++
++	return 0;
++}
++
++static int clk_audio_pll_pad_set_rate(struct clk_hw *hw, unsigned long rate,
++				      unsigned long parent_rate)
++{
++	struct clk_audio_pad *apad_ck = to_clk_audio_pad(hw);
++	u8 tmp_div;
++
++	pr_debug("A PLL/PAD: %s, rate = %lu (parent_rate = %lu)\n", __func__,
++		 rate, parent_rate);
++
++	if (!rate)
++		return -EINVAL;
++
++	tmp_div = parent_rate / rate;
++	if (tmp_div % 3 == 0) {
++		apad_ck->qdaudio = tmp_div / 3;
++		apad_ck->div = 3;
++	} else {
++		apad_ck->qdaudio = tmp_div / 2;
++		apad_ck->div = 2;
 +	}
 +
 +	return 0;
 +}
 +
- static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
- 				      unsigned int devfn, int where)
- {
-@@ -249,13 +594,49 @@ static void mtk_pcie_enable_port(struct mtk_pcie_port *port)
- 
- 	err = clk_prepare_enable(port->sys_ck);
- 	if (err) {
--		dev_err(dev, "failed to enable port%d clock\n", port->slot);
-+		dev_err(dev, "failed to enable sys_ck%d clock\n", port->slot);
- 		goto err_sys_clk;
- 	}
- 
-+	err = clk_prepare_enable(port->ahb_ck);
-+	if (err) {
-+		dev_err(dev, "failed to enable ahb_ck%d\n", port->slot);
-+		goto err_ahb_clk;
-+	}
++static int clk_audio_pll_pmc_set_rate(struct clk_hw *hw, unsigned long rate,
++				      unsigned long parent_rate)
++{
++	struct clk_audio_pmc *apmc_ck = to_clk_audio_pmc(hw);
 +
-+	err = clk_prepare_enable(port->aux_ck);
-+	if (err) {
-+		dev_err(dev, "failed to enable aux_ck%d\n", port->slot);
-+		goto err_aux_clk;
-+	}
++	if (!rate)
++		return -EINVAL;
 +
-+	err = clk_prepare_enable(port->axi_ck);
-+	if (err) {
-+		dev_err(dev, "failed to enable axi_ck%d\n", port->slot);
-+		goto err_axi_clk;
-+	}
++	pr_debug("A PLL/PMC: %s, rate = %lu (parent_rate = %lu)\n", __func__,
++		 rate, parent_rate);
 +
-+	err = clk_prepare_enable(port->obff_ck);
-+	if (err) {
-+		dev_err(dev, "failed to enable obff_ck%d\n", port->slot);
-+		goto err_obff_clk;
-+	}
++	apmc_ck->qdpmc = parent_rate / rate - 1;
 +
-+	err = clk_prepare_enable(port->pipe_ck);
-+	if (err) {
-+		dev_err(dev, "failed to enable pipe_ck%d\n", port->slot);
-+		goto err_pipe_clk;
-+	}
++	return 0;
++}
 +
- 	reset_control_assert(port->reset);
- 	reset_control_deassert(port->reset);
- 
-+	err = phy_init(port->phy);
-+	if (err) {
-+		dev_err(dev, "failed to initialize port%d phy\n", port->slot);
-+		goto err_phy_init;
-+	}
-+
- 	err = phy_power_on(port->phy);
- 	if (err) {
- 		dev_err(dev, "failed to power on port%d phy\n", port->slot);
-@@ -269,6 +650,18 @@ static void mtk_pcie_enable_port(struct mtk_pcie_port *port)
- 
- 	phy_power_off(port->phy);
- err_phy_on:
-+	phy_exit(port->phy);
-+err_phy_init:
-+	clk_disable_unprepare(port->pipe_ck);
-+err_pipe_clk:
-+	clk_disable_unprepare(port->obff_ck);
-+err_obff_clk:
-+	clk_disable_unprepare(port->axi_ck);
-+err_axi_clk:
-+	clk_disable_unprepare(port->aux_ck);
-+err_aux_clk:
-+	clk_disable_unprepare(port->ahb_ck);
-+err_ahb_clk:
- 	clk_disable_unprepare(port->sys_ck);
- err_sys_clk:
- 	mtk_pcie_port_free(port);
-@@ -306,10 +699,56 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 	snprintf(name, sizeof(name), "sys_ck%d", slot);
- 	port->sys_ck = devm_clk_get(dev, name);
- 	if (IS_ERR(port->sys_ck)) {
--		dev_err(dev, "failed to get port%d clock\n", slot);
-+		dev_err(dev, "failed to get sys_ck%d clock\n", slot);
- 		return PTR_ERR(port->sys_ck);
- 	}
- 
-+	/* sys_ck might be divided into the following parts in some chips */
-+	snprintf(name, sizeof(name), "ahb_ck%d", slot);
-+	port->ahb_ck = devm_clk_get(dev, name);
-+	if (IS_ERR(port->ahb_ck)) {
-+		if (PTR_ERR(port->ahb_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		port->ahb_ck = NULL;
-+	}
-+
-+	snprintf(name, sizeof(name), "axi_ck%d", slot);
-+	port->axi_ck = devm_clk_get(dev, name);
-+	if (IS_ERR(port->axi_ck)) {
-+		if (PTR_ERR(port->axi_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		port->axi_ck = NULL;
-+	}
-+
-+	snprintf(name, sizeof(name), "aux_ck%d", slot);
-+	port->aux_ck = devm_clk_get(dev, name);
-+	if (IS_ERR(port->aux_ck)) {
-+		if (PTR_ERR(port->aux_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		port->aux_ck = NULL;
-+	}
-+
-+	snprintf(name, sizeof(name), "obff_ck%d", slot);
-+	port->obff_ck = devm_clk_get(dev, name);
-+	if (IS_ERR(port->obff_ck)) {
-+		if (PTR_ERR(port->obff_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		port->obff_ck = NULL;
-+	}
-+
-+	snprintf(name, sizeof(name), "pipe_ck%d", slot);
-+	port->pipe_ck = devm_clk_get(dev, name);
-+	if (IS_ERR(port->pipe_ck)) {
-+		if (PTR_ERR(port->pipe_ck) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		port->pipe_ck = NULL;
-+	}
-+
- 	snprintf(name, sizeof(name), "pcie-rst%d", slot);
- 	port->reset = devm_reset_control_get_optional_exclusive(dev, name);
- 	if (PTR_ERR(port->reset) == -EPROBE_DEFER)
-@@ -324,6 +763,12 @@ static int mtk_pcie_parse_port(struct mtk_pcie *pcie,
- 	port->slot = slot;
- 	port->pcie = pcie;
- 
-+	if (pcie->soc->setup_irq) {
-+		err = pcie->soc->setup_irq(port, node);
-+		if (err)
-+			return err;
-+	}
-+
- 	INIT_LIST_HEAD(&port->list);
- 	list_add_tail(&port->list, &pcie->ports);
- 
-@@ -493,6 +938,7 @@ static int mtk_pcie_register_host(struct pci_host_bridge *host)
- 	host->ops = pcie->soc->ops;
- 	host->map_irq = of_irq_parse_and_map_pci;
- 	host->swizzle_irq = pci_common_swizzle;
-+	host->sysdata = pcie;
- 
- 	err = pci_scan_root_bus_bridge(host);
- 	if (err < 0)
-@@ -553,9 +999,17 @@ static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.startup = mtk_pcie_startup_port,
- };
- 
-+static const struct mtk_pcie_soc mtk_pcie_soc_v2 = {
-+	.ops = &mtk_pcie_ops_v2,
-+	.startup = mtk_pcie_startup_port_v2,
-+	.setup_irq = mtk_pcie_setup_irq,
++static const struct clk_ops audio_pll_frac_ops = {
++	.enable = clk_audio_pll_frac_enable,
++	.disable = clk_audio_pll_frac_disable,
++	.recalc_rate = clk_audio_pll_frac_recalc_rate,
++	.determine_rate = clk_audio_pll_frac_determine_rate,
++	.set_rate = clk_audio_pll_frac_set_rate,
 +};
 +
- static const struct of_device_id mtk_pcie_ids[] = {
- 	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
- 	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-+	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_v2 },
-+	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_v2 },
- 	{},
- };
++static const struct clk_ops audio_pll_pad_ops = {
++	.enable = clk_audio_pll_pad_enable,
++	.disable = clk_audio_pll_pad_disable,
++	.recalc_rate = clk_audio_pll_pad_recalc_rate,
++	.round_rate = clk_audio_pll_pad_round_rate,
++	.set_rate = clk_audio_pll_pad_set_rate,
++};
++
++static const struct clk_ops audio_pll_pmc_ops = {
++	.enable = clk_audio_pll_pmc_enable,
++	.disable = clk_audio_pll_pmc_disable,
++	.recalc_rate = clk_audio_pll_pmc_recalc_rate,
++	.round_rate = clk_audio_pll_pmc_round_rate,
++	.set_rate = clk_audio_pll_pmc_set_rate,
++};
++
++static int of_sama5d2_clk_audio_pll_setup(struct device_node *np,
++					  struct clk_init_data *init,
++					  struct clk_hw *hw,
++					  struct regmap **clk_audio_regmap)
++{
++	struct regmap *regmap;
++	const char *parent_names[1];
++	int ret;
++
++	regmap = syscon_node_to_regmap(of_get_parent(np));
++	if (IS_ERR(regmap))
++		return PTR_ERR(regmap);
++
++	init->name = np->name;
++	of_clk_parent_fill(np, parent_names, 1);
++	init->parent_names = parent_names;
++	init->num_parents = 1;
++
++	hw->init = init;
++	*clk_audio_regmap = regmap;
++
++	ret = clk_hw_register(NULL, hw);
++	if (ret)
++		return ret;
++
++	return of_clk_add_hw_provider(np, of_clk_hw_simple_get, hw);
++}
++
++static void __init of_sama5d2_clk_audio_pll_frac_setup(struct device_node *np)
++{
++	struct clk_audio_frac *frac_ck;
++	struct clk_init_data init = {};
++
++	frac_ck = kzalloc(sizeof(*frac_ck), GFP_KERNEL);
++	if (!frac_ck)
++		return;
++
++	init.ops = &audio_pll_frac_ops;
++	init.flags = CLK_SET_RATE_GATE;
++
++	if (of_sama5d2_clk_audio_pll_setup(np, &init, &frac_ck->hw,
++					   &frac_ck->regmap))
++		kfree(frac_ck);
++}
++
++static void __init of_sama5d2_clk_audio_pll_pad_setup(struct device_node *np)
++{
++	struct clk_audio_pad *apad_ck;
++	struct clk_init_data init = {};
++
++	apad_ck = kzalloc(sizeof(*apad_ck), GFP_KERNEL);
++	if (!apad_ck)
++		return;
++
++	init.ops = &audio_pll_pad_ops;
++	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
++		CLK_SET_RATE_PARENT;
++
++	if (of_sama5d2_clk_audio_pll_setup(np, &init, &apad_ck->hw,
++					   &apad_ck->regmap))
++		kfree(apad_ck);
++}
++
++static void __init of_sama5d2_clk_audio_pll_pmc_setup(struct device_node *np)
++{
++	struct clk_audio_pad *apmc_ck;
++	struct clk_init_data init = {};
++
++	apmc_ck = kzalloc(sizeof(*apmc_ck), GFP_KERNEL);
++	if (!apmc_ck)
++		return;
++
++	init.ops = &audio_pll_pmc_ops;
++	init.flags = CLK_SET_RATE_GATE | CLK_SET_PARENT_GATE |
++		CLK_SET_RATE_PARENT;
++
++	if (of_sama5d2_clk_audio_pll_setup(np, &init, &apmc_ck->hw,
++					   &apmc_ck->regmap))
++		kfree(apmc_ck);
++}
++
++CLK_OF_DECLARE(of_sama5d2_clk_audio_pll_frac_setup,
++	       "atmel,sama5d2-clk-audio-pll-frac",
++	       of_sama5d2_clk_audio_pll_frac_setup);
++CLK_OF_DECLARE(of_sama5d2_clk_audio_pll_pad_setup,
++	       "atmel,sama5d2-clk-audio-pll-pad",
++	       of_sama5d2_clk_audio_pll_pad_setup);
++CLK_OF_DECLARE(of_sama5d2_clk_audio_pll_pmc_setup,
++	       "atmel,sama5d2-clk-audio-pll-pmc",
++	       of_sama5d2_clk_audio_pll_pmc_setup);
+diff --git a/include/linux/clk/at91_pmc.h b/include/linux/clk/at91_pmc.h
+index 17f413b..6aca5ce 100644
+--- a/include/linux/clk/at91_pmc.h
++++ b/include/linux/clk/at91_pmc.h
+@@ -185,4 +185,29 @@
+ #define		AT91_PMC_PCR_EN			(0x1  <<  28)				/* Enable */
+ #define		AT91_PMC_PCR_GCKEN		(0x1  <<  29)				/* GCK Enable */
  
++#define AT91_PMC_AUDIO_PLL0	0x14c
++#define		AT91_PMC_AUDIO_PLL_PLLEN	(1  <<  0)
++#define		AT91_PMC_AUDIO_PLL_PADEN	(1  <<  1)
++#define		AT91_PMC_AUDIO_PLL_PMCEN	(1  <<  2)
++#define		AT91_PMC_AUDIO_PLL_RESETN	(1  <<  3)
++#define		AT91_PMC_AUDIO_PLL_ND_OFFSET	8
++#define		AT91_PMC_AUDIO_PLL_ND_MASK	(0x7f << AT91_PMC_AUDIO_PLL_ND_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_ND(n)	((n)  << AT91_PMC_AUDIO_PLL_ND_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPMC_OFFSET	16
++#define		AT91_PMC_AUDIO_PLL_QDPMC_MASK	(0x7f << AT91_PMC_AUDIO_PLL_QDPMC_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPMC(n)	((n)  << AT91_PMC_AUDIO_PLL_QDPMC_OFFSET)
++
++#define AT91_PMC_AUDIO_PLL1	0x150
++#define		AT91_PMC_AUDIO_PLL_FRACR_MASK		0x3fffff
++#define		AT91_PMC_AUDIO_PLL_QDPAD_OFFSET		24
++#define		AT91_PMC_AUDIO_PLL_QDPAD_MASK		(0x7f << AT91_PMC_AUDIO_PLL_QDPAD_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPAD(n)		((n)  << AT91_PMC_AUDIO_PLL_QDPAD_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPAD_DIV_OFFSET	AT91_PMC_AUDIO_PLL_QDPAD_OFFSET
++#define		AT91_PMC_AUDIO_PLL_QDPAD_DIV_MASK	(0x3  << AT91_PMC_AUDIO_PLL_QDPAD_DIV_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPAD_DIV(n)		((n)  << AT91_PMC_AUDIO_PLL_QDPAD_DIV_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_OFFSET	26
++#define		AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_MAX	0x1f
++#define		AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_MASK	(AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_MAX << AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_OFFSET)
++#define		AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV(n)	((n)  << AT91_PMC_AUDIO_PLL_QDPAD_EXTDIV_OFFSET)
++
+ #endif
 -- 
-2.6.4
+git-series 0.9.1
