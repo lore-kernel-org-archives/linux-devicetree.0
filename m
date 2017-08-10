@@ -1,45 +1,52 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] arm, am335x: add support for Moxa UC-8100-ME-T open
- platform
-Date: Thu, 10 Aug 2017 10:03:41 -0700
-Message-ID: <20170810170341.GM8569@atomide.com>
-References: <20170802065757.1074-1-sz.lin@moxa.com>
- <20170810155246.pfaii3zb5jblluwy@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: phy-rockchip-inno-usb2: add
+ companion grf quirk
+Date: Thu, 10 Aug 2017 12:05:08 -0500
+Message-ID: <20170810170508.pwf35mud4ffnrzzd@rob-hp-laptop>
+References: <1501747753-6983-1-git-send-email-frank.wang@rock-chips.com>
+ <1501747753-6983-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170810155246.pfaii3zb5jblluwy@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: SZ Lin <sz.lin-D4fb9hXD9d4@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1501747753-6983-3-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: heiko@sntech.de, kishon@ti.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, huangtao@rock-chips.com, william.wu@rock-chips.com, daniel.meng@rock-chips.com, kever.yang@rock-chips.com, andy.yan@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170810 08:53]:
-> On Wed, Aug 02, 2017 at 02:57:57PM +0800, SZ Lin wrote:
-> > Add support for Moxa UC-8100-ME-T open platform
-...
-
-> > +	vbat: fixedregulator@0 {
+On Thu, Aug 03, 2017 at 04:09:10PM +0800, Frank Wang wrote:
+> Add rockchip,usbgrf and rockchip,companion_grf_quirk to support
+> the registers of usb-phy that are distributed in grf and usbgrf
+> on some special Rockchip SoCs (e.g RV1108).
 > 
-> Unit address without reg property is not valid (build with W=2). Perhaps 
-> vbat-regulator instead.
-...
-
-> > +	/* Power supply provides a fixed 3.3V @3A */
-> > +	vmmcsd_fixed: fixedregulator@1 {
+> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Ditto
-> 
-> With those fixed,
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> index 84d59b0..ddf868a 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> @@ -18,6 +18,10 @@ Optional properties:
+>  		 usb-phy output 480m and xin24m.
+>  		 Refer to clk/clock-bindings.txt for generic clock
+>  		 consumer properties.
+> + - rockchip,usbgrf : phandle to the syscon managing the "usb general
+> +		 register files".
+> + - rockchip,companion_grf_quirk : when set driver will request
+> +		 "rockchip,usbgrf" phandle as one companion-grf.
 
-I've fixed it up here and will apply into omap-for-v4.14/dt
-thanks.
+Why isn't presence of rockchip,usbgrf or being implied by an SoC 
+specific compatible string enough? 
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In any case, use '-' rather than '_'.
+
+>  
+>  Required nodes : a sub-node is required for each port the phy provides.
+>  		 The sub-node name is used to identify host or otg port,
+> -- 
+> 2.0.0
+> 
+> 
