@@ -1,27 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: i2c: i2c-davinci: Update binding for
- 66AK2Gx pwr dm property
-Date: Thu, 10 Aug 2017 11:36:45 -0500
-Message-ID: <20170810163645.wt52uharpdxhnmbb@rob-hp-laptop>
-References: <20170802221753.13786-1-fcooper@ti.com>
- <20170802221753.13786-4-fcooper@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] arm: dts: omap3: Remove needless interrupt-parent
+ property
+Date: Thu, 10 Aug 2017 09:38:17 -0700
+Message-ID: <20170810163816.GH8569@atomide.com>
+References: <41ab5d17-620e-34b6-bd1c-33ae7bb3234c@techveda.org>
+ <1498546060-5742-1-git-send-email-karthik@techveda.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170802221753.13786-4-fcooper@ti.com>
+In-Reply-To: <1498546060-5742-1-git-send-email-karthik@techveda.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: wsa@the-dreams.de, linux@armlinux.org.uk, nsekhar@ti.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: karthik@techveda.org
+Cc: bcousson@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, sunil.m@techveda.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 02, 2017 at 05:17:52PM -0500, Franklin S Cooper Jr wrote:
-> Add pm-domains property which is required for 66AK2Gx. Also document 66AK2G
-> unique clocks property usage.
+* karthik@techveda.org <karthik@techveda.org> [170626 23:48]:
+> From: Karthik Tummala <karthik@techveda.org>
 > 
-> Signed-off-by: Franklin S Cooper Jr <fcooper@ti.com>
+> All nodes inhert "interrupt-parent" property from root
+> node. Removed the aforementioned property from usbhsohci,
+> usbhsehci, ssi_port1, ssi_port2 nodes to avoid duplication.
+> 
+> Signed-off-by: Karthik Tummala <karthik@techveda.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-davinci.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Changes for v2:
+> - Made changes to subject & description as suggested by
+>   Suniel Mahesh.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Applying into omap-for-v4.14/dt thanks.
+
+Tony
