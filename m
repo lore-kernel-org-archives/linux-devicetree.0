@@ -1,52 +1,187 @@
-From: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/7] mtd: spi-nor: cadence-quadspi: Add support to enable
- loopback clock circuit
-Date: Thu, 10 Aug 2017 10:55:13 +0530
-Message-ID: <ba2414dd-4af1-a5bc-8ae9-092faef4eb83@ti.com>
-References: <20170801045434.8733-1-vigneshr@ti.com>
- <20170801045434.8733-3-vigneshr@ti.com>
- <20170810001021.ayygkgy6xwnrxghl@rob-hp-laptop>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v2 0/4] ipmi: bt-i2c: added IPMI Block Transfer over I2C
+Date: Wed, 9 Aug 2017 22:28:36 -0700
+Message-ID: <CAFd5g45BYV702x+PnN5DWcXo=P+yU=zhSEHJA21=z_gP8QD_Xw@mail.gmail.com>
+References: <20170805011855.1027-1-brendanhiggins@google.com>
+ <8f5579cb-2c4d-2cd0-e874-a44374e08417@acm.org> <CAFd5g46LmyjPnjKis7c-F9FbjzyU1MgvrVkR7vjrEC4oWV1doQ@mail.gmail.com>
+ <fd82d68b-0ca4-fa43-4ed4-e18f684f6dee@acm.org> <CAFd5g47FmTiygHDjm0-h2NAz8qa85zZVLKgCf9vGYP8iK6_+ZQ@mail.gmail.com>
+ <9c0aef7c-6dcc-2328-f712-d35ef81ebc41@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810001021.ayygkgy6xwnrxghl@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <9c0aef7c-6dcc-2328-f712-d35ef81ebc41@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Corey Minyard <minyard@acm.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg KH <gregkh@linuxfoundation.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Benjamin Fair <benjaminfair@google.com>, linux-doc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, openipmi-developer@lists.sourceforge.net, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 10 August 2017 05:40 AM, Rob Herring wrote:
-> On Tue, Aug 01, 2017 at 10:24:29AM +0530, Vignesh R wrote:
->> Cadence QSPI IP has a adapted loopback circuit which can be enabled by
->> setting BYPASS field to 0 in READCAPTURE register. It enables use of
->> QSPI return clock to latch the data rather than the internal QSPI
->> reference clock. For high speed operations, adapted loopback circuit
->> using QSPI return clock helps to increase data valid window.
+On Wed, Aug 9, 2017 at 7:26 PM, Corey Minyard <tcminyard@gmail.com> wrote:
+> On 08/09/2017 08:04 PM, Brendan Higgins wrote:
+>>>
+>>> Perhaps that is some level of abuse, but it's pretty common.  I'm not
+>>> against it.
+>>>
+>>> There is standard IPMI firmware NetFN (though no commands defined) that
+>>> if
+>>> you use
+>>> the driver automatically goes into "Maintenance mode" and modified the
+>>> timeouts
+>>> and handling to some extent to help with this.
 >>
->> Add DT parameter cdns,rclk-en to help enable adapted loopback circuit
->> for boards which do have QSPI return clock provided.
->> This patch also modifies cqspi_readdata_capture() function's bypass
->> parameter to bool to match how its used in the function.
+>> That is a really good point, I missed that.
+>> ...
+>>>
+>>>
+>>> There are ways to accomplish this that aren't that complex.  You can
+>>> create
+>>> an OEM
+>>> command that can query the maximum message size and the ability to do
+>>> sequence
+>>> numbers in the messages.
+>>>
+>>> If messages larger than 32-bytes are supported, and the host I2C/SMBus
+>>> driver
+>>> supports it, you could use the standard SSIF SMBus commands to do this,
+>>> they
+>>> have an 8-bit length field.
+>>>
+>>> If sequence numbers are supported, The SSIF could use different SMBus
+>>> commands
+>>> to do the write and read requests.  Since this is only if you get an OEM
+>>> command,
+>>> and if you put the sequence numbers at the end where they are easy to add
+>>> on
+>>> the send side, this is a small change to the driver.
 >>
->> Signed-off-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 3 +++
->>  drivers/mtd/spi-nor/cadence-quadspi.c                     | 8 ++++++--
->>  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> Please separate bindings to a separate patch or patches.
-> 
-Ok, Will do that in v2.
+>> What if we just had an OEM command that changed the message structure from
+>> that point on? We could abuse the "maintenance mode" NetFN to get back
+>> into
+>> normal SSIF if necessary.
+>
+>
+> Actually, I wouldn't have a separate "openbmc mode".  I would have OpenBMC
+> always
+> work with standard SSIF, and have separate SMBus commands for messages with
+> the sequence number and messages larger than 32 bytes.
+>
+> I've attached a patch with what I would expect the changes to be to the host
+> driver.
+> It doesn't handle multiple outstanding messages, but it shows what detection
+> and a
+> separate SMBus command would look like.
 
+I took a look at the patch, it seems reasonable. If I was maintaining
+SSIF, I probably
+would not want that kind of clutter for my admittedly weird use case,
+but if you're
+okay with it, then so am I.
 
--- 
-Regards
-Vignesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>>> So I think the changes would be small and contained.  I'm actually ok
+>>> with a
+>>> different driver, but I think it would be more valuable to the OpenBMC
+>>> project
+>>> to have a standardized interface that would work (in a not quite as
+>>> efficient
+>>> mode) with software that does not use the Linux IPMI driver.
+>>
+>> I guess I see the all of my asks as hacky things which we can hopefully
+>> remove
+>> at some point. Hopefully, most OpenBMC users won't want or need these
+>> things.
+>> ...
+>>>>
+>>>> Regardless of what we do with the "BT-I2C" stuff, I am still interested
+>>>> in
+>>>> what
+>>>> you think about this.
+>>>
+>>>
+>>> I think you are right, it probably belongs some place else.  The way that
+>>> makes the most
+>>> sense to me would be to have an "ipmi" directory with a "host" and
+>>> "slave"
+>>> side, and since
+>>> ipmi is not really a char driver, to move it to the main driver
+>>> directory.
+>>> That might be
+>>> fairly disruptive, though.
+>>
+>> That was my thinking exactly.
+>>
+>>> The other option that makes sense to me would be to add a
+>>> drivers/char/ipmi_slave directory,
+>>> or something like that, and put the slave code there.  That would be less
+>>> disruptive.
+>>
+>> Right that is the approach I took, except I called it
+>> drivers/char/ipmi_bmc.
+>>
+>> I originally thought doing the less disruptive thing is best; however, I
+>> know
+>> there are also some OpenBMC people who are interested in implementing
+>> IPMB. So maybe now is the time to bite the bullet and create an ipmi
+>> directory under drivers/.
+>
+>
+> I'm not sure IPMB would make much difference, there's no host side change as
+> it's
+> already supported.  I don't think there would be any significant code
+> sharing
+> between the two.
+
+No, I don't expect much code sharing between them. I just thought it would be a
+reasonable place to put IPMB, sort of like how we have a bunch of "character"
+device drivers in drivers/char, but I suppose that might be somewhat of an
+anti-pattern ;-)
+
+>
+> If there end up being a significant amount of common code, then it would
+> definitely be worth the effort to move it.
+>
+>>> -corey
+>>
+>> In summary, I think I can live with making it a mangled form of SSIF, but
+>> I would prefer to put it in its own driver.
+>
+>
+> You can look at the patch and consider it, and consider that you would need
+> to
+> implement flag and event handling.  On an x86 host there would be SMBIOS
+> and ACPI stuff to deal with somehow for discovery.  There's probably few
+> other
+> things to deal with.
+>
+>> In any case, I think I would rather focus on the the BMC side IPMI
+>> framework
+>> now, since it is a bigger change and would also reduce the work of
+>> implementing a BMC side SSIF driver.
+>>
+>> Here is what I propose: we focus on the BMC side IPMI framework RFC that
+>> I sent out the other day:
+>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1463473.html
+>> I will add a change to the BMC side IPMI framework patchset to move all
+>> the
+>> IPMI stuff to the new drivers/ipmi directory as discussed and then drop
+>> the
+>> patch in that patchset that depends on this patchset.
+>>
+>> Let me know what you think
+>
+>
+> Let's hold off on the new directory, there's probably some convincing of the
+> "powers
+> that be" for that.
+>
+> I'll look at the patch set tomorrow, unless something critical comes up.
+
+Sounds good
+
+>
+> Thanks,
+>
+> -corey
+>
+
+Cheers
