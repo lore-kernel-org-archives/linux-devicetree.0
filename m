@@ -1,48 +1,25 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v2 9/9] arm64: dts: hi3660: add bindings for DMA
-Date: Thu, 10 Aug 2017 10:26:15 +0800
-Message-ID: <20170810022615.19204-10-guodong.xu@linaro.org>
-References: <20170810022615.19204-1-guodong.xu@linaro.org>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: [RESEND PATCH 0/2] Add i2c dt-binding and compatible for Mediatek MT7622 SoC
+Date: Thu, 10 Aug 2017 10:27:39 +0800
+Message-ID: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170810022615.19204-1-guodong.xu@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Ruyi <wangruyi@huawei.com>, Guodong Xu <guodong.xu@linaro.org>
+To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wang Ruyi <wangruyi@huawei.com>
+This patch series based on v4.13-rc1, include MT7622 i2c dt-binding
+and compatible.
 
-Add bindings for DMA.
+Jun Gao (2):
+  dt-bindings: i2c: Add MediaTek MT7622 i2c binding
+  i2c: mediatek: Add i2c compatible for MediaTek MT7622
 
-Signed-off-by: Wang Ruyi <wangruyi@huawei.com>
-Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 11 ++++++-----
+ drivers/i2c/busses/i2c-mt65xx.c                   | 18 ++++++++++++++++++
+ 2 files changed, 24 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 41841f7..545d435 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -436,6 +436,19 @@
- 			status = "disabled";
- 		};
- 
-+		dma0: dma@fdf30000 {
-+			compatible = "hisilicon,k3-dma-1.0";
-+			reg = <0x0 0xfdf30000 0x0 0x1000>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			dma-requests = <32>;
-+			dma-min-chan = <1>;
-+			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_CLK_GATE_DMAC>;
-+			dma-no-cci;
-+			dma-type = "hi3660_dma";
-+		};
-+
- 		rtc0: rtc@fff04000 {
- 			compatible = "arm,pl031", "arm,primecell";
- 			reg = <0x0 0Xfff04000 0x0 0x1000>;
--- 
-2.10.2
+--
+1.8.1.1
