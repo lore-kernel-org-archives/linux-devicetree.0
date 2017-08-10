@@ -1,27 +1,208 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: timer: stm32: add support for
- STM32H7
-Date: Thu, 10 Aug 2017 12:12:17 -0500
-Message-ID: <20170810171217.gxms3ect2gpbizba@rob-hp-laptop>
-References: <1501751654-14153-1-git-send-email-fabrice.gasnier@st.com>
- <1501751654-14153-2-git-send-email-fabrice.gasnier@st.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC] interrupts DT property for irqdomain hierarchy
+Date: Thu, 10 Aug 2017 12:23:15 -0500
+Message-ID: <CAL_JsqLC2kUvhHHJdKd_UinvgRHpSv+vsPgRh0xGowfDX5BXYQ@mail.gmail.com>
+References: <CAK7LNATme8P1uHx5hZr6Eez4KGweUi=jQ6zJ=bdBf1XmxZVoLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1501751654-14153-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATme8P1uHx5hZr6Eez4KGweUi=jQ6zJ=bdBf1XmxZVoLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jiang Liu <jiang.liu-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 03, 2017 at 11:14:12AM +0200, Fabrice Gasnier wrote:
-> STM32H7 has slightly different triggers than previous versions.
-> Introduce st,stm32h7-timer-trigger compatible to handle this new variant.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+On Thu, Jul 6, 2017 at 4:58 PM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> Hi IRQ experts, DT exports,
+>
+>
+> I have a question about CONFIG_IRQ_DOMAIN_HIERARCHY.
+>
+> When IRQ domains are hierarchy,
+> how can we specify IRQ number re-mapping between the
+> parent irqchip and the child irqchip?
+>
+> The following figure shows a simplified example.
+>
+> |----------|        |----------|       |----------|
+> | parent   |        | child    |       |  IRQ     |
+> | IRQ chip | <----- | IRQ chip |<----- | consumer |
+> |          |        |          |       | Device   |
+> |----------|        |----------|       |----------|
+>
+> Perhaps, we may describe DT like follows
+>
+>     gic: interrupt-controller {
+>             ...
+>             interrupt-controller;
+>             #interrupt-cells = <3>;
+>     };
+>
+>     child_intc: child-interrupt-controller {
+>             ...
+>             interrupt-parent = <&gic>;
+>             interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
+>             interrupt-controller;
+>             #interrupt-cells = <2>;
+>     };
+>
+>     i2c: i2c {
+>             ...
+>             interrupt-parent = <&child_intc>;
+>             interrupts = <0 4>;
+>     };
+>
+>
+> In this example, the I2C controller takes HWIRQ=0 of the child_intc device.
+> This goes through the child IRQ chip,
+> then connected to HWIRQ=50 of the parent intc.
+>
+> The DT above describes the hardware connection well,
+> but it actually does not work.
+>
+> The root irqchip is usually declared with IRQCHIP_DECLARE().
+> So, IRQ resources are allocated when platform devices are populated from DT.
+> This means IRQ allocation happens before drivers are probed.
+>
+> of_pupulate_default_populate() does not know the fact about irqdomain hierarchy.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+This has not been true for some time now. The irqs are resolved at
+probe time rather than statically created resources and deferred probe
+is supported if one of the interrupt controllers is not yet
+initialized.
+
+>
+> As a result, interrupts = <0 50 0> in the child_intc,
+> and interrupts = <0 4> of the I2C are allocated with different virtual
+> IRQ numbers.
+>
+> We want to assign the same IRQ number if we want handle them
+> in the hierarchy IRQ manner.
+>
+> How can we make it work?
+>
+> Of course, we can remove the
+>           interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>;
+> from the child_intc device node.
+>
+> But, we can not retrieve the IRQ remapping information from DT.
+>
+>
+> I saw some irqchip implementations and .alloc hook are often
+> hard-coded in the case.
+>
+>
+> For example, like this.
+>
+> static int child_intc_domain_alloc(struct irq_domain *domain,
+>                           unsigned int virq, unsigned int nr_irqs, void *arg)
+> {
+>         ....
+>
+>         for (i = 0; i < nr_irqs; i++) {
+>                 struct irq_fwspec parent_fwspec;
+>
+>                 ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+>                                                     &priv->chip, priv);
+>                 if (ret)
+>                         return ret;
+>
+>                 /* CAUTION: parent irqchip must be GIC. */
+>
+>                 parent_fwspec.fwnode = domain->parent->fwnode;
+>                 parent_fwspec.param_count = 3;  /*GIC: #interrupt-cells = <3> */
+>                 parent_fwspec.param[0] = 0;   /* SPI of GIC */
+>                 /* HWIRQ=0 of this chip corresponds to HWIRQ=50 of the parent */
+>                 parent_fwspec.param[1] = hwirq + 50;
+>                 parent_fwspec.param[2] = type;
+>
+>                 ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
+>                                                    &parent_fwspec);
+>                 if (ret)
+>                         return ret;
+>
+>                 virq++;
+>                 hwirq++;
+>         }
+>
+>         return 0;
+> }
+>
+>
+>
+> In order to avoid hard-coding, one possible idea is
+> to retrieve the IRQ information from DT, like this:
+>
+>         for (i = 0; i < nr_irqs; i++) {
+>                 struct of_phandle_args parent_irq;
+>                 struct irq_fwspec parent_fwspec;
+>
+>                 ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
+>                                                    &priv->chip, priv);
+>                 if (ret)
+>                         return ret;
+>
+>                 /* retrieve interrupt spec from DT */
+>                 ret = of_irq_parse_one(irq_domain_get_of_node(domain), hwirq,
+>                                        &parent_irq);
+>                 if (ret)
+>                         return ret;
+>
+>                 of_phandle_args_to_fwspec(&parent_irq, &parent_fwspec);
+>
+>                 ret = irq_domain_alloc_irqs_parent(domain, virq, 1,
+>                                                   &parent_fwspec);
+>                 if (ret)
+>                         return ret;
+>
+>                 virq++;
+>                 hwirq++;
+>         }
+>
+>
+>
+> Some possible solutions:
+>
+> [1] stop early irq allocation and make it completely on-the-fly
+> i.e. IRQ are allocated only when drivers explicitly call of_irq_get()
+> or friends.
+>
+> This does not address one problem.
+>
+> If there are many IRQ lines connected between the parent and the child,
+> interrupts will be very long.
+>
+>    #interrupts = <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0>,
+>                  <0 54 0>, <0 55 0>, <0 56 0>, <0 57 0>,
+>                   ...
+>
+> This is a mess.
+>
+>
+>
+>
+> [2] Introduce DT property something like "interrupt-range"
+>
+> The idea is similar like "ranges" property transforms "reg".
+>
+> "interrupt-range" is an arbitrary number of
+> (child irqchip interrupt) (parent irqchip interrupt) (length) triplets.
+>
+> For example,
+>
+>    interrupt-ranges = <0 0 0 50 0 4>;
+>
+> This means   <0 0>, <0 1>, <0 2>, <0 3> in the child
+> should be mapped to  <0 50 0>, <0 51 0>, <0 52 0>, <0 53 0> in the parent,
+> respectively.
+
+interrupt-map property does this. See here[1].
+
+Rob
+
+[1] http://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
