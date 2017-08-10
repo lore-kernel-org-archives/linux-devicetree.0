@@ -1,69 +1,72 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v5 1/7] clk: at91: clk-generated: remove useless divisor loop
-Date: Thu, 10 Aug 2017 08:34:01 +0200
-Message-ID: <fe26a470c87e39b5e07fbada6ce7020a6b65429b.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v4 0/7] PCI: MediaTek: Add host controller support for mt2712 and mt7622
+Date: Thu, 10 Aug 2017 14:34:53 +0800
+Message-ID: <cover.1502336769.git.honghui.zhang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, cyrille.pitchen@wedev4u.fr, thomas.petazzoni@free-electrons.com, Quentin Schulz <quentin.schulz@free-electrons.com>
+To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The driver requests the current clk rate of each of its parent clocks to
-decide whether a clock rate is suitable or not. It does not request
-determine_rate from a parent clock which could request a rate change in
-parent clock (i.e. there is no parent rate propagation).
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-We know the rate we want (passed along req argument of the function) and
-the parent clock rate, thus we know the closest rounded divisor, we
-don't need to iterate over the available divisors to find the best one
-for a given clock.
+MediaTek's PCIe host controller has two generation HWs, MT2712 and MT7622
+using the new generation HW, which has two root ports. They share most
+probing flow with MT2701/MT7623. But the read/write config space logical
+is different. The per-port registers must be touched for read/write
+configuration space.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- drivers/clk/at91/clk-generated.c | 25 ++++++++++++-------------
- 1 file changed, 12 insertions(+), 13 deletions(-)
+This patchset abstract the common probing flow, and add support for the
+new generation controller.
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index f0b7ae9..ef4b4e0 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -124,19 +124,18 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 		    (gck->range.max && min_rate > gck->range.max))
- 			continue;
- 
--		for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
--			tmp_rate = DIV_ROUND_CLOSEST(parent_rate, div);
--			tmp_diff = abs(req->rate - tmp_rate);
--
--			if (best_diff < 0 || best_diff > tmp_diff) {
--				best_rate = tmp_rate;
--				best_diff = tmp_diff;
--				req->best_parent_rate = parent_rate;
--				req->best_parent_hw = parent;
--			}
--
--			if (!best_diff || tmp_rate < req->rate)
--				break;
-+		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
-+		if (!div)
-+			tmp_rate = parent_rate;
-+		else
-+			tmp_rate = parent_rate / div;
-+		tmp_diff = abs(req->rate - tmp_rate);
-+
-+		if (best_diff < 0 || best_diff > tmp_diff) {
-+			best_rate = tmp_rate;
-+			best_diff = tmp_diff;
-+			req->best_parent_rate = parent_rate;
-+			req->best_parent_hw = parent;
- 		}
- 
- 		if (!best_diff)
+Changes since v3:
+ - Unify the macro define's names with PCIE_ prefix.
+ - Use lower/upper_32_bits macro and remove AHB2PCIE_BASEL/AHB2PCIE_BASEH.
+ - Factor out mtk_pcie_find_port to eliminate duplicate code.
+ - Use list_for_each_entry instead of list_for_each_entry_safe when search list.
+ - Simplify the mtk_pcie_hw_rd_cfg flow.
+ - Split a new patch to rename the parameter and function names.
+ - Update the subject and changelog to include specific SoC IDs.
+
+Changes since v2:
+ - Split the Gen2 training change to a separate patch.
+ - Simplify the config_read/write logical and get rid of mtk_pcie_find_port.
+ - Using bus->sysdata to simplify the code.
+ - Rebase to commit 65b83b13204a ("PCI: mediatek: Explicitly request exclusive
+   reset control")[1].
+ - Fix some misspells.
+ - Add review tags in commit message.
+
+Changes since v1:
+ - Fix build warnings in arm arch.
+ - Using SoC specific compatible instead of generic compatible.
+ - Add devicetree binding example for mt7622.
+ - Unified the register define names with PCIE_ prefix.
+ - Cleanup some un-necessary condition determine when starup port.
+ - minor code cleanups.
+
+[1] https://patchwork.kernel.org/patch/9852591/
+
+Honghui Zhang (2):
+  PCI: mediatek: make the parameter and function names more accurate
+  PCI: mediatek: Add a structure to abstract the controller generations
+
+Ryder Lee (5):
+  PCI: mediatek: Using readl_poll_timeout to wait Gen2 training
+  PCI: mediatek: switch to use platform_get_resource_byname()
+  dt-bindings: PCI: rename and cleanup MediaTek binding text
+  PCI: mediatek: Add controller support for mt2712 and mt7622
+  dt-bindings: PCI: add support for mt2712 and mt7622
+
+ .../bindings/pci/mediatek,mt7623-pcie.txt          | 130 -----
+ .../devicetree/bindings/pci/mediatek-pcie.txt      | 284 ++++++++++
+ drivers/pci/host/Kconfig                           |   5 +-
+ drivers/pci/host/pcie-mediatek.c                   | 598 ++++++++++++++++++---
+ 4 files changed, 820 insertions(+), 197 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+ create mode 100644 Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+
 -- 
-git-series 0.9.1
+2.6.4
