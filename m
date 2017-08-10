@@ -1,226 +1,140 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
- bitrate
-Date: Thu, 10 Aug 2017 17:29:13 +0200
-Message-ID: <4a96c6a8-b8c5-24a1-5e99-44751a0ae987@pengutronix.de>
-References: <20170810005916.27163-1-fcooper@ti.com>
- <20170810005916.27163-2-fcooper@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] power: smb347-charger: Summit SMB358 charger IC
+Date: Thu, 10 Aug 2017 10:30:13 -0500
+Message-ID: <20170810153013.yq6efa4c53wammwe@rob-hp-laptop>
+References: <1501613430-24508-1-git-send-email-simhavcs@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
- protocol="application/pgp-signature";
- boundary="mMhkTxquGB5jERDiHjS8tXtRJOWrPlaQf"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170810005916.27163-2-fcooper-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1501613430-24508-1-git-send-email-simhavcs@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinay Simha BN <simhavcs@gmail.com>
+Cc: John Stultz <john.stultz@linaro.org>, Sumit Semwal <sumit.semwal@linaro.org>, Jonghwa Lee <jonghwa3.lee@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---mMhkTxquGB5jERDiHjS8tXtRJOWrPlaQf
-Content-Type: multipart/mixed; boundary="2H0fqbPv56hvmkDXmofDteMS09jVhdKAu";
- protected-headers="v1"
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-To: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org,
- quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, dev.kurt-yI9piX4KPfawT/RRk36CISFp6vIno51x@public.gmane.org,
- andrew-g2DYL2Zd6BY@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, socketcan-fJ+pQTUTwRTk1uMJSBkQmQ@public.gmane.org
-Message-ID: <4a96c6a8-b8c5-24a1-5e99-44751a0ae987-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] can: dev: Add support for limiting configured
- bitrate
-References: <20170810005916.27163-1-fcooper-l0cyMroinI0@public.gmane.org>
- <20170810005916.27163-2-fcooper-l0cyMroinI0@public.gmane.org>
-In-Reply-To: <20170810005916.27163-2-fcooper-l0cyMroinI0@public.gmane.org>
-
---2H0fqbPv56hvmkDXmofDteMS09jVhdKAu
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-sorry for stepping in late....
-
-On 08/10/2017 02:59 AM, Franklin S Cooper Jr wrote:
-> Various CAN or CAN-FD IP may be able to run at a faster rate than
-> what the transceiver the CAN node is connected to. This can lead to
-> unexpected errors. However, CAN transceivers typically have fixed
-> limitations and provide no means to discover these limitations at
-> runtime. Therefore, add support for a can-transceiver node that
-> can be reused by other CAN peripheral drivers to determine for both
-> CAN and CAN-FD what the max bitrate that can be used. If the user
-> tries to configure CAN to pass these maximum bitrates it will throw
-> an error.
->=20
-> Signed-off-by: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+On Wed, Aug 02, 2017 at 12:20:26AM +0530, Vinay Simha BN wrote:
+> Summit microelectronics' SMB358 charger chip has
+> almost the same register map and functionality.
+> voltage and current table are only differed.
+> 
+> SMB345 charger IC tested in nexus7
+> 
+> Cc: John Stultz <john.stultz@linaro.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Jonghwa Lee <jonghwa3.lee@samsung.com>
+> Cc: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Myungjoo Ham <myungjoo.ham@samsung.com>
+> Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
+> 
 > ---
-> Version 4 changes:
-> Used can-transceiver instead of fixed-transceiver.
->=20
->  drivers/net/can/dev.c   | 50 +++++++++++++++++++++++++++++++++++++++++=
-++++++++
->  include/linux/can/dev.h |  5 +++++
->  2 files changed, 55 insertions(+)
->=20
-> diff --git a/drivers/net/can/dev.c b/drivers/net/can/dev.c
-> index 365a8cc..372108f 100644
-> --- a/drivers/net/can/dev.c
-> +++ b/drivers/net/can/dev.c
-> @@ -27,6 +27,7 @@
->  #include <linux/can/skb.h>
->  #include <linux/can/netlink.h>
->  #include <linux/can/led.h>
-> +#include <linux/of.h>
->  #include <net/rtnetlink.h>
-> =20
->  #define MOD_DESC "CAN device driver interface"
-> @@ -814,6 +815,39 @@ int open_candev(struct net_device *dev)
->  }
->  EXPORT_SYMBOL_GPL(open_candev);
-> =20
-> +#ifdef CONFIG_OF
-> +/*
-> + * Common function that can be used to understand the limitation of
-> + * a transceiver when it provides no means to determine these limitati=
-ons
-> + * at runtime.
-> + */
-> +void of_can_transceiver(struct net_device *dev)
-> +{
-> +	struct device_node *dn;
-> +	struct can_priv *priv =3D netdev_priv(dev);
-> +	struct device_node *np;
-> +	unsigned int max_bitrate;
-> +	int ret;
-> +
-> +	np =3D dev->dev.parent->of_node;
-> +
-> +	dn =3D of_get_child_by_name(np, "can-transceiver");
-> +	if (!dn)
-> +		return;
-> +
-> +	max_bitrate =3D 0;
-> +	ret =3D of_property_read_u32(dn, "max-bitrate", &max_bitrate);
+> v2:
+> * incorporated code review from Rob Herring
+>   gpio line added for Enable charging control,
+>   documentation bindings (vendor prefixes and unit suffixes)
+> ---
+>  .../bindings/power/supply/smb347_charger.txt       |  73 +++++
 
-IIRC the last argument is only modified in case of no error, so what abou=
-t:
-	ret =3D of_property_read_u32(dn, "max-bitrate",
-			&priv->max_bitrate);
+Please split binding to a separate patch.
+
+>  drivers/power/supply/smb347-charger.c              | 334 +++++++++++++--------
+>  include/linux/power/smb347-charger.h               |   4 +-
+>  3 files changed, 283 insertions(+), 128 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/smb347_charger.txt b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> new file mode 100644
+> index 0000000..45da4ee
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/smb347_charger.txt
+> @@ -0,0 +1,73 @@
+> +smb347_charger bindings
+> +~~~~~~~~~~~~~~~~~~~~~~~~
+> +
+> +[Required porperties]
+> +- compatible : "summit,smb345"
+> +	       "summit,smb347"
+> +- reg : Slave address for i2c interface
+> +# At least one of following should be set
+> +  - enable-usb-charging
+> +  - enable-otg-charging
+> +  - enable-mains-charging
+
+As I wrote last time, I don't think these belong in DT.
 
 > +
-> +	if (max_bitrate > 0) {
-> +		priv->max_bitrate =3D max_bitrate;
-> +		priv->is_bitrate_limited =3D true;
+> +[Optional properties]
+> +- interrupt-parent : The phandle for the interrupt controller
+> +- interrupts : Interrupt line index for mapping
+> +- en-gpio : Enable charging control
 
-Do we need is_bitrate_limited...
+enable-gpios
 
-> +	} else if (ret !=3D -EINVAL) {
-> +		netdev_warn(dev, "Invalid value for transceiver max bitrate\n");
-> +	}
-> +}
-> +EXPORT_SYMBOL(of_can_transceiver);
-> +#endif
+> +	  : If this is not specified it will use SW (i2c interface)
 > +
->  /*
->   * Common close function for cleanup before the device gets closed.
->   *
-> @@ -913,6 +947,14 @@ static int can_changelink(struct net_device *dev, =
-struct nlattr *tb[],
->  					priv->bitrate_const_cnt);
->  		if (err)
->  			return err;
+> +# Charging constraints
+> +- max-chg-curr : microamps for charging Maximum current
+> +- max-chg-volt : microvolts for charging Maximum voltage
+> +- pre-chg-curr : microamps for Pre-charging current
+> +- term-curr : microamps for Charging cycle termination current
+> +- fast-volt-thershold : microvolts for Voltage threshold to transit to fast charge mode
+> +- mains-curr-limit : micromaps for Maximum input current from AC/DC input
+> +- usb-curr-limit : microamps for Maximum input current from USB input
+
+These are all properties of the battery, not the charger. See 
+.../power/supply/battery.txt.
+
 > +
-> +		if (priv->is_bitrate_limited &&
-> +		    bt.bitrate > priv->max_bitrate) {
+> +# Related thermometer monitoring (Degrees Celsius)
+> +- chip-temp-threshold : Chip temperature for thermal regulaton.   <100, 130>
+> +- soft-cold-temp-limit : Cold battery temperature for soft alarm. <0, 15>*
+> +- soft-hot-temp-limit : Hot battery temperature for soft alarm.   <40, 55>
+> +- hard-cold-temp-limit : Cold battery temperature for hard alarm. <0, 15>*
+> +- hard-hot-temp-limit : Hot battery temperature for hard alarm.   <55, 65>
+> +(* The written temperature has +5'C offset. 0'C -> -5'C, 15'C -> 10'C)
 
-=2E..can we just use priv->max_bitrate?
+These too should probably be common. If not they need vendor prefix and 
+unit suffix. See property-units.txt.
 
-	if (priv->max_bitrate && bt.bitrate > priv->max_bitrate)
-
-> +			netdev_err(dev, "arbitration bitrate surpasses transceiver capabili=
-ties of %d bps\n",
-> +				   priv->max_bitrate);
-> +			return -EINVAL;
-> +		}
+> +- soft-comp-method : Soft temperature limit compensation method
+> +	(Not defined) : Use default setting
+> +		<0> : Compensation none
+> +		<1> : Charge current compensation
+> +		<2> : Voltage compensation
 > +
->  		memcpy(&priv->bittiming, &bt, sizeof(bt));
-> =20
->  		if (priv->do_set_bittiming) {
-> @@ -997,6 +1039,14 @@ static int can_changelink(struct net_device *dev,=
- struct nlattr *tb[],
->  					priv->data_bitrate_const_cnt);
->  		if (err)
->  			return err;
+> +Example:
+> +	smb345@6a {
+> +		compatible = "summit,smb345";
+> +		reg = <0x6a>;
+> +		status = "okay";
+> +		interrupt-parent = <&tlmm_pinmux>;
+> +		interrupts = <23 IRQ_TYPE_EDGE_BOTH>;
 > +
-> +		if (priv->is_bitrate_limited &&
-> +		    dbt.bitrate > priv->max_bitrate) {
-> +			netdev_err(dev, "canfd data bitrate surpasses transceiver capabilit=
-ies of %d bps\n",
-> +				   priv->max_bitrate);
-> +			return -EINVAL;
-> +		}
+> +		max-chg-curr = <1800000>;
+> +		usb-curr-limit = <450000>;
 > +
->  		memcpy(&priv->data_bittiming, &dbt, sizeof(dbt));
-> =20
->  		if (priv->do_set_data_bittiming) {
-> diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
-> index 141b05a..5519f59 100644
-> --- a/include/linux/can/dev.h
-> +++ b/include/linux/can/dev.h
-> @@ -47,6 +47,9 @@ struct can_priv {
->  	unsigned int data_bitrate_const_cnt;
->  	struct can_clock clock;
-> =20
-> +	unsigned int max_bitrate;
-> +	bool is_bitrate_limited;
+> +		chip-temp-thershold = <110>; /* celsius */
 > +
->  	enum can_state state;
-> =20
->  	/* CAN controller features - see include/uapi/linux/can/netlink.h */
-> @@ -165,6 +168,8 @@ void can_put_echo_skb(struct sk_buff *skb, struct n=
-et_device *dev,
->  unsigned int can_get_echo_skb(struct net_device *dev, unsigned int idx=
-);
->  void can_free_echo_skb(struct net_device *dev, unsigned int idx);
-> =20
-> +void of_can_transceiver(struct net_device *dev);
+> +		enable-usb-charging;
+> +		enable-otg-charging;
+> +	};
 > +
->  struct sk_buff *alloc_can_skb(struct net_device *dev, struct can_frame=
- **cf);
->  struct sk_buff *alloc_canfd_skb(struct net_device *dev,
->  				struct canfd_frame **cfd);
->=20
+> +	smb347@7f {
 
-Marc
+Isn't one example sufficient?
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---2H0fqbPv56hvmkDXmofDteMS09jVhdKAu--
-
---mMhkTxquGB5jERDiHjS8tXtRJOWrPlaQf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEE4bay/IylYqM/npjQHv7KIOw4HPYFAlmMe8kACgkQHv7KIOw4
-HPbtKggAltn42+XOFBPtjBR0Zdf948NmpxpxAKtGVvnHjVuOE10m5M2GVFftg2Dm
-7ewHJj/G72bfN/V1VpBvljCuWnqzoFPWwZwPU4R7kPrZku2LEHfv7wq9M2f8nN8n
-JJB9oITPPFqaYhoAWQWodJWFtlFXellUxZc7fjmsY1DlzWQyCrxvkEpd8afSfD1U
-CZOfp7kkGYqloeVeCUcjSL4D+rr4ljMKxXYW/p1ftsoT2Zz0/ddfTrUY03DMTEBN
-N1RblAXo6lGbNXowNF2uLO7w+y9FXIYOhUeZCJYT5PeL01Ebz2RuYWWyYWQXA8v0
-wJXZwsClX8KzdKnAngQ6oI9KkssoIQ==
-=sBn7
------END PGP SIGNATURE-----
-
---mMhkTxquGB5jERDiHjS8tXtRJOWrPlaQf--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		compatible = "summit,smb347";
+> +		reg = <0x7f>;
+> +		status = "okay";
+> +
+> +		max-chg-curr = <1800000>;
+> +		mains-curr-limit = <2000000>;
+> +		usb-curr-limit = <450000>;
+> +
+> +		chip-temp-thershold = <110>; /* celsius */
+> +
+> +		en-gpios = <&tlmm_pinmux 54 GPIO_ACTIVE_HIGH>;
+> +
+> +		enable-usb-charging;
+> +		enable-mains-charging;
+> +	};
