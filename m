@@ -1,107 +1,100 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v5 4/7] clk: at91: clk-generated: create function to find
- best_diff
-Date: Thu, 10 Aug 2017 08:34:04 +0200
-Message-ID: <4dde07bb3345d569778e7b1b5a8679bded095041.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v4 5/7] dt-bindings: PCI: rename and cleanup MediaTek binding text
+Date: Thu, 10 Aug 2017 14:34:58 +0800
+Message-ID: <9767937d128a8efe516522292af59944e1a4066a.1502336769.git.honghui.zhang@mediatek.com>
+References: <cover.1502336769.git.honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-In-Reply-To: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-References: <cover.ada7bc60e0b3a0f7429afc6ea9e4869131d1b757.1502346448.git-series.quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, cyrille.pitchen@wedev4u.fr, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1502336769.git.honghui.zhang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bhelgaas@google.com, robh@kerenl.org, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
+Cc: honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The way to find the best_diff and do the appropriate process afterwards
-can be re-used.
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-This patch prepares the driver for an upcoming patch that will allow
-clk_generated to determine the rate of the audio_pll.
+In order to accommodate other SoC generations, this patch updates filename
+to make it more generic, regroups specific properties by SoCs, and removes
+redundant descriptions.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/at91/clk-generated.c | 41 +++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+ ...{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} | 32 +++++++++++-----------
+ 1 file changed, 16 insertions(+), 16 deletions(-)
+ rename Documentation/devicetree/bindings/pci/{mediatek,mt7623-pcie.txt => mediatek-pcie.txt} (90%)
 
-diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
-index ef4b4e0..7260e49 100644
---- a/drivers/clk/at91/clk-generated.c
-+++ b/drivers/clk/at91/clk-generated.c
-@@ -99,15 +99,36 @@ clk_generated_recalc_rate(struct clk_hw *hw,
- 	return DIV_ROUND_CLOSEST(parent_rate, gck->gckdiv + 1);
- }
- 
-+static void clk_generated_best_diff(struct clk_rate_request *req,
-+				    struct clk_hw *parent,
-+				    unsigned long parent_rate, u32 div,
-+				    int *best_diff, long *best_rate)
-+{
-+	unsigned long tmp_rate;
-+	int tmp_diff;
-+
-+	if (!div)
-+		tmp_rate = parent_rate;
-+	else
-+		tmp_rate = parent_rate / div;
-+	tmp_diff = abs(req->rate - tmp_rate);
-+
-+	if (*best_diff < 0 || *best_diff > tmp_diff) {
-+		*best_rate = tmp_rate;
-+		*best_diff = tmp_diff;
-+		req->best_parent_rate = parent_rate;
-+		req->best_parent_hw = parent;
-+	}
-+}
-+
- static int clk_generated_determine_rate(struct clk_hw *hw,
- 					struct clk_rate_request *req)
- {
- 	struct clk_generated *gck = to_clk_generated(hw);
- 	struct clk_hw *parent = NULL;
- 	long best_rate = -EINVAL;
--	unsigned long tmp_rate, min_rate;
-+	unsigned long min_rate;
- 	int best_diff = -1;
--	int tmp_diff;
- 	int i;
- 
- 	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-@@ -125,18 +146,10 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
- 			continue;
- 
- 		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
--		if (!div)
--			tmp_rate = parent_rate;
--		else
--			tmp_rate = parent_rate / div;
--		tmp_diff = abs(req->rate - tmp_rate);
+diff --git a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+similarity index 90%
+rename from Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
+rename to Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+index fe80dda..0fdcb15 100644
+--- a/Documentation/devicetree/bindings/pci/mediatek,mt7623-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/mediatek-pcie.txt
+@@ -1,18 +1,13 @@
+-MediaTek Gen2 PCIe controller which is available on MT7623 series SoCs
 -
--		if (best_diff < 0 || best_diff > tmp_diff) {
--			best_rate = tmp_rate;
--			best_diff = tmp_diff;
--			req->best_parent_rate = parent_rate;
--			req->best_parent_hw = parent;
--		}
-+
-+		clk_generated_best_diff(req, parent, parent_rate, div,
-+					&best_diff, &best_rate);
-+
+-PCIe subsys supports single root complex (RC) with 3 Root Ports. Each root
+-ports supports a Gen2 1-lane Link and has PIPE interface to PHY.
++MediaTek Gen2 PCIe controller
  
- 		if (!best_diff)
- 			break;
+ Required properties:
+-- compatible: Should contain "mediatek,mt7623-pcie".
++- compatible: Should contain one of the following strings:
++	"mediatek,mt2701-pcie"
++	"mediatek,mt7623-pcie"
+ - device_type: Must be "pci"
+ - reg: Base addresses and lengths of the PCIe controller.
+ - #address-cells: Address representation for root ports (must be 3)
+ - #size-cells: Size representation for root ports (must be 2)
+-- #interrupt-cells: Size representation for interrupts (must be 1)
+-- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
+-  Please refer to the standard PCI bus binding document for a more detailed
+-  explanation.
+ - clocks: Must contain an entry for each entry in clock-names.
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names: Must include the following entries:
+@@ -20,12 +15,6 @@ Required properties:
+   - sys_ck0 :for clock of Port0
+   - sys_ck1 :for clock of Port1
+   - sys_ck2 :for clock of Port2
+-- resets: Must contain an entry for each entry in reset-names.
+-  See ../reset/reset.txt for details.
+-- reset-names: Must include the following entries:
+-  - pcie-rst0 :port0 reset
+-  - pcie-rst1 :port1 reset
+-  - pcie-rst2 :port2 reset
+ - phys: List of PHY specifiers (used by generic PHY framework).
+ - phy-names : Must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+   number of PHYs as specified in *phys* property.
+@@ -34,6 +23,16 @@ Required properties:
+ - bus-range: Range of bus numbers associated with this controller.
+ - ranges: Ranges for the PCI memory and I/O regions.
+ 
++Required properties for MT7623/MT2701:
++- #interrupt-cells: Size representation for interrupts (must be 1)
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must be "pcie-rst0", "pcie-rst1", "pcie-rstN".. based on the
++  number of root ports.
++
+ In addition, the device tree node must have sub-nodes describing each
+ PCIe port interface, having the following mandatory properties:
+ 
+@@ -85,7 +84,8 @@ Examples:
+ 			 <&hifsys MT2701_HIFSYS_PCIE1_RST>,
+ 			 <&hifsys MT2701_HIFSYS_PCIE2_RST>;
+ 		reset-names = "pcie-rst0", "pcie-rst1", "pcie-rst2";
+-		phys = <&pcie0_phy>, <&pcie1_phy>, <&pcie2_phy>;
++		phys = <&pcie0_phy PHY_TYPE_PCIE>, <&pcie1_phy PHY_TYPE_PCIE>,
++		       <&pcie2_phy PHY_TYPE_PCIE>;
+ 		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
+ 		bus-range = <0x00 0xff>;
 -- 
-git-series 0.9.1
+2.6.4
