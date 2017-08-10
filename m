@@ -1,66 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] char: xilinx_hwicap: Fix warnings in the driver
-Date: Thu, 10 Aug 2017 13:16:31 -0500
-Message-ID: <CAL_JsqLy3yV60eoxL0s7vohpcCuh=d3-Z8zVyaEPe=g772yySA@mail.gmail.com>
-References: <6da0afe2afd2c7a21d16da9a9c7acab09385ae2c.1501247838.git.michal.simek@xilinx.com>
- <79e2e616a8b7dbf38eb72ba0b620230017dcbc65.1501247838.git.michal.simek@xilinx.com>
- <20170803223218.ilryp5spqztsr3cz@rob-hp-laptop> <0e40a687-e11b-b5bb-24f0-465144c98929@xilinx.com>
+Subject: Re: [PATCH v5 1/1] dt-bindings: mtd: add new compatible strings and
+ improve description
+Date: Thu, 10 Aug 2017 13:21:46 -0500
+Message-ID: <20170810182146.glmikeqpqwe66dwt@rob-hp-laptop>
+References: <1501834239-25581-1-git-send-email-guochun.mao@mediatek.com>
+ <1501834239-25581-2-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0e40a687-e11b-b5bb-24f0-465144c98929-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1501834239-25581-2-git-send-email-guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 4, 2017 at 2:49 AM, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
-> On 4.8.2017 00:32, Rob Herring wrote:
->> On Fri, Jul 28, 2017 at 03:17:26PM +0200, Michal Simek wrote:
->>> From: Nava kishore Manne <nava.manne-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>>
->>> This patch fixes the below warning
->>>         --> Use #include <linux/io.h> instead of <asm/io.h>
->>>         --> Use #include <linux/uaccess.h> instead of <asm/uaccess.h>
->>>         --> please, no space before tabs
->>>         --> Block comments use a trailing */ on a separate line
->>>         --> Possible unnecessary 'out of memory' message
->>>         --> Block comments use * on subsequent lines
->>>         --> Block comments use a trailing */ on a separate line
->>>         --> braces {} are not necessary for any arm of this statement
->>>         --> DT compatible string "xlnx,opb-hwicap-1.00.b"
->>>          appears un-documented
->>>         --> DT compatible string "xlnx,xps-hwicap-1.00.a"
->>>             appears un-documented
->>>
->>> Signed-off-by: Nava kishore Manne <navam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> Signed-off-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>
->>>  Documentation/devicetree/bindings/xilinx.txt |  2 ++
->>
->> It's preferred to split bindings to separate patches. No need unless you
->> respin:
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->
-> thanks. Was there any outcome from that discussion to extract binding
-> out of kernel source code?
+On Fri, Aug 04, 2017 at 04:10:39PM +0800, Guochun Mao wrote:
+> Add "mediatek,mt2712-nor" and "mediatek,mt7622-nor"
+> for nor flash node's compatible strings.
+> Explicate the fallback compatible.
+> 
+> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mtd/mtk-quadspi.txt        |   15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
 
-Well, the reason to split the patches is so the history of the
-filtered DT repository we generate from the kernel tree[1] looks
-saner.
-
-As far as actually moving things out, no there's not been any
-movement. My biggest concern with moving things out would be the loss
-of kernel subsystem maintainers' review. Once it's a separate tree and
-not merged thru their tree, we'd loose their reviews and I don't have
-confidence that we'd be gaining reviews from other places. Though some
-subsystem maintainers merge bindings and don't look at them already.
-
-Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
