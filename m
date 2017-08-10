@@ -1,94 +1,58 @@
-From: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Subject: Re: [RESEND PATCH 2/2] i2c: mediatek: Add i2c compatible for
- MediaTek MT7622
-Date: Thu, 10 Aug 2017 16:03:46 +0800
-Message-ID: <1502352226.12382.1.camel@mtksdaap41>
-References: <1502332061-25085-1-git-send-email-jun.gao@mediatek.com>
-         <1502332061-25085-3-git-send-email-jun.gao@mediatek.com>
-         <1502349760.930.66.camel@mhfsdcap03>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 1/3] dt-bindings: document the CEC GPIO bindings
+Date: Thu, 10 Aug 2017 10:11:49 +0200
+Message-ID: <e64f40cb-f53c-4de9-180c-a6a30e052965@xs4all.nl>
+References: <20170802084242.14947-1-hverkuil@xs4all.nl>
+ <20170802084242.14947-2-hverkuil@xs4all.nl>
+ <64803004-6bea-44db-a651-cc21806250b5@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502349760.930.66.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jun Gao <jun.gao@mediatek.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <64803004-6bea-44db-a651-cc21806250b5@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-08-10 at 15:22 +0800, Jun Gao wrote:
-> On Thu, 2017-08-10 at 10:27 +0800, Jun Gao wrote:
-> > From: Jun Gao <jun.gao@mediatek.com>
-> > 
-> > Add i2c compatible for MT7622. Compare to MT8173 i2c controller,
-> > MT7622 limits message numbers to 255, and does not support 4GB
-> > DMA mode.
-> > 
-> 
-> These two resend patches only modify commit message.
-> Thanks!
-> 
-> Jun
-
-Looks good to me, so for new version:
-Reviewed-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-
-Joe.C
-
-
-> 
-> > Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> > ---
-> >  drivers/i2c/busses/i2c-mt65xx.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-mt65xx.c b/drivers/i2c/busses/i2c-mt65xx.c
-> > index 9bedf0b..2c7f847 100644
-> > --- a/drivers/i2c/busses/i2c-mt65xx.c
-> > +++ b/drivers/i2c/busses/i2c-mt65xx.c
-> > @@ -172,6 +172,14 @@ struct mtk_i2c {
-> >  	.max_comb_2nd_msg_len = 31,
-> >  };
-> >  
-> > +static const struct i2c_adapter_quirks mt7622_i2c_quirks = {
-> > +	.max_num_msgs = 255,
-> > +	.max_write_len = 65535,
-> > +	.max_read_len = 65535,
-> > +	.max_comb_1st_msg_len = 65535,
-> > +	.max_comb_2nd_msg_len = 65535,
-> > +};
-> > +
-> >  static const struct mtk_i2c_compatible mt6577_compat = {
-> >  	.quirks = &mt6577_i2c_quirks,
-> >  	.pmic_i2c = 0,
-> > @@ -190,6 +198,15 @@ struct mtk_i2c {
-> >  	.support_33bits = 0,
-> >  };
-> >  
-> > +static const struct mtk_i2c_compatible mt7622_compat = {
-> > +	.quirks = &mt7622_i2c_quirks,
-> > +	.pmic_i2c = 0,
-> > +	.dcm = 1,
-> > +	.auto_restart = 1,
-> > +	.aux_len_reg = 1,
-> > +	.support_33bits = 0,
-> > +};
-> > +
-> >  static const struct mtk_i2c_compatible mt8173_compat = {
-> >  	.pmic_i2c = 0,
-> >  	.dcm = 1,
-> > @@ -201,6 +218,7 @@ struct mtk_i2c {
-> >  static const struct of_device_id mtk_i2c_of_match[] = {
-> >  	{ .compatible = "mediatek,mt6577-i2c", .data = &mt6577_compat },
-> >  	{ .compatible = "mediatek,mt6589-i2c", .data = &mt6589_compat },
-> > +	{ .compatible = "mediatek,mt7622-i2c", .data = &mt7622_compat },
-> >  	{ .compatible = "mediatek,mt8173-i2c", .data = &mt8173_compat },
-> >  	{}
-> >  };
-> 
-> 
-> 
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+T24gMTAvMDgvMTcgMTA6MDMsIEhhbnMgVmVya3VpbCB3cm90ZToKPiBPbiAwMi8wOC8xNyAxMDo0
+MiwgSGFucyBWZXJrdWlsIHdyb3RlOgo+PiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3Vp
+bEBjaXNjby5jb20+Cj4+Cj4+IERvY3VtZW50IHRoZSBiaW5kaW5ncyBmb3IgdGhlIGNlYy1ncGlv
+IG1vZHVsZSBmb3IgaGFyZHdhcmUgd2hlcmUgdGhlCj4+IENFQyBwaW4gaXMgY29ubmVjdGVkIHRv
+IGEgR1BJTyBwaW4uCj4gCj4gcGluZz8KPiAKPj4KPj4gU2lnbmVkLW9mZi1ieTogSGFucyBWZXJr
+dWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+PiAtLS0KPj4gIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMtZ3Bpby50eHQgfCAxOCArKysrKysrKysrKysrKysr
+KysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAx
+MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2NlYy1ncGlvLnR4
+dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+ZGlhL2NlYy1ncGlvLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRp
+YS9jZWMtZ3Bpby50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAwMDAw
+MDAwLi41OGZhNTYwODBjZGEKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLWdwaW8udHh0Cj4+IEBAIC0wLDAgKzEsMTgg
+QEAKPj4gKyogSERNSSBDRUMgR1BJTyBkcml2ZXIKCk9LLCByZWFkaW5nIHlvdXIgY29tbWVudHMg
+ZnJvbSBhbiBvdGhlciBiaW5kaW5ncyBwYXRjaCBJIHJlYWxpemUgdGhhdCAnYmluZGluZ3MKcmVm
+ZXIgdG8gaGFyZHdhcmUsIG5vdCBkcml2ZXJzJy4gSSdsbCBmaXggYW5kIHJlcG9zdCA6LSkKClJl
+Z2FyZHMsCgoJSGFucwoKPj4gKwo+PiArVGhlIEhETUkgQ0VDIEdQSU8gbW9kdWxlIHN1cHBvcnRz
+IENFQyBpbXBsZW1lbnRhdGlvbnMgd2hlcmUgdGhlIENFQyBwaW4KPj4gK2lzIGhvb2tlZCB1cCB0
+byBhIHB1bGwtdXAgR1BJTyBwaW4uCj4+ICsKPj4gK1RoZSBDRUMgR1BJTwo+PiArCj4+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+PiArICAtIGNvbXBhdGlibGU6IHZhbHVlIG11c3QgYmUgImNlYy1n
+cGlvIgo+PiArICAtIGdwaW86IGdwaW8gdGhhdCB0aGUgQ0VDIGxpbmUgaXMgY29ubmVjdGVkIHRv
+Cj4+ICsKPj4gK0V4YW1wbGUgZm9yIHRoZSBSYXNwYmVycnkgUGkgMyB3aGVyZSB0aGUgQ0VDIGxp
+bmUgaXMgY29ubmVjdGVkIHRvCj4+ICtwaW4gNyBha2EgQkNNNCBha2EgR1BDTEswIG9uIHRoZSBH
+UElPIHBpbiBoZWFkZXI6Cj4+ICsKPj4gK2NlYy1ncGlvIHsKPj4gKyAgICAgICBjb21wYXRpYmxl
+ID0gImNlYy1ncGlvIjsKPj4gKyAgICAgICBncGlvID0gPCZncGlvIDQgR1BJT19BQ1RJVkVfSElH
+SD47Cj4+ICt9Owo+Pgo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
