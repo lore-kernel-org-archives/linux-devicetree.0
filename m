@@ -1,49 +1,215 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/3] dt-bindings: i2c: Document the POWER system power supply device
-Date: Thu, 10 Aug 2017 17:19:44 -0500
-Message-ID: <1502403586-20549-2-git-send-email-eajames@linux.vnet.ibm.com>
+From: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 2/3] hwmon: (pmbus): Add POWER system power supply driver
+Date: Thu, 10 Aug 2017 17:19:45 -0500
+Message-ID: <1502403586-20549-3-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1502403586-20549-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: robh+dt@kernel.org, jdelvare@suse.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, joel@jms.id.au, jk@ozlabs.org, andrew@aj.id.au, eajames@linux.vnet.ibm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1502403586-20549-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Add the driver to monitor POWER system power supplies with hwmon over
+pmbus.
+
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 ---
- .../devicetree/bindings/i2c/ibm,power-ps.txt        | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+ drivers/hwmon/pmbus/Kconfig   |  10 +++
+ drivers/hwmon/pmbus/Makefile  |   1 +
+ drivers/hwmon/pmbus/powerps.c | 144 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 155 insertions(+)
+ create mode 100644 drivers/hwmon/pmbus/powerps.c
 
-diff --git a/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index 68d717a..8925c1a 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -125,6 +125,16 @@ config SENSORS_MAX8688
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called max8688.
+ 
++config SENSORS_POWERPS
++	tristate "IBM POWER System Power Supply"
++	default n
++	help
++	  If you say yes here you get hardware monitoring support for the IBM
++	  POWER system power supply.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called powerps.
++
+ config SENSORS_TPS40422
+ 	tristate "TI TPS40422"
+ 	default n
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index 75bb7ca..3303af5 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -13,6 +13,7 @@ obj-$(CONFIG_SENSORS_MAX16064)	+= max16064.o
+ obj-$(CONFIG_SENSORS_MAX20751)	+= max20751.o
+ obj-$(CONFIG_SENSORS_MAX34440)	+= max34440.o
+ obj-$(CONFIG_SENSORS_MAX8688)	+= max8688.o
++obj-$(CONFIG_SENSORS_POWERPS)	+= powerps.o
+ obj-$(CONFIG_SENSORS_TPS40422)	+= tps40422.o
+ obj-$(CONFIG_SENSORS_UCD9000)	+= ucd9000.o
+ obj-$(CONFIG_SENSORS_UCD9200)	+= ucd9200.o
+diff --git a/drivers/hwmon/pmbus/powerps.c b/drivers/hwmon/pmbus/powerps.c
 new file mode 100644
-index 0000000..2ea8ea2
+index 0000000..21d28f2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/ibm,power-ps.txt
-@@ -0,0 +1,21 @@
-+Device-tree bindings for IBM POWER system power supplies
-+--------------------------------------------------------
++++ b/drivers/hwmon/pmbus/powerps.c
+@@ -0,0 +1,144 @@
++/*
++ * Copyright 2017 IBM Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
 +
-+Required properties:
-+ - compatible = "ibm,power-ps";
-+ - reg = < I2C bus address >;		: Address of the power supply on the
-+					  I2C bus.
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/jiffies.h>
++#include <linux/module.h>
 +
-+Example:
++#include "pmbus.h"
 +
-+    i2c-bus@100 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        #interrupt-cells = <1>;
-+        < more properties >
++/* STATUS_MFR_SPECIFIC bits */
++#define POWERPS_MFR_FAN_FAULT			BIT(0)
++#define POWERPS_MFR_THERMAL_FAULT		BIT(1)
++#define POWERPS_MFR_OV_FAULT			BIT(2)
++#define POWERPS_MFR_UV_FAULT			BIT(3)
++#define POWERPS_MFR_PS_KILL			BIT(4)
++#define POWERPS_MFR_OC_FAULT			BIT(5)
++#define POWERPS_MFR_VAUX_FAULT			BIT(6)
++#define POWERPS_MFR_CURRENT_SHARE_WARNING	BIT(7)
 +
-+        power_ps@68 {
-+            compatible = "ibm,power-ps";
-+            reg = <0x68>;
-+        };
-+    };
++static int powerps_read_byte_data(struct i2c_client *client, int page, int reg)
++{
++	int rc, mfr;
++
++	switch (reg) {
++	case PMBUS_STATUS_VOUT:
++	case PMBUS_STATUS_IOUT:
++	case PMBUS_STATUS_TEMPERATURE:
++	case PMBUS_STATUS_FAN_12:
++		rc = pmbus_read_byte_data(client, page, reg);
++		if (rc < 0)
++			return rc;
++
++		mfr = pmbus_read_byte_data(client, page,
++					   PMBUS_STATUS_MFR_SPECIFIC);
++		if (mfr < 0)
++			return rc;
++
++		/* Add MFR_SPECIFIC bits to the standard pmbus status regs. */
++		if (reg == PMBUS_STATUS_FAN_12) {
++			if (mfr & POWERPS_MFR_FAN_FAULT)
++				rc |= PB_FAN_FAN1_FAULT;
++		} else if (reg == PMBUS_STATUS_TEMPERATURE) {
++			if (mfr & POWERPS_MFR_THERMAL_FAULT)
++				rc |= PB_TEMP_OT_FAULT;
++		} else if (reg == PMBUS_STATUS_VOUT) {
++			if (mfr &
++			    (POWERPS_MFR_OV_FAULT | POWERPS_MFR_VAUX_FAULT))
++				rc |= PB_VOLTAGE_OV_FAULT;
++			if (mfr & POWERPS_MFR_UV_FAULT)
++				rc |= PB_VOLTAGE_UV_FAULT;
++		} else if (reg == PMBUS_STATUS_IOUT) {
++			if (mfr & POWERPS_MFR_OC_FAULT)
++				rc |= PB_IOUT_OC_FAULT;
++			if (mfr & POWERPS_MFR_CURRENT_SHARE_WARNING)
++				rc |= PB_CURRENT_SHARE_FAULT;
++		}
++		break;
++	default:
++		rc = -ENODATA;
++		break;
++	}
++
++	return rc;
++}
++
++static int powerps_read_word_data(struct i2c_client *client, int page, int reg)
++{
++	int rc, mfr;
++
++	switch (reg) {
++	case PMBUS_STATUS_WORD:
++		rc = pmbus_read_word_data(client, page, reg);
++		if (rc < 0)
++			return rc;
++
++		mfr = pmbus_read_byte_data(client, page,
++					   PMBUS_STATUS_MFR_SPECIFIC);
++		if (mfr < 0)
++			return rc;
++
++		if (mfr & POWERPS_MFR_PS_KILL)
++			rc |= PB_STATUS_OFF;
++		break;
++	default:
++		rc = -ENODATA;
++		break;
++	}
++
++	return rc;
++}
++
++static struct pmbus_driver_info powerps_info = {
++	.pages = 1,
++	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_IOUT |
++		PMBUS_HAVE_PIN | PMBUS_HAVE_FAN12 | PMBUS_HAVE_TEMP |
++		PMBUS_HAVE_TEMP2 | PMBUS_HAVE_TEMP3 | PMBUS_HAVE_STATUS_VOUT |
++		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_STATUS_INPUT |
++		PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_STATUS_FAN12,
++	.read_byte_data = powerps_read_byte_data,
++	.read_word_data = powerps_read_word_data,
++	.debugfs = true,
++};
++
++static int powerps_probe(struct i2c_client *client,
++			 const struct i2c_device_id *id)
++{
++	return pmbus_do_probe(client, id, &powerps_info);
++}
++
++static const struct i2c_device_id powerps_id[] = {
++	{ "power_ps", 1 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, powerps_id);
++
++/* IBM provides many compatible power supplies; use a generic name. */
++static const struct of_device_id powerps_of_match[] = {
++	{ .compatible = "ibm,power-ps" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, powerps_of_match);
++
++static struct i2c_driver powerps_driver = {
++	.driver = {
++		.name = "powerps",
++		.of_match_table = powerps_of_match,
++	},
++	.probe = powerps_probe,
++	.remove = pmbus_do_remove,
++	.id_table = powerps_id,
++};
++
++module_i2c_driver(powerps_driver);
++
++MODULE_AUTHOR("Eddie James");
++MODULE_DESCRIPTION("PMBus driver for POWER system power supplies");
++MODULE_LICENSE("GPL");
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
